@@ -266,4 +266,11 @@ public interface Configuration extends AnnotatedElement {
      */
     Map<Instance, List<InternalPort>> allInternalPorts();
 
-} // Configuration
+    /**
+     * @generated NOT
+     * @return
+     */
+    List<Instance> orderInstanceInit();
+
+
+    } // Configuration

@@ -558,7 +558,8 @@ public abstract class CCompilerContext extends Context {
             return j-1;
         }
     }
-    
+
+    //FIXME @Lyadis to merge this debug code with the rest of the compilers. Knowing what to debug is not C-specific but is a general concern, for which we already have some (partial) solutions! we should not duplicate that in each compiler!!!
     public boolean isToBeDebugged(Configuration cfg) {
         if(cfg.hasAnnotation("debug")) {
             if(cfg.annotation("debug").iterator().next().compareToIgnoreCase("true") == 0) {
@@ -570,7 +571,8 @@ public abstract class CCompilerContext extends Context {
             return false;
         }
     }
-    
+
+    //FIXME @Lyadis
     public boolean isToBeDebugged(Configuration cfg, Thing t) {
         int lastLevel;
         if(t.hasAnnotation("debug")) {
@@ -588,7 +590,8 @@ public abstract class CCompilerContext extends Context {
         }
         return ((isToBeDebugged(cfg) && (lastLevel != 0)) || (lastLevel == 1));
     }
-    
+
+    //FIXME @Lyadis
     public boolean isToBeDebugged(Configuration cfg, Instance inst) {
         int lastLevel;
         if(inst.hasAnnotation("debug")) {
@@ -606,7 +609,8 @@ public abstract class CCompilerContext extends Context {
         }
         return ((isToBeDebugged(cfg, inst.getType()) && (lastLevel != 0)) || (lastLevel == 1));
     }
-    
+
+    //FIXME @Lyadis
     public boolean isToBeDebugged(Configuration cfg, Thing t, Port p) {
         int lastLevel;
         if(p.hasAnnotation("debug")) {
@@ -624,7 +628,8 @@ public abstract class CCompilerContext extends Context {
         }
         return ((isToBeDebugged(cfg, t) && (lastLevel != 0)) || (lastLevel == 1));
     }
-    
+
+    //FIXME @Lyadis
     public boolean isToBeDebugged(Configuration cfg, Thing t, Port p, Message m) {
         int lastLevel;
         if(m.hasAnnotation("debug")) {
@@ -642,7 +647,8 @@ public abstract class CCompilerContext extends Context {
         }
         return ((isToBeDebugged(cfg, t, p) && (lastLevel != 0)) || (lastLevel == 1));
     }
-    
+
+    //FIXME @Lyadis
     public boolean isToBeDebugged(Configuration cfg, Thing t, State s) {
         int lastLevel;
         if(s.hasAnnotation("debug")) {
@@ -660,7 +666,8 @@ public abstract class CCompilerContext extends Context {
         }
         return ((isToBeDebugged(cfg, t) && (lastLevel != 0)) || (lastLevel == 1));
     }
-    
+
+    //FIXME @Lyadis
     public boolean isToBeDebugged(Configuration cfg, Thing t, Function f) {
         int lastLevel;
         if(f.hasAnnotation("debug")) {
@@ -678,7 +685,8 @@ public abstract class CCompilerContext extends Context {
         }
         return ((isToBeDebugged(cfg, t) && (lastLevel != 0)) || (lastLevel == 1));
     }
-    
+
+    //FIXME @Lyadis
     public boolean containsDebug(Configuration cfg, Thing t) {
         boolean res = isToBeDebugged(cfg, t);
         
@@ -710,43 +718,5 @@ public abstract class CCompilerContext extends Context {
         
         return res;
     }
-    
-    
-    private List<Instance> isRequiredBy(Instance cur, List<Connector> Cos, List<Instance> Instances) {
-        System.out.println("I: " + cur.getName());
-        List<Instance> res = new LinkedList<Instance>();
-        //List<Connector> toBeRemoved = new LinkedList<Connector>();
-        Instance needed;
-        for (Connector co : Cos) {
-            if(co.getCli().getInstance().getName().compareTo(cur.getName()) == 0) {
-                needed = co.getSrv().getInstance();
-                for(Instance inst : Instances) {
-                    if(inst.getName().compareTo(needed.getName()) == 0) {
-                        Instances.remove(inst);
-                        //Cos.remove(co);
-                        res.addAll(0, isRequiredBy(inst,Cos,Instances));
-                        res.add(0, inst);
-                        break;
-                    }
-                }
-            }
-        }
-        return res;
-    } 
-    
-    List<Instance> orderInstanceInit(Configuration cfg) {
-        List<Instance> Instances = new LinkedList<Instance>(cfg.allInstances());
-        List<Connector> Cos = new LinkedList<Connector>(cfg.allConnectors());
-        List<Instance> res = new LinkedList<Instance>();
-        Instance cur;
-        while(!Instances.isEmpty()) {
-            cur = Instances.get(0);
-            Instances.remove(cur);
-            res.addAll(0, isRequiredBy(cur, Cos, Instances));
-            res.add(0, cur);
-        }
-        return res;
-    }
 
-    
 }

@@ -914,4 +914,51 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         return result;
     }
 
+    /**
+     * @generated NOT
+     * @param cur
+     * @param Cos
+     * @param Instances
+     * @return
+     */
+    private List<Instance> isRequiredBy(Instance cur, List<Connector> Cos, List<Instance> Instances) {
+        System.out.println("I: " + cur.getName());
+        List<Instance> res = new LinkedList<Instance>();
+        //List<Connector> toBeRemoved = new LinkedList<Connector>();
+        Instance needed;
+        for (Connector co : Cos) {
+            if(co.getCli().getInstance().getName().compareTo(cur.getName()) == 0) {
+                needed = co.getSrv().getInstance();
+                for(Instance inst : Instances) {
+                    if(inst.getName().compareTo(needed.getName()) == 0) {
+                        Instances.remove(inst);
+                        //Cos.remove(co);
+                        res.addAll(0, isRequiredBy(inst,Cos,Instances));
+                        res.add(0, inst);
+                        break;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    public List<Instance> orderInstanceInit() {
+        List<Instance> Instances = new LinkedList<Instance>(this.allInstances());
+        List<Connector> Cos = new LinkedList<Connector>(this.allConnectors());
+        List<Instance> res = new LinkedList<Instance>();
+        Instance cur;
+        while(!Instances.isEmpty()) {
+            cur = Instances.get(0);
+            Instances.remove(cur);
+            res.addAll(0, isRequiredBy(cur, Cos, Instances));
+            res.add(0, cur);
+        }
+        return res;
+    }
+
 } //ConfigurationImpl

@@ -1316,7 +1316,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         generateInitializationNetworkCode(cfg, builder, ctx);
 
         System.out.println("Instance initialization order");
-        List<Instance> Instances = ctx.orderInstanceInit(cfg);
+        List<Instance> Instances = cfg.orderInstanceInit();
         Instance inst;
         while(!Instances.isEmpty()) {
             inst = Instances.get(Instances.size()-1);
