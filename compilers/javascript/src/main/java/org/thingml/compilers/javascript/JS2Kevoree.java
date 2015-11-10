@@ -168,7 +168,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("//Attributes\n");
         for (Instance i : cfg.allInstances()) {
             for (Property p : i.getType().allPropertiesInDepth()) {
-                if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
+                if (p.isChangeable() && p.getCardinality() == null && p.isDefined("kevoree", "true") && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
                     builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
                     final Expression e = cfg.initExpressions(i, p).get(0);
                     if (e != null) {
@@ -197,7 +197,8 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("start: function (done) {\n");
         for (Instance i : cfg.allInstances()) {
             for (Property p : i.getType().allPropertiesInDepth()) {
-                if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
+                System.out.println(p.getName() + " Kevoree? " + p.isDefined("kevoree", "true"));
+                if (p.isChangeable() && p.getCardinality() == null && p.isDefined("kevoree", "true") && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
                     String accessor = "getValue";
                     String escaper = "\"";
                     boolean isNumber = false;
