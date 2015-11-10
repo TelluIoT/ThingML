@@ -83,7 +83,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
                 for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
                     if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true") && prop.eContainer() instanceof Thing) {
-                        System.out.println("Property " + prop);
+                        //System.out.println("Property " + prop);
                         String result = "";
                         if (prop.getType() instanceof Enumeration) {
                             Enumeration enum_ = (Enumeration) prop.getType();
@@ -110,7 +110,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 }
                 for (Property a : cfg.allArrays(i)) {
                     if (prop.equals(a) && !(prop.isDefined("private", "true")) && prop.eContainer() instanceof Thing) {
-                        System.out.println("Array " + prop);
+                        //System.out.println("Array " + prop);
                         builder.append(", ");
                         builder.append(i.getName() + "_" + a.getName() + "_array");
                     }
@@ -222,64 +222,22 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
         generateInstances(cfg, builder, ctx, false);
 
-        builder.append("//Starting instances following client/server dependencies...\n");
-        List<Instance> instances = new ArrayList<Instance>();
-        for(Instance i : cfg.allInstances()) {
-            if (cfg.getServers(i).isEmpty()) {
-                instances.add(i);
-            }
-        }
-        List<Instance> all = new ArrayList<Instance>();
-        while (!instances.isEmpty()) {
-            for(Instance i : instances) {
-                if (!ctx.containsInstance(all, i) && i.getType().allStateMachines().size() > 0) {
-                        builder.append(i.getName() + "._init();\n");
-                }
-                all.add(i);
-            }
-            instances.clear();
-            for(Instance i : cfg.allInstances()) {
-                if (!ctx.containsInstance(all, i) && (cfg.getServers(i).isEmpty() || ctx.containsAllInstances(all, cfg.getServers(i)))) {
-                    instances.add(i);
-                }
-            }
-        }
-        builder.append("//Instances whose init order could not be determined...\n");
-        for (Instance i : cfg.allInstances()) {
-            if (!ctx.containsInstance(all, i) && i.getType().allStateMachines().size() > 0) {
-                builder.append(i.getName() + "._init();\n");
-            }
+        List<Instance> instances = cfg.orderInstanceInit();
+        Instance inst;
+        while(!instances.isEmpty()) {
+            inst = instances.get(instances.size()-1);
+            instances.remove(inst);
+            builder.append(inst.getName() + "._init();\n");
         }
 
         builder.append("//terminate all things on SIGINT (e.g. CTRL+C)\n");
         builder.append("process.on('SIGINT', function() {\n");
         builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
-        List<Instance> instancesToStop = new ArrayList<Instance>();
-        for(Instance i : cfg.allInstances()) {
-            if (cfg.getClients(i).isEmpty() && i.getType().allStateMachines().size() > 0) {
-                instancesToStop.add(i);
-            }
-        }
-        List<Instance> all2 = new ArrayList<Instance>();
-        while (!instancesToStop.isEmpty()) {
-            for(Instance i : instancesToStop) {
-                if (!ctx.containsInstance(all2, i)) {
-                    builder.append(i.getName() + "._stop();\n");
-                }
-                all2.add(i);
-            }
-            instancesToStop.clear();
-            for(Instance i : cfg.allInstances()) {
-                if (!ctx.containsInstance(all2, i) && (cfg.getClients(i).isEmpty() || ctx.containsAllInstances(all2, cfg.getClients(i)))) {
-                    instancesToStop.add(i);
-                }
-            }
-        }
-        builder.append("//Instances whose init order could not be determined (because of a cycle)...\n");
-        for (Instance i : cfg.allInstances()) {
-            if (!ctx.containsInstance(all2, i) && i.getType().allStateMachines().size() > 0) {
-                builder.append(i.getName() + "._stop();\n");
-            }
+        instances = cfg.orderInstanceInit();
+        while(!instances.isEmpty()) {
+            inst = instances.get(0);
+            instances.remove(inst);
+            builder.append(inst.getName() + "._stop();\n");
         }
         builder.append("});\n\n");
     }
