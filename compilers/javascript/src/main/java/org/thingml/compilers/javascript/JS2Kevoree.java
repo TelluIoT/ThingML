@@ -224,10 +224,10 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                         isNumber = true;
                     }
                     if (p.isDefined("kevoree", "instance")) {
-                        generateKevoreeListener(builder, ctx, isNumber, p, i, false);
+                        generateKevoreeListener(builder, ctx, isNumber, p, i, false, accessor);
                         generateThingMLListener(builder, ctx, p, i, accessor, false);
                     } else if (p.isDefined("kevoree", "merge")) {
-                        generateKevoreeListener(builder, ctx, isNumber, p, i, true);//FIXME: should generate one listener that update all thingml attribute, rather than n listeners on the same attribute that update one thingml attribute...
+                        generateKevoreeListener(builder, ctx, isNumber, p, i, true, accessor);//FIXME: should generate one listener that update all thingml attribute, rather than n listeners on the same attribute that update one thingml attribute...
                         generateThingMLListener(builder, ctx, p, i, accessor, true);
                     }
                 }
@@ -281,7 +281,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("module.exports = " + cfg.getName() + ";\n");
     }
 
-    private void generateKevoreeListener(StringBuilder builder, Context ctx, boolean isNumber, Property p, Instance i, boolean isGlobal) {
+    private void generateKevoreeListener(StringBuilder builder, Context ctx, boolean isNumber, Property p, Instance i, boolean isGlobal, String accessor) {
         //Update ThingML properties when Kevoree properties are updated
         if (!isGlobal) //per instance mapping
             builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', function (newValue) {");
@@ -300,6 +300,12 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("console.log(\"updating ThingML attribute...\");\n");
         builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
         builder.append("}});\n");
+
+        //Force update on startup, as listeners might be registered too late the first time
+        if (!isGlobal) //per instance mapping
+            builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "');");
+        else
+            builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "');");
     }
 
     private void generateThingMLListener(StringBuilder builder, Context ctx, Property p, Instance i, String accessor, boolean isGlobal) {
