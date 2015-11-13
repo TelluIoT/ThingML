@@ -23,6 +23,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -136,6 +137,10 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         return "dic_" + i.getName() + "_" + ctx.getVariableName(p);
     }
 
+    private String getGlobalVariableName(Property p, Context ctx) {
+        return "dic_" + ctx.getVariableName(p);
+    }
+
     private void generateWrapper(Context ctx, Configuration cfg) {
         //Generate wrapper
 
@@ -165,18 +170,32 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
         builder.append("toString: '" + cfg.getName() + "',\n");
 
+
+        List<String> attributes = new ArrayList<String>();
         builder.append("//Attributes\n");
         for (Instance i : cfg.allInstances()) {
             for (Property p : i.getType().allPropertiesInDepth()) {
-                if (p.isChangeable() && p.getCardinality() == null && p.isDefined("kevoree", "true") && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
-                    builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
-                    final Expression e = cfg.initExpressions(i, p).get(0);
-                    if (e != null) {
-                        ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
-                    } else {
-                        builder.append("null\n");
+                if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
+                    if (p.isDefined("kevoree", "instance")) {
+                        builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
+                        final Expression e = cfg.initExpressions(i, p).get(0);
+                        if (e != null) {
+                            ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+                        } else {
+                            builder.append("null\n");
+                        }
+                        builder.append("},\n");
+                    } else if ((p.isDefined("kevoree", "merge") || p.isDefined("kevoree", "only")) && !attributes.contains(p.getName())) {
+                        builder.append(getGlobalVariableName(p, ctx) + " : { \ndefaultValue: ");
+                        final Expression e = cfg.initExpressions(i, p).get(0);
+                        if (e != null) {
+                            ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+                        } else {
+                            builder.append("null\n");
+                        }
+                        builder.append("},\n");
+                        attributes.add(p.getName());
                     }
-                    builder.append("},\n");
                 }
             }
         }
@@ -197,35 +216,20 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("start: function (done) {\n");
         for (Instance i : cfg.allInstances()) {
             for (Property p : i.getType().allPropertiesInDepth()) {
-                System.out.println(p.getName() + " Kevoree? " + p.isDefined("kevoree", "true"));
-                if (p.isChangeable() && p.getCardinality() == null && p.isDefined("kevoree", "true") && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
+                if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
                     String accessor = "getValue";
-                    String escaper = "\"";
                     boolean isNumber = false;
                     if(p.getType() instanceof PrimitiveType && ((PrimitiveType)p.getType()).isNumber()) {
                         accessor = "getNumber";
-                        //escaper = "";
                         isNumber = true;
                     }
-
-                    //Update ThingML properties when Kevoree properties are updated
-                    builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', function (newValue) {");
-                    if (isNumber) {
-                        builder.append("newValue = Number(newValue);\n");
+                    if (p.isDefined("kevoree", "instance")) {
+                        generateKevoreeListener(builder, ctx, isNumber, p, i, false, accessor);
+                        generateThingMLListener(builder, ctx, p, i, accessor, false);
+                    } else if (p.isDefined("kevoree", "merge")) {
+                        generateKevoreeListener(builder, ctx, isNumber, p, i, true, accessor);//FIXME: should generate one listener that update all thingml attribute, rather than n listeners on the same attribute that update one thingml attribute...
+                        generateThingMLListener(builder, ctx, p, i, accessor, true);
                     }
-                    builder.append("console.log(\"Kevoree attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
-                    builder.append("if(this." + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) { ");
-                    builder.append("console.log(\"updating ThingML attribute...\");\n");
-                    builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
-                    builder.append("}});\n");
-
-                    //Update Kevoree properties when ThingML properties are updated
-                    builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {");
-                    builder.append("console.log(\"ThingML attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
-                    builder.append("if(this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== newValue) {\n");
-                    builder.append("console.log(\"updating Kevoree attribute...\");\n");
-                    builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + i.getName() + "_" + ctx.getVariableName(p) + " = " + escaper + "'+newValue+'" + escaper + "');\n");
-                    builder.append("}}.bind(this));\n");
                 }
             }
         }
@@ -275,6 +279,49 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         }
         builder.append("});\n\n");
         builder.append("module.exports = " + cfg.getName() + ";\n");
+    }
+
+    private void generateKevoreeListener(StringBuilder builder, Context ctx, boolean isNumber, Property p, Instance i, boolean isGlobal, String accessor) {
+        //Update ThingML properties when Kevoree properties are updated
+        if (!isGlobal) //per instance mapping
+            builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', function (newValue) {");
+        else
+            builder.append("this.dictionary.on('" + ctx.getVariableName(p) + "', function (newValue) {");
+        if (isNumber) {
+            builder.append("newValue = Number(newValue);\n");
+        }
+        if (!isGlobal) {//per instance mapping
+            builder.append("console.log(\"Kevoree attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
+        }
+        else {
+            builder.append("console.log(\"Kevoree attribute " + ctx.getVariableName(p) + " updated...\");\n");
+        }
+        builder.append("if(this." + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) { ");
+        builder.append("console.log(\"updating ThingML attribute...\");\n");
+        builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
+        builder.append("}});\n");
+
+        //Force update on startup, as listeners might be registered too late the first time
+        if (!isGlobal) //per instance mapping
+            builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "');");
+        else
+            builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "');");
+    }
+
+    private void generateThingMLListener(StringBuilder builder, Context ctx, Property p, Instance i, String accessor, boolean isGlobal) {
+        //Update Kevoree properties when ThingML properties are updated
+        builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {");
+        builder.append("console.log(\"ThingML attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
+        if (!isGlobal)
+            builder.append("if(this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== newValue) {\n");
+        else
+            builder.append("if(this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "') !== newValue) {\n");
+        builder.append("console.log(\"updating Kevoree attribute...\");\n");
+        if (!isGlobal)
+            builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + i.getName() + "_" + ctx.getVariableName(p) + " = \"'+newValue+'\"');\n");
+        else
+            builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + ctx.getVariableName(p) + " = \"'+newValue+'\"');\n");
+        builder.append("}}.bind(this));\n");
     }
 
     private String shortName(Instance i, Port p, Message m) {
