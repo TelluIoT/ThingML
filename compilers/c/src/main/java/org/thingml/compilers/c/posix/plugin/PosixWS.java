@@ -20,7 +20,7 @@
  */
 package org.thingml.compilers.c.posix.plugin;
 
-import org.thingml.compilers.c.NetworkLibraryGenerator;
+import org.thingml.compilers.c.CNetworkLibraryGenerator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +35,7 @@ import org.thingml.compilers.c.CCompilerContext;
  *
  * @author Nicolas Harrand
  */
-public class PosixWS extends NetworkLibraryGenerator {
+public class PosixWS extends CNetworkLibraryGenerator {
 
     public PosixWS(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
@@ -47,6 +47,7 @@ public class PosixWS extends NetworkLibraryGenerator {
 
     @Override
     public void generateNetworkLibrary() {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
         
         for(ExternalConnector eco : this.getExternalConnectors()) {
             
@@ -285,6 +286,7 @@ public class PosixWS extends NetworkLibraryGenerator {
 
     @Override
     public void generateMessageForwarders(StringBuilder builder) {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
         for (ExternalConnector eco : this.getExternalConnectors()) {
             //if (eco.hasAnnotation("c_external_send")) {
             Thing t = eco.getInst().getInstance().getType();

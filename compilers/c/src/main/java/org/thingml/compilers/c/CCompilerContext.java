@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.c;
 
+import org.thingml.compilers.NetworkLibraryGenerator;
 import java.util.HashSet;
 import org.sintef.thingml.*;
 import org.thingml.compilers.ThingMLCompiler;
@@ -24,6 +25,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by ffl on 01.06.15.
@@ -561,6 +563,8 @@ public abstract class CCompilerContext extends Context {
 
     //FIXME @Lyadis to merge this debug code with the rest of the compilers. Knowing what to debug is not C-specific but is a general concern, for which we already have some (partial) solutions! we should not duplicate that in each compiler!!!
     public boolean isToBeDebugged(Configuration cfg) {
+        //DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
+        //if(!(debugProfile==null) && debugProfile.getDebugFunctions().contains(f)) {}
         if(cfg.hasAnnotation("debug")) {
             if(cfg.annotation("debug").iterator().next().compareToIgnoreCase("true") == 0) {
                 return true;

@@ -21,7 +21,7 @@
 package org.thingml.compilers.c.posix.plugin;
 
 import java.util.HashSet;
-import org.thingml.compilers.c.NetworkLibraryGenerator;
+import org.thingml.compilers.c.CNetworkLibraryGenerator;
 import java.util.List;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
@@ -35,7 +35,7 @@ import org.thingml.compilers.c.CCompilerContext;
  *
  * @author sintef
  */
-public class PosixMQTT extends NetworkLibraryGenerator {
+public class PosixMQTT extends CNetworkLibraryGenerator {
 
     public PosixMQTT(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
@@ -46,6 +46,7 @@ public class PosixMQTT extends NetworkLibraryGenerator {
 
     @Override
     public void generateNetworkLibrary() {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
         for(ExternalConnector eco : this.getExternalConnectors()) {
             String ctemplate = ctx.getNetworkLibMQTTTemplate();
             String htemplate = ctx.getNetworkLibMQTTHeaderTemplate();
@@ -266,6 +267,7 @@ public class PosixMQTT extends NetworkLibraryGenerator {
 
     @Override
     public void generateMessageForwarders(StringBuilder builder) {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
         
         for (ExternalConnector eco : this.getExternalConnectors()) {
             //if (eco.hasAnnotation("c_external_send")) {

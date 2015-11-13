@@ -64,7 +64,7 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
     public void do_call_compiler(Configuration cfg, String... options) {
 
         CCompilerContext ctx = new CCompilerContextPosix(this);
-
+        processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
 

@@ -22,6 +22,7 @@ import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by ffl on 17.06.15.
@@ -56,6 +57,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         //builder.append("}\n");
         //builder.append("#endif\n");
         //builder.append("\n");
+        
+        
         
         if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
             builder.append("//Debug fonction\n");

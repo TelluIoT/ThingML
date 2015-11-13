@@ -26,13 +26,13 @@ import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.NetworkLibraryGenerator;
+import org.thingml.compilers.c.CNetworkLibraryGenerator;
 
 /**
  *
  * @author sintef
  */
-public class ArduinoSerial extends NetworkLibraryGenerator {
+public class ArduinoSerial extends CNetworkLibraryGenerator {
 
     public ArduinoSerial(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
@@ -43,6 +43,7 @@ public class ArduinoSerial extends NetworkLibraryGenerator {
 
     @Override
     public void generateNetworkLibrary() {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
         for(ExternalConnector eco : this.getExternalConnectors()) {
             boolean ring = false;
             String ctemplate = ctx.getNetworkLibSerialTemplate();

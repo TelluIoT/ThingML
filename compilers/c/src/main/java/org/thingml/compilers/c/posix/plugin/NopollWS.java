@@ -29,13 +29,13 @@ import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.NetworkLibraryGenerator;
+import org.thingml.compilers.c.CNetworkLibraryGenerator;
 
 /**
  *
  * @author sintef
  */
-public class NopollWS extends NetworkLibraryGenerator {
+public class NopollWS extends CNetworkLibraryGenerator {
 
     public NopollWS(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
@@ -47,6 +47,7 @@ public class NopollWS extends NetworkLibraryGenerator {
 
     @Override
     public void generateNetworkLibrary() {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
         
         for(ExternalConnector eco : this.getExternalConnectors()) {
             
@@ -150,8 +151,9 @@ public class NopollWS extends NetworkLibraryGenerator {
         }
     }
 
-    @Override
+    //@Override
     public void generateMessageForwarders(StringBuilder builder) {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
         for (ExternalConnector eco : this.getExternalConnectors()) {
             //if (eco.hasAnnotation("c_external_send")) {
             Thing t = eco.getInst().getInstance().getType();

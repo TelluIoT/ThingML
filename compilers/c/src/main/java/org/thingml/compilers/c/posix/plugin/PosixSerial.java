@@ -20,7 +20,7 @@
  */
 package org.thingml.compilers.c.posix.plugin;
 
-import org.thingml.compilers.c.NetworkLibraryGenerator;
+import org.thingml.compilers.c.CNetworkLibraryGenerator;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
@@ -32,7 +32,7 @@ import org.thingml.compilers.c.CCompilerContext;
  *
  * @author sintef
  */
-public class PosixSerial extends NetworkLibraryGenerator {
+public class PosixSerial extends CNetworkLibraryGenerator {
 
     public PosixSerial(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
@@ -43,6 +43,7 @@ public class PosixSerial extends NetworkLibraryGenerator {
 
     @Override
     public void generateNetworkLibrary() {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
         for (ExternalConnector eco : this.getExternalConnectors()) {
             String ctemplate = ctx.getNetworkLibSerialTemplate();
             String htemplate = ctx.getNetworkLibSerialHeaderTemplate();

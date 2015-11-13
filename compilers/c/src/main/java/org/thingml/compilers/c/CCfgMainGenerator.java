@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.c;
 
+import org.thingml.compilers.NetworkLibraryGenerator;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
@@ -29,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.arduino.plugin.ArduinoSerial;
 import org.thingml.compilers.c.posix.plugin.NopollWS;
 import org.thingml.compilers.c.posix.plugin.PosixMQTT;
@@ -1542,6 +1544,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("\n");
         
+        //DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
+        //if(!(debugProfile==null) && debugProfile.g) {}
         if(ctx.containsDebug(cfg, inst.getType())) {
             if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
                 builder.append(ctx.getInstanceVarName(inst) + ".debug = true;\n");

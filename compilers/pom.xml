@@ -19,6 +19,7 @@
         <module>javascript</module>
         <module>c</module>
         <module>uml</module>
+        <module>debugGUI</module>
         <!--<module>deprescala</module>-->
         <module>registry</module>
     </modules>
