@@ -61,9 +61,17 @@ body {
 	width: 400px;
 }
 
+#received-logs {
+	white-space: pre;
+}
+
 #div-sent-logs {
 	margin-left: 410px;
 	width: 400px;
+}
+
+#sent-logs {
+	white-space: pre;
 }
 
 #send {
@@ -155,8 +163,12 @@ table {
 	text-decoration: bold;
 }
 
+input[type="text"]{
+    max-width: 100px;
+    width: 70%;
+}
 
-.bootstrap-frm input[type="text"], .bootstrap-frm input[type="email"], .bootstrap-frm textarea, .bootstrap-frm select{
+/*.bootstrap-frm input[type="text"], .bootstrap-frm input[type="email"], .bootstrap-frm textarea, .bootstrap-frm select{
     border: 1px solid #CCC;
     color: #888;
     height: 20px;
@@ -166,6 +178,7 @@ table {
     margin-top: 2px;
     outline: 0 none;
     padding: 5px 0px 5px 5px;
+    max-width: 100px;
     width: 70%;
     border-radius: 4px;
     -webkit-border-radius: 4px;
@@ -173,4 +186,4 @@ table {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
+}*/

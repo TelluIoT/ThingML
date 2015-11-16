@@ -23,6 +23,7 @@ import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.compilers.javascript.EspruinoCompiler;
 import org.thingml.compilers.javascript.JSCompiler;
 import org.thingml.compilers.uml.PlantUMLCompiler;
+import org.thingml.compilers.debugGUI.DebugGUICompiler;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new EspruinoCompiler());
             instance.addCompiler(new JSCompiler());
             instance.addCompiler(new PlantUMLCompiler());
+            instance.addCompiler(new DebugGUICompiler());
 
         }
         return instance;

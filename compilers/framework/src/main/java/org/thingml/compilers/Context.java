@@ -139,6 +139,8 @@ public class Context {
             if (input != null) {
                 result = org.apache.commons.io.IOUtils.toString(input);
                 input.close();
+            } else {
+                System.out.println("[Error] Template not found: " + template_id);
             }
         } catch (Exception e) {
             //e.printStackTrace();

@@ -48,10 +48,17 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
     public void generateMockUp(ExternalConnector eco, Configuration cfg, DebugGUICompilerContext ctx) {
         String htmlTemp = ctx.getHtmlTemplate();
         
+        String portName;
+        if(eco.hasAnnotation("port_name")) {
+            portName = eco.annotation("port_name").iterator().next();
+        } else {
+            portName = eco.getProtocol();
+        }
+        
         /* Sending messages */
-        String sendFunction = "", msgID = "";
+        String sendFunction = portName + "_send", msgID = "";
         StringBuilder sendForm = new StringBuilder();
-        for (Message msg : eco.getPort().getSends()) {
+        for (Message msg : eco.getPort().getReceives()) {
             
             if(msg.hasAnnotation("code")) {
                 msgID = msg.annotation("code").iterator().next();
@@ -66,30 +73,34 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
             sendForm.append("</tr>\n");
             
             sendForm.append("<tr>\n<td><input type=\"submit\" class=\"btn\" value=\"" + msg.getName() + "\""
-                    + "onClick=\"" + sendFunction + "(" + msgID + ");\" /></td>\n");
+                    + " onClick=\"" + sendFunction + "(" + msgID + ");\" /></td>\n");
             for(Parameter p : msg.getParameters()) {
-                sendForm.append("<td><input type=\"text\" class=\"bootstrap-frm\" /></td>\n");
+                sendForm.append("<td><input type=\"text\" class=\"bootstrap-frm\" id=\"param_" + msg.getName() + "_" + p.getName() + "\" /></td>\n");
             }
             sendForm.append("</tr>\n");
         }
-        htmlTemp.replace("/*SEND*/", sendForm);
-        
-        String portName;
-        if(eco.hasAnnotation("port_name")) {
-            portName = eco.annotation("port_name").iterator().next();
-        } else {
-            portName = eco.getProtocol();
-        }
+        htmlTemp = htmlTemp.replace("/*SEND*/", sendForm);
         
         String title = "Mock-up for debugging " + cfg.getName() + " :: " + portName + "";
-        htmlTemp.replace("/*TITLE*/", title);
+        htmlTemp = htmlTemp.replace("/*TITLE*/", title);
         
         /*Network Library*/
         if(eco.getProtocol().startsWith("Websocket")) {
             WSjs WSgen = new WSjs(cfg, ctx);
             WSgen.addExternalCnnector(eco);
             
-            htmlTemp.replace("/*CONNECT*/", WSgen.generateConnectionInterface(portName));
+            htmlTemp = htmlTemp.replace("/*CONNECT*/", WSgen.generateConnectionInterface(portName));
+            
+            StringBuilder script = new StringBuilder();
+            WSgen.generateMessageForwarders(script);
+            htmlTemp = htmlTemp.replace("/*SCRIPT*/", script);
         }
+        
+        htmlTemp = htmlTemp.replace("/*CSS*/", portName + ".css");
+        
+        //System.out.print(htmlTemp);
+        
+        ctx.getBuilder(portName + ".html").append(htmlTemp);
+        ctx.getBuilder(portName + ".css").append(ctx.getCSSTemplate());
     }
 }
