@@ -34,6 +34,22 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
         pack = pack + ".gui";
+
+        final StringBuilder b = ctx.getNewBuilder("src/main/java/" + pack.replace(".", "/") + "/StringHelper.java");
+        String helper = "";
+        try {
+            InputStream input = this.getClass().getClassLoader().getResourceAsStream("javatemplates/StringHelper.java");
+            final List<String> packLines = IOUtils.readLines(input);
+            for (String line : packLines) {
+                helper += line + "\n";
+            }
+            input.close();
+        } catch (Exception e) {
+            System.err.println("Error loading Swing template: " + e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+        b.append(helper);
+
         for (Instance i : cfg.allInstances()) {
             compileType(i.getType(), ctx, pack);
         }
@@ -58,22 +74,6 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         }
 
         final StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + t.getName() + "Mock.java");
-        final StringBuilder b = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/StringHelper.java");
-
-        String helper = "";
-        try {
-            InputStream input = this.getClass().getClassLoader().getResourceAsStream("javatemplates/StringHelper.java");
-            final List<String> packLines = IOUtils.readLines(input);
-            for (String line : packLines) {
-                helper += line + "\n";
-            }
-            input.close();
-        } catch (Exception e) {
-            System.err.println("Error loading Swing template: " + e.getLocalizedMessage());
-            e.printStackTrace();
-        }
-        b.append(helper);
-
 
         String imports = "";
         try {
