@@ -21,14 +21,18 @@
 package org.thingml.compilers.c.posix.plugin;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
 import java.util.List;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
+import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingmlFactory;
+import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.c.CCompilerContext;
 
 /**
@@ -39,16 +43,40 @@ public class PosixMQTT extends CNetworkLibraryGenerator {
 
     public PosixMQTT(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
+         addDependencies(cfg, ctx);
     }
     public PosixMQTT(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
+         addDependencies(cfg, ctx);
+    }
+    
+    private void addDependencies(Configuration cfg, CCompilerContext ctx) {
+        if(!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "mosquitto")) {
+            ThingmlFactory factory;
+            factory = ThingmlFactoryImpl.init();
+            PlatformAnnotation pan = factory.createPlatformAnnotation();
+            pan.setName("add_c_libraries");
+            pan.setValue("mosquitto");
+            cfg.allAnnotations().add(pan);
+        }
     }
 
     @Override
     public void generateNetworkLibrary() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         for(ExternalConnector eco : this.getExternalConnectors()) {
-            String ctemplate = ctx.getNetworkLibMQTTTemplate();
+            
+            String platform = "";
+            String ctemplate = "";
+            if(eco.hasAnnotation("platform")) {
+                platform = eco.annotation("platform").iterator().next();
+                if(platform.compareToIgnoreCase("x86") == 0) {
+                    ctemplate = ctx.getNetworkLibMQTTTemplate();
+                }
+            } else {
+                ctemplate = ctx.getNetworkLibMQTTTemplateYun();
+            }
+            
             String htemplate = ctx.getNetworkLibMQTTHeaderTemplate();
 
             String portName;

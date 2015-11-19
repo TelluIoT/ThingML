@@ -22,13 +22,17 @@ package org.thingml.compilers.c.posix.plugin;
 
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
+import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingmlFactory;
+import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.c.CCompilerContext;
 
 /**
@@ -39,10 +43,23 @@ public class PosixWS extends CNetworkLibraryGenerator {
 
     public PosixWS(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
+        addDependencies(cfg, ctx);
     }
     
     public PosixWS(Configuration cfg, CCompilerContext ctx, List<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx);
+        addDependencies(cfg, ctx);
+    }
+    
+    private void addDependencies(Configuration cfg, CCompilerContext ctx) {
+        if(!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "websockets")) {
+            ThingmlFactory factory;
+            factory = ThingmlFactoryImpl.init();
+            PlatformAnnotation pan = factory.createPlatformAnnotation();
+            pan.setName("add_c_libraries");
+            pan.setValue("websockets");
+            cfg.allAnnotations().add(pan);
+        }
     }
 
     @Override

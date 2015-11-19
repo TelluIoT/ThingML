@@ -99,8 +99,12 @@ public abstract class CCompilerContext extends Context {
         return getTemplateByID("ctemplates/network_lib/posix/PosixNopollWebsocketClient.h");
     }
     
-    public String getNetworkLibMQTTTemplate() {
+    public String getNetworkLibMQTTTemplateYun() {
         return getTemplateByID("ctemplates/network_lib/posix/PosixMQTTClient.c");
+    }
+    
+    public String getNetworkLibMQTTTemplate() {
+        return getTemplateByID("ctemplates/network_lib/posix/PosixMQTTClient2.c");
     }
     
     public String getNetworkLibMQTTHeaderTemplate() {
@@ -134,7 +138,15 @@ public abstract class CCompilerContext extends Context {
     public String getCommonHeaderTemplate() {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thingml_typedefs.h");
     }
-
+    
+    public boolean hasAnnotationWithValue(Configuration cfg, String annotation, String value) {
+        for(String st : cfg.annotation(annotation)) {
+            if (st.compareToIgnoreCase(value) == 0) {
+               return true;
+            }
+        }
+        return false;
+    }
     // The concrete thing for which the code is being generated
     protected Thing concreteThing = null;
 

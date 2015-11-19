@@ -20,12 +20,39 @@
  */
 package org.thingml.compilers.debugGUI;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Parameter;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Event;
+import org.sintef.thingml.Expression;
+import org.sintef.thingml.Instance;
+import org.sintef.thingml.InstanceRef;
+import org.sintef.thingml.InternalTransition;
+import org.sintef.thingml.MessageParameter;
+import org.sintef.thingml.PlatformAnnotation;
+import org.sintef.thingml.Port;
+import org.sintef.thingml.ReceiveMessage;
+import org.sintef.thingml.SendAction;
+import org.sintef.thingml.State;
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.ThingmlFactory;
+import org.sintef.thingml.Type;
+import org.sintef.thingml.impl.ThingMLModelImpl;
+import org.sintef.thingml.impl.ThingmlFactoryImpl;
+import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.debugGUI.plugin.MQTTjs;
 import org.thingml.compilers.debugGUI.plugin.WSjs;
+import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.c.posix.PosixCompiler;
 
 /**
  *
@@ -94,7 +121,39 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
             StringBuilder script = new StringBuilder();
             WSgen.generateMessageForwarders(script);
             htmlTemp = htmlTemp.replace("/*SCRIPT*/", script);
+        } else {
+            //Proxy
+            //if(eco.getProtocol().startsWith("MQTT")) {
+                WSjs WSgen = new WSjs(cfg, ctx);
+                WSgen.addExternalCnnector(eco);
+
+                htmlTemp = htmlTemp.replace("/*CONNECT*/", WSgen.generateConnectionInterface(portName));
+
+                StringBuilder script = new StringBuilder();
+                WSgen.generateMessageForwarders(script);
+                htmlTemp = htmlTemp.replace("/*SCRIPT*/", script);
+                
+                StringBuilder proxyThingML = new StringBuilder();
+                
+                ThingmlFactory factory;
+                factory = ThingmlFactoryImpl.init();
+                List<PlatformAnnotation> lpan = new LinkedList<PlatformAnnotation>();
+                PlatformAnnotation pan = factory.createPlatformAnnotation();
+                pan.setName("platform");
+                pan.setValue("x86");
+                lpan.add(pan);
+                
+                generateProxy(eco, lpan, proxyThingML, cfg);
+                
+                ctx.getBuilder(portName + "Proxy.thingml").append(proxyThingML);
+                /*ThingMLCompiler proxyCompiler = new PosixCompiler();
+                
+                proxyCompiler.setOutputDirectory(ctx.getOutputDirectory());
+                proxyCompiler.compile(proxy, "");*/
+                
+            //}
         }
+        
         
         htmlTemp = htmlTemp.replace("/*CSS*/", portName + ".css");
         
@@ -102,5 +161,175 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         
         ctx.getBuilder(portName + ".html").append(htmlTemp);
         ctx.getBuilder(portName + ".css").append(ctx.getCSSTemplate());
+    }
+    
+    public void generateProxy(ExternalConnector eco, List<PlatformAnnotation> annotations, StringBuilder builder, Configuration cfg) {
+        
+        // Datatypes generation
+        
+        for (Type t : cfg.findContainingModel().allSimpleTypes()) {
+            builder.append("datatype " + t.getName() + "\n");
+            for(PlatformAnnotation pan : t.allAnnotations()) {
+                builder.append("    @" + pan.getName() + "\"" + pan.getValue() + "\"\n");
+            }
+            builder.append(";\n\n");
+        }
+        
+        //Proxy Conf generation
+        
+        builder.append("configuration proxyCfg {\n" +
+                        "	instance p : proxyType\n" +
+                        "\n" +
+                        "	connector p.Browser over Websocket\n" +
+                        "	connector p.Debug over " + eco.getProtocol() + "\n");
+        
+        for(PlatformAnnotation pan: annotations) {
+            builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");
+        }
+        
+        builder.append("}\n" +
+                        "\n");
+        
+        // Messages declaration
+        
+        Set<Message> Messages= new HashSet<Message>();
+        Set<String> MessagesNames = new HashSet<String>();
+        for(Message m : eco.getPort().getReceives()) {
+            if(!MessagesNames.contains(m.getName())) {
+                MessagesNames.add(m.getName());
+                Messages.add(m);
+            }
+        }
+        for(Message m : eco.getPort().getSends()) {
+            if(!MessagesNames.contains(m.getName())) {
+                MessagesNames.add(m.getName());
+                Messages.add(m);
+            }
+        }
+        
+        builder.append("thing fragment Msgs {\n");
+        
+        for(Message m : Messages) {
+            builder.append("    message " + m.getName() + "(");
+            boolean isFirst = true;
+            for(Parameter p : m.getParameters()) {
+                if(isFirst) {
+                    isFirst = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append(p.getName() + " : " + p.getType().getName());
+            }
+            builder.append(")");
+            for(PlatformAnnotation pan : m.allAnnotations()) {
+                builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");
+            }
+            builder.append(";\n");
+        }
+        
+        builder.append("}\n\n");
+        
+        //Proxy Thing generation
+        
+        builder.append("thing proxyType includes Msgs {\n" +
+                        "\n" +
+                        "	provided port Browser {\n");
+        
+        if(!eco.getPort().getReceives().isEmpty()) {
+            builder.append("       receives ");
+            boolean isFirst = true;
+            for(Message m : eco.getPort().getReceives()) {
+                if(isFirst) {
+                    isFirst = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append(m.getName());
+            }
+        }
+        if(!eco.getPort().getSends().isEmpty()) {
+            builder.append("\n       sends ");
+            boolean isFirst = true;
+            for(Message m : eco.getPort().getSends()) {
+                if(isFirst) {
+                    isFirst = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append(m.getName());
+            }
+        }
+        
+        builder.append("\n	}\n" +
+                        "\n" +
+                        "	provided port Debug {\n");
+        
+        if(!eco.getPort().getReceives().isEmpty()) {
+            builder.append("       sends ");
+            boolean isFirst = true;
+            for(Message m : eco.getPort().getReceives()) {
+                if(isFirst) {
+                    isFirst = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append(m.getName());
+            }
+        }
+        if(!eco.getPort().getSends().isEmpty()) {
+            builder.append("\n       receives ");
+            boolean isFirst = true;
+            for(Message m : eco.getPort().getSends()) {
+                if(isFirst) {
+                    isFirst = false;
+                } else {
+                    builder.append(", ");
+                }
+                builder.append(m.getName());
+            }
+        }
+        
+        builder.append("\n	}\n" +
+                        "	\n" +
+                        "	statechart proxChart init Active {\n" +
+                        "		state Active {\n");
+        
+        if(!eco.getPort().getReceives().isEmpty()) {
+            for(Message m : eco.getPort().getReceives()) {
+                builder.append("            internal event e : Browser?" + m.getName() + "\n");
+                builder.append("            action Debug!" + m.getName() + "(");
+                boolean isFirst = true;
+                for(Parameter p : m.getParameters()) {
+                    if(isFirst) {
+                        isFirst = false;
+                    } else {
+                        builder.append(", ");
+                    }
+                    builder.append("e." + p.getName());
+                }
+                builder.append(")\n");
+            }
+        }
+        if(!eco.getPort().getSends().isEmpty()) {
+            for(Message m : eco.getPort().getSends()) {
+                builder.append("            internal event e : Debug?" + m.getName() + "\n");
+                builder.append("            action Browser!" + m.getName() + "(");
+                boolean isFirst = true;
+                for(Parameter p : m.getParameters()) {
+                    if(isFirst) {
+                        isFirst = false;
+                    } else {
+                        builder.append(", ");
+                    }
+                    builder.append("e." + p.getName());
+                }
+                builder.append(")\n");
+            }
+        }
+        
+        builder.append("		}\n" +
+                        "	}\n" +
+                        "}");
+    
     }
 }

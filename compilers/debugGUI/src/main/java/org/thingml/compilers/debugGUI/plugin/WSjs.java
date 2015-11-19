@@ -74,6 +74,24 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
 "		return buf;\n" +
 "	}\n" +
 "//return i;\n" +
+"}\n\n"
+                + "function intToBytes(i, nbB) {\n" +
+"	var n = nbB;\n" +
+"	var res = \"\";\n" +
+"	while(n > 1){\n" +
+"		res += intToXdigitString(Math.floor(i / Math.pow(256, n-1)), 3);\n" +
+"		n--;\n" +
+"	}\n" +
+"	res += intToXdigitString(i % 256, 3);\n" +
+"	return res;\n" +
+"}\n\n"
+                + "function readByte(i, nbB) {\n" +
+"	var n = nbB;\n" +
+"	var res;\n" +
+"	while(n > 0) {\n" +
+"		res += Number(msg.substring((nbB-n)*3, (nbB-n+1)*3)) * Math.pow(256, n);\n" +
+"		n--;\n" +
+"	}\n" +
 "}\n\n");
         
         for(ExternalConnector eco : this.getExternalConnectors()) {
@@ -89,7 +107,7 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
             
             
              builder.append("var tosend, tmp_param, tolog;\n\n");
-             builder.append("tosend = intToXdigitString(msgID, 6);\n");
+             builder.append("tosend = intToBytes(msgID, 2);\n");
              
             for(Message m : eco.getPort().getReceives()) {
                 String msgID = "";
@@ -110,7 +128,7 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
                    }
                    builder.append("tmp_param = document.getElementById(\"param_" + m.getName() + "_" + p.getName() + "\").value;\n");
                    builder.append("tolog += tmp_param;\n");
-                   builder.append("tosend += intToXdigitString(tmp_param, " + p.getType().annotation("c_byte_size").iterator().next() + " * 3);\n");
+                   builder.append("tosend += intToBytes(tmp_param, " + p.getType().annotation("c_byte_size").iterator().next() + ");\n");
                 }
 
                 builder.append("}\n");
@@ -123,10 +141,11 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
             
             builder.append("function " + portName + "_parse(msg) {\n");
             builder.append("var parsedMsg = \"\";\n");
-            builder.append("var msgID = Number(msg.substring(0, 6));\n");
-            int char_i = 6;
+            builder.append("var msgID = readByte(msg.substring(0, 6), 2);\n");
             boolean mIsFirst = true;
             for(Message m : eco.getPort().getSends()) {
+                int char_i = 6;
+                int param_l;
                 String msgID = "";
                 if(m.hasAnnotation("code")) {
                     msgID = m.annotation("code").iterator().next();
@@ -150,9 +169,10 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
                        builder.append("parsedMsg += \", \";\n");
                    }
                    
-                   builder.append("parsedMsg += Number(msg.substring(" + char_i);
-                   char_i += parseInt(p.getType().annotation("c_byte_size").iterator().next()) * 3;
-                   builder.append(", " + char_i + "));\n");
+                   builder.append("parsedMsg += readByte(msg.substring(" + char_i);
+                   param_l = parseInt(p.getType().annotation("c_byte_size").iterator().next());
+                   char_i += param_l * 3;
+                   builder.append(", " + char_i + "), " + param_l + ");\n");
                 }
                 builder.append("parsedMsg += \")\";\n");
 
