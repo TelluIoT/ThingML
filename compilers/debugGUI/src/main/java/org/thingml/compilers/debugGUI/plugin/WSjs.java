@@ -77,21 +77,27 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
 "}\n\n"
                 + "function intToBytes(i, nbB) {\n" +
 "	var n = nbB;\n" +
+"	var tmp = i;\n" +
 "	var res = \"\";\n" +
 "	while(n > 1){\n" +
-"		res += intToXdigitString(Math.floor(i / Math.pow(256, n-1)), 3);\n" +
+"		res += intToXdigitString(Math.floor(tmp / Math.pow(256, n)), 3);\n" +
+"		tmp = i - res;\n" +
 "		n--;\n" +
 "	}\n" +
 "	res += intToXdigitString(i % 256, 3);\n" +
 "	return res;\n" +
-"}\n\n"
-                + "function readByte(i, nbB) {\n" +
+"}\n" +
+"\n" +
+"function readByte(i, nbB) {\n" +
 "	var n = nbB;\n" +
-"	var res;\n" +
+"	var res = 0;\n" +
+"	var tmp = \"\";\n" +
 "	while(n > 0) {\n" +
-"		res += Number(msg.substring((nbB-n)*3, (nbB-n+1)*3)) * Math.pow(256, n);\n" +
+"		tmp = i.substring((nbB-n)*3, (nbB-n+1)*3);\n" +
+"		res += Number(tmp) * Math.pow(256, (n-1));\n" +
 "		n--;\n" +
 "	}\n" +
+"	return res;\n" +
 "}\n\n");
         
         for(ExternalConnector eco : this.getExternalConnectors()) {
