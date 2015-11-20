@@ -147,6 +147,22 @@ public abstract class CCompilerContext extends Context {
         }
         return false;
     }
+    
+    // Argh!!
+    protected Instance concreteInstance = null;
+
+    public void setConcreteInstance(Instance inst) {
+        concreteInstance = inst;
+    }
+
+    public Instance getConcreteInstance() {
+        return concreteInstance;
+    }
+
+    public void clearConcreteInstance() {
+        concreteInstance = null;
+    }
+    
     // The concrete thing for which the code is being generated
     protected Thing concreteThing = null;
 

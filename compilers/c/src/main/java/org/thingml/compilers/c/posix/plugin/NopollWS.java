@@ -26,8 +26,11 @@ import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
+import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingmlFactory;
+import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
 
@@ -44,10 +47,25 @@ public class NopollWS extends CNetworkLibraryGenerator {
     public NopollWS(Configuration cfg, CCompilerContext ctx, List<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx);
     }
+    
+    private void addDependencies() {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
+        if(!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "nopoll")) {
+            ThingmlFactory factory;
+            factory = ThingmlFactoryImpl.init();
+            PlatformAnnotation pan = factory.createPlatformAnnotation();
+            pan.setName("add_c_libraries");
+            pan.setValue("nopoll");
+            cfg.allAnnotations().add(pan);
+        }
+    }
 
     @Override
     public void generateNetworkLibrary() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
+        if(!this.getExternalConnectors().isEmpty()) {
+            addDependencies();
+        }
         
         for(ExternalConnector eco : this.getExternalConnectors()) {
             

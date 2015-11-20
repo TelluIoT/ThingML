@@ -43,14 +43,13 @@ public class PosixMQTT extends CNetworkLibraryGenerator {
 
     public PosixMQTT(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
-         addDependencies(cfg, ctx);
     }
     public PosixMQTT(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
-         addDependencies(cfg, ctx);
     }
     
-    private void addDependencies(Configuration cfg, CCompilerContext ctx) {
+    private void addDependencies() {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
         if(!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "mosquitto")) {
             ThingmlFactory factory;
             factory = ThingmlFactoryImpl.init();
@@ -64,6 +63,10 @@ public class PosixMQTT extends CNetworkLibraryGenerator {
     @Override
     public void generateNetworkLibrary() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
+        if(!this.getExternalConnectors().isEmpty()) {
+            addDependencies();
+        }
+        
         for(ExternalConnector eco : this.getExternalConnectors()) {
             
             String platform = "";

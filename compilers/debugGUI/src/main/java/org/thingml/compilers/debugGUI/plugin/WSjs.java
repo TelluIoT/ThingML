@@ -60,45 +60,45 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
     @Override
     public void generateMessageForwarders(StringBuilder builder) {
         builder.append("function intToXdigitString(i, digit) {\n" +
-"	if ((i >= 0) && (digit > 0)) {\n" +
-"		var buf = \"\" + i;\n" +
-"		while (buf.length < digit) {\n" +
-"			buf = \"0\" + buf;\n" +
-"		}\n" +
-"		return buf;\n" +
-"	} else {\n" +
-"		var buf = \"\";\n" +
-"		while (buf.length < digit) {\n" +
-"			buf = \"0\" + buf;\n" +
-"		}\n" +
-"		return buf;\n" +
-"	}\n" +
-"//return i;\n" +
-"}\n\n"
-                + "function intToBytes(i, nbB) {\n" +
-"	var n = nbB;\n" +
-"	var tmp = i;\n" +
-"	var res = \"\";\n" +
-"	while(n > 1){\n" +
-"		res += intToXdigitString(Math.floor(tmp / Math.pow(256, n)), 3);\n" +
-"		tmp = i - res;\n" +
-"		n--;\n" +
-"	}\n" +
-"	res += intToXdigitString(i % 256, 3);\n" +
-"	return res;\n" +
-"}\n" +
-"\n" +
-"function readByte(i, nbB) {\n" +
-"	var n = nbB;\n" +
-"	var res = 0;\n" +
-"	var tmp = \"\";\n" +
-"	while(n > 0) {\n" +
-"		tmp = i.substring((nbB-n)*3, (nbB-n+1)*3);\n" +
-"		res += Number(tmp) * Math.pow(256, (n-1));\n" +
-"		n--;\n" +
-"	}\n" +
-"	return res;\n" +
-"}\n\n");
+        "	if ((i >= 0) && (digit > 0)) {\n" +
+        "		var buf = \"\" + i;\n" +
+        "		while (buf.length < digit) {\n" +
+        "			buf = \"0\" + buf;\n" +
+        "		}\n" +
+        "		return buf;\n" +
+        "	} else {\n" +
+        "		var buf = \"\";\n" +
+        "		while (buf.length < digit) {\n" +
+        "			buf = \"0\" + buf;\n" +
+        "		}\n" +
+        "		return buf;\n" +
+        "	}\n" +
+        "//return i;\n" +
+        "}\n\n"
+                        + "function intToBytes(i, nbB) {\n" +
+        "	var n = nbB;\n" +
+        "	var tmp = i;\n" +
+        "	var res = \"\";\n" +
+        "	while(n > 1){\n" +
+        "		res += intToXdigitString(Math.floor(tmp / Math.pow(256, n)), 3);\n" +
+        "		tmp = i - res;\n" +
+        "		n--;\n" +
+        "	}\n" +
+        "	res += intToXdigitString(i % 256, 3);\n" +
+        "	return res;\n" +
+        "}\n" +
+        "\n" +
+        "function readByte(i, nbB) {\n" +
+        "	var n = nbB;\n" +
+        "	var res = 0;\n" +
+        "	var tmp = \"\";\n" +
+        "	while(n > 0) {\n" +
+        "		tmp = i.substring((nbB-n)*3, (nbB-n+1)*3);\n" +
+        "		res += Number(tmp) * Math.pow(256, (n-1));\n" +
+        "		n--;\n" +
+        "	}\n" +
+        "	return res;\n" +
+        "}\n\n");
         
         for(ExternalConnector eco : this.getExternalConnectors()) {
             String portName;

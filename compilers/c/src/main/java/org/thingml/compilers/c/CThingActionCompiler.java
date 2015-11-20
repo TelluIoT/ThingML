@@ -165,10 +165,38 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
+        CCompilerContext nctx = (CCompilerContext) ctx;
         if (expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
             builder.append(expression.getProperty().getName());
         } else if (expression.getProperty() instanceof Property) {
-            builder.append("_instance->" + expression.getProperty().qname("_") + "_var");
+            if(nctx.getConcreteInstance() != null) {
+                Property p = (Property) expression.getProperty();
+                if (!p.isChangeable()) {
+                    boolean found = false;
+                    for(ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
+                        String tmp = pa.getInstance().getInstance().findContainingConfiguration().getName() + "_" + pa.getInstance().getInstance().getName();
+
+                        if(nctx.getConcreteInstance().getName().compareTo(tmp)==0){
+                            if(pa.getProperty().getName().compareTo(p.getName()) == 0) {
+                                generate(pa.getInit(), builder, ctx);
+                                found = true;
+                                System.out.println("ass: '" + tmp + "'");
+                                System.out.println("init: '" + tmp + "'");
+                                //System.out.println("BuilderA: '" + builder + "'");
+                                break;
+                            }
+                        }
+                    }
+                    if(!found){
+                        generate(p.getInit(), builder, ctx);
+                        //System.out.println("BuilderB: '" + builder + "'");
+                    }
+                } else {
+                    builder.append("_instance->" + expression.getProperty().qname("_") + "_var");
+                }
+            } else {
+                builder.append("_instance->" + expression.getProperty().qname("_") + "_var");
+            }
         }
     }
 

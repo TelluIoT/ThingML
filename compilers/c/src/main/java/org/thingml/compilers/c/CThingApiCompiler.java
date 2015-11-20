@@ -138,12 +138,17 @@ public class CThingApiCompiler extends ThingApiCompiler {
         // Create variables for all the properties defined in the Thing and States
         builder.append("// Variables for the properties of the instance\n");
         for (Property p : thing.allPropertiesInDepth()) {
-            builder.append(ctx.getCType(p.getType()) + " " + ctx.getCVarName(p));
+            builder.append(ctx.getCType(p.getType()) + " ");
             if (p.getCardinality() != null) {//array
+                builder.append("* ");
+            }
+            builder.append(ctx.getCVarName(p));
+            
+            /*if (p.getCardinality() != null) {//array
                 builder.append("[");
                 ctx.getCompiler().getThingActionCompiler().generate(p.getCardinality(), builder, ctx);
                 builder.append("]");
-            }
+            }*/
             builder.append(";\n");
         }
         builder.append("\n};\n");

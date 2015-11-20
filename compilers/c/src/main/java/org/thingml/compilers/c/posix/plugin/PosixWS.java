@@ -43,15 +43,14 @@ public class PosixWS extends CNetworkLibraryGenerator {
 
     public PosixWS(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
-        addDependencies(cfg, ctx);
     }
     
     public PosixWS(Configuration cfg, CCompilerContext ctx, List<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx);
-        addDependencies(cfg, ctx);
     }
     
-    private void addDependencies(Configuration cfg, CCompilerContext ctx) {
+    private void addDependencies() {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
         if(!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "websockets")) {
             ThingmlFactory factory;
             factory = ThingmlFactoryImpl.init();
@@ -65,6 +64,9 @@ public class PosixWS extends CNetworkLibraryGenerator {
     @Override
     public void generateNetworkLibrary() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
+        if(!this.getExternalConnectors().isEmpty()) {
+            addDependencies();
+        }
         
         for(ExternalConnector eco : this.getExternalConnectors()) {
             

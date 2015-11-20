@@ -204,6 +204,21 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         for (Instance inst : cfg.allInstances()) {
             builder.append("//Instance " + inst.getName() + "\n");
+            
+            builder.append("// Variables for the properties of the instance\n");
+            for (Property p : inst.getType().allPropertiesInDepth()) {
+                if (p.getCardinality() != null) {//array
+                builder.append(ctx.getCType(p.getType()) + " ");
+                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(p));
+                builder.append("[");
+                ctx.setConcreteInstance(inst);
+                ctx.getCompiler().getThingActionCompiler().generate(p.getCardinality(), builder, ctx);
+                ctx.clearConcreteInstance();
+                builder.append("]");
+                builder.append(";\n");
+                }
+            }
+            
             builder.append(ctx.getInstanceVarDecl(inst) + "\n");
             
             for(Port p : inst.getType().allPorts()) {
@@ -1525,7 +1540,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(";\n");
             }
         }
-
+        
+        
+        for (Property p : inst.getType().allPropertiesInDepth()) {
+            if (p.getCardinality() != null) {//array
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = &");
+                builder.append("array_" + inst.getName() + "_" + ctx.getVariableName(p));
+                builder.append(";\n");
+            }
+        }
         // Init array properties
         Map<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> expressions = cfg.initExpressionsForInstanceArrays(inst);
 
@@ -1597,19 +1620,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             
             builder.append("//" + eco.getName() + ":\n");
             builder.append(eco.getName() + "_setup();\n");
-            /*for (String initFunction : eco.annotation("c_external_init")) {
-                builder.append(initFunction + ";\n");
-                builder.append("//" + eco.getInst().getInstance().getName() + ":\n");
-            }*/
-            /*builder.append(eco.getName() + "_set_listener_id(" + cfg.getName()+ "_" 
-                        + eco.getInst().getInstance().getName()
-                        + "_var.id_" + eco.getPort().getName() + ");\n");*/
-            /*for (String set_listener_idFunction : eco.annotation("c_external_set_listener_id")) {
-                builder.append(set_listener_idFunction + "(" + cfg.getName()+ "_" 
-                        + eco.getInst().getInstance().getName()
-                        + "_var.id_" + eco.getPort().getName() + ");\n");
-            }*/
-            //if (eco.hasAnnotation("c_external_threaded_listener")) {
             if (ctx.getCompiler().getID().compareTo("posix") == 0) {
                 builder.append("pthread_t thread_");
                 builder.append(eco.getInst().getInstance().getName() + "_");
@@ -1625,21 +1635,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(eco.getName() + "_start_receiver_process");
                 builder.append(", NULL);\n"); 
             }
-            /*for (String threaded_listener_function : eco.annotation("c_external_threaded_listener")) {
-                builder.append("pthread_t thread_");
-                builder.append(eco.getInst().getInstance().getName() + "_");
-                builder.append(eco.getPort().getName() + "_");
-                builder.append(eco.getProtocol());
-                builder.append(";\n");
-                
-                builder.append("pthread_create( &thread_");
-                builder.append(eco.getInst().getInstance().getName() + "_");
-                builder.append(eco.getPort().getName() + "_");
-                builder.append(eco.getProtocol());
-                builder.append(", NULL, ");
-                builder.append(threaded_listener_function);
-                builder.append(", NULL);\n");          
-            }*/
         }
         builder.append("\n\n// End Network Initilization \n\n");
         
@@ -1652,7 +1647,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         
-        //generateDebuggTraceCfg(cfg, builder, ctx);
     }
 
     protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
