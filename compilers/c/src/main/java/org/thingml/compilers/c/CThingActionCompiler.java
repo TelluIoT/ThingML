@@ -180,8 +180,8 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                             if(pa.getProperty().getName().compareTo(p.getName()) == 0) {
                                 generate(pa.getInit(), builder, ctx);
                                 found = true;
-                                System.out.println("ass: '" + tmp + "'");
-                                System.out.println("init: '" + tmp + "'");
+                                //System.out.println("ass: '" + tmp + "'");
+                                //System.out.println("init: '" + tmp + "'");
                                 //System.out.println("BuilderA: '" + builder + "'");
                                 break;
                             }
