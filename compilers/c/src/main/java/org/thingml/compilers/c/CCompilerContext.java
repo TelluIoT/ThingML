@@ -522,24 +522,24 @@ public abstract class CCompilerContext extends Context {
             //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
 
             if(pt.isIsArray()) {
-                builder.append("\n// cardinality: " + pt.getCardinality().toString() + ": ");
-                ctx.getCompiler().getThingActionCompiler().generate(pt.getCardinality(), builder, ctx);
-                builder.append("\n");
+                builder.append("\n// cardinality: \n");
+               throw new Error("ERROR: Attempting to serialize an array (for type " + t.getName() + "). This is not allowed.");
+                
                 //TODO enqueue dequeue of array
-            }
+            } else {
+                builder.append("union u_" + v + "_t {\n");
+                builder.append(getCType(t) + " p;\n");
+                builder.append("byte bytebuffer[" + getCByteSize(t, 0) + "];\n");
+                builder.append("} u_" + v + ";\n");
+                builder.append("u_" + v + ".p = " + v + ";\n");
             
-            builder.append("union u_" + v + "_t {\n");
-            builder.append(getCType(t) + " p;\n");
-            builder.append("byte bytebuffer[" + getCByteSize(t, 0) + "];\n");
-            builder.append("} u_" + v + ";\n");
-            builder.append("u_" + v + ".p = " + v + ";\n");
-
-            while (i > 0) {
-                i = i - 1;
-                //if (i == 0) 
-                //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
-                builder.append("_fifo_enqueue( u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
-                //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
+                while (i > 0) {
+                    i = i - 1;
+                    //if (i == 0) 
+                    //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
+                    builder.append("_fifo_enqueue( u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
+                    //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
+                }
             }
         }
     }

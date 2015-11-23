@@ -706,6 +706,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 for (Parameter p : m.getParameters()) {
                     builder.append(", ");
                     builder.append(ctx.getCType(p.getType()));
+                    
+                    if(ctx.isPointer(p.getType()) || p.isIsArray()) {
+                         builder.append(" *");
+                    }
+                    
                     builder.append(" ");
                     builder.append("param_" + p.getName());
                 }
@@ -721,6 +726,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 for (Parameter p : m.getParameters()) {
                     builder.append(", ");
                     builder.append(ctx.getCType(p.getType()));
+                    
+                    if(ctx.isPointer(p.getType()) || p.isIsArray()) {
+                         builder.append(" *");
+                    }
                 }
                 
                 builder.append(")) (**cur).msg_handler[i];\n" +
