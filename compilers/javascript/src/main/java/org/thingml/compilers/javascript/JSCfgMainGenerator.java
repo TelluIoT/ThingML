@@ -24,6 +24,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -116,7 +117,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                     }
                 }
             }
-            if (debug || i.isDefined("debug", "true")) {
+            //if (debug || i.isDefined("debug", "true")) {
+            DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
+            if (debug || debugProfile.getDebugInstances().contains(i)) {
                 builder.append(", true");
             } else {
                 builder.append(", false");
@@ -125,12 +128,14 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             builder.append(reference(i.getName(), useThis) + ".setThis(" + reference(i.getName(), useThis) + ");\n");
             if (useThis) {
                 builder.append("this." + i.getName() + ".build();\n");
-                if (debug || i.isDefined("debug", "true")) {
+                //if (debug || i.isDefined("debug", "true")) {
+                if (debug || debugProfile.getDebugInstances().contains(i)) {
                     builder.append("console.log(colors.cyan(\"INIT: \" + this." + i.getName() + "));\n");
                 }
             } else {
                 builder.append(i.getName() + ".build();\n");
-                if (debug || i.isDefined("debug", "true")) {
+                //if (debug || i.isDefined("debug", "true")) {
+                if (debug || debugProfile.getDebugInstances().contains(i)) {
                     builder.append("console.log(colors.cyan(\"INIT: \" + " + i.getName() + "));\n");
                 }
             }

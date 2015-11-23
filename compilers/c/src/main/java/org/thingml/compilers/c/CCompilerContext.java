@@ -590,7 +590,7 @@ public abstract class CCompilerContext extends Context {
     }
 
     //FIXME @Lyadis to merge this debug code with the rest of the compilers. Knowing what to debug is not C-specific but is a general concern, for which we already have some (partial) solutions! we should not duplicate that in each compiler!!!
-    public boolean isToBeDebugged(Configuration cfg) {
+    /*public boolean isToBeDebugged(Configuration cfg) {
         //DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
         //if(!(debugProfile==null) && debugProfile.getDebugFunctions().contains(f)) {}
         if(cfg.hasAnnotation("debug")) {
@@ -749,6 +749,6 @@ public abstract class CCompilerContext extends Context {
         }
         
         return res;
-    }
+    }*/
 
 }

@@ -21,20 +21,21 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 
 import java.util.List;
 import java.util.Map;
+import org.thingml.compilers.DebugProfile;
 
 
 public class CThingApiCompiler extends ThingApiCompiler {
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
-        generateCHeader(thing, (CCompilerContext) ctx);
+        generateCHeader(thing, (CCompilerContext) ctx, ctx.getCompiler().getDebugProfiles().get(thing));
     }
 
-    protected void generateCHeader(Thing thing, CCompilerContext ctx) {
+    protected void generateCHeader(Thing thing, CCompilerContext ctx, DebugProfile debugProfile) {
 
         StringBuilder builder = new StringBuilder();
 
-        generateCHeaderCode(thing, ctx, builder);
+        generateCHeaderCode(thing, ctx, builder, debugProfile);
 
         // Get the template and replace the values
         String htemplate = ctx.getThingHeaderTemplate();
@@ -45,7 +46,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         ctx.getBuilder(ctx.getPrefix() + thing.getName() + ".h").append(htemplate);
     }
 
-    protected void generateCHeaderCode(Thing thing, CCompilerContext ctx, StringBuilder builder) {
+    protected void generateCHeaderCode(Thing thing, CCompilerContext ctx, StringBuilder builder, DebugProfile debugProfile) {
 
         builder.append("/*****************************************************************************\n");
         builder.append(" * Headers for type : " + thing.getName() + "\n");
@@ -55,7 +56,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         generateCHeaderAnnotation(thing, builder, ctx);
 
         // Define the data structure for instances
-        generateInstanceStruct(thing, builder, ctx);
+        generateInstanceStruct(thing, builder, ctx, debugProfile);
 
         // Define the public API
         generatePublicPrototypes(thing, builder, ctx);
@@ -80,7 +81,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         }
     }
 
-    protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+    protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("// Definition of the instance stuct:\n");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
@@ -89,7 +90,8 @@ public class CThingApiCompiler extends ThingApiCompiler {
         
         builder.append("// Variables for the ID of the ports of the instance\n");
         
-        if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
+        //if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
+        if(debugProfile.isActive()) {
             builder.append("bool debug;\n");
         }
         

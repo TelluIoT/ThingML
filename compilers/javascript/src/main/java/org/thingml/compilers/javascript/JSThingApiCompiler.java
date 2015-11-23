@@ -130,7 +130,8 @@ public class JSThingApiCompiler extends ThingApiCompiler {
     protected void callListeners(Port p, Message m, StringBuilder builder, Context ctx, DebugProfile debugProfile) {
         final boolean debug = debugProfile.getDebugMessages().get(p) != null && debugProfile.getDebugMessages().get(p).contains(m);
         if (debug) {
-            builder.append("if(_this.debug) console.log(colors.green(_this.name + \" (" + p.findContainingThing().getName() + ") : " + p.getName() + "!" + m.getName() + "(");
+            //builder.append("if(_this.debug) console.log(colors.green(_this.name + \" (" + p.findContainingThing().getName() + ") : " + p.getName() + "!" + m.getName() + "(");
+            builder.append("if(_this.debug) console.log(colors.green(_this.name + \"" + ctx.traceSendMessage(p.getOwner(), p, m) + "(");
             int i = 0;
             for (Parameter pa : m.getParameters()) {
                 if (i > 0)

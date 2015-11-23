@@ -100,20 +100,6 @@ public abstract class ThingMLCompiler {
     //FIXME: refactor code to avoid code duplication (should be possible to have one sub-method that we call twice with different params)
     public void processDebug(Configuration cfg) {
         final boolean debugCfg = cfg.isDefined("debug", "true");
-        /*List<Instance> debugInstances = new ArrayList<Instance>();
-        if (debugCfg) {//collect all instances not marked with @debug "false"
-            for (Instance i : cfg.allInstances()) {
-                if (!i.isDefined("debug", "false")) {
-                    debugInstances.add(i);
-                }
-            }
-        } else { //collect all instances marked with @debug "true"
-            for (Instance i : cfg.allInstances()) {
-                if (i.isDefined("debug", "true")) {
-                    debugInstances.add(i);
-                }
-            }
-        }*/
 
         Set<Thing> debugThings = new HashSet<>();
         for (Instance i : cfg.allInstances()) {
@@ -132,7 +118,21 @@ public abstract class ThingMLCompiler {
             boolean debugBehavior = false;
             List<Function> debugFunctions = new ArrayList<Function>();
             List<Property> debugProperties = new ArrayList<>();
+            List<Instance> debugInstances = new ArrayList<>();
             Map<Port, List<Message>> debugMessages = new HashMap<>();
+            
+            
+            for (Instance i : cfg.allInstances()) {
+                if (debugCfg) {
+                    if (!i.isDefined("debug", "false")) {
+                        debugInstances.add(i);
+                    }
+                } else {
+                    if (i.isDefined("debug", "true") || i.getType().isDefined("debug", "true")) {
+                       debugInstances.add(i);
+                    }
+                }
+            }
 
             if (debugThings.contains(thing)) {
                 if (!thing.isDefined("debug", "false")) {//collect everything not marked with @debug "false"
@@ -189,7 +189,7 @@ public abstract class ThingMLCompiler {
                     }
                 }
             }
-            DebugProfile profile = new DebugProfile(thing, debugBehavior, debugFunctions, debugProperties, debugMessages);
+            DebugProfile profile = new DebugProfile(thing, debugBehavior, debugFunctions, debugProperties, debugMessages, debugInstances);
             debugProfiles.put(thing, profile);
         }
     }

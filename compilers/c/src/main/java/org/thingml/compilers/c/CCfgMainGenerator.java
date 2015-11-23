@@ -746,6 +746,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(");\n");
                 
                 //DEBUG
+                
                 if(ctx.traceLevelIsAbove(cfg, 3)) {
                     builder.append(ctx.getTraceFunctionForString(cfg) + "\"[Dispatcher] Calling handler for " 
                         + m.getName() + "\\n\");\n");
@@ -1576,10 +1577,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("\n");
         
-        //DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
         //if(!(debugProfile==null) && debugProfile.g) {}
-        if(ctx.containsDebug(cfg, inst.getType())) {
-            if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
+        //if(ctx.containsDebug(cfg, inst.getType())) {
+        if(debugProfile.isActive()) {
+            //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
+            if(debugProfile.getDebugInstances().contains(inst)) {
                 builder.append(ctx.getInstanceVarName(inst) + ".debug = true;\n");
                 builder.append(inst.getType().getName() + "_print_debug(&" + ctx.getInstanceVarName(inst) + ", \""
                         + "[" + inst.getName() + "] Initialization\\n\");\n");

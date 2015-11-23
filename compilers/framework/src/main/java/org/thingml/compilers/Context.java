@@ -25,6 +25,13 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.*;
+import org.sintef.thingml.Function;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.Port;
+import org.sintef.thingml.Region;
+import org.sintef.thingml.State;
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.Thing;
 
 public class Context {
 
@@ -283,5 +290,64 @@ public class Context {
         else return outputDirectory;
     }
 
-
+    boolean debugTraceWithID = false;
+    public void setDebugWithID(boolean b) {
+        debugTraceWithID = b;
+    }
+    
+    public String traceOnEntry(Thing t, StateMachine sm) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): Enters " + sm.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceOnEntry(Thing t, Region r, State s) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): Enters " + r.getName() + ":" + s.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceOnExit(Thing t, Region r, State s) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): Exits " + r.getName() + ":" + s.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceSendMessage(Thing t, Port p, Message m) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): " + p.getName() + "!" + m.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceReceiveMessage(Thing t, Port p, Message m) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): " + p.getName() + "?" + m.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceFunctionBegin(Thing t, Function f) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): Start " + f.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceFunctionDone(Thing t, Function f) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): " + f.getName() + "Done.";
+        } else {
+            return null;
+        }
+    }
 }

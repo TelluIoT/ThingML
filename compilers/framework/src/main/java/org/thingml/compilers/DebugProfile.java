@@ -32,13 +32,15 @@ public class DebugProfile {
     final private List<Function> debugFunctions;
     final private List<Property> debugProperties;
     final private Map<Port, List<Message>> debugMessages;
+    final private List<Instance> debugInstances;
 
-    public DebugProfile(Thing thing, boolean debugBehavior, List<Function> debugFunctions, List<Property> debugProperties, Map<Port, List<Message>> debugMessages) {
+    public DebugProfile(Thing thing, boolean debugBehavior, List<Function> debugFunctions, List<Property> debugProperties, Map<Port, List<Message>> debugMessages, List<Instance> debugInstances) {
         this.thing = thing;
         this.debugBehavior = debugBehavior;
         this.debugFunctions = debugFunctions;
         this.debugProperties = debugProperties;
         this.debugMessages = debugMessages;
+        this.debugInstances = debugInstances;
     }
 
     public Thing getThing() {
@@ -59,6 +61,10 @@ public class DebugProfile {
 
     public Map<Port, List<Message>> getDebugMessages() {
         return debugMessages;
+    }
+    
+    public List<Instance> getDebugInstances() {
+        return debugInstances;
     }
 
     public boolean isActive() {
