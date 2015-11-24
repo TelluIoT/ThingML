@@ -631,7 +631,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                         builder.append(i.hashCode());
                     builder.append("\"," + r.getMessage().getName() + "Type, " + r.getPort().getName() + "_port, state_" + s.qname("_") + ")");
                 }
-                if (i.getGuard() != null || i.getAction() != null)
+                if (i.getGuard() != null || i.getAction() != null || debugProfile.isDebugBehavior())
                     builder.append("{\n");
                 if (i.getGuard() != null) {
                     builder.append("@Override\n");
@@ -666,7 +666,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                         ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
                     builder.append("}\n\n");
                 }
-                if (i.getGuard() != null || i.getAction() != null)
+                if (i.getGuard() != null || i.getAction() != null || debugProfile.isDebugBehavior())
                     builder.append("}");
                 builder.append(");\n");
             }
@@ -680,7 +680,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append(i.hashCode());
                 builder.append("\", new NullEventType(), null, state_" + s.qname("_") + ", state_" + t.getTarget().qname("_") + ")");
             }
-            if (i.getGuard() != null || i.getAction() != null)
+            if (i.getGuard() != null || i.getAction() != null || debugProfile.isDebugBehavior())
                 builder.append("{\n");
             if (i.getGuard() != null) {
                 builder.append("@Override\n");
@@ -708,7 +708,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
                 builder.append("}\n\n");
             }
-            if (i.getGuard() != null || i.getAction() != null)
+            if (i.getGuard() != null || i.getAction() != null || debugProfile.isDebugBehavior())
                 builder.append("}");
             builder.append(");\n");
         }
