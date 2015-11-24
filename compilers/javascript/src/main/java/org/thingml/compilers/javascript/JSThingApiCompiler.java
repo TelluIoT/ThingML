@@ -106,7 +106,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                     builder.append(") {\n");
                     final boolean debug = (debugProfile != null) && debugProfile.getDebugMessages().get(p) != null && debugProfile.getDebugMessages().get(p).contains(m);
                     if (debug) {
-                        builder.append("if(this.debug) console.log(colors.green(this.name + \" (" + thing.getName() + "): " + p.getName() + "?" + m.getName() + "(");
+                        builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceReceiveMessage(thing, p, m) + "(");
                         i = 0;
                         for (Parameter pa : m.getParameters()) {
                             if (i > 0)
@@ -114,7 +114,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                             builder.append("\" + " + ctx.protectKeyword(pa.getName()) + " + \"");
                             i++;
                         }
-                        builder.append(")\"));\n");
+                        builder.append(")\");\n");
                     }
                     builder.append("this._receive(\"" + p.getName() + "\", \"" + m.getName() + "\"");
                     for (Parameter pa : m.getParameters()) {
@@ -131,7 +131,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         final boolean debug = debugProfile.getDebugMessages().get(p) != null && debugProfile.getDebugMessages().get(p).contains(m);
         if (debug) {
             //builder.append("if(_this.debug) console.log(colors.green(_this.name + \" (" + p.findContainingThing().getName() + ") : " + p.getName() + "!" + m.getName() + "(");
-            builder.append("if(_this.debug) console.log(colors.green(_this.name + \"" + ctx.traceSendMessage(p.getOwner(), p, m) + "(");
+            builder.append("" + p.getOwner().getName() + "_print_debug(_this, \"" + ctx.traceSendMessage(p.getOwner(), p, m) + "(");
             int i = 0;
             for (Parameter pa : m.getParameters()) {
                 if (i > 0)
@@ -140,7 +140,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                 builder.append(ctx.protectKeyword(pa.getName()));
                 builder.append(" + \"");
             }
-            builder.append(")\"));\n");
+            builder.append(")\");\n");
         }
 
         if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
@@ -149,7 +149,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
             if(debug) {
                 builder.append("if (arrayLength < 1) {\n");
-                builder.append("if(_this.debug) console.log(colors.red(_this.name + \" (" + p.findContainingThing().getName() + "): message lost, because no connector/listener is defined!\"));\n");
+                builder.append("" + p.getOwner().getName() + "_print_debug(_this, \"(" + p.findContainingThing().getName() + "): message lost, because no connector/listener is defined!\");\n");
                 builder.append("}\n");
             }
 

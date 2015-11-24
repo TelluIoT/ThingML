@@ -294,6 +294,9 @@ public class Context {
     public void setDebugWithID(boolean b) {
         debugTraceWithID = b;
     }
+    public boolean getDebugWithID() {
+        return debugTraceWithID;
+    }
     
     public String traceOnEntry(Thing t, StateMachine sm) {
         if(!debugTraceWithID) {

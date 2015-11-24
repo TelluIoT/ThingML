@@ -80,6 +80,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         if (debugProfile.isActive()) {
             builder.append("var colors = require('colors/safe');\n");
+            generatePrintDebugFunction(thing, builder, ctx);
         }
 
         if (thing.getStreams().size() > 0) {
@@ -171,7 +172,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(") {\n");
                 if(debugProfile.getDebugFunctions().contains(f)) {
                     //builder.append("if(_this.debug) console.log(colors.blue(_this.name + \"(" + thing.getName() + "): executing function " + f.getName() + "(");
-                    builder.append("if(_this.debug) console.log(colors.blue(_this.name + \"" + ctx.traceFunctionBegin(thing, f) + "(");
+                    builder.append("" + thing.getName() + "_print_debug(_this, \"" + ctx.traceFunctionBegin(thing, f) + "(");
                     int i = 0;
                     for (Parameter pa : f.getParameters()) {
                         if (i > 0)
@@ -180,14 +181,13 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                         builder.append(ctx.protectKeyword(pa.qname("_") + "_var"));
                         builder.append(" + \"");
                     }
-                    builder.append(")...\"));\n");
+                    builder.append(")...\");\n");
                 }
                 ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
                 
                 if(debugProfile.getDebugFunctions().contains(f)) {
                     //builder.append("if(_this.debug) console.log(colors.blue(_this.name + \"(" + thing.getName() + "): executing function " + f.getName() + "(");
-                    builder.append("if(_this.debug) console.log(colors.blue(_this.name + \"" + ctx.traceFunctionDone(thing, f) + "");
-                    builder.append("...\"));\n");
+                    builder.append("" + thing.getName() + "_print_debug(_this, \"" + ctx.traceFunctionDone(thing, f) + "\");\n");
                 }
                 builder.append("}\n\n");
 
@@ -309,7 +309,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(".entry(function () {\n");
             if (debugProfile.isDebugBehavior()) {
                 //builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"(" + s.findContainingThing().getName() + "): enters " + s.qualifiedName(":") + "\"));\n");
-                builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"" + ctx.traceOnEntry(s.findContainingThing(), s.findContainingRegion(), s) + "\"));\n");
+                builder.append("" + s.findContainingThing().getName() + "_print_debug(_this, \"" + ctx.traceOnEntry(s.findContainingThing(), s.findContainingRegion(), s) + "\");\n");
             }
             if (s.getEntry() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
@@ -319,7 +319,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(".exit(function () {\n");
             if (debugProfile.isDebugBehavior()) {
                 //builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"(" + s.findContainingThing().getName() + "): exits " + s.qualifiedName(":") + "\"));\n");
-                builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"" + ctx.traceOnExit(s.findContainingThing(), s.findContainingRegion(), s) + "\"));\n");
+                builder.append("" + s.findContainingThing().getName() + "_print_debug(_this, \"" + ctx.traceOnExit(s.findContainingThing(), s.findContainingRegion(), s) + "\");\n");
             }
             if (s.getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
@@ -424,7 +424,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
                 //debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " from " + t.getSource().qualifiedName(":") + " to " + t.getTarget().qualifiedName(":") + "\"));\n";
-                debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"" + ctx.traceReceiveMessage(p.getOwner(), p, msg) + "\"));\n";
+                debugString = "" + p.getOwner().getName() + "_print_debug(_this, \"" + ctx.traceReceiveMessage(p.getOwner(), p, msg) + "\");\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         }
         builder.append(";\n");
@@ -452,10 +452,22 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
                 //debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " in state " + ((State) t.eContainer()).qualifiedName(":") + "\"));\n";
-                debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"" + ctx.traceReceiveMessage(p.getOwner(), p, msg) + "\"));\n";
+                debugString = "" + p.getOwner().getName() + "_print_debug(_this, \"" + ctx.traceReceiveMessage(p.getOwner(), p, msg) + "\");\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         }
         builder.append(";\n");
+    }
+    
+    protected void generatePrintDebugFunction(Thing thing, StringBuilder builder, Context ctx) {
+        builder.append("//Trace function for " + thing.getName() + "\n");
+        builder.append("function " + thing.getName() + "_print_debug(instance, msg) {\n");
+        builder.append("if(instance.debug) {\n");
+        if(!ctx.getDebugWithID()) {
+            builder.append("console.log(instance.name + msg +\" X\");\n");
+        }
+        builder.append("}\n");
+        builder.append("}\n");
+        
     }
 
 }
