@@ -303,6 +303,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("switch(state) {\n");
         for (CompositeState cs : sm.allContainedCompositeStates()) {
             builder.append("case " + ctx.getStateID(cs) + ":\n");
+            if(debugProfile.isDebugBehavior()) {
+                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                        + ctx.traceOnEntry(thing, sm) + "\\n\");\n");
+            }
             ArrayList<Region> regions = new ArrayList<Region>();
             regions.add(cs);
             regions.addAll(cs.getRegion());
@@ -412,11 +416,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 */
 
                 // dispatch the current message to sub-regions
-                dispatchToSubRegions(thing, builder, sm, port, msg, ctx);
+                dispatchToSubRegions(thing, builder, sm, port, msg, ctx, debugProfile);
                 // If the state machine itself has a handler
                 if (sm.canHandle(port, msg)) {
                     // it can only be an internal handler so the last param can be null (in theory)
-                    generateMessageHandlers(thing, sm, port, msg, builder, null, sm, ctx);
+                    generateMessageHandlers(thing, sm, port, msg, builder, null, sm, ctx, debugProfile);
                 }
                 builder.append("}\n");
             }
@@ -492,7 +496,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     }
 
-    protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx) {
+    protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
 
         ArrayList<Region> regions = new ArrayList<Region>();
         regions.add(cs);
@@ -509,9 +513,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 if (states.get(0) != s) builder.append("else ");
                 builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
                 if (s instanceof CompositeState) {
-                    dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx);
+                    dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx, debugProfile);
                 }
-                generateMessageHandlers(thing, s, port, msg, builder, cs, r, ctx);
+                generateMessageHandlers(thing, s, port, msg, builder, cs, r, ctx, debugProfile);
                 builder.append("}\n");
             }
         }
@@ -527,7 +531,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
 
-    protected void generateMessageHandlers(Thing thing, State s, Port port, Message msg, StringBuilder builder, CompositeState cs, Region r, CCompilerContext ctx) {
+    protected void generateMessageHandlers(Thing thing, State s, Port port, Message msg, StringBuilder builder, CompositeState cs, Region r, CCompilerContext ctx, DebugProfile debugProfile) {
 
         boolean first = true;
 
@@ -562,11 +566,20 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(") {\n");
 
             if (h instanceof InternalTransition) {
+                if(debugProfile.isDebugBehavior()) {
+                    builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                                + ctx.traceInternal(thing, port, msg) + "\\n\");\n");
+                }
                 InternalTransition it = (InternalTransition) h;
                 ctx.getCompiler().getThingActionCompiler().generate(it.getAction(), builder, ctx);
                 if (r != null) builder.append(ctx.getStateVarName(r) + "_event_consumed = 1;\n");
             } else if (h instanceof Transition) {
+                
                 Transition et = (Transition) h;
+                if(debugProfile.isDebugBehavior()) {
+                    builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                                + ctx.traceTransition(thing, et, port, msg) + "\\n\");\n");
+                }
 
                 ctx.getCompiler().getThingActionCompiler().generate(et.getBefore(), builder, ctx);
 

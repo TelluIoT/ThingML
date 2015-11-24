@@ -1580,9 +1580,16 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
         //if(!(debugProfile==null) && debugProfile.g) {}
         //if(ctx.containsDebug(cfg, inst.getType())) {
+        boolean debugInst = false;
+        for(Instance i : debugProfile.getDebugInstances()) {
+            if(i.getName().compareTo(inst.getName()) == 0) {
+                debugInst = true;
+                break;
+            }
+        }
         if(debugProfile.isActive()) {
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
-            if(debugProfile.getDebugInstances().contains(inst)) {
+            if(debugInst) {
                 builder.append(ctx.getInstanceVarName(inst) + ".debug = true;\n");
                 builder.append(inst.getType().getName() + "_print_debug(&" + ctx.getInstanceVarName(inst) + ", \""
                         + "[" + inst.getName() + "] Initialization\\n\");\n");

@@ -123,13 +123,15 @@ public abstract class ThingMLCompiler {
             
             
             for (Instance i : cfg.allInstances()) {
-                if (debugCfg) {
-                    if (!i.isDefined("debug", "false")) {
-                        debugInstances.add(i);
-                    }
-                } else {
-                    if (i.isDefined("debug", "true") || i.getType().isDefined("debug", "true")) {
-                       debugInstances.add(i);
+                if(i.getType().getName().compareTo(thing.getName()) == 0) {
+                    if (debugCfg) {
+                        if (!i.isDefined("debug", "false")) {
+                            debugInstances.add(i);
+                        }
+                    } else {
+                        if (i.isDefined("debug", "true") || i.getType().isDefined("debug", "true")) {
+                           debugInstances.add(i);
+                        }
                     }
                 }
             }

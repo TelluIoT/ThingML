@@ -424,7 +424,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
                 //debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " from " + t.getSource().qualifiedName(":") + " to " + t.getTarget().qualifiedName(":") + "\"));\n";
-                debugString = "" + p.getOwner().getName() + "_print_debug(_this, \"" + ctx.traceReceiveMessage(p.getOwner(), p, msg) + "\");\n";
+                debugString = "" + p.getOwner().getName() + "_print_debug(_this, \"" + ctx.traceTransition(p.getOwner(), t, p, msg) + "\");\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         }
         builder.append(";\n");
@@ -452,7 +452,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
                 //debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " in state " + ((State) t.eContainer()).qualifiedName(":") + "\"));\n";
-                debugString = "" + p.getOwner().getName() + "_print_debug(_this, \"" + ctx.traceReceiveMessage(p.getOwner(), p, msg) + "\");\n";
+                debugString = "" + p.getOwner().getName() + "_print_debug(_this, \"" + ctx.traceInternal(p.getOwner(), p, msg) + "\");\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         }
         builder.append(";\n");

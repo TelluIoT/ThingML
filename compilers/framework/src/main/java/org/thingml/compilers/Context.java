@@ -26,12 +26,14 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.*;
 import org.sintef.thingml.Function;
+import org.sintef.thingml.InternalTransition;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Region;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.Transition;
 
 public class Context {
 
@@ -348,7 +350,23 @@ public class Context {
     
     public String traceFunctionDone(Thing t, Function f) {
         if(!debugTraceWithID) {
-            return " (" + t.getName() + "): " + f.getName() + "Done.";
+            return " (" + t.getName() + "): " + f.getName() + " Done.";
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceTransition(Thing t, Transition tr, Port p, Message m) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): transition " + tr.getSource().getName() + " -> " + tr.getTarget().getName() + " event " + p.getName() + "?" + m.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceInternal(Thing t, Port p, Message m) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): internal event " + p.getName() + "?" + m.getName();
         } else {
             return null;
         }

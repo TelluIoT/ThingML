@@ -119,7 +119,14 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             }
             //if (debug || i.isDefined("debug", "true")) {
             DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
-            if (debug || debugProfile.getDebugInstances().contains(i)) {
+            boolean debugInst = false;
+            for(Instance inst : debugProfile.getDebugInstances()) {
+                if(i.getName().compareTo(inst.getName()) == 0) {
+                    debugInst = true;
+                    break;
+                }
+            }
+            if (debugInst) {
                 builder.append(", true");
             } else {
                 builder.append(", false");
