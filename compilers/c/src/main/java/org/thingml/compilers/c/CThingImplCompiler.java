@@ -72,13 +72,13 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
                     String stdout = ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next();
-                    builder.append(stdout + ".print(\"[" + thing.getName() + "]\");\n");
+                    builder.append(stdout + ".print(\"(" + thing.getName() + "):\");\n");
                     builder.append(stdout + ".print(str);\n");
                 } else {
-                    builder.append("// PRINT: [" + thing.getName() + "] str");
+                    builder.append("// PRINT: (" + thing.getName() + ") str");
                 }
             } else {
-                builder.append("printf(\"[" + thing.getName() + "]%s\", str);\n");
+                builder.append("printf(\"(" + thing.getName() + "):%s\", str);\n");
             }
             
             builder.append("}\n");
@@ -214,15 +214,15 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         
         //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, func)) {
         if(debugProfile.getDebugFunctions().contains(func)) {
-            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \"["
-                    + func.getName() + "] Start\\n\");\n");
+            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                    + ctx.traceFunctionBegin(thing, func) + "\\n\");\n");
         }
         
         ctx.getCompiler().getThingActionCompiler().generate(func.getBody(), builder, ctx);
 
         if(debugProfile.getDebugFunctions().contains(func)) {
-            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \"["
-                    + func.getName() + "] End\\n\");\n");
+            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                    + ctx.traceFunctionDone(thing, func) + "\\n\");\n");
         }
         
         ctx.clearInstanceVarName();
@@ -243,15 +243,15 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         StringBuilder b_code = new StringBuilder();
         
         if(debugProfile.getDebugFunctions().contains(func)) {
-            b_code.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \"["
-                    + func.getName() + "] Start\\n\");\n");
+            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                    + ctx.traceFunctionBegin(thing, func) + "\\n\");\n");
         }
         
         ctx.getCompiler().getThingActionCompiler().generate(func.getBody(), b_code, ctx);
 
         if(debugProfile.getDebugFunctions().contains(func)) {
-            b_code.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \"["
-                    + func.getName() + "] End\\n\");\n");
+            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                    + ctx.traceFunctionDone(thing, func) + "\\n\");\n");
         }
         
         template = template.replace("/*CODE*/", b_code.toString());
@@ -326,8 +326,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("case " + ctx.getStateID(s) + ":\n");
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
             if(debugProfile.isDebugBehavior()) {
-                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \"["
-                        + s.getName() + "] Enters\\n\");\n");
+                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                        + ctx.traceOnEntry(thing, sm, s) + "\\n\");\n");
             }
             if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
             builder.append("break;\n");
@@ -370,8 +370,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             
             
             if(debugProfile.isDebugBehavior()) {
-                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \"["
-                        + s.getName() + "] Exits\\n\");\n");
+                builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                        + ctx.traceOnExit(thing, sm, s) + "\\n\");\n");
             }
             
             builder.append("break;\n");
@@ -399,8 +399,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, port, msg)) {
                 if(debugProfile.getDebugMessages().containsKey(port)) {
                     if(debugProfile.getDebugMessages().get(port).contains(msg)) {
-                        builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \" Event "
-                                + port.getName() + "?" + msg.getName() + "\\n\");\n");
+                        builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                                + ctx.traceReceiveMessage(thing, port, msg) + "\\n\");\n");
                     }
                 }
 
@@ -649,8 +649,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, port, msg)) {
                 if(debugProfile.getDebugMessages().containsKey(port)) {
                     if(debugProfile.getDebugMessages().get(port).contains(msg)) {
-                        builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \" Event "
-                                + port.getName() + "!" + msg.getName() + "\\n\");\n");
+                        builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                                + ctx.traceSendMessage(thing, port, msg) + "\\n\");\n");
                     }
                 }
                 
