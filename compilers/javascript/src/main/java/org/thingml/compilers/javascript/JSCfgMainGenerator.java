@@ -145,7 +145,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 //if (debug || i.isDefined("debug", "true")) {
                 if (debug || debugProfile.getDebugInstances().contains(i)) {
                     //builder.append("console.log(colors.cyan(\"INIT: \" + " + i.getName() + "));\n");
-                    builder.append(i.getType().getName() + "_print_debug(" + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
+                    builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
                 }
             }
         }
