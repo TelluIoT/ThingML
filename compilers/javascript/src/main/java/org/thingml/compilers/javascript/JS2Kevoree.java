@@ -16,6 +16,7 @@
 package org.thingml.compilers.javascript;
 
 import com.eclipsesource.json.JsonObject;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
@@ -33,41 +34,48 @@ import java.util.Map;
 public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
     private void generateKevScript(Context ctx, Configuration cfg) {
-        StringBuilder kevScript = ctx.getBuilder(cfg.getName() + "/kevs/main.kevs");
-        kevScript.append("//create a default JavaScript node\n");
-        kevScript.append("add node0 : JavascriptNode\n");
+        if (cfg.hasAnnotation("kevscript")) {
+            try {
+                FileUtils.copyFile(new File(cfg.annotation("kevscript").get(0)), new File(ctx.getOutputDirectory(), cfg.getName() + "/kevs/main.kevs"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            StringBuilder kevScript = ctx.getBuilder(cfg.getName() + "/kevs/main.kevs");
+            kevScript.append("//create a default JavaScript node\n");
+            kevScript.append("add node0 : JavascriptNode\n");
 
-        kevScript.append("//create a default group to manage the node(s)\n");
-        kevScript.append("add sync : WSGroup\n");
-        kevScript.append("set sync.port/node0 = \"9000\"\n");
+            kevScript.append("//create a default group to manage the node(s)\n");
+            kevScript.append("add sync : WSGroup\n");
+            kevScript.append("set sync.port/node0 = \"9000\"\n");
 
-        kevScript.append("attach node0 sync\n\n");
+            kevScript.append("attach node0 sync\n\n");
 
-        kevScript.append("//instantiate Kevoree/ThingML components\n");
-        kevScript.append("add node0." + cfg.getName() + "_0 : my.package." + cfg.getName() + "\n");
+            kevScript.append("//instantiate Kevoree/ThingML components\n");
+            kevScript.append("add node0." + cfg.getName() + "_0 : my.package." + cfg.getName() + "\n");
 
-        for (String k : ctx.getCurrentConfiguration().annotation("kevscript_import")) {
-            kevScript.append(k);
-        }
-        if (ctx.getCurrentConfiguration().hasAnnotation("kevscript_import"))
+            for (String k : ctx.getCurrentConfiguration().annotation("kevscript_import")) {
+                kevScript.append(k);
+            }
+            if (ctx.getCurrentConfiguration().hasAnnotation("kevscript_import"))
+                kevScript.append("\n");
+
+            kevScript.append("start sync\n");
+            kevScript.append("//start node0\n\n");
             kevScript.append("\n");
 
-        kevScript.append("start sync\n");
-        kevScript.append("//start node0\n\n");
-        kevScript.append("\n");
-
-        PrintWriter w = null;
-        try {
-            new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/kevs").mkdirs();
-            w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/kevs/main.kevs")));
-            w.println(kevScript);
-            w.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(w);
+            PrintWriter w = null;
+            try {
+                new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/kevs").mkdirs();
+                w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/kevs/main.kevs")));
+                w.println(kevScript);
+                w.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                IOUtils.closeQuietly(w);
+            }
         }
-
     }
 
     private void generateGruntFile(Context ctx, String outputdir) {
@@ -350,6 +358,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
     @Override
     public void generateExternalConnector(Configuration cfg, Context ctx, String... options) {
+        ctx.getCompiler().processDebug(cfg);
         updatePackageJSON(ctx, cfg);
         generateGruntFile(ctx, cfg.getName());
         generateWrapper(ctx, cfg);
