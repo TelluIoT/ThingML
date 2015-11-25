@@ -204,7 +204,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
     @Override
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
-        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/main.js");
+        final StringBuilder builder = ctx.getBuilder("main.js");
 
         boolean debug = false;
         if (cfg.isDefined("debug", "true"));

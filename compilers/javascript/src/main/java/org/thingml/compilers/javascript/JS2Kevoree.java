@@ -36,12 +36,12 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
     private void generateKevScript(Context ctx, Configuration cfg) {
         if (cfg.hasAnnotation("kevscript")) {
             try {
-                FileUtils.copyFile(new File(cfg.annotation("kevscript").get(0)), new File(ctx.getOutputDirectory(), cfg.getName() + "/kevs/main.kevs"));
+                FileUtils.copyFile(new File(cfg.annotation("kevscript").get(0)), new File(ctx.getOutputDirectory(), "/kevs/main.kevs"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            StringBuilder kevScript = ctx.getBuilder(cfg.getName() + "/kevs/main.kevs");
+            StringBuilder kevScript = ctx.getBuilder("/kevs/main.kevs");
             kevScript.append("//create a default JavaScript node\n");
             kevScript.append("add node0 : JavascriptNode\n");
 
@@ -66,8 +66,8 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
             PrintWriter w = null;
             try {
-                new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/kevs").mkdirs();
-                w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/kevs/main.kevs")));
+                new File(ctx.getOutputDirectory() + "/kevs").mkdirs();
+                w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/kevs/main.kevs")));
                 w.println(kevScript);
                 w.close();
             } catch (IOException e) {
@@ -78,7 +78,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         }
     }
 
-    private void generateGruntFile(Context ctx, String outputdir) {
+    private void generateGruntFile(Context ctx) {
         //copy Gruntfile.js
         try {
             final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Gruntfile.js");
@@ -97,7 +97,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                 i++;
             }
             pom = pom.replace("mergeLocalLibraries: []", "mergeLocalLibraries: [" + dep + "]");
-            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/" + outputdir + "/Gruntfile.js")));
+            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/Gruntfile.js")));
             w.println(pom);
             w.close();
         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
     private void updatePackageJSON(Context ctx, Configuration cfg) {
         //Update package.json
         try {
-            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/" + cfg.getName() + "/package.json");
+            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/package.json");
             final List<String> packLines = IOUtils.readLines(input);
             String pack = "";
             for (String line : packLines) {
@@ -132,7 +132,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
             final JsonObject kevProp = JsonObject.readFrom("{\"package\":\"my.package\"}");
             json.add("kevoree", kevProp);
 
-            final File f = new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/package.json");
+            final File f = new File(ctx.getOutputDirectory() + "/package.json");
             final OutputStream output = new FileOutputStream(f);
             IOUtils.write(json.toString(), output);
             IOUtils.closeQuietly(output);
@@ -153,16 +153,20 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         //Generate wrapper
 
         //Move all .js file (previously generated) into lib folder
-        final File dir = new File(ctx.getOutputDirectory() + "/" + cfg.getName());
-        final File lib = new File(dir, "lib");
+        //final File dir = new File(ctx.getOutputDirectory() + "/" + cfg.getName());
+        final File lib = new File(ctx.getOutputDirectory(), "lib");
         lib.mkdirs();
-        for (File f : dir.listFiles()) {
+        for (File f : ctx.getOutputDirectory().listFiles()) {
             if (FilenameUtils.getExtension(f.getAbsolutePath()).equals("js") && !f.getName().equals("Gruntfile.js")) {
-                f.renameTo(new File(lib, f.getName()));
+                try {
+                    FileUtils.moveFileToDirectory(f, lib, false);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
-        final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/lib/" + cfg.getName() + ".js");
+        final StringBuilder builder = ctx.getBuilder("/lib/" + cfg.getName() + ".js");
         //builder.append("var Connector = require('./Connector');\n");
         builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
 
@@ -360,7 +364,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
     public void generateExternalConnector(Configuration cfg, Context ctx, String... options) {
         ctx.getCompiler().processDebug(cfg);
         updatePackageJSON(ctx, cfg);
-        generateGruntFile(ctx, cfg.getName());
+        generateGruntFile(ctx);
         generateWrapper(ctx, cfg);
         generateKevScript(ctx, cfg);
     }

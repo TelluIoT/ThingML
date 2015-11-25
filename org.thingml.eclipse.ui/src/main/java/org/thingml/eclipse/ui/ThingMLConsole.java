@@ -124,4 +124,18 @@ public class ThingMLConsole {
 	    folder.delete();
 	}
 	
+	//FIXME: move that into a FileHelper class
+	public void emptyFolder(File folder) {
+	    File[] files = folder.listFiles();
+	    if(files!=null) { //some JVMs return null for empty dirs
+	        for(File f: files) {
+	            if(f.isDirectory()) {
+	                emptyFolder(f);
+	            } else {
+	            	f.delete();
+	            }
+	        }
+	    }
+	}
+	
 }
