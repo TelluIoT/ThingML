@@ -81,12 +81,12 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
         if(lastOpIsWindow) {
             builder.append("int i;\n");
             for(Parameter parameter : outPut.getParameters()) {
-               builder.append("int[] " + outPutName + parameter.getName() + " = new int[" + outPutName + ".size()];\n")
+               builder.append(JavaHelper.getJavaType(parameter.getType(), false, context) + "[] " + outPutName + parameter.getName() + " = new " + JavaHelper.getJavaType(parameter.getType(), false, context) + "[" + outPutName + ".size()];\n")
                        .append("i = 0;\n")
                        .append("for(" + messageType + " " + outPutName + "_msg : " + outPutName + ") {\n")
                        .append(outPutName + parameter.getName() + "[i] = " + outPutName + "_msg." + parameter.getName() + ";\n")
                        .append("i++;\n")
-                       .append("}");
+                       .append("}\n");
            }
         }
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
