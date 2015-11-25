@@ -132,7 +132,9 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("+ \")\");\n");
             }
             ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
-            builder.append("printDebug(\"" + ctx.traceFunctionDone(thing, f) + "\");");
+            if(!(debugProfile==null) && debugProfile.getDebugFunctions().contains(f)) {
+                builder.append("printDebug(\"" + ctx.traceFunctionDone(thing, f) + "\");");
+            }
             builder.append("}\n");
         }
     }
