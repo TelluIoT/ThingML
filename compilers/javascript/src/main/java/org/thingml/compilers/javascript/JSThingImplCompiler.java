@@ -62,7 +62,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     j++;
                 }
                 builder.append(") {\n");
-                ((JSThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(p, m, builder, ctx, debugProfile);
+                ((JSThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(thing, p, m, builder, ctx, debugProfile);
                 builder.append("}\n\n");
             }
         }
@@ -72,7 +72,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     public void generateImplementation(Thing thing, Context ctx) {
         debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
 
-        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/" + ctx.firstToUpper(thing.getName()) + ".js");
+        final StringBuilder builder = ctx.getBuilder(ctx.firstToUpper(thing.getName()) + ".js");
         if (ctx.getContextAnnotation("hasEnum") != null && ctx.getContextAnnotation("hasEnum").equals("true")) {
             builder.append("var Enum = require('./enums');\n");
         }
@@ -424,7 +424,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
                 //debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " from " + t.getSource().qualifiedName(":") + " to " + t.getTarget().qualifiedName(":") + "\"));\n";
-                debugString = "" + p.getOwner().getName() + "_print_debug(_this, \"" + ctx.traceTransition(p.getOwner(), t, p, msg) + "\");\n";
+                debugString = "" + t.findContainingThing().getName() + "_print_debug(_this, \"" + ctx.traceTransition(p.getOwner(), t, p, msg) + "\");\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         }
         builder.append(";\n");
@@ -452,7 +452,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
                 //debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " in state " + ((State) t.eContainer()).qualifiedName(":") + "\"));\n";
-                debugString = "" + p.getOwner().getName() + "_print_debug(_this, \"" + ctx.traceInternal(p.getOwner(), p, msg) + "\");\n";
+                debugString = "" + t.findContainingThing().getName() + "_print_debug(_this, \"" + ctx.traceInternal(p.getOwner(), p, msg) + "\");\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         }
         builder.append(";\n");

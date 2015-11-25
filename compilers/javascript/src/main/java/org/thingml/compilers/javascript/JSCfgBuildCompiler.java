@@ -74,7 +74,7 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
                 deps.asObject().add("colors", "^1.1.2");
             }
 
-            final File f = new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/package.json");
+            final File f = new File(ctx.getOutputDirectory() + "/package.json");
             f.setWritable(true);
             final PrintWriter w = new PrintWriter(new FileWriter(f));
             w.println(json.toString());

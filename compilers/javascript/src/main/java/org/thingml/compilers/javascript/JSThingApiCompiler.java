@@ -31,7 +31,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
-        final StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/" + ctx.firstToUpper(thing.getName()) + ".js");
+        final StringBuilder builder = ctx.getBuilder(ctx.firstToUpper(thing.getName()) + ".js");
 
         if (thing.allStateMachines().size() > 0) {
             //Lifecycle
@@ -127,11 +127,11 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         }
     }
 
-    protected void callListeners(Port p, Message m, StringBuilder builder, Context ctx, DebugProfile debugProfile) {
+    protected void callListeners(Thing t, Port p, Message m, StringBuilder builder, Context ctx, DebugProfile debugProfile) {
         final boolean debug = debugProfile.getDebugMessages().get(p) != null && debugProfile.getDebugMessages().get(p).contains(m);
         if (debug) {
             //builder.append("if(_this.debug) console.log(colors.green(_this.name + \" (" + p.findContainingThing().getName() + ") : " + p.getName() + "!" + m.getName() + "(");
-            builder.append("" + p.getOwner().getName() + "_print_debug(_this, \"" + ctx.traceSendMessage(p.getOwner(), p, m) + "(");
+            builder.append("" +t.getName() + "_print_debug(_this, \"" + ctx.traceSendMessage(p.getOwner(), p, m) + "(");
             int i = 0;
             for (Parameter pa : m.getParameters()) {
                 if (i > 0)
@@ -149,7 +149,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
             if(debug) {
                 builder.append("if (arrayLength < 1) {\n");
-                builder.append("" + p.getOwner().getName() + "_print_debug(_this, \"(" + p.findContainingThing().getName() + "): message lost, because no connector/listener is defined!\");\n");
+                builder.append("" + t.getName() + "_print_debug(_this, \"(" + p.findContainingThing().getName() + "): message lost, because no connector/listener is defined!\");\n");
                 builder.append("}\n");
             }
 
