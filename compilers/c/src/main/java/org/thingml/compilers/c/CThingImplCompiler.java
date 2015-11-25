@@ -72,13 +72,13 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
                     String stdout = ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next();
-                    builder.append(stdout + ".print(\"(" + thing.getName() + "):\");\n");
+                    builder.append(stdout + ".print(_instance->name);\n");
                     builder.append(stdout + ".print(str);\n");
                 } else {
                     builder.append("// PRINT: (" + thing.getName() + ") str");
                 }
             } else {
-                builder.append("printf(\"(" + thing.getName() + "):%s\", str);\n");
+                builder.append("printf(\"%s%s\", _instance->name, str);\n");
             }
             
             builder.append("}\n");

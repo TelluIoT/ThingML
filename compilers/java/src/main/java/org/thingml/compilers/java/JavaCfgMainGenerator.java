@@ -211,13 +211,13 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                 }
             }
             if (debugInst) {
-                builder.append(ctx.getInstanceName(i) + ".instanceName = " + ctx.getInstanceName(i) + ";\n");
+                builder.append(ctx.getInstanceName(i) + ".instanceName = \"" + i.getName() + "\";\n");
                 builder.append(ctx.getInstanceName(i) + ".setDebug(true);\n");
             }
             builder.append(ctx.getInstanceName(i) + ".init();\n");
-            if (debugInst) {
+            if (debugInst || debug) {
                 //builder.append("System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|cyan INIT: \" + " + ctx.getInstanceName(i) + " + \"|@\"));\n");
-                builder.append("System.out.println(\"Init: \" + " + ctx.getInstanceName(i) + ");\n");
+                builder.append(ctx.getInstanceName(i) + ".printDebug(\"" + ctx.traceInit(i.getType()) + "\");\n");
             }
         }
 

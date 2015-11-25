@@ -93,6 +93,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         //if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
         if(debugProfile.isActive()) {
             builder.append("bool debug;\n");
+            builder.append("char * name;\n");
         }
         
         for (Port p : thing.allPorts()) {
