@@ -474,6 +474,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                                 + ctx.traceInternal(thing) + "\\n\");\n");
                 }
                 ctx.getCompiler().getThingActionCompiler().generate(it.getAction(), builder, ctx);
+                builder.append("return 1;\n");
             } else if (h instanceof Transition) {
                 Transition et = (Transition) h;
                 
