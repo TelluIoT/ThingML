@@ -699,6 +699,14 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 else
                     builder.append(i.hashCode());
                 builder.append("\", new NullEventType(), null, state_" + s.qname("_") + ", state_" + t.getTarget().qname("_") + ")");
+            } else {
+                InternalTransition h = (InternalTransition) i;
+                builder.append("transitions_" + ((ThingMLElement) s.eContainer()).qname("_") + ".add(new InternalTransition(\"");
+                if (i.getName() != null)
+                    builder.append(i.getName());
+                else
+                    builder.append(i.hashCode());
+                builder.append("\", new NullEventType(), null, state_" + s.qname("_") + ")");
             }
             if (i.getGuard() != null || i.getAction() != null || debugProfile.isDebugBehavior())
                 builder.append("{\n");
