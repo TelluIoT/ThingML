@@ -170,7 +170,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                     builder.append("@Input\n");
                     builder.append("public void " + i.getName() + "_" + p.getName() + "Port(String string) {\n");
                     builder.append("final JsonObject json = JsonObject.readFrom(string);\n");
-                    builder.append("if (json.get(\"port\").asString().equals(\"" + p.getName() + "_c\")) {\n"); //might be a redundant check
+                    //builder.append("if (json.get(\"port\").asString().equals(\"" + p.getName() + "_c\")) {\n"); //might be a redundant check
                     int id = 0;
                     for (Message m : p.getReceives()) {
                         if (id > 0)
@@ -182,29 +182,30 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
 
                             builder.append(", (" + pa.getType().annotation("java_type").toArray()[0] + ") json.get(\"" + pa.getName() + "\")");
 
-                            String t = pa.getType().annotation("java_type").toArray()[0].toString();
-
-                            // switch ((String) pa.getType().annotation("java_type").toArray()[0]) {
-                            if (t.equals("int")) builder.append(".asInt()");
-                            else if (t.equals("short")) builder.append(".asInt()");
-                            else if (t.equals("long")) builder.append(".asLong()");
-                            else if (t.equals("double")) builder.append(".asDouble()");
-                            else if (t.equals("float")) builder.append(".asFloat()");
-                            else if (t.equals("char")) builder.append(".asString().charAt(0)");
-                            else if (t.equals("String")) builder.append(".asString()");
-                            else if (t.equals("byte")) builder.append(".asString().getBytes[0]");
-                            else if (t.equals("boolean")) builder.append(".asBoolean()");
-
+                            if (pa.getType().getName().equals("JSON")) {
+                                builder.append(".asObject().toString()");
+                            } else {
+                                String t = pa.getType().annotation("java_type").toArray()[0].toString();
+                                // switch ((String) pa.getType().annotation("java_type").toArray()[0]) {
+                                if (t.equals("int")) builder.append(".asInt()");
+                                else if (t.equals("short")) builder.append(".asInt()");
+                                else if (t.equals("long")) builder.append(".asLong()");
+                                else if (t.equals("double")) builder.append(".asDouble()");
+                                else if (t.equals("float")) builder.append(".asFloat()");
+                                else if (t.equals("char")) builder.append(".asString().charAt(0)");
+                                else if (t.equals("String")) builder.append(".asString()");
+                                else if (t.equals("byte")) builder.append(".asString().getBytes[0]");
+                                else if (t.equals("boolean")) builder.append(".asBoolean()");
+                            }
                         }
                         builder.append(");\n");
                         builder.append(ctx.getInstanceName(i) + ".receive(msg, " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
                         builder.append("}\n");
                         id = id + 1;
                     }
+                    //builder.append("}\n");
+                    builder.append("}\n\n");
                 }
-                builder.append("}\n");
-                builder.append("}\n\n");
-
             }
         }
 
@@ -279,15 +280,16 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                             boolean isString = pa.getType().isDefined("java_type", "String");
                             boolean isChar = pa.getType().isDefined("java_type", "char");
                             boolean isArray = (pa.getCardinality() != null);
+                            boolean isJSON = pa.getType().getName().equals("JSON");
 
                             builder.append(", \\\"" + pa.getName() + "\\\":");
                             if (isArray) builder.append("[");
-                            if (isString || isChar) builder.append("\\\"\"");
+                            if ((isString || isChar) && !isJSON) builder.append("\\\"\"");
                             else builder.append("\"");
                             builder.append(" + " + ctx.protectKeyword(ctx.getVariableName(pa)));
                             if (isString) builder.append(".replace(\"\\n\", \"\\\\n\")");
                             builder.append(" + ");
-                            if (isString || isChar) builder.append("\"\\\"");
+                            if ((isString || isChar) && !isJSON) builder.append("\"\\\"");
                             else builder.append("\"");
                             if (isArray) builder.append("]");
                         }
