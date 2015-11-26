@@ -424,8 +424,17 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
                 //debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " from " + t.getSource().qualifiedName(":") + " to " + t.getTarget().qualifiedName(":") + "\"));\n";
-                debugString = "" + t.findContainingThing().getName() + "_print_debug(_this, \"" + ctx.traceTransition(p.getOwner(), t, p, msg) + "\");\n";
+                debugString = "" + t.findContainingThing().getName() + "_print_debug(_this, \"" + ctx.traceTransition(t.findContainingThing(), t, p, msg) + "\");\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
+        } else {
+            if (debugProfile.isDebugBehavior()) {
+               builder.append(".effect(function () {\n");
+               builder.append("" + t.findContainingThing().getName() 
+                       + "_print_debug(_this, \"" 
+                       + ctx.traceTransition(t.findContainingThing(), t, p, msg) 
+                       + "\");\n");
+               builder.append("});\n");
+            }
         }
         builder.append(";\n");
     }
@@ -452,8 +461,19 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
                 //debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + t.findContainingThing().getName() + "): on " + p.getName() + "?" + msg.getName() + " in state " + ((State) t.eContainer()).qualifiedName(":") + "\"));\n";
-                debugString = "" + t.findContainingThing().getName() + "_print_debug(_this, \"" + ctx.traceInternal(p.getOwner(), p, msg) + "\");\n";
+                debugString = "" + t.findContainingThing().getName() + "_print_debug(_this, \"" + ctx.traceInternal(t.findContainingThing(), p, msg) + "\");\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
+        } else {
+            if (p != null) {
+                if (debugProfile.isDebugBehavior()) {
+                   builder.append(".effect(function () {\n");
+                   builder.append("" + t.findContainingThing().getName() 
+                           + "_print_debug(_this, \"" 
+                           + ctx.traceInternal(t.findContainingThing(), p, msg) 
+                           + "\");\n");
+                   builder.append("});\n");
+                }
+            }
         }
         builder.append(";\n");
     }

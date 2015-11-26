@@ -719,7 +719,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     if (i instanceof Transition) {
                         Transition t = (Transition) i;
                         //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + getName() + \": auto from " + ((State) t.eContainer()).qualifiedName(":") + " to " + t.getTarget().qualifiedName(":") + "|@\"));\n");
-                        //builder.append("printDebug(\"" + ctx.traceTransition(s.findContainingThing(), t, r.getPort(), r.getMessage()) + "\");\n");
+                        builder.append("printDebug(\"" + ctx.traceTransition(s.findContainingThing(), t) + "\");\n");
                     } else {
                         //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + getName() + \": auto in state " + ((State) i.eContainer()).qualifiedName(":") + "|@\"));\n");
                         //builder.append("printDebug(\"" + ctx.traceInternal(s.findContainingThing()) + "\");\n");

@@ -292,6 +292,8 @@ public class Context {
         else return outputDirectory;
     }
 
+    //Debug traces
+    
     boolean debugTraceWithID = false;
     public void setDebugWithID(boolean b) {
         debugTraceWithID = b;
@@ -358,7 +360,27 @@ public class Context {
     
     public String traceTransition(Thing t, Transition tr, Port p, Message m) {
         if(!debugTraceWithID) {
-            return " (" + t.getName() + "): transition " + tr.getSource().getName() + " -> " + tr.getTarget().getName() + " event " + p.getName() + "?" + m.getName();
+            if(p != null) {
+                return " (" + t.getName() 
+                        + "): transition " 
+                        + tr.getSource().getName() 
+                        + " -> " + tr.getTarget().getName() + " event " 
+                        + p.getName() + "?" 
+                        + m.getName();
+            } else {
+                return traceTransition(t, tr);
+            }
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceTransition(Thing t, Transition tr) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() 
+                    + "): transition " 
+                    + tr.getSource().getName() 
+                    + " -> " + tr.getTarget().getName();
         } else {
             return null;
         }
@@ -366,7 +388,19 @@ public class Context {
     
     public String traceInternal(Thing t, Port p, Message m) {
         if(!debugTraceWithID) {
-            return " (" + t.getName() + "): internal event " + p.getName() + "?" + m.getName();
+            if(p != null) {
+                return " (" + t.getName() + "): internal event " + p.getName() + "?" + m.getName(); 
+            } else {
+                return traceInternal(t);
+            }
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceInternal(Thing t) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): internal" ;
         } else {
             return null;
         }

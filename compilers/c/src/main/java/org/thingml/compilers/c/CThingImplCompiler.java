@@ -436,11 +436,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(" {\n");
 
             // dispatch the current message to sub-regions
-            dispatchEmptyToSubRegions(thing, builder, sm, ctx);
+            dispatchEmptyToSubRegions(thing, builder, sm, ctx, debugProfile);
             // If the state machine itself has a handler
             if (sm.hasEmptyHandlers()) {
                 // it can only be an internal handler so the last param can be null (in theory)
-                generateEmptyHandlers(thing, sm, builder, null, sm, ctx);
+                generateEmptyHandlers(thing, sm, builder, null, sm, ctx, debugProfile);
             }
             //New Empty Event Method
             builder.append("return 0;\n");
@@ -449,7 +449,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    public void generateEmptyHandlers(Thing thing, State s, StringBuilder builder, CompositeState cs, Region r, CCompilerContext ctx) {
+    public void generateEmptyHandlers(Thing thing, State s, StringBuilder builder, CompositeState cs, Region r, CCompilerContext ctx, DebugProfile debugProfile) {
         boolean first = true;
         
         // Gather all the empty transitions
@@ -468,10 +468,20 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
             if (h instanceof InternalTransition) {
                 InternalTransition it = (InternalTransition) h;
+                
+                if(debugProfile.isDebugBehavior()) {
+                    builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                                + ctx.traceInternal(thing) + "\\n\");\n");
+                }
                 ctx.getCompiler().getThingActionCompiler().generate(it.getAction(), builder, ctx);
             } else if (h instanceof Transition) {
                 Transition et = (Transition) h;
-
+                
+                if(debugProfile.isDebugBehavior()) {
+                    builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+                                + ctx.traceTransition(thing, et) + "\\n\");\n");
+                }
+                
                 ctx.getCompiler().getThingActionCompiler().generate(et.getBefore(), builder, ctx);
 
                 // Execute the exit actions for current states (starting at the deepest)
@@ -603,7 +613,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx) {
+    protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx, DebugProfile debugProfile) {
 
         for (Region r : cs.directSubRegions()) {
 
@@ -614,10 +624,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
                 // dispatch to sub-regions if it is a composite
                 if (s instanceof CompositeState) {
-                    dispatchEmptyToSubRegions(thing, builder, (CompositeState) s, ctx);
+                    dispatchEmptyToSubRegions(thing, builder, (CompositeState) s, ctx, debugProfile);
                 }
                 // handle message locally
-                generateEmptyHandlers(thing, s, builder, cs, r, ctx);
+                generateEmptyHandlers(thing, s, builder, cs, r, ctx, debugProfile);
 
                 builder.append("}\n");
             }
