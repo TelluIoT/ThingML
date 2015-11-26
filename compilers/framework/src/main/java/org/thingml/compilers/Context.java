@@ -371,4 +371,12 @@ public class Context {
             return null;
         }
     }
+    
+    public String traceInit(Thing t) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): Init";
+        } else {
+            return null;
+        }
+    }
 }

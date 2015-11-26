@@ -24,6 +24,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -197,16 +198,26 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("public static void main(String args[]) {\n");
         generateInstances(cfg, ctx, builder);
-
         final boolean debug = cfg.isDefined("debug", "true");
         builder.append("//Init instances (queues, etc)\n");
         for (Instance i : cfg.allInstances()) {
-            if (debug || i.isDefined("debug", "true")) {
+            //if (debug || i.isDefined("debug", "true")) {
+            DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
+            boolean debugInst = false;
+            for(Instance inst : debugProfile.getDebugInstances()) {
+                if(i.getName().equals(inst.getName())) {
+                    debugInst = true;
+                    break;
+                }
+            }
+            if (debugInst) {
+                builder.append(ctx.getInstanceName(i) + ".instanceName = \"" + i.getName() + "\";\n");
                 builder.append(ctx.getInstanceName(i) + ".setDebug(true);\n");
             }
             builder.append(ctx.getInstanceName(i) + ".init();\n");
-            if (debug || i.isDefined("debug", "true")) {
-                builder.append("System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|cyan INIT: \" + " + ctx.getInstanceName(i) + " + \"|@\"));\n");
+            if (debugInst || debug) {
+                //builder.append("System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|cyan INIT: \" + " + ctx.getInstanceName(i) + " + \"|@\"));\n");
+                builder.append(ctx.getInstanceName(i) + ".printDebug(\"" + ctx.traceInit(i.getType()) + "\");\n");
             }
         }
 

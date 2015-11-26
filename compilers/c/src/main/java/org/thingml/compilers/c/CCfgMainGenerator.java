@@ -232,6 +232,23 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     
                 }
             }
+            
+            DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
+            //if(!(debugProfile==null) && debugProfile.g) {}
+            //if(ctx.containsDebug(cfg, inst.getType())) {
+            boolean debugInst = false;
+            for(Instance i : debugProfile.getDebugInstances()) {
+                if(i.getName().compareTo(inst.getName()) == 0) {
+                    debugInst = true;
+                    break;
+                }
+            }
+            if(debugProfile.isActive()) {
+                //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
+                if(debugInst) {
+                    builder.append("char * " + ctx.getInstanceVarName(inst) + "_name = \"" + inst.getName() + "\";\n");
+                }
+            }
         }
 
         builder.append("\n");
@@ -1591,8 +1608,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
             if(debugInst) {
                 builder.append(ctx.getInstanceVarName(inst) + ".debug = true;\n");
+                builder.append(ctx.getInstanceVarName(inst) + ".name = " + ctx.getInstanceVarName(inst) + "_name;\n");
                 builder.append(inst.getType().getName() + "_print_debug(&" + ctx.getInstanceVarName(inst) + ", \""
-                        + "[" + inst.getName() + "] Initialization\\n\");\n");
+                        + ctx.traceInit(inst.getType()) + "\\n\");\n");
             } else {
                 builder.append(ctx.getInstanceVarName(inst) + ".debug = false;\n");
             }

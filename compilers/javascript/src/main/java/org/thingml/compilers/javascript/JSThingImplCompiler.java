@@ -466,7 +466,11 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("console.log(instance.name + msg +\"\");\n");
         }
         builder.append("}\n");
-        builder.append("}\n");
+        builder.append("}\n\n");
+        //A.prototype.A_print_debug = function(instance, msg) {
+        //A_print_debug(instance, msg);};
+        builder.append(thing.getName() + ".prototype."+ thing.getName() + "_print_debug =function(instance, msg) {\n");
+        builder.append(thing.getName() + "_print_debug(instance, msg);};");
         
     }
 
