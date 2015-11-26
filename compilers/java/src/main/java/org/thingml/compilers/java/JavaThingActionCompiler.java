@@ -168,11 +168,15 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     protected void generateReference(Message message,String messageName,Reference expression, StringBuilder builder, Context ctx) {
         String paramResult = "";
-        if (expression.getParameter() instanceof SimpleParamRef) {
-            paramResult = ".";
-        } //else : ArrayParamRef
-        ParamReference paramReference = (ParamReference) expression.getParameter(); //this method is called only when the reference parameter is a ParamReference
-        builder.append(ctx.protectKeyword(messageName) + paramResult + ctx.protectKeyword(paramReference.getParameterRef().getName()));
+        if (expression.getParameter() instanceof ParamReference) {
+            if(expression.getParameter() instanceof SimpleParamRef)
+                paramResult = ".";
+            ParamReference paramReference = (ParamReference) expression.getParameter(); //this method is called only when the reference parameter is a ParamReference
+            builder.append(ctx.protectKeyword(messageName) + paramResult + ctx.protectKeyword(paramReference.getParameterRef().getName()));
+        } else {//else : ArrayParamRef
+            builder.append(ctx.protectKeyword(messageName) + ".size()");
+        }
+
     }
 
     @Override
