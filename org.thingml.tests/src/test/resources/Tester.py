@@ -30,7 +30,7 @@ class Tester:
 			
 		for char in inputString:
 			testerFile.write('\t\tstate e' +str(i)+' {\n'+
-				'\t\t\ton entry timer!timer_start(100)\n'
+				'\t\t\ton entry timer!timer_start(10)\n'
 				'\t\t\ttransition -> e'+str(i+1)+'\n'
 				'\t\t\tevent timer?timer_timeout\n'
 				"\t\t\taction test!testIn('\\'"+inputString[0]+"\\'')\n\t\t}\n")
@@ -38,7 +38,7 @@ class Tester:
 				inputString=inputString[1:]
 			i=i+1
 		testerFile.write('\t\tstate e' +str(i)+' {\n'+
-			'\t\t\ton entry timer!timer_start(500)\n'
+			'\t\t\ton entry timer!timer_start(250)\n'
 			'\t\t\ttransition -> e'+str(i+1)+'\n'
 			'\t\t\tevent timer?timer_timeout\n\t\t}\n')
 		i=i+1

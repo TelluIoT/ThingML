@@ -26,5 +26,5 @@ package org.sintef.thingml;
  * @model
  * @generated
  */
-public interface Parameter extends Variable {
+public interface Parameter extends Variable, ReferencedElmt {
 } // Parameter

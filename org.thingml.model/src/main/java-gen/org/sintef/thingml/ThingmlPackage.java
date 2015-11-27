@@ -226,13 +226,22 @@ public interface ThingmlPackage extends EPackage {
 	int FUNCTION__CARDINALITY = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION__IS_ARRAY = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION__PARAMETERS = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+	int FUNCTION__PARAMETERS = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -241,7 +250,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION__BODY = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
+	int FUNCTION__BODY = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Function</em>' class.
@@ -250,7 +259,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
+	int FUNCTION_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.MessageImpl <em>Message</em>}' class.
@@ -436,13 +445,31 @@ public interface ThingmlPackage extends EPackage {
 	int THING__FUNCTIONS = TYPE_FEATURE_COUNT + 7;
 
 	/**
+	 * The feature id for the '<em><b>Streams</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THING__STREAMS = TYPE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THING__OPERATORS = TYPE_FEATURE_COUNT + 9;
+
+	/**
 	 * The number of structural features of the '<em>Thing</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THING_FEATURE_COUNT = TYPE_FEATURE_COUNT + 8;
+	int THING_FEATURE_COUNT = TYPE_FEATURE_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.TypedElementImpl <em>Typed Element</em>}' class.
@@ -473,13 +500,22 @@ public interface ThingmlPackage extends EPackage {
 	int TYPED_ELEMENT__CARDINALITY = 1;
 
 	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPED_ELEMENT__IS_ARRAY = 2;
+
+	/**
 	 * The number of structural features of the '<em>Typed Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPED_ELEMENT_FEATURE_COUNT = 2;
+	int TYPED_ELEMENT_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.VariableImpl <em>Variable</em>}' class.
@@ -508,6 +544,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int VARIABLE__CARDINALITY = TYPED_ELEMENT__CARDINALITY;
+
+	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE__IS_ARRAY = TYPED_ELEMENT__IS_ARRAY;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -565,6 +610,15 @@ public interface ThingmlPackage extends EPackage {
 	int PARAMETER__CARDINALITY = VARIABLE__CARDINALITY;
 
 	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETER__IS_ARRAY = VARIABLE__IS_ARRAY;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -618,6 +672,15 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY__CARDINALITY = VARIABLE__CARDINALITY;
+
+	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY__IS_ARRAY = VARIABLE__IS_ARRAY;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1902,88 +1965,6 @@ public interface ThingmlPackage extends EPackage {
 	int RECEIVE_MESSAGE_FEATURE_COUNT = EVENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.DictionaryImpl <em>Dictionary</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.DictionaryImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getDictionary()
-	 * @generated
-	 */
-	int DICTIONARY = 33;
-
-	/**
-	 * The feature id for the '<em><b>Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY__TYPE = PROPERTY__TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Cardinality</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY__CARDINALITY = PROPERTY__CARDINALITY;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY__NAME = PROPERTY__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY__ANNOTATIONS = PROPERTY__ANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Init</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY__INIT = PROPERTY__INIT;
-
-	/**
-	 * The feature id for the '<em><b>Changeable</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY__CHANGEABLE = PROPERTY__CHANGEABLE;
-
-	/**
-	 * The feature id for the '<em><b>Index Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY__INDEX_TYPE = PROPERTY_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Dictionary</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY_FEATURE_COUNT = PROPERTY_FEATURE_COUNT + 1;
-
-	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.PortImpl <em>Port</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1991,7 +1972,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPort()
 	 * @generated
 	 */
-	int PORT = 34;
+	int PORT = 33;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2055,7 +2036,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getRequiredPort()
 	 * @generated
 	 */
-	int REQUIRED_PORT = 35;
+	int REQUIRED_PORT = 34;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2128,7 +2109,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getProvidedPort()
 	 * @generated
 	 */
-	int PROVIDED_PORT = 36;
+	int PROVIDED_PORT = 35;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2185,41 +2166,68 @@ public interface ThingmlPackage extends EPackage {
 	int PROVIDED_PORT_FEATURE_COUNT = PORT_FEATURE_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.EventReferenceImpl <em>Event Reference</em>}' class.
+	 * The meta object id for the '{@link org.sintef.thingml.impl.InternalPortImpl <em>Internal Port</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.EventReferenceImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getEventReference()
+	 * @see org.sintef.thingml.impl.InternalPortImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getInternalPort()
 	 * @generated
 	 */
-	int EVENT_REFERENCE = 37;
+	int INTERNAL_PORT = 36;
 
 	/**
-	 * The feature id for the '<em><b>Msg Ref</b></em>' reference.
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EVENT_REFERENCE__MSG_REF = EXPRESSION_FEATURE_COUNT + 0;
+	int INTERNAL_PORT__NAME = PORT__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Param Ref</b></em>' reference.
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EVENT_REFERENCE__PARAM_REF = EXPRESSION_FEATURE_COUNT + 1;
+	int INTERNAL_PORT__ANNOTATIONS = PORT__ANNOTATIONS;
 
 	/**
-	 * The number of structural features of the '<em>Event Reference</em>' class.
+	 * The feature id for the '<em><b>Owner</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EVENT_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+	int INTERNAL_PORT__OWNER = PORT__OWNER;
+
+	/**
+	 * The feature id for the '<em><b>Receives</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERNAL_PORT__RECEIVES = PORT__RECEIVES;
+
+	/**
+	 * The feature id for the '<em><b>Sends</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERNAL_PORT__SENDS = PORT__SENDS;
+
+	/**
+	 * The number of structural features of the '<em>Internal Port</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERNAL_PORT_FEATURE_COUNT = PORT_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.LiteralImpl <em>Literal</em>}' class.
@@ -2229,7 +2237,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLiteral()
 	 * @generated
 	 */
-	int LITERAL = 38;
+	int LITERAL = 37;
 
 	/**
 	 * The number of structural features of the '<em>Literal</em>' class.
@@ -2248,7 +2256,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getEnumLiteralRef()
 	 * @generated
 	 */
-	int ENUM_LITERAL_REF = 39;
+	int ENUM_LITERAL_REF = 38;
 
 	/**
 	 * The feature id for the '<em><b>Enum</b></em>' reference.
@@ -2285,7 +2293,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getIntegerLiteral()
 	 * @generated
 	 */
-	int INTEGER_LITERAL = 40;
+	int INTEGER_LITERAL = 39;
 
 	/**
 	 * The feature id for the '<em><b>Int Value</b></em>' attribute.
@@ -2313,7 +2321,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getBooleanLiteral()
 	 * @generated
 	 */
-	int BOOLEAN_LITERAL = 41;
+	int BOOLEAN_LITERAL = 40;
 
 	/**
 	 * The feature id for the '<em><b>Bool Value</b></em>' attribute.
@@ -2341,7 +2349,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStringLiteral()
 	 * @generated
 	 */
-	int STRING_LITERAL = 42;
+	int STRING_LITERAL = 41;
 
 	/**
 	 * The feature id for the '<em><b>String Value</b></em>' attribute.
@@ -2369,7 +2377,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getDoubleLiteral()
 	 * @generated
 	 */
-	int DOUBLE_LITERAL = 43;
+	int DOUBLE_LITERAL = 42;
 
 	/**
 	 * The feature id for the '<em><b>Double Value</b></em>' attribute.
@@ -2397,7 +2405,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getUnaryExpression()
 	 * @generated
 	 */
-	int UNARY_EXPRESSION = 44;
+	int UNARY_EXPRESSION = 43;
 
 	/**
 	 * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -2425,7 +2433,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getNotExpression()
 	 * @generated
 	 */
-	int NOT_EXPRESSION = 45;
+	int NOT_EXPRESSION = 44;
 
 	/**
 	 * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -2453,7 +2461,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getUnaryMinus()
 	 * @generated
 	 */
-	int UNARY_MINUS = 46;
+	int UNARY_MINUS = 45;
 
 	/**
 	 * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -2481,7 +2489,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getBinaryExpression()
 	 * @generated
 	 */
-	int BINARY_EXPRESSION = 47;
+	int BINARY_EXPRESSION = 46;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2518,7 +2526,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPlusExpression()
 	 * @generated
 	 */
-	int PLUS_EXPRESSION = 48;
+	int PLUS_EXPRESSION = 47;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2555,7 +2563,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMinusExpression()
 	 * @generated
 	 */
-	int MINUS_EXPRESSION = 49;
+	int MINUS_EXPRESSION = 48;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2592,7 +2600,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getTimesExpression()
 	 * @generated
 	 */
-	int TIMES_EXPRESSION = 50;
+	int TIMES_EXPRESSION = 49;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2629,7 +2637,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getDivExpression()
 	 * @generated
 	 */
-	int DIV_EXPRESSION = 51;
+	int DIV_EXPRESSION = 50;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2666,7 +2674,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getModExpression()
 	 * @generated
 	 */
-	int MOD_EXPRESSION = 52;
+	int MOD_EXPRESSION = 51;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2703,7 +2711,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getEqualsExpression()
 	 * @generated
 	 */
-	int EQUALS_EXPRESSION = 53;
+	int EQUALS_EXPRESSION = 52;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2740,7 +2748,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getGreaterExpression()
 	 * @generated
 	 */
-	int GREATER_EXPRESSION = 54;
+	int GREATER_EXPRESSION = 53;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2777,7 +2785,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLowerExpression()
 	 * @generated
 	 */
-	int LOWER_EXPRESSION = 55;
+	int LOWER_EXPRESSION = 54;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2814,7 +2822,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getAndExpression()
 	 * @generated
 	 */
-	int AND_EXPRESSION = 56;
+	int AND_EXPRESSION = 55;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2851,7 +2859,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getOrExpression()
 	 * @generated
 	 */
-	int OR_EXPRESSION = 57;
+	int OR_EXPRESSION = 56;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2888,7 +2896,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getControlStructure()
 	 * @generated
 	 */
-	int CONTROL_STRUCTURE = 58;
+	int CONTROL_STRUCTURE = 57;
 
 	/**
 	 * The feature id for the '<em><b>Action</b></em>' containment reference.
@@ -2925,7 +2933,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLoopAction()
 	 * @generated
 	 */
-	int LOOP_ACTION = 59;
+	int LOOP_ACTION = 58;
 
 	/**
 	 * The feature id for the '<em><b>Action</b></em>' containment reference.
@@ -2962,7 +2970,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getConditionalAction()
 	 * @generated
 	 */
-	int CONDITIONAL_ACTION = 60;
+	int CONDITIONAL_ACTION = 59;
 
 	/**
 	 * The feature id for the '<em><b>Action</b></em>' containment reference.
@@ -3008,7 +3016,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPropertyReference()
 	 * @generated
 	 */
-	int PROPERTY_REFERENCE = 61;
+	int PROPERTY_REFERENCE = 60;
 
 	/**
 	 * The feature id for the '<em><b>Property</b></em>' reference.
@@ -3036,7 +3044,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getArrayIndex()
 	 * @generated
 	 */
-	int ARRAY_INDEX = 62;
+	int ARRAY_INDEX = 61;
 
 	/**
 	 * The feature id for the '<em><b>Array</b></em>' containment reference.
@@ -3066,43 +3074,6 @@ public interface ThingmlPackage extends EPackage {
 	int ARRAY_INDEX_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.DictionaryReferenceImpl <em>Dictionary Reference</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.DictionaryReferenceImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getDictionaryReference()
-	 * @generated
-	 */
-	int DICTIONARY_REFERENCE = 63;
-
-	/**
-	 * The feature id for the '<em><b>Property</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY_REFERENCE__PROPERTY = PROPERTY_REFERENCE__PROPERTY;
-
-	/**
-	 * The feature id for the '<em><b>Index</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY_REFERENCE__INDEX = PROPERTY_REFERENCE_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Dictionary Reference</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DICTIONARY_REFERENCE_FEATURE_COUNT = PROPERTY_REFERENCE_FEATURE_COUNT + 1;
-
-	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ExpressionGroupImpl <em>Expression Group</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3110,7 +3081,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getExpressionGroup()
 	 * @generated
 	 */
-	int EXPRESSION_GROUP = 64;
+	int EXPRESSION_GROUP = 62;
 
 	/**
 	 * The feature id for the '<em><b>Exp</b></em>' containment reference.
@@ -3138,7 +3109,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReturnAction()
 	 * @generated
 	 */
-	int RETURN_ACTION = 65;
+	int RETURN_ACTION = 63;
 
 	/**
 	 * The feature id for the '<em><b>Exp</b></em>' containment reference.
@@ -3166,7 +3137,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPrintAction()
 	 * @generated
 	 */
-	int PRINT_ACTION = 66;
+	int PRINT_ACTION = 64;
 
 	/**
 	 * The feature id for the '<em><b>Msg</b></em>' containment reference.
@@ -3194,7 +3165,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getErrorAction()
 	 * @generated
 	 */
-	int ERROR_ACTION = 67;
+	int ERROR_ACTION = 65;
 
 	/**
 	 * The feature id for the '<em><b>Msg</b></em>' containment reference.
@@ -3222,7 +3193,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getConfiguration()
 	 * @generated
 	 */
-	int CONFIGURATION = 68;
+	int CONFIGURATION = 66;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3304,7 +3275,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getInstance()
 	 * @generated
 	 */
-	int INSTANCE = 69;
+	int INSTANCE = 67;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3352,14 +3323,14 @@ public interface ThingmlPackage extends EPackage {
 	int INSTANCE_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.ConnectorImpl <em>Connector</em>}' class.
+	 * The meta object id for the '{@link org.sintef.thingml.impl.AbstractConnectorImpl <em>Abstract Connector</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.ConnectorImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getConnector()
+	 * @see org.sintef.thingml.impl.AbstractConnectorImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getAbstractConnector()
 	 * @generated
 	 */
-	int CONNECTOR = 70;
+	int ABSTRACT_CONNECTOR = 70;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3368,7 +3339,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTOR__NAME = ANNOTATED_ELEMENT__NAME;
+	int ABSTRACT_CONNECTOR__NAME = ANNOTATED_ELEMENT__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3377,7 +3348,44 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTOR__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
+	int ABSTRACT_CONNECTOR__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
+
+	/**
+	 * The number of structural features of the '<em>Abstract Connector</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_CONNECTOR_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ConnectorImpl <em>Connector</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ConnectorImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getConnector()
+	 * @generated
+	 */
+	int CONNECTOR = 68;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONNECTOR__NAME = ABSTRACT_CONNECTOR__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONNECTOR__ANNOTATIONS = ABSTRACT_CONNECTOR__ANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Srv</b></em>' containment reference.
@@ -3386,7 +3394,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTOR__SRV = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
+	int CONNECTOR__SRV = ABSTRACT_CONNECTOR_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Cli</b></em>' containment reference.
@@ -3395,7 +3403,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTOR__CLI = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
+	int CONNECTOR__CLI = ABSTRACT_CONNECTOR_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Required</b></em>' reference.
@@ -3404,7 +3412,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTOR__REQUIRED = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+	int CONNECTOR__REQUIRED = ABSTRACT_CONNECTOR_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Provided</b></em>' reference.
@@ -3413,7 +3421,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTOR__PROVIDED = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
+	int CONNECTOR__PROVIDED = ABSTRACT_CONNECTOR_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Connector</em>' class.
@@ -3422,7 +3430,71 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONNECTOR_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
+	int CONNECTOR_FEATURE_COUNT = ABSTRACT_CONNECTOR_FEATURE_COUNT + 4;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ExternalConnectorImpl <em>External Connector</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ExternalConnectorImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getExternalConnector()
+	 * @generated
+	 */
+	int EXTERNAL_CONNECTOR = 69;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTERNAL_CONNECTOR__NAME = ABSTRACT_CONNECTOR__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTERNAL_CONNECTOR__ANNOTATIONS = ABSTRACT_CONNECTOR__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Inst</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTERNAL_CONNECTOR__INST = ABSTRACT_CONNECTOR_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Port</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTERNAL_CONNECTOR__PORT = ABSTRACT_CONNECTOR_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Protocol</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTERNAL_CONNECTOR__PROTOCOL = ABSTRACT_CONNECTOR_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>External Connector</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXTERNAL_CONNECTOR_FEATURE_COUNT = ABSTRACT_CONNECTOR_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ConfigPropertyAssignImpl <em>Config Property Assign</em>}' class.
@@ -3720,6 +3792,15 @@ public interface ThingmlPackage extends EPackage {
 	int LOCAL_VARIABLE__CARDINALITY = VARIABLE__CARDINALITY;
 
 	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOCAL_VARIABLE__IS_ARRAY = VARIABLE__IS_ARRAY;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3763,6 +3844,1012 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int LOCAL_VARIABLE_FEATURE_COUNT = VARIABLE_FEATURE_COUNT + 2;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamImpl <em>Stream</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.StreamImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStream()
+	 * @generated
+	 */
+	int STREAM = 78;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM__NAME = ANNOTATED_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Selection</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM__SELECTION = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Output</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM__OUTPUT = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Input</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM__INPUT = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Stream</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamExpressionImpl <em>Stream Expression</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.StreamExpressionImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamExpression()
+	 * @generated
+	 */
+	int STREAM_EXPRESSION = 79;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_EXPRESSION__NAME = THING_ML_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_EXPRESSION__EXPRESSION = THING_ML_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Stream Expression</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_EXPRESSION_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamParamReferenceImpl <em>Stream Param Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.StreamParamReferenceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamParamReference()
+	 * @generated
+	 */
+	int STREAM_PARAM_REFERENCE = 80;
+
+	/**
+	 * The feature id for the '<em><b>Index Param</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_PARAM_REFERENCE__INDEX_PARAM = EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Stream Param Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_PARAM_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamOutputImpl <em>Stream Output</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.StreamOutputImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamOutput()
+	 * @generated
+	 */
+	int STREAM_OUTPUT = 81;
+
+	/**
+	 * The feature id for the '<em><b>Parameters</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_OUTPUT__PARAMETERS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_OUTPUT__MESSAGE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Port</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_OUTPUT__PORT = 2;
+
+	/**
+	 * The number of structural features of the '<em>Stream Output</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STREAM_OUTPUT_FEATURE_COUNT = 3;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SourceImpl <em>Source</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SourceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSource()
+	 * @generated
+	 */
+	int SOURCE = 82;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE__NAME = THING_ML_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE__OPERATORS = THING_ML_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Source</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SourceCompositionImpl <em>Source Composition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SourceCompositionImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSourceComposition()
+	 * @generated
+	 */
+	int SOURCE_COMPOSITION = 83;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_COMPOSITION__NAME = SOURCE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_COMPOSITION__OPERATORS = SOURCE__OPERATORS;
+
+	/**
+	 * The feature id for the '<em><b>Sources</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_COMPOSITION__SOURCES = SOURCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Result Message</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_COMPOSITION__RESULT_MESSAGE = SOURCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Rules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_COMPOSITION__RULES = SOURCE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Source Composition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SOURCE_COMPOSITION_FEATURE_COUNT = SOURCE_FEATURE_COUNT + 3;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.JoinSourcesImpl <em>Join Sources</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.JoinSourcesImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getJoinSources()
+	 * @generated
+	 */
+	int JOIN_SOURCES = 84;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JOIN_SOURCES__NAME = SOURCE_COMPOSITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JOIN_SOURCES__OPERATORS = SOURCE_COMPOSITION__OPERATORS;
+
+	/**
+	 * The feature id for the '<em><b>Sources</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JOIN_SOURCES__SOURCES = SOURCE_COMPOSITION__SOURCES;
+
+	/**
+	 * The feature id for the '<em><b>Result Message</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JOIN_SOURCES__RESULT_MESSAGE = SOURCE_COMPOSITION__RESULT_MESSAGE;
+
+	/**
+	 * The feature id for the '<em><b>Rules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JOIN_SOURCES__RULES = SOURCE_COMPOSITION__RULES;
+
+	/**
+	 * The number of structural features of the '<em>Join Sources</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JOIN_SOURCES_FEATURE_COUNT = SOURCE_COMPOSITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.MergeSourcesImpl <em>Merge Sources</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.MergeSourcesImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMergeSources()
+	 * @generated
+	 */
+	int MERGE_SOURCES = 85;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MERGE_SOURCES__NAME = SOURCE_COMPOSITION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MERGE_SOURCES__OPERATORS = SOURCE_COMPOSITION__OPERATORS;
+
+	/**
+	 * The feature id for the '<em><b>Sources</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MERGE_SOURCES__SOURCES = SOURCE_COMPOSITION__SOURCES;
+
+	/**
+	 * The feature id for the '<em><b>Result Message</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MERGE_SOURCES__RESULT_MESSAGE = SOURCE_COMPOSITION__RESULT_MESSAGE;
+
+	/**
+	 * The feature id for the '<em><b>Rules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MERGE_SOURCES__RULES = SOURCE_COMPOSITION__RULES;
+
+	/**
+	 * The number of structural features of the '<em>Merge Sources</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MERGE_SOURCES_FEATURE_COUNT = SOURCE_COMPOSITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SimpleSourceImpl <em>Simple Source</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SimpleSourceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleSource()
+	 * @generated
+	 */
+	int SIMPLE_SOURCE = 86;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_SOURCE__NAME = SOURCE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_SOURCE__OPERATORS = SOURCE__OPERATORS;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_SOURCE__MESSAGE = SOURCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Simple Source</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_SOURCE_FEATURE_COUNT = SOURCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ViewSourceImpl <em>View Source</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ViewSourceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getViewSource()
+	 * @generated
+	 */
+	int VIEW_SOURCE = 87;
+
+	/**
+	 * The number of structural features of the '<em>View Source</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VIEW_SOURCE_FEATURE_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.FilterImpl <em>Filter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.FilterImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFilter()
+	 * @generated
+	 */
+	int FILTER = 88;
+
+	/**
+	 * The feature id for the '<em><b>Filter Op</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER__FILTER_OP = VIEW_SOURCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Filter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FILTER_FEATURE_COUNT = VIEW_SOURCE_FEATURE_COUNT + 1;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.OperatorImpl <em>Operator</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.OperatorImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getOperator()
+	 * @generated
+	 */
+	int OPERATOR = 89;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATOR__TYPE = TYPED_ELEMENT__TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Cardinality</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATOR__CARDINALITY = TYPED_ELEMENT__CARDINALITY;
+
+	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATOR__IS_ARRAY = TYPED_ELEMENT__IS_ARRAY;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATOR__NAME = TYPED_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Body</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATOR__BODY = TYPED_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Operator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OPERATOR_FEATURE_COUNT = TYPED_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.MessageParameterImpl <em>Message Parameter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.MessageParameterImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessageParameter()
+	 * @generated
+	 */
+	int MESSAGE_PARAMETER = 90;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE_PARAMETER__NAME = THING_ML_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Msg Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE_PARAMETER__MSG_REF = THING_ML_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Message Parameter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MESSAGE_PARAMETER_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SglMsgParamOperatorCallImpl <em>Sgl Msg Param Operator Call</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SglMsgParamOperatorCallImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSglMsgParamOperatorCall()
+	 * @generated
+	 */
+	int SGL_MSG_PARAM_OPERATOR_CALL = 91;
+
+	/**
+	 * The feature id for the '<em><b>Operator Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR_CALL__OPERATOR_REF = 0;
+
+	/**
+	 * The feature id for the '<em><b>Parameter</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR_CALL__PARAMETER = 1;
+
+	/**
+	 * The number of structural features of the '<em>Sgl Msg Param Operator Call</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR_CALL_FEATURE_COUNT = 2;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ReferenceImpl <em>Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ReferenceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReference()
+	 * @generated
+	 */
+	int REFERENCE = 92;
+
+	/**
+	 * The feature id for the '<em><b>Reference</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE__REFERENCE = EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Parameter</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE__PARAMETER = EXPRESSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ReferencedElmtImpl <em>Referenced Elmt</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ReferencedElmtImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReferencedElmt()
+	 * @generated
+	 */
+	int REFERENCED_ELMT = 93;
+
+	/**
+	 * The number of structural features of the '<em>Referenced Elmt</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REFERENCED_ELMT_FEATURE_COUNT = 0;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SglMsgParamOperatorImpl <em>Sgl Msg Param Operator</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SglMsgParamOperatorImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSglMsgParamOperator()
+	 * @generated
+	 */
+	int SGL_MSG_PARAM_OPERATOR = 94;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR__TYPE = OPERATOR__TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Cardinality</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR__CARDINALITY = OPERATOR__CARDINALITY;
+
+	/**
+	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR__IS_ARRAY = OPERATOR__IS_ARRAY;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR__NAME = OPERATOR__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Body</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR__BODY = OPERATOR__BODY;
+
+	/**
+	 * The feature id for the '<em><b>Parameter</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR__PARAMETER = OPERATOR_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Sgl Msg Param Operator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SGL_MSG_PARAM_OPERATOR_FEATURE_COUNT = OPERATOR_FEATURE_COUNT + 1;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.WindowViewImpl <em>Window View</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.WindowViewImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getWindowView()
+	 * @generated
+	 */
+	int WINDOW_VIEW = 103;
+
+	/**
+	 * The number of structural features of the '<em>Window View</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WINDOW_VIEW_FEATURE_COUNT = VIEW_SOURCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.LengthWindowImpl <em>Length Window</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.LengthWindowImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthWindow()
+	 * @generated
+	 */
+	int LENGTH_WINDOW = 95;
+
+	/**
+	 * The feature id for the '<em><b>Nb Events</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LENGTH_WINDOW__NB_EVENTS = WINDOW_VIEW_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Step</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LENGTH_WINDOW__STEP = WINDOW_VIEW_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Length Window</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LENGTH_WINDOW_FEATURE_COUNT = WINDOW_VIEW_FEATURE_COUNT + 2;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.TimeWindowImpl <em>Time Window</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.TimeWindowImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getTimeWindow()
+	 * @generated
+	 */
+	int TIME_WINDOW = 96;
+
+	/**
+	 * The feature id for the '<em><b>Step</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TIME_WINDOW__STEP = WINDOW_VIEW_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Size</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TIME_WINDOW__SIZE = WINDOW_VIEW_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Time Window</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TIME_WINDOW_FEATURE_COUNT = WINDOW_VIEW_FEATURE_COUNT + 2;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ElmtPropertyImpl <em>Elmt Property</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ElmtPropertyImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getElmtProperty()
+	 * @generated
+	 */
+	int ELMT_PROPERTY = 100;
+
+	/**
+	 * The number of structural features of the '<em>Elmt Property</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELMT_PROPERTY_FEATURE_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ParamReferenceImpl <em>Param Reference</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ParamReferenceImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getParamReference()
+	 * @generated
+	 */
+	int PARAM_REFERENCE = 97;
+
+	/**
+	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM_REFERENCE__PARAMETER_REF = ELMT_PROPERTY_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Param Reference</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAM_REFERENCE_FEATURE_COUNT = ELMT_PROPERTY_FEATURE_COUNT + 1;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SimpleParamRefImpl <em>Simple Param Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SimpleParamRefImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleParamRef()
+	 * @generated
+	 */
+	int SIMPLE_PARAM_REF = 98;
+
+	/**
+	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_PARAM_REF__PARAMETER_REF = PARAM_REFERENCE__PARAMETER_REF;
+
+	/**
+	 * The number of structural features of the '<em>Simple Param Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SIMPLE_PARAM_REF_FEATURE_COUNT = PARAM_REFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ArrayParamRefImpl <em>Array Param Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ArrayParamRefImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getArrayParamRef()
+	 * @generated
+	 */
+	int ARRAY_PARAM_REF = 99;
+
+	/**
+	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARRAY_PARAM_REF__PARAMETER_REF = PARAM_REFERENCE__PARAMETER_REF;
+
+	/**
+	 * The number of structural features of the '<em>Array Param Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARRAY_PARAM_REF_FEATURE_COUNT = PARAM_REFERENCE_FEATURE_COUNT + 0;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.PredifinedPropertyImpl <em>Predifined Property</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.PredifinedPropertyImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPredifinedProperty()
+	 * @generated
+	 */
+	int PREDIFINED_PROPERTY = 101;
+
+	/**
+	 * The number of structural features of the '<em>Predifined Property</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PREDIFINED_PROPERTY_FEATURE_COUNT = ELMT_PROPERTY_FEATURE_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.LengthArrayImpl <em>Length Array</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.LengthArrayImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthArray()
+	 * @generated
+	 */
+	int LENGTH_ARRAY = 102;
+
+	/**
+	 * The number of structural features of the '<em>Length Array</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LENGTH_ARRAY_FEATURE_COUNT = PREDIFINED_PROPERTY_FEATURE_COUNT + 0;
 
 
 	/**
@@ -3960,6 +5047,28 @@ public interface ThingmlPackage extends EPackage {
 	EReference getThing_Functions();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Thing#getStreams <em>Streams</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Streams</em>'.
+	 * @see org.sintef.thingml.Thing#getStreams()
+	 * @see #getThing()
+	 * @generated
+	 */
+	EReference getThing_Streams();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Thing#getOperators <em>Operators</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Operators</em>'.
+	 * @see org.sintef.thingml.Thing#getOperators()
+	 * @see #getThing()
+	 * @generated
+	 */
+	EReference getThing_Operators();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Parameter <em>Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4041,6 +5150,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTypedElement_Cardinality();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.TypedElement#isIsArray <em>Is Array</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Is Array</em>'.
+	 * @see org.sintef.thingml.TypedElement#isIsArray()
+	 * @see #getTypedElement()
+	 * @generated
+	 */
+	EAttribute getTypedElement_IsArray();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Property <em>Property</em>}'.
@@ -4712,27 +5832,6 @@ public interface ThingmlPackage extends EPackage {
 	EReference getReceiveMessage_Port();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.Dictionary <em>Dictionary</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Dictionary</em>'.
-	 * @see org.sintef.thingml.Dictionary
-	 * @generated
-	 */
-	EClass getDictionary();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.Dictionary#getIndexType <em>Index Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Index Type</em>'.
-	 * @see org.sintef.thingml.Dictionary#getIndexType()
-	 * @see #getDictionary()
-	 * @generated
-	 */
-	EReference getDictionary_IndexType();
-
-	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Port <em>Port</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4807,36 +5906,14 @@ public interface ThingmlPackage extends EPackage {
 	EClass getProvidedPort();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.EventReference <em>Event Reference</em>}'.
+	 * Returns the meta object for class '{@link org.sintef.thingml.InternalPort <em>Internal Port</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Event Reference</em>'.
-	 * @see org.sintef.thingml.EventReference
+	 * @return the meta object for class '<em>Internal Port</em>'.
+	 * @see org.sintef.thingml.InternalPort
 	 * @generated
 	 */
-	EClass getEventReference();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.EventReference#getMsgRef <em>Msg Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Msg Ref</em>'.
-	 * @see org.sintef.thingml.EventReference#getMsgRef()
-	 * @see #getEventReference()
-	 * @generated
-	 */
-	EReference getEventReference_MsgRef();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.EventReference#getParamRef <em>Param Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Param Ref</em>'.
-	 * @see org.sintef.thingml.EventReference#getParamRef()
-	 * @see #getEventReference()
-	 * @generated
-	 */
-	EReference getEventReference_ParamRef();
+	EClass getInternalPort();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Literal <em>Literal</em>}'.
@@ -5254,27 +6331,6 @@ public interface ThingmlPackage extends EPackage {
 	EReference getArrayIndex_Index();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.DictionaryReference <em>Dictionary Reference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Dictionary Reference</em>'.
-	 * @see org.sintef.thingml.DictionaryReference
-	 * @generated
-	 */
-	EClass getDictionaryReference();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.DictionaryReference#getIndex <em>Index</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Index</em>'.
-	 * @see org.sintef.thingml.DictionaryReference#getIndex()
-	 * @see #getDictionaryReference()
-	 * @generated
-	 */
-	EReference getDictionaryReference_Index();
-
-	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.ExpressionGroup <em>Expression Group</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5510,6 +6566,59 @@ public interface ThingmlPackage extends EPackage {
 	EReference getConnector_Provided();
 
 	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ExternalConnector <em>External Connector</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>External Connector</em>'.
+	 * @see org.sintef.thingml.ExternalConnector
+	 * @generated
+	 */
+	EClass getExternalConnector();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.ExternalConnector#getInst <em>Inst</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Inst</em>'.
+	 * @see org.sintef.thingml.ExternalConnector#getInst()
+	 * @see #getExternalConnector()
+	 * @generated
+	 */
+	EReference getExternalConnector_Inst();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.ExternalConnector#getPort <em>Port</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Port</em>'.
+	 * @see org.sintef.thingml.ExternalConnector#getPort()
+	 * @see #getExternalConnector()
+	 * @generated
+	 */
+	EReference getExternalConnector_Port();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.ExternalConnector#getProtocol <em>Protocol</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Protocol</em>'.
+	 * @see org.sintef.thingml.ExternalConnector#getProtocol()
+	 * @see #getExternalConnector()
+	 * @generated
+	 */
+	EAttribute getExternalConnector_Protocol();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.AbstractConnector <em>Abstract Connector</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Abstract Connector</em>'.
+	 * @see org.sintef.thingml.AbstractConnector
+	 * @generated
+	 */
+	EClass getAbstractConnector();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.ConfigPropertyAssign <em>Config Property Assign</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5701,6 +6810,552 @@ public interface ThingmlPackage extends EPackage {
 	EAttribute getLocalVariable_Changeable();
 
 	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.Stream <em>Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Stream</em>'.
+	 * @see org.sintef.thingml.Stream
+	 * @generated
+	 */
+	EClass getStream();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Selection</em>'.
+	 * @see org.sintef.thingml.Stream#getSelection()
+	 * @see #getStream()
+	 * @generated
+	 */
+	EReference getStream_Selection();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Output</em>'.
+	 * @see org.sintef.thingml.Stream#getOutput()
+	 * @see #getStream()
+	 * @generated
+	 */
+	EReference getStream_Output();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Stream#getInput <em>Input</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Input</em>'.
+	 * @see org.sintef.thingml.Stream#getInput()
+	 * @see #getStream()
+	 * @generated
+	 */
+	EReference getStream_Input();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.StreamExpression <em>Stream Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Stream Expression</em>'.
+	 * @see org.sintef.thingml.StreamExpression
+	 * @generated
+	 */
+	EClass getStreamExpression();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.StreamExpression#getExpression <em>Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Expression</em>'.
+	 * @see org.sintef.thingml.StreamExpression#getExpression()
+	 * @see #getStreamExpression()
+	 * @generated
+	 */
+	EReference getStreamExpression_Expression();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Stream Param Reference</em>'.
+	 * @see org.sintef.thingml.StreamParamReference
+	 * @generated
+	 */
+	EClass getStreamParamReference();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.StreamParamReference#getIndexParam <em>Index Param</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Index Param</em>'.
+	 * @see org.sintef.thingml.StreamParamReference#getIndexParam()
+	 * @see #getStreamParamReference()
+	 * @generated
+	 */
+	EAttribute getStreamParamReference_IndexParam();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.StreamOutput <em>Stream Output</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Stream Output</em>'.
+	 * @see org.sintef.thingml.StreamOutput
+	 * @generated
+	 */
+	EClass getStreamOutput();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.sintef.thingml.StreamOutput#getParameters <em>Parameters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Parameters</em>'.
+	 * @see org.sintef.thingml.StreamOutput#getParameters()
+	 * @see #getStreamOutput()
+	 * @generated
+	 */
+	EReference getStreamOutput_Parameters();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.StreamOutput#getMessage <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Message</em>'.
+	 * @see org.sintef.thingml.StreamOutput#getMessage()
+	 * @see #getStreamOutput()
+	 * @generated
+	 */
+	EReference getStreamOutput_Message();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.StreamOutput#getPort <em>Port</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Port</em>'.
+	 * @see org.sintef.thingml.StreamOutput#getPort()
+	 * @see #getStreamOutput()
+	 * @generated
+	 */
+	EReference getStreamOutput_Port();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.Source <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Source</em>'.
+	 * @see org.sintef.thingml.Source
+	 * @generated
+	 */
+	EClass getSource();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Source#getOperators <em>Operators</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Operators</em>'.
+	 * @see org.sintef.thingml.Source#getOperators()
+	 * @see #getSource()
+	 * @generated
+	 */
+	EReference getSource_Operators();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.SourceComposition <em>Source Composition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Source Composition</em>'.
+	 * @see org.sintef.thingml.SourceComposition
+	 * @generated
+	 */
+	EClass getSourceComposition();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.SourceComposition#getSources <em>Sources</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Sources</em>'.
+	 * @see org.sintef.thingml.SourceComposition#getSources()
+	 * @see #getSourceComposition()
+	 * @generated
+	 */
+	EReference getSourceComposition_Sources();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.SourceComposition#getResultMessage <em>Result Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Result Message</em>'.
+	 * @see org.sintef.thingml.SourceComposition#getResultMessage()
+	 * @see #getSourceComposition()
+	 * @generated
+	 */
+	EReference getSourceComposition_ResultMessage();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.SourceComposition#getRules <em>Rules</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Rules</em>'.
+	 * @see org.sintef.thingml.SourceComposition#getRules()
+	 * @see #getSourceComposition()
+	 * @generated
+	 */
+	EReference getSourceComposition_Rules();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.JoinSources <em>Join Sources</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Join Sources</em>'.
+	 * @see org.sintef.thingml.JoinSources
+	 * @generated
+	 */
+	EClass getJoinSources();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.MergeSources <em>Merge Sources</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Merge Sources</em>'.
+	 * @see org.sintef.thingml.MergeSources
+	 * @generated
+	 */
+	EClass getMergeSources();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.SimpleSource <em>Simple Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Simple Source</em>'.
+	 * @see org.sintef.thingml.SimpleSource
+	 * @generated
+	 */
+	EClass getSimpleSource();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.SimpleSource#getMessage <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Message</em>'.
+	 * @see org.sintef.thingml.SimpleSource#getMessage()
+	 * @see #getSimpleSource()
+	 * @generated
+	 */
+	EReference getSimpleSource_Message();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ViewSource <em>View Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>View Source</em>'.
+	 * @see org.sintef.thingml.ViewSource
+	 * @generated
+	 */
+	EClass getViewSource();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.Filter <em>Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Filter</em>'.
+	 * @see org.sintef.thingml.Filter
+	 * @generated
+	 */
+	EClass getFilter();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Filter#getFilterOp <em>Filter Op</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Filter Op</em>'.
+	 * @see org.sintef.thingml.Filter#getFilterOp()
+	 * @see #getFilter()
+	 * @generated
+	 */
+	EReference getFilter_FilterOp();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.Operator <em>Operator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Operator</em>'.
+	 * @see org.sintef.thingml.Operator
+	 * @generated
+	 */
+	EClass getOperator();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Operator#getBody <em>Body</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Body</em>'.
+	 * @see org.sintef.thingml.Operator#getBody()
+	 * @see #getOperator()
+	 * @generated
+	 */
+	EReference getOperator_Body();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.MessageParameter <em>Message Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Message Parameter</em>'.
+	 * @see org.sintef.thingml.MessageParameter
+	 * @generated
+	 */
+	EClass getMessageParameter();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.MessageParameter#getMsgRef <em>Msg Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Msg Ref</em>'.
+	 * @see org.sintef.thingml.MessageParameter#getMsgRef()
+	 * @see #getMessageParameter()
+	 * @generated
+	 */
+	EReference getMessageParameter_MsgRef();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.SglMsgParamOperatorCall <em>Sgl Msg Param Operator Call</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Sgl Msg Param Operator Call</em>'.
+	 * @see org.sintef.thingml.SglMsgParamOperatorCall
+	 * @generated
+	 */
+	EClass getSglMsgParamOperatorCall();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.SglMsgParamOperatorCall#getOperatorRef <em>Operator Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Operator Ref</em>'.
+	 * @see org.sintef.thingml.SglMsgParamOperatorCall#getOperatorRef()
+	 * @see #getSglMsgParamOperatorCall()
+	 * @generated
+	 */
+	EReference getSglMsgParamOperatorCall_OperatorRef();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.SglMsgParamOperatorCall#getParameter <em>Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Parameter</em>'.
+	 * @see org.sintef.thingml.SglMsgParamOperatorCall#getParameter()
+	 * @see #getSglMsgParamOperatorCall()
+	 * @generated
+	 */
+	EReference getSglMsgParamOperatorCall_Parameter();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.Reference <em>Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Reference</em>'.
+	 * @see org.sintef.thingml.Reference
+	 * @generated
+	 */
+	EClass getReference();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Reference#getParameter <em>Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Parameter</em>'.
+	 * @see org.sintef.thingml.Reference#getParameter()
+	 * @see #getReference()
+	 * @generated
+	 */
+	EReference getReference_Parameter();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.Reference#getReference <em>Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Reference</em>'.
+	 * @see org.sintef.thingml.Reference#getReference()
+	 * @see #getReference()
+	 * @generated
+	 */
+	EReference getReference_Reference();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ReferencedElmt <em>Referenced Elmt</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Referenced Elmt</em>'.
+	 * @see org.sintef.thingml.ReferencedElmt
+	 * @generated
+	 */
+	EClass getReferencedElmt();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.SglMsgParamOperator <em>Sgl Msg Param Operator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Sgl Msg Param Operator</em>'.
+	 * @see org.sintef.thingml.SglMsgParamOperator
+	 * @generated
+	 */
+	EClass getSglMsgParamOperator();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.SglMsgParamOperator#getParameter <em>Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Parameter</em>'.
+	 * @see org.sintef.thingml.SglMsgParamOperator#getParameter()
+	 * @see #getSglMsgParamOperator()
+	 * @generated
+	 */
+	EReference getSglMsgParamOperator_Parameter();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.LengthWindow <em>Length Window</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Length Window</em>'.
+	 * @see org.sintef.thingml.LengthWindow
+	 * @generated
+	 */
+	EClass getLengthWindow();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.LengthWindow#getNbEvents <em>Nb Events</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Nb Events</em>'.
+	 * @see org.sintef.thingml.LengthWindow#getNbEvents()
+	 * @see #getLengthWindow()
+	 * @generated
+	 */
+	EAttribute getLengthWindow_NbEvents();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.LengthWindow#getStep <em>Step</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Step</em>'.
+	 * @see org.sintef.thingml.LengthWindow#getStep()
+	 * @see #getLengthWindow()
+	 * @generated
+	 */
+	EAttribute getLengthWindow_Step();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.TimeWindow <em>Time Window</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Time Window</em>'.
+	 * @see org.sintef.thingml.TimeWindow
+	 * @generated
+	 */
+	EClass getTimeWindow();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.TimeWindow#getStep <em>Step</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Step</em>'.
+	 * @see org.sintef.thingml.TimeWindow#getStep()
+	 * @see #getTimeWindow()
+	 * @generated
+	 */
+	EAttribute getTimeWindow_Step();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.TimeWindow#getSize <em>Size</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Size</em>'.
+	 * @see org.sintef.thingml.TimeWindow#getSize()
+	 * @see #getTimeWindow()
+	 * @generated
+	 */
+	EAttribute getTimeWindow_Size();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ParamReference <em>Param Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Param Reference</em>'.
+	 * @see org.sintef.thingml.ParamReference
+	 * @generated
+	 */
+	EClass getParamReference();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.ParamReference#getParameterRef <em>Parameter Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Parameter Ref</em>'.
+	 * @see org.sintef.thingml.ParamReference#getParameterRef()
+	 * @see #getParamReference()
+	 * @generated
+	 */
+	EReference getParamReference_ParameterRef();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.SimpleParamRef <em>Simple Param Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Simple Param Ref</em>'.
+	 * @see org.sintef.thingml.SimpleParamRef
+	 * @generated
+	 */
+	EClass getSimpleParamRef();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ArrayParamRef <em>Array Param Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Array Param Ref</em>'.
+	 * @see org.sintef.thingml.ArrayParamRef
+	 * @generated
+	 */
+	EClass getArrayParamRef();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ElmtProperty <em>Elmt Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Elmt Property</em>'.
+	 * @see org.sintef.thingml.ElmtProperty
+	 * @generated
+	 */
+	EClass getElmtProperty();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.PredifinedProperty <em>Predifined Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Predifined Property</em>'.
+	 * @see org.sintef.thingml.PredifinedProperty
+	 * @generated
+	 */
+	EClass getPredifinedProperty();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.LengthArray <em>Length Array</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Length Array</em>'.
+	 * @see org.sintef.thingml.LengthArray
+	 * @generated
+	 */
+	EClass getLengthArray();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.WindowView <em>Window View</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Window View</em>'.
+	 * @see org.sintef.thingml.WindowView
+	 * @generated
+	 */
+	EClass getWindowView();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5875,6 +7530,22 @@ public interface ThingmlPackage extends EPackage {
 		EReference THING__FUNCTIONS = eINSTANCE.getThing_Functions();
 
 		/**
+		 * The meta object literal for the '<em><b>Streams</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference THING__STREAMS = eINSTANCE.getThing_Streams();
+
+		/**
+		 * The meta object literal for the '<em><b>Operators</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference THING__OPERATORS = eINSTANCE.getThing_Operators();
+
+		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ParameterImpl <em>Parameter</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -5947,6 +7618,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TYPED_ELEMENT__CARDINALITY = eINSTANCE.getTypedElement_Cardinality();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Array</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TYPED_ELEMENT__IS_ARRAY = eINSTANCE.getTypedElement_IsArray();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.PropertyImpl <em>Property</em>}' class.
@@ -6501,24 +8180,6 @@ public interface ThingmlPackage extends EPackage {
 		EReference RECEIVE_MESSAGE__PORT = eINSTANCE.getReceiveMessage_Port();
 
 		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.DictionaryImpl <em>Dictionary</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.DictionaryImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getDictionary()
-		 * @generated
-		 */
-		EClass DICTIONARY = eINSTANCE.getDictionary();
-
-		/**
-		 * The meta object literal for the '<em><b>Index Type</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DICTIONARY__INDEX_TYPE = eINSTANCE.getDictionary_IndexType();
-
-		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.PortImpl <em>Port</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -6581,30 +8242,14 @@ public interface ThingmlPackage extends EPackage {
 		EClass PROVIDED_PORT = eINSTANCE.getProvidedPort();
 
 		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.EventReferenceImpl <em>Event Reference</em>}' class.
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.InternalPortImpl <em>Internal Port</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.EventReferenceImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getEventReference()
+		 * @see org.sintef.thingml.impl.InternalPortImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getInternalPort()
 		 * @generated
 		 */
-		EClass EVENT_REFERENCE = eINSTANCE.getEventReference();
-
-		/**
-		 * The meta object literal for the '<em><b>Msg Ref</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference EVENT_REFERENCE__MSG_REF = eINSTANCE.getEventReference_MsgRef();
-
-		/**
-		 * The meta object literal for the '<em><b>Param Ref</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference EVENT_REFERENCE__PARAM_REF = eINSTANCE.getEventReference_ParamRef();
+		EClass INTERNAL_PORT = eINSTANCE.getInternalPort();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.LiteralImpl <em>Literal</em>}' class.
@@ -6977,24 +8622,6 @@ public interface ThingmlPackage extends EPackage {
 		EReference ARRAY_INDEX__INDEX = eINSTANCE.getArrayIndex_Index();
 
 		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.DictionaryReferenceImpl <em>Dictionary Reference</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.DictionaryReferenceImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getDictionaryReference()
-		 * @generated
-		 */
-		EClass DICTIONARY_REFERENCE = eINSTANCE.getDictionaryReference();
-
-		/**
-		 * The meta object literal for the '<em><b>Index</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference DICTIONARY_REFERENCE__INDEX = eINSTANCE.getDictionaryReference_Index();
-
-		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ExpressionGroupImpl <em>Expression Group</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -7185,6 +8812,50 @@ public interface ThingmlPackage extends EPackage {
 		EReference CONNECTOR__PROVIDED = eINSTANCE.getConnector_Provided();
 
 		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ExternalConnectorImpl <em>External Connector</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ExternalConnectorImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getExternalConnector()
+		 * @generated
+		 */
+		EClass EXTERNAL_CONNECTOR = eINSTANCE.getExternalConnector();
+
+		/**
+		 * The meta object literal for the '<em><b>Inst</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXTERNAL_CONNECTOR__INST = eINSTANCE.getExternalConnector_Inst();
+
+		/**
+		 * The meta object literal for the '<em><b>Port</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXTERNAL_CONNECTOR__PORT = eINSTANCE.getExternalConnector_Port();
+
+		/**
+		 * The meta object literal for the '<em><b>Protocol</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXTERNAL_CONNECTOR__PROTOCOL = eINSTANCE.getExternalConnector_Protocol();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.AbstractConnectorImpl <em>Abstract Connector</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.AbstractConnectorImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getAbstractConnector()
+		 * @generated
+		 */
+		EClass ABSTRACT_CONNECTOR = eINSTANCE.getAbstractConnector();
+
+		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ConfigPropertyAssignImpl <em>Config Property Assign</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -7341,6 +9012,474 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute LOCAL_VARIABLE__CHANGEABLE = eINSTANCE.getLocalVariable_Changeable();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamImpl <em>Stream</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.StreamImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStream()
+		 * @generated
+		 */
+		EClass STREAM = eINSTANCE.getStream();
+
+		/**
+		 * The meta object literal for the '<em><b>Selection</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM__SELECTION = eINSTANCE.getStream_Selection();
+
+		/**
+		 * The meta object literal for the '<em><b>Output</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM__OUTPUT = eINSTANCE.getStream_Output();
+
+		/**
+		 * The meta object literal for the '<em><b>Input</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM__INPUT = eINSTANCE.getStream_Input();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamExpressionImpl <em>Stream Expression</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.StreamExpressionImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamExpression()
+		 * @generated
+		 */
+		EClass STREAM_EXPRESSION = eINSTANCE.getStreamExpression();
+
+		/**
+		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM_EXPRESSION__EXPRESSION = eINSTANCE.getStreamExpression_Expression();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamParamReferenceImpl <em>Stream Param Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.StreamParamReferenceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamParamReference()
+		 * @generated
+		 */
+		EClass STREAM_PARAM_REFERENCE = eINSTANCE.getStreamParamReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Index Param</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STREAM_PARAM_REFERENCE__INDEX_PARAM = eINSTANCE.getStreamParamReference_IndexParam();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamOutputImpl <em>Stream Output</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.StreamOutputImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamOutput()
+		 * @generated
+		 */
+		EClass STREAM_OUTPUT = eINSTANCE.getStreamOutput();
+
+		/**
+		 * The meta object literal for the '<em><b>Parameters</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM_OUTPUT__PARAMETERS = eINSTANCE.getStreamOutput_Parameters();
+
+		/**
+		 * The meta object literal for the '<em><b>Message</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM_OUTPUT__MESSAGE = eINSTANCE.getStreamOutput_Message();
+
+		/**
+		 * The meta object literal for the '<em><b>Port</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference STREAM_OUTPUT__PORT = eINSTANCE.getStreamOutput_Port();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SourceImpl <em>Source</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.SourceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSource()
+		 * @generated
+		 */
+		EClass SOURCE = eINSTANCE.getSource();
+
+		/**
+		 * The meta object literal for the '<em><b>Operators</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SOURCE__OPERATORS = eINSTANCE.getSource_Operators();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SourceCompositionImpl <em>Source Composition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.SourceCompositionImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSourceComposition()
+		 * @generated
+		 */
+		EClass SOURCE_COMPOSITION = eINSTANCE.getSourceComposition();
+
+		/**
+		 * The meta object literal for the '<em><b>Sources</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SOURCE_COMPOSITION__SOURCES = eINSTANCE.getSourceComposition_Sources();
+
+		/**
+		 * The meta object literal for the '<em><b>Result Message</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SOURCE_COMPOSITION__RESULT_MESSAGE = eINSTANCE.getSourceComposition_ResultMessage();
+
+		/**
+		 * The meta object literal for the '<em><b>Rules</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SOURCE_COMPOSITION__RULES = eINSTANCE.getSourceComposition_Rules();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.JoinSourcesImpl <em>Join Sources</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.JoinSourcesImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getJoinSources()
+		 * @generated
+		 */
+		EClass JOIN_SOURCES = eINSTANCE.getJoinSources();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.MergeSourcesImpl <em>Merge Sources</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.MergeSourcesImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMergeSources()
+		 * @generated
+		 */
+		EClass MERGE_SOURCES = eINSTANCE.getMergeSources();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SimpleSourceImpl <em>Simple Source</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.SimpleSourceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleSource()
+		 * @generated
+		 */
+		EClass SIMPLE_SOURCE = eINSTANCE.getSimpleSource();
+
+		/**
+		 * The meta object literal for the '<em><b>Message</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SIMPLE_SOURCE__MESSAGE = eINSTANCE.getSimpleSource_Message();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ViewSourceImpl <em>View Source</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ViewSourceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getViewSource()
+		 * @generated
+		 */
+		EClass VIEW_SOURCE = eINSTANCE.getViewSource();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.FilterImpl <em>Filter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.FilterImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFilter()
+		 * @generated
+		 */
+		EClass FILTER = eINSTANCE.getFilter();
+
+		/**
+		 * The meta object literal for the '<em><b>Filter Op</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FILTER__FILTER_OP = eINSTANCE.getFilter_FilterOp();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.OperatorImpl <em>Operator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.OperatorImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getOperator()
+		 * @generated
+		 */
+		EClass OPERATOR = eINSTANCE.getOperator();
+
+		/**
+		 * The meta object literal for the '<em><b>Body</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference OPERATOR__BODY = eINSTANCE.getOperator_Body();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.MessageParameterImpl <em>Message Parameter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.MessageParameterImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessageParameter()
+		 * @generated
+		 */
+		EClass MESSAGE_PARAMETER = eINSTANCE.getMessageParameter();
+
+		/**
+		 * The meta object literal for the '<em><b>Msg Ref</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MESSAGE_PARAMETER__MSG_REF = eINSTANCE.getMessageParameter_MsgRef();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SglMsgParamOperatorCallImpl <em>Sgl Msg Param Operator Call</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.SglMsgParamOperatorCallImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSglMsgParamOperatorCall()
+		 * @generated
+		 */
+		EClass SGL_MSG_PARAM_OPERATOR_CALL = eINSTANCE.getSglMsgParamOperatorCall();
+
+		/**
+		 * The meta object literal for the '<em><b>Operator Ref</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SGL_MSG_PARAM_OPERATOR_CALL__OPERATOR_REF = eINSTANCE.getSglMsgParamOperatorCall_OperatorRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Parameter</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SGL_MSG_PARAM_OPERATOR_CALL__PARAMETER = eINSTANCE.getSglMsgParamOperatorCall_Parameter();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ReferenceImpl <em>Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ReferenceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReference()
+		 * @generated
+		 */
+		EClass REFERENCE = eINSTANCE.getReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Parameter</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE__PARAMETER = eINSTANCE.getReference_Parameter();
+
+		/**
+		 * The meta object literal for the '<em><b>Reference</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REFERENCE__REFERENCE = eINSTANCE.getReference_Reference();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ReferencedElmtImpl <em>Referenced Elmt</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ReferencedElmtImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReferencedElmt()
+		 * @generated
+		 */
+		EClass REFERENCED_ELMT = eINSTANCE.getReferencedElmt();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SglMsgParamOperatorImpl <em>Sgl Msg Param Operator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.SglMsgParamOperatorImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSglMsgParamOperator()
+		 * @generated
+		 */
+		EClass SGL_MSG_PARAM_OPERATOR = eINSTANCE.getSglMsgParamOperator();
+
+		/**
+		 * The meta object literal for the '<em><b>Parameter</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SGL_MSG_PARAM_OPERATOR__PARAMETER = eINSTANCE.getSglMsgParamOperator_Parameter();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.LengthWindowImpl <em>Length Window</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.LengthWindowImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthWindow()
+		 * @generated
+		 */
+		EClass LENGTH_WINDOW = eINSTANCE.getLengthWindow();
+
+		/**
+		 * The meta object literal for the '<em><b>Nb Events</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LENGTH_WINDOW__NB_EVENTS = eINSTANCE.getLengthWindow_NbEvents();
+
+		/**
+		 * The meta object literal for the '<em><b>Step</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute LENGTH_WINDOW__STEP = eINSTANCE.getLengthWindow_Step();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.TimeWindowImpl <em>Time Window</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.TimeWindowImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getTimeWindow()
+		 * @generated
+		 */
+		EClass TIME_WINDOW = eINSTANCE.getTimeWindow();
+
+		/**
+		 * The meta object literal for the '<em><b>Step</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TIME_WINDOW__STEP = eINSTANCE.getTimeWindow_Step();
+
+		/**
+		 * The meta object literal for the '<em><b>Size</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TIME_WINDOW__SIZE = eINSTANCE.getTimeWindow_Size();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ParamReferenceImpl <em>Param Reference</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ParamReferenceImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getParamReference()
+		 * @generated
+		 */
+		EClass PARAM_REFERENCE = eINSTANCE.getParamReference();
+
+		/**
+		 * The meta object literal for the '<em><b>Parameter Ref</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference PARAM_REFERENCE__PARAMETER_REF = eINSTANCE.getParamReference_ParameterRef();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SimpleParamRefImpl <em>Simple Param Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.SimpleParamRefImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleParamRef()
+		 * @generated
+		 */
+		EClass SIMPLE_PARAM_REF = eINSTANCE.getSimpleParamRef();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ArrayParamRefImpl <em>Array Param Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ArrayParamRefImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getArrayParamRef()
+		 * @generated
+		 */
+		EClass ARRAY_PARAM_REF = eINSTANCE.getArrayParamRef();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ElmtPropertyImpl <em>Elmt Property</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ElmtPropertyImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getElmtProperty()
+		 * @generated
+		 */
+		EClass ELMT_PROPERTY = eINSTANCE.getElmtProperty();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.PredifinedPropertyImpl <em>Predifined Property</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.PredifinedPropertyImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPredifinedProperty()
+		 * @generated
+		 */
+		EClass PREDIFINED_PROPERTY = eINSTANCE.getPredifinedProperty();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.LengthArrayImpl <em>Length Array</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.LengthArrayImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthArray()
+		 * @generated
+		 */
+		EClass LENGTH_ARRAY = eINSTANCE.getLengthArray();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.WindowViewImpl <em>Window View</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.WindowViewImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getWindowView()
+		 * @generated
+		 */
+		EClass WINDOW_VIEW = eINSTANCE.getWindowView();
 
 	}
 

@@ -1,0 +1,71 @@
+datatype Char	
+	@c_type "char"
+	@c_byte_size "1";
+	
+datatype String	
+	@c_type "char *"
+	@c_byte_size "2";
+    
+datatype Boolean	
+	@c_type "uint8_t"
+	@c_byte_size "1";
+
+datatype UInt8	
+	@c_type "uint8_t"
+	@c_byte_size "1";
+	
+datatype UInt16	
+	@c_type "uint16_t"
+	@c_byte_size "2";
+
+datatype Integer	
+	@c_type "int16_t"
+	@c_byte_size "2";
+
+datatype Long	
+	@c_type "long"
+	@c_byte_size "4";
+
+datatype Double	
+	@c_type "double"
+	@c_byte_size "4";
+	
+enumeration DigitalState 
+    @c_byte_size "1"
+	@c_type "uint8_t"
+{
+	LOW @enum_val "0"
+	HIGH @enum_val "1"
+}
+
+datatype Int16	
+	@c_type "int"
+    @c_byte_size "2";
+    
+datatype Byte	
+	@c_type "uint8_t"
+	@c_byte_size "1"
+	@java_type "byte"
+	@java_primitive "true"
+    @scala_type "Byte"
+    @SenML_type "Double";
+
+enumeration DigitalState 
+  @c_type "uint8_t"
+  @c_byte_size "1"
+{
+  LOW @enum_val "0"
+  HIGH @enum_val "1"
+}
+	
+thing fragment ThingMLSchedulerMsg {
+	message setup();
+	message poll();
+}
+
+thing ThingMLScheduler includes ThingMLSchedulerMsg 
+{
+	provided port Polling {
+		sends poll, setup
+	}
+}

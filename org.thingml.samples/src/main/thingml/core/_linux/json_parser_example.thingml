@@ -1,0 +1,110 @@
+import "json/json_parser.thingml"
+import "clock.thingml"
+
+
+thing JSONParserPIM includes JSONParserMsg, ClockMsgs {
+
+	property json_str : CString = '"{\"uuid\": \"00a02b93-25d4-4e35-b134-3028a1993c32\", \"command\": {\"default\": {\"value\": \"true\", \"bvalue\": false, \"intvalue\": 10, \"doublevalue\": 10.0}}}"'
+	property boolean_key : CString = '".command.default.bvalue"'
+	property str_key : CString = '".command.default.value"'
+	property int_key : CString = '".command.default.intvalue"'
+	property double_key : CString = '".command.default.doublevalue"'
+
+	required port boolparser @sync_send "true" {
+		sends decode_boolean
+		receives value_boolean, error_decode
+	}
+	
+	required port strparser @sync_send "true" {
+		sends decode_string
+		receives value_string, error_decode
+	}
+	
+	required port intparser @sync_send "true" {
+		sends decode_integer
+		receives value_integer, error_decode
+	}
+	
+	required port doubleparser @sync_send "true" {
+		sends decode_double
+		receives value_double, error_decode
+	}
+	
+	required port signal {
+		receives clock_tick
+	}
+	
+	statechart Behavior init Start {
+	
+		state Start {
+			
+			internal event signal?clock_tick
+			action do
+				boolparser!decode_boolean(json_str, boolean_key)
+				strparser!decode_string(json_str, str_key)
+				intparser!decode_integer(json_str, int_key)
+				doubleparser!decode_double(json_str, double_key)
+			end
+			
+			internal event boolparser?error_decode
+			action print "failed to parse bool value \n"
+			
+			internal event strparser?error_decode
+			action print "failed to parse string value \n"
+			
+			internal event intparser?error_decode
+			action print "failed to parse integer value \n"
+			
+			internal event doubleparser?error_decode
+			action print "failed to parse double value \n"
+			
+			internal event e : boolparser?value_boolean
+			action do
+				if(e.value) print "extracted value - true \n"
+				if(not e.value) print "extracted value - false \n" 
+			end
+			
+			internal event e : strparser?value_string
+			action do
+				print "some string value is received...\n"
+			end
+			
+			internal event e : intparser?value_integer
+			action do
+				if(e.value == 10) print "extracted value int is 10\n"
+				if(not e.value == 10) print "some other int value is received\n"
+			end
+			
+			internal event e : doubleparser?value_double
+			action do
+				if(e.value == 10) print "extracted value double is 10.0\n"
+				if(not e.value == 10) print "some other double value is received\n"
+			end
+		}
+	}
+	
+	
+}
+
+configuration JSONParserExample
+  @output_folder "/home/tmp/"
+  @debug "true"
+  @debug_fifo "true"
+  @debug_message_send ".*"
+  @debug_message_receive ".*"
+  @add_c_libraries "cson"
+{
+
+	instance jsonparserpim : JSONParserPIM
+	instance jsonparserpsm : JSONParserPSM
+	
+	instance clock : ClockLinux
+		set clock.period = 5000
+	
+	connector jsonparserpim.boolparser => jsonparserpsm.boolparser
+	connector jsonparserpim.strparser => jsonparserpsm.strparser
+	connector jsonparserpim.intparser => jsonparserpsm.intparser
+	connector jsonparserpim.doubleparser => jsonparserpsm.doubleparser
+	
+	connector jsonparserpim.signal => clock.signal
+}

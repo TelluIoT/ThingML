@@ -1,0 +1,16 @@
+import "../core/_javascript/test.thingml"
+import "../testMixStreamsAndEvent.thingml"
+import "../tester.thingml"
+import "../core/_javascript/timer.thingml"
+
+configuration TestMixStreamsAndEvent {
+	instance harness : Tester
+	instance dump : TestDumpJS
+	instance test : TestMixStreamsAndEvent
+ instance timer : TimerJS
+	connector harness.testEnd => dump.dumpEnd
+ connector harness.timer => timer.timer
+	connector test.harnessOut => dump.dump
+	connector test.harnessIn => harness.test
+	connector test.cepRcv => test.cepSend
+}

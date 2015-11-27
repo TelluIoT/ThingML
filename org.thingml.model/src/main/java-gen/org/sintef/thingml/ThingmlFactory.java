@@ -242,15 +242,6 @@ public interface ThingmlFactory extends EFactory {
 	ReceiveMessage createReceiveMessage();
 
 	/**
-	 * Returns a new object of class '<em>Dictionary</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Dictionary</em>'.
-	 * @generated
-	 */
-	Dictionary createDictionary();
-
-	/**
 	 * Returns a new object of class '<em>Required Port</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -269,13 +260,13 @@ public interface ThingmlFactory extends EFactory {
 	ProvidedPort createProvidedPort();
 
 	/**
-	 * Returns a new object of class '<em>Event Reference</em>'.
+	 * Returns a new object of class '<em>Internal Port</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Event Reference</em>'.
+	 * @return a new object of class '<em>Internal Port</em>'.
 	 * @generated
 	 */
-	EventReference createEventReference();
+	InternalPort createInternalPort();
 
 	/**
 	 * Returns a new object of class '<em>Enum Literal Ref</em>'.
@@ -467,15 +458,6 @@ public interface ThingmlFactory extends EFactory {
 	ArrayIndex createArrayIndex();
 
 	/**
-	 * Returns a new object of class '<em>Dictionary Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Dictionary Reference</em>'.
-	 * @generated
-	 */
-	DictionaryReference createDictionaryReference();
-
-	/**
 	 * Returns a new object of class '<em>Expression Group</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -539,6 +521,15 @@ public interface ThingmlFactory extends EFactory {
 	Connector createConnector();
 
 	/**
+	 * Returns a new object of class '<em>External Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>External Connector</em>'.
+	 * @generated
+	 */
+	ExternalConnector createExternalConnector();
+
+	/**
 	 * Returns a new object of class '<em>Config Property Assign</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -591,6 +582,159 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	LocalVariable createLocalVariable();
+
+	/**
+	 * Returns a new object of class '<em>Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stream</em>'.
+	 * @generated
+	 */
+	Stream createStream();
+
+	/**
+	 * Returns a new object of class '<em>Stream Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stream Expression</em>'.
+	 * @generated
+	 */
+	StreamExpression createStreamExpression();
+
+	/**
+	 * Returns a new object of class '<em>Stream Param Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stream Param Reference</em>'.
+	 * @generated
+	 */
+	StreamParamReference createStreamParamReference();
+
+	/**
+	 * Returns a new object of class '<em>Stream Output</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stream Output</em>'.
+	 * @generated
+	 */
+	StreamOutput createStreamOutput();
+
+	/**
+	 * Returns a new object of class '<em>Join Sources</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Join Sources</em>'.
+	 * @generated
+	 */
+	JoinSources createJoinSources();
+
+	/**
+	 * Returns a new object of class '<em>Merge Sources</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Merge Sources</em>'.
+	 * @generated
+	 */
+	MergeSources createMergeSources();
+
+	/**
+	 * Returns a new object of class '<em>Simple Source</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Simple Source</em>'.
+	 * @generated
+	 */
+	SimpleSource createSimpleSource();
+
+	/**
+	 * Returns a new object of class '<em>Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Filter</em>'.
+	 * @generated
+	 */
+	Filter createFilter();
+
+	/**
+	 * Returns a new object of class '<em>Message Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Message Parameter</em>'.
+	 * @generated
+	 */
+	MessageParameter createMessageParameter();
+
+	/**
+	 * Returns a new object of class '<em>Sgl Msg Param Operator Call</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Sgl Msg Param Operator Call</em>'.
+	 * @generated
+	 */
+	SglMsgParamOperatorCall createSglMsgParamOperatorCall();
+
+	/**
+	 * Returns a new object of class '<em>Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Reference</em>'.
+	 * @generated
+	 */
+	Reference createReference();
+
+	/**
+	 * Returns a new object of class '<em>Sgl Msg Param Operator</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Sgl Msg Param Operator</em>'.
+	 * @generated
+	 */
+	SglMsgParamOperator createSglMsgParamOperator();
+
+	/**
+	 * Returns a new object of class '<em>Length Window</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Length Window</em>'.
+	 * @generated
+	 */
+	LengthWindow createLengthWindow();
+
+	/**
+	 * Returns a new object of class '<em>Time Window</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Time Window</em>'.
+	 * @generated
+	 */
+	TimeWindow createTimeWindow();
+
+	/**
+	 * Returns a new object of class '<em>Simple Param Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Simple Param Ref</em>'.
+	 * @generated
+	 */
+	SimpleParamRef createSimpleParamRef();
+
+	/**
+	 * Returns a new object of class '<em>Array Param Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Array Param Ref</em>'.
+	 * @generated
+	 */
+	ArrayParamRef createArrayParamRef();
+
+	/**
+	 * Returns a new object of class '<em>Length Array</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Length Array</em>'.
+	 * @generated
+	 */
+	LengthArray createLengthArray();
 
 	/**
 	 * Returns the package supported by this factory.

@@ -51,7 +51,7 @@ def generic_execute(type,capitalizedName, fileName):
 	if type == "Java":
 		os.system("mvn exec:java -Dexec.mainClass=\"org.thingml.generated.Main\"")
 	if type == "Javascript":
-		os.system("sudo npm install && sudo node main.js")
+		os.system("npm install && node main.js")
 
 fileName = sys.argv[1]
 rootDirectory = os.getcwd()
@@ -113,7 +113,7 @@ for (a,b) in results:
 
 		if deleteTemporaryFiles and os.path.exists(capitalizedName):
 			os.system("rm -r ../../../../../target/tmp/_"+smallType+"/")
-		if (not type == "Java"):
+		if ((not type == "Java") and (not type == "Javascript")):
 			os.system("mvn -f ../../../../../../compilers/registry/pom.xml exec:java -Dexec.mainClass=\"org.thingml.compilers.commandline.Main\" -Dexec.args=\""+compiler+" ../_"+smallType+"/"+fileName+".thingml ../../../../../target/tmp/_" + smallType+ "\"")
 		else:
 			os.system("mvn -f ../../../../../../compilers/registry/pom.xml exec:java -Dexec.mainClass=\"org.thingml.compilers.commandline.Main\" -Dexec.args=\""+compiler+" ../_"+smallType+"/"+fileName+".thingml ../../../../../target/tmp/_" + smallType+"/"+capitalizedName + "\"")

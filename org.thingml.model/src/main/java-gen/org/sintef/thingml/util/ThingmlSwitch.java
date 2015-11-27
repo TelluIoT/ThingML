@@ -117,6 +117,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVariable(parameter);
 				if (result == null) result = caseTypedElement(parameter);
 				if (result == null) result = caseAnnotatedElement(parameter);
+				if (result == null) result = caseReferencedElmt(parameter);
 				if (result == null) result = caseThingMLElement(parameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -126,6 +127,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseVariable(variable);
 				if (result == null) result = caseTypedElement(variable);
 				if (result == null) result = caseAnnotatedElement(variable);
+				if (result == null) result = caseReferencedElmt(variable);
 				if (result == null) result = caseThingMLElement(variable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -156,6 +158,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVariable(property);
 				if (result == null) result = caseTypedElement(property);
 				if (result == null) result = caseAnnotatedElement(property);
+				if (result == null) result = caseReferencedElmt(property);
 				if (result == null) result = caseThingMLElement(property);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -338,18 +341,8 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				ReceiveMessage receiveMessage = (ReceiveMessage)theEObject;
 				T result = caseReceiveMessage(receiveMessage);
 				if (result == null) result = caseEvent(receiveMessage);
+				if (result == null) result = caseReferencedElmt(receiveMessage);
 				if (result == null) result = caseThingMLElement(receiveMessage);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ThingmlPackage.DICTIONARY: {
-				Dictionary dictionary = (Dictionary)theEObject;
-				T result = caseDictionary(dictionary);
-				if (result == null) result = caseProperty(dictionary);
-				if (result == null) result = caseVariable(dictionary);
-				if (result == null) result = caseTypedElement(dictionary);
-				if (result == null) result = caseAnnotatedElement(dictionary);
-				if (result == null) result = caseThingMLElement(dictionary);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -379,10 +372,12 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.EVENT_REFERENCE: {
-				EventReference eventReference = (EventReference)theEObject;
-				T result = caseEventReference(eventReference);
-				if (result == null) result = caseExpression(eventReference);
+			case ThingmlPackage.INTERNAL_PORT: {
+				InternalPort internalPort = (InternalPort)theEObject;
+				T result = caseInternalPort(internalPort);
+				if (result == null) result = casePort(internalPort);
+				if (result == null) result = caseAnnotatedElement(internalPort);
+				if (result == null) result = caseThingMLElement(internalPort);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -580,14 +575,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.DICTIONARY_REFERENCE: {
-				DictionaryReference dictionaryReference = (DictionaryReference)theEObject;
-				T result = caseDictionaryReference(dictionaryReference);
-				if (result == null) result = casePropertyReference(dictionaryReference);
-				if (result == null) result = caseExpression(dictionaryReference);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ThingmlPackage.EXPRESSION_GROUP: {
 				ExpressionGroup expressionGroup = (ExpressionGroup)theEObject;
 				T result = caseExpressionGroup(expressionGroup);
@@ -635,8 +622,26 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.CONNECTOR: {
 				Connector connector = (Connector)theEObject;
 				T result = caseConnector(connector);
+				if (result == null) result = caseAbstractConnector(connector);
 				if (result == null) result = caseAnnotatedElement(connector);
 				if (result == null) result = caseThingMLElement(connector);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.EXTERNAL_CONNECTOR: {
+				ExternalConnector externalConnector = (ExternalConnector)theEObject;
+				T result = caseExternalConnector(externalConnector);
+				if (result == null) result = caseAbstractConnector(externalConnector);
+				if (result == null) result = caseAnnotatedElement(externalConnector);
+				if (result == null) result = caseThingMLElement(externalConnector);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.ABSTRACT_CONNECTOR: {
+				AbstractConnector abstractConnector = (AbstractConnector)theEObject;
+				T result = caseAbstractConnector(abstractConnector);
+				if (result == null) result = caseAnnotatedElement(abstractConnector);
+				if (result == null) result = caseThingMLElement(abstractConnector);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -691,7 +696,206 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = caseAction(localVariable);
 				if (result == null) result = caseTypedElement(localVariable);
 				if (result == null) result = caseAnnotatedElement(localVariable);
+				if (result == null) result = caseReferencedElmt(localVariable);
 				if (result == null) result = caseThingMLElement(localVariable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.STREAM: {
+				Stream stream = (Stream)theEObject;
+				T result = caseStream(stream);
+				if (result == null) result = caseAnnotatedElement(stream);
+				if (result == null) result = caseThingMLElement(stream);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.STREAM_EXPRESSION: {
+				StreamExpression streamExpression = (StreamExpression)theEObject;
+				T result = caseStreamExpression(streamExpression);
+				if (result == null) result = caseThingMLElement(streamExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.STREAM_PARAM_REFERENCE: {
+				StreamParamReference streamParamReference = (StreamParamReference)theEObject;
+				T result = caseStreamParamReference(streamParamReference);
+				if (result == null) result = caseExpression(streamParamReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.STREAM_OUTPUT: {
+				StreamOutput streamOutput = (StreamOutput)theEObject;
+				T result = caseStreamOutput(streamOutput);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.SOURCE: {
+				Source source = (Source)theEObject;
+				T result = caseSource(source);
+				if (result == null) result = caseThingMLElement(source);
+				if (result == null) result = caseReferencedElmt(source);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.SOURCE_COMPOSITION: {
+				SourceComposition sourceComposition = (SourceComposition)theEObject;
+				T result = caseSourceComposition(sourceComposition);
+				if (result == null) result = caseSource(sourceComposition);
+				if (result == null) result = caseThingMLElement(sourceComposition);
+				if (result == null) result = caseReferencedElmt(sourceComposition);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.JOIN_SOURCES: {
+				JoinSources joinSources = (JoinSources)theEObject;
+				T result = caseJoinSources(joinSources);
+				if (result == null) result = caseSourceComposition(joinSources);
+				if (result == null) result = caseSource(joinSources);
+				if (result == null) result = caseThingMLElement(joinSources);
+				if (result == null) result = caseReferencedElmt(joinSources);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.MERGE_SOURCES: {
+				MergeSources mergeSources = (MergeSources)theEObject;
+				T result = caseMergeSources(mergeSources);
+				if (result == null) result = caseSourceComposition(mergeSources);
+				if (result == null) result = caseSource(mergeSources);
+				if (result == null) result = caseThingMLElement(mergeSources);
+				if (result == null) result = caseReferencedElmt(mergeSources);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.SIMPLE_SOURCE: {
+				SimpleSource simpleSource = (SimpleSource)theEObject;
+				T result = caseSimpleSource(simpleSource);
+				if (result == null) result = caseSource(simpleSource);
+				if (result == null) result = caseThingMLElement(simpleSource);
+				if (result == null) result = caseReferencedElmt(simpleSource);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.VIEW_SOURCE: {
+				ViewSource viewSource = (ViewSource)theEObject;
+				T result = caseViewSource(viewSource);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.FILTER: {
+				Filter filter = (Filter)theEObject;
+				T result = caseFilter(filter);
+				if (result == null) result = caseViewSource(filter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.OPERATOR: {
+				Operator operator = (Operator)theEObject;
+				T result = caseOperator(operator);
+				if (result == null) result = caseTypedElement(operator);
+				if (result == null) result = caseThingMLElement(operator);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.MESSAGE_PARAMETER: {
+				MessageParameter messageParameter = (MessageParameter)theEObject;
+				T result = caseMessageParameter(messageParameter);
+				if (result == null) result = caseThingMLElement(messageParameter);
+				if (result == null) result = caseReferencedElmt(messageParameter);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL: {
+				SglMsgParamOperatorCall sglMsgParamOperatorCall = (SglMsgParamOperatorCall)theEObject;
+				T result = caseSglMsgParamOperatorCall(sglMsgParamOperatorCall);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.REFERENCE: {
+				Reference reference = (Reference)theEObject;
+				T result = caseReference(reference);
+				if (result == null) result = caseExpression(reference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.REFERENCED_ELMT: {
+				ReferencedElmt referencedElmt = (ReferencedElmt)theEObject;
+				T result = caseReferencedElmt(referencedElmt);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR: {
+				SglMsgParamOperator sglMsgParamOperator = (SglMsgParamOperator)theEObject;
+				T result = caseSglMsgParamOperator(sglMsgParamOperator);
+				if (result == null) result = caseOperator(sglMsgParamOperator);
+				if (result == null) result = caseTypedElement(sglMsgParamOperator);
+				if (result == null) result = caseThingMLElement(sglMsgParamOperator);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.LENGTH_WINDOW: {
+				LengthWindow lengthWindow = (LengthWindow)theEObject;
+				T result = caseLengthWindow(lengthWindow);
+				if (result == null) result = caseWindowView(lengthWindow);
+				if (result == null) result = caseViewSource(lengthWindow);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.TIME_WINDOW: {
+				TimeWindow timeWindow = (TimeWindow)theEObject;
+				T result = caseTimeWindow(timeWindow);
+				if (result == null) result = caseWindowView(timeWindow);
+				if (result == null) result = caseViewSource(timeWindow);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.PARAM_REFERENCE: {
+				ParamReference paramReference = (ParamReference)theEObject;
+				T result = caseParamReference(paramReference);
+				if (result == null) result = caseElmtProperty(paramReference);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.SIMPLE_PARAM_REF: {
+				SimpleParamRef simpleParamRef = (SimpleParamRef)theEObject;
+				T result = caseSimpleParamRef(simpleParamRef);
+				if (result == null) result = caseParamReference(simpleParamRef);
+				if (result == null) result = caseElmtProperty(simpleParamRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.ARRAY_PARAM_REF: {
+				ArrayParamRef arrayParamRef = (ArrayParamRef)theEObject;
+				T result = caseArrayParamRef(arrayParamRef);
+				if (result == null) result = caseParamReference(arrayParamRef);
+				if (result == null) result = caseElmtProperty(arrayParamRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.ELMT_PROPERTY: {
+				ElmtProperty elmtProperty = (ElmtProperty)theEObject;
+				T result = caseElmtProperty(elmtProperty);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.PREDIFINED_PROPERTY: {
+				PredifinedProperty predifinedProperty = (PredifinedProperty)theEObject;
+				T result = casePredifinedProperty(predifinedProperty);
+				if (result == null) result = caseElmtProperty(predifinedProperty);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.LENGTH_ARRAY: {
+				LengthArray lengthArray = (LengthArray)theEObject;
+				T result = caseLengthArray(lengthArray);
+				if (result == null) result = casePredifinedProperty(lengthArray);
+				if (result == null) result = caseElmtProperty(lengthArray);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.WINDOW_VIEW: {
+				WindowView windowView = (WindowView)theEObject;
+				T result = caseWindowView(windowView);
+				if (result == null) result = caseViewSource(windowView);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1195,21 +1399,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Dictionary</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Dictionary</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDictionary(Dictionary object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Port</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1255,17 +1444,17 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Event Reference</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Internal Port</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Event Reference</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Internal Port</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseEventReference(EventReference object) {
+	public T caseInternalPort(InternalPort object) {
 		return null;
 	}
 
@@ -1645,21 +1834,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Dictionary Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Dictionary Reference</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseDictionaryReference(DictionaryReference object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Expression Group</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1765,6 +1939,36 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>External Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>External Connector</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExternalConnector(ExternalConnector object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Abstract Connector</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Abstract Connector</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAbstractConnector(AbstractConnector object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Config Property Assign</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1866,6 +2070,396 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseLocalVariable(LocalVariable object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Stream</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStream(Stream object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Stream Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Stream Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStreamExpression(StreamExpression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Stream Param Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Stream Param Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStreamParamReference(StreamParamReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Stream Output</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Stream Output</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStreamOutput(StreamOutput object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Source</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Source</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSource(Source object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Source Composition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Source Composition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSourceComposition(SourceComposition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Join Sources</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Join Sources</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJoinSources(JoinSources object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Merge Sources</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Merge Sources</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMergeSources(MergeSources object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Simple Source</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Simple Source</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSimpleSource(SimpleSource object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>View Source</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>View Source</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseViewSource(ViewSource object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Filter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Filter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFilter(Filter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Operator</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Operator</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOperator(Operator object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Message Parameter</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Message Parameter</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMessageParameter(MessageParameter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Sgl Msg Param Operator Call</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Sgl Msg Param Operator Call</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSglMsgParamOperatorCall(SglMsgParamOperatorCall object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReference(Reference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Referenced Elmt</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Referenced Elmt</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseReferencedElmt(ReferencedElmt object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Sgl Msg Param Operator</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Sgl Msg Param Operator</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSglMsgParamOperator(SglMsgParamOperator object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Length Window</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Length Window</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLengthWindow(LengthWindow object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Time Window</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Time Window</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTimeWindow(TimeWindow object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Param Reference</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Param Reference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseParamReference(ParamReference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Simple Param Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Simple Param Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSimpleParamRef(SimpleParamRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Array Param Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Array Param Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseArrayParamRef(ArrayParamRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Elmt Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Elmt Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseElmtProperty(ElmtProperty object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Predifined Property</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Predifined Property</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePredifinedProperty(PredifinedProperty object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Length Array</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Length Array</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLengthArray(LengthArray object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Window View</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Window View</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseWindowView(WindowView object) {
 		return null;
 	}
 

@@ -16,13 +16,11 @@
 package org.thingml.compilers.utils;
 
 import org.sintef.thingml.Configuration;
+import org.thingml.compilers.thing.*;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
-import org.thingml.compilers.thing.ThingActionCompiler;
-import org.thingml.compilers.thing.ThingApiCompiler;
-
 import java.io.File;
 
 /**
@@ -35,16 +33,17 @@ public class FakeThingMLCompiler extends ThingMLCompiler {
 
     }
 
-    public FakeThingMLCompiler (ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
-        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
-        File folder = new File("tmp/ThingML");
-
+    public FakeThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
+        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler,cepCompiler);
+        File folder = new File("tmp/ThingML"); //fixme useful?
     }
 
 
     @Override
     public ThingMLCompiler clone() {
-        return new FakeThingMLCompiler(new ThingActionCompiler(), new ThingApiCompiler(), new CfgMainGenerator(), new CfgBuildCompiler(), new FSMBasedThingImplCompiler());
+        return new FakeThingMLCompiler(new ThingActionCompiler(), new ThingApiCompiler(), new CfgMainGenerator(),
+                new CfgBuildCompiler(), new FSMBasedThingImplCompiler(),
+                new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
     }
 
     @Override

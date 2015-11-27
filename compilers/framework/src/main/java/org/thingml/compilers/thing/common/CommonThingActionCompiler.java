@@ -16,6 +16,8 @@
 package org.thingml.compilers.thing.common;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
@@ -33,10 +35,19 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append("//Platform-specific action (" + action.getClass().getName() + ") should be refined in a sub-compiler");
     }
 
+    public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
+
+    }
+
+    public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
+
+    }
+
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
+        traceVariablePre(action, builder, ctx);
         if (action.getProperty().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
-            for(Expression i : action.getIndex()) {
+            for (Expression i : action.getIndex()) {
                 builder.append(action.getProperty().qname("_") + "_var");
                 StringBuilder tempBuilder = new StringBuilder();
                 generate(i, tempBuilder, ctx);
@@ -45,27 +56,28 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
                 cast(action.getProperty().getType(), false, action.getExpression(), builder, ctx);
                 //generateMainAndInit(action.getExpression(), builder, ctx);
                 builder.append(";\n");
+
             }
-        }
-        else {//simple variable or we re-affect the whole array
+        } else {//simple variable or we re-affect the whole array
             if (action.getProperty().eContainer() instanceof Thing && !(action.getProperty().isDefined("private", "true"))) {
                 builder.append(ctx.getContextAnnotation("thisRef"));
             }
             builder.append(action.getProperty().qname("_") + "_var");
             builder.append(" = ");
-            cast(action.getProperty().getType(), action.getProperty().getCardinality()!=null, action.getExpression(), builder, ctx);
+            cast(action.getProperty().getType(), action.getProperty().isIsArray(), action.getExpression(), builder, ctx);
             //generateMainAndInit(action.getExpression(), builder, ctx);
             builder.append(";\n");
         }
+        traceVariablePost(action, builder, ctx);
     }
 
-    protected void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
+    public void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
         generate(exp, builder, ctx);
     }
 
     @Override
     public void generate(ActionBlock action, StringBuilder builder, Context ctx) {
-        for(Action a : action.getActions()) {
+        for (Action a : action.getActions()) {
             generate(a, builder, ctx);
         }
     }
@@ -116,7 +128,8 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
-        generate(action.getExp(), builder, ctx);
+        TypedElement parent = ThingMLHelpers.findContainingFuncOp(action);
+        cast(parent.getType(),false,action.getExp(),builder,ctx);
         builder.append(";\n");
     }
 
@@ -159,7 +172,8 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     public void generate(LowerExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" < ");
-        generate(expression.getRhs(), builder, ctx);    }
+        generate(expression.getRhs(), builder, ctx);
+    }
 
     @Override
     public void generate(GreaterExpression expression, StringBuilder builder, Context ctx) {
@@ -172,7 +186,8 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" == ");
-        generate(expression.getRhs(), builder, ctx);    }
+        generate(expression.getRhs(), builder, ctx);
+    }
 
     @Override
     public void generate(PlusExpression expression, StringBuilder builder, Context ctx) {
@@ -222,9 +237,51 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append(")");
     }
 
-    @Override
-    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
-        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
+   @Override
+    public void generate(Reference expression, StringBuilder builder, Context ctx) {
+       String messageName = "";
+       Message message = null;
+       if (expression.getReference() instanceof ReceiveMessage) {
+           ReceiveMessage rm = (ReceiveMessage) expression.getReference();
+           message = rm.getMessage();
+           messageName = message.getName();
+       } else if (expression.getReference() instanceof Source) {
+           Source source = (Source) expression.getReference();
+           if (source instanceof SimpleSource) {
+               ReceiveMessage rm = ((SimpleSource) source).getMessage();
+               message = rm.getMessage();
+               messageName = message.getName();
+           } else if (source instanceof SourceComposition){
+               message = ((SourceComposition) source).getResultMessage();
+               messageName = message.getName();
+           } else {
+               throw new UnsupportedException(source.getClass().getName(),"stream input","JavaThingActionCompiler");
+           }
+       } else if (expression.getReference() instanceof MessageParameter) {
+           MessageParameter mp = (MessageParameter) expression.getReference();
+           messageName = mp.getName();
+           message = mp.getMsgRef();
+       } else if(expression.getReference() instanceof Variable) {
+           Variable var = (Variable) expression.getReference();
+           if(var.isIsArray()) {
+               generateReferenceArray(var,builder,ctx);
+               return;
+           } else {
+               throw new UnsupportedOperationException("The variable " + var.getName() + " must be an array.");
+           }
+       }else {
+           throw new UnsupportedException(expression.getReference().getClass().getName(),"reference","CommonThingActionCompiler");
+       }
+       generateReference(message, messageName, expression, builder, ctx);
+
+    }
+
+    protected void generateReferenceArray(Variable variable, StringBuilder builder, Context context) {
+        builder.append(context.getVariableName(variable) + ".length");
+    }
+
+    protected void generateReference(Message message,String messageName, Reference reference, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This part of reference compiler (CommonThingActionCompiler) is platform specific and should be redefined."));
     }
 
     @Override
@@ -256,10 +313,10 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-       if (expression.isBoolValue())
-           builder.append("true");
-       else
-           builder.append("false");
+        if (expression.isBoolValue())
+            builder.append("true");
+        else
+            builder.append("false");
     }
 
     @Override
@@ -270,7 +327,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
         builder.append(expression.getExpression());
-        for(Expression e : expression.getSegments()) {
+        for (Expression e : expression.getSegments()) {
             generate(e, builder, ctx);
         }
     }

@@ -49,4 +49,39 @@ public class PrimitiveTypeImpl extends TypeImpl implements PrimitiveType {
 		return ThingmlPackage.Literals.PRIMITIVE_TYPE;
 	}
 
+	/**
+	 * @generated NOT
+	 */
+	public boolean isNumber() {
+	   return this.getName().contains("Int") || this.getName().contains("Long") || this.getName().contains("Float") || this.getName().contains("Double");
+	}
+
+	/**
+	 * @generated NOT
+	 */
+	public boolean isBoolean() {
+		return this.getName().contains("Bool");
+	}
+
+	/**
+	 * @generated NOT
+	 */
+	public boolean isString() {
+		return this.getName().contains("String");
+	}
+
+	/**
+	 * @generated NOT
+	 */
+	public boolean isChar() {
+		return this.getName().contains("Char");
+	}
+
+	/**
+	 * @generated NOT
+	 */
+	public boolean isByte() {
+		return this.getName().contains("Byte");
+	}
+
 } //PrimitiveTypeImpl

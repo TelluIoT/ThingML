@@ -213,10 +213,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createReceiveMessageAdapter();
 			}
 			@Override
-			public Adapter caseDictionary(Dictionary object) {
-				return createDictionaryAdapter();
-			}
-			@Override
 			public Adapter casePort(Port object) {
 				return createPortAdapter();
 			}
@@ -229,8 +225,8 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createProvidedPortAdapter();
 			}
 			@Override
-			public Adapter caseEventReference(EventReference object) {
-				return createEventReferenceAdapter();
+			public Adapter caseInternalPort(InternalPort object) {
+				return createInternalPortAdapter();
 			}
 			@Override
 			public Adapter caseLiteral(Literal object) {
@@ -333,10 +329,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createArrayIndexAdapter();
 			}
 			@Override
-			public Adapter caseDictionaryReference(DictionaryReference object) {
-				return createDictionaryReferenceAdapter();
-			}
-			@Override
 			public Adapter caseExpressionGroup(ExpressionGroup object) {
 				return createExpressionGroupAdapter();
 			}
@@ -365,6 +357,14 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createConnectorAdapter();
 			}
 			@Override
+			public Adapter caseExternalConnector(ExternalConnector object) {
+				return createExternalConnectorAdapter();
+			}
+			@Override
+			public Adapter caseAbstractConnector(AbstractConnector object) {
+				return createAbstractConnectorAdapter();
+			}
+			@Override
 			public Adapter caseConfigPropertyAssign(ConfigPropertyAssign object) {
 				return createConfigPropertyAssignAdapter();
 			}
@@ -391,6 +391,110 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseLocalVariable(LocalVariable object) {
 				return createLocalVariableAdapter();
+			}
+			@Override
+			public Adapter caseStream(Stream object) {
+				return createStreamAdapter();
+			}
+			@Override
+			public Adapter caseStreamExpression(StreamExpression object) {
+				return createStreamExpressionAdapter();
+			}
+			@Override
+			public Adapter caseStreamParamReference(StreamParamReference object) {
+				return createStreamParamReferenceAdapter();
+			}
+			@Override
+			public Adapter caseStreamOutput(StreamOutput object) {
+				return createStreamOutputAdapter();
+			}
+			@Override
+			public Adapter caseSource(Source object) {
+				return createSourceAdapter();
+			}
+			@Override
+			public Adapter caseSourceComposition(SourceComposition object) {
+				return createSourceCompositionAdapter();
+			}
+			@Override
+			public Adapter caseJoinSources(JoinSources object) {
+				return createJoinSourcesAdapter();
+			}
+			@Override
+			public Adapter caseMergeSources(MergeSources object) {
+				return createMergeSourcesAdapter();
+			}
+			@Override
+			public Adapter caseSimpleSource(SimpleSource object) {
+				return createSimpleSourceAdapter();
+			}
+			@Override
+			public Adapter caseViewSource(ViewSource object) {
+				return createViewSourceAdapter();
+			}
+			@Override
+			public Adapter caseFilter(Filter object) {
+				return createFilterAdapter();
+			}
+			@Override
+			public Adapter caseOperator(Operator object) {
+				return createOperatorAdapter();
+			}
+			@Override
+			public Adapter caseMessageParameter(MessageParameter object) {
+				return createMessageParameterAdapter();
+			}
+			@Override
+			public Adapter caseSglMsgParamOperatorCall(SglMsgParamOperatorCall object) {
+				return createSglMsgParamOperatorCallAdapter();
+			}
+			@Override
+			public Adapter caseReference(Reference object) {
+				return createReferenceAdapter();
+			}
+			@Override
+			public Adapter caseReferencedElmt(ReferencedElmt object) {
+				return createReferencedElmtAdapter();
+			}
+			@Override
+			public Adapter caseSglMsgParamOperator(SglMsgParamOperator object) {
+				return createSglMsgParamOperatorAdapter();
+			}
+			@Override
+			public Adapter caseLengthWindow(LengthWindow object) {
+				return createLengthWindowAdapter();
+			}
+			@Override
+			public Adapter caseTimeWindow(TimeWindow object) {
+				return createTimeWindowAdapter();
+			}
+			@Override
+			public Adapter caseParamReference(ParamReference object) {
+				return createParamReferenceAdapter();
+			}
+			@Override
+			public Adapter caseSimpleParamRef(SimpleParamRef object) {
+				return createSimpleParamRefAdapter();
+			}
+			@Override
+			public Adapter caseArrayParamRef(ArrayParamRef object) {
+				return createArrayParamRefAdapter();
+			}
+			@Override
+			public Adapter caseElmtProperty(ElmtProperty object) {
+				return createElmtPropertyAdapter();
+			}
+			@Override
+			public Adapter casePredifinedProperty(PredifinedProperty object) {
+				return createPredifinedPropertyAdapter();
+			}
+			@Override
+			public Adapter caseLengthArray(LengthArray object) {
+				return createLengthArrayAdapter();
+			}
+			@Override
+			public Adapter caseWindowView(WindowView object) {
+				return createWindowViewAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -875,20 +979,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Dictionary <em>Dictionary</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.Dictionary
-	 * @generated
-	 */
-	public Adapter createDictionaryAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Port <em>Port</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -931,16 +1021,16 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.EventReference <em>Event Reference</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.InternalPort <em>Internal Port</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.EventReference
+	 * @see org.sintef.thingml.InternalPort
 	 * @generated
 	 */
-	public Adapter createEventReferenceAdapter() {
+	public Adapter createInternalPortAdapter() {
 		return null;
 	}
 
@@ -1295,20 +1385,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.DictionaryReference <em>Dictionary Reference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.DictionaryReference
-	 * @generated
-	 */
-	public Adapter createDictionaryReferenceAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ExpressionGroup <em>Expression Group</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1407,6 +1483,34 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ExternalConnector <em>External Connector</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ExternalConnector
+	 * @generated
+	 */
+	public Adapter createExternalConnectorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.AbstractConnector <em>Abstract Connector</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.AbstractConnector
+	 * @generated
+	 */
+	public Adapter createAbstractConnectorAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ConfigPropertyAssign <em>Config Property Assign</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1501,6 +1605,370 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createLocalVariableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Stream <em>Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Stream
+	 * @generated
+	 */
+	public Adapter createStreamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamExpression <em>Stream Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.StreamExpression
+	 * @generated
+	 */
+	public Adapter createStreamExpressionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.StreamParamReference
+	 * @generated
+	 */
+	public Adapter createStreamParamReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamOutput <em>Stream Output</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.StreamOutput
+	 * @generated
+	 */
+	public Adapter createStreamOutputAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Source <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Source
+	 * @generated
+	 */
+	public Adapter createSourceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SourceComposition <em>Source Composition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SourceComposition
+	 * @generated
+	 */
+	public Adapter createSourceCompositionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.JoinSources <em>Join Sources</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.JoinSources
+	 * @generated
+	 */
+	public Adapter createJoinSourcesAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.MergeSources <em>Merge Sources</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.MergeSources
+	 * @generated
+	 */
+	public Adapter createMergeSourcesAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SimpleSource <em>Simple Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SimpleSource
+	 * @generated
+	 */
+	public Adapter createSimpleSourceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ViewSource <em>View Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ViewSource
+	 * @generated
+	 */
+	public Adapter createViewSourceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Filter <em>Filter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Filter
+	 * @generated
+	 */
+	public Adapter createFilterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Operator <em>Operator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Operator
+	 * @generated
+	 */
+	public Adapter createOperatorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.MessageParameter <em>Message Parameter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.MessageParameter
+	 * @generated
+	 */
+	public Adapter createMessageParameterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SglMsgParamOperatorCall <em>Sgl Msg Param Operator Call</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SglMsgParamOperatorCall
+	 * @generated
+	 */
+	public Adapter createSglMsgParamOperatorCallAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Reference <em>Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Reference
+	 * @generated
+	 */
+	public Adapter createReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ReferencedElmt <em>Referenced Elmt</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ReferencedElmt
+	 * @generated
+	 */
+	public Adapter createReferencedElmtAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SglMsgParamOperator <em>Sgl Msg Param Operator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SglMsgParamOperator
+	 * @generated
+	 */
+	public Adapter createSglMsgParamOperatorAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.LengthWindow <em>Length Window</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.LengthWindow
+	 * @generated
+	 */
+	public Adapter createLengthWindowAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.TimeWindow <em>Time Window</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.TimeWindow
+	 * @generated
+	 */
+	public Adapter createTimeWindowAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ParamReference <em>Param Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ParamReference
+	 * @generated
+	 */
+	public Adapter createParamReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SimpleParamRef <em>Simple Param Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.SimpleParamRef
+	 * @generated
+	 */
+	public Adapter createSimpleParamRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ArrayParamRef <em>Array Param Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ArrayParamRef
+	 * @generated
+	 */
+	public Adapter createArrayParamRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ElmtProperty <em>Elmt Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ElmtProperty
+	 * @generated
+	 */
+	public Adapter createElmtPropertyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.PredifinedProperty <em>Predifined Property</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.PredifinedProperty
+	 * @generated
+	 */
+	public Adapter createPredifinedPropertyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.LengthArray <em>Length Array</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.LengthArray
+	 * @generated
+	 */
+	public Adapter createLengthArrayAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.WindowView <em>Window View</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.WindowView
+	 * @generated
+	 */
+	public Adapter createWindowViewAdapter() {
 		return null;
 	}
 

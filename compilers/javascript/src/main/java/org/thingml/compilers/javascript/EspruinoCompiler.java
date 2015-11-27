@@ -16,23 +16,27 @@
 package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
-import org.thingml.compilers.thing.ThingActionCompiler;
-import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.javascript.cepHelper.JSCepViewCompiler;
+import org.thingml.compilers.javascript.cepHelper.JSGenerateSourceDeclaration;
+import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 /**
  * Created by ffl on 25.11.14.
  */
-public class EspruinoCompiler extends JavaScriptCompiler {
+public class EspruinoCompiler extends JSCompiler {
 
-   public EspruinoCompiler() {
-        super(new EspruinoThingActionCompiler(), new EspruinoThingApiCompiler(), new JSCfgMainGenerator(), new JSCfgBuildCompiler(), new JSThingImplCompiler());
+    public EspruinoCompiler() {
+        super(new EspruinoThingActionCompiler(), new EspruinoThingApiCompiler(), new JSCfgMainGenerator(),
+                new JSCfgBuildCompiler(), new JSThingImplCompiler(),
+                new JSThingCepCompiler(new JSCepViewCompiler(), new JSGenerateSourceDeclaration()));
     }
 
-    public EspruinoCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
-        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
+    public EspruinoCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, JSThingCepCompiler cepCompiler) {
+        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
     }
 
     @Override

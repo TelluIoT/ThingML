@@ -15,12 +15,16 @@
  */
 package org.thingml.compilers.java;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
-import org.sintef.thingml.Enumeration;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -35,12 +39,12 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             } else {
 
 
-                for(Property a : cfg.allArrays(i)) {
+                for (Property a : cfg.allArrays(i)) {
                     builder.append("final " + JavaHelper.getJavaType(a.getType(), true, ctx) + " " + i.getName() + "_" + a.getName() + "_array = new " + JavaHelper.getJavaType(a.getType(), false, ctx) + "[");
                     if (a.getCardinality() instanceof PropertyReference) {
                         PropertyReference pr = (PropertyReference) a.getCardinality();
                         AbstractMap.SimpleImmutableEntry l = null;
-                        for(AbstractMap.SimpleImmutableEntry l2 : cfg.initExpressionsForInstance(i)) {
+                        for (AbstractMap.SimpleImmutableEntry l2 : cfg.initExpressionsForInstance(i)) {
                             if (l2.getKey().equals(pr.getProperty())) {
                                 l = l2;
                                 break;
@@ -57,8 +61,8 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                     builder.append("];\n");
                 }
 
-                for(Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : cfg.initExpressionsForInstanceArrays(i).entrySet()) {
-                    for(AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
+                for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : cfg.initExpressionsForInstanceArrays(i).entrySet()) {
+                    for (AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
                         String result = "";
                         StringBuilder tempBuilder = new StringBuilder();
                         result += i.getName() + "_" + entry.getKey().getName() + "_array [";
@@ -72,10 +76,10 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                     }
                 }
 
-                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + ") new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + ": " + i.getType().getName() + "\"");
+                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + ") new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + " (" + i.getType().getName() + ")\"");
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                for(Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
-                    for(AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
+                for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
+                    for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
                         if (p.getKey().equals(prop) && prop.getCardinality() == null) {
                             String result = "";
                             if (prop.getType() instanceof Enumeration) {
@@ -103,7 +107,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                         }
                     }
 
-                    for(Property a : cfg.allArrays(i)) {
+                    for (Property a : cfg.allArrays(i)) {
                         if (prop.equals(a)) {
                             builder.append(", " + i.getName() + "_" + a.getName() + "_array");
                         }
@@ -113,13 +117,32 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
+        builder.append("//Connecting internal ports...\n");
+        for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+            Instance i = entries.getKey();
+            for(InternalPort p : entries.getValue()) {
+                for(Message rec : p.getReceives())  {
+                    for(Message send : p.getSends()) {
+                        if(EcoreUtil.equals(rec, send)) {
+                            builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port().addListener(");
+                            builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         builder.append("//Connectors\n");
-        for(Connector c : cfg.allConnectors()) {
-            builder.append("new Connector(");
-            builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port(), ");
-            builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port(), ");
-            builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ", ");
-            builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ");\n");
+        for (Connector c : cfg.allConnectors()) {
+            if(c.getProvided().getSends().size() > 0 && c.getRequired().getReceives().size() > 0) {
+                builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port().addListener(");
+                builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port());\n");
+            }
+            if(c.getProvided().getReceives().size() > 0 && c.getRequired().getSends().size() > 0) {
+                builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port().addListener(");
+                builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port());\n");
+            }
         }
     }
 
@@ -128,7 +151,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
 
-        final String src = "src/main/java/" + pack.replace(".", "/");
+        final String src = "/src/main/java/" + pack.replace(".", "/");
 
         StringBuilder builder = ctx.getBuilder(src + "/Main.java");
 
@@ -156,7 +179,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-        JavaHelper.generateHeader(pack, pack, builder, ctx, true, api, cfg.allMessages().size() > 0);
+        JavaHelper.generateHeader(pack, pack, builder, ctx, true, api, cfg.allMessages().size() > 0,false);
         if (gui) {
             builder.append("import " + pack + ".gui.*;\n");
         }
@@ -166,7 +189,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("//Things\n");
         for (Instance i : cfg.allInstances()) {
-            if (i.getType().isMockUp()) {
+            if (i.getType().hasAnnotation("mock")) {
                 builder.append("public static " + ctx.firstToUpper(i.getType().getName()) + "Mock " + ctx.getInstanceName(i) + ";\n");
             } else {
                 builder.append("public static " + ctx.firstToUpper(i.getType().getName()) + " " + ctx.getInstanceName(i) + ";\n");
@@ -175,21 +198,46 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("public static void main(String args[]) {\n");
         generateInstances(cfg, ctx, builder);
-
-        builder.append("//Starting Things\n");
-        for(Instance i : cfg.allInstances()) {
+        final boolean debug = cfg.isDefined("debug", "true");
+        builder.append("//Init instances (queues, etc)\n");
+        for (Instance i : cfg.allInstances()) {
+            //if (debug || i.isDefined("debug", "true")) {
+            DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
+            boolean debugInst = false;
+            for(Instance inst : debugProfile.getDebugInstances()) {
+                if(i.getName().equals(inst.getName())) {
+                    debugInst = true;
+                    break;
+                }
+            }
+            if (debugInst) {
+                builder.append(ctx.getInstanceName(i) + ".instanceName = \"" + i.getName() + "\";\n");
+                builder.append(ctx.getInstanceName(i) + ".setDebug(true);\n");
+            }
             builder.append(ctx.getInstanceName(i) + ".init();\n");
-        }
-        for(Instance i : cfg.allInstances()) {
-            builder.append(ctx.getInstanceName(i) + ".start();\n");
+            if (debugInst || debug) {
+                //builder.append("System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|cyan INIT: \" + " + ctx.getInstanceName(i) + " + \"|@\"));\n");
+                builder.append(ctx.getInstanceName(i) + ".printDebug(\"" + ctx.traceInit(i.getType()) + "\");\n");
+            }
         }
 
+        List<Instance> instances = cfg.orderInstanceInit();
+        Instance inst;
+        while(!instances.isEmpty()) {
+            inst = instances.get(instances.size()-1);
+            instances.remove(inst);
+            builder.append(ctx.getInstanceName(inst) + ".start();\n");
+        }
 
+        builder.append("//Hook to stop instances following client/server dependencies (clients firsts)\n");
         builder.append("Runtime.getRuntime().addShutdownHook(new Thread() {\n");
         builder.append("public void run() {\n");
-        builder.append("System.out.println(\"Terminating ThingML app...\");");
-        for(Instance i : cfg.allInstances()) {
-            builder.append(ctx.getInstanceName(i) + ".stop();\n");
+        builder.append("System.out.println(\"Terminating ThingML app...\");\n");
+        instances = cfg.orderInstanceInit();
+        while(!instances.isEmpty()) {
+            inst = instances.get(0);
+            instances.remove(inst);
+            builder.append(ctx.getInstanceName(inst) + ".stop();\n");
         }
         builder.append("System.out.println(\"ThingML app terminated. RIP!\");");
         builder.append("}\n");

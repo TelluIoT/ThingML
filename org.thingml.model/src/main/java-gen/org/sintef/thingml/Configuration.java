@@ -17,10 +17,7 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <!-- begin-user-doc -->
@@ -61,7 +58,7 @@ public interface Configuration extends AnnotatedElement {
 
 	/**
 	 * Returns the value of the '<em><b>Connectors</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.Connector}.
+	 * The list contents are of type {@link org.sintef.thingml.AbstractConnector}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Connectors</em>' containment reference list isn't clear,
@@ -73,7 +70,7 @@ public interface Configuration extends AnnotatedElement {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<Connector> getConnectors();
+	EList<AbstractConnector> getConnectors();
 
 	/**
 	 * Returns the value of the '<em><b>Fragment</b></em>' attribute.
@@ -184,20 +181,6 @@ public interface Configuration extends AnnotatedElement {
 
     /**
      *
-     * @return
-     * @generated NOT
-     */
-    Set<String> allThingMLMavenDep();//FIXME: should be moved in a JavaHelper
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    Set<String> allMavenDep();//FIXME: should be moved in a JavaHelper
-
-    /**
-     *
      * @param i
      * @return
      * @generated NOT
@@ -249,5 +232,45 @@ public interface Configuration extends AnnotatedElement {
      * @generated NOT
      */
     List<Expression> initExpressions(Instance i, Property p);
+    
+    /**
+     * @generated NOT
+     * @return
+     */
+    List<Connector> getInternalConnectors();
+    
+    /**
+     * @generated NOT
+     * @return
+     */
+    List<ExternalConnector> getExternalConnectors();
 
-} // Configuration
+    /**
+     * Returns all thing instances ("clients") that dependents on instance i
+     * @generated NOT
+     * @return
+     */
+    List<Instance> getClients(Instance i);
+
+    /**
+     * Returns all thing instances i dependents on ("servers")
+     * @generated NOT
+     * @return
+     */
+    List<Instance> getServers(Instance i);
+
+    /**
+     * Returns all internal ports, for all instances
+     * @generated NOT
+     * @return
+     */
+    Map<Instance, List<InternalPort>> allInternalPorts();
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    List<Instance> orderInstanceInit();
+
+
+    } // Configuration

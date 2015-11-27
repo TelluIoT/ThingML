@@ -1,0 +1,189 @@
+html, body {
+	height:100%;
+	width:100%;
+	margin: 0;
+	padding: 0;
+}
+
+
+body {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	display: flex;
+	flex-direction: column;
+}
+
+
+.main {
+	flex-grow: 1;
+	overflow-x: auto;
+}
+
+#header {
+	margin: 50px 0px 10px 0px;
+	height: 100px;
+	padding: 20px 0px 20px 0px;
+
+
+	background: #202020;
+	background-image: -webkit-linear-gradient(top, #202020, #101010);
+	background-image: -moz-linear-gradient(top, #202020, #101010);
+	background-image: -ms-linear-gradient(top, #202020, #101010);
+	background-image: -o-linear-gradient(top, #202020, #101010);
+	background-image: linear-gradient(to bottom, #202020, #101010);
+}
+
+#header-inside {
+	margin: 50px auto 10px auto;
+	padding: 0px;
+	width: 820px;
+}
+
+#footer {
+	height: 50px;
+	background: #b31010;
+	background: #202020;
+	background-image: -webkit-linear-gradient(top, #202020, #101010);
+	background-image: -moz-linear-gradient(top, #202020, #101010);
+	background-image: -ms-linear-gradient(top, #202020, #101010);
+	background-image: -o-linear-gradient(top, #202020, #101010);
+	background-image: linear-gradient(to bottom, #202020, #101010);
+}
+
+#logs {
+    overflow: auto;
+	margin: 10px auto 10px auto;
+	width: 820px;
+}
+
+#div-received-logs {
+	margin: 0px 0px 10px 0px;
+	float: left;
+	width: 400px;
+}
+
+#received-logs {
+	white-space: pre;
+}
+
+#div-sent-logs {
+	margin-left: 410px;
+	width: 400px;
+}
+
+#sent-logs {
+	white-space: pre;
+}
+
+#send {
+}
+
+#send-content{
+    overflow: auto;
+	margin: 10px auto 10px auto;
+	width: 820px;
+}
+
+#connect {
+	background: #202020;
+	background-image: -webkit-linear-gradient(top, #cccccc, #aaaaaa);
+	background-image: -moz-linear-gradient(top, #cccccc, #aaaaaa);
+	background-image: -ms-linear-gradient(top, #cccccc, #aaaaaa);
+	background-image: -o-linear-gradient(top, #cccccc, #aaaaaa);
+	background-image: linear-gradient(to bottom, #cccccc, #aaaaaa);
+}
+
+#connect-content{
+    overflow: auto;
+	margin: 10px auto 0px auto;
+	padding: 10px 0px 10px 0px;
+	width: 820px;
+}
+
+.log {
+	height: 400px;
+	width: 390px;
+    overflow: auto;
+	padding: 5px;
+	margin: 0px;
+
+
+	background: #202020;
+	background-image: -webkit-linear-gradient(top, #fafafa, #f0f0f0);
+	background-image: -moz-linear-gradient(top, #fafafa, #f0f0f0);
+	background-image: -ms-linear-gradient(top, #fafafa, #f0f0f0);
+	background-image: -o-linear-gradient(top, #fafafa, #f0f0f0);
+	background-image: linear-gradient(to bottom, #fafafa, #f0f0f0);
+
+	box-shadow: -webkit-box-shadow: 5px 5px 5px 0px rgba(143,143,143,1);
+	box-shadow: -moz-box-shadow: 5px 5px 5px 0px rgba(143,143,143,1);
+	box-shadow: 5px 5px 5px 0px rgba(143,143,143,1);
+}
+
+h1 {
+	color: #f5f5f5;
+}
+
+h2 {
+
+}
+
+table {
+	align: center;
+}
+
+.btn {
+	background: #880000;
+	background-image: -webkit-linear-gradient(top, #88000, #440000);
+	background-image: -moz-linear-gradient(top, #88000, #440000);
+	background-image: -ms-linear-gradient(top, #88000, #440000);
+	background-image: -o-linear-gradient(top, #88000, #440000);
+	-webkit-border-radius: 5;
+	-moz-border-radius: 5;
+	border-radius: 5px;
+	-webkit-box-shadow: 1px 1px 3px #666666;
+	-moz-box-shadow: 1px 1px 3px #666666;
+	box-shadow: 1px 1px 3px #666666;
+	font-family: Arial;
+	color: #ffffff;
+	padding: 5px 10px 5px 10px;
+	text-decoration: none;
+}
+
+.btn:hover {
+	background: #ed0000;
+	background-image: -webkit-linear-gradient(top, #ed0000, #cd0000);
+	background-image: -moz-linear-gradient(top, #ed0000, #cd0000);
+	background-image: -ms-linear-gradient(top, #ed0000, #cd0000);
+	background-image: -o-linear-gradient(top, #ed0000, #cd0000);
+	background-image: linear-gradient(to bottom, #ed0000, #cd0000);
+	text-decoration: none;
+}
+
+.btn:active {
+	text-decoration: bold;
+}
+
+input[type="text"]{
+    max-width: 100px;
+    width: 70%;
+}
+
+/*.bootstrap-frm input[type="text"], .bootstrap-frm input[type="email"], .bootstrap-frm textarea, .bootstrap-frm select{
+    border: 1px solid #CCC;
+    color: #888;
+    height: 20px;
+    line-height:15px;
+    margin-bottom: 16px;
+    margin-right: 6px;
+    margin-top: 2px;
+    outline: 0 none;
+    padding: 5px 0px 5px 5px;
+    max-width: 100px;
+    width: 70%;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;    
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}*/

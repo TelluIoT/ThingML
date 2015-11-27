@@ -38,6 +38,7 @@ import org.sintef.thingml.TypedElement;
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.TypedElementImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.TypedElementImpl#getCardinality <em>Cardinality</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.TypedElementImpl#isIsArray <em>Is Array</em>}</li>
  * </ul>
  * </p>
  *
@@ -63,6 +64,26 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	 * @ordered
 	 */
 	protected Expression cardinality;
+
+	/**
+	 * The default value of the '{@link #isIsArray() <em>Is Array</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIsArray()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean IS_ARRAY_EDEFAULT = true;
+
+	/**
+	 * The cached value of the '{@link #isIsArray() <em>Is Array</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isIsArray()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean isArray = IS_ARRAY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -169,6 +190,27 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isIsArray() {
+		return isArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setIsArray(boolean newIsArray) {
+		boolean oldIsArray = isArray;
+		isArray = newIsArray;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.TYPED_ELEMENT__IS_ARRAY, oldIsArray, isArray));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -191,6 +233,8 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 				return basicGetType();
 			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
 				return getCardinality();
+			case ThingmlPackage.TYPED_ELEMENT__IS_ARRAY:
+				return isIsArray();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -208,6 +252,9 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 				return;
 			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
 				setCardinality((Expression)newValue);
+				return;
+			case ThingmlPackage.TYPED_ELEMENT__IS_ARRAY:
+				setIsArray((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -227,6 +274,9 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
 				setCardinality((Expression)null);
 				return;
+			case ThingmlPackage.TYPED_ELEMENT__IS_ARRAY:
+				setIsArray(IS_ARRAY_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -243,8 +293,26 @@ public abstract class TypedElementImpl extends EObjectImpl implements TypedEleme
 				return type != null;
 			case ThingmlPackage.TYPED_ELEMENT__CARDINALITY:
 				return cardinality != null;
+			case ThingmlPackage.TYPED_ELEMENT__IS_ARRAY:
+				return isArray != IS_ARRAY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (isArray: ");
+		result.append(isArray);
+		result.append(')');
+		return result.toString();
 	}
 
 } //TypedElementImpl

@@ -1,0 +1,38 @@
+import "../lib/_Arduino.thingml"
+
+configuration SoloCfg {
+	instance schedueler : ArduinoScheduler
+	instance myControlloer : Controller
+
+	connector myControlloer.arduino => schedueler.arduino
+}
+
+thing Controller includes ArduinoApplication {
+	property LEDPin : UInt8 = 8
+	property sensorPin : UInt8 = 0
+	property sensorValue : UInt16
+	
+	statechart ControllerChart init Initialization {
+		state Initialization {
+			on entry do
+				'pinMode('&LEDPin&',OUTPUT);'
+			end
+		
+			transition -> Control
+		}
+
+		state Control {
+			on entry do
+				sensorValue = 'analogRead('&sensorPin&')'
+				if(sensorValue > 512) do
+					'digitalWrite('&LEDPin&', HIGH);'
+				end
+				if(not(sensorValue > 512)) do
+					'digitalWrite('&LEDPin&', LOW);'
+				end
+			end
+			
+			transition -> Control event arduino?100ms_interrupt
+		}
+	}
+}

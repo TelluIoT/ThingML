@@ -15,21 +15,48 @@
  */
 package org.thingml.compilers;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Connector;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.Variable;
 
-import java.io.*;
-import java.lang.String;
-import java.lang.StringBuilder;
+import java.io.File;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.*;
+import org.sintef.thingml.Function;
+import org.sintef.thingml.InternalTransition;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.Port;
+import org.sintef.thingml.Region;
+import org.sintef.thingml.State;
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.Transition;
 
 public class Context {
 
     private ThingMLCompiler compiler;
     private Configuration currentConfiguration;
 
+
+    //Some Helpers to overcome bug in EMF related to broken equals
+    public boolean containsInstance(List<Instance> list, Instance element) {
+        for(Instance e : list) {
+            if (EcoreUtil.equals(e, element))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean containsAllInstances(List<Instance> thisList, List<Instance> thatList) {
+        for(Instance e : thatList) {
+            if (!containsInstance(thisList, e))
+                return false;
+        }
+        return true;
+    }
 
     public Context(ThingMLCompiler compiler) {
         this.compiler = compiler;
@@ -51,6 +78,7 @@ public class Context {
     public Configuration getCurrentConfiguration() {
         return currentConfiguration;
     }
+
     public void setCurrentConfiguration(Configuration currentConfiguration) {
         this.currentConfiguration = currentConfiguration;
     }
@@ -71,6 +99,7 @@ public class Context {
 
     /**
      * This one will be removed when we figure out why it is here
+     *
      * @param path
      * @return
      */
@@ -82,18 +111,18 @@ public class Context {
     }
 
 
-
     /**
      * Dumps the whole code generated in the generatedCode
      */
     public void writeGeneratedCodeToFiles() {
-        for(Map.Entry<String, StringBuilder> e : generatedCode.entrySet()) {
+        for (Map.Entry<String, StringBuilder> e : generatedCode.entrySet()) {
             writeTextFile(e.getKey(), e.getValue().toString());
         }
     }
 
     /**
      * Allows to writeTextFile additional files (not generated in the normal generatedCode)
+     *
      * @param path
      * @param content
      */
@@ -119,6 +148,8 @@ public class Context {
             if (input != null) {
                 result = org.apache.commons.io.IOUtils.toString(input);
                 input.close();
+            } else {
+                System.out.println("[Error] Template not found: " + template_id);
             }
         } catch (Exception e) {
             //e.printStackTrace();
@@ -142,6 +173,7 @@ public class Context {
     public String getContextAnnotation(String key) {
         return contextAnnotations.get(key);
     }
+
     public String removeContextAnnotation(String key) {
         return contextAnnotations.remove(key);
     }
@@ -159,7 +191,6 @@ public class Context {
      ********************************************************************************************/
 
     /**
-     *
      * @param value, a String of at least a character
      * @return value with first letter in upper case
      */
@@ -167,9 +198,9 @@ public class Context {
         if (value == null)
             return null;
         else if (value.length() > 1)
-            return value.substring(0,1).toUpperCase() + value.substring(1);
+            return value.substring(0, 1).toUpperCase() + value.substring(1);
         else
-            return value.substring(0,1).toUpperCase();
+            return value.substring(0, 1).toUpperCase();
     }
 
     public String getVariableName(Variable var) {
@@ -192,10 +223,12 @@ public class Context {
         return builder.toString();
     }
 
-    /********************************************************************************************
+    /**
+     * *****************************************************************************************
      * Keyword protection API. To be used by all compilers which need to protect against clashes
      * with target language keywords
-     ********************************************************************************************/
+     * ******************************************************************************************
+     */
 
     private Set<String> keywords = new HashSet<String>();
     private String preKeywordEscape = "`";
@@ -229,7 +262,6 @@ public class Context {
     }
 
     /**
-     *
      * @param value, to be escaped
      * @return the escaped (if need be) value
      */
@@ -240,15 +272,18 @@ public class Context {
             return value;
         }
     }
-    
-    
+
+
     private File outputDirectory = null;
 
     public void setOutputDirectory(File outDir) {
         outDir.mkdirs();
-        if (!outDir.exists()) throw new Error("ERROR: The output directory does not exist (" + outDir.getAbsolutePath() + ").");
-        if (!outDir.isDirectory()) throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
-        if (!outDir.canWrite()) throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.exists())
+            throw new Error("ERROR: The output directory does not exist (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.isDirectory())
+            throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.canWrite())
+            throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
         outputDirectory = outDir;
     }
 
@@ -256,7 +291,126 @@ public class Context {
         if (outputDirectory == null) return compiler.getOutputDirectory();
         else return outputDirectory;
     }
+
+    //Debug traces
     
-
-
+    boolean debugTraceWithID = false;
+    public void setDebugWithID(boolean b) {
+        debugTraceWithID = b;
+    }
+    public boolean getDebugWithID() {
+        return debugTraceWithID;
+    }
+    
+    public String traceOnEntry(Thing t, StateMachine sm) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): Enters " + sm.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceOnEntry(Thing t, Region r, State s) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): Enters " + r.getName() + ":" + s.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceOnExit(Thing t, Region r, State s) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): Exits " + r.getName() + ":" + s.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceSendMessage(Thing t, Port p, Message m) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): " + p.getName() + "!" + m.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceReceiveMessage(Thing t, Port p, Message m) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): " + p.getName() + "?" + m.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceFunctionBegin(Thing t, Function f) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): Start " + f.getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceFunctionDone(Thing t, Function f) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): " + f.getName() + " Done.";
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceTransition(Thing t, Transition tr, Port p, Message m) {
+        if(!debugTraceWithID) {
+            if(p != null) {
+                return " (" + t.getName() 
+                        + "): transition " 
+                        + tr.getSource().getName() 
+                        + " -> " + tr.getTarget().getName() + " event " 
+                        + p.getName() + "?" 
+                        + m.getName();
+            } else {
+                return traceTransition(t, tr);
+            }
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceTransition(Thing t, Transition tr) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() 
+                    + "): transition " 
+                    + tr.getSource().getName() 
+                    + " -> " + tr.getTarget().getName();
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceInternal(Thing t, Port p, Message m) {
+        if(!debugTraceWithID) {
+            if(p != null) {
+                return " (" + t.getName() + "): internal event " + p.getName() + "?" + m.getName(); 
+            } else {
+                return traceInternal(t);
+            }
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceInternal(Thing t) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): internal" ;
+        } else {
+            return null;
+        }
+    }
+    
+    public String traceInit(Thing t) {
+        if(!debugTraceWithID) {
+            return " (" + t.getName() + "): Init";
+        } else {
+            return null;
+        }
+    }
 }

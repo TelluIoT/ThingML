@@ -30,16 +30,16 @@ import org.thingml.compilers.utils.CharacterEscaper
 
 object SimpleCopyTemplate {
 
-    def copyFromClassPath(path : String) : String = {
-      Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(path),"utf-8").getLines().mkString("\n")
-    }
+  def copyFromClassPath(path : String) : String = {
+    Source.fromInputStream(this.getClass.getClassLoader.getResourceAsStream(path),"utf-8").getLines().mkString("\n")
+  }
 }
 
 object CPPGenerator {
 
   /****************************************************************************************
-   *    Injection of implicits for C code generation in the ThingML metamodel
-   ****************************************************************************************/
+    *    Injection of implicits for C code generation in the ThingML metamodel
+    ****************************************************************************************/
 
   implicit def cGeneratorAspect(self: Thing): ThingCGenerator = ThingCGenerator(self)
 
@@ -53,7 +53,7 @@ object CPPGenerator {
 
   implicit def cGeneratorAspect(self: Function): FunctionCGenerator = FunctionCGenerator(self)
 
- // implicit def cGeneratorAspect(self: Property): PropertyCGenerator = PropertyCGenerator(self)
+  // implicit def cGeneratorAspect(self: Property): PropertyCGenerator = PropertyCGenerator(self)
 
   implicit def cGeneratorAspect(self: Type) = self match {
     case t: PrimitiveType => PrimitiveTypeCGenerator(t)
@@ -89,7 +89,7 @@ object CPPGenerator {
     case exp: ModExpression => ModExpressionCGenerator(exp)
     case exp: UnaryMinus => UnaryMinusCGenerator(exp)
     case exp: NotExpression => NotExpressionCGenerator(exp)
-    case exp: EventReference => EventReferenceCGenerator(exp)
+//    case exp: EventReference => EventReferenceCGenerator(exp)
     case exp: ExpressionGroup => ExpressionGroupCGenerator(exp)
     case exp: PropertyReference => PropertyReferenceCGenerator(exp)
     case exp: IntegerLiteral => IntegerLiteralCGenerator(exp)
@@ -102,50 +102,50 @@ object CPPGenerator {
     case _ => new ExpressionCGenerator(self)
   }
 
-    /*
-  implicit def cGeneratorAspect(self:OrExpression) : OrExpressionCGenerator = OrExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:AndExpression) : AndExpressionCGenerator = AndExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:LowerExpression) : LowerExpressionCGenerator = LowerExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:GreaterExpression) : GreaterExpressionCGenerator = GreaterExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:EqualsExpression) : EqualsExpressionCGenerator = EqualsExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:PlusExpression) : PlusExpressionCGenerator = PlusExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:MinusExpression) : MinusExpressionCGenerator = MinusExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:TimesExpression) : TimesExpressionCGenerator = TimesExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:DivExpression) : DivExpressionCGenerator = DivExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:ModExpression) : ModExpressionCGenerator = ModExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:UnaryMinus) : UnaryMinusCGenerator = UnaryMinusCGenerator(self)
-  implicit def cGeneratorAspect(self:NotExpression) : NotExpressionCGenerator = NotExpressionCGenerator(self)
-  implicit def cGeneratorAspect(self:EventReference) : EventReferenceCGenerator = EventReferenceCGenerator(self)
-  implicit def cGeneratorAspect(self:ExpressionGroup) : ExpressionGroupCGenerator = ExpressionGroupCGenerator(self)
-  implicit def cGeneratorAspect(self:PropertyReference) : PropertyReferenceCGenerator = PropertyReferenceCGenerator(self)
-  implicit def cGeneratorAspect(self:IntegerLitteral) : IntegerLitteralCGenerator = IntegerLitteralCGenerator(self)
-  implicit def cGeneratorAspect(self:StringLitteral) : StringLitteralCGenerator = StringLitteralCGenerator(self)
-  implicit def cGeneratorAspect(self:BooleanLitteral) : BooleanLitteralCGenerator = BooleanLitteralCGenerator(self)
-  implicit def cGeneratorAspect(self:ExternExpression) : ExternExpressionCGenerator = ExternExpressionCGenerator(self)
-  */
+  /*
+implicit def cGeneratorAspect(self:OrExpression) : OrExpressionCGenerator = OrExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:AndExpression) : AndExpressionCGenerator = AndExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:LowerExpression) : LowerExpressionCGenerator = LowerExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:GreaterExpression) : GreaterExpressionCGenerator = GreaterExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:EqualsExpression) : EqualsExpressionCGenerator = EqualsExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:PlusExpression) : PlusExpressionCGenerator = PlusExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:MinusExpression) : MinusExpressionCGenerator = MinusExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:TimesExpression) : TimesExpressionCGenerator = TimesExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:DivExpression) : DivExpressionCGenerator = DivExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:ModExpression) : ModExpressionCGenerator = ModExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:UnaryMinus) : UnaryMinusCGenerator = UnaryMinusCGenerator(self)
+implicit def cGeneratorAspect(self:NotExpression) : NotExpressionCGenerator = NotExpressionCGenerator(self)
+implicit def cGeneratorAspect(self:EventReference) : EventReferenceCGenerator = EventReferenceCGenerator(self)
+implicit def cGeneratorAspect(self:ExpressionGroup) : ExpressionGroupCGenerator = ExpressionGroupCGenerator(self)
+implicit def cGeneratorAspect(self:PropertyReference) : PropertyReferenceCGenerator = PropertyReferenceCGenerator(self)
+implicit def cGeneratorAspect(self:IntegerLitteral) : IntegerLitteralCGenerator = IntegerLitteralCGenerator(self)
+implicit def cGeneratorAspect(self:StringLitteral) : StringLitteralCGenerator = StringLitteralCGenerator(self)
+implicit def cGeneratorAspect(self:BooleanLitteral) : BooleanLitteralCGenerator = BooleanLitteralCGenerator(self)
+implicit def cGeneratorAspect(self:ExternExpression) : ExternExpressionCGenerator = ExternExpressionCGenerator(self)
+*/
 
   /****************************************************************************************
-   *    Generic methods
-   ****************************************************************************************/
+    *    Generic methods
+    ****************************************************************************************/
 
   def isWindows() : Boolean = {
-		var os = System.getProperty("os.name").toLowerCase();
+    var os = System.getProperty("os.name").toLowerCase();
     return (os.indexOf( "win" ) >= 0);
-	}
+  }
 
-	def isMac() : Boolean = {
-		var os = System.getProperty("os.name").toLowerCase();
-	  return (os.indexOf( "mac" ) >= 0);
-	}
+  def isMac() : Boolean = {
+    var os = System.getProperty("os.name").toLowerCase();
+    return (os.indexOf( "mac" ) >= 0);
+  }
 
-	def isUnix(): Boolean = {
-		var os = System.getProperty("os.name").toLowerCase();
-	  return (os.indexOf( "nix") >=0 || os.indexOf( "nux") >=0);
-	}
+  def isUnix(): Boolean = {
+    var os = System.getProperty("os.name").toLowerCase();
+    return (os.indexOf( "nix") >=0 || os.indexOf( "nux") >=0);
+  }
 
   /****************************************************************************************
-   *    Linux Specific methods
-   ****************************************************************************************/
+    *    Linux Specific methods
+    ****************************************************************************************/
 
   def compileToLinuxAndMake(model : ThingMLModel) {
     // First look for a configuration in the model
@@ -153,30 +153,30 @@ object CPPGenerator {
       case Some (c) => compileToLinuxAndMake(c)
       case None =>
         // look in all configs
-      model.allConfigurations.filter{ c => !c.isFragment }.headOption match {
-        case Some (c) => compileToLinuxAndMake(c)
-        case None => {}
-      }
+        model.allConfigurations.filter{ c => !c.isFragment }.headOption match {
+          case Some (c) => compileToLinuxAndMake(c)
+          case None => {}
+        }
     }
   }
 
   /**
-     * By default File#delete fails for non-empty directories, it works like "rm".
-     * We need something a little more brutual - this does the equivalent of "rm -r"
-     * @param path Root File Path
-     * @return true iff the file and all sub files/directories have been removed
-     * @throws FileNotFoundException
-     */
-    def deleteRecursive(path : File ) : Boolean = {
-        //if (!path.exists()) throw new FileNotFoundException(path.getAbsolutePath());
-        var ret = true;
-        if (path.isDirectory()) {
-            path.listFiles().foreach{ f =>
-                ret = ret && deleteRecursive(f)
-            }
-        }
-        return ret && path.delete();
+   * By default File#delete fails for non-empty directories, it works like "rm".
+   * We need something a little more brutual - this does the equivalent of "rm -r"
+   * @param path Root File Path
+   * @return true iff the file and all sub files/directories have been removed
+   * @throws FileNotFoundException
+   */
+  def deleteRecursive(path : File ) : Boolean = {
+    //if (!path.exists()) throw new FileNotFoundException(path.getAbsolutePath());
+    var ret = true;
+    if (path.isDirectory()) {
+      path.listFiles().foreach{ f =>
+        ret = ret && deleteRecursive(f)
+      }
     }
+    return ret && path.delete();
+  }
 
   def createEmptyOutputDir(cfg : Configuration) : File = {
     var out = cfg.out_folder
@@ -205,7 +205,7 @@ object CPPGenerator {
     println("Compiling configuration "+ cfg.getName +" to C into target folder: " + out.getAbsolutePath)
 
 
-      compileToLinux(cfg, out.getAbsolutePath)
+    compileToLinux(cfg, out.getAbsolutePath)
 
     /*
      * GENERATE SOME DOCUMENTATION
@@ -267,7 +267,7 @@ object CPPGenerator {
 
     // GENERATE A MODULE FOR EACH THING
     cfg.allThings.foreach { thing =>
-       context.set_concrete_thing(thing)
+      context.set_concrete_thing(thing)
       // GENERATE HEADER
       var htemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/linux_thing_header_cpp.h")
 
@@ -287,7 +287,7 @@ object CPPGenerator {
     }
     context.clear_concrete_thing()
 
-     // GENERATE THE RUNTIME HEADER
+    // GENERATE THE RUNTIME HEADER
     var rhtemplate =  SimpleCopyTemplate.copyFromClassPath("ctemplates/runtime_cpp.h")
     rhtemplate = rhtemplate.replace("/*NAME*/", cfg.getName)
     result.put(prefix + "runtime.h", rhtemplate)
@@ -343,7 +343,7 @@ object CPPGenerator {
     mtemplate = mtemplate.replace("/*NAME*/", cfg.getName)
 
     mtemplate = mtemplate.replace("/*GPP*/", "g++")
-    
+
     if (context.debug) {
       mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -DDEBUG")
     }
@@ -355,7 +355,7 @@ object CPPGenerator {
 
     if (cfg.getAnnotations.filter(a=> a.getName == "add_c_modules").size>0) {
       cfg.getAnnotations.filter(a=> a.getName == "add_c_modules").head.getValue.trim.split(" ").foreach(m =>
-         list += m.trim
+        list += m.trim
       )
     }
 
@@ -363,15 +363,15 @@ object CPPGenerator {
 
     if (cfg.getAnnotations.filter(a=> a.getName == "add_c_libraries").size>0) {
       cfg.getAnnotations.filter(a=> a.getName == "add_c_libraries").head.getValue.trim.split(" ").foreach(m =>
-         liblist = m.trim :: liblist
+        liblist = m.trim :: liblist
       )
     }
-    
+
     var preProclist = List[String]()
 
     if (cfg.getAnnotations.filter(a=> a.getName == "add_c_directives").size>0) {
       cfg.getAnnotations.filter(a=> a.getName == "add_c_directives").head.getValue.trim.split(" ").foreach(m =>
-         preProclist = m.trim :: preProclist
+        preProclist = m.trim :: preProclist
       )
     }
 
@@ -415,16 +415,16 @@ class CGeneratorContext( src: Configuration ) {
   var concrete_thing_opt : Option[Thing] = None
 
   def set_concrete_thing(t : Thing) {
-        concrete_thing_opt = Option(t)
+    concrete_thing_opt = Option(t)
   }
 
   def get_concrete_thing() : Thing = {
     //TODO: Should print an internal error if "null". It should never happen
-     concrete_thing_opt.getOrElse(null)
+    concrete_thing_opt.getOrElse(null)
   }
 
-    def clear_concrete_thing() {
-     concrete_thing_opt = None
+  def clear_concrete_thing() {
+    concrete_thing_opt = None
   }
 
   // The following allow changing the name of the instance variable for generating
@@ -434,11 +434,11 @@ class CGeneratorContext( src: Configuration ) {
   var instance_var_names: Option[String] = None
 
   def change_instance_var_name(n : String) {
-     instance_var_names = Option(n)
+    instance_var_names = Option(n)
   }
 
   def clear_instance_var_names() {
-     instance_var_names = None
+    instance_var_names = None
   }
 
   def instance_var_name() : String = {
@@ -448,7 +448,7 @@ class CGeneratorContext( src: Configuration ) {
   var debug : Boolean = _debug
 
   def _debug() : Boolean = {
-     cfg.getAnnotations.filter {
+    cfg.getAnnotations.filter {
       a => a.getName == "debug"
     }.headOption match {
       case Some(a) => {
@@ -464,7 +464,7 @@ class CGeneratorContext( src: Configuration ) {
 
   def debug_fifo() : Boolean = {
     if (!debug) return false
-     cfg.getAnnotations.filter {
+    cfg.getAnnotations.filter {
       a => a.getName == "debug_fifo"
     }.headOption match {
       case Some(a) => {
@@ -480,8 +480,8 @@ class CGeneratorContext( src: Configuration ) {
 
   def debug_message_send(m : Message) : Boolean = {
     if (!debug) return false
-   cfg.getAnnotations.filter{
-    a => a.getName == "debug_message_send"
+    cfg.getAnnotations.filter{
+      a => a.getName == "debug_message_send"
     }.foreach { a=>
       if (m.getName.matches(a.asInstanceOf[PlatformAnnotation].getValue)) return true
     }
@@ -490,8 +490,8 @@ class CGeneratorContext( src: Configuration ) {
 
   def debug_message_receive(m : Message) : Boolean = {
     if (!debug) return false
-   cfg.getAnnotations.filter{
-    a => a.getName == "debug_message_receive"
+    cfg.getAnnotations.filter{
+      a => a.getName == "debug_message_receive"
     }.foreach { a=>
       if (m.getName.matches(a.asInstanceOf[PlatformAnnotation].getValue)) return true
     }
@@ -556,7 +556,7 @@ class ThingMLCGenerator(self: ThingMLElement) {
 case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGenerator(self) {
 
   def out_folder() : File = {
-     self.getAnnotations.filter {
+    self.getAnnotations.filter {
       a => a.getName == "output_folder"
     }.headOption match {
       case Some(a) => {
@@ -610,7 +610,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
 
     builder append "//Declaration of instance variables\n"
     self.allInstances.foreach { inst =>
-       builder append inst.c_var_decl() + "\n"
+      builder append inst.c_var_decl() + "\n"
     }
 
     builder append "\n"
@@ -645,7 +645,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
         }
         else {
           // This is to enquqe the message and let the scheduler forward it
-           builder append "enqueue_" + t.sender_name(port, msg) + ");\n"
+          builder append "enqueue_" + t.sender_name(port, msg) + ");\n"
         }
 
       }
@@ -656,11 +656,11 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
     //builder append "// Initialize instance variables and states\n"
     // Generate code to initialize variable for instances
     self.allInstances.foreach { inst =>
-       inst.generateC(builder, context)
+      inst.generateC(builder, context)
     }
 
     self.allInstances.foreach { inst =>
-       inst.generateOnEntry(builder, context)
+      inst.generateOnEntry(builder, context)
     }
 
     builder append "}\n"
@@ -736,7 +736,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
         builder append "if ( fifo_byte_available() > " + message_size(m, context) + " ) {\n\n"
 
         //DEBUG
-       // builder append "Serial.println(\"QU MSG "+m.getName+"\");\n"
+        // builder append "Serial.println(\"QU MSG "+m.getName+"\");\n"
 
         builder append "_fifo_enqueue( ("+handler_code(t,p,m)+" >> 8) & 0xFF );\n"
         builder append "_fifo_enqueue( "+handler_code(t,p,m)+" & 0xFF );\n\n"
@@ -795,13 +795,13 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
         val size = message_size(m, context)
         if ( size > max_msg_size) max_msg_size = size
       }}}
-      context.clear_concrete_thing()
+    context.clear_concrete_thing()
     // Allocate a buffer to store the message bytes.
     // Size of the buffer is "size-2" because we have already read 2 bytes
     builder append "byte mbuf[" + (max_msg_size-2) + "];\n"
     builder append "uint8_t mbufi = 0;\n\n"
 
-     builder append "// Read the code of the next port/message in the queue\n"
+    builder append "// Read the code of the next port/message in the queue\n"
     builder append "uint16_t code = fifo_dequeue() << 8;\n\n"
     builder append "code += fifo_dequeue();\n\n"
 
@@ -809,7 +809,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
     builder append "switch(code) {\n"
 
     self.allThings.foreach{ t=> t.allPorts.filter{ p => !isSyncSend(p) }.foreach{ p=>
-       context.set_concrete_thing(t)
+      context.set_concrete_thing(t)
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
 
@@ -819,7 +819,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
         // Fill the buffer
 
         //DEBUG
-       // builder append "Serial.println(\"FW MSG "+m.getName+"\");\n"
+        // builder append "Serial.println(\"FW MSG "+m.getName+"\");\n"
 
         if (context.sync_fifo) builder append "fifo_unlock();\n"
 
@@ -847,7 +847,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
   def generateMessageDispatchers(builder : StringBuilder, context : CGeneratorContext) {
 
     self.allThings.foreach{ t=> t.allPorts.foreach{ p=>
-       context.set_concrete_thing(t)
+      context.set_concrete_thing(t)
       var allMessageDispatch = self.allMessageDispatch(t,p)
       allMessageDispatch.keySet().foreach{m =>
         // definition of handler for message m coming from instances of t thought port p
@@ -860,33 +860,33 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
         val mtable = allMessageDispatch.get(m)
 
         mtable.keySet().foreach{ i =>  // i is the source instance of the message
-           builder append "if (_instance == &" + i.c_var_name + ") {\n"
-           mtable.get(i).foreach{ tgt =>
-              // dispatch to all connected instances whi can handle the message
-              if (tgt.getKey.getType.composedBehaviour.canHandle(tgt.getValue, m)) {
-                 builder append tgt.getKey.getType.handler_name(tgt.getValue, m)
-                 tgt.getKey.getType.append_actual_parameters(builder, m, "&" + tgt.getKey.c_var_name())
-                 builder append ";\n"
-              }
-           }
-           builder append "}\n"
+          builder append "if (_instance == &" + i.c_var_name + ") {\n"
+          mtable.get(i).foreach{ tgt =>
+            // dispatch to all connected instances whi can handle the message
+            if (tgt.getKey.getType.composedBehaviour.canHandle(tgt.getValue, m)) {
+              builder append tgt.getKey.getType.handler_name(tgt.getValue, m)
+              tgt.getKey.getType.append_actual_parameters(builder, m, "&" + tgt.getKey.c_var_name())
+              builder append ";\n"
+            }
+          }
+          builder append "}\n"
         }
         builder append "}\n"
       }
     }}
     context.clear_concrete_thing()
   }
- 
+
   def generateInitializationCode(builder : StringBuilder, context : CGeneratorContext) {
 
     var model = ThingMLHelpers.findContainingModel(self)
 
     if (context.debug) {
-         builder append context.init_debug_mode() + "\n"
-      }
+      builder append context.init_debug_mode() + "\n"
+    }
 
-      // Call the initialization function
-      builder append "initialize_configuration_" + self.getName + "();\n"
+    // Call the initialization function
+    builder append "initialize_configuration_" + self.getName + "();\n"
 
     // Serach for the ThingMLSheduler Thing
     var things = model.allThings.filter{ t => t.getName == "ThingMLScheduler" }
@@ -899,13 +899,13 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
       // Send a setup message to all components which can receive it
       self.allInstances.foreach{ i =>  i.getType.allPorts.foreach{ p =>
         if (p.getReceives.contains(setup_msg)) {
-           builder append i.getType.handler_name(p, setup_msg) +  "(&" + i.c_var_name() + ");\n"
+          builder append i.getType.handler_name(p, setup_msg) +  "(&" + i.c_var_name() + ");\n"
         }
       }}
     }
   }
 
-   def generatePollingCode(builder : StringBuilder) {
+  def generatePollingCode(builder : StringBuilder) {
 
     var model = ThingMLHelpers.findContainingModel(self)
 
@@ -921,7 +921,7 @@ case class ConfigurationCGenerator(val self: Configuration) extends ThingMLCGene
         p.getReceives.foreach{ msg =>
         }
         if (p.getReceives.contains(poll_msg)) {
-           builder append i.getType.handler_name(p, poll_msg) +  "(&" + i.c_var_name() + ");\n"
+          builder append i.getType.handler_name(p, poll_msg) +  "(&" + i.c_var_name() + ");\n"
         }
       }}
     }
@@ -946,21 +946,21 @@ case class FunctionCGenerator(val self: Function) extends ThingMLCGenerator(self
       generateCforThingLinuxThread(builder, context, thing)
     }
     else {
-       generateCforThingDirect(builder, context, thing)
+      generateCforThingDirect(builder, context, thing)
     }
 
   }
 
   def generatePrototypeforThingDirect(builder: StringBuilder, context : CGeneratorContext, thing : Thing) {
-        if (self.getAnnotations.filter(a=>a.getName == "c_prototype").size == 1) {
+    if (self.getAnnotations.filter(a=>a.getName == "c_prototype").size == 1) {
       // generateMainAndInit the given prototype. Any parameters are ignored.
       builder append self.getAnnotations.filter(a=>a.getName == "c_prototype").head.getValue
 
       if (self.getAnnotations.filter(a=>a.getName == "c_instance_var_name").size == 1) {
-      // generateMainAndInit the given prototype. Any parameters are ignored.
+        // generateMainAndInit the given prototype. Any parameters are ignored.
         val nname = self.getAnnotations.filter(a=>a.getName == "c_instance_var_name").head.getValue.trim()
-      context.change_instance_var_name (nname)
-      println("INFO: Instance variable name changed to " + nname + " in function " + self.getName)
+        context.change_instance_var_name (nname)
+        println("INFO: Instance variable name changed to " + nname + " in function " + self.getName)
       }
     }
     else {
@@ -1072,7 +1072,7 @@ case class InstanceCGenerator(val self: Instance) extends ThingMLCGenerator(self
 
     // Init simple properties
     context.cfg.initExpressionsForInstance(self).foreach{ init =>
-       if (init.getValue != null ) {
+      if (init.getValue != null ) {
         builder append c_var_name + "." + init.getKey.c_var_name + " = "
         init.getValue.generateC(builder, context)
         builder append ";\n";
@@ -1107,13 +1107,13 @@ case class ConnectorCGenerator(val self: Connector) extends ThingMLCGenerator(se
     // connect the handlers for messages with the sender
     // sender_listener = reveive_handler;
     self.getProvided.getSends.filter{m => self.getRequired.getReceives.contains(m)}.foreach { m =>
-       builder append self.getSrv.getInstance().getType.sender_name(self.getProvided, m) + "_listener = "
-       builder append self.getCli.getInstance().getType.handler_name(self.getRequired, m) + ";\n"
+      builder append self.getSrv.getInstance().getType.sender_name(self.getProvided, m) + "_listener = "
+      builder append self.getCli.getInstance().getType.handler_name(self.getRequired, m) + ";\n"
     }
 
     self.getRequired.getSends.filter{m => self.getProvided.getReceives.contains(m)}.foreach { m =>
-       builder append self.getCli.getInstance().getType.sender_name(self.getRequired, m) + "_listener = "
-       builder append self.getSrv.getInstance().getType.handler_name(self.getProvided, m) + ";\n"
+      builder append self.getCli.getInstance().getType.sender_name(self.getRequired, m) + "_listener = "
+      builder append self.getSrv.getInstance().getType.handler_name(self.getProvided, m) + ";\n"
     }
   }
 }
@@ -1130,9 +1130,9 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
 
     var h = self.annotation("c_header")
     if (h.size > 0) {
-       builder append "\n// BEGIN: Code from the c_header annotation " + self.getName + "\n"
-       builder append h.mkString("\n")
-       builder append "\n// END: Code from the c_header annotation " + self.getName + "\n\n"
+      builder append "\n// BEGIN: Code from the c_header annotation " + self.getName + "\n"
+      builder append h.mkString("\n")
+      builder append "\n// END: Code from the c_header annotation " + self.getName + "\n\n"
     }
 
     builder append "// Definition of the instance stuct:\n"
@@ -1154,21 +1154,21 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
   }
 
   def generateCImpl(builder: StringBuilder, context : CGeneratorContext) {
-      builder append "/*****************************************************************************\n"
+    builder append "/*****************************************************************************\n"
     builder append " * Implementation for type : " + self.getName + "\n"
     builder append " *****************************************************************************/\n\n"
 
     var h = self.annotation("c_global")
     if (h.size() > 0) {
-       builder append "\n// BEGIN: Code from the c_global annotation " + self.getName + "\n"
-       builder append h.mkString("\n")
-       builder append "\n// END: Code from the c_global annotation " + self.getName + "\n\n"
+      builder append "\n// BEGIN: Code from the c_global annotation " + self.getName + "\n"
+      builder append h.mkString("\n")
+      builder append "\n// END: Code from the c_global annotation " + self.getName + "\n\n"
     }
 
     builder append "// Declaration of prototypes:\n"
 
     generatePrivatePrototypes(builder, context)
-    
+
     builder append "\n"
 
     builder append "// Declaration of functions:\n"
@@ -1199,14 +1199,14 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
     generateCHeader(builder, context)
     generateCImpl(builder, context)
   }
- /*
-  def handler_name(p: Port, m: Message) = ThingMLHelpers.findContainingThing(p).qname("_") + "_handle_" + p.getName + "_" + m.getName
+  /*
+   def handler_name(p: Port, m: Message) = ThingMLHelpers.findContainingThing(p).qname("_") + "_handle_" + p.getName + "_" + m.getName
 
-  def sender_name(p: Port, m: Message) = ThingMLHelpers.findContainingThing(p).qname("_") + "_send_" + p.getName + "_" + m.getName
- */
+   def sender_name(p: Port, m: Message) = ThingMLHelpers.findContainingThing(p).qname("_") + "_send_" + p.getName + "_" + m.getName
+  */
   def handler_name(p: Port, m: Message) = self.qname("_") + "_handle_" + p.getName + "_" + m.getName
 
-    def sender_name(p: Port, m: Message) = self.qname("_") + "_send_" + p.getName + "_" + m.getName
+  def sender_name(p: Port, m: Message) = self.qname("_") + "_send_" + p.getName + "_" + m.getName
 
 
 
@@ -1325,8 +1325,8 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
     // Message Sending
     self.allPorts.foreach{ port => port.getSends.foreach{ msg =>
       builder append "void " + sender_name(port, msg)
-          append_formal_parameters(builder, msg)
-          builder append ";\n"
+      append_formal_parameters(builder, msg)
+      builder append ";\n"
     }}
 
     self.allFunctions.foreach{ f=>
@@ -1545,8 +1545,8 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
     //println("dispatchToSubRegions for " + cs + " port=" + port.getName + " msg=" + msg.getName)
     cs.directSubRegions().foreach {
       r =>
-         //println("  processing region " + r)
-      // for all states of the region, if the state can handle the message and that state is active we forward the message
+        //println("  processing region " + r)
+        // for all states of the region, if the state can handle the message and that state is active we forward the message
         val states = r.getSubstate.filter {
           s => s.canHandle(port, msg)
         }
@@ -1587,9 +1587,9 @@ case class ThingCGenerator(val self: Thing) extends ThingMLCGenerator(self) {
 }
 
 case class VariableCGenerator(val self: Variable) extends ThingMLCGenerator(self) {
-   def c_var_name = {
-       self.qname("_") + "_var"
-   }
+  def c_var_name = {
+    self.qname("_") + "_var"
+  }
 }
 
 /*
@@ -1708,7 +1708,7 @@ class TypeCGenerator(val self: Type) extends ThingMLCGenerator(self) {
   }
 
   def has_byte_buffer() : Boolean = {
-     self.getAnnotations.filter {
+    self.getAnnotations.filter {
       a => a.getName == "c_byte_buffer"
     }.headOption match {
       case Some(a) => return true
@@ -1717,7 +1717,7 @@ class TypeCGenerator(val self: Type) extends ThingMLCGenerator(self) {
   }
 
   def byte_buffer_name() : String = {
-     self.getAnnotations.filter {
+    self.getAnnotations.filter {
       a => a.getName == "c_byte_buffer"
     }.headOption match {
       case Some(a) => return a.asInstanceOf[PlatformAnnotation].getValue
@@ -1847,13 +1847,13 @@ case class VariableAssignmentCGenerator(override val self: VariableAssignment) e
 
     self.getProperty match {
       case p: Parameter => {
-         builder append  p.getName
+        builder append  p.getName
       }
       case p : Property => {
-         builder.append(context.instance_var_name + "->" + self.getProperty.qname("_") + "_var")
+        builder.append(context.instance_var_name + "->" + self.getProperty.qname("_") + "_var")
       }
       case v : LocalVariable => {
-         builder append  v.getName
+        builder append  v.getName
       }
     }
 
@@ -1917,7 +1917,7 @@ case class PrintActionCGenerator(override val self: PrintAction) extends ActionC
 
 case class ErrorActionCGenerator(override val self: ErrorAction) extends ActionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
-     val b = new StringBuilder()
+    val b = new StringBuilder()
     self.getMsg.generateC(b, context)
     builder append context.error_message (b.toString) + "\n"
   }
@@ -1940,8 +1940,8 @@ case class LocalVariableActionCGenerator(override val self: LocalVariable) exten
       builder append "]"
     }
     if (self.getInit != null) {
-       builder append " = "
-       self.getInit.generateC(builder, context)
+      builder append " = "
+      self.getInit.generateC(builder, context)
     }
     builder append ";\n"
   }
@@ -2093,11 +2093,11 @@ case class NotExpressionCGenerator(override val self: NotExpression) extends Exp
   }
 }
 
-case class EventReferenceCGenerator(override val self: EventReference) extends ExpressionCGenerator(self) {
+/*case class EventReferenceCGenerator(override val self: EventReference) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     builder.append(self.getParamRef.getName)
   }
-}
+}*/
 
 case class ExpressionGroupCGenerator(override val self: ExpressionGroup) extends ExpressionCGenerator(self) {
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
@@ -2111,13 +2111,13 @@ case class PropertyReferenceCGenerator(override val self: PropertyReference) ext
   override def generateC(builder: StringBuilder, context : CGeneratorContext) {
     self.getProperty match {
       case p: Parameter => {
-         builder append  p.getName
+        builder append  p.getName
       }
       case p : Property => {
-         builder.append("_instance->" + self.getProperty.qname("_") + "_var")
+        builder.append("_instance->" + self.getProperty.qname("_") + "_var")
       }
       case v : LocalVariable => {
-         builder append  v.getName
+        builder append  v.getName
       }
     }
   }

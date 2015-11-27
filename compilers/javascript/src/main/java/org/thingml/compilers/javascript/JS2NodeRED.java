@@ -16,8 +16,8 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
-import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 
 import java.util.List;
 import java.util.Map;
@@ -32,58 +32,58 @@ public class JS2NodeRED extends CfgExternalConnectorCompiler {
     private void generateNodeJS(Context ctx, Configuration cfg) {
         //Generate wrapper
 
-        final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/" + cfg.getName() + "_nodered.js" );
-        builder.append("var Connector = require('./Connector');\n");
+        final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/" + cfg.getName() + "_nodered.js");
 
-        for(Thing t : cfg.allThings()) {
+        for (Thing t : cfg.allThings()) {
             builder.append("var " + t.getName() + " = require('./" + t.getName() + "');\n");
         }
 
         builder.append("/**\n* Node-RED node for " + cfg.getName() + "\n*/\n");
         builder.append("module.exports = function(RED) {\n");
+        builder.append("\"use strict\";\n");
         builder.append("function " + ctx.firstToUpper(cfg.getName()) + "Node(config) {\n");
         builder.append("RED.nodes.createNode(this, config);\n");
         builder.append("var node = this;\n");
 
         JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
 
-        for(Map.Entry e : cfg.danglingPorts().entrySet()) {
+        for (Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
-            for(Port p : (List<Port>)e.getValue()) {
+            for (Port p : (List<Port>) e.getValue()) {
                 if (p.getSends().size() > 0) {
                     builder.append("this." + i.getName() + ".get" + ctx.firstToUpper(p.getName()) + "Listeners().push(node.send);\n");
                 }
             }
         }
 
-        for(Instance i : cfg.danglingPorts().keySet()) {
+        for (Instance i : cfg.danglingPorts().keySet()) {
             builder.append("this." + i.getName() + "._init();\n");
         }
 
         builder.append("this.status({fill:\"green\",shape:\"dot\",text:\"on\"});\n");
 
         builder.append("this.on('close', function(done) {\n");
-        for(Instance i : cfg.allInstances()) {
+        for (Instance i : cfg.allInstances()) {
             builder.append(i.getName() + "._stop();\n");
         }
         builder.append("this.status({fill:\"red\",shape:\"dot\",text:\"off\"});\n");
         builder.append("done();\n");
         builder.append("});\n");
 
-        for(Map.Entry e : cfg.danglingPorts().entrySet()) {
+        for (Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
-            for(Port p : (List<Port>)e.getValue()) {
+            for (Port p : (List<Port>) e.getValue()) {
                 if (p.getReceives().size() > 0) {
                     builder.append("this.on('" + i.getName() + "_" + p.getName() + "', function(msg) {\n");
                     builder.append("this.status({fill:\"green\",shape:\"ring\",text:\"incoming\"});\n");
                     builder.append("var json = JSON.parse(msg);\n");//FIXME: generateMainAndInit try/catch
                     int id = 0;
-                    for(Message m : p.getReceives()) {
+                    for (Message m : p.getReceives()) {
                         if (id > 0) builder.append("else ");
                         builder.append("if (json.message === '" + m.getName() + "') {\n");
                         builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(");
                         int j = 0;
-                        for(Parameter param : m.getParameters()) {
+                        for (Parameter param : m.getParameters()) {
                             if (j > 0) {
                                 builder.append(", ");
                             }
@@ -104,8 +104,8 @@ public class JS2NodeRED extends CfgExternalConnectorCompiler {
             }
         }
         builder.append("}\n");
-        builder.append("RED.nodes.registerType(\"" + cfg.getName() + "\", " + ctx.firstToUpper(cfg.getName()) + ")");
-        builder.append("};\n\n");
+        builder.append("RED.nodes.registerType(\"" + cfg.getName() + "\", " + ctx.firstToUpper(cfg.getName()) + ");\n");
+        builder.append("}\n");
 
     }
 
@@ -117,16 +117,16 @@ public class JS2NodeRED extends CfgExternalConnectorCompiler {
         template = template.replace("$#INPUTS$", String.valueOf(inputs));
 
         int outputs = 0;
-        for(Map.Entry e : cfg.danglingPorts().entrySet()) {
+        for (Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
             for (Port p : (List<Port>) e.getValue()) {
                 outputs += p.getSends().size();
             }
         }
 
-        for(Map.Entry e : cfg.danglingPorts().entrySet()) {
+        for (Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
-            for(Property p : i.getType().allPropertiesInDepth()) {
+            for (Property p : i.getType().allPropertiesInDepth()) {
                 StringBuilder temp = new StringBuilder();
                 temp.append("<div class=\"form-row\">\n");
                 temp.append("<label for=\"node-input-" + i.getName() + "_" + p.getName() + "\"><i class=\"icon-tag\"></i> " + i.getName() + "_" + p.getName() + "</label>\n");

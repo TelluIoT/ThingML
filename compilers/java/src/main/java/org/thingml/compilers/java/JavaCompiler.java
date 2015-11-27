@@ -18,10 +18,12 @@ package org.thingml.compilers.java;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
+import org.thingml.compilers.java.cepHelper.JavaCepViewCompiler;
+import org.thingml.compilers.java.cepHelper.JavaGenerateSourceDeclaration;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
 import java.io.File;
 import java.util.HashMap;
@@ -35,11 +37,14 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     {
         Map<String, CfgExternalConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgExternalConnectorCompiler>();
         connectorCompilerMap.put("kevoree-java", new Java2Kevoree());
+        connectorCompilerMap.put("swing", new Java2Swing());
         addConnectorCompilers(connectorCompilerMap);
     }
 
     public JavaCompiler() {
-        super(new JavaThingActionCompiler(), new JavaThingApiCompiler(), new JavaCfgMainGenerator(), new JavaCfgBuildCompiler(), new JavaThingImplCompiler());
+        super(new JavaThingActionCompiler(), new JavaThingApiCompiler(), new JavaCfgMainGenerator(),
+                new JavaCfgBuildCompiler(), new JavaThingImplCompiler(),
+                new JavaThingCepCompiler(new JavaCepViewCompiler(), new JavaGenerateSourceDeclaration()));
     }
 
     @Override
@@ -76,14 +81,15 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         }
 
         String tmpFolder = System.getProperty("java.io.tmpdir") + "/ThingML_temp/";
-        if (doingTests){
-            tmpFolder="tmp/ThingML_Java/";
+        if (doingTests) {
+            tmpFolder = "tmp/ThingML_Java/";
         }
         if (ctx.getOutputDirectory() != null) tmpFolder = ctx.getOutputDirectory().getAbsolutePath() + File.separator;
         else new File(tmpFolder).deleteOnExit();
         ctx.addContextAnnotation("package", pack);
         ctx.setCurrentConfiguration(cfg);
-        for(Thing th : cfg.allThings()) {
+        processDebug(cfg);
+        for (Thing th : cfg.allThings()) {
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(th, ctx);
             ctx.getCompiler().getThingImplCompiler().generateImplementation(th, ctx);
         }

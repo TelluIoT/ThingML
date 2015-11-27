@@ -21,13 +21,14 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 
 import java.util.List;
 import java.util.Map;
+import org.thingml.compilers.DebugProfile;
 
 
 public class CThingApiCompiler extends ThingApiCompiler {
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
-        generateCHeader(thing, (CCompilerContext)ctx);
+        generateCHeader(thing, (CCompilerContext) ctx, ctx.getCompiler().getDebugProfiles().get(thing));
     }
 
     public boolean isGeneratingCpp() {
@@ -38,11 +39,11 @@ public class CThingApiCompiler extends ThingApiCompiler {
         return "";
     }
 
-    protected void generateCHeader(Thing thing, CCompilerContext ctx) {
+    protected void generateCHeader(Thing thing, CCompilerContext ctx, DebugProfile debugProfile) {
 
         StringBuilder builder = new StringBuilder();
 
-        generateCHeaderCode(thing, ctx, builder);
+        generateCHeaderCode(thing, ctx, builder, debugProfile);
 
         // Get the template and replace the values
         String htemplate = ctx.getThingHeaderTemplate();
@@ -53,7 +54,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         ctx.getBuilder(ctx.getPrefix() + thing.getName() + ".h").append(htemplate);
     }
 
-    protected void generateCHeaderCode(Thing thing, CCompilerContext ctx, StringBuilder builder) {
+    protected void generateCHeaderCode(Thing thing, CCompilerContext ctx, StringBuilder builder, DebugProfile debugProfile) {
 
         builder.append("/*****************************************************************************\n");
         builder.append(" * Headers for type : " + thing.getName() + "\n");
@@ -63,7 +64,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         generateCHeaderAnnotation(thing, builder, ctx);
 
         // Define the data structure for instances
-        generateInstanceStruct(thing, builder, ctx);
+        generateInstanceStruct(thing, builder, ctx, debugProfile);
 
         // Define the public API
         generatePublicPrototypes(thing, builder, ctx);
@@ -98,12 +99,48 @@ public class CThingApiCompiler extends ThingApiCompiler {
         }
     }
 
-    protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+    protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("// Definition of the instance stuct:\n");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
-        builder.append("// Variables for the ID of the instance\n");
-        builder.append("int id;\n");
+        //builder.append("// Variables for the ID of the instance\n");
+        //builder.append("int id;\n");
+        
+        builder.append("// Variables for the ID of the ports of the instance\n");
+        
+        //if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
+        if(debugProfile.isActive()) {
+            builder.append("bool debug;\n");
+            builder.append("char * name;\n");
+        }
+        
+        for (Port p : thing.allPorts()) {
+            builder.append("uint16_t id_");
+            builder.append(p.getName());
+            builder.append(";\n");
+        
+            if(!p.getSends().isEmpty()) {
+                builder.append("// Pointer to receiver list\n");
+                builder.append("struct Msg_Handler ** ");
+                builder.append(p.getName());
+                builder.append("_receiver_list_head;\n");
+                
+                builder.append("struct Msg_Handler ** ");
+                builder.append(p.getName());
+                builder.append("_receiver_list_tail;\n");
+            }
+        
+            
+            if(!p.getReceives().isEmpty()) {
+                builder.append("// Handler Array\n");
+                builder.append("struct Msg_Handler * ");
+                builder.append(p.getName());
+                builder.append("_handlers;\n");//[");
+                //builder.append(p.getReceives().size() + "];");
+            }
+        }
+        
+        
         // Variables for each region to store its current state
         builder.append("// Variables for the current instance state\n");
 
@@ -122,12 +159,17 @@ public class CThingApiCompiler extends ThingApiCompiler {
         // Create variables for all the properties defined in the Thing and States
         builder.append("// Variables for the properties of the instance\n");
         for (Property p : thing.allPropertiesInDepth()) {
-            builder.append(ctx.getCType(p.getType()) + " " + ctx.getCVarName(p));
+            builder.append(ctx.getCType(p.getType()) + " ");
             if (p.getCardinality() != null) {//array
+                builder.append("* ");
+            }
+            builder.append(ctx.getCVarName(p));
+            
+            /*if (p.getCardinality() != null) {//array
                 builder.append("[");
                 ctx.getCompiler().getThingActionCompiler().generate(p.getCardinality(), builder, ctx);
                 builder.append("]");
-            }
+            }*/
             builder.append(";\n");
         }
         builder.append("\n};\n");
@@ -142,6 +184,14 @@ public class CThingApiCompiler extends ThingApiCompiler {
             builder.append("void " + sm.qname("_") + "_OnEntry(int state, ");
             builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
+            // Message Handlers
+            /*for (Port port : thing.allPorts()) {
+                for (Message msg : port.getReceives()) {
+                    builder.append("void " + ctx.getHandlerName(thing, port, msg));
+                    ctx.appendFormalParameters(thing, builder, msg);
+                    builder.append(";\n");
+                }
+            }*/
             // Message Handlers
             Map<Port, Map<Message, List<Handler>>> handlers = sm.allMessageHandlers();
             for (Port port : handlers.keySet()) {
@@ -159,6 +209,12 @@ public class CThingApiCompiler extends ThingApiCompiler {
         for(Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
                 builder.append("void register_" + ctx.getSenderName(thing, port, msg) + getCppNameScope() + "_listener(");
+                builder.append("void (*_listener)");
+                ctx.appendFormalTypeSignature(thing, builder, msg);
+                builder.append(");\n");
+
+                //external
+                builder.append("void register_external_" + ctx.getSenderName(thing, port, msg) + "_listener(");
                 builder.append("void (*_listener)");
                 ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append(");\n");

@@ -27,4 +27,31 @@ package org.sintef.thingml;
  * @generated
  */
 public interface PrimitiveType extends Type {
+
+    /**
+     * @generated NOT
+     */
+    boolean isNumber();
+
+    /**
+     * @generated NOT
+     */
+    boolean isBoolean();
+
+    /**
+     * @generated NOT
+     */
+    boolean isString();
+
+    /**
+     * @generated NOT
+     */
+    boolean isChar();
+
+
+    /**
+     * @generated NOT
+     */
+    boolean isByte();
+
 } // PrimitiveType

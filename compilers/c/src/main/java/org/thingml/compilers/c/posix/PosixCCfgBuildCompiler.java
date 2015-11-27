@@ -17,10 +17,9 @@ package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingMLModel;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
 
 /**
  * Created by ffl on 17.06.15.
@@ -30,7 +29,7 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
 
     @Override
     public void generateBuildScript(Configuration cfg, Context ctx) {
-        generateLinuxMakefile(cfg, (CCompilerContext)ctx);
+        generateLinuxMakefile(cfg, (CCompilerContext) ctx);
     }
 
     protected void generateLinuxMakefile(Configuration cfg, CCompilerContext ctx) {
@@ -42,27 +41,32 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         String compiler = "cc"; // default value
         if (cfg.hasAnnotation("c_compiler")) compiler = cfg.annotation("c_compiler").iterator().next();
         mtemplate = mtemplate.replace("/*CC*/", compiler);
-
-        if (ctx.enableDebug()) mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -DDEBUG");
-        else mtemplate = mtemplate.replace("/*CFLAGS*/", "CFLAGS = -O2 -w");
+        
+        String flags;
+        if (ctx.enableDebug()) flags = "CFLAGS = -DDEBUG";
+        else flags = "CFLAGS = -O2 -w";
+        for (String s : cfg.annotation("add_c_flags")) {
+            flags += " " + s;
+        }
+        mtemplate = mtemplate.replace("/*CFLAGS*/", flags);
 
         String srcs = "";
         String objs = "";
 
         // Add the modules for the Things
-        for(Thing t : cfg.allThings()) {
+        for (Thing t : cfg.allThings()) {
             srcs += t.getName() + ".c ";
             objs += t.getName() + ".o ";
         }
 
         // Add the module for the Configuration
-        srcs += cfg.getName() + ".c ";
-        objs += cfg.getName() + ".o ";
+        srcs += cfg.getName() + "_cfg.c ";
+        objs += cfg.getName() + "_cfg.o ";
 
         // Add any additional modules from the annotations
         for (String s : cfg.annotation("add_c_modules")) {
             String[] mods = s.split(" ");
-            for (int i=0; i<mods.length; i++) {
+            for (int i = 0; i < mods.length; i++) {
                 srcs += mods[i].trim() + ".c ";
                 objs += mods[i].trim() + ".o ";
             }
@@ -73,8 +77,14 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         String libs = "";
         for (String s : cfg.annotation("add_c_libraries")) {
             String[] strs = s.split(" ");
-            for (int i=0; i<strs.length; i++) {
+            for (int i = 0; i < strs.length; i++) {
                 libs += "-l " + strs[i].trim() + " ";
+            }
+        }
+        for (String s : cfg.annotation("add_c_libraries_rep")) {
+            String[] strs = s.split(" ");
+            for (int i = 0; i < strs.length; i++) {
+                libs += "-L " + strs[i].trim() + " ";
             }
         }
         libs = libs.trim();
@@ -82,7 +92,7 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         String preproc = "";
         for (String s : cfg.annotation("add_c_directives")) {
             String[] strs = s.split(" ");
-            for (int i=0; i<strs.length; i++) {
+            for (int i = 0; i < strs.length; i++) {
                 preproc += "-D " + strs[i].trim() + " ";
             }
         }

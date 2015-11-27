@@ -19,6 +19,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -40,7 +41,7 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
             final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/package.json");
             final List<String> packLines = IOUtils.readLines(input);
             String pack = "";
-            for(String line : packLines) {
+            for (String line : packLines) {
                 pack += line + "\n";
             }
             input.close();
@@ -48,13 +49,32 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
 
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonValue deps = json.get("dependencies");
-            for(Thing t : cfg.allThings()) {
-                for(String dep : t.annotation("js_dep")) {
+            for (Thing t : cfg.allThings()) {
+                for (String dep : t.annotation("js_dep")) {
                     deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
+                }
+
+            }
+
+            boolean addCEPdeps = false;
+            boolean addDebugDeps = !ctx.getCompiler().getDebugProfiles().isEmpty();
+
+            for (Thing t : cfg.allThings()) {
+                if (t.getStreams().size() > 0) {
+                    addCEPdeps = true;
                 }
             }
 
-            final File f = new File(ctx.getOutputDirectory() + "/" + cfg.getName() + "/package.json");
+            if(addCEPdeps) {
+                deps.asObject().add("rx", "^2.5.3");
+                deps.asObject().add("events", "^1.0.2");
+            }
+
+            if(addDebugDeps) {
+                deps.asObject().add("colors", "^1.1.2");
+            }
+
+            final File f = new File(ctx.getOutputDirectory() + "/package.json");
             f.setWritable(true);
             final PrintWriter w = new PrintWriter(new FileWriter(f));
             w.println(json.toString());

@@ -19,7 +19,13 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 
 import java.util.ArrayList;
-import java.util.Map;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Instance;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.Port;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
 /**
  * Created by ffl on 11.06.15.
@@ -45,7 +51,7 @@ public class CCompilerContextArduino extends CCompilerContext {
 
         ArrayList<String> headers = new ArrayList<String>();
         ArrayList<String> modules = new ArrayList<String>();
-        String main = getCurrentConfiguration().getName() + ".c";
+        String main = getCurrentConfiguration().getName() + "_cfg.c";
 
         for (String filename : generatedCode.keySet()) {
             if (filename.endsWith(".h")) headers.add(filename);
@@ -66,6 +72,42 @@ public class CCompilerContextArduino extends CCompilerContext {
 
         writeTextFile(getCurrentConfiguration().getName() + ".pde", pde.toString());
 
+    }
+    
+    @Override
+    public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {
+        ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
+
+        // FIXME: Extract the arduino specific part bellow
+
+        Thing arduino_scheduler = null;
+        for (Thing t : model.allThings()) {
+            if (t.getName().equals("ThingMLScheduler")) {
+                arduino_scheduler = t;
+                break;
+            }
+        }
+        if (arduino_scheduler != null) {
+            Message poll_msg = null;
+            for (Message m : arduino_scheduler.allMessages()) {
+                if (m.getName().equals("poll")) {
+                    poll_msg = m;
+                    break;
+                }
+            }
+
+            if (poll_msg != null) {
+                // Send a poll message to all components which can receive it
+                for (Instance i : cfg.allInstances()) {
+                    for (Port p : i.getType().allPorts()) {
+                        if (p.getReceives().contains(poll_msg)) {
+                            builder.append(this.getHandlerName(i.getType(), p, poll_msg) + "(&" + this.getInstanceVarName(i) + ");\n");
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
 

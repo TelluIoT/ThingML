@@ -25,29 +25,48 @@ import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.ThingMLCompilerRegistry;
+import org.thingml.compilers.registry.ThingMLCompilerRegistry;
+import org.thingml.compilers.configuration.*;
 
 public class DynamicCompilerMenu extends  CompoundContributionItem implements IWorkbenchContribution {
 
 	@Override
 	protected IContributionItem[] getContributionItems() {
-		
-		
-		IContributionItem[] list = new IContributionItem[ThingMLCompilerRegistry.getInstance().getCompilerPrototypes().size()];
-		int i=0;
-		Map<String, String> parms;
-		
+
+		int index = 0;
 		for (ThingMLCompiler c : ThingMLCompilerRegistry.getInstance().getCompilerPrototypes()) {
-			parms = new HashMap<String, String>();
-			parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", c.getName());
-			list[i] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "itemid_"+i, "thingml.compile", parms, null, null, null, c.getName(), null, c.getDescription(), CommandContributionItem.STYLE_PUSH, null, true));
-			i++;
+			index++;			
+			for (final Map.Entry<String, CfgExternalConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
+				index++;
+			}
 		}
 		
+		//System.out.println("size = " + index);
+
+		IContributionItem[] list = new IContributionItem[index];
+		int i=0;
+		Map<String, String> parms;
+
+		for (ThingMLCompiler c : ThingMLCompilerRegistry.getInstance().getCompilerPrototypes()) {
+			parms = new HashMap<String, String>();
+			parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", c.getID());
+			list[i] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "itemid_"+i, "thingml.compile", parms, null, null, null, c.getID(), null, c.getDescription(), CommandContributionItem.STYLE_PUSH, null, true));
+			//System.out.println(c.getID() + " " + i);
+			i++;
+			for (final Map.Entry<String, CfgExternalConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
+				parms = new HashMap<String, String>();
+				parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", c.getID() + "/" + connectorCompiler.getKey());
+				//parms.put("org.thingml.eclipse.ui.commandParameterCompilerConnectorName", connectorCompiler.getKey());
+				list[i] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "itemid_"+i, "thingml.compile", parms, null, null, null, c.getID() + "/" + connectorCompiler.getKey(), null, connectorCompiler.getKey(), CommandContributionItem.STYLE_PUSH, null, true));
+				//System.out.println(connectorCompiler.getKey() + " " + i);
+				i++;
+			}			
+		}
+
 		return list;
-		
+
 	}
-	
+
 	// Service locator to located the handler service.
 	private IServiceLocator serviceLocator;
 
@@ -55,8 +74,8 @@ public class DynamicCompilerMenu extends  CompoundContributionItem implements IW
 	public void initialize(IServiceLocator serviceLocator) {
 		this.serviceLocator = serviceLocator;
 	}
-	
-	
-	
+
+
+
 
 }

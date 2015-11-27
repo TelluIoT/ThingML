@@ -92,10 +92,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.SEND_ACTION: return createSendAction();
 			case ThingmlPackage.VARIABLE_ASSIGNMENT: return createVariableAssignment();
 			case ThingmlPackage.RECEIVE_MESSAGE: return createReceiveMessage();
-			case ThingmlPackage.DICTIONARY: return createDictionary();
 			case ThingmlPackage.REQUIRED_PORT: return createRequiredPort();
 			case ThingmlPackage.PROVIDED_PORT: return createProvidedPort();
-			case ThingmlPackage.EVENT_REFERENCE: return createEventReference();
+			case ThingmlPackage.INTERNAL_PORT: return createInternalPort();
 			case ThingmlPackage.ENUM_LITERAL_REF: return createEnumLiteralRef();
 			case ThingmlPackage.INTEGER_LITERAL: return createIntegerLiteral();
 			case ThingmlPackage.BOOLEAN_LITERAL: return createBooleanLiteral();
@@ -117,7 +116,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.CONDITIONAL_ACTION: return createConditionalAction();
 			case ThingmlPackage.PROPERTY_REFERENCE: return createPropertyReference();
 			case ThingmlPackage.ARRAY_INDEX: return createArrayIndex();
-			case ThingmlPackage.DICTIONARY_REFERENCE: return createDictionaryReference();
 			case ThingmlPackage.EXPRESSION_GROUP: return createExpressionGroup();
 			case ThingmlPackage.RETURN_ACTION: return createReturnAction();
 			case ThingmlPackage.PRINT_ACTION: return createPrintAction();
@@ -125,12 +123,30 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.CONFIGURATION: return createConfiguration();
 			case ThingmlPackage.INSTANCE: return createInstance();
 			case ThingmlPackage.CONNECTOR: return createConnector();
+			case ThingmlPackage.EXTERNAL_CONNECTOR: return createExternalConnector();
 			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN: return createConfigPropertyAssign();
 			case ThingmlPackage.CONFIG_INCLUDE: return createConfigInclude();
 			case ThingmlPackage.INSTANCE_REF: return createInstanceRef();
 			case ThingmlPackage.FUNCTION_CALL_STATEMENT: return createFunctionCallStatement();
 			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
 			case ThingmlPackage.LOCAL_VARIABLE: return createLocalVariable();
+			case ThingmlPackage.STREAM: return createStream();
+			case ThingmlPackage.STREAM_EXPRESSION: return createStreamExpression();
+			case ThingmlPackage.STREAM_PARAM_REFERENCE: return createStreamParamReference();
+			case ThingmlPackage.STREAM_OUTPUT: return createStreamOutput();
+			case ThingmlPackage.JOIN_SOURCES: return createJoinSources();
+			case ThingmlPackage.MERGE_SOURCES: return createMergeSources();
+			case ThingmlPackage.SIMPLE_SOURCE: return createSimpleSource();
+			case ThingmlPackage.FILTER: return createFilter();
+			case ThingmlPackage.MESSAGE_PARAMETER: return createMessageParameter();
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL: return createSglMsgParamOperatorCall();
+			case ThingmlPackage.REFERENCE: return createReference();
+			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR: return createSglMsgParamOperator();
+			case ThingmlPackage.LENGTH_WINDOW: return createLengthWindow();
+			case ThingmlPackage.TIME_WINDOW: return createTimeWindow();
+			case ThingmlPackage.SIMPLE_PARAM_REF: return createSimpleParamRef();
+			case ThingmlPackage.ARRAY_PARAM_REF: return createArrayParamRef();
+			case ThingmlPackage.LENGTH_ARRAY: return createLengthArray();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -371,16 +387,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Dictionary createDictionary() {
-		DictionaryImpl dictionary = new DictionaryImpl();
-		return dictionary;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public RequiredPort createRequiredPort() {
 		RequiredPortImpl requiredPort = new RequiredPortImpl();
 		return requiredPort;
@@ -401,9 +407,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EventReference createEventReference() {
-		EventReferenceImpl eventReference = new EventReferenceImpl();
-		return eventReference;
+	public InternalPort createInternalPort() {
+		InternalPortImpl internalPort = new InternalPortImpl();
+		return internalPort;
 	}
 
 	/**
@@ -621,16 +627,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public DictionaryReference createDictionaryReference() {
-		DictionaryReferenceImpl dictionaryReference = new DictionaryReferenceImpl();
-		return dictionaryReference;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public ExpressionGroup createExpressionGroup() {
 		ExpressionGroupImpl expressionGroup = new ExpressionGroupImpl();
 		return expressionGroup;
@@ -701,6 +697,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public ExternalConnector createExternalConnector() {
+		ExternalConnectorImpl externalConnector = new ExternalConnectorImpl();
+		return externalConnector;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ConfigPropertyAssign createConfigPropertyAssign() {
 		ConfigPropertyAssignImpl configPropertyAssign = new ConfigPropertyAssignImpl();
 		return configPropertyAssign;
@@ -754,6 +760,176 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public LocalVariable createLocalVariable() {
 		LocalVariableImpl localVariable = new LocalVariableImpl();
 		return localVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Stream createStream() {
+		StreamImpl stream = new StreamImpl();
+		return stream;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StreamExpression createStreamExpression() {
+		StreamExpressionImpl streamExpression = new StreamExpressionImpl();
+		return streamExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StreamParamReference createStreamParamReference() {
+		StreamParamReferenceImpl streamParamReference = new StreamParamReferenceImpl();
+		return streamParamReference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StreamOutput createStreamOutput() {
+		StreamOutputImpl streamOutput = new StreamOutputImpl();
+		return streamOutput;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JoinSources createJoinSources() {
+		JoinSourcesImpl joinSources = new JoinSourcesImpl();
+		return joinSources;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MergeSources createMergeSources() {
+		MergeSourcesImpl mergeSources = new MergeSourcesImpl();
+		return mergeSources;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SimpleSource createSimpleSource() {
+		SimpleSourceImpl simpleSource = new SimpleSourceImpl();
+		return simpleSource;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Filter createFilter() {
+		FilterImpl filter = new FilterImpl();
+		return filter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MessageParameter createMessageParameter() {
+		MessageParameterImpl messageParameter = new MessageParameterImpl();
+		return messageParameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SglMsgParamOperatorCall createSglMsgParamOperatorCall() {
+		SglMsgParamOperatorCallImpl sglMsgParamOperatorCall = new SglMsgParamOperatorCallImpl();
+		return sglMsgParamOperatorCall;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Reference createReference() {
+		ReferenceImpl reference = new ReferenceImpl();
+		return reference;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SglMsgParamOperator createSglMsgParamOperator() {
+		SglMsgParamOperatorImpl sglMsgParamOperator = new SglMsgParamOperatorImpl();
+		return sglMsgParamOperator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LengthWindow createLengthWindow() {
+		LengthWindowImpl lengthWindow = new LengthWindowImpl();
+		return lengthWindow;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TimeWindow createTimeWindow() {
+		TimeWindowImpl timeWindow = new TimeWindowImpl();
+		return timeWindow;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SimpleParamRef createSimpleParamRef() {
+		SimpleParamRefImpl simpleParamRef = new SimpleParamRefImpl();
+		return simpleParamRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ArrayParamRef createArrayParamRef() {
+		ArrayParamRefImpl arrayParamRef = new ArrayParamRefImpl();
+		return arrayParamRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LengthArray createLengthArray() {
+		LengthArrayImpl lengthArray = new LengthArrayImpl();
+		return lengthArray;
 	}
 
 	/**

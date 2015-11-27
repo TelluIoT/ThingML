@@ -16,7 +16,7 @@ OPTIONS {
 	//
 	// The code should be generated *2 times*, once for eclipse and once for standalone
 	// The generated code shares all the code that is manually edited in (src/main/java) so there is no need to create the resolvers twice.
-	// Bellow are the different options to use.
+	// Below are the different options to use.
 	// Generate the standalone version first and then the eclipse version.
 	
 	// 1. FOR STANDALONE
@@ -26,6 +26,7 @@ OPTIONS {
 	
 	// 2. FOR ECLIPSE Comment the lines bellow
 	srcGenFolder = "src/main/java-gen";
+	
 	
 	// IMPORTANT: In the generated eclipse plugins it is required to change the Vendor to SINTEF and the Version from "1.0.0" to "0.x.0.qualifier"
 }
@@ -54,6 +55,8 @@ TOKENS{
 		DEFINE WHITESPACE $(' '|'\t'|'\f')$;
 		DEFINE LINEBREAKS $('\r\n'|'\r'|'\n')$;
 		
+		DEFINE T_ARRAY $'['$;
+		
 		//DEFINE MULTIPLICITY $(('0'..'9')+) '\.' '\.' ( ('*') | (('1'..'9')+) )$;
 		//DEFINE MULTIPLICITY $( ('*') | (('1'..'9')+) )$;
 		
@@ -65,6 +68,8 @@ TOKENSTYLES{
 	
 	// Default text
 	"TEXT" COLOR #222222;
+	
+	"T_ARRAY" COLOR #222222, BOLD;
 	
 	// Comments
 	"SL_COMMENT"  COLOR #666666;
@@ -116,6 +121,11 @@ TOKENSTYLES{
 	"T_HISTORY" COLOR #A22000, BOLD;
 	"->" COLOR #A22000, BOLD;
 	
+	//CEP
+	"stream" COLOR #A22000, BOLD;
+	"from" COLOR #A22000, BOLD;
+	"select" COLOR #A22000, BOLD;
+	
 	// Action language
 	"var" COLOR #444444, BOLD;
 	"function" COLOR #444444, BOLD;
@@ -129,6 +139,8 @@ TOKENSTYLES{
 	"not" COLOR #444444, BOLD;
 	"and" COLOR #444444, BOLD;
 	"or" COLOR #444444, BOLD;
+	"operator" COLOR #444444, BOLD;
+	"filter" COLOR #A22000, BOLD;
 	
 	// Configurations and Instances
 	"configuration" COLOR #007F55, BOLD;
@@ -136,6 +148,7 @@ TOKENSTYLES{
 	"connector" COLOR #007F55, BOLD;
 	"group" COLOR #007F55, BOLD;	
 	"=>" COLOR #007F55, BOLD;
+	"over" COLOR #006E54, BOLD;
 
 	// Special keywords
 	"T_ASPECT" COLOR #444444, BOLD;
@@ -164,21 +177,21 @@ RULES {
 		
 	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
 	
-	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( "[" cardinality "]")? )? #1 body ;
+	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? )? #1 body ;
 	
-	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour )* !0 "}" ;
+	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams | operators)* !0 "}" ;
 	
 	RequiredPort ::= !1 (optional[T_OPTIONAL])? "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 
 	ProvidedPort ::= !1  "provided" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 	
-	Property::= !1 (changeable[T_READONLY])? "property" #1 name[] #1 ":" #1 type[]  ( "[" cardinality "]")? (#1 "=" #1 init)?  (annotations)*;
+	InternalPort ::= !1  "internal" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
+	
+	Property::= !1 (changeable[T_READONLY])? "property" #1 name[] #1 ":" #1 type[]  ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? (#1 "=" #1 init)?  (annotations)*;
 	
 	//("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?
-	
-//	Dictionary::= !1 (changeable[T_READONLY])? "dictionary" #1 name[]  ":"  indexType[] "->" type[] ("[" lowerBound[INTEGER_LITERAL] ".." upperBound[INTEGER_LITERAL] "]")?(annotations)*;
-	
-	Parameter::= name[]  ":"  type[] ( "[" cardinality "]")?;
+		
+	Parameter::= name[]  ":"  type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))?;
 	
 	PrimitiveType::= "datatype" #1 name[] (annotations)* ";" ;
 	
@@ -217,6 +230,8 @@ RULES {
 	
 	Connector ::= "connector" #1 (name[] #1)? cli "." required[] "=>" srv "." provided[] (!0 annotations)*;
 	
+	ExternalConnector ::= "connector" #1 (name[] #1)? inst "." port[] "over" protocol[] (!0 annotations)*;	
+	
 	ConfigPropertyAssign ::= "set" instance "." property[] ("[" index "]")* #1 "=" #1 init;
 	
 	InstanceRef ::= (config[] ".")* instance[];
@@ -231,7 +246,7 @@ RULES {
 	
 	ActionBlock::= "do" ( !1 actions  )* !0 "end"  ;
 	
-	LocalVariable::= !1 (changeable[T_READONLY])? "var" #1 name[] #1 ":" #1 type[] ( "[" cardinality "]")? (#1 "=" #1 init)?  (annotations)*;
+	LocalVariable::= !1 (changeable[T_READONLY])? "var" #1 name[] #1 ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? (#1 "=" #1 init)?  (annotations)*;
 	
 	ExternStatement::= statement[STRING_EXT] ("&" segments)*;
 	
@@ -246,6 +261,35 @@ RULES {
 	ReturnAction ::= "return" #1 exp;
 	
 	FunctionCallStatement ::= function[] "(" (parameters ("," #1 parameters)* )? ")";
+	
+	// *******************************
+	// * CEP
+	// *******************************
+	SglMsgParamOperator ::= "operator" #1 name[] "(" parameter ")" ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? #1 body;
+	MessageParameter ::= name[] ":" msgRef[];
+
+	SglMsgParamOperatorCall ::= operatorRef[] "(" parameter[] ")";
+	
+	StreamExpression ::= name[] ":" expression;
+	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
+	
+	Filter ::= "filter" "(" filterOp ")";
+	LengthWindow ::= "lengthWindow" "(" nbEvents[INTEGER_LITERAL] ("," step[INTEGER_LITERAL])? ")";
+	TimeWindow ::= "timeWindow" "(" step[INTEGER_LITERAL] "," size[INTEGER_LITERAL] ")";
+		
+	SimpleSource ::= ( (name[] ":" "[" message "]") | message) ("::" operators)*;	
+	JoinSources ::= (name[] ":" )? "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
+	MergeSources ::= (name[] ":" )? "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)*;
+	
+	Stream ::= "stream" #1 name[] #1 (annotations)* "do"
+					 !1 "from" #1 input
+					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
+					 !1 "action" #1 output
+					 "end";
+	
+	SimpleParamRef ::= parameterRef[];
+	ArrayParamRef ::= parameterRef[] "[]";		
+	LengthArray ::= "length";	 
 	
 	// *********************
 	// * The Expressions
@@ -288,8 +332,12 @@ RULES {
 	@Operator(type="unary_prefix", weight="7", superclass="Expression")	
 	NotExpression ::= "not" #1 term;
 	
+	//CEP
 	@Operator(type="primitive", weight="9", superclass="Expression")
-	EventReference ::= msgRef[] "." paramRef[];	
+	StreamParamReference ::= "#" indexParam[INTEGER_LITERAL];
+	
+	@Operator(type="primitive", weight="9", superclass="Expression")
+	Reference ::= reference[] "." parameter;	
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	ExpressionGroup ::= "(" exp ")";

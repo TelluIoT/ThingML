@@ -55,13 +55,21 @@ datatype UInt16
     @SenML_type "Double";
 
 datatype Int16	
-	@c_type "int"
+	@c_type "int16_t"
     @c_byte_size "2"
 	@java_type "short"
 	@java_primitive "true"
     @scala_type "Short"
     @SenML_type "Double";
 
+
+datatype Int32	
+	@c_type "int32_t"
+	@c_byte_size "4"
+	@java_type "int"
+	@java_primitive "true"
+    @scala_type "Int"
+    @SenML_type "Double";
 
 datatype Long	
 	@c_type "long"
@@ -81,7 +89,7 @@ datatype ULong
 
 datatype Double	
 	@c_type "double"
-	@c_byte_size "4"
+	@c_byte_size "8"
 	@java_type "float"
 	@java_primitive "true"
     @scala_type "Float"

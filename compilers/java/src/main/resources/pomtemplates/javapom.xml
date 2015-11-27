@@ -1,58 +1,71 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.thingml.generated</groupId>
     <artifactId><!--CONFIGURATIONNAME--></artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    
-	<properties>
-            <java.bootstrap.classes>${java.home}/lib/rt.jar</java.bootstrap.classes>
-            <java.cryptographic.extension.classes>${java.home}/lib/jce.jar</java.cryptographic.extension.classes>
-            <java.secure.socket.extension.classes>${java.home}/lib/jsse.jar</java.secure.socket.extension.classes>
-            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-            <thingml.version>0.6.0-SNAPSHOT</thingml.version>
-            <jasm.version>0.1.0-SNAPSHOT</jasm.version>
-            <!--PROP-->
-        </properties>
-	
-	<repositories>        
-    
+
+    <properties>
+        <java.bootstrap.classes>${java.home}/lib/rt.jar</java.bootstrap.classes>
+        <java.cryptographic.extension.classes>${java.home}/lib/jce.jar</java.cryptographic.extension.classes>
+        <java.secure.socket.extension.classes>${java.home}/lib/jsse.jar</java.secure.socket.extension.classes>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <thingml.version>0.6.0-SNAPSHOT</thingml.version>
+        <jasm.version>0.1.0-SNAPSHOT</jasm.version>
+        <!--PROP-->
+    </properties>
+
+    <repositories>
+
         <repository>
             <id>thingml-snapshot</id>
             <name>thingml-snapshot</name>
             <url>http://maven.thingml.org/thingml-snapshot/</url>
         </repository>
-        
+
         <repository>
             <id>thingml-release</id>
             <name>thingml-release</name>
             <url>http://maven.thingml.org/thingml-release/</url>
         </repository>
-        
+
         <repository>
             <id>thirdparty</id>
             <name>thingml-snapshot</name>
             <url>http://maven.thingml.org/thirdparty/</url>
         </repository>
-		
+
         <repository>
             <id>sonatype-snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
-        
+
+        <repository>
+            <id>repo1-maven</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+
         <!--Additional repositories-->
         <!--REPO-->
-		
+
     </repositories>
-	
-	
+
+
     <dependencies>
-        
+
         <dependency>
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.jasm</artifactId>
             <version>${jasm.version}</version>
+        </dependency>
+
+        <!--FIXME: should be only here if debug-->
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>1.11</version>
         </dependency>
 
         <!--<dependency>
@@ -61,21 +74,22 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>-->
-        
+
         <!--Additional dependencies-->
         <!--<dependency>
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.utils</artifactId>
             <version>${thingml.version}</version>
         </dependency>-->
-        <!--DEP-->		
+        <!--DEP-->
+        <!--DEP RX-->
     </dependencies>
 
-	
+
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <!--<testSourceDirectory>src/test/java</testSourceDirectory>-->
-		<plugins>
+        <plugins>
 
             <!--<plugin>
                 <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
@@ -103,71 +117,86 @@
                     <source>1.6</source>
                     <target>1.6</target>
                     <!--<compilerArguments>-->
-                        <!--<profile>--><!--COMPACT_PROFILE--><!--</profile>-->
+                    <!--<profile>--><!--COMPACT_PROFILE--><!--</profile>-->
                     <!--</compilerArguments>--><!--For Java8 only-->
                 </configuration>
             </plugin>
 
-    <!--<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-            <execution>
-                <id>unpack-shared-resources</id>
-                <goals>
-                    <goal>unpack-dependencies</goal>
-                </goals>
-                <phase>generateMainAndInit-resources</phase>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <outputDirectory>${basedir}</outputDirectory>
-                    <includes>**/resources/**</includes>
-                    <includeArtifacIds>org.thingml.samples.resources</includeArtifacIds>
-                    <excludeArtifacIds>org.thingml.samples.utils</excludeArtifacIds>
-                    <includeGroupIds>org.thingml</includeGroupIds>
-                    <excludeTransitive>true</excludeTransitive>
+                    <mainClass><!--PACK-->.Main</mainClass>
                 </configuration>
-            </execution>
-        </executions>
-    </plugin> -->
+            </plugin>
 
-    <!--ProGuard to reduce size of binaries and hopefully optimize some stuff-->
-    <!--<plugin>
-        <groupId>com.github.wvengen</groupId>
-        <artifactId>proguard-maven-plugin</artifactId>
-        <executions>
-            <execution>
-                <id>proguard</id>
-                <phase>package</phase>
-                <goals>
-                    <goal>proguard</goal>
-                </goals>
-            </execution>
-        </executions>
-        <configuration>
-            <options>
-                <option>-keep public class * { public protected *; }</option>
-                <option>-optimizations class/merging/*,method/removal/parameter,method/inlining/*,code/simplification/*,code/removal/*,code/merging,code/allocation/variable</option>
-                <option>-optimizationpasses 3</option>
-                <option>-mergeinterfacesaggressively</option>
-                <option>-dontobfuscate</option>
-            </options>
-            <libs>
-                <lib>${java.bootstrap.classes}</lib>
-                <lib>${java.cryptographic.extension.classes}</lib>
-                <lib>${java.secure.socket.extension.classes}</lib>
-            </libs>
-        </configuration>
-        <dependencies>
-            <dependency>
-                <groupId>net.sf.proguard</groupId>
-                <artifactId>proguard-base</artifactId>
-                <version>4.10</version>
-                <scope>runtime</scope>
-            </dependency>
-        </dependencies>
-    </plugin>-->
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-shared-resources</id>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <phase>generateMainAndInit-resources</phase>
+                        <configuration>
+                            <outputDirectory>${basedir}</outputDirectory>
+                            <includes>**/resources/**</includes>
+                            <includeArtifacIds>org.thingml.samples.resources</includeArtifacIds>
+                            <excludeArtifacIds>org.thingml.samples.utils</excludeArtifacIds>
+                            <includeGroupIds>org.thingml</includeGroupIds>
+                            <excludeTransitive>true</excludeTransitive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin> -->
+
+            <!--ProGuard to reduce size of binaries and hopefully optimize some stuff-->
+            <!--<plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>proguard</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <options>
+                        <option>-keep public class * { public protected *; }</option>
+                        <option>-optimizations class/merging/*,method/removal/parameter,method/inlining/*,code/simplification/*,code/removal/*,code/merging,code/allocation/variable</option>
+                        <option>-optimizationpasses 3</option>
+                        <option>-mergeinterfacesaggressively</option>
+                        <option>-dontobfuscate</option>
+                    </options>
+                    <libs>
+                        <lib>${java.bootstrap.classes}</lib>
+                        <lib>${java.cryptographic.extension.classes}</lib>
+                        <lib>${java.secure.socket.extension.classes}</lib>
+                    </libs>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>4.10</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>-->
 
         </plugins>
     </build>
-    
+
 </project>

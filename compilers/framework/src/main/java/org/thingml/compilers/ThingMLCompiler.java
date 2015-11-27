@@ -15,20 +15,16 @@
  */
 package org.thingml.compilers;
 
-import org.sintef.thingml.Configuration;
+import org.sintef.thingml.*;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.thing.*;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
-import org.thingml.compilers.thing.ThingActionCompiler;
-import org.thingml.compilers.thing.ThingApiCompiler;
-import org.thingml.compilers.thing.ThingImplCompiler;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ffl on 23.11.14.
@@ -42,6 +38,14 @@ public abstract class ThingMLCompiler {
     private CfgMainGenerator mainCompiler;
     private CfgBuildCompiler cfgBuildCompiler;
     private ThingImplCompiler thingImplCompiler;
+    private ThingCepCompiler cepCompiler;
+
+    //Debug
+    private Map<Thing, DebugProfile> debugProfiles = new HashMap<>();
+
+    public Map<Thing, DebugProfile> getDebugProfiles() {
+        return debugProfiles;
+    }
 
     //we might need several connector compilers has different ports might use different connectors
     private Map<String, CfgExternalConnectorCompiler> connectorCompilers = new HashMap<String, CfgExternalConnectorCompiler>();
@@ -53,33 +57,144 @@ public abstract class ThingMLCompiler {
         this.cfgBuildCompiler = new CfgBuildCompiler();
         this.thingImplCompiler = new FSMBasedThingImplCompiler();
         connectorCompilers.put("default", new CfgExternalConnectorCompiler());
+        this.cepCompiler = new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration());
     }
 
-    public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
+    public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
         this.thingActionCompiler = thingActionCompiler;
         this.thingApiCompiler = thingApiCompiler;
         this.mainCompiler = mainCompiler;
         this.cfgBuildCompiler = cfgBuildCompiler;
         this.thingImplCompiler = thingImplCompiler;
+        this.cepCompiler = cepCompiler;
     }
 
     public abstract ThingMLCompiler clone();
 
-    /**************************************************************
+    /**
+     * ***********************************************************
      * META-DATA about this particular compiler
-     **************************************************************/
+     * ************************************************************
+     */
     public abstract String getID();
+
     public abstract String getName();
+
     public abstract String getDescription();
 
     /**************************************************************
      * Parameters common to all compilers
      **************************************************************/
 
-    /**************************************************************
+    /**
+     * ***********************************************************
      * Entry point of the compiler
-     **************************************************************/
+     * ************************************************************
+     */
     public abstract boolean compile(Configuration cfg, String... options);
+
+    /**
+     * Creates debug profiles
+     * @param cfg
+     */
+    //FIXME: refactor code to avoid code duplication (should be possible to have one sub-method that we call twice with different params)
+    public void processDebug(Configuration cfg) {
+        final boolean debugCfg = cfg.isDefined("debug", "true");
+
+        Set<Thing> debugThings = new HashSet<>();
+        for (Instance i : cfg.allInstances()) {
+            if (debugCfg) {
+                if (!i.isDefined("debug", "false")) {
+                    debugThings.add(i.getType());
+                }
+            } else {
+                if (i.isDefined("debug", "true") || i.getType().isDefined("debug", "true")) {
+                    debugThings.add(i.getType());
+                }
+            }
+        }
+
+        for (Thing thing : cfg.allThings()) {
+            boolean debugBehavior = false;
+            List<Function> debugFunctions = new ArrayList<Function>();
+            List<Property> debugProperties = new ArrayList<>();
+            List<Instance> debugInstances = new ArrayList<>();
+            Map<Port, List<Message>> debugMessages = new HashMap<>();
+            
+            
+            for (Instance i : cfg.allInstances()) {
+                if(i.getType().getName().compareTo(thing.getName()) == 0) {
+                    if (debugCfg) {
+                        if (!i.isDefined("debug", "false")) {
+                            debugInstances.add(i);
+                        }
+                    } else {
+                        if (i.isDefined("debug", "true") || i.getType().isDefined("debug", "true")) {
+                           debugInstances.add(i);
+                        }
+                    }
+                }
+            }
+
+            if (debugThings.contains(thing)) {
+                if (!thing.isDefined("debug", "false")) {//collect everything not marked with @debug "false"
+                    debugBehavior = !thing.getBehaviour().isEmpty() && !thing.getBehaviour().get(0).isDefined("debug", "false");
+                    for (Function f : thing.allFunctions()) {
+                        if (!f.isDefined("debug", "false")) {
+                            debugFunctions.add(f);
+                        }
+                    }
+                    for (Property p : thing.allPropertiesInDepth()) {
+                        if (!p.isDefined("debug", "false")) {
+                            debugProperties.add(p);
+                        }
+                    }
+                    for (Port p : thing.allPorts()) {
+                        List<Message> msg = p.getReceives();
+                        msg.addAll(p.getSends());
+                        for (Message m : msg) {
+                            if ((!p.isDefined("debug", "false") && !m.isDefined("debug", "false")) || m.isDefined("debug", "true")) {//TODO: check the rules for debugging of messages/ports
+                                List<Message> l = debugMessages.get(p);
+                                if (l == null) {
+                                    l = new ArrayList<>();
+                                    debugMessages.put(p, l);
+                                }
+                                l.add(m);
+                            }
+                        }
+                    }
+                } else {//collect everything marked with @debug "true"
+                    debugBehavior =  !thing.getBehaviour().isEmpty() && thing.getBehaviour().get(0).isDefined("debug", "true");
+                    for (Function f : thing.allFunctions()) {
+                        if (f.isDefined("debug", "true")) {
+                            debugFunctions.add(f);
+                        }
+                    }
+                    for (Property p : thing.allPropertiesInDepth()) {
+                        if (p.isDefined("debug", "true")) {
+                            debugProperties.add(p);
+                        }
+                    }
+                    for (Port p : thing.allPorts()) {
+                        List<Message> msg = p.getReceives();
+                        msg.addAll(p.getSends());
+                        for (Message m : msg) {
+                            if ((p.isDefined("debug", "true") && !m.isDefined("debug", "false")) || m.isDefined("debug", "true")) {//TODO: check the rules for debugging of messages/ports
+                                List<Message> l = debugMessages.get(p);
+                                if (l == null) {
+                                    l = new ArrayList<>();
+                                    debugMessages.put(p, l);
+                                }
+                                l.add(m);
+                            }
+                        }
+                    }
+                }
+            }
+            DebugProfile profile = new DebugProfile(thing, debugBehavior, debugFunctions, debugProperties, debugMessages, debugInstances);
+            debugProfiles.put(thing, profile);
+        }
+    }
 
     public boolean compileConnector(String connector, Configuration cfg, String... options) {
         ctx.setCurrentConfiguration(cfg);
@@ -108,7 +223,13 @@ public abstract class ThingMLCompiler {
         return cfgBuildCompiler;
     }
 
-    public ThingImplCompiler getThingImplCompiler() {return thingImplCompiler; }
+    public ThingImplCompiler getThingImplCompiler() {
+        return thingImplCompiler;
+    }
+
+    public ThingCepCompiler getCepCompiler() {
+        return cepCompiler;
+    }
 
     public void addConnectorCompilers(Map<String, CfgExternalConnectorCompiler> connectorCompilers) {
         this.connectorCompilers.putAll(connectorCompilers);
@@ -117,7 +238,7 @@ public abstract class ThingMLCompiler {
     public Map<String, CfgExternalConnectorCompiler> getConnectorCompilers() {
         return Collections.unmodifiableMap(connectorCompilers);
     }
-    
+
     private OutputStream messageStream = System.out;
     private OutputStream errorStream = System.err;
 
@@ -136,14 +257,17 @@ public abstract class ThingMLCompiler {
     public void setMessageStream(OutputStream messageStream) {
         this.messageStream = messageStream;
     }
-    
-   private File outputDirectory = null;
+
+    private File outputDirectory = null;
 
     public void setOutputDirectory(File outDir) {
         outDir.mkdirs();
-        if (!outDir.exists()) throw new Error("ERROR: The output directory does not exist (" + outDir.getAbsolutePath() + ").");
-        if (!outDir.isDirectory()) throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
-        if (!outDir.canWrite()) throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.exists())
+            throw new Error("ERROR: The output directory does not exist (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.isDirectory())
+            throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
+        if (!outDir.canWrite())
+            throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
         outputDirectory = outDir;
     }
 
@@ -151,5 +275,5 @@ public abstract class ThingMLCompiler {
         return outputDirectory;
     }
 
-    
+
 }

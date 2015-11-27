@@ -4,6 +4,8 @@ org.thingml.tests
 org.thingml.tests module manages tests defined in org.thingml.tests/src/main/thingml/tests. 
 This module automatically generates JUnit tests ready for integration in tools such as Maven, and provides several ways of running some or all the tests manually.
 
+Other information about testing: [ThingML Compiler](https://github.com/SINTEF-9012/ThingML/blob/master/compilers/README.md#testing-the-compilers)
+
 Installation:
 -------------
 This modules requires Gperftools and Yourkit frameworks to give performance measures. The maven build tries to install them automatically, but may fail for the following reasons:

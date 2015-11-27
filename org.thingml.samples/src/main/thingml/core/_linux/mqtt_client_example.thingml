@@ -1,0 +1,75 @@
+import "mqtt/mqtt_client.thingml"
+import "clock.thingml"
+
+thing MQTTClientPIM includes MQTTClientMsg, ClockMsgs {
+
+	property topic : CString = "/sintef/vassik/hello"
+	property msg : String = "hello world!"
+	
+	required port mqttport {
+		receives connected, published, subscribed
+	}
+	
+	required port syncmqttport @sync_send "true" {
+		sends publish, subscribe, unsubscribe
+		receives message_received
+	}
+	
+	required port signal {
+        receives clock_tick
+    }
+    
+    statechart behavior init Init {
+    	
+    	state Init {
+    	
+    		internal event mqttport?connected
+    		action do 
+    			print "subscribing to a topic... \n"
+    			syncmqttport!subscribe(topic)
+    		end
+    		
+    		transition -> Start
+    		event mqttport?subscribed
+    		action do
+    			print "successfully subscribed to the topic, start messaging ...\n"
+    		end
+    	}
+    	
+    	state Start {
+    		
+    		internal event signal?clock_tick
+    		action syncmqttport!publish(topic, msg)
+    		
+    		internal event syncmqttport?message_received
+    		action do
+    			print "new message received... \n"
+    		end
+    	}
+    	
+    }	
+}
+
+
+configuration MQTTClientExample
+  @output_folder "/home/tmp/"
+  @debug "true"
+  @debug_fifo "true"
+  @debug_message_send ".*"
+  @debug_message_receive ".*"
+  @add_c_libraries "paho-mqtt3a tmlmqtt"
+{
+	instance mqttclpsm : MQTTClientPSM
+		set mqttclpsm.serverURI = "tcp://m2m.eclipse.org:1883"
+		set mqttclpsm.clientId = "pub_sub_thingml_client"
+		set mqttclpsm.qos = 1
+		
+	instance mqttclpim : MQTTClientPIM
+
+    instance clock : ClockLinux
+    	set clock.period = 5000
+    	
+    connector mqttclpim.mqttport => mqttclpsm.mqttport
+    connector mqttclpim.syncmqttport => mqttclpsm.syncmqttport
+    connector mqttclpim.signal => clock.signal
+}

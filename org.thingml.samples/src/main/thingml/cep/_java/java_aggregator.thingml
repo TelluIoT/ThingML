@@ -1,0 +1,200 @@
+import "../../datatypes.thingml"
+
+thing fragment JavaMathAgg {
+    //sum
+    function sumByte(tab: Byte[]) : Byte do
+        var index : Integer = 0
+        var sum : Byte = 0
+        while(index < tab.length) do
+            sum = sum + tab[index]
+            index = index + 1
+        end
+        return sum
+    end
+    
+    function sumInteger(tab: Integer[]) : Integer do
+        var index : Integer = 0
+        var sum : Integer = 0
+        while(index < tab.length) do
+            sum = sum + tab[index]
+            index = index + 1
+        end
+        return sum
+    end
+    
+    function sumLong(tab: Long[]) : Long do
+        var index : Integer = 0
+        var sum : Long = 0
+        while(index < tab.length) do
+            sum = sum + tab[index]
+            index = index + 1
+        end
+        return sum
+    end
+    
+    function sumLongLong(tab: LongLong[]) : LongLong do
+        var index : Integer = 0
+        var sum : LongLong = 0
+        while(index < tab.length) do
+            sum = sum + tab[index]
+            index = index + 1
+        end
+        return sum
+    end
+    
+    //average
+    function avgByte(tab: Byte[]) : Byte do
+        return sumByte(tab) / tab.length
+    end  
+    
+    function avgInteger(tab: Integer[]) : Integer do
+        return sumInteger(tab) / tab.length
+    end  
+    
+    function avgLong(tab: Long[]) : Long do
+        return sumLong(tab) / tab.length
+    end  
+    
+    function avgLongLong(tab: LongLong[]) : LongLong do
+        return sumLongLong(tab) / tab.length
+    end  
+    
+    //max
+    function maxByte(tab: Byte[]) : Byte do
+        var index : Integer = 0 
+        var max : Byte
+        if(tab.length > 0) do
+            max = tab[0]
+            while(index < tab.length) do
+                if(tab[index] > max) do
+                    max = tab[index]
+                end
+                index = index + 1
+            end
+        end
+        return max
+    end
+    
+    function maxInteger(tab: Integer[]) : Integer do
+        var index : Integer = 0 
+        var max : Integer
+        if(tab.length > 0) do
+            max = tab[0]
+            while(index < tab.length) do
+                if(tab[index] > max) do
+                    max = tab[index]
+                end
+                index = index + 1
+            end
+        end
+        return max
+    end
+    
+    function maxLong(tab: Long[]) : Long do
+        var index : Integer = 0 
+        var max : Long
+        if(tab.length > 0) do
+            max = tab[0]
+            while(index < tab.length) do
+                if(tab[index] > max) do
+                    max = tab[index]
+                end
+                index = index + 1
+            end
+        end
+        return max
+    end
+    
+    function maxLongLong(tab: LongLong[]) : LongLong do
+        var index : Integer = 0 
+        var max : LongLong
+        if(tab.length > 0) do
+            max = tab[0]
+            while(index < tab.length) do
+                if(tab[index] > max) do
+                    max = tab[index]
+                end
+                index = index + 1
+            end
+        end
+        return max
+    end
+    
+    //min
+    function minByte(tab: Byte[]) : Byte do
+        var index : Integer = 0 
+        var min : Byte
+        if(tab.length > 0) do
+            min = tab[0]
+            while(index < tab.length) do
+                if(tab[index] < min) do
+                    min= tab[index]
+                end
+                index = index + 1
+            end
+        end
+        return min
+    end
+    
+    function minInteger(tab: Integer[]) : Integer do
+        var index : Integer = 0 
+        var min : Integer
+        if(tab.length > 0) do
+            min = tab[0]
+            while(index < tab.length) do
+                if(tab[index] < min) do
+                    min = tab[index]
+                end
+                index = index + 1
+            end
+        end
+        return min
+    end
+    
+    function minLong(tab: Long[]) : Long do
+        var index : Integer = 0 
+        var min : Long
+        if(tab.length > 0) do
+            min = tab[0]
+            while(index < tab.length) do
+                if(tab[index] < min) do
+                    min = tab[index]
+                end
+                index = index + 1
+            end
+        end
+        return min
+    end
+    
+    function minLongLong(tab: LongLong[]) : LongLong do
+        var index : Integer = 0 
+        var min : LongLong
+        if(tab.length > 0) do
+            min = tab[0]
+            while(index < tab.length) do
+                if(tab[index] < min) do
+                    min = tab[index]
+                end
+                index = index + 1
+            end
+        end
+        return min
+    end
+    
+    //count
+    function countByte(tab: Byte[]) : Byte do
+        return tab.length
+    end  
+    
+    function countInteger(tab: Integer[]) : Integer do
+        return tab.length
+    end  
+    
+    function countLong(tab: Long[]) : Long do
+        return tab.length
+    end  
+    
+    function countLongLong(tab: LongLong[]) : LongLong do
+        return tab.length
+    end
+}

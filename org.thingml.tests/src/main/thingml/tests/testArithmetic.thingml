@@ -5,6 +5,7 @@ thing TestArithmetic includes Test
 {
   
     statechart TestPropertyPing init INIT {
+        
     
     	state INIT {
 			

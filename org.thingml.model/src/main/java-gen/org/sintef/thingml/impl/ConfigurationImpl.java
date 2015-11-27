@@ -20,22 +20,17 @@ import java.util.*;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-
+import org.sintef.thingml.AbstractConnector;
 import org.sintef.thingml.ConfigInclude;
 import org.sintef.thingml.ConfigPropertyAssign;
 import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Connector;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
@@ -76,7 +71,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 	 * @generated
 	 * @ordered
 	 */
-    protected EList<Connector> connectors;
+    protected EList<AbstractConnector> connectors;
 
     /**
 	 * The default value of the '{@link #isFragment() <em>Fragment</em>}' attribute.
@@ -154,9 +149,9 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public EList<Connector> getConnectors() {
+    public EList<AbstractConnector> getConnectors() {
 		if (connectors == null) {
-			connectors = new EObjectContainmentEList<Connector>(Connector.class, this, ThingmlPackage.CONFIGURATION__CONNECTORS);
+			connectors = new EObjectContainmentEList<AbstractConnector>(AbstractConnector.class, this, ThingmlPackage.CONFIGURATION__CONNECTORS);
 		}
 		return connectors;
 	}
@@ -263,7 +258,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 				return;
 			case ThingmlPackage.CONFIGURATION__CONNECTORS:
 				getConnectors().clear();
-				getConnectors().addAll((Collection<? extends Connector>)newValue);
+				getConnectors().addAll((Collection<? extends AbstractConnector>)newValue);
 				return;
 			case ThingmlPackage.CONFIGURATION__FRAGMENT:
 				setFragment((Boolean)newValue);
@@ -379,7 +374,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 
         final Configuration copy = EcoreUtil.copy(this);
         final Map<String, Instance> instances = new HashMap<String, Instance>();
-        final List<Connector> connectors = new ArrayList<Connector>();
+        final List<AbstractConnector> connectors = new ArrayList<AbstractConnector>();
         final Map<String, ConfigPropertyAssign> assigns = new HashMap<String, ConfigPropertyAssign>();
         final String prefix = getName();
 
@@ -407,7 +402,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @param prefix
      * @generated NOT
      */
-    private void _merge(Map<String, Instance> instances, List<Connector> connectors, Map<String, ConfigPropertyAssign> assigns, String prefix) {
+    private void _merge(Map<String, Instance> instances, List<AbstractConnector> connectors, Map<String, ConfigPropertyAssign> assigns, String prefix) {
         // Recursively deal with all groups first
         for(ConfigInclude g : getConfigs()) {
             ((ConfigurationImpl)g.getConfig())._merge(instances, connectors, assigns, prefix + "_" + g.getName());
@@ -442,7 +437,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         }
 
         // Add the connectors
-        for(Connector c : getConnectors()) {
+        for(Connector c : getInternalConnectors()) {
             Connector copy = EcoreUtil.copy(c);
             // look for the instances:
             Instance cli = instances.get(getInstanceMergedName(prefix, c.getCli()));
@@ -453,6 +448,17 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 
             copy.getSrv().getConfig().clear();
             copy.getSrv().setInstance(srv);
+
+            connectors.add(copy);
+        }
+        
+        for(ExternalConnector c : getExternalConnectors()) {
+            ExternalConnector copy = EcoreUtil.copy(c);
+            // look for the instances:
+            Instance cli = instances.get(getInstanceMergedName(prefix, c.getInst()));
+
+            copy.getInst().getConfig().clear();
+            copy.getInst().setInstance(cli);
 
             connectors.add(copy);
         }
@@ -534,7 +540,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
     public Set<Connector> allConnectors() {
         Set<Connector> result = new HashSet<Connector>();
         MergedConfigurationCache.clearCache();
-        result.addAll(merge().getConnectors());
+        result.addAll(merge().getInternalConnectors());
         return result;
     }
 
@@ -604,38 +610,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         Set<Message> result = new HashSet<Message>();
         for(Thing t : allThings()) {
             result.addAll(t.allMessages());
-        }
-        return result;
-    }
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    public Set<String> allThingMLMavenDep() {//FIXME: should be moved in a JavaHelper
-        Set<String> result = new HashSet<String>();
-        for(Thing t : allThings()) {
-            for(String dep : t.annotation("thingml_maven_dep")) {
-                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
-                result.add(cleanDep);
-            }
-        }
-        return result;
-    }
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    public Set<String> allMavenDep() {//FIXME: should be moved in a JavaHelper
-        Set<String> result = new HashSet<String>();
-        for(Thing t : allThings()) {
-            for(String dep : t.annotation("maven_dep")) {
-                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
-                result.add(cleanDep);
-            }
         }
         return result;
     }
@@ -838,6 +812,64 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @generated NOT
      * @return
      */
+    public List<Connector> getInternalConnectors() {
+    	List<Connector> result = new ArrayList<Connector>();
+    	for(AbstractConnector c : getConnectors()) {
+    		if (c instanceof Connector) {
+    			result.add((Connector)c);
+    		}
+    	}
+    	
+    	return result;
+    }
+    
+    /**
+     * @generated NOT
+     * @return
+     */
+    public List<ExternalConnector> getExternalConnectors() {
+    	List<ExternalConnector> result = new ArrayList<ExternalConnector>();
+    	for(AbstractConnector c : getConnectors()) {
+    		if (c instanceof ExternalConnector) {
+    			result.add((ExternalConnector)c);
+    		}
+    	}
+    	
+    	return result;
+    }
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    public List<Instance> getClients(Instance i) {
+        List<Instance> result = new ArrayList<Instance>();
+        for(Connector c : this.allConnectors()) {
+            if (EcoreUtil.equals(c.getSrv().getInstance(), i)) {
+                result.add(c.getCli().getInstance());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    public List<Instance> getServers(Instance i) {
+        List<Instance> result = new ArrayList<Instance>();
+        for(Connector c : this.allConnectors()) {
+            if (EcoreUtil.equals(c.getCli().getInstance(), i)) {
+                result.add(c.getSrv().getInstance());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @generated NOT
+     * @return
+     */
     public Map<Instance, List<Port>> danglingPorts() {
         Map<Instance, List<Port>> result = new HashMap<Instance, List<Port>>();
         for(Instance i : allInstances()) {
@@ -857,6 +889,76 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             result.put(i, ports);
         }
         return result;
+    }
+
+
+    /**
+     * Returns all internal ports, for all instances
+     * @generated NOT
+     * @return
+     */
+    public Map<Instance, List<InternalPort>> allInternalPorts() {
+        Map<Instance, List<InternalPort>> result = new HashMap<Instance, List<InternalPort>>();
+        for(Instance i : allInstances()) {
+            List<InternalPort> iports = new ArrayList<InternalPort>();
+            for(Port p : i.getType().allPorts()) {
+                if (p instanceof InternalPort) {
+                    InternalPort iport = (InternalPort) p;
+                    iports.add(iport);
+                }
+            }
+            if(!iports.isEmpty()) {
+                result.put(i, iports);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @generated NOT
+     * @param cur
+     * @param Cos
+     * @param Instances
+     * @return
+     */
+    private List<Instance> isRequiredBy(Instance cur, List<Connector> Cos, List<Instance> Instances) {
+        System.out.println("I: " + cur.getName());
+        List<Instance> res = new LinkedList<Instance>();
+        //List<Connector> toBeRemoved = new LinkedList<Connector>();
+        Instance needed;
+        for (Connector co : Cos) {
+            if(co.getCli().getInstance().getName().compareTo(cur.getName()) == 0) {
+                needed = co.getSrv().getInstance();
+                for(Instance inst : Instances) {
+                    if(inst.getName().compareTo(needed.getName()) == 0) {
+                        Instances.remove(inst);
+                        //Cos.remove(co);
+                        res.addAll(0, isRequiredBy(inst,Cos,Instances));
+                        res.add(0, inst);
+                        break;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    public List<Instance> orderInstanceInit() {
+        List<Instance> Instances = new LinkedList<Instance>(this.allInstances());
+        List<Connector> Cos = new LinkedList<Connector>(this.allConnectors());
+        List<Instance> res = new LinkedList<Instance>();
+        Instance cur;
+        while(!Instances.isEmpty()) {
+            cur = Instances.get(0);
+            Instances.remove(cur);
+            res.addAll(0, isRequiredBy(cur, Cos, Instances));
+            res.add(0, cur);
+        }
+        return res;
     }
 
 } //ConfigurationImpl

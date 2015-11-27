@@ -1,0 +1,260 @@
+/*
+	File: _Arduino.thingml
+	Goal: This library provide an abstraction layer between an Arduino Uno and the ThinML Language.
+	Warning: In order to work properly, this library use one of the 3 Hardware Timers of the arduino. 
+			 While in use, some other functions using the same timer might not work properly. Here is a
+			 list of the most common functions using the different timers:
+			 	- timer0: delay, millis, micro
+			 	- timer1: Servo, SoftwareSerial
+			 	- timer2: tone
+			 By default, the timer2 is used. Feel free to uncomment an other one and comment timer2 related function.
+			 (timer0 is not yet tested and might uncounter problem because of the use of mills function)
+*/
+
+import "_Datatypes.thingml"
+
+thing ArduinoMsgs {
+	
+	message ready();
+	message 4ms_interrupt();
+	message 100ms_interrupt();
+	message 1s_poll();
+	
+	message timeout(id : UInt8);
+	message timer_start(id: UInt8, time: Integer);
+	message timer_cancel(id : UInt8);
+	
+	message serial_print_str(msg: String);
+	message serial_print_dec(num: Double);
+    message serial_print_num(num: Integer);
+    
+    message setDigitalHigh(pin : UInt8);
+	message setDigitalLow(pin : UInt8);
+	
+	message setOutput(pin : UInt8);
+	message setInput(pin : UInt8);
+	
+	message readDigital(pin : UInt8);
+	message readDigitalResponse(pin : UInt8, DigitalState : DigitalState);
+	
+	message readAnalog(pin : UInt8);
+	message readAnalogResponse(pin : UInt8, res : Int16);
+}
+
+
+thing ArduinoScheduler includes ArduinoMsgs, ThingMLSchedulerMsg 
+@c_header "
+#define NB_SOFT_TIMERS 4 // for 4 different timers, 0 to 3. change here to get more or less timers.
+"
+@c_global "
+struct ArduinoScheduler_Instance *_ArduinoScheduler_instance;
+uint8_t interrupt_counter = 0;
+"
+{
+
+	provided port arduino
+	@sync_send "true" // Do not queue messages to make sure interrupts are executed right away.
+	{
+		sends ready
+		
+		sends 4ms_interrupt, 100ms_interrupt, 1s_poll
+		
+		receives timer_start, timer_cancel
+		sends timeout
+		
+		receives setDigitalHigh, setDigitalLow, setOutput, setInput, readDigital, readAnalog
+		sends readDigitalResponse, readAnalogResponse
+		
+	}
+	
+	required port polling {
+		receives setup, poll
+	}
+	
+	property interrupt_counter : UInt8 = 0
+	
+	function initialize_timer2() do
+		'// Store the instance in a global variable so that the interrupt routine can use it
+		_ArduinoScheduler_instance = _instance;
+		
+		// Run timer2 interrupt up counting at 250kHz 
+		 TCCR2A = 0;
+		 TCCR2B = 1<<CS22 | 0<<CS21 | 0<<CS20;
+		
+		 //Timer2 Overflow Interrupt Enable
+		 TIMSK2 |= 1<<TOIE2;
+		'
+	end
+	
+	function timer2_overflow_interrupt() 
+	@c_prototype "SIGNAL(TIMER2_OVF_vect)"
+	@c_instance_var_name "_ArduinoScheduler_instance"
+	do
+		
+		'TCNT2 = 5; // Leave 250 tics until overflow (1 overflow every 1ms)'
+		'interrupt_counter++;'
+		if ('interrupt_counter >= 99') do 
+			arduino!100ms_interrupt()
+			'interrupt_counter=0;'
+		end
+		if ('interrupt_counter % 4') do 
+			arduino!4ms_interrupt()
+		end
+		
+	end
+	
+	
+	/*function initialize_timer0() do
+		'// Store the instance in a global variable 
+		//  so that the interrupt routine can use it
+		_ArduinoScheduler_instance = _instance;
+		
+		// Run timer0 interrupt up counting at 250kHz 
+		 TCCR0A = 0;
+		 TCCR0B = 0<<CS02 | 1<<CS01 | 1<<CS00;
+		
+		 //Timer0 Overflow Interrupt Enable
+		 TIMSK0 |= 1<<TOIE0;
+		'
+	end
+	
+	function timer0_overflow_interrupt() 
+	@c_prototype "SIGNAL(TIMER0_OVF_vect)"
+	@c_instance_var_name "_ArduinoScheduler_instance"
+	do
+		
+		'TCNT0 = 5; // Leave 250 tics until overflow (1 overflow every 1ms)'
+		'interrupt_counter++;'
+		if ('interrupt_counter >= 99') do 
+			arduino!100ms_interrupt()
+			'interrupt_counter=0;'
+		end
+		if ('interrupt_counter % 4') do 
+			arduino!4ms_interrupt()
+		end
+		
+	end*/
+	
+	/*
+	function initialize_timer1() do
+		'// Store the instance in a global variable so that the interrupt routine can use it
+		 _ArduinoScheduler_instance = _instance;
+		 
+		 // Run timer1 interrupt up counting at 16MHz 
+		 TCCR1A = 0;
+		 TCCR1B = 0<<CS12 | 0<<CS11 | 1<<CS10;
+		
+		 //Timer1 Overflow Interrupt Enable
+		 TIMSK1 |= 1<<TOIE1;'
+	end
+	
+	
+	function timer1_compare_interrupt() 
+	@c_prototype "SIGNAL(TIMER1_OVF_vect)"
+	@c_instance_var_name "_ArduinoScheduler_instance"
+	do
+		'TCNT1 = 1535;'
+		'interrupt_counter++;'
+		if ('interrupt_counter >= 24') do 
+			arduino!100ms_interrupt()
+			'interrupt_counter=0;'
+		end
+		arduino!4ms_interrupt()
+	end
+	*/
+
+	statechart ArduinoSchedulerStateChart init ACTIVE {
+		property timers : Long['NB_SOFT_TIMERS'] 
+		property prev_1sec : Long
+		on entry do
+			'//Serial.begin(9600);'
+		end
+
+		internal event polling?setup action do
+			//initialize_timer0()
+			//initialize_timer1()
+			initialize_timer2()
+			prev_1sec = 'millis()' + 1000
+			arduino!ready()
+		end
+		
+		internal event polling?poll action do
+			var tms : Long = 'millis()'
+			// Handle timers
+			var t : UInt8 = 0
+			while (t < 'NB_SOFT_TIMERS') do
+				if (timers[t] > 0 and timers[t] < tms) do 
+					timers[t] = 0 
+					arduino!timeout(t) 
+				end
+				t = t + 1
+			end
+			// Handle the 1s poll
+			if (prev_1sec < tms) do
+				prev_1sec = prev_1sec + 1000
+				arduino!1s_poll()
+			end
+			// Handle serial rx
+			//if ('Serial.available()' > 0) arduino!usb_rx_char('(char)Serial.read()')
+		end
+		
+		internal event e : arduino?timer_start action do
+			if(e.id < 'NB_SOFT_TIMERS') timers[e.id] = 'millis()' + e.time - 1 
+		end
+		
+		internal event e : arduino?timer_cancel action do
+			if(e.id < 'NB_SOFT_TIMERS') timers[e.id] = 0
+		end
+		
+		internal event e : arduino?setDigitalHigh action do
+			'digitalWrite('&e.pin&', HIGH);'
+		end
+		
+		internal event e : arduino?setDigitalLow action do
+			'digitalWrite('&e.pin&', LOW);'
+		end
+		
+		internal event e : arduino?setInput action do
+			'pinMode('&e.pin&',INPUT);'
+		end
+		
+		internal event e : arduino?setOutput action do
+			'pinMode('&e.pin&',OUTPUT);'
+		end
+		
+		internal event e : arduino?readDigital action do
+			if ('(digitalRead('&e.pin&') == HIGH)') do
+				arduino!readDigitalResponse(e.pin, DigitalState:HIGH)
+				
+			end
+			if ('(digitalRead('&e.pin&') == LOW)') do
+				arduino!readDigitalResponse(e.pin, DigitalState:LOW)
+				
+			end
+		end
+		
+		internal event e : arduino?readAnalog action do
+			arduino!readAnalogResponse(e.pin, 'analogRead('&e.pin&')')
+		end
+		
+		state ACTIVE {}
+
+	}
+}
+
+thing fragment ArduinoApplication includes ArduinoMsgs, ThingMLSchedulerMsg {
+	required port arduino 
+	@sync_send "true" // Do not queue messages to make sure timers are updated right away.
+	{
+		
+		receives ready
+		//receives setup, poll
+		receives 4ms_interrupt, 100ms_interrupt, 1s_poll
+		
+		sends timer_start, timer_cancel
+		receives timeout
+		
+		sends setDigitalHigh, setDigitalLow, setOutput, setInput, readDigital, readAnalog
+		receives readDigitalResponse, readAnalogResponse
+	}
+}

@@ -24,7 +24,7 @@ import org.thingml.compilers.Context;
 public class CfgExternalConnectorCompiler {
 
     public void generateExternalConnector(Configuration cfg, Context ctx, String... options) {
-        throw(new UnsupportedOperationException("Connector libs are platform-specific."));
+        throw (new UnsupportedOperationException("Connector libs are platform-specific."));
     }
 
 }
