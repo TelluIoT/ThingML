@@ -1517,14 +1517,13 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         return nbConnectorSoFar;
     }
 
-    public int generateInstanceInitCode(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx, int nbConnectorSoFar) {
     protected void generateCppHeaderCfgInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         // Added by sdalgard to handle method headers for C++
         // Generate code to initialize connectors
         builder.append("void " + "initialize_configuration_" + cfg.getName() + "();\n");
     }
 
-    public void generateInstanceInitCode(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    public int generateInstanceInitCode(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx, int nbConnectorSoFar) {
         builder.append("// Init the ID, state variables and properties for instance " + inst.getName() + "\n");
         
         if(ctx.traceLevelIsAbove(cfg, 1)) {

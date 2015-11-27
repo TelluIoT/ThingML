@@ -30,6 +30,9 @@ import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
 import java.io.File;
+import org.thingml.compilers.thing.ThingCepCompiler;
+import org.thingml.compilers.thing.ThingCepSourceDeclaration;
+import org.thingml.compilers.thing.ThingCepViewCompiler;
 
 /**
  * Created by ffl on 25.11.14.
@@ -37,7 +40,7 @@ import java.io.File;
 public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
     public SintefboardCompiler() {
-        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGeneratorSintefboard(), new CfgBuildCompiler(), new CThingImplCompilerSintefboard());
+        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGeneratorSintefboard(), new CfgBuildCompiler(), new CThingImplCompilerSintefboard(), new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
     }
 
     @Override
@@ -52,7 +55,7 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public String getName() {
-        return "Sintefboard C++ for PSOC3";
+        return "Sintefboard C++ for PSOC Creator";
     }
 
     public String getDescription() {
@@ -63,6 +66,7 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
     public void do_call_compiler(Configuration cfg, String... options) {
 
         CCompilerContext ctx = new CCompilerContextSintefboard(this);
+        processDebug(cfg);
         
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));

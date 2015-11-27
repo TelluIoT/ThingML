@@ -178,12 +178,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0);
             builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
+
+            //fix for empty statechart
             builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n"); // sdalgard moved inside if-statement
         }
 
-            //fix for empty statechart
-            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
-        }
 
         //fix for empty statechart
         //builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");

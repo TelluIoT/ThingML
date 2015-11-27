@@ -99,7 +99,7 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         stringHeader = stringHeader.replace("/*CFG_CPPNAME_SCOPE*/", cfgCppnameScope);
         writeTextFile(configName + ".hpp", stringHeader);
         
-        String stringImpl = generatedCode.get(configName + ".c").toString();
+        String stringImpl = generatedCode.get(configName + "_cfg.c").toString();
         stringImpl = stringImpl.replace("/*NAME*/", configName);
         stringImpl = stringImpl.replace("/*RUNTIME_CLASS*/", generatedCode.get("runtime.c").toString());
         stringImpl = stringImpl.replace("/*CODE*/", builderImpl.toString());
