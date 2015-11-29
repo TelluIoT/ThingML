@@ -56,11 +56,11 @@ public class CCompilerContextArduino extends CCompilerContext {
         for (String filename : generatedCode.keySet()) {
             if (filename.endsWith(".h")) {
                 headers.add(filename);
-                System.out.println("Adding " + filename + " to headers");
+                //System.out.println("Adding " + filename + " to headers");
             }
             if (filename.endsWith(".c") && !filename.equals(main)) {
                 modules.add(filename);
-                System.out.println("Adding " + filename + " to modules");
+                //System.out.println("Adding " + filename + " to modules");
             }
         }
 
