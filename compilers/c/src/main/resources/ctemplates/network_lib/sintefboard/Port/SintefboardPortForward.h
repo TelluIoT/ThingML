@@ -1,4 +1,4 @@
-// Dummy to make first step in reverse engineering .... sdalgard
+// SintefboardPortForward.h *** Dummy to make first step in reverse engineering .... sdalgard
 //#ifndef SintefboardSerialForward_h
 //
 //#define SintefboardSerialForward_h

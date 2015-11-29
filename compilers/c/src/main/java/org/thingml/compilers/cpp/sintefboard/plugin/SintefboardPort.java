@@ -32,12 +32,12 @@ import org.thingml.compilers.c.CNetworkLibraryGenerator;
  *
  * @author sintef
  */
-public class SintefboardSerial extends CNetworkLibraryGenerator {
+public class SintefboardPort extends CNetworkLibraryGenerator {
 
-    public SintefboardSerial(Configuration cfg, CCompilerContext ctx) {
+    public SintefboardPort(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
     }
-    public SintefboardSerial(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
+    public SintefboardPort(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
     }
 
@@ -46,23 +46,8 @@ public class SintefboardSerial extends CNetworkLibraryGenerator {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         for(ExternalConnector eco : this.getExternalConnectors()) {
             boolean ring = false;
-            String ctemplate = ctx.getNetworkLibSerialTemplate();
-            String htemplate = ctx.getNetworkLibSerialHeaderTemplate();
-            if(eco.hasAnnotation("serial_ring")) {
-                if(eco.annotation("serial_ring").iterator().next().compareToIgnoreCase("true") == 0) {
-                    ring = true;
-                    ctemplate = ctx.getNetworkLibSerialRingTemplate();
-                    htemplate = ctx.getNetworkLibSerialHeaderTemplate();
-
-                    Integer maxTTL;
-                    if(eco.hasAnnotation("serial_ring_max_ttl")) {
-                        maxTTL = Integer.parseInt(eco.annotation("serial_ring_max_ttl").iterator().next());
-                    } else {
-                        maxTTL = 1;
-                    }
-                    ctemplate = ctemplate.replace("/*TTL_MAX*/", maxTTL.toString());
-                }
-            }
+            String ctemplate = ctx.getNetworkLibPortTemplate();
+            String htemplate = ctx.getNetworkLibPortHeaderTemplate();
 
             String portName;
             if(eco.hasAnnotation("port_name")) {

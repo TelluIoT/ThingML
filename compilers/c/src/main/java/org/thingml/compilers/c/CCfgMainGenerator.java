@@ -36,6 +36,7 @@ import org.thingml.compilers.c.posix.plugin.NopollWS;
 import org.thingml.compilers.c.posix.plugin.PosixMQTT;
 import org.thingml.compilers.c.posix.plugin.PosixSerial;
 import org.thingml.compilers.c.posix.plugin.PosixWS;
+import org.thingml.compilers.cpp.sintefboard.plugin.SintefboardPort;
 
 /**
  * Created by ffl on 29.05.15.
@@ -74,10 +75,18 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ArduinoSerial aSerialgen = new ArduinoSerial(cfg, ctx);
         ctx.addNetworkLibraryGenerator(aSerialgen);
         
+        SintefboardPort sPortgen = new SintefboardPort(cfg, ctx);
+        ctx.addNetworkLibraryGenerator(sPortgen);
+        
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 if(eco.getProtocol().startsWith("Serial")) {
                     aSerialgen.addExternalCnnector(eco);
+                }
+            }
+            if(ctx.getCompiler().getID().compareTo("sintefboard") == 0) {
+                if(eco.getProtocol().startsWith("Port")) {
+                    sPortgen.addExternalCnnector(eco);
                 }
             }
             if(ctx.getCompiler().getID().compareTo("posix") == 0) {
@@ -101,6 +110,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         MQTTgen.generateNetworkLibrary();
         pSerialgen.generateNetworkLibrary();
         aSerialgen.generateNetworkLibrary();
+        sPortgen.generateNetworkLibrary();
     }
     
     protected void generateConfigurationImplementation(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {

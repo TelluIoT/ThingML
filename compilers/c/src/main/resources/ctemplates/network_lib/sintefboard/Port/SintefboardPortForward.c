@@ -1,4 +1,4 @@
-// Dummy to make first step in reverse engineering .... sdalgard
+// SintefboardPortForward.c *** Dummy to make first step in reverse engineering .... sdalgard
 
 /*SOFTWARE_SERIAL*/
 

@@ -54,8 +54,14 @@ public class CCompilerContextArduino extends CCompilerContext {
         String main = getCurrentConfiguration().getName() + "_cfg.c";
 
         for (String filename : generatedCode.keySet()) {
-            if (filename.endsWith(".h")) headers.add(filename);
-            if (filename.endsWith(".c") && !filename.equals(main)) modules.add(filename);
+            if (filename.endsWith(".h")) {
+                headers.add(filename);
+                System.out.println("Adding " + filename + " to headers");
+            }
+            if (filename.endsWith(".c") && !filename.equals(main)) {
+                modules.add(filename);
+                System.out.println("Adding " + filename + " to modules");
+            }
         }
 
         StringBuilder pde = new StringBuilder();

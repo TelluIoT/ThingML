@@ -79,6 +79,22 @@ public abstract class CCompilerContext extends Context {
         }
     }
     
+    public String getNetworkLibPortTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/Port/SintefboardPortForward.c");
+        } else {
+            return "";
+        }
+    }
+    
+    public String getNetworkLibPortHeaderTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/Port/SintefboardPortForward.h");
+        } else {
+            return "";
+        }
+    }
+    
     public String getNetworkLibWebsocketTemplate() {
         return getTemplateByID("ctemplates/network_lib/posix/PosixWebsocketForward.c");
     }
