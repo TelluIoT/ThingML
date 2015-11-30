@@ -100,25 +100,27 @@ public class CThingApiCompiler extends ThingApiCompiler {
             builder.append("uint16_t id_");
             builder.append(p.getName());
             builder.append(";\n");
-        
-            if(!p.getSends().isEmpty()) {
-                builder.append("// Pointer to receiver list\n");
-                builder.append("struct Msg_Handler ** ");
-                builder.append(p.getName());
-                builder.append("_receiver_list_head;\n");
-                
-                builder.append("struct Msg_Handler ** ");
-                builder.append(p.getName());
-                builder.append("_receiver_list_tail;\n");
-            }
-        
             
-            if(!p.getReceives().isEmpty()) {
-                builder.append("// Handler Array\n");
-                builder.append("struct Msg_Handler * ");
-                builder.append(p.getName());
-                builder.append("_handlers;\n");//[");
-                //builder.append(p.getReceives().size() + "];");
+            if(ctx.getCurrentConfiguration().hasAnnotation("c_dyn_connectors")) {
+                if(!p.getSends().isEmpty()) {
+                    builder.append("// Pointer to receiver list\n");
+                    builder.append("struct Msg_Handler ** ");
+                    builder.append(p.getName());
+                    builder.append("_receiver_list_head;\n");
+
+                    builder.append("struct Msg_Handler ** ");
+                    builder.append(p.getName());
+                    builder.append("_receiver_list_tail;\n");
+                }
+
+
+                if(!p.getReceives().isEmpty()) {
+                    builder.append("// Handler Array\n");
+                    builder.append("struct Msg_Handler * ");
+                    builder.append(p.getName());
+                    builder.append("_handlers;\n");//[");
+                    //builder.append(p.getReceives().size() + "];");
+                }
             }
         }
         
