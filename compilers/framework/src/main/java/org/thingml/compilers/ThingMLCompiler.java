@@ -42,9 +42,14 @@ public abstract class ThingMLCompiler {
 
     //Debug
     private Map<Thing, DebugProfile> debugProfiles = new HashMap<>();
+    private boolean containsDebug = false;
 
     public Map<Thing, DebugProfile> getDebugProfiles() {
         return debugProfiles;
+    }
+
+    public boolean containsDebug() {
+        return containsDebug;
     }
 
     //we might need several connector compilers has different ports might use different connectors
@@ -100,6 +105,7 @@ public abstract class ThingMLCompiler {
     //FIXME: refactor code to avoid code duplication (should be possible to have one sub-method that we call twice with different params)
     public void processDebug(Configuration cfg) {
         final boolean debugCfg = cfg.isDefined("debug", "true");
+        this.containsDebug = this.containsDebug || debugCfg;
 
         Set<Thing> debugThings = new HashSet<>();
         for (Instance i : cfg.allInstances()) {
@@ -193,6 +199,7 @@ public abstract class ThingMLCompiler {
             }
             DebugProfile profile = new DebugProfile(thing, debugBehavior, debugFunctions, debugProperties, debugMessages, debugInstances);
             debugProfiles.put(thing, profile);
+            this.containsDebug = this.containsDebug || profile.isActive();
         }
     }
 

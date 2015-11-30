@@ -219,7 +219,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 }
             }
         }
-        if (debug) {
+        //if (debug) {
+        if (ctx.getCompiler().containsDebug()) {
             builder.append("var colors = require('colors/safe');\n");
         }
 

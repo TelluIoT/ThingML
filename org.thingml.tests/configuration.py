@@ -16,7 +16,7 @@
 
 #When set to False, does not remove source code after execution. 
 #May cause secondary inputs to use files from the first input
-deleteTemporaryFiles = True
+deleteTemporaryFiles = False
 
 #Chooses which compilers should be used
 testLanguages=[]
@@ -28,8 +28,9 @@ testLanguages.append("Javascript")
 #Functional tests options
 #If useBlacklist is True, runs all tests not present in blacklist
 #If useBlacklist is False, runs all tests present in whitelist
-useBlacklist = True
+useBlacklist = False
 
-blacklist=["testMixStreamsAndEventTest", "testLengthSimpleSourceTest",  "testStreamsTest", "testSimpleFilterTest", "testJoinFilterTest", "testDeepCompositeStatesWithStreamTest", "testHistoryStatesWithStreamTest", "testMergeStreamsTest", "testMergeFilterTest"]
-whitelist=["testArrays4"]
+blacklist=[]
+#blacklist=["testMixStreamsAndEvent", "testLengthSimpleSource",  "testStreamst", "testSimpleFiltert", "testJoinFilter", "testDeepCompositeStatesWithStream", "testHistoryStatesWithStream", "testMergeStreams", "testMergeFilter"]
+whitelist=["testEnumeration"]
 

@@ -56,7 +56,7 @@ for f in onlyfiles:
 		fichier = open('_arduino/'+name+'.thingml', 'w')
 		fichier.write('import "../core/_arduino/test.thingml"\n'+
 		'import "../'+name+'.thingml"\n\n'+
-		'configuration '+name+' {\n'+
+		'configuration '+name+' '+cfgincludes+' {\n'+
 		'    instance test : '+bigname+'\n'+
 		'    group harness : TestHarnessArduino \n'+
 		'    connector test.harness => harness.harness.test\n}')
