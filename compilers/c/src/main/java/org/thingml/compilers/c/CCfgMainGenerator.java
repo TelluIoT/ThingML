@@ -196,12 +196,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
         int nbMaxConnexion = cfg.allConnectors().size()*2 + cfg.getExternalConnectors().size() + nbInternalPort;
         if(cfg.hasAnnotation("c_dyn_connectors")) {
-            nbMaxConnexion = Integer.parseInt(cfg.annotation("c_dyn_connectors").iterator().next());
+            if(cfg.annotation("c_dyn_connectors").iterator().next().compareToIgnoreCase("*") != 0) {
+                nbMaxConnexion = Integer.parseInt(cfg.annotation("c_dyn_connectors").iterator().next());
+            }
+            builder.append("//Declaration of connexion array\n");
+            builder.append("#define NB_MAX_CONNEXION " + nbMaxConnexion + "\n");
+            builder.append("struct Msg_Handler * " + cfg.getName() + "_receivers[NB_MAX_CONNEXION];\n\n");
         }
         
-        builder.append("//Declaration of connexion array\n");
-        builder.append("#define NB_MAX_CONNEXION " + nbMaxConnexion + "\n");
-        builder.append("struct Msg_Handler * " + cfg.getName() + "_receivers[NB_MAX_CONNEXION];\n\n");
         
         
         builder.append("//Declaration of instance variables\n");
