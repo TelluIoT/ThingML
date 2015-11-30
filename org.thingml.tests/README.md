@@ -68,5 +68,5 @@ The file src/main/scala/org/thingml/tests/TestsGeneration.scala is the starting 
 	
 Most files are split between two folders: 
   * src/main/thingml/tests/Tester which contains files processing thingml tests.
-  * stc/test/resources which contains most analysis and execution files.
+  * src/test/resources which contains most analysis and execution files.
 These two folders contains filesDescription.md files which describe the role of each source file present in the folder.
