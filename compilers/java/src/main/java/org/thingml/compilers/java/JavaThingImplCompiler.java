@@ -55,11 +55,16 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         builder.append("@Override\npublic String toString(){\n");
-        builder.append("return \"" + ctx.firstToUpper(m.getName()) + " \"");
+        builder.append("return \"" + m.getName() + " (\"");
+        int i = 0;
         for (Parameter p : m.getParameters()) {
-            builder.append(" + \"" + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + ": \" + " + ctx.protectKeyword(p.getName()));
+            if (i > 0) {
+                builder.append(" + \", \"");
+            }
+            builder.append(" + \"" + p.getName() + ": \" + " + ctx.protectKeyword(p.getName()));
+            i++;
         }
-        builder.append(";}\n\n");
+        builder.append(" + \")\";\n}\n\n");
 
         builder.append("protected " + ctx.firstToUpper(m.getName()) + "Message(EventType type, Port port");
         for (Parameter p : m.getParameters()) {

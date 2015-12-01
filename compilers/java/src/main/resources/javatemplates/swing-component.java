@@ -61,6 +61,9 @@ private void initGUI(String name){
         c.gridwidth=1;
         c.fill=GridBagConstraints.HORIZONTAL;
         c.insets=new Insets(0,3,0,3);
+        c.weightx = 0.5;
+        c.weighty = 0;
+
 
         clearButton=new JButton("Clear Console");
 
@@ -75,9 +78,12 @@ private void initGUI(String name){
         c.gridy=1;
         c.gridx=0;
         c.gridwidth=1;
+        c.weighty = 1;
+        c.fill = GridBagConstraints.BOTH;
         frame.add(createJTextPane(),c);
 
         c.gridy=2;
+        c.weighty = 0;
         frame.add(clearButton,c);
 
         frame.pack();
@@ -103,11 +109,11 @@ public JScrollPane createJTextPane(){
         JScrollPane editorScrollPane=new JScrollPane(screen);
         editorScrollPane.setVerticalScrollBarPolicy(
         JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        editorScrollPane.setPreferredSize(new Dimension(480,240));
-        editorScrollPane.setMinimumSize(new Dimension(320,160));
+        //editorScrollPane.setPreferredSize(new Dimension(480,240));
+        //editorScrollPane.setMinimumSize(new Dimension(320,160));
 
         doc=screen.getStyledDocument();
-//Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);\n"
+        //Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);\n"
 
         $MESSAGE_TO_RECEIVE_BEHAVIOR$
 

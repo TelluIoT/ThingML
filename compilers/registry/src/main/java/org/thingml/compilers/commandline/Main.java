@@ -53,13 +53,6 @@ public class Main {
             System.out.print(" " + args[2]);
         System.out.println();
 
-        ThingMLCompiler compiler = registry.createCompilerInstanceByName(args[0].trim());
-
-        if (compiler == null) {
-            System.out.println("ERROR: Cannot find compiler " + args[0].trim() + ". Use -help to check the list of registered compilers.");
-            return;
-        }
-
         File input = new File(args[1]);
 
         if (!input.exists() || !input.isFile() || !input.canRead()) {
@@ -111,10 +104,14 @@ public class Main {
                 return;
             }
 
-            compiler.setOutputDirectory(outdir);
-
             for (Configuration cfg : input_model.allConfigurations()) {
                 if (cfg.isFragment()) continue; // ignore fragments
+                ThingMLCompiler compiler = registry.createCompilerInstanceByName(args[0].trim());
+                if (compiler == null) {
+                    System.out.println("ERROR: Cannot find compiler " + args[0].trim() + ". Use -help to check the list of registered compilers.");
+                    return;
+                }
+                compiler.setOutputDirectory(outdir);
                 System.out.println("Generating code for configuration: " + cfg.getName());
                 compiler.compile(cfg);
             }

@@ -248,6 +248,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
 
                 tempBuilder.append("c.gridy = 2;\n");
                 tempBuilder.append("c.gridx = " + x + ";\n");
+                tempBuilder.append("c.weighty = 0;\n");
                 tempBuilder.append("send" + msg.getName() + "_via_" + port.getName() + " = createSendButton(\"" + port.getName() + " => " + msg.getName() + "\");\n");
                 tempBuilder.append("frame_" + port.getName() + ".add(send" + msg.getName() + "_via_" + port.getName() + ", c);\n");
 
@@ -359,7 +360,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                     } else {
                         tempBuilder.append("getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText().getBytes()");
                     }
-
+                    j++;
                 }
                 tempBuilder.append(");\n");
                 tempBuilder.append("} catch(IllegalArgumentException iae) {\n");
