@@ -12,6 +12,14 @@ private final Color alertColor = new Color(255,64,32);
 private boolean colorOutput = false;
 private JCheckBox showColor;
 
+private synchronized boolean isColorOutput() {
+        return colorOutput;
+}
+
+private synchronized void setColorOutput(boolean value) {
+        this.colorOutput = value;
+}
+
 public $NAME$Mock(String name){
         super(name);
         $PORT_DECL$
@@ -48,7 +56,7 @@ public boolean dispatch(Event event,Port port){
 
 public void print(String id,String data){
         try{
-        if (colorOutput)
+        if (isColorOutput())
             doc.insertString(doc.getLength(), formatForPrint(data), doc.getStyle(id));
         else
             doc.insertString(doc.getLength(), formatForPrint(data), null);
@@ -147,6 +155,6 @@ public void actionPerformed(ActionEvent ae){
 public void itemStateChanged(ItemEvent e) {
         Object source = e.getItemSelectable();
         if (source == showColor) {
-            colorOutput = !colorOutput;
+            setColorOutput(!isColorOutput());
         }
 }
