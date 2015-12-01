@@ -91,7 +91,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         imports = imports.replace("$PACK$", pack);
         builder.append(imports);
 
-        builder.append("public class " + ctx.firstToUpper(t.getName()) + "Mock extends Component implements ActionListener");
+        builder.append("public class " + ctx.firstToUpper(t.getName()) + "Mock extends Component implements ActionListener, ItemListener");
         for (Port p : messageToReceive.keySet()) {
             builder.append(", I" + t.getName() + "_" + p.getName());
         }
@@ -285,7 +285,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                         tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JComboBox(values_" + p.getType().getName() + ".keySet().toArray());\n");
                     } else {
                         tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JTextField();\n");
-                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ".setText(\"" + p.getName() + "\");\n");
+                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ".setText(\"" + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + "\");\n");
                     }
 
                     tempBuilder.append("c.gridx = 1;\n");
@@ -303,11 +303,11 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         tempBuilder = new StringBuilder();
 
         Random rnd = new Random();
-        for (Map.Entry<Port, List<Message>> entry : messageToSend.entrySet()) {
+        for (Map.Entry<Port, List<Message>> entry : messageToReceive.entrySet()) {
             Port port = entry.getKey();
             for (Message msg : entry.getValue()) {
                 tempBuilder.append("Style receive" + msg.getName() + "_via_" + port.getName() + "Style = doc.addStyle(\"" + msg.getName() + "_via_" + port.getName() + "\", null);\n");
-                tempBuilder.append("StyleConstants.setBackground(receive" + msg.getName() + "_via_" + port.getName() + "Style, new Color(" + (255 - rnd.nextInt(125)) + ", " + (255 - rnd.nextInt(125)) + ", " + (255 - rnd.nextInt(125)) + "));\n");
+                tempBuilder.append("StyleConstants.setBackground(receive" + msg.getName() + "_via_" + port.getName() + "Style, new Color(" + ((255 + (Math.abs(msg.getName().hashCode())%255))/2) + ", " + ((255 + (Math.abs(port.getName().hashCode())%255))/2) + ", " + ((255 + ((Math.abs(port.getName().hashCode()+msg.getName().hashCode()))%255))/2) + "));\n");
             }
         }
 
@@ -363,8 +363,10 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                     j++;
                 }
                 tempBuilder.append(");\n");
+                tempBuilder.append("getSend" + msg.getName() + "_via_" + port.getName() + "().setForeground(Color.BLACK);\n");
                 tempBuilder.append("} catch(IllegalArgumentException iae) {\n");
                 tempBuilder.append("System.err.println(\"Cannot parse arguments for message " + msg.getName() + " on port " + port.getName() + ". Please try again with proper parameters\");\n");
+                tempBuilder.append("getSend" + msg.getName() + "_via_" + port.getName() + "().setForeground(alertColor);\n");
                 tempBuilder.append("}\n");
                 tempBuilder.append("}\n");
             }

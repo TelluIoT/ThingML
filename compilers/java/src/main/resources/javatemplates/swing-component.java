@@ -1,6 +1,5 @@
 private SimpleDateFormat dateFormat=new SimpleDateFormat("dd MMM yyy 'at' HH:mm:ss.SSS");
 
-//TODO: manage one tab for each port
 private JTabbedPane tabbedPane=new JTabbedPane();
 private JFrame frame;
 
@@ -9,6 +8,9 @@ private JFrame frame;
 private JTextPane screen;
 private JButton clearButton;
 private StyledDocument doc;
+private final Color alertColor = new Color(255,64,32);
+private boolean colorOutput = false;
+private JCheckBox showColor;
 
 public $NAME$Mock(String name){
         super(name);
@@ -34,7 +36,7 @@ public Component buildBehavior(){
 @Override
 public boolean dispatch(Event event,Port port){
         if(port!=null){
-        print(event.getType().getName()+"_via_"+port.getName(),dateFormat.format(new Date())+": "+event.toString());
+        print(event.getType().getName()+"_via_"+port.getName(),dateFormat.format(new Date())+": " + port.getName() + "?" +event.toString());
         }
         return false;
         }
@@ -46,7 +48,10 @@ public boolean dispatch(Event event,Port port){
 
 public void print(String id,String data){
         try{
-        doc.insertString(doc.getLength(),formatForPrint(data),doc.getStyle(id));
+        if (colorOutput)
+            doc.insertString(doc.getLength(), formatForPrint(data), doc.getStyle(id));
+        else
+            doc.insertString(doc.getLength(), formatForPrint(data), null);
         screen.setCaretPosition(doc.getLength());
         }catch(BadLocationException ex){
         ex.printStackTrace();
@@ -65,7 +70,6 @@ private void initGUI(String name){
         c.weighty = 0;
 
 
-        clearButton=new JButton("Clear Console");
 
         c.gridy=0;
         c.gridx=0;
@@ -84,7 +88,14 @@ private void initGUI(String name){
 
         c.gridy=2;
         c.weighty = 0;
+        clearButton=new JButton("Clear Console");
         frame.add(clearButton,c);
+
+        c.gridy = 3;
+        c.gridx = 0;
+        showColor = new JCheckBox("Colored logs");
+        showColor.addItemListener(this);
+        frame.add(showColor, c);
 
         frame.pack();
         clearButton.addActionListener(this);
@@ -131,3 +142,11 @@ public void actionPerformed(ActionEvent ae){
         }
         $ON_ACTION$
         }
+
+@Override
+public void itemStateChanged(ItemEvent e) {
+        Object source = e.getItemSelectable();
+        if (source == showColor) {
+            colorOutput = !colorOutput;
+        }
+}
