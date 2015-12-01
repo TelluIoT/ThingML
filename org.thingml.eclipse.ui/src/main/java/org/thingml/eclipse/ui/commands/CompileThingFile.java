@@ -175,13 +175,14 @@ public class CompileThingFile implements IHandler {
 					ThingMLConsole.getInstance().printDebug("Creating folder " + cfg_folder.getAbsolutePath() + "\n");
 					cfg_folder.mkdir();
 				}
-				
+				compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
 				compiler.setOutputDirectory(cfg_folder);
 				compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
 				compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
 
 				boolean result = compiler.compile(cfg, options);
 				if(subCompiler != null) {
+					ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");
 					result = result && compiler.compileConnector(subCompiler, cfg);
 				}
 

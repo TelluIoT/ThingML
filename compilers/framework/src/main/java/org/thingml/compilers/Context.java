@@ -59,6 +59,7 @@ public class Context {
     }
 
     public Context(ThingMLCompiler compiler) {
+        this.debugStrings = new HashMap<Integer,String>();
         this.compiler = compiler;
     }
 
@@ -235,6 +236,7 @@ public class Context {
     private String postKeywordEscape = "`";
 
     public Context(ThingMLCompiler compiler, String... keywords) {
+        this.debugStrings = new HashMap<Integer,String>();
         this.compiler = compiler;
         for (String k : keywords) {
             this.keywords.add(k);
@@ -295,6 +297,8 @@ public class Context {
     //Debug traces
     
     boolean debugTraceWithID = false;
+    Map<Integer,String> debugStrings;
+    
     public void setDebugWithID(boolean b) {
         debugTraceWithID = b;
     }

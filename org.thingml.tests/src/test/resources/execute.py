@@ -121,6 +121,7 @@ for (a,b) in results:
 		dump=open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'a')
 		os.chdir(testsDirectory + "/../../../../../target/tmp/_"+smallType+"/"+capitalizedName)
 
+		
 		generic_compile(type)
 		generic_execute(type,capitalizedName, fileName)
 

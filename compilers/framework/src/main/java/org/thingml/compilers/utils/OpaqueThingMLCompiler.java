@@ -34,18 +34,23 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
     public OpaqueThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
+        final OutputStream stream = getMessageStream();
+        if (stream != null) {
+            m = new PrintStream(stream);
+            e = new PrintStream(stream);
+        }
     }
 
     PrintStream m, e;
 
-    private void println(String msg) {
+    protected void println(String msg) {
         if (m != null)
             m.println(msg);
         else
             System.out.println(msg);
     }
 
-    private void erroln(String msg) {
+    protected void erroln(String msg) {
         if (e != null)
             e.println(msg);
         else
@@ -54,12 +59,6 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
     @Override
     public boolean compile(Configuration cfg, String... options) {
-        final OutputStream stream = getMessageStream();
-        if (stream != null) {
-            m = new PrintStream(stream);
-            e = new PrintStream(stream);
-        }
-
         try {
             println("Running " + getName() + " compiler on configuration " + cfg.getName());
             do_call_compiler(cfg, options);
@@ -73,6 +72,18 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean compileConnector(String connector, Configuration cfg, String... options) {
+        println("Running connector compiler " + connector + " on configuration " + cfg.getName());
+        boolean result = super.compileConnector(connector, cfg, options);
+        if (result) {
+            println("Compilation complete.");
+        } else {
+            println("Compilation error. Connector compiler " + connector + " not found.");
+        }
+        return result;
     }
 
     public abstract void do_call_compiler(Configuration cfg, String... options);

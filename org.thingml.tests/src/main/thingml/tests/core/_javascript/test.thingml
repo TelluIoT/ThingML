@@ -79,6 +79,6 @@ thing TestDumpJS includes TestDump
 	}
 }
 
-configuration test {
+/*configuration test {
     instance t : TestDumpJS   
-}
+}*/

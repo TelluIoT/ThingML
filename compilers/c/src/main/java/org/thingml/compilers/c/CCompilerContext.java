@@ -407,6 +407,17 @@ public abstract class CCompilerContext extends Context {
         builder.append(")");
     }
 
+    public void appendActualParametersForDispatcher(Thing thing, StringBuilder builder, Message m, String instance_param) {
+        if (instance_param == null) instance_param = getInstanceVarName();
+        builder.append("(");
+        builder.append(instance_param);
+        for (Parameter p : m.getParameters()) {
+            builder.append(", param_");
+            builder.append(p.getName());
+        }
+        builder.append(")");
+    }
+
     public void appendFormalParameters(Thing thing, StringBuilder builder, Message m) {
         builder.append("(");
         builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName());
@@ -419,12 +430,6 @@ public abstract class CCompilerContext extends Context {
         builder.append(")");
     }
 
-    public void appendFormalParametersEmptyHandler(Thing thing, StringBuilder builder) {
-        builder.append("(");
-        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName());
-        builder.append(")");
-    }
-
     public void appendActualParameters(Thing thing, StringBuilder builder, Message m, String instance_param) {
         if (instance_param == null) instance_param = getInstanceVarName();
         builder.append("(");
@@ -433,6 +438,12 @@ public abstract class CCompilerContext extends Context {
             builder.append(", ");
             builder.append(p.getName());
         }
+        builder.append(")");
+    }
+
+    public void appendFormalParametersEmptyHandler(Thing thing, StringBuilder builder) {
+        builder.append("(");
+        builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName());
         builder.append(")");
     }
 

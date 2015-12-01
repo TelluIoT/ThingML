@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.java;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
@@ -30,54 +31,61 @@ import java.util.Map;
 public class Java2Kevoree extends CfgExternalConnectorCompiler {
 
     private void generateKevScript(Context ctx, Configuration cfg, String pack) {
-        StringBuilder kevScript = new StringBuilder();
+        if (cfg.hasAnnotation("kevscript")) {
+            try {
+                FileUtils.copyFile(new File(cfg.annotation("kevscript").get(0)), new File(ctx.getOutputDirectory(), "/src/main/kevs/main.kevs"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            StringBuilder kevScript = new StringBuilder();
 
 
-        //FIXME: we should include repo for all deps not available on Maven central
+            //FIXME: we should include repo for all deps not available on Maven central
         /*kevScript.append("//include external libraries that may be needed by ThingML components\n");
         cfg.allThingMLMavenDep().forEach( dep ->
             kevScript.append("include mvn:org.thingml:" + dep + ":0.6.0-SNAPSHOT\n")
         );*/
 
-        kevScript.append("\n");
+            kevScript.append("\n");
 
-        kevScript.append("repo \"http://maven.thingml.org\"\n\n");
-        kevScript.append("include mvn:org.thingml:org.thingml.jasm:0.1.0-SNAPSHOT\n\n");
+            kevScript.append("repo \"http://maven.thingml.org\"\n\n");
+            kevScript.append("include mvn:org.thingml:org.thingml.jasm:0.1.0-SNAPSHOT\n\n");
 
-        kevScript.append("//create a default Java node\n");
-        kevScript.append("add node0 : JavaNode\n");
-        kevScript.append("set node0.log = \"false\"\n");
+            kevScript.append("//create a default Java node\n");
+            kevScript.append("add node0 : JavaNode\n");
+            kevScript.append("set node0.log = \"false\"\n");
 
-        kevScript.append("//create a default group to manage the node(s)\n");
-        kevScript.append("add sync : WSGroup\n");
-        kevScript.append("set sync.port/node0 = \"9000\"\n");
-        kevScript.append("set sync.master = \"node0\"\n");
-        kevScript.append("attach node0 sync\n\n");
+            kevScript.append("//create a default group to manage the node(s)\n");
+            kevScript.append("add sync : WSGroup\n");
+            kevScript.append("set sync.port/node0 = \"9000\"\n");
+            kevScript.append("set sync.master = \"node0\"\n");
+            kevScript.append("attach node0 sync\n\n");
 
-        kevScript.append("//instantiate Kevoree/ThingML components\n");
-        kevScript.append("add node0." + cfg.getName() + " : " + pack + ".kevoree.K" + ctx.firstToUpper(cfg.getName()) + "/1.0-SNAPSHOT\n");
+            kevScript.append("//instantiate Kevoree/ThingML components\n");
+            kevScript.append("add node0." + cfg.getName() + " : " + pack + ".kevoree.K" + ctx.firstToUpper(cfg.getName()) + "/1.0-SNAPSHOT\n");
 
         /*
           no need to generateMainAndInit channels and bindings. Connectors defined in ThingML are managed internally.
           Ports not connected in ThingML should be connected later on in Kevoree (we do not have the info how to connect them)
          */
 
-        kevScript.append("start sync\n");
-        kevScript.append("//start node0\n\n");
-        kevScript.append("\n");
+            kevScript.append("start sync\n");
+            kevScript.append("//start node0\n\n");
+            kevScript.append("\n");
 
-        PrintWriter w = null;
-        try {
-            new File(ctx.getOutputDirectory() + "/src/main/kevs").mkdirs();
-            w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/src/main/kevs/main.kevs")));
-            w.println(kevScript);
-            w.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(w);
+            PrintWriter w = null;
+            try {
+                new File(ctx.getOutputDirectory() + "/src/main/kevs").mkdirs();
+                w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/src/main/kevs/main.kevs")));
+                w.println(kevScript);
+                w.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                IOUtils.closeQuietly(w);
+            }
         }
-
     }
 
     private void updatePOM(Context ctx, Configuration cfg) {
@@ -91,13 +99,21 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
             }
             input.close();
 
-            final String kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>node0</nodename><model>src/main/kevs/main.kevs</model>\n</configuration>\n</plugin>\n</plugins>\n";
+            final String kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>node0</nodename><model>src/main/kevs/main.kevs</model><mergeLocalLibraries></mergeLocalLibraries>\n</configuration>\n</plugin>\n</plugins>\n";
             pom = pom.replace("</plugins>", kevoreePlugin);
 
             pom = pom.replace("<!--PROP-->", "<kevoree.version>5.3.0</kevoree.version>\n<!--PROP-->");
 
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>com.eclipsesource.minimal-json</groupId>\n<artifactId>minimal-json</artifactId>\n<version>0.9.2</version>\n</dependency>\n<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
+
+
+            String dep = "";
+            for (String d : ctx.getCurrentConfiguration().annotation("kevoree_import")) {
+                dep += "<mergeLocalLibrary>../" + d + "/target/classes</mergeLocalLibrary>";
+            }
+            pom = pom.replace("<mergeLocalLibraries></mergeLocalLibraries>", "<mergeLocalLibraries>" + dep + "</mergeLocalLibraries>");
+
 
             final File f = new File(ctx.getOutputDirectory() + "/POM.xml");
             final OutputStream output = new FileOutputStream(f);
