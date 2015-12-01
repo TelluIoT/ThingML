@@ -302,7 +302,6 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
 
         tempBuilder = new StringBuilder();
 
-        Random rnd = new Random();
         for (Map.Entry<Port, List<Message>> entry : messageToReceive.entrySet()) {
             Port port = entry.getKey();
             for (Message msg : entry.getValue()) {
