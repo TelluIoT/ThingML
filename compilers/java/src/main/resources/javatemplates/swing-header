@@ -12,15 +12,7 @@ import org.thingml.generated.messages.*;
 import org.thingml.java.*;
 import org.thingml.java.ext.*;
 
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JCheckBox;
+import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -37,7 +29,4 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.SimpleDateFormat;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;

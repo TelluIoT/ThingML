@@ -21,6 +21,7 @@ import org.sintef.thingml.Enumeration;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 
+import javax.swing.*;
 import java.io.InputStream;
 import java.util.*;
 
@@ -49,6 +50,23 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
             e.printStackTrace();
         }
         b.append(helper);
+
+
+        final StringBuilder b2 = ctx.getNewBuilder("src/main/java/" + pack.replace(".", "/") + "/Command.java");
+        String command = "";
+        try {
+            InputStream input = this.getClass().getClassLoader().getResourceAsStream("javatemplates/Command.java");
+            final List<String> packLines = IOUtils.readLines(input);
+            for (String line : packLines) {
+                command += line + "\n";
+            }
+            input.close();
+        } catch (Exception e) {
+            System.err.println("Error loading Swing template: " + e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+        b2.append(command);
+
 
         for (Instance i : cfg.allInstances()) {
             compileType(i.getType(), ctx, pack);
@@ -338,18 +356,20 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
 
                 tempBuilder.append("else if ( ae.getSource() == getSend" + msg.getName() + "_via_" + port.getName() + "()) {\n");
                 tempBuilder.append("try{\n");
-                tempBuilder.append("port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + ".send(" + msg.getName() + "Type.instantiate(port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName());
 
-                parseBuilder.append("port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + ".send(" + msg.getName() + "Type.instantiate(port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName());
+                tempBuilder.append("Map<String, Object> param = new HashMap<String, Object>();\n");
+                parseBuilder.append("Map<String, Object> param = new HashMap<String, Object>();\n");
+
 
                 for (Parameter p : msg.getParameters()) {
-                    tempBuilder.append(", ");
-                    parseBuilder.append(", ");
+                    tempBuilder.append("param.put(\"" + p.getName() + "\", ");
+                    parseBuilder.append("param.put(\"" + p.getName() + "\", ");
                     if (p.getCardinality() == null) {
                         if (p.getType() instanceof Enumeration) {
                             tempBuilder.append("values_" + p.getType().getName() + ".get(getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getSelectedItem().toString())");
+                            parseBuilder.append("values_" + p.getType().getName() + ".get(getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getSelectedItem().toString())");
                         } else {
-                            tempBuilder.append("(");
+                            /*tempBuilder.append("(");
                             parseBuilder.append("(");
                             if (JavaHelper.getJavaType(p.getType(), false, ctx).equals("int")) {
                                 tempBuilder.append("Integer");
@@ -358,16 +378,24 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                             else {
                                 tempBuilder.append(ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), false, ctx)));
                                 parseBuilder.append(ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), false, ctx)));
-                            }
-                            tempBuilder.append(") StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText())");
-                            parseBuilder.append(") StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, params[" + msg.getParameters().indexOf(p) + "].trim())");
+                            }*/
+                            tempBuilder.append("StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText())");
+                            parseBuilder.append("StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, params[" + msg.getParameters().indexOf(p) + "].trim())");
                         }
                     } else {
                         builder.append("getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText().getBytes()");
                     }
+                    tempBuilder.append(");\n");
+                    parseBuilder.append(");\n");
                 }
-                tempBuilder.append("));\n");
-                parseBuilder.append("));\n");
+
+                tempBuilder.append("Command c = new Command(port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + ", " + msg.getName() + "Type, param);");
+                tempBuilder.append("c.execute();\n");
+                tempBuilder.append("((DefaultListModel)commands.getModel()).addElement(c);\n");
+
+                parseBuilder.append("Command c = new Command(port_" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + ", " + msg.getName() + "Type, param);");
+                parseBuilder.append("c.execute();\n");
+                parseBuilder.append("((DefaultListModel)commands.getModel()).addElement(c);\n");
                 parseBuilder.append("cliButton.setForeground(Color.BLACK);\n");
 
                 tempBuilder.append("for(I" + ctx.firstToUpper(t.getName()) + "_" + port.getName() + "Client l : " + port.getName() + "_listeners)\n");

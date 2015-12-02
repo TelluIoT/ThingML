@@ -13,6 +13,7 @@ private final Color alertColor = new Color(255,64,32);
 private boolean colorOutput = false;
 private JCheckBox showColor;
 private JTextField cli;
+private JList<Command> commands;
 
 private synchronized boolean isColorOutput() {
         return colorOutput;
@@ -111,7 +112,6 @@ private void initGUI(String name){
         c.weighty = 1;
         frame.add(createJTextPane(),c);
 
-        frame.add(createJTextPane(),c);
 
         c.gridy=2;
         c.weighty = 0;
@@ -124,6 +124,19 @@ private void initGUI(String name){
         showColor.addItemListener(this);
         frame.add(showColor, c);
 
+        commands = new JList<Command>();
+        commands.setModel(new DefaultListModel<Command>());
+        commands.setVisible(true);
+        commands.setLayout(new GridBagLayout());
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weighty = 1;
+        c.gridheight=4;
+        c.fill = GridBagConstraints.BOTH;
+        frame.add(new JScrollPane(commands), c);
+
+
+        frame.setMinimumSize(new Dimension(480,480));
         frame.pack();
         clearButton.addActionListener(this);
         addListener(this);
