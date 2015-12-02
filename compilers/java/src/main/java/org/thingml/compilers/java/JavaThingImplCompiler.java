@@ -48,6 +48,20 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("); }\n");
 
+        builder.append("@Override\n");
+        builder.append("public Event instantiate(Port port, Map<String, Object> params) {");
+        builder.append("return instantiate(port");
+        for (Parameter p : m.getParameters()) {
+            String cast = "";
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("int"))
+                cast = "Integer";
+            else
+                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
+            builder.append(", (" + cast + ") params.get(\"" + ctx.protectKeyword(p.getName()) + "\")");
+        }
+        builder.append(");\n");
+        builder.append("}\n\n");
+
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "Message extends Event implements java.io.Serializable {\n\n");
 
         for (Parameter p : m.getParameters()) {
