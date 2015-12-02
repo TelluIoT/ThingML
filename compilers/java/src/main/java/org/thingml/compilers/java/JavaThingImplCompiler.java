@@ -48,6 +48,20 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("); }\n");
 
+        builder.append("@Override\n");
+        builder.append("public Event instantiate(Port port, Map<String, Object> params) {");
+        builder.append("return instantiate(port");
+        for (Parameter p : m.getParameters()) {
+            String cast = "";
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("int"))
+                cast = "Integer";
+            else
+                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
+            builder.append(", (" + cast + ") params.get(\"" + ctx.protectKeyword(p.getName()) + "\")");
+        }
+        builder.append(");\n");
+        builder.append("}\n\n");
+
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "Message extends Event implements java.io.Serializable {\n\n");
 
         for (Parameter p : m.getParameters()) {
@@ -55,11 +69,16 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         builder.append("@Override\npublic String toString(){\n");
-        builder.append("return \"" + ctx.firstToUpper(m.getName()) + " \"");
+        builder.append("return \"" + m.getName() + " (\"");
+        int i = 0;
         for (Parameter p : m.getParameters()) {
-            builder.append(" + \"" + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + ": \" + " + ctx.protectKeyword(p.getName()));
+            if (i > 0) {
+                builder.append(" + \", \"");
+            }
+            builder.append(" + \"" + p.getName() + ": \" + " + ctx.protectKeyword(p.getName()));
+            i++;
         }
-        builder.append(";}\n\n");
+        builder.append(" + \")\";\n}\n\n");
 
         builder.append("protected " + ctx.firstToUpper(m.getName()) + "Message(EventType type, Port port");
         for (Parameter p : m.getParameters()) {
