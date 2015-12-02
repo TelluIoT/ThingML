@@ -877,7 +877,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             for (Port p : i.getType().allPorts()) {
                 boolean connected = false;
                 for(Connector c : allConnectors()) {
-                    if ((EcoreUtil.equals(c.getCli().getInstance(), i) || EcoreUtil.equals(c.getSrv().getInstance(), i)) && (EcoreUtil.equals(c.getProvided(), p) || EcoreUtil.equals(c.getRequired(), p))) {
+                    if ((EcoreUtil.equals(c.getCli().getInstance(), i) && EcoreUtil.equals(c.getRequired(), p)) || (EcoreUtil.equals(c.getProvided(), p) && EcoreUtil.equals(c.getSrv().getInstance(), i))) {
                         connected = true;
                         break;
                     }

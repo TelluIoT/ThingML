@@ -49,6 +49,13 @@ public class Context {
         }
         return false;
     }
+    public boolean containsInstance(Set<Instance> list, Instance element) {
+        for(Instance e : list) {
+            if (EcoreUtil.equals(e, element))
+                return true;
+        }
+        return false;
+    }
 
     public boolean containsAllInstances(List<Instance> thisList, List<Instance> thatList) {
         for(Instance e : thatList) {

@@ -32,6 +32,7 @@ import java.util.*;
 public abstract class ThingMLCompiler {
 
     protected Context ctx = new Context(this);
+    public Checker checker;
 
     private ThingActionCompiler thingActionCompiler;
     private ThingApiCompiler thingApiCompiler;
