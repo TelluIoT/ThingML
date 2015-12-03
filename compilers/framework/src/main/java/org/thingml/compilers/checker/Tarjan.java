@@ -28,7 +28,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Connector;
 import org.sintef.thingml.Instance;
+import org.sintef.thingml.Region;
+import org.sintef.thingml.State;
+import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLElement;
+import org.sintef.thingml.Transition;
 
 /**
  *
@@ -87,7 +91,16 @@ public class Tarjan<T extends ThingMLElement> {
                     }
                 }
             } else {
-                
+                if(el instanceof State) {
+                    State s = (State) el;
+                    for (Transition tr : s.getOutgoing()) {
+                        if(tr.getEvent().isEmpty()) {
+                            if(tr.getGuard() == null) {
+                                res.add(findElement((T) tr.getTarget()));
+                            }
+                        }
+                    }
+                }
             }
             return res;
         }
