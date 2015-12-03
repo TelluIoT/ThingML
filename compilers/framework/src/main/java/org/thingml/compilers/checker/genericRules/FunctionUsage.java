@@ -29,9 +29,9 @@ import org.thingml.compilers.checker.Rule;
  *
  * @author sintef
  */
-public class MessagesUsage extends Rule {
+public class FunctionUsage extends Rule {
 
-    public MessagesUsage() {
+    public FunctionUsage() {
         super();
     }
 
@@ -47,25 +47,23 @@ public class MessagesUsage extends Rule {
 
     @Override
     public String getDescription() {
-        return "Check that each message declared as to be sent in port declaration can be sent by the state machine.";
+        return "Check that each function defined in a thing is actually called.";
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
         for(Thing t : cfg.allThings()) {
-            for(Port p : t.allPorts()) {
-                for (Message m : p.getSends()) {
-                    boolean found = false;
-                    for(Action b : t.allAction(SendAction.class)) {
-                        SendAction a = (SendAction)b;
-                        if (EcoreUtil.equals(a.getMessage(), m)) {
-                            found = true;
-                            break;
-                        }
+            for(Function f : t.allFunctions()) {
+                boolean found = false;
+                for(Action b : t.allAction(FunctionCall.class)) {
+                    FunctionCall a = (FunctionCall) b;
+                    if (EcoreUtil.equals(a.getFunction(), f)) {
+                        found = true;
+                        break;
                     }
-                    if (!found)
-                        checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", p);
                 }
+                if (!found)
+                    checker.addGenericNotice("Function " + f.getName() + " of Thing " + t.getName() + " is never called.", f);
             }
         }
     }

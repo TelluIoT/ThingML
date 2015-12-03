@@ -30,10 +30,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Rule;
-import org.thingml.compilers.checker.genericRules.ConnectorCycles;
-import org.thingml.compilers.checker.genericRules.MessagesUsage;
-import org.thingml.compilers.checker.genericRules.PortsUsage;
-import org.thingml.compilers.checker.genericRules.ThingsUsage;
+import org.thingml.compilers.checker.genericRules.*;
 
 /**
  *
@@ -65,6 +62,7 @@ abstract public class Checker {
         Rules.add(new PortsUsage());
         Rules.add(new MessagesUsage());
         Rules.add(new ConnectorCycles());
+        Rules.add(new FunctionUsage());
     }
     
     public void do_generic_check(Configuration cfg) {

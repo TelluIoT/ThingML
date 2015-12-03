@@ -775,17 +775,17 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 * @param action
 	 * @return
      */
-	private List<SendAction> getAllSendAction(Action action) {
-		List<SendAction> result = new ArrayList<SendAction>();
-		if (action instanceof SendAction) {
-			result.add((SendAction)action);
+	private List<Action> getAllSendAction(Class clazz, Action action) {
+		List<Action> result = new ArrayList<Action>();
+		if (clazz.isInstance(action)) {
+			result.add(action);
 		} else if (action instanceof ActionBlock) {
 			ActionBlock block = (ActionBlock) action;
-			result.addAll(block.allSendAction());
+			result.addAll(block.allAction(clazz));
 		} else if (action instanceof ControlStructure) {
-			result.addAll(((ControlStructure)action).allSendAction());
+			result.addAll(((ControlStructure)action).allAction(clazz));
 		} else if (action instanceof FunctionCall) {
-			result.addAll(getAllSendAction(((FunctionCall)action).getFunction().getBody()));
+			result.addAll(getAllSendAction(clazz, ((FunctionCall)action).getFunction().getBody()));
 		}
 		return result;
 	}
@@ -794,8 +794,8 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 * @generated NOT
 	 * @return
      */
-	public List<SendAction> allSendAction() {
-		List<SendAction> result = new ArrayList<SendAction>();
+	public List<Action> allAction(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
 		/*for (Function f : allFunctions()) {
 			System.out.println("analyzing function " + f.getName());
 			result.addAll(getAllSendAction(f.getBody()));
@@ -803,19 +803,19 @@ public class ThingImpl extends TypeImpl implements Thing {
 		for(StateMachine sm : allStateMachines()) {
 			for(State s : sm.allStates()) {
 				if (s.getEntry() != null) {
-					result.addAll(getAllSendAction(s.getEntry()));
+					result.addAll(getAllSendAction(clazz, s.getEntry()));
 				}
 				if (s.getExit() != null) {
-					result.addAll(getAllSendAction(s.getEntry()));
+					result.addAll(getAllSendAction(clazz, s.getEntry()));
 				}
 				for(InternalTransition t : s.getInternal()) {
 					if (t.getAction() != null) {
-						result.addAll(getAllSendAction(t.getAction()));
+						result.addAll(getAllSendAction(clazz, t.getAction()));
 					}
 				}
 				for(Transition t : s.getOutgoing()) {
 					if (t.getAction() != null) {
-						result.addAll(getAllSendAction(t.getAction()));
+						result.addAll(getAllSendAction(clazz, t.getAction()));
 					}
 				}
 			}

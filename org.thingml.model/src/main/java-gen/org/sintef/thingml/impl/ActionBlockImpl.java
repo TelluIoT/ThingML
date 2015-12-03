@@ -164,15 +164,15 @@ public class ActionBlockImpl extends ActionImpl implements ActionBlock {
 	 * @generated NOT
 	 * @return
      */
-	public List<SendAction> allSendAction() {
-		List<SendAction> result = new ArrayList<SendAction>();
+	public List<Action> allAction(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
 		for (Action a : getActions()) {
-			if (a instanceof SendAction) {
-				result.add((SendAction)a);
+			if (clazz.isInstance(a)) {
+				result.add(a);
 			} else if (a instanceof ActionBlock) {
-				result.addAll(((ActionBlock)a).allSendAction());
+				result.addAll(((ActionBlock)a).allAction(clazz));
 			} else if (a instanceof ControlStructure) {
-				result.addAll(((ControlStructure)a).allSendAction());
+				result.addAll(((ControlStructure)a).allAction(clazz));
 			}
 		}
 		return result;

@@ -256,15 +256,15 @@ public abstract class ControlStructureImpl extends ActionImpl implements Control
 	 * @generated NOT
 	 * @return
 	 */
-	public List<SendAction> allSendAction() {
-		List<SendAction> result = new ArrayList<SendAction>();
+	public List<Action> allAction(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
 		if (getAction() instanceof SendAction) {
-			result.add((SendAction) getAction());
+			result.add(getAction());
 		}
 		else if (getAction() instanceof ActionBlock) {
-			result.addAll(((ActionBlock) getAction()).allSendAction());
+			result.addAll(((ActionBlock) getAction()).allAction(clazz));
 		} else if (getAction() instanceof ControlStructure) {
-			result.addAll(((ControlStructure)getAction()).allSendAction());
+			result.addAll(((ControlStructure)getAction()).allAction(clazz));
 		}
 		return result;
 	}

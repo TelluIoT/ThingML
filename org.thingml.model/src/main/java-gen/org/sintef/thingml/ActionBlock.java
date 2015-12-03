@@ -56,7 +56,7 @@ public interface ActionBlock extends Action {
 	 * @generated NOT
 	 * @return
      */
-	List<SendAction> allSendAction();
+	List<Action> allAction(Class clazz);
 
 
 	} // ActionBlock
