@@ -60,7 +60,10 @@ public class MessagesUsage extends Rule {
                         SendAction a = (SendAction)b;
                         if (EcoreUtil.equals(a.getMessage(), m)) {
                             found = true;
-                            break;
+                            if (m.getParameters().size() != a.getParameters().size()) {
+                                checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with wrong number of parameters. Expected " + m.getParameters().size() + ", called with " + a.getParameters().size(), t);
+                            }
+                            //break;
                         }
                     }
                     if (!found)

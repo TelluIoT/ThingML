@@ -59,7 +59,14 @@ public class FunctionUsage extends Rule {
                     FunctionCall a = (FunctionCall) b;
                     if (EcoreUtil.equals(a.getFunction(), f)) {
                         found = true;
-                        break;
+                        if (f.getParameters().size() != a.getParameters().size()) {
+                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + f.getParameters().size() + ", called with " + a.getParameters().size(), f);
+                        }
+                        /*for (Parameter p : f.getParameters()) {//FIXME: check type of formal/actual parameters
+                            Expression e = a.getParameters().get(f.getParameters().indexOf(p));
+
+                        }*/
+                        //break;
                     }
                 }
                 if (!found)
