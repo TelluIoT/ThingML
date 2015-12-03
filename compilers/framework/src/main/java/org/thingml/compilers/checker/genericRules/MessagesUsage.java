@@ -69,6 +69,13 @@ public class MessagesUsage extends Rule {
                     if (!found)
                         checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", p);
                 }
+                for (Message m : p.getReceives()) {
+                    for (StateMachine sm : t.allStateMachines()) {
+                        if (sm.allMessageHandlers().get(p) == null || sm.allMessageHandlers().get(p).get(m) == null) {
+                            checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received.", p);
+                        }
+                    }
+                }
             }
         }
     }
