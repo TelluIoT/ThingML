@@ -20,8 +20,12 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Handler;
+import org.sintef.thingml.InternalTransition;
+import org.sintef.thingml.Region;
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -29,45 +33,35 @@ import org.thingml.compilers.checker.Rule;
  *
  * @author sintef
  */
-public class MessagesUsage extends Rule {
-
-    public MessagesUsage() {
-        super();
-    }
+public class InternalTransitions extends Rule {
 
     @Override
     public Checker.InfoType getHighestLevel() {
-        return Checker.InfoType.NOTICE;
+        return Checker.InfoType.ERROR;
     }
 
     @Override
     public String getName() {
-        return "Messages Usage";
+        return "Internal Transitions";
     }
 
     @Override
     public String getDescription() {
-        return "Check that each message declared as to be sent in port declaration can be sent by the state machine.";
+        return "Check that Internal transition are triggered by event and/or have guard";
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
         for(Thing t : cfg.allThings()) {
-            for(Port p : t.allPorts()) {
-                for (Message m : p.getSends()) {
-                    boolean found = false;
-                    for(Action b : t.allAction(SendAction.class)) {
-                        SendAction a = (SendAction)b;
-                        if (EcoreUtil.equals(a.getMessage(), m)) {
-                            found = true;
-                            if (m.getParameters().size() != a.getParameters().size()) {
-                                checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with wrong number of parameters. Expected " + m.getParameters().size() + ", called with " + a.getParameters().size(), t);
-                            }
-                            //break;
+            for(StateMachine sm : t.allStateMachines()) {
+                for(Handler h : sm.allEmptyHandlers()) {
+                    if(h instanceof InternalTransition) {
+                        if(h.getGuard() == null) {
+                            checker.addGenericError("Empty Internal Transition without guard.", sm);
+                        } else {
+                             checker.addGenericNotice("Empty Internal Transition.", sm);
                         }
                     }
-                    if (!found)
-                        checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", p);
                 }
             }
         }

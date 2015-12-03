@@ -23,53 +23,48 @@ package org.thingml.compilers.checker.genericRules;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;
 
 /**
  *
  * @author sintef
  */
-public class MessagesUsage extends Rule {
+public class StatesUsage extends Rule {
 
-    public MessagesUsage() {
+    public StatesUsage() {
         super();
     }
 
     @Override
-    public Checker.InfoType getHighestLevel() {
-        return Checker.InfoType.NOTICE;
+    public InfoType getHighestLevel() {
+        return InfoType.NOTICE;
     }
 
     @Override
     public String getName() {
-        return "Messages Usage";
+        return "Things Usage";
     }
 
     @Override
     public String getDescription() {
-        return "Check that each message declared as to be sent in port declaration can be sent by the state machine.";
+        return "Check for sink and unreachable states.";
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.allThings()) {
-            for(Port p : t.allPorts()) {
-                for (Message m : p.getSends()) {
-                    boolean found = false;
-                    for(Action b : t.allAction(SendAction.class)) {
-                        SendAction a = (SendAction)b;
-                        if (EcoreUtil.equals(a.getMessage(), m)) {
-                            found = true;
-                            if (m.getParameters().size() != a.getParameters().size()) {
-                                checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with wrong number of parameters. Expected " + m.getParameters().size() + ", called with " + a.getParameters().size(), t);
-                            }
-                            //break;
-                        }
+        for(Thing t : cfg.findContainingModel().allThings()) {
+            for(StateMachine sm : t.allStateMachines()) {
+                for(State s : sm.allStates()) {
+                    if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
+                        checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
                     }
-                    if (!found)
-                        checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", p);
+                    if (s.getOutgoing().size() == 0) {
+                        checker.addGenericNotice("Sink state " + s.getName() + " in Thing " + t.getName() + ".", s);
+                    }
                 }
             }
+
         }
     }
     

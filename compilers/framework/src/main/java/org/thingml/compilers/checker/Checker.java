@@ -65,6 +65,8 @@ abstract public class Checker {
         Rules.add(new InternalTransitions());
         Rules.add(new AutotransitionCycles());
         Rules.add(new NonDeterministicTransitions());
+        Rules.add(new FunctionUsage());
+        Rules.add(new StatesUsage());
     }
     
     public void do_generic_check(Configuration cfg) {

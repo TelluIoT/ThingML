@@ -92,6 +92,6 @@ public interface ControlStructure extends Action {
 	 * @generated NOT
 	 * @return
 	 */
-	List<SendAction> allSendAction();
+	List<Action> allAction(Class clazz);
 
 } // ControlStructure

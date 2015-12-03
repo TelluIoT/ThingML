@@ -328,6 +328,6 @@ public interface Thing extends Type {
 	 * @generated NOT
 	 * @return
      */
-	List<SendAction> allSendAction();
+	List<Action> allAction(Class clazz);
 
 } // Thing
