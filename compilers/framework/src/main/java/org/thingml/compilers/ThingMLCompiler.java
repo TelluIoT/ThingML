@@ -158,7 +158,8 @@ public abstract class ThingMLCompiler {
                         }
                     }
                     for (Port p : thing.allPorts()) {
-                        List<Message> msg = p.getReceives();
+                        List<Message> msg = new LinkedList<Message>();
+                        msg.addAll(p.getReceives());
                         msg.addAll(p.getSends());
                         for (Message m : msg) {
                             if ((!p.isDefined("debug", "false") && !m.isDefined("debug", "false")) || m.isDefined("debug", "true")) {//TODO: check the rules for debugging of messages/ports
@@ -184,7 +185,8 @@ public abstract class ThingMLCompiler {
                         }
                     }
                     for (Port p : thing.allPorts()) {
-                        List<Message> msg = p.getReceives();
+                        List<Message> msg = new LinkedList<Message>();
+                        msg.addAll(p.getReceives());
                         msg.addAll(p.getSends());
                         for (Message m : msg) {
                             if ((p.isDefined("debug", "true") && !m.isDefined("debug", "false")) || m.isDefined("debug", "true")) {//TODO: check the rules for debugging of messages/ports
