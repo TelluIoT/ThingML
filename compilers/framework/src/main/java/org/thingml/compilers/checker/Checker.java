@@ -63,6 +63,7 @@ abstract public class Checker {
         Rules.add(new MessagesUsage());
         Rules.add(new ConnectorCycles());
         Rules.add(new FunctionUsage());
+        Rules.add(new StatesUsage());
     }
     
     public void do_generic_check(Configuration cfg) {
