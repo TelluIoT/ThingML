@@ -17,6 +17,8 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Action Block</b></em>'.
@@ -50,4 +52,11 @@ public interface ActionBlock extends Action {
 	 */
 	EList<Action> getActions();
 
-} // ActionBlock
+	/**
+	 * @generated NOT
+	 * @return
+     */
+	List<SendAction> allSendAction();
+
+
+	} // ActionBlock
