@@ -85,6 +85,10 @@ abstract public class Checker {
         Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
     }
     
+    public void addError(String compiler, String msg, ThingMLElement el) {
+        Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
+    }
+    
     public void addGenericError(String msg, ThingMLElement el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, generic, msg, el));
     }
@@ -93,11 +97,19 @@ abstract public class Checker {
         Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
     }
     
+    public void addWarning(String compiler, String msg, ThingMLElement el) {
+        Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
+    }
+    
     public void addGenericWarning(String msg, ThingMLElement el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, generic, msg, el));
     }
     
     public void addNotice(String msg, ThingMLElement el) {
+        Notices.add(new CheckerInfo(InfoType.NOTICE, compiler, msg, el));
+    }
+    
+    public void addNotice(String compiler, String msg, ThingMLElement el) {
         Notices.add(new CheckerInfo(InfoType.NOTICE, compiler, msg, el));
     }
     

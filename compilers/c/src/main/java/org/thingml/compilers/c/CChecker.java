@@ -20,26 +20,36 @@
  */
 package org.thingml.compilers.c;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.sintef.thingml.Configuration;
+import org.thingml.compilers.c.checkerRules.*;
 import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.Rule;
 
 /**
  *
  * @author sintef
  */
 public abstract class CChecker extends Checker{
-
+    Set<Rule>CRules;
+    
     public CChecker(String compiler) {
         super(compiler);
+        CRules = new HashSet<Rule>();
+        CRules.add(new PointerParameters());
     }
 
     @Override
-    public void do_check(Configuration cfg) {
+    public void do_generic_check(Configuration cfg) {
         String Cname = "C";
         
+        for(Rule r : CRules) {
+            r.check(cfg, this);
+        }
         //ADD C specific checks
         
-        this.do_generic_check(cfg);
+        super.do_generic_check(cfg);
     }
     
 }

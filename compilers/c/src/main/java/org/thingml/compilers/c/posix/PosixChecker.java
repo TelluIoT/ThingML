@@ -37,7 +37,6 @@ public class PosixChecker extends CChecker {
     public void do_check(Configuration cfg) {
         
         //ADD Posix specific checks
-        
         super.do_generic_check(cfg);
         
     }

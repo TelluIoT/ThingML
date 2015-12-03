@@ -55,7 +55,7 @@ public class NonDeterministicTransitions extends Rule {
 
     @Override
     public String getDescription() {
-        return "Check that Internal transition are triggered by event and/or have guard";
+        return "Check that no event can trigger two transition at the same time.";
     }
     
     public class Pair{
