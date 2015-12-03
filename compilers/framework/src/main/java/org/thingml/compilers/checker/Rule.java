@@ -18,28 +18,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.c;
+package org.thingml.compilers.checker;
+
 
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.checker.Checker;
-
+import org.thingml.compilers.checker.Checker.InfoType;
 /**
  *
  * @author sintef
  */
-public abstract class CChecker extends Checker{
-
-    public CChecker(String compiler) {
-        super(compiler);
+public abstract class Rule {
+    
+    public Rule() {
     }
-
-    @Override
-    public void do_check(Configuration cfg) {
-        String Cname = "C";
-        
-        //ADD C specific checks
-        
-        this.do_generic_check(cfg);
-    }
+    
+    public abstract InfoType getHighestLevel();
+    public abstract String getName();
+    public abstract String getDescription();
+    
+    public abstract void check(Configuration cfg, Checker checker);
     
 }

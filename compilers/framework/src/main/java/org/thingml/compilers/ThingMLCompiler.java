@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers;
 
+import org.thingml.compilers.checker.Checker;
 import org.sintef.thingml.*;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
