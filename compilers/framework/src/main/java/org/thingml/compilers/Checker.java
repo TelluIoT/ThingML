@@ -27,13 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Connector;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingMLElement;
+import org.sintef.thingml.*;
 
 /**
  *
@@ -63,6 +57,7 @@ abstract public class Checker {
         checkThingsUsage(cfg);
         checkPortsUsage(cfg);
         checkCycle(cfg);
+        checkMessagesUsage(cfg);
     }
     
     // Must be implemented and must contain a call to do_generic_check(cfg)
@@ -126,6 +121,24 @@ abstract public class Checker {
     }
     
     // ---------------------- Generic checks ----------------------
+
+    public void checkMessagesUsage(Configuration cfg) {
+        for(Thing t : cfg.allThings()) {
+            for(Port p : t.allPorts()) {
+                for (Message m : p.getSends()) {
+                    boolean found = false;
+                    for(SendAction a : t.allSendAction()) {
+                        if (EcoreUtil.equals(a.getMessage(), m)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                        this.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", p);
+                }
+            }
+        }
+    }
     
     public void checkThingsUsage(Configuration cfg) {
         

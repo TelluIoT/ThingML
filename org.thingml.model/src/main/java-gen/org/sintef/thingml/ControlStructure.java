@@ -16,6 +16,8 @@
 package org.sintef.thingml;
 
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Control Structure</b></em>'.
@@ -85,5 +87,11 @@ public interface ControlStructure extends Action {
 	 * @generated
 	 */
 	void setCondition(Expression value);
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	List<SendAction> allSendAction();
 
 } // ControlStructure

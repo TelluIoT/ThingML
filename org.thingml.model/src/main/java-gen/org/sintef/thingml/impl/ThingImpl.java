@@ -41,6 +41,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <!-- begin-user-doc -->
@@ -768,5 +769,59 @@ public class ThingImpl extends TypeImpl implements Thing {
         }
         return result;
     }
+
+	/**
+	 * @generated NOT
+	 * @param action
+	 * @return
+     */
+	private List<SendAction> getAllSendAction(Action action) {
+		List<SendAction> result = new ArrayList<SendAction>();
+		if (action instanceof SendAction) {
+			result.add((SendAction)action);
+		} else if (action instanceof ActionBlock) {
+			ActionBlock block = (ActionBlock) action;
+			result.addAll(block.allSendAction());
+		} else if (action instanceof ControlStructure) {
+			result.addAll(((ControlStructure)action).allSendAction());
+		} else if (action instanceof FunctionCall) {
+			result.addAll(getAllSendAction(((FunctionCall)action).getFunction().getBody()));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+     */
+	public List<SendAction> allSendAction() {
+		List<SendAction> result = new ArrayList<SendAction>();
+		/*for (Function f : allFunctions()) {
+			System.out.println("analyzing function " + f.getName());
+			result.addAll(getAllSendAction(f.getBody()));
+		}*/
+		for(StateMachine sm : allStateMachines()) {
+			for(State s : sm.allStates()) {
+				if (s.getEntry() != null) {
+					result.addAll(getAllSendAction(s.getEntry()));
+				}
+				if (s.getExit() != null) {
+					result.addAll(getAllSendAction(s.getEntry()));
+				}
+				for(InternalTransition t : s.getInternal()) {
+					if (t.getAction() != null) {
+						result.addAll(getAllSendAction(t.getAction()));
+					}
+				}
+				for(Transition t : s.getOutgoing()) {
+					if (t.getAction() != null) {
+						result.addAll(getAllSendAction(t.getAction()));
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 
 } //ThingImpl

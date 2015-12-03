@@ -15,7 +15,9 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -27,9 +29,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.sintef.thingml.Action;
-import org.sintef.thingml.ActionBlock;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
 
 /**
  * <!-- begin-user-doc -->
@@ -159,5 +159,24 @@ public class ActionBlockImpl extends ActionImpl implements ActionBlock {
 		}
 		return super.eIsSet(featureID);
 	}
+
+	/**
+	 * @generated NOT
+	 * @return
+     */
+	public List<SendAction> allSendAction() {
+		List<SendAction> result = new ArrayList<SendAction>();
+		for (Action a : getActions()) {
+			if (a instanceof SendAction) {
+				result.add((SendAction)a);
+			} else if (a instanceof ActionBlock) {
+				result.addAll(((ActionBlock)a).allSendAction());
+			} else if (a instanceof ControlStructure) {
+				result.addAll(((ControlStructure)a).allSendAction());
+			}
+		}
+		return result;
+	}
+
 
 } //ActionBlockImpl

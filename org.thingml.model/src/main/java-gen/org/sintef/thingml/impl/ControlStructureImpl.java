@@ -23,10 +23,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.sintef.thingml.Action;
-import org.sintef.thingml.ControlStructure;
-import org.sintef.thingml.Expression;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -250,6 +250,23 @@ public abstract class ControlStructureImpl extends ActionImpl implements Control
 				return condition != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	public List<SendAction> allSendAction() {
+		List<SendAction> result = new ArrayList<SendAction>();
+		if (getAction() instanceof SendAction) {
+			result.add((SendAction) getAction());
+		}
+		else if (getAction() instanceof ActionBlock) {
+			result.addAll(((ActionBlock) getAction()).allSendAction());
+		} else if (getAction() instanceof ControlStructure) {
+			result.addAll(((ControlStructure)getAction()).allSendAction());
+		}
+		return result;
 	}
 
 } //ControlStructureImpl
