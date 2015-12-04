@@ -775,7 +775,7 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 * @param action
 	 * @return
      */
-	private List<Action> getAllSendAction(Class clazz, Action action) {
+	private List<Action> getAllAction(Class clazz, Action action) {
 		List<Action> result = new ArrayList<Action>();
 		if (clazz.isInstance(action)) {
 			result.add(action);
@@ -785,7 +785,33 @@ public class ThingImpl extends TypeImpl implements Thing {
 		} else if (action instanceof ControlStructure) {
 			result.addAll(((ControlStructure)action).allAction(clazz));
 		} else if (action instanceof FunctionCall) {
-			result.addAll(getAllSendAction(clazz, ((FunctionCall)action).getFunction().getBody()));
+			result.addAll(getAllAction(clazz, ((FunctionCall)action).getFunction().getBody()));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @param clazz
+	 * @param action
+     * @return
+     */
+	private List<Expression> getAllExpression(Class clazz, Action action) {
+		List<Expression> result = new ArrayList<Expression>();
+		if (action instanceof PropertyAssign) {
+			PropertyAssign pa = (PropertyAssign) action;
+			if(clazz.isInstance(pa.getInit())) {
+				result.add(pa.getInit());
+			}
+		} else if (action instanceof ControlStructure) {
+			ControlStructure cs = (ControlStructure) action;
+			if(clazz.isInstance(cs.getCondition())) {
+				result.add(cs.getCondition());
+			}
+			result.addAll(getAllExpression(clazz, cs.getAction()));
+		} else if (action instanceof ActionBlock) {
+			ActionBlock b = (ActionBlock) action;
+			b.allExpression(clazz);
 		}
 		return result;
 	}
@@ -803,19 +829,48 @@ public class ThingImpl extends TypeImpl implements Thing {
 		for(StateMachine sm : allStateMachines()) {
 			for(State s : sm.allStates()) {
 				if (s.getEntry() != null) {
-					result.addAll(getAllSendAction(clazz, s.getEntry()));
+					result.addAll(getAllAction(clazz, s.getEntry()));
 				}
 				if (s.getExit() != null) {
-					result.addAll(getAllSendAction(clazz, s.getEntry()));
+					result.addAll(getAllAction(clazz, s.getEntry()));
 				}
 				for(InternalTransition t : s.getInternal()) {
 					if (t.getAction() != null) {
-						result.addAll(getAllSendAction(clazz, t.getAction()));
+						result.addAll(getAllAction(clazz, t.getAction()));
 					}
 				}
 				for(Transition t : s.getOutgoing()) {
 					if (t.getAction() != null) {
-						result.addAll(getAllSendAction(clazz, t.getAction()));
+						result.addAll(getAllAction(clazz, t.getAction()));
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	public List<Expression> allExpression(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		for(StateMachine sm : allStateMachines()) {
+			for(State s : sm.allStates()) {
+				if (s.getEntry() != null) {
+					result.addAll(getAllExpression(clazz, s.getEntry()));
+				}
+				if (s.getExit() != null) {
+					result.addAll(getAllExpression(clazz, s.getEntry()));
+				}
+				for(InternalTransition t : s.getInternal()) {
+					if (t.getAction() != null) {
+						result.addAll(getAllExpression(clazz, t.getAction()));
+					}
+				}
+				for(Transition t : s.getOutgoing()) {
+					if (t.getAction() != null) {
+						result.addAll(getAllExpression(clazz, t.getAction()));
 					}
 				}
 			}

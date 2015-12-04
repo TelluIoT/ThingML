@@ -67,12 +67,14 @@ public class MessagesUsage extends Rule {
                                 Expression e = a.getParameters().get(m.getParameters().indexOf(pa));
                                 Type expected = pa.getType().getBroadType();
                                 Type actual = checker.typeChecker.computeTypeOf(e);
-                                if (actual.getName().equals("ERROR_TYPE")) {
-                                    checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
-                                } else if (actual.getName().equals("ANY_TYPE")) {
-                                    checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
-                                } else if (!actual.isA(expected)) {
-                                    checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                if (actual != null) {
+                                    if (actual.getName().equals("ERROR_TYPE")) {
+                                        checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                    } else if (actual.getName().equals("ANY_TYPE")) {
+                                        checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                    } else if (!actual.isA(expected)) {
+                                        checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                    }
                                 }
                             }
                         }

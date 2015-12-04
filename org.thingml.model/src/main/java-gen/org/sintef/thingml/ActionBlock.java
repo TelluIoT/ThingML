@@ -58,5 +58,12 @@ public interface ActionBlock extends Action {
      */
 	List<Action> allAction(Class clazz);
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	List<Expression> allExpression(Class clazz);
 
-	} // ActionBlock
+
+
+} // ActionBlock

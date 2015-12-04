@@ -178,5 +178,28 @@ public class ActionBlockImpl extends ActionImpl implements ActionBlock {
 		return result;
 	}
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	public List<Expression> allExpression(Class clazz) {//TODO: to be completed
+		List<Expression> result = new ArrayList<Expression>();
+		for (Action a : getActions()) {
+			if (a instanceof ActionBlock) {
+				result.addAll(((ActionBlock)a).allExpression(clazz));
+			} else if (a instanceof ControlStructure) {
+				ControlStructure cs = (ControlStructure) a;
+				if(clazz.isInstance(cs.getCondition())) {
+					result.add(cs.getCondition());
+				}
+				if (cs.getAction() instanceof ActionBlock) {
+					result.addAll(((ActionBlock)cs.getAction()).allExpression(clazz));
+				}
+			}
+		}
+		return result;
+	}
+
+
 
 } //ActionBlockImpl

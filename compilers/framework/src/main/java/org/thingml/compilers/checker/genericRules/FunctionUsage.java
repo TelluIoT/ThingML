@@ -26,6 +26,8 @@ import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.TypeChecker;
 
+import java.util.List;
+
 /**
  *
  * @author sintef
@@ -51,6 +53,32 @@ public class FunctionUsage extends Rule {
         return "Check that each function defined in a thing is actually called.";
     }
 
+    private boolean check(Checker checker, Thing t, Function call, List<Expression> params, Function f) {
+        boolean found = false;
+        if (EcoreUtil.equals(call, f)) {
+            found = true;
+            if (f.getParameters().size() != params.size()) {
+                checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + f.getParameters().size() + ", called with " + params.size(), f);
+            }
+            for (Parameter p : f.getParameters()) {
+                Expression e = params.get(f.getParameters().indexOf(p));
+                Type expected = p.getType().getBroadType();
+                Type actual = checker.typeChecker.computeTypeOf(e);
+                if (actual != null) {
+                    if (actual.getName().equals("ERROR_TYPE")) {
+                        checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), f);
+                    } else if (actual.getName().equals("ANY_TYPE")) {
+                        checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), f);
+                    } else if (!actual.isA(expected)) {
+                        checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), f);
+                    }
+                }
+            }
+            //break;
+        }
+        return found;
+    }
+
     @Override
     public void check(Configuration cfg, Checker checker) {
         for(Thing t : cfg.allThings()) {
@@ -58,24 +86,14 @@ public class FunctionUsage extends Rule {
                 boolean found = false;
                 for(Action b : t.allAction(FunctionCall.class)) {
                     FunctionCall a = (FunctionCall) b;
-                    if (EcoreUtil.equals(a.getFunction(), f)) {
+                    if (check(checker, t, a.getFunction(), a.getParameters(), f)) {
                         found = true;
-                        if (f.getParameters().size() != a.getParameters().size()) {
-                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + f.getParameters().size() + ", called with " + a.getParameters().size(), f);
-                        }
-                        for (Parameter p : f.getParameters()) {
-                            Expression e = a.getParameters().get(f.getParameters().indexOf(p));
-                            Type expected = p.getType().getBroadType();
-                            Type actual = checker.typeChecker.computeTypeOf(e);
-                            if (actual.getName().equals("ERROR_TYPE")) {
-                                checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), f);
-                            } else if (actual.getName().equals("ANY_TYPE")) {
-                                checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), f);
-                            } else if (!actual.isA(expected)) {
-                                checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), f);
-                            }
-                        }
-                        //break;
+                    }
+                }
+                for(Expression b : t.allExpression(FunctionCallExpression.class)) {
+                    FunctionCallExpression a = (FunctionCallExpression) b;
+                    if (check(checker, t, a.getFunction(), a.getParameters(), f)) {
+                        found = true;
                     }
                 }
                 if (!found)

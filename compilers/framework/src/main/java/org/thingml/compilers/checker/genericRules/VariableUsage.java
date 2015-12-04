@@ -58,12 +58,14 @@ public class VariableUsage extends Rule {
                 Expression e = va.getExpression();
                 Type expected = va.getProperty().getType().getBroadType();
                 Type actual = checker.typeChecker.computeTypeOf(e);
-                if (actual.getName().equals("ERROR_TYPE")) {
-                    checker.addGenericError("Property " + va.getProperty().getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
-                } else if (actual.getName().equals("ANY_TYPE")) {
-                    checker.addGenericWarning("Property " + va.getProperty().getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
-                } else if (!actual.isA(expected)) {
-                    checker.addGenericWarning("Property " + va.getProperty().getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
+                if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
+                    if (actual.getName().equals("ERROR_TYPE")) {
+                        checker.addGenericError("Property " + va.getProperty().getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
+                    } else if (actual.getName().equals("ANY_TYPE")) {
+                        checker.addGenericWarning("Property " + va.getProperty().getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
+                    } else if (!actual.isA(expected)) {
+                        checker.addGenericWarning("Property " + va.getProperty().getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
+                    }
                 }
             }
         }

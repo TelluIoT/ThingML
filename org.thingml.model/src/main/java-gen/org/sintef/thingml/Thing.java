@@ -330,4 +330,10 @@ public interface Thing extends Type {
      */
 	List<Action> allAction(Class clazz);
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	List<Expression> allExpression(Class clazz);
+
 } // Thing
