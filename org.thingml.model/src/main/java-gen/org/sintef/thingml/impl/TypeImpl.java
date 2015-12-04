@@ -17,6 +17,7 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Type;
 
@@ -47,6 +48,42 @@ public abstract class TypeImpl extends AnnotatedElementImpl implements Type {
 	@Override
 	protected EClass eStaticClass() {
 		return ThingmlPackage.Literals.TYPE;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	public Type getBroadType() {
+		Type t = ThingmlPackageImpl.init().getThingmlFactory().createPrimitiveType();
+		if (hasAnnotation("type_checker")) {
+			t.setName(annotation("type_checker").get(0));
+			PlatformAnnotation a = ThingmlPackageImpl.init().getThingmlFactory().createPlatformAnnotation();
+			a.setName("type_checker");
+			a.setValue(t.getName());
+			t.getAnnotations().add(a);
+		} else {
+			t.setName("ANY_TYPE");
+			PlatformAnnotation a = ThingmlPackageImpl.init().getThingmlFactory().createPlatformAnnotation();
+			a.setName("type_checker");
+			a.setValue("Any");
+			t.getAnnotations().add(a);
+		}
+		return t;
+	}
+
+	/**
+	 * @generated NOT
+	 * @param t
+	 * @return
+     */
+	public boolean isA(Type t) {
+		System.out.println(getName() + "(" + getBroadType().getName() + ") is a " + t.getName() + "(" + t.getBroadType().getName() + ")?");
+		if (getBroadType().getName().equals(t.getBroadType().getName()))
+			return true;
+		if (getBroadType().getName().equals("Integer") && t.getBroadType().getName().equals("Real"))
+			return true;
+		return false;
 	}
 
 } //TypeImpl
