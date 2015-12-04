@@ -55,7 +55,6 @@ public class PointerParameters extends Rule {
                 if(!p.isDefined("sync_send", "true")) {
                     List<Message> messages = new LinkedList<Message>();
                     messages.addAll(p.getReceives());
-                    System.out.println("T: "+ t.getName() + " p: " + p.getName() + " Receives " + messages.size() + " messages");
                     messages.addAll(p.getSends());
                     for(Message m : messages) {
                         for(Parameter pt : m.getParameters()) {
