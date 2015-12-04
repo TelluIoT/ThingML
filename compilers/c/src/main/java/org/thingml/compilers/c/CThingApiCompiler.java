@@ -216,7 +216,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
                 builder.append(");\n");
 
                 //external
-                builder.append("void register_external_" + ctx.getSenderName(thing, port, msg) + "_listener(");
+                builder.append("void register_external_" + ctx.getSenderName(thing, port, msg) + getCppNameScope() + "_listener(");
                 builder.append("void (*_listener)");
                 ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append(");\n");
@@ -275,6 +275,11 @@ public class CThingApiCompiler extends ThingApiCompiler {
             for (Message msg : port.getSends()) {
                 // Variable for the function pointer
                 builder.append("void (" + getCppNameScope() + "*" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                ctx.appendFormalTypeSignature(thing, builder, msg);
+                builder.append(";\n");
+
+                // Variable for the external function pointer
+                builder.append("void (*external_" + getCppNameScope() + "*" + ctx.getSenderName(thing, port, msg) + "_listener)");
                 ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append(";\n");
 

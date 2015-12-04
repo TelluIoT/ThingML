@@ -119,6 +119,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             // GENERATE HEADER FOR MAIN
             String cheadertemplate = ctx.getCfgMainHeaderTemplate();
             StringBuilder builder = new StringBuilder();
+            generateCppHeaderExternalMessageEnqueue(cfg, builder, ctx);            
             generateCppHeaderForConfiguration(cfg, builder, ctx);
             cheadertemplate = cheadertemplate.replace("/*HEADER_CONFIGURATION*/", builder.toString());
             ctx.getBuilder(cfg.getName() + ".h").append(cheadertemplate);
@@ -527,22 +528,35 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
     
-    protected void  generateExternalMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        boolean isThereNetworkListener = false;
+    protected boolean isThereNetworkListener(Configuration cfg) {
+        boolean ret = false;
         
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             if(!eco.getPort().getReceives().isEmpty()) {
-                isThereNetworkListener = true;
+                ret = true;
                 break;
             }
         }
         
         if(!cfg.getExternalConnectors().isEmpty()) {
-                isThereNetworkListener = true;
+                ret = true;
         }
         
-        if(isThereNetworkListener) {
-            builder.append("void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id) {\n");
+        return ret;
+    }
+    
+    protected void generateCppHeaderExternalMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        // Added by sdalgard to handle method headers for C++
+        if(isThereNetworkListener(cfg)) {
+            builder.append("void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);\n"); 
+        }
+    }
+
+    
+    protected void  generateExternalMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        
+        if(isThereNetworkListener(cfg)) {
+            builder.append("void " + getCppNameScope() + "externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id) {\n");
 
             builder.append("if ((msgSize >= 2) && (msg != NULL)) {\n");
 
@@ -1175,12 +1189,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     }
 
     protected void generateMessageProcessQueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        builder.append("void processMessageQueue() {\n");
+        //builder.append("void processMessageQueue() {\n");
+        builder.append("int " + getCppNameScope() + "processMessageQueue() {\n"); // Changed by sdalgard to return int
         if (ctx.sync_fifo()) {
             builder.append("fifo_lock();\n");
             builder.append("while (fifo_empty()) fifo_wait();\n");
         } else {
-            builder.append("if (fifo_empty()) return; // return if there is nothing to do\n\n");
+            //builder.append("if (fifo_empty()) return; // return if there is nothing to do\n\n");
+            builder.append("if (fifo_empty()) return 0; // return 0 if there is nothing to do\n\n"); // Changed by sdalgard
         }
 
         int max_msg_size = 4; // at least the code and the source instance id (2 bytes + 2 bytes)
@@ -1315,122 +1331,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
         ctx.clearConcreteThing();
         builder.append("}\n");
-        builder.append("}\n");
-    }
-
-// This has to be manually merged with the new method using external ports and different serrialization
-    protected void generateMessageProcessQueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        builder.append("int " + getCppNameScope() + "processMessageQueue() {\n"); // Changed by sdalgard to return int
-        if (ctx.sync_fifo()) {
-            builder.append("fifo_lock();\n");
-            builder.append("while (fifo_empty()) fifo_wait();\n");
-        } else {
-            builder.append("if (fifo_empty()) return 0; // return 0 if there is nothing to do\n\n"); // Changed by sdalgard
-        }
-
-        int max_msg_size = 4; // at least the code and the source instance id (2 bytes + 2 bytes)
-
-        // Generate dequeue code only for non syncronized ports
-        for (Thing t : cfg.allThings()) {
-            for(Port p : t.allPorts()) {
-                if (p.isDefined("sync_send", "true")) continue; // do not generateMainAndInit for synchronous ports
-
-                ctx.setConcreteThing(t);
-                Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
-
-                for(Message m : allMessageDispatch.keySet()) {
-                    int size = ctx.getMessageSerializationSize(m);
-                    if (size > max_msg_size) max_msg_size = size;
-                }
-            }
-        }
-        ctx.clearConcreteThing();
-
-        //builder.append("uint8_t param_buf[" + (max_msg_size - 2) + "];\n");
-
-        // Allocate a buffer to store the message bytes.
-        // Size of the buffer is "size-2" because we have already read 2 bytes
-        builder.append("byte mbuf[" + (max_msg_size - 2) + "];\n");
-        builder.append("uint8_t mbufi = 0;\n\n");
-
-        builder.append("// Read the code of the next port/message in the queue\n");
-        builder.append("uint16_t code = fifo_dequeue() << 8;\n\n");
-        builder.append("code += fifo_dequeue();\n\n");
-
-        builder.append("// Switch to call the appropriate handler\n");
-        builder.append("switch(code) {\n");
-
-        for (Thing t : cfg.allThings()) {
-            for(Port p : t.allPorts()) {
-                if (p.isDefined("sync_send", "true")) continue; // do not generateMainAndInit for synchronous ports
-
-                ctx.setConcreteThing(t);
-                Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
-
-                for(Message m : allMessageDispatch.keySet()) {
-
-                    builder.append("case " + ctx.getHandlerCode(cfg, m) + ":\n");
-
-                    builder.append("while (mbufi < " + (ctx.getMessageSerializationSize(m) - 2) + ") mbuf[mbufi++] = fifo_dequeue();\n");
-                    // Fill the buffer
-
-                    //DEBUG
-                    // builder.append("Serial.println(\"FW MSG "+m.getName+"\");\n"
-
-                    if (ctx.sync_fifo()) builder.append("fifo_unlock();\n");
-
-                    // Begin Horrible deserialization trick
-                    int idx_bis = 2;
-
-                    for (Parameter pt : m.getParameters()) {
-                        builder.append("union u_" + t.getName() + "_" + p.getName() + "_" + m.getName() + "_" + pt.getName() + "_t {\n");
-                        builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                        builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
-                        builder.append("} u_" + t.getName() + "_" + p.getName() + "_" + m.getName() + "_" + pt.getName() + ";\n");
-
-
-                        for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
-
-                            builder.append("u_" + t.getName() + "_" + p.getName() + "_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
-                            builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
-
-                            //builder.append("param_buf[" + (idx_bis + ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
-                            //builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
-                        }
-
-
-                        //builder.append(ctx.getCType(pt.getType()) + " * p_" + m.getName() + "_" + pt.getName() +";\n");
-                        //builder.append("p_" + m.getName() + "_" + pt.getName() +" = (" + ctx.getCType(pt.getType()) + " *) &(param_buf[" + idx_bis + "]);\n");
-
-
-                        idx_bis = idx_bis + ctx.getCByteSize(pt.getType(), 0);
-                    }
-                    // End Horrible deserialization trick
-
-                    builder.append("dispatch_" + ctx.getSenderName(t, p, m) + "(");
-                    builder.append("(struct " + ctx.getInstanceStructName(t) + "*)");
-                    builder.append("instance_by_id((mbuf[0] << 8) + mbuf[1]) /* instance */");
-
-                    int idx = 2;
-
-                    for (Parameter pt : m.getParameters()) {
-                        //builder.append(",\n" + ctx.deserializeFromByte(pt.getType(), "mbuf", idx, ctx) + " /* " + pt.getName() + " */ ");
-                        builder.append(",\n u_" + t.getName() + "_" + p.getName() + "_" + m.getName() + "_" + pt.getName() + ".p /* " + pt.getName() + " */ ");
-                        idx = idx + ctx.getCByteSize(pt.getType(), 0);
-                    }
-
-                    builder.append(");\n");
-
-                    builder.append("break;\n");
-                }
-            }
-        }
-        ctx.clearConcreteThing();
-        builder.append("}\n");
         builder.append("return 1;\n");  // Added by sdalgard
         builder.append("}\n");
     }
-
 
     protected void generateCppHeaderMessageProcessQueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         // Added by sdalgard to handle method headers for C++

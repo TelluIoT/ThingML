@@ -669,24 +669,25 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             for (Message msg : port.getSends()) {
                 if (!isGeneratingCpp()) { // Private prototypes will be generated as part of header for C++
 
-                //for external messages
-                //var
-                builder.append("void (*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                ctx.appendFormalTypeSignature(thing, builder, msg);
-                builder.append("= 0x0;\n");
-                //register
-                builder.append("void register_external_" + ctx.getSenderName(thing, port, msg) + "_listener(");
-                builder.append("void (*_listener)");
-                ctx.appendFormalTypeSignature(thing, builder, msg);
-                builder.append("){\n");
-                builder.append("external_" + ctx.getSenderName(thing, port, msg) + "_listener = _listener;\n");
-                builder.append("}\n");
-
+                    //for external messages
+                    //var
+                    builder.append("void (*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                    ctx.appendFormalTypeSignature(thing, builder, msg);
+                    builder.append("= 0x0;\n");
+                    
                     // Variable for the function pointer
                     builder.append("void (*" + ctx.getSenderName(thing, port, msg) + "_listener)");
                     ctx.appendFormalTypeSignature(thing, builder, msg);
                     builder.append("= 0x0;\n");
                 }
+                //register
+                builder.append("void " + getCppNameScope() + "register_external_" + ctx.getSenderName(thing, port, msg) + "_listener(");
+                builder.append("void (" + getCppNameScope() + "*_listener)");
+                ctx.appendFormalTypeSignature(thing, builder, msg);
+                builder.append("){\n");
+                builder.append("external_" + ctx.getSenderName(thing, port, msg) + "_listener = _listener;\n");
+                builder.append("}\n");
+
 
                 builder.append("void " + getCppNameScope() + "register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
                 builder.append("void (" + getCppNameScope() + "*_listener)");
@@ -716,7 +717,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 }
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n");
-                builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) external_" + ctx.getSenderName(thing, port, msg) + "_listener");
+                if (!isGeneratingCpp()) {
+                    builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) external_" + ctx.getSenderName(thing, port, msg) + "_listener");
+                } else {
+                    builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) (this->*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                }
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n");
                 builder.append(";\n}\n");
@@ -732,6 +737,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
        for(Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
                 builder.append("" + ctx.getSenderName(thing, port, msg) + "_listener = 0x0;\n");
+                builder.append("external_" + ctx.getSenderName(thing, port, msg) + "_listener = 0x0;\n");
             }
         }
         builder.append("\n");
