@@ -95,11 +95,11 @@ public class ThingMLHelpers {
 	 * Type checking and expressions
 	 * ***********************************************************/
 	
-	public static TypeChecker typerchecker = new TypeChecker();
+	//public static TypeChecker typerchecker = new TypeChecker();
 		
-	public static Type getExpressionType(Expression exp) {
+	/*public static Type getExpressionType(Expression exp) {
 		return typerchecker.computeTypeOf(exp);
-	}
+	}*/
 
 	/* ***********************************************************
 	 * Resolution of imported models / All available Things and Types
