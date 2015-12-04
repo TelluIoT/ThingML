@@ -32,8 +32,6 @@ import org.thingml.compilers.checker.TypeChecker;
  */
 public class FunctionUsage extends Rule {
 
-    private TypeChecker typeChecker = new TypeChecker();
-
     public FunctionUsage() {
         super();
     }
@@ -65,10 +63,10 @@ public class FunctionUsage extends Rule {
                         if (f.getParameters().size() != a.getParameters().size()) {
                             checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + f.getParameters().size() + ", called with " + a.getParameters().size(), f);
                         }
-                        for (Parameter p : f.getParameters()) {//FIXME: check type of formal/actual parameters
+                        for (Parameter p : f.getParameters()) {
                             Expression e = a.getParameters().get(f.getParameters().indexOf(p));
                             Type expected = p.getType().getBroadType();
-                            Type actual = typeChecker.computeTypeOf(e);
+                            Type actual = checker.typeChecker.computeTypeOf(e);
                             if (actual.getName().equals("ERROR_TYPE")) {
                                 checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), f);
                             } else if (actual.getName().equals("ANY_TYPE")) {

@@ -150,7 +150,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 		if (!t1.equals(INTEGER_TYPE) && !t1.equals(REAL_TYPE) && !t2.equals(INTEGER_TYPE) && !t2.equals(REAL_TYPE)) {
 			return ERROR_TYPE;
 		}
-		if (!t1.equals(t2)) //One Integer and one Real
+		if (!t1.getBroadType().getName().equals(t2.getBroadType().getName())) //One Integer and one Real
 			return REAL_TYPE;
 		return t1;
 	}
@@ -164,7 +164,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 		if (!t1.equals(INTEGER_TYPE) && !t1.equals(REAL_TYPE) && !t2.equals(INTEGER_TYPE) && !t2.equals(REAL_TYPE)) {
 			return ERROR_TYPE;
 		}
-		if (!t1.equals(t2)) //One Integer and one Real
+		if (!t1.getBroadType().getName().equals(t2.getBroadType().getName())) //One Integer and one Real
 			return REAL_TYPE;
 		return t1;
 	}
@@ -178,7 +178,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 		if (!t1.equals(INTEGER_TYPE) && !t1.equals(REAL_TYPE) && !t2.equals(INTEGER_TYPE) && !t2.equals(REAL_TYPE)) {
 			return ERROR_TYPE;
 		}
-		if (!t1.equals(t2)) //One Integer and one Real
+		if (!t1.getBroadType().getName().equals(t2.getBroadType().getName())) //One Integer and one Real
 			return REAL_TYPE;
 		return t1;
 	}
@@ -192,7 +192,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 		if (!t1.equals(INTEGER_TYPE) && !t1.equals(REAL_TYPE) && !t2.equals(INTEGER_TYPE) && !t2.equals(REAL_TYPE)) {
 			return ERROR_TYPE;
 		}
-		if (!t1.equals(t2)) //One Integer and one Real
+		if (!t1.getBroadType().getName().equals(t2.getBroadType().getName())) //One Integer and one Real
 			return REAL_TYPE;
 		return t1;
 	}
@@ -251,7 +251,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 
 	@Override
 	public Type casePropertyReference(PropertyReference object) {
-		return object.getProperty().getType();
+		return object.getProperty().getType().getBroadType();
 	}
 
 	@Override
@@ -266,7 +266,16 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 		// TODO: Check that the types are compatible
 		return BOOLEAN_TYPE;
 	}
-	
-	
 
+	@Override
+	public Type caseReference(Reference object) {
+		if (object.getReference() instanceof ReceiveMessage) {
+			ReceiveMessage rm = (ReceiveMessage) object.getReference();
+			if (object.getParameter() instanceof SimpleParamRef) {
+				SimpleParamRef ref = (SimpleParamRef) object.getParameter();
+				return ref.getParameterRef().getType().getBroadType();
+			}
+		}
+		return ANY_TYPE;
+	}
 }

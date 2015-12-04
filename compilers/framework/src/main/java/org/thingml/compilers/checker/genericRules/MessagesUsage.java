@@ -61,18 +61,29 @@ public class MessagesUsage extends Rule {
                         if (EcoreUtil.equals(a.getMessage(), m)) {
                             found = true;
                             if (m.getParameters().size() != a.getParameters().size()) {
-                                checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with wrong number of parameters. Expected " + m.getParameters().size() + ", called with " + a.getParameters().size(), t);
+                                checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with wrong number of parameters. Expected " + m.getParameters().size() + ", called with " + a.getParameters().size(), a);
                             }
-                            //break;
+                            for (Parameter pa : m.getParameters()) {
+                                Expression e = a.getParameters().get(m.getParameters().indexOf(pa));
+                                Type expected = pa.getType().getBroadType();
+                                Type actual = checker.typeChecker.computeTypeOf(e);
+                                if (actual.getName().equals("ERROR_TYPE")) {
+                                    checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                } else if (actual.getName().equals("ANY_TYPE")) {
+                                    checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                } else if (!actual.isA(expected)) {
+                                    checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                }
+                            }
                         }
                     }
                     if (!found)
-                        checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", p);
+                        checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", m);
                 }
                 for (Message m : p.getReceives()) {
                     for (StateMachine sm : t.allStateMachines()) {
                         if (sm.allMessageHandlers().get(p) == null || sm.allMessageHandlers().get(p).get(m) == null) {
-                            checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received.", p);
+                            checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received.", m);
                         }
                     }
                 }

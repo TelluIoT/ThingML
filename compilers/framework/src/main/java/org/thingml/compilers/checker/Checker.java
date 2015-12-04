@@ -26,6 +26,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
@@ -47,7 +49,9 @@ abstract public class Checker {
     private String generic;
     
     private Context ctx;
-    
+
+    public TypeChecker typeChecker = new TypeChecker();
+
     public Checker (String compiler) {
         Rules = new HashSet<Rule>();
         Errors = new HashSet<CheckerInfo>();
@@ -67,12 +71,15 @@ abstract public class Checker {
         Rules.add(new NonDeterministicTransitions());
         Rules.add(new FunctionUsage());
         Rules.add(new StatesUsage());
+        Rules.add(new VariableUsage());
     }
     
     public void do_generic_check(Configuration cfg) {
+        long start = System.currentTimeMillis();
         for(Rule r : Rules) {
             r.check(cfg, this);
         }
+        System.out.println("checker took " + (System.currentTimeMillis() - start) + " ms");
     }
     
     // Must be implemented and must contain a call to do_generic_check(cfg)
@@ -81,39 +88,39 @@ abstract public class Checker {
     
     // ---------------------- Accessors ----------------------
     
-    public void addError(String msg, ThingMLElement el) {
+    public void addError(String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
     }
     
-    public void addError(String compiler, String msg, ThingMLElement el) {
+    public void addError(String compiler, String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
     }
     
-    public void addGenericError(String msg, ThingMLElement el) {
+    public void addGenericError(String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, generic, msg, el));
     }
     
-    public void addWarning(String msg, ThingMLElement el) {
+    public void addWarning(String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
     }
     
-    public void addWarning(String compiler, String msg, ThingMLElement el) {
+    public void addWarning(String compiler, String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
     }
     
-    public void addGenericWarning(String msg, ThingMLElement el) {
+    public void addGenericWarning(String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, generic, msg, el));
     }
     
-    public void addNotice(String msg, ThingMLElement el) {
+    public void addNotice(String msg, EObject el) {
         Notices.add(new CheckerInfo(InfoType.NOTICE, compiler, msg, el));
     }
     
-    public void addNotice(String compiler, String msg, ThingMLElement el) {
+    public void addNotice(String compiler, String msg, EObject el) {
         Notices.add(new CheckerInfo(InfoType.NOTICE, compiler, msg, el));
     }
     
-    public void addGenericNotice(String msg, ThingMLElement el) {
+    public void addGenericNotice(String msg, EObject el) {
         Notices.add(new CheckerInfo(InfoType.NOTICE, generic, msg, el));
     }
     
@@ -155,21 +162,22 @@ abstract public class Checker {
         public InfoType type;
         public String source;
         public String message;
-        public ThingMLElement element;
+        public EObject element;
         
-        public CheckerInfo(InfoType type, String source, String message, ThingMLElement element) {
+        public CheckerInfo(InfoType type, String source, String message, EObject element) {
             this.type = type;
             this.source = source;
             this.message = message;
             this.element = element;
         }
         
-        public String print(ThingMLElement el) {
-            if(el.getName() != null) {
-                return el.getName();
-            } else {
-                return "";
+        public String print(EObject el) {
+            if (el instanceof ThingMLElement) {
+                if(((ThingMLElement)el).getName() != null) {
+                    return ((ThingMLElement)el).getName();
+                }
             }
+            return el.toString();
         }
         
         public String toString() {
