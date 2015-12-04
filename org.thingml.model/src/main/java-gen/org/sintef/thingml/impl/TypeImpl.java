@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Type;
+import org.sintef.thingml.constraints.Types;
 
 /**
  * <!-- begin-user-doc -->
@@ -55,21 +56,20 @@ public abstract class TypeImpl extends AnnotatedElementImpl implements Type {
 	 * @return
 	 */
 	public Type getBroadType() {
-		Type t = ThingmlPackageImpl.init().getThingmlFactory().createPrimitiveType();
 		if (hasAnnotation("type_checker")) {
-			t.setName(annotation("type_checker").get(0));
-			PlatformAnnotation a = ThingmlPackageImpl.init().getThingmlFactory().createPlatformAnnotation();
-			a.setName("type_checker");
-			a.setValue(t.getName());
-			t.getAnnotations().add(a);
-		} else {
-			t.setName("ANY_TYPE");
-			PlatformAnnotation a = ThingmlPackageImpl.init().getThingmlFactory().createPlatformAnnotation();
-			a.setName("type_checker");
-			a.setValue("Any");
-			t.getAnnotations().add(a);
+			String ty = annotation("type_checker").get(0);
+			if (ty.equals("Integer"))
+				return Types.INTEGER_TYPE;
+			else if (ty.equals("Real"))
+				return Types.REAL_TYPE;
+			else if (ty.equals("Boolean"))
+				return Types.BOOLEAN_TYPE;
+			else if (ty.equals("String"))
+				return Types.STRING_TYPE;
+			else
+				return Types.ANY_TYPE;
 		}
-		return t;
+		return Types.ANY_TYPE;
 	}
 
 	/**
