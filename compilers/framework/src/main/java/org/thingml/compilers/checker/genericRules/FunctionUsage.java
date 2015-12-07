@@ -84,7 +84,7 @@ public class FunctionUsage extends Rule {
         for(Thing t : cfg.allThings()) {
             for(Function f : t.allFunctions()) {
                 boolean found = false;
-                for(Action b : t.allAction(FunctionCall.class)) {
+                for(Action b : t.allAction(FunctionCallStatement.class)) {
                     FunctionCall a = (FunctionCall) b;
                     if (check(checker, t, a.getFunction(), a.getParameters(), f)) {
                         found = true;

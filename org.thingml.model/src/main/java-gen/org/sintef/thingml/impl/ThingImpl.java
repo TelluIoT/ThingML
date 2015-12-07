@@ -811,7 +811,20 @@ public class ThingImpl extends TypeImpl implements Thing {
 			result.addAll(getAllExpression(clazz, cs.getAction()));
 		} else if (action instanceof ActionBlock) {
 			ActionBlock b = (ActionBlock) action;
-			b.allExpression(clazz);
+			for(Action a : b.getActions()) {
+				result.addAll(getAllExpression(clazz, a));
+			}
+			//b.allExpression(clazz);
+		} else if (action instanceof VariableAssignment) {
+			VariableAssignment va = (VariableAssignment) action;
+			if(clazz.isInstance(va.getExpression())) {
+				result.add(va.getExpression());
+			}
+		} else if (action instanceof LocalVariable) {
+			LocalVariable lv = (LocalVariable) action;
+			if(clazz.isInstance(lv.getInit())) {
+				result.add(lv.getInit());
+			}
 		}
 		return result;
 	}

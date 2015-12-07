@@ -50,23 +50,30 @@ public class VariableUsage extends Rule {
         return "Check variables and properties.";
     }
 
+    private void check(Variable va, Expression e, Thing t, Checker checker) {
+        Type expected = va.getType().getBroadType();
+        Type actual = checker.typeChecker.computeTypeOf(e);
+        if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
+            if (actual.getName().equals("ERROR_TYPE")) {
+                checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
+            } else if (actual.getName().equals("ANY_TYPE")) {
+                checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
+            } else if (!actual.isA(expected)) {
+                checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
+            }
+        }
+    }
+
     @Override
     public void check(Configuration cfg, Checker checker) {
         for(Thing t : cfg.allThings()) {
             for(Action a : t.allAction(VariableAssignment.class)) {
                 VariableAssignment va = (VariableAssignment)a;
-                Expression e = va.getExpression();
-                Type expected = va.getProperty().getType().getBroadType();
-                Type actual = checker.typeChecker.computeTypeOf(e);
-                if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
-                    if (actual.getName().equals("ERROR_TYPE")) {
-                        checker.addGenericError("Property " + va.getProperty().getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
-                    } else if (actual.getName().equals("ANY_TYPE")) {
-                        checker.addGenericWarning("Property " + va.getProperty().getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
-                    } else if (!actual.isA(expected)) {
-                        checker.addGenericWarning("Property " + va.getProperty().getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
-                    }
-                }
+                check(va.getProperty(), va.getExpression(), t, checker);
+            }
+            for(Action a : t.allAction(LocalVariable.class)) {
+                LocalVariable lv = (LocalVariable) a;
+                check(lv, lv.getInit(), t, checker);
             }
         }
     }
