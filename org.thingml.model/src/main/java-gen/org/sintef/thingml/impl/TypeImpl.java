@@ -78,7 +78,6 @@ public abstract class TypeImpl extends AnnotatedElementImpl implements Type {
 	 * @return
      */
 	public boolean isA(Type t) {
-		System.out.println(getName() + "(" + getBroadType().getName() + ") is a " + t.getName() + "(" + t.getBroadType().getName() + ")?");
 		if (t.getBroadType() == Types.ANY_TYPE)
 			return true;
 		if (getBroadType() == t.getBroadType())

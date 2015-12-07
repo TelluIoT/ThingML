@@ -45,6 +45,9 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		if (result == null) {
+			System.out.println("TODO: Type checking for " + exp.getClass().getName());
+		}
 		return result;
 	}
 	
@@ -231,5 +234,11 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 			}
 		}
 		return Types.ANY_TYPE;
+	}
+
+	@Override
+	public Type caseFunctionCallExpression(FunctionCallExpression object) {
+		Type t = object.getFunction().getType().getBroadType();
+		return t;
 	}
 }

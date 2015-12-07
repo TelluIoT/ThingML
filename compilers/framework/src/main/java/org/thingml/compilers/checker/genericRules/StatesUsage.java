@@ -59,7 +59,7 @@ public class StatesUsage extends Rule {
                     if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
                         checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
                     }
-                    if (s.getOutgoing().size() == 0) {
+                    if (s.getOutgoing().size() == 0 && !EcoreUtil.equals(s, sm)) {
                         checker.addGenericNotice("Sink state " + s.getName() + " in Thing " + t.getName() + ".", s);
                     }
                 }

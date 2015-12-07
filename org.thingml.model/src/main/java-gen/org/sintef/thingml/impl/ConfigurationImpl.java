@@ -922,7 +922,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @return
      */
     private List<Instance> isRequiredBy(Instance cur, List<Connector> Cos, List<Instance> Instances) {
-        System.out.println("I: " + cur.getName());
         List<Instance> res = new LinkedList<Instance>();
         //List<Connector> toBeRemoved = new LinkedList<Connector>();
         Instance needed;
