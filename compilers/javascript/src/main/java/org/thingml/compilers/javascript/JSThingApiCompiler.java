@@ -139,6 +139,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                 builder.append("\" + ");
                 builder.append(ctx.protectKeyword(pa.getName()));
                 builder.append(" + \"");
+                i++;
             }
             builder.append(")\");\n");
         }
