@@ -55,6 +55,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             String cast = "";
             if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("int"))
                 cast = "Integer";
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).contains("."))
+                cast = JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx); //extern datatype with full qualified name
             else
                 cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
             builder.append(", (" + cast + ") params.get(\"" + ctx.protectKeyword(p.getName()) + "\")");
