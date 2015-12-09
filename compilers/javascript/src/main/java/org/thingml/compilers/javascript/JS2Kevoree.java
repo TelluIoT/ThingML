@@ -262,19 +262,42 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         for (Map.Entry e : cfg.danglingPorts().entrySet()) {
             final Instance i = (Instance) e.getKey();
             for (Port p : (List<Port>) e.getValue()) {
-                for (Message m : p.getReceives()) {
-                    builder.append(",\nin_" + shortName(i, p, m) + "_in: function (msg) {\n");
-                    builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(msg.split(';'));\n");
-                    builder.append("}");
+                //builder.append("\n//ThingML connector for port " + p.getName() + " of instance " + i.getName() + "\n");
+                builder.append(",\nin_" + shortName(i, p, null) + "_in: function (msg) {\n");
+                    int j = 0;
+                    for(Message m : p.getReceives()) {
+                        if (j > 0)
+                            builder.append("else ");
+                        builder.append("if(msg.split(':')[0] === '" + m.getName() + "'){\n");
+                        builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(msg.split(':')[1].split(';'));\n");
+                        builder.append("}");
+                        j++;
+                    }
+                builder.append("}");
+
+                for (Message m : p.getSends()) {
+                    builder.append(",\n" + shortName(i, p, m) + "_proxy: function() {this.out_" + shortName(i, p, null) + "_out(");
+                    builder.append("'" + m.getName() + ":'");
+                    for (Parameter pa : m.getParameters()) {
+                        builder.append(" + arguments[" + m.getParameters().indexOf(pa) + "] + ';'");
+                    }
+                    builder.append(");}");
                 }
+                builder.append(",\nout_" + shortName(i, p, null) + "_out: function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
             }
         }
 
-        for (Map.Entry e : cfg.danglingPorts().entrySet()) {
-            final Instance i = (Instance) e.getKey();
-            for (Port p : (List<Port>) e.getValue()) {
-                for (Message m : p.getSends()) {
-                    builder.append(",\n" + shortName(i, p, m) + "_proxy: function() {this.out_" + shortName(i, p, m) + "_out(");
+        for(ExternalConnector c : cfg.getExternalConnectors()) { //External kevoree port should be split (to allow easy integration with external non-HEADS services)
+            //builder.append("\n//External connector for port " + c.getPort().getName() + " of instance " + c.getInst().getInstance().getName() + "\n");
+            if (c.getProtocol().equals("kevoree")) {
+                final Instance i = c.getInst().getInstance();
+                for(Message m : c.getPort().getReceives()) {
+                    builder.append(",\nin_" + shortName(i, c.getPort(), m) + "_in: function (msg) {\n");
+                    builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
+                    builder.append("}");
+                }
+                for(Message m : c.getPort().getSends()) {
+                    builder.append(",\n" + shortName(i, c.getPort(), m) + "_proxy: function() {this.out_" + shortName(i, c.getPort(), m) + "_out(");
                     int index = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (index > 0)
@@ -285,7 +308,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                     if (index > 1)
                         builder.append("''");
                     builder.append(");}");
-                    builder.append(",\nout_" + shortName(i, p, m) + "_out: function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
+                    builder.append(",\nout_" + shortName(i, c.getPort(), m) + "_out: function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
                 }
             }
         }
@@ -355,7 +378,9 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
         result += "_";
 
-        result += m.getName();
+        if (m != null) {
+            result += m.getName();
+        }
 
         return result;
     }

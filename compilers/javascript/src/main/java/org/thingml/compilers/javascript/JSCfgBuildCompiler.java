@@ -93,14 +93,14 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
                 //System.out.println("ADD DEP");
             }
 
-            if(addDebugDeps) {
+            //if(addDebugDeps) {
                 deps.asObject().add("colors", "^1.1.2");
                 //System.out.println("ADD DEBUG");
                 
                 for(Thing t : ctx.getCompiler().getDebugProfiles().keySet()) {
                     //System.out.println("ADD DEBUG t: " +t.getName());
                 }
-            }
+            //}
             
             /*try {
                 System.out.println("fdep: ");
