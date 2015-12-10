@@ -30,6 +30,32 @@ import java.util.Map;
  */
 public class Java2Kevoree extends CfgExternalConnectorCompiler {
 
+    private String shortName(Instance i, Port p, Message m) {
+        String result = "";
+
+        if (i.getName().length() > 3) {
+            result += i.getName().substring(0, 3);
+        } else {
+            result += i.getName();
+        }
+
+        result += "_";
+
+        if (p.getName().length() > 3) {
+            result += p.getName().substring(0, 3);
+        } else {
+            result += p.getName();
+        }
+
+        result += "_";
+
+        if (m != null) {
+            result += m.getName();
+        }
+
+        return result;
+    }
+
     private void generateKevScript(Context ctx, Configuration cfg, String pack) {
         if (cfg.hasAnnotation("kevscript")) {
             try {
@@ -204,7 +230,36 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         }
 
         for(ExternalConnector c : cfg.getExternalConnectors()) {
-            //TODO
+            final Instance i = c.getInst().getInstance();
+            final Port p = c.getPort();
+            for(Message m : p.getSends()) {
+                builder.append("@Output\n");
+                builder.append("private org.kevoree.api.Port " + shortName(i, p, m) + "Port_out;\n");
+            }
+            for (Message m : p.getReceives()) {
+                builder.append("@Input\n");
+                builder.append("public void " + shortName(i, p, m) + "Port(String string) {\n");
+                System.out.println("DEBUG: " + ctx.getInstanceName(i) + " / " + i.getName() + " / " + i.qname("_"));
+                //FIXME: something wtong with External connectors... Instance name is strange... but can be worked around (cf below)
+                builder.append("final Event msg = " + i.getType().getName() + "_" + i.qname("_") + ".get" + ctx.firstToUpper(m.getName()) + "Type().instantiate(" + i.getType().getName() + "_" + i.qname("_") + ".get" + ctx.firstToUpper(p.getName()) + "_port()");
+                for (Parameter pa : m.getParameters()) {
+                    builder.append(", ");
+                    String t = pa.getType().annotation("java_type").toArray()[0].toString();
+                    if (t.equals("int")) builder.append("Integer.parseInteger(");
+                    else if (t.equals("short")) builder.append("Short.parseShort(");
+                    else if (t.equals("long")) builder.append("Long.parseLong(");
+                    else if (t.equals("double")) builder.append("Double.parseDouble(");
+                    else if (t.equals("float")) builder.append(".Float.parseFloat(");
+                    else if (t.equals("byte")) builder.append("Byte.parseByte(");
+                    else if (t.equals("boolean")) builder.append("Boolean.parseBoolean(");
+                    builder.append("string.split(\":\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
+                    if (t.equals("char")) builder.append(".charAt(0)");
+                    else builder.append(")");
+                }
+                builder.append(");\n");
+                builder.append(i.getType().getName() + "_" + i.qname("_") + ".receive(msg, " + i.getType().getName() + "_" + i.qname("_") + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
+                builder.append("}\n");
+            }
         }
 
         builder.append("//Attributes\n");
