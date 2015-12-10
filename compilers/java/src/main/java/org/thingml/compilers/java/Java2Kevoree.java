@@ -104,7 +104,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
 
             pom = pom.replace("<!--PROP-->", "<kevoree.version>5.3.0</kevoree.version>\n<!--PROP-->");
 
-            pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>com.eclipsesource.minimal-json</groupId>\n<artifactId>minimal-json</artifactId>\n<version>0.9.2</version>\n</dependency>\n<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
+            pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
 
 
@@ -149,8 +149,6 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("import org.thingml.java.ext.*;\n");
         builder.append("import " + pack + ".messages.*;\n\n");
 
-        builder.append("import com.eclipsesource.json.JsonObject;\n\n");
-
         builder.append("\n\n");
 
 
@@ -164,8 +162,6 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
             builder.append("private " + ctx.firstToUpper(i.getType().getName()) + " " + ctx.getInstanceName(i) + ";\n");
         }
 
-
-        builder.append("//Output ports (dangling ports in the ThingML configuration)\n");
         for (Map.Entry<Instance, List<Port>> entry : cfg.danglingPorts().entrySet()) {
             Instance i = entry.getKey();
             List<Port> ports = entry.getValue();
@@ -174,57 +170,42 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                     builder.append("@Output\n");
                     builder.append("private org.kevoree.api.Port " + i.getName() + "_" + p.getName() + "Port_out;\n");
                 }
-            }
-        }
-
-        //FIXME: [NOT URGENT] merge with previous loop + temp builder to avoid browsing the map twice
-        for (Map.Entry<Instance, List<Port>> entry : cfg.danglingPorts().entrySet()) {
-            Instance i = entry.getKey();
-            List<Port> ports = entry.getValue();
-            for (Port p : ports) {
                 if (p.getReceives().size() > 0) {
                     builder.append("@Input\n");
                     builder.append("public void " + i.getName() + "_" + p.getName() + "Port(String string) {\n");
-                    builder.append("final JsonObject json = JsonObject.readFrom(string);\n");
-                    //builder.append("if (json.get(\"port\").asString().equals(\"" + p.getName() + "_c\")) {\n"); //might be a redundant check
                     int id = 0;
                     for (Message m : p.getReceives()) {
                         if (id > 0)
                             builder.append("else ");
-                        builder.append("if (json.get(\"message\").asString().equals(\"" + m.getName() + "\")) {\n");
+                        builder.append("if (string.split(\":\")[0].equals(\"" + m.getName() + "\")) {\n");
                         builder.append("final Event msg = " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(m.getName()) + "Type().instantiate(" + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port()");
-
                         for (Parameter pa : m.getParameters()) {
-
-                            builder.append(", (" + pa.getType().annotation("java_type").toArray()[0] + ") json.get(\"" + pa.getName() + "\")");
-
-                            if (pa.getType().getName().equals("JSON")) {
-                                builder.append(".asObject().toString()");
-                            } else {
-                                String t = pa.getType().annotation("java_type").toArray()[0].toString();
-                                // switch ((String) pa.getType().annotation("java_type").toArray()[0]) {
-                                if (t.equals("int")) builder.append(".asInt()");
-                                else if (t.equals("short")) builder.append(".asInt()");
-                                else if (t.equals("long")) builder.append(".asLong()");
-                                else if (t.equals("double")) builder.append(".asDouble()");
-                                else if (t.equals("float")) builder.append(".asFloat()");
-                                else if (t.equals("char")) builder.append(".asString().charAt(0)");
-                                else if (t.equals("String")) builder.append(".asString()");
-                                else if (t.equals("byte")) builder.append(".asString().getBytes[0]");
-                                else if (t.equals("boolean")) builder.append(".asBoolean()");
-                            }
+                            builder.append(", ");
+                            String t = pa.getType().annotation("java_type").toArray()[0].toString();
+                            if (t.equals("int")) builder.append("Integer.parseInteger(");
+                            else if (t.equals("short")) builder.append("Short.parseShort(");
+                            else if (t.equals("long")) builder.append("Long.parseLong(");
+                            else if (t.equals("double")) builder.append("Double.parseDouble(");
+                            else if (t.equals("float")) builder.append(".Float.parseFloat(");
+                            else if (t.equals("byte")) builder.append("Byte.parseByte(");
+                            else if (t.equals("boolean")) builder.append("Boolean.parseBoolean(");
+                            builder.append("string.split(\":\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
+                            if (t.equals("char")) builder.append(".charAt(0)");
+                            else builder.append(")");
                         }
                         builder.append(");\n");
                         builder.append(ctx.getInstanceName(i) + ".receive(msg, " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
                         builder.append("}\n");
                         id = id + 1;
                     }
-                    //builder.append("}\n");
                     builder.append("}\n\n");
                 }
             }
         }
 
+        for(ExternalConnector c : cfg.getExternalConnectors()) {
+            //TODO
+        }
 
         builder.append("//Attributes\n");
         for (Instance i : cfg.allInstances()) {
@@ -268,63 +249,48 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("initThingML();\n");
         builder.append("}\n\n");
 
-
         builder.append("//Instantiates ThingML component instances and connectors\n");
         builder.append("private void initThingML() {\n");
         JavaCfgMainGenerator.generateInstances(cfg, ctx, builder);
 
+
+        StringBuilder tempBuilder = new StringBuilder();
         for (Map.Entry<Instance, List<Port>> e : cfg.danglingPorts().entrySet()) {
             final Instance i = e.getKey();
             final List<Port> ports = e.getValue();
             for (Port p : ports) {
                 if (p.getSends().size() > 0) {
-                    builder.append("final I" + i.getType().getName() + "_" + p.getName() + "Client " + i.getName() + "_" + p.getName() + "_listener = new I" + i.getType().getName() + "_" + p.getName() + "Client(){\n");
+                    tempBuilder.append("final I" + i.getType().getName() + "_" + p.getName() + "Client " + i.getName() + "_" + p.getName() + "_listener = new I" + i.getType().getName() + "_" + p.getName() + "Client(){\n");
                     for (Message m : p.getSends()) {
-                        builder.append("@Override\n");
-                        builder.append("public void " + m.getName() + "_from_" + p.getName() + "(");
+                        tempBuilder.append("@Override\n");
+                        tempBuilder.append("public void " + m.getName() + "_from_" + p.getName() + "(");
                         int id = 0;
                         for (Parameter pa : m.getParameters()) {
                             if (id > 0)
-                                builder.append(", ");
-                            builder.append(JavaHelper.getJavaType(pa.getType(), pa.isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                                tempBuilder.append(", ");
+                            tempBuilder.append(JavaHelper.getJavaType(pa.getType(), pa.isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
 //                            builder.append(JavaHelper.getJavaType(pa.getType(), pa.getCardinality() != null, ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
                             id++;
                         }
-                        builder.append(") {\n");
-                        builder.append("final String msg = \"{\\\"message\\\":\\\"" + m.getName() + "\\\",\\\"port\\\":\\\"" + p.getName() + "_c" + "\\\"");
+                        tempBuilder.append(") {\n");
+                        tempBuilder.append("final String msg = \"" + m.getName() + ":\"");
                         for (Parameter pa : m.getParameters()) {
-                            boolean isString = pa.getType().isDefined("java_type", "String");
-                            boolean isChar = pa.getType().isDefined("java_type", "char");
-                            boolean isArray = (pa.getCardinality() != null);
-                            boolean isJSON = pa.getType().getName().equals("JSON");
-
-                            builder.append(", \\\"" + pa.getName() + "\\\":");
-                            if (isArray) builder.append("[");
-                            if ((isString || isChar) && !isJSON) builder.append("\\\"\"");
-                            else builder.append("\"");
-                            builder.append(" + " + ctx.protectKeyword(ctx.getVariableName(pa)));
-                            if (isString) builder.append(".replace(\"\\n\", \"\\\\n\")");
-                            builder.append(" + ");
-                            if ((isString || isChar) && !isJSON) builder.append("\"\\\"");
-                            else builder.append("\"");
-                            if (isArray) builder.append("]");
+                            tempBuilder.append(" + " + ctx.protectKeyword(ctx.getVariableName(pa)));
                         }
-                        builder.append("}\";\n");
-                        builder.append("try {\n");
-                        builder.append(i.getName() + "_" + p.getName() + "Port_out.send(msg, null);\n");
-                        builder.append("} catch(NullPointerException npe) {\n");
-                        builder.append("Log.warn(\"Port " + i.getName() + "_" + p.getName() + "Port_out is not connected.\\nMessage \" + msg + \" has been lost.\\nConnect a channel (and maybe restart your component " + cfg.getName() + ")\");\n");
-                        builder.append("}\n");
-                        builder.append("}\n");
+                        tempBuilder.append(";\n");
+                        tempBuilder.append("try {\n");
+                        tempBuilder.append(i.getName() + "_" + p.getName() + "Port_out.send(msg, null);\n");
+                        tempBuilder.append("} catch(NullPointerException npe) {\n");
+                        tempBuilder.append("Log.warn(\"Port " + i.getName() + "_" + p.getName() + "Port_out is not connected.\\nMessage \" + msg + \" has been lost.\\nConnect a channel (and maybe restart your component " + cfg.getName() + ")\");\n");
+                        tempBuilder.append("}\n}\n");
                     }
-                    builder.append("};\n");
+                    tempBuilder.append("};\n");
                     builder.append(ctx.getInstanceName(i) + ".registerOn" + ctx.firstToUpper(p.getName()) + "(" + i.getName() + "_" + p.getName() + "_listener);\n");
                 }
             }
         }
-
-        builder.append("}\n\n");
-
+        builder.append("}");
+        builder.append(tempBuilder.toString());
 
         builder.append("@Start\n");
         builder.append("public void startComponent() {\n");
@@ -343,20 +309,6 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         }
         builder.append("}\n\n");
         builder.append("}\n");
-
-
-        final String file_name = "K" + ctx.firstToUpper(cfg.getName());
-        final String code = builder.toString();
-
-        /*try {
-            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDir() + "/" + file_name + ".java")));
-            System.out.println("code generated at " + ctx.getOutputDir() + "/" + file_name + ".java");
-            w.println(code);
-            w.close();
-        } catch (Exception e){
-            System.err.println("Problem while saving generating Kevoree code: " + e.getMessage());
-            e.printStackTrace();
-        }*/
     }
 
     @Override
