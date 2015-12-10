@@ -269,8 +269,13 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                         if (j > 0)
                             builder.append("else ");
                         builder.append("if(msg.split(':')[0] === '" + m.getName() + "'){\n");
-                        builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(msg.split(':')[1].split(';'));\n");
-                        builder.append("}");
+                        builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(");
+                        for(Parameter pa : m.getParameters()) {
+                            if (m.getParameters().indexOf(pa) > 0)
+                                builder.append(", ");
+                            builder.append("msg.split(':')[1].split(';')[" + m.getParameters().indexOf(pa) + "]");
+                        }
+                        builder.append(");\n}\n");
                         j++;
                     }
                 builder.append("}");
