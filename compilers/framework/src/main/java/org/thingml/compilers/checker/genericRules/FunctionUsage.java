@@ -86,15 +86,21 @@ public class FunctionUsage extends Rule {
             for(Function f : t.allFunctions()) {
                 boolean found = false;
                 for(Action b : t.allAction(FunctionCallStatement.class)) {
-                    FunctionCall a = (FunctionCall) b;
-                    if (check(checker, t, a.getFunction(), a.getParameters(), f)) {
-                        found = true;
+                    //FIXME brice
+                    if(b instanceof FunctionCallStatement) {
+                        FunctionCall a = (FunctionCall) b;
+                        if (check(checker, t, a.getFunction(), a.getParameters(), f)) {
+                            found = true;
+                        }
                     }
                 }
                 for(Expression b : t.allExpression(FunctionCallExpression.class)) {
-                    FunctionCallExpression a = (FunctionCallExpression) b;
-                    if (check(checker, t, a.getFunction(), a.getParameters(), f)) {
-                        found = true;
+                    //FIXME brice
+                    if(b instanceof FunctionCallExpression) {
+                        FunctionCallExpression a = (FunctionCallExpression) b;
+                        if (check(checker, t, a.getFunction(), a.getParameters(), f)) {
+                            found = true;
+                        }
                     }
                 }
                 if (!found)

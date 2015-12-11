@@ -68,12 +68,18 @@ public class VariableUsage extends Rule {
     public void check(Configuration cfg, Checker checker) {
         for(Thing t : cfg.allThings()) {
             for(Action a : t.allAction(VariableAssignment.class)) {
-                VariableAssignment va = (VariableAssignment)a;
-                check(va.getProperty(), va.getExpression(), t, checker);
+                //FIXME @Brice see testIfElse
+                if(a instanceof VariableAssignment) {
+                    VariableAssignment va = (VariableAssignment)a;
+                    check(va.getProperty(), va.getExpression(), t, checker);
+                }
             }
             for(Action a : t.allAction(LocalVariable.class)) {
-                LocalVariable lv = (LocalVariable) a;
-                check(lv, lv.getInit(), t, checker);
+                //FIXME @Brice see testIfElse
+                if(a instanceof LocalVariable) {
+                    LocalVariable lv = (LocalVariable) a;
+                    check(lv, lv.getInit(), t, checker);
+                }
             }
         }
     }
