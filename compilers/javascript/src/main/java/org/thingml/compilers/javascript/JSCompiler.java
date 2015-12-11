@@ -103,7 +103,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;
                 ctx.addContextAnnotation("hasEnum", "true");
-                StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/enums.js"); //FIXME: this code should be integrated into the compilation framework
+                StringBuilder builder = ctx.getBuilder("enums.js"); //FIXME: this code should be integrated into the compilation framework
                 builder.append("// Definition of Enumeration  " + e.getName() + "\n");
                 builder.append("var " + e.getName() + "_ENUM = {\n");
                 int i = 0;
