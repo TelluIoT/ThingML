@@ -47,6 +47,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 		}
 		if (result == null) {
 			System.out.println("TODO: Type checking for " + exp.getClass().getName());
+			return Types.ANY_TYPE;
 		}
 		return result;
 	}
