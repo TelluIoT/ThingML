@@ -28,10 +28,10 @@ testLanguages.append("Java")
 #Functional tests options
 #If useBlacklist is True, runs all tests not present in blacklist
 #If useBlacklist is False, runs all tests present in whitelist
-useBlacklist = True
+useBlacklist = False
 
 blacklist=[]
 #blacklist=["testMixStreamsAndEvent", "testLengthSimpleSource",  "testStreams", "testSimpleFilter", "testJoinFilter", "testDeepCompositeStatesWithStream", "testHistoryStatesWithStream", "testMergeStreams", "testMergeFilter"]
-whitelist=["testStreams", "testVariables", "testArrays2", "testMergeStreams", "testEnumeration"]
+#whitelist=["testStreams", "testVariables", "testArrays2", "testMergeStreams", "testEnumeration"]
 #whitelist=["testIfElse", "testVariables", "testArrays2", "testMaskProperty"]
-
+whitelist=["testOnExit", "testMultiServerPing", "testSerialization"]

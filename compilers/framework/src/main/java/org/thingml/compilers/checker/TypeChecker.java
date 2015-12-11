@@ -40,7 +40,10 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 	public Type computeTypeOf(Expression exp) {
 		Type result = null;
 		try {
-			result = doSwitch(exp);
+                    if(exp == null) { //FIXME brice
+                       return Types.ANY_TYPE; 
+                    }
+                    result = doSwitch(exp);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
