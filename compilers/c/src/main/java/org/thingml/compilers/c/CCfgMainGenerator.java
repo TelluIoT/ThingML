@@ -1721,12 +1721,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }*/
         }
         
-
-            
-        //New Empty Event Handler
-        builder.append("int emptyEventConsumed = 1;\n");
-        builder.append("while (emptyEventConsumed != 0) {\n");
-        builder.append("emptyEventConsumed = 0;\n");
+        if(ctx.getCompiler().getID().compareTo("arduino") != 0) { //FIXME Nicolas This code is awfull
+            //New Empty Event Handler
+            builder.append("int emptyEventConsumed = 1;\n");
+            builder.append("while (emptyEventConsumed != 0) {\n");
+            builder.append("emptyEventConsumed = 0;\n");
+        }
         
         // Call empty transition handler (if needed)
         for (Instance i : cfg.allInstances()) {
@@ -1734,14 +1734,19 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             if (i.getType().allStateMachines().size() > 0) { // There has to be only 1
                 StateMachine sm = i.getType().allStateMachines().get(0);
                 if (sm.hasEmptyHandlers()) {
-                    builder.append("emptyEventConsumed += ");
+                    if(ctx.getCompiler().getID().compareTo("arduino") != 0) {
+                        builder.append("emptyEventConsumed += ");
+                    }
                     builder.append(ctx.getEmptyHandlerName(i.getType()) + "(&" + ctx.getInstanceVarName(i) + ");\n");
                 }
             }
 
 
         }
-        builder.append("}\n");
+        
+        if(ctx.getCompiler().getID().compareTo("arduino") != 0) {
+            builder.append("}\n");
+        }
 
     }
 
