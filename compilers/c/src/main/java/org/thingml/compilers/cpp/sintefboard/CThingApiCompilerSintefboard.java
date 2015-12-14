@@ -36,21 +36,5 @@ public class CThingApiCompilerSintefboard extends CThingApiCompiler {
         return "/*CFG_CPPNAME_SCOPE*/";
     }
 
-    @Override
-    protected void generatePublicMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        builder.append("// Declaration of callbacks for incoming messages:\n");
-        for(Port port : thing.allPorts()) {
-            for (Message msg : port.getSends()) {
-                builder.append("void register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
-                builder.append("void (" + getCppNameScope() + "*_listener)");
-                ctx.appendFormalTypeSignature(thing, builder, msg);
-                builder.append(");\n");
-
-            }
-        }
-        builder.append("\n");
-    }
-
-
 
 }

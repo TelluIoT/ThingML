@@ -210,17 +210,18 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("// Declaration of callbacks for incoming messages:\n");
         for(Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
-                builder.append("void register_" + ctx.getSenderName(thing, port, msg) + getCppNameScope() + "_listener(");
-                builder.append("void (*_listener)");
+                builder.append("void register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
+                builder.append("void (" + getCppNameScope() + "*_listener)");
                 ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append(");\n");
 
                 //external
-                builder.append("void register_external_" + ctx.getSenderName(thing, port, msg) + getCppNameScope() + "_listener(");
-                builder.append("void (*_listener)");
+                builder.append("void register_external_" + ctx.getSenderName(thing, port, msg) + "_listener(");
+                builder.append("void (" + getCppNameScope() + "*_listener)");
                 ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append(");\n");
 
+               
             }
         }
         builder.append("\n");
@@ -238,7 +239,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
             
             // Add handler for empty transitions if needed - Added by sdalgard
             if (sm.hasEmptyHandlers()) {
-                builder.append("void " + ctx.getEmptyHandlerName(thing));
+                builder.append("int " + ctx.getEmptyHandlerName(thing));
                 ctx.appendFormalParametersEmptyHandler(thing, builder);
                 builder.append(";\n");
             }
@@ -279,7 +280,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
                 builder.append(";\n");
 
                 // Variable for the external function pointer
-                builder.append("void (*external_" + getCppNameScope() + "*" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                builder.append("void (" + getCppNameScope() + "*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
                 ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append(";\n");
 
