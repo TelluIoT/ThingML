@@ -15,11 +15,16 @@
  */
 package org.thingml.compilers.java;
 
+import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -220,6 +225,10 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         builder.append(" {\n\n");
+
+        builder.append("private List<AttributeListener> attListener = new ArrayList<AttributeListener>();\n");
+        builder.append("public void addAttributeListener(AttributeListener listener){\nthis.attListener.add(listener);\n}\n\n");
+        builder.append("public void removeAttributeListener(AttributeListener listener){\nthis.attListener.remove(listener);\n}\n\n");
 
         builder.append("private boolean debug = false;\n");
         builder.append("public boolean isDebug() {return debug;}\n");

@@ -81,6 +81,11 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
             kevScript.append("//create a default Java node\n");
             kevScript.append("add node0 : JavaNode\n");
             kevScript.append("set node0.log = \"false\"\n");
+            for (String k : ctx.getCurrentConfiguration().annotation("kevscript_import")) {
+                kevScript.append(k);
+            }
+            if (ctx.getCurrentConfiguration().hasAnnotation("kevscript_import"))
+                kevScript.append("\n");
 
             kevScript.append("//create a default group to manage the node(s)\n");
             kevScript.append("add sync : WSGroup\n");
@@ -179,7 +184,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
 
 
         builder.append("@ComponentType\n ");
-        builder.append("public class K" + ctx.firstToUpper(cfg.getName()) + "{//The Kevoree component wraps the whole ThingML configuration " + cfg.getName() + "\n");
+        builder.append("public class K" + ctx.firstToUpper(cfg.getName()) + " implements AttributeListener {//The Kevoree component wraps the whole ThingML configuration " + cfg.getName() + "\n");
 
 
         builder.append("//Things\n");
@@ -240,7 +245,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                 builder.append("@Input\n");
                 builder.append("public void " + shortName(i, p, m) + "Port(String string) {\n");
                 System.out.println("DEBUG: " + ctx.getInstanceName(i) + " / " + i.getName() + " / " + i.qname("_"));
-                //FIXME: something wtong with External connectors... Instance name is strange... but can be worked around (cf below)
+                //FIXME: something wrong with External connectors... Instance name is strange... but can be worked around (cf below)
                 builder.append("final Event msg = " + i.getType().getName() + "_" + i.qname("_") + ".get" + ctx.firstToUpper(m.getName()) + "Type().instantiate(" + i.getType().getName() + "_" + i.qname("_") + ".get" + ctx.firstToUpper(p.getName()) + "_port()");
                 for (Parameter pa : m.getParameters()) {
                     builder.append(", ");
@@ -307,8 +312,9 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("//Instantiates ThingML component instances and connectors\n");
         builder.append("private void initThingML() {\n");
         JavaCfgMainGenerator.generateInstances(cfg, ctx, builder);
-
-
+        for(Instance i : cfg.allInstances()) {
+            builder.append(ctx.getInstanceName(i) + ".addAttributeListener(this);\n");
+        }
         StringBuilder tempBuilder = new StringBuilder();
         for (Map.Entry<Instance, List<Port>> e : cfg.danglingPorts().entrySet()) {
             final Instance i = e.getKey();
@@ -346,6 +352,23 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         }
         builder.append("}");
         builder.append(tempBuilder.toString());
+
+        builder.append("@Override\npublic void onUpdate(String instance, String attribute, Object value){\n");
+        int index = 0;
+        for(Instance i : cfg.allInstances()) {
+            if (index > 0)
+                builder.append("else ");
+            builder.append("if(instance.equals(" + ctx.getInstanceName(i) + ".getName())){\n");
+            for (Property p : i.getType().allPropertiesInDepth()) {
+                if (p.isDefined("kevoree", "instance")) {
+
+                } else if (p.isDefined("kevoree", "merge")) {
+                    //TODO
+                }
+            }
+            builder.append("}\n");
+        }
+        builder.append("}\n\n");
 
         builder.append("@Start\n");
         builder.append("public void startComponent() {\n");
