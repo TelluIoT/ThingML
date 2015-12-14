@@ -989,6 +989,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                             builder.append(ctx.getHandlerName(myReceiver.getKey().getType(), myReceiver.getValue(), m));
                             ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(myReceiver.getKey()));
                             builder.append(";\n");
+                            //builder.append("//TODEBUG " + myReceiver.getKey().getName() + "\n");
                         }
                     }
                     builder.append("\n}\n");
@@ -1007,8 +1008,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     StateMachine sm = eco.getInst().getInstance().getType().allStateMachines().get(0);
                     if (sm.canHandle(eco.getPort(), m)) {
                         builder.append(ctx.getHandlerName(eco.getInst().getInstance().getType(), eco.getPort(), m));
-                        ctx.appendActualParametersForDispatcher(eco.getInst().getInstance().getType(), builder, m, "&" + ctx.getInstanceVarName(eco.getInst().getInstance()));
+                        ctx.appendActualParametersForDispatcher(eco.getInst().getInstance().getType(), builder, m, "&" + cfg.getName() + "_" + ctx.getInstanceVarName(eco.getInst().getInstance()));
                         builder.append(";\n");
+                        //builder.append("//TODEBUG " + eco.getInst().getInstance().getName() + "\n");
                     }
                     builder.append("\n}\n");
                 }
@@ -1345,30 +1347,30 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         int head = nbConnectorSoFar;
 
+        if(cfg.hasAnnotation("c_dyn_connectors")) {
+            if(!eco.getPort().getReceives().isEmpty()) {
+                //    && (!co.getRequired().getReceives().isEmpty())) {
+                builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
+                builder.append(cfg.getName() + "_" + eco.getInst().getInstance().getName()
+                        + "_" + eco.getPort().getName() + "_handlers;\n");
+                nbConnectorSoFar++;
+            }
 
-        if(!eco.getPort().getReceives().isEmpty()) {
-            //    && (!co.getRequired().getReceives().isEmpty())) {
-            builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
-            builder.append(cfg.getName() + "_" + eco.getInst().getInstance().getName()
-                    + "_" + eco.getPort().getName() + "_handlers;\n");
-            nbConnectorSoFar++;
-        }
-
-        if(head != nbConnectorSoFar) {
-            builder.append(portName + "_instance." + p.getName() + "_receiver_list_head = &");
-            builder.append(cfg.getName() + "_receivers[" + head + "];\n");
-            builder.append(portName + "_instance." + p.getName() + "_receiver_list_tail = &");
-            builder.append(cfg.getName() + "_receivers[" + (nbConnectorSoFar - 1) + "];\n");
-        } else {
-            if(!p.getReceives().isEmpty()) {
-                //Case where the port could sends messages but isn't connected
-                builder.append(portName + "_instance." + p.getName() + "_receiver_list_head = ");
-                builder.append("NULL;\n");
-                builder.append(portName + "_instance." + p.getName() + "_receiver_list_tail = &");
+            if(head != nbConnectorSoFar) {
+                builder.append(portName + "_instance." + p.getName() + "_receiver_list_head = &");
                 builder.append(cfg.getName() + "_receivers[" + head + "];\n");
-                }
+                builder.append(portName + "_instance." + p.getName() + "_receiver_list_tail = &");
+                builder.append(cfg.getName() + "_receivers[" + (nbConnectorSoFar - 1) + "];\n");
+            } else {
+                if(!p.getReceives().isEmpty()) {
+                    //Case where the port could sends messages but isn't connected
+                    builder.append(portName + "_instance." + p.getName() + "_receiver_list_head = ");
+                    builder.append("NULL;\n");
+                    builder.append(portName + "_instance." + p.getName() + "_receiver_list_tail = &");
+                    builder.append(cfg.getName() + "_receivers[" + head + "];\n");
+                    }
+            }
         }
-        
         return nbConnectorSoFar;
     }
 
