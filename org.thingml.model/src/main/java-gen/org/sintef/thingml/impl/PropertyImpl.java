@@ -268,7 +268,7 @@ public class PropertyImpl extends VariableImpl implements Property {
      * @generated NOT
      */
     public List<PlatformAnnotation> allAnnotations() {
-        return this.annotations;
+        return this.getAnnotations();
     }
 
     /**
