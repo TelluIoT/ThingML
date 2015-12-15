@@ -17,11 +17,13 @@ package org.thingml.compilers.java;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -155,6 +157,45 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         }
     }
 
+    private void generateAttribute(StringBuilder builder, Context ctx, Configuration cfg, Property p, Instance i, boolean isGlobal) {
+        builder.append("@Param ");
+        final Expression e = cfg.initExpressions(i, p).get(0);
+        if (e != null) {
+            builder.append("(defaultValue = \"");
+            ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+            builder.append("\")");
+        }
+        if (!isGlobal)
+            builder.append("\nprivate " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + i.getName() + "_" + ctx.getVariableName(p));
+        else
+            builder.append("\nprivate " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p));
+        if (e != null) {
+            builder.append(" = ");
+            ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+        }
+        builder.append(";\n");
+        builder.append("//Getters and Setters for non readonly/final attributes\n");
+        if(!isGlobal) {
+            builder.append("public " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + i.getName() + "_" + ctx.getVariableName(p) + ";\n}\n\n");
+            builder.append("public void set" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + "){\n");
+            builder.append("this." + i.getName() + "_" + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
+            builder.append("this." + ctx.getInstanceName(i) + ".set" + i.getType().getName() + "_" + p.getName() + "__var(" + ctx.getVariableName(p) + ");\n");
+            builder.append("}\n\n");
+        } else {
+            builder.append("public " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p) + ";\n}\n\n");
+            builder.append("public void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + "){\n");
+            builder.append("this." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
+            for (Instance i2 : cfg.allInstances()) {
+                for (Property p2 : i2.getType().allPropertiesInDepth()) {
+                    if (EcoreUtil.equals(p, p2)) {
+                        builder.append("this." + ctx.getInstanceName(i2) + ".set" + i.getType().getName() + "_" + p.getName() + "__var(" + ctx.getVariableName(p) + ");\n");
+                    }
+                }
+            }
+            builder.append("}\n\n");
+        }
+    }
+
     private void generateWrapper(Context ctx, Configuration cfg, String pack) {
         //final String pack = ctx.getContextAnnotation("package").orElse("org.thingml.generated");
 
@@ -266,43 +307,21 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                 builder.append("}\n");
             }
         }
-
+        
+        List<String> attributes = new ArrayList<String>();
         builder.append("//Attributes\n");
         for (Instance i : cfg.allInstances()) {
-
             for (Property p : i.getType().allPropertiesInDepth()) {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
-                    builder.append("@Param ");
-                    final Expression e = cfg.initExpressions(i, p).get(0);
-                    if (e != null) {
-                        builder.append("(defaultValue = \"");
-                        ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
-                        builder.append("\")");
+                    if (p.isDefined("kevoree", "instance")) {
+                        generateAttribute(builder, ctx, cfg, p, i, false);
+                    } else if ((p.isDefined("kevoree", "merge") || p.isDefined("kevoree", "only")) && !attributes.contains(p.getName())) {
+                        generateAttribute(builder, ctx, cfg, p, i, true);
+                        attributes.add(p.getName());
                     }
-                    builder.append("\nprivate " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + i.getName() + "_" + ctx.getVariableName(p));
-//                    builder.append("\nprivate " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + i.getName() + "_" + ctx.getVariableName(p));
-                    if (e != null) {
-                        builder.append(" = ");
-                        ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
-                    }
-                    builder.append(";\n");
                 }
             }
-
-            builder.append("//Getters and Setters for non readonly/final attributes\n");
-            for (Property p : i.getType().allPropertiesInDepth()) {
-                if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
-                    builder.append("public " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + i.getName() + "_" + ctx.getVariableName(p) + ";\n}\n\n");
-//                    builder.append("public " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + i.getName() + "_" + ctx.getVariableName(p) + ";\n}\n\n");
-                    builder.append("public void set" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + "){\n");
-                    builder.append("this." + i.getName() + "_" + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
-                    builder.append("this." + ctx.getInstanceName(i) + ".set" + i.getType().getName() + "_" + p.getName() + "__var(" + ctx.getVariableName(p) + ");\n");
-                    builder.append("}\n\n");
-                }
-            }
-
         }
-
 
         builder.append("//Empty Constructor\n");
         builder.append("public K" + ctx.firstToUpper(cfg.getName()) + "() {\n");
