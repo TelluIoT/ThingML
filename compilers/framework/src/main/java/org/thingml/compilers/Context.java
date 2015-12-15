@@ -28,6 +28,7 @@ import java.util.*;
 import org.sintef.thingml.Function;
 import org.sintef.thingml.InternalTransition;
 import org.sintef.thingml.Message;
+import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Region;
 import org.sintef.thingml.State;
@@ -63,6 +64,14 @@ public class Context {
                 return false;
         }
         return true;
+    }
+
+    public boolean containsParam(List<Parameter> list, Parameter element) {
+        for(Parameter e : list) {
+            if (EcoreUtil.equals(e, element))
+                return true;
+        }
+        return false;
     }
 
     public Context(ThingMLCompiler compiler) {

@@ -53,6 +53,8 @@ void /*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size) {
   /*PORT_NAME*/.write(/*PORT_NAME*/_STOP_BYTE);
 }
 
+/*PARSER_IMPLEMENTATION*/
+
 void /*PORT_NAME*/_read() {
   byte limit = 0;
   while ((/*PORT_NAME*/.available()) && (limit < /*PORT_NAME*/_LIMIT_BYTE_PER_LOOP)) {
@@ -73,7 +75,8 @@ void /*PORT_NAME*/_read() {
         } else {
           if(/*PORT_NAME*/_incoming == /*PORT_NAME*/_STOP_BYTE) {
             /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_IDLE;
-            externalMessageEnqueue(/*PORT_NAME*/_serialBuffer, /*PORT_NAME*/_serialMsgSize, /*PORT_NAME*/_instance.listener_id);
+            /*PARSER_CALL*/
+            //externalMessageEnqueue(/*PORT_NAME*/_serialBuffer, /*PORT_NAME*/_serialMsgSize, /*PORT_NAME*/_instance.listener_id);
             
           } else if (/*PORT_NAME*/_incoming == /*PORT_NAME*/_ESCAPE_BYTE) {
             /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_ESCAPE;

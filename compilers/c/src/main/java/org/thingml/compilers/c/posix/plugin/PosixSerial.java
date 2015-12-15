@@ -27,18 +27,24 @@ import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CMessageSerializer;
+import org.thingml.compilers.c.plugin.CByteArraySerializer;
 
 /**
  *
  * @author sintef
  */
 public class PosixSerial extends CNetworkLibraryGenerator {
+    
+    CMessageSerializer ser;
 
     public PosixSerial(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
+        this.ser = new CByteArraySerializer(ctx, cfg);
     }
     public PosixSerial(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
+        this.ser = new CByteArraySerializer(ctx, cfg);
     }
 
     @Override
@@ -139,6 +145,17 @@ public class PosixSerial extends CNetworkLibraryGenerator {
                 eco_instance.append(p.getName());
                 eco_instance.append("_receiver_list_tail;\n");
             }
+            
+            //De Serializer 
+            StringBuilder ParserImplementation = new StringBuilder();
+            
+            ser.generateMessageParser(eco, ParserImplementation);
+            ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", ParserImplementation);
+            
+            String ParserCall = portName + "_parser(serialBuffer, serialMsgSize, " + portName + "_instance.listener_id);";
+            ctemplate = ctemplate.replace("/*PARSER_CALL*/", ParserCall);
+            //End De Serializer
+            
             Integer traceLevel;
             if(eco.hasAnnotation("trace_level")) {
                 traceLevel = Integer.parseInt(eco.annotation("trace_level").iterator().next());
@@ -184,4 +201,8 @@ public class PosixSerial extends CNetworkLibraryGenerator {
         }
     }
     
+    @Override
+    public void generateMessageForwarders(StringBuilder builder) {
+        super.generateMessageForwarders(builder, ser);
+    }
 }

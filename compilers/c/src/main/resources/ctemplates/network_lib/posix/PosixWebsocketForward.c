@@ -93,53 +93,40 @@ static int /*PORT_NAME*/_callback_ThingML_protocol(struct libwebsocket_context *
             int len = strlen((char *) in);
             /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] l:%i\n", len);
             if ((len % 3) == 0) {
-                    unsigned char msg[len % 3];
-                    unsigned char * p = in;
+                unsigned char msg[len % 3];
+                unsigned char * p = in;
 
-                    int buf = 0;
-                    int index = 0;
-                    bool everythingisfine = true;
-                    while ((index < len) && everythingisfine) {
-                            if((*p - 48) < 10) {
-                                    buf = (*p - 48) + 10 * buf;
-                            } else {
-                                    everythingisfine = false;
-                            }
-                            if ((index % 3) == 2) {
-                                    if(buf < 256) {
-                                            msg[(index-2) / 3] =  (uint8_t) buf;
-                                    } else {
-                                            everythingisfine = false;
-                                    }
-                                    buf = 0;
-                            }
-                            index++;
-                            p++;
-                    }
-                    if(everythingisfine) {
-                            int j;
-                            externalMessageEnqueue(msg, (len / 3), /*PORT_NAME*/_instance.listener_id);
-                            /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Message received\n");
-
+                int buf = 0;
+                int index = 0;
+                bool everythingisfine = true;
+                while ((index < len) && everythingisfine) {
+                    if((*p - 48) < 10) {
+                        buf = (*p - 48) + 10 * buf;
                     } else {
-                            /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] incorrect message '%s'\n", (char *) in);
+                        everythingisfine = false;
                     }
+                    if ((index % 3) == 2) {
+                        if(buf < 256) {
+                                msg[(index-2) / 3] =  (uint8_t) buf;
+                        } else {
+                                everythingisfine = false;
+                        }
+                        buf = 0;
+                    }
+                    index++;
+                    p++;
+                }
+                if(everythingisfine) {
+                    int j;
+                    externalMessageEnqueue(msg, (len / 3), /*PORT_NAME*/_instance.listener_id);
+                    /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Message received\n");
+
+                } else {
+                    /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] incorrect message '%s'\n", (char *) in);
+                }
             } else {
                 /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] incorrect message '%s'\n", (char *) in);
             }
-
-
-			
-          
-            // send response
-            // just notice that we have to tell where exactly our response starts. That's
-            // why there's `buf[LWS_SEND_BUFFER_PRE_PADDING]` and how long it is.
-            // we know that our response has the same length as request because
-            // it's the same message in reverse order.
-            //libwebsocket_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], len, LWS_WRITE_TEXT);
-           
-            // release memory back into the wild
-            //free(buf);
             break;
         }
 		
@@ -239,9 +226,7 @@ void /*PORT_NAME*/_forwardMessage(char * msg, int length/*PARAM_CLIENT_ID*/) {
 	unsigned char *q = p;
 	n = 0;
 	for(i = 0; i < length; i++) {
-		//printf("%03i -> ", (unsigned char) msg[i]);
 		n += sprintf((unsigned char *)q, "%03i", (unsigned char) msg[i]);
-		//printf("%s\n", q);
 		n--;
 		q += 3;
 	}
@@ -251,8 +236,5 @@ void /*PORT_NAME*/_forwardMessage(char * msg, int length/*PARAM_CLIENT_ID*/) {
 
 
         /*SENDING_BROADCAST_OR_NOT*/
-	//for(i = 0; i < /*PORT_NAME*/_nb_client; i++) {
-	//	m = libwebsocket_write(/*PORT_NAME*/_clients[i], p, (length * 3 + 1), LWS_WRITE_TEXT);
-	//}
 }
 

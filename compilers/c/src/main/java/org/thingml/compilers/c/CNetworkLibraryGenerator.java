@@ -21,14 +21,17 @@
 package org.thingml.compilers.c;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
+import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.NetworkLibraryGenerator;
+import org.thingml.compilers.c.plugin.CByteArraySerializer;
 
 /**
  *
@@ -57,6 +60,7 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
     
     public void generateMessageForwarders(StringBuilder builder) {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
+        CByteArraySerializer ser = new CByteArraySerializer(ctx, cfg);
         
         
         for (ExternalConnector eco : this.getExternalConnectors()) {
@@ -71,8 +75,39 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
                 builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
                 ctx.appendFormalParameters(t, builder, m);
                 builder.append("{\n");
+                
+                ser.generateMessageSerialzer(eco, m, builder, "forward_buf", new LinkedList<Parameter>());
+                //ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
 
-                ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
+                builder.append("\n//Forwarding with specified function \n");
+                builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                
+        //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                builder.append("}\n\n");
+            }
+                
+        }
+    }
+    
+    public void generateMessageForwarders(StringBuilder builder, CMessageSerializer ser) {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
+        
+        
+        for (ExternalConnector eco : this.getExternalConnectors()) {
+            //if (eco.hasAnnotation("c_external_send")) {
+            Thing t = eco.getInst().getInstance().getType();
+            Port p = eco.getPort();
+            
+            for (Message m : p.getSends()) {
+                Set<String> ignoreList = new HashSet<String>();
+
+                builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                ctx.appendFormalParameters(t, builder, m);
+                builder.append("{\n");
+                
+                ser.generateMessageSerialzer(eco, m, builder, "forward_buf", new LinkedList<Parameter>());
+                //ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
 
                 builder.append("\n//Forwarding with specified function \n");
                 builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");

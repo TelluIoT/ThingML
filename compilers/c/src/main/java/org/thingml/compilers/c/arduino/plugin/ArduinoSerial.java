@@ -26,7 +26,9 @@ import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CMessageSerializer;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
+import org.thingml.compilers.c.plugin.CByteArraySerializer;
 
 /**
  *
@@ -34,11 +36,15 @@ import org.thingml.compilers.c.CNetworkLibraryGenerator;
  */
 public class ArduinoSerial extends CNetworkLibraryGenerator {
 
+    CMessageSerializer ser;
+    
     public ArduinoSerial(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
+        this.ser = new CByteArraySerializer(ctx, cfg);
     }
     public ArduinoSerial(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
+        this.ser = new CByteArraySerializer(ctx, cfg);
     }
 
     @Override
@@ -165,7 +171,16 @@ public class ArduinoSerial extends CNetworkLibraryGenerator {
                 eco_instance.append(p.getName());
                 eco_instance.append("_receiver_list_tail;\n");
             }
-
+            
+            //De Serializer 
+            StringBuilder ParserImplementation = new StringBuilder();
+            
+            ser.generateMessageParser(eco, ParserImplementation);
+            ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", ParserImplementation);
+            
+            String ParserCall = portName + "_parser((char *) " + portName + "_serialBuffer, " + portName + "_serialMsgSize, " + portName + "_instance.listener_id);";
+            ctemplate = ctemplate.replace("/*PARSER_CALL*/", ParserCall);
+            //End De Serializer
 
             if(!p.getSends().isEmpty()) {
             //if(!p.getReceives().isEmpty()) {
