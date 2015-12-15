@@ -15,7 +15,9 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -27,9 +29,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.sintef.thingml.Action;
-import org.sintef.thingml.ActionBlock;
-import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
 
 /**
  * <!-- begin-user-doc -->
@@ -159,5 +159,47 @@ public class ActionBlockImpl extends ActionImpl implements ActionBlock {
 		}
 		return super.eIsSet(featureID);
 	}
+
+	/**
+	 * @generated NOT
+	 * @return
+     */
+	public List<Action> allAction(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
+		for (Action a : getActions()) {
+			if (clazz.isInstance(a)) {
+				result.add(a);
+			} else if (a instanceof ActionBlock) {
+				result.addAll(((ActionBlock)a).allAction(clazz));
+			} else if (a instanceof ControlStructure) {
+				result.addAll(((ControlStructure)a).allAction(clazz));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	public List<Expression> allExpression(Class clazz) {//TODO: to be completed
+		List<Expression> result = new ArrayList<Expression>();
+		for (Action a : getActions()) {
+			if (a instanceof ActionBlock) {
+				result.addAll(((ActionBlock)a).allExpression(clazz));
+			} else if (a instanceof ControlStructure) {
+				ControlStructure cs = (ControlStructure) a;
+				if(clazz.isInstance(cs.getCondition())) {
+					result.add(cs.getCondition());
+				}
+				if (cs.getAction() instanceof ActionBlock) {
+					result.addAll(((ActionBlock)cs.getAction()).allExpression(clazz));
+				}
+			}
+		}
+		return result;
+	}
+
+
 
 } //ActionBlockImpl

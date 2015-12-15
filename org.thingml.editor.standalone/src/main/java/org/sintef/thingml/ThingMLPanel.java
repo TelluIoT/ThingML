@@ -47,7 +47,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by bmori on 26.05.2015.
  */
-public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers registered in the registry appear automatically here
+public class ThingMLPanel extends JPanel {
 
     File targetFile = null;
     JEditorPane codeEditor = new JEditorPane();
@@ -69,8 +69,6 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
             JToolBar toolPane = new JToolBar();
             ((ThingMLJSyntaxKit) editorKit).addToolBarActions(codeEditor, toolPane);
 
-            //TODO: The integration of new compilers is not really clean. We should think about something more modular...
-            // Add the C Compiler toolbar
             JMenuBar menubar = new JMenuBar();
             JInternalFrame menuframe = new JInternalFrame();
 
@@ -102,10 +100,10 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                         connectorMenu.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                 ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
                                 for (Configuration cfg : thingmlModel.allConfigurations()) {
                                     if (cfg.isFragment()) continue;
+                                    final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                     compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
                                     compiler.compileConnector(connectorCompiler.getKey(), cfg);
                                 }
@@ -121,10 +119,10 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                         System.out.println("Input file : " + targetFile);
                         if (targetFile == null) return;
                         try {
-                            final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                             ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
                             for (Configuration cfg : thingmlModel.allConfigurations()) {
                                 if (cfg.isFragment()) continue;
+                                final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                 compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
                                 compiler.compile(cfg);
                             }
@@ -136,67 +134,6 @@ public class ThingMLPanel extends JPanel {    //TODO: refactor so that compilers
                 c = null;
             }
 
-            //START TO BE REMOVED AFTER MIGRATION
-            /*JMenu compilersMenu = new JMenu("Compile to");
-            JMenu linuxMenu = new JMenu("Linux");
-            compilersMenu.add(linuxMenu);*/
-
-            /*JMenuItem bCPP = new JMenuItem("C++");
-            JMenuItem bThingML = new JMenuItem("ThingML/Comm");
-            JMenuItem bThingML2 = new JMenuItem("ThingML/Comm2");*/
-
-            /*JFileChooser filechooser = new JFileChooser();
-            filechooser.setDialogTitle("Select target directory");
-            filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);*/
-
-            /*bCPP.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Input file : " + targetFile);
-                    if (targetFile == null) return;
-                    try {
-                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                        CPPGenerator.compileToLinuxAndMake(thingmlModel);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });*/
-
-            /*bThingML.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Input file : " + targetFile);
-                    if (targetFile == null) return;
-                    try {
-                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                        for (Configuration c : thingmlModel.allConfigurations()) {
-                            ThingMLGenerator.compileAndRun(c, false);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });
-
-            bThingML2.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Input file : " + targetFile);
-                    if (targetFile == null) return;
-                    try {
-                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                        for (Configuration c : thingmlModel.allConfigurations()) {
-                            ThingMLGenerator.compileAndRun(c, true);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            });*/
-
-            /*linuxMenu.add(bCPP);
-            compilersMenu.add(bThingML);
-            compilersMenu.add(bThingML2);
-            menubar.add(compilersMenu);*/
-            //END TO BE REMOVED AFTER MIGRATION
             menubar.add(newCompilersMenu);
 
             codeEditor.getDocument().addDocumentListener(new DocumentListener() {

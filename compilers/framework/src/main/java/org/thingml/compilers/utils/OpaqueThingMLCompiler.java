@@ -61,8 +61,9 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
     public boolean compile(Configuration cfg, String... options) {
         try {
             println("Running " + getName() + " compiler on configuration " + cfg.getName());
+            final long start = System.currentTimeMillis();
             do_call_compiler(cfg, options);
-            println("Compilation complete.");
+            println("Compilation complete. Took " + (System.currentTimeMillis() - start) + " ms.");
         } catch (Error err) {
             erroln("Compilation error:" + err.getMessage());
             err.printStackTrace();
@@ -77,9 +78,10 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
     @Override
     public boolean compileConnector(String connector, Configuration cfg, String... options) {
         println("Running connector compiler " + connector + " on configuration " + cfg.getName());
+        final long start = System.currentTimeMillis();
         boolean result = super.compileConnector(connector, cfg, options);
         if (result) {
-            println("Compilation complete.");
+            println("Compilation complete. Took " + (System.currentTimeMillis() - start) + " ms.");
         } else {
             println("Compilation error. Connector compiler " + connector + " not found.");
         }

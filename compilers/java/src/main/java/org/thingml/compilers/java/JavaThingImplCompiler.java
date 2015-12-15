@@ -15,11 +15,16 @@
  */
 package org.thingml.compilers.java;
 
+import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +53,24 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("); }\n");
 
+        builder.append("@Override\n");
+        builder.append("public Event instantiate(Port port, Map<String, Object> params) {");
+        builder.append("return instantiate(port");
+        for (Parameter p : m.getParameters()) {
+            String cast = "";
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("int"))
+                cast = "Integer";
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("char"))
+                cast = "Character";
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).contains("."))
+                cast = JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx); //extern datatype with full qualified name
+            else
+                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
+            builder.append(", (" + cast + ") params.get(\"" + ctx.protectKeyword(p.getName()) + "\")");
+        }
+        builder.append(");\n");
+        builder.append("}\n\n");
+
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "Message extends Event implements java.io.Serializable {\n\n");
 
         for (Parameter p : m.getParameters()) {
@@ -55,11 +78,16 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         builder.append("@Override\npublic String toString(){\n");
-        builder.append("return \"" + ctx.firstToUpper(m.getName()) + " \"");
+        builder.append("return \"" + m.getName() + " (\"");
+        int i = 0;
         for (Parameter p : m.getParameters()) {
-            builder.append(" + \"" + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + ": \" + " + ctx.protectKeyword(p.getName()));
+            if (i > 0) {
+                builder.append(" + \", \"");
+            }
+            builder.append(" + \"" + p.getName() + ": \" + " + ctx.protectKeyword(p.getName()));
+            i++;
         }
-        builder.append(";}\n\n");
+        builder.append(" + \")\";\n}\n\n");
 
         builder.append("protected " + ctx.firstToUpper(m.getName()) + "Message(EventType type, Port port");
         for (Parameter p : m.getParameters()) {
@@ -197,6 +225,10 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         builder.append(" {\n\n");
+
+        builder.append("private List<AttributeListener> attListener = new ArrayList<AttributeListener>();\n");
+        builder.append("public void addAttributeListener(AttributeListener listener){\nthis.attListener.add(listener);\n}\n\n");
+        builder.append("public void removeAttributeListener(AttributeListener listener){\nthis.attListener.remove(listener);\n}\n\n");
 
         builder.append("private boolean debug = false;\n");
         builder.append("public boolean isDebug() {return debug;}\n");

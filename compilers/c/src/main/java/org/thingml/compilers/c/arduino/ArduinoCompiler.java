@@ -40,6 +40,7 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
         super(new CThingActionCompilerArduino(), new CThingApiCompilerArduino(), new CCfgMainGenerator(),
                 new CfgBuildCompiler(), new CThingImplCompiler(),
                 new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
+        this.checker = new ArduinoChecker(this.getID());
     }
 
     @Override
@@ -68,6 +69,13 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
         processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
+        
+        //Checks
+        
+        this.checker.do_check(cfg);
+        this.checker.printErrors();
+        this.checker.printWarnings();
+        this.checker.printNotices();
         
               
         // GENERATE A MODULE FOR EACH THING

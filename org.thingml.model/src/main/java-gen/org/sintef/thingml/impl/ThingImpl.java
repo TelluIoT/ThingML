@@ -41,6 +41,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <!-- begin-user-doc -->
@@ -768,5 +769,127 @@ public class ThingImpl extends TypeImpl implements Thing {
         }
         return result;
     }
+
+	/**
+	 * @generated NOT
+	 * @param action
+	 * @return
+     */
+	private List<Action> getAllAction(Class clazz, Action action) {
+		List<Action> result = new ArrayList<Action>();
+		if (clazz.isInstance(action)) {
+			result.add(action);
+		} else if (action instanceof ActionBlock) {
+			ActionBlock block = (ActionBlock) action;
+			result.addAll(block.allAction(clazz));
+		} else if (action instanceof ControlStructure) {
+			result.addAll(((ControlStructure)action).allAction(clazz));
+		} else if (action instanceof FunctionCall) {
+			result.addAll(getAllAction(clazz, ((FunctionCall)action).getFunction().getBody()));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @param clazz
+	 * @param action
+     * @return
+     */
+	private List<Expression> getAllExpression(Class clazz, Action action) {
+		List<Expression> result = new ArrayList<Expression>();
+		if (action instanceof PropertyAssign) {
+			PropertyAssign pa = (PropertyAssign) action;
+			if(clazz.isInstance(pa.getInit())) {
+				result.add(pa.getInit());
+			}
+		} else if (action instanceof ControlStructure) {
+			ControlStructure cs = (ControlStructure) action;
+			if(clazz.isInstance(cs.getCondition())) {
+				result.add(cs.getCondition());
+			}
+			result.addAll(getAllExpression(clazz, cs.getAction()));
+		} else if (action instanceof ActionBlock) {
+			ActionBlock b = (ActionBlock) action;
+			for(Action a : b.getActions()) {
+				result.addAll(getAllExpression(clazz, a));
+			}
+			//b.allExpression(clazz);
+		} else if (action instanceof VariableAssignment) {
+			VariableAssignment va = (VariableAssignment) action;
+			if(clazz.isInstance(va.getExpression())) {
+				result.add(va.getExpression());
+			}
+		} else if (action instanceof LocalVariable) {
+			LocalVariable lv = (LocalVariable) action;
+			if(clazz.isInstance(lv.getInit())) {
+				result.add(lv.getInit());
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+     */
+	public List<Action> allAction(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
+		/*for (Function f : allFunctions()) {
+			System.out.println("analyzing function " + f.getName());
+			result.addAll(getAllSendAction(f.getBody()));
+		}*/
+		for(StateMachine sm : allStateMachines()) {
+			for(State s : sm.allStates()) {
+				if (s.getEntry() != null) {
+					result.addAll(getAllAction(clazz, s.getEntry()));
+				}
+				if (s.getExit() != null) {
+					result.addAll(getAllAction(clazz, s.getEntry()));
+				}
+				for(InternalTransition t : s.getInternal()) {
+					if (t.getAction() != null) {
+						result.addAll(getAllAction(clazz, t.getAction()));
+					}
+				}
+				for(Transition t : s.getOutgoing()) {
+					if (t.getAction() != null) {
+						result.addAll(getAllAction(clazz, t.getAction()));
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	public List<Expression> allExpression(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		for(StateMachine sm : allStateMachines()) {
+			for(State s : sm.allStates()) {
+				if (s.getEntry() != null) {
+					result.addAll(getAllExpression(clazz, s.getEntry()));
+				}
+				if (s.getExit() != null) {
+					result.addAll(getAllExpression(clazz, s.getEntry()));
+				}
+				for(InternalTransition t : s.getInternal()) {
+					if (t.getAction() != null) {
+						result.addAll(getAllExpression(clazz, t.getAction()));
+					}
+				}
+				for(Transition t : s.getOutgoing()) {
+					if (t.getAction() != null) {
+						result.addAll(getAllExpression(clazz, t.getAction()));
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 
 } //ThingImpl

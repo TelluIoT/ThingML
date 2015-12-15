@@ -16,14 +16,14 @@
 
 #When set to False, does not remove source code after execution. 
 #May cause secondary inputs to use files from the first input
-deleteTemporaryFiles = False
+deleteTemporaryFiles = True
 
 #Chooses which compilers should be used
 testLanguages=[]
 testLanguages.append("Linux")
-# testLanguages.append("Javascript")
-# testLanguages.append("Java")
-# testLanguages.append("Arduino")
+#testLanguages.append("Javascript")
+#testLanguages.append("Java")
+#testLanguages.append("Arduino")
 
 #Functional tests options
 #If useBlacklist is True, runs all tests not present in blacklist
@@ -32,5 +32,6 @@ useBlacklist = True
 
 #blacklist=[]
 blacklist=["testMixStreamsAndEvent", "testLengthSimpleSource",  "testStreams", "testSimpleFilter", "testJoinFilter", "testDeepCompositeStatesWithStream", "testHistoryStatesWithStream", "testMergeStreams", "testMergeFilter"]
-whitelist=["testInternalPort", "testInternalPort2"]
-
+whitelist=["testInternalEmptyTransition"]
+#whitelist=["testIfElse", "testVariables", "testArrays2", "testMaskProperty"]
+#whitelist=["testOnExit", "testMultiServerPing", "testSerialization"]

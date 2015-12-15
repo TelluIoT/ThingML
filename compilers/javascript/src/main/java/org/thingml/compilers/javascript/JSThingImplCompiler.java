@@ -180,6 +180,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                         builder.append("\" + ");
                         builder.append(ctx.protectKeyword(pa.qname("_") + "_var"));
                         builder.append(" + \"");
+                        i++;
                     }
                     builder.append(")...\");\n");
                 }

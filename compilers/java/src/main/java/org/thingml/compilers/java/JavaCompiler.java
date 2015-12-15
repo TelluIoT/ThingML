@@ -20,6 +20,7 @@ import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.java.cepHelper.JavaCepViewCompiler;
 import org.thingml.compilers.java.cepHelper.JavaGenerateSourceDeclaration;
@@ -45,6 +46,12 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         super(new JavaThingActionCompiler(), new JavaThingApiCompiler(), new JavaCfgMainGenerator(),
                 new JavaCfgBuildCompiler(), new JavaThingImplCompiler(),
                 new JavaThingCepCompiler(new JavaCepViewCompiler(), new JavaGenerateSourceDeclaration()));
+        this.checker = new Checker(this.getID()) {
+            @Override
+            public void do_check(Configuration cfg) {
+                do_generic_check(cfg);
+            }
+        };
     }
 
     @Override
@@ -68,6 +75,11 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
+        this.checker.do_check(cfg);
+        this.checker.printErrors();
+        this.checker.printWarnings();
+        this.checker.printNotices();
+
         Context ctx = new Context(this, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@");
         ctx.addContextAnnotation("thisRef", "");
         String pack = "org.thingml.generated";

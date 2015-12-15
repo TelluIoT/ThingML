@@ -324,4 +324,16 @@ public interface Thing extends Type {
      */
     List<PropertyAssign> initExpressionsForArray(Property p);
 
+	/**
+	 * @generated NOT
+	 * @return
+     */
+	List<Action> allAction(Class clazz);
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	List<Expression> allExpression(Class clazz);
+
 } // Thing

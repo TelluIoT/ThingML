@@ -1,0 +1,41 @@
+import "../datatypes.thingml"
+
+thing ErroneousThing {
+    message m1();
+    message m2(i : Integer);
+    message m3(i : Integer, s : String);
+    
+    provided port myPort {
+        receives m2, m3
+        sends m1    
+    }    
+    
+    required port myPort2 {
+        receives m1
+    }
+    
+    function f1(i : Integer) : Integer do
+        return i
+    end
+    
+    function f2() do
+        print "hello"
+    end
+    
+    statechart behavior init Init {
+        state Init {
+            on entry do
+                var i : Integer = f1("1")
+                var s : String = f1(1)
+            end
+        }
+        
+        state Unreachable {
+                   
+        }    
+    }
+}
+
+configuration test {
+    instance bad : ErroneousThing    
+}

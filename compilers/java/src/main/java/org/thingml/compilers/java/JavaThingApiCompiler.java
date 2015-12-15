@@ -15,9 +15,16 @@
  */
 package org.thingml.compilers.java;
 
+import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingApiCompiler;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.List;
 
 
 /**
@@ -64,8 +71,32 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         builder.append("}\n");
     }
 
+    public void copyAttributeListener(Context ctx) {
+        String pack = ctx.getContextAnnotation("package");
+        if (pack == null) pack = "org.thingml.generated";
+        final String src = "src/main/java/" + pack.replace(".", "/") + "/api";
+        final File f = new File(ctx.getOutputDirectory() + "/" + src + "/AttributeListener.java");
+        if (!f.exists()) {
+            f.mkdirs();
+            try {
+                InputStream input = this.getClass().getClassLoader().getResourceAsStream("javatemplates/AttributeListener.java");//FIXME: allow custom package in template
+                List<String> pomLines = IOUtils.readLines(input);
+                String pom = "";
+                for (String line : pomLines) {
+                    pom += line + "\n";
+                }
+                input.close();
+                final StringBuilder builder = ctx.getBuilder(src + "/api/AttributeListener.java");
+                builder.append(pom);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
+        copyAttributeListener(ctx);
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
 
@@ -91,7 +122,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         //Generate interfaces that the thing will implement, for others to call this API
         for (Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false") && p.getReceives().size() > 0) {
-                final StringBuilder builder = ctx.getBuilder(src + "/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + ".java");
+                final StringBuilder builder = ctx.getNewBuilder(src + "/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + ".java");
                 builder.append("package " + pack + ".api;\n\n");
                 builder.append("import " + pack + ".api.*;\n\n");
                 builder.append("public interface " + "I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "{\n");
@@ -107,7 +138,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         //generateMainAndInit interfaces for the others to implement, so that the thing can notify them
         for (Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
-                final StringBuilder builder = ctx.getBuilder(src + "/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client.java");
+                final StringBuilder builder = ctx.getNewBuilder(src + "/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client.java");
                 builder.append("package " + pack + ".api;\n\n");
                 builder.append("import " + pack + ".api.*;\n\n");
                 builder.append("public interface " + "I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client{\n");

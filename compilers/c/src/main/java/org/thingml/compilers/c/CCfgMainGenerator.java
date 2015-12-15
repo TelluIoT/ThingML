@@ -1112,6 +1112,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                             builder.append(ctx.getHandlerName(myReceiver.getKey().getType(), myReceiver.getValue(), m));
                             ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(myReceiver.getKey()));
                             builder.append(";\n");
+                            //builder.append("//TODEBUG " + myReceiver.getKey().getName() + "\n");
                         }
                     }
                     builder.append("\n}\n");
@@ -1130,8 +1131,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     StateMachine sm = eco.getInst().getInstance().getType().allStateMachines().get(0);
                     if (sm.canHandle(eco.getPort(), m)) {
                         builder.append(ctx.getHandlerName(eco.getInst().getInstance().getType(), eco.getPort(), m));
-                        ctx.appendActualParametersForDispatcher(eco.getInst().getInstance().getType(), builder, m, "&" + ctx.getInstanceVarName(eco.getInst().getInstance()));
+                        ctx.appendActualParametersForDispatcher(eco.getInst().getInstance().getType(), builder, m, "&" + cfg.getName() + "_" + ctx.getInstanceVarName(eco.getInst().getInstance()));
                         builder.append(";\n");
+                        //builder.append("//TODEBUG " + eco.getInst().getInstance().getName() + "\n");
                     }
                     builder.append("\n}\n");
                 }
@@ -1505,7 +1507,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         int head = nbConnectorSoFar;
 
-
+        if(cfg.hasAnnotation("c_dyn_connectors")) {
         if(!eco.getPort().getReceives().isEmpty()) {
             //    && (!co.getRequired().getReceives().isEmpty())) {
             builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
@@ -1528,7 +1530,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(cfg.getName() + "_receivers[" + head + "];\n");
                 }
         }
-        
+        }
         return nbConnectorSoFar;
     }
 
@@ -1885,12 +1887,12 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
             }*/
         }
 
-
-            
+        if(ctx.getCompiler().getID().compareTo("arduino") != 0) { //FIXME Nicolas This code is awfull
         //New Empty Event Handler
         builder.append("int emptyEventConsumed = 1;\n");
         builder.append("while (emptyEventConsumed != 0) {\n");
         builder.append("emptyEventConsumed = 0;\n");
+        }
         
         // Call empty transition handler (if needed)
         for (Instance i : cfg.allInstances()) {
@@ -1898,14 +1900,19 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
             if (i.getType().allStateMachines().size()>0) { // There has to be only 1
                 StateMachine sm = i.getType().allStateMachines().get(0);
                 if (sm.hasEmptyHandlers()) {
+                    if(ctx.getCompiler().getID().compareTo("arduino") != 0) {
                     builder.append("emptyEventConsumed += ");
+                    }
                     builder.append(ctx.getEmptyHandlerName(i.getType()) + "(&" + ctx.getInstanceVarName(i) + ");\n");
                 }
             }
 
 
         }
+        
+        if(ctx.getCompiler().getID().compareTo("arduino") != 0) {
         builder.append("}\n");
+        }
 
         }
 

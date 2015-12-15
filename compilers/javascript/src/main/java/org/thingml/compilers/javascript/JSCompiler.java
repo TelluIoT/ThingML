@@ -19,6 +19,7 @@ import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -50,6 +51,12 @@ public class JSCompiler extends OpaqueThingMLCompiler {
         super(new JSThingActionCompiler(), new JSThingApiCompiler(), new JSCfgMainGenerator(),
                 new JSCfgBuildCompiler(), new JSThingImplCompiler(),
                 new JSThingCepCompiler(new JSCepViewCompiler(), new JSGenerateSourceDeclaration()));
+        this.checker = new Checker(this.getID()) {
+            @Override
+            public void do_check(Configuration cfg) {
+                do_generic_check(cfg);
+            }
+        };
     }
 
     public JSCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
@@ -77,6 +84,11 @@ public class JSCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
+        this.checker.do_check(cfg);
+        this.checker.printErrors();
+        this.checker.printWarnings();
+        this.checker.printNotices();
+
         ctx.addContextAnnotation("thisRef", "_this.");
         //new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
@@ -91,7 +103,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;
                 ctx.addContextAnnotation("hasEnum", "true");
-                StringBuilder builder = ctx.getBuilder(ctx.getCurrentConfiguration().getName() + "/enums.js"); //FIXME: this code should be integrated into the compilation framework
+                StringBuilder builder = ctx.getBuilder("enums.js"); //FIXME: this code should be integrated into the compilation framework
                 builder.append("// Definition of Enumeration  " + e.getName() + "\n");
                 builder.append("var " + e.getName() + "_ENUM = {\n");
                 int i = 0;

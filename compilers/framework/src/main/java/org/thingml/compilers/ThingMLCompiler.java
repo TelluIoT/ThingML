@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers;
 
+import org.thingml.compilers.checker.Checker;
 import org.sintef.thingml.*;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
@@ -32,6 +33,7 @@ import java.util.*;
 public abstract class ThingMLCompiler {
 
     protected Context ctx = new Context(this);
+    public Checker checker;
 
     private ThingActionCompiler thingActionCompiler;
     private ThingApiCompiler thingApiCompiler;
@@ -156,7 +158,8 @@ public abstract class ThingMLCompiler {
                         }
                     }
                     for (Port p : thing.allPorts()) {
-                        List<Message> msg = p.getReceives();
+                        List<Message> msg = new LinkedList<Message>();
+                        msg.addAll(p.getReceives());
                         msg.addAll(p.getSends());
                         for (Message m : msg) {
                             if ((!p.isDefined("debug", "false") && !m.isDefined("debug", "false")) || m.isDefined("debug", "true")) {//TODO: check the rules for debugging of messages/ports
@@ -182,7 +185,8 @@ public abstract class ThingMLCompiler {
                         }
                     }
                     for (Port p : thing.allPorts()) {
-                        List<Message> msg = p.getReceives();
+                        List<Message> msg = new LinkedList<Message>();
+                        msg.addAll(p.getReceives());
                         msg.addAll(p.getSends());
                         for (Message m : msg) {
                             if ((p.isDefined("debug", "true") && !m.isDefined("debug", "false")) || m.isDefined("debug", "true")) {//TODO: check the rules for debugging of messages/ports

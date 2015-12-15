@@ -877,11 +877,20 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             for (Port p : i.getType().allPorts()) {
                 boolean connected = false;
                 for(Connector c : allConnectors()) {
-                    if ((EcoreUtil.equals(c.getCli().getInstance(), i) || EcoreUtil.equals(c.getSrv().getInstance(), i)) && (EcoreUtil.equals(c.getProvided(), p) || EcoreUtil.equals(c.getRequired(), p))) {
+                    if ((EcoreUtil.equals(c.getCli().getInstance(), i) && EcoreUtil.equals(c.getRequired(), p)) || (EcoreUtil.equals(c.getProvided(), p) && EcoreUtil.equals(c.getSrv().getInstance(), i))) {
                         connected = true;
                         break;
                     }
                 }
+				for(ExternalConnector c : getExternalConnectors()) {
+					System.out.println("External connector " + c.getInst().getInstance().qname("_") + "." + c.getPort().getName() + "? " + i.getName() + "." + p.getName());
+					if (c.getInst().getInstance().qname("_").equals(i.getName()) && EcoreUtil.equals(c.getPort(), p)) {//FIXME: this is a hack, c.getInst.getInstance should be equal to i (at least in some cases...)
+					//if ((EcoreUtil.equals(c.getInst().getInstance(), i) && EcoreUtil.equals(c.getPort(), p))) {
+						System.out.println("\tis connected to " + i.getName() + "." + p.getName());
+						connected = true;
+						break;
+					}
+				}
                 if (!connected) {
                     ports.add(p);
                 }
@@ -922,7 +931,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @return
      */
     private List<Instance> isRequiredBy(Instance cur, List<Connector> Cos, List<Instance> Instances) {
-        System.out.println("I: " + cur.getName());
         List<Instance> res = new LinkedList<Instance>();
         //List<Connector> toBeRemoved = new LinkedList<Connector>();
         Instance needed;

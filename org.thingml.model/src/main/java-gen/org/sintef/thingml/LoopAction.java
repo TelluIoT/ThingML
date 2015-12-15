@@ -27,4 +27,7 @@ package org.sintef.thingml;
  * @generated
  */
 public interface LoopAction extends ControlStructure {
+
+
+
 } // LoopAction

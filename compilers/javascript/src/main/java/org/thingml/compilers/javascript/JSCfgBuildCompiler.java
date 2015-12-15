@@ -85,30 +85,16 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
                     addCEPdeps = true;
                 }
             }
-            deps.asObject().add("enums", "^0.1.0");
 
             if(addCEPdeps) {
                 deps.asObject().add("rx", "^2.5.3");
                 deps.asObject().add("events", "^1.0.2");
-                //System.out.println("ADD DEP");
             }
 
-            if(addDebugDeps) {
+            //if(addDebugDeps) {
                 deps.asObject().add("colors", "^1.1.2");
-                //System.out.println("ADD DEBUG");
-                
-                for(Thing t : ctx.getCompiler().getDebugProfiles().keySet()) {
-                    //System.out.println("ADD DEBUG t: " +t.getName());
-                }
-            }
+            //}
             
-            /*try {
-                System.out.println("fdep: ");
-                System.out.println("fdep: " + deps.asString());
-            } catch(Exception e) {
-                e.printStackTrace();
-            }*/
-            //System.out.println("pack: " + ctx.getOutputDirectory() + "/package.json");
             final File f = new File(ctx.getOutputDirectory() + "/package.json");
             f.setWritable(true);
             final PrintWriter w = new PrintWriter(new FileWriter(f));
