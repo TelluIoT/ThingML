@@ -115,16 +115,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     
     protected void generateConfigurationImplementation(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
 
-        if (isGeneratingCpp()) {
-            // GENERATE HEADER FOR MAIN
-            String cheadertemplate = ctx.getCfgMainHeaderTemplate();
-            StringBuilder builder = new StringBuilder();
-            generateCppHeaderExternalMessageEnqueue(cfg, builder, ctx);            
-            generateCppHeaderForConfiguration(cfg, builder, ctx);
-            cheadertemplate = cheadertemplate.replace("/*HEADER_CONFIGURATION*/", builder.toString());
-            ctx.getBuilder(cfg.getName() + ".h").append(cheadertemplate);
-        }
-        
         // GENERATE THE CONFIGURATION AND A MAIN
         String ctemplate = ctx.getCfgMainTemplate();
         ctemplate = ctemplate.replace("/*NAME*/", cfg.getName());
@@ -147,12 +137,22 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ctemplate = ctemplate.replace("/*INCLUDES*/", builder.toString());
 
         builder = new StringBuilder();
-        generateCForConfiguration(cfg, builder, ctx);
+        StringBuilder headerbuilder = new StringBuilder();
+        generateCForConfiguration(cfg, builder, headerbuilder, ctx);
         
-        generateDynamicConnectors(cfg, builder, ctx);
+        generateDynamicConnectors(cfg, builder, headerbuilder, ctx);
         
         ctemplate = ctemplate.replace("/*CONFIGURATION*/", builder.toString());
 
+        if (isGeneratingCpp()) {
+            // GENERATE HEADER FOR MAIN
+            String cheadertemplate = ctx.getCfgMainHeaderTemplate();
+            //generateCppHeaderExternalMessageEnqueue(cfg, headerbuilder, ctx);            
+            //generateCppHeaderForConfiguration(cfg, headerbuilder, ctx);
+            cheadertemplate = cheadertemplate.replace("/*HEADER_CONFIGURATION*/", headerbuilder.toString());
+            ctx.getBuilder(cfg.getName() + ".h").append(cheadertemplate);
+        }
+        
         StringBuilder initb = new StringBuilder();
         generateInitializationCode(cfg, initb, ctx);
 
@@ -211,12 +211,22 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     }
 
 
-    protected void generateCForConfiguration(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    protected void generateCForConfiguration(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
 
         builder.append("\n");
         builder.append("/*****************************************************************************\n");
         builder.append(" * Definitions for configuration : " + cfg.getName() + "\n");
         builder.append(" *****************************************************************************/\n\n");
+        
+        headerbuilder.append("\n");
+        headerbuilder.append("/*****************************************************************************\n");
+        headerbuilder.append(" * Definitions for configuration : " + cfg.getName() + "\n");
+        headerbuilder.append(" *****************************************************************************/\n\n");
+        headerbuilder.append("//Declaration of instance variables\n");
+        for (Instance inst : cfg.allInstances()) {
+            headerbuilder.append(ctx.getInstanceVarDecl(inst) + "\n");
+        }
+        headerbuilder.append("\n");
         
         int nbInternalPort = 0;
         for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
@@ -294,60 +304,61 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         
 
-        generateMessageEnqueue(cfg, builder, ctx);
+        generateMessageEnqueue(cfg, builder, headerbuilder, ctx);
         //builder.append("\n");
         //generateMessageDispatchers(cfg, builder, ctx);
         builder.append("\n");
+        headerbuilder.append("\n");
         
         if(!cfg.hasAnnotation("c_dyn_connectors")) {
-            generateMessageDispatchers(cfg, builder, ctx);
+            generateMessageDispatchers(cfg, builder, headerbuilder, ctx);
         } else {
-        generateMessageDispatchersDynamic(cfg, builder, ctx);
+            generateMessageDispatchersDynamic(cfg, builder, headerbuilder, ctx);
         }
         //builder.append("\n");
         //generateMessageProcessQueue(cfg, builder, ctx);
         builder.append("\n");
-        generateMessageProcessQueue(cfg, builder, ctx);
+        generateMessageProcessQueue(cfg, builder, headerbuilder, ctx);
 
         builder.append("\n");
         generateMessageForwarders(cfg, builder, ctx);
         builder.append("\n");
         builder.append("//external Message enqueue\n");
-        generateExternalMessageEnqueue(cfg, builder, ctx);
+        generateExternalMessageEnqueue(cfg, builder, headerbuilder, ctx);
         builder.append("\n");
 
-        generateCfgInitializationCode(cfg, builder, ctx);
+        generateCfgInitializationCode(cfg, builder, headerbuilder, ctx);
 
 
     }
 
-    protected void generateCppHeaderForConfiguration(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-
-        
-        builder.append("\n");
-        builder.append("/*****************************************************************************\n");
-        builder.append(" * Definitions for configuration : " + cfg.getName() + "\n");
-        builder.append(" *****************************************************************************/\n\n");
-
-        builder.append("//Declaration of instance variables\n");
-
-        for (Instance inst : cfg.allInstances()) {
-            builder.append(ctx.getInstanceVarDecl(inst) + "\n");
-        }
-
-        builder.append("\n");
-
-        generateCppHeaderMessageEnqueue(cfg, builder, ctx);
-        builder.append("\n");
-        generateCppHeaderMessageDispatchers(cfg, builder, ctx);
-        builder.append("\n");
-        generateCppHeaderMessageProcessQueue(cfg, builder, ctx);
-
-        builder.append("\n");
-
-        generateCppHeaderCfgInitializationCode(cfg, builder, ctx);
-
-    }
+//    protected void generateCppHeaderForConfiguration(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+//
+//        
+//        builder.append("\n");
+//        builder.append("/*****************************************************************************\n");
+//        builder.append(" * Definitions for configuration : " + cfg.getName() + "\n");
+//        builder.append(" *****************************************************************************/\n\n");
+//
+//        builder.append("//Declaration of instance variables\n");
+//
+//        for (Instance inst : cfg.allInstances()) {
+//            builder.append(ctx.getInstanceVarDecl(inst) + "\n");
+//        }
+//
+//        builder.append("\n");
+//
+//        generateCppHeaderMessageEnqueue(cfg, builder, ctx);
+//        builder.append("\n");
+//        generateCppHeaderMessageDispatchers(cfg, builder, ctx);
+//        builder.append("\n");
+//        generateCppHeaderMessageProcessQueue(cfg, builder, ctx);
+//
+//        builder.append("\n");
+//
+//        generateCppHeaderCfgInitializationCode(cfg, builder, ctx);
+//
+//    }
 
     protected void generateTypedefs(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
@@ -375,7 +386,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     }
     }
 
-    protected void generateMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    protected void generateMessageEnqueue(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         // Generate the Enqueue operation only for ports which are not marked as "sync"
         for (Thing t : cfg.allThings()) {
             for(Port p : t.allPorts()) {
@@ -404,6 +415,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
                 
                 for(Message m : allMessageDispatch.keySet()) {
+                    headerbuilder.append("// Enqueue of messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                    headerbuilder.append("void " + "enqueue_" + ctx.getSenderName(t, p, m));
+                    ctx.appendFormalParameters(t, headerbuilder, m);
+                    headerbuilder.append(";\n");
+                    
                     builder.append("// Enqueue of messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
                     builder.append("void " + getCppNameScope() + "enqueue_" + ctx.getSenderName(t, p, m));
                     ctx.appendFormalParameters(t, builder, m);
@@ -461,7 +477,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ctx.clearConcreteThing();
     }
 
-    protected void generateCppHeaderMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    /*protected void generateCppHeaderMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         // Added by sdalgard to handle method headers for C++
         // Generate the Enqueue operation only for ports which are not marked as "sync"
         for (Thing t : cfg.allThings()) {
@@ -480,7 +496,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         ctx.clearConcreteThing();
-    }
+    }*/
 
         
     public int generateSerializationForForwarder(CCompilerContext ctx, Message m, StringBuilder builder, int HandlerCode, Set<String> ignoreList) {
@@ -545,17 +561,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         return ret;
     }
     
-    protected void generateCppHeaderExternalMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        // Added by sdalgard to handle method headers for C++
-        if(isThereNetworkListener(cfg)) {
-            builder.append("void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);\n"); 
-        }
-    }
-
-    
-    protected void  generateExternalMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    protected void  generateExternalMessageEnqueue(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         
         if(isThereNetworkListener(cfg)) {
+            headerbuilder.append("void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);\n"); 
+            
             builder.append("void " + getCppNameScope() + "externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id) {\n");
 
             builder.append("if ((msgSize >= 2) && (msg != NULL)) {\n");
@@ -642,6 +652,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append("}\n");
         }
     }
+    
+    /*protected void generateCppHeaderExternalMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        // Added by sdalgard to handle method headers for C++
+        if(isThereNetworkListener(cfg)) {
+            builder.append("void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);\n"); 
+        }
+    }*/
+
     
     protected void generateMessageForwarders(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         
@@ -732,7 +750,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
     
-    protected void generateMessageDispatchersDynamic(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    protected void generateMessageDispatchersDynamic(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         
         Map<Message, Set<ExternalConnector>> messageExternalSenders = new HashMap<Message, Set<ExternalConnector>>();
         Set<ExternalConnector> externalSenders;
@@ -790,14 +808,20 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 if(found) {break;}
             }
             if(found) {
+                headerbuilder.append("\n//Dynamic dispatcher for message " + m.getName() + "\n");
+                headerbuilder.append("void " + "dispatch_" + m.getName());
+                ctx.appendFormalParametersForDispatcher(headerbuilder, m);
+                headerbuilder.append(";\n");
+                headerbuilder.append("ERROR dynamic dispatches are not ported to C++"); // TODO steffend This has not been ported...
+                    
                 builder.append("\n//Dynamic dispatcher for message " + m.getName() + "\n");
-                builder.append("void dispatch_" + m.getName());
+                builder.append("void " + getCppNameScope() + "dispatch_" + m.getName());
                 ctx.appendFormalParametersForDispatcher(builder, m);
                 builder.append(" {\n");
                 
                 
                 if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
-                    builder.append("struct executor {\nstatic ");
+                    builder.append("struct executor {\nstatic ");   
                 }
                 
                 builder.append("void executor_dispatch_" + m.getName());
@@ -983,7 +1007,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
 
-    protected void generateMessageDispatchers(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    protected void generateMessageDispatchers(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         
         for (Message m : cfg.allMessages()) {
             Set<ExternalConnector> externalSenders = new HashSet<ExternalConnector>();
@@ -1062,9 +1086,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
             }
             
-            if((!SenderList.isEmpty()) || (!externalSenders.isEmpty())) {
+        if((!SenderList.isEmpty()) || (!externalSenders.isEmpty())) {
+                headerbuilder.append("\n//New dispatcher for messages\n");
+                headerbuilder.append("void " + "dispatch_" + m.getName());
+                ctx.appendFormalParametersForDispatcher(headerbuilder, m);
+                headerbuilder.append(";\n");
+                    
                 builder.append("\n//New dispatcher for messages\n");
-                builder.append("void dispatch_" + m.getName());
+                builder.append("void " + getCppNameScope() + "dispatch_" + m.getName());
                 ctx.appendFormalParametersForDispatcher(builder, m);
                 builder.append(" {\n");
 
@@ -1112,7 +1141,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
             
             for(Port p : syncSenderList) {
-                builder.append("void sync_dispatch_" + ctx.getSenderName(p.getOwner(), p, m));
+                headerbuilder.append("void " + "sync_dispatch_" + ctx.getSenderName(p.getOwner(), p, m));
+                ctx.appendFormalParameters(p.getOwner(), headerbuilder, m);
+                headerbuilder.append(";\n");
+                    
+                builder.append("void " + getCppNameScope() + "sync_dispatch_" + ctx.getSenderName(p.getOwner(), p, m));
                 ctx.appendFormalParameters(p.getOwner(), builder, m);
                 builder.append("{\n");
                 builder.append("dispatch_" + m.getName());
@@ -1169,7 +1202,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ctx.clearConcreteThing();
     }*/
 
-    protected void generateCppHeaderMessageDispatchers(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    /*protected void generateCppHeaderMessageDispatchers(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         // Added by sdalgard to handle method headers for C++
         for (Thing t : cfg.allThings()) {
             for(Port p : t.allPorts()) {
@@ -1186,10 +1219,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         ctx.clearConcreteThing();
-    }
+    } */
 
-    protected void generateMessageProcessQueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    protected void generateMessageProcessQueue(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         //builder.append("void processMessageQueue() {\n");
+        headerbuilder.append("int " + "processMessageQueue();\n"); 
+        
         builder.append("int " + getCppNameScope() + "processMessageQueue() {\n"); // Changed by sdalgard to return int
         if (ctx.sync_fifo()) {
             builder.append("fifo_lock();\n");
@@ -1335,14 +1370,16 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("}\n");
     }
 
-    protected void generateCppHeaderMessageProcessQueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    /*protected void generateCppHeaderMessageProcessQueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         // Added by sdalgard to handle method headers for C++
         builder.append("int " + "processMessageQueue();\n"); 
-    }
+    }*/
 
 
-    protected void generateCfgInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    protected void generateCfgInitializationCode(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         // Generate code to initialize connectors
+        headerbuilder.append("void " + "initialize_configuration_" + cfg.getName() + "();\n");
+        
         builder.append("void " + getCppNameScope() + "initialize_configuration_" + cfg.getName() + "() {\n");
         builder.append("// Initialize connectors\n");
 
@@ -1495,11 +1532,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         return nbConnectorSoFar;
     }
 
-    protected void generateCppHeaderCfgInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    /*protected void generateCppHeaderCfgInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
         // Added by sdalgard to handle method headers for C++
         // Generate code to initialize connectors
         builder.append("void " + "initialize_configuration_" + cfg.getName() + "();\n");
-    }
+    }*/
 
     public int generateInstanceInitCode(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx, int nbConnectorSoFar) {
         builder.append("// Init the ID, state variables and properties for instance " + inst.getName() + "\n");
@@ -1872,8 +1909,11 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
 
         }
 
-    protected void generateDynamicConnectors(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    protected void generateDynamicConnectors(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         if(cfg.hasAnnotation("c_dyn_connectors_lib")) {
+            
+            headerbuilder.append("ERROR dynamic connectors are not ported to C++\n");  // TODO steffend
+            
             if(cfg.annotation("c_dyn_connectors_lib").iterator().next().compareToIgnoreCase("true") == 0) {
                 String dynCoLib = ctx.getDynamicConnectorsTemplate();
                 
