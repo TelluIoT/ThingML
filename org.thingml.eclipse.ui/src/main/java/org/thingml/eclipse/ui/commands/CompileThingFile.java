@@ -40,6 +40,7 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.checker.Checker.CheckerInfo;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.eclipse.preferences.PreferenceConstants;
 import org.thingml.eclipse.ui.Activator;
@@ -180,6 +181,21 @@ public class CompileThingFile implements IHandler {
 				compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
 				compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
 
+				compiler.checker.do_check(cfg);
+				ThingMLConsole.getInstance().printMessage("Configuration " + cfg.getName() + " contains " + compiler.checker.Errors.size() + " error(s), " + compiler.checker.Warnings.size() + " warning(s), and " + compiler.checker.Notices.size() + " notices.");
+				if (compiler.checker.Errors.size() > 0) {
+					ThingMLConsole.getInstance().printMessage("Please fix the errors below. In future versions, we will block the code generation if errors are identified!");	
+				}
+				for(CheckerInfo i : compiler.checker.Errors) {
+					ThingMLConsole.getInstance().printError(i.toString());		         
+		        }
+				for(CheckerInfo i : compiler.checker.Warnings) {
+					ThingMLConsole.getInstance().printMessage(i.toString());		         
+		        }
+				for(CheckerInfo i : compiler.checker.Notices) {
+					ThingMLConsole.getInstance().printMessage(i.toString());		         
+		        }
+				
 				boolean result = compiler.compile(cfg, options);
 				if(subCompiler != null) {
 					ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");

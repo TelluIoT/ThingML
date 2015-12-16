@@ -77,7 +77,6 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         final String src = "src/main/java/" + pack.replace(".", "/") + "/api";
         final File f = new File(ctx.getOutputDirectory() + "/" + src + "/AttributeListener.java");
         if (!f.exists()) {
-            f.mkdirs();
             try {
                 InputStream input = this.getClass().getClassLoader().getResourceAsStream("javatemplates/AttributeListener.java");//FIXME: allow custom package in template
                 List<String> pomLines = IOUtils.readLines(input);
@@ -86,7 +85,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
                     pom += line + "\n";
                 }
                 input.close();
-                final StringBuilder builder = ctx.getBuilder(src + "/api/AttributeListener.java");
+                final StringBuilder builder = ctx.getNewBuilder(src + "/AttributeListener.java");
                 builder.append(pom);
             } catch (Exception e) {
                 e.printStackTrace();

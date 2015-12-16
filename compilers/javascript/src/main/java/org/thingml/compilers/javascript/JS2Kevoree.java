@@ -268,12 +268,12 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                     for(Message m : p.getReceives()) {
                         if (j > 0)
                             builder.append("else ");
-                        builder.append("if(msg.split(':')[0] === '" + m.getName() + "'){\n");
+                        builder.append("if(msg.split('@:@')[0] === '" + m.getName() + "'){\n");
                         builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(");
                         for(Parameter pa : m.getParameters()) {
                             if (m.getParameters().indexOf(pa) > 0)
                                 builder.append(", ");
-                            builder.append("msg.split(':')[1].split(';')[" + m.getParameters().indexOf(pa) + "]");
+                            builder.append("msg.split('@:@')[1].split(';')[" + m.getParameters().indexOf(pa) + "]");
                         }
                         builder.append(");\n}\n");
                         j++;
@@ -282,7 +282,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
                 for (Message m : p.getSends()) {
                     builder.append(",\n" + shortName(i, p, m) + "_proxy: function() {this.out_" + shortName(i, p, null) + "_out(");
-                    builder.append("'" + m.getName() + ":'");
+                    builder.append("'" + m.getName() + "@:@'");
                     for (Parameter pa : m.getParameters()) {
                         builder.append(" + arguments[" + m.getParameters().indexOf(pa) + "] + ';'");
                     }
