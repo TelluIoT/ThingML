@@ -41,9 +41,9 @@ import org.thingml.compilers.checker.genericRules.*;
 abstract public class Checker {
     private Set<Rule> Rules;
     
-    private Set<CheckerInfo> Errors;
-    private Set<CheckerInfo> Warnings;
-    private Set<CheckerInfo> Notices;
+    public Set<CheckerInfo> Errors;
+    public Set<CheckerInfo> Warnings;
+    public Set<CheckerInfo> Notices;
     
     private String compiler;
     private String generic;
