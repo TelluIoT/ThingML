@@ -46,9 +46,9 @@ public class PosixTextDigitSerializer extends CMessageSerializer {
         int HandlerCode = ctx.getHandlerCode(cfg, m);
         int j = 0;
 
-        builder.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) ((" + HandlerCode + " >> 8) & 0xFF));");
+        builder.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) ((" + HandlerCode + " >> 8) & 0xFF));\n");
         j++;
-        builder.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) (" + HandlerCode + " & 0xFF));");
+        builder.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) (" + HandlerCode + " & 0xFF));\n");
         j++;
 
         for (Parameter pt : m.getParameters()) {
@@ -68,7 +68,7 @@ public class PosixTextDigitSerializer extends CMessageSerializer {
 
                     while (i > 0) {
                         i = i - 1;
-                        builder.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) (u_" + v + ".bytebuffer[" + i + "] & 0xFF));");
+                        builder.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) (u_" + v + ".bytebuffer[" + i + "] & 0xFF));\n");
                         j++;
                     }
                 }
@@ -109,7 +109,7 @@ public class PosixTextDigitSerializer extends CMessageSerializer {
         "                if(everythingisfine) {\n" +
         "                    externalMessageEnqueue(msg, (len / 3), listener_id);\n" +
         "                } else {\n" +
-        "                }");
+        "                }\n}\n");
         builder.append("}\n");
     }
     

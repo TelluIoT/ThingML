@@ -28,25 +28,31 @@ import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
+import org.sintef.thingml.Parameter;
 import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingmlFactory;
 import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CMessageSerializer;
 
 /**
  *
  * @author Nicolas Harrand
  */
 public class PosixWS extends CNetworkLibraryGenerator {
+    
+    CMessageSerializer ser;
 
     public PosixWS(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
+        this.ser = new PosixTextDigitSerializer(ctx, cfg);
     }
     
     public PosixWS(Configuration cfg, CCompilerContext ctx, List<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx);
+        this.ser = new PosixTextDigitSerializer(ctx, cfg);
     }
     
     private void addDependencies() {
@@ -265,6 +271,12 @@ public class PosixWS extends CNetworkLibraryGenerator {
                 ctemplate = ctemplate.replace(" /*SENDING_BROADCAST_OR_NOT*/", WSSending);
 
             }
+            
+            /*PARSE_FUNCTION*/
+            StringBuilder ParserImplementation = new StringBuilder();
+            
+            ser.generateMessageParser(eco, ParserImplementation);
+            ctemplate = ctemplate.replace("/*PARSE_IMPLEMENTATION*/", ParserImplementation);
 
             Integer traceLevel;
             if(eco.hasAnnotation("trace_level")) {
@@ -320,11 +332,18 @@ public class PosixWS extends CNetworkLibraryGenerator {
             String param;
             
             for (Message m : p.getSends()) {
-                Set<String> ignoreList = new HashSet<String>();
+                //Set<String> ignoreList = new HashSet<String>();
+                List<Parameter> ignoreList = new LinkedList<Parameter>();
                 if(additionalParam) {
                     if(m.hasAnnotation("websocket_client_id")) {
                         param = m.annotation("websocket_client_id").iterator().next();
-                        ignoreList.add(param);
+                        //ignoreList.add(param);
+                        for(Parameter pt : m.getParameters()) {
+                            if(pt.getName().compareTo(param) == 0) {
+                                ignoreList.add(pt);
+                            }
+                        }
+                        
                     } else {
                         param = "-1";
                     }
@@ -337,13 +356,14 @@ public class PosixWS extends CNetworkLibraryGenerator {
                 ctx.appendFormalParameters(t, builder, m);
                 builder.append("{\n");
 
-                int messageSize =  ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
+                //int messageSize =  ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
+                int messageSize =  ser.generateMessageSerialzer(eco, m, builder, "forward_buf", ignoreList);
 
                 builder.append("\n//Forwarding with specified function \n");
                 if(additionalParam) {
                     builder.append(eco.getName() + "_forwardMessage(forward_buf, " + messageSize + ", " + param + ");\n");
                 } else {
-                    builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                    builder.append(eco.getName() + "_forwardMessage(forward_buf, " + messageSize + ");\n");
                 }
         //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
                 builder.append("}\n\n");

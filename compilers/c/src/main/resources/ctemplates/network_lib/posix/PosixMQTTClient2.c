@@ -29,6 +29,8 @@ void /*PORT_NAME*/_set_listener_id(uint16_t id) {
 	/*PORT_NAME*/_instance.listener_id = id;
 }
 
+/*PARSE_IMPLEMENTATION*/
+
 
 void /*PORT_NAME*/_publish_callback(struct mosquitto * mosq, void *obj, uint16_t mid)
 {
@@ -39,41 +41,7 @@ void /*PORT_NAME*/_message_callback(struct mosquitto * mosq, void *obj, const st
     printf("%s %s\n", message->topic, message->payload);
     int len = strlen(message->payload);
     /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] receveid l:%i\n", len);
-    if (((len % 3) == 0) && (len >= 6)) {
-        unsigned char msg[len % 3];
-        unsigned char * p = message->payload;
-
-        int buf = 0;
-        int index = 0;
-        bool everythingisfine = true;
-        while ((index < len) && everythingisfine) {
-            if((*p - 48) < 10) {
-                buf = (*p - 48) + 10 * buf;
-            } else {
-                everythingisfine = false;
-            }
-            if ((index % 3) == 2) {
-                if(buf < 256) {
-                    msg[(index-2) / 3] =  (uint8_t) buf;
-                } else {
-                    everythingisfine = false;
-                }
-                buf = 0;
-            }
-            index++;
-            p++;
-        }
-        if(everythingisfine) {
-            int j;
-            externalMessageEnqueue(msg, (len / 3), /*PORT_NAME*/_instance.listener_id);
-            /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Message received\n");
-
-        } else {
-            /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] incorrect message '%s'\n", message->payload);
-        }
-    } else {
-        /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] incorrect message '%s'\n", message->payload);
-    }
+    /*PORT_NAME*/_parser(message->payload, len, /*PORT_NAME*/_instance.listener_id);
 }
 
 void /*PORT_NAME*/_connect_callback(struct mosquitto * mosq, void *obj, int result)
