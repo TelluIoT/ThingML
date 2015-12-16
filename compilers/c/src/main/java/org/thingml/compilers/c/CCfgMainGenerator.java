@@ -321,7 +321,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         generateMessageProcessQueue(cfg, builder, headerbuilder, ctx);
 
         builder.append("\n");
-        generateMessageForwarders(cfg, builder, ctx);
+        generateMessageForwarders(cfg, builder, headerbuilder, ctx);
         builder.append("\n");
         builder.append("//external Message enqueue\n");
         generateExternalMessageEnqueue(cfg, builder, headerbuilder, ctx);
@@ -661,7 +661,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     }*/
 
     
-    protected void generateMessageForwarders(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    protected void generateMessageForwarders(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         
         //Thing Port Message Forwarder
         Map<Message, Map<Thing, Map<Port, Set<ExternalConnector>>>> tpm = new HashMap<Message, Map<Thing, Map<Port, Set<ExternalConnector>>>>();
@@ -711,7 +711,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
         
         for(NetworkLibraryGenerator nlg : ctx.getNetworkLibraryGenerators()) {
-            nlg.generateMessageForwarders(builder);
+            nlg.generateMessageForwarders(builder, headerbuilder);
         }
         
         
@@ -723,7 +723,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 for(Port p : peco.keySet()) {
                     ecoSet = peco.get(p);
                     if(!ecoSet.isEmpty()) {
-                        builder.append("void forward_" + ctx.getSenderName(t, p, m));
+                        headerbuilder.append("void " + "forward_" + ctx.getSenderName(t, p, m));
+                        ctx.appendFormalParameters(t, headerbuilder, m);
+                        headerbuilder.append(";\n");
+
+                        builder.append("void " + getCppNameScope() + "forward_" + ctx.getSenderName(t, p, m));
                         ctx.appendFormalParameters(t, builder, m);
                         builder.append("{\n");
                         
@@ -1390,7 +1394,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             Port port = eco.getPort();
             for(Message msg : eco.getPort().getSends()) {
                 builder.append("register_external_" + ctx.getSenderName(t, port, msg) + "_listener(");
-                builder.append("forward_" + ctx.getSenderName(t, port, msg) + ");\n");
+                builder.append("&" + getCppNameScope() + "forward_" + ctx.getSenderName(t, port, msg) + ");\n");
             }
         }
         

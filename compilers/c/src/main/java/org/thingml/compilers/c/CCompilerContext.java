@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.c;
 
+import java.util.ArrayList;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import java.util.HashSet;
 import org.sintef.thingml.*;
@@ -428,6 +429,15 @@ public abstract class CCompilerContext extends Context {
             builder.append(" " + p.getName());
         }
         builder.append(")");
+    }
+
+    public List<String> getFormalParameterNamelist(Thing thing, Message m) {
+        List<String> paramList = new ArrayList<String>();
+        
+        for (Parameter p : m.getParameters()) {
+            paramList.add(p.getName());
+        }
+        return paramList;
     }
 
     public void appendActualParameters(Thing thing, StringBuilder builder, Message m, String instance_param) {

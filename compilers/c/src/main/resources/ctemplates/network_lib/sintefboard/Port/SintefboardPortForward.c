@@ -11,9 +11,9 @@ void /*CFG_CPPNAME_SCOPE*//*PORT_NAME*/_set_listener_id(uint16_t id) {
 }
 
 
-void /*CFG_CPPNAME_SCOPE*//*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size) {
-  
-}
+//void /*CFG_CPPNAME_SCOPE*//*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size) {
+//  
+//}
 
 void /*CFG_CPPNAME_SCOPE*//*PORT_NAME*/_read(void) {
   

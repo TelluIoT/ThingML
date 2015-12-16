@@ -55,7 +55,22 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
      * Note that this last one can have additional parameters if they are correctly handled by generateMessageForwarders
      */
     
-    public void generateMessageForwarders(StringBuilder builder) {
+    
+    public boolean isGeneratingCpp() {
+        return false;
+    }
+
+    public String getCppNameScope() {
+        return "";
+    }
+
+    @Override
+    final public void generateMessageForwarders(StringBuilder builder) {
+        System.out.println("CNetworkLibraryGenerator::generateMessageForwarders() ERROR This method shall not be called in the C-compiler. Use method with headerbuilder.");
+    }
+    
+    
+    public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         
         
@@ -67,8 +82,13 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
             for (Message m : p.getSends()) {
                 Set<String> ignoreList = new HashSet<String>();
 
+                headerbuilder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                headerbuilder.append("void " + getCppNameScope() + "forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                ctx.appendFormalParameters(t, headerbuilder, m);
+                headerbuilder.append(";\n");
+                
                 builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                builder.append("void " + getCppNameScope() + "forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
                 ctx.appendFormalParameters(t, builder, m);
                 builder.append("{\n");
 

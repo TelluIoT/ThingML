@@ -29,7 +29,7 @@ void /*CFG_CPPNAME_SCOPE*/loop() {
     int more_to_process = 1;  // Added loop to process all fifo content
     while (more_to_process == 1) {
         loop_counter++;
-        if (loop_counter > 1) printf("loop_count : %d\n", loop_counter);
+        //if (loop_counter > 1) printf("loop_count : %d\n", loop_counter);
 
 /*POLL_CODE*/
 
