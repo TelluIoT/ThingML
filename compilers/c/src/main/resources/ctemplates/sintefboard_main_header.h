@@ -13,14 +13,15 @@ typedef unsigned char byte;
 
 class /*NAME*/ : public ThingMlRuntime_class {
 private:
-
+port_class *Ports_ptr;
 /*HEADER_CLASS*/
 
 /*HEADER_CONFIGURATION*/
 
 public:
-void setup();
-void loop();
+void setup(port_class *ports_ptr);
+void loop(void);
+void receive_forward(msgc_t *msg_in_ptr, int16_t from_port);
 
 };
 

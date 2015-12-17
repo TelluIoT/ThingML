@@ -431,15 +431,25 @@ public abstract class CCompilerContext extends Context {
         builder.append(")");
     }
 
-    public List<String> getFormalParameterNamelist(Thing thing, Message m) {
-        List<String> paramList = new ArrayList<String>();
-        
+    //public List<String> getFormalParameterNamelist(Thing thing, Message m) {
+    //    List<String> paramList = new ArrayList<String>();
+    //    
+    //    for (Parameter p : m.getParameters()) {
+    //        paramList.add(p.getName());
+    //    }
+    //    return paramList;
+    //}
+
+    public void appendFormalParameterDeclarations(StringBuilder builder, Message m) {
         for (Parameter p : m.getParameters()) {
-            paramList.add(p.getName());
+            builder.append(getCType(p.getType()));
+            if (p.getCardinality() != null) builder.append("*");
+            builder.append(" " + p.getName());
+            builder.append(";\n");
         }
-        return paramList;
     }
 
+    
     public void appendActualParameters(Thing thing, StringBuilder builder, Message m, String instance_param) {
         if (instance_param == null) instance_param = getInstanceVarName();
         builder.append("(");

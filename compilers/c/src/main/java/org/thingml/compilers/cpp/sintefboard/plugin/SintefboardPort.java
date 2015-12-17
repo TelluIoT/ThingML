@@ -188,7 +188,7 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
     public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         
-        
+        //************ Generate methods for sending meassages to ports
         for (ExternalConnector eco : this.getExternalConnectors()) {
             //if (eco.hasAnnotation("c_external_send")) {
             Thing t = eco.getInst().getInstance().getType();
@@ -208,17 +208,29 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
                 ctx.appendFormalParameters(t, builder, m);
                 builder.append("{\n");
 
-                builder.append("//eco.getname is() " + eco.getName() + "\n");
-                builder.append("//eco.getProtocol() is " + eco.getProtocol() + "\n");
-                builder.append("//m.getname is() " + m.getName() + "\n");
-                builder.append("//m.annotation(rcdport_tagname) is " +  m.annotation("rcdport_tagname").iterator().next() + "\n");
-                builder.append("//m.annotation(rcdport_composeproto) is " +  m.annotation("rcdport_composeproto").iterator().next() + "\n");
+                //builder.append("//eco.getname is() " + eco.getName() + "\n");
+                String portname = eco.getName();
+                String portnum = portname.replace("Port", "");
+                //builder.append("//portnum is() " + portnum + "\n");
+                //builder.append("//eco.getProtocol() is " + eco.getProtocol() + "\n");
+                //builder.append("//m.getname is() " + m.getName() + "\n");
+                String msgid = m.annotation("rcdport_msgid").iterator().next();
+                //builder.append("//m.annotation(rcdport_msgid) is " +  msgid + "\n");
+                String composeproto = m.annotation("rcdport_composeproto").iterator().next();
+                //builder.append("//m.annotation(rcdport_composeproto) is " +  composeproto + "\n");
+                String composestr = composeproto.replace("/*MSG_PTR*/", "&msg_out").replace("/*MSGID*/", msgid);
                 
-                paramList = ctx.getFormalParameterNamelist(t, m);
-                for (int i = 0; i < paramList.size(); i++){
-                    builder.append("//ctx.getFormalParameterNamelist(" + i + ") is " +  paramList.get(i) + "\n");
-                }
+                //paramList = ctx.getFormalParameterNamelist(t, m);
+                //for (int i = 0; i < paramList.size(); i++){
+                //    builder.append("//ctx.getFormalParameterNamelist(" + i + ") is " +  paramList.get(i) + "\n");
+                //}
+                
                 builder.append("// TODO This code will be added later\n");
+                builder.append("msgc_t   msg_out;      // Outgoing message\n");
+                builder.append("if( Ports_ptr->IsConnected(" + portnum + ") ) {\n");
+                builder.append(composestr + "\n");
+                builder.append("Ports_ptr->SendMsgc(" + portnum + ", &msg_out);\n");
+                builder.append("}\n");
 
                 //ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
 
@@ -228,8 +240,57 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
         //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
                 builder.append("}\n\n");
             }
-                
         }
+
+        //************ Generate methods for receiving messages from ports
+        
+        //This header is part of the "sintefboard_main_header.h" template file
+        //headerbuilder.append("// Receive forwarding of messages from ports\n");
+        //headerbuilder.append("void " + "receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
+        //headerbuilder.append(";\n");
+
+        builder.append("// Receive forwarding of messages from ports\n");
+        builder.append("void " + getCppNameScope() + "receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
+        builder.append("{\n");
+        builder.append("switch (from_port) {\n");
+        for (ExternalConnector eco : this.getExternalConnectors()) {
+            //if (eco.hasAnnotation("c_external_send")) {
+            Thing t = eco.getInst().getInstance().getType();
+            Port p = eco.getPort();
+            String portname = eco.getName();
+            String portnum = portname.replace("Port", "");
+            builder.append("//portnum is() " + portnum + "\n");
+            builder.append("case " + portnum + ":\n");
+            generatePortReceiver(portname, p, builder);
+            builder.append("break;\n");
+        }
+        builder.append("} // switch from port\n");
+        builder.append("}\n");
     }
-    
+
+    private void generatePortReceiver(String portname, Port p, StringBuilder builder) {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
+        
+        builder.append("switch (msg_in_ptr->MsgId) {\n");
+        for (Message m : p.getReceives()) {
+            Set<String> ignoreList = new HashSet<String>();
+            String msgid = m.annotation("rcdport_msgid").iterator().next();
+            builder.append("//m.annotation(rcdport_msgid) is " +  msgid + "\n");
+            String decompproto = m.annotation("rcdport_decompproto").iterator().next();
+            builder.append("//m.annotation(rcdport_decompproto) is " +  decompproto + "\n");
+            builder.append("case " + msgid + ":\n");
+            builder.append("{\n");
+            ctx.appendFormalParameterDeclarations(builder, m);
+            String decompstr = decompproto.replace("/*MSG_PTR*/", "msg_in_ptr").replace("/*MSGID*/", msgid);
+            builder.append(decompstr + "\n");
+            builder.append("{\n");
+            ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
+            builder.append("externalMessageEnqueue(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ", " + portname + "_instance.listener_id);\n");
+            builder.append("}\n");
+            builder.append("}\n");
+            builder.append("break;\n");
+        }
+        builder.append("} // switch MsgId \n");
+    }
+
 }
