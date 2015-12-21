@@ -1,0 +1,71 @@
+import "../Timer.thingml"
+
+datatype Long	
+	@c_type "long"
+	@c_byte_size "4";
+
+/*****************************************************************************
+ * Definition of the ThingML scheduler messages
+ *****************************************************************************/
+thing fragment ThingMLSchedulerMsg {
+	message setup();
+	message poll();
+}
+
+thing ThingMLScheduler includes ThingMLSchedulerMsg 
+{
+	provided port Polling {
+		sends poll, setup
+	}
+}
+// Manage a set of software timers.
+thing TimerArduino includes Timer, ThingMLSchedulerMsg
+@pim "Timer"
+@platform "arduino"
+{
+	required port Polling 
+    {
+		receives poll
+	}
+    
+    statechart SoftTimer init Idle 
+    {
+        property target : Long = 0
+    
+        state Idle 
+        {
+            /**on entry do
+            	print("[Timer] Idle\n")
+            end*/
+            
+            transition start -> Counting
+            event m : timer?timer_start
+            guard m.delay > 0
+            action target = 'millis()' + m.delay
+        }
+        
+        state Counting 
+        {    
+            transition timeout -> Idle 
+            event Polling?poll
+            guard not ('millis()' < target)
+            after timer!timer_timeout()
+                
+            transition cancel -> Idle
+            event m : timer?timer_cancel
+                
+            internal reset
+            event m : timer?timer_start
+            guard m.delay > 0
+            action target = 'millis()' + m.delay
+        }
+    }
+}
+
+configuration TestTimerArduino 
+@arduino_stdout "Serial"
+{
+    instance timer : TimerArduino
+    instance client : HelloTimer
+    connector client.timer => timer.timer    
+}

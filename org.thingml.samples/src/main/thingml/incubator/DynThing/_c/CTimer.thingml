@@ -1,0 +1,91 @@
+import "../Timer.thingml"
+
+datatype Boolean	
+	@c_type "uint8_t"
+	@c_byte_size "2"
+	@java_type "boolean"
+	@java_primitive "true";
+
+thing fragment ClockMsgs {
+	message clock_tick();
+}
+
+thing fragment Clock includes ClockMsgs 
+{
+	readonly property period : Integer = 100 // clock period in ms
+	
+	provided port signal {
+		sends clock_tick
+	}
+}
+
+thing ClockLinux includes Clock 
+@c_headers "#include <sys/time.h>"
+{
+
+	function sleep_ms(timeout_ms : Integer)
+	do
+		'struct timeval tv;
+        tv.tv_sec = '& timeout_ms &'/1000;
+        tv.tv_usec = ('& timeout_ms &'%1000) * 1000;
+        select(0, NULL, NULL, NULL, &tv);'
+	end
+	
+	function start_clock_process()
+	@fork_linux_thread "true"
+	do
+		while (1) do
+			sleep_ms(period)
+            signal!clock_tick()
+		end
+	end
+	
+	statechart ClockImpl init Ticking {
+		on entry do
+            start_clock_process()
+        end
+		state Ticking{}
+	}
+}
+
+thing TimerLinux includes Timer, ClockMsgs 
+@pim "Timer"
+@platform "linux"
+{
+
+	required port clock { receives clock_tick }
+	
+	//To use timer in millisecond, set "millisecond" to true and "period" to the period of the clock
+	readonly property millisecond : Boolean = true
+	readonly property period : Integer = 100
+	
+	statechart ClockTimerImpl init Idle {
+		
+		property remaining : Integer = 0
+		
+        state Idle {
+			transition -> Counting event m : timer?timer_start action remaining = m.delay 
+		}
+		
+		state Counting {
+			transition -> Idle event timer?timer_cancel
+			transition -> Idle event clock?clock_tick guard remaining == 0 action timer!timer_timeout()
+			internal event clock?clock_tick guard remaining > 0 action do 
+				if (not millisecond) remaining = remaining - 1
+				if (millisecond) remaining = remaining - period
+			end 
+			
+		}
+	
+	}
+
+}
+
+configuration TestTimerC {
+    instance clock : ClockLinux
+	set clock.period = 100
+	instance timer : TimerLinux
+	connector timer.clock => clock.signal
+    instance client : HelloTimer//this is your application
+    connector client.timer => timer.timer    
+}
