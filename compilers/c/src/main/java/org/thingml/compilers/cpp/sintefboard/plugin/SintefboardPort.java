@@ -187,85 +187,86 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
     @Override
     public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
-        
-        //************ Generate methods for sending meassages to ports
-        for (ExternalConnector eco : this.getExternalConnectors()) {
-            //if (eco.hasAnnotation("c_external_send")) {
-            Thing t = eco.getInst().getInstance().getType();
-            Port p = eco.getPort();
-            
-            for (Message m : p.getSends()) {
-                Set<String> ignoreList = new HashSet<String>();
-                List<String> paramList;
+        if(!this.getExternalConnectors().isEmpty()) {
 
-                headerbuilder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                headerbuilder.append("void " + "forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
-                ctx.appendFormalParameters(t, headerbuilder, m);
-                headerbuilder.append(";\n");
-                
-                builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                builder.append("void " + getCppNameScope() + "forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
-                ctx.appendFormalParameters(t, builder, m);
-                builder.append("{\n");
+            //************ Generate methods for sending meassages to ports
+            for (ExternalConnector eco : this.getExternalConnectors()) {
+                //if (eco.hasAnnotation("c_external_send")) {
+                Thing t = eco.getInst().getInstance().getType();
+                Port p = eco.getPort();
 
-                //builder.append("//eco.getname is() " + eco.getName() + "\n");
+                for (Message m : p.getSends()) {
+                    Set<String> ignoreList = new HashSet<String>();
+                    List<String> paramList;
+
+                    headerbuilder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                    headerbuilder.append("void " + "forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                    ctx.appendFormalParameters(t, headerbuilder, m);
+                    headerbuilder.append(";\n");
+
+                    builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                    builder.append("void " + getCppNameScope() + "forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                    ctx.appendFormalParameters(t, builder, m);
+                    builder.append("{\n");
+
+                    //builder.append("//eco.getname is() " + eco.getName() + "\n");
+                    String portname = eco.getName();
+                    String portnum = portname.replace("Port", "");
+                    //builder.append("//portnum is() " + portnum + "\n");
+                    //builder.append("//eco.getProtocol() is " + eco.getProtocol() + "\n");
+                    //builder.append("//m.getname is() " + m.getName() + "\n");
+                    String msgid = m.annotation("rcdport_msgid").iterator().next();
+                    //builder.append("//m.annotation(rcdport_msgid) is " +  msgid + "\n");
+                    String composeproto = m.annotation("rcdport_composeproto").iterator().next();
+                    //builder.append("//m.annotation(rcdport_composeproto) is " +  composeproto + "\n");
+                    String composestr = composeproto.replace("/*MSG_PTR*/", "&msg_out").replace("/*MSGID*/", msgid);
+
+                    //paramList = ctx.getFormalParameterNamelist(t, m);
+                    //for (int i = 0; i < paramList.size(); i++){
+                    //    builder.append("//ctx.getFormalParameterNamelist(" + i + ") is " +  paramList.get(i) + "\n");
+                    //}
+
+                    builder.append("// TODO This code will be added later\n");
+                    builder.append("msgc_t   msg_out;      // Outgoing message\n");
+                    builder.append("if( Ports_ptr->IsConnected(" + portnum + ") ) {\n");
+                    builder.append(composestr + "\n");
+                    builder.append("Ports_ptr->SendMsgc(" + portnum + ", &msg_out);\n");
+                    builder.append("}\n");
+
+                    //ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
+
+                    //builder.append("\n//Forwarding with specified function \n");
+                    //builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+
+            //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                    builder.append("}\n\n");
+                }
+            }
+
+            //************ Generate methods for receiving messages from ports
+
+            //This header is part of the "sintefboard_main_header.h" template file
+            //headerbuilder.append("// Receive forwarding of messages from ports\n");
+            //headerbuilder.append("void " + "receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
+            //headerbuilder.append(";\n");
+            builder.append("// Receive forwarding of messages from ports\n");
+            builder.append("void " + getCppNameScope() + "receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
+            builder.append("{\n");
+            builder.append("switch (from_port) {\n");
+            for (ExternalConnector eco : this.getExternalConnectors()) {
+                //if (eco.hasAnnotation("c_external_send")) {
+                Thing t = eco.getInst().getInstance().getType();
+                Port p = eco.getPort();
                 String portname = eco.getName();
                 String portnum = portname.replace("Port", "");
-                //builder.append("//portnum is() " + portnum + "\n");
-                //builder.append("//eco.getProtocol() is " + eco.getProtocol() + "\n");
-                //builder.append("//m.getname is() " + m.getName() + "\n");
-                String msgid = m.annotation("rcdport_msgid").iterator().next();
-                //builder.append("//m.annotation(rcdport_msgid) is " +  msgid + "\n");
-                String composeproto = m.annotation("rcdport_composeproto").iterator().next();
-                //builder.append("//m.annotation(rcdport_composeproto) is " +  composeproto + "\n");
-                String composestr = composeproto.replace("/*MSG_PTR*/", "&msg_out").replace("/*MSGID*/", msgid);
-                
-                //paramList = ctx.getFormalParameterNamelist(t, m);
-                //for (int i = 0; i < paramList.size(); i++){
-                //    builder.append("//ctx.getFormalParameterNamelist(" + i + ") is " +  paramList.get(i) + "\n");
-                //}
-                
-                builder.append("// TODO This code will be added later\n");
-                builder.append("msgc_t   msg_out;      // Outgoing message\n");
-                builder.append("if( Ports_ptr->IsConnected(" + portnum + ") ) {\n");
-                builder.append(composestr + "\n");
-                builder.append("Ports_ptr->SendMsgc(" + portnum + ", &msg_out);\n");
-                builder.append("}\n");
-
-                //ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
-
-                //builder.append("\n//Forwarding with specified function \n");
-                //builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
-                
-        //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
-                builder.append("}\n\n");
+                builder.append("//portnum is() " + portnum + "\n");
+                builder.append("case " + portnum + ":\n");
+                generatePortReceiver(portname, p, builder);
+                builder.append("break;\n");
             }
+            builder.append("} // switch from port\n");
+            builder.append("}\n");
         }
-
-        //************ Generate methods for receiving messages from ports
-        
-        //This header is part of the "sintefboard_main_header.h" template file
-        //headerbuilder.append("// Receive forwarding of messages from ports\n");
-        //headerbuilder.append("void " + "receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
-        //headerbuilder.append(";\n");
-
-        builder.append("// Receive forwarding of messages from ports\n");
-        builder.append("void " + getCppNameScope() + "receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
-        builder.append("{\n");
-        builder.append("switch (from_port) {\n");
-        for (ExternalConnector eco : this.getExternalConnectors()) {
-            //if (eco.hasAnnotation("c_external_send")) {
-            Thing t = eco.getInst().getInstance().getType();
-            Port p = eco.getPort();
-            String portname = eco.getName();
-            String portnum = portname.replace("Port", "");
-            builder.append("//portnum is() " + portnum + "\n");
-            builder.append("case " + portnum + ":\n");
-            generatePortReceiver(portname, p, builder);
-            builder.append("break;\n");
-        }
-        builder.append("} // switch from port\n");
-        builder.append("}\n");
     }
 
     private void generatePortReceiver(String portname, Port p, StringBuilder builder) {
