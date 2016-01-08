@@ -65,4 +65,8 @@ public abstract class NetworkLibraryGenerator {
      * For each PORT_NAME::Thing::Port::Message
      */
     public abstract void generateMessageForwarders(StringBuilder builder);
+
+    public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
+        System.out.println("NetworkLibraryGenerator::generateMessageForwarders() ERROR This method shall only be called in the C-compiler where it is overridden. Use method without headerbuilder for other compilers.");
+    }
 }

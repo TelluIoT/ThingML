@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.c;
 
+import java.util.ArrayList;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import java.util.HashSet;
 import org.sintef.thingml.*;
@@ -31,14 +32,18 @@ import org.thingml.compilers.DebugProfile;
  * Created by ffl on 01.06.15.
  */
 public abstract class CCompilerContext extends Context {
-    
+
     private Set<NetworkLibraryGenerator> NetworkLibraryGenerators;
 
     public CCompilerContext(ThingMLCompiler c) {
         super(c);
         NetworkLibraryGenerators = new HashSet<NetworkLibraryGenerator>();
     }
-    
+
+    public String getCfgMainHeaderTemplate() {
+        return getTemplateByID("ctemplates/" + getCompiler().getID() + "_main_header.h");
+    }
+
     public String getDynamicConnectorsTemplate() {
         return getTemplateByID("ctemplates/dyn_connectors.c");
     }
@@ -72,6 +77,22 @@ public abstract class CCompilerContext extends Context {
             return getTemplateByID("ctemplates/network_lib/arduino/Serial/ArduinoSerialForward.h");
         } else {
             return getTemplateByID("ctemplates/network_lib/posix/PosixSerialForward.h");
+        }
+    }
+    
+    public String getNetworkLibPortTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/Port/SintefboardPortForward.c");
+        } else {
+            return "";
+        }
+    }
+    
+    public String getNetworkLibPortHeaderTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/Port/SintefboardPortForward.h");
+        } else {
+            return "";
         }
     }
     
@@ -127,6 +148,10 @@ public abstract class CCompilerContext extends Context {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thing_impl.c");
     }
 
+    public String getThingImplInitTemplate() {
+        return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thing_impl_init.c");
+    }
+
     public String getRuntimeHeaderTemplate() {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_runtime.h");
     }
@@ -138,7 +163,7 @@ public abstract class CCompilerContext extends Context {
     public String getCommonHeaderTemplate() {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thingml_typedefs.h");
     }
-    
+
     public boolean hasAnnotationWithValue(Configuration cfg, String annotation, String value) {
         for(String st : cfg.annotation(annotation)) {
             if (st.compareToIgnoreCase(value) == 0) {
@@ -244,7 +269,7 @@ public abstract class CCompilerContext extends Context {
     public String getHandlerName(Thing thing, Port p, Message m) {
         return thing.qname("_") + "_handle_" + p.getName() + "_" + m.getName();
     }
-    
+
     public int numberInstancesAndPort(Configuration cfg) {
         int result = 0;
         for(Instance i : cfg.allInstances()) {
@@ -262,7 +287,7 @@ public abstract class CCompilerContext extends Context {
     protected Hashtable<Message, Integer> handlerCodes = new Hashtable<Message, Integer>();
     protected int handlerCodeCpt = 1;
 
-    
+
     public int getHandlerCode(Configuration cfg, Message m) {
         Integer result = handlerCodes.get(m);
         if (result == null) {
@@ -270,7 +295,7 @@ public abstract class CCompilerContext extends Context {
                 result = Integer.parseInt(m.annotation("code").iterator().next());
                 if (result == null) {
                     System.err.println("Warning: @code must contain an Integer for message:" + m.getName());
-                }
+        }
             } else {
                 boolean codeIsFree = false;
 
@@ -283,7 +308,7 @@ public abstract class CCompilerContext extends Context {
                                     if (Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
                                         codeIsFree = false;
                                         handlerCodeCpt += 1;
-                                    }
+        }
                                 }
                             }
                             for (Message me : po.getSends()) {
@@ -297,11 +322,11 @@ public abstract class CCompilerContext extends Context {
                         }
                     }
                 }
-                result = handlerCodeCpt;
-                handlerCodeCpt += 1;
+            result = handlerCodeCpt;
+            handlerCodeCpt += 1;
                 if (result == null) {
                     System.err.println("Warning: no code could be found for message:" + m.getName());
-                }
+        }
             }
 
             handlerCodes.put(m, result);
@@ -310,7 +335,7 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getEmptyHandlerName(Thing thing) {
-        return thing.qname("_") + "_handle_empty_event";
+        return  thing.qname("_") + "_handle_empty_event";
     }
 
     public String getSenderName(Thing thing, Port p, Message m) {
@@ -318,7 +343,7 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getCName(Function f, Thing thing) {
-        return "f_" + thing.getName() + "_" + f.getName();
+        return  "f_" + thing.getName() + "_" + f.getName();
     }
 
     public String getStateVarName(Region r) {
@@ -332,7 +357,7 @@ public abstract class CCompilerContext extends Context {
     public String getCVarName(Variable v) {
         return v.qname("_") + "_var";
     }
-    
+
     public String getTraceFunctionForString(Configuration cfg) {
         if(getCompiler().getID().compareTo("arduino") == 0) {
             if(cfg.hasAnnotation("arduino_stdout")) {
@@ -344,7 +369,7 @@ public abstract class CCompilerContext extends Context {
             return "printf(";
         }
     }
-    
+
     public String getTraceFunctionForInt(Configuration cfg) {
         if(getCompiler().getID().compareTo("arduino") == 0) {
             if(cfg.hasAnnotation("arduino_stdout")) {
@@ -406,6 +431,25 @@ public abstract class CCompilerContext extends Context {
         builder.append(")");
     }
 
+    //public List<String> getFormalParameterNamelist(Thing thing, Message m) {
+    //    List<String> paramList = new ArrayList<String>();
+    //    
+    //    for (Parameter p : m.getParameters()) {
+    //        paramList.add(p.getName());
+    //    }
+    //    return paramList;
+    //}
+
+    public void appendFormalParameterDeclarations(StringBuilder builder, Message m) {
+        for (Parameter p : m.getParameters()) {
+            builder.append(getCType(p.getType()));
+            if (p.getCardinality() != null) builder.append("*");
+            builder.append(" " + p.getName());
+            builder.append(";\n");
+        }
+    }
+
+    
     public void appendActualParameters(Thing thing, StringBuilder builder, Message m, String instance_param) {
         if (instance_param == null) instance_param = getInstanceVarName();
         builder.append("(");
@@ -437,7 +481,7 @@ public abstract class CCompilerContext extends Context {
     public int getMessageSerializationSize(Message m) {
         int result = 2; // 2 bytes to store the port/message code
         result += 2; // to store the id of the source instance
-        for (Parameter p : m.getParameters()) {
+        for(Parameter p : m.getParameters()) {
             result += this.getCByteSize(p.getType(), 0);
         }
         return result;
@@ -511,7 +555,7 @@ public abstract class CCompilerContext extends Context {
 
         if (isPointer(t)) {
             // This should not happen and should be checked before.
-            throw new Error("ERROR: Attempting to serialize a pointer (for type " + t.getName() + "). This is not allowed.");
+            throw  new Error("ERROR: Attempting to serialize a pointer (for type " + t.getName() + "). This is not allowed.");
         } else {
             while (i > 0) {
                 i = i - 1;
@@ -528,7 +572,7 @@ public abstract class CCompilerContext extends Context {
         String v = variable;
         if (isPointer(t)) {
             // This should not happen and should be checked before.
-            throw new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
+            throw  new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
         } else {
             //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
 
@@ -550,7 +594,7 @@ public abstract class CCompilerContext extends Context {
                     //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
                     builder.append("_fifo_enqueue( u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
                     //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
-                }
+        }
             }
         }
     }
@@ -582,16 +626,16 @@ public abstract class CCompilerContext extends Context {
                     builder.append("} u_" + v + ";\n");
                     builder.append("u_" + v + ".p = " + v + ";\n");
 
-                    while (i > 0) {
-                        i = i - 1;
+            while (i > 0) {
+                i = i - 1;
                         //if (i == 0) 
                         //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
                         builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                         j++;
-                    }
-                }
             }
         }
+    }
+}
         
         if(j == 2) {
             return j;
