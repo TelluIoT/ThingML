@@ -202,7 +202,7 @@ public class PosixSerial extends CNetworkLibraryGenerator {
     }
     
     @Override
-    public void generateMessageForwarders(StringBuilder builder) {
+    public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
         super.generateMessageForwarders(builder, ser);
     }
 }

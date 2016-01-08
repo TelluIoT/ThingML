@@ -29,7 +29,7 @@ import java.io.InputStream;
 public class ThingMLFrame extends JFrame {
 
     FilePanel filePanel = null;
-    ThingMLPanel editor = new ThingMLPanel();
+    ThingMLPanel editor;
     String argsFlat = "";
 
     public ThingMLFrame(String args[]) {
@@ -39,6 +39,12 @@ public class ThingMLFrame extends JFrame {
                 argsFlat += "=";
             }
             argsFlat += s;
+        }
+        
+        if(argsFlat.contains("-ArduinoIDEPlugin=true")) {
+            editor = new ThingMLPanel(true);
+        } else {
+            editor = new ThingMLPanel();
         }
 
         if (argsFlat.contains("-open=")) {

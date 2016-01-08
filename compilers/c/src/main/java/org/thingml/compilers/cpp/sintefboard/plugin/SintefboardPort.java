@@ -84,71 +84,7 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
             ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
             htemplate = htemplate.replace("/*PORT_NAME*/", portName);
 
-            //String startByte;
-            //if(eco.hasAnnotation("serial_start_byte")) {
-            //    startByte = eco.annotation("serial_start_byte").iterator().next();
-            //} else {
-            //    startByte = "18";
-            //}
-            //ctemplate = ctemplate.replace("/*START_BYTE*/", startByte);
-
-            //String stopByte;
-            //if(eco.hasAnnotation("serial_stop_byte")) {
-            //    stopByte = eco.annotation("serial_stop_byte").iterator().next();
-            //} else {
-            //    stopByte = "19";
-            //}
-            //ctemplate = ctemplate.replace("/*STOP_BYTE*/", stopByte);
-
-            //String escapeByte;
-            //if(eco.hasAnnotation("serial_escape_byte")) {
-            //    escapeByte = eco.annotation("serial_escape_byte").iterator().next();
-            //} else {
-            //    escapeByte = "125";
-            //}
-            //ctemplate = ctemplate.replace("/*ESCAPE_BYTE*/", escapeByte);
-
-            //Integer maxMsgSize = 0;
-            //for(Message m : eco.getPort().getReceives()) {
-            //    if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
-            //        maxMsgSize = ctx.getMessageSerializationSize(m);
-            //    }
-            //}
-            //maxMsgSize = maxMsgSize - 2;
-
-            //ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
-
-            //if(ring) {
-            //    maxMsgSize++;
-            //}
-
-            //String limitBytePerLoop;
-            //if(eco.hasAnnotation("serial_limit_byte_per_loop")) {
-            //    limitBytePerLoop = eco.annotation("serial_limit_byte_per_loop").iterator().next();
-            //} else {
-            //    Integer tmp = maxMsgSize*2;
-            //    limitBytePerLoop = tmp.toString();
-            //}
-            //ctemplate = ctemplate.replace("/*LIMIT_BYTE_PER_LOOP*/", limitBytePerLoop);
-
-
-
-            //String msgBufferSize;
-            //if(eco.hasAnnotation("serial_msg_buffer_size")) {
-            //    msgBufferSize = eco.annotation("serial_limit_byte_per_loop").iterator().next();
-            //    Integer tmp = Integer.parseInt(msgBufferSize);
-            //    if(tmp != null) {
-            //        if(tmp < maxMsgSize) {
-            //            System.err.println("Warning: @serial_limit_byte_per_loop should specify a size greater than the maximal size of a message.");
-            //            msgBufferSize = maxMsgSize.toString();
-            //        }
-            //    }
-            //} else {
-            //    Integer tmp = maxMsgSize*2;
-            //    msgBufferSize = tmp.toString();
-            //}
-            //ctemplate = ctemplate.replace("/*MSG_BUFFER_SIZE*/", msgBufferSize);
-
+            
             //Connector Instanciation
             StringBuilder eco_instance = new StringBuilder();
             eco_instance.append("//Connector");

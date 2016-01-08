@@ -26,6 +26,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.DebugProfile;
 
 /**
@@ -172,7 +173,13 @@ public abstract class CCompilerContext extends Context {
         }
         return false;
     }
-    
+    public boolean containsParam(List<Parameter> list, Parameter element) {
+        for(Parameter e : list) {
+            if (EcoreUtil.equals(e, element))
+                return true;
+        }
+        return false;
+    }
     // Argh!!
     protected Instance concreteInstance = null;
 

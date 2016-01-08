@@ -34,7 +34,7 @@ public class ThingMLino implements Tool {
     public void init(Editor editor) {
         this.editor = editor;
         args = new String[1];
-        args[0] = "ArduinoIDEPlugin=true";
+        args[0] = "-ArduinoIDEPlugin=true";
     }
 
     public void run() {
