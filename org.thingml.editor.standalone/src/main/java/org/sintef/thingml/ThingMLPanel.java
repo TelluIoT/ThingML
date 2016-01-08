@@ -51,8 +51,13 @@ public class ThingMLPanel extends JPanel {
 
     File targetFile = null;
     JEditorPane codeEditor = new JEditorPane();
-
+    Boolean ArduinoPlugin = false;
+    
     public ThingMLPanel() {
+        this(false);
+    }
+    
+    public ThingMLPanel(Boolean ArduinoPlugin) {
         try {
             this.setLayout(new BorderLayout());
             jsyntaxpane.DefaultSyntaxKit.initKit();
@@ -64,11 +69,8 @@ public class ThingMLPanel extends JPanel {
             reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
 
             //codeEditor.setBackground(Color.LIGHT_GRAY)
-
-            EditorKit editorKit = codeEditor.getEditorKit();
-            JToolBar toolPane = new JToolBar();
-            ((ThingMLJSyntaxKit) editorKit).addToolBarActions(codeEditor, toolPane);
-
+            
+            
             JMenuBar menubar = new JMenuBar();
             JInternalFrame menuframe = new JInternalFrame();
 
@@ -77,7 +79,16 @@ public class ThingMLPanel extends JPanel {
 
             menuframe.setLayout(new BorderLayout());
             menuframe.add(scrPane, BorderLayout.CENTER);
-            menuframe.add(toolPane, BorderLayout.NORTH);
+            
+            if(!ArduinoPlugin) {
+                try {
+                    EditorKit editorKit = codeEditor.getEditorKit();
+                    JToolBar toolPane = new JToolBar();
+                    ((ThingMLJSyntaxKit) editorKit).addToolBarActions(codeEditor, toolPane);
+                    menuframe.add(toolPane, BorderLayout.NORTH);
+                } catch (Exception e) {
+                }
+            }
 
             menuframe.setVisible(true);
             ((BasicInternalFrameUI) menuframe.getUI()).setNorthPane(null);
@@ -157,7 +168,7 @@ public class ThingMLPanel extends JPanel {
             e.printStackTrace();
         }
     }
-
+    
     public ThingMLModel loadThingMLmodel(File file) {
         ResourceSet rs = new ResourceSetImpl();
         org.eclipse.emf.common.util.URI xmiuri = org.eclipse.emf.common.util.URI.createFileURI(file.getAbsolutePath());

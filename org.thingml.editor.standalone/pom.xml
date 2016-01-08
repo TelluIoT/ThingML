@@ -64,24 +64,24 @@
     </dependencies>
 
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <mainClass>org.sintef.thingml.ThingMLApp</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>java</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <mainClass>org.sintef.thingml.ThingMLApp</mainClass>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
 
     <!--<repositories>
         <repository>
