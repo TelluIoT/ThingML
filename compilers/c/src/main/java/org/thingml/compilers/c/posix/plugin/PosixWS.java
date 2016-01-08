@@ -316,7 +316,7 @@ public class PosixWS extends CNetworkLibraryGenerator {
     }
 
     @Override
-    public void generateMessageForwarders(StringBuilder builder) {
+    public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         for (ExternalConnector eco : this.getExternalConnectors()) {
             //if (eco.hasAnnotation("c_external_send")) {
