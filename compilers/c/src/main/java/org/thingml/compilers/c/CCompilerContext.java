@@ -358,6 +358,31 @@ public abstract class CCompilerContext extends Context {
         return v.qname("_") + "_var";
     }
 
+    public String getConcatenatedParameterTypes(Message m) {
+        String ret = "";
+        for (Parameter p : m.getParameters()) {
+            ret += "_" + getCType(p.getType());
+            if (p.getCardinality() != null) ret+= "_ptr";
+        }
+        return(ret);
+    }
+
+    public String getActualParametersSection(Message m) {
+        String ret = "";
+        for (Parameter p : m.getParameters()) {
+            ret += ", " + p.getName();
+        }
+        return(ret);
+    }
+
+    public String getActualPtrParametersSection(Message m) {
+        String ret = "";
+        for (Parameter p : m.getParameters()) {
+            ret += ", &" + p.getName();
+        }
+        return(ret);
+    }
+
     public String getTraceFunctionForString(Configuration cfg) {
         if(getCompiler().getID().compareTo("arduino") == 0) {
             if(cfg.hasAnnotation("arduino_stdout")) {
@@ -381,6 +406,8 @@ public abstract class CCompilerContext extends Context {
             return "printf(\"%i\", ";
         }
     }
+    
+    
     
     boolean traceLevelIsAbove(AnnotatedElement E, int level) {
         Integer traceLevel = 0;
@@ -431,6 +458,7 @@ public abstract class CCompilerContext extends Context {
         builder.append(")");
     }
 
+    
     //public List<String> getFormalParameterNamelist(Thing thing, Message m) {
     //    List<String> paramList = new ArrayList<String>();
     //    

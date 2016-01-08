@@ -217,19 +217,20 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
                     //builder.append("//m.getname is() " + m.getName() + "\n");
                     String msgid = m.annotation("rcdport_msgid").iterator().next();
                     //builder.append("//m.annotation(rcdport_msgid) is " +  msgid + "\n");
-                    String composeproto = m.annotation("rcdport_composeproto").iterator().next();
+                    //String composeproto = m.annotation("rcdport_composeproto").iterator().next();
                     //builder.append("//m.annotation(rcdport_composeproto) is " +  composeproto + "\n");
-                    String composestr = composeproto.replace("/*MSG_PTR*/", "&msg_out").replace("/*MSGID*/", msgid);
+                    //String composestr = composeproto.replace("/*MSG_PTR*/", "&msg_out").replace("/*MSGID*/", msgid);
 
                     //paramList = ctx.getFormalParameterNamelist(t, m);
                     //for (int i = 0; i < paramList.size(); i++){
                     //    builder.append("//ctx.getFormalParameterNamelist(" + i + ") is " +  paramList.get(i) + "\n");
                     //}
 
-                    builder.append("// TODO This code will be added later\n");
+                    //builder.append("// TODO This code will be added later\n");
                     builder.append("msgc_t   msg_out;      // Outgoing message\n");
                     builder.append("if( Ports_ptr->IsConnected(" + portnum + ") ) {\n");
-                    builder.append(composestr + "\n");
+                    builder.append("APP_MSGC_comp" + ctx.getConcatenatedParameterTypes(m) + "(&msg_out, " + msgid + ctx.getActualParametersSection(m) + ");\n");
+                    //builder.append(composestr + "\n");
                     builder.append("Ports_ptr->SendMsgc(" + portnum + ", &msg_out);\n");
                     builder.append("}\n");
 
@@ -282,8 +283,9 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
             builder.append("case " + msgid + ":\n");
             builder.append("{\n");
             ctx.appendFormalParameterDeclarations(builder, m);
-            String decompstr = decompproto.replace("/*MSG_PTR*/", "msg_in_ptr").replace("/*MSGID*/", msgid);
-            builder.append(decompstr + "\n");
+            //String decompstr = decompproto.replace("/*MSG_PTR*/", "msg_in_ptr").replace("/*MSGID*/", msgid);
+            //builder.append(decompstr + "\n");
+            builder.append("APP_MSGC_decomp" + ctx.getConcatenatedParameterTypes(m) + "(&msg_out, " + msgid + ctx.getActualPtrParametersSection(m) + ");\n");
             builder.append("{\n");
             ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
             builder.append("externalMessageEnqueue(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ", " + portname + "_instance.listener_id);\n");
