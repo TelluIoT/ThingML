@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package org.sintef.thingml;
 
-import javax.swing.*;
+import java.util.Observable;
 
 /**
- * Created by bmori on 21.05.2015.
+ *
+ * @author sintef
  */
-public class ThingMLApp {
-
-    public static void main(String args[]) {
-        ThingMLFrame f = new ThingMLFrame(args);
-        f.setSize(800, 600);
-        f.setPreferredSize(f.getSize());
-        f.pack();
-        f.setVisible(true);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+public class ObservableString extends Observable {
+    public String str;
+    
+    public ObservableString () {
+        this.str = new String();
     }
-
-    public static void runAsArduinoPlugin(String args[], ObservableString transferBuf) {
-        ThingMLFrame f = new ThingMLFrame(args, transferBuf);
-        f.setSize(800, 600);
-        f.setPreferredSize(f.getSize());
-        f.pack();
-        f.setVisible(true);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+    public void setString(String st) {
+        str = new String(st);
+        //System.out.println("new " + str);
+        setChanged();
     }
-
+    
 }

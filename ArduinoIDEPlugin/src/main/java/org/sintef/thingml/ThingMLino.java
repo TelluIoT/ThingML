@@ -20,6 +20,10 @@
  */
 package org.sintef.thingml;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 import processing.app.Editor;
 import processing.app.tools.Tool;
 import org.sintef.thingml.ThingMLApp;
@@ -27,9 +31,10 @@ import org.sintef.thingml.ThingMLApp;
  *
  * @author sintef
  */
-public class ThingMLino implements Tool {
+public class ThingMLino implements Tool, Observer {
     static Editor editor;
     static String[] args;
+    static ObservableString transferBuf;
     
     public void init(Editor editor) {
         this.editor = editor;
@@ -38,10 +43,24 @@ public class ThingMLino implements Tool {
     }
 
     public void run() {
-        ThingMLApp.main(args);
+        transferBuf = new ObservableString();
+        transferBuf.addObserver(this);
+        
+        ThingMLApp.runAsArduinoPlugin(args, transferBuf);
     }
 
     public String getMenuTitle() {
         return "ThingML editor";
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        //System.out.println("Hello Obs");
+        if(o instanceof ObservableString) {
+            ObservableString mybuf = (ObservableString) o;
+            //System.out.println("MyString: " + mybuf.str);
+            //editor.insertText(mybuf.str + "\n\n");
+            editor.setText(mybuf.str);
+        }
     }
 }

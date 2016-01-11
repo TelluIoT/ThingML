@@ -9,7 +9,7 @@
     </parent>
     
     
-    <artifactId>ArduinIDEPlugin</artifactId>
+    <artifactId>ArduinoIDEPlugin</artifactId>
     <name>ThingML :: Plugin Arduino IDE</name>
     
     <dependencies>

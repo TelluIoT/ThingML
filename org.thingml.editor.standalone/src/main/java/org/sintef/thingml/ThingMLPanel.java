@@ -37,9 +37,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -52,12 +55,13 @@ public class ThingMLPanel extends JPanel {
     File targetFile = null;
     JEditorPane codeEditor = new JEditorPane();
     Boolean ArduinoPlugin = false;
+    ObservableString transferBuf = null;
     
     public ThingMLPanel() {
-        this(false);
+        this(false, null);
     }
     
-    public ThingMLPanel(Boolean ArduinoPlugin) {
+    public ThingMLPanel(Boolean ArduinoPlugin, final ObservableString transferBuf) {
         try {
             this.setLayout(new BorderLayout());
             jsyntaxpane.DefaultSyntaxKit.initKit();
@@ -82,6 +86,7 @@ public class ThingMLPanel extends JPanel {
             
             if(!ArduinoPlugin) {
                 try {
+                    this.transferBuf = transferBuf;
                     EditorKit editorKit = codeEditor.getEditorKit();
                     JToolBar toolPane = new JToolBar();
                     ((ThingMLJSyntaxKit) editorKit).addToolBarActions(codeEditor, toolPane);
@@ -94,59 +99,140 @@ public class ThingMLPanel extends JPanel {
             ((BasicInternalFrameUI) menuframe.getUI()).setNorthPane(null);
             menuframe.setBorder(BorderFactory.createEmptyBorder());
             add(menuframe, BorderLayout.CENTER);
+            
+            if(!ArduinoPlugin) {
+                final ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
 
-            final ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
+                JMenu newCompilersMenu = new JMenu("Compile to");
+                for (final String id : registry.getCompilerIds()) {
+                    JMenuItem item = new JMenuItem(id);
+                    ThingMLCompiler c = registry.createCompilerInstanceByName(id);
+                    if (c.getConnectorCompilers().size() > 0) {
+                        JMenu compilerMenu = new JMenu(c.getID());
+                        newCompilersMenu.add(compilerMenu);
+                        compilerMenu.add(item);
+                        for (final Map.Entry<String, CfgExternalConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
+                            JMenuItem connectorMenu = new JMenuItem(connectorCompiler.getKey());
+                            compilerMenu.add(connectorMenu);
+                            connectorMenu.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                                    for (Configuration cfg : thingmlModel.allConfigurations()) {
+                                        if (cfg.isFragment()) continue;
+                                        final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                        compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
+                                        compiler.compileConnector(connectorCompiler.getKey(), cfg);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        newCompilersMenu.add(item);
+                    }
 
-            JMenu newCompilersMenu = new JMenu("Compile to");
-            for (final String id : registry.getCompilerIds()) {
-                JMenuItem item = new JMenuItem(id);
-                ThingMLCompiler c = registry.createCompilerInstanceByName(id);
-                if (c.getConnectorCompilers().size() > 0) {
-                    JMenu compilerMenu = new JMenu(c.getID());
-                    newCompilersMenu.add(compilerMenu);
-                    compilerMenu.add(item);
-                    for (final Map.Entry<String, CfgExternalConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
-                        JMenuItem connectorMenu = new JMenuItem(connectorCompiler.getKey());
-                        compilerMenu.add(connectorMenu);
-                        connectorMenu.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
+                    item.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("Input file : " + targetFile);
+                            if (targetFile == null) return;
+                            try {
                                 ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
                                 for (Configuration cfg : thingmlModel.allConfigurations()) {
                                     if (cfg.isFragment()) continue;
                                     final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                     compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
-                                    compiler.compileConnector(connectorCompiler.getKey(), cfg);
+                                    compiler.compile(cfg);
+                                }
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
+                    c = null;
+                }
+
+                menubar.add(newCompilersMenu);
+            } else {
+            
+                final ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
+
+                JMenu newCompilersMenu = new JMenu("Compile to");
+                for (final String id : registry.getCompilerIds()) {
+                    if(id.compareToIgnoreCase("arduino") == 0) {
+                        JMenuItem item = new JMenuItem(id);
+                        ThingMLCompiler c = registry.createCompilerInstanceByName(id);
+                        if (c.getConnectorCompilers().size() > 0) {
+                            JMenu compilerMenu = new JMenu(c.getID());
+                            newCompilersMenu.add(compilerMenu);
+                            compilerMenu.add(item);
+                            for (final Map.Entry<String, CfgExternalConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
+                                JMenuItem connectorMenu = new JMenuItem(connectorCompiler.getKey());
+                                compilerMenu.add(connectorMenu);
+                                connectorMenu.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                                        for (Configuration cfg : thingmlModel.allConfigurations()) {
+                                            if (cfg.isFragment()) continue;
+                                            final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                            compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
+                                            compiler.compileConnector(connectorCompiler.getKey(), cfg);
+                                        }
+                                    }
+                                });
+                            }
+                        } else {
+                            newCompilersMenu.add(item);
+                        }
+
+                        item.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                System.out.println("Input file : " + targetFile);
+                                if (targetFile == null) return;
+                                try {
+                                    ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                                    for (Configuration cfg : thingmlModel.allConfigurations()) {
+                                        if (cfg.isFragment()) continue;
+                                        final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                        
+                                        File myFileBuf = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName());
+                                        compiler.setOutputDirectory(myFileBuf);
+                                        compiler.compile(cfg);
+                                        
+                                        final InputStream input = new FileInputStream(myFileBuf.getAbsolutePath() + "/" + cfg.getName() + "/" + cfg.getName() + ".pde");
+                                        
+                                        //System.out.println("tmp file: " + myFileBuf.getAbsolutePath() + "/" + cfg.getName() + "/" + cfg.getName() + ".pde");
+                                        
+                                        //final InputStream input = new FileInputStream(myFileBuf);
+                                        String result = null;
+                                        try {
+                                            if (input != null) {
+                                                result = org.apache.commons.io.IOUtils.toString(input);
+                                                input.close();
+                                                transferBuf.setString(result);
+                                                transferBuf.hasChanged();
+                                                transferBuf.notifyObservers();
+                                            } else {
+                                                //System.out.println("WHY");
+                                            }
+                                        } catch (Exception exce) {
+                                                System.out.println("OH REALLY?");
+                                        }
+                                        
+                                        
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
                                 }
                             }
                         });
+                        c = null;
                     }
-                } else {
-                    newCompilersMenu.add(item);
                 }
 
-                item.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("Input file : " + targetFile);
-                        if (targetFile == null) return;
-                        try {
-                            ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
-                            for (Configuration cfg : thingmlModel.allConfigurations()) {
-                                if (cfg.isFragment()) continue;
-                                final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
-                                compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
-                                compiler.compile(cfg);
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                });
-                c = null;
+                menubar.add(newCompilersMenu);
             }
-
-            menubar.add(newCompilersMenu);
-
+            
             codeEditor.getDocument().addDocumentListener(new DocumentListener() {
                 public void removeUpdate(DocumentEvent e) {
                     checkNeeded.set(true);

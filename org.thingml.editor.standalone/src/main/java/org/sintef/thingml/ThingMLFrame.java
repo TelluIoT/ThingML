@@ -31,8 +31,12 @@ public class ThingMLFrame extends JFrame {
     FilePanel filePanel = null;
     ThingMLPanel editor;
     String argsFlat = "";
-
+    
     public ThingMLFrame(String args[]) {
+        this(args, null);
+    }
+
+    public ThingMLFrame(String args[], ObservableString transferBuf) {
         int i = 0;
         for (String s : args) {
             if (i > 0) {
@@ -42,7 +46,7 @@ public class ThingMLFrame extends JFrame {
         }
         
         if(argsFlat.contains("-ArduinoIDEPlugin=true")) {
-            editor = new ThingMLPanel(true);
+            editor = new ThingMLPanel(true, transferBuf);
         } else {
             editor = new ThingMLPanel();
         }
