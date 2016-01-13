@@ -45,7 +45,6 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             builder.append("[" + c.getCli().getInstance().getName() + "] -> " + c.getProvided().getName() + "_" + c.getSrv().getInstance().getName() + " : " + c.getRequired().getName() + "\n");
         }
 	for (ExternalConnector eco : cfg.getExternalConnectors()) {
-            System.out.println("eco");
             builder.append("[" + cfg.getName() + "_" + eco.getInst().getInstance().getName() + "] ..> " + eco.getProtocol() + "\n");
 	}
         builder.append("}\n");
