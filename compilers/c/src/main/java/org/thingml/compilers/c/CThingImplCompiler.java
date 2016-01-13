@@ -188,7 +188,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         //builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
         // Message Sending
-        for(Port port : thing.getPorts()) {
+        //for(Port port : thing.getPorts()) {
+        for(Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
                 builder.append("void " + ctx.getSenderName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);

@@ -247,9 +247,9 @@ public class CThingApiCompiler extends ThingApiCompiler {
             
         }
 
-
         // Message Sending
-        for(Port port : thing.getPorts()) {
+        //for(Port port : thing.getPorts()) {
+        for(Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
                 builder.append("void " + ctx.getSenderName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
