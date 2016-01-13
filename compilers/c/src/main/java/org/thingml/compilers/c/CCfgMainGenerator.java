@@ -36,7 +36,8 @@ import org.thingml.compilers.c.posix.plugin.NopollWS;
 import org.thingml.compilers.c.posix.plugin.PosixMQTT;
 import org.thingml.compilers.c.posix.plugin.PosixSerial;
 import org.thingml.compilers.c.posix.plugin.PosixWS;
-import org.thingml.compilers.cpp.sintefboard.plugin.SintefboardPort;
+import org.thingml.compilers.cpp.sintefboard.plugin.SintefboardRcdPort;
+import org.thingml.compilers.cpp.sintefboard.plugin.SintefboardRcdTimer;
 
 /**
  * Created by ffl on 29.05.15.
@@ -75,8 +76,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ArduinoSerial aSerialgen = new ArduinoSerial(cfg, ctx);
         ctx.addNetworkLibraryGenerator(aSerialgen);
         
-        SintefboardPort sPortgen = new SintefboardPort(cfg, ctx);
-        ctx.addNetworkLibraryGenerator(sPortgen);
+        SintefboardRcdPort sRcdportgen = new SintefboardRcdPort(cfg, ctx);
+        ctx.addNetworkLibraryGenerator(sRcdportgen);
+        
+        SintefboardRcdTimer sRcdtimergen = new SintefboardRcdTimer(cfg, ctx);
+        ctx.addNetworkLibraryGenerator(sRcdtimergen);
         
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
@@ -85,8 +89,13 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
             }
             if(ctx.getCompiler().getID().compareTo("sintefboard") == 0) {
-                if(eco.getProtocol().startsWith("Port")) {
-                    sPortgen.addExternalCnnector(eco);
+                if(eco.getProtocol().startsWith("Rcdport")) {
+                    sRcdportgen.addExternalCnnector(eco);
+                }
+            }
+            if(ctx.getCompiler().getID().compareTo("sintefboard") == 0) {
+                if(eco.getProtocol().startsWith("Rcdtimer")) {
+                    sRcdtimergen.addExternalCnnector(eco);
                 }
             }
             if(ctx.getCompiler().getID().compareTo("posix") == 0) {
@@ -110,7 +119,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         MQTTgen.generateNetworkLibrary();
         pSerialgen.generateNetworkLibrary();
         aSerialgen.generateNetworkLibrary();
-        sPortgen.generateNetworkLibrary();
+        sRcdportgen.generateNetworkLibrary();
+        sRcdtimergen.generateNetworkLibrary();
     }
     
     protected void generateConfigurationImplementation(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
@@ -1873,7 +1883,7 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
 
 
         //Network Listener
-        builder.append("\n// Network Listener\n");
+        uilder.append("\n// Network Listener\n");
 
         /*for (Instance in : ctx.getCurrentConfiguration().allInstances()) {
             for (String listenFunction : in.annotation("c_external_listen")) {
@@ -1889,6 +1899,7 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
             /*for (String listenFunction : eco.annotation("c_external_listen")) {
                 builder.append(listenFunction + ";\n");
             }*/
+            
         }
 
         if(ctx.getCompiler().getID().compareTo("arduino") != 0) { //FIXME Nicolas This code is awfull
@@ -1917,8 +1928,12 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
         if(ctx.getCompiler().getID().compareTo("arduino") != 0) {
         builder.append("}\n");
         }
-
+        
+        for(NetworkLibraryGenerator nlg : ctx.getNetworkLibraryGenerators()) {
+            nlg.generatePollCode(builder);
         }
+
+    }
 
     protected void generateDynamicConnectors(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         if(cfg.hasAnnotation("c_dyn_connectors_lib")) {

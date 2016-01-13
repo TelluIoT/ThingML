@@ -35,12 +35,12 @@ import org.thingml.compilers.c.CNetworkLibraryGenerator;
  *
  * @author sintef
  */
-public class SintefboardPort extends CNetworkLibraryGenerator {
+public class SintefboardRcdPort extends CNetworkLibraryGenerator {
 
-    public SintefboardPort(Configuration cfg, CCompilerContext ctx) {
+    public SintefboardRcdPort(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
     }
-    public SintefboardPort(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
+    public SintefboardRcdPort(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
     }
 
@@ -60,8 +60,8 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         for(ExternalConnector eco : this.getExternalConnectors()) {
             //boolean ring = false;
-            String ctemplate = ctx.getNetworkLibPortTemplate();
-            String htemplate = ctx.getNetworkLibPortHeaderTemplate();
+            String ctemplate = ctx.getNetworkLibRcdPortTemplate();
+            String htemplate = ctx.getNetworkLibRcdPortHeaderTemplate();
 
             String portName;
             if(eco.hasAnnotation("port_name")) {
@@ -71,83 +71,9 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
             }
 
             eco.setName(portName);
-            //System.out.println("eco name:"+eco.getName());
-
-            //Integer baudrate;
-            //if(eco.hasAnnotation("serial_baudrate")) {
-            //    baudrate = Integer.parseInt(eco.annotation("serial_baudrate").iterator().next());
-            //} else {
-            //    baudrate = 115200;
-            //}
-            //ctemplate = ctemplate.replace("/*BAUDRATE*/", baudrate.toString());
 
             ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
             htemplate = htemplate.replace("/*PORT_NAME*/", portName);
-
-            //String startByte;
-            //if(eco.hasAnnotation("serial_start_byte")) {
-            //    startByte = eco.annotation("serial_start_byte").iterator().next();
-            //} else {
-            //    startByte = "18";
-            //}
-            //ctemplate = ctemplate.replace("/*START_BYTE*/", startByte);
-
-            //String stopByte;
-            //if(eco.hasAnnotation("serial_stop_byte")) {
-            //    stopByte = eco.annotation("serial_stop_byte").iterator().next();
-            //} else {
-            //    stopByte = "19";
-            //}
-            //ctemplate = ctemplate.replace("/*STOP_BYTE*/", stopByte);
-
-            //String escapeByte;
-            //if(eco.hasAnnotation("serial_escape_byte")) {
-            //    escapeByte = eco.annotation("serial_escape_byte").iterator().next();
-            //} else {
-            //    escapeByte = "125";
-            //}
-            //ctemplate = ctemplate.replace("/*ESCAPE_BYTE*/", escapeByte);
-
-            //Integer maxMsgSize = 0;
-            //for(Message m : eco.getPort().getReceives()) {
-            //    if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
-            //        maxMsgSize = ctx.getMessageSerializationSize(m);
-            //    }
-            //}
-            //maxMsgSize = maxMsgSize - 2;
-
-            //ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
-
-            //if(ring) {
-            //    maxMsgSize++;
-            //}
-
-            //String limitBytePerLoop;
-            //if(eco.hasAnnotation("serial_limit_byte_per_loop")) {
-            //    limitBytePerLoop = eco.annotation("serial_limit_byte_per_loop").iterator().next();
-            //} else {
-            //    Integer tmp = maxMsgSize*2;
-            //    limitBytePerLoop = tmp.toString();
-            //}
-            //ctemplate = ctemplate.replace("/*LIMIT_BYTE_PER_LOOP*/", limitBytePerLoop);
-
-
-
-            //String msgBufferSize;
-            //if(eco.hasAnnotation("serial_msg_buffer_size")) {
-            //    msgBufferSize = eco.annotation("serial_limit_byte_per_loop").iterator().next();
-            //    Integer tmp = Integer.parseInt(msgBufferSize);
-            //    if(tmp != null) {
-            //        if(tmp < maxMsgSize) {
-            //            System.err.println("Warning: @serial_limit_byte_per_loop should specify a size greater than the maximal size of a message.");
-            //            msgBufferSize = maxMsgSize.toString();
-            //        }
-            //    }
-            //} else {
-            //    Integer tmp = maxMsgSize*2;
-            //    msgBufferSize = tmp.toString();
-            //}
-            //ctemplate = ctemplate.replace("/*MSG_BUFFER_SIZE*/", msgBufferSize);
 
             //Connector Instanciation
             StringBuilder eco_instance = new StringBuilder();
@@ -165,18 +91,14 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
                 eco_instance.append("_receiver_list_tail;\n");
             }
 
-
             if(!p.getSends().isEmpty()) {
             //if(!p.getReceives().isEmpty()) {
                 eco_instance.append("// Handler Array\n");
                 eco_instance.append("struct Msg_Handler * ");
                 eco_instance.append(p.getName());
-                eco_instance.append("_handlers;\n");//[");
-                //builder.append(p.getReceives().size() + "];");
+                eco_instance.append("_handlers;\n");
             }
             ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
-
-
 
             ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
             ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
@@ -191,7 +113,6 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
 
             //************ Generate methods for sending meassages to ports
             for (ExternalConnector eco : this.getExternalConnectors()) {
-                //if (eco.hasAnnotation("c_external_send")) {
                 Thing t = eco.getInst().getInstance().getType();
                 Port p = eco.getPort();
 
@@ -209,37 +130,16 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
                     ctx.appendFormalParameters(t, builder, m);
                     builder.append("{\n");
 
-                    //builder.append("//eco.getname is() " + eco.getName() + "\n");
                     String portname = eco.getName();
-                    String portnum = portname.replace("Port", "");
-                    //builder.append("//portnum is() " + portnum + "\n");
-                    //builder.append("//eco.getProtocol() is " + eco.getProtocol() + "\n");
-                    //builder.append("//m.getname is() " + m.getName() + "\n");
+                    String portnum = portname.replace("Rcdport", "");
                     String msgid = m.annotation("rcdport_msgid").iterator().next();
-                    //builder.append("//m.annotation(rcdport_msgid) is " +  msgid + "\n");
-                    //String composeproto = m.annotation("rcdport_composeproto").iterator().next();
-                    //builder.append("//m.annotation(rcdport_composeproto) is " +  composeproto + "\n");
-                    //String composestr = composeproto.replace("/*MSG_PTR*/", "&msg_out").replace("/*MSGID*/", msgid);
 
-                    //paramList = ctx.getFormalParameterNamelist(t, m);
-                    //for (int i = 0; i < paramList.size(); i++){
-                    //    builder.append("//ctx.getFormalParameterNamelist(" + i + ") is " +  paramList.get(i) + "\n");
-                    //}
-
-                    //builder.append("// TODO This code will be added later\n");
                     builder.append("msgc_t   msg_out;      // Outgoing message\n");
                     builder.append("if( Ports_ptr->IsConnected(" + portnum + ") ) {\n");
                     builder.append("APP_MSGC_comp" + ctx.getConcatenatedParameterTypes(m) + "(&msg_out, " + msgid + ctx.getActualParametersSection(m) + ");\n");
-                    //builder.append(composestr + "\n");
                     builder.append("Ports_ptr->SendMsgc(" + portnum + ", &msg_out);\n");
                     builder.append("}\n");
 
-                    //ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
-
-                    //builder.append("\n//Forwarding with specified function \n");
-                    //builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
-
-            //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
                     builder.append("}\n\n");
                 }
             }
@@ -248,18 +148,17 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
 
             //This header is part of the "sintefboard_main_header.h" template file
             //headerbuilder.append("// Receive forwarding of messages from ports\n");
-            //headerbuilder.append("void " + "receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
+            //headerbuilder.append("void " + "rcdport_receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
             //headerbuilder.append(";\n");
             builder.append("// Receive forwarding of messages from ports\n");
-            builder.append("void " + getCppNameScope() + "receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
+            builder.append("void " + getCppNameScope() + "rcd_port_receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
             builder.append("{\n");
             builder.append("switch (from_port) {\n");
             for (ExternalConnector eco : this.getExternalConnectors()) {
-                //if (eco.hasAnnotation("c_external_send")) {
                 Thing t = eco.getInst().getInstance().getType();
                 Port p = eco.getPort();
                 String portname = eco.getName();
-                String portnum = portname.replace("Port", "");
+                String portnum = portname.replace("Rcdport", "");
                 builder.append("//portnum is() " + portnum + "\n");
                 builder.append("case " + portnum + ":\n");
                 generatePortReceiver(portname, p, builder);
@@ -283,8 +182,6 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
             builder.append("case " + msgid + ":\n");
             builder.append("{\n");
             ctx.appendFormalParameterDeclarations(builder, m);
-            //String decompstr = decompproto.replace("/*MSG_PTR*/", "msg_in_ptr").replace("/*MSGID*/", msgid);
-            //builder.append(decompstr + "\n");
             builder.append("APP_MSGC_decomp" + ctx.getConcatenatedParameterTypes(m) + "(&msg_out, " + msgid + ctx.getActualPtrParametersSection(m) + ");\n");
             builder.append("{\n");
             ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
