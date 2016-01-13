@@ -21,7 +21,13 @@ port_class *Ports_ptr;
 public:
 void setup(port_class *ports_ptr);
 void loop(void);
-void receive_forward(msgc_t *msg_in_ptr, int16_t from_port);
+#ifdef RCDPORT_IN_USE
+void rcd_port_receive_forward(msgc_t *msg_in_ptr, int16_t from_port);
+#endif
+
+#ifdef RCDTIMER_IN_USE
+uint32_t rcd_timer_next(void);
+#endif
 
 };
 

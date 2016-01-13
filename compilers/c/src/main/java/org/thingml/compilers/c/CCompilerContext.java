@@ -80,17 +80,49 @@ public abstract class CCompilerContext extends Context {
         }
     }
     
-    public String getNetworkLibPortTemplate() {
+    public String getNetworkLibRcdPortTemplate() {
         if(getCompiler().getID().compareTo("sintefboard") == 0) {
-            return getTemplateByID("ctemplates/network_lib/sintefboard/Port/SintefboardPortForward.c");
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdPortForward.c");
         } else {
             return "";
         }
     }
     
-    public String getNetworkLibPortHeaderTemplate() {
+    public String getNetworkLibRcdPortHeaderTemplate() {
         if(getCompiler().getID().compareTo("sintefboard") == 0) {
-            return getTemplateByID("ctemplates/network_lib/sintefboard/Port/SintefboardPortForward.h");
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdPortForward.h");
+        } else {
+            return "";
+        }
+    }
+    
+    public String getNetworkLibRcdTimerInstanceTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdTimerInstance.c");
+        } else {
+            return "";
+        }
+    }
+    
+    public String getNetworkLibRcdTimerInstanceHeaderTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdTimerInstance.h");
+        } else {
+            return "";
+        }
+    }
+    
+    public String getNetworkLibRcdTimerCommonTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdTimerCommon.c");
+        } else {
+            return "";
+        }
+    }
+    
+    public String getNetworkLibRcdTimerCommonHeaderTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdTimerCommon.h");
         } else {
             return "";
         }
