@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.arduino.plugin.ArduinoSerial;
+import org.thingml.compilers.c.arduino.plugin.ArduinoTimer;
 import org.thingml.compilers.c.posix.plugin.NopollWS;
 import org.thingml.compilers.c.posix.plugin.PosixMQTT;
 import org.thingml.compilers.c.posix.plugin.PosixSerial;
@@ -75,6 +76,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ArduinoSerial aSerialgen = new ArduinoSerial(cfg, ctx);
         ctx.addNetworkLibraryGenerator(aSerialgen);
         
+        ArduinoTimer aTimergen = new ArduinoTimer(cfg, ctx);
+        ctx.addNetworkLibraryGenerator(aTimergen);
+        
         SintefboardPort sPortgen = new SintefboardPort(cfg, ctx);
         ctx.addNetworkLibraryGenerator(sPortgen);
         
@@ -82,6 +86,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 if(eco.getProtocol().startsWith("Serial")) {
                     aSerialgen.addExternalCnnector(eco);
+                }
+                if(eco.getProtocol().startsWith("Timer")) {
+                    aTimergen.addExternalCnnector(eco);
+                    System.out.println("eco");
                 }
             }
             if(ctx.getCompiler().getID().compareTo("sintefboard") == 0) {
@@ -110,6 +118,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         MQTTgen.generateNetworkLibrary();
         pSerialgen.generateNetworkLibrary();
         aSerialgen.generateNetworkLibrary();
+        aTimergen.generateNetworkLibrary();
         sPortgen.generateNetworkLibrary();
     }
     
@@ -1448,10 +1457,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                             builder.append("&" + getCppNameScope() + "enqueue_" + ctx.getSenderName(t, port, msg) + ");\n");
                         }
                     }
-                    /*if (remote) {
-                        builder.append("register_external_" + ctx.getSenderName(t, port, msg) + "_listener(");
-                        builder.append("forward_" + ctx.getSenderName(t, port, msg) + ");\n");
-                    }*/
 
 
                 }

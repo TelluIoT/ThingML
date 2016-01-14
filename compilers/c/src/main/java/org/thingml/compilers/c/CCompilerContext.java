@@ -65,6 +65,14 @@ public abstract class CCompilerContext extends Context {
         NetworkLibraryGenerators.add(nlg);
     }
     
+    public String getTimerTemplate() {
+        if(getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/network_lib/arduino/Timer/Timer.c");
+        } else {
+            return getTemplateByID("");
+        }
+    }
+    
     public String getNetworkLibSerialTemplate() {
         if(getCompiler().getID().compareTo("arduino") == 0) {
             return getTemplateByID("ctemplates/network_lib/arduino/Serial/ArduinoSerialForward.c");
