@@ -25,12 +25,12 @@ package org.sintef.thingml;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.ExternalConnector#getInst <em>Inst</em>}</li>
  *   <li>{@link org.sintef.thingml.ExternalConnector#getPort <em>Port</em>}</li>
  *   <li>{@link org.sintef.thingml.ExternalConnector#getProtocol <em>Protocol</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getExternalConnector()
  * @model

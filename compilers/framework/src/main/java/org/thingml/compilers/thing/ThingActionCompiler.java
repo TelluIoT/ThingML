@@ -57,6 +57,11 @@ public class ThingActionCompiler {
             generate((LocalVariable) action, builder, ctx);
         else if (action instanceof FunctionCallStatement)
             generate((FunctionCallStatement) action, builder, ctx);
+        else if (action instanceof Increment)
+            generate ((Increment) action, builder, ctx);
+        else if (action instanceof Decrement)
+            generate ((Decrement) action, builder, ctx);
+
     }
 
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
@@ -103,6 +108,14 @@ public class ThingActionCompiler {
         throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
 
     //ThingML Expressions
     public void generate(Expression expression, StringBuilder builder, Context ctx) {
@@ -116,6 +129,10 @@ public class ThingActionCompiler {
             generate((LowerExpression) expression, builder, ctx);
         } else if (expression instanceof GreaterExpression) {
             generate((GreaterExpression) expression, builder, ctx);
+        } else if (expression instanceof LowerOrEqualExpression) {
+            generate((LowerOrEqualExpression) expression, builder, ctx);
+        } else if (expression instanceof GreaterOrEqualExpression) {
+            generate((GreaterOrEqualExpression) expression, builder, ctx);
         } else if (expression instanceof EqualsExpression) {
             generate((EqualsExpression) expression, builder, ctx);
         } else if (expression instanceof PlusExpression) {
@@ -174,6 +191,14 @@ public class ThingActionCompiler {
     }
 
     public void generate(GreaterExpression expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(LowerOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(GreaterOrEqualExpression expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 

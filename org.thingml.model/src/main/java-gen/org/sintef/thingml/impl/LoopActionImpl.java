@@ -24,8 +24,6 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Loop Action</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

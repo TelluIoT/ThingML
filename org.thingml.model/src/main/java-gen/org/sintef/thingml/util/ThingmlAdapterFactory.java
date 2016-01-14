@@ -301,12 +301,28 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createLowerExpressionAdapter();
 			}
 			@Override
+			public Adapter caseGreaterOrEqualExpression(GreaterOrEqualExpression object) {
+				return createGreaterOrEqualExpressionAdapter();
+			}
+			@Override
+			public Adapter caseLowerOrEqualExpression(LowerOrEqualExpression object) {
+				return createLowerOrEqualExpressionAdapter();
+			}
+			@Override
 			public Adapter caseAndExpression(AndExpression object) {
 				return createAndExpressionAdapter();
 			}
 			@Override
 			public Adapter caseOrExpression(OrExpression object) {
 				return createOrExpressionAdapter();
+			}
+			@Override
+			public Adapter caseIncrement(Increment object) {
+				return createIncrementAdapter();
+			}
+			@Override
+			public Adapter caseDecrement(Decrement object) {
+				return createDecrementAdapter();
 			}
 			@Override
 			public Adapter caseControlStructure(ControlStructure object) {
@@ -367,10 +383,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseConfigPropertyAssign(ConfigPropertyAssign object) {
 				return createConfigPropertyAssignAdapter();
-			}
-			@Override
-			public Adapter caseConfigInclude(ConfigInclude object) {
-				return createConfigIncludeAdapter();
 			}
 			@Override
 			public Adapter caseInstanceRef(InstanceRef object) {
@@ -1189,6 +1201,34 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Increment <em>Increment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Increment
+	 * @generated
+	 */
+	public Adapter createIncrementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Decrement <em>Decrement</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Decrement
+	 * @generated
+	 */
+	public Adapter createDecrementAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.MinusExpression <em>Minus Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1283,6 +1323,34 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createLowerExpressionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.GreaterOrEqualExpression <em>Greater Or Equal Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.GreaterOrEqualExpression
+	 * @generated
+	 */
+	public Adapter createGreaterOrEqualExpressionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.LowerOrEqualExpression <em>Lower Or Equal Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.LowerOrEqualExpression
+	 * @generated
+	 */
+	public Adapter createLowerOrEqualExpressionAdapter() {
 		return null;
 	}
 
@@ -1521,20 +1589,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createConfigPropertyAssignAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ConfigInclude <em>Config Include</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.ConfigInclude
-	 * @generated
-	 */
-	public Adapter createConfigIncludeAdapter() {
 		return null;
 	}
 

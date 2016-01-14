@@ -45,11 +45,11 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.OperatorImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.OperatorImpl#getBody <em>Body</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

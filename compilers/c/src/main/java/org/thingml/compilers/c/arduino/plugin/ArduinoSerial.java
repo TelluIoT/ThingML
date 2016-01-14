@@ -156,12 +156,16 @@ public class ArduinoSerial extends CNetworkLibraryGenerator {
             }
             ctemplate = ctemplate.replace("/*MSG_BUFFER_SIZE*/", msgBufferSize);
 
+            
+            ctx.addToInitCode("\n" + portName + "_instance.listener_id = add_instance(&" + portName + "_instance);\n");
+            ctx.addToInitCode(portName + "_setup();\n");
+            
             //Connector Instanciation
             StringBuilder eco_instance = new StringBuilder();
             eco_instance.append("//Connector");
             Port p = eco.getPort();
             if(!p.getReceives().isEmpty()) {
-            //if(!p.getSends().isEmpty()) {
+                ctx.addToPollCode(portName + "_read();\n");
                 eco_instance.append("// Pointer to receiver list\n");
                 eco_instance.append("struct Msg_Handler ** ");
                 eco_instance.append(p.getName());

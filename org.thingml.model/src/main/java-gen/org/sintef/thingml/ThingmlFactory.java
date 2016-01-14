@@ -341,6 +341,24 @@ public interface ThingmlFactory extends EFactory {
 	PlusExpression createPlusExpression();
 
 	/**
+	 * Returns a new object of class '<em>Increment</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Increment</em>'.
+	 * @generated
+	 */
+	Increment createIncrement();
+
+	/**
+	 * Returns a new object of class '<em>Decrement</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Decrement</em>'.
+	 * @generated
+	 */
+	Decrement createDecrement();
+
+	/**
 	 * Returns a new object of class '<em>Minus Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -402,6 +420,24 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	LowerExpression createLowerExpression();
+
+	/**
+	 * Returns a new object of class '<em>Greater Or Equal Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Greater Or Equal Expression</em>'.
+	 * @generated
+	 */
+	GreaterOrEqualExpression createGreaterOrEqualExpression();
+
+	/**
+	 * Returns a new object of class '<em>Lower Or Equal Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Lower Or Equal Expression</em>'.
+	 * @generated
+	 */
+	LowerOrEqualExpression createLowerOrEqualExpression();
 
 	/**
 	 * Returns a new object of class '<em>And Expression</em>'.
@@ -537,15 +573,6 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	ConfigPropertyAssign createConfigPropertyAssign();
-
-	/**
-	 * Returns a new object of class '<em>Config Include</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Config Include</em>'.
-	 * @generated
-	 */
-	ConfigInclude createConfigInclude();
 
 	/**
 	 * Returns a new object of class '<em>Instance Ref</em>'.

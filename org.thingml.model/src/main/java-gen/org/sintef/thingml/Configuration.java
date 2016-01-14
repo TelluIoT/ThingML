@@ -26,14 +26,12 @@ import java.util.*;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Configuration#getInstances <em>Instances</em>}</li>
  *   <li>{@link org.sintef.thingml.Configuration#getConnectors <em>Connectors</em>}</li>
- *   <li>{@link org.sintef.thingml.Configuration#isFragment <em>Fragment</em>}</li>
- *   <li>{@link org.sintef.thingml.Configuration#getConfigs <em>Configs</em>}</li>
  *   <li>{@link org.sintef.thingml.Configuration#getPropassigns <em>Propassigns</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getConfiguration()
  * @model
@@ -71,48 +69,6 @@ public interface Configuration extends AnnotatedElement {
 	 * @generated
 	 */
 	EList<AbstractConnector> getConnectors();
-
-	/**
-	 * Returns the value of the '<em><b>Fragment</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Fragment</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Fragment</em>' attribute.
-	 * @see #setFragment(boolean)
-	 * @see org.sintef.thingml.ThingmlPackage#getConfiguration_Fragment()
-	 * @model
-	 * @generated
-	 */
-	boolean isFragment();
-
-	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Configuration#isFragment <em>Fragment</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Fragment</em>' attribute.
-	 * @see #isFragment()
-	 * @generated
-	 */
-	void setFragment(boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Configs</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.ConfigInclude}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Configs</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Configs</em>' containment reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getConfiguration_Configs()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<ConfigInclude> getConfigs();
 
 	/**
 	 * Returns the value of the '<em><b>Propassigns</b></em>' containment reference list.

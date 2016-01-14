@@ -29,12 +29,12 @@ import java.util.Set;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.ThingMLModel#getTypes <em>Types</em>}</li>
  *   <li>{@link org.sintef.thingml.ThingMLModel#getImports <em>Imports</em>}</li>
  *   <li>{@link org.sintef.thingml.ThingMLModel#getConfigs <em>Configs</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getThingMLModel()
  * @model

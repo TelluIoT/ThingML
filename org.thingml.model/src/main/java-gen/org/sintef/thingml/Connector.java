@@ -23,13 +23,13 @@ package org.sintef.thingml;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Connector#getSrv <em>Srv</em>}</li>
  *   <li>{@link org.sintef.thingml.Connector#getCli <em>Cli</em>}</li>
  *   <li>{@link org.sintef.thingml.Connector#getRequired <em>Required</em>}</li>
  *   <li>{@link org.sintef.thingml.Connector#getProvided <em>Provided</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getConnector()
  * @model

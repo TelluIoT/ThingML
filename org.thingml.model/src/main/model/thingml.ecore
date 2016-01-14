@@ -223,8 +223,16 @@
   <eClassifiers xsi:type="ecore:EClass" name="EqualsExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="GreaterExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="LowerExpression" eSuperTypes="#//BinaryExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GreaterOrEqualExpression" eSuperTypes="#//BinaryExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LowerOrEqualExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="AndExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="OrExpression" eSuperTypes="#//BinaryExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Increment" eSuperTypes="#//Action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="var" lowerBound="1" eType="#//Variable"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Decrement" eSuperTypes="#//Action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="var" lowerBound="1" eType="#//Variable"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ControlStructure" abstract="true" eSuperTypes="#//Action">
     <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="1"
         eType="#//Action" containment="true"/>
@@ -267,9 +275,6 @@
         eType="#//Instance" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="connectors" upperBound="-1"
         eType="#//AbstractConnector" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fragment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="configs" upperBound="-1"
-        eType="#//ConfigInclude" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="propassigns" upperBound="-1"
         eType="#//ConfigPropertyAssign" containment="true"/>
   </eClassifiers>
@@ -306,13 +311,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="index" upperBound="-1"
         eType="#//Expression" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ConfigInclude" eSuperTypes="#//AnnotatedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="config" lowerBound="1"
-        eType="#//Configuration"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InstanceRef">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="config" upperBound="-1"
-        eType="#//ConfigInclude"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="instance" lowerBound="1"
         eType="#//Instance"/>
   </eClassifiers>

@@ -42,11 +42,11 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.FunctionCallStatementImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionCallStatementImpl#getFunction <em>Function</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

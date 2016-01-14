@@ -119,7 +119,6 @@ public class ThingMLPanel extends JPanel {
                                 public void actionPerformed(ActionEvent e) {
                                     ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
                                     for (Configuration cfg : thingmlModel.allConfigurations()) {
-                                        if (cfg.isFragment()) continue;
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                         compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
                                         compiler.compileConnector(connectorCompiler.getKey(), cfg);
@@ -138,7 +137,6 @@ public class ThingMLPanel extends JPanel {
                             try {
                                 ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
                                 for (Configuration cfg : thingmlModel.allConfigurations()) {
-                                    if (cfg.isFragment()) continue;
                                     final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                     compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
                                     compiler.compile(cfg);
@@ -173,7 +171,6 @@ public class ThingMLPanel extends JPanel {
                                     public void actionPerformed(ActionEvent e) {
                                         ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
                                         for (Configuration cfg : thingmlModel.allConfigurations()) {
-                                            if (cfg.isFragment()) continue;
                                             final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                             compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
                                             compiler.compileConnector(connectorCompiler.getKey(), cfg);
@@ -192,7 +189,6 @@ public class ThingMLPanel extends JPanel {
                                 try {
                                     ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
                                     for (Configuration cfg : thingmlModel.allConfigurations()) {
-                                        if (cfg.isFragment()) continue;
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                         
                                         File myFileBuf = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName());

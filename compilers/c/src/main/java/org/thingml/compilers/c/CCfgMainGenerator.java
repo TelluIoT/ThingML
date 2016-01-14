@@ -1510,35 +1510,39 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
         
         builder.append("// Init the ID, state variables and properties for external connector " + eco.getName() + "\n");
-        builder.append(portName + "_instance.listener_id");
+        
+        
+        
+        //TODO
+        /*builder.append(portName + "_instance.listener_id");
         builder.append(" = ");
-        builder.append("add_instance( (void*) &" + portName + "_instance" + ");\n");
+        builder.append("add_instance( (void*) &" + portName + "_instance" + ");\n");*/
 
         int head = nbConnectorSoFar;
 
         if(cfg.hasAnnotation("c_dyn_connectors")) {
-        if(!eco.getPort().getReceives().isEmpty()) {
-            //    && (!co.getRequired().getReceives().isEmpty())) {
-            builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
-            builder.append(cfg.getName() + "_" + eco.getInst().getInstance().getName()
-                    + "_" + eco.getPort().getName() + "_handlers;\n");
-            nbConnectorSoFar++;
-        }
+            if(!eco.getPort().getReceives().isEmpty()) {
+                //    && (!co.getRequired().getReceives().isEmpty())) {
+                builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
+                builder.append(cfg.getName() + "_" + eco.getInst().getInstance().getName()
+                        + "_" + eco.getPort().getName() + "_handlers;\n");
+                nbConnectorSoFar++;
+            }
 
-        if(head != nbConnectorSoFar) {
-            builder.append(portName + "_instance." + p.getName() + "_receiver_list_head = &");
-            builder.append(cfg.getName() + "_receivers[" + head + "];\n");
-            builder.append(portName + "_instance." + p.getName() + "_receiver_list_tail = &");
-            builder.append(cfg.getName() + "_receivers[" + (nbConnectorSoFar - 1) + "];\n");
-        } else {
-            if(!p.getReceives().isEmpty()) {
-                //Case where the port could sends messages but isn't connected
-                builder.append(portName + "_instance." + p.getName() + "_receiver_list_head = ");
-                builder.append("NULL;\n");
-                builder.append(portName + "_instance." + p.getName() + "_receiver_list_tail = &");
+            if(head != nbConnectorSoFar) {
+                builder.append(portName + "_instance." + p.getName() + "_receiver_list_head = &");
                 builder.append(cfg.getName() + "_receivers[" + head + "];\n");
-                }
-        }
+                builder.append(portName + "_instance." + p.getName() + "_receiver_list_tail = &");
+                builder.append(cfg.getName() + "_receivers[" + (nbConnectorSoFar - 1) + "];\n");
+            } else {
+                if(!p.getReceives().isEmpty()) {
+                    //Case where the port could sends messages but isn't connected
+                    builder.append(portName + "_instance." + p.getName() + "_receiver_list_head = ");
+                    builder.append("NULL;\n");
+                    builder.append(portName + "_instance." + p.getName() + "_receiver_list_tail = &");
+                    builder.append(cfg.getName() + "_receivers[" + head + "];\n");
+                    }
+            }
         }
         return nbConnectorSoFar;
     }
@@ -1784,7 +1788,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("\n");
         builder.append("// Network Initilization \n");
-        for (ExternalConnector eco : cfg.getExternalConnectors()) {
+        /*for (ExternalConnector eco : cfg.getExternalConnectors()) {
             
             builder.append("//" + eco.getName() + ":\n");
             builder.append(eco.getName() + "_setup();\n");
@@ -1803,7 +1807,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(eco.getName() + "_start_receiver_process");
                 builder.append(", NULL);\n"); 
             }
-        }
+        }*/
+        builder.append(ctx.getInitCode());
         builder.append("\n\n// End Network Initilization \n\n");
         
         
@@ -1885,16 +1890,15 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
                 builder.append(listenFunction + ";\n");
                         }
         }*/
-
+        /*
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             //if(!eco.hasAnnotation("c_external_threaded_listener") && !eco.getPort().getReceives().isEmpty()) {
             if((ctx.getCompiler().getID().compareTo("arduino") == 0) && !eco.getPort().getReceives().isEmpty()) {
                 builder.append(eco.getName() + "_read();\n");
             }
-            /*for (String listenFunction : eco.annotation("c_external_listen")) {
-                builder.append(listenFunction + ";\n");
-            }*/
         }
+        */
+        builder.append(ctx.getPollCode());
 
         if(ctx.getCompiler().getID().compareTo("arduino") != 0) { //FIXME Nicolas This code is awfull
         //New Empty Event Handler

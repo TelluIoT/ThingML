@@ -25,13 +25,13 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.ConfigPropertyAssign#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.ConfigPropertyAssign#getProperty <em>Property</em>}</li>
  *   <li>{@link org.sintef.thingml.ConfigPropertyAssign#getInstance <em>Instance</em>}</li>
  *   <li>{@link org.sintef.thingml.ConfigPropertyAssign#getIndex <em>Index</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getConfigPropertyAssign()
  * @model

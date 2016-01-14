@@ -110,8 +110,12 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.EQUALS_EXPRESSION: return createEqualsExpression();
 			case ThingmlPackage.GREATER_EXPRESSION: return createGreaterExpression();
 			case ThingmlPackage.LOWER_EXPRESSION: return createLowerExpression();
+			case ThingmlPackage.GREATER_OR_EQUAL_EXPRESSION: return createGreaterOrEqualExpression();
+			case ThingmlPackage.LOWER_OR_EQUAL_EXPRESSION: return createLowerOrEqualExpression();
 			case ThingmlPackage.AND_EXPRESSION: return createAndExpression();
 			case ThingmlPackage.OR_EXPRESSION: return createOrExpression();
+			case ThingmlPackage.INCREMENT: return createIncrement();
+			case ThingmlPackage.DECREMENT: return createDecrement();
 			case ThingmlPackage.LOOP_ACTION: return createLoopAction();
 			case ThingmlPackage.CONDITIONAL_ACTION: return createConditionalAction();
 			case ThingmlPackage.PROPERTY_REFERENCE: return createPropertyReference();
@@ -125,7 +129,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.CONNECTOR: return createConnector();
 			case ThingmlPackage.EXTERNAL_CONNECTOR: return createExternalConnector();
 			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN: return createConfigPropertyAssign();
-			case ThingmlPackage.CONFIG_INCLUDE: return createConfigInclude();
 			case ThingmlPackage.INSTANCE_REF: return createInstanceRef();
 			case ThingmlPackage.FUNCTION_CALL_STATEMENT: return createFunctionCallStatement();
 			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
@@ -497,6 +500,26 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Increment createIncrement() {
+		IncrementImpl increment = new IncrementImpl();
+		return increment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Decrement createDecrement() {
+		DecrementImpl decrement = new DecrementImpl();
+		return decrement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public MinusExpression createMinusExpression() {
 		MinusExpressionImpl minusExpression = new MinusExpressionImpl();
 		return minusExpression;
@@ -560,6 +583,26 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public LowerExpression createLowerExpression() {
 		LowerExpressionImpl lowerExpression = new LowerExpressionImpl();
 		return lowerExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GreaterOrEqualExpression createGreaterOrEqualExpression() {
+		GreaterOrEqualExpressionImpl greaterOrEqualExpression = new GreaterOrEqualExpressionImpl();
+		return greaterOrEqualExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LowerOrEqualExpression createLowerOrEqualExpression() {
+		LowerOrEqualExpressionImpl lowerOrEqualExpression = new LowerOrEqualExpressionImpl();
+		return lowerOrEqualExpression;
 	}
 
 	/**
@@ -710,16 +753,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ConfigPropertyAssign createConfigPropertyAssign() {
 		ConfigPropertyAssignImpl configPropertyAssign = new ConfigPropertyAssignImpl();
 		return configPropertyAssign;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ConfigInclude createConfigInclude() {
-		ConfigIncludeImpl configInclude = new ConfigIncludeImpl();
-		return configInclude;
 	}
 
 	/**

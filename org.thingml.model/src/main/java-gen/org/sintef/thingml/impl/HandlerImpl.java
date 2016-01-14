@@ -46,12 +46,12 @@ import org.sintef.thingml.*;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.HandlerImpl#getEvent <em>Event</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.HandlerImpl#getGuard <em>Guard</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.HandlerImpl#getAction <em>Action</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

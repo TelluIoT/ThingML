@@ -391,6 +391,18 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.GreaterOrEqualExpression) {
+			result = interprete_org_sintef_thingml_GreaterOrEqualExpression((org.sintef.thingml.GreaterOrEqualExpression) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.LowerOrEqualExpression) {
+			result = interprete_org_sintef_thingml_LowerOrEqualExpression((org.sintef.thingml.LowerOrEqualExpression) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		if (object instanceof org.sintef.thingml.AndExpression) {
 			result = interprete_org_sintef_thingml_AndExpression((org.sintef.thingml.AndExpression) object, context);
 		}
@@ -405,6 +417,18 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.BinaryExpression) {
 			result = interprete_org_sintef_thingml_BinaryExpression((org.sintef.thingml.BinaryExpression) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.Increment) {
+			result = interprete_org_sintef_thingml_Increment((org.sintef.thingml.Increment) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.Decrement) {
+			result = interprete_org_sintef_thingml_Decrement((org.sintef.thingml.Decrement) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -495,12 +519,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.ConfigPropertyAssign) {
 			result = interprete_org_sintef_thingml_ConfigPropertyAssign((org.sintef.thingml.ConfigPropertyAssign) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.ConfigInclude) {
-			result = interprete_org_sintef_thingml_ConfigInclude((org.sintef.thingml.ConfigInclude) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -914,11 +932,27 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
+	public ResultType interprete_org_sintef_thingml_GreaterOrEqualExpression(org.sintef.thingml.GreaterOrEqualExpression greaterOrEqualExpression, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_LowerOrEqualExpression(org.sintef.thingml.LowerOrEqualExpression lowerOrEqualExpression, ContextType context) {
+		return null;
+	}
+	
 	public ResultType interprete_org_sintef_thingml_AndExpression(org.sintef.thingml.AndExpression andExpression, ContextType context) {
 		return null;
 	}
 	
 	public ResultType interprete_org_sintef_thingml_OrExpression(org.sintef.thingml.OrExpression orExpression, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_Increment(org.sintef.thingml.Increment increment, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_Decrement(org.sintef.thingml.Decrement decrement, ContextType context) {
 		return null;
 	}
 	
@@ -979,10 +1013,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_ConfigPropertyAssign(org.sintef.thingml.ConfigPropertyAssign configPropertyAssign, ContextType context) {
-		return null;
-	}
-	
-	public ResultType interprete_org_sintef_thingml_ConfigInclude(org.sintef.thingml.ConfigInclude configInclude, ContextType context) {
 		return null;
 	}
 	

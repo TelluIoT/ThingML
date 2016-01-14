@@ -26,8 +26,6 @@ import org.sintef.thingml.WindowView;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Window View</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

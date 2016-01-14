@@ -27,12 +27,12 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.SourceComposition#getSources <em>Sources</em>}</li>
  *   <li>{@link org.sintef.thingml.SourceComposition#getResultMessage <em>Result Message</em>}</li>
  *   <li>{@link org.sintef.thingml.SourceComposition#getRules <em>Rules</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getSourceComposition()
  * @model abstract="true"

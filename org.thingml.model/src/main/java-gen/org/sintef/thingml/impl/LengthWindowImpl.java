@@ -32,11 +32,11 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.LengthWindowImpl#getNbEvents <em>Nb Events</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.LengthWindowImpl#getStep <em>Step</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

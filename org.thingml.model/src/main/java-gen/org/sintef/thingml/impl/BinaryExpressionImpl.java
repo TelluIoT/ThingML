@@ -33,11 +33,11 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.BinaryExpressionImpl#getLhs <em>Lhs</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.BinaryExpressionImpl#getRhs <em>Rhs</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

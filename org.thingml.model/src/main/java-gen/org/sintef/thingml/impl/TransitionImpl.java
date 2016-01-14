@@ -36,13 +36,13 @@ import org.sintef.thingml.Transition;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.TransitionImpl#getTarget <em>Target</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.TransitionImpl#getSource <em>Source</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.TransitionImpl#getAfter <em>After</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.TransitionImpl#getBefore <em>Before</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

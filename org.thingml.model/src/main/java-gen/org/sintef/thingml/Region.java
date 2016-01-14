@@ -27,12 +27,12 @@ import java.util.Set;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Region#getSubstate <em>Substate</em>}</li>
  *   <li>{@link org.sintef.thingml.Region#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.sintef.thingml.Region#isHistory <em>History</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getRegion()
  * @model abstract="true"

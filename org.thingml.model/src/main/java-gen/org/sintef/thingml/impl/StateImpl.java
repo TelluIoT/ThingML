@@ -48,6 +48,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.StateImpl#getOutgoing <em>Outgoing</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StateImpl#getIncoming <em>Incoming</em>}</li>
@@ -56,7 +57,6 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
  *   <li>{@link org.sintef.thingml.impl.StateImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StateImpl#getInternal <em>Internal</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

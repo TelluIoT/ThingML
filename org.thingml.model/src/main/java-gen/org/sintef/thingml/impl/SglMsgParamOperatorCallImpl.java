@@ -43,11 +43,11 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.SglMsgParamOperatorCallImpl#getOperatorRef <em>Operator Ref</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.SglMsgParamOperatorCallImpl#getParameter <em>Parameter</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -27,8 +27,6 @@ public class InstanceRefInstanceReferenceResolver implements org.sintef.thingml.
 		
 		// In which configuration should we look:
 		Configuration cfg = ThingMLHelpers.findContainingConfiguration(container);
-		if (container.getConfig().size() > 0) cfg = container.getConfig().get(container.getConfig().size() -1).getConfig();
-		
 		if (cfg != null) {
 		
 			for (Instance ci : cfg.getInstances()) {

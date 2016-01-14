@@ -24,8 +24,6 @@ import org.sintef.thingml.UnaryMinus;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Unary Minus</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

@@ -38,12 +38,12 @@ import org.sintef.thingml.VariableAssignment;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getProperty <em>Property</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getExpression <em>Expression</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getIndex <em>Index</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

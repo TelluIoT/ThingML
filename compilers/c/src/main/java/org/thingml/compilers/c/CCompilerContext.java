@@ -658,6 +658,27 @@ public abstract class CCompilerContext extends Context {
             return j-1;
         }
     }
+    
+    StringBuilder pollCode = new StringBuilder();
+    
+    public void addToPollCode(String s) {
+        pollCode.append("\n" + s);
+    }
+    
+    public String getPollCode() {
+        return pollCode.toString();
+    }
+    
+    StringBuilder initCode = new StringBuilder();
+    public void addToInitCode(String s) {
+        initCode.append("\n" + s);
+    }
+    
+    public String getInitCode() {
+        return initCode.toString();
+    }
+    
+    
 
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {}
 

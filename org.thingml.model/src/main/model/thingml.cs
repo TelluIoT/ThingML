@@ -217,14 +217,15 @@ RULES {
 	
 	PropertyAssign ::= "set" #1 property[] ("[" index "]")* #1 "=" #1 init ; 
 	
+	Increment ::= var[] #1 "++" ;
+	
+	Decrement ::= var[] "--" ;
 
 	// *******************************
 	// * Configurations and Instances
 	// *******************************
 	
-	Configuration ::= "configuration" (#1 fragment[T_ASPECT])? #1 name[] (annotations)*  !0 "{" (  instances | connectors | configs | propassigns )* !0 "}" ;
-	
-	ConfigInclude ::= "group" #1 name[] #1 ":" #1 config[] (annotations)* !0 ;
+	Configuration ::= "configuration" #1 name[] (annotations)*  !0 "{" (  instances | connectors | propassigns )* !0 "}" ;
 	
 	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)*  ; // !0 (  assign )* !0
 	
@@ -234,7 +235,7 @@ RULES {
 	
 	ConfigPropertyAssign ::= "set" instance "." property[] ("[" index "]")* #1 "=" #1 init;
 	
-	InstanceRef ::= (config[] ".")* instance[];
+	InstanceRef ::= instance[];
 
 	// *********************
 	// * Actions
@@ -307,6 +308,12 @@ RULES {
 	
 	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
 	GreaterExpression ::= lhs #1 ">" #1  rhs;
+	
+	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
+	LowerOrEqualExpression ::= lhs #1 "<=" #1  rhs;
+	
+	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
+	GreaterOrEqualExpression ::= lhs #1 ">=" #1  rhs;
 	
 	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
 	EqualsExpression ::= lhs #1 "==" #1  rhs;

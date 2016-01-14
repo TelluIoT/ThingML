@@ -23,11 +23,11 @@ package org.sintef.thingml;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.EnumLiteralRef#getEnum <em>Enum</em>}</li>
  *   <li>{@link org.sintef.thingml.EnumLiteralRef#getLiteral <em>Literal</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getEnumLiteralRef()
  * @model

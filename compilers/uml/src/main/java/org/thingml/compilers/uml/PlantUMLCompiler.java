@@ -23,6 +23,7 @@ import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.thing.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
@@ -43,10 +44,22 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
         super(new ThingMLPrettyPrinter(), new ThingApiCompiler(), new PlantUMLCfgMainGenerator(),
                 new CfgBuildCompiler(), new PlantUMLThingImplCompiler(),
                 new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
+        this.checker = new Checker(this.getID()) {
+            @Override
+            public void do_check(Configuration cfg) {
+                do_generic_check(cfg);
+            }
+        };
     }
 
     public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
+        this.checker = new Checker(this.getID()) {
+            @Override
+            public void do_check(Configuration cfg) {
+                do_generic_check(cfg);
+            }
+        };
     }
 
     @Override
@@ -70,6 +83,11 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(final Configuration cfg, String... options) {
+        this.checker.do_check(cfg);
+        this.checker.printErrors();
+        this.checker.printWarnings();
+        this.checker.printNotices();
+
         new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);

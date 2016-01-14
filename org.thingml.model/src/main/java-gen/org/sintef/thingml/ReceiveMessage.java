@@ -23,11 +23,11 @@ package org.sintef.thingml;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.ReceiveMessage#getMessage <em>Message</em>}</li>
  *   <li>{@link org.sintef.thingml.ReceiveMessage#getPort <em>Port</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getReceiveMessage()
  * @model

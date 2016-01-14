@@ -42,12 +42,12 @@ import org.sintef.thingml.*;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.RegionImpl#getSubstate <em>Substate</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.RegionImpl#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.RegionImpl#isHistory <em>History</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

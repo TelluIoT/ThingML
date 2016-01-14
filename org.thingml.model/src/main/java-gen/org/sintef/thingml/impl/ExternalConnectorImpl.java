@@ -36,12 +36,12 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ExternalConnectorImpl#getInst <em>Inst</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ExternalConnectorImpl#getPort <em>Port</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ExternalConnectorImpl#getProtocol <em>Protocol</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

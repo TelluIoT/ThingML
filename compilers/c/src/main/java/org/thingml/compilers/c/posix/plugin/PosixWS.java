@@ -108,6 +108,27 @@ public class PosixWS extends CNetworkLibraryGenerator {
             }
 
             eco.setName(portName);
+            
+            //Threaded listener --- BEGIN
+            ctx.addToInitCode("\n" + portName + "_instance.id = add_instance(&" + portName + "_instance);\n");
+            StringBuilder initThread = new StringBuilder();
+            initThread.append("//" + eco.getName() + ":\n");
+            initThread.append(eco.getName() + "_setup();\n");
+            initThread.append("pthread_t thread_");
+            initThread.append(eco.getInst().getInstance().getName() + "_");
+            initThread.append(eco.getPort().getName() + "_");
+            initThread.append(eco.getProtocol());
+            initThread.append(";\n");
+
+            initThread.append("pthread_create( &thread_");
+            initThread.append(eco.getInst().getInstance().getName() + "_");
+            initThread.append(eco.getPort().getName() + "_");
+            initThread.append(eco.getProtocol());
+            initThread.append(", NULL, ");
+            initThread.append(eco.getName() + "_start_receiver_process");
+            initThread.append(", NULL);\n"); 
+            ctx.addToInitCode(initThread.toString());
+            //Threaded listener --- END
 
             ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
             htemplate = htemplate.replace("/*PORT_NAME*/", portName);

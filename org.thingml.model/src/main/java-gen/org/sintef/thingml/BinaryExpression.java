@@ -23,11 +23,11 @@ package org.sintef.thingml;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.BinaryExpression#getLhs <em>Lhs</em>}</li>
  *   <li>{@link org.sintef.thingml.BinaryExpression#getRhs <em>Rhs</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getBinaryExpression()
  * @model abstract="true"

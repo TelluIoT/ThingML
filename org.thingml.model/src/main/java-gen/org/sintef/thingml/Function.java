@@ -24,11 +24,11 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Function#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.Function#getBody <em>Body</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getFunction()
  * @model

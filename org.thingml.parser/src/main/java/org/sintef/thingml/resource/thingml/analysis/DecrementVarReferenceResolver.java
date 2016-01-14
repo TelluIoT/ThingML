@@ -15,15 +15,15 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-public class ConfigIncludeConfigReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ConfigInclude, org.sintef.thingml.Configuration> {
+public class DecrementVarReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Decrement, org.sintef.thingml.Variable> {
 	
-	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.ConfigInclude, org.sintef.thingml.Configuration> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.ConfigInclude, org.sintef.thingml.Configuration>();
+	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Decrement, org.sintef.thingml.Variable> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Decrement, org.sintef.thingml.Variable>();
 	
-	public void resolve(String identifier, org.sintef.thingml.ConfigInclude container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Configuration> result) {
+	public void resolve(String identifier, org.sintef.thingml.Decrement container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Variable> result) {
 		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
 	}
 	
-	public String deResolve(org.sintef.thingml.Configuration element, org.sintef.thingml.ConfigInclude container, org.eclipse.emf.ecore.EReference reference) {
+	public String deResolve(org.sintef.thingml.Variable element, org.sintef.thingml.Decrement container, org.eclipse.emf.ecore.EReference reference) {
 		return delegate.deResolve(element, container, reference);
 	}
 	

@@ -16,7 +16,8 @@
         <dependency>
             <groupId>arduino</groupId>
             <artifactId>pde</artifactId>
-            <scope>provided</scope>
+            <scope>system</scope>
+			<systemPath>${project.basedir}/lib/pde.jar</systemPath>
             <version>1.0</version>
         </dependency>
         <dependency>

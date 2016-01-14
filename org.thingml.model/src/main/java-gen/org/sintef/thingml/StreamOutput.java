@@ -28,12 +28,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.StreamOutput#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.StreamOutput#getMessage <em>Message</em>}</li>
  *   <li>{@link org.sintef.thingml.StreamOutput#getPort <em>Port</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getStreamOutput()
  * @model
