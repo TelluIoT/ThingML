@@ -1883,7 +1883,7 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
 
 
         //Network Listener
-        uilder.append("\n// Network Listener\n");
+        builder.append("\n// Network Listener\n");
 
         /*for (Instance in : ctx.getCurrentConfiguration().allInstances()) {
             for (String listenFunction : in.annotation("c_external_listen")) {
