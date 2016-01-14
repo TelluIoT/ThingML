@@ -26,6 +26,7 @@ import java.util.List;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Thing#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.sintef.thingml.Thing#isFragment <em>Fragment</em>}</li>
@@ -38,7 +39,6 @@ import java.util.List;
  *   <li>{@link org.sintef.thingml.Thing#getStreams <em>Streams</em>}</li>
  *   <li>{@link org.sintef.thingml.Thing#getOperators <em>Operators</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getThing()
  * @model

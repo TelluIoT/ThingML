@@ -35,12 +35,12 @@ import org.sintef.thingml.TypedElement;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.TypedElementImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.TypedElementImpl#getCardinality <em>Cardinality</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.TypedElementImpl#isIsArray <em>Is Array</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

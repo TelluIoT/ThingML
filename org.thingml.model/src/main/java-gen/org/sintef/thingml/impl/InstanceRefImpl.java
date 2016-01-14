@@ -29,7 +29,6 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
-import org.sintef.thingml.ConfigInclude;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.InstanceRef;
 import org.sintef.thingml.ThingmlPackage;
@@ -40,25 +39,14 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.InstanceRefImpl#getConfig <em>Config</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.InstanceRefImpl#getInstance <em>Instance</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
 public class InstanceRefImpl extends EObjectImpl implements InstanceRef {
-	/**
-	 * The cached value of the '{@link #getConfig() <em>Config</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getConfig()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ConfigInclude> config;
-
 	/**
 	 * The cached value of the '{@link #getInstance() <em>Instance</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -86,18 +74,6 @@ public class InstanceRefImpl extends EObjectImpl implements InstanceRef {
 	@Override
 	protected EClass eStaticClass() {
 		return ThingmlPackage.Literals.INSTANCE_REF;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<ConfigInclude> getConfig() {
-		if (config == null) {
-			config = new EObjectResolvingEList<ConfigInclude>(ConfigInclude.class, this, ThingmlPackage.INSTANCE_REF__CONFIG);
-		}
-		return config;
 	}
 
 	/**
@@ -146,8 +122,6 @@ public class InstanceRefImpl extends EObjectImpl implements InstanceRef {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.INSTANCE_REF__CONFIG:
-				return getConfig();
 			case ThingmlPackage.INSTANCE_REF__INSTANCE:
 				if (resolve) return getInstance();
 				return basicGetInstance();
@@ -164,10 +138,6 @@ public class InstanceRefImpl extends EObjectImpl implements InstanceRef {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.INSTANCE_REF__CONFIG:
-				getConfig().clear();
-				getConfig().addAll((Collection<? extends ConfigInclude>)newValue);
-				return;
 			case ThingmlPackage.INSTANCE_REF__INSTANCE:
 				setInstance((Instance)newValue);
 				return;
@@ -183,9 +153,6 @@ public class InstanceRefImpl extends EObjectImpl implements InstanceRef {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.INSTANCE_REF__CONFIG:
-				getConfig().clear();
-				return;
 			case ThingmlPackage.INSTANCE_REF__INSTANCE:
 				setInstance((Instance)null);
 				return;
@@ -201,8 +168,6 @@ public class InstanceRefImpl extends EObjectImpl implements InstanceRef {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.INSTANCE_REF__CONFIG:
-				return config != null && !config.isEmpty();
 			case ThingmlPackage.INSTANCE_REF__INSTANCE:
 				return instance != null;
 		}

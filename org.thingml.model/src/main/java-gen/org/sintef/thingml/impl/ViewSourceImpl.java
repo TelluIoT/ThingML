@@ -34,8 +34,6 @@ import org.sintef.thingml.ViewSource;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>View Source</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

@@ -26,8 +26,6 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Join Sources</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

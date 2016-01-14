@@ -33,10 +33,10 @@ import org.sintef.thingml.UnaryExpression;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.UnaryExpressionImpl#getTerm <em>Term</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -38,11 +38,11 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ReferenceImpl#getReference <em>Reference</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ReferenceImpl#getParameter <em>Parameter</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

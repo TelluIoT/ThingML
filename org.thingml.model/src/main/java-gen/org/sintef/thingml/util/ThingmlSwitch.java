@@ -60,7 +60,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * Checks whether this is a switch for the given package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @parameter ePackage the package in question.
+	 * @param ePackage the package in question.
 	 * @return whether this is a switch for the given package.
 	 * @generated
 	 */
@@ -522,6 +522,22 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.GREATER_OR_EQUAL_EXPRESSION: {
+				GreaterOrEqualExpression greaterOrEqualExpression = (GreaterOrEqualExpression)theEObject;
+				T result = caseGreaterOrEqualExpression(greaterOrEqualExpression);
+				if (result == null) result = caseBinaryExpression(greaterOrEqualExpression);
+				if (result == null) result = caseExpression(greaterOrEqualExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.LOWER_OR_EQUAL_EXPRESSION: {
+				LowerOrEqualExpression lowerOrEqualExpression = (LowerOrEqualExpression)theEObject;
+				T result = caseLowerOrEqualExpression(lowerOrEqualExpression);
+				if (result == null) result = caseBinaryExpression(lowerOrEqualExpression);
+				if (result == null) result = caseExpression(lowerOrEqualExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.AND_EXPRESSION: {
 				AndExpression andExpression = (AndExpression)theEObject;
 				T result = caseAndExpression(andExpression);
@@ -535,6 +551,20 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseOrExpression(orExpression);
 				if (result == null) result = caseBinaryExpression(orExpression);
 				if (result == null) result = caseExpression(orExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.INCREMENT: {
+				Increment increment = (Increment)theEObject;
+				T result = caseIncrement(increment);
+				if (result == null) result = caseAction(increment);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.DECREMENT: {
+				Decrement decrement = (Decrement)theEObject;
+				T result = caseDecrement(decrement);
+				if (result == null) result = caseAction(decrement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -650,14 +680,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseConfigPropertyAssign(configPropertyAssign);
 				if (result == null) result = caseAnnotatedElement(configPropertyAssign);
 				if (result == null) result = caseThingMLElement(configPropertyAssign);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ThingmlPackage.CONFIG_INCLUDE: {
-				ConfigInclude configInclude = (ConfigInclude)theEObject;
-				T result = caseConfigInclude(configInclude);
-				if (result == null) result = caseAnnotatedElement(configInclude);
-				if (result == null) result = caseThingMLElement(configInclude);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1624,6 +1646,36 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Increment</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Increment</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIncrement(Increment object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Decrement</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Decrement</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDecrement(Decrement object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Minus Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1725,6 +1777,36 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseLowerExpression(LowerExpression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Greater Or Equal Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Greater Or Equal Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseGreaterOrEqualExpression(GreaterOrEqualExpression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Lower Or Equal Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Lower Or Equal Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLowerOrEqualExpression(LowerOrEqualExpression object) {
 		return null;
 	}
 
@@ -1980,21 +2062,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseConfigPropertyAssign(ConfigPropertyAssign object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Config Include</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Config Include</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseConfigInclude(ConfigInclude object) {
 		return null;
 	}
 

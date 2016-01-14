@@ -32,10 +32,10 @@ import org.sintef.thingml.Variable;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.PropertyReferenceImpl#getProperty <em>Property</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -23,13 +23,13 @@ package org.sintef.thingml;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Transition#getTarget <em>Target</em>}</li>
  *   <li>{@link org.sintef.thingml.Transition#getSource <em>Source</em>}</li>
  *   <li>{@link org.sintef.thingml.Transition#getAfter <em>After</em>}</li>
  *   <li>{@link org.sintef.thingml.Transition#getBefore <em>Before</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getTransition()
  * @model

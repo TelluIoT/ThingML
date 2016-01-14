@@ -18,6 +18,8 @@ package org.thingml.compilers.thing.common;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
+import org.sintef.thingml.impl.GreaterOrEqualExpressionImpl;
+import org.sintef.thingml.impl.LowerOrEqualExpressionImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
@@ -143,6 +145,18 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
     }
 
+    @Override
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+        builder.append(ctx.getVariableName(action.getVar()));
+        builder.append("++;\n");
+    }
+
+    @Override
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+        builder.append(ctx.getVariableName(action.getVar()));
+        builder.append("--;\n");
+    }
+
 
     //ThingML expressions that can be compiled the same way for any imperative language like (Java, JS, C)
 
@@ -179,6 +193,20 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     public void generate(GreaterExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" > ");
+        generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
+    public void generate(LowerOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" <= ");
+        generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
+    public void generate(GreaterOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" >= ");
         generate(expression.getRhs(), builder, ctx);
     }
 

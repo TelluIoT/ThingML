@@ -26,8 +26,6 @@ import org.sintef.thingml.constraints.Types;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Type</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

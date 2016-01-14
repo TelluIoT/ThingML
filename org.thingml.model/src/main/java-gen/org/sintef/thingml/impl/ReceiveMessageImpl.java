@@ -33,11 +33,11 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ReceiveMessageImpl#getMessage <em>Message</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ReceiveMessageImpl#getPort <em>Port</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

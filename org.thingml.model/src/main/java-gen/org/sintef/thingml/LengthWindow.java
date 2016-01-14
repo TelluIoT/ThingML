@@ -25,11 +25,11 @@ package org.sintef.thingml;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.LengthWindow#getNbEvents <em>Nb Events</em>}</li>
  *   <li>{@link org.sintef.thingml.LengthWindow#getStep <em>Step</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getLengthWindow()
  * @model

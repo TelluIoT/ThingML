@@ -105,7 +105,6 @@ public class Main {
             }
 
             for (Configuration cfg : input_model.allConfigurations()) {
-                if (cfg.isFragment()) continue; // ignore fragments
                 ThingMLCompiler compiler = registry.createCompilerInstanceByName(args[0].trim());
                 if (compiler == null) {
                     System.out.println("ERROR: Cannot find compiler " + args[0].trim() + ". Use -help to check the list of registered compilers.");

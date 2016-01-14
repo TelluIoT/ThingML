@@ -43,11 +43,11 @@ import org.sintef.thingml.Variable;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.VariableImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.VariableImpl#getAnnotations <em>Annotations</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

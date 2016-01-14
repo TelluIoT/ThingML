@@ -28,11 +28,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.SglMsgParamOperatorCall#getOperatorRef <em>Operator Ref</em>}</li>
  *   <li>{@link org.sintef.thingml.SglMsgParamOperatorCall#getParameter <em>Parameter</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getSglMsgParamOperatorCall()
  * @model

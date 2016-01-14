@@ -165,8 +165,16 @@
     <genClasses ecoreClass="thingml.ecore#//EqualsExpression"/>
     <genClasses ecoreClass="thingml.ecore#//GreaterExpression"/>
     <genClasses ecoreClass="thingml.ecore#//LowerExpression"/>
+    <genClasses ecoreClass="thingml.ecore#//GreaterOrEqualExpression"/>
+    <genClasses ecoreClass="thingml.ecore#//LowerOrEqualExpression"/>
     <genClasses ecoreClass="thingml.ecore#//AndExpression"/>
     <genClasses ecoreClass="thingml.ecore#//OrExpression"/>
+    <genClasses ecoreClass="thingml.ecore#//Increment">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Increment/var"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//Decrement">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Decrement/var"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="thingml.ecore#//ControlStructure">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ControlStructure/action"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ControlStructure/condition"/>
@@ -197,8 +205,6 @@
     <genClasses ecoreClass="thingml.ecore#//Configuration">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/instances"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/connectors"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Configuration/fragment"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/configs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/propassigns"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Instance">
@@ -223,11 +229,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ConfigPropertyAssign/instance"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ConfigPropertyAssign/index"/>
     </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//ConfigInclude">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ConfigInclude/config"/>
-    </genClasses>
     <genClasses ecoreClass="thingml.ecore#//InstanceRef">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//InstanceRef/config"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//InstanceRef/instance"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//FunctionCall">

@@ -44,6 +44,7 @@ import org.sintef.thingml.TypedElement;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getCardinality <em>Cardinality</em>}</li>
@@ -51,7 +52,6 @@ import org.sintef.thingml.TypedElement;
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getBody <em>Body</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -44,13 +44,13 @@ import org.sintef.thingml.*;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.CompositeStateImpl#getSubstate <em>Substate</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.CompositeStateImpl#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.CompositeStateImpl#isHistory <em>History</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.CompositeStateImpl#getRegion <em>Region</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

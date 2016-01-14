@@ -49,6 +49,7 @@ import java.util.Map;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#isFragment <em>Fragment</em>}</li>
@@ -61,7 +62,6 @@ import java.util.Map;
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getStreams <em>Streams</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getOperators <em>Operators</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -27,10 +27,10 @@ import java.util.Set;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.AnnotatedElement#getAnnotations <em>Annotations</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getAnnotatedElement()
  * @model abstract="true"

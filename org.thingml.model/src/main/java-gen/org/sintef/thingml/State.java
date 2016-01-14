@@ -27,6 +27,7 @@ import java.util.Map;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.State#getOutgoing <em>Outgoing</em>}</li>
  *   <li>{@link org.sintef.thingml.State#getIncoming <em>Incoming</em>}</li>
@@ -35,7 +36,6 @@ import java.util.Map;
  *   <li>{@link org.sintef.thingml.State#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.sintef.thingml.State#getInternal <em>Internal</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getState()
  * @model

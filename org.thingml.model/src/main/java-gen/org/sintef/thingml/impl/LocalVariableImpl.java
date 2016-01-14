@@ -40,11 +40,11 @@ import java.util.Set;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.LocalVariableImpl#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.LocalVariableImpl#isChangeable <em>Changeable</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

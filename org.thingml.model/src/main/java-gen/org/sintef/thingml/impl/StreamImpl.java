@@ -44,12 +44,12 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getSelection <em>Selection</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getOutput <em>Output</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getInput <em>Input</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

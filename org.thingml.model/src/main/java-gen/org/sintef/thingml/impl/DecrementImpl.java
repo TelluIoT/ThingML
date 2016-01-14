@@ -13,49 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ */
 package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
+
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
-import org.sintef.thingml.ConfigInclude;
-import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Decrement;
 import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.Variable;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Config Include</b></em>'.
+ * An implementation of the model object '<em><b>Decrement</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * <ul>
- *   <li>{@link org.sintef.thingml.impl.ConfigIncludeImpl#getConfig <em>Config</em>}</li>
- * </ul>
  * </p>
+ * <ul>
+ *   <li>{@link org.sintef.thingml.impl.DecrementImpl#getVar <em>Var</em>}</li>
+ * </ul>
  *
  * @generated
  */
-public class ConfigIncludeImpl extends AnnotatedElementImpl implements ConfigInclude {
+public class DecrementImpl extends ActionImpl implements Decrement {
 	/**
-	 * The cached value of the '{@link #getConfig() <em>Config</em>}' reference.
+	 * The cached value of the '{@link #getVar() <em>Var</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getConfig()
+	 * @see #getVar()
 	 * @generated
 	 * @ordered
 	 */
-	protected Configuration config;
-
+	protected Variable var;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ConfigIncludeImpl() {
+	protected DecrementImpl() {
 		super();
 	}
 
@@ -66,7 +65,7 @@ public class ConfigIncludeImpl extends AnnotatedElementImpl implements ConfigInc
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ThingmlPackage.Literals.CONFIG_INCLUDE;
+		return ThingmlPackage.Literals.DECREMENT;
 	}
 
 	/**
@@ -74,16 +73,16 @@ public class ConfigIncludeImpl extends AnnotatedElementImpl implements ConfigInc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Configuration getConfig() {
-		if (config != null && config.eIsProxy()) {
-			InternalEObject oldConfig = (InternalEObject)config;
-			config = (Configuration)eResolveProxy(oldConfig);
-			if (config != oldConfig) {
+	public Variable getVar() {
+		if (var != null && var.eIsProxy()) {
+			InternalEObject oldVar = (InternalEObject)var;
+			var = (Variable)eResolveProxy(oldVar);
+			if (var != oldVar) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.CONFIG_INCLUDE__CONFIG, oldConfig, config));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.DECREMENT__VAR, oldVar, var));
 			}
 		}
-		return config;
+		return var;
 	}
 
 	/**
@@ -91,8 +90,8 @@ public class ConfigIncludeImpl extends AnnotatedElementImpl implements ConfigInc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Configuration basicGetConfig() {
-		return config;
+	public Variable basicGetVar() {
+		return var;
 	}
 
 	/**
@@ -100,11 +99,11 @@ public class ConfigIncludeImpl extends AnnotatedElementImpl implements ConfigInc
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setConfig(Configuration newConfig) {
-		Configuration oldConfig = config;
-		config = newConfig;
+	public void setVar(Variable newVar) {
+		Variable oldVar = var;
+		var = newVar;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.CONFIG_INCLUDE__CONFIG, oldConfig, config));
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.DECREMENT__VAR, oldVar, var));
 	}
 
 	/**
@@ -115,9 +114,9 @@ public class ConfigIncludeImpl extends AnnotatedElementImpl implements ConfigInc
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.CONFIG_INCLUDE__CONFIG:
-				if (resolve) return getConfig();
-				return basicGetConfig();
+			case ThingmlPackage.DECREMENT__VAR:
+				if (resolve) return getVar();
+				return basicGetVar();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -130,8 +129,8 @@ public class ConfigIncludeImpl extends AnnotatedElementImpl implements ConfigInc
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.CONFIG_INCLUDE__CONFIG:
-				setConfig((Configuration)newValue);
+			case ThingmlPackage.DECREMENT__VAR:
+				setVar((Variable)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -145,8 +144,8 @@ public class ConfigIncludeImpl extends AnnotatedElementImpl implements ConfigInc
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.CONFIG_INCLUDE__CONFIG:
-				setConfig((Configuration)null);
+			case ThingmlPackage.DECREMENT__VAR:
+				setVar((Variable)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -160,10 +159,10 @@ public class ConfigIncludeImpl extends AnnotatedElementImpl implements ConfigInc
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.CONFIG_INCLUDE__CONFIG:
-				return config != null;
+			case ThingmlPackage.DECREMENT__VAR:
+				return var != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //ConfigIncludeImpl
+} //DecrementImpl

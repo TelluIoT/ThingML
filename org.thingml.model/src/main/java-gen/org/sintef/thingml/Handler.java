@@ -27,12 +27,12 @@ import java.util.Set;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Handler#getEvent <em>Event</em>}</li>
  *   <li>{@link org.sintef.thingml.Handler#getGuard <em>Guard</em>}</li>
  *   <li>{@link org.sintef.thingml.Handler#getAction <em>Action</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getHandler()
  * @model abstract="true"

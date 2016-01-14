@@ -32,11 +32,11 @@ import org.sintef.thingml.TimeWindow;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.TimeWindowImpl#getStep <em>Step</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.TimeWindowImpl#getSize <em>Size</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

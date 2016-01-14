@@ -26,12 +26,12 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#getInput <em>Input</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getStream()
  * @model

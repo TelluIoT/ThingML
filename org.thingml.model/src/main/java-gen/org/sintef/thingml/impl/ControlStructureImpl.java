@@ -23,6 +23,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.sintef.thingml.Action;
+import org.sintef.thingml.ControlStructure;
+import org.sintef.thingml.Expression;
+import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 
 import java.util.ArrayList;
@@ -34,11 +38,11 @@ import java.util.List;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ControlStructureImpl#getAction <em>Action</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ControlStructureImpl#getCondition <em>Condition</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

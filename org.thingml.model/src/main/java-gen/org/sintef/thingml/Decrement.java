@@ -13,50 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ */
 package org.sintef.thingml;
 
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Config Include</b></em>'.
+ * A representation of the model object '<em><b>Decrement</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
- * <ul>
- *   <li>{@link org.sintef.thingml.ConfigInclude#getConfig <em>Config</em>}</li>
- * </ul>
  * </p>
+ * <ul>
+ *   <li>{@link org.sintef.thingml.Decrement#getVar <em>Var</em>}</li>
+ * </ul>
  *
- * @see org.sintef.thingml.ThingmlPackage#getConfigInclude()
+ * @see org.sintef.thingml.ThingmlPackage#getDecrement()
  * @model
  * @generated
  */
-public interface ConfigInclude extends AnnotatedElement {
+public interface Decrement extends Action {
+
 	/**
-	 * Returns the value of the '<em><b>Config</b></em>' reference.
+	 * Returns the value of the '<em><b>Var</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Config</em>' reference isn't clear,
+	 * If the meaning of the '<em>Var</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Config</em>' reference.
-	 * @see #setConfig(Configuration)
-	 * @see org.sintef.thingml.ThingmlPackage#getConfigInclude_Config()
+	 * @return the value of the '<em>Var</em>' reference.
+	 * @see #setVar(Variable)
+	 * @see org.sintef.thingml.ThingmlPackage#getDecrement_Var()
 	 * @model required="true"
 	 * @generated
 	 */
-	Configuration getConfig();
+	Variable getVar();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.ConfigInclude#getConfig <em>Config</em>}' reference.
+	 * Sets the value of the '{@link org.sintef.thingml.Decrement#getVar <em>Var</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Config</em>' reference.
-	 * @see #getConfig()
+	 * @param value the new value of the '<em>Var</em>' reference.
+	 * @see #getVar()
 	 * @generated
 	 */
-	void setConfig(Configuration value);
-
-} // ConfigInclude
+	void setVar(Variable value);
+} // Decrement

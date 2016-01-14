@@ -11,7 +11,7 @@ thing TimerJava includes Timer
     property timer : JThread
     
     function start(delay : Integer) do
-             /*if (not(timer == 'null')) do
+              /*if (not(timer == 'null')) do
                 '' & timer & '.interrupt();'
              end*/
              'Thread t = new Thread(){

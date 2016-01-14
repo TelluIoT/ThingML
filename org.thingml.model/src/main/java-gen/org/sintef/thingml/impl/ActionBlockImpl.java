@@ -29,6 +29,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.Action;
+import org.sintef.thingml.ActionBlock;
+import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 
 /**
@@ -37,10 +40,10 @@ import org.sintef.thingml.*;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ActionBlockImpl#getActions <em>Actions</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

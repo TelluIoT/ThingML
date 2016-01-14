@@ -46,12 +46,12 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getTypes <em>Types</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getImports <em>Imports</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getConfigs <em>Configs</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

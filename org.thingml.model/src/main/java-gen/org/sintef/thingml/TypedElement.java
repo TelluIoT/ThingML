@@ -24,12 +24,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.TypedElement#getType <em>Type</em>}</li>
  *   <li>{@link org.sintef.thingml.TypedElement#getCardinality <em>Cardinality</em>}</li>
  *   <li>{@link org.sintef.thingml.TypedElement#isIsArray <em>Is Array</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getTypedElement()
  * @model abstract="true"
