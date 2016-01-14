@@ -71,6 +71,7 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
             ctx.getBuilder("Rcdtimer_common.h").append(htemplate);
         }
         
+        Set<String> existing_connectors = new HashSet<String>();  // TODO
         for(ExternalConnector eco : this.getExternalConnectors()) {
             //boolean ring = false;
             String ctemplate = ctx.getNetworkLibRcdTimerInstanceTemplate();
@@ -84,39 +85,41 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
             }
 
             eco.setName(portName);
+            if (!existing_connectors.contains(portName)) { // Only generate once
+                existing_connectors.add(portName);
+                
+                ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
+                htemplate = htemplate.replace("/*PORT_NAME*/", portName);
 
-            ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
-            htemplate = htemplate.replace("/*PORT_NAME*/", portName);
 
+                //Connector Instanciation
+                StringBuilder eco_instance = new StringBuilder();
+                eco_instance.append("//Connector");
+                Port p = eco.getPort();
+                if(!p.getReceives().isEmpty()) {
+                //if(!p.getSends().isEmpty()) {
+                    eco_instance.append("// Pointer to receiver list\n");
+                    eco_instance.append("struct Msg_Handler ** ");
+                    eco_instance.append(p.getName());
+                    eco_instance.append("_receiver_list_head;\n");
 
-            //Connector Instanciation
-            StringBuilder eco_instance = new StringBuilder();
-            eco_instance.append("//Connector");
-            Port p = eco.getPort();
-            if(!p.getReceives().isEmpty()) {
-            //if(!p.getSends().isEmpty()) {
-                eco_instance.append("// Pointer to receiver list\n");
-                eco_instance.append("struct Msg_Handler ** ");
-                eco_instance.append(p.getName());
-                eco_instance.append("_receiver_list_head;\n");
+                    eco_instance.append("struct Msg_Handler ** ");
+                    eco_instance.append(p.getName());
+                    eco_instance.append("_receiver_list_tail;\n");
+                }
 
-                eco_instance.append("struct Msg_Handler ** ");
-                eco_instance.append(p.getName());
-                eco_instance.append("_receiver_list_tail;\n");
+                if(!p.getSends().isEmpty()) {
+                //if(!p.getReceives().isEmpty()) {
+                    eco_instance.append("// Handler Array\n");
+                    eco_instance.append("struct Msg_Handler * ");
+                    eco_instance.append(p.getName());
+                    eco_instance.append("_handlers;\n");
+                }
+                ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
+
+                ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
+                ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
             }
-
-            if(!p.getSends().isEmpty()) {
-            //if(!p.getReceives().isEmpty()) {
-                eco_instance.append("// Handler Array\n");
-                eco_instance.append("struct Msg_Handler * ");
-                eco_instance.append(p.getName());
-                eco_instance.append("_handlers;\n");
-            }
-            ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
-
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
-
         }
     }
 
@@ -125,15 +128,21 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         
         for(ExternalConnector eco : this.getExternalConnectors()) {
-            String timername = eco.getProtocol();
-            System.out.println("findTimerInstance() found <" + timername + ">");
-            int timernum = Integer.decode(timername.replace("Rcdtimer", ""));
+            int timernum = findTimerNum(eco);
             if (ret < timernum)
                 ret = timernum;
         }
         return ret+1;
     }
-            
+    
+    private int findTimerNum(ExternalConnector eco) {
+        String timername = eco.getProtocol();
+        System.out.println("findTimerInstance() found <" + timername + ">");
+        int timernum = Integer.decode(timername.replace("Rcdtimer", ""));
+        
+        return timernum;
+    }
+    
     @Override
     public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
@@ -180,15 +189,17 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
             builder.append("void " + getCppNameScope() + "rcd_send_timeout(unsigned int timer_num)");
             builder.append("{\n");
             builder.append("switch (timer_num) {\n");
+            
+            Set<Integer> generated_timernums = new HashSet<Integer>();  // TODO
             for (ExternalConnector eco : this.getExternalConnectors()) {
-                Thing t = eco.getInst().getInstance().getType();
+                //Thing t = eco.getInst().getInstance().getType();
                 Port p = eco.getPort();
                 String timername = eco.getName();
-                String timernum = timername.replace("Rcdtimer", "");
-                builder.append("//timernum is() " + timernum + "\n");
-                builder.append("case " + timernum + ":\n");
-                generateTimerReceiver(timername, p, builder);
-                builder.append("break;\n");
+                int timernum = findTimerNum(eco);
+                if (!generated_timernums.contains(timernum)) { // Only generate once per instance
+                    if (generateTimerSendTimeout(timernum, timername, p, builder) == true)
+                        generated_timernums.add(timernum);
+                }
             }
             builder.append("} // switch from timer\n");
             builder.append("}\n");
@@ -197,19 +208,28 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
         
     }
 
-    private void generateTimerReceiver(String timername, Port p, StringBuilder builder) {
+    private boolean generateTimerSendTimeout(int timernum, String timername, Port p, StringBuilder builder) {
+        boolean generated = false;
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         
-        for (Message m : p.getReceives()) {
-            Set<String> ignoreList = new HashSet<String>();
-            builder.append("{\n");
-            ctx.appendFormalParameterDeclarations(builder, m);
-            builder.append("{\n");
-            ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
-            builder.append("externalMessageEnqueue(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ", " + timername + "_instance.listener_id);\n");
-            builder.append("}\n");
-            builder.append("}\n");
+        for (Message m : p.getReceives()) {  // TODO how assure that correct messages are generated...
+            if (m.getName().equals("timer_timeout")) {
+                generated = true;
+                
+                Set<String> ignoreList = new HashSet<String>();
+                builder.append("//timernum is() " + timernum + "\n");
+                builder.append("case " + timernum + ":\n");
+                builder.append("{\n");
+                ctx.appendFormalParameterDeclarations(builder, m);
+                builder.append("{\n");
+                ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
+                builder.append("externalMessageEnqueue(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ", " + timername + "_instance.listener_id);\n");
+                builder.append("}\n");
+                builder.append("}\n");
+                builder.append("break;\n");
+            }
         }
+        return generated;
     }
 
     @Override
