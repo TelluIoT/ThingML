@@ -131,7 +131,7 @@ public class CompileThingFile implements IHandler {
 			// Look for a Configurations to compile
 			ArrayList<Configuration> toCompile = new ArrayList<Configuration>();
 			for ( Configuration cfg :  model.allConfigurations() ) {
-				if (!cfg.isFragment()) toCompile.add(cfg);
+				toCompile.add(cfg);
 			}
 
 			if (toCompile.isEmpty()) {
