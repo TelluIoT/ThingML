@@ -23,6 +23,7 @@ package org.thingml.compilers.c.arduino.plugin;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.Configuration;
@@ -58,28 +59,15 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
     }
     
     public void Init() {
-        System.out.println("ArduinotTimer.init();");
         if(!isInit) {
-            System.out.println("ArduinotTimer.init()->false");
             CCompilerContext ctx = (CCompilerContext) this.ctx;
             
-            Set<ExternalConnector> eco0 = new HashSet<ExternalConnector>();
-            Set<ExternalConnector> eco1 = new HashSet<ExternalConnector>();
-            Set<ExternalConnector> eco2 = new HashSet<ExternalConnector>();
+            Set<ExternalConnector> eco0 = new HashSet<>();
+            Set<ExternalConnector> eco1 = new HashSet<>();
+            Set<ExternalConnector> eco2 = new HashSet<>();
             //How many Hardware timers?
             int nbHWTimer = 0;
             for(ExternalConnector eco : this.getExternalConnectors()) {
-
-            
-                String portName;
-                if(eco.hasAnnotation("port_name")) {
-                    portName = eco.annotation("port_name").iterator().next();
-                } else {
-                    portName = eco.getProtocol();
-                }
-
-                eco.setName(portName);
-                
                 if(eco.hasAnnotation("hardware_timer")) {
                     int thisTimer = Integer.parseInt(eco.annotation("hardware_timer").iterator().next());
                     if(thisTimer == 0) {
@@ -91,7 +79,7 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
                     }
                 } else {
                     eco2.add(eco);
-                    System.out.println("add eco to timer 2");
+                    //System.out.println("add eco to timer 2");
                 }
             }
 
@@ -108,24 +96,33 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
         this.Init();
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         if(!hwtimer0.ExternalConnectors.isEmpty()) {
+            ctx.addToInitCode("\n" + hwtimer0.timerName + "_instance.listener_id = add_instance(&" + hwtimer0.timerName + "_instance);\n");
+            ctx.addToInitCode(hwtimer0.timerName + "_setup();\n");
+            ctx.addToPollCode(hwtimer0.timerName + "_read();\n");
+            
             ctx.getBuilder(hwtimer0.timerName + ".c").append(hwtimer0.generateTimerLibrary(ctx));
             ctx.getBuilder(hwtimer0.timerName + ".h").append("//" + hwtimer0.timerName + "\n");
         }
         if(!hwtimer1.ExternalConnectors.isEmpty()) {
+            ctx.addToInitCode("\n" + hwtimer1.timerName + "_instance.listener_id = add_instance(&" + hwtimer1.timerName + "_instance);\n");
+            ctx.addToInitCode(hwtimer1.timerName + "_setup();\n");
+            ctx.addToPollCode(hwtimer1.timerName + "_read();\n");
+            
             ctx.getBuilder(hwtimer1.timerName + ".c").append(hwtimer1.generateTimerLibrary(ctx));
-            ctx.getBuilder(hwtimer0.timerName + ".h").append("//" + hwtimer1.timerName + "\n");
+            ctx.getBuilder(hwtimer1.timerName + ".h").append("//" + hwtimer1.timerName + "\n");
         }
         if(!hwtimer2.ExternalConnectors.isEmpty()) {
-            String timerlib = hwtimer2.generateTimerLibrary(ctx);
-            //System.out.println("timerlib: " + timerlib);
-            ctx.getBuilder(hwtimer2.timerName + ".c").append(timerlib);
-            ctx.getBuilder(hwtimer0.timerName + ".h").append("//" + hwtimer2.timerName + "\n");
+            ctx.addToInitCode("\n" + hwtimer2.timerName + "_instance.listener_id = add_instance(&" + hwtimer2.timerName + "_instance);\n");
+            ctx.addToInitCode(hwtimer2.timerName + "_setup();\n");
+            ctx.addToPollCode(hwtimer2.timerName + "_read();\n");
+            
+            ctx.getBuilder(hwtimer2.timerName + ".c").append(hwtimer2.generateTimerLibrary(ctx));
+            ctx.getBuilder(hwtimer2.timerName + ".h").append("//" + hwtimer2.timerName + "\n");
         }
     }
     
     @Override
     public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
-        //System.out.println("generateMessageForwarders");
         this.Init();
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         if(!hwtimer0.ExternalConnectors.isEmpty()) {
@@ -145,21 +142,36 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
         public Set<ExternalConnector> ExternalConnectors;
         Set<BigInteger> tics;
         BigInteger scm;
-        BigInteger gcd;
         String interruptCounterType;
         public String timerName;
         int nbSoftTimer = 0;
         
-        void findSCM() {
-            for(BigInteger bi : tics) {
-                if(scm == null) {
-                    scm = BigInteger.valueOf(bi.longValue());
-                    gcd = BigInteger.valueOf(bi.longValue());
-                } else {
-                    gcd = gcd.gcd(bi);
-                    scm = BigInteger.valueOf(scm.longValue() * bi.longValue() / gcd.longValue());
-                }
+        BigInteger SCM(List<BigInteger> l) {
+            if(l.isEmpty()) {
+                //System.out.println("tscm (empty): 0");
+                return BigInteger.valueOf(0);
+            } else if (l.size() == 1) {
+                //System.out.println("tscm (" + l.get(0).longValue() + "): " + l.get(0).longValue());
+                return l.get(0);
+            } else {
+                BigInteger a = l.get(0);
+                l.remove(a);
+                BigInteger b = SCM(l);
+                BigInteger res = BigInteger.valueOf((a.longValue() * b.longValue()) / a.gcd(b).longValue());
+                //System.out.println("tscm (" + a.longValue() + ", " + b.longValue() + "): " + res.longValue());
+                return res;
             }
+        }
+        
+        void findSCM() {
+            List<BigInteger> l = new LinkedList<BigInteger>();
+            for(BigInteger bi : tics) {
+                l.add(bi);
+                //System.out.println(bi.longValue() + " tics");
+            }
+            
+            scm = SCM(l);
+            //System.out.println("scm: " + scm.longValue());
             
             if(scm != null) {
                 if(scm.longValue() < 256) {
@@ -181,6 +193,9 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
             this.tics = new HashSet<BigInteger>();
             
             for(ExternalConnector eco : ExternalConnectors) {
+                eco.setName(timerName);
+                //System.out.println("eco now named:" + eco.getName());
+                
                 for(Message msg : eco.getPort().getSends()) {
                     if(msg.hasAnnotation("timer_start")) {
                         timerStart |= true;
@@ -237,14 +252,14 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
 
                     interruptVector.append("SIGNAL(TIMER0_OVF_vect) {\n"
                             + "TCNT0 = 5;\n"
-                            + "interrupt_counter++;\n");
+                            + timerName + "_interrupt_counter++;\n");
 
                     for(BigInteger bi : tics) {
-                        interruptVector.append("if(interrupt_counter % " + bi.longValue() + ") {\n");
+                        interruptVector.append("if((" + timerName + "_interrupt_counter % " + bi.longValue() + ") == 0) {\n");
                         interruptVector.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
                         interruptVector.append("}\n");
                     }
-                    interruptVector.append("if(interrupt_counter >= " + scm.longValue() + ") {\n");
+                    interruptVector.append("if(" + timerName + "_interrupt_counter >= " + scm.longValue() + ") {\n");
                     interruptVector.append(timerName + "_interrupt_counter = 0;\n");
                     interruptVector.append("}\n");
 
@@ -261,14 +276,14 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
 
                     interruptVector.append("SIGNAL(TIMER1_OVF_vect) {\n"
                             + "TCNT1 = 49536;\n"
-                            + "interrupt_counter++;\n");
+                            + timerName + "_interrupt_counter++;\n");
 
                     for(BigInteger bi : tics) {
-                        interruptVector.append("if(interrupt_counter % " + bi.longValue() + ") {\n");
+                        interruptVector.append("if((" + timerName + "_interrupt_counter % " + bi.longValue() + ") == 0) {\n");
                         interruptVector.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
                         interruptVector.append("}\n");
                     }
-                    interruptVector.append("if(interrupt_counter >= " + scm.longValue() + ") {\n");
+                    interruptVector.append("if(" + timerName + "_interrupt_counter >= " + scm.longValue() + ") {\n");
                     interruptVector.append(timerName + "_interrupt_counter = 0;\n");
                     interruptVector.append("}\n");
 
@@ -283,14 +298,14 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
 
                     interruptVector.append("SIGNAL(TIMER2_OVF_vect) {\n"
                             + "TCNT2 = 5;\n"
-                            + "interrupt_counter++;\n");
+                            + timerName + "_interrupt_counter++;\n");
 
                     for(BigInteger bi : tics) {
-                        interruptVector.append("if(interrupt_counter % " + bi.longValue() + ") {\n");
+                        interruptVector.append("if((" + timerName + "_interrupt_counter % " + bi.longValue() + ") == 0) {\n");
                         interruptVector.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
                         interruptVector.append("}\n");
                     }
-                    interruptVector.append("if(interrupt_counter >= " + scm.longValue() + ") {\n");
+                    interruptVector.append("if(" + timerName + "_interrupt_counter >= " + scm.longValue() + ") {\n");
                     interruptVector.append(timerName + "_interrupt_counter = 0;\n");
                     interruptVector.append("}\n");
 
@@ -304,7 +319,7 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
                 if(timerStart) {
                     instructions.append("void " + timerName + "_timer_start(uint8_t id, uint32_t ms) {\n"
                             + "if(id <" + timerName + "_NB_SOFT_TIMER) {\n"
-                            + timerName + "_timer[id] = ms;\n"
+                            + timerName + "_timer[id] = ms + millis();\n"
                             + "}\n"
                             + "}\n\n");
                 }
@@ -347,8 +362,10 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
                 }
                 if(xmsTic) {
                     for(BigInteger bi : tics) {
-                        instructions.append("void " + timerName + "_"+ bi.longValue() +"ms_tic() {\n"
-                                + "uint8_t enqueue_buf[2];\n");
+                        instructions.append("void " + timerName + "_"+ bi.longValue() +"ms_tic() {\n");
+                        
+                        
+                        //instructions.append("uint8_t enqueue_buf[2];\n");
 
                         Set<Message> timeoutMessages = new HashSet<Message>();
                         for(ExternalConnector eco : ExternalConnectors) {
@@ -371,11 +388,11 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
                             }
                         }
                         for(Message msg : timeoutMessages) {
-                            instructions.append("enqueue_buf[0] = (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " >> 8) & 0xFF;\n");
-                            instructions.append("enqueue_buf[1] = " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " & 0xFF;\n");
-                            instructions.append("externalMessageEnqueue(enqueue_buf, 2, " + timerName + "_instance.listener_id);\n");
+                            //instructions.append("enqueue_buf[0] = (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " >> 8) & 0xFF;\n");
+                            //instructions.append("enqueue_buf[1] = " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " & 0xFF;\n");
+                            //instructions.append("externalMessageEnqueue(enqueue_buf, 2, " + timerName + "_instance.listener_id);\n");
+                            instructions.append("dispatch_" + msg.getName()+ "(" + timerName + "_instance.listener_id);\n");
                         }
-
                         instructions.append("}\n\n");
                     }
                 }

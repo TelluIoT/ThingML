@@ -89,7 +89,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
                 if(eco.getProtocol().startsWith("Timer")) {
                     aTimergen.addExternalCnnector(eco);
-                    System.out.println("eco");
                 }
             }
             if(ctx.getCompiler().getID().compareTo("sintefboard") == 0) {
@@ -952,12 +951,13 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 
                 if(messageExternalSenders.containsKey(m)) {
                     for(ExternalConnector eco : messageExternalSenders.get(m)) {
-                        String portName;
+                        String portName = eco.getName();
+                        /*String portName;
                         if(eco.hasAnnotation("port_name")) {
                             portName = eco.annotation("port_name").iterator().next();
                         } else {
                             portName = eco.getProtocol();
-                        }
+                        }*/
                         builder.append("if (sender ==");
                         builder.append(" " + portName + "_instance.listener_id) {\n");
 
@@ -1132,12 +1132,13 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
 
                 for(ExternalConnector eco : externalSenders) {
-                    String portName;
+                    String portName = eco.getName();
+                    /*String portName;
                     if(eco.hasAnnotation("port_name")) {
                         portName = eco.annotation("port_name").iterator().next();
                     } else {
                         portName = eco.getProtocol();
-                    }
+                    }*/
                     builder.append("if (sender ==");
                     builder.append(" " + portName + "_instance.listener_id) {\n");
                     
