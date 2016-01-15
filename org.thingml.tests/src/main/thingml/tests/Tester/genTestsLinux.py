@@ -64,11 +64,23 @@ def run(type):
 					'	instance harness : Tester\n'+
 					'	instance dump : TestDumpLinux\n'+
 					'	instance test : '+bigname+'\n')
-					fichier.write(' group timer : TimerLinuxCFG\n'+
-					' set timer.timer.millisecond = true\n'+
-					' set timer.timer.period = 10\n'+
-					' set timer.clock.period = 10\n\n')
-					fichier.write(' connector harness.timer => timer.timer.timer\n')
+
+					fichier.write('instance clock : ClockLinux\n'+
+					'set clock.period = 1000\n'+
+					'instance timer : TimerLinux\n'+
+					'connector timer.clock => clock.signal\n')
+
+					#fichier.write(' group timer : TimerLinuxCFG\n'+
+					#' set timer.timer.millisecond = true\n'+
+					#' set timer.timer.period = 10\n'+
+					#' set timer.clock.period = 10\n\n')
+					#fichier.write(' connector harness.timer => timer.timer.timer\n')
+
+					fichier.write(' set timer.millisecond = true\n'+
+					' set timer.period = 10\n'+
+					' set clock.period = 10\n\n')
+					fichier.write(' connector harness.timer => timer.timer\n')
+
 					if type == "perf":
 						fichier.write('	//instance timestamp : TimestampLinux\n'+
 						'	connector test.testEnd => dump.dumpEnd\n'+
