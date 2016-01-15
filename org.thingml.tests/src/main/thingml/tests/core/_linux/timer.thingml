@@ -39,12 +39,13 @@ thing TimerLinux includes Timer, ClockMsgs
 
 }
 
+/*
 configuration fragment TimerLinuxCFG {
 	instance clock : ClockLinux
 	set clock.period = 1000
 	instance timer : TimerLinux
 	connector timer.clock => clock.signal
-}
+}*/
 
 /*configuration TestTimerLinux 
   @debug "true"
