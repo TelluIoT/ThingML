@@ -17,14 +17,16 @@ package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.ErrorAction;
 import org.sintef.thingml.PrintAction;
+import org.sintef.thingml.Type;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CThingActionCompiler;
+import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.TypeChecker;
 
 /**
  * Created by ffl on 11.06.15.
  */
 public class CThingActionCompilerPosix extends CThingActionCompiler {
-
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
@@ -35,8 +37,24 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
+        Checker checker = ctx.getCompiler().checker;
+        Type actual = checker.typeChecker.computeTypeOf(action.getMsg());
         generate(action.getMsg(), b, ctx);
-        builder.append("fprintf(stdout, " + b.toString() + ");\n");
+        if (actual != null) {
+            if (actual.getName().equals("INTEGER_TYPE")) {
+                builder.append("fprintf(stdout, \"%i\"," + b.toString() + ");\n");
+            } else if (actual.getName().equals("STRING_TYPE")) {generate(action.getMsg(), b, ctx);
+                builder.append("fprintf(stdout, " + b.toString() + ");\n");
+            } else if (actual.getName().equals("REAL_TYPE")) {
+                builder.append("fprintf(stdout, \"%f\"," + b.toString() + ");\n");
+            } else if (actual.getName().equals("BOOLEAN_TYPE")) {
+                builder.append("fprintf(stdout, \"%b\"," + b.toString() + ");\n");
+            } else {
+            
+            }
+        }
+        
+        
     }
 
 }
