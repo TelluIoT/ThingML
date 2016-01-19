@@ -3,7 +3,7 @@ Unlike the print statement, ThingML does not provide any timing facilities direc
 However, timers are usually important in your logic. We define below how to wrap timers for the different platforms.
 */
 
-datatype Integer	
+datatype Integer<2>	
 	@c_type "int"
 	@c_byte_size "2"
 	@java_type "short"

@@ -8,11 +8,11 @@ cepM4M5 received with value (4)
 cepM4M5 received with value (4)
 **/
 
-datatype Integer
+datatype Integer<2>
     @js_type "int"
     @java_type "int";
     
-datatype Bool
+datatype Bool<1>
     @js_type "bool"
     @java_type "boolean";
 

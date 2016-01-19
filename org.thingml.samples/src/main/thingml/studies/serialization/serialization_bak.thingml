@@ -1,10 +1,10 @@
-datatype Integer
+datatype Integer<2>
 @scala_type "Int";
 
-datatype String
+object String
 @scala_type "String";
 
-datatype Byte
+datatype Byte<1>
 @scala_type "Byte";
 
 thing fragment testMsgs {

@@ -14,7 +14,7 @@
 import "../websocket.thingml"
 import "timer.thingml"
 
-datatype WebSocketMirrorServer
+object WebSocketMirrorServer
 @c_type "WebSocketMirrorServer*";
 
 thing WebSMirrorServer includes WebSocketServer
@@ -122,7 +122,7 @@ using namespace WebSockets;
     
 }
 
-datatype WebSocketClient
+object WebSocketClient
 @c_type "WebSocketClient*";
 
 thing WebSClient includes WebSocketServer

@@ -9,11 +9,11 @@ Is someone in the room? : true
 System : at least one person is in the room
 **/
 
-datatype Integer
+datatype Integer<2>
     @js_type "short"
     @java_type "int";
     
-datatype Boolean
+datatype Boolean<1>
     @js_type "bool"
     @java_type "boolean";
 

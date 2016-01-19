@@ -29,6 +29,8 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getProperty(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getParameter(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getPrimitiveType(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getObjectType(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getProtocol(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumeration(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getEnumerationLiteral(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getPlatformAnnotation(),

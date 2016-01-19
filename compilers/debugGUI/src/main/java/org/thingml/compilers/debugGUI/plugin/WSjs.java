@@ -50,7 +50,7 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
             if(eco.hasAnnotation("port_name")) {
                 portName = eco.annotation("port_name").iterator().next();
             } else {
-                portName = eco.getProtocol();
+                portName = eco.getProtocol().getName();
             }
 
             //ctx.getBuilder(portName + ".js").append("");
@@ -105,7 +105,7 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
             if(eco.hasAnnotation("port_name")) {
                 portName = eco.annotation("port_name").iterator().next();
             } else {
-                portName = eco.getProtocol();
+                portName = eco.getProtocol().getName();
             }
             builder.append("	var " + portName + "_socket;\n\n");
             
@@ -119,25 +119,25 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
                 String msgID = "";
                 if(m.hasAnnotation("code")) {
                     msgID = m.annotation("code").iterator().next();
+
+                    builder.append("if(msgID == " + msgID + ") {\n");
+                    builder.append("tolog = \"" + m.getName() + "(\"\n");
+                    boolean pIsFirst = true;
+                    for(Parameter p : m.getParameters()) {
+                       if(pIsFirst) {
+                           pIsFirst = false;
+                       } else {
+                           builder.append("tolog += \", \";\n");
+                       }
+                       builder.append("tmp_param = document.getElementById(\"param_" + m.getName() + "_" + p.getName() + "\").value;\n");
+                       builder.append("tolog += tmp_param;\n");
+                       builder.append("tosend += intToBytes(tmp_param, " + p.getType().annotation("c_byte_size").iterator().next() + ");\n");
+                    }
+
+                    builder.append("}\n");
                 } else {
                    System.out.println("[Warning] in order to generate working mock-up, messages ID must be specified with @code");
                 }
-
-                builder.append("if(msgID == " + msgID + ") {\n");
-                builder.append("tolog = \"" + m.getName() + "(\"\n");
-                boolean pIsFirst = true;
-                for(Parameter p : m.getParameters()) {
-                   if(pIsFirst) {
-                       pIsFirst = false;
-                   } else {
-                       builder.append("tolog += \", \";\n");
-                   }
-                   builder.append("tmp_param = document.getElementById(\"param_" + m.getName() + "_" + p.getName() + "\").value;\n");
-                   builder.append("tolog += tmp_param;\n");
-                   builder.append("tosend += intToBytes(tmp_param, " + p.getType().annotation("c_byte_size").iterator().next() + ");\n");
-                }
-
-                builder.append("}\n");
             }
             builder.append("tolog += \")\"\n");
             builder.append("document.getElementById(\"sent-logs\").textContent += \"\\n> \" + tolog;\n");

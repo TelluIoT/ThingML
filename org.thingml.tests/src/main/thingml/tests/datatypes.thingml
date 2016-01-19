@@ -5,7 +5,7 @@
  * The size of Java primitive types is given here: http://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
  * TODO: some information is missing to properly serialize/deserialize some types, typically UInt and Int, which have the same size, but different encodings
  *****************************************************************************/
-datatype Byte	
+datatype Byte<1>	
 	@c_type "uint8_t"
 	@c_byte_size "1"
 	@java_type "byte"
@@ -13,7 +13,7 @@ datatype Byte
     @scala_type "Byte"
     @SenML_type "Double";
 
-datatype Boolean	
+datatype Boolean<2>	
 	@c_type "uint8_t"
 	@c_byte_size "2"
 	@java_type "boolean"
@@ -21,7 +21,7 @@ datatype Boolean
     @scala_type "Boolean"
     @SenML_type "Boolean";
 
-datatype Integer	
+datatype Integer<2>	
 	@c_type "int"
 	@c_byte_size "2"
 	@java_type "short"
@@ -30,7 +30,7 @@ datatype Integer
     @SenML_type "Double"
     @ros_type "int16";
 	
-datatype UInt8	
+datatype UInt8<1>	
 	@c_type "uint8_t"
 	@c_byte_size "1"
 	@java_type "byte"
@@ -38,7 +38,7 @@ datatype UInt8
     @scala_type "Byte"
     @SenML_type "Double";
 	
-datatype Int8	
+datatype Int8<1>	
 	@c_type "int8_t"
 	@c_byte_size "1"
 	@java_type "byte"
@@ -46,7 +46,7 @@ datatype Int8
     @scala_type "Byte"
     @SenML_type "Double";
 
-datatype UInt16	
+datatype UInt16<2>	
 	@c_type "uint16_t"
 	@c_byte_size "2"
 	@java_type "short"
@@ -54,7 +54,7 @@ datatype UInt16
     @scala_type "Short"
     @SenML_type "Double";
 
-datatype Int16	
+datatype Int16<2>	
 	@c_type "int16_t"
     @c_byte_size "2"
 	@java_type "short"
@@ -63,7 +63,7 @@ datatype Int16
     @SenML_type "Double";
 
 
-datatype Int32	
+datatype Int32<4>	
 	@c_type "int32_t"
 	@c_byte_size "4"
 	@java_type "int"
@@ -71,7 +71,7 @@ datatype Int32
     @scala_type "Int"
     @SenML_type "Double";
 
-datatype Long	
+datatype Long<4>	
 	@c_type "long"
 	@c_byte_size "4"
 	@java_type "int"
@@ -79,7 +79,7 @@ datatype Long
     @scala_type "Int"
     @SenML_type "Double";
 	
-datatype ULong	
+datatype ULong<4>	
 	@c_type "unsigned long"
 	@c_byte_size "4"
 	@java_type "int"
@@ -87,7 +87,7 @@ datatype ULong
     @scala_type "Int"
     @SenML_type "Double";
 
-datatype Double	
+datatype Double<8>
 	@c_type "double"
 	@c_byte_size "8"
 	@java_type "float"
@@ -95,7 +95,7 @@ datatype Double
     @scala_type "Float"
     @SenML_type "Double";
 
-datatype Char	
+datatype Char<1>	
 	@c_type "char"
 	@c_byte_size "1"
 	@java_type "char"
@@ -104,7 +104,7 @@ datatype Char
     @scala_type "Character"
     @SenML_type "String";
 
-datatype String
+object String
 	@c_type "char *"
 	@c_byte_size "*"
 	@java_type "String"
@@ -122,7 +122,7 @@ enumeration DigitalState
 	HIGH @enum_val "1"
 }
 
-datatype LongLong
+datatype LongLong<8>
     @c_type "long long"
     @c_byte_size "8"
     @java_type "long"

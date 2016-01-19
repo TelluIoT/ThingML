@@ -1,4 +1,4 @@
-datatype String
+object String
 	@c_type "char *"
 	@c_byte_size "*"
     @js_type "String"

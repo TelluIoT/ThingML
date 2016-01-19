@@ -67,7 +67,7 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
             if(eco.hasAnnotation("port_name")) {
                 portName = eco.annotation("port_name").iterator().next();
             } else {
-                portName = eco.getProtocol();
+                portName = eco.getProtocol().getName();
             }
 
             eco.setName(portName);
@@ -114,8 +114,8 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
 
 
 
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
+            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".c").append(ctemplate);
+            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".h").append(htemplate);
 
         }
     }

@@ -13,7 +13,7 @@
 import "../../thingml.thingml"
 import "clock.thingml"
 
-datatype CString
+object CString
 @c_type "const char*";
 
 thing fragment Config {
@@ -37,7 +37,7 @@ thing fragment ControllerMsg {
   	message all_nodes_quiried();
 }
 
-datatype TinyController
+object TinyController
 @c_type "TinyController*";
 
 thing fragment Controller includes ControllerMsg {
@@ -149,7 +149,7 @@ thing fragment PlugMsg {
     message switch_state( swstate : Boolean);
 }
 
-datatype BinarySwitch
+object BinarySwitch
 @c_type "BinarySwitch*";
 
 thing fragment Plug includes PlugMsg {

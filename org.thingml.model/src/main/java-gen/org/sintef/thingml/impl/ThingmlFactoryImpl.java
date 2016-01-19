@@ -23,6 +23,90 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import org.sintef.thingml.ActionBlock;
+import org.sintef.thingml.AndExpression;
+import org.sintef.thingml.ArrayIndex;
+import org.sintef.thingml.ArrayParamRef;
+import org.sintef.thingml.BooleanLiteral;
+import org.sintef.thingml.CompositeState;
+import org.sintef.thingml.ConditionalAction;
+import org.sintef.thingml.ConfigPropertyAssign;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Connector;
+import org.sintef.thingml.Decrement;
+import org.sintef.thingml.DivExpression;
+import org.sintef.thingml.DoubleLiteral;
+import org.sintef.thingml.EnumLiteralRef;
+import org.sintef.thingml.Enumeration;
+import org.sintef.thingml.EnumerationLiteral;
+import org.sintef.thingml.EqualsExpression;
+import org.sintef.thingml.ErrorAction;
+import org.sintef.thingml.ExpressionGroup;
+import org.sintef.thingml.ExternExpression;
+import org.sintef.thingml.ExternStatement;
+import org.sintef.thingml.ExternalConnector;
+import org.sintef.thingml.Filter;
+import org.sintef.thingml.Function;
+import org.sintef.thingml.FunctionCallExpression;
+import org.sintef.thingml.FunctionCallStatement;
+import org.sintef.thingml.GreaterExpression;
+import org.sintef.thingml.GreaterOrEqualExpression;
+import org.sintef.thingml.Increment;
+import org.sintef.thingml.Instance;
+import org.sintef.thingml.InstanceRef;
+import org.sintef.thingml.IntegerLiteral;
+import org.sintef.thingml.InternalPort;
+import org.sintef.thingml.InternalTransition;
+import org.sintef.thingml.JoinSources;
+import org.sintef.thingml.LengthArray;
+import org.sintef.thingml.LengthWindow;
+import org.sintef.thingml.LocalVariable;
+import org.sintef.thingml.LoopAction;
+import org.sintef.thingml.LowerExpression;
+import org.sintef.thingml.LowerOrEqualExpression;
+import org.sintef.thingml.MergeSources;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.MessageParameter;
+import org.sintef.thingml.MinusExpression;
+import org.sintef.thingml.ModExpression;
+import org.sintef.thingml.NotExpression;
+import org.sintef.thingml.OrExpression;
+import org.sintef.thingml.ParallelRegion;
+import org.sintef.thingml.Parameter;
+import org.sintef.thingml.PlatformAnnotation;
+import org.sintef.thingml.PlusExpression;
+import org.sintef.thingml.PrimitiveType;
+import org.sintef.thingml.PrintAction;
+import org.sintef.thingml.Property;
+import org.sintef.thingml.PropertyAssign;
+import org.sintef.thingml.PropertyReference;
+import org.sintef.thingml.Protocol;
+import org.sintef.thingml.ProvidedPort;
+import org.sintef.thingml.ReceiveMessage;
+import org.sintef.thingml.Reference;
+import org.sintef.thingml.RequiredPort;
+import org.sintef.thingml.ReturnAction;
+import org.sintef.thingml.SendAction;
+import org.sintef.thingml.SglMsgParamOperator;
+import org.sintef.thingml.SglMsgParamOperatorCall;
+import org.sintef.thingml.SimpleParamRef;
+import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.State;
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.Stream;
+import org.sintef.thingml.StreamExpression;
+import org.sintef.thingml.StreamOutput;
+import org.sintef.thingml.StreamParamReference;
+import org.sintef.thingml.StringLiteral;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.ThingmlFactory;
+import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.TimeWindow;
+import org.sintef.thingml.TimesExpression;
+import org.sintef.thingml.Transition;
+import org.sintef.thingml.UnaryMinus;
+import org.sintef.thingml.VariableAssignment;
 import org.sintef.thingml.*;
 
 /**
@@ -150,6 +234,8 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.SIMPLE_PARAM_REF: return createSimpleParamRef();
 			case ThingmlPackage.ARRAY_PARAM_REF: return createArrayParamRef();
 			case ThingmlPackage.LENGTH_ARRAY: return createLengthArray();
+			case ThingmlPackage.PROTOCOL: return createProtocol();
+			case ThingmlPackage.OBJECT_TYPE: return createObjectType();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -963,6 +1049,26 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public LengthArray createLengthArray() {
 		LengthArrayImpl lengthArray = new LengthArrayImpl();
 		return lengthArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Protocol createProtocol() {
+		ProtocolImpl protocol = new ProtocolImpl();
+		return protocol;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ObjectType createObjectType() {
+		ObjectTypeImpl objectType = new ObjectTypeImpl();
+		return objectType;
 	}
 
 	/**

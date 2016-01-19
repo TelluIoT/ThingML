@@ -92,25 +92,25 @@ public class PosixMQTT extends CNetworkLibraryGenerator {
             if(eco.hasAnnotation("port_name")) {
                 portName = eco.annotation("port_name").iterator().next();
             } else {
-                portName = eco.getProtocol();
+                portName = eco.getProtocol().getName();
             }
             eco.setName(portName);
             
             //Threaded listener --- BEGIN
-            ctx.addToInitCode("\n" + portName + "_instance.id = add_instance(&" + portName + "_instance);\n");
+            ctx.addToInitCode("\n" + portName + "_instance.listener_id = add_instance(&" + portName + "_instance);\n");
             StringBuilder initThread = new StringBuilder();
             initThread.append("//" + eco.getName() + ":\n");
             initThread.append(eco.getName() + "_setup();\n");
             initThread.append("pthread_t thread_");
             initThread.append(eco.getInst().getInstance().getName() + "_");
             initThread.append(eco.getPort().getName() + "_");
-            initThread.append(eco.getProtocol());
+            initThread.append(eco.getProtocol().getName());
             initThread.append(";\n");
 
             initThread.append("pthread_create( &thread_");
             initThread.append(eco.getInst().getInstance().getName() + "_");
             initThread.append(eco.getPort().getName() + "_");
-            initThread.append(eco.getProtocol());
+            initThread.append(eco.getProtocol().getName());
             initThread.append(", NULL, ");
             initThread.append(eco.getName() + "_start_receiver_process");
             initThread.append(", NULL);\n"); 
@@ -166,7 +166,7 @@ public class PosixMQTT extends CNetworkLibraryGenerator {
             ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
 
             htemplate = htemplate.replace("/*PATH_TO_C*/", eco.getInst().getInstance().getName() 
-                    + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c");
+                    + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".c");
 
             //if(!eco.getPort().getReceives().isEmpty()) {
             List<String> topicList = eco.annotation("mqtt_topic");
@@ -322,8 +322,8 @@ public class PosixMQTT extends CNetworkLibraryGenerator {
                 ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "//");
             }
 
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
+            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".c").append(ctemplate);
+            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".h").append(htemplate);
 
         }
     }

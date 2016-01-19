@@ -14,7 +14,7 @@ import "../../../thingml.thingml"
 import "../../coap_client.thingml"
 
 
-datatype ThingMLCOAPContext
+object ThingMLCOAPContext
 @c_type "ThingMLCOAPContext*";
 
 thing COAPClientGetPSM includes COAPClientMsg 

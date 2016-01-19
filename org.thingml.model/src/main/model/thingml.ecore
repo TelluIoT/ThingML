@@ -8,6 +8,8 @@
         eType="#//ThingMLModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="configs" upperBound="-1"
         eType="#//Configuration" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="protocols" upperBound="-1"
+        eType="#//Protocol" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="#//AnnotatedElement #//TypedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
@@ -74,7 +76,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="literals" upperBound="-1"
         eType="#//EnumerationLiteral" containment="true" eOpposite="#//EnumerationLiteral/enum"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="PrimitiveType" eSuperTypes="#//Type"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PrimitiveType" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ByteSize" unique="false"
+        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="0"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EnumerationLiteral" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="enum" lowerBound="1" eType="#//Enumeration"
         eOpposite="#//Enumeration/literals"/>
@@ -297,8 +303,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="inst" lowerBound="1" eType="#//InstanceRef"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" lowerBound="1" eType="#//Port"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="protocol" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="protocol" lowerBound="1"
+        eType="#//Protocol"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractConnector" abstract="true" eSuperTypes="#//AnnotatedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="ConfigPropertyAssign" eSuperTypes="#//AnnotatedElement">
@@ -421,4 +427,6 @@
       eSuperTypes="#//ElmtProperty"/>
   <eClassifiers xsi:type="ecore:EClass" name="LengthArray" eSuperTypes="#//PredifinedProperty"/>
   <eClassifiers xsi:type="ecore:EClass" name="WindowView" abstract="true" eSuperTypes="#//ViewSource"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Protocol" eSuperTypes="#//AnnotatedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ObjectType" eSuperTypes="#//Type"/>
 </ecore:EPackage>

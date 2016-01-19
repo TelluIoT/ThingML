@@ -106,13 +106,22 @@ public interface ThingmlPackage extends EPackage {
 	int THING_ML_MODEL__CONFIGS = 2;
 
 	/**
+	 * The feature id for the '<em><b>Protocols</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THING_ML_MODEL__PROTOCOLS = 3;
+
+	/**
 	 * The number of structural features of the '<em>Thing ML Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THING_ML_MODEL_FEATURE_COUNT = 3;
+	int THING_ML_MODEL_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ThingMLElementImpl <em>Thing ML Element</em>}' class.
@@ -903,13 +912,22 @@ public interface ThingmlPackage extends EPackage {
 	int PRIMITIVE_TYPE__ANNOTATIONS = TYPE__ANNOTATIONS;
 
 	/**
+	 * The feature id for the '<em><b>Byte Size</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE__BYTE_SIZE = TYPE_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Primitive Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 0;
+	int PRIMITIVE_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.EnumerationLiteralImpl <em>Enumeration Literal</em>}' class.
@@ -3591,7 +3609,7 @@ public interface ThingmlPackage extends EPackage {
 	int EXTERNAL_CONNECTOR__PORT = ABSTRACT_CONNECTOR_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Protocol</b></em>' attribute.
+	 * The feature id for the '<em><b>Protocol</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -4910,6 +4928,81 @@ public interface ThingmlPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ProtocolImpl <em>Protocol</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ProtocolImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getProtocol()
+	 * @generated
+	 */
+	int PROTOCOL = 107;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROTOCOL__NAME = ANNOTATED_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROTOCOL__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
+
+	/**
+	 * The number of structural features of the '<em>Protocol</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROTOCOL_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
+
+
+	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ObjectTypeImpl <em>Object Type</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ObjectTypeImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getObjectType()
+	 * @generated
+	 */
+	int OBJECT_TYPE = 108;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OBJECT_TYPE__NAME = TYPE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OBJECT_TYPE__ANNOTATIONS = TYPE__ANNOTATIONS;
+
+	/**
+	 * The number of structural features of the '<em>Object Type</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int OBJECT_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 0;
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.ThingMLModel <em>Thing ML Model</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4951,6 +5044,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getThingMLModel_Configs();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.ThingMLModel#getProtocols <em>Protocols</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Protocols</em>'.
+	 * @see org.sintef.thingml.ThingMLModel#getProtocols()
+	 * @see #getThingMLModel()
+	 * @generated
+	 */
+	EReference getThingMLModel_Protocols();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Function <em>Function</em>}'.
@@ -5345,6 +5449,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getPrimitiveType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.sintef.thingml.PrimitiveType#getByteSize <em>Byte Size</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Byte Size</em>'.
+	 * @see org.sintef.thingml.PrimitiveType#getByteSize()
+	 * @see #getPrimitiveType()
+	 * @generated
+	 */
+	EAttribute getPrimitiveType_ByteSize();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.EnumerationLiteral <em>Enumeration Literal</em>}'.
@@ -6695,15 +6810,15 @@ public interface ThingmlPackage extends EPackage {
 	EReference getExternalConnector_Port();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.sintef.thingml.ExternalConnector#getProtocol <em>Protocol</em>}'.
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.ExternalConnector#getProtocol <em>Protocol</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Protocol</em>'.
+	 * @return the meta object for the reference '<em>Protocol</em>'.
 	 * @see org.sintef.thingml.ExternalConnector#getProtocol()
 	 * @see #getExternalConnector()
 	 * @generated
 	 */
-	EAttribute getExternalConnector_Protocol();
+	EReference getExternalConnector_Protocol();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.AbstractConnector <em>Abstract Connector</em>}'.
@@ -7421,6 +7536,26 @@ public interface ThingmlPackage extends EPackage {
 	EClass getWindowView();
 
 	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.Protocol <em>Protocol</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Protocol</em>'.
+	 * @see org.sintef.thingml.Protocol
+	 * @generated
+	 */
+	EClass getProtocol();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ObjectType <em>Object Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Object Type</em>'.
+	 * @see org.sintef.thingml.ObjectType
+	 * @generated
+	 */
+	EClass getObjectType();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7475,6 +7610,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference THING_ML_MODEL__CONFIGS = eINSTANCE.getThingMLModel_Configs();
+
+		/**
+		 * The meta object literal for the '<em><b>Protocols</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference THING_ML_MODEL__PROTOCOLS = eINSTANCE.getThingMLModel_Protocols();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.FunctionImpl <em>Function</em>}' class.
@@ -7797,6 +7940,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass PRIMITIVE_TYPE = eINSTANCE.getPrimitiveType();
+
+		/**
+		 * The meta object literal for the '<em><b>Byte Size</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PRIMITIVE_TYPE__BYTE_SIZE = eINSTANCE.getPrimitiveType_ByteSize();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.EnumerationLiteralImpl <em>Enumeration Literal</em>}' class.
@@ -8943,12 +9094,12 @@ public interface ThingmlPackage extends EPackage {
 		EReference EXTERNAL_CONNECTOR__PORT = eINSTANCE.getExternalConnector_Port();
 
 		/**
-		 * The meta object literal for the '<em><b>Protocol</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Protocol</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EXTERNAL_CONNECTOR__PROTOCOL = eINSTANCE.getExternalConnector_Protocol();
+		EReference EXTERNAL_CONNECTOR__PROTOCOL = eINSTANCE.getExternalConnector_Protocol();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.AbstractConnectorImpl <em>Abstract Connector</em>}' class.
@@ -9559,6 +9710,26 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass WINDOW_VIEW = eINSTANCE.getWindowView();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ProtocolImpl <em>Protocol</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ProtocolImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getProtocol()
+		 * @generated
+		 */
+		EClass PROTOCOL = eINSTANCE.getProtocol();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ObjectTypeImpl <em>Object Type</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ObjectTypeImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getObjectType()
+		 * @generated
+		 */
+		EClass OBJECT_TYPE = eINSTANCE.getObjectType();
 
 	}
 

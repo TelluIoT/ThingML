@@ -201,7 +201,7 @@
 
     <modules>
         <module>org.emftext.commons.antlr3_4_0</module>
-        <module>org.thingml.model</module>
+		<module>org.thingml.model</module>
         <module>org.thingml.parser</module>
         <module>compilers</module>
         <module>org.thingml.editor.standalone</module>

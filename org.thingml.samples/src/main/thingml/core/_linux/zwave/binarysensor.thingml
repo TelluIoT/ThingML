@@ -15,7 +15,7 @@ import "../../../thingml.thingml"
 import "config.thingml"
 import "controller.thingml"
 
-datatype BinarySensor
+object BinarySensor
 @c_type "BinarySensor*";
 
 

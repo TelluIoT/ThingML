@@ -523,7 +523,13 @@ public abstract class CCompilerContext extends Context {
     }
 
     public int getCByteSize(Type t, int pointerSize) {
-        if (t.hasAnnotation("c_byte_size")) {
+        if(t instanceof ObjectType) {
+            return pointerSize;
+        } else {
+            PrimitiveType pt = (PrimitiveType) t;
+            return pt.getByteSize();
+        }
+        /*if (t.hasAnnotation("c_byte_size")) {
             String v = t.annotation("c_byte_size").iterator().next();
             if (v.equals("*")) {
                 return pointerSize;
@@ -536,16 +542,18 @@ public abstract class CCompilerContext extends Context {
             }
         }
         System.err.println("Warning: Missing annotation c_byte_size for type " + t.getName() + ", using 2 as the byte size.");
-        return 2;
+        return 2;*/
     }
 
     public boolean isPointer(Type t) {
-        if (t.hasAnnotation("c_byte_size")) {
+        return t instanceof ObjectType;
+        
+        /*if (t.hasAnnotation("c_byte_size")) {
             String v = t.annotation("c_byte_size").iterator().next();
             return v.equals("*");
         }
         System.err.println("Warning: Missing annotation c_byte_size for type " + t.getName() + ", using 2 as the byte size.");
-        return false;
+        return false;*/
     }
 
     public boolean hasByteBuffer(Type t) {

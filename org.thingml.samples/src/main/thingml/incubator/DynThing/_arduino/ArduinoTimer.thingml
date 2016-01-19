@@ -1,6 +1,6 @@
 import "../Timer.thingml"
 
-datatype Long	
+datatype Long<4>	
 	@c_type "long"
 	@c_byte_size "4";
 

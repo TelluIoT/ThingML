@@ -1,6 +1,6 @@
 import "../Timer.thingml"
 
-datatype JThread
+object JThread
 @java_type "Thread";
 
 // Manage a set of software timers.

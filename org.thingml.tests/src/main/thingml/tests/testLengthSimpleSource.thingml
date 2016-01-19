@@ -1,6 +1,6 @@
 import "thingml.thingml"
 
-datatype JInt
+datatype JInt<2>
     @java_type "int"
     @js_type "int";
     

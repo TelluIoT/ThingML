@@ -14,7 +14,7 @@
 import "../websocket.thingml"
 
 
-datatype WebSocketMirrorServer
+object WebSocketMirrorServer
 @c_type "WebSocketMirrorServer*";
 
 thing WebSMirrorServer includes WebSocketServer

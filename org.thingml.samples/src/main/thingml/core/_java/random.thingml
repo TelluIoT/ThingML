@@ -1,6 +1,6 @@
 import "../random.thingml"
 
-datatype JavaRandom
+object JavaRandom
 @java_type "java.util.Random";
 
 thing RandomJava includes Random

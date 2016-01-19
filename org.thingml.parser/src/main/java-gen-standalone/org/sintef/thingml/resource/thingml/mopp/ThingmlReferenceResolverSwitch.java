@@ -38,6 +38,7 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 	protected org.sintef.thingml.resource.thingml.analysis.ConnectorRequiredReferenceResolver connectorRequiredReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.ConnectorRequiredReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.ConnectorProvidedReferenceResolver connectorProvidedReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.ConnectorProvidedReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.ExternalConnectorPortReferenceResolver externalConnectorPortReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.ExternalConnectorPortReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.ExternalConnectorProtocolReferenceResolver externalConnectorProtocolReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.ExternalConnectorProtocolReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.ConfigPropertyAssignPropertyReferenceResolver configPropertyAssignPropertyReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.ConfigPropertyAssignPropertyReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.InstanceRefInstanceReferenceResolver instanceRefInstanceReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.InstanceRefInstanceReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.SendActionPortReferenceResolver sendActionPortReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.SendActionPortReferenceResolver();
@@ -119,6 +120,10 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 	
 	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ExternalConnector, org.sintef.thingml.Port> getExternalConnectorPortReferenceResolver() {
 		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternalConnector_Port(), externalConnectorPortReferenceResolver);
+	}
+	
+	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ExternalConnector, org.sintef.thingml.Protocol> getExternalConnectorProtocolReferenceResolver() {
+		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternalConnector_Protocol(), externalConnectorProtocolReferenceResolver);
 	}
 	
 	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ConfigPropertyAssign, org.sintef.thingml.Property> getConfigPropertyAssignPropertyReferenceResolver() {
@@ -214,6 +219,7 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		connectorRequiredReferenceResolver.setOptions(options);
 		connectorProvidedReferenceResolver.setOptions(options);
 		externalConnectorPortReferenceResolver.setOptions(options);
+		externalConnectorProtocolReferenceResolver.setOptions(options);
 		configPropertyAssignPropertyReferenceResolver.setOptions(options);
 		instanceRefInstanceReferenceResolver.setOptions(options);
 		sendActionPortReferenceResolver.setOptions(options);
@@ -364,6 +370,14 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
 			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("port")) {
 				externalConnectorPortReferenceResolver.resolve(identifier, (org.sintef.thingml.ExternalConnector) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternalConnector().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.Protocol> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Protocol>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("protocol")) {
+				externalConnectorProtocolReferenceResolver.resolve(identifier, (org.sintef.thingml.ExternalConnector) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
 			}
 		}
 		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getConfigPropertyAssign().isInstance(container)) {
@@ -560,6 +574,9 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		}
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternalConnector_Port()) {
 			return getResolverChain(reference, externalConnectorPortReferenceResolver);
+		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getExternalConnector_Protocol()) {
+			return getResolverChain(reference, externalConnectorProtocolReferenceResolver);
 		}
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getConfigPropertyAssign_Property()) {
 			return getResolverChain(reference, configPropertyAssignPropertyReferenceResolver);

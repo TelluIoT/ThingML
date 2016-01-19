@@ -79,7 +79,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         if(eco.hasAnnotation("port_name")) {
             portName = eco.annotation("port_name").iterator().next();
         } else {
-            portName = eco.getProtocol();
+            portName = eco.getProtocol().getName();
         }
         
         /* Sending messages */
@@ -112,7 +112,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         htmlTemp = htmlTemp.replace("/*TITLE*/", title);
         
         /*Network Library*/
-        if(eco.getProtocol().startsWith("Websocket")) {
+        if(eco.getProtocol().getName().startsWith("Websocket")) {
             WSjs WSgen = new WSjs(cfg, ctx);
             WSgen.addExternalCnnector(eco);
             

@@ -1,4 +1,4 @@
-datatype Integer
+datatype Integer<2>
     @js_type "int"
     @java_type "int";
 

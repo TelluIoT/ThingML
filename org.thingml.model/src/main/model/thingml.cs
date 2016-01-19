@@ -83,6 +83,7 @@ TOKENSTYLES{
 	// Literals
 	"STRING_LITERAL" COLOR #0055bb;
 	"INTEGER_LITERAL" COLOR #0055bb;
+	"REAL_LITERAL" COLOR #0055bb;	
 	"BOOLEAN_LITERAL" COLOR #0055bb, BOLD;
 	
 	// Definition of types and messages
@@ -90,6 +91,7 @@ TOKENSTYLES{
 	"thing" COLOR #CC8000, BOLD;
 	"includes" COLOR #CC8000, BOLD;
 	"datatype" COLOR #CC8000, BOLD;
+	"object" COLOR #CC8000, BOLD, ITALIC;	
 	"enumeration" COLOR #CC8000, BOLD;
 	"sends" COLOR #CC8000, BOLD;
 	"receives" COLOR #CC8000, BOLD;
@@ -142,11 +144,13 @@ TOKENSTYLES{
 	"operator" COLOR #444444, BOLD;
 	"filter" COLOR #A22000, BOLD;
 	
+	//Protocols
+	"protocol" COLOR #65BA9E, BOLD;
+	
 	// Configurations and Instances
 	"configuration" COLOR #007F55, BOLD;
 	"instance" COLOR #007F55, BOLD;	
-	"connector" COLOR #007F55, BOLD;
-	"group" COLOR #007F55, BOLD;	
+	"connector" COLOR #007F55, BOLD;	
 	"=>" COLOR #007F55, BOLD;
 	"over" COLOR #006E54, BOLD;
 
@@ -173,7 +177,7 @@ TOKENSTYLES{
 
 RULES {
 	
-	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (types | configs) )* ;
+	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (types | configs | protocols) )* ;
 		
 	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
 	
@@ -193,7 +197,11 @@ RULES {
 		
 	Parameter::= name[]  ":"  type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))?;
 	
-	PrimitiveType::= "datatype" #1 name[] (annotations)* ";" ;
+	PrimitiveType::= "datatype" #1 name[]  #1 "<"  #1 ByteSize[INTEGER_LITERAL]  #1 ">" (annotations)* ";" ;
+	
+	ObjectType::= "object" #1 name[] (annotations)* ";" ;
+	
+	Protocol::= "protocol" #1 name[] (annotations)* ";" ;
 	
 	Enumeration::= "enumeration" #1 name[] (annotations)* !0 "{" (literals)* "}" ;
 	

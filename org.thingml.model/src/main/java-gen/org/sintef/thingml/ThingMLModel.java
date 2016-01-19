@@ -34,6 +34,7 @@ import java.util.Set;
  *   <li>{@link org.sintef.thingml.ThingMLModel#getTypes <em>Types</em>}</li>
  *   <li>{@link org.sintef.thingml.ThingMLModel#getImports <em>Imports</em>}</li>
  *   <li>{@link org.sintef.thingml.ThingMLModel#getConfigs <em>Configs</em>}</li>
+ *   <li>{@link org.sintef.thingml.ThingMLModel#getProtocols <em>Protocols</em>}</li>
  * </ul>
  *
  * @see org.sintef.thingml.ThingmlPackage#getThingMLModel()
@@ -89,7 +90,23 @@ public interface ThingMLModel extends EObject {
 	 */
 	EList<Configuration> getConfigs();
 
-    //Derived properties
+    /**
+	 * Returns the value of the '<em><b>Protocols</b></em>' containment reference list.
+	 * The list contents are of type {@link org.sintef.thingml.Protocol}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Protocols</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Protocols</em>' containment reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getThingMLModel_Protocols()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Protocol> getProtocols();
+
+				//Derived properties
 
     /**
      *

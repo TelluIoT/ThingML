@@ -195,7 +195,7 @@ public class ThingMLHelpers {
 		ArrayList<Type> result = new ArrayList<Type>();
 		for (ThingMLModel m : allThingMLModelModels(model)) {
 			for (Type t : m.getTypes()) {
-				if ( (t instanceof PrimitiveType || t instanceof Enumeration) && !result.contains(t)) 
+				if ( (t instanceof ObjectType || t instanceof PrimitiveType || t instanceof Enumeration) && !result.contains(t)) 
 					result.add(t);
 			}
 		}

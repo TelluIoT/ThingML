@@ -90,29 +90,29 @@ public interface ExternalConnector extends AbstractConnector {
 	void setPort(Port value);
 
 	/**
-	 * Returns the value of the '<em><b>Protocol</b></em>' attribute.
+	 * Returns the value of the '<em><b>Protocol</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Protocol</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Protocol</em>' attribute.
-	 * @see #setProtocol(String)
+	 * @return the value of the '<em>Protocol</em>' reference.
+	 * @see #setProtocol(Protocol)
 	 * @see org.sintef.thingml.ThingmlPackage#getExternalConnector_Protocol()
 	 * @model required="true"
 	 * @generated
 	 */
-	String getProtocol();
+	Protocol getProtocol();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.ExternalConnector#getProtocol <em>Protocol</em>}' attribute.
+	 * Sets the value of the '{@link org.sintef.thingml.ExternalConnector#getProtocol <em>Protocol</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Protocol</em>' attribute.
+	 * @param value the new value of the '<em>Protocol</em>' reference.
 	 * @see #getProtocol()
 	 * @generated
 	 */
-	void setProtocol(String value);
+	void setProtocol(Protocol value);
 
 } // ExternalConnector

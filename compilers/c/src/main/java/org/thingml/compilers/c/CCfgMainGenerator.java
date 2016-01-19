@@ -84,29 +84,29 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
-                if(eco.getProtocol().startsWith("Serial")) {
+                if(eco.getProtocol().getName().startsWith("Serial")) {
                     aSerialgen.addExternalCnnector(eco);
                 }
-                if(eco.getProtocol().startsWith("Timer")) {
+                if(eco.getProtocol().getName().startsWith("Timer")) {
                     aTimergen.addExternalCnnector(eco);
                 }
             }
             if(ctx.getCompiler().getID().compareTo("sintefboard") == 0) {
-                if(eco.getProtocol().startsWith("Port")) {
+                if(eco.getProtocol().getName().startsWith("Port")) {
                     sPortgen.addExternalCnnector(eco);
                 }
             }
             if(ctx.getCompiler().getID().compareTo("posix") == 0) {
-                if(eco.getProtocol().startsWith("Serial")) {
+                if(eco.getProtocol().getName().startsWith("Serial")) {
                     pSerialgen.addExternalCnnector(eco);
                 }
-                if(eco.getProtocol().startsWith("Websocket")) {
+                if(eco.getProtocol().getName().startsWith("Websocket")) {
                   WSgen.addExternalCnnector(eco);
                 }
-                if(eco.getProtocol().startsWith("NopollWS")) {
+                if(eco.getProtocol().getName().startsWith("NopollWS")) {
                   nopollWSgen.addExternalCnnector(eco);
                 }
-                if(eco.getProtocol().startsWith("MQTT")) {
+                if(eco.getProtocol().getName().startsWith("MQTT")) {
                     MQTTgen.addExternalCnnector(eco);
                 }
             }
@@ -390,7 +390,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             builder.append("#include \"" + eco.getInst().getInstance().getName() 
-                    + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h\"\n");
+                    + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".h\"\n");
     }
     }
 

@@ -52,6 +52,8 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
             } else {
                 builder.append("//Type " + actual.getName() + " is not handled in print action\n");
             }
+        } else {
+            builder.append("//Error in type detection\n");
         }
         
         

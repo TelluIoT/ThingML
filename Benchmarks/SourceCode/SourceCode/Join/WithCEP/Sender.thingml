@@ -1,4 +1,4 @@
-datatype Double 
+datatype Double<8> 
     @js_type "double";
 
 thing fragment SenderMsgs {

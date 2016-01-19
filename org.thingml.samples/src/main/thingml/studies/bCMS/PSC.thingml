@@ -17,7 +17,7 @@ thing PSC_Mock includes PSC_Interface
 {}
 
 
-datatype PSC_GUI
+object PSC_GUI
 @java_type "org.thingml.generated.gui.PSC_MockMock";
 
 thing PSC_GUI includes GUIbCMSMsgs, bCMSMsgs 

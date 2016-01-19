@@ -17,7 +17,7 @@ thing FSC_Mock includes FSC_Interface
 {}
 
 
-datatype FSC_GUI
+object FSC_GUI
 @java_type "org.thingml.generated.gui.FSC_MockMock";
 
 thing FSC_GUI includes GUIbCMSMsgs, bCMSMsgs 

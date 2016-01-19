@@ -1,5 +1,5 @@
 //Arbitraty datatypes can be defined and mapped to concrete types
-datatype String
+object String
 @java_type "String"
 @js_type "String";
 

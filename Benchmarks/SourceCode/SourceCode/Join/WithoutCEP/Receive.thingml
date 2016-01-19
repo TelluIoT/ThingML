@@ -1,7 +1,7 @@
 import "Stream.thingml"
 import "Sender.thingml"
 
-datatype Integer
+datatype Integer<2>
     @js_type "short";
 
 thing Receiver includes StreamCepMsgs, SenderMsgs{

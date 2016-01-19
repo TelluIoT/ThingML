@@ -16,10 +16,10 @@ import "../../mqtt_client.thingml"
 
 
 
-datatype MQTTAsync
+object MQTTAsync
 @c_type "MQTTAsync";
 
-datatype ThingMLMQTTContext
+object ThingMLMQTTContext
 @c_type "ThingMLMQTTContext*";
 
 

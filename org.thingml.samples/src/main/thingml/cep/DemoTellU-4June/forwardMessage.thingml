@@ -2,7 +2,7 @@
 The heating is on its maximum capacity.
 Bye Bye
 **/
-datatype Integer
+datatype Integer<2>
     @js_type "short"
     @java_type "int";
 

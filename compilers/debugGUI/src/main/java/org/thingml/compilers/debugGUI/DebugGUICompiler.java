@@ -58,8 +58,9 @@ public class DebugGUICompiler extends OpaqueThingMLCompiler {
 
         
         DebugGUICfgMainGenerator mainGen = (DebugGUICfgMainGenerator) getMainCompiler();
-        
-        mainGen.generateMockUp(mainGen.findExternalConnector(cfg), cfg, ctx);
+        ExternalConnector eco = mainGen.findExternalConnector(cfg);
+        if(eco != null)
+            mainGen.generateMockUp(eco, cfg, ctx);
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();

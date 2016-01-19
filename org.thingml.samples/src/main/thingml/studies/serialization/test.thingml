@@ -1,7 +1,7 @@
-datatype Byte
+datatype Byte<1>
 @scala_type "Byte";
 
-datatype Integer
+datatype Integer<2>
 @scala_type "Int";
 
 thing fragment msgs {

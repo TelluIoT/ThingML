@@ -2,8 +2,8 @@
 
 import "../comm.thingml"
 
-datatype serial;
-datatype SerialPort;
+object serial;
+object SerialPort;
 
 //IMPORTANT: please install serialport beforehand:
 //          npm install serialport

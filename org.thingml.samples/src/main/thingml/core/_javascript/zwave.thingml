@@ -1,10 +1,10 @@
 import "../zwave.thingml"
 import "../zwave_test.thingml"
 
-	datatype ZWave
+	object ZWave
     @js_type "var";
     
-    datatype Nodes
+    object Nodes
     @js_type "var";
 
 thing ZWave includes ZWaveServer, ZWaveInternal

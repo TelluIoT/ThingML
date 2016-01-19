@@ -82,6 +82,7 @@ import org.sintef.thingml.MessageParameter;
 import org.sintef.thingml.MinusExpression;
 import org.sintef.thingml.ModExpression;
 import org.sintef.thingml.NotExpression;
+import org.sintef.thingml.ObjectType;
 import org.sintef.thingml.Operator;
 import org.sintef.thingml.OperatorCall;
 import org.sintef.thingml.OrExpression;
@@ -97,6 +98,7 @@ import org.sintef.thingml.PrintAction;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.PropertyAssign;
 import org.sintef.thingml.PropertyReference;
+import org.sintef.thingml.Protocol;
 import org.sintef.thingml.ProvidedPort;
 import org.sintef.thingml.ReceiveMessage;
 import org.sintef.thingml.Reference;
@@ -892,6 +894,20 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	private EClass windowViewEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass protocolEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass objectTypeEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -986,6 +1002,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EReference getThingMLModel_Configs() {
 		return (EReference)thingMLModelEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getThingMLModel_Protocols() {
+		return (EReference)thingMLModelEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1319,6 +1344,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EClass getPrimitiveType() {
 		return primitiveTypeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPrimitiveType_ByteSize() {
+		return (EAttribute)primitiveTypeEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2478,8 +2512,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getExternalConnector_Protocol() {
-		return (EAttribute)externalConnectorEClass.getEStructuralFeatures().get(2);
+	public EReference getExternalConnector_Protocol() {
+		return (EReference)externalConnectorEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -3099,6 +3133,24 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getProtocol() {
+		return protocolEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getObjectType() {
+		return objectTypeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ThingmlFactory getThingmlFactory() {
 		return (ThingmlFactory)getEFactoryInstance();
 	}
@@ -3126,6 +3178,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(thingMLModelEClass, THING_ML_MODEL__TYPES);
 		createEReference(thingMLModelEClass, THING_ML_MODEL__IMPORTS);
 		createEReference(thingMLModelEClass, THING_ML_MODEL__CONFIGS);
+		createEReference(thingMLModelEClass, THING_ML_MODEL__PROTOCOLS);
 
 		functionEClass = createEClass(FUNCTION);
 		createEReference(functionEClass, FUNCTION__PARAMETERS);
@@ -3176,6 +3229,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(enumerationEClass, ENUMERATION__LITERALS);
 
 		primitiveTypeEClass = createEClass(PRIMITIVE_TYPE);
+		createEAttribute(primitiveTypeEClass, PRIMITIVE_TYPE__BYTE_SIZE);
 
 		enumerationLiteralEClass = createEClass(ENUMERATION_LITERAL);
 		createEReference(enumerationLiteralEClass, ENUMERATION_LITERAL__ENUM);
@@ -3364,7 +3418,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		externalConnectorEClass = createEClass(EXTERNAL_CONNECTOR);
 		createEReference(externalConnectorEClass, EXTERNAL_CONNECTOR__INST);
 		createEReference(externalConnectorEClass, EXTERNAL_CONNECTOR__PORT);
-		createEAttribute(externalConnectorEClass, EXTERNAL_CONNECTOR__PROTOCOL);
+		createEReference(externalConnectorEClass, EXTERNAL_CONNECTOR__PROTOCOL);
 
 		abstractConnectorEClass = createEClass(ABSTRACT_CONNECTOR);
 
@@ -3466,6 +3520,10 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		lengthArrayEClass = createEClass(LENGTH_ARRAY);
 
 		windowViewEClass = createEClass(WINDOW_VIEW);
+
+		protocolEClass = createEClass(PROTOCOL);
+
+		objectTypeEClass = createEClass(OBJECT_TYPE);
 	}
 
 	/**
@@ -3603,12 +3661,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		predifinedPropertyEClass.getESuperTypes().add(this.getElmtProperty());
 		lengthArrayEClass.getESuperTypes().add(this.getPredifinedProperty());
 		windowViewEClass.getESuperTypes().add(this.getViewSource());
+		protocolEClass.getESuperTypes().add(this.getAnnotatedElement());
+		objectTypeEClass.getESuperTypes().add(this.getType());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getThingMLModel_Types(), this.getType(), null, "types", null, 0, -1, ThingMLModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getThingMLModel_Imports(), this.getThingMLModel(), null, "imports", null, 0, -1, ThingMLModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getThingMLModel_Configs(), this.getConfiguration(), null, "configs", null, 0, -1, ThingMLModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getThingMLModel_Protocols(), this.getProtocol(), null, "protocols", null, 0, -1, ThingMLModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(functionEClass, Function.class, "Function", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getFunction_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3659,6 +3720,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getEnumeration_Literals(), this.getEnumerationLiteral(), this.getEnumerationLiteral_Enum(), "literals", null, 0, -1, Enumeration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(primitiveTypeEClass, PrimitiveType.class, "PrimitiveType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPrimitiveType_ByteSize(), ecorePackage.getEInt(), "ByteSize", "0", 1, 1, PrimitiveType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(enumerationLiteralEClass, EnumerationLiteral.class, "EnumerationLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getEnumerationLiteral_Enum(), this.getEnumeration(), this.getEnumeration_Literals(), "enum", null, 1, 1, EnumerationLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3847,7 +3909,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(externalConnectorEClass, ExternalConnector.class, "ExternalConnector", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getExternalConnector_Inst(), this.getInstanceRef(), null, "inst", null, 1, 1, ExternalConnector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getExternalConnector_Port(), this.getPort(), null, "port", null, 1, 1, ExternalConnector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getExternalConnector_Protocol(), ecorePackage.getEString(), "protocol", null, 1, 1, ExternalConnector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExternalConnector_Protocol(), this.getProtocol(), null, "protocol", null, 1, 1, ExternalConnector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(abstractConnectorEClass, AbstractConnector.class, "AbstractConnector", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -3949,6 +4011,10 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(lengthArrayEClass, LengthArray.class, "LengthArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(windowViewEClass, WindowView.class, "WindowView", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(protocolEClass, Protocol.class, "Protocol", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(objectTypeEClass, ObjectType.class, "ObjectType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

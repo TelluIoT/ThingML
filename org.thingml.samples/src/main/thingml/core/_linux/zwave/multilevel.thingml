@@ -15,7 +15,7 @@ import "../../../thingml.thingml"
 import "config.thingml"
 import "controller.thingml"
 
-datatype MultiLevel
+object MultiLevel
 @c_type "MultiLevel*";
 
 thing fragment MultiLevelMsg {

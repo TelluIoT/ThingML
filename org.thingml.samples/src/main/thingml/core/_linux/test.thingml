@@ -1,5 +1,5 @@
 import "../test.thingml"
-datatype double
+datatype double<8>
 @c_type "double";
 
 thing TestDumpLinux includes TestDump

@@ -21,6 +21,12 @@ package org.sintef.thingml;
  * A representation of the model object '<em><b>Primitive Type</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <p>
+ * The following features are supported:
+ * </p>
+ * <ul>
+ *   <li>{@link org.sintef.thingml.PrimitiveType#getByteSize <em>Byte Size</em>}</li>
+ * </ul>
  *
  * @see org.sintef.thingml.ThingmlPackage#getPrimitiveType()
  * @model
@@ -29,6 +35,33 @@ package org.sintef.thingml;
 public interface PrimitiveType extends Type {
 
     /**
+	 * Returns the value of the '<em><b>Byte Size</b></em>' attribute.
+	 * The default value is <code>"0"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Byte Size</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Byte Size</em>' attribute.
+	 * @see #setByteSize(int)
+	 * @see org.sintef.thingml.ThingmlPackage#getPrimitiveType_ByteSize()
+	 * @model default="0" unique="false" required="true"
+	 * @generated
+	 */
+	int getByteSize();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.PrimitiveType#getByteSize <em>Byte Size</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Byte Size</em>' attribute.
+	 * @see #getByteSize()
+	 * @generated
+	 */
+	void setByteSize(int value);
+
+				/**
      * @generated NOT
      */
     boolean isNumber();

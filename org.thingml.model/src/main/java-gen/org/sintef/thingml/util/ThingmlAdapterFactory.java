@@ -22,6 +22,115 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.sintef.thingml.AbstractConnector;
+import org.sintef.thingml.Action;
+import org.sintef.thingml.ActionBlock;
+import org.sintef.thingml.AndExpression;
+import org.sintef.thingml.AnnotatedElement;
+import org.sintef.thingml.ArrayIndex;
+import org.sintef.thingml.ArrayParamRef;
+import org.sintef.thingml.BinaryExpression;
+import org.sintef.thingml.BooleanLiteral;
+import org.sintef.thingml.CompositeState;
+import org.sintef.thingml.ConditionalAction;
+import org.sintef.thingml.ConfigPropertyAssign;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Connector;
+import org.sintef.thingml.ControlStructure;
+import org.sintef.thingml.Decrement;
+import org.sintef.thingml.DivExpression;
+import org.sintef.thingml.DoubleLiteral;
+import org.sintef.thingml.ElmtProperty;
+import org.sintef.thingml.EnumLiteralRef;
+import org.sintef.thingml.Enumeration;
+import org.sintef.thingml.EnumerationLiteral;
+import org.sintef.thingml.EqualsExpression;
+import org.sintef.thingml.ErrorAction;
+import org.sintef.thingml.Event;
+import org.sintef.thingml.Expression;
+import org.sintef.thingml.ExpressionGroup;
+import org.sintef.thingml.ExternExpression;
+import org.sintef.thingml.ExternStatement;
+import org.sintef.thingml.ExternalConnector;
+import org.sintef.thingml.Filter;
+import org.sintef.thingml.Function;
+import org.sintef.thingml.FunctionCall;
+import org.sintef.thingml.FunctionCallExpression;
+import org.sintef.thingml.FunctionCallStatement;
+import org.sintef.thingml.GreaterExpression;
+import org.sintef.thingml.GreaterOrEqualExpression;
+import org.sintef.thingml.Handler;
+import org.sintef.thingml.Increment;
+import org.sintef.thingml.Instance;
+import org.sintef.thingml.InstanceRef;
+import org.sintef.thingml.IntegerLiteral;
+import org.sintef.thingml.InternalPort;
+import org.sintef.thingml.InternalTransition;
+import org.sintef.thingml.JoinSources;
+import org.sintef.thingml.LengthArray;
+import org.sintef.thingml.LengthWindow;
+import org.sintef.thingml.Literal;
+import org.sintef.thingml.LocalVariable;
+import org.sintef.thingml.LoopAction;
+import org.sintef.thingml.LowerExpression;
+import org.sintef.thingml.LowerOrEqualExpression;
+import org.sintef.thingml.MergeSources;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.MessageParameter;
+import org.sintef.thingml.MinusExpression;
+import org.sintef.thingml.ModExpression;
+import org.sintef.thingml.NotExpression;
+import org.sintef.thingml.Operator;
+import org.sintef.thingml.OrExpression;
+import org.sintef.thingml.ParallelRegion;
+import org.sintef.thingml.ParamReference;
+import org.sintef.thingml.Parameter;
+import org.sintef.thingml.PlatformAnnotation;
+import org.sintef.thingml.PlusExpression;
+import org.sintef.thingml.Port;
+import org.sintef.thingml.PredifinedProperty;
+import org.sintef.thingml.PrimitiveType;
+import org.sintef.thingml.PrintAction;
+import org.sintef.thingml.Property;
+import org.sintef.thingml.PropertyAssign;
+import org.sintef.thingml.PropertyReference;
+import org.sintef.thingml.Protocol;
+import org.sintef.thingml.ProvidedPort;
+import org.sintef.thingml.ReceiveMessage;
+import org.sintef.thingml.Reference;
+import org.sintef.thingml.ReferencedElmt;
+import org.sintef.thingml.Region;
+import org.sintef.thingml.RequiredPort;
+import org.sintef.thingml.ReturnAction;
+import org.sintef.thingml.SendAction;
+import org.sintef.thingml.SglMsgParamOperator;
+import org.sintef.thingml.SglMsgParamOperatorCall;
+import org.sintef.thingml.SimpleParamRef;
+import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.Source;
+import org.sintef.thingml.SourceComposition;
+import org.sintef.thingml.State;
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.Stream;
+import org.sintef.thingml.StreamExpression;
+import org.sintef.thingml.StreamOutput;
+import org.sintef.thingml.StreamParamReference;
+import org.sintef.thingml.StringLiteral;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingMLElement;
+import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.TimeWindow;
+import org.sintef.thingml.TimesExpression;
+import org.sintef.thingml.Transition;
+import org.sintef.thingml.Type;
+import org.sintef.thingml.TypedElement;
+import org.sintef.thingml.UnaryExpression;
+import org.sintef.thingml.UnaryMinus;
+import org.sintef.thingml.Variable;
+import org.sintef.thingml.VariableAssignment;
+import org.sintef.thingml.ViewSource;
+import org.sintef.thingml.WindowView;
 import org.sintef.thingml.*;
 
 /**
@@ -507,6 +616,14 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseWindowView(WindowView object) {
 				return createWindowViewAdapter();
+			}
+			@Override
+			public Adapter caseProtocol(Protocol object) {
+				return createProtocolAdapter();
+			}
+			@Override
+			public Adapter caseObjectType(ObjectType object) {
+				return createObjectTypeAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -2023,6 +2140,34 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createWindowViewAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Protocol <em>Protocol</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Protocol
+	 * @generated
+	 */
+	public Adapter createProtocolAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ObjectType <em>Object Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ObjectType
+	 * @generated
+	 */
+	public Adapter createObjectTypeAdapter() {
 		return null;
 	}
 
