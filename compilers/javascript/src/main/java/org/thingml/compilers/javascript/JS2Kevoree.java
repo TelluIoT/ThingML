@@ -294,7 +294,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
         for(ExternalConnector c : cfg.getExternalConnectors()) { //External kevoree port should be split (to allow easy integration with external non-HEADS services)
             //builder.append("\n//External connector for port " + c.getPort().getName() + " of instance " + c.getInst().getInstance().getName() + "\n");
-            if (c.getProtocol().equals("kevoree")) {
+            if (c.getProtocol().getName().equals("kevoree")) {
                 final Instance i = c.getInst().getInstance();
                 for(Message m : c.getPort().getReceives()) {
                     builder.append(",\nin_" + shortName(i, c.getPort(), m) + "_in: function (msg) {\n");
