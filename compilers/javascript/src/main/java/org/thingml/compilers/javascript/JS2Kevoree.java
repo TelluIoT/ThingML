@@ -222,6 +222,16 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                 }
             }
         }
+        for(ExternalConnector c : cfg.getExternalConnectors()) {
+            if (c.getProtocol().getName().equals("kevoree")) {
+                final Instance i = c.getInst().getInstance();
+                for (Message m : c.getPort().getSends()) {
+                    final Port p = c.getPort();
+                    builder.append("this." + cfg.getName() + "_" + i.getName() + ".get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
+                }
+            }
+        }
+
         builder.append("},\n\n");
 
 
