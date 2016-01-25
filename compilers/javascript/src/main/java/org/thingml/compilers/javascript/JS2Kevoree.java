@@ -312,7 +312,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                 for(Message m : c.getPort().getReceives()) {
                     builder.append(",\nin_" + shortName(i, c.getPort(), m) + "_in: function (msg) {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\n");
                     //builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
-                    builder.append("this." + cfg.getName() + "_" + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
+                    builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
                     builder.append("}");
                 }
                 for(Message m : c.getPort().getSends()) {

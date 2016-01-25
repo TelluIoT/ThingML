@@ -353,7 +353,7 @@ public class PosixMQTT extends CNetworkLibraryGenerator {
                         param = m.annotation("mqtt_topic_id").iterator().next();
                         //ignoreList.add(param);
                         for(Parameter pt : m.getParameters()) {
-                            if(pt.getName().compareTo(param) == 0) {
+                            if(pt.getName().equals(param)) {
                                 ignoreList.add(pt);
                             }
                         }

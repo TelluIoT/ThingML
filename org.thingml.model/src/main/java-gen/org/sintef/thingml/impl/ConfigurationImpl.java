@@ -270,9 +270,8 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         final Map<String, Instance> instances = new HashMap<String, Instance>();
         final List<AbstractConnector> connectors = new ArrayList<AbstractConnector>();
         final Map<String, ConfigPropertyAssign> assigns = new HashMap<String, ConfigPropertyAssign>();
-        final String prefix = getName();
 
-        _merge(instances, connectors, assigns, prefix);
+        _merge(instances, connectors, assigns);
 
         copy.getInstances().clear();
         copy.getConnectors().clear();
@@ -292,14 +291,13 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @param instances
      * @param connectors
      * @param assigns
-     * @param prefix
      * @generated NOT
      */
-    private void _merge(Map<String, Instance> instances, List<AbstractConnector> connectors, Map<String, ConfigPropertyAssign> assigns, String prefix) {
+    private void _merge(Map<String, Instance> instances, List<AbstractConnector> connectors, Map<String, ConfigPropertyAssign> assigns) {
         // Add the instances of this configuration (actually a copy)
         for(Instance inst : getInstances()) {
 
-            final String key = prefix + "_" + inst.getName();
+            //final String key = prefix + "_" + inst.getName();
             Instance copy = null;
 
             if (inst.getType().isSingleton()) {
@@ -318,18 +316,18 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             }
             else {
                 copy = EcoreUtil.copy(inst);
-                copy.setName(key); // rename the instance with the prefix
+                copy.setName(inst.getName()); // rename the instance with the prefix
             }
 
-            instances.put(key, copy);
+            instances.put(inst.getName(), copy);
         }
 
         // Add the connectors
         for(Connector c : getInternalConnectors()) {
             Connector copy = EcoreUtil.copy(c);
             // look for the instances:
-            Instance cli = instances.get(getInstanceMergedName(prefix, c.getCli()));
-            Instance srv = instances.get(getInstanceMergedName(prefix, c.getSrv()));
+            Instance cli = instances.get(c.getCli().getInstance().getName());
+            Instance srv = instances.get(c.getSrv().getInstance().getName());
 
             copy.getCli().setInstance(cli);
             copy.getSrv().setInstance(srv);
@@ -340,7 +338,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         for(ExternalConnector c : getExternalConnectors()) {
             ExternalConnector copy = EcoreUtil.copy(c);
             // look for the instances:
-            Instance cli = instances.get(getInstanceMergedName(prefix, c.getInst()));
+            Instance cli = instances.get(c.getInst().getInstance().getName());
 
             copy.getInst().setInstance(cli);
 
@@ -350,7 +348,7 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         for(ConfigPropertyAssign a : getPropassigns()) {
             ConfigPropertyAssign copy = EcoreUtil.copy(a);
 
-            String inst_name = getInstanceMergedName(prefix, a.getInstance());
+            String inst_name = a.getInstance().getInstance().getName();
 
             Instance inst = instances.get(inst_name);
             copy.getInstance().setInstance(inst);
@@ -365,19 +363,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             assigns.put(id, copy); // This will replace any previous initialization of the variable
         }
 
-    }
-
-    /**
-     *
-     * @param prefix
-     * @param ref
-     * @return
-     * @generated NOT
-     */
-    private String getInstanceMergedName(String prefix, InstanceRef ref) {
-        String result = prefix;
-        result += "_" + ref.getInstance().getName();
-        return result;
     }
 
     /**

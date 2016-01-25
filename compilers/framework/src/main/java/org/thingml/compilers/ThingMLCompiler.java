@@ -131,7 +131,7 @@ public abstract class ThingMLCompiler {
             
             
             for (Instance i : cfg.allInstances()) {
-                if(i.getType().getName().compareTo(thing.getName()) == 0) {
+                if(i.getType().getName().equals(thing.getName())) {
                     if (debugCfg) {
                         if (!i.isDefined("debug", "false")) {
                             debugInstances.add(i);

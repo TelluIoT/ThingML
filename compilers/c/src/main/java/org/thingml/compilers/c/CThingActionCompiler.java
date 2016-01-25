@@ -176,7 +176,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                     for(ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
                         String tmp = pa.getInstance().getInstance().findContainingConfiguration().getName() + "_" + pa.getInstance().getInstance().getName();
 
-                        if(nctx.getConcreteInstance().getName().compareTo(tmp)==0){
+                        if(nctx.getConcreteInstance().getName().equals(tmp)){
                             if(pa.getProperty().getName().compareTo(p.getName()) == 0) {
                                 generate(pa.getInit(), builder, ctx);
                                 found = true;
