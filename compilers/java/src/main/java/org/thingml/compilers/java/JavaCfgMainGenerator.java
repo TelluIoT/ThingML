@@ -41,23 +41,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 
                 for (Property a : cfg.allArrays(i)) {
                     builder.append("final " + JavaHelper.getJavaType(a.getType(), true, ctx) + " " + i.getName() + "_" + a.getName() + "_array = new " + JavaHelper.getJavaType(a.getType(), false, ctx) + "[");
-                    if (a.getCardinality() instanceof PropertyReference) {
-                        PropertyReference pr = (PropertyReference) a.getCardinality();
-                        AbstractMap.SimpleImmutableEntry l = null;
-                        for (AbstractMap.SimpleImmutableEntry l2 : cfg.initExpressionsForInstance(i)) {
-                            if (l2.getKey().equals(pr.getProperty())) {
-                                l = l2;
-                                break;
-                            }
-                        }
-                        if (l != null) {
-                            ctx.getCompiler().getThingActionCompiler().generate(l.getValue(), builder, ctx);
-                        } else {
-                            ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
-                        }
-                    } else {
-                        ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
-                    }
+                    ctx.generateFixedAtInitValue(cfg, i, a.getCardinality(), builder);
                     builder.append("];\n");
                 }
 
@@ -95,8 +79,11 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                             } else {
                                 if (p.getValue() != null) {
                                     StringBuilder tempbuilder = new StringBuilder();
-                                    tempbuilder.append("(" + JavaHelper.getJavaType(p.getKey().getType(), false, ctx) + ")");
-                                    ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                                    tempbuilder.append("(" + JavaHelper.getJavaType(p.getKey().getType(), false, ctx) + ") ");
+                                    tempbuilder.append("(");
+                                    //ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                                    ctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
+                                    tempbuilder.append(")");
                                     result += tempbuilder.toString();
                                 } else {
                                     result += "(" + JavaHelper.getJavaType(p.getKey().getType(), false, ctx) + ")"; //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
