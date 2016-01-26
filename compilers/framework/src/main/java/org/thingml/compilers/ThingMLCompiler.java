@@ -15,6 +15,9 @@
  */
 package org.thingml.compilers;
 
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.thingml.compilers.checker.Checker;
 import org.sintef.thingml.*;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -99,6 +102,47 @@ public abstract class ThingMLCompiler {
      * ************************************************************
      */
     public abstract boolean compile(Configuration cfg, String... options);
+
+    public static ThingMLModel loadModel(File file) {
+        ResourceSet rs = new ResourceSetImpl();
+        org.eclipse.emf.common.util.URI xmiuri = org.eclipse.emf.common.util.URI.createFileURI(file.getAbsolutePath());
+        Resource model = rs.createResource(xmiuri);
+        if (!checkEMFErrorsAndWarnings(model)) {
+            System.err.println("ERROR: model contains some error. Compilation might fail. Please fix errors!");
+        }
+        try {
+            model.load(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (ThingMLModel) model.getContents().get(0);
+    }
+
+    private static boolean checkEMFErrorsAndWarnings(Resource model) {
+        System.out.println("Checking for EMF errors and warnings");
+        boolean isOK = true;
+        if (model.getErrors().size() > 0) {
+            isOK = false;
+            System.err.println("ERROR: The input model contains " + model.getErrors().size() + " errors:");
+            for (Resource.Diagnostic d : model.getErrors()) {
+                System.err.println("  " + d.getLocation() + " : " + d.getMessage());
+            }
+        }
+
+        if (model.getWarnings().size() > 0) {
+            System.out.println("WARNING: The input model contains " + model.getWarnings().size() + " warnings:");
+            for (Resource.Diagnostic d : model.getWarnings()) {
+                System.out.println("  " + d.getLocation() + " : " + d.getMessage());
+            }
+        }
+        for(Resource r : model.getResourceSet().getResources()) {
+            if (!r.equals(model)) {
+                if (!checkEMFErrorsAndWarnings(r))
+                    isOK = false;
+            }
+        }
+        return isOK;
+    }
 
     /**
      * Creates debug profiles

@@ -100,7 +100,7 @@ public class ThingMLPanel extends JPanel {
             menuframe.setBorder(BorderFactory.createEmptyBorder());
             add(menuframe, BorderLayout.CENTER);
             
-            if(!ArduinoPlugin) {
+            if(!ArduinoPlugin) {//FIXME: Nicolas, avoid code duplication
                 final ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
 
                 JMenu newCompilersMenu = new JMenu("Compile to");
@@ -117,7 +117,7 @@ public class ThingMLPanel extends JPanel {
                             connectorMenu.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                                    ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
                                     for (Configuration cfg : thingmlModel.allConfigurations()) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                         compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
@@ -135,7 +135,7 @@ public class ThingMLPanel extends JPanel {
                             System.out.println("Input file : " + targetFile);
                             if (targetFile == null) return;
                             try {
-                                ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                                ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
                                 for (Configuration cfg : thingmlModel.allConfigurations()) {
                                     final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                     compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
@@ -169,7 +169,7 @@ public class ThingMLPanel extends JPanel {
                                 connectorMenu.addActionListener(new ActionListener() {
                                     @Override
                                     public void actionPerformed(ActionEvent e) {
-                                        ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                                        ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
                                         for (Configuration cfg : thingmlModel.allConfigurations()) {
                                             final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                             compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
@@ -187,7 +187,7 @@ public class ThingMLPanel extends JPanel {
                                 System.out.println("Input file : " + targetFile);
                                 if (targetFile == null) return;
                                 try {
-                                    ThingMLModel thingmlModel = loadThingMLmodel(targetFile);
+                                    ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
                                     for (Configuration cfg : thingmlModel.allConfigurations()) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                         
@@ -249,18 +249,6 @@ public class ThingMLPanel extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    
-    public ThingMLModel loadThingMLmodel(File file) {
-        ResourceSet rs = new ResourceSetImpl();
-        org.eclipse.emf.common.util.URI xmiuri = org.eclipse.emf.common.util.URI.createFileURI(file.getAbsolutePath());
-        Resource model = rs.createResource(xmiuri);
-        try {
-            model.load(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return (ThingMLModel) model.getContents().get(0);
     }
 
     public int getIndex(int line, int column) {

@@ -99,34 +99,7 @@ public class CompileThingFile implements IHandler {
 			java.io.File f = target_file.getLocation().toFile();
 			ThingMLConsole.getInstance().printDebug("Selected input file: " + target_file.toString() + " (" + f.getAbsolutePath() + ")\n");
 
-			// Load the ThingML model
-			org.eclipse.emf.ecore.resource.Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-			reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
-
-			ResourceSet rs = new ResourceSetImpl();
-			rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
-			URI xmiuri = URI.createFileURI(f.getAbsolutePath());
-			Resource resource = rs.getResource(xmiuri,true);
-
-			try {
-				resource.load(new HashMap());
-			} catch (IOException e) {
-				ThingMLConsole.getInstance().printError("ERROR: Unable to load the selected model:\n");
-				ThingMLConsole.getInstance().printError(e.getLocalizedMessage());
-				e.printStackTrace();
-				return null;
-			}
-
-			if (!resource.getErrors().isEmpty()) {
-				ThingMLConsole.getInstance().printError("ERROR: The selected model contains errors:\n");
-				for (Diagnostic d : resource.getErrors()) {
-					ThingMLConsole.getInstance().printError(d.getLocation() + " : " + d.getMessage() + "\n");
-				}
-				ThingMLConsole.getInstance().printError("Compilation stopped.\n");
-				return null;
-			}
-
-			ThingMLModel model = (ThingMLModel) resource.getContents().get(0);
+			ThingMLModel model = ThingMLCompiler.loadModel(f);
 
 			// Look for a Configurations to compile
 			ArrayList<Configuration> toCompile = new ArrayList<Configuration>();
@@ -188,14 +161,16 @@ public class CompileThingFile implements IHandler {
 				}
 				for(CheckerInfo i : compiler.checker.Errors) {
 					ThingMLConsole.getInstance().printError(i.toString());		         
-		        }
+				}
 				for(CheckerInfo i : compiler.checker.Warnings) {
 					ThingMLConsole.getInstance().printMessage(i.toString());		         
-		        }
-				for(CheckerInfo i : compiler.checker.Notices) {
-					ThingMLConsole.getInstance().printMessage(i.toString());		         
-		        }
-				
+				}
+				if (store.getBoolean(PreferenceConstants.PRINT_NOTICE_STRING)) {
+					for(CheckerInfo i : compiler.checker.Notices) {
+						ThingMLConsole.getInstance().printMessage(i.toString());		         
+					}
+				}
+
 				boolean result = compiler.compile(cfg, options);
 				if(subCompiler != null) {
 					ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");
