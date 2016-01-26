@@ -35,4 +35,4 @@ blacklist=["testMixStreamsAndEvent", "testLengthSimpleSource",  "testStreams", "
 #whitelist=["testInternalEmptyTransition"]
 #whitelist=["testIfElse", "testVariables", "testArrays2", "testMaskProperty"]
 #whitelist=["testOnExit", "testMultiServerPing", "testSerialization"]
-whitelist=["testArrays2", "testArrays4"]
+whitelist=["testArrays2", "testArrays4", "testArrays5"]

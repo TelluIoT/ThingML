@@ -262,7 +262,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append("//Instance " + inst.getName() + "\n");
             
             builder.append("// Variables for the properties of the instance\n");
-            for (Property p : inst.getType().allPropertiesInDepth()) {
+            /*for (Property p : inst.getType().allPropertiesInDepth()) {
                 if (p.getCardinality() != null) {//array
                 builder.append(ctx.getCType(p.getType()) + " ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(p));
@@ -273,7 +273,34 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append("]");
                 builder.append(";\n");
                 }
+            }*/
+            
+        
+            for (Property a : cfg.allArrays(inst)) {
+                builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
+                builder.append("[");
+                if (a.getCardinality() instanceof PropertyReference) {
+                    PropertyReference pr = (PropertyReference) a.getCardinality();
+                    AbstractMap.SimpleImmutableEntry l = null;
+                    for (AbstractMap.SimpleImmutableEntry l2 : cfg.initExpressionsForInstance(inst)) {
+                        if (l2.getKey().equals(pr.getProperty())) {
+                            l = l2;
+                            break;
+                        }
+                    }
+                    if (l != null) {
+                        ctx.getCompiler().getThingActionCompiler().generate(l.getValue(), builder, ctx);
+                    } else {
+                        ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
+                    }
+                } else {
+                    ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
+                }
+                builder.append("];\n");
             }
+            
+            
             
                 builder.append(ctx.getInstanceVarDecl(inst) + "\n");
             
@@ -1713,6 +1740,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(";\n");
             }
         }
+        
+        
         // Init array properties
         Map<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> expressions = cfg.initExpressionsForInstanceArrays(inst);
 

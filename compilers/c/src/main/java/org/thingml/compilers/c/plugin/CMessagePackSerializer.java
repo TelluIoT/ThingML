@@ -209,7 +209,10 @@ public class CMessagePackSerializer extends CMessageSerializer {
 
     @Override
     public void generateMessageParser(ExternalConnector eco, StringBuilder builder) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        builder.append("void " + eco.getName() + "_parser(char * msg, int size, int listener_id) {\n");
+        
+        builder.append("    externalMessageEnqueue((uint8_t *) msg_buf, msg_size, listener_id);\n");
+        builder.append("}\n");
     }
     
 }
