@@ -22,6 +22,13 @@
             <artifactId>org.thingml.model</artifactId>
             <version>${thingml.version}</version>
         </dependency>
+        
+        
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.parser.standalone</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!--
 		<dependency>

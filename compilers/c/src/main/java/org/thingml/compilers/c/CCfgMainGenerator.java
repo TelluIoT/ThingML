@@ -280,8 +280,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(ctx.getCType(a.getType()) + " ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
                 builder.append("[");
-                if (a.getCardinality() instanceof PropertyReference) {
-                    PropertyReference pr = (PropertyReference) a.getCardinality();
+                /*if (a.getCardinality() instanceof PropertyReference) {
+                    PropertyReference pr = (PropertyReference) a.getCardinality();      
                     AbstractMap.SimpleImmutableEntry l = null;
                     for (AbstractMap.SimpleImmutableEntry l2 : cfg.initExpressionsForInstance(inst)) {
                         if (l2.getKey().equals(pr.getProperty())) {
@@ -290,19 +290,20 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         }
                     }
                     if (l != null) {
+                        
                         ctx.getCompiler().getThingActionCompiler().generate(l.getValue(), builder, ctx);
                     } else {
                         ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
                     }
                 } else {
                     ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
-                }
+                }*/
+                ctx.generateCardinality(cfg, inst, a, builder);
                 builder.append("];\n");
             }
             
             
-            
-                builder.append(ctx.getInstanceVarDecl(inst) + "\n");
+            builder.append(ctx.getInstanceVarDecl(inst) + "\n");
             
             if(cfg.hasAnnotation("c_dyn_connectors")) {
             for(Port p : inst.getType().allPorts()) {

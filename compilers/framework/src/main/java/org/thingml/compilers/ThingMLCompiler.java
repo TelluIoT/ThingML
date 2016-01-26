@@ -15,10 +15,12 @@
  */
 package org.thingml.compilers;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.thingml.compilers.checker.Checker;
+import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.sintef.thingml.*;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
@@ -104,18 +106,24 @@ public abstract class ThingMLCompiler {
     public abstract boolean compile(Configuration cfg, String... options);
 
     public static ThingMLModel loadModel(File file) {
-        ResourceSet rs = new ResourceSetImpl();
-        org.eclipse.emf.common.util.URI xmiuri = org.eclipse.emf.common.util.URI.createFileURI(file.getAbsolutePath());
-        Resource model = rs.createResource(xmiuri);
-        if (!checkEMFErrorsAndWarnings(model)) {
-            System.err.println("ERROR: model contains some error. Compilation might fail. Please fix errors!");
-        }
-        try {
+            Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+            reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
+
+            ResourceSet rs = new ResourceSetImpl();
+            URI xmiuri = URI.createFileURI(file.getAbsolutePath());
+            Resource model = rs.createResource(xmiuri);
+            try {
             model.load(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return (ThingMLModel) model.getContents().get(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            if (model != null) {
+                if (checkEMFErrorsAndWarnings(model))
+                    return (ThingMLModel) model.getContents().get(0);
+            }
+            System.exit(-1);
+            return null;
     }
 
     private static boolean checkEMFErrorsAndWarnings(Resource model) {
@@ -135,12 +143,12 @@ public abstract class ThingMLCompiler {
                 System.out.println("  " + d.getLocation() + " : " + d.getMessage());
             }
         }
-        for(Resource r : model.getResourceSet().getResources()) {
+        /*for(Resource r : model.getResourceSet().getResources()) {
             if (!r.equals(model)) {
                 if (!checkEMFErrorsAndWarnings(r))
                     isOK = false;
             }
-        }
+        }*/
         return isOK;
     }
 

@@ -30,6 +30,8 @@ import org.sintef.thingml.InternalTransition;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
+import org.sintef.thingml.Property;
+import org.sintef.thingml.PropertyReference;
 import org.sintef.thingml.Region;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
@@ -432,5 +434,17 @@ public class Context {
         } else {
             return null;
         }
+    }
+    
+    private Boolean atInitTimeLock = false;
+    
+    public Boolean getAtInitTimeLock() {
+        return atInitTimeLock;
+    }
+    
+    public void generateCardinality(Configuration cfg, Instance inst, Property a, StringBuilder builder) {
+        atInitTimeLock = true;
+        getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, this);
+        atInitTimeLock = false;
     }
 }
