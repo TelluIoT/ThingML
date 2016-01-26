@@ -51,6 +51,12 @@ public class VariableUsage extends Rule {
     }
 
     private void check(Variable va, Expression e, Thing t, Checker checker) {
+        if (va instanceof Property) {
+            Property p = (Property) va;
+            if (!p.isChangeable()) {
+                checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is read-only and cannot be re-assigned.", va);
+            }
+        }
         Type expected = va.getType().getBroadType();
         Type actual = checker.typeChecker.computeTypeOf(e);
         if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
