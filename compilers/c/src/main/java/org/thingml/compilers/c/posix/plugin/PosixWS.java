@@ -260,13 +260,13 @@ public class PosixWS extends CNetworkLibraryGenerator {
                 WSSending.append("if(clientID == 65535) {\n" +
                     "for(i = 0; i < " + portName + "_nb_client; i++) {\n" +
                     "if(" + portName + "_clients[i] != NULL) {\n" +
-                    "m = libwebsocket_write(" + portName + "_clients[i], p, (length * 3 + 1), LWS_WRITE_TEXT);\n" +
+                    "m = libwebsocket_write(" + portName + "_clients[i], p, length + 1, LWS_WRITE_TEXT);\n" +
                     "}\n" +
                     "}\n" +
                     "} else {\n" +
                     "if(clientID < "+ nbClientMax + ") {\n" +
                     "if(" + portName + "_clients[clientID] != NULL) {\n" +
-                    "m = libwebsocket_write(" + portName + "_clients[clientID], p, (length * 3 + 1), LWS_WRITE_TEXT);\n" +
+                    "m = libwebsocket_write(" + portName + "_clients[clientID], p, length + 1, LWS_WRITE_TEXT);\n" +
                     "} else {\n" +
                     "/*TRACE_LEVEL_1*/printf(\"[PosixWSForward] client %i not found\\n\", clientID);" +
                     "}\n" +
@@ -287,7 +287,7 @@ public class PosixWS extends CNetworkLibraryGenerator {
                 /*SENDING_BROADCAST_OR_NOT*/
                 StringBuilder WSSending = new StringBuilder();
                 WSSending.append("for(i = 0; i < " + portName + "_nb_client; i++) {\n" +
-                    "m = libwebsocket_write(" + portName + "_clients[i], p, (length * 3 + 1), LWS_WRITE_TEXT);\n" +
+                    "m = libwebsocket_write(" + portName + "_clients[i], p, length + 1, LWS_WRITE_TEXT);\n" +
                     "}\n");
                 ctemplate = ctemplate.replace(" /*SENDING_BROADCAST_OR_NOT*/", WSSending);
 

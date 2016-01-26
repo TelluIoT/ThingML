@@ -189,18 +189,15 @@ void /*PORT_NAME*/_start_receiver_process() {
 void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size/*PUBLISH_MULTI_OR_MONO_DECLARATION*/) {
     int n, m, i;
     int length = size;
-    unsigned char buf[(length * 3 + 1)];
+    unsigned char buf[length];
     unsigned char *p = &buf[0];	
     unsigned char *q = p;
     n = 0;
     for(i = 0; i < length; i++) {
-        n += sprintf((unsigned char *)q, "%03i", (unsigned char) msg[i]);
-        n--;
-        q += 3;
+        *q = msg[i];
+        q++;
+        n++;
     }
-    *q = '\0';
-    n++;
-    n++;
     
     /*PUBLISH_MULTI_OR_MONO_CORE*/
     
