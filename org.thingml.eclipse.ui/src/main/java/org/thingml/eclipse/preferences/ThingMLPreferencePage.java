@@ -57,6 +57,8 @@ public class ThingMLPreferencePage
 				new StringFieldEditor(PreferenceConstants.T_STRING, "Arduino Library Folder:", getFieldEditorParent()));
         addField(
                 new StringFieldEditor(PreferenceConstants.PACK_STRING, "Default package:", getFieldEditorParent()));
+        addField(
+                new BooleanFieldEditor(PreferenceConstants.PRINT_NOTICE_STRING, "Print Notices?", getFieldEditorParent()));
 	}
 
 	/* (non-Javadoc)

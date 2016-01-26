@@ -81,23 +81,7 @@ public class Main {
 
 
         try {
-            Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-            reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
-
-            ResourceSet rs = new ResourceSetImpl();
-            URI xmiuri = URI.createFileURI(input.getAbsolutePath());
-            Resource model = rs.createResource(xmiuri);
-            model.load(null);
-
-            if (model.getErrors().size() > 0) {
-                System.out.println("ERROR: The input model contains " + model.getErrors().size() + " errors:");
-                for (Resource.Diagnostic d : model.getErrors()) {
-                    System.out.println("  " + d.getLocation() + " : " + d.getMessage());
-                }
-                return;
-            }
-
-            ThingMLModel input_model = (ThingMLModel) model.getContents().get(0);
+            ThingMLModel input_model = ThingMLCompiler.loadModel(input);
 
             if (input_model.allConfigurations().isEmpty()) {
                 System.out.println("ERROR: The input model does not contain any configuration to be compiled.");
