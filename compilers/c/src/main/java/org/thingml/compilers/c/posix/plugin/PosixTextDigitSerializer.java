@@ -40,19 +40,21 @@ public class PosixTextDigitSerializer extends CMessageSerializer {
 
     @Override
     public int generateMessageSerialzer(ExternalConnector eco, Message m, StringBuilder builder, String BufferName, List<Parameter> IgnoreList) {
-        int size = ((ctx.getMessageSerializationSize(m) - 2) * 3 + 1);
-        builder.append("byte " + BufferName + "[" + size + "];\n");
+        int size = 0;
+        StringBuilder b = new StringBuilder();
 
         int HandlerCode = ctx.getHandlerCode(cfg, m);
         int j = 0;
 
-        builder.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) ((" + HandlerCode + " >> 8) & 0xFF));\n");
+        b.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) ((" + HandlerCode + " >> 8) & 0xFF));\n");
         j++;
-        builder.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) (" + HandlerCode + " & 0xFF));\n");
+        size += 3;
+        b.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) (" + HandlerCode + " & 0xFF));\n");
         j++;
+        size += 3;
 
         for (Parameter pt : m.getParameters()) {
-            builder.append("\n// parameter " + pt.getName() + "\n");
+            b.append("\n// parameter " + pt.getName() + "\n");
             int i = ctx.getCByteSize(pt.getType(), 0);
             String v = pt.getName();
             if (ctx.isPointer(pt.getType())) {
@@ -60,21 +62,24 @@ public class PosixTextDigitSerializer extends CMessageSerializer {
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
                 if(!ctx.containsParam(IgnoreList, pt)) {
-                    builder.append("union u_" + v + "_t {\n");
-                    builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
-                    builder.append("} u_" + v + ";\n");
-                    builder.append("u_" + v + ".p = " + v + ";\n");
+                    b.append("union u_" + v + "_t {\n");
+                    b.append(ctx.getCType(pt.getType()) + " p;\n");
+                    b.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                    b.append("} u_" + v + ";\n");
+                    b.append("u_" + v + ".p = " + v + ";\n");
 
                     while (i > 0) {
                         i = i - 1;
-                        builder.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) (u_" + v + ".bytebuffer[" + i + "] & 0xFF));\n");
+                        b.append("sprintf((unsigned char *) &" + BufferName + "[" + (j*3) +"], \"%03i\", (unsigned char) (u_" + v + ".bytebuffer[" + i + "] & 0xFF));\n");
                         j++;
+                        size += 3;
                     }
                 }
             }
         }
-        
+        size++;
+        builder.append("byte " + BufferName + "[" + size + "];\n");
+        builder.append(b);
         return size;
     }
 

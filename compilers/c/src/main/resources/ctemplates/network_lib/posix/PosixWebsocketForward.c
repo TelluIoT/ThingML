@@ -185,29 +185,20 @@ void /*PORT_NAME*/_start_receiver_process() {
 }
 
 void /*PORT_NAME*/_forwardMessage(char * msg, int length/*PARAM_CLIENT_ID*/) {
-	int n, m, i;
-	unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + (length * 3 + 1) +
+	
+	unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + length + 1 +
 						  LWS_SEND_BUFFER_POST_PADDING];
 	unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];	
 	unsigned char *q = p;
 	
-        /*n = 0;
-	for(i = 0; i < length; i++) {
-		n += sprintf((unsigned char *)q, "%03i", (unsigned char) msg[i]);
-		n--;
-		q += 3;
-	}
-	*q = '\0';
-	n++;*/
+        
+        int i, m;
+        for(i = 0; i < length; i++) {
+                *q = msg[i];
+                q++;
+        }
+        *q = '\0';
 
-        n = 0;
-	for(i = 0; i < length; i++) {
-		*q = msg[i];
-		q ++;
-                n++;
-	}
-	*q = '\0';
-	n++;
 	/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Trying to send:\n%s \n", p);
 
         /*SENDING_BROADCAST_OR_NOT*/

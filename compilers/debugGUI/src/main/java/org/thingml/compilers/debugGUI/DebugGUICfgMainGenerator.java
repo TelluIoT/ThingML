@@ -29,14 +29,18 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Enumeration;
+import org.sintef.thingml.EnumerationLiteral;
 import org.sintef.thingml.Event;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.InstanceRef;
 import org.sintef.thingml.InternalTransition;
 import org.sintef.thingml.MessageParameter;
+import org.sintef.thingml.ObjectType;
 import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.Port;
+import org.sintef.thingml.PrimitiveType;
 import org.sintef.thingml.ReceiveMessage;
 import org.sintef.thingml.SendAction;
 import org.sintef.thingml.State;
@@ -168,12 +172,40 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         // Datatypes generation
         
         for (Type t : cfg.findContainingModel().allSimpleTypes()) {
-            builder.append("datatype " + t.getName() + "\n");
-            for(PlatformAnnotation pan : t.allAnnotations()) {
-                builder.append("    @" + pan.getName() + "\"" + pan.getValue() + "\"\n");
+            if(t instanceof ObjectType) {
+                builder.append("object " + t.getName() + "\n");
+            } else if (t instanceof PrimitiveType) {
+                PrimitiveType pt = (PrimitiveType) t;
+                builder.append("datatype " + t.getName() + "<" + pt.getByteSize() + ">\n");
+            } else if (t instanceof Enumeration) {
+                builder.append("enumeration " + t.getName() + "\n");
             }
-            builder.append(";\n\n");
+            for(PlatformAnnotation pan : t.allAnnotations()) {
+                builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");
+            }
+            if(t instanceof Enumeration) {
+                Enumeration et = (Enumeration) t;
+                builder.append("{\n");
+                for(EnumerationLiteral l : et.getLiterals()) {
+                     builder.append(l.getName());
+                    for(PlatformAnnotation pan : l.allAnnotations()) {
+                        builder.append(" @" + pan.getName() + " \"" + pan.getValue() + "\"");
+                    }
+                builder.append("\n");
+                }
+                builder.append("}\n");
+                
+            } else {
+                builder.append(";\n\n");
+            }
         }
+        
+        builder.append("protocol Websocket;");
+        builder.append("protocol " + eco.getProtocol().getName());
+        for(PlatformAnnotation pan : eco.getProtocol().allAnnotations()) {
+            builder.append(" @" + pan.getName() + " \"" + pan.getValue() + "\"");
+        }
+        builder.append(";\n\n");
         
         //Proxy Conf generation
         
@@ -181,7 +213,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                         "	instance p : proxyType\n" +
                         "\n" +
                         "	connector p.Browser over Websocket\n" +
-                        "	connector p.Debug over " + eco.getProtocol() + "\n");
+                        "	connector p.Debug over " + eco.getProtocol().getName() + "\n");
         
         for(PlatformAnnotation pan: annotations) {
             builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");

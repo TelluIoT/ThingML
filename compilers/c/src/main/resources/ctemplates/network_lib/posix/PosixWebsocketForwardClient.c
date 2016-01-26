@@ -139,24 +139,22 @@ void /*PORT_NAME*/_start_receiver_process() {
 
 void /*PORT_NAME*/_forwardMessage(char * msg, int length/*PARAM_CLIENT_ID*/) {
 	if(/*PORT_NAME*/_is_open) {
-		int n, m, i;
-		unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + (length * 3 + 1) +
+		unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + length + 1 +
 							  LWS_SEND_BUFFER_POST_PADDING];
 		unsigned char *p = &buf[LWS_SEND_BUFFER_PRE_PADDING];	
 		unsigned char *q = p;
 		
-                n = 0;
+                
+		int i, m;
                 for(i = 0; i < length; i++) {
                         *q = msg[i];
-                        q ++;
-                        n++;
+                        q++;
                 }
                 *q = '\0';
-                n++;
 
 		/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Trying to send:\n%s \n", p);
 
-		m = libwebsocket_write(/*PORT_NAME*/_socket, p, (length * 3 + 1), LWS_WRITE_TEXT);
+		m = libwebsocket_write(/*PORT_NAME*/_socket, p, length + 1, LWS_WRITE_TEXT);
 	} else {
 		/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Error: Attempting to write on a closed socket\n");
 	}
