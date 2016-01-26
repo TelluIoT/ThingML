@@ -81,7 +81,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
         SintefboardPort sPortgen = new SintefboardPort(cfg, ctx);
         ctx.addNetworkLibraryGenerator(sPortgen);
-        
+
+        //FIXME: Nicolas: I guess the if below are mutually exclusive... if so, use if/else if/else...
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 if(eco.getProtocol().getName().startsWith("Serial")) {
@@ -294,7 +295,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             //if(ctx.containsDebug(cfg, inst.getType())) {
             boolean debugInst = false;
             for(Instance i : debugProfile.getDebugInstances()) {
-                if(i.getName().compareTo(inst.getName()) == 0) {
+                if(i.getName().equals(inst.getName())) {
                     debugInst = true;
                     break;
                 }
@@ -405,9 +406,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 
                 //Ugly
                 for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
-                    if(entries.getKey().getType().getName().compareTo(t.getName()) == 0) {
+                    if(entries.getKey().getType().getName().equals(t.getName())) {
                         for(Port ip : entries.getValue()) {
-                            if(ip.getName().compareTo(p.getName()) == 0) {
+                            if(ip.getName().equals(p.getName())) {
                                 for(Message m: ip.getSends()) {
                                     if(allMessageDispatch.keySet().contains(m)) {
                                         
@@ -741,7 +742,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         
                         for(ExternalConnector eco : ecoSet) {
                             builder.append("if(_instance->id_" + p.getName() + " ==");
-                            builder.append(" " + cfg.getName() + "_" + ctx.getInstanceVarName(eco.getInst().getInstance()));
+                            builder.append(" " + ctx.getInstanceVarName(eco.getInst().getInstance()));
                             builder.append(".id_" + p.getName() + ") {\n");
                             builder.append("forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
                             builder.append("(_instance");
@@ -1433,10 +1434,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     }
                     
                     for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
-                        if (entries.getKey().getType().getName().compareTo(t.getName()) == 0) {
+                        if (entries.getKey().getType().getName().equals(t.getName())) {
                             //System.out.println("inst " + inst.getName() + " found");
                             for(Port ip : entries.getValue()) {
-                                if (ip.getName().compareTo(port.getName()) == 0) {
+                                if (ip.getName().equals(port.getName())) {
                                     if(port.getSends().contains(msg)) {
                                         found = true;
                                         break;
@@ -1525,7 +1526,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             if(!eco.getPort().getReceives().isEmpty()) {
                 //    && (!co.getRequired().getReceives().isEmpty())) {
                 builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
-                builder.append(cfg.getName() + "_" + eco.getInst().getInstance().getName()
+                builder.append(eco.getInst().getInstance().getName()
                         + "_" + eco.getPort().getName() + "_handlers;\n");
                 nbConnectorSoFar++;
             }
@@ -1625,8 +1626,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 
             for(Connector co : cfg.allConnectors()) {
                 
-                if((co.getSrv().getInstance().getName().compareTo(inst.getName()) == 0) 
-                        && (co.getProvided().getName().compareTo(p.getName()) == 0) 
+                if((co.getSrv().getInstance().getName().equals(inst.getName()))
+                        && (co.getProvided().getName().equals(p.getName()))
                         && (!co.getProvided().getSends().isEmpty()) 
                         && (!co.getRequired().getReceives().isEmpty())) {
                     builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
@@ -1634,8 +1635,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                             + "_" + co.getRequired().getName() + "_handlers;\n");
                     nbConnectorSoFar++;
                 }
-                if((co.getCli().getInstance().getName().compareTo(inst.getName()) == 0) 
-                        && (co.getRequired().getName().compareTo(p.getName()) == 0) 
+                if((co.getCli().getInstance().getName().equals(inst.getName()))
+                        && (co.getRequired().getName().equals(p.getName()))
                     //    && (co.getRequired() == p) 
                         && (!co.getRequired().getSends().isEmpty()) 
                         && (!co.getProvided().getReceives().isEmpty())) {
@@ -1648,7 +1649,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             
             //Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet();
             for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
-                if (entries.getKey().getName().compareTo(inst.getName()) == 0) {
+                if (entries.getKey().getName().equals(inst.getName())) {
                     //System.out.println("inst " + inst.getName() + " found");
                     for(Port ip : entries.getValue()) {
                         if (ip.getName().compareTo(p.getName()) == 0) {
@@ -1735,7 +1736,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         //if(ctx.containsDebug(cfg, inst.getType())) {
         boolean debugInst = false;
         for(Instance i : debugProfile.getDebugInstances()) {
-            if(i.getName().compareTo(inst.getName()) == 0) {
+            if(i.getName().equals(inst.getName())) {
                 debugInst = true;
                 break;
     }
