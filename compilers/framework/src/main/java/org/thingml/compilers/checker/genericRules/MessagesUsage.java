@@ -82,11 +82,25 @@ public class MessagesUsage extends Rule {
                     }
                     if (!found)
                         checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", m);
+                    else {//check if message is serializable
+                        for(Parameter pa : m.getParameters()) {
+                            if ((pa.getType() instanceof ObjectType) && !pa.isDefined("serializable", "true")) {
+                                checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.", pa);
+                                break;
+                            }
+                        }
+                    }
                 }
                 for (Message m : p.getReceives()) {
                     for (StateMachine sm : t.allStateMachines()) {
                         if (sm.allMessageHandlers().get(p) == null || sm.allMessageHandlers().get(p).get(m) == null) {
                             checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received.", m);
+                        }
+                    }
+                    for(Parameter pa : m.getParameters()) {
+                        if ((pa.getType() instanceof ObjectType)  && !pa.isDefined("serializable", "true")) {
+                            checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be received from the network, please use only primitive datatypes.", pa);
+                            break;
                         }
                     }
                 }
