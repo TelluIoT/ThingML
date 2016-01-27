@@ -1,6 +1,6 @@
 import "thingml.thingml"
 
-thing TestArrays5 includes Msgs, Test
+thing TestArrays6 includes Msgs, Test
 @conf "instance a : A"
 @conf "set a.c = 5 + 0"
 @conf "instance b : A"
@@ -54,7 +54,8 @@ thing fragment Msgs {
 }
 
 thing A includes Msgs {
-	readonly property d : Int32 = 1
+	readonly property e : Int32 = 1
+	readonly property d : Int32 = e
 	readonly property c : Int32 = 2+2
 	property ar : Int32[c + 1 + d]
 

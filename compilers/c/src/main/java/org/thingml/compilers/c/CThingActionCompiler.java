@@ -199,12 +199,9 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                     builder.append("_instance->" + expression.getProperty().qname("_") + "_var");
                 }
             } else {
-                if(nctx.getConcreteInstance() != null) {
-                    Property p = (Property) expression.getProperty();
-                    generate(p.getInit(), builder, ctx);
-                } else {
-                    builder.append("/*ERROR*/");
-                }
+                Property p = (Property) expression.getProperty();
+                Expression e = ctx.getCurrentConfiguration().initExpressions(ctx.currentInstance, p).get(0);
+                generate(e, builder, ctx);
             }
         }
     }

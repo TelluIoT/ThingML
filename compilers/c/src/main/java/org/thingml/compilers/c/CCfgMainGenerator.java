@@ -280,25 +280,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(ctx.getCType(a.getType()) + " ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
                 builder.append("[");
-                /*if (a.getCardinality() instanceof PropertyReference) {
-                    PropertyReference pr = (PropertyReference) a.getCardinality();      
-                    AbstractMap.SimpleImmutableEntry l = null;
-                    for (AbstractMap.SimpleImmutableEntry l2 : cfg.initExpressionsForInstance(inst)) {
-                        if (l2.getKey().equals(pr.getProperty())) {
-                            l = l2;
-                            break;
-                        }
-                    }
-                    if (l != null) {
-                        
-                        ctx.getCompiler().getThingActionCompiler().generate(l.getValue(), builder, ctx);
-                    } else {
-                        ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
-                    }
-                } else {
-                    ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
-                }*/
-                ctx.generateCardinality(cfg, inst, a, builder);
+                ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
                 builder.append("];\n");
             }
             
@@ -1728,7 +1710,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
 
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(init.getKey()) + " = ");
-                        ctx.getCompiler().getThingActionCompiler().generate(init.getValue(), builder, ctx);
+                        //ctx.getCompiler().getThingActionCompiler().generate(init.getValue(), builder, ctx);
+                        ctx.generateFixedAtInitValue(cfg, inst, init.getValue(), builder);
                         builder.append(";\n");
             }
         }
@@ -1753,7 +1736,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     builder.append("[");
                     ctx.getCompiler().getThingActionCompiler().generate(e.getKey(), builder, ctx);
                     builder.append("] = ");
-                    ctx.getCompiler().getThingActionCompiler().generate(e.getValue(), builder, ctx);
+                    //ctx.getCompiler().getThingActionCompiler().generate(e.getValue(), builder, ctx);
+                    ctx.generateFixedAtInitValue(cfg, inst, e.getValue(), builder);
                     builder.append(";\n");
                 }
             }

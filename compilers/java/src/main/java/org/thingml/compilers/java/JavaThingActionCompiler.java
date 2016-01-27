@@ -183,10 +183,19 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
-            builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
-        else
-            builder.append(ctx.getVariableName(expression.getProperty()));
+        if(!ctx.getAtInitTimeLock()) {
+            if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
+                builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
+            else
+                builder.append(ctx.getVariableName(expression.getProperty()));
+        } else {
+            Property p = (Property) expression.getProperty();
+            if(p.isChangeable()) {
+                System.out.println("Error: non Read-only property (" + p.getName() + ") used in array cardinality definition.");
+            }
+            Expression e = ctx.getCurrentConfiguration().initExpressions(ctx.currentInstance, p).get(0);
+            generate(e, builder, ctx);
+        }
     }
 
     @Override

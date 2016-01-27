@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.*;
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.Function;
 import org.sintef.thingml.InternalTransition;
 import org.sintef.thingml.Message;
@@ -437,14 +438,16 @@ public class Context {
     }
     
     private Boolean atInitTimeLock = false;
+    public Instance currentInstance;
     
     public Boolean getAtInitTimeLock() {
         return atInitTimeLock;
     }
     
-    public void generateCardinality(Configuration cfg, Instance inst, Property a, StringBuilder builder) {
+    public void generateFixedAtInitValue(Configuration cfg, Instance inst, Expression a, StringBuilder builder) {
         atInitTimeLock = true;
-        getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, this);
+        currentInstance = inst;
+        getCompiler().getThingActionCompiler().generate(a, builder, this);
         atInitTimeLock = false;
     }
 }
