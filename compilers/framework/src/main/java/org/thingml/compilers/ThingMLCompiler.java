@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.thingml.compilers.checker.Checker;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
+import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic;
 import org.sintef.thingml.*;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
@@ -113,16 +114,15 @@ public abstract class ThingMLCompiler {
             URI xmiuri = URI.createFileURI(file.getAbsolutePath());
             Resource model = rs.createResource(xmiuri);
             try {
-            model.load(null);
+                model.load(null);
+                org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(model);
+                if (checkEMFErrorsAndWarnings(model)) {
+                    return (ThingMLModel) model.getContents().get(0);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
+                System.exit(-1);
             }
-            
-            if (model != null) {
-                if (checkEMFErrorsAndWarnings(model))
-                    return (ThingMLModel) model.getContents().get(0);
-            }
-            System.exit(-1);
             return null;
     }
 
@@ -133,7 +133,12 @@ public abstract class ThingMLCompiler {
             isOK = false;
             System.err.println("ERROR: The input model contains " + model.getErrors().size() + " errors:");
             for (Resource.Diagnostic d : model.getErrors()) {
-                System.err.println("  " + d.getLocation() + " : " + d.getMessage());
+                if (d instanceof IThingmlTextDiagnostic) {
+                    IThingmlTextDiagnostic e = (IThingmlTextDiagnostic) d;
+                    System.err.println("Syntax error in file " + d.getLocation() + " on line " + e.getLine() + " column " + e.getColumn());
+                } else {
+                    System.err.println("  " + d.getLocation() + "(l: " + d.getLine() + ", c: " + d.getColumn()  + ") : " + d.getMessage());
+                }
             }
         }
 

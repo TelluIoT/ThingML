@@ -136,10 +136,12 @@ public class ThingMLPanel extends JPanel {
                             if (targetFile == null) return;
                             try {
                                 ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
-                                for (Configuration cfg : thingmlModel.allConfigurations()) {
-                                    final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
-                                    compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
-                                    compiler.compile(cfg);
+                                if (thingmlModel != null) {
+                                    for (Configuration cfg : thingmlModel.allConfigurations()) {
+                                        final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                        compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
+                                        compiler.compile(cfg);
+                                    }
                                 }
                             } catch (Exception ex) {
                                 ex.printStackTrace();
@@ -325,7 +327,7 @@ public class ThingMLPanel extends JPanel {
                     Markers.markText(codeEditor, offset, getNextIndex(offset), marker);
                 }
 
-                ThingMLModel model = (ThingMLModel) resource.getContents().get(0);
+                //ThingMLModel model = (ThingMLModel) resource.getContents().get(0);
 
                 if (targetFile != null) {
                     FileWriter fileWriter = new FileWriter(targetFile);

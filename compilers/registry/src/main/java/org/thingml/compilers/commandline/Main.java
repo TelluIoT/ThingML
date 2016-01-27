@@ -82,7 +82,8 @@ public class Main {
 
         try {
             ThingMLModel input_model = ThingMLCompiler.loadModel(input);
-
+            if (input_model == null)//Models contains errors
+                return;
             if (input_model.allConfigurations().isEmpty()) {
                 System.out.println("ERROR: The input model does not contain any configuration to be compiled.");
                 return;
