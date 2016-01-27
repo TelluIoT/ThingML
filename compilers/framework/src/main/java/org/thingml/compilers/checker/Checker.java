@@ -72,7 +72,6 @@ abstract public class Checker {
         Rules.add(new FunctionUsage());
         Rules.add(new StatesUsage());
         Rules.add(new VariableUsage());
-        Rules.add(new ReadOnlyProperty());
     }
     
     public void do_generic_check(Configuration cfg) {
