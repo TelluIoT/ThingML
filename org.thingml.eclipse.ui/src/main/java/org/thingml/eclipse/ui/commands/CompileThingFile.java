@@ -100,6 +100,17 @@ public class CompileThingFile implements IHandler {
 			ThingMLConsole.getInstance().printDebug("Selected input file: " + target_file.toString() + " (" + f.getAbsolutePath() + ")\n");
 
 			ThingMLModel model = ThingMLCompiler.loadModel(f);
+			if (model == null) {
+				ThingMLConsole.getInstance().printError("ERROR: The selected model contains errors and will not be compiled. Please fix errors below\n");
+				for(String error : ThingMLCompiler.errors) {
+					ThingMLConsole.getInstance().printError(error + "\n");
+				}
+				ThingMLConsole.getInstance().printError("Compilation stopped.\n");
+				return null;
+			}
+			for(String warning : ThingMLCompiler.warnings) {
+				ThingMLConsole.getInstance().printMessage(warning + "\n");
+			}
 
 			// Look for a Configurations to compile
 			ArrayList<Configuration> toCompile = new ArrayList<Configuration>();

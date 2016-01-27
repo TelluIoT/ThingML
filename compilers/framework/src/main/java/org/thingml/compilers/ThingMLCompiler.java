@@ -106,7 +106,13 @@ public abstract class ThingMLCompiler {
      */
     public abstract boolean compile(Configuration cfg, String... options);
 
+    public static List<String> errors;
+    public static List<String> warnings;
+
     public static ThingMLModel loadModel(File file) {
+        errors = new ArrayList<String>();
+        warnings = new ArrayList<String>();
+
             Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
             reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
 
@@ -116,12 +122,13 @@ public abstract class ThingMLCompiler {
             try {
                 model.load(null);
                 org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(model);
-                if (checkEMFErrorsAndWarnings(model)) {
-                    return (ThingMLModel) model.getContents().get(0);
+                for(Resource r : model.getResourceSet().getResources()) {//TODO: check if r also includes model
+                    checkEMFErrorsAndWarnings(r);
                 }
+                if (errors.isEmpty())
+                    return (ThingMLModel) model.getContents().get(0);
             } catch (Exception e) {
                 e.printStackTrace();
-                System.exit(-1);
             }
             return null;
     }
@@ -131,29 +138,26 @@ public abstract class ThingMLCompiler {
         boolean isOK = true;
         if (model.getErrors().size() > 0) {
             isOK = false;
-            System.err.println("ERROR: The input model contains " + model.getErrors().size() + " errors:");
+            System.err.println("ERROR: The input model contains " + model.getErrors().size() + " errors.");
             for (Resource.Diagnostic d : model.getErrors()) {
                 if (d instanceof IThingmlTextDiagnostic) {
                     IThingmlTextDiagnostic e = (IThingmlTextDiagnostic) d;
-                    System.err.println("Syntax error in file " + d.getLocation() + " on line " + e.getLine() + " column " + e.getColumn());
+                    System.err.println("Syntax error in file " + d.getLocation() + " (" + e.getLine() + ", " + e.getColumn() + ")");
+                    errors.add("Syntax error in file " + d.getLocation() + " (" + e.getLine() + ", " + e.getColumn() + ")");
                 } else {
-                    System.err.println("  " + d.getLocation() + "(l: " + d.getLine() + ", c: " + d.getColumn()  + ") : " + d.getMessage());
+                    System.err.println("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn()  + "): " + d.getMessage());
+                    errors.add("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn()  + "): " + d.getMessage());
                 }
             }
         }
 
         if (model.getWarnings().size() > 0) {
-            System.out.println("WARNING: The input model contains " + model.getWarnings().size() + " warnings:");
+            System.out.println("WARNING: The input model contains " + model.getWarnings().size() + " warnings.");
             for (Resource.Diagnostic d : model.getWarnings()) {
-                System.out.println("  " + d.getLocation() + " : " + d.getMessage());
+                System.out.println("Warning in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+                warnings.add("Warning in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
             }
         }
-        /*for(Resource r : model.getResourceSet().getResources()) {
-            if (!r.equals(model)) {
-                if (!checkEMFErrorsAndWarnings(r))
-                    isOK = false;
-            }
-        }*/
         return isOK;
     }
 
