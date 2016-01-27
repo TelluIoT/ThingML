@@ -27,7 +27,6 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Instance#getType <em>Type</em>}</li>
- *   <li>{@link org.sintef.thingml.Instance#getAssign <em>Assign</em>}</li>
  * </ul>
  *
  * @see org.sintef.thingml.ThingmlPackage#getInstance()
@@ -60,21 +59,5 @@ public interface Instance extends AnnotatedElement {
 	 * @generated
 	 */
 	void setType(Thing value);
-
-	/**
-	 * Returns the value of the '<em><b>Assign</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.PropertyAssign}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Assign</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Assign</em>' containment reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getInstance_Assign()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<PropertyAssign> getAssign();
 
 } // Instance

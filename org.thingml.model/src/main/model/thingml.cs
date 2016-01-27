@@ -235,7 +235,7 @@ RULES {
 	
 	Configuration ::= "configuration" #1 name[] (annotations)*  !0 "{" (  instances | connectors | propassigns )* !0 "}" ;
 	
-	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)*  ; // !0 (  assign )* !0
+	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)*  ; 
 	
 	Connector ::= "connector" #1 (name[] #1)? cli "." required[] "=>" srv "." provided[] (!0 annotations)*;
 	

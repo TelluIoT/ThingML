@@ -3435,22 +3435,13 @@ public interface ThingmlPackage extends EPackage {
 	int INSTANCE__TYPE = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Assign</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INSTANCE__ASSIGN = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>Instance</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INSTANCE_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+	int INSTANCE_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.AbstractConnectorImpl <em>Abstract Connector</em>}' class.
@@ -6713,17 +6704,6 @@ public interface ThingmlPackage extends EPackage {
 	EReference getInstance_Type();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Instance#getAssign <em>Assign</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Assign</em>'.
-	 * @see org.sintef.thingml.Instance#getAssign()
-	 * @see #getInstance()
-	 * @generated
-	 */
-	EReference getInstance_Assign();
-
-	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Connector <em>Connector</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9016,14 +8996,6 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference INSTANCE__TYPE = eINSTANCE.getInstance_Type();
-
-		/**
-		 * The meta object literal for the '<em><b>Assign</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference INSTANCE__ASSIGN = eINSTANCE.getInstance_Assign();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ConnectorImpl <em>Connector</em>}' class.

@@ -44,7 +44,6 @@ import org.sintef.thingml.ThingmlPackage;
  * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.InstanceImpl#getType <em>Type</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.InstanceImpl#getAssign <em>Assign</em>}</li>
  * </ul>
  *
  * @generated
@@ -59,16 +58,6 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance {
 	 * @ordered
 	 */
 	protected Thing type;
-
-	/**
-	 * The cached value of the '{@link #getAssign() <em>Assign</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAssign()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<PropertyAssign> assign;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -132,40 +121,12 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<PropertyAssign> getAssign() {
-		if (assign == null) {
-			assign = new EObjectContainmentEList<PropertyAssign>(PropertyAssign.class, this, ThingmlPackage.INSTANCE__ASSIGN);
-		}
-		return assign;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ThingmlPackage.INSTANCE__ASSIGN:
-				return ((InternalEList<?>)getAssign()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ThingmlPackage.INSTANCE__TYPE:
 				if (resolve) return getType();
 				return basicGetType();
-			case ThingmlPackage.INSTANCE__ASSIGN:
-				return getAssign();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -182,10 +143,6 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance {
 			case ThingmlPackage.INSTANCE__TYPE:
 				setType((Thing)newValue);
 				return;
-			case ThingmlPackage.INSTANCE__ASSIGN:
-				getAssign().clear();
-				getAssign().addAll((Collection<? extends PropertyAssign>)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -201,9 +158,6 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance {
 			case ThingmlPackage.INSTANCE__TYPE:
 				setType((Thing)null);
 				return;
-			case ThingmlPackage.INSTANCE__ASSIGN:
-				getAssign().clear();
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -218,8 +172,6 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance {
 		switch (featureID) {
 			case ThingmlPackage.INSTANCE__TYPE:
 				return type != null;
-			case ThingmlPackage.INSTANCE__ASSIGN:
-				return assign != null && !assign.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

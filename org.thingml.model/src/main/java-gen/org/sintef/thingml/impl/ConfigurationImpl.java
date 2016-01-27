@@ -533,24 +533,8 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             if (confassigns.size() > 0) {  // There is an assignment for this property
                 result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, ((ConfigPropertyAssign)confassigns.toArray()[0]).getInit()));
             }
-            else { // Look on the instance and in the type to find an init expression
-                // get the init from the instance if there is an assignment
-
-                Set<PropertyAssign> assigns = new HashSet<PropertyAssign>();
-                for(PropertyAssign a : i.getAssign()) {
-                    if (EcoreUtil.equals(a.getProperty(), p)) {
-                        assigns.add(a);
-                    }
-                }
-                if (assigns.size() > 1)
-                    System.out.println("Error: Instance " + i.getName() + " contains several assignments for property " + p.getName());
-
-                if (assigns.size() > 0) {
-                    result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, ((PropertyAssign)assigns.toArray()[0]).getInit()));
-                }
-                else {
-                    result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, i.getType().initExpression(p)));
-                }
+            else {
+                result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, i.getType().initExpression(p)));
             }
         }
         return result;
