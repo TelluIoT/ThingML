@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.thingml.compilers.checker.Checker;
+import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic;
 import org.sintef.thingml.*;
@@ -39,7 +40,7 @@ import java.util.*;
 public abstract class ThingMLCompiler {
 
     protected Context ctx = new Context(this);
-    public Checker checker;
+    public static Checker checker;
 
     private ThingActionCompiler thingActionCompiler;
     private ThingApiCompiler thingApiCompiler;
@@ -106,8 +107,10 @@ public abstract class ThingMLCompiler {
      */
     public abstract boolean compile(Configuration cfg, String... options);
 
+    //FIXME: the code below related to loading and errors should be refactored and probably moved. It is just here right now as a convenience.
     public static List<String> errors;
     public static List<String> warnings;
+    public static ThingmlResource resource;
 
     public static ThingMLModel loadModel(File file) {
         errors = new ArrayList<String>();
@@ -119,14 +122,23 @@ public abstract class ThingMLCompiler {
             ResourceSet rs = new ResourceSetImpl();
             URI xmiuri = URI.createFileURI(file.getAbsolutePath());
             Resource model = rs.createResource(xmiuri);
+            resource = (ThingmlResource) model;
             try {
                 model.load(null);
                 org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(model);
-                for(Resource r : model.getResourceSet().getResources()) {//TODO: check if r also includes model
+                for(Resource r : model.getResourceSet().getResources()) {
                     checkEMFErrorsAndWarnings(r);
                 }
-                if (errors.isEmpty())
-                    return (ThingMLModel) model.getContents().get(0);
+                if (errors.isEmpty()) {
+                    ThingMLModel m = (ThingMLModel) model.getContents().get(0);
+                    for (Configuration cfg : m.allConfigurations()) {
+                        checker.do_generic_check(cfg);
+                    }
+                    if (errors.isEmpty()) {
+                        return m;
+                    }
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

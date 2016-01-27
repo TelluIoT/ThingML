@@ -54,7 +54,7 @@ public class VariableUsage extends Rule {
         if (va instanceof Property) {
             Property p = (Property) va;
             if (!p.isChangeable()) {
-                checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is read-only and cannot be re-assigned.", va);
+                checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is read-only and cannot be re-assigned.", e);
             }
         }
         Type expected = va.getType().getBroadType();

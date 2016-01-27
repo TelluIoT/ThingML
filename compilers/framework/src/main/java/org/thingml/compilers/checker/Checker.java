@@ -20,19 +20,16 @@
  */
 package org.thingml.compilers.checker;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.genericRules.*;
+import org.sintef.thingml.resource.thingml.*;//FIXME: import just what is needed
 
 /**
  *
@@ -137,14 +134,33 @@ abstract public class Checker {
     }
     
     public void printErrors() {
-        for(CheckerInfo i : Errors) {
+        for(final CheckerInfo i : Errors) {
             System.out.print(i.toString());
+
+            //Produce EMFText errors, to link errors back to editors, get line numbers, etc
+            System.out.println("Creating EMF Errors...");
+            IThingmlProblem problem = new IThingmlProblem(){
+                public String getMessage(){return i.toString();}
+                public org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity getSeverity(){return ThingmlEProblemSeverity.ERROR;}
+                public org.sintef.thingml.resource.thingml.ThingmlEProblemType getType(){return ThingmlEProblemType.UNKNOWN;}
+                public java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlQuickFix> getQuickFixes(){return Collections.EMPTY_LIST;}
+            };
+            ThingMLCompiler.resource.addProblem(problem, i.element);
         }
     }
     
     public void printWarnings() {
-        for(CheckerInfo i : Warnings) {
+        for(final CheckerInfo i : Warnings) {
             System.out.print(i.toString());
+
+            System.out.println("Creating EMF Warnings...");
+            IThingmlProblem problem = new IThingmlProblem(){
+                public String getMessage(){return i.toString();}
+                public org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity getSeverity(){return ThingmlEProblemSeverity.WARNING;}
+                public org.sintef.thingml.resource.thingml.ThingmlEProblemType getType(){return ThingmlEProblemType.UNKNOWN;}
+                public java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlQuickFix> getQuickFixes(){return Collections.EMPTY_LIST;}
+            };
+            ctx.getCompiler().resource.addProblem(problem, i.element);
         }
     }
     

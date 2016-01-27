@@ -24,6 +24,7 @@ import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.compilers.*;
+import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 
@@ -56,6 +57,13 @@ public class ThingMLPanel extends JPanel {
     JEditorPane codeEditor = new JEditorPane();
     Boolean ArduinoPlugin = false;
     ObservableString transferBuf = null;
+
+    Checker checker = new Checker("Generic") {
+        @Override
+        public void do_check(Configuration cfg) {
+            do_generic_check(cfg);
+        }
+    };
     
     public ThingMLPanel() {
         this(false, null);
@@ -254,8 +262,12 @@ public class ThingMLPanel extends JPanel {
     }
 
     public int getIndex(int line, int column) {
-        int lineStart = codeEditor.getDocument().getDefaultRootElement().getElement(line - 1).getStartOffset();
-        return lineStart + column;
+        try {
+            int lineStart = codeEditor.getDocument().getDefaultRootElement().getElement(line - 1).getStartOffset();
+            return lineStart + column;
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     public int getNextIndex(int offset) {
@@ -299,6 +311,8 @@ public class ThingMLPanel extends JPanel {
                     resource = new ThingmlResource(URI.createFileURI(targetFile.getAbsolutePath()));
                 } else resource = new ThingmlResource(URI.createURI("http://thingml.org"));
 
+                ThingMLCompiler.resource = (ThingmlResource) resource;
+
                 // It does not really work without a resourceSet
                 ResourceSet rset = new ResourceSetImpl();
                 rset.getResources().add(resource);
@@ -306,8 +320,17 @@ public class ThingMLPanel extends JPanel {
                 // This is the text from the editor
                 InputStream stream = new ByteArrayInputStream(codeEditor.getText().getBytes());
                 resource.load(stream, null);
+                org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(resource);
+
 
                 Markers.removeMarkers(codeEditor);
+                ThingMLModel model = (ThingMLModel) resource.getContents().get(0);
+                for (Configuration cfg : model.allConfigurations()) {
+                    System.out.println("Checking configuration " + cfg.getName());
+                    checker.do_generic_check(cfg);
+                    checker.printErrors();
+                    checker.printWarnings();
+                }
 
                 if (resource.getErrors().isEmpty())
                     org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(resource);
@@ -327,7 +350,7 @@ public class ThingMLPanel extends JPanel {
                     Markers.markText(codeEditor, offset, getNextIndex(offset), marker);
                 }
 
-                //ThingMLModel model = (ThingMLModel) resource.getContents().get(0);
+
 
                 if (targetFile != null) {
                     FileWriter fileWriter = new FileWriter(targetFile);
