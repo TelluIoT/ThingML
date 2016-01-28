@@ -188,6 +188,8 @@ abstract public class Checker {
         }
         
         public String print(EObject el) {
+            if(el == null)
+                return "";
             if (el instanceof ThingMLElement) {
                 if(((ThingMLElement)el).getName() != null) {
                     return ((ThingMLElement)el).getName();
