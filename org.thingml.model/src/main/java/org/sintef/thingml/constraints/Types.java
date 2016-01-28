@@ -30,6 +30,7 @@ public class Types {
     public static Type BOOLEAN_TYPE;
     public static Type STRING_TYPE;
     public static Type REAL_TYPE;
+    public static Type VOID_TYPE;
 
     static {
         ThingmlFactory factory = ThingmlPackageImpl.init().getThingmlFactory();
@@ -69,5 +70,11 @@ public class Types {
         real.setName("type_checker");
         real.setValue("Real");
         REAL_TYPE.getAnnotations().add(real);
+        VOID_TYPE = factory.createPrimitiveType();
+        VOID_TYPE.setName("Void");
+        PlatformAnnotation _void = factory.createPlatformAnnotation();
+        _void.setName("type_checker");
+        _void.setValue("Void");
+        VOID_TYPE.getAnnotations().add(_void);
     }
 }

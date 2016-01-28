@@ -556,7 +556,7 @@ public class ThingMLHelpers {
 	public static ArrayList<Variable> findVisibleVariables(EObject container, String name, boolean fuzzy) {
 		ArrayList<Variable> result = new ArrayList<Variable>();
 		for (Variable t : allVisibleVariables(container)) {
-			if (t.getName().startsWith(name)) {
+			if (t.getName() != null && t.getName().startsWith(name)) {
 				if (fuzzy) result.add(t);
 				else if (t.getName().equals(name)) result.add(t);
 			}
