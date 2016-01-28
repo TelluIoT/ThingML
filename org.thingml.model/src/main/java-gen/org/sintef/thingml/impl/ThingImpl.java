@@ -835,10 +835,9 @@ public class ThingImpl extends TypeImpl implements Thing {
      */
 	public List<Action> allAction(Class clazz) {
 		List<Action> result = new ArrayList<Action>();
-		/*for (Function f : allFunctions()) {
-			System.out.println("analyzing function " + f.getName());
-			result.addAll(getAllSendAction(f.getBody()));
-		}*/
+		for (Function f : allFunctions()) {
+			result.addAll(getAllAction(clazz, f.getBody()));
+		}
 		for(StateMachine sm : allStateMachines()) {
 			for(State s : sm.allStates()) {
 				if (s.getEntry() != null) {
@@ -868,6 +867,9 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 */
 	public List<Expression> allExpression(Class clazz) {
 		List<Expression> result = new ArrayList<Expression>();
+		for (Function f : allFunctions()) {
+			result.addAll(getAllExpression(clazz, f.getBody()));
+		}
 		for(StateMachine sm : allStateMachines()) {
 			for(State s : sm.allStates()) {
 				if (s.getEntry() != null) {
