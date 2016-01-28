@@ -29,7 +29,6 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.genericRules.*;
-import org.sintef.thingml.resource.thingml.*;//FIXME: import just what is needed
 
 /**
  *
@@ -41,6 +40,7 @@ abstract public class Checker {
     public Set<CheckerInfo> Errors;
     public Set<CheckerInfo> Warnings;
     public Set<CheckerInfo> Notices;
+    public List<ErrorWrapper> wrappers;
     
     private String compiler;
     private String generic;
@@ -54,6 +54,8 @@ abstract public class Checker {
         Errors = new HashSet<CheckerInfo>();
         Warnings = new HashSet<CheckerInfo>();
         Notices = new HashSet<CheckerInfo>();
+        wrappers = new ArrayList<ErrorWrapper>();
+        wrappers.add(new EMFWrapper());
         
         this.ctx = new Context(null);
         this.compiler = compiler;
@@ -87,26 +89,44 @@ abstract public class Checker {
     
     public void addError(String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
+        for(ErrorWrapper wrapper : wrappers) {
+            wrapper.addError(msg, el);
+        }
     }
     
     public void addError(String compiler, String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
+        for(ErrorWrapper wrapper : wrappers) {
+            wrapper.addError(msg, el);
+        }
     }
     
     public void addGenericError(String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, generic, msg, el));
+        for(ErrorWrapper wrapper : wrappers) {
+            wrapper.addError(msg, el);
+        }
     }
     
     public void addWarning(String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
+        for(ErrorWrapper wrapper : wrappers) {
+            wrapper.addWarning(msg, el);
+        }
     }
     
     public void addWarning(String compiler, String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
+        for(ErrorWrapper wrapper : wrappers) {
+            wrapper.addWarning(msg, el);
+        }
     }
     
     public void addGenericWarning(String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, generic, msg, el));
+        for(ErrorWrapper wrapper : wrappers) {
+            wrapper.addWarning(msg, el);
+        }
     }
     
     public void addNotice(String msg, EObject el) {
@@ -136,31 +156,12 @@ abstract public class Checker {
     public void printErrors() {
         for(final CheckerInfo i : Errors) {
             System.out.print(i.toString());
-
-            //Produce EMFText errors, to link errors back to editors, get line numbers, etc
-            System.out.println("Creating EMF Errors...");
-            IThingmlProblem problem = new IThingmlProblem(){
-                public String getMessage(){return i.toString();}
-                public org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity getSeverity(){return ThingmlEProblemSeverity.ERROR;}
-                public org.sintef.thingml.resource.thingml.ThingmlEProblemType getType(){return ThingmlEProblemType.UNKNOWN;}
-                public java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlQuickFix> getQuickFixes(){return Collections.EMPTY_LIST;}
-            };
-            ThingMLCompiler.resource.addProblem(problem, i.element);
         }
     }
     
     public void printWarnings() {
         for(final CheckerInfo i : Warnings) {
             System.out.print(i.toString());
-
-            System.out.println("Creating EMF Warnings...");
-            IThingmlProblem problem = new IThingmlProblem(){
-                public String getMessage(){return i.toString();}
-                public org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity getSeverity(){return ThingmlEProblemSeverity.WARNING;}
-                public org.sintef.thingml.resource.thingml.ThingmlEProblemType getType(){return ThingmlEProblemType.UNKNOWN;}
-                public java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlQuickFix> getQuickFixes(){return Collections.EMPTY_LIST;}
-            };
-            ctx.getCompiler().resource.addProblem(problem, i.element);
         }
     }
     

@@ -20,6 +20,7 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.checker.Checker;
@@ -53,12 +54,12 @@ public class FunctionUsage extends Rule {
         return "Check that each function defined in a thing is actually called.";
     }
 
-    private boolean check(Checker checker, Thing t, Function call, List<Expression> params, Function f) {
+    private boolean check(Checker checker, Thing t, Function call, List<Expression> params, Function f, EObject o) {
         boolean found = false;
         if (EcoreUtil.equals(call, f)) {
             found = true;
             if (f.getParameters().size() != params.size()) {
-                checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + f.getParameters().size() + ", called with " + params.size(), f);
+                checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + f.getParameters().size() + ", called with " + params.size(), o);
             } else {
                 for (Parameter p : f.getParameters()) {
                     Expression e = params.get(f.getParameters().indexOf(p));
@@ -66,11 +67,11 @@ public class FunctionUsage extends Rule {
                     Type actual = checker.typeChecker.computeTypeOf(e);
                     if (actual != null) {
                         if (actual.getName().equals("ERROR_TYPE")) {
-                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), f);
+                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
                         } else if (actual.getName().equals("ANY_TYPE")) {
-                            checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), f);
+                            checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
                         } else if (!actual.isA(expected)) {
-                            checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), f);
+                            checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
                         }
                     }
                 }
@@ -89,7 +90,7 @@ public class FunctionUsage extends Rule {
                     //FIXME brice
                     if(b instanceof FunctionCallStatement) {
                         FunctionCall a = (FunctionCall) b;
-                        if (check(checker, t, a.getFunction(), a.getParameters(), f)) {
+                        if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
                             found = true;
                         }
                     }
@@ -98,7 +99,7 @@ public class FunctionUsage extends Rule {
                     //FIXME brice
                     if(b instanceof FunctionCallExpression) {
                         FunctionCallExpression a = (FunctionCallExpression) b;
-                        if (check(checker, t, a.getFunction(), a.getParameters(), f)) {
+                        if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
                             found = true;
                         }
                     }

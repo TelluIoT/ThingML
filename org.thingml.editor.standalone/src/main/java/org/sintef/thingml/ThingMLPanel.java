@@ -25,6 +25,8 @@ import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.compilers.*;
 import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.EMFWrapper;
+import org.thingml.compilers.checker.ErrorWrapper;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 
@@ -58,7 +60,7 @@ public class ThingMLPanel extends JPanel {
     Boolean ArduinoPlugin = false;
     ObservableString transferBuf = null;
 
-    Checker checker = new Checker("Generic") {
+    Checker checker = new Checker("Generic") {//FIXME: if we are in _arduino instantiate the arduino checker, etc
         @Override
         public void do_check(Configuration cfg) {
             do_generic_check(cfg);
@@ -313,6 +315,7 @@ public class ThingMLPanel extends JPanel {
 
                 ThingMLCompiler.resource = (ThingmlResource) resource;
 
+
                 // It does not really work without a resourceSet
                 ResourceSet rset = new ResourceSetImpl();
                 rset.getResources().add(resource);
@@ -324,6 +327,12 @@ public class ThingMLPanel extends JPanel {
 
 
                 Markers.removeMarkers(codeEditor);
+                resource.getErrors().clear();
+                resource.getWarnings().clear();
+                checker.Errors.clear();
+                checker.Warnings.clear();
+                checker.Notices.clear();
+
                 ThingMLModel model = (ThingMLModel) resource.getContents().get(0);
                 for (Configuration cfg : model.allConfigurations()) {
                     System.out.println("Checking configuration " + cfg.getName());

@@ -20,6 +20,7 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.checker.Checker;
@@ -50,22 +51,22 @@ public class VariableUsage extends Rule {
         return "Check variables and properties.";
     }
 
-    private void check(Variable va, Expression e, Thing t, Checker checker) {
+    private void check(Variable va, Expression e, Thing t, Checker checker, EObject o) {
         if (va instanceof Property) {
             Property p = (Property) va;
             if (!p.isChangeable()) {
-                checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is read-only and cannot be re-assigned.", e);
+                checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is read-only and cannot be re-assigned.", o);
             }
         }
         Type expected = va.getType().getBroadType();
         Type actual = checker.typeChecker.computeTypeOf(e);
         if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
             if (actual.getName().equals("ERROR_TYPE")) {
-                checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
+                checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), o);
             } else if (actual.getName().equals("ANY_TYPE")) {
-                checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
+                checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), o);
             } else if (!actual.isA(expected)) {
-                checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), va);
+                checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), o);
             }
         }
     }
@@ -77,14 +78,14 @@ public class VariableUsage extends Rule {
                 //FIXME @Brice see testIfElse
                 if(a instanceof VariableAssignment) {
                     VariableAssignment va = (VariableAssignment)a;
-                    check(va.getProperty(), va.getExpression(), t, checker);
+                    check(va.getProperty(), va.getExpression(), t, checker, va);
                 }
             }
             for(Action a : t.allAction(LocalVariable.class)) {
                 //FIXME @Brice see testIfElse
                 if(a instanceof LocalVariable) {
                     LocalVariable lv = (LocalVariable) a;
-                    check(lv, lv.getInit(), t, checker);
+                    check(lv, lv.getInit(), t, checker, lv);
                 }
             }
         }
