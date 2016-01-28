@@ -54,30 +54,27 @@ public class NonDeterministicTransitions extends Rule {
     public void check(Configuration cfg, Checker checker) {
         for(Thing t : cfg.allThings()) {
             for (StateMachine sm : t.allStateMachines()) {
-                handlerLoop: for(Map.Entry<Port, Map<Message, List<Handler>>> entry : sm.allMessageHandlers().entrySet()) {
-                    final Port p = entry.getKey();
-                    for(Map.Entry<Message, List<Handler>> e : entry.getValue().entrySet()) {
-                        final Message m = e.getKey();
-                        if (e.getValue().size()>1) { //at least two handlers (transition or internal) with the same trigger (p?m)
-                            for (Handler h : e.getValue()) {
-                                if (h.getGuard() == null) {//one of those handlers does not have a guard
-                                    checker.addGenericError("Non deterministic behaviour: Two transitions handling " + p.getName() + "?" + m.getName() + ", with at least one without a guard", h);
-                                    //break handlerLoop;
+                for(State s : sm.allStates()) {
+                    for(Port p : t.allPorts()) {
+                        for(Message m : p.getReceives()) {
+                            if (s.allHandlers(p,m).size()>1) {//at least two handlers (transition or internal) with the same trigger (p?m)
+                                for (Handler h : s.allHandlers(p, m)) {
+                                    if (h.getGuard() == null) {//one of those handlers does not have a guard
+                                        checker.addGenericError("Non deterministic behaviour: Two transitions handling " + p.getName() + "?" + m.getName() + ", with at least one without a guard", h);
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                if (sm.allEmptyHandlers().size()>1) { //at least two empty handlers
-                    emptyLoop: for (Handler h : sm.allEmptyHandlers()) {
-                        if (h.getGuard() == null) { //one of those handlers does not have a guard
-                            checker.addGenericError("Non deterministic behaviour: Two empty transitions (with no event), with at least one without a guard", h);
-                            //break emptyLoop;
+                    if (s.allEmptyHandlers().size()>1) {//at least two empty handlers
+                        for (Handler h : s.allEmptyHandlers()) {
+                            if (h.getGuard() == null) { //one of those handlers does not have a guard
+                                checker.addGenericError("Non deterministic behaviour: Two empty transitions (with no event), with at least one without a guard", h);
+                            }
                         }
                     }
                 }
             }
         }
     }
-    
 }
