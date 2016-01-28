@@ -29,10 +29,12 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 		if(parentAction != null) {
 			List<Variable> variables = ThingMLHelpers.allVisibleVariables(parentAction);
 			for(Variable v : variables) {
-				if(resolveFuzzy && v.getName().startsWith(identifier)) {
-					result.addMapping(v.getName(),v);
-				} else if(!resolveFuzzy && v.getName().equals(identifier)) {
-					result.addMapping(v.getName(),v);
+				if (v.getName() != null) {
+					if (resolveFuzzy && v.getName().startsWith(identifier)) {
+						result.addMapping(v.getName(), v);
+					} else if (!resolveFuzzy && v.getName().equals(identifier)) {
+						result.addMapping(v.getName(), v);
+					}
 				}
 			}
 			if(result.wasResolved()) {

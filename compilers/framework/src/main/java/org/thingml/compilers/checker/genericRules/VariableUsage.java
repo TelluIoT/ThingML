@@ -58,8 +58,10 @@ public class VariableUsage extends Rule {
                 checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is read-only and cannot be re-assigned.", o);
             }
         }
-        if (va.getType() == null)//parsing probably still ongoing...
+        if (va.getType() == null) {//parsing probably still ongoing...v
+            checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " has no type", va);
             return;
+        }
         Type expected = va.getType().getBroadType();
         Type actual = checker.typeChecker.computeTypeOf(e);
         if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)

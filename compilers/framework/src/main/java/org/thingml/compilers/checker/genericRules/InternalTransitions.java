@@ -57,9 +57,9 @@ public class InternalTransitions extends Rule {
                 for(Handler h : sm.allEmptyHandlers()) {
                     if(h instanceof InternalTransition) {
                         if(h.getGuard() == null) {
-                            checker.addGenericError("Empty Internal Transition without guard.", sm);
+                            checker.addGenericError("Empty Internal Transition without guard.", h);
                         } else {
-                             checker.addGenericNotice("Empty Internal Transition.", sm);
+                             checker.addGenericNotice("Empty Internal Transition.", h);
                         }
                     }
                 }
