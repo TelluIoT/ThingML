@@ -21,7 +21,6 @@
 package org.thingml.compilers.c.plugin;
 
 import java.util.List;
-import javafx.animation.KeyValue;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;

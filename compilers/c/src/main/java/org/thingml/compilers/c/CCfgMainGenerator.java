@@ -1040,16 +1040,16 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             Map.Entry<Instance, Port> Sender, Receiver;
             Set<Map.Entry<Instance, Port>> ReceiverList;
             
-            Set<Port> syncSenderList;
+            Set<Map.Entry<Instance, Port>> syncSenderList;
             
             // Init
             SenderList = new HashMap<Map.Entry<Instance, Port>, Set<Map.Entry<Instance, Port>>>();
-            syncSenderList = new HashSet<Port>();
+            syncSenderList = new HashSet<Map.Entry<Instance, Port>>();
             
             for(Connector co : cfg.allConnectors()) {
                 if(co.getProvided().getSends().contains(m)) {
                     if(co.getProvided().isDefined("sync_send", "true")) {
-                       syncSenderList.add(co.getProvided());
+                       syncSenderList.add(new HashMap.SimpleEntry<Instance, Port>(co.getSrv().getInstance(), co.getProvided()));
                     }
                     Sender = new HashMap.SimpleEntry<Instance, Port>(co.getSrv().getInstance(),co.getProvided());
                     if(SenderList.containsKey(Sender)) {
@@ -1065,7 +1065,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
                 if(co.getRequired().getSends().contains(m)) {
                     if(co.getRequired().isDefined("sync_send", "true")) {
-                       syncSenderList.add(co.getRequired());
+                       syncSenderList.add(new HashMap.SimpleEntry<Instance, Port>(co.getCli().getInstance(), co.getRequired()));
                     }
                     Sender = new HashMap.SimpleEntry<Instance, Port>(co.getCli().getInstance(),co.getRequired());
                     if(SenderList.containsKey(Sender)) {
@@ -1087,7 +1087,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     things.add(entrie.getKey().getType());
                     for(InternalPort ip : entrie.getValue()) {
                         if(ip.isDefined("sync_send", "true")) {
-                           syncSenderList.add(ip);
+                           syncSenderList.add(new HashMap.SimpleEntry<Instance, Port>(entrie.getKey(), ip));
                         }
                         Sender = new HashMap.SimpleEntry<Instance, Port>(entrie.getKey(), ip);
                         if(SenderList.containsKey(Sender)) {
@@ -1135,6 +1135,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         if (sm.canHandle(myReceiver.getValue(), m)) {
                             builder.append(ctx.getHandlerName(myReceiver.getKey().getType(), myReceiver.getValue(), m));
                             ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(myReceiver.getKey()));
+                            System.out.println("Ohhhhhhhhhhhh: " + ctx.getInstanceVarName(myReceiver.getKey()));
+                            //ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + myReceiver.getKey().getName() + "_var");
                             builder.append(";\n");
                             //builder.append("//TODEBUG " + myReceiver.getKey().getName() + "\n");
                         }
@@ -1156,7 +1158,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     StateMachine sm = eco.getInst().getInstance().getType().allStateMachines().get(0);
                     if (sm.canHandle(eco.getPort(), m)) {
                         builder.append(ctx.getHandlerName(eco.getInst().getInstance().getType(), eco.getPort(), m));
-                        ctx.appendActualParametersForDispatcher(eco.getInst().getInstance().getType(), builder, m, "&" + cfg.getName() + "_" + ctx.getInstanceVarName(eco.getInst().getInstance()));
+                        ctx.appendActualParametersForDispatcher(eco.getInst().getInstance().getType(), builder, m, "&" + ctx.getInstanceVarName(eco.getInst().getInstance()));
                         builder.append(";\n");
                         //builder.append("//TODEBUG " + eco.getInst().getInstance().getName() + "\n");
                     }
@@ -1167,13 +1169,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
 
             
-            for(Port p : syncSenderList) {
-                headerbuilder.append("void " + "sync_dispatch_" + ctx.getSenderName(p.getOwner(), p, m));
-                ctx.appendFormalParameters(p.getOwner(), headerbuilder, m);
+            for(Map.Entry<Instance, Port> mySender: syncSenderList) {
+                Port p = mySender.getValue();
+                Thing owner = mySender.getKey().getType();
+                headerbuilder.append("void " + "sync_dispatch_" + ctx.getSenderName(owner, p, m));
+                ctx.appendFormalParameters(owner, headerbuilder, m);
                 headerbuilder.append(";\n");
                     
-                builder.append("void " + getCppNameScope() + "sync_dispatch_" + ctx.getSenderName(p.getOwner(), p, m));
-                ctx.appendFormalParameters(p.getOwner(), builder, m);
+                builder.append("void " + getCppNameScope() + "sync_dispatch_" + ctx.getSenderName(owner, p, m));
+                ctx.appendFormalParameters(owner, builder, m);
                 builder.append("{\n");
                 builder.append("dispatch_" + m.getName());
                 builder.append("(_instance->id_" + p.getName());
