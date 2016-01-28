@@ -242,7 +242,8 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 
 	@Override
 	public Type caseFunctionCallExpression(FunctionCallExpression object) {
-		Type t = object.getFunction().getType().getBroadType();
-		return t;
+		if (object.getFunction().getType() == null)
+			return Types.VOID_TYPE;
+		return object.getFunction().getType().getBroadType();
 	}
 }
