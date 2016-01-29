@@ -75,9 +75,35 @@ public class FunctionUsage extends Rule {
                             checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
                         }
                     }
+                    for(Action a : t.allAction(VariableAssignment.class)) {//TODO: implement allActions on Function directly
+                        if (a instanceof VariableAssignment) {
+                            VariableAssignment va = (VariableAssignment) a;
+                            if (va.getProperty().equals(p)) {
+                                checker.addWarning("Re-assigning parameter " + p.getName() + " can have side effects", va);
+                            }
+                        }
+                    }
                 }
             }
             //break;
+        }
+        for (Parameter p : f.getParameters()) {
+            boolean isUsed = false;
+             for(Expression exp : t.allExpression(PropertyReference.class)) {//TODO: see above
+                System.out.println("DEBUG: property reference " + exp);
+                if (exp instanceof PropertyReference) {
+                    PropertyReference pr = (PropertyReference) exp;
+                    System.out.println("DEBUG: property reference to " + pr.getProperty().getName());
+                    if (pr.getProperty().equals(p)) {
+                        System.out.println("\tFOUND: property reference to " + pr.getProperty().getName());
+                        isUsed = true;
+                        break;
+                    }
+                }
+             }
+            if (!isUsed) {
+                checker.addWarning("Parameter " + p.getName() + " is never read", p);
+            }
         }
         return found;
     }

@@ -820,10 +820,47 @@ public class ThingImpl extends TypeImpl implements Thing {
 			if(clazz.isInstance(va.getExpression())) {
 				result.add(va.getExpression());
 			}
+			result.addAll(getAllExpression(clazz, va.getExpression()));
 		} else if (action instanceof LocalVariable) {
 			LocalVariable lv = (LocalVariable) action;
 			if(clazz.isInstance(lv.getInit())) {
 				result.add(lv.getInit());
+			}
+			result.addAll(getAllExpression(clazz, lv.getInit()));
+		} else if (action instanceof ExternStatement) {
+			ExternStatement es = (ExternStatement) action;
+			for(Expression e : es.getSegments()) {
+				if(clazz.isInstance(e)) {
+					result.add(e);
+				}
+				result.addAll(getAllExpression(clazz, e));
+			}
+		}
+		return result;
+	}
+
+	private List<Expression> getAllExpression(Class clazz, Expression exp) {
+		List<Expression> result = new ArrayList<Expression>();
+		if (clazz.isInstance(exp))
+			result.add(exp);
+
+		if (exp instanceof UnaryExpression) {
+			UnaryExpression e = (UnaryExpression)exp;
+			result.addAll(getAllExpression(clazz, e.getTerm()));
+		}
+		else if (exp instanceof BinaryExpression) {
+			BinaryExpression e = (BinaryExpression)exp;
+			result.addAll(getAllExpression(clazz, e.getLhs()));
+			result.addAll(getAllExpression(clazz, e.getRhs()));
+		} else if (exp instanceof ExternExpression) {
+			ExternExpression e = (ExternExpression) exp;
+			for(Expression ex : e.getSegments()) {
+				result.addAll(getAllExpression(clazz, ex));
+			}
+		}  else if (exp instanceof FunctionCall) {
+			FunctionCall e = (FunctionCall) exp;
+			for(Expression ex : e.getParameters()) {
+				result.addAll(getAllExpression(clazz, ex));
 			}
 		}
 		return result;
