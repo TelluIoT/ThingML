@@ -51,9 +51,8 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
     public void generateNetworkLibrary() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         for(ExternalConnector eco : this.getExternalConnectors()) {
-            boolean ring = false;
-            String ctemplate = ctx.getNetworkLibSerialTemplate();
-            String htemplate = ctx.getNetworkLibSerialHeaderTemplate();
+            
+            String ctemplate = ctx.getNetworkLibNoBufSerialTemplate();
 
             String portName;
             if(eco.hasAnnotation("port_name")) {
@@ -74,7 +73,6 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
             ctemplate = ctemplate.replace("/*BAUDRATE*/", baudrate.toString());
 
             ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
-            htemplate = htemplate.replace("/*PORT_NAME*/", portName);
 
             
             
@@ -103,16 +101,14 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
             ser.generateMessageParser(eco, ParserImplementation);
             ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", ParserImplementation);
             
-            String ParserCall = portName + "_parser((char *) " + portName + "_serialBuffer, " + portName + "_serialMsgSize, " + portName + "_instance.listener_id);";
-            ctemplate = ctemplate.replace("/*PARSER_CALL*/", ParserCall);
+            
             //End De Serializer
             ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
 
 
 
             ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".c").append(ctemplate);
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".h").append(htemplate);
-
+            
         }
     }
     
