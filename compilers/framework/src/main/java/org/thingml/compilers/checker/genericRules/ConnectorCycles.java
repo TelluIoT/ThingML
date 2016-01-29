@@ -23,6 +23,7 @@ package org.thingml.compilers.checker.genericRules;
 import java.util.List;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Instance;
+import org.sintef.thingml.ThingMLModel;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.Tarjan;

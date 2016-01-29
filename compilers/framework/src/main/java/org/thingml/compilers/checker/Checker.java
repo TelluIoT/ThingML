@@ -80,6 +80,14 @@ abstract public class Checker {
         }
         System.out.println("checker took " + (System.currentTimeMillis() - start) + " ms");
     }
+
+    public void do_generic_check(ThingMLModel model) {
+        long start = System.currentTimeMillis();
+        for(Rule r : Rules) {
+            r.check(model, this);
+        }
+        System.out.println("checker took " + (System.currentTimeMillis() - start) + " ms");
+    }
     
     // Must be implemented and must contain a call to do_generic_check(cfg)
     abstract public void do_check(Configuration cfg);

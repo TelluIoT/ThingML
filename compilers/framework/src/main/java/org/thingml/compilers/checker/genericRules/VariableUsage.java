@@ -23,6 +23,7 @@ package org.thingml.compilers.checker.genericRules;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.Types;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -65,32 +66,43 @@ public class VariableUsage extends Rule {
         Type expected = va.getType().getBroadType();
         Type actual = checker.typeChecker.computeTypeOf(e);
         if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
-            if (actual.getName().equals("ERROR_TYPE")) {
+            if (actual.equals(Types.ERROR_TYPE)) {
                 checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), o);
-            } else if (actual.getName().equals("ANY_TYPE")) {
+            } else if (actual.equals(Types.ANY_TYPE)) {
                 checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), o);
             } else if (!actual.isA(expected)) {
-                checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), o);
+                checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), o);
             }
+        }
+    }
+
+    @Override
+    public void check(ThingMLModel model, Checker checker) {
+        for(Thing t : model.allThings()) {
+            check(t, checker);
         }
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
         for(Thing t : cfg.allThings()) {
-            for(Action a : t.allAction(VariableAssignment.class)) {
-                //FIXME @Brice see testIfElse
-                if(a instanceof VariableAssignment) {
-                    VariableAssignment va = (VariableAssignment)a;
-                    check(va.getProperty(), va.getExpression(), t, checker, va);
-                }
+            check(t, checker);
+        }
+    }
+
+    private void check(Thing t, Checker checker) {
+        for(Action a : t.allAction(VariableAssignment.class)) {
+            //FIXME @Brice see testIfElse
+            if(a instanceof VariableAssignment) {
+                VariableAssignment va = (VariableAssignment)a;
+                check(va.getProperty(), va.getExpression(), t, checker, va);
             }
-            for(Action a : t.allAction(LocalVariable.class)) {
-                //FIXME @Brice see testIfElse
-                if(a instanceof LocalVariable) {
-                    LocalVariable lv = (LocalVariable) a;
-                    check(lv, lv.getInit(), t, checker, lv);
-                }
+        }
+        for(Action a : t.allAction(LocalVariable.class)) {
+            //FIXME @Brice see testIfElse
+            if(a instanceof LocalVariable) {
+                LocalVariable lv = (LocalVariable) a;
+                check(lv, lv.getInit(), t, checker, lv);
             }
         }
     }

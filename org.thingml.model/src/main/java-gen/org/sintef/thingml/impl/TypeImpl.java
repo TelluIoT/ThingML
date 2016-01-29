@@ -64,6 +64,10 @@ public abstract class TypeImpl extends AnnotatedElementImpl implements Type {
 				return Types.BOOLEAN_TYPE;
 			else if (ty.equals("String"))
 				return Types.STRING_TYPE;
+			else if (ty.equals("Error"))
+				return Types.ERROR_TYPE;
+			else if (ty.equals("Void"))
+				return Types.VOID_TYPE;
 			else
 				return Types.ANY_TYPE;
 		}

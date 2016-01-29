@@ -249,9 +249,11 @@ public class ThingMLHelpers {
 	public static ArrayList<Type> findSimpleType(ThingMLModel model, String name, boolean fuzzy) {
 		ArrayList<Type> result = new ArrayList<Type>();
 		for (Type t : allSimpleTypes(model)) {
-			if (t.getName().startsWith(name)) {
-				if (fuzzy) result.add(t);
-				else if (t.getName().equals(name)) result.add(t);
+			if (t.getName() != null) {
+				if (t.getName().startsWith(name)) {
+					if (fuzzy) result.add(t);
+					else if (t.getName().equals(name)) result.add(t);
+				}
 			}
 		}
 		return result;

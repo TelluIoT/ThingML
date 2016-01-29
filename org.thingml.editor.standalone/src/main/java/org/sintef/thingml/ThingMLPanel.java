@@ -49,6 +49,7 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by bmori on 26.05.2015.
@@ -243,20 +244,23 @@ public class ThingMLPanel extends JPanel {
             
             codeEditor.getDocument().addDocumentListener(new DocumentListener() {
                 public void removeUpdate(DocumentEvent e) {
+                    lastUpdate.set(System.currentTimeMillis());
                     checkNeeded.set(true);
                 }
 
                 public void insertUpdate(DocumentEvent e) {
+                    lastUpdate.set(System.currentTimeMillis());
                     checkNeeded.set(true);
                 }
 
                 public void changedUpdate(DocumentEvent e) {
+                    lastUpdate.set(System.currentTimeMillis());
                     checkNeeded.set(true);
                 }
             });
 
             java.util.Timer timer = new Timer();
-            timer.scheduleAtFixedRate(new SeamlessNotification(), 500, 500);
+            timer.scheduleAtFixedRate(new SeamlessNotification(), 250, 250);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -287,12 +291,13 @@ public class ThingMLPanel extends JPanel {
 
 
     AtomicBoolean checkNeeded = new AtomicBoolean(false);
+    AtomicLong lastUpdate = new AtomicLong(System.currentTimeMillis());
 
     class SeamlessNotification extends TimerTask {
 
         @Override
         public void run() {
-            if (checkNeeded.get()) {
+            if (checkNeeded.get() && System.currentTimeMillis() - lastUpdate.get() > 500) {
                 if (codeEditor.getDocument().getLength() > 1) {
                     try {
                         updateMarkers(codeEditor.getDocument().getText(0, codeEditor.getDocument().getLength() - 1));
@@ -334,12 +339,15 @@ public class ThingMLPanel extends JPanel {
                 checker.Notices.clear();
 
                 ThingMLModel model = (ThingMLModel) resource.getContents().get(0);
-                for (Configuration cfg : model.allConfigurations()) {
+                checker.do_generic_check(model);
+                checker.printErrors();
+                checker.printWarnings();
+                /*for (Configuration cfg : model.allConfigurations()) {
                     System.out.println("Checking configuration " + cfg.getName());
                     checker.do_generic_check(cfg);
                     checker.printErrors();
                     checker.printWarnings();
-                }
+                }*/
 
                 if (resource.getErrors().isEmpty())
                     org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(resource);

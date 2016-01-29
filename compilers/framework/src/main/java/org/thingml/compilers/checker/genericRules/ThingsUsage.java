@@ -23,6 +23,7 @@ package org.thingml.compilers.checker.genericRules;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingMLModel;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;

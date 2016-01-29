@@ -23,6 +23,7 @@ package org.thingml.compilers.checker.genericRules;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.Types;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.TypeChecker;
@@ -66,12 +67,12 @@ public class FunctionUsage extends Rule {
                     Type expected = p.getType().getBroadType();
                     Type actual = checker.typeChecker.computeTypeOf(e);
                     if (actual != null) {
-                        if (actual.getName().equals("ERROR_TYPE")) {
+                        if (actual.equals(Types.ERROR_TYPE)) {
                             checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
-                        } else if (actual.getName().equals("ANY_TYPE")) {
+                        } else if (actual.equals(Types.ANY_TYPE)) {
                             checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
                         } else if (!actual.isA(expected)) {
-                            checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
+                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
                         }
                     }
                 }
@@ -82,31 +83,42 @@ public class FunctionUsage extends Rule {
     }
 
     @Override
+    public void check(ThingMLModel model, Checker checker) {
+        for(Thing thing : model.allThings()) {
+            check(thing, checker);
+        }
+    }
+
+    @Override
     public void check(Configuration cfg, Checker checker) {
         for(Thing t : cfg.allThings()) {
-            for(Function f : t.allFunctions()) {
-                boolean found = false;
-                for(Action b : t.allAction(FunctionCallStatement.class)) {
-                    //FIXME brice
-                    if(b instanceof FunctionCallStatement) {
-                        FunctionCall a = (FunctionCall) b;
-                        if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
-                            found = true;
-                        }
+            check(t, checker);
+        }
+    }
+
+    private void check(Thing t, Checker checker) {
+        for(Function f : t.allFunctions()) {
+            boolean found = false;
+            for(Action b : t.allAction(FunctionCallStatement.class)) {
+                //FIXME brice
+                if(b instanceof FunctionCallStatement) {
+                    FunctionCall a = (FunctionCall) b;
+                    if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
+                        found = true;
                     }
                 }
-                for(Expression b : t.allExpression(FunctionCallExpression.class)) {
-                    //FIXME brice
-                    if(b instanceof FunctionCallExpression) {
-                        FunctionCallExpression a = (FunctionCallExpression) b;
-                        if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
-                            found = true;
-                        }
-                    }
-                }
-                if (!found)
-                    checker.addGenericNotice("Function " + f.getName() + " of Thing " + t.getName() + " is never called.", f);
             }
+            for(Expression b : t.allExpression(FunctionCallExpression.class)) {
+                //FIXME brice
+                if(b instanceof FunctionCallExpression) {
+                    FunctionCallExpression a = (FunctionCallExpression) b;
+                    if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
+                        found = true;
+                    }
+                }
+            }
+            if (!found)
+                checker.addGenericNotice("Function " + f.getName() + " of Thing " + t.getName() + " is never called.", f);
         }
     }
     
