@@ -90,12 +90,9 @@ public class FunctionUsage extends Rule {
         for (Parameter p : f.getParameters()) {
             boolean isUsed = false;
              for(Expression exp : t.allExpression(PropertyReference.class)) {//TODO: see above
-                System.out.println("DEBUG: property reference " + exp);
                 if (exp instanceof PropertyReference) {
                     PropertyReference pr = (PropertyReference) exp;
-                    System.out.println("DEBUG: property reference to " + pr.getProperty().getName());
                     if (pr.getProperty().equals(p)) {
-                        System.out.println("\tFOUND: property reference to " + pr.getProperty().getName());
                         isUsed = true;
                         break;
                     }

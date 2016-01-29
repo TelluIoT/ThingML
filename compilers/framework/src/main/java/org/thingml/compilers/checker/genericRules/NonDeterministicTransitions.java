@@ -64,7 +64,7 @@ public class NonDeterministicTransitions extends Rule {
         }
     }
 
-    private void check(Thing t, Checker checker) {
+    private void check(Thing t, Checker checker) {//FIXME: not working properly
         for (StateMachine sm : t.allStateMachines()) {
             for(State s : sm.allStates()) {
                 for(Port p : t.allPorts()) {
