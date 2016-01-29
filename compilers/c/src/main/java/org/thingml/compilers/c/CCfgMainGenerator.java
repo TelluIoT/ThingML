@@ -1135,7 +1135,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         if (sm.canHandle(myReceiver.getValue(), m)) {
                             builder.append(ctx.getHandlerName(myReceiver.getKey().getType(), myReceiver.getValue(), m));
                             ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(myReceiver.getKey()));
-                            System.out.println("Ohhhhhhhhhhhh: " + ctx.getInstanceVarName(myReceiver.getKey()));
                             //ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + myReceiver.getKey().getName() + "_var");
                             builder.append(";\n");
                             //builder.append("//TODEBUG " + myReceiver.getKey().getName() + "\n");

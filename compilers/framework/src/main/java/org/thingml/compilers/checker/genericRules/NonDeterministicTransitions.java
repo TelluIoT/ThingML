@@ -79,7 +79,14 @@ public class NonDeterministicTransitions extends Rule {
                     }
                 }
                 if (s.allEmptyHandlers().size()>1) {//at least two empty handlers
+                    System.out.println("State: " + s.getName());
                     for (Handler h : s.allEmptyHandlers()) {
+                        if(h instanceof InternalTransition) {
+                            System.out.println(" -> " + s.getName());
+                        }
+                        if(h instanceof Transition) {
+                            System.out.println(" -> " + ((Transition) h).getTarget().getName());
+                        }
                         if (h.getGuard() == null) { //one of those handlers does not have a guard
                             checker.addGenericError("Non deterministic behaviour: Two empty transitions (with no event), with at least one without a guard", h);
                         }
