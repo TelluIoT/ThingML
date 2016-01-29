@@ -800,41 +800,36 @@ public class ThingImpl extends TypeImpl implements Thing {
 		List<Expression> result = new ArrayList<Expression>();
 		if (action instanceof PropertyAssign) {
 			PropertyAssign pa = (PropertyAssign) action;
-			if(clazz.isInstance(pa.getInit())) {
-				result.add(pa.getInit());
-			}
+			result.addAll(getAllExpression(clazz, pa.getInit()));
 		} else if (action instanceof ControlStructure) {
 			ControlStructure cs = (ControlStructure) action;
-			if(clazz.isInstance(cs.getCondition())) {
-				result.add(cs.getCondition());
-			}
+			result.addAll(getAllExpression(clazz, cs.getCondition()));
 			result.addAll(getAllExpression(clazz, cs.getAction()));
 		} else if (action instanceof ActionBlock) {
 			ActionBlock b = (ActionBlock) action;
 			for(Action a : b.getActions()) {
 				result.addAll(getAllExpression(clazz, a));
 			}
-			//b.allExpression(clazz);
 		} else if (action instanceof VariableAssignment) {
 			VariableAssignment va = (VariableAssignment) action;
-			if(clazz.isInstance(va.getExpression())) {
-				result.add(va.getExpression());
-			}
 			result.addAll(getAllExpression(clazz, va.getExpression()));
 		} else if (action instanceof LocalVariable) {
 			LocalVariable lv = (LocalVariable) action;
-			if(clazz.isInstance(lv.getInit())) {
-				result.add(lv.getInit());
-			}
 			result.addAll(getAllExpression(clazz, lv.getInit()));
 		} else if (action instanceof ExternStatement) {
 			ExternStatement es = (ExternStatement) action;
 			for(Expression e : es.getSegments()) {
-				if(clazz.isInstance(e)) {
-					result.add(e);
-				}
 				result.addAll(getAllExpression(clazz, e));
 			}
+		} else if (action instanceof PrintAction) {
+			PrintAction pa = (PrintAction) action;
+			result.addAll(getAllExpression(clazz, pa.getMsg()));
+		} else if (action instanceof Increment) {
+			Increment i = (Increment) action;
+			//result.addAll(getAllExpression(clazz, i.getVar()));//FIXME: i.getVar() should probably return a PropertyReference rather than a Variable
+		} else if (action instanceof Decrement) {
+			Decrement i = (Decrement) action;
+			//result.addAll(getAllExpression(clazz, i.getVar()));//FIXME: i.getVar() should probably return a PropertyReference rather than a Variable
 		}
 		return result;
 	}
