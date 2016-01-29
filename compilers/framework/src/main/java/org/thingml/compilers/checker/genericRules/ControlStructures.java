@@ -20,35 +20,46 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.EObject;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.Types;
 import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;
 
 /**
  *
  * @author sintef
  */
-public class StatesUsage extends Rule {
+public class ControlStructures extends Rule {
 
-    public StatesUsage() {
+    public ControlStructures() {
         super();
     }
 
     @Override
-    public InfoType getHighestLevel() {
-        return InfoType.NOTICE;
+    public Checker.InfoType getHighestLevel() {
+        return Checker.InfoType.NOTICE;
     }
 
     @Override
     public String getName() {
-        return "Things Usage";
+        return "Messages Usage";
     }
 
     @Override
     public String getDescription() {
-        return "Check for sink and unreachable states.";
+        return "Check variables and properties.";
+    }
+
+    private void check(ControlStructure cs, Checker checker) {
+        Type actual = checker.typeChecker.computeTypeOf(cs.getCondition());
+        if (actual.equals(Types.BOOLEAN_TYPE))
+            return;
+        if (actual.equals(Types.ANY_TYPE)) {
+            checker.addGenericWarning("Condition cannot be typed as Boolean", cs);
+            return;
+        }
+        checker.addGenericError("Condition is not a Boolean (" + actual.getBroadType().getName() + ")", cs);
     }
 
     @Override
@@ -60,20 +71,24 @@ public class StatesUsage extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.findContainingModel().allThings()) {
+        for(Thing t : cfg.allThings()) {
             check(t, checker);
         }
     }
 
     private void check(Thing t, Checker checker) {
-        for(StateMachine sm : t.allStateMachines()) {
-            for(State s : sm.allStates()) {
-                if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
-                    checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
-                }
-                if (s.getOutgoing().size() == 0 && !EcoreUtil.equals(s, sm)) {
-                    checker.addGenericNotice("Sink state " + s.getName() + " in Thing " + t.getName() + ".", s);
-                }
+        for(Action a : t.allAction(ConditionalAction.class)) {
+            //FIXME @Brice see testIfElse
+            if(a instanceof ConditionalAction) {
+                ConditionalAction va = (ConditionalAction)a;
+                check(va, checker);
+            }
+        }
+        for(Action a : t.allAction(LoopAction.class)) {
+            //FIXME @Brice see testIfElse
+            if(a instanceof LoopAction) {
+                LoopAction lv = (LoopAction) a;
+                check(lv, checker);
             }
         }
     }

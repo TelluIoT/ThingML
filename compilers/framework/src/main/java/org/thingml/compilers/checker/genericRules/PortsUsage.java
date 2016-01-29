@@ -23,11 +23,7 @@ package org.thingml.compilers.checker.genericRules;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
+import org.sintef.thingml.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 

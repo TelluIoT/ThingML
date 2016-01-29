@@ -71,12 +71,21 @@ abstract public class Checker {
         Rules.add(new FunctionUsage());
         Rules.add(new StatesUsage());
         Rules.add(new VariableUsage());
+        Rules.add(new ControlStructures());
     }
     
     public void do_generic_check(Configuration cfg) {
         long start = System.currentTimeMillis();
         for(Rule r : Rules) {
             r.check(cfg, this);
+        }
+        System.out.println("checker took " + (System.currentTimeMillis() - start) + " ms");
+    }
+
+    public void do_generic_check(ThingMLModel model) {
+        long start = System.currentTimeMillis();
+        for(Rule r : Rules) {
+            r.check(model, this);
         }
         System.out.println("checker took " + (System.currentTimeMillis() - start) + " ms");
     }

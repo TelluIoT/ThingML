@@ -20,12 +20,7 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Handler;
-import org.sintef.thingml.InternalTransition;
-import org.sintef.thingml.Region;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
+import org.sintef.thingml.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -51,16 +46,27 @@ public class InternalTransitions extends Rule {
     }
 
     @Override
+    public void check(ThingMLModel model, Checker checker) {
+        for(Thing thing : model.allThings()) {
+            check(thing, checker);
+        }
+    }
+
+    @Override
     public void check(Configuration cfg, Checker checker) {
         for(Thing t : cfg.allThings()) {
-            for(StateMachine sm : t.allStateMachines()) {
-                for(Handler h : sm.allEmptyHandlers()) {
-                    if(h instanceof InternalTransition) {
-                        if(h.getGuard() == null) {
-                            checker.addGenericError("Empty Internal Transition without guard.", sm);
-                        } else {
-                             checker.addGenericNotice("Empty Internal Transition.", sm);
-                        }
+            check(t, checker);
+        }
+    }
+
+    private void check(Thing t, Checker checker) {
+        for(StateMachine sm : t.allStateMachines()) {
+            for(Handler h : sm.allEmptyHandlers()) {
+                if(h instanceof InternalTransition) {
+                    if(h.getGuard() == null) {
+                        checker.addGenericError("Empty Internal Transition without guard.", h);
+                    } else {
+                        checker.addGenericNotice("Empty Internal Transition.", h);
                     }
                 }
             }
