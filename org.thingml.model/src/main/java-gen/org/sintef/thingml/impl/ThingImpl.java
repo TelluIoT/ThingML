@@ -830,6 +830,9 @@ public class ThingImpl extends TypeImpl implements Thing {
 		} else if (action instanceof Decrement) {
 			Decrement i = (Decrement) action;
 			//result.addAll(getAllExpression(clazz, i.getVar()));//FIXME: i.getVar() should probably return a PropertyReference rather than a Variable
+		} else if (action instanceof ReturnAction) {
+			ReturnAction ra = (ReturnAction) action;
+			result.addAll(getAllExpression(clazz, ra.getExp()));
 		}
 		return result;
 	}

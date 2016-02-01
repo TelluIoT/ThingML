@@ -62,31 +62,23 @@ public class NonDeterministicTransitions extends Rule {
         }
     }
 
-    private void check(Thing t, Checker checker) {//FIXME: not working properly
+    private void check(Thing t, Checker checker) {
         for (StateMachine sm : t.allStateMachines()) {
             for(State s : sm.allStates()) {
                 List<Event> guarded = new ArrayList<Event>();
                 List<Event> notGuarded = new ArrayList<Event>();
                 for(Transition tr : s.getOutgoing()) {
                     if (tr.getGuard() != null) {
-                        /*for(Event e : tr.getEvent())
-                            System.out.println(t.getName() + ": found guarded transition on event " + ((ReceiveMessage)e).getMessage().getName());
-                        */guarded.addAll(tr.getEvent());
+                        guarded.addAll(tr.getEvent());
                     } else {
-                        /*for(Event e : tr.getEvent())
-                            System.out.println(t.getName() + ": found not guarded transition on event " + ((ReceiveMessage)e).getMessage().getName());
-                        */notGuarded.addAll(tr.getEvent());
+                        notGuarded.addAll(tr.getEvent());
                     }
                 }
                 for(InternalTransition it : s.getInternal()) {
                     if (it.getGuard() != null) {
-                        /*for(Event e : it.getEvent())
-                            System.out.println(t.getName() + ": found guarded internal on event " + ((ReceiveMessage)e).getMessage().getName());
-                        */guarded.addAll(it.getEvent());
+                        guarded.addAll(it.getEvent());
                     } else {
-                        /*for(Event e : it.getEvent())
-                            System.out.println(t.getName() + ": found not guarded internal on event " + ((ReceiveMessage)e).getMessage().getName());
-                        */notGuarded.addAll(it.getEvent());
+                        notGuarded.addAll(it.getEvent());
                     }
                 }
                 for(Event g : guarded) {

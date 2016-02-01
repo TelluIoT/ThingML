@@ -102,6 +102,27 @@ public class FunctionUsage extends Rule {
                 checker.addWarning("Parameter " + p.getName() + " is never read", p);
             }
         }
+
+        if (f.getType() != null) {
+            for(Action a : t.allAction(ReturnAction.class)) {
+                EObject parent = a.eContainer();
+                while(parent != null && !EcoreUtil.equals(parent, f)) {
+                    parent = parent.eContainer();
+                }
+                if (EcoreUtil.equals(parent, f)) {
+                    Type actualType = f.getType().getBroadType();
+                    Type returnType = checker.typeChecker.computeTypeOf(((ReturnAction)a).getExp());
+                    if (returnType.equals(Types.ERROR_TYPE)) {
+                        checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
+                    } else if (returnType.equals(Types.ANY_TYPE)) {
+                        checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
+                    } else if (!returnType.isA(actualType)) {
+                        checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
+                    }
+                }
+            }
+        }
+
         return found;
     }
 

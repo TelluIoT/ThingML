@@ -117,12 +117,31 @@ public class CompileThingFile implements IHandler {
 			for ( Configuration cfg :  model.allConfigurations() ) {
 				toCompile.add(cfg);
 			}
-
+			
 			if (toCompile.isEmpty()) {
 				ThingMLConsole.getInstance().printError("ERROR: The selected model does not contain any concrete Configuration to compile. \n");
 				ThingMLConsole.getInstance().printError("Compilation stopped.\n");
 				return null;
 			}
+			
+			/*for(Configuration cfg : toCompile) {
+				ThingMLCompiler.checker.Errors.clear();
+				ThingMLCompiler.checker.Warnings.clear();
+				ThingMLCompiler.checker.Notices.clear();
+				ThingMLCompiler.checker.do_generic_check(cfg);
+				if (ThingMLCompiler.checker.containsErrors()) {
+					ThingMLConsole.getInstance().printError("ERROR: Configuration " + cfg.getName() + " contains errors and will not be compiled. Please fix errors below\n");
+					for(CheckerInfo err : ThingMLCompiler.checker.Errors) {
+						System.out.println("debug: error: " + err.message);
+						ThingMLConsole.getInstance().printError(err.message + "(" + err.source + ")");
+					}
+					return null;
+				}
+				for(CheckerInfo err : ThingMLCompiler.checker.Warnings) {
+					ThingMLConsole.getInstance().printError(err.message + "(" + err.source + ")");
+				}
+			}*/
+			
 
 			// Create the output directory in the current project in a folder "/thingml-gen/<platform>/"
 			IProject project = target_file.getProject();
@@ -165,8 +184,11 @@ public class CompileThingFile implements IHandler {
 				compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
 				compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
 
+				compiler.checker.Errors.clear();
+				compiler.checker.Warnings.clear();
+				compiler.checker.Notices.clear();
 				compiler.checker.do_check(cfg);
-				ThingMLConsole.getInstance().printMessage("Configuration " + cfg.getName() + " contains " + compiler.checker.Errors.size() + " error(s), " + compiler.checker.Warnings.size() + " warning(s), and " + compiler.checker.Notices.size() + " notices.");
+				ThingMLConsole.getInstance().printMessage("Configuration " + cfg.getName() + " contains " + compiler.checker.Errors.size() + " error(s), " + compiler.checker.Warnings.size() + " warning(s), and " + compiler.checker.Notices.size() + " notices.\n");
 				if (compiler.checker.Errors.size() > 0) {
 					ThingMLConsole.getInstance().printMessage("Please fix the errors below. In future versions, we will block the code generation if errors are identified!");	
 				}
