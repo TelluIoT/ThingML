@@ -81,6 +81,14 @@ public abstract class CCompilerContext extends Context {
         }
     }
     
+    public String getNetworkLibNoBufSerialTemplate() {
+        if(getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/network_lib/arduino/NoBufSerial/NoBufSerial.c");
+        } else {
+            return getTemplateByID("");
+        }
+    }
+    
     public String getNetworkLibSerialHeaderTemplate() {
         if(getCompiler().getID().compareTo("arduino") == 0) {
             return getTemplateByID("ctemplates/network_lib/arduino/Serial/ArduinoSerialForward.h");

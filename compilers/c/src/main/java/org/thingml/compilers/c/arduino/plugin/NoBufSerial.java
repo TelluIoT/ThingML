@@ -20,11 +20,13 @@
  */
 package org.thingml.compilers.c.arduino.plugin;
 
+import java.util.HashSet;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
+import org.sintef.thingml.Protocol;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CMessageSerializer;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
@@ -51,69 +53,39 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
     public void generateNetworkLibrary() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         for(ExternalConnector eco : this.getExternalConnectors()) {
-            boolean ring = false;
-            String ctemplate = ctx.getNetworkLibSerialTemplate();
-            String htemplate = ctx.getNetworkLibSerialHeaderTemplate();
-
-            String portName;
-            if(eco.hasAnnotation("port_name")) {
-                portName = eco.annotation("port_name").iterator().next();
-            } else {
-                portName = eco.getProtocol().getName();
-            }
-
-            eco.setName(portName);
-            //System.out.println("eco name:"+eco.getName());
-
-            Integer baudrate;
-            if(eco.hasAnnotation("serial_baudrate")) {
-                baudrate = Integer.parseInt(eco.annotation("serial_baudrate").iterator().next());
-            } else {
-                baudrate = 115200;
-            }
-            ctemplate = ctemplate.replace("/*BAUDRATE*/", baudrate.toString());
-
-            ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
-            htemplate = htemplate.replace("/*PORT_NAME*/", portName);
-
             
             
-            ctx.addToInitCode("\n" + portName + "_instance.listener_id = add_instance(&" + portName + "_instance);\n");
-            ctx.addToInitCode(portName + "_setup();\n");
-            
-            //Connector Instanciation
-            StringBuilder eco_instance = new StringBuilder();
-            eco_instance.append("//Connector");
-            Port p = eco.getPort();
-            if(!p.getReceives().isEmpty()) {
-                ctx.addToPollCode(portName + "_read();\n");
-                eco_instance.append("// Pointer to receiver list\n");
-                eco_instance.append("struct Msg_Handler ** ");
-                eco_instance.append(p.getName());
-                eco_instance.append("_receiver_list_head;\n");
-
-                eco_instance.append("struct Msg_Handler ** ");
-                eco_instance.append(p.getName());
-                eco_instance.append("_receiver_list_tail;\n");
-            }
-            
-            //De Serializer 
-            StringBuilder ParserImplementation = new StringBuilder();
-            
-            ser.generateMessageParser(eco, ParserImplementation);
-            ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", ParserImplementation);
-            
-            String ParserCall = portName + "_parser((char *) " + portName + "_serialBuffer, " + portName + "_serialMsgSize, " + portName + "_instance.listener_id);";
-            ctemplate = ctemplate.replace("/*PARSER_CALL*/", ParserCall);
-            //End De Serializer
-            ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
-
-
-
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".c").append(ctemplate);
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".h").append(htemplate);
-
         }
     }
     
+    
+    private class HWSerial {
+        Set<ExternalConnector> ecos;
+        Protocol protocol;
+        String port;
+        String header;
+        String tail;
+        char escapeChar;
+        int baudrate;
+        
+        HWSerial() {
+            ecos = new HashSet<>();
+        }
+        
+        void generate(CCompilerContext ctx) {
+            String ctemplate = ctx.getNetworkLibNoBufSerialTemplate();
+            //Processing TODO
+            
+            String portName = port;
+            for(ExternalConnector eco : ecos) {
+                if(eco.hasAnnotation("port_name")) {
+                    portName = eco.annotation("port_name").iterator().next();
+                }
+
+                eco.setName(portName);
+            }
+
+            
+        }
+    }
 }
