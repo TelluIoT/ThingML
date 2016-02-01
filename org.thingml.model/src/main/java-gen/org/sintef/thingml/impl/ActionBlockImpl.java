@@ -204,5 +204,55 @@ public class ActionBlockImpl extends ActionImpl implements ActionBlock {
 	}
 
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Action a : getActions()) {
+			result.addAll(a.getAllExpressions());
+		}
+		return result;
+	}
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Action a : getActions()) {
+			result.addAll(a.getAllExpressions(clazz));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions() {
+		List<Action> result = new ArrayList<Action>();
+		result.addAll(super.getAllActions());
+		for(Action a : getActions())
+			result.addAll(a.getAllActions());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
+		result.addAll(super.getAllActions(clazz));
+		for(Action a : getActions())
+			result.addAll(a.getAllActions(clazz));
+		return result;
+	}
 } //ActionBlockImpl

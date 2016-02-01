@@ -273,4 +273,52 @@ public abstract class ControlStructureImpl extends ActionImpl implements Control
 		return result;
 	}
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.addAll(getCondition().getAllExpressions());
+		result.addAll(getAction().getAllExpressions());
+		return  result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		result.addAll(getCondition().getAllExpressions(clazz));
+		result.addAll(getAction().getAllExpressions(clazz));
+		return  result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions() {
+		List<Action> result = new ArrayList<Action>();
+		result.addAll(super.getAllActions());
+		result.addAll(getAction().getAllActions());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
+		result.addAll(super.getAllActions(clazz));
+   		result.addAll(getAction().getAllActions(clazz));
+		return result;
+	}
+
 } //ControlStructureImpl

@@ -15,7 +15,9 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -291,6 +293,19 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.FUNCTION__BODY, newBody, newBody));
 	}
+
+	@Override
+	public List<Action> getAllActions() {
+		List<Action> result = new ArrayList<Action>();
+		result.addAll(getBody().getAllActions());
+		return result;
+	}
+
+	@Override
+	public List<Action> getAllActions(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
+		result.addAll(getBody().getAllActions(clazz));
+		return result;	}
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -15,7 +15,9 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -229,6 +231,32 @@ public class ExternStatementImpl extends ActionImpl implements ExternStatement {
 		result.append(statement);
 		result.append(')');
 		return result.toString();
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Expression e : getSegments()) {
+			result.addAll(e.getAllExpressions());
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Expression e : getSegments()) {
+			result.addAll(e.getAllExpressions(clazz));
+		}
+		return result;
 	}
 
 } //ExternStatementImpl

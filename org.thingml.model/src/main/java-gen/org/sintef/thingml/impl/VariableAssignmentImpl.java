@@ -15,7 +15,10 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -285,6 +288,32 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 				return index != null && !index.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Expression e : getIndex())
+			result.addAll(e.getAllExpressions());
+		result.addAll(getExpression().getAllExpressions());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Expression e : getIndex())
+			result.addAll(e.getAllExpressions(clazz));
+		result.addAll(getExpression().getAllExpressions(clazz));
+		return result;
 	}
 
 } //VariableAssignmentImpl

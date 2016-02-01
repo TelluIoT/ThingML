@@ -770,125 +770,65 @@ public class ThingImpl extends TypeImpl implements Thing {
         return result;
     }
 
-	/**
-	 * @generated NOT
-	 * @param action
-	 * @return
-     */
-	private List<Action> getAllAction(Class clazz, Action action) {
+	@Override
+	public List<Action> getAllActions() {
 		List<Action> result = new ArrayList<Action>();
-		if (clazz.isInstance(action)) {
-			result.add(action);
-		} else if (action instanceof ActionBlock) {
-			ActionBlock block = (ActionBlock) action;
-			result.addAll(block.allAction(clazz));
-		} else if (action instanceof ControlStructure) {
-			result.addAll(((ControlStructure)action).allAction(clazz));
-		} else if (action instanceof FunctionCall) {
-			result.addAll(getAllAction(clazz, ((FunctionCall)action).getFunction().getBody()));
-		}
-		return result;
-	}
-
-	/**
-	 * @generated NOT
-	 * @param clazz
-	 * @param action
-     * @return
-     */
-	private List<Expression> getAllExpression(Class clazz, Action action) {
-		List<Expression> result = new ArrayList<Expression>();
-		if (action instanceof PropertyAssign) {
-			PropertyAssign pa = (PropertyAssign) action;
-			result.addAll(getAllExpression(clazz, pa.getInit()));
-		} else if (action instanceof ControlStructure) {
-			ControlStructure cs = (ControlStructure) action;
-			result.addAll(getAllExpression(clazz, cs.getCondition()));
-			result.addAll(getAllExpression(clazz, cs.getAction()));
-		} else if (action instanceof ActionBlock) {
-			ActionBlock b = (ActionBlock) action;
-			for(Action a : b.getActions()) {
-				result.addAll(getAllExpression(clazz, a));
+		for(Function f : allFunctions())
+			result.addAll(f.getAllActions());
+		for(StateMachine sm : allStateMachines()) {
+			for(State s : sm.allStatesWithEntry()) {
+				result.addAll(s.getEntry().getAllActions());
 			}
-		} else if (action instanceof VariableAssignment) {
-			VariableAssignment va = (VariableAssignment) action;
-			result.addAll(getAllExpression(clazz, va.getExpression()));
-		} else if (action instanceof LocalVariable) {
-			LocalVariable lv = (LocalVariable) action;
-			result.addAll(getAllExpression(clazz, lv.getInit()));
-		} else if (action instanceof ExternStatement) {
-			ExternStatement es = (ExternStatement) action;
-			for(Expression e : es.getSegments()) {
-				result.addAll(getAllExpression(clazz, e));
+			for(State s : sm.allStatesWithExit()) {
+				result.addAll(s.getExit().getAllActions());
 			}
-		} else if (action instanceof PrintAction) {
-			PrintAction pa = (PrintAction) action;
-			result.addAll(getAllExpression(clazz, pa.getMsg()));
-		} else if (action instanceof Increment) {
-			Increment i = (Increment) action;
-			//result.addAll(getAllExpression(clazz, i.getVar()));//FIXME: i.getVar() should probably return a PropertyReference rather than a Variable
-		} else if (action instanceof Decrement) {
-			Decrement i = (Decrement) action;
-			//result.addAll(getAllExpression(clazz, i.getVar()));//FIXME: i.getVar() should probably return a PropertyReference rather than a Variable
-		} else if (action instanceof ReturnAction) {
-			ReturnAction ra = (ReturnAction) action;
-			result.addAll(getAllExpression(clazz, ra.getExp()));
-		}
-		return result;
-	}
-
-	private List<Expression> getAllExpression(Class clazz, Expression exp) {
-		List<Expression> result = new ArrayList<Expression>();
-		if (clazz.isInstance(exp))
-			result.add(exp);
-
-		if (exp instanceof UnaryExpression) {
-			UnaryExpression e = (UnaryExpression)exp;
-			result.addAll(getAllExpression(clazz, e.getTerm()));
-		}
-		else if (exp instanceof BinaryExpression) {
-			BinaryExpression e = (BinaryExpression)exp;
-			result.addAll(getAllExpression(clazz, e.getLhs()));
-			result.addAll(getAllExpression(clazz, e.getRhs()));
-		} else if (exp instanceof ExternExpression) {
-			ExternExpression e = (ExternExpression) exp;
-			for(Expression ex : e.getSegments()) {
-				result.addAll(getAllExpression(clazz, ex));
-			}
-		}  else if (exp instanceof FunctionCall) {
-			FunctionCall e = (FunctionCall) exp;
-			for(Expression ex : e.getParameters()) {
-				result.addAll(getAllExpression(clazz, ex));
+			for(Map<Message, List<Handler>> values : sm.allMessageHandlers().values()) {
+				for(List<Handler> handlers : values.values()) {
+					for(Handler h : handlers) {
+						if(h.getAction()!=null)
+							result.addAll(h.getAction().getAllActions());
+					}
+				}
 			}
 		}
 		return result;
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-     */
-	public List<Action> allAction(Class clazz) {
+	@Override
+	public List<Action> getAllActions(Class clazz) {
 		List<Action> result = new ArrayList<Action>();
-		for (Function f : allFunctions()) {
-			result.addAll(getAllAction(clazz, f.getBody()));
+		for(Function f : allFunctions())
+			result.addAll(f.getAllActions(clazz));
+		for(StateMachine sm : allStateMachines()) {
+			for(State s : sm.allStatesWithEntry()) {
+				result.addAll(s.getEntry().getAllActions(clazz));
+			}
+			for(State s : sm.allStatesWithExit()) {
+				result.addAll(s.getExit().getAllActions(clazz));
+			}
+			for(Map<Message, List<Handler>> values : sm.allMessageHandlers().values()) {
+				for(List<Handler> handlers : values.values()) {
+					for(Handler h : handlers) {
+						if(h.getAction()!=null)
+							result.addAll(h.getAction().getAllActions(clazz));
+					}
+				}
+			}
+		}
+		return result;	}
+
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Action a : getAllActions()) {
+			result.addAll(a.getAllExpressions());
 		}
 		for(StateMachine sm : allStateMachines()) {
-			for(State s : sm.allStates()) {
-				if (s.getEntry() != null) {
-					result.addAll(getAllAction(clazz, s.getEntry()));
-				}
-				if (s.getExit() != null) {
-					result.addAll(getAllAction(clazz, s.getEntry()));
-				}
-				for(InternalTransition t : s.getInternal()) {
-					if (t.getAction() != null) {
-						result.addAll(getAllAction(clazz, t.getAction()));
-					}
-				}
-				for(Transition t : s.getOutgoing()) {
-					if (t.getAction() != null) {
-						result.addAll(getAllAction(clazz, t.getAction()));
+			for(Map<Message, List<Handler>> values : sm.allMessageHandlers().values()) {
+				for(List<Handler> handlers : values.values()) {
+					for(Handler h : handlers) {
+						if(h.getGuard()!=null)
+							result.addAll(h.getGuard().getAllExpressions());
 					}
 				}
 			}
@@ -896,37 +836,22 @@ public class ThingImpl extends TypeImpl implements Thing {
 		return result;
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	public List<Expression> allExpression(Class clazz) {
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
 		List<Expression> result = new ArrayList<Expression>();
-		for (Function f : allFunctions()) {
-			result.addAll(getAllExpression(clazz, f.getBody()));
+		for(Action a : getAllActions()) {
+			result.addAll(a.getAllExpressions(clazz));
 		}
 		for(StateMachine sm : allStateMachines()) {
-			for(State s : sm.allStates()) {
-				if (s.getEntry() != null) {
-					result.addAll(getAllExpression(clazz, s.getEntry()));
-				}
-				if (s.getExit() != null) {
-					result.addAll(getAllExpression(clazz, s.getEntry()));
-				}
-				for(InternalTransition t : s.getInternal()) {
-					if (t.getAction() != null) {
-						result.addAll(getAllExpression(clazz, t.getAction()));
-					}
-				}
-				for(Transition t : s.getOutgoing()) {
-					if (t.getAction() != null) {
-						result.addAll(getAllExpression(clazz, t.getAction()));
+			for(Map<Message, List<Handler>> values : sm.allMessageHandlers().values()) {
+				for(List<Handler> handlers : values.values()) {
+					for(Handler h : handlers) {
+						if(h.getGuard()!=null)
+							result.addAll(h.getGuard().getAllExpressions(clazz));
 					}
 				}
 			}
 		}
 		return result;
 	}
-
-
 } //ThingImpl

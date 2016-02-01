@@ -27,6 +27,9 @@ import org.sintef.thingml.ErrorAction;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Error Action</b></em>'.
@@ -183,6 +186,28 @@ public class ErrorActionImpl extends ActionImpl implements ErrorAction {
 				return msg != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.addAll(getMsg().getAllExpressions());
+		return  result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		result.addAll(getMsg().getAllExpressions(clazz));
+		return  result;
 	}
 
 } //ErrorActionImpl

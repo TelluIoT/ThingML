@@ -20,7 +20,11 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.sintef.thingml.Action;
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -47,6 +51,29 @@ public abstract class ActionImpl extends EObjectImpl implements Action {
 	@Override
 	protected EClass eStaticClass() {
 		return ThingmlPackage.Literals.ACTION;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions() {
+		List<Action> result = new ArrayList<Action>();
+		result.add(this);
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		return result;
 	}
 
 } //ActionImpl

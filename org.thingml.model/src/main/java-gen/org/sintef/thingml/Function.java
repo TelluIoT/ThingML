@@ -17,6 +17,8 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Function</b></em>'.
@@ -76,5 +78,17 @@ public interface Function extends AnnotatedElement, TypedElement {
 	 * @generated
 	 */
 	void setBody(Action value);
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	List<Action> getAllActions();
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	List<Action> getAllActions(Class clazz);
 
 } // Function

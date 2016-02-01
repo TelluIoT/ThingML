@@ -77,14 +77,14 @@ public class ControlStructures extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
-        for(Action a : t.allAction(ConditionalAction.class)) {
+        for(Action a : t.getAllActions(ConditionalAction.class)) {
             //FIXME @Brice see testIfElse
             if(a instanceof ConditionalAction) {
                 ConditionalAction va = (ConditionalAction)a;
                 check(va, checker);
             }
         }
-        for(Action a : t.allAction(LoopAction.class)) {
+        for(Action a : t.getAllActions(LoopAction.class)) {
             //FIXME @Brice see testIfElse
             if(a instanceof LoopAction) {
                 LoopAction lv = (LoopAction) a;

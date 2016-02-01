@@ -27,6 +27,9 @@ import org.sintef.thingml.Expression;
 import org.sintef.thingml.ReturnAction;
 import org.sintef.thingml.ThingmlPackage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Return Action</b></em>'.
@@ -183,6 +186,28 @@ public class ReturnActionImpl extends ActionImpl implements ReturnAction {
 				return exp != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.addAll(getExp().getAllExpressions());
+		return  result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		result.addAll(getExp().getAllExpressions(clazz));
+		return  result;
 	}
 
 } //ReturnActionImpl

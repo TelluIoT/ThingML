@@ -93,14 +93,14 @@ public class VariableUsage extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
-        for(Action a : t.allAction(VariableAssignment.class)) {
+        for(Action a : t.getAllActions(VariableAssignment.class)) {
             //FIXME @Brice see testIfElse
             if(a instanceof VariableAssignment) {
                 VariableAssignment va = (VariableAssignment)a;
                 check(va.getProperty(), va.getExpression(), t, checker, va);
             }
         }
-        for(Action a : t.allAction(LocalVariable.class)) {
+        for(Action a : t.getAllActions(LocalVariable.class)) {
             //FIXME @Brice see testIfElse
             if(a instanceof LocalVariable) {
                 LocalVariable lv = (LocalVariable) a;

@@ -17,6 +17,8 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.ecore.EObject;
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Expression</b></em>'.
@@ -28,4 +30,15 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Expression extends EObject {
+    /**
+     * @generated NOT
+     * @return
+     */
+    List<Expression> getAllExpressions();
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    List<Expression> getAllExpressions(Class clazz);
 } // Expression

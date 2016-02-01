@@ -23,8 +23,12 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.sintef.thingml.Decrement;
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Variable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -163,6 +167,28 @@ public class DecrementImpl extends ActionImpl implements Decrement {
 				return var != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		//TODO: should refer to a Reference rather than to the variable directly
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		//TODO: should refer to a Reference rather than to the variable directly
+		return result;
 	}
 
 } //DecrementImpl

@@ -327,13 +327,25 @@ public interface Thing extends Type {
 	/**
 	 * @generated NOT
 	 * @return
-     */
-	List<Action> allAction(Class clazz);
+	 */
+	List<Action> getAllActions();
 
 	/**
 	 * @generated NOT
 	 * @return
 	 */
-	List<Expression> allExpression(Class clazz);
+	List<Action> getAllActions(Class clazz);
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	List<Expression> getAllExpressions();
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	List<Expression> getAllExpressions(Class clazz);
 
 } // Thing

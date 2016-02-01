@@ -27,6 +27,9 @@ import org.sintef.thingml.Expression;
 import org.sintef.thingml.ExpressionGroup;
 import org.sintef.thingml.ThingmlPackage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Expression Group</b></em>'.
@@ -185,4 +188,28 @@ public class ExpressionGroupImpl extends ExpressionImpl implements ExpressionGro
 		return super.eIsSet(featureID);
 	}
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.add(this);
+		result.addAll(getExp().getAllExpressions());
+		return  result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		result.addAll(getExp().getAllExpressions(clazz));
+		return  result;
+	}
 } //ExpressionGroupImpl

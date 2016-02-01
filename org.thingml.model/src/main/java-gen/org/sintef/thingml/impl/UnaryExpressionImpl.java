@@ -27,6 +27,9 @@ import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.UnaryExpression;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Unary Expression</b></em>'.
@@ -183,6 +186,31 @@ public abstract class UnaryExpressionImpl extends ExpressionImpl implements Unar
 				return term != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.add(this);
+		result.addAll(getTerm().getAllExpressions());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		result.addAll(getTerm().getAllExpressions(clazz));
+		return result;
 	}
 
 } //UnaryExpressionImpl

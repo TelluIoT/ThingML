@@ -69,7 +69,7 @@ public class MessagesUsage extends Rule {
         for(Port p : t.allPorts()) {
             for (Message m : p.getSends()) {
                 boolean found = false;
-                for(Action b : t.allAction(SendAction.class)) {
+                for(Action b : t.getAllActions(SendAction.class)) {
                     SendAction a = (SendAction)b;
                     if (EcoreUtil.equals(a.getMessage(), m)) {
                         found = true;

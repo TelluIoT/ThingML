@@ -75,7 +75,7 @@ public class FunctionUsage extends Rule {
                             checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
                         }
                     }
-                    for(Action a : t.allAction(VariableAssignment.class)) {//TODO: implement allActions on Function directly
+                    for(Action a : t.getAllActions(VariableAssignment.class)) {//TODO: implement allActions on Function directly
                         if (a instanceof VariableAssignment) {
                             VariableAssignment va = (VariableAssignment) a;
                             if (va.getProperty().equals(p)) {
@@ -89,7 +89,7 @@ public class FunctionUsage extends Rule {
         }
         for (Parameter p : f.getParameters()) {
             boolean isUsed = false;
-             for(Expression exp : t.allExpression(PropertyReference.class)) {//TODO: see above
+             for(Expression exp : t.getAllExpressions(PropertyReference.class)) {//TODO: see above
                 if (exp instanceof PropertyReference) {
                     PropertyReference pr = (PropertyReference) exp;
                     if (pr.getProperty().equals(p)) {
@@ -104,7 +104,7 @@ public class FunctionUsage extends Rule {
         }
 
         if (f.getType() != null) {
-            for(Action a : t.allAction(ReturnAction.class)) {
+            for(Action a : t.getAllActions(ReturnAction.class)) {
                 EObject parent = a.eContainer();
                 while(parent != null && !EcoreUtil.equals(parent, f)) {
                     parent = parent.eContainer();
@@ -143,7 +143,7 @@ public class FunctionUsage extends Rule {
     private void check(Thing t, Checker checker) {
         for(Function f : t.allFunctions()) {
             boolean found = false;
-            for(Action b : t.allAction(FunctionCallStatement.class)) {
+            for(Action b : t.getAllActions(FunctionCallStatement.class)) {
                 //FIXME brice
                 if(b instanceof FunctionCallStatement) {
                     FunctionCall a = (FunctionCall) b;
@@ -152,7 +152,7 @@ public class FunctionUsage extends Rule {
                     }
                 }
             }
-            for(Expression b : t.allExpression(FunctionCallExpression.class)) {
+            for(Expression b : t.getAllExpressions(FunctionCallExpression.class)) {
                 //FIXME brice
                 if(b instanceof FunctionCallExpression) {
                     FunctionCallExpression a = (FunctionCallExpression) b;
