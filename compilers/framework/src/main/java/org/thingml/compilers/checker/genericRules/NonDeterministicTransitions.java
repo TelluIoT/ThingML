@@ -20,10 +20,8 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.checker.Checker;
@@ -67,21 +65,34 @@ public class NonDeterministicTransitions extends Rule {
     private void check(Thing t, Checker checker) {//FIXME: not working properly
         for (StateMachine sm : t.allStateMachines()) {
             for(State s : sm.allStates()) {
-                for(Port p : t.allPorts()) {
-                    for(Message m : p.getReceives()) {
-                        if (s.allHandlers(p,m).size()>1) {//at least two handlers (transition or internal) with the same trigger (p?m)
-                            for (Handler h : s.allHandlers(p, m)) {
-                                if (h.getGuard() == null) {//one of those handlers does not have a guard
-                                    checker.addGenericError("Non deterministic behaviour: Two transitions handling " + p.getName() + "?" + m.getName() + ", with at least one without a guard", h);
-                                }
-                            }
-                        }
+                List<Event> guarded = new ArrayList<Event>();
+                List<Event> notGuarded = new ArrayList<Event>();
+                for(Transition tr : s.getOutgoing()) {
+                    if (tr.getGuard() != null) {
+                        /*for(Event e : tr.getEvent())
+                            System.out.println(t.getName() + ": found guarded transition on event " + ((ReceiveMessage)e).getMessage().getName());
+                        */guarded.addAll(tr.getEvent());
+                    } else {
+                        /*for(Event e : tr.getEvent())
+                            System.out.println(t.getName() + ": found not guarded transition on event " + ((ReceiveMessage)e).getMessage().getName());
+                        */notGuarded.addAll(tr.getEvent());
                     }
                 }
-                if (s.allEmptyHandlers().size()>1) {//at least two empty handlers
-                    for (Handler h : s.allEmptyHandlers()) {
-                        if (h.getGuard() == null) { //one of those handlers does not have a guard
-                            checker.addGenericError("Non deterministic behaviour: Two empty transitions (with no event), with at least one without a guard", h);
+                for(InternalTransition it : s.getInternal()) {
+                    if (it.getGuard() != null) {
+                        /*for(Event e : it.getEvent())
+                            System.out.println(t.getName() + ": found guarded internal on event " + ((ReceiveMessage)e).getMessage().getName());
+                        */guarded.addAll(it.getEvent());
+                    } else {
+                        /*for(Event e : it.getEvent())
+                            System.out.println(t.getName() + ": found not guarded internal on event " + ((ReceiveMessage)e).getMessage().getName());
+                        */notGuarded.addAll(it.getEvent());
+                    }
+                }
+                for(Event g : guarded) {
+                    for(Event ng : notGuarded) {
+                        if (EcoreUtil.equals(g, ng)) {
+                            checker.addGenericError("Non deterministic behaviour: Two transitions handling " + g.getName() + ", with at least one without a guard", g);
                         }
                     }
                 }
