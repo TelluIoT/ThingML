@@ -412,7 +412,8 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable {
 	@Override
 	public List<Expression> getAllExpressions() {
 		List<Expression> result = new ArrayList<Expression>();
-		result.addAll(getInit().getAllExpressions());
+		if (getInit() != null)
+			result.addAll(getInit().getAllExpressions());
 		return result;
 	}
 
@@ -423,7 +424,8 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable {
 	@Override
 	public List<Expression> getAllExpressions(Class clazz) {
 		List<Expression> result = new ArrayList<Expression>();
-		result.addAll(getInit().getAllExpressions(clazz));
+		if (getInit() != null)
+			result.addAll(getInit().getAllExpressions(clazz));
 		return result;
 	}
 

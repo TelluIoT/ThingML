@@ -97,7 +97,8 @@ public class VariableUsage extends Rule {
             //FIXME @Brice see testIfElse
             if(a instanceof VariableAssignment) {
                 VariableAssignment va = (VariableAssignment)a;
-                check(va.getProperty(), va.getExpression(), t, checker, va);
+                if (va.getExpression()!=null)
+                    check(va.getProperty(), va.getExpression(), t, checker, va);
             }
         }
         for(Action a : t.getAllActions(LocalVariable.class)) {
