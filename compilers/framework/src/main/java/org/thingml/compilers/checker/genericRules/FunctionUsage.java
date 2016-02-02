@@ -87,7 +87,13 @@ public class FunctionUsage extends Rule {
             }
             //break;
         }
-        for (Parameter p : f.getParameters()) {
+        
+
+        return found;
+    }
+    
+    public void check(Checker checker, Thing t, Function f) {
+    for (Parameter p : f.getParameters()) {
             boolean isUsed = false;
              for(Expression exp : t.getAllExpressions(PropertyReference.class)) {//TODO: see above
                 if (exp instanceof PropertyReference) {
@@ -122,8 +128,6 @@ public class FunctionUsage extends Rule {
                 }
             }
         }
-
-        return found;
     }
 
     @Override
@@ -142,6 +146,7 @@ public class FunctionUsage extends Rule {
 
     private void check(Thing t, Checker checker) {
         for(Function f : t.allFunctions()) {
+            check(checker, t, f);
             boolean found = false;
             for(Action b : t.getAllActions(FunctionCallStatement.class)) {
                 //FIXME brice
@@ -162,7 +167,7 @@ public class FunctionUsage extends Rule {
                 }
             }
             if (!found)
-                checker.addGenericNotice("Function " + f.getName() + " of Thing " + t.getName() + " is never called.", f);
+                checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is never called.", f);
         }
     }
     

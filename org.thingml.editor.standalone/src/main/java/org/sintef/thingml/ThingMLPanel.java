@@ -103,6 +103,8 @@ public class ThingMLPanel extends JPanel {
                     ((ThingMLJSyntaxKit) editorKit).addToolBarActions(codeEditor, toolPane);
                     menuframe.add(toolPane, BorderLayout.NORTH);
                 } catch (Exception e) {
+                    if (ThingMLApp.debug)
+                        e.printStackTrace();
                 }
             }
 
@@ -155,7 +157,8 @@ public class ThingMLPanel extends JPanel {
                                     }
                                 }
                             } catch (Exception ex) {
-                                ex.printStackTrace();
+                                if (ThingMLApp.debug)
+                                    ex.printStackTrace();
                             }
                         }
                     });
@@ -225,13 +228,15 @@ public class ThingMLPanel extends JPanel {
                                                 //System.out.println("WHY");
                                             }
                                         } catch (Exception exce) {
+                                            if (ThingMLApp.debug)
                                                 System.out.println("OH REALLY?");
                                         }
                                         
                                         
                                     }
                                 } catch (Exception ex) {
-                                    ex.printStackTrace();
+                                    if (ThingMLApp.debug)
+                                        ex.printStackTrace();
                                 }
                             }
                         });
@@ -263,7 +268,8 @@ public class ThingMLPanel extends JPanel {
             timer.scheduleAtFixedRate(new SeamlessNotification(), 250, 250);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            if (ThingMLApp.debug)
+                e.printStackTrace();
         }
     }
 
@@ -303,7 +309,8 @@ public class ThingMLPanel extends JPanel {
                         updateMarkers(codeEditor.getDocument().getText(0, codeEditor.getDocument().getLength() - 1));
                         checkNeeded.set(false);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        if (ThingMLApp.debug)
+                            e.printStackTrace();
                     }
                 }
             }
@@ -375,7 +382,8 @@ public class ThingMLPanel extends JPanel {
                     fileWriter.close();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                if (ThingMLApp.debug)
+                    e.printStackTrace();
             }
         }
     }

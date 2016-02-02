@@ -39,20 +39,10 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 	
 	public Type computeTypeOf(Expression exp) {
 		Type result = null;
-		try {
-                    if(exp == null) { //FIXME dirty code to get a stack trace to help solving the problem
-						try {
-							throw new NullPointerException();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-                       return Types.ANY_TYPE;
-                    }
-                    result = doSwitch(exp);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+                if(exp == null) {
+                   return Types.ANY_TYPE;
+                }
+                result = doSwitch(exp);
 		if (result == null) {
 			System.out.println("TODO: Type checking for " + exp.getClass().getName());
 			return Types.ANY_TYPE;

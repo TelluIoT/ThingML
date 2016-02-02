@@ -15,29 +15,72 @@
  */
 package org.sintef.thingml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Properties;
 import javax.swing.*;
 
 /**
  * Created by bmori on 21.05.2015.
  */
 public class ThingMLApp {
+    
+    public static boolean debug = false;
+    
+    public static void displayStackTrace(String args[]) {
+        try {
+            Properties prop = new Properties();
+            final File propFile = new File(System.getProperty("user.home") + "/.thingml/settings.properties");
+            prop.load(new FileInputStream(propFile));      
+            if(prop.containsKey("debug")) {
+                debug = Boolean.parseBoolean(prop.getProperty("debug"));
+            }
+            for(String arg : args) {
+                if(arg.compareToIgnoreCase("-d") == 0) {
+                    //prop.setProperty("debug", "true");
+                    //prop.store(new FileOutputStream(propFile), null);
+                    debug = true;
+                }
+            }
+  
 
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        //System.out.println("debug: " + debug);
+    } 
+    
     public static void main(String args[]) {
-        ThingMLFrame f = new ThingMLFrame(args);
-        f.setSize(800, 600);
-        f.setPreferredSize(f.getSize());
-        f.pack();
-        f.setVisible(true);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        displayStackTrace(args);
+        try {
+            ThingMLFrame f = new ThingMLFrame(args);
+            f.setSize(800, 600);
+            f.setPreferredSize(f.getSize());
+            f.pack();
+            f.setVisible(true);
+            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        } catch (Exception e){
+            if(debug) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void runAsArduinoPlugin(String args[], ObservableString transferBuf) {
-        ThingMLFrame f = new ThingMLFrame(args, transferBuf);
-        f.setSize(800, 600);
-        f.setPreferredSize(f.getSize());
-        f.pack();
-        f.setVisible(true);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        displayStackTrace(args);
+        try {
+            ThingMLFrame f = new ThingMLFrame(args, transferBuf);
+            f.setSize(800, 600);
+            f.setPreferredSize(f.getSize());
+            f.pack();
+            f.setVisible(true);
+            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        } catch (Exception e){
+            if(debug) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
