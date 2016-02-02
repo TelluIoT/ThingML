@@ -30,25 +30,21 @@ public class ThingMLApp {
     
     public static void displayStackTrace(String args[]) {
         try {
-            Properties prop = new Properties();
-            final File propFile = new File(System.getProperty("user.home") + "/.thingml/settings.properties");
-            prop.load(new FileInputStream(propFile));      
+            Properties prop = ThingMLSettings.getInstance().get_settings();
             if(prop.containsKey("debug")) {
                 debug = Boolean.parseBoolean(prop.getProperty("debug"));
+            } else {
+                prop.setProperty("debug", "false");
+                prop.store(new FileOutputStream(ThingMLSettings.getInstance().get_settings_file()), null);
             }
             for(String arg : args) {
                 if(arg.compareToIgnoreCase("-d") == 0) {
-                    //prop.setProperty("debug", "true");
-                    //prop.store(new FileOutputStream(propFile), null);
                     debug = true;
                 }
             }
-  
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        //System.out.println("debug: " + debug);
     } 
     
     public static void main(String args[]) {
