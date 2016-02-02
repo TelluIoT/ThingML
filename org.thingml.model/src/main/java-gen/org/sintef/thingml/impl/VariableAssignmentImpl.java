@@ -299,7 +299,8 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 		List<Expression> result = new ArrayList<Expression>();
 		for(Expression e : getIndex())
 			result.addAll(e.getAllExpressions());
-		result.addAll(getExpression().getAllExpressions());
+		if (getExpression() != null)
+			result.addAll(getExpression().getAllExpressions());
 		return result;
 	}
 
@@ -312,7 +313,8 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 		List<Expression> result = new ArrayList<Expression>();
 		for(Expression e : getIndex())
 			result.addAll(e.getAllExpressions(clazz));
-		result.addAll(getExpression().getAllExpressions(clazz));
+		if (getExpression() != null)
+			result.addAll(getExpression().getAllExpressions(clazz));
 		return result;
 	}
 

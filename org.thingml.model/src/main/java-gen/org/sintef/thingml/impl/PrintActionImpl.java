@@ -195,7 +195,8 @@ public class PrintActionImpl extends ActionImpl implements PrintAction {
 	@Override
 	public List<Expression> getAllExpressions() {
 		List<Expression> result = new ArrayList<Expression>();
-		result.addAll(getMsg().getAllExpressions());
+		if (getMsg()!=null)
+			result.addAll(getMsg().getAllExpressions());
 		return result;
 	}
 
@@ -206,7 +207,8 @@ public class PrintActionImpl extends ActionImpl implements PrintAction {
 	@Override
 	public List<Expression> getAllExpressions(Class clazz) {
 		List<Expression> result = new ArrayList<Expression>();
-		result.addAll(getMsg().getAllExpressions(clazz));
+		if (getMsg()!=null)
+			result.addAll(getMsg().getAllExpressions(clazz));
 		return result;
 	}
 } //PrintActionImpl

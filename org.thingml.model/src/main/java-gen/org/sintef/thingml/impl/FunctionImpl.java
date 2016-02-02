@@ -297,13 +297,15 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 	@Override
 	public List<Action> getAllActions() {
 		List<Action> result = new ArrayList<Action>();
-		result.addAll(getBody().getAllActions());
+		if (getBody()!=null)
+			result.addAll(getBody().getAllActions());
 		return result;
 	}
 
 	@Override
 	public List<Action> getAllActions(Class clazz) {
 		List<Action> result = new ArrayList<Action>();
+		if (getBody()!=null)
 		result.addAll(getBody().getAllActions(clazz));
 		return result;	}
 
