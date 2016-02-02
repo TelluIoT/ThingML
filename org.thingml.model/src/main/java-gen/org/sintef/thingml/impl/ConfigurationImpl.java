@@ -732,10 +732,10 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
                     }
                 }
 				for(ExternalConnector c : getExternalConnectors()) {
-					System.out.println("External connector " + c.getInst().getInstance().qname("_") + "." + c.getPort().getName() + "? " + i.getName() + "." + p.getName());
+					//System.out.println("External connector " + c.getInst().getInstance().qname("_") + "." + c.getPort().getName() + "? " + i.getName() + "." + p.getName());
 					if (c.getInst().getInstance().qname("_").equals(i.getName()) && EcoreUtil.equals(c.getPort(), p)) {//FIXME: this is a hack, c.getInst.getInstance should be equal to i (at least in some cases...)
 					//if ((EcoreUtil.equals(c.getInst().getInstance(), i) && EcoreUtil.equals(c.getPort(), p))) {
-						System.out.println("\tis connected to " + i.getName() + "." + p.getName());
+						//System.out.println("\tis connected to " + i.getName() + "." + p.getName());
 						connected = true;
 						break;
 					}
