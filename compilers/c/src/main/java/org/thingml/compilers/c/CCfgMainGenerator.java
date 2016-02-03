@@ -33,6 +33,7 @@ import java.util.Set;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.arduino.plugin.ArduinoSerial;
 import org.thingml.compilers.c.arduino.plugin.ArduinoTimer;
+import org.thingml.compilers.c.arduino.plugin.NoBufSerial;
 import org.thingml.compilers.c.posix.plugin.NopollWS;
 import org.thingml.compilers.c.posix.plugin.PosixMQTT;
 import org.thingml.compilers.c.posix.plugin.PosixSerial;
@@ -76,6 +77,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ArduinoSerial aSerialgen = new ArduinoSerial(cfg, ctx);
         ctx.addNetworkLibraryGenerator(aSerialgen);
         
+        NoBufSerial noBufSerial = new NoBufSerial(cfg, ctx);
+        ctx.addNetworkLibraryGenerator(noBufSerial);
+        
         ArduinoTimer aTimergen = new ArduinoTimer(cfg, ctx);
         ctx.addNetworkLibraryGenerator(aTimergen);
         
@@ -86,7 +90,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 if(eco.getProtocol().getName().startsWith("Serial")) {
-                    aSerialgen.addExternalCnnector(eco);
+                    if(eco.getProtocol().isDefined("nlg", "NoBufSerial")) {
+                        System.out.println("nlg: NoBufSerial");
+                        noBufSerial.addExternalCnnector(eco);
+                    } else  {
+                        aSerialgen.addExternalCnnector(eco);
+                    }
                 }
                 if(eco.getProtocol().getName().startsWith("Timer")) {
                     aTimergen.addExternalCnnector(eco);
@@ -113,6 +122,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
         
+        noBufSerial.generateNetworkLibrary();
         WSgen.generateNetworkLibrary();
         nopollWSgen.generateNetworkLibrary();
         MQTTgen.generateNetworkLibrary();
