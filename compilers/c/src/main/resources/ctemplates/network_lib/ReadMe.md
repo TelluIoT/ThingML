@@ -53,4 +53,4 @@
 * @serial_escape_byte default value: 125
 * @serial_limit_byte_per_loop default value: 2 * Max message size
 * @serial_msg_buffer_size default value: 2 * Max message size
-* @serial_baudrate default value: 9600
+* @serial_baudrate default value: 115200
