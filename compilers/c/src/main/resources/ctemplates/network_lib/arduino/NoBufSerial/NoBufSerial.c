@@ -39,7 +39,7 @@ void /*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size) {
 /*READER_IMPLEMENTATION*/
 
 void /*PORT_NAME*/_read() {
-  while (/*PORT_NAME*/.available()) {
+  if (/*PORT_NAME*/.available() > 0) {
     
     switch(/*PORT_NAME*/_serialListenerState) {
       case /*PORT_NAME*/_LISTENER_STATE_IDLE:
