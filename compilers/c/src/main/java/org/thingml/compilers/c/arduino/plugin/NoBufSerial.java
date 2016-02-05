@@ -170,8 +170,9 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
                 readerImpl.append(" bool /*PORT_NAME*/_res = true;\n");
                 if(header != null) {
                     ctemplate = ctemplate.replace("/*WRITE_HEADER*/", port + ".write(\"" + header + "\");\n");
+                    readerImpl.append(" uint8_t /*PORT_NAME*/_buf;\n");
                     for(char c : header.toCharArray()) {
-                        readerImpl.append(" /*PORT_NAME*/_res &= (" + port + ".read() == " + (int) c + ");\n");
+                        readerImpl.append(" /*PORT_NAME*/_res &= ((" + port + ".readBytes(&/*PORT_NAME*/_buf, 1) == 1) && (/*PORT_NAME*/_buf == " + (int) c + "));\n");
                     }
                 }
                 readerImpl.append(" return /*PORT_NAME*/_res;\n");
@@ -185,8 +186,9 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
 
                     readerImpl.append("bool /*PORT_NAME*/_read_footer() {\n");
                     readerImpl.append(" bool /*PORT_NAME*/_res = true;\n");
+                    readerImpl.append(" uint8_t /*PORT_NAME*/_buf;\n");
                     for(char c : tail.toCharArray()) {
-                        readerImpl.append(" /*PORT_NAME*/_res &= (" + port + ".read() == " + (int) c + ");\n");
+                        readerImpl.append(" /*PORT_NAME*/_res &= ((" + port + ".readBytes(&/*PORT_NAME*/_buf, 1) == 1) && (/*PORT_NAME*/_buf == " + (int) c + "));\n");
                     }
                     readerImpl.append(" return /*PORT_NAME*/_res;\n");
                     readerImpl.append("}\n");
@@ -234,35 +236,31 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
                     }
                 }
                 parserImpl.append("uint8_t msgbuf[" + maxSize + "];\n");
+                parserImpl.append("uint8_t bytebuf;\n");
                 parserImpl.append("uint8_t index = 0;\n");
-                parserImpl.append("msgbuf[index] = " + port + ".read();\n");
-                parserImpl.append("index++;\n");
-                parserImpl.append("msgbuf[index] = " + port + ".read();\n");
-                parserImpl.append("index++;\n");
+                parserImpl.append("index += " + port + ".readBytes(&msgbuf[index], 2);\n");
                 parserImpl.append("uint16_t msgID = (msgbuf[0] << 8) + msgbuf[1];\n");
-                parserImpl.append("uint16_t safe;\n");
+                parserImpl.append("if(index != 2) return false;\n");
                 parserImpl.append("switch(msgID) {\n");
                 for(Message m : messages) {
                     parserImpl.append("case ");
                     parserImpl.append(ctx.getHandlerCode(cfg ,m));
                     parserImpl.append(":\n");
-                    parserImpl.append("while(index < " + (ctx.getMessageSerializationSize(m)-4) + ") {\n");
-                    parserImpl.append("safe = " + port + ".read();\n");
-                    parserImpl.append("if(safe == -1) {\n");
+                    parserImpl.append("while(index < " + (ctx.getMessageSerializationSize(m)-2) + ") {\n");
+                    parserImpl.append("if(" + port + ".readBytes(&bytebuf, 1) == 0) {\n");
                     parserImpl.append("return false;\n}\n");
 
                     if(escape) {
-                        parserImpl.append("if(safe != " + (int) escapeChar + ") {\n");
+                        parserImpl.append("if(bytebuf != " + (int) escapeChar + ") {\n");
                     }
-                    parserImpl.append("msgbuf[index] = safe;\n");
+                    parserImpl.append("msgbuf[index] = bytebuf;\n");
                     parserImpl.append("index++;\n");
 
                     if(escape) {
                         parserImpl.append("} else {\n");
-                        parserImpl.append("safe = " + port + ".read();\n");
-                        parserImpl.append("if(safe == -1) {\n");
+                        parserImpl.append("if(" + port + ".readBytes(&bytebuf, 1) == 0) {\n");
                         parserImpl.append("return false;\n}\n");
-                        parserImpl.append("msgbuf[index] = safe;\n");
+                        parserImpl.append("msgbuf[index] = bytebuf;\n");
                         parserImpl.append("index++;\n");
                         parserImpl.append("}\n");
                     }
