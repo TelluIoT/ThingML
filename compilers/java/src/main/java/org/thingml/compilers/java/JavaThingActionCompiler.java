@@ -203,7 +203,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + ((ThingMLElement) expression.getLiteral().eContainer()).getName().toUpperCase() + "_" + expression.getLiteral().getName().toUpperCase());
     }
 
-    @Override
+    /*@Override
     public void generate(StreamParamReference expression, StringBuilder builder, Context ctx) {
         Stream stream = ThingMLHelpers.findContainingStream(expression);
         Source source = stream.getInput();
@@ -236,7 +236,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             throw new UnsupportedOperationException("An input source has been added (" + source.getClass().getName() + ") to ThingML but the compiler did not updates." +
                     "Please update JavaThingActionCompiler.generate for StreamParamReference expression .");
         }
-    }
+    }*/
 
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
