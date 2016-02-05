@@ -31,12 +31,19 @@ public class ParamReferenceParameterRefReferenceResolver implements org.sintef.t
 			message = ((ReceiveMessage) elmt).getMessage();
 		} else if(elmt instanceof MessageParameter) {
 			message = ((MessageParameter)elmt).getMsgRef();
+		} else if(elmt instanceof Parameter) {
+			Parameter parameter = (Parameter) elmt;
+			/*if(resolveFuzzy && parameter.getName().startsWith(identifier)) {
+				result.addMapping(parameter.getName(),parameter);
+			} else if(!resolveFuzzy && parameter.getName().equals(identifier)) {
+				result.addMapping(parameter.getName(),parameter);
+			}*/
 		} else if(elmt instanceof SimpleSource) {
 			message = ((SimpleSource)elmt).getMessage().getMessage();
 		} else if(elmt instanceof SourceComposition) {
 			message = ((SourceComposition)elmt).getResultMessage();
 		} else {
-			result.setErrorMessage("The reference is incorrect or a new referenced element has been added. " +
+			result.setErrorMessage("The reference is incorrect or a new referenced element has been added (" + elmt.getClass().getName() + "). " +
 					"May be you should update the resolver (" + this.getClass().getName() + ").");
 		}
 

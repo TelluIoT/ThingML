@@ -25,6 +25,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.sintef.thingml.ElmtProperty;
+import org.sintef.thingml.Reference;
+import org.sintef.thingml.ReferencedElmt;
+import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 
 import java.util.ArrayList;

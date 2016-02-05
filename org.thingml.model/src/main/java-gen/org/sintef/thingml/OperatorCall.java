@@ -28,11 +28,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.OperatorCall#getOperatorRef <em>Operator Ref</em>}</li>
- *   <li>{@link org.sintef.thingml.OperatorCall#getParameters <em>Parameters</em>}</li>
+ *   <li>{@link org.sintef.thingml.OperatorCall#getParameter <em>Parameter</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getOperatorCall()
  * @model
@@ -66,19 +66,19 @@ public interface OperatorCall extends EObject {
 	void setOperatorRef(Operator value);
 
 	/**
-	 * Returns the value of the '<em><b>Parameters</b></em>' reference list.
-	 * The list contents are of type {@link org.sintef.thingml.ReceiveMessage}.
+	 * Returns the value of the '<em><b>Parameter</b></em>' reference list.
+	 * The list contents are of type {@link org.sintef.thingml.Source}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Parameters</em>' reference list isn't clear,
+	 * If the meaning of the '<em>Parameter</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Parameters</em>' reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getOperatorCall_Parameters()
-	 * @model
+	 * @return the value of the '<em>Parameter</em>' reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getOperatorCall_Parameter()
+	 * @model required="true"
 	 * @generated
 	 */
-	EList<ReceiveMessage> getParameters();
+	EList<Source> getParameter();
 
 } // OperatorCall

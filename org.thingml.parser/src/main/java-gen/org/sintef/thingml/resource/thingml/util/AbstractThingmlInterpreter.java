@@ -235,6 +235,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.Expression) {
+			result = interprete_org_sintef_thingml_Expression((org.sintef.thingml.Expression) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		if (object instanceof org.sintef.thingml.SendAction) {
 			result = interprete_org_sintef_thingml_SendAction((org.sintef.thingml.SendAction) object, context);
 		}
@@ -463,12 +469,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.Expression) {
-			result = interprete_org_sintef_thingml_Expression((org.sintef.thingml.Expression) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.ReturnAction) {
 			result = interprete_org_sintef_thingml_ReturnAction((org.sintef.thingml.ReturnAction) object, context);
 		}
@@ -559,20 +559,8 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.StreamExpression) {
-			result = interprete_org_sintef_thingml_StreamExpression((org.sintef.thingml.StreamExpression) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.StreamParamReference) {
 			result = interprete_org_sintef_thingml_StreamParamReference((org.sintef.thingml.StreamParamReference) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.StreamOutput) {
-			result = interprete_org_sintef_thingml_StreamOutput((org.sintef.thingml.StreamOutput) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -613,12 +601,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.LengthWindow) {
-			result = interprete_org_sintef_thingml_LengthWindow((org.sintef.thingml.LengthWindow) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.ViewSource) {
 			result = interprete_org_sintef_thingml_ViewSource((org.sintef.thingml.ViewSource) object, context);
 		}
@@ -637,8 +619,8 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.SglMsgParamOperatorCall) {
-			result = interprete_org_sintef_thingml_SglMsgParamOperatorCall((org.sintef.thingml.SglMsgParamOperatorCall) object, context);
+		if (object instanceof org.sintef.thingml.OperatorCall) {
+			result = interprete_org_sintef_thingml_OperatorCall((org.sintef.thingml.OperatorCall) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -655,8 +637,8 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.SglMsgParamOperator) {
-			result = interprete_org_sintef_thingml_SglMsgParamOperator((org.sintef.thingml.SglMsgParamOperator) object, context);
+		if (object instanceof org.sintef.thingml.LengthWindow) {
+			result = interprete_org_sintef_thingml_LengthWindow((org.sintef.thingml.LengthWindow) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -1052,15 +1034,7 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
-	public ResultType interprete_org_sintef_thingml_StreamExpression(org.sintef.thingml.StreamExpression streamExpression, ContextType context) {
-		return null;
-	}
-	
 	public ResultType interprete_org_sintef_thingml_StreamParamReference(org.sintef.thingml.StreamParamReference streamParamReference, ContextType context) {
-		return null;
-	}
-	
-	public ResultType interprete_org_sintef_thingml_StreamOutput(org.sintef.thingml.StreamOutput streamOutput, ContextType context) {
 		return null;
 	}
 	
@@ -1100,7 +1074,7 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
-	public ResultType interprete_org_sintef_thingml_SglMsgParamOperatorCall(org.sintef.thingml.SglMsgParamOperatorCall sglMsgParamOperatorCall, ContextType context) {
+	public ResultType interprete_org_sintef_thingml_OperatorCall(org.sintef.thingml.OperatorCall operatorCall, ContextType context) {
 		return null;
 	}
 	
@@ -1109,10 +1083,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_ReferencedElmt(org.sintef.thingml.ReferencedElmt referencedElmt, ContextType context) {
-		return null;
-	}
-	
-	public ResultType interprete_org_sintef_thingml_SglMsgParamOperator(org.sintef.thingml.SglMsgParamOperator sglMsgParamOperator, ContextType context) {
 		return null;
 	}
 	

@@ -107,8 +107,6 @@ import org.sintef.thingml.Region;
 import org.sintef.thingml.RequiredPort;
 import org.sintef.thingml.ReturnAction;
 import org.sintef.thingml.SendAction;
-import org.sintef.thingml.SglMsgParamOperator;
-import org.sintef.thingml.SglMsgParamOperatorCall;
 import org.sintef.thingml.SimpleParamRef;
 import org.sintef.thingml.SimpleSource;
 import org.sintef.thingml.Source;
@@ -116,8 +114,6 @@ import org.sintef.thingml.SourceComposition;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
-import org.sintef.thingml.StreamExpression;
-import org.sintef.thingml.StreamOutput;
 import org.sintef.thingml.StreamParamReference;
 import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.Thing;
@@ -723,21 +719,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass streamExpressionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass streamParamReferenceEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass streamOutputEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -807,7 +789,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass sglMsgParamOperatorCallEClass = null;
+	private EClass operatorCallEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -822,13 +804,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass referencedElmtEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass sglMsgParamOperatorEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1461,24 +1436,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EReference getTransition_Source() {
 		return (EReference)transitionEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTransition_After() {
-		return (EReference)transitionEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getTransition_Before() {
-		return (EReference)transitionEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2692,24 +2649,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getStreamExpression() {
-		return streamExpressionEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getStreamExpression_Expression() {
-		return (EReference)streamExpressionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getStreamParamReference() {
 		return streamParamReferenceEClass;
 	}
@@ -2721,42 +2660,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EAttribute getStreamParamReference_IndexParam() {
 		return (EAttribute)streamParamReferenceEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getStreamOutput() {
-		return streamOutputEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getStreamOutput_Parameters() {
-		return (EReference)streamOutputEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getStreamOutput_Message() {
-		return (EReference)streamOutputEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getStreamOutput_Port() {
-		return (EReference)streamOutputEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2899,6 +2802,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getOperator_Parameter() {
+		return (EReference)operatorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMessageParameter() {
 		return messageParameterEClass;
 	}
@@ -2917,8 +2829,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getSglMsgParamOperatorCall() {
-		return sglMsgParamOperatorCallEClass;
+	public EClass getOperatorCall() {
+		return operatorCallEClass;
 	}
 
 	/**
@@ -2926,8 +2838,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSglMsgParamOperatorCall_OperatorRef() {
-		return (EReference)sglMsgParamOperatorCallEClass.getEStructuralFeatures().get(0);
+	public EReference getOperatorCall_OperatorRef() {
+		return (EReference)operatorCallEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2935,8 +2847,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSglMsgParamOperatorCall_Parameter() {
-		return (EReference)sglMsgParamOperatorCallEClass.getEStructuralFeatures().get(1);
+	public EReference getOperatorCall_Parameter() {
+		return (EReference)operatorCallEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2973,24 +2885,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EClass getReferencedElmt() {
 		return referencedElmtEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getSglMsgParamOperator() {
-		return sglMsgParamOperatorEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getSglMsgParamOperator_Parameter() {
-		return (EReference)sglMsgParamOperatorEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3238,8 +3132,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		transitionEClass = createEClass(TRANSITION);
 		createEReference(transitionEClass, TRANSITION__TARGET);
 		createEReference(transitionEClass, TRANSITION__SOURCE);
-		createEReference(transitionEClass, TRANSITION__AFTER);
-		createEReference(transitionEClass, TRANSITION__BEFORE);
 
 		internalTransitionEClass = createEClass(INTERNAL_TRANSITION);
 
@@ -3438,16 +3330,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(streamEClass, STREAM__OUTPUT);
 		createEReference(streamEClass, STREAM__INPUT);
 
-		streamExpressionEClass = createEClass(STREAM_EXPRESSION);
-		createEReference(streamExpressionEClass, STREAM_EXPRESSION__EXPRESSION);
-
 		streamParamReferenceEClass = createEClass(STREAM_PARAM_REFERENCE);
 		createEAttribute(streamParamReferenceEClass, STREAM_PARAM_REFERENCE__INDEX_PARAM);
-
-		streamOutputEClass = createEClass(STREAM_OUTPUT);
-		createEReference(streamOutputEClass, STREAM_OUTPUT__PARAMETERS);
-		createEReference(streamOutputEClass, STREAM_OUTPUT__MESSAGE);
-		createEReference(streamOutputEClass, STREAM_OUTPUT__PORT);
 
 		sourceEClass = createEClass(SOURCE);
 		createEReference(sourceEClass, SOURCE__OPERATORS);
@@ -3471,22 +3355,20 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		operatorEClass = createEClass(OPERATOR);
 		createEReference(operatorEClass, OPERATOR__BODY);
+		createEReference(operatorEClass, OPERATOR__PARAMETER);
 
 		messageParameterEClass = createEClass(MESSAGE_PARAMETER);
 		createEReference(messageParameterEClass, MESSAGE_PARAMETER__MSG_REF);
 
-		sglMsgParamOperatorCallEClass = createEClass(SGL_MSG_PARAM_OPERATOR_CALL);
-		createEReference(sglMsgParamOperatorCallEClass, SGL_MSG_PARAM_OPERATOR_CALL__OPERATOR_REF);
-		createEReference(sglMsgParamOperatorCallEClass, SGL_MSG_PARAM_OPERATOR_CALL__PARAMETER);
+		operatorCallEClass = createEClass(OPERATOR_CALL);
+		createEReference(operatorCallEClass, OPERATOR_CALL__OPERATOR_REF);
+		createEReference(operatorCallEClass, OPERATOR_CALL__PARAMETER);
 
 		referenceEClass = createEClass(REFERENCE);
 		createEReference(referenceEClass, REFERENCE__REFERENCE);
 		createEReference(referenceEClass, REFERENCE__PARAMETER);
 
 		referencedElmtEClass = createEClass(REFERENCED_ELMT);
-
-		sglMsgParamOperatorEClass = createEClass(SGL_MSG_PARAM_OPERATOR);
-		createEReference(sglMsgParamOperatorEClass, SGL_MSG_PARAM_OPERATOR__PARAMETER);
 
 		lengthWindowEClass = createEClass(LENGTH_WINDOW);
 		createEAttribute(lengthWindowEClass, LENGTH_WINDOW__NB_EVENTS);
@@ -3628,7 +3510,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		localVariableEClass.getESuperTypes().add(this.getVariable());
 		localVariableEClass.getESuperTypes().add(this.getAction());
 		streamEClass.getESuperTypes().add(this.getAnnotatedElement());
-		streamExpressionEClass.getESuperTypes().add(this.getThingMLElement());
 		streamParamReferenceEClass.getESuperTypes().add(this.getExpression());
 		sourceEClass.getESuperTypes().add(this.getThingMLElement());
 		sourceEClass.getESuperTypes().add(this.getReferencedElmt());
@@ -3641,8 +3522,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		operatorEClass.getESuperTypes().add(this.getThingMLElement());
 		messageParameterEClass.getESuperTypes().add(this.getThingMLElement());
 		messageParameterEClass.getESuperTypes().add(this.getReferencedElmt());
+		messageParameterEClass.getESuperTypes().add(this.getExpression());
 		referenceEClass.getESuperTypes().add(this.getExpression());
-		sglMsgParamOperatorEClass.getESuperTypes().add(this.getOperator());
 		lengthWindowEClass.getESuperTypes().add(this.getWindowView());
 		timeWindowEClass.getESuperTypes().add(this.getWindowView());
 		paramReferenceEClass.getESuperTypes().add(this.getElmtProperty());
@@ -3728,8 +3609,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(transitionEClass, Transition.class, "Transition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTransition_Target(), this.getState(), this.getState_Incoming(), "target", null, 1, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTransition_Source(), this.getState(), this.getState_Outgoing(), "source", null, 1, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTransition_After(), this.getAction(), null, "after", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTransition_Before(), this.getAction(), null, "before", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(internalTransitionEClass, InternalTransition.class, "InternalTransition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -3924,20 +3803,12 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEAttribute(getLocalVariable_Changeable(), ecorePackage.getEBoolean(), "changeable", "true", 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(streamEClass, Stream.class, "Stream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getStream_Selection(), this.getStreamExpression(), null, "selection", null, 0, -1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getStream_Output(), this.getStreamOutput(), null, "output", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getStream_Selection(), this.getLocalVariable(), null, "selection", null, 0, -1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getStream_Output(), this.getSendAction(), null, "output", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStream_Input(), this.getSource(), null, "input", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(streamExpressionEClass, StreamExpression.class, "StreamExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getStreamExpression_Expression(), this.getExpression(), null, "expression", null, 1, 1, StreamExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(streamParamReferenceEClass, StreamParamReference.class, "StreamParamReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getStreamParamReference_IndexParam(), ecorePackage.getEInt(), "indexParam", "0", 1, 1, StreamParamReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(streamOutputEClass, StreamOutput.class, "StreamOutput", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getStreamOutput_Parameters(), this.getStreamExpression(), null, "parameters", null, 0, -1, StreamOutput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getStreamOutput_Message(), this.getMessage(), null, "message", null, 1, 1, StreamOutput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getStreamOutput_Port(), this.getPort(), null, "port", null, 1, 1, StreamOutput.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(sourceEClass, Source.class, "Source", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSource_Operators(), this.getViewSource(), null, "operators", null, 0, -1, Source.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3957,26 +3828,24 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(viewSourceEClass, ViewSource.class, "ViewSource", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(filterEClass, Filter.class, "Filter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getFilter_FilterOp(), this.getSglMsgParamOperatorCall(), null, "filterOp", null, 1, 1, Filter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFilter_FilterOp(), this.getOperatorCall(), null, "filterOp", null, 1, 1, Filter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(operatorEClass, Operator.class, "Operator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(operatorEClass, Operator.class, "Operator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getOperator_Body(), this.getActionBlock(), null, "body", null, 1, 1, Operator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getOperator_Parameter(), this.getMessageParameter(), null, "parameter", null, 1, 1, Operator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(messageParameterEClass, MessageParameter.class, "MessageParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getMessageParameter_MsgRef(), this.getMessage(), null, "msgRef", null, 1, 1, MessageParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(sglMsgParamOperatorCallEClass, SglMsgParamOperatorCall.class, "SglMsgParamOperatorCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSglMsgParamOperatorCall_OperatorRef(), this.getSglMsgParamOperator(), null, "operatorRef", null, 1, 1, SglMsgParamOperatorCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSglMsgParamOperatorCall_Parameter(), this.getSource(), null, "parameter", null, 1, 1, SglMsgParamOperatorCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(operatorCallEClass, OperatorCall.class, "OperatorCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getOperatorCall_OperatorRef(), this.getOperator(), null, "operatorRef", null, 1, 1, OperatorCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getOperatorCall_Parameter(), this.getSource(), null, "parameter", null, 1, -1, OperatorCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(referenceEClass, Reference.class, "Reference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getReference_Reference(), this.getReferencedElmt(), null, "reference", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getReference_Parameter(), this.getElmtProperty(), null, "parameter", null, 1, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(referencedElmtEClass, ReferencedElmt.class, "ReferencedElmt", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(sglMsgParamOperatorEClass, SglMsgParamOperator.class, "SglMsgParamOperator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSglMsgParamOperator_Parameter(), this.getMessageParameter(), null, "parameter", null, 1, 1, SglMsgParamOperator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(lengthWindowEClass, LengthWindow.class, "LengthWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getLengthWindow_NbEvents(), ecorePackage.getEInt(), "nbEvents", "1", 1, 1, LengthWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

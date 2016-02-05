@@ -256,17 +256,11 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
     }
 
-    private void generateOperator(Operator operator, StringBuilder builder, Context ctx) {
-        if (operator instanceof SglMsgParamOperator) {
-            SglMsgParamOperator sglMsgParamOperator = (SglMsgParamOperator) operator;
-            MessageParameter messageParameter = sglMsgParamOperator.getParameter();
-            builder.append("function " + sglMsgParamOperator.getName() + "(" + messageParameter.getName() + ") {\n");
-            ctx.getCompiler().getThingActionCompiler().generate(sglMsgParamOperator.getBody(), builder, ctx);
+    private void generateOperator(Operator op, StringBuilder builder, Context ctx) {
+            MessageParameter messageParameter = op.getParameter();
+            builder.append("function " + op.getName() + "(" + messageParameter.getName() + ") {\n");
+            ctx.getCompiler().getThingActionCompiler().generate(op.getBody(), builder, ctx);
             builder.append("}\n");
-        } else {
-            throw new UnsupportedOperationException("A new operator has been added to ThingML (" + operator.getClass().getName() + ")" +
-                    ". However, the JSThingImplCompiler has not been updated.");
-        }
     }
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {

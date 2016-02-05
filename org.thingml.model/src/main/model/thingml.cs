@@ -110,8 +110,6 @@ TOKENSTYLES{
 	"event" COLOR #A22000, BOLD;	
 	"guard" COLOR #A22000, BOLD;
 	"action" COLOR #A22000, BOLD;
-	"before" COLOR #A22000, BOLD;
-	"after" COLOR #A22000, BOLD;
 	"on" COLOR #A22000, BOLD;
 	"entry" COLOR #A22000, BOLD;
 	"exit" COLOR #A22000, BOLD;
@@ -124,9 +122,12 @@ TOKENSTYLES{
 	"->" COLOR #A22000, BOLD;
 	
 	//CEP
-	"stream" COLOR #A22000, BOLD;
-	"from" COLOR #A22000, BOLD;
-	"select" COLOR #A22000, BOLD;
+	"stream" COLOR #CF6E29, BOLD;
+	"from" COLOR #CF6E29, BOLD;
+	"select" COLOR #CF6E29, BOLD;
+	"operator" COLOR #CF6E29, BOLD;
+	"filter" COLOR #CF6E29, BOLD;
+	
 	
 	// Action language
 	"var" COLOR #444444, BOLD;
@@ -141,8 +142,6 @@ TOKENSTYLES{
 	"not" COLOR #444444, BOLD;
 	"and" COLOR #444444, BOLD;
 	"or" COLOR #444444, BOLD;
-	"operator" COLOR #444444, BOLD;
-	"filter" COLOR #A22000, BOLD;
 	
 	//Protocols
 	"protocol" COLOR #65BA9E, BOLD;
@@ -217,7 +216,7 @@ RULES {
 	
 	ParallelRegion ::= "region" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{"(!1 substate)* !0 "}"  ;
 	
-	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? (!1 "before" #1 before)? (!1 "after" #1 after)? ;
+	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? ;
 
 	InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
 
@@ -274,13 +273,10 @@ RULES {
 	// *******************************
 	// * CEP
 	// *******************************
-	SglMsgParamOperator ::= "operator" #1 name[] "(" parameter ")" ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? #1 body;
+	Operator ::= "operator" #1 name[] "(" parameter ")" ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? #1 body;
 	MessageParameter ::= name[] ":" msgRef[];
 
-	SglMsgParamOperatorCall ::= operatorRef[] "(" parameter[] ")";
-	
-	StreamExpression ::= name[] ":" expression;
-	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
+	OperatorCall ::= operatorRef[] "(" parameter[] (("," #1 parameter[])* )? ")";
 	
 	Filter ::= "filter" "(" filterOp ")";
 	LengthWindow ::= "lengthWindow" "(" nbEvents[INTEGER_LITERAL] ("," step[INTEGER_LITERAL])? ")";

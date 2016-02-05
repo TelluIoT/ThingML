@@ -45,12 +45,12 @@ public interface Filter extends ViewSource {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Filter Op</em>' containment reference.
-	 * @see #setFilterOp(SglMsgParamOperatorCall)
+	 * @see #setFilterOp(OperatorCall)
 	 * @see org.sintef.thingml.ThingmlPackage#getFilter_FilterOp()
 	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	SglMsgParamOperatorCall getFilterOp();
+	OperatorCall getFilterOp();
 
 	/**
 	 * Sets the value of the '{@link org.sintef.thingml.Filter#getFilterOp <em>Filter Op</em>}' containment reference.
@@ -60,5 +60,5 @@ public interface Filter extends ViewSource {
 	 * @see #getFilterOp()
 	 * @generated
 	 */
-	void setFilterOp(SglMsgParamOperatorCall value);
+	void setFilterOp(OperatorCall value);
 } // Filter

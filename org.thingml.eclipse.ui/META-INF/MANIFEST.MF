@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.ui,
  org.sintef.thingml.model,
  org.sintef.thingml.resource.thingml,
  org.sintef.thingml.resource.thingml.ui,
- org.eclipse.ui.console
+ org.eclipse.ui.console,
+ org.eclipse.emf.validation;bundle-version="1.8.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

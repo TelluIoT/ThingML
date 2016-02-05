@@ -66,7 +66,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append(");\n");
     }
 
-    @Override
+    /*@Override
     public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
         builder.append("send" + ctx.firstToUpper(streamOutput.getMessage().getName()) + "_via_" + streamOutput.getPort().getName() + "(");
         int i = 0;
@@ -81,7 +81,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         }
 
         builder.append(");\n");
-    }
+    }*/
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {

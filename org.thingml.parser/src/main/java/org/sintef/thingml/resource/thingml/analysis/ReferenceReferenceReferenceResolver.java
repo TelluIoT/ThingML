@@ -21,9 +21,9 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import java.util.List;
 
 public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Reference, org.sintef.thingml.ReferencedElmt> {
-	
+
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Reference, org.sintef.thingml.ReferencedElmt> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Reference, org.sintef.thingml.ReferencedElmt>();
-	
+
 	public void resolve(String identifier, org.sintef.thingml.Reference container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.ReferencedElmt> result) {
 		Action parentAction = ThingMLHelpers.findContainer(container,Action.class);
 		if(parentAction != null) {
@@ -58,8 +58,8 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 			}
 			if (!result.wasResolved())
 				result.setErrorMessage("Cannot resolve receive message (event): " + identifier);
-		} else if( parent instanceof SglMsgParamOperator) { //we reference a message
-			MessageParameter mp = ((SglMsgParamOperator) parent).getParameter();
+		} else if( parent instanceof Operator) { //we reference a message
+			MessageParameter mp = ((Operator) parent).getParameter();
 			if(resolveFuzzy && mp.getName().startsWith(identifier)) {
 				result.addMapping(mp.getName(), mp);
 			} else if(!resolveFuzzy && mp.getName().equals(identifier)) {
@@ -69,21 +69,6 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 			if(!result.wasResolved()) {
 				result.setErrorMessage("Cannot resolve parameter " + identifier);
 			}
-		} else if(parent instanceof StreamExpression) {//we reference a stream input
-			Stream stream = ThingMLHelpers.findContainingStream(parent);
-			Source source = stream.getInput();
-			if(source.getName() != null) {
-				if(resolveFuzzy && source.getName().startsWith(identifier)) {
-					result.addMapping(source.getName(),source);
-				} else if(!resolveFuzzy && source.getName().equals(identifier)) {
-					result.addMapping(source.getName(),source);
-				}
-			}
-
-			if(!result.wasResolved()) {
-				result.setErrorMessage("Cannot resolve stream input " + identifier);
-			}
-
 		} else if(parent instanceof SourceComposition) {//we reference an event in one of the stream inputs
 			for(Source source : ((SourceComposition) parent).getSources()) {
 				ReceiveMessage receiveMessage = ((SimpleSource) source).getMessage();
@@ -99,18 +84,35 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 				result.setErrorMessage("Cannot resolve receive message " + identifier + " in the sources of " + stream.getName());
 			}
 
+		} else if(parent instanceof Stream) {//we reference an event in one of the stream inputs			
+			Source source = ((Stream) parent).getInput(); 
+			if(resolveFuzzy && source.getName().startsWith(identifier)) {
+				result.addMapping(source.getName(),source);
+			} else if(!resolveFuzzy && source.getName().equals(identifier)) {
+				result.addMapping(source.getName(),source);
+			}			
+
+			if(!result.wasResolved()) {
+				Stream stream = ThingMLHelpers.findContainingStream(parent);
+				result.setErrorMessage("Cannot resolve receive message " + identifier + " in the sources of " + stream.getName());
+			}
+
+
 		} else {
-			result.setErrorMessage("The reference has not a good parent! ");
+			if (parent != null)
+				result.setErrorMessage("The reference has not a good parent (" + parent.getClass().getName() + ")! ");
+			else 
+				result.setErrorMessage("The reference has not a good parent (null)! ");
 		}
 	}
-	
+
 	public String deResolve(org.sintef.thingml.ReferencedElmt element, org.sintef.thingml.Reference container, org.eclipse.emf.ecore.EReference reference) {
 		return delegate.deResolve(element, container, reference);
 	}
-	
+
 	public void setOptions(java.util.Map<?,?> options) {
 		// save options in a field or leave method empty if this resolver does not depend
 		// on any option
 	}
-	
+
 }

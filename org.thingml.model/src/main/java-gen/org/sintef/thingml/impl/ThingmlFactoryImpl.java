@@ -87,15 +87,11 @@ import org.sintef.thingml.Reference;
 import org.sintef.thingml.RequiredPort;
 import org.sintef.thingml.ReturnAction;
 import org.sintef.thingml.SendAction;
-import org.sintef.thingml.SglMsgParamOperator;
-import org.sintef.thingml.SglMsgParamOperatorCall;
 import org.sintef.thingml.SimpleParamRef;
 import org.sintef.thingml.SimpleSource;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
-import org.sintef.thingml.StreamExpression;
-import org.sintef.thingml.StreamOutput;
 import org.sintef.thingml.StreamParamReference;
 import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.Thing;
@@ -218,17 +214,15 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
 			case ThingmlPackage.LOCAL_VARIABLE: return createLocalVariable();
 			case ThingmlPackage.STREAM: return createStream();
-			case ThingmlPackage.STREAM_EXPRESSION: return createStreamExpression();
 			case ThingmlPackage.STREAM_PARAM_REFERENCE: return createStreamParamReference();
-			case ThingmlPackage.STREAM_OUTPUT: return createStreamOutput();
 			case ThingmlPackage.JOIN_SOURCES: return createJoinSources();
 			case ThingmlPackage.MERGE_SOURCES: return createMergeSources();
 			case ThingmlPackage.SIMPLE_SOURCE: return createSimpleSource();
 			case ThingmlPackage.FILTER: return createFilter();
+			case ThingmlPackage.OPERATOR: return createOperator();
 			case ThingmlPackage.MESSAGE_PARAMETER: return createMessageParameter();
-			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL: return createSglMsgParamOperatorCall();
+			case ThingmlPackage.OPERATOR_CALL: return createOperatorCall();
 			case ThingmlPackage.REFERENCE: return createReference();
-			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR: return createSglMsgParamOperator();
 			case ThingmlPackage.LENGTH_WINDOW: return createLengthWindow();
 			case ThingmlPackage.TIME_WINDOW: return createTimeWindow();
 			case ThingmlPackage.SIMPLE_PARAM_REF: return createSimpleParamRef();
@@ -896,29 +890,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StreamExpression createStreamExpression() {
-		StreamExpressionImpl streamExpression = new StreamExpressionImpl();
-		return streamExpression;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public StreamParamReference createStreamParamReference() {
 		StreamParamReferenceImpl streamParamReference = new StreamParamReferenceImpl();
 		return streamParamReference;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public StreamOutput createStreamOutput() {
-		StreamOutputImpl streamOutput = new StreamOutputImpl();
-		return streamOutput;
 	}
 
 	/**
@@ -966,6 +940,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Operator createOperator() {
+		OperatorImpl operator = new OperatorImpl();
+		return operator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public MessageParameter createMessageParameter() {
 		MessageParameterImpl messageParameter = new MessageParameterImpl();
 		return messageParameter;
@@ -976,9 +960,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SglMsgParamOperatorCall createSglMsgParamOperatorCall() {
-		SglMsgParamOperatorCallImpl sglMsgParamOperatorCall = new SglMsgParamOperatorCallImpl();
-		return sglMsgParamOperatorCall;
+	public OperatorCall createOperatorCall() {
+		OperatorCallImpl operatorCall = new OperatorCallImpl();
+		return operatorCall;
 	}
 
 	/**
@@ -989,16 +973,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public Reference createReference() {
 		ReferenceImpl reference = new ReferenceImpl();
 		return reference;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public SglMsgParamOperator createSglMsgParamOperator() {
-		SglMsgParamOperatorImpl sglMsgParamOperator = new SglMsgParamOperatorImpl();
-		return sglMsgParamOperator;
 	}
 
 	/**

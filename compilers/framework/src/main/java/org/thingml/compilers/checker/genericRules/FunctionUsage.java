@@ -47,7 +47,7 @@ public class FunctionUsage extends Rule {
 
     @Override
     public String getName() {
-        return "Messages Usage";
+        return "Function Usage";
     }
 
     @Override

@@ -27,8 +27,6 @@ package org.sintef.thingml;
  * <ul>
  *   <li>{@link org.sintef.thingml.Transition#getTarget <em>Target</em>}</li>
  *   <li>{@link org.sintef.thingml.Transition#getSource <em>Source</em>}</li>
- *   <li>{@link org.sintef.thingml.Transition#getAfter <em>After</em>}</li>
- *   <li>{@link org.sintef.thingml.Transition#getBefore <em>Before</em>}</li>
  * </ul>
  *
  * @see org.sintef.thingml.ThingmlPackage#getTransition()
@@ -91,57 +89,5 @@ public interface Transition extends Handler {
 	 * @generated
 	 */
 	void setSource(State value);
-
-	/**
-	 * Returns the value of the '<em><b>After</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>After</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>After</em>' containment reference.
-	 * @see #setAfter(Action)
-	 * @see org.sintef.thingml.ThingmlPackage#getTransition_After()
-	 * @model containment="true"
-	 * @generated
-	 */
-	Action getAfter();
-
-	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Transition#getAfter <em>After</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>After</em>' containment reference.
-	 * @see #getAfter()
-	 * @generated
-	 */
-	void setAfter(Action value);
-
-	/**
-	 * Returns the value of the '<em><b>Before</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Before</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Before</em>' containment reference.
-	 * @see #setBefore(Action)
-	 * @see org.sintef.thingml.ThingmlPackage#getTransition_Before()
-	 * @model containment="true"
-	 * @generated
-	 */
-	Action getBefore();
-
-	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Transition#getBefore <em>Before</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Before</em>' containment reference.
-	 * @see #getBefore()
-	 * @generated
-	 */
-	void setBefore(Action value);
 
 } // Transition

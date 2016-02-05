@@ -49,11 +49,12 @@ import org.sintef.thingml.ThingmlPackage;
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.OperatorImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.OperatorImpl#getBody <em>Body</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.OperatorImpl#getParameter <em>Parameter</em>}</li>
  * </ul>
  *
  * @generated
  */
-public abstract class OperatorImpl extends TypedElementImpl implements Operator {
+public class OperatorImpl extends TypedElementImpl implements Operator {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -83,6 +84,16 @@ public abstract class OperatorImpl extends TypedElementImpl implements Operator 
 	 * @ordered
 	 */
 	protected ActionBlock body;
+
+	/**
+	 * The cached value of the '{@link #getParameter() <em>Parameter</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getParameter()
+	 * @generated
+	 * @ordered
+	 */
+	protected MessageParameter parameter;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -172,11 +183,56 @@ public abstract class OperatorImpl extends TypedElementImpl implements Operator 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public MessageParameter getParameter() {
+		return parameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetParameter(MessageParameter newParameter, NotificationChain msgs) {
+		MessageParameter oldParameter = parameter;
+		parameter = newParameter;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.OPERATOR__PARAMETER, oldParameter, newParameter);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setParameter(MessageParameter newParameter) {
+		if (newParameter != parameter) {
+			NotificationChain msgs = null;
+			if (parameter != null)
+				msgs = ((InternalEObject)parameter).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.OPERATOR__PARAMETER, null, msgs);
+			if (newParameter != null)
+				msgs = ((InternalEObject)newParameter).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.OPERATOR__PARAMETER, null, msgs);
+			msgs = basicSetParameter(newParameter, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.OPERATOR__PARAMETER, newParameter, newParameter));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ThingmlPackage.OPERATOR__BODY:
 				return basicSetBody(null, msgs);
+			case ThingmlPackage.OPERATOR__PARAMETER:
+				return basicSetParameter(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -193,6 +249,8 @@ public abstract class OperatorImpl extends TypedElementImpl implements Operator 
 				return getName();
 			case ThingmlPackage.OPERATOR__BODY:
 				return getBody();
+			case ThingmlPackage.OPERATOR__PARAMETER:
+				return getParameter();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -212,6 +270,9 @@ public abstract class OperatorImpl extends TypedElementImpl implements Operator 
 			case ThingmlPackage.OPERATOR__BODY:
 				setBody((ActionBlock)newValue);
 				return;
+			case ThingmlPackage.OPERATOR__PARAMETER:
+				setParameter((MessageParameter)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -230,6 +291,9 @@ public abstract class OperatorImpl extends TypedElementImpl implements Operator 
 			case ThingmlPackage.OPERATOR__BODY:
 				setBody((ActionBlock)null);
 				return;
+			case ThingmlPackage.OPERATOR__PARAMETER:
+				setParameter((MessageParameter)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -246,6 +310,8 @@ public abstract class OperatorImpl extends TypedElementImpl implements Operator 
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case ThingmlPackage.OPERATOR__BODY:
 				return body != null;
+			case ThingmlPackage.OPERATOR__PARAMETER:
+				return parameter != null;
 		}
 		return super.eIsSet(featureID);
 	}

@@ -32,10 +32,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.LocalVariable;
+import org.sintef.thingml.SendAction;
 import org.sintef.thingml.Source;
 import org.sintef.thingml.Stream;
-import org.sintef.thingml.StreamExpression;
-import org.sintef.thingml.StreamOutput;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
@@ -62,7 +62,7 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<StreamExpression> selection;
+	protected EList<LocalVariable> selection;
 
 	/**
 	 * The cached value of the '{@link #getOutput() <em>Output</em>}' containment reference.
@@ -72,7 +72,7 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 	 * @generated
 	 * @ordered
 	 */
-	protected StreamOutput output;
+	protected SendAction output;
 
 	/**
 	 * The cached value of the '{@link #getInput() <em>Input</em>}' containment reference.
@@ -108,9 +108,9 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<StreamExpression> getSelection() {
+	public EList<LocalVariable> getSelection() {
 		if (selection == null) {
-			selection = new EObjectContainmentEList<StreamExpression>(StreamExpression.class, this, ThingmlPackage.STREAM__SELECTION);
+			selection = new EObjectContainmentEList<LocalVariable>(LocalVariable.class, this, ThingmlPackage.STREAM__SELECTION);
 		}
 		return selection;
 	}
@@ -120,7 +120,7 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StreamOutput getOutput() {
+	public SendAction getOutput() {
 		return output;
 	}
 
@@ -129,8 +129,8 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetOutput(StreamOutput newOutput, NotificationChain msgs) {
-		StreamOutput oldOutput = output;
+	public NotificationChain basicSetOutput(SendAction newOutput, NotificationChain msgs) {
+		SendAction oldOutput = output;
 		output = newOutput;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.STREAM__OUTPUT, oldOutput, newOutput);
@@ -144,7 +144,7 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setOutput(StreamOutput newOutput) {
+	public void setOutput(SendAction newOutput) {
 		if (newOutput != output) {
 			NotificationChain msgs = null;
 			if (output != null)
@@ -248,10 +248,10 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 		switch (featureID) {
 			case ThingmlPackage.STREAM__SELECTION:
 				getSelection().clear();
-				getSelection().addAll((Collection<? extends StreamExpression>)newValue);
+				getSelection().addAll((Collection<? extends LocalVariable>)newValue);
 				return;
 			case ThingmlPackage.STREAM__OUTPUT:
-				setOutput((StreamOutput)newValue);
+				setOutput((SendAction)newValue);
 				return;
 			case ThingmlPackage.STREAM__INPUT:
 				setInput((Source)newValue);
@@ -272,7 +272,7 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 				getSelection().clear();
 				return;
 			case ThingmlPackage.STREAM__OUTPUT:
-				setOutput((StreamOutput)null);
+				setOutput((SendAction)null);
 				return;
 			case ThingmlPackage.STREAM__INPUT:
 				setInput((Source)null);

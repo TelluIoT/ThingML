@@ -23,8 +23,6 @@ public class ThingActionCompiler {
     public void generate(Object o, StringBuilder builder, Context ctx) {
         if (o instanceof Action) {
             generate((Action) o, builder, ctx);
-        } else if (o instanceof StreamOutput) {
-            generate((StreamOutput) o, builder, ctx);
         } else if (o instanceof Expression) {
             generate((Expression) o, builder, ctx);
         } else {
@@ -277,10 +275,5 @@ public class ThingActionCompiler {
 
     public void generate(StreamParamReference expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
-    }
-
-    // CEP Action
-    public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
-        throw (new UnsupportedOperationException("This CEP action (" + streamOutput.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 }

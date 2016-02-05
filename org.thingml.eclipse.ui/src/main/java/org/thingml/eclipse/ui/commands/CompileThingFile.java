@@ -27,11 +27,18 @@ import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EContentAdapter;
+import org.eclipse.emf.validation.model.EvaluationMode;
+import org.eclipse.emf.validation.service.IBatchValidator;
+import org.eclipse.emf.validation.service.ILiveValidator;
+import org.eclipse.emf.validation.service.ModelValidationService;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -47,6 +54,8 @@ import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
 
 public class CompileThingFile implements IHandler {
+	
+	EContentAdapter liveValidationContentAdapter = new LiveValidationContentAdapter();
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
@@ -72,8 +81,7 @@ public class CompileThingFile implements IHandler {
 				subCompiler = compilerName.split("/")[1];
 				compilerName = compilerName.split("/")[0];
 			}
-
-
+			
 			ThingMLCompiler compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
 			ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\" (Platform: " + compiler.getID() + ")\n");
 
@@ -111,6 +119,26 @@ public class CompileThingFile implements IHandler {
 			for(String warning : ThingMLCompiler.warnings) {
 				ThingMLConsole.getInstance().printMessage(warning + "\n");
 			}
+			
+			
+
+			
+			/*System.out.println("checking.......");
+			CheckThingMLFile.running = true;
+
+			ILiveValidator validator = (ILiveValidator)ModelValidationService.getInstance().newValidator(EvaluationMode.LIVE);
+			//validator.setIncludeLiveConstraints(true);
+
+			//IStatus status = validator.validate(model);
+			
+			Resource r = ThingMLCompiler.resource;
+			if (!r.eAdapters().contains(liveValidationContentAdapter)) {
+				r.eAdapters().add(liveValidationContentAdapter);
+			}
+			
+			CheckThingMLFile.running = false;
+			System.out.println("done!");*/
+			
 
 			// Look for a Configurations to compile
 			ArrayList<Configuration> toCompile = new ArrayList<Configuration>();
@@ -190,7 +218,7 @@ public class CompileThingFile implements IHandler {
 				compiler.checker.do_check(cfg);
 				ThingMLConsole.getInstance().printMessage("Configuration " + cfg.getName() + " contains " + compiler.checker.Errors.size() + " error(s), " + compiler.checker.Warnings.size() + " warning(s), and " + compiler.checker.Notices.size() + " notices.\n");
 				if (compiler.checker.Errors.size() > 0) {
-					ThingMLConsole.getInstance().printMessage("Please fix the errors below. In future versions, we will block the code generation if errors are identified!");	
+					ThingMLConsole.getInstance().printMessage("Please fix the errors below. In future versions, we will block the code generation if errors are identified!\n");	
 				}
 				for(CheckerInfo i : compiler.checker.Errors) {
 					ThingMLConsole.getInstance().printError(i.toString());		         

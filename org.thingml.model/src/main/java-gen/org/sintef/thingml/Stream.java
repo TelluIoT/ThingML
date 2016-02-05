@@ -40,7 +40,7 @@ import org.eclipse.emf.common.util.EList;
 public interface Stream extends AnnotatedElement {
 	/**
 	 * Returns the value of the '<em><b>Selection</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.StreamExpression}.
+	 * The list contents are of type {@link org.sintef.thingml.LocalVariable}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Selection</em>' containment reference list isn't clear,
@@ -52,7 +52,7 @@ public interface Stream extends AnnotatedElement {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<StreamExpression> getSelection();
+	EList<LocalVariable> getSelection();
 
 	/**
 	 * Returns the value of the '<em><b>Output</b></em>' containment reference.
@@ -63,12 +63,12 @@ public interface Stream extends AnnotatedElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Output</em>' containment reference.
-	 * @see #setOutput(StreamOutput)
+	 * @see #setOutput(SendAction)
 	 * @see org.sintef.thingml.ThingmlPackage#getStream_Output()
 	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	StreamOutput getOutput();
+	SendAction getOutput();
 
 	/**
 	 * Sets the value of the '{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}' containment reference.
@@ -78,7 +78,7 @@ public interface Stream extends AnnotatedElement {
 	 * @see #getOutput()
 	 * @generated
 	 */
-	void setOutput(StreamOutput value);
+	void setOutput(SendAction value);
 
 	/**
 	 * Returns the value of the '<em><b>Input</b></em>' containment reference.

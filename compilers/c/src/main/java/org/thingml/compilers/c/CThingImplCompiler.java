@@ -509,8 +509,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
                                 + ctx.traceTransition(thing, et) + "\\n\");\n");
                 }
-                
-                ctx.getCompiler().getThingActionCompiler().generate(et.getBefore(), builder, ctx);
 
                 // Execute the exit actions for current states (starting at the deepest)
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName() + ");\n");
@@ -523,8 +521,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 // Enter the target state and initialize its children
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName() + ");\n");
 
-                ctx.getCompiler().getThingActionCompiler().generate(et.getAfter(), builder, ctx);
-                
                 //New Empty Event Method
                 builder.append("return 1;\n");
             }
@@ -619,8 +615,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                                 + ctx.traceTransition(thing, et, port, msg) + "\\n\");\n");
             }
 
-                ctx.getCompiler().getThingActionCompiler().generate(et.getBefore(), builder, ctx);
-
                 // Execute the exit actions for current states (starting at the deepest)
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName() + ");\n");
                 // Set the new current state
@@ -631,8 +625,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
                 // Enter the target state and initialize its children
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnEntry(" + ctx.getStateID(et.getTarget()) + ", " + ctx.getInstanceVarName() + ");\n");
-
-                ctx.getCompiler().getThingActionCompiler().generate(et.getAfter(), builder, ctx);
 
                 // The event has been consumed
                 if (r != null) builder.append(ctx.getStateVarName(r)+ "_event_consumed = 1;\n");

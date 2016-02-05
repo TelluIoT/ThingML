@@ -620,15 +620,6 @@ public interface ThingmlFactory extends EFactory {
 	Stream createStream();
 
 	/**
-	 * Returns a new object of class '<em>Stream Expression</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Stream Expression</em>'.
-	 * @generated
-	 */
-	StreamExpression createStreamExpression();
-
-	/**
 	 * Returns a new object of class '<em>Stream Param Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -636,15 +627,6 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	StreamParamReference createStreamParamReference();
-
-	/**
-	 * Returns a new object of class '<em>Stream Output</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Stream Output</em>'.
-	 * @generated
-	 */
-	StreamOutput createStreamOutput();
 
 	/**
 	 * Returns a new object of class '<em>Join Sources</em>'.
@@ -683,6 +665,15 @@ public interface ThingmlFactory extends EFactory {
 	Filter createFilter();
 
 	/**
+	 * Returns a new object of class '<em>Operator</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Operator</em>'.
+	 * @generated
+	 */
+	Operator createOperator();
+
+	/**
 	 * Returns a new object of class '<em>Message Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -692,13 +683,13 @@ public interface ThingmlFactory extends EFactory {
 	MessageParameter createMessageParameter();
 
 	/**
-	 * Returns a new object of class '<em>Sgl Msg Param Operator Call</em>'.
+	 * Returns a new object of class '<em>Operator Call</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Sgl Msg Param Operator Call</em>'.
+	 * @return a new object of class '<em>Operator Call</em>'.
 	 * @generated
 	 */
-	SglMsgParamOperatorCall createSglMsgParamOperatorCall();
+	OperatorCall createOperatorCall();
 
 	/**
 	 * Returns a new object of class '<em>Reference</em>'.
@@ -708,15 +699,6 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	Reference createReference();
-
-	/**
-	 * Returns a new object of class '<em>Sgl Msg Param Operator</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Sgl Msg Param Operator</em>'.
-	 * @generated
-	 */
-	SglMsgParamOperator createSglMsgParamOperator();
 
 	/**
 	 * Returns a new object of class '<em>Length Window</em>'.

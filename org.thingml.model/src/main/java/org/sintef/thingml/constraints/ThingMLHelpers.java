@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 
 public class ThingMLHelpers {
@@ -516,6 +517,12 @@ public class ThingMLHelpers {
 	public static ArrayList<Variable> allVisibleVariables (EObject container) {
 		ArrayList<Variable> result = new ArrayList<Variable>();
 		
+		if (container instanceof LocalVariable) {
+			if (container.eContainer() instanceof Stream) {
+				return allVisibleVariables(container.eContainer());
+			}
+		}
+		
 		// Add the variables of the block if we are in a block
 		ActionBlock b = findContainingActionBlock(container);
 		if (b != null) {
@@ -543,13 +550,18 @@ public class ThingMLHelpers {
 			result.addAll(allVisibleVariables(f.eContainer()));
 		}
 		
+		Stream stream = findContainingStream(container);
+		if (stream != null) {
+			result.addAll(stream.getSelection());
+		}	
+		
 		// Only the variables of the thing if we are in a thing:
 		Thing t = findContainingThing(container);
 		if (t != null) {
 			// Properties from the thing
 			result.addAll(allProperties(t));
 			return result;
-		}
+		}		
 				
 		return result;		
 		
@@ -736,10 +748,17 @@ public class ThingMLHelpers {
 
 	public static ThingMLElement findReferenceContainer(Reference container) {
 		EObject parent = container.eContainer();
-
-		while (parent !=null && !(parent instanceof Handler || parent instanceof SglMsgParamOperator ||
-				parent instanceof StreamExpression || parent instanceof SourceComposition)) {
+		List<String> parents = new ArrayList<String>();
+		
+		while (parent !=null && !(parent instanceof Handler || parent instanceof Stream ||/*parent instanceof SglMsgParamOperator ||
+				parent instanceof StreamExpression ||*/ parent instanceof SourceComposition || parent instanceof Operator)) {
+			parents.add(parent.getClass().getName());
 			parent = parent.eContainer();
+		}
+		if (parent == null) {
+			for(String p : parents) {
+				System.out.println("Parent:" + parent);
+			}
 		}
 		return (ThingMLElement) parent;
 	}

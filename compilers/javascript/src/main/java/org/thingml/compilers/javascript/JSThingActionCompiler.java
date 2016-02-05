@@ -56,7 +56,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         builder.append(");\n");
     }
 
-    @Override
+    /*@Override
     public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
         builder.append("setImmediate(send" + ctx.firstToUpper(streamOutput.getMessage().getName()) + "On" + ctx.firstToUpper(streamOutput.getPort().getName()));
         for (StreamExpression se : streamOutput.getParameters()) {
@@ -64,7 +64,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             generate(se.getExpression(), builder, ctx);
         }
         builder.append(");\n");
-    }
+    }*/
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {

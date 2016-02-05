@@ -101,8 +101,6 @@ import org.sintef.thingml.Region;
 import org.sintef.thingml.RequiredPort;
 import org.sintef.thingml.ReturnAction;
 import org.sintef.thingml.SendAction;
-import org.sintef.thingml.SglMsgParamOperator;
-import org.sintef.thingml.SglMsgParamOperatorCall;
 import org.sintef.thingml.SimpleParamRef;
 import org.sintef.thingml.SimpleSource;
 import org.sintef.thingml.Source;
@@ -110,8 +108,6 @@ import org.sintef.thingml.SourceComposition;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
-import org.sintef.thingml.StreamExpression;
-import org.sintef.thingml.StreamOutput;
 import org.sintef.thingml.StreamParamReference;
 import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.Thing;
@@ -840,23 +836,10 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.STREAM_EXPRESSION: {
-				StreamExpression streamExpression = (StreamExpression)theEObject;
-				T result = caseStreamExpression(streamExpression);
-				if (result == null) result = caseThingMLElement(streamExpression);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ThingmlPackage.STREAM_PARAM_REFERENCE: {
 				StreamParamReference streamParamReference = (StreamParamReference)theEObject;
 				T result = caseStreamParamReference(streamParamReference);
 				if (result == null) result = caseExpression(streamParamReference);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ThingmlPackage.STREAM_OUTPUT: {
-				StreamOutput streamOutput = (StreamOutput)theEObject;
-				T result = caseStreamOutput(streamOutput);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -932,12 +915,13 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseMessageParameter(messageParameter);
 				if (result == null) result = caseThingMLElement(messageParameter);
 				if (result == null) result = caseReferencedElmt(messageParameter);
+				if (result == null) result = caseExpression(messageParameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL: {
-				SglMsgParamOperatorCall sglMsgParamOperatorCall = (SglMsgParamOperatorCall)theEObject;
-				T result = caseSglMsgParamOperatorCall(sglMsgParamOperatorCall);
+			case ThingmlPackage.OPERATOR_CALL: {
+				OperatorCall operatorCall = (OperatorCall)theEObject;
+				T result = caseOperatorCall(operatorCall);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -951,15 +935,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.REFERENCED_ELMT: {
 				ReferencedElmt referencedElmt = (ReferencedElmt)theEObject;
 				T result = caseReferencedElmt(referencedElmt);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR: {
-				SglMsgParamOperator sglMsgParamOperator = (SglMsgParamOperator)theEObject;
-				T result = caseSglMsgParamOperator(sglMsgParamOperator);
-				if (result == null) result = caseOperator(sglMsgParamOperator);
-				if (result == null) result = caseTypedElement(sglMsgParamOperator);
-				if (result == null) result = caseThingMLElement(sglMsgParamOperator);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -2282,21 +2257,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Stream Expression</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Stream Expression</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseStreamExpression(StreamExpression object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Stream Param Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -2308,21 +2268,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseStreamParamReference(StreamParamReference object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Stream Output</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Stream Output</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseStreamOutput(StreamOutput object) {
 		return null;
 	}
 
@@ -2462,17 +2407,17 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Sgl Msg Param Operator Call</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Operator Call</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Sgl Msg Param Operator Call</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Operator Call</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseSglMsgParamOperatorCall(SglMsgParamOperatorCall object) {
+	public T caseOperatorCall(OperatorCall object) {
 		return null;
 	}
 
@@ -2503,21 +2448,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseReferencedElmt(ReferencedElmt object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Sgl Msg Param Operator</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Sgl Msg Param Operator</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseSglMsgParamOperator(SglMsgParamOperator object) {
 		return null;
 	}
 

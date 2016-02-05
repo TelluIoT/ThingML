@@ -168,22 +168,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateOperator(Operator op, StringBuilder builder, Context ctx) {
-        if(op instanceof SglMsgParamOperator) {
-            SglMsgParamOperator sglMsgParamOperator = (SglMsgParamOperator) op;
-
-            Message paramMsg = sglMsgParamOperator.getParameter().getMsgRef();
+            Message paramMsg = op.getParameter().getMsgRef();
             String paramMsgName = paramMsg.getName();
             String paramMsgType = ctx.firstToUpper(paramMsgName) + "MessageType." + ctx.firstToUpper(paramMsgName) + "Message";
 
-            builder.append("private Func1<" + paramMsgType + ",Boolean> " + sglMsgParamOperator.getName() + "() {\n")
+            builder.append("private Func1<" + paramMsgType + ",Boolean> " + op.getName() + "() {\n")
                     .append("return new Func1<" + paramMsgType + ",Boolean>() {\n")
                     .append("@Override\n")
-                    .append("public Boolean call(" + paramMsgType + " " + sglMsgParamOperator.getParameter().getName() +") {\n");
-            ctx.getCompiler().getThingActionCompiler().generate(sglMsgParamOperator.getBody(), builder, ctx);
+                    .append("public Boolean call(" + paramMsgType + " " + op.getParameter().getName() +") {\n");
+            ctx.getCompiler().getThingActionCompiler().generate(op.getBody(), builder, ctx);
             builder.append("}\n")
                     .append("};\n")
                     .append("}\n");
-        }
     }
 
 

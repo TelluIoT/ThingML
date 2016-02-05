@@ -103,8 +103,6 @@ import org.sintef.thingml.Region;
 import org.sintef.thingml.RequiredPort;
 import org.sintef.thingml.ReturnAction;
 import org.sintef.thingml.SendAction;
-import org.sintef.thingml.SglMsgParamOperator;
-import org.sintef.thingml.SglMsgParamOperatorCall;
 import org.sintef.thingml.SimpleParamRef;
 import org.sintef.thingml.SimpleSource;
 import org.sintef.thingml.Source;
@@ -112,8 +110,6 @@ import org.sintef.thingml.SourceComposition;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
-import org.sintef.thingml.StreamExpression;
-import org.sintef.thingml.StreamOutput;
 import org.sintef.thingml.StreamParamReference;
 import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.Thing;
@@ -518,16 +514,8 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createStreamAdapter();
 			}
 			@Override
-			public Adapter caseStreamExpression(StreamExpression object) {
-				return createStreamExpressionAdapter();
-			}
-			@Override
 			public Adapter caseStreamParamReference(StreamParamReference object) {
 				return createStreamParamReferenceAdapter();
-			}
-			@Override
-			public Adapter caseStreamOutput(StreamOutput object) {
-				return createStreamOutputAdapter();
 			}
 			@Override
 			public Adapter caseSource(Source object) {
@@ -566,8 +554,8 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createMessageParameterAdapter();
 			}
 			@Override
-			public Adapter caseSglMsgParamOperatorCall(SglMsgParamOperatorCall object) {
-				return createSglMsgParamOperatorCallAdapter();
+			public Adapter caseOperatorCall(OperatorCall object) {
+				return createOperatorCallAdapter();
 			}
 			@Override
 			public Adapter caseReference(Reference object) {
@@ -576,10 +564,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseReferencedElmt(ReferencedElmt object) {
 				return createReferencedElmtAdapter();
-			}
-			@Override
-			public Adapter caseSglMsgParamOperator(SglMsgParamOperator object) {
-				return createSglMsgParamOperatorAdapter();
 			}
 			@Override
 			public Adapter caseLengthWindow(LengthWindow object) {
@@ -1794,20 +1778,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamExpression <em>Stream Expression</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.StreamExpression
-	 * @generated
-	 */
-	public Adapter createStreamExpressionAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1818,20 +1788,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStreamParamReferenceAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamOutput <em>Stream Output</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.StreamOutput
-	 * @generated
-	 */
-	public Adapter createStreamOutputAdapter() {
 		return null;
 	}
 
@@ -1962,16 +1918,16 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SglMsgParamOperatorCall <em>Sgl Msg Param Operator Call</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.OperatorCall <em>Operator Call</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.SglMsgParamOperatorCall
+	 * @see org.sintef.thingml.OperatorCall
 	 * @generated
 	 */
-	public Adapter createSglMsgParamOperatorCallAdapter() {
+	public Adapter createOperatorCallAdapter() {
 		return null;
 	}
 
@@ -2000,20 +1956,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createReferencedElmtAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.SglMsgParamOperator <em>Sgl Msg Param Operator</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.SglMsgParamOperator
-	 * @generated
-	 */
-	public Adapter createSglMsgParamOperatorAdapter() {
 		return null;
 	}
 

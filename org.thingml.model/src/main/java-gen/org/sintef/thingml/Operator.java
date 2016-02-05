@@ -29,10 +29,11 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Operator#getBody <em>Body</em>}</li>
+ *   <li>{@link org.sintef.thingml.Operator#getParameter <em>Parameter</em>}</li>
  * </ul>
  *
  * @see org.sintef.thingml.ThingmlPackage#getOperator()
- * @model abstract="true"
+ * @model
  * @generated
  */
 public interface Operator extends TypedElement, ThingMLElement {
@@ -61,5 +62,31 @@ public interface Operator extends TypedElement, ThingMLElement {
 	 * @generated
 	 */
 	void setBody(ActionBlock value);
+
+	/**
+	 * Returns the value of the '<em><b>Parameter</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Parameter</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Parameter</em>' containment reference.
+	 * @see #setParameter(MessageParameter)
+	 * @see org.sintef.thingml.ThingmlPackage#getOperator_Parameter()
+	 * @model containment="true" required="true"
+	 * @generated
+	 */
+	MessageParameter getParameter();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.Operator#getParameter <em>Parameter</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Parameter</em>' containment reference.
+	 * @see #getParameter()
+	 * @generated
+	 */
+	void setParameter(MessageParameter value);
 
 } // Operator
