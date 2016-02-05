@@ -22,7 +22,7 @@ thing TestDeepCompositeStatesWithStream includes Test, TestMsgs
     
     stream testIn do
         from e : [ harnessIn?testIn ]
-        select c : e.c
+        select var c : Char = e.c
         action cepSendService!cep(c)
     end
     

@@ -46,7 +46,9 @@ thing TestMergeStreams includes CepMsgs,  SampleMsgs, Test
     
     stream mergeMessagesWithValues do
         from [ rcvPort?m4 | rcvPort?m5 | rcvPort?m6 | rcvPort?m7 -> cep2(#0,complexTransforming(#1),(#2 * 2))]
-        select a : #0, b: complexTransforming(#1) - 1, c: #2 + 5
+        select var a : Integer = #0, 
+        var b : Integer = complexTransforming(#1) - 1, 
+        var c : Integer = #2 + 5
         action sendPort!cep2(a,b,c)
     end
     

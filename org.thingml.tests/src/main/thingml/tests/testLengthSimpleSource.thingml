@@ -44,7 +44,7 @@ thing TestLengthSimpleSource includes Test, TestFilterLengthMsgs
     
    stream sumM1 do
         from cHR : [recvPort?m1]::lengthWindow(5)
-        select sum: sum(cHR.x[])
+        select var sum : Char = sum(cHR.x[])
         action harnessOut!testOut(sum)
         
    end
@@ -65,7 +65,9 @@ thing TestLengthSimpleSource includes Test, TestFilterLengthMsgs
    
    stream avgM1M2 do
         from mge : [ recvPort?m2 | recvPort?m3 -> m2m3(#0,#1,#2)]::lengthWindow(4)
-        select avgA: avgParam(mge.a[]) , avgB: avgParam(mge.b[]), avgC: avgParam(mge.c[])
+        select var avgA : JInt = avgParam(mge.a[]) , 
+        var avgB : JInt = avgParam(mge.b[]), 
+        var avgC : JInt = avgParam(mge.c[])
         action sendPort!m2m3(avgA,avgB,avgC)
         
    end  
@@ -82,7 +84,9 @@ thing TestLengthSimpleSource includes Test, TestFilterLengthMsgs
    
    stream maxM1M2 do
         from jn : [ e1 : recvPort?m2 & e2 : recvPort?m3 -> m2m3(e1.x + e2.v1,e1.y + e2.v2,e1.z + e2.v3)]::lengthWindow(2)
-        select maxA : max(jn.a[]), maxB: max(jn.b[]), maxC: max(jn.c[])
+        select var maxA : JInt = max(jn.a[]), 
+        var maxB : JInt = max(jn.b[]), 
+        var maxC : JInt = max(jn.c[])
         action sendPort!m2m3(maxA,maxB,maxC)
    end
    

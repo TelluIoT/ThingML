@@ -14,7 +14,7 @@ thing TestSimpleFilter includes Test
     
     stream filterSimpleSourceOK do
         from fSS : [ harnessIn?testIn ]::filter(filterFSS(fSS))::filter(alwaysTrue(fSS))
-        select a : fSS.c
+        select var a : Char = fSS.c
         action harnessOut!testOut(a)
     end
     
@@ -24,7 +24,7 @@ thing TestSimpleFilter includes Test
      
     stream filterSimpleSourceFail do
         from fSS : [ harnessIn?testIn ]::filter(filterFSSFail(fSS))
-        select a : fSS.c
+        select var a : Char = fSS.c
         action harnessOut!testOut(a)
     end
     
