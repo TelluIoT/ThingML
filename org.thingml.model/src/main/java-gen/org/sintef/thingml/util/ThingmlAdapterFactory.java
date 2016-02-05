@@ -110,7 +110,6 @@ import org.sintef.thingml.SourceComposition;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
-import org.sintef.thingml.StreamParamReference;
 import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLElement;
@@ -512,10 +511,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseStream(Stream object) {
 				return createStreamAdapter();
-			}
-			@Override
-			public Adapter caseStreamParamReference(StreamParamReference object) {
-				return createStreamParamReferenceAdapter();
 			}
 			@Override
 			public Adapter caseSource(Source object) {
@@ -1774,20 +1769,6 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStreamAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.sintef.thingml.StreamParamReference
-	 * @generated
-	 */
-	public Adapter createStreamParamReferenceAdapter() {
 		return null;
 	}
 

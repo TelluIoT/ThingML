@@ -620,15 +620,6 @@ public interface ThingmlFactory extends EFactory {
 	Stream createStream();
 
 	/**
-	 * Returns a new object of class '<em>Stream Param Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Stream Param Reference</em>'.
-	 * @generated
-	 */
-	StreamParamReference createStreamParamReference();
-
-	/**
 	 * Returns a new object of class '<em>Join Sources</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

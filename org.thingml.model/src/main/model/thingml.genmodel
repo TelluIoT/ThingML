@@ -247,9 +247,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/output"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/input"/>
     </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//StreamParamReference">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//StreamParamReference/indexParam"/>
-    </genClasses>
     <genClasses image="false" ecoreClass="thingml.ecore#//Source">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Source/operators"/>
     </genClasses>

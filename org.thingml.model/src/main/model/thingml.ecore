@@ -17,7 +17,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Action"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//AnnotatedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//AnnotatedElement #//ReferencedElmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//Parameter" containment="true"/>
   </eClassifiers>
@@ -336,10 +336,6 @@
         eType="#//SendAction" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="input" lowerBound="1" eType="#//Source"
         containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StreamParamReference" eSuperTypes="#//Expression">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexParam" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="0"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true" eSuperTypes="#//ThingMLElement #//ReferencedElmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"

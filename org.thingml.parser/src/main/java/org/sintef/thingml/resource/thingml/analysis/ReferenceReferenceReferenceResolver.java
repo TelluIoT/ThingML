@@ -70,12 +70,20 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 				result.setErrorMessage("Cannot resolve parameter " + identifier);
 			}
 		} else if(parent instanceof SourceComposition) {//we reference an event in one of the stream inputs
-			for(Source source : ((SourceComposition) parent).getSources()) {
-				ReceiveMessage receiveMessage = ((SimpleSource) source).getMessage();
-				if(resolveFuzzy && receiveMessage.getName().startsWith(identifier)) {
-					result.addMapping(receiveMessage.getName(),receiveMessage);
-				} else if(!resolveFuzzy && receiveMessage.getName().equals(identifier)) {
-					result.addMapping(receiveMessage.getName(),receiveMessage);
+			SourceComposition sc = (SourceComposition) parent;
+			if(resolveFuzzy && sc.getName().startsWith(identifier)) {
+				result.addMapping(sc.getName(), sc.getResultMessage());
+			} else if(!resolveFuzzy && sc.getName().equals(identifier)) {
+				result.addMapping(sc.getName(), sc.getResultMessage());
+			}
+			if(!result.wasResolved()) {
+				for(Source source : ((SourceComposition) parent).getSources()) {
+					ReceiveMessage receiveMessage = ((SimpleSource) source).getMessage();
+					if(resolveFuzzy && receiveMessage.getName().startsWith(identifier)) {
+						result.addMapping(receiveMessage.getName(),receiveMessage);
+					} else if(!resolveFuzzy && receiveMessage.getName().equals(identifier)) {
+						result.addMapping(receiveMessage.getName(),receiveMessage);
+					}
 				}
 			}
 

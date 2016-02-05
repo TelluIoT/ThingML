@@ -33,7 +33,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface Message extends AnnotatedElement {
+public interface Message extends AnnotatedElement, ReferencedElmt {
 	/**
 	 * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
 	 * The list contents are of type {@link org.sintef.thingml.Parameter}.

@@ -108,7 +108,6 @@ import org.sintef.thingml.SourceComposition;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
-import org.sintef.thingml.StreamParamReference;
 import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLElement;
@@ -203,6 +202,7 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				Message message = (Message)theEObject;
 				T result = caseMessage(message);
 				if (result == null) result = caseAnnotatedElement(message);
+				if (result == null) result = caseReferencedElmt(message);
 				if (result == null) result = caseThingMLElement(message);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -833,13 +833,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				T result = caseStream(stream);
 				if (result == null) result = caseAnnotatedElement(stream);
 				if (result == null) result = caseThingMLElement(stream);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ThingmlPackage.STREAM_PARAM_REFERENCE: {
-				StreamParamReference streamParamReference = (StreamParamReference)theEObject;
-				T result = caseStreamParamReference(streamParamReference);
-				if (result == null) result = caseExpression(streamParamReference);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -2253,21 +2246,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseStream(Stream object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Stream Param Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Stream Param Reference</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseStreamParamReference(StreamParamReference object) {
 		return null;
 	}
 

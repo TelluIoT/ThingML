@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.mopp;
 
@@ -331,10 +322,6 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		}
 		if (element instanceof org.sintef.thingml.NotExpression) {
 			print_org_sintef_thingml_NotExpression((org.sintef.thingml.NotExpression) element, globaltab, out);
-			return;
-		}
-		if (element instanceof org.sintef.thingml.StreamParamReference) {
-			print_org_sintef_thingml_StreamParamReference((org.sintef.thingml.StreamParamReference) element, globaltab, out);
 			return;
 		}
 		if (element instanceof org.sintef.thingml.Reference) {
@@ -8820,34 +8807,6 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
 			printCountingMap.put("term", count - 1);
-		}
-	}
-	
-	
-	public void print_org_sintef_thingml_StreamParamReference(org.sintef.thingml.StreamParamReference element, String outertab, java.io.PrintWriter out) {
-		// The printCountingMap contains a mapping from feature names to the number of
-		// remaining elements that still need to be printed. The map is initialized with
-		// the number of elements stored in each structural feature. For lists this is the
-		// list size. For non-multiple features it is either 1 (if the feature is set) or
-		// 0 (if the feature is null).
-		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(1);
-		Object temp;
-		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.STREAM_PARAM_REFERENCE__INDEX_PARAM));
-		printCountingMap.put("indexParam", temp == null ? 0 : 1);
-		// print collected hidden tokens
-		int count;
-		// DEFINITION PART BEGINS (CsString)
-		out.print("#");
-		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
-		count = printCountingMap.get("indexParam");
-		if (count > 0) {
-			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.STREAM_PARAM_REFERENCE__INDEX_PARAM));
-			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("INTEGER_LITERAL");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.STREAM_PARAM_REFERENCE__INDEX_PARAM), element));
-			}
-			printCountingMap.put("indexParam", count - 1);
 		}
 	}
 	

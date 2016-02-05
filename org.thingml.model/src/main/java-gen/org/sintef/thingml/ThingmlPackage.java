@@ -3959,34 +3959,6 @@ public interface ThingmlPackage extends EPackage {
 	int STREAM_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.StreamParamReferenceImpl <em>Stream Param Reference</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.StreamParamReferenceImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamParamReference()
-	 * @generated
-	 */
-	int STREAM_PARAM_REFERENCE = 82;
-
-	/**
-	 * The feature id for the '<em><b>Index Param</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STREAM_PARAM_REFERENCE__INDEX_PARAM = EXPRESSION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Stream Param Reference</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STREAM_PARAM_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
-
-	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.SourceImpl <em>Source</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3994,7 +3966,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSource()
 	 * @generated
 	 */
-	int SOURCE = 83;
+	int SOURCE = 82;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4031,7 +4003,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSourceComposition()
 	 * @generated
 	 */
-	int SOURCE_COMPOSITION = 84;
+	int SOURCE_COMPOSITION = 83;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4095,7 +4067,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getJoinSources()
 	 * @generated
 	 */
-	int JOIN_SOURCES = 85;
+	int JOIN_SOURCES = 84;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4159,7 +4131,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMergeSources()
 	 * @generated
 	 */
-	int MERGE_SOURCES = 86;
+	int MERGE_SOURCES = 85;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4223,7 +4195,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleSource()
 	 * @generated
 	 */
-	int SIMPLE_SOURCE = 87;
+	int SIMPLE_SOURCE = 86;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4269,7 +4241,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getViewSource()
 	 * @generated
 	 */
-	int VIEW_SOURCE = 88;
+	int VIEW_SOURCE = 87;
 
 	/**
 	 * The number of structural features of the '<em>View Source</em>' class.
@@ -4288,7 +4260,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFilter()
 	 * @generated
 	 */
-	int FILTER = 89;
+	int FILTER = 88;
 
 	/**
 	 * The feature id for the '<em><b>Filter Op</b></em>' containment reference.
@@ -4317,7 +4289,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getOperator()
 	 * @generated
 	 */
-	int OPERATOR = 90;
+	int OPERATOR = 89;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' reference.
@@ -4390,7 +4362,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessageParameter()
 	 * @generated
 	 */
-	int MESSAGE_PARAMETER = 91;
+	int MESSAGE_PARAMETER = 90;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4427,7 +4399,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getOperatorCall()
 	 * @generated
 	 */
-	int OPERATOR_CALL = 92;
+	int OPERATOR_CALL = 91;
 
 	/**
 	 * The feature id for the '<em><b>Operator Ref</b></em>' reference.
@@ -4464,7 +4436,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReference()
 	 * @generated
 	 */
-	int REFERENCE = 93;
+	int REFERENCE = 92;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -4501,7 +4473,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReferencedElmt()
 	 * @generated
 	 */
-	int REFERENCED_ELMT = 94;
+	int REFERENCED_ELMT = 93;
 
 	/**
 	 * The number of structural features of the '<em>Referenced Elmt</em>' class.
@@ -4521,7 +4493,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getWindowView()
 	 * @generated
 	 */
-	int WINDOW_VIEW = 103;
+	int WINDOW_VIEW = 102;
 
 	/**
 	 * The number of structural features of the '<em>Window View</em>' class.
@@ -4540,7 +4512,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthWindow()
 	 * @generated
 	 */
-	int LENGTH_WINDOW = 95;
+	int LENGTH_WINDOW = 94;
 
 	/**
 	 * The feature id for the '<em><b>Nb Events</b></em>' attribute.
@@ -4578,7 +4550,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getTimeWindow()
 	 * @generated
 	 */
-	int TIME_WINDOW = 96;
+	int TIME_WINDOW = 95;
 
 	/**
 	 * The feature id for the '<em><b>Step</b></em>' attribute.
@@ -4616,7 +4588,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getElmtProperty()
 	 * @generated
 	 */
-	int ELMT_PROPERTY = 100;
+	int ELMT_PROPERTY = 99;
 
 	/**
 	 * The number of structural features of the '<em>Elmt Property</em>' class.
@@ -4635,7 +4607,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getParamReference()
 	 * @generated
 	 */
-	int PARAM_REFERENCE = 97;
+	int PARAM_REFERENCE = 96;
 
 	/**
 	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -4664,7 +4636,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleParamRef()
 	 * @generated
 	 */
-	int SIMPLE_PARAM_REF = 98;
+	int SIMPLE_PARAM_REF = 97;
 
 	/**
 	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -4692,7 +4664,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getArrayParamRef()
 	 * @generated
 	 */
-	int ARRAY_PARAM_REF = 99;
+	int ARRAY_PARAM_REF = 98;
 
 	/**
 	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -4721,7 +4693,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPredifinedProperty()
 	 * @generated
 	 */
-	int PREDIFINED_PROPERTY = 101;
+	int PREDIFINED_PROPERTY = 100;
 
 	/**
 	 * The number of structural features of the '<em>Predifined Property</em>' class.
@@ -4740,7 +4712,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthArray()
 	 * @generated
 	 */
-	int LENGTH_ARRAY = 102;
+	int LENGTH_ARRAY = 101;
 
 	/**
 	 * The number of structural features of the '<em>Length Array</em>' class.
@@ -4760,7 +4732,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getProtocol()
 	 * @generated
 	 */
-	int PROTOCOL = 104;
+	int PROTOCOL = 103;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4798,7 +4770,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getObjectType()
 	 * @generated
 	 */
-	int OBJECT_TYPE = 105;
+	int OBJECT_TYPE = 104;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6823,27 +6795,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getStream_Input();
-
-	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.StreamParamReference <em>Stream Param Reference</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Stream Param Reference</em>'.
-	 * @see org.sintef.thingml.StreamParamReference
-	 * @generated
-	 */
-	EClass getStreamParamReference();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.sintef.thingml.StreamParamReference#getIndexParam <em>Index Param</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Index Param</em>'.
-	 * @see org.sintef.thingml.StreamParamReference#getIndexParam()
-	 * @see #getStreamParamReference()
-	 * @generated
-	 */
-	EAttribute getStreamParamReference_IndexParam();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Source <em>Source</em>}'.
@@ -8970,24 +8921,6 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference STREAM__INPUT = eINSTANCE.getStream_Input();
-
-		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.StreamParamReferenceImpl <em>Stream Param Reference</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.StreamParamReferenceImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStreamParamReference()
-		 * @generated
-		 */
-		EClass STREAM_PARAM_REFERENCE = eINSTANCE.getStreamParamReference();
-
-		/**
-		 * The meta object literal for the '<em><b>Index Param</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute STREAM_PARAM_REFERENCE__INDEX_PARAM = eINSTANCE.getStreamParamReference_IndexParam();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.SourceImpl <em>Source</em>}' class.

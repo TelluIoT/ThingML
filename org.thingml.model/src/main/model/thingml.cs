@@ -343,10 +343,7 @@ RULES {
 	@Operator(type="unary_prefix", weight="7", superclass="Expression")	
 	NotExpression ::= "not" #1 term;
 	
-	//CEP
-	@Operator(type="primitive", weight="9", superclass="Expression")
-	StreamParamReference ::= "#" indexParam[INTEGER_LITERAL];
-	
+	//CEP	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	Reference ::= reference[] "." parameter;	
 	

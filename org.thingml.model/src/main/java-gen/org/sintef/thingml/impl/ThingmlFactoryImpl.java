@@ -92,7 +92,6 @@ import org.sintef.thingml.SimpleSource;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
-import org.sintef.thingml.StreamParamReference;
 import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
@@ -214,7 +213,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
 			case ThingmlPackage.LOCAL_VARIABLE: return createLocalVariable();
 			case ThingmlPackage.STREAM: return createStream();
-			case ThingmlPackage.STREAM_PARAM_REFERENCE: return createStreamParamReference();
 			case ThingmlPackage.JOIN_SOURCES: return createJoinSources();
 			case ThingmlPackage.MERGE_SOURCES: return createMergeSources();
 			case ThingmlPackage.SIMPLE_SOURCE: return createSimpleSource();
@@ -883,16 +881,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public Stream createStream() {
 		StreamImpl stream = new StreamImpl();
 		return stream;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public StreamParamReference createStreamParamReference() {
-		StreamParamReferenceImpl streamParamReference = new StreamParamReferenceImpl();
-		return streamParamReference;
 	}
 
 	/**

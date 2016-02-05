@@ -1,17 +1,8 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ * <copyright>
+ * </copyright>
  *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package org.sintef.thingml.resource.thingml.util;
 
@@ -559,12 +550,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.StreamParamReference) {
-			result = interprete_org_sintef_thingml_StreamParamReference((org.sintef.thingml.StreamParamReference) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.JoinSources) {
 			result = interprete_org_sintef_thingml_JoinSources((org.sintef.thingml.JoinSources) object, context);
 		}
@@ -597,6 +582,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.Filter) {
 			result = interprete_org_sintef_thingml_Filter((org.sintef.thingml.Filter) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.TimeWindow) {
+			result = interprete_org_sintef_thingml_TimeWindow((org.sintef.thingml.TimeWindow) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -639,12 +630,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.LengthWindow) {
 			result = interprete_org_sintef_thingml_LengthWindow((org.sintef.thingml.LengthWindow) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.TimeWindow) {
-			result = interprete_org_sintef_thingml_TimeWindow((org.sintef.thingml.TimeWindow) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -1031,10 +1016,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_Stream(org.sintef.thingml.Stream stream, ContextType context) {
-		return null;
-	}
-	
-	public ResultType interprete_org_sintef_thingml_StreamParamReference(org.sintef.thingml.StreamParamReference streamParamReference, ContextType context) {
 		return null;
 	}
 	

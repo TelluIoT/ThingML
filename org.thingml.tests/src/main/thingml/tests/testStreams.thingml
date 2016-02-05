@@ -74,18 +74,18 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
     end
     
     stream mergeMessagesWithValues do
-        from [ rcvPort?m5 | rcvPort?m6 -> cep4(#0,complexTransforming(#1),(#2 * 2) + 5)]
-        select var a : JInt = #0, 
-        var b : JInt = #1, 
-        var c : JInt = #2
+        from result : [ rcvPort?m5 | rcvPort?m6 -> cep4(result.a,complexTransforming(result.b),(result.c * 2) + 5)]
+        select var a : JInt = result.a, 
+        var b : JInt = result.b, 
+        var c : JInt = result.c
         action sendPort!cep4(a,b,c)
     end
     
     stream joinMessages do
-        from [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1, e1.b * e2.v2, e1.c * e2.v3)]
-        select var a : JInt = #0, 
-        var b : JInt = #1, 
-        var c : JInt = #2
+        from result : [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1, e1.b * e2.v2, e1.c * e2.v3)]
+        select var a : JInt = result.a, 
+        var b : JInt = result.b, 
+        var c : JInt = result.c
         action sendPort!cep5(a,b,c)
     end
     

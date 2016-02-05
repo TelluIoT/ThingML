@@ -114,7 +114,6 @@ import org.sintef.thingml.SourceComposition;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
-import org.sintef.thingml.StreamParamReference;
 import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLElement;
@@ -713,13 +712,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass streamEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass streamParamReferenceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2649,24 +2641,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getStreamParamReference() {
-		return streamParamReferenceEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getStreamParamReference_IndexParam() {
-		return (EAttribute)streamParamReferenceEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getSource() {
 		return sourceEClass;
 	}
@@ -3330,9 +3304,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(streamEClass, STREAM__OUTPUT);
 		createEReference(streamEClass, STREAM__INPUT);
 
-		streamParamReferenceEClass = createEClass(STREAM_PARAM_REFERENCE);
-		createEAttribute(streamParamReferenceEClass, STREAM_PARAM_REFERENCE__INDEX_PARAM);
-
 		sourceEClass = createEClass(SOURCE);
 		createEReference(sourceEClass, SOURCE__OPERATORS);
 
@@ -3429,6 +3400,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		functionEClass.getESuperTypes().add(this.getAnnotatedElement());
 		functionEClass.getESuperTypes().add(this.getTypedElement());
 		messageEClass.getESuperTypes().add(this.getAnnotatedElement());
+		messageEClass.getESuperTypes().add(this.getReferencedElmt());
 		thingEClass.getESuperTypes().add(this.getType());
 		parameterEClass.getESuperTypes().add(this.getVariable());
 		parameterEClass.getESuperTypes().add(this.getReferencedElmt());
@@ -3510,7 +3482,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		localVariableEClass.getESuperTypes().add(this.getVariable());
 		localVariableEClass.getESuperTypes().add(this.getAction());
 		streamEClass.getESuperTypes().add(this.getAnnotatedElement());
-		streamParamReferenceEClass.getESuperTypes().add(this.getExpression());
 		sourceEClass.getESuperTypes().add(this.getThingMLElement());
 		sourceEClass.getESuperTypes().add(this.getReferencedElmt());
 		sourceCompositionEClass.getESuperTypes().add(this.getSource());
@@ -3806,9 +3777,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getStream_Selection(), this.getLocalVariable(), null, "selection", null, 0, -1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStream_Output(), this.getSendAction(), null, "output", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getStream_Input(), this.getSource(), null, "input", null, 1, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(streamParamReferenceEClass, StreamParamReference.class, "StreamParamReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getStreamParamReference_IndexParam(), ecorePackage.getEInt(), "indexParam", "0", 1, 1, StreamParamReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(sourceEClass, Source.class, "Source", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSource_Operators(), this.getViewSource(), null, "operators", null, 0, -1, Source.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

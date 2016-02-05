@@ -750,8 +750,7 @@ public class ThingMLHelpers {
 		EObject parent = container.eContainer();
 		List<String> parents = new ArrayList<String>();
 		
-		while (parent !=null && !(parent instanceof Handler || parent instanceof Stream ||/*parent instanceof SglMsgParamOperator ||
-				parent instanceof StreamExpression ||*/ parent instanceof SourceComposition || parent instanceof Operator)) {
+		while (parent !=null && !(parent instanceof Handler || parent instanceof Stream || parent instanceof SourceComposition || parent instanceof Operator)) {
 			parents.add(parent.getClass().getName());
 			parent = parent.eContainer();
 		}
