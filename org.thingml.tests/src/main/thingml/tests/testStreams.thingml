@@ -69,15 +69,15 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
     end
     
     stream mergedSimpleMessages do
-        from [ rcvPort?m3 | rcvPort?m4 -> cep3()]
+        from result : [ rcvPort?m3 | rcvPort?m4 -> cep3]
         action sendPort!cep3()
     end
     
     stream mergeMessagesWithValues do
-        from result : [ rcvPort?m5 | rcvPort?m6 -> cep4(result.a,complexTransforming(result.b),(result.c * 2) + 5)]
+        from result : [ rcvPort?m5 | rcvPort?m6 -> cep4]
         select var a : JInt = result.a, 
-        var b : JInt = result.b, 
-        var c : JInt = result.c
+        var b : JInt = complexTransforming(result.b) - 1, 
+        var c : JInt = 0
         action sendPort!cep4(a,b,c)
     end
     
@@ -133,8 +133,8 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
             event e : rcvPort?cep4
             action do
                 print "cep4 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ")."
-                if(e.a == 1 and e.b == 3 and e.c == 11) harnessOut!testOut('\'5\'')
-                if(e.a == 4 and e.b == 6 and e.c == 17) harnessOut!testOut('\'6\'')
+                if(e.a == 1 and e.b == 2 and e.c == 0) harnessOut!testOut('\'5\'')
+                if(e.a == 4 and e.b == 5 and e.c == 0) harnessOut!testOut('\'6\'')
             end
             
             internal

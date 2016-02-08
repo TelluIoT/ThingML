@@ -37,12 +37,12 @@ thing TestMergeFilter includes Test, TestMsgs
     end
 
     stream filteredMergeOK do
-        from m : [ e1 : [recv?m1]::filter(m1NotPassed(e1)) | e2 : [recv?m2]::filter(m2Passed(e2)) | recv?m3 -> res()]::filter(mergePassed(m))
+        from m : [ e1 : [recv?m1]::filter(m1NotPassed(e1)) | e2 : [recv?m2]::filter(m2Passed(e2)) | recv?m3 -> res]::filter(mergePassed(m))
         action send!res()
     end
     
     stream filteredMergeFail do
-        from m : [ e1 : [recv?m1]::filter(m1NotPassed(e1)) | e2 : [recv?m2]::filter(m2Passed(e2)) | recv?m3 -> res()]::filter(mergeNotPassed(m))
+        from m : [ e1 : [recv?m1]::filter(m1NotPassed(e1)) | e2 : [recv?m2]::filter(m2Passed(e2)) | recv?m3 -> res]::filter(mergeNotPassed(m))
         action send!res()
     end
 

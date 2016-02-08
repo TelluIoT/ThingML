@@ -64,7 +64,7 @@ thing TestLengthSimpleSource includes Test, TestFilterLengthMsgs
    end
    
    stream avgM1M2 do
-        from mge : [ recvPort?m2 | recvPort?m3 -> m2m3(mge.a, mge.b, mge.c)]::lengthWindow(4)
+        from mge : [ recvPort?m2 | recvPort?m3 -> m2m3]::lengthWindow(4)
         select var avgA : JInt = avgParam(mge.a[]) , 
         var avgB : JInt = avgParam(mge.b[]), 
         var avgC : JInt = avgParam(mge.c[])
