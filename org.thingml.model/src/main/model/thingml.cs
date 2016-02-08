@@ -182,7 +182,7 @@ RULES {
 	
 	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? )? #1 body ;
 	
-	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams | operators)* !0 "}" ;
+	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams)* !0 "}" ;
 	
 	RequiredPort ::= !1 (optional[T_OPTIONAL])? "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 
@@ -273,12 +273,9 @@ RULES {
 	// *******************************
 	// * CEP
 	// *******************************
-	Operator ::= "operator" #1 name[] "(" parameter ")" ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? #1 body;
 	MessageParameter ::= name[] ":" msgRef[];
-
-	OperatorCall ::= operatorRef[] "(" parameter[] (("," #1 parameter[])* )? ")";
 	
-	Filter ::= "filter" "(" filterOp ")";
+	Filter ::= "keep" "(" guard ")";
 	LengthWindow ::= "lengthWindow" "(" nbEvents[INTEGER_LITERAL] ("," step[INTEGER_LITERAL])? ")";
 	TimeWindow ::= "timeWindow" "(" step[INTEGER_LITERAL] "," size[INTEGER_LITERAL] ")";
 		

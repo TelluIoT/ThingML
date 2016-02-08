@@ -27,7 +27,9 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 public class JavaCepViewCompiler extends ThingCepViewCompiler{
     @Override
     public void generate(Filter filter, StringBuilder builder, Context context) {
-        builder.append(".filter(" + filter.getFilterOp().getOperatorRef().getName() + "())");
+        builder.append(".filter(");
+        context.getCompiler().getThingActionCompiler().generate(filter.getGuard(), builder, context);
+        builder.append("())");
     }
 
     @Override

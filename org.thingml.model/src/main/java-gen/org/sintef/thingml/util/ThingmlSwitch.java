@@ -78,7 +78,6 @@ import org.sintef.thingml.MessageParameter;
 import org.sintef.thingml.MinusExpression;
 import org.sintef.thingml.ModExpression;
 import org.sintef.thingml.NotExpression;
-import org.sintef.thingml.Operator;
 import org.sintef.thingml.OrExpression;
 import org.sintef.thingml.ParallelRegion;
 import org.sintef.thingml.ParamReference;
@@ -895,26 +894,12 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.OPERATOR: {
-				Operator operator = (Operator)theEObject;
-				T result = caseOperator(operator);
-				if (result == null) result = caseTypedElement(operator);
-				if (result == null) result = caseThingMLElement(operator);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case ThingmlPackage.MESSAGE_PARAMETER: {
 				MessageParameter messageParameter = (MessageParameter)theEObject;
 				T result = caseMessageParameter(messageParameter);
 				if (result == null) result = caseThingMLElement(messageParameter);
 				if (result == null) result = caseReferencedElmt(messageParameter);
 				if (result == null) result = caseExpression(messageParameter);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case ThingmlPackage.OPERATOR_CALL: {
-				OperatorCall operatorCall = (OperatorCall)theEObject;
-				T result = caseOperatorCall(operatorCall);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -2355,21 +2340,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Operator</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Operator</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseOperator(Operator object) {
-		return null;
-	}
-
-	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Message Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -2381,21 +2351,6 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseMessageParameter(MessageParameter object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Operator Call</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Operator Call</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseOperatorCall(OperatorCall object) {
 		return null;
 	}
 

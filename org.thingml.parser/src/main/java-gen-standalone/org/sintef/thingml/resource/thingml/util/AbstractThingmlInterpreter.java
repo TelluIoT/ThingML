@@ -595,32 +595,14 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.TimeWindow) {
-			result = interprete_org_sintef_thingml_TimeWindow((org.sintef.thingml.TimeWindow) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.ViewSource) {
 			result = interprete_org_sintef_thingml_ViewSource((org.sintef.thingml.ViewSource) object, context);
 		}
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.Operator) {
-			result = interprete_org_sintef_thingml_Operator((org.sintef.thingml.Operator) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
 		if (object instanceof org.sintef.thingml.MessageParameter) {
 			result = interprete_org_sintef_thingml_MessageParameter((org.sintef.thingml.MessageParameter) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.OperatorCall) {
-			result = interprete_org_sintef_thingml_OperatorCall((org.sintef.thingml.OperatorCall) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -639,6 +621,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.LengthWindow) {
 			result = interprete_org_sintef_thingml_LengthWindow((org.sintef.thingml.LengthWindow) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.TimeWindow) {
+			result = interprete_org_sintef_thingml_TimeWindow((org.sintef.thingml.TimeWindow) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -1056,15 +1044,7 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
-	public ResultType interprete_org_sintef_thingml_Operator(org.sintef.thingml.Operator operator, ContextType context) {
-		return null;
-	}
-	
 	public ResultType interprete_org_sintef_thingml_MessageParameter(org.sintef.thingml.MessageParameter messageParameter, ContextType context) {
-		return null;
-	}
-	
-	public ResultType interprete_org_sintef_thingml_OperatorCall(org.sintef.thingml.OperatorCall operatorCall, ContextType context) {
 		return null;
 	}
 	

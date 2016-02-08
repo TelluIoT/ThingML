@@ -15,9 +15,7 @@
  */
 package org.thingml.compilers.javascript.cepHelper;
 
-import org.sintef.thingml.Filter;
-import org.sintef.thingml.LengthWindow;
-import org.sintef.thingml.TimeWindow;
+import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
 
@@ -27,7 +25,17 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 public class JSCepViewCompiler extends ThingCepViewCompiler {
     @Override
     public void generate(Filter filter, StringBuilder builder, Context context) {
-        builder.append(".filter(" + filter.getFilterOp().getOperatorRef().getName() + ")");
+        String param = "x";
+        if (filter.eContainer() instanceof SimpleSource) {
+            SimpleSource s = (SimpleSource) filter.eContainer();
+            param = s.getMessage().getMessage().getName();
+        } else if (filter.eContainer() instanceof SourceComposition) {
+            SourceComposition s = (SourceComposition) filter.eContainer();
+            param = s.getResultMessage().getName();
+        }
+        builder.append(".filter(function(" + param + ", idx, obs) {return ");
+        context.getCompiler().getThingActionCompiler().generate(filter.getGuard(), builder, context);
+        builder.append(";})");
     }
 
     @Override

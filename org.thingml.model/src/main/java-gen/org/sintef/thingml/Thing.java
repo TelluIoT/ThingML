@@ -37,7 +37,6 @@ import java.util.List;
  *   <li>{@link org.sintef.thingml.Thing#getMessages <em>Messages</em>}</li>
  *   <li>{@link org.sintef.thingml.Thing#getFunctions <em>Functions</em>}</li>
  *   <li>{@link org.sintef.thingml.Thing#getStreams <em>Streams</em>}</li>
- *   <li>{@link org.sintef.thingml.Thing#getOperators <em>Operators</em>}</li>
  * </ul>
  *
  * @see org.sintef.thingml.ThingmlPackage#getThing()
@@ -201,22 +200,6 @@ public interface Thing extends Type {
 	 */
 	EList<Stream> getStreams();
 
-				/**
-	 * Returns the value of the '<em><b>Operators</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.Operator}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Operators</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Operators</em>' containment reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getThing_Operators()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<Operator> getOperators();
-
 				//Derived properties
 
     /**
@@ -258,14 +241,7 @@ public interface Thing extends Type {
      * @generated NOT
      */
     List<Function> allFunctions();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    List<Operator> allOperators();
-
+    
     /**
      *
      * @return

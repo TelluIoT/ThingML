@@ -29,7 +29,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/messages"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/functions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/streams"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Thing/operators"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Parameter"/>
     <genClasses image="false" ecoreClass="thingml.ecore#//Variable"/>
@@ -263,18 +262,10 @@
     </genClasses>
     <genClasses image="false" ecoreClass="thingml.ecore#//ViewSource"/>
     <genClasses ecoreClass="thingml.ecore#//Filter">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Filter/filterOp"/>
-    </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//Operator">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Operator/body"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Operator/parameter"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Filter/guard"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//MessageParameter">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//MessageParameter/msgRef"/>
-    </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//OperatorCall">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//OperatorCall/operatorRef"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//OperatorCall/parameter"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Reference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//Reference/reference"/>

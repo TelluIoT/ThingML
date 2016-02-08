@@ -217,9 +217,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.MERGE_SOURCES: return createMergeSources();
 			case ThingmlPackage.SIMPLE_SOURCE: return createSimpleSource();
 			case ThingmlPackage.FILTER: return createFilter();
-			case ThingmlPackage.OPERATOR: return createOperator();
 			case ThingmlPackage.MESSAGE_PARAMETER: return createMessageParameter();
-			case ThingmlPackage.OPERATOR_CALL: return createOperatorCall();
 			case ThingmlPackage.REFERENCE: return createReference();
 			case ThingmlPackage.LENGTH_WINDOW: return createLengthWindow();
 			case ThingmlPackage.TIME_WINDOW: return createTimeWindow();
@@ -928,29 +926,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Operator createOperator() {
-		OperatorImpl operator = new OperatorImpl();
-		return operator;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public MessageParameter createMessageParameter() {
 		MessageParameterImpl messageParameter = new MessageParameterImpl();
 		return messageParameter;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public OperatorCall createOperatorCall() {
-		OperatorCallImpl operatorCall = new OperatorCallImpl();
-		return operatorCall;
 	}
 
 	/**

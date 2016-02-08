@@ -463,22 +463,13 @@ public interface ThingmlPackage extends EPackage {
 	int THING__STREAMS = TYPE_FEATURE_COUNT + 8;
 
 	/**
-	 * The feature id for the '<em><b>Operators</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THING__OPERATORS = TYPE_FEATURE_COUNT + 9;
-
-	/**
 	 * The number of structural features of the '<em>Thing</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THING_FEATURE_COUNT = TYPE_FEATURE_COUNT + 10;
+	int THING_FEATURE_COUNT = TYPE_FEATURE_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.TypedElementImpl <em>Typed Element</em>}' class.
@@ -4245,13 +4236,13 @@ public interface ThingmlPackage extends EPackage {
 	int FILTER = 88;
 
 	/**
-	 * The feature id for the '<em><b>Filter Op</b></em>' containment reference.
+	 * The feature id for the '<em><b>Guard</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FILTER__FILTER_OP = VIEW_SOURCE_FEATURE_COUNT + 0;
+	int FILTER__GUARD = VIEW_SOURCE_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Filter</em>' class.
@@ -4264,79 +4255,6 @@ public interface ThingmlPackage extends EPackage {
 
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.OperatorImpl <em>Operator</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.OperatorImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getOperator()
-	 * @generated
-	 */
-	int OPERATOR = 89;
-
-	/**
-	 * The feature id for the '<em><b>Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATOR__TYPE = TYPED_ELEMENT__TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Cardinality</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATOR__CARDINALITY = TYPED_ELEMENT__CARDINALITY;
-
-	/**
-	 * The feature id for the '<em><b>Is Array</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATOR__IS_ARRAY = TYPED_ELEMENT__IS_ARRAY;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATOR__NAME = TYPED_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Body</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATOR__BODY = TYPED_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Parameter</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATOR__PARAMETER = TYPED_ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The number of structural features of the '<em>Operator</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATOR_FEATURE_COUNT = TYPED_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.MessageParameterImpl <em>Message Parameter</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4344,7 +4262,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessageParameter()
 	 * @generated
 	 */
-	int MESSAGE_PARAMETER = 90;
+	int MESSAGE_PARAMETER = 89;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4374,43 +4292,6 @@ public interface ThingmlPackage extends EPackage {
 	int MESSAGE_PARAMETER_FEATURE_COUNT = THING_ML_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.OperatorCallImpl <em>Operator Call</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.OperatorCallImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getOperatorCall()
-	 * @generated
-	 */
-	int OPERATOR_CALL = 91;
-
-	/**
-	 * The feature id for the '<em><b>Operator Ref</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATOR_CALL__OPERATOR_REF = 0;
-
-	/**
-	 * The feature id for the '<em><b>Parameter</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATOR_CALL__PARAMETER = 1;
-
-	/**
-	 * The number of structural features of the '<em>Operator Call</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OPERATOR_CALL_FEATURE_COUNT = 2;
-
-	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ReferenceImpl <em>Reference</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4418,7 +4299,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReference()
 	 * @generated
 	 */
-	int REFERENCE = 92;
+	int REFERENCE = 90;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -4455,7 +4336,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReferencedElmt()
 	 * @generated
 	 */
-	int REFERENCED_ELMT = 93;
+	int REFERENCED_ELMT = 91;
 
 	/**
 	 * The number of structural features of the '<em>Referenced Elmt</em>' class.
@@ -4475,7 +4356,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getWindowView()
 	 * @generated
 	 */
-	int WINDOW_VIEW = 102;
+	int WINDOW_VIEW = 100;
 
 	/**
 	 * The number of structural features of the '<em>Window View</em>' class.
@@ -4494,7 +4375,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthWindow()
 	 * @generated
 	 */
-	int LENGTH_WINDOW = 94;
+	int LENGTH_WINDOW = 92;
 
 	/**
 	 * The feature id for the '<em><b>Nb Events</b></em>' attribute.
@@ -4532,7 +4413,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getTimeWindow()
 	 * @generated
 	 */
-	int TIME_WINDOW = 95;
+	int TIME_WINDOW = 93;
 
 	/**
 	 * The feature id for the '<em><b>Step</b></em>' attribute.
@@ -4570,7 +4451,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getElmtProperty()
 	 * @generated
 	 */
-	int ELMT_PROPERTY = 99;
+	int ELMT_PROPERTY = 97;
 
 	/**
 	 * The number of structural features of the '<em>Elmt Property</em>' class.
@@ -4589,7 +4470,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getParamReference()
 	 * @generated
 	 */
-	int PARAM_REFERENCE = 96;
+	int PARAM_REFERENCE = 94;
 
 	/**
 	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -4618,7 +4499,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleParamRef()
 	 * @generated
 	 */
-	int SIMPLE_PARAM_REF = 97;
+	int SIMPLE_PARAM_REF = 95;
 
 	/**
 	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -4646,7 +4527,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getArrayParamRef()
 	 * @generated
 	 */
-	int ARRAY_PARAM_REF = 98;
+	int ARRAY_PARAM_REF = 96;
 
 	/**
 	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -4675,7 +4556,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPredifinedProperty()
 	 * @generated
 	 */
-	int PREDIFINED_PROPERTY = 100;
+	int PREDIFINED_PROPERTY = 98;
 
 	/**
 	 * The number of structural features of the '<em>Predifined Property</em>' class.
@@ -4694,7 +4575,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthArray()
 	 * @generated
 	 */
-	int LENGTH_ARRAY = 101;
+	int LENGTH_ARRAY = 99;
 
 	/**
 	 * The number of structural features of the '<em>Length Array</em>' class.
@@ -4714,7 +4595,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getProtocol()
 	 * @generated
 	 */
-	int PROTOCOL = 103;
+	int PROTOCOL = 101;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4752,7 +4633,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getObjectType()
 	 * @generated
 	 */
-	int OBJECT_TYPE = 104;
+	int OBJECT_TYPE = 102;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4996,17 +4877,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getThing_Streams();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.Thing#getOperators <em>Operators</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Operators</em>'.
-	 * @see org.sintef.thingml.Thing#getOperators()
-	 * @see #getThing()
-	 * @generated
-	 */
-	EReference getThing_Operators();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Parameter <em>Parameter</em>}'.
@@ -6904,47 +6774,15 @@ public interface ThingmlPackage extends EPackage {
 	EClass getFilter();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Filter#getFilterOp <em>Filter Op</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Filter#getGuard <em>Guard</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Filter Op</em>'.
-	 * @see org.sintef.thingml.Filter#getFilterOp()
+	 * @return the meta object for the containment reference '<em>Guard</em>'.
+	 * @see org.sintef.thingml.Filter#getGuard()
 	 * @see #getFilter()
 	 * @generated
 	 */
-	EReference getFilter_FilterOp();
-
-	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.Operator <em>Operator</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Operator</em>'.
-	 * @see org.sintef.thingml.Operator
-	 * @generated
-	 */
-	EClass getOperator();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Operator#getBody <em>Body</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Body</em>'.
-	 * @see org.sintef.thingml.Operator#getBody()
-	 * @see #getOperator()
-	 * @generated
-	 */
-	EReference getOperator_Body();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Operator#getParameter <em>Parameter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Parameter</em>'.
-	 * @see org.sintef.thingml.Operator#getParameter()
-	 * @see #getOperator()
-	 * @generated
-	 */
-	EReference getOperator_Parameter();
+	EReference getFilter_Guard();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.MessageParameter <em>Message Parameter</em>}'.
@@ -6966,38 +6804,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getMessageParameter_MsgRef();
-
-	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.OperatorCall <em>Operator Call</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Operator Call</em>'.
-	 * @see org.sintef.thingml.OperatorCall
-	 * @generated
-	 */
-	EClass getOperatorCall();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.OperatorCall#getOperatorRef <em>Operator Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Operator Ref</em>'.
-	 * @see org.sintef.thingml.OperatorCall#getOperatorRef()
-	 * @see #getOperatorCall()
-	 * @generated
-	 */
-	EReference getOperatorCall_OperatorRef();
-
-	/**
-	 * Returns the meta object for the reference list '{@link org.sintef.thingml.OperatorCall#getParameter <em>Parameter</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Parameter</em>'.
-	 * @see org.sintef.thingml.OperatorCall#getParameter()
-	 * @see #getOperatorCall()
-	 * @generated
-	 */
-	EReference getOperatorCall_Parameter();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Reference <em>Reference</em>}'.
@@ -7395,14 +7201,6 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference THING__STREAMS = eINSTANCE.getThing_Streams();
-
-		/**
-		 * The meta object literal for the '<em><b>Operators</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference THING__OPERATORS = eINSTANCE.getThing_Operators();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ParameterImpl <em>Parameter</em>}' class.
@@ -9015,38 +8813,12 @@ public interface ThingmlPackage extends EPackage {
 		EClass FILTER = eINSTANCE.getFilter();
 
 		/**
-		 * The meta object literal for the '<em><b>Filter Op</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Guard</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference FILTER__FILTER_OP = eINSTANCE.getFilter_FilterOp();
-
-		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.OperatorImpl <em>Operator</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.OperatorImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getOperator()
-		 * @generated
-		 */
-		EClass OPERATOR = eINSTANCE.getOperator();
-
-		/**
-		 * The meta object literal for the '<em><b>Body</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference OPERATOR__BODY = eINSTANCE.getOperator_Body();
-
-		/**
-		 * The meta object literal for the '<em><b>Parameter</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference OPERATOR__PARAMETER = eINSTANCE.getOperator_Parameter();
+		EReference FILTER__GUARD = eINSTANCE.getFilter_Guard();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.MessageParameterImpl <em>Message Parameter</em>}' class.
@@ -9065,32 +8837,6 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference MESSAGE_PARAMETER__MSG_REF = eINSTANCE.getMessageParameter_MsgRef();
-
-		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.OperatorCallImpl <em>Operator Call</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.OperatorCallImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getOperatorCall()
-		 * @generated
-		 */
-		EClass OPERATOR_CALL = eINSTANCE.getOperatorCall();
-
-		/**
-		 * The meta object literal for the '<em><b>Operator Ref</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference OPERATOR_CALL__OPERATOR_REF = eINSTANCE.getOperatorCall_OperatorRef();
-
-		/**
-		 * The meta object literal for the '<em><b>Parameter</b></em>' reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference OPERATOR_CALL__PARAMETER = eINSTANCE.getOperatorCall_Parameter();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ReferenceImpl <em>Reference</em>}' class.

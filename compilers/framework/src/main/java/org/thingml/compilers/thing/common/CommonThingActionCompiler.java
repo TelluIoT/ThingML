@@ -297,7 +297,12 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
            } else {
                throw new UnsupportedOperationException("The variable " + var.getName() + " must be an array.");
            }
-       }else {
+       } else if (expression.getReference() instanceof Message) {
+           Message msg = (Message) expression.getReference();
+           messageName = msg.getName();
+           message = msg;
+       }
+       else {
            throw new UnsupportedException(expression.getReference().getClass().getName(),"reference","CommonThingActionCompiler");
        }
        generateReference(message, messageName, expression, builder, ctx);
