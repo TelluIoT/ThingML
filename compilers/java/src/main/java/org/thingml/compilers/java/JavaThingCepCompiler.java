@@ -78,6 +78,7 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
         builder.append(name + ".subscribe(new Action1<" + outPutType + ">() {\n")
                 .append("@Override\n")
                 .append("public void call(" + outPutType + " " + outPutName + ") {\n");
+
         if(lastOpIsWindow) {
             builder.append("int i;\n");
             for(Parameter parameter : outPut.getParameters()) {
@@ -89,6 +90,11 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
                        .append("}\n");
            }
         }
+
+       for(LocalVariable lv : stream.getSelection()) {
+           context.getCompiler().getThingActionCompiler().generate(lv, builder, context);
+       }
+
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
 
        builder.append("}\n")

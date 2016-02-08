@@ -108,14 +108,6 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
             }
         }
 
-        /*i = 0;
-        for(Expression exp : source.getRules()) {
-                builder.append("param" + i + " = ");
-                context.getCompiler().getThingActionCompiler().generate(exp, builder, context);
-                builder.append(";\n");
-            i++;
-        }*/
-
         builder.append("return (" + resultType + ") " + resultName + "Type.instantiate(" + stream.getOutput().getPort().getName() + "_port");
         for(i = 0; i<stream.getOutput().getMessage().getParameters().size(); i++) {
             builder.append(",param" + i);
@@ -180,14 +172,14 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
         JavaThingActionCompiler javaCmpl = ((JavaThingActionCompiler) context.getCompiler().getThingActionCompiler());
         builder.append("return (" + outPutType + ") " + outPutName + "Type.instantiate("+ stream.getOutput().getPort().getName() + "_port");
 
-        /*Iterator<Expression> itRules = sources.getRules().iterator();
+        Iterator<Expression> itRules = sources.getRules().iterator();
         Iterator<Parameter> itParamsResultMsgs = sources.getResultMessage().getParameters().iterator();
         while(itRules.hasNext() && itParamsResultMsgs.hasNext()) {
             builder.append(", ");
             Parameter parameter = itParamsResultMsgs.next();
             Expression rule = itRules.next();
             javaCmpl.cast(parameter.getType(),parameter.isIsArray(), rule, builder, context);
-        }*/
+        }
 
 
         builder.append(");\n");

@@ -56,16 +56,6 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         builder.append(");\n");
     }
 
-    /*@Override
-    public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
-        builder.append("setImmediate(send" + ctx.firstToUpper(streamOutput.getMessage().getName()) + "On" + ctx.firstToUpper(streamOutput.getPort().getName()));
-        for (StreamExpression se : streamOutput.getParameters()) {
-            builder.append(", ");
-            generate(se.getExpression(), builder, ctx);
-        }
-        builder.append(");\n");
-    }*/
-
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
         if (ctx.hasContextAnnotation("useThis"))
@@ -146,42 +136,6 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
         builder.append("Enum." + ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + expression.getLiteral().getName().toUpperCase());
     }
-
-   /* @Override
-    public void generate(StreamParamReference expression, StringBuilder builder, Context ctx) {
-//        builder.append("x[" + (expression.getIndexParam() + 2 )+ "]");
-        Stream stream = ThingMLHelpers.findContainingStream(expression);
-        Source source = stream.getInput();
-        Message message;
-        if (source instanceof SimpleSource) {
-            message = ((SimpleSource) source).getMessage().getMessage();
-            builder.append(message.getName() + "[" + (expression.getIndexParam() + 2) + "]");
-        } else if (source instanceof JoinSources) {
-            message = ((JoinSources) source).getResultMessage();
-            builder.append(message.getName() + "[" + (expression.getIndexParam() + 2) + "]");
-        } else if (source instanceof MergeSources) {
-            boolean ok = false;
-            //if the expression is in the rule
-            Expression rootExp = ThingMLHelpers.findRootExpressions(expression);
-            for (Expression exp : ((MergeSources) source).getRules()) {
-                if (rootExp == exp) {
-                    builder.append("x[" + (expression.getIndexParam() + 2) + "]");
-                    ok = true;
-                    break;
-                }
-            }
-
-            //if the expression is in the "select" part
-            if (!ok) {
-                message = ((MergeSources) source).getResultMessage();
-                builder.append(message.getName() + "[" + (expression.getIndexParam() + 2) + "]");
-            }
-
-        } else {
-            throw new UnsupportedOperationException("An input source has been added (" + source.getClass().getName() + ") to ThingML but the compiler did not updates." +
-                    "Please update JavaThingActionCompiler.generate for StreamParamReference expression .");
-        }
-    }*/
 
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
