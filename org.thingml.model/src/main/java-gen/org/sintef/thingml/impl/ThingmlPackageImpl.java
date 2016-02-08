@@ -2686,8 +2686,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSourceComposition_Rules() {
-		return (EReference)sourceCompositionEClass.getEStructuralFeatures().get(2);
+	public EClass getJoinSources() {
+		return joinSourcesEClass;
 	}
 
 	/**
@@ -2695,8 +2695,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getJoinSources() {
-		return joinSourcesEClass;
+	public EReference getJoinSources_Rules() {
+		return (EReference)joinSourcesEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3310,9 +3310,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		sourceCompositionEClass = createEClass(SOURCE_COMPOSITION);
 		createEReference(sourceCompositionEClass, SOURCE_COMPOSITION__SOURCES);
 		createEReference(sourceCompositionEClass, SOURCE_COMPOSITION__RESULT_MESSAGE);
-		createEReference(sourceCompositionEClass, SOURCE_COMPOSITION__RULES);
 
 		joinSourcesEClass = createEClass(JOIN_SOURCES);
+		createEReference(joinSourcesEClass, JOIN_SOURCES__RULES);
 
 		mergeSourcesEClass = createEClass(MERGE_SOURCES);
 
@@ -3784,9 +3784,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(sourceCompositionEClass, SourceComposition.class, "SourceComposition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSourceComposition_Sources(), this.getSource(), null, "sources", null, 2, -1, SourceComposition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSourceComposition_ResultMessage(), this.getMessage(), null, "resultMessage", null, 1, 1, SourceComposition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSourceComposition_Rules(), this.getExpression(), null, "rules", null, 0, -1, SourceComposition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(joinSourcesEClass, JoinSources.class, "JoinSources", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJoinSources_Rules(), this.getExpression(), null, "rules", null, 0, -1, JoinSources.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(mergeSourcesEClass, MergeSources.class, "MergeSources", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

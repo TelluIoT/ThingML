@@ -44,7 +44,6 @@ import org.sintef.thingml.ThingmlPackage;
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.SourceCompositionImpl#getSources <em>Sources</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.SourceCompositionImpl#getResultMessage <em>Result Message</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.SourceCompositionImpl#getRules <em>Rules</em>}</li>
  * </ul>
  *
  * @generated
@@ -69,16 +68,6 @@ public abstract class SourceCompositionImpl extends SourceImpl implements Source
 	 * @ordered
 	 */
 	protected Message resultMessage;
-	/**
-	 * The cached value of the '{@link #getRules() <em>Rules</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getRules()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Expression> rules;
-
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -153,25 +142,11 @@ public abstract class SourceCompositionImpl extends SourceImpl implements Source
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Expression> getRules() {
-		if (rules == null) {
-			rules = new EObjectContainmentEList<Expression>(Expression.class, this, ThingmlPackage.SOURCE_COMPOSITION__RULES);
-		}
-		return rules;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case ThingmlPackage.SOURCE_COMPOSITION__SOURCES:
 				return ((InternalEList<?>)getSources()).basicRemove(otherEnd, msgs);
-			case ThingmlPackage.SOURCE_COMPOSITION__RULES:
-				return ((InternalEList<?>)getRules()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -189,8 +164,6 @@ public abstract class SourceCompositionImpl extends SourceImpl implements Source
 			case ThingmlPackage.SOURCE_COMPOSITION__RESULT_MESSAGE:
 				if (resolve) return getResultMessage();
 				return basicGetResultMessage();
-			case ThingmlPackage.SOURCE_COMPOSITION__RULES:
-				return getRules();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -211,10 +184,6 @@ public abstract class SourceCompositionImpl extends SourceImpl implements Source
 			case ThingmlPackage.SOURCE_COMPOSITION__RESULT_MESSAGE:
 				setResultMessage((Message)newValue);
 				return;
-			case ThingmlPackage.SOURCE_COMPOSITION__RULES:
-				getRules().clear();
-				getRules().addAll((Collection<? extends Expression>)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -233,9 +202,6 @@ public abstract class SourceCompositionImpl extends SourceImpl implements Source
 			case ThingmlPackage.SOURCE_COMPOSITION__RESULT_MESSAGE:
 				setResultMessage((Message)null);
 				return;
-			case ThingmlPackage.SOURCE_COMPOSITION__RULES:
-				getRules().clear();
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -252,8 +218,6 @@ public abstract class SourceCompositionImpl extends SourceImpl implements Source
 				return sources != null && !sources.isEmpty();
 			case ThingmlPackage.SOURCE_COMPOSITION__RESULT_MESSAGE:
 				return resultMessage != null;
-			case ThingmlPackage.SOURCE_COMPOSITION__RULES:
-				return rules != null && !rules.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

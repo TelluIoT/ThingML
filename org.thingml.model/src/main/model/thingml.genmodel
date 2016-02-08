@@ -253,9 +253,10 @@
     <genClasses image="false" ecoreClass="thingml.ecore#//SourceComposition">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//SourceComposition/sources"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//SourceComposition/resultMessage"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//SourceComposition/rules"/>
     </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//JoinSources"/>
+    <genClasses ecoreClass="thingml.ecore#//JoinSources">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//JoinSources/rules"/>
+    </genClasses>
     <genClasses ecoreClass="thingml.ecore#//MergeSources"/>
     <genClasses ecoreClass="thingml.ecore#//SimpleSource">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//SimpleSource/message"/>

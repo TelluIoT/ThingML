@@ -346,10 +346,11 @@
         upperBound="-1" eType="#//Source" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="resultMessage" lowerBound="1"
         eType="#//Message"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JoinSources" eSuperTypes="#//SourceComposition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1"
         eType="#//Expression" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="JoinSources" eSuperTypes="#//SourceComposition"/>
   <eClassifiers xsi:type="ecore:EClass" name="MergeSources" eSuperTypes="#//SourceComposition"/>
   <eClassifiers xsi:type="ecore:EClass" name="SimpleSource" eSuperTypes="#//Source">
     <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"

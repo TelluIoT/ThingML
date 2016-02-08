@@ -283,8 +283,8 @@ RULES {
 	TimeWindow ::= "timeWindow" "(" step[INTEGER_LITERAL] "," size[INTEGER_LITERAL] ")";
 		
 	SimpleSource ::= ( (name[] ":" "[" message "]") | message) ("::" operators)*;	
-	JoinSources ::= (name[] ":" )? "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
-	MergeSources ::= (name[] ":" )? "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)*;
+	JoinSources ::= name[] ":" #1 "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
+	MergeSources ::= name[] ":" #1 "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] #1 "]" ("::" operators)*;
 	
 	Stream ::= "stream" #1 name[] #1 (annotations)* "do"
 					 !1 "from" #1 input

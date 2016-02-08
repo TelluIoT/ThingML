@@ -17,16 +17,40 @@
  */
 package org.sintef.thingml;
 
+import org.eclipse.emf.common.util.EList;
+
 
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Join Sources</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <p>
+ * The following features are supported:
+ * </p>
+ * <ul>
+ *   <li>{@link org.sintef.thingml.JoinSources#getRules <em>Rules</em>}</li>
+ * </ul>
  *
  * @see org.sintef.thingml.ThingmlPackage#getJoinSources()
  * @model
  * @generated
  */
 public interface JoinSources extends SourceComposition {
+
+	/**
+	 * Returns the value of the '<em><b>Rules</b></em>' containment reference list.
+	 * The list contents are of type {@link org.sintef.thingml.Expression}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Rules</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Rules</em>' containment reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getJoinSources_Rules()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Expression> getRules();
 } // JoinSources

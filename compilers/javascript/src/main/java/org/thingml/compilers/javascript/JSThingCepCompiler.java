@@ -55,7 +55,6 @@ public class JSThingCepCompiler extends ThingCepCompiler {
 
         List<ViewSource> operators = stream.getInput().getOperators();
         if (operators.size() > 0) {
-            boolean lastOpIsWindow = false;
             ViewSource lastOp = operators.get(operators.size() - 1);
             if (lastOp instanceof WindowView) {
                 for (Parameter parameter : outPut.getParameters()) {
@@ -68,6 +67,9 @@ public class JSThingCepCompiler extends ThingCepCompiler {
             }
         }
 
+        for(LocalVariable v : stream.getSelection()) {
+            context.getCompiler().getThingActionCompiler().generate(v, builder, context);
+        }
 
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
         builder.append("\t});\n");

@@ -4042,22 +4042,13 @@ public interface ThingmlPackage extends EPackage {
 	int SOURCE_COMPOSITION__RESULT_MESSAGE = SOURCE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Rules</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SOURCE_COMPOSITION__RULES = SOURCE_FEATURE_COUNT + 2;
-
-	/**
 	 * The number of structural features of the '<em>Source Composition</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SOURCE_COMPOSITION_FEATURE_COUNT = SOURCE_FEATURE_COUNT + 3;
+	int SOURCE_COMPOSITION_FEATURE_COUNT = SOURCE_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.JoinSourcesImpl <em>Join Sources</em>}' class.
@@ -4112,7 +4103,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int JOIN_SOURCES__RULES = SOURCE_COMPOSITION__RULES;
+	int JOIN_SOURCES__RULES = SOURCE_COMPOSITION_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Join Sources</em>' class.
@@ -4121,7 +4112,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int JOIN_SOURCES_FEATURE_COUNT = SOURCE_COMPOSITION_FEATURE_COUNT + 0;
+	int JOIN_SOURCES_FEATURE_COUNT = SOURCE_COMPOSITION_FEATURE_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.MergeSourcesImpl <em>Merge Sources</em>}' class.
@@ -4168,15 +4159,6 @@ public interface ThingmlPackage extends EPackage {
 	 * @ordered
 	 */
 	int MERGE_SOURCES__RESULT_MESSAGE = SOURCE_COMPOSITION__RESULT_MESSAGE;
-
-	/**
-	 * The feature id for the '<em><b>Rules</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MERGE_SOURCES__RULES = SOURCE_COMPOSITION__RULES;
 
 	/**
 	 * The number of structural features of the '<em>Merge Sources</em>' class.
@@ -6850,17 +6832,6 @@ public interface ThingmlPackage extends EPackage {
 	EReference getSourceComposition_ResultMessage();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.SourceComposition#getRules <em>Rules</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Rules</em>'.
-	 * @see org.sintef.thingml.SourceComposition#getRules()
-	 * @see #getSourceComposition()
-	 * @generated
-	 */
-	EReference getSourceComposition_Rules();
-
-	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.JoinSources <em>Join Sources</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6869,6 +6840,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getJoinSources();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.JoinSources#getRules <em>Rules</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Rules</em>'.
+	 * @see org.sintef.thingml.JoinSources#getRules()
+	 * @see #getJoinSources()
+	 * @generated
+	 */
+	EReference getJoinSources_Rules();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.MergeSources <em>Merge Sources</em>}'.
@@ -8967,14 +8949,6 @@ public interface ThingmlPackage extends EPackage {
 		EReference SOURCE_COMPOSITION__RESULT_MESSAGE = eINSTANCE.getSourceComposition_ResultMessage();
 
 		/**
-		 * The meta object literal for the '<em><b>Rules</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SOURCE_COMPOSITION__RULES = eINSTANCE.getSourceComposition_Rules();
-
-		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.JoinSourcesImpl <em>Join Sources</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -8983,6 +8957,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass JOIN_SOURCES = eINSTANCE.getJoinSources();
+
+		/**
+		 * The meta object literal for the '<em><b>Rules</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JOIN_SOURCES__RULES = eINSTANCE.getJoinSources_Rules();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.MergeSourcesImpl <em>Merge Sources</em>}' class.
