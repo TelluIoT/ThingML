@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ */
 package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
@@ -21,45 +23,35 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Function Call</b></em>'.
+ * A representation of the model object '<em><b>Has Parameters</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.FunctionCall#getFunction <em>Function</em>}</li>
+ *   <li>{@link org.sintef.thingml.HasParameters#getParameters <em>Parameters</em>}</li>
  * </ul>
  *
- * @see org.sintef.thingml.ThingmlPackage#getFunctionCall()
+ * @see org.sintef.thingml.ThingmlPackage#getHasParameters()
  * @model abstract="true"
  * @generated
  */
-public interface FunctionCall extends PassesParameters {
+public interface HasParameters extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Function</b></em>' reference.
+	 * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
+	 * The list contents are of type {@link org.sintef.thingml.Parameter}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Function</em>' reference isn't clear,
+	 * If the meaning of the '<em>Parameters</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Function</em>' reference.
-	 * @see #setFunction(Function)
-	 * @see org.sintef.thingml.ThingmlPackage#getFunctionCall_Function()
-	 * @model required="true"
+	 * @return the value of the '<em>Parameters</em>' containment reference list.
+	 * @see org.sintef.thingml.ThingmlPackage#getHasParameters_Parameters()
+	 * @model containment="true"
 	 * @generated
 	 */
-	Function getFunction();
+	EList<Parameter> getParameters();
 
-	/**
-	 * Sets the value of the '{@link org.sintef.thingml.FunctionCall#getFunction <em>Function</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Function</em>' reference.
-	 * @see #getFunction()
-	 * @generated
-	 */
-	void setFunction(Function value);
-
-} // FunctionCall
+} // HasParameters

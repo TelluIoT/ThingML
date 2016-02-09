@@ -35,7 +35,7 @@ package org.sintef.thingml;
  * @model
  * @generated
  */
-public interface TimeWindow extends WindowView {
+public interface TimeWindow extends ViewSource {
 	/**
 	 * Returns the value of the '<em><b>Step</b></em>' attribute.
 	 * <!-- begin-user-doc -->

@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.Action;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.Function;
+import org.sintef.thingml.HasParameters;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Type;
@@ -443,6 +444,12 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 				default: return -1;
 			}
 		}
+		if (baseClass == HasParameters.class) {
+			switch (derivedFeatureID) {
+				case ThingmlPackage.FUNCTION__PARAMETERS: return ThingmlPackage.HAS_PARAMETERS__PARAMETERS;
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -458,6 +465,12 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 				case ThingmlPackage.TYPED_ELEMENT__TYPE: return ThingmlPackage.FUNCTION__TYPE;
 				case ThingmlPackage.TYPED_ELEMENT__CARDINALITY: return ThingmlPackage.FUNCTION__CARDINALITY;
 				case ThingmlPackage.TYPED_ELEMENT__IS_ARRAY: return ThingmlPackage.FUNCTION__IS_ARRAY;
+				default: return -1;
+			}
+		}
+		if (baseClass == HasParameters.class) {
+			switch (baseFeatureID) {
+				case ThingmlPackage.HAS_PARAMETERS__PARAMETERS: return ThingmlPackage.FUNCTION__PARAMETERS;
 				default: return -1;
 			}
 		}

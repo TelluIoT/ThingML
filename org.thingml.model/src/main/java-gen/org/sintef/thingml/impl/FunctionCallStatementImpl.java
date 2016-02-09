@@ -36,6 +36,7 @@ import org.sintef.thingml.Expression;
 import org.sintef.thingml.Function;
 import org.sintef.thingml.FunctionCall;
 import org.sintef.thingml.FunctionCallStatement;
+import org.sintef.thingml.PassesParameters;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
@@ -234,9 +235,14 @@ public class FunctionCallStatementImpl extends ActionImpl implements FunctionCal
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == PassesParameters.class) {
+			switch (derivedFeatureID) {
+				case ThingmlPackage.FUNCTION_CALL_STATEMENT__PARAMETERS: return ThingmlPackage.PASSES_PARAMETERS__PARAMETERS;
+				default: return -1;
+			}
+		}
 		if (baseClass == FunctionCall.class) {
 			switch (derivedFeatureID) {
-				case ThingmlPackage.FUNCTION_CALL_STATEMENT__PARAMETERS: return ThingmlPackage.FUNCTION_CALL__PARAMETERS;
 				case ThingmlPackage.FUNCTION_CALL_STATEMENT__FUNCTION: return ThingmlPackage.FUNCTION_CALL__FUNCTION;
 				default: return -1;
 			}
@@ -251,9 +257,14 @@ public class FunctionCallStatementImpl extends ActionImpl implements FunctionCal
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == PassesParameters.class) {
+			switch (baseFeatureID) {
+				case ThingmlPackage.PASSES_PARAMETERS__PARAMETERS: return ThingmlPackage.FUNCTION_CALL_STATEMENT__PARAMETERS;
+				default: return -1;
+			}
+		}
 		if (baseClass == FunctionCall.class) {
 			switch (baseFeatureID) {
-				case ThingmlPackage.FUNCTION_CALL__PARAMETERS: return ThingmlPackage.FUNCTION_CALL_STATEMENT__PARAMETERS;
 				case ThingmlPackage.FUNCTION_CALL__FUNCTION: return ThingmlPackage.FUNCTION_CALL_STATEMENT__FUNCTION;
 				default: return -1;
 			}

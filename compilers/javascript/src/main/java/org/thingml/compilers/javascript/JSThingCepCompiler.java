@@ -54,16 +54,19 @@ public class JSThingCepCompiler extends ThingCepCompiler {
                 .append("function( " + paramName + ") { \n");
 
         List<ViewSource> operators = stream.getInput().getOperators();
-        if (operators.size() > 0) {
-            ViewSource lastOp = operators.get(operators.size() - 1);
-            if (lastOp instanceof WindowView) {
-                for (Parameter parameter : outPut.getParameters()) {
-                    builder.append("var " + outPut.getName() + parameter.getName() + " = [];\n")
-                            .append("for(var i = 0; i< " + paramName + ".length; i++) {\n")
-                            .append(outPut.getName() + parameter.getName() + "[i] = ")
-                            .append(paramName + "[i][" + JSHelper.getCorrectParamIndex(outPut, parameter) + "];\n")
-                            .append("}");
-                }
+        boolean hasWindow = false;
+        for(ViewSource vs : operators) {
+            hasWindow = (vs instanceof TimeWindow) || (vs instanceof LengthWindow);
+            if (hasWindow)
+                break;
+        }
+        if (hasWindow) {
+            for (Parameter parameter : outPut.getParameters()) {
+                builder.append("var " + outPut.getName() + parameter.getName() + " = [];\n")
+                        .append("for(var i = 0; i< " + paramName + ".length; i++) {\n")
+                        .append(outPut.getName() + parameter.getName() + "[i] = ")
+                        .append(paramName + "[i][" + JSHelper.getCorrectParamIndex(outPut, parameter) + "];\n")
+                        .append("}");
             }
         }
 

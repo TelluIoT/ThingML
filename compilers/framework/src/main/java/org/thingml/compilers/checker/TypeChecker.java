@@ -89,7 +89,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 	private Type caseBinaryNumericalOperator(Type t1, Type t2) {
 		if (t1.equals(Types.ANY_TYPE) || t2.equals(Types.ANY_TYPE))
 			return Types.ANY_TYPE;
-		if (!t1.equals(Types.INTEGER_TYPE) && !t1.equals(Types.REAL_TYPE) && !t2.equals(Types.INTEGER_TYPE) && !t2.equals(Types.REAL_TYPE)) {
+		if ((!t1.equals(Types.INTEGER_TYPE) && !t1.equals(Types.REAL_TYPE)) || (!t2.equals(Types.INTEGER_TYPE) && !t2.equals(Types.REAL_TYPE))) {
 			return Types.ERROR_TYPE;
 		}
 		if (!t1.getBroadType().getName().equals(t2.getBroadType().getName())) //One Integer and one Real
@@ -131,7 +131,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 		Type t2 = computeTypeOf(object.getRhs());
 		if (t1.equals(Types.ANY_TYPE) || t2.equals(Types.ANY_TYPE))
 			return Types.ANY_TYPE;
-		if (!t1.equals(Types.INTEGER_TYPE) && !t2.equals(Types.INTEGER_TYPE)) {
+		if (!t1.equals(Types.INTEGER_TYPE) || !t2.equals(Types.INTEGER_TYPE)) {
 			return Types.ERROR_TYPE;
 		}
 		return Types.INTEGER_TYPE;
@@ -186,7 +186,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 	private Type caseBooleanOperator(Type t1, Type t2) {
 		if (t1.equals(Types.ANY_TYPE) || t2.equals(Types.ANY_TYPE))
 			return Types.ANY_TYPE;
-		if (!t1.equals(Types.BOOLEAN_TYPE) && !t2.equals(Types.BOOLEAN_TYPE)) {
+		if (!t1.equals(Types.BOOLEAN_TYPE) || !t2.equals(Types.BOOLEAN_TYPE)) {
 			return Types.ERROR_TYPE;
 		}
 		return Types.BOOLEAN_TYPE;
@@ -238,6 +238,11 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 					return Types.ERROR_TYPE;
 				return ref.getParameterRef().getType().getBroadType();
 			}
+		} else if (object instanceof PropertyReference) {
+			PropertyReference pr = (PropertyReference) object;
+			if (pr.getProperty().getType() == null)
+				return Types.ERROR_TYPE;
+			return pr.getProperty().getType().getBroadType();
 		}
 		return Types.ANY_TYPE;
 	}

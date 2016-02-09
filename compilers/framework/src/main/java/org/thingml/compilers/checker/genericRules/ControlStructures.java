@@ -43,23 +43,23 @@ public class ControlStructures extends Rule {
 
     @Override
     public String getName() {
-        return "Messages Usage";
+        return "Control Structures";
     }
 
     @Override
     public String getDescription() {
-        return "Check variables and properties.";
+        return "Check that if, while and keep use boolean expressions for their conditions.";
     }
 
-    private void check(ControlStructure cs, Checker checker) {
-        Type actual = checker.typeChecker.computeTypeOf(cs.getCondition());
+    private void check(Expression e, EObject o, Checker checker) {
+        Type actual = checker.typeChecker.computeTypeOf(e);
         if (actual.equals(Types.BOOLEAN_TYPE))
             return;
         if (actual.equals(Types.ANY_TYPE)) {
-            checker.addGenericWarning("Condition cannot be typed as Boolean", cs);
+            checker.addGenericWarning("Condition cannot be typed as Boolean", o);
             return;
         }
-        checker.addGenericError("Condition is not a Boolean (" + actual.getBroadType().getName() + ")", cs);
+        checker.addGenericError("Condition is not a Boolean (" + actual.getBroadType().getName() + ")", o);
     }
 
     @Override
@@ -81,14 +81,22 @@ public class ControlStructures extends Rule {
             //FIXME @Brice see testIfElse
             if(a instanceof ConditionalAction) {
                 ConditionalAction va = (ConditionalAction)a;
-                check(va, checker);
+                check(va.getCondition(), va, checker);
             }
         }
         for(Action a : t.getAllActions(LoopAction.class)) {
             //FIXME @Brice see testIfElse
             if(a instanceof LoopAction) {
                 LoopAction lv = (LoopAction) a;
-                check(lv, checker);
+                check(lv.getCondition(), lv, checker);
+            }
+        }
+        for(Stream s : t.getStreams()) {
+            for(ViewSource vs : s.getInput().getOperators()) {
+                if (vs instanceof Filter) {
+                    Filter f = (Filter) vs;
+                    check(f.getGuard(), f, checker);
+                }
             }
         }
     }

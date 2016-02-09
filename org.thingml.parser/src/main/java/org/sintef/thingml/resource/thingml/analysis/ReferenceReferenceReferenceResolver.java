@@ -43,10 +43,9 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 		}
 
 		ThingMLElement parent = ThingMLHelpers.findReferenceContainer(container);
-
+		
 		if(parent instanceof Handler) { //we reference an event in a handler
 			Handler handler = (Handler) parent;
-
 			for (Event event : handler.getEvent()) {
 				if(event instanceof ReceiveMessage && event.getName() != null) {
 					if (resolveFuzzy && event.getName().startsWith(identifier)) {
@@ -65,17 +64,16 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 			} else if(!resolveFuzzy && sc.getName().equals(identifier)) {
 				result.addMapping(sc.getName(), sc.getResultMessage());
 			}
-			if(!result.wasResolved()) {
+			//if(!result.wasResolved()) {
 				for(Source source : ((SourceComposition) parent).getSources()) {
 					ReceiveMessage receiveMessage = ((SimpleSource) source).getMessage();
-					if(resolveFuzzy && receiveMessage.getName().startsWith(identifier)) {
-						result.addMapping(receiveMessage.getName(),receiveMessage);
-					} else if(!resolveFuzzy && receiveMessage.getName().equals(identifier)) {
-						result.addMapping(receiveMessage.getName(),receiveMessage);
+					if(resolveFuzzy && source.getName().startsWith(identifier)) {
+						result.addMapping(source.getName(),receiveMessage);
+					} else if(!resolveFuzzy && source.getName().equals(identifier)) {
+						result.addMapping(source.getName(),receiveMessage);
 					}
 				}
-			}
-
+			//}				
 			if(!result.wasResolved()) {
 				Stream stream = ThingMLHelpers.findContainingStream(parent);
 				result.setErrorMessage("Cannot resolve receive message " + identifier + " in the sources of " + stream.getName());

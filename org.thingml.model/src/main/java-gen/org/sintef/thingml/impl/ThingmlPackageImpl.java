@@ -62,6 +62,7 @@ import org.sintef.thingml.FunctionCallStatement;
 import org.sintef.thingml.GreaterExpression;
 import org.sintef.thingml.GreaterOrEqualExpression;
 import org.sintef.thingml.Handler;
+import org.sintef.thingml.HasParameters;
 import org.sintef.thingml.Increment;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.InstanceRef;
@@ -87,6 +88,7 @@ import org.sintef.thingml.OrExpression;
 import org.sintef.thingml.ParallelRegion;
 import org.sintef.thingml.ParamReference;
 import org.sintef.thingml.Parameter;
+import org.sintef.thingml.PassesParameters;
 import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.PlusExpression;
 import org.sintef.thingml.Port;
@@ -128,7 +130,6 @@ import org.sintef.thingml.UnaryMinus;
 import org.sintef.thingml.Variable;
 import org.sintef.thingml.VariableAssignment;
 import org.sintef.thingml.ViewSource;
-import org.sintef.thingml.WindowView;
 
 /**
  * <!-- begin-user-doc -->
@@ -143,6 +144,20 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass thingMLModelEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass hasParametersEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass passesParametersEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -842,13 +857,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass windowViewEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass protocolEClass = null;
 
 	/**
@@ -969,6 +977,42 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getHasParameters() {
+		return hasParametersEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getHasParameters_Parameters() {
+		return (EReference)hasParametersEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getPassesParameters() {
+		return passesParametersEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getPassesParameters_Parameters() {
+		return (EReference)passesParametersEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getFunction() {
 		return functionEClass;
 	}
@@ -978,17 +1022,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getFunction_Parameters() {
-		return (EReference)functionEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getFunction_Body() {
-		return (EReference)functionEClass.getEStructuralFeatures().get(1);
+		return (EReference)functionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -998,15 +1033,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EClass getMessage() {
 		return messageEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getMessage_Parameters() {
-		return (EReference)messageEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1644,7 +1670,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSendAction_Parameters() {
+	public EReference getSendAction_Message() {
 		return (EReference)sendActionEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1653,17 +1679,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getSendAction_Message() {
-		return (EReference)sendActionEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getSendAction_Port() {
-		return (EReference)sendActionEClass.getEStructuralFeatures().get(2);
+		return (EReference)sendActionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2517,17 +2534,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getFunctionCall_Parameters() {
-		return (EReference)functionCallEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getFunctionCall_Function() {
-		return (EReference)functionCallEClass.getEStructuralFeatures().get(1);
+		return (EReference)functionCallEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2904,15 +2912,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getWindowView() {
-		return windowViewEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getProtocol() {
 		return protocolEClass;
 	}
@@ -2960,12 +2959,16 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(thingMLModelEClass, THING_ML_MODEL__CONFIGS);
 		createEReference(thingMLModelEClass, THING_ML_MODEL__PROTOCOLS);
 
+		hasParametersEClass = createEClass(HAS_PARAMETERS);
+		createEReference(hasParametersEClass, HAS_PARAMETERS__PARAMETERS);
+
+		passesParametersEClass = createEClass(PASSES_PARAMETERS);
+		createEReference(passesParametersEClass, PASSES_PARAMETERS__PARAMETERS);
+
 		functionEClass = createEClass(FUNCTION);
-		createEReference(functionEClass, FUNCTION__PARAMETERS);
 		createEReference(functionEClass, FUNCTION__BODY);
 
 		messageEClass = createEClass(MESSAGE);
-		createEReference(messageEClass, MESSAGE__PARAMETERS);
 
 		thingEClass = createEClass(THING);
 		createEReference(thingEClass, THING__PROPERTIES);
@@ -3063,7 +3066,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(externExpressionEClass, EXTERN_EXPRESSION__SEGMENTS);
 
 		sendActionEClass = createEClass(SEND_ACTION);
-		createEReference(sendActionEClass, SEND_ACTION__PARAMETERS);
 		createEReference(sendActionEClass, SEND_ACTION__MESSAGE);
 		createEReference(sendActionEClass, SEND_ACTION__PORT);
 
@@ -3208,7 +3210,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(instanceRefEClass, INSTANCE_REF__INSTANCE);
 
 		functionCallEClass = createEClass(FUNCTION_CALL);
-		createEReference(functionCallEClass, FUNCTION_CALL__PARAMETERS);
 		createEReference(functionCallEClass, FUNCTION_CALL__FUNCTION);
 
 		functionCallStatementEClass = createEClass(FUNCTION_CALL_STATEMENT);
@@ -3274,8 +3275,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		lengthArrayEClass = createEClass(LENGTH_ARRAY);
 
-		windowViewEClass = createEClass(WINDOW_VIEW);
-
 		protocolEClass = createEClass(PROTOCOL);
 
 		objectTypeEClass = createEClass(OBJECT_TYPE);
@@ -3311,8 +3310,10 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		// Add supertypes to classes
 		functionEClass.getESuperTypes().add(this.getAnnotatedElement());
 		functionEClass.getESuperTypes().add(this.getTypedElement());
+		functionEClass.getESuperTypes().add(this.getHasParameters());
 		messageEClass.getESuperTypes().add(this.getAnnotatedElement());
 		messageEClass.getESuperTypes().add(this.getReferencedElmt());
+		messageEClass.getESuperTypes().add(this.getHasParameters());
 		thingEClass.getESuperTypes().add(this.getType());
 		parameterEClass.getESuperTypes().add(this.getVariable());
 		parameterEClass.getESuperTypes().add(this.getReferencedElmt());
@@ -3340,6 +3341,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		externStatementEClass.getESuperTypes().add(this.getAction());
 		externExpressionEClass.getESuperTypes().add(this.getExpression());
 		sendActionEClass.getESuperTypes().add(this.getAction());
+		sendActionEClass.getESuperTypes().add(this.getPassesParameters());
 		variableAssignmentEClass.getESuperTypes().add(this.getAction());
 		eventEClass.getESuperTypes().add(this.getThingMLElement());
 		receiveMessageEClass.getESuperTypes().add(this.getEvent());
@@ -3387,6 +3389,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		externalConnectorEClass.getESuperTypes().add(this.getAbstractConnector());
 		abstractConnectorEClass.getESuperTypes().add(this.getAnnotatedElement());
 		configPropertyAssignEClass.getESuperTypes().add(this.getAnnotatedElement());
+		functionCallEClass.getESuperTypes().add(this.getPassesParameters());
 		functionCallStatementEClass.getESuperTypes().add(this.getAction());
 		functionCallStatementEClass.getESuperTypes().add(this.getFunctionCall());
 		functionCallExpressionEClass.getESuperTypes().add(this.getFunctionCall());
@@ -3405,14 +3408,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		messageParameterEClass.getESuperTypes().add(this.getReferencedElmt());
 		messageParameterEClass.getESuperTypes().add(this.getExpression());
 		referenceEClass.getESuperTypes().add(this.getExpression());
-		lengthWindowEClass.getESuperTypes().add(this.getWindowView());
-		timeWindowEClass.getESuperTypes().add(this.getWindowView());
+		lengthWindowEClass.getESuperTypes().add(this.getViewSource());
+		timeWindowEClass.getESuperTypes().add(this.getViewSource());
 		paramReferenceEClass.getESuperTypes().add(this.getElmtProperty());
 		simpleParamRefEClass.getESuperTypes().add(this.getParamReference());
 		arrayParamRefEClass.getESuperTypes().add(this.getParamReference());
 		predifinedPropertyEClass.getESuperTypes().add(this.getElmtProperty());
 		lengthArrayEClass.getESuperTypes().add(this.getPredifinedProperty());
-		windowViewEClass.getESuperTypes().add(this.getViewSource());
 		protocolEClass.getESuperTypes().add(this.getAnnotatedElement());
 		objectTypeEClass.getESuperTypes().add(this.getType());
 
@@ -3423,12 +3425,16 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getThingMLModel_Configs(), this.getConfiguration(), null, "configs", null, 0, -1, ThingMLModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getThingMLModel_Protocols(), this.getProtocol(), null, "protocols", null, 0, -1, ThingMLModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(hasParametersEClass, HasParameters.class, "HasParameters", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getHasParameters_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, HasParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(passesParametersEClass, PassesParameters.class, "PassesParameters", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getPassesParameters_Parameters(), this.getExpression(), null, "parameters", null, 0, -1, PassesParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(functionEClass, Function.class, "Function", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getFunction_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunction_Body(), this.getAction(), null, "body", null, 1, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(messageEClass, Message.class, "Message", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMessage_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(thingEClass, Thing.class, "Thing", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getThing_Properties(), this.getProperty(), null, "properties", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3526,7 +3532,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getExternExpression_Segments(), this.getExpression(), null, "segments", null, 0, -1, ExternExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(sendActionEClass, SendAction.class, "SendAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getSendAction_Parameters(), this.getExpression(), null, "parameters", null, 0, -1, SendAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSendAction_Message(), this.getMessage(), null, "message", null, 1, 1, SendAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSendAction_Port(), this.getPort(), null, "port", null, 1, 1, SendAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -3671,7 +3676,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getInstanceRef_Instance(), this.getInstance(), null, "instance", null, 1, 1, InstanceRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(functionCallEClass, FunctionCall.class, "FunctionCall", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getFunctionCall_Parameters(), this.getExpression(), null, "parameters", null, 0, -1, FunctionCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionCall_Function(), this.getFunction(), null, "function", null, 1, 1, FunctionCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(functionCallStatementEClass, FunctionCallStatement.class, "FunctionCallStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3736,8 +3740,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(predifinedPropertyEClass, PredifinedProperty.class, "PredifinedProperty", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(lengthArrayEClass, LengthArray.class, "LengthArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(windowViewEClass, WindowView.class, "WindowView", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(protocolEClass, Protocol.class, "Protocol", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

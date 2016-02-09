@@ -44,7 +44,13 @@ public class ParamReferenceParameterRefReferenceResolver implements org.sintef.t
 			message = ((SourceComposition)elmt).getResultMessage();
 		} else if(elmt instanceof Message) {
 			message = (Message) elmt;
-		} else {
+		} else if (elmt instanceof Reference) {
+			Reference r = (Reference) elmt;
+			if (r.getParameter() instanceof MessageParameter) {
+				message = ((MessageParameter)r.getParameter()).getMsgRef();
+			}				
+		}
+		else {
 			result.setErrorMessage("The reference is incorrect or a new referenced element has been added (" + elmt.getClass().getName() + "). " +
 					"May be you should update the resolver (" + this.getClass().getName() + ").");
 		}

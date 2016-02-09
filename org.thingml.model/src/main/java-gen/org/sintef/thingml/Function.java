@@ -28,7 +28,6 @@ import java.util.List;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.Function#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.Function#getBody <em>Body</em>}</li>
  * </ul>
  *
@@ -36,23 +35,7 @@ import java.util.List;
  * @model
  * @generated
  */
-public interface Function extends AnnotatedElement, TypedElement {
-	/**
-	 * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.Parameter}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Parameters</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Parameters</em>' containment reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getFunction_Parameters()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<Parameter> getParameters();
-
+public interface Function extends AnnotatedElement, TypedElement, HasParameters {
 	/**
 	 * Returns the value of the '<em><b>Body</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
