@@ -16,11 +16,10 @@ thing TestHistoryStatesWithStream includes Test, TestMsgs
         receives cepMsg
     }
     
-    stream testStream do
-        from m : [ harnessIn?testIn ]
-        select c : m.c
-        action cepSend!cepMsg(c)
-    end
+    stream testStream 
+    from m : harnessIn?testIn
+    select var c : Char = m.c
+    produce cepSend!cepMsg(c)
     
 	statechart TestHistoryStates init I {
 	

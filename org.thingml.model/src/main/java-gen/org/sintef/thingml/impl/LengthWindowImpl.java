@@ -40,7 +40,7 @@ import org.sintef.thingml.ThingmlPackage;
  *
  * @generated
  */
-public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
+public class LengthWindowImpl extends ViewSourceImpl implements LengthWindow {
 	/**
 	 * The default value of the '{@link #getNbEvents() <em>Nb Events</em>}' attribute.
 	 * <!-- begin-user-doc -->

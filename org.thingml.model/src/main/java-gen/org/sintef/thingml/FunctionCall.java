@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.FunctionCall#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.FunctionCall#getFunction <em>Function</em>}</li>
  * </ul>
  *
@@ -36,23 +35,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface FunctionCall extends EObject {
-	/**
-	 * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.Expression}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Parameters</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Parameters</em>' containment reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getFunctionCall_Parameters()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<Expression> getParameters();
-
+public interface FunctionCall extends PassesParameters {
 	/**
 	 * Returns the value of the '<em><b>Function</b></em>' reference.
 	 * <!-- begin-user-doc -->

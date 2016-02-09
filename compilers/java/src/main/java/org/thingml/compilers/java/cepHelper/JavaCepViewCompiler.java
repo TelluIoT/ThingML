@@ -15,10 +15,9 @@
  */
 package org.thingml.compilers.java.cepHelper;
 
-import org.sintef.thingml.Filter;
-import org.sintef.thingml.LengthWindow;
-import org.sintef.thingml.TimeWindow;
+import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
 
 /**
@@ -27,7 +26,20 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 public class JavaCepViewCompiler extends ThingCepViewCompiler{
     @Override
     public void generate(Filter filter, StringBuilder builder, Context context) {
-        builder.append(".filter(" + filter.getFilterOp().getOperatorRef().getName() + "())");
+        String param = "x";
+        String type = "Object";
+        if (filter.eContainer() instanceof SimpleSource) {
+            SimpleSource s = (SimpleSource) filter.eContainer();
+            param = s.getMessage().getMessage().getName();
+            type = context.firstToUpper(s.getMessage().getMessage().getName()) + "MessageType." + context.firstToUpper(s.getMessage().getMessage().getName()) + "Message";
+        } else if (filter.eContainer() instanceof SourceComposition) {
+            SourceComposition s = (SourceComposition) filter.eContainer();
+            param = s.getResultMessage().getName();
+            type = context.firstToUpper(s.getResultMessage().getName()) + "MessageType." + context.firstToUpper(s.getResultMessage().getName()) + "Message";
+        }
+        builder.append(".filter(new Func1<" + type + ", Boolean>() {\n@Override\npublic Boolean call(" + type + " " + param + "){\n return ");
+        context.getCompiler().getThingActionCompiler().generate(filter.getGuard(), builder, context);
+        builder.append(";}})");
     }
 
     @Override

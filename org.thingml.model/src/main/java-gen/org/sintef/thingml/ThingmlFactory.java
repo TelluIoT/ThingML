@@ -620,15 +620,6 @@ public interface ThingmlFactory extends EFactory {
 	Stream createStream();
 
 	/**
-	 * Returns a new object of class '<em>Stream Param Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Stream Param Reference</em>'.
-	 * @generated
-	 */
-	StreamParamReference createStreamParamReference();
-
-	/**
 	 * Returns a new object of class '<em>Join Sources</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -665,15 +656,6 @@ public interface ThingmlFactory extends EFactory {
 	Filter createFilter();
 
 	/**
-	 * Returns a new object of class '<em>Operator</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Operator</em>'.
-	 * @generated
-	 */
-	Operator createOperator();
-
-	/**
 	 * Returns a new object of class '<em>Message Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -681,15 +663,6 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	MessageParameter createMessageParameter();
-
-	/**
-	 * Returns a new object of class '<em>Operator Call</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Operator Call</em>'.
-	 * @generated
-	 */
-	OperatorCall createOperatorCall();
 
 	/**
 	 * Returns a new object of class '<em>Reference</em>'.

@@ -167,22 +167,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    protected void generateOperator(Operator op, StringBuilder builder, Context ctx) {
-            Message paramMsg = op.getParameter().getMsgRef();
-            String paramMsgName = paramMsg.getName();
-            String paramMsgType = ctx.firstToUpper(paramMsgName) + "MessageType." + ctx.firstToUpper(paramMsgName) + "Message";
-
-            builder.append("private Func1<" + paramMsgType + ",Boolean> " + op.getName() + "() {\n")
-                    .append("return new Func1<" + paramMsgType + ",Boolean>() {\n")
-                    .append("@Override\n")
-                    .append("public Boolean call(" + paramMsgType + " " + op.getParameter().getName() +") {\n");
-            ctx.getCompiler().getThingActionCompiler().generate(op.getBody(), builder, ctx);
-            builder.append("}\n")
-                    .append("};\n")
-                    .append("}\n");
-    }
-
-
     @Override
     public void generateImplementation(Thing thing, Context ctx) {
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
@@ -491,10 +475,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         for (Function f : thing.allFunctions()) {
             generateFunction(f, thing, builder, ctx);
-        }
-
-        for(Operator op : thing.allOperators()) {
-            generateOperator(op, builder, ctx);
         }
 
         builder.append("}\n");

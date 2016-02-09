@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.Filter;
-import org.sintef.thingml.OperatorCall;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
@@ -35,22 +35,21 @@ import org.sintef.thingml.ThingmlPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.FilterImpl#getFilterOp <em>Filter Op</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.FilterImpl#getGuard <em>Guard</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class FilterImpl extends ViewSourceImpl implements Filter {
 	/**
-	 * The cached value of the '{@link #getFilterOp() <em>Filter Op</em>}' containment reference.
+	 * The cached value of the '{@link #getGuard() <em>Guard</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getFilterOp()
+	 * @see #getGuard()
 	 * @generated
 	 * @ordered
 	 */
-	protected OperatorCall filterOp;
-
+	protected Expression guard;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -75,8 +74,8 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public OperatorCall getFilterOp() {
-		return filterOp;
+	public Expression getGuard() {
+		return guard;
 	}
 
 	/**
@@ -84,11 +83,11 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetFilterOp(OperatorCall newFilterOp, NotificationChain msgs) {
-		OperatorCall oldFilterOp = filterOp;
-		filterOp = newFilterOp;
+	public NotificationChain basicSetGuard(Expression newGuard, NotificationChain msgs) {
+		Expression oldGuard = guard;
+		guard = newGuard;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.FILTER__FILTER_OP, oldFilterOp, newFilterOp);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.FILTER__GUARD, oldGuard, newGuard);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -99,18 +98,18 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setFilterOp(OperatorCall newFilterOp) {
-		if (newFilterOp != filterOp) {
+	public void setGuard(Expression newGuard) {
+		if (newGuard != guard) {
 			NotificationChain msgs = null;
-			if (filterOp != null)
-				msgs = ((InternalEObject)filterOp).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.FILTER__FILTER_OP, null, msgs);
-			if (newFilterOp != null)
-				msgs = ((InternalEObject)newFilterOp).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.FILTER__FILTER_OP, null, msgs);
-			msgs = basicSetFilterOp(newFilterOp, msgs);
+			if (guard != null)
+				msgs = ((InternalEObject)guard).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.FILTER__GUARD, null, msgs);
+			if (newGuard != null)
+				msgs = ((InternalEObject)newGuard).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.FILTER__GUARD, null, msgs);
+			msgs = basicSetGuard(newGuard, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.FILTER__FILTER_OP, newFilterOp, newFilterOp));
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.FILTER__GUARD, newGuard, newGuard));
 	}
 
 	/**
@@ -121,8 +120,8 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ThingmlPackage.FILTER__FILTER_OP:
-				return basicSetFilterOp(null, msgs);
+			case ThingmlPackage.FILTER__GUARD:
+				return basicSetGuard(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -135,8 +134,8 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.FILTER__FILTER_OP:
-				return getFilterOp();
+			case ThingmlPackage.FILTER__GUARD:
+				return getGuard();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -149,8 +148,8 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.FILTER__FILTER_OP:
-				setFilterOp((OperatorCall)newValue);
+			case ThingmlPackage.FILTER__GUARD:
+				setGuard((Expression)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -164,8 +163,8 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.FILTER__FILTER_OP:
-				setFilterOp((OperatorCall)null);
+			case ThingmlPackage.FILTER__GUARD:
+				setGuard((Expression)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -179,8 +178,8 @@ public class FilterImpl extends ViewSourceImpl implements Filter {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.FILTER__FILTER_OP:
-				return filterOp != null;
+			case ThingmlPackage.FILTER__GUARD:
+				return guard != null;
 		}
 		return super.eIsSet(featureID);
 	}

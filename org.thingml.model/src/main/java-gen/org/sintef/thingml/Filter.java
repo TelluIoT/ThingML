@@ -27,7 +27,7 @@ package org.sintef.thingml;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.Filter#getFilterOp <em>Filter Op</em>}</li>
+ *   <li>{@link org.sintef.thingml.Filter#getGuard <em>Guard</em>}</li>
  * </ul>
  *
  * @see org.sintef.thingml.ThingmlPackage#getFilter()
@@ -37,28 +37,28 @@ package org.sintef.thingml;
 public interface Filter extends ViewSource {
 
 	/**
-	 * Returns the value of the '<em><b>Filter Op</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Guard</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Filter Op</em>' containment reference isn't clear,
+	 * If the meaning of the '<em>Guard</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Filter Op</em>' containment reference.
-	 * @see #setFilterOp(OperatorCall)
-	 * @see org.sintef.thingml.ThingmlPackage#getFilter_FilterOp()
+	 * @return the value of the '<em>Guard</em>' containment reference.
+	 * @see #setGuard(Expression)
+	 * @see org.sintef.thingml.ThingmlPackage#getFilter_Guard()
 	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	OperatorCall getFilterOp();
+	Expression getGuard();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Filter#getFilterOp <em>Filter Op</em>}' containment reference.
+	 * Sets the value of the '{@link org.sintef.thingml.Filter#getGuard <em>Guard</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Filter Op</em>' containment reference.
-	 * @see #getFilterOp()
+	 * @param value the new value of the '<em>Guard</em>' containment reference.
+	 * @see #getGuard()
 	 * @generated
 	 */
-	void setFilterOp(OperatorCall value);
+	void setGuard(Expression value);
 } // Filter

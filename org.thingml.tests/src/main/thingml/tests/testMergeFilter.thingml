@@ -20,33 +20,14 @@ thing TestMergeFilter includes Test, TestMsgs
         receives m1, m2, m3, res
     }
 
-    operator m1NotPassed(m : m1) : Boolean do
-        return 'false'
-    end
+    stream filteredMergeOK
+    from m : [ e1 : recv?m1::keep if false | e2 : recv?m2::keep if true | e3 : recv?m3 -> res]::keep if true
+    produce send!res()
     
-    operator m2Passed(m : m2) : Boolean do
-        return 'true'
-    end
+    stream filteredMergeFail
+    from m : [ e1 : recv?m1::keep if false | e2 : recv?m2::keep if true | e3 : recv?m3 -> res]::keep if false
+    produce send!res()
     
-    operator mergePassed(r : res) : Boolean do
-        return 'true'
-    end
-    
-    operator mergeNotPassed(r : res) : Boolean do
-        return 'false'
-    end
-
-    stream filteredMergeOK do
-        from m : [ e1 : [recv?m1]::filter(m1NotPassed(e1)) | e2 : [recv?m2]::filter(m2Passed(e2)) | recv?m3 -> res()]::filter(mergePassed(m))
-        action send!res()
-    end
-    
-    stream filteredMergeFail do
-        from m : [ e1 : [recv?m1]::filter(m1NotPassed(e1)) | e2 : [recv?m2]::filter(m2Passed(e2)) | recv?m3 -> res()]::filter(mergeNotPassed(m))
-        action send!res()
-    end
-
-
 
     statechart testSimpleFilter init Init {
         state Init {

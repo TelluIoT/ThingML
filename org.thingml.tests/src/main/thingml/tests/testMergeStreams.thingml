@@ -39,16 +39,16 @@ thing TestMergeStreams includes CepMsgs,  SampleMsgs, Test
     end
     
 
-    stream mergedSimpleMessages do
-        from [ rcvPort?m1 | rcvPort?m2 | rcvPort?m3 -> cep1()]
-        action sendPort!cep1()
-    end
+    stream mergedSimpleMessages
+    from result : [ e1 : rcvPort?m1 | e2 : rcvPort?m2 | e3: rcvPort?m3 -> cep1]
+    produce sendPort!cep1()
     
-    stream mergeMessagesWithValues do
-        from [ rcvPort?m4 | rcvPort?m5 | rcvPort?m6 | rcvPort?m7 -> cep2(#0,complexTransforming(#1),(#2 * 2))]
-        select a : #0, b: complexTransforming(#1) - 1, c: #2 + 5
-        action sendPort!cep2(a,b,c)
-    end
+    stream mergeMessagesWithValues
+    from result : [ e1 : rcvPort?m4 | e2 : rcvPort?m5 | e3 : rcvPort?m6 | e4 : rcvPort?m7 -> cep2]
+    select var a : Integer = result.val1, 
+           var b : Integer = complexTransforming(result.val2) - 1, 
+           var c : Integer = 3
+    produce sendPort!cep2(a,b,c)
     
    statechart Sample init Init {
         state Init {
@@ -75,10 +75,10 @@ thing TestMergeStreams includes CepMsgs,  SampleMsgs, Test
             event e : rcvPort?cep2
             action do
                 print "cep2 message receive with values (" + e.val1 + ";" + e.val2 + e.val3 + ")."
-                if(e.val1 == 1 and e.val2 == 3 and e.val3 == 11) harnessOut!testOut('\'2\'')
-                if(e.val1 == 4 and e.val2 == 6 and e.val3 == 17) harnessOut!testOut('\'3\'')
-                if(e.val1 == 7 and e.val2 == 9 and e.val3 == 23) harnessOut!testOut('\'4\'')
-                if(e.val1 == 10 and e.val2 == 12 and e.val3 == 29) harnessOut!testOut('\'5\'')
+                if(e.val1 == 1 and e.val2 == 2 and e.val3 == 3) harnessOut!testOut('\'2\'')
+                if(e.val1 == 4 and e.val2 == 5 and e.val3 == 3) harnessOut!testOut('\'3\'')
+                if(e.val1 == 7 and e.val2 == 8 and e.val3 == 3) harnessOut!testOut('\'4\'')
+                if(e.val1 == 10 and e.val2 == 11 and e.val3 == 3) harnessOut!testOut('\'5\'')
             end
         }    
     }

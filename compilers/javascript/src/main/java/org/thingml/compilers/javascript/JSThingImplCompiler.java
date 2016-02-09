@@ -215,10 +215,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
 
-        for (Operator operator : thing.allOperators()) {
-            generateOperator(operator, builder, ctx);
-        }
-
         builder.append("//Internal functions\n");
 
 
@@ -254,13 +250,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("};\n\n");
 
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
-    }
-
-    private void generateOperator(Operator op, StringBuilder builder, Context ctx) {
-            MessageParameter messageParameter = op.getParameter();
-            builder.append("function " + op.getName() + "(" + messageParameter.getName() + ") {\n");
-            ctx.getCompiler().getThingActionCompiler().generate(op.getBody(), builder, ctx);
-            builder.append("}\n");
     }
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {

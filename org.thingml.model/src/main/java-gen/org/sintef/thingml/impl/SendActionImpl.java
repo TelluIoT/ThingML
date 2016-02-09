@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.Message;
+import org.sintef.thingml.PassesParameters;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.SendAction;
 import org.sintef.thingml.ThingmlPackage;
@@ -285,6 +286,38 @@ public class SendActionImpl extends ActionImpl implements SendAction {
 				return port != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == PassesParameters.class) {
+			switch (derivedFeatureID) {
+				case ThingmlPackage.SEND_ACTION__PARAMETERS: return ThingmlPackage.PASSES_PARAMETERS__PARAMETERS;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == PassesParameters.class) {
+			switch (baseFeatureID) {
+				case ThingmlPackage.PASSES_PARAMETERS__PARAMETERS: return ThingmlPackage.SEND_ACTION__PARAMETERS;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 	/**

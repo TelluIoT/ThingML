@@ -92,7 +92,6 @@ import org.sintef.thingml.SimpleSource;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
-import org.sintef.thingml.StreamParamReference;
 import org.sintef.thingml.StringLiteral;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
@@ -214,14 +213,11 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
 			case ThingmlPackage.LOCAL_VARIABLE: return createLocalVariable();
 			case ThingmlPackage.STREAM: return createStream();
-			case ThingmlPackage.STREAM_PARAM_REFERENCE: return createStreamParamReference();
 			case ThingmlPackage.JOIN_SOURCES: return createJoinSources();
 			case ThingmlPackage.MERGE_SOURCES: return createMergeSources();
 			case ThingmlPackage.SIMPLE_SOURCE: return createSimpleSource();
 			case ThingmlPackage.FILTER: return createFilter();
-			case ThingmlPackage.OPERATOR: return createOperator();
 			case ThingmlPackage.MESSAGE_PARAMETER: return createMessageParameter();
-			case ThingmlPackage.OPERATOR_CALL: return createOperatorCall();
 			case ThingmlPackage.REFERENCE: return createReference();
 			case ThingmlPackage.LENGTH_WINDOW: return createLengthWindow();
 			case ThingmlPackage.TIME_WINDOW: return createTimeWindow();
@@ -890,16 +886,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StreamParamReference createStreamParamReference() {
-		StreamParamReferenceImpl streamParamReference = new StreamParamReferenceImpl();
-		return streamParamReference;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public JoinSources createJoinSources() {
 		JoinSourcesImpl joinSources = new JoinSourcesImpl();
 		return joinSources;
@@ -940,29 +926,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Operator createOperator() {
-		OperatorImpl operator = new OperatorImpl();
-		return operator;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public MessageParameter createMessageParameter() {
 		MessageParameterImpl messageParameter = new MessageParameterImpl();
 		return messageParameter;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public OperatorCall createOperatorCall() {
-		OperatorCallImpl operatorCall = new OperatorCallImpl();
-		return operatorCall;
 	}
 
 	/**

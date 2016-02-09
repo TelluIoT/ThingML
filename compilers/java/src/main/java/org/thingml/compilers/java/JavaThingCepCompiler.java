@@ -66,19 +66,21 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
 
 
         List<ViewSource> operators = stream.getInput().getOperators();
-       boolean lastOpIsWindow = false;
-       if(operators.size() > 0) {
-           ViewSource lastOp = operators.get(operators.size() - 1);
-           lastOpIsWindow =  lastOp instanceof WindowView;
+       boolean hasWindow = false;
+       for(ViewSource vs : operators) {
+           hasWindow =  (vs instanceof TimeWindow) || (vs instanceof LengthWindow);
+           if (hasWindow)
+               break;
        }
-        if (lastOpIsWindow) {
+        if (hasWindow) {
             outPutType = "List<" + outPutType + ">";
         }
 
         builder.append(name + ".subscribe(new Action1<" + outPutType + ">() {\n")
                 .append("@Override\n")
                 .append("public void call(" + outPutType + " " + outPutName + ") {\n");
-        if(lastOpIsWindow) {
+
+        if(hasWindow) {
             builder.append("int i;\n");
             for(Parameter parameter : outPut.getParameters()) {
                builder.append(JavaHelper.getJavaType(parameter.getType(), false, context) + "[] " + outPutName + parameter.getName() + " = new " + JavaHelper.getJavaType(parameter.getType(), false, context) + "[" + outPutName + ".size()];\n")
@@ -89,6 +91,11 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
                        .append("}\n");
            }
         }
+
+       for(LocalVariable lv : stream.getSelection()) {
+           context.getCompiler().getThingActionCompiler().generate(lv, builder, context);
+       }
+
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
 
        builder.append("}\n")

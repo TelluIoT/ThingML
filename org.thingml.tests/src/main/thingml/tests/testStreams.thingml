@@ -49,39 +49,45 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
         return value + 1
     end
     
-    stream forwardSimpleMessage do
-        from rcvPort?m1
-        action sendPort!cep1() 
-    end
+    stream forwardSimpleMessage
+    from e1 : rcvPort?m1
+    produce sendPort!cep1() 
+   
     
-    stream forwardMessageWithParams do
-        from evt : [ rcvPort?m2 ]
-        select a : evt.v1, b : evt.v2
-        action sendPort!cep2(a,b)
-    end
+    stream forwardMessageWithParams
+    from evt : rcvPort?m2
+    select var a : JInt =  evt.v1, 
+           var b : JInt = evt.v2
+    produce sendPort!cep2(a,b)
+   
     
-    stream transformingMessageValue do
-        from evt : [ rcvPort?m2 ]
-         select a : (evt.v1 * 2) + 5, b : complexTransforming(evt.v2)
-        action sendPort!cep2(a,b)
-    end
+    stream transformingMessageValue
+    from evt : rcvPort?m2
+    select var a : JInt = (evt.v1 * 2) + 5, 
+           var b : JInt = complexTransforming(evt.v2)
+    produce sendPort!cep2(a,b)
     
-    stream mergedSimpleMessages do
-        from [ rcvPort?m3 | rcvPort?m4 -> cep3()]
-        action sendPort!cep3()
-    end
     
-    stream mergeMessagesWithValues do
-        from [ rcvPort?m5 | rcvPort?m6 -> cep4(#0,complexTransforming(#1),(#2 * 2) + 5)]
-        select a : #0, b: #1, c: #2
-        action sendPort!cep4(a,b,c)
-    end
+    stream mergedSimpleMessages
+    from result : [ e1 : rcvPort?m3 | e2 : rcvPort?m4 -> cep3]
+    produce sendPort!cep3()
+        
     
-    stream joinMessages do
-        from [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1, e1.b * e2.v2, e1.c * e2.v3)]
-        select a : #0, b : #1, c : #2
-        action sendPort!cep5(a,b,c)
-    end
+    stream mergeMessagesWithValues
+    from result : [ e1 : rcvPort?m5 | e2 : rcvPort?m6 -> cep4]
+    select var a : JInt = result.a, 
+           var b : JInt = complexTransforming(result.b) - 1, 
+           var c : JInt = 0
+    produce sendPort!cep4(a,b,c)
+    
+    
+    stream joinMessages
+    from result : [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1, e1.b * e2.v2, e1.c * e2.v3)]
+    select var a : JInt = result.a, 
+           var b : JInt = result.b, 
+           var c : JInt = result.c
+    produce sendPort!cep5(a,b,c)
+    
     
     
     statechart Sample init Init {
@@ -127,8 +133,8 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
             event e : rcvPort?cep4
             action do
                 print "cep4 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ")."
-                if(e.a == 1 and e.b == 3 and e.c == 11) harnessOut!testOut('\'5\'')
-                if(e.a == 4 and e.b == 6 and e.c == 17) harnessOut!testOut('\'6\'')
+                if(e.a == 1 and e.b == 2 and e.c == 0) harnessOut!testOut('\'5\'')
+                if(e.a == 4 and e.b == 5 and e.c == 0) harnessOut!testOut('\'6\'')
             end
             
             internal

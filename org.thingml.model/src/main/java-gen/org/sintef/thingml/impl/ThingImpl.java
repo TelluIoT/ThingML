@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.Function;
 import org.sintef.thingml.Message;
-import org.sintef.thingml.Operator;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.PropertyAssign;
@@ -60,7 +59,6 @@ import java.util.Map;
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getMessages <em>Messages</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getFunctions <em>Functions</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getStreams <em>Streams</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.ThingImpl#getOperators <em>Operators</em>}</li>
  * </ul>
  *
  * @generated
@@ -165,16 +163,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 * @ordered
 	 */
 	protected EList<Stream> streams;
-
-	/**
-	 * The cached value of the '{@link #getOperators() <em>Operators</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getOperators()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Operator> operators;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -317,18 +305,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Operator> getOperators() {
-		if (operators == null) {
-			operators = new EObjectContainmentEList<Operator>(Operator.class, this, ThingmlPackage.THING__OPERATORS);
-		}
-		return operators;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -361,8 +337,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 				return ((InternalEList<?>)getFunctions()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.THING__STREAMS:
 				return ((InternalEList<?>)getStreams()).basicRemove(otherEnd, msgs);
-			case ThingmlPackage.THING__OPERATORS:
-				return ((InternalEList<?>)getOperators()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -393,8 +367,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 				return getFunctions();
 			case ThingmlPackage.THING__STREAMS:
 				return getStreams();
-			case ThingmlPackage.THING__OPERATORS:
-				return getOperators();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -443,10 +415,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 				getStreams().clear();
 				getStreams().addAll((Collection<? extends Stream>)newValue);
 				return;
-			case ThingmlPackage.THING__OPERATORS:
-				getOperators().clear();
-				getOperators().addAll((Collection<? extends Operator>)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -486,9 +454,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 			case ThingmlPackage.THING__STREAMS:
 				getStreams().clear();
 				return;
-			case ThingmlPackage.THING__OPERATORS:
-				getOperators().clear();
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -519,8 +484,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 				return functions != null && !functions.isEmpty();
 			case ThingmlPackage.THING__STREAMS:
 				return streams != null && !streams.isEmpty();
-			case ThingmlPackage.THING__OPERATORS:
-				return operators != null && !operators.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -620,10 +583,6 @@ public class ThingImpl extends TypeImpl implements Thing {
         return ThingMLHelpers.allFunctions(this);
     }
 
-	@Override
-	public List<Operator> allOperators() {
-		return ThingMLHelpers.allOperators(this);
-	}
 
 	/**
      *

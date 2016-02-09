@@ -19,6 +19,9 @@ import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author ludovic
  */
@@ -48,10 +51,18 @@ public class ThingCepSourceDeclaration {
     }
 
     protected void generateOperatorCalls(String name, Source source, StringBuilder builder, Context context) {
+        List<ViewSource> windows = new ArrayList<ViewSource>();
         if (source.getOperators().size() > 0) {
             builder.append(name + " = " + name);
             for (ViewSource view : source.getOperators()) {
-                context.getCompiler().getCepCompiler().getCepViewCompiler().generate(view,builder,context);
+                if (!(view instanceof TimeWindow) && !(view instanceof LengthWindow)) {
+                    context.getCompiler().getCepCompiler().getCepViewCompiler().generate(view, builder, context);
+                } else {
+                    windows.add(view);
+                }
+            }
+            for (ViewSource view : windows) {
+                context.getCompiler().getCepCompiler().getCepViewCompiler().generate(view, builder, context);
             }
             builder.append(";\n");
         }

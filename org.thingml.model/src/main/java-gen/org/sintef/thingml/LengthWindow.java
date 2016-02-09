@@ -35,7 +35,7 @@ package org.sintef.thingml;
  * @model
  * @generated
  */
-public interface LengthWindow extends WindowView {
+public interface LengthWindow extends ViewSource {
 	/**
 	 * Returns the value of the '<em><b>Nb Events</b></em>' attribute.
 	 * The default value is <code>"1"</code>.

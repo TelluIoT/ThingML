@@ -108,16 +108,6 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
             }
         }
 
-        i = 0;
-        for(Expression exp : source.getRules()) {
-            if(!(exp instanceof StreamParamReference)) {
-                builder.append("param" + i + " = ");
-                context.getCompiler().getThingActionCompiler().generate(exp, builder, context);
-                builder.append(";\n");
-            }
-            i++;
-        }
-
         builder.append("return (" + resultType + ") " + resultName + "Type.instantiate(" + stream.getOutput().getPort().getName() + "_port");
         for(i = 0; i<stream.getOutput().getMessage().getParameters().size(); i++) {
             builder.append(",param" + i);

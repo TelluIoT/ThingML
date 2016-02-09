@@ -122,11 +122,14 @@ TOKENSTYLES{
 	"->" COLOR #A22000, BOLD;
 	
 	//CEP
-	"stream" COLOR #CF6E29, BOLD;
-	"from" COLOR #CF6E29, BOLD;
-	"select" COLOR #CF6E29, BOLD;
-	"operator" COLOR #CF6E29, BOLD;
-	"filter" COLOR #CF6E29, BOLD;
+	"stream" COLOR #CF4729, BOLD;	
+	"from" COLOR #CF4729, BOLD;
+	"select" COLOR #CF4729, BOLD;
+	"produce" COLOR #CF4729, BOLD;
+	"keep if" COLOR #CF4729, BOLD;
+	"during" COLOR #CF4729, BOLD;
+	"buffer" COLOR #CF4729, BOLD;	
+	"by" COLOR #CF4729, BOLD;
 	
 	
 	// Action language
@@ -182,7 +185,7 @@ RULES {
 	
 	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? )? #1 body ;
 	
-	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams | operators)* !0 "}" ;
+	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams)* !0 "}" ;
 	
 	RequiredPort ::= !1 (optional[T_OPTIONAL])? "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 
@@ -234,7 +237,7 @@ RULES {
 	
 	Configuration ::= "configuration" #1 name[] (annotations)*  !0 "{" (  instances | connectors | propassigns )* !0 "}" ;
 	
-	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)*  ; 
+	Instance ::= "instance" #1 name[] #1 ":" #1 type[] (annotations)*  ; 
 	
 	Connector ::= "connector" #1 (name[] #1)? cli "." required[] "=>" srv "." provided[] (!0 annotations)*;
 	
@@ -273,26 +276,22 @@ RULES {
 	// *******************************
 	// * CEP
 	// *******************************
-	Operator ::= "operator" #1 name[] "(" parameter ")" ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? #1 body;
 	MessageParameter ::= name[] ":" msgRef[];
-
-	OperatorCall ::= operatorRef[] "(" parameter[] (("," #1 parameter[])* )? ")";
 	
-	Filter ::= "filter" "(" filterOp ")";
-	LengthWindow ::= "lengthWindow" "(" nbEvents[INTEGER_LITERAL] ("," step[INTEGER_LITERAL])? ")";
-	TimeWindow ::= "timeWindow" "(" step[INTEGER_LITERAL] "," size[INTEGER_LITERAL] ")";
+	Filter ::= "keep if" #1 guard ;
+	LengthWindow ::= "buffer" #1 nbEvents[INTEGER_LITERAL] (#1 "by" #1 step[INTEGER_LITERAL])? ;
+	TimeWindow ::= "during" #1 size[INTEGER_LITERAL] (#1 "by" #1 step[INTEGER_LITERAL])? ;
 		
-	SimpleSource ::= ( (name[] ":" "[" message "]") | message) ("::" operators)*;	
-	JoinSources ::= (name[] ":" )? "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
-	MergeSources ::= (name[] ":" )? "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)*;
+	SimpleSource ::= name[] ":" message ("::" operators)*;	
+	JoinSources ::= name[] ":" #1 "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
+	MergeSources ::= name[] ":" #1 "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] #1 "]" ("::" operators)*;
 	
-	Stream ::= "stream" #1 name[] #1 (annotations)* "do"
+	Stream ::= "stream" #1 name[] #1 (annotations)*
 					 !1 "from" #1 input
 					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
-					 !1 "action" #1 output
-					 "end";
+					 !1 "produce" #1 output ;
 	
-	SimpleParamRef ::= parameterRef[];
+	SimpleParamRef ::= parameterRef[];	
 	ArrayParamRef ::= parameterRef[] "[]";		
 	LengthArray ::= "length";	 
 	
@@ -343,10 +342,7 @@ RULES {
 	@Operator(type="unary_prefix", weight="7", superclass="Expression")	
 	NotExpression ::= "not" #1 term;
 	
-	//CEP
-	@Operator(type="primitive", weight="9", superclass="Expression")
-	StreamParamReference ::= "#" indexParam[INTEGER_LITERAL];
-	
+	//CEP	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	Reference ::= reference[] "." parameter;	
 	

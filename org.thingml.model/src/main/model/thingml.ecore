@@ -11,16 +11,19 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="protocols" upperBound="-1"
         eType="#//Protocol" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="#//AnnotatedElement #//TypedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="HasParameters" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//Parameter" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PassesParameters" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
+        eType="#//Expression" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="#//AnnotatedElement #//TypedElement #//HasParameters">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Action"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//AnnotatedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
-        eType="#//Parameter" containment="true"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//AnnotatedElement #//ReferencedElmt #//HasParameters"/>
   <eClassifiers xsi:type="ecore:EClass" name="Thing" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
         eType="#//Property" containment="true"/>
@@ -39,8 +42,6 @@
         eType="#//Function" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="streams" upperBound="-1"
         eType="#//Stream" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
-        eType="#//Operator" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//Variable #//ReferencedElmt"/>
   <eClassifiers xsi:type="ecore:EClass" name="Variable" abstract="true" eSuperTypes="#//TypedElement #//AnnotatedElement #//ReferencedElmt"/>
@@ -149,9 +150,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="segments" upperBound="-1"
         eType="#//Expression" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SendAction" eSuperTypes="#//Action">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
-        eType="#//Expression" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SendAction" eSuperTypes="#//Action #//PassesParameters">
     <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"
         eType="#//Message"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" lowerBound="1" eType="#//Port"/>
@@ -315,9 +314,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="instance" lowerBound="1"
         eType="#//Instance"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FunctionCall" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
-        eType="#//Expression" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FunctionCall" abstract="true" eSuperTypes="#//PassesParameters">
     <eStructuralFeatures xsi:type="ecore:EReference" name="function" lowerBound="1"
         eType="#//Function"/>
   </eClassifiers>
@@ -337,10 +334,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="input" lowerBound="1" eType="#//Source"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StreamParamReference" eSuperTypes="#//Expression">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexParam" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="0"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true" eSuperTypes="#//ThingMLElement #//ReferencedElmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
         eType="#//ViewSource" containment="true"/>
@@ -350,10 +343,11 @@
         upperBound="-1" eType="#//Source" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="resultMessage" lowerBound="1"
         eType="#//Message"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JoinSources" eSuperTypes="#//SourceComposition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1"
         eType="#//Expression" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="JoinSources" eSuperTypes="#//SourceComposition"/>
   <eClassifiers xsi:type="ecore:EClass" name="MergeSources" eSuperTypes="#//SourceComposition"/>
   <eClassifiers xsi:type="ecore:EClass" name="SimpleSource" eSuperTypes="#//Source">
     <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"
@@ -361,24 +355,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ViewSource" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Filter" eSuperTypes="#//ViewSource">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="filterOp" lowerBound="1"
-        eType="#//OperatorCall" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Operator" eSuperTypes="#//TypedElement #//ThingMLElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//ActionBlock"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="1" eType="#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" lowerBound="1"
-        eType="#//MessageParameter" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageParameter" eSuperTypes="#//ThingMLElement #//ReferencedElmt #//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="msgRef" lowerBound="1"
         eType="#//Message"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="OperatorCall">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="operatorRef" lowerBound="1"
-        eType="#//Operator"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" lowerBound="1"
-        upperBound="-1" eType="#//Source"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Reference" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="reference" lowerBound="1"
@@ -387,15 +369,15 @@
         eType="#//ElmtProperty" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReferencedElmt" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="LengthWindow" eSuperTypes="#//WindowView">
+  <eClassifiers xsi:type="ecore:EClass" name="LengthWindow" eSuperTypes="#//ViewSource">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nbEvents" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" defaultValueLiteral="1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="step" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="step" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         defaultValueLiteral="-1"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TimeWindow" eSuperTypes="#//WindowView">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="step" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeWindow" eSuperTypes="#//ViewSource">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="step" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ParamReference" abstract="true" eSuperTypes="#//ElmtProperty">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameterRef" lowerBound="1"
@@ -407,7 +389,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="PredifinedProperty" abstract="true"
       eSuperTypes="#//ElmtProperty"/>
   <eClassifiers xsi:type="ecore:EClass" name="LengthArray" eSuperTypes="#//PredifinedProperty"/>
-  <eClassifiers xsi:type="ecore:EClass" name="WindowView" abstract="true" eSuperTypes="#//ViewSource"/>
   <eClassifiers xsi:type="ecore:EClass" name="Protocol" eSuperTypes="#//AnnotatedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="ObjectType" eSuperTypes="#//Type"/>
 </ecore:EPackage>

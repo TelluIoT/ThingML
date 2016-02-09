@@ -307,14 +307,6 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
-
-	public static List<Operator> allOperators(Thing thing) {
-		ArrayList<Operator> result = new ArrayList<Operator>();
-		for (Thing t : allThingFragments(thing)) {
-			result.addAll(t.getOperators());
-		}
-		return result;
-	}
 	
 	public static ArrayList<Message> allMessages(Thing thing) {
 		ArrayList<Message> result = new ArrayList<Message>();
@@ -729,29 +721,11 @@ public class ThingMLHelpers {
 		return result;
 	}
 
-	public static Operator findContainingOperator(EObject eObject) {
-		return findContainer(eObject,Operator.class);
-	}
-
-	public static List<ReceiveMessage> findInputs(OperatorCall operatorCall) {
-		List<ReceiveMessage> result = new ArrayList<>();
-		Stream parent = findContainingStream(operatorCall);
-		if(parent != null) {
-			List<SimpleSource> simpleSources = allSimpleSources(parent.getInput());
-			for(SimpleSource ss : simpleSources) {
-				result.add(ss.getMessage());
-			}
-		}
-
-		return result;
-	}
-
 	public static ThingMLElement findReferenceContainer(Reference container) {
 		EObject parent = container.eContainer();
 		List<String> parents = new ArrayList<String>();
 		
-		while (parent !=null && !(parent instanceof Handler || parent instanceof Stream ||/*parent instanceof SglMsgParamOperator ||
-				parent instanceof StreamExpression ||*/ parent instanceof SourceComposition || parent instanceof Operator)) {
+		while (parent !=null && !(parent instanceof Handler || parent instanceof Stream || parent instanceof SourceComposition || parent instanceof SimpleSource)) {
 			parents.add(parent.getClass().getName());
 			parent = parent.eContainer();
 		}
@@ -774,7 +748,7 @@ public class ThingMLHelpers {
 	}
 
 	public static TypedElement findContainingFuncOp(EObject eObject) {
-		while(eObject != null && !(eObject instanceof Function || eObject instanceof Operator)) {
+		while(eObject != null && !(eObject instanceof Function)) {
 			eObject = eObject.eContainer();
 		}
 		return (TypedElement) eObject;

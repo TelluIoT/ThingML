@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ */
 package org.sintef.thingml.impl;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -25,47 +26,45 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.sintef.thingml.Expression;
-import org.sintef.thingml.Function;
-import org.sintef.thingml.FunctionCall;
+import org.sintef.thingml.PassesParameters;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Function Call</b></em>'.
+ * An implementation of the model object '<em><b>Passes Parameters</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.FunctionCallImpl#getFunction <em>Function</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.PassesParametersImpl#getParameters <em>Parameters</em>}</li>
  * </ul>
  *
  * @generated
  */
-public abstract class FunctionCallImpl extends PassesParametersImpl implements FunctionCall {
+public abstract class PassesParametersImpl extends EObjectImpl implements PassesParameters {
 	/**
-	 * The cached value of the '{@link #getFunction() <em>Function</em>}' reference.
+	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getFunction()
+	 * @see #getParameters()
 	 * @generated
 	 * @ordered
 	 */
-	protected Function function;
+	protected EList<Expression> parameters;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected FunctionCallImpl() {
+	protected PassesParametersImpl() {
 		super();
 	}
 
@@ -76,7 +75,7 @@ public abstract class FunctionCallImpl extends PassesParametersImpl implements F
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ThingmlPackage.Literals.FUNCTION_CALL;
+		return ThingmlPackage.Literals.PASSES_PARAMETERS;
 	}
 
 	/**
@@ -84,16 +83,11 @@ public abstract class FunctionCallImpl extends PassesParametersImpl implements F
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Function getFunction() {
-		if (function != null && function.eIsProxy()) {
-			InternalEObject oldFunction = (InternalEObject)function;
-			function = (Function)eResolveProxy(oldFunction);
-			if (function != oldFunction) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.FUNCTION_CALL__FUNCTION, oldFunction, function));
-			}
+	public EList<Expression> getParameters() {
+		if (parameters == null) {
+			parameters = new EObjectContainmentEList<Expression>(Expression.class, this, ThingmlPackage.PASSES_PARAMETERS__PARAMETERS);
 		}
-		return function;
+		return parameters;
 	}
 
 	/**
@@ -101,20 +95,13 @@ public abstract class FunctionCallImpl extends PassesParametersImpl implements F
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Function basicGetFunction() {
-		return function;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setFunction(Function newFunction) {
-		Function oldFunction = function;
-		function = newFunction;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.FUNCTION_CALL__FUNCTION, oldFunction, function));
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.PASSES_PARAMETERS__PARAMETERS:
+				return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -125,9 +112,8 @@ public abstract class FunctionCallImpl extends PassesParametersImpl implements F
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.FUNCTION_CALL__FUNCTION:
-				if (resolve) return getFunction();
-				return basicGetFunction();
+			case ThingmlPackage.PASSES_PARAMETERS__PARAMETERS:
+				return getParameters();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -141,8 +127,9 @@ public abstract class FunctionCallImpl extends PassesParametersImpl implements F
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.FUNCTION_CALL__FUNCTION:
-				setFunction((Function)newValue);
+			case ThingmlPackage.PASSES_PARAMETERS__PARAMETERS:
+				getParameters().clear();
+				getParameters().addAll((Collection<? extends Expression>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -156,8 +143,8 @@ public abstract class FunctionCallImpl extends PassesParametersImpl implements F
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.FUNCTION_CALL__FUNCTION:
-				setFunction((Function)null);
+			case ThingmlPackage.PASSES_PARAMETERS__PARAMETERS:
+				getParameters().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -171,10 +158,10 @@ public abstract class FunctionCallImpl extends PassesParametersImpl implements F
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.FUNCTION_CALL__FUNCTION:
-				return function != null;
+			case ThingmlPackage.PASSES_PARAMETERS__PARAMETERS:
+				return parameters != null && !parameters.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //FunctionCallImpl
+} //PassesParametersImpl
