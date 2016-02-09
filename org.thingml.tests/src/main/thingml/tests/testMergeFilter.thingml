@@ -20,17 +20,14 @@ thing TestMergeFilter includes Test, TestMsgs
         receives m1, m2, m3, res
     }
 
-    stream filteredMergeOK do
-        from m : [ e1 : [recv?m1]::keep(false) | e2 : [recv?m2]::keep(true) | recv?m3 -> res]::keep(true)
-        action send!res()
-    end
+    stream filteredMergeOK
+    from m : [ e1 : recv?m1::keep if false | e2 : recv?m2::keep if true | e3 : recv?m3 -> res]::keep if true
+    produce send!res()
     
-    stream filteredMergeFail do
-        from m : [ e1 : [recv?m1]::keep(false) | e2 : [recv?m2]::keep(true) | recv?m3 -> res]::keep(false)
-        action send!res()
-    end
-
-
+    stream filteredMergeFail
+    from m : [ e1 : recv?m1::keep if false | e2 : recv?m2::keep if true | e3 : recv?m3 -> res]::keep if false
+    produce send!res()
+    
 
     statechart testSimpleFilter init Init {
         state Init {

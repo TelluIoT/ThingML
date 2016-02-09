@@ -3,17 +3,15 @@ import "thingml.thingml"
 thing TestSimpleFilter includes Test
 @test "f # f"
 { 
-    stream filterSimpleSourceOK do
-        from fSS : [ harnessIn?testIn ]::keep(fSS.c == '\'f\'')::keep(true)
-        select var a : Char = fSS.c
-        action harnessOut!testOut(a)
-    end
+    stream filterSimpleSourceOK
+    from fSS : harnessIn?testIn::keep if fSS.c == '\'f\''::keep if true
+    select var a : Char = fSS.c
+    produce harnessOut!testOut(a)
      
-    stream filterSimpleSourceFail do
-        from fSS : [ harnessIn?testIn ]::keep(fSS.c == '\'g\'')
-        select var a : Char = fSS.c
-        action harnessOut!testOut(a)
-    end
+    stream filterSimpleSourceFail
+    from fSS : harnessIn?testIn::keep if fSS.c == '\'g\''
+    select var a : Char = fSS.c
+    produce harnessOut!testOut(a)
     
     statechart testSimpleFilter init Init {
         state Init {}    

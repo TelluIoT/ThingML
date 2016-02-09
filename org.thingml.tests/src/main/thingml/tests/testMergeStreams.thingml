@@ -39,18 +39,16 @@ thing TestMergeStreams includes CepMsgs,  SampleMsgs, Test
     end
     
 
-    stream mergedSimpleMessages do
-        from result : [ rcvPort?m1 | rcvPort?m2 | rcvPort?m3 -> cep1]
-        action sendPort!cep1()
-    end
+    stream mergedSimpleMessages
+    from result : [ e1 : rcvPort?m1 | e2 : rcvPort?m2 | e3: rcvPort?m3 -> cep1]
+    produce sendPort!cep1()
     
-    stream mergeMessagesWithValues do
-        from result : [ rcvPort?m4 | rcvPort?m5 | rcvPort?m6 | rcvPort?m7 -> cep2]
-        select var a : Integer = result.val1, 
-        var b : Integer = complexTransforming(result.val2) - 1, 
-        var c : Integer = 3
-        action sendPort!cep2(a,b,c)
-    end
+    stream mergeMessagesWithValues
+    from result : [ e1 : rcvPort?m4 | e2 : rcvPort?m5 | e3 : rcvPort?m6 | e4 : rcvPort?m7 -> cep2]
+    select var a : Integer = result.val1, 
+           var b : Integer = complexTransforming(result.val2) - 1, 
+           var c : Integer = 3
+    produce sendPort!cep2(a,b,c)
     
    statechart Sample init Init {
         state Init {

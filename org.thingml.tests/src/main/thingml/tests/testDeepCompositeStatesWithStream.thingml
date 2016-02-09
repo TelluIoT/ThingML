@@ -20,11 +20,10 @@ thing TestDeepCompositeStatesWithStream includes Test, TestMsgs
     }
     
     
-    stream testIn do
-        from e : [ harnessIn?testIn ]
-        select var c : Char = e.c
-        action cepSendService!cep(c)
-    end
+    stream testIn 
+    from e : harnessIn?testIn
+    select var c : Char = e.c
+    produce cepSendService!cep(c)
     
 	statechart TestDeepCompositeStates init I {
 	
