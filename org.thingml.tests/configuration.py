@@ -20,9 +20,9 @@ deleteTemporaryFiles = False
 
 #Chooses which compilers should be used
 testLanguages=[]
-testLanguages.append("Linux")
+#testLanguages.append("Linux")
 #testLanguages.append("Javascript")
-#testLanguages.append("Java")
+testLanguages.append("Java")
 #testLanguages.append("Arduino")
 
 #Functional tests options
@@ -30,8 +30,8 @@ testLanguages.append("Linux")
 #If useBlacklist is False, runs all tests present in whitelist
 useBlacklist = True
 
-#blacklist=[]
-blacklist=["testMixStreamsAndEvent", "testLengthSimpleSource",  "testStreams", "testSimpleFilter", "testJoinFilter", "testDeepCompositeStatesWithStream", "testHistoryStatesWithStream", "testMergeStreams", "testMergeFilter"]
+blacklist=[]
+#blacklist=["testMixStreamsAndEvent", "testLengthSimpleSource",  "testStreams", "testSimpleFilter", "testJoinFilter", "testDeepCompositeStatesWithStream", "testHistoryStatesWithStream", "testMergeStreams", "testMergeFilter"]
 #whitelist=["testInternalEmptyTransition"]
 #whitelist=["testIfElse", "testVariables", "testArrays2", "testMaskProperty"]
 #whitelist=["testOnExit", "testMultiServerPing", "testSerialization"]

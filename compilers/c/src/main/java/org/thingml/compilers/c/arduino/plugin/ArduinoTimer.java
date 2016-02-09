@@ -45,7 +45,7 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
 
 
     CMessageSerializer ser;
-    HWTimer hwtimer0, hwtimer1, hwtimer2;
+    HWTimer hwtimer0, hwtimer1, hwtimer2, hwtimer3;
     Boolean isInit = false;
     
     public ArduinoTimer(Configuration cfg, CCompilerContext ctx) {
@@ -65,6 +65,7 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
             Set<ExternalConnector> eco0 = new HashSet<>();
             Set<ExternalConnector> eco1 = new HashSet<>();
             Set<ExternalConnector> eco2 = new HashSet<>();
+            Set<ExternalConnector> eco3 = new HashSet<>();
             //How many Hardware timers?
             int nbHWTimer = 0;
             for(ExternalConnector eco : this.getExternalConnectors()) {
@@ -76,6 +77,8 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
                         eco1.add(eco);
                     } else if (thisTimer == 2) {
                         eco2.add(eco);
+                    } else if (thisTimer == 3) {
+                        eco3.add(eco);
                     }
                 } else {
                     eco2.add(eco);
@@ -86,6 +89,7 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
             hwtimer0 = new HWTimer(0, eco0);
             hwtimer1 = new HWTimer(1, eco1);
             hwtimer2 = new HWTimer(2, eco2);
+            hwtimer3 = new HWTimer(3, eco3);
             isInit = true;
         }
     }
@@ -119,6 +123,14 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
             ctx.getBuilder(hwtimer2.timerName + ".c").append(hwtimer2.generateTimerLibrary(ctx));
             ctx.getBuilder(hwtimer2.timerName + ".h").append("//" + hwtimer2.timerName + "\n");
         }
+        if(!hwtimer3.ExternalConnectors.isEmpty()) {
+            ctx.addToInitCode("\n" + hwtimer3.timerName + "_instance.listener_id = add_instance(&" + hwtimer3.timerName + "_instance);\n");
+            ctx.addToInitCode(hwtimer3.timerName + "_setup();\n");
+            ctx.addToPollCode(hwtimer3.timerName + "_read();\n");
+            
+            ctx.getBuilder(hwtimer3.timerName + ".c").append(hwtimer3.generateTimerLibrary(ctx));
+            ctx.getBuilder(hwtimer3.timerName + ".h").append("//" + hwtimer3.timerName + "\n");
+        }
     }
     
     @Override
@@ -133,6 +145,9 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
         }
         if(!hwtimer2.ExternalConnectors.isEmpty()) {
             hwtimer2.generateInstructions(ctx, builder);
+        }
+        if(!hwtimer3.ExternalConnectors.isEmpty()) {
+            hwtimer3.generateInstructions(ctx, builder);
         }
     }
     
@@ -184,6 +199,69 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
             } else {
                 interruptCounterType = "uint8_t";
             }
+        }
+        
+        String timer_init() {
+            String res ="";
+            switch(idHWTimer) {
+                case 0:
+                    res = "// Run timer0 interrupt up counting at 250kHz \n" +
+    "            TCCR0A = 0;\n" +
+    "            TCCR0B = 0<<CS02 | 1<<CS01 | 1<<CS00;\n" +
+    "\n" +
+    "            //Timer0 Overflow Interrupt Enable\n" +
+    "            TIMSK0 |= 1<<TOIE0;\n";
+                    break;
+                case 1:
+                    res = "// Run timer1 interrupt up counting at 16MHz \n" +
+    "		 TCCR1A = 0;\n" +
+    "		 TCCR1B = 0<<CS12 | 0<<CS11 | 1<<CS10;\n" +
+    "		\n" +
+    "		 //Timer1 Overflow Interrupt Enable\n" +
+    "		 TIMSK1 |= 1<<TOIE1;\n";
+                    break;
+                case 2:
+                    res = "// Run timer2 interrupt up counting at 250kHz \n" +
+    "		 TCCR2A = 0;\n" +
+    "		 TCCR2B = 1<<CS22 | 0<<CS21 | 0<<CS20;\n" +
+    "		\n" +
+    "		 //Timer2 Overflow Interrupt Enable\n" +
+    "		 TIMSK2 |= 1<<TOIE2;\n";
+                    break;
+                case 3:
+                    res = "// Run timer3 interrupt up counting at 16MHz \n" +
+    "		 TCCR3A = 0;\n" +
+    "		 TCCR3B = 0<<CS32 | 0<<CS31 | 1<<CS30;\n" +
+    "		\n" +
+    "		 //Timer1 Overflow Interrupt Enable\n" +
+    "		 TIMSK3 |= 1<<TOIE3;\n";
+                    break;
+            }
+            return res;
+        }
+        
+        String timer_interrupt() {
+        
+            String res ="";
+            switch(idHWTimer) {
+                case 0:
+                    res = "SIGNAL(TIMER0_OVF_vect) {\n" + 
+                            "TCNT0 = 5;\n";
+                    break;
+                case 1:
+                    res = "SIGNAL(TIMER1_OVF_vect) {\n" + 
+                            "TCNT1 = 49536;\n";
+                    break;
+                case 2:
+                    res = "SIGNAL(TIMER2_OVF_vect) {\n" + 
+                            "TCNT2 = 5;\n";
+                    break;
+                case 3:
+                    res = "SIGNAL(TIMER3_OVF_vect) {\n" + 
+                            "TCNT3 = 49536;\n";
+                    break;
+            }
+            return res;
         }
         
         public HWTimer(int idHWTimer, Set<ExternalConnector> ExternalConnectors) {
@@ -242,75 +320,23 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
 
                 StringBuilder interruptVector = new StringBuilder();
                 StringBuilder initTimer = new StringBuilder();
-                if(idHWTimer == 0) {
-                    initTimer.append("// Run timer0 interrupt up counting at 250kHz \n" +
-    "            TCCR0A = 0;\n" +
-    "            TCCR0B = 0<<CS02 | 1<<CS01 | 1<<CS00;\n" +
-    "\n" +
-    "            //Timer0 Overflow Interrupt Enable\n" +
-    "            TIMSK0 |= 1<<TOIE0;\n");
+                
+                initTimer.append(timer_init());
 
-                    interruptVector.append("SIGNAL(TIMER0_OVF_vect) {\n"
-                            + "TCNT0 = 5;\n"
-                            + timerName + "_interrupt_counter++;\n");
+                //interruptVector.append("SIGNAL(TIMER0_OVF_vect) {\n");
+                interruptVector.append(timer_interrupt());
+                interruptVector.append(timerName + "_interrupt_counter++;\n");
 
-                    for(BigInteger bi : tics) {
-                        interruptVector.append("if((" + timerName + "_interrupt_counter % " + bi.longValue() + ") == 0) {\n");
-                        interruptVector.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
-                        interruptVector.append("}\n");
-                    }
-                    interruptVector.append("if(" + timerName + "_interrupt_counter >= " + scm.longValue() + ") {\n");
-                    interruptVector.append(timerName + "_interrupt_counter = 0;\n");
+                for(BigInteger bi : tics) {
+                    interruptVector.append("if((" + timerName + "_interrupt_counter % " + bi.longValue() + ") == 0) {\n");
+                    interruptVector.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
                     interruptVector.append("}\n");
-
-                    interruptVector.append("}\n\n");
-
-
-                } else if (idHWTimer == 1) {
-                    initTimer.append("// Run timer1 interrupt up counting at 16MHz \n" +
-    "		 TCCR1A = 0;\n" +
-    "		 TCCR1B = 0<<CS12 | 0<<CS11 | 1<<CS10;\n" +
-    "		\n" +
-    "		 //Timer1 Overflow Interrupt Enable\n" +
-    "		 TIMSK1 |= 1<<TOIE1;\n");
-
-                    interruptVector.append("SIGNAL(TIMER1_OVF_vect) {\n"
-                            + "TCNT1 = 49536;\n"
-                            + timerName + "_interrupt_counter++;\n");
-
-                    for(BigInteger bi : tics) {
-                        interruptVector.append("if((" + timerName + "_interrupt_counter % " + bi.longValue() + ") == 0) {\n");
-                        interruptVector.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
-                        interruptVector.append("}\n");
-                    }
-                    interruptVector.append("if(" + timerName + "_interrupt_counter >= " + scm.longValue() + ") {\n");
-                    interruptVector.append(timerName + "_interrupt_counter = 0;\n");
-                    interruptVector.append("}\n");
-
-                    interruptVector.append("}\n\n");
-                } else if (idHWTimer == 2) {
-                    initTimer.append("// Run timer2 interrupt up counting at 250kHz \n" +
-    "		 TCCR2A = 0;\n" +
-    "		 TCCR2B = 1<<CS22 | 0<<CS21 | 0<<CS20;\n" +
-    "		\n" +
-    "		 //Timer2 Overflow Interrupt Enable\n" +
-    "		 TIMSK2 |= 1<<TOIE2;\n");
-
-                    interruptVector.append("SIGNAL(TIMER2_OVF_vect) {\n"
-                            + "TCNT2 = 5;\n"
-                            + timerName + "_interrupt_counter++;\n");
-
-                    for(BigInteger bi : tics) {
-                        interruptVector.append("if((" + timerName + "_interrupt_counter % " + bi.longValue() + ") == 0) {\n");
-                        interruptVector.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
-                        interruptVector.append("}\n");
-                    }
-                    interruptVector.append("if(" + timerName + "_interrupt_counter >= " + scm.longValue() + ") {\n");
-                    interruptVector.append(timerName + "_interrupt_counter = 0;\n");
-                    interruptVector.append("}\n");
-
-                    interruptVector.append("}\n\n");
                 }
+                interruptVector.append("if(" + timerName + "_interrupt_counter >= " + scm.longValue() + ") {\n");
+                interruptVector.append(timerName + "_interrupt_counter = 0;\n");
+                interruptVector.append("}\n");
+
+                interruptVector.append("}\n\n");
 
                 ctemplate = ctemplate.replace("/*INTERRUPT_VECTOR*/", interruptVector);
                 ctemplate = ctemplate.replace("/*INITIALIZATION*/", initTimer);
