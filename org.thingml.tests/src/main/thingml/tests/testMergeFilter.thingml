@@ -20,29 +20,13 @@ thing TestMergeFilter includes Test, TestMsgs
         receives m1, m2, m3, res
     }
 
-    operator m1NotPassed(m : m1) : Boolean do
-        return 'false'
-    end
-    
-    operator m2Passed(m : m2) : Boolean do
-        return 'true'
-    end
-    
-    operator mergePassed(r : res) : Boolean do
-        return 'true'
-    end
-    
-    operator mergeNotPassed(r : res) : Boolean do
-        return 'false'
-    end
-
     stream filteredMergeOK do
-        from m : [ e1 : [recv?m1]::filter(m1NotPassed(e1)) | e2 : [recv?m2]::filter(m2Passed(e2)) | recv?m3 -> res]::filter(mergePassed(m))
+        from m : [ e1 : [recv?m1]::keep(false) | e2 : [recv?m2]::keep(true) | recv?m3 -> res]::keep(true)
         action send!res()
     end
     
     stream filteredMergeFail do
-        from m : [ e1 : [recv?m1]::filter(m1NotPassed(e1)) | e2 : [recv?m2]::filter(m2Passed(e2)) | recv?m3 -> res]::filter(mergeNotPassed(m))
+        from m : [ e1 : [recv?m1]::keep(false) | e2 : [recv?m2]::keep(true) | recv?m3 -> res]::keep(false)
         action send!res()
     end
 

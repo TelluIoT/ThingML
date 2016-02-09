@@ -2,28 +2,15 @@ import "thingml.thingml"
 
 thing TestSimpleFilter includes Test
 @test "f # f"
-{
- 
-    operator filterFSS(input : testIn) : Boolean do
-        return input.c == '\'f\''
-    end
-    
-    operator alwaysTrue(input : testIn) : Boolean do
-        return 'true'
-    end
-    
+{ 
     stream filterSimpleSourceOK do
-        from fSS : [ harnessIn?testIn ]::filter(filterFSS(fSS))::filter(alwaysTrue(fSS))
+        from fSS : [ harnessIn?testIn ]::keep(fSS.c == '\'f\'')::keep(true)
         select var a : Char = fSS.c
         action harnessOut!testOut(a)
     end
-    
-    operator filterFSSFail(input : testIn) : Boolean do
-        return input.c == '\'g\''
-    end
      
     stream filterSimpleSourceFail do
-        from fSS : [ harnessIn?testIn ]::filter(filterFSSFail(fSS))
+        from fSS : [ harnessIn?testIn ]::keep(fSS.c == '\'g\'')
         select var a : Char = fSS.c
         action harnessOut!testOut(a)
     end
