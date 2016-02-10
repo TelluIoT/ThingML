@@ -220,8 +220,6 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
                 }
 
                 // -------------------- Parser -------------------- 
-
-                parserImpl.append("bool /*PORT_NAME*/_parse() {\n");
                 Set<Message> messages = new HashSet<Message>();
                 int maxSize = 0;
                 int minSize = 0;
@@ -235,44 +233,50 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
                         }
                     }
                 }
-                parserImpl.append("uint8_t msgbuf[" + maxSize + "];\n");
-                parserImpl.append("uint8_t bytebuf;\n");
-                parserImpl.append("uint8_t index = 0;\n");
-                parserImpl.append("index += " + port + ".readBytes(&msgbuf[index], 2);\n");
-                parserImpl.append("uint16_t msgID = (msgbuf[0] << 8) + msgbuf[1];\n");
-                parserImpl.append("if(index != 2) return false;\n");
-                parserImpl.append("switch(msgID) {\n");
-                for(Message m : messages) {
-                    parserImpl.append("case ");
-                    parserImpl.append(ctx.getHandlerCode(cfg ,m));
-                    parserImpl.append(":\n");
-                    parserImpl.append("while(index < " + (ctx.getMessageSerializationSize(m)-2) + ") {\n");
-                    parserImpl.append("if(" + port + ".readBytes(&bytebuf, 1) == 0) {\n");
-                    parserImpl.append("return false;\n}\n");
-
-                    if(escape) {
-                        parserImpl.append("if(bytebuf != " + (int) escapeChar + ") {\n");
-                    }
-                    parserImpl.append("msgbuf[index] = bytebuf;\n");
-                    parserImpl.append("index++;\n");
-
-                    if(escape) {
-                        parserImpl.append("} else {\n");
+                if(protocol.isDefined("serializer", "msgpack")) {
+                    ArduinoMessagePackSerializer ser = new ArduinoMessagePackSerializer(ctx, cfg);
+                    ser.generateMessageParser(port, port, parserImpl, messages, maxSize);
+                } else {
+                    parserImpl.append("bool /*PORT_NAME*/_parse() {\n");
+                    
+                    parserImpl.append("uint8_t msgbuf[" + maxSize + "];\n");
+                    parserImpl.append("uint8_t bytebuf;\n");
+                    parserImpl.append("uint8_t index = 0;\n");
+                    parserImpl.append("index += " + port + ".readBytes(&msgbuf[index], 2);\n");
+                    parserImpl.append("uint16_t msgID = (msgbuf[0] << 8) + msgbuf[1];\n");
+                    parserImpl.append("if(index != 2) return false;\n");
+                    parserImpl.append("switch(msgID) {\n");
+                    for(Message m : messages) {
+                        parserImpl.append("case ");
+                        parserImpl.append(ctx.getHandlerCode(cfg ,m));
+                        parserImpl.append(":\n");
+                        parserImpl.append("while(index < " + (ctx.getMessageSerializationSize(m)-2) + ") {\n");
                         parserImpl.append("if(" + port + ".readBytes(&bytebuf, 1) == 0) {\n");
                         parserImpl.append("return false;\n}\n");
+
+                        if(escape) {
+                            parserImpl.append("if(bytebuf != " + (int) escapeChar + ") {\n");
+                        }
                         parserImpl.append("msgbuf[index] = bytebuf;\n");
                         parserImpl.append("index++;\n");
-                        parserImpl.append("}\n");
+
+                        if(escape) {
+                            parserImpl.append("} else {\n");
+                            parserImpl.append("if(" + port + ".readBytes(&bytebuf, 1) == 0) {\n");
+                            parserImpl.append("return false;\n}\n");
+                            parserImpl.append("msgbuf[index] = bytebuf;\n");
+                            parserImpl.append("index++;\n");
+                            parserImpl.append("}\n");
+                        }
+                        parserImpl.append("break;\n");
                     }
-                    parserImpl.append("break;\n");
+                    parserImpl.append("}\n");
+                    parserImpl.append("}\n");
+                    parserImpl.append("externalMessageEnqueue(msgbuf, index, /*PORT_NAME*/_instance.listener_id);\n");
+
+
+                    parserImpl.append("}\n");
                 }
-                parserImpl.append("}\n");
-                parserImpl.append("}\n");
-                parserImpl.append("externalMessageEnqueue(msgbuf, index, /*PORT_NAME*/_instance.listener_id);\n");
-
-
-                parserImpl.append("}\n");
-
                 // ------------------ End Parser ------------------ 
 
 
