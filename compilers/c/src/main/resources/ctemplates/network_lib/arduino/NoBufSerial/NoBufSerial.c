@@ -50,6 +50,7 @@ void /*PORT_NAME*/_read() {
 
               /*TRANSITION_TO_READ_FOOTER*/
             } else {
+              /*PORT_NAME*/.flush();
               /*PORT_NAME*/_serialListenerState = /*PORT_NAME*/_LISTENER_STATE_ERROR;
             }
       break;

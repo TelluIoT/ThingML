@@ -21,16 +21,20 @@
 package org.thingml.compilers.c.arduino.plugin;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
+import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Protocol;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CMessageSerializer;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
 import org.thingml.compilers.c.plugin.CByteArraySerializer;
+import org.thingml.compilers.c.plugin.CMSPSerializer;
 
 /**
  *
@@ -39,6 +43,11 @@ import org.thingml.compilers.c.plugin.CByteArraySerializer;
 public class NoBufSerial extends CNetworkLibraryGenerator {
 
     CMessageSerializer ser;
+        
+    HWSerial Serial0 = new HWSerial();
+    HWSerial Serial1 = new HWSerial();
+    HWSerial Serial2 = new HWSerial();
+    HWSerial Serial3 = new HWSerial();
     
     public NoBufSerial(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
@@ -53,27 +62,26 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
     public void generateNetworkLibrary() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         
-        HWSerial Serial0 = new HWSerial();
-        HWSerial Serial1 = new HWSerial();
-        HWSerial Serial2 = new HWSerial();
-        HWSerial Serial3 = new HWSerial();
-        
         Protocol prot;
         for(ExternalConnector eco : this.getExternalConnectors()) {
             if((eco.getProtocol().getName().compareToIgnoreCase("Serial0") == 0) 
                     || (eco.getProtocol().getName().compareToIgnoreCase("Serial") == 0)) {
                 Serial0.protocol = eco.getProtocol();
                 Serial0.ecos.add(eco);
+                eco.setName(eco.getProtocol().getName());
             
             } else if (eco.getProtocol().getName().compareToIgnoreCase("Serial1") == 0) {
                 Serial1.protocol = eco.getProtocol();
                 Serial1.ecos.add(eco);
+                eco.setName(eco.getProtocol().getName());
             } else if (eco.getProtocol().getName().compareToIgnoreCase("Serial2") == 0) {
                 Serial2.protocol = eco.getProtocol();
                 Serial2.ecos.add(eco);
+                eco.setName(eco.getProtocol().getName());
             } else if (eco.getProtocol().getName().compareToIgnoreCase("Serial3") == 0) {
                 Serial3.protocol = eco.getProtocol();
                 Serial3.ecos.add(eco);
+                eco.setName(eco.getProtocol().getName());
             }
             
         }
@@ -82,6 +90,45 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
         Serial1.generateNetworkLibrary(ctx);
         Serial2.generateNetworkLibrary(ctx);
         Serial3.generateNetworkLibrary(ctx);
+    }
+    
+    @Override
+    public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
+        CCompilerContext ctx = (CCompilerContext) this.ctx;
+        for (ExternalConnector eco : this.getExternalConnectors()) {
+            //if (eco.hasAnnotation("c_external_send")) {
+            Thing t = eco.getInst().getInstance().getType();
+            Port p = eco.getPort();
+            CMessageSerializer Aser;
+            if(eco.getProtocol().isDefined("serializer", "MSP")) {
+                Aser = new CMSPSerializer(ctx, cfg);
+            } else if (eco.getProtocol().isDefined("serializer", "msgpack")) {
+                Aser = new ArduinoMessagePackSerializer(ctx, cfg);
+            } else {
+                Aser = new CByteArraySerializer(ctx, cfg);
+            }
+            
+            for (Message m : p.getSends()) {
+                Set<String> ignoreList = new HashSet<String>();
+
+                builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                ctx.appendFormalParameters(t, builder, m);
+                builder.append("{\n");
+                
+                
+                
+                int i = Aser.generateMessageSerialzer(eco, m, builder, "forward_buf", new LinkedList<Parameter>());
+                //ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
+
+                builder.append("\n//Forwarding with specified function \n");
+                builder.append(eco.getName() + "_forwardMessage(forward_buf, " + i + ");\n");
+                
+        //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                builder.append("}\n\n");
+            }
+                
+        }
     }
     
     
@@ -95,6 +142,7 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
         char[] charToEscape;
         boolean escape;
         int baudrate;
+        CMessageSerializer ser;
         
         HWSerial() {
             ecos = new HashSet<>();
@@ -234,15 +282,28 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
                     }
                 }
                 if(protocol.isDefined("serializer", "msgpack")) {
-                    ArduinoMessagePackSerializer ser = new ArduinoMessagePackSerializer(ctx, cfg);
-                    ser.generateMessageParser(port, port, parserImpl, messages, maxSize);
+                    ArduinoMessagePackSerializer Aser = new ArduinoMessagePackSerializer(ctx, cfg);
+                    Aser.generateMessageParser(port, port, parserImpl, messages, maxSize);
                 } else {
+                    if(protocol.isDefined("serializer", "MSP")) {
+                        CMSPSerializer Aser = new CMSPSerializer(ctx, cfg);
+                        Aser.generateMessageParser(ecos.iterator().next(), readerImpl);
+                    }
+                    
                     parserImpl.append("bool /*PORT_NAME*/_parse() {\n");
                     
                     parserImpl.append("uint8_t msgbuf[" + maxSize + "];\n");
                     parserImpl.append("uint8_t bytebuf;\n");
                     parserImpl.append("uint8_t index = 0;\n");
-                    parserImpl.append("index += " + port + ".readBytes(&msgbuf[index], 2);\n");
+                    if(protocol.isDefined("serializer", "MSP")) {
+                         parserImpl.append("" + port + ".readBytes(&bytebuf, 1);\n");
+                         parserImpl.append("" + port + ".readBytes(&bytebuf, 1);\n");
+                         parserImpl.append("msgbuf[0] = 1;\n");
+                         parserImpl.append("index++;\n");
+                         parserImpl.append("index += Serial2.readBytes(&msgbuf[1], 1);\n");
+                    } else {
+                        parserImpl.append("index += " + port + ".readBytes(&msgbuf[index], 2);\n");
+                    }
                     parserImpl.append("uint16_t msgID = (msgbuf[0] << 8) + msgbuf[1];\n");
                     parserImpl.append("if(index != 2) return false;\n");
                     parserImpl.append("switch(msgID) {\n");
@@ -268,12 +329,17 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
                             parserImpl.append("index++;\n");
                             parserImpl.append("}\n");
                         }
+                        parserImpl.append("}\n");
                         parserImpl.append("break;\n");
                     }
                     parserImpl.append("}\n");
-                    parserImpl.append("}\n");
-                    parserImpl.append("externalMessageEnqueue(msgbuf, index, /*PORT_NAME*/_instance.listener_id);\n");
-
+                    
+                    if(protocol.isDefined("serializer", "MSP")) {
+                        parserImpl.append("/*PORT_NAME*/_parser(msgbuf, index, /*PORT_NAME*/_instance.listener_id);\n");
+                        parserImpl.append(port + ".readBytes(&bytebuf, 1);\n");
+                    } else {
+                        parserImpl.append("externalMessageEnqueue(msgbuf, index, /*PORT_NAME*/_instance.listener_id);\n");
+                    }
 
                     parserImpl.append("}\n");
                 }
