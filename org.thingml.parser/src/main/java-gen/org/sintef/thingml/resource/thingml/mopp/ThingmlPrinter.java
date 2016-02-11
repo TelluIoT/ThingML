@@ -6902,8 +6902,8 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		// 0 (if the feature is null).
 		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(2);
 		Object temp;
-		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__NB_EVENTS));
-		printCountingMap.put("nbEvents", temp == null ? 0 : 1);
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__SIZE));
+		printCountingMap.put("size", temp == null ? 0 : 1);
 		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__STEP));
 		printCountingMap.put("step", temp == null ? 0 : 1);
 		// print collected hidden tokens
@@ -6915,16 +6915,14 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		out.print("buffer");
 		// DEFINITION PART BEGINS (WhiteSpaces)
 		out.print(" ");
-		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
-		count = printCountingMap.get("nbEvents");
+		// DEFINITION PART BEGINS (Containment)
+		count = printCountingMap.get("size");
 		if (count > 0) {
-			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__NB_EVENTS));
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__SIZE));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("INTEGER_LITERAL");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__NB_EVENTS), element));
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
-			printCountingMap.put("nbEvents", count - 1);
+			printCountingMap.put("size", count - 1);
 		}
 		// DEFINITION PART BEGINS (CompoundDefinition)
 		sWriter = new java.io.StringWriter();
@@ -6942,6 +6940,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	}
 	
 	public void print_org_sintef_thingml_LengthWindow_0(org.sintef.thingml.LengthWindow element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		String localtab = outertab;
 		int count;
 		// DEFINITION PART BEGINS (WhiteSpaces)
 		out.print(" ");
@@ -6949,14 +6948,12 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		out.print("by");
 		// DEFINITION PART BEGINS (WhiteSpaces)
 		out.print(" ");
-		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("step");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__STEP));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("INTEGER_LITERAL");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.LENGTH_WINDOW__STEP), element));
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
 			printCountingMap.put("step", count - 1);
 		}
@@ -6972,8 +6969,8 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		// 0 (if the feature is null).
 		java.util.Map<String, Integer> printCountingMap = new java.util.LinkedHashMap<String, Integer>(2);
 		Object temp;
-		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__SIZE));
-		printCountingMap.put("size", temp == null ? 0 : 1);
+		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__DURATION));
+		printCountingMap.put("duration", temp == null ? 0 : 1);
 		temp = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__STEP));
 		printCountingMap.put("step", temp == null ? 0 : 1);
 		// print collected hidden tokens
@@ -6985,16 +6982,14 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		out.print("during");
 		// DEFINITION PART BEGINS (WhiteSpaces)
 		out.print(" ");
-		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
-		count = printCountingMap.get("size");
+		// DEFINITION PART BEGINS (Containment)
+		count = printCountingMap.get("duration");
 		if (count > 0) {
-			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__SIZE));
+			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__DURATION));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("INTEGER_LITERAL");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__SIZE), element));
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
-			printCountingMap.put("size", count - 1);
+			printCountingMap.put("duration", count - 1);
 		}
 		// DEFINITION PART BEGINS (CompoundDefinition)
 		sWriter = new java.io.StringWriter();
@@ -7012,6 +7007,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	}
 	
 	public void print_org_sintef_thingml_TimeWindow_0(org.sintef.thingml.TimeWindow element, String outertab, java.io.PrintWriter out, java.util.Map<String, Integer> printCountingMap) {
+		String localtab = outertab;
 		int count;
 		// DEFINITION PART BEGINS (WhiteSpaces)
 		out.print(" ");
@@ -7019,14 +7015,12 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		out.print("by");
 		// DEFINITION PART BEGINS (WhiteSpaces)
 		out.print(" ");
-		// DEFINITION PART BEGINS (PlaceholderUsingSpecifiedToken)
+		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("step");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__STEP));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("INTEGER_LITERAL");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve((Object) o, element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.TIME_WINDOW__STEP), element));
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
 			printCountingMap.put("step", count - 1);
 		}

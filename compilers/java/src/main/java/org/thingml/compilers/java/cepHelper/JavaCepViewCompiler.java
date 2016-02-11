@@ -44,14 +44,25 @@ public class JavaCepViewCompiler extends ThingCepViewCompiler{
 
     @Override
     public void generate(TimeWindow timeWindow, StringBuilder builder, Context context) {
-        builder.append(".buffer(" + timeWindow.getSize() + "," + timeWindow.getStep() + ",TimeUnit.MILLISECONDS)");
+        builder.append(".buffer(");
+        context.getCompiler().getThingActionCompiler().generate(timeWindow.getDuration(), builder, context);
+        builder.append(",");
+        if (timeWindow.getStep() != null)
+            context.getCompiler().getThingActionCompiler().generate(timeWindow.getStep(), builder, context);
+        else //step = duration by default
+            context.getCompiler().getThingActionCompiler().generate(timeWindow.getDuration(), builder, context);
+        builder.append(",TimeUnit.MILLISECONDS)");
     }
 
     @Override
     public void generate(LengthWindow lengthWindow, StringBuilder builder, Context context) {
-        builder.append(".buffer(" + lengthWindow.getNbEvents());
-        if(lengthWindow.getStep() != -1) {
-            builder.append(", " + lengthWindow.getStep());
+        builder.append(".buffer(");
+        context.getCompiler().getThingActionCompiler().generate(lengthWindow.getSize(), builder, context);
+        builder.append(", ");
+        if(lengthWindow.getStep() != null) {
+            context.getCompiler().getThingActionCompiler().generate(lengthWindow.getStep(), builder, context);
+        } else { //step = size by default
+            context.getCompiler().getThingActionCompiler().generate(lengthWindow.getSize(), builder, context);
         }
         builder.append( ")");
     }

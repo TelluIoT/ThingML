@@ -27,7 +27,7 @@ package org.sintef.thingml;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.LengthWindow#getNbEvents <em>Nb Events</em>}</li>
+ *   <li>{@link org.sintef.thingml.LengthWindow#getSize <em>Size</em>}</li>
  *   <li>{@link org.sintef.thingml.LengthWindow#getStep <em>Step</em>}</li>
  * </ul>
  *
@@ -37,57 +37,55 @@ package org.sintef.thingml;
  */
 public interface LengthWindow extends ViewSource {
 	/**
-	 * Returns the value of the '<em><b>Nb Events</b></em>' attribute.
-	 * The default value is <code>"1"</code>.
+	 * Returns the value of the '<em><b>Size</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Nb Events</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Size</em>' containment reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Nb Events</em>' attribute.
-	 * @see #setNbEvents(int)
-	 * @see org.sintef.thingml.ThingmlPackage#getLengthWindow_NbEvents()
-	 * @model default="1" required="true"
+	 * @return the value of the '<em>Size</em>' containment reference.
+	 * @see #setSize(Expression)
+	 * @see org.sintef.thingml.ThingmlPackage#getLengthWindow_Size()
+	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	int getNbEvents();
+	Expression getSize();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.LengthWindow#getNbEvents <em>Nb Events</em>}' attribute.
+	 * Sets the value of the '{@link org.sintef.thingml.LengthWindow#getSize <em>Size</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Nb Events</em>' attribute.
-	 * @see #getNbEvents()
+	 * @param value the new value of the '<em>Size</em>' containment reference.
+	 * @see #getSize()
 	 * @generated
 	 */
-	void setNbEvents(int value);
+	void setSize(Expression value);
 
 	/**
-	 * Returns the value of the '<em><b>Step</b></em>' attribute.
-	 * The default value is <code>"-1"</code>.
+	 * Returns the value of the '<em><b>Step</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Step</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Step</em>' attribute.
-	 * @see #setStep(int)
+	 * @return the value of the '<em>Step</em>' containment reference.
+	 * @see #setStep(Expression)
 	 * @see org.sintef.thingml.ThingmlPackage#getLengthWindow_Step()
-	 * @model default="-1" required="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	int getStep();
+	Expression getStep();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.LengthWindow#getStep <em>Step</em>}' attribute.
+	 * Sets the value of the '{@link org.sintef.thingml.LengthWindow#getStep <em>Step</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Step</em>' attribute.
+	 * @param value the new value of the '<em>Step</em>' containment reference.
 	 * @see #getStep()
 	 * @generated
 	 */
-	void setStep(int value);
+	void setStep(Expression value);
 
 } // LengthWindow

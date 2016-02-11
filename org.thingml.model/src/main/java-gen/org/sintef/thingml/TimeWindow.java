@@ -27,8 +27,8 @@ package org.sintef.thingml;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.sintef.thingml.TimeWindow#getDuration <em>Duration</em>}</li>
  *   <li>{@link org.sintef.thingml.TimeWindow#getStep <em>Step</em>}</li>
- *   <li>{@link org.sintef.thingml.TimeWindow#getSize <em>Size</em>}</li>
  * </ul>
  *
  * @see org.sintef.thingml.ThingmlPackage#getTimeWindow()
@@ -37,55 +37,55 @@ package org.sintef.thingml;
  */
 public interface TimeWindow extends ViewSource {
 	/**
-	 * Returns the value of the '<em><b>Step</b></em>' attribute.
+	 * Returns the value of the '<em><b>Duration</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Duration</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Duration</em>' containment reference.
+	 * @see #setDuration(Expression)
+	 * @see org.sintef.thingml.ThingmlPackage#getTimeWindow_Duration()
+	 * @model containment="true" required="true"
+	 * @generated
+	 */
+	Expression getDuration();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.TimeWindow#getDuration <em>Duration</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Duration</em>' containment reference.
+	 * @see #getDuration()
+	 * @generated
+	 */
+	void setDuration(Expression value);
+
+	/**
+	 * Returns the value of the '<em><b>Step</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Step</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Step</em>' attribute.
-	 * @see #setStep(int)
+	 * @return the value of the '<em>Step</em>' containment reference.
+	 * @see #setStep(Expression)
 	 * @see org.sintef.thingml.ThingmlPackage#getTimeWindow_Step()
-	 * @model required="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	int getStep();
+	Expression getStep();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.TimeWindow#getStep <em>Step</em>}' attribute.
+	 * Sets the value of the '{@link org.sintef.thingml.TimeWindow#getStep <em>Step</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Step</em>' attribute.
+	 * @param value the new value of the '<em>Step</em>' containment reference.
 	 * @see #getStep()
 	 * @generated
 	 */
-	void setStep(int value);
-
-	/**
-	 * Returns the value of the '<em><b>Size</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Size</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Size</em>' attribute.
-	 * @see #setSize(int)
-	 * @see org.sintef.thingml.ThingmlPackage#getTimeWindow_Size()
-	 * @model required="true"
-	 * @generated
-	 */
-	int getSize();
-
-	/**
-	 * Sets the value of the '{@link org.sintef.thingml.TimeWindow#getSize <em>Size</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Size</em>' attribute.
-	 * @see #getSize()
-	 * @generated
-	 */
-	void setSize(int value);
+	void setStep(Expression value);
 
 } // TimeWindow

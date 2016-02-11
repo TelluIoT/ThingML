@@ -2804,8 +2804,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getLengthWindow_NbEvents() {
-		return (EAttribute)lengthWindowEClass.getEStructuralFeatures().get(0);
+	public EReference getLengthWindow_Size() {
+		return (EReference)lengthWindowEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2813,8 +2813,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getLengthWindow_Step() {
-		return (EAttribute)lengthWindowEClass.getEStructuralFeatures().get(1);
+	public EReference getLengthWindow_Step() {
+		return (EReference)lengthWindowEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2831,8 +2831,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getTimeWindow_Step() {
-		return (EAttribute)timeWindowEClass.getEStructuralFeatures().get(0);
+	public EReference getTimeWindow_Duration() {
+		return (EReference)timeWindowEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2840,8 +2840,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getTimeWindow_Size() {
-		return (EAttribute)timeWindowEClass.getEStructuralFeatures().get(1);
+	public EReference getTimeWindow_Step() {
+		return (EReference)timeWindowEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -3255,12 +3255,12 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		referencedElmtEClass = createEClass(REFERENCED_ELMT);
 
 		lengthWindowEClass = createEClass(LENGTH_WINDOW);
-		createEAttribute(lengthWindowEClass, LENGTH_WINDOW__NB_EVENTS);
-		createEAttribute(lengthWindowEClass, LENGTH_WINDOW__STEP);
+		createEReference(lengthWindowEClass, LENGTH_WINDOW__SIZE);
+		createEReference(lengthWindowEClass, LENGTH_WINDOW__STEP);
 
 		timeWindowEClass = createEClass(TIME_WINDOW);
-		createEAttribute(timeWindowEClass, TIME_WINDOW__STEP);
-		createEAttribute(timeWindowEClass, TIME_WINDOW__SIZE);
+		createEReference(timeWindowEClass, TIME_WINDOW__DURATION);
+		createEReference(timeWindowEClass, TIME_WINDOW__STEP);
 
 		paramReferenceEClass = createEClass(PARAM_REFERENCE);
 		createEReference(paramReferenceEClass, PARAM_REFERENCE__PARAMETER_REF);
@@ -3721,12 +3721,12 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(referencedElmtEClass, ReferencedElmt.class, "ReferencedElmt", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(lengthWindowEClass, LengthWindow.class, "LengthWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getLengthWindow_NbEvents(), ecorePackage.getEInt(), "nbEvents", "1", 1, 1, LengthWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getLengthWindow_Step(), ecorePackage.getEInt(), "step", "-1", 1, 1, LengthWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getLengthWindow_Size(), this.getExpression(), null, "size", null, 1, 1, LengthWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getLengthWindow_Step(), this.getExpression(), null, "step", null, 0, 1, LengthWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(timeWindowEClass, TimeWindow.class, "TimeWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getTimeWindow_Step(), ecorePackage.getEInt(), "step", null, 1, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTimeWindow_Size(), ecorePackage.getEInt(), "size", null, 1, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTimeWindow_Duration(), this.getExpression(), null, "duration", null, 1, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTimeWindow_Step(), this.getExpression(), null, "step", null, 0, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(paramReferenceEClass, ParamReference.class, "ParamReference", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getParamReference_ParameterRef(), this.getParameter(), null, "parameterRef", null, 1, 1, ParamReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

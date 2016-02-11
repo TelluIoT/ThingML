@@ -274,12 +274,12 @@
     </genClasses>
     <genClasses image="false" ecoreClass="thingml.ecore#//ReferencedElmt"/>
     <genClasses ecoreClass="thingml.ecore#//LengthWindow">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//LengthWindow/nbEvents"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//LengthWindow/step"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//LengthWindow/size"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference thingml.ecore#//LengthWindow/step"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//TimeWindow">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//TimeWindow/size"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//TimeWindow/step"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//TimeWindow/duration"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference thingml.ecore#//TimeWindow/step"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//ParamReference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ParamReference/parameterRef"/>
