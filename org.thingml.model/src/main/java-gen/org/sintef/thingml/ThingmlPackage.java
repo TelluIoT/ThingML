@@ -4415,16 +4415,16 @@ public interface ThingmlPackage extends EPackage {
 	int LENGTH_WINDOW = 94;
 
 	/**
-	 * The feature id for the '<em><b>Nb Events</b></em>' attribute.
+	 * The feature id for the '<em><b>Size</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int LENGTH_WINDOW__NB_EVENTS = VIEW_SOURCE_FEATURE_COUNT + 0;
+	int LENGTH_WINDOW__SIZE = VIEW_SOURCE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Step</b></em>' attribute.
+	 * The feature id for the '<em><b>Step</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -4453,22 +4453,22 @@ public interface ThingmlPackage extends EPackage {
 	int TIME_WINDOW = 95;
 
 	/**
-	 * The feature id for the '<em><b>Step</b></em>' attribute.
+	 * The feature id for the '<em><b>Duration</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TIME_WINDOW__STEP = VIEW_SOURCE_FEATURE_COUNT + 0;
+	int TIME_WINDOW__DURATION = VIEW_SOURCE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Size</b></em>' attribute.
+	 * The feature id for the '<em><b>Step</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TIME_WINDOW__SIZE = VIEW_SOURCE_FEATURE_COUNT + 1;
+	int TIME_WINDOW__STEP = VIEW_SOURCE_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Time Window</em>' class.
@@ -6893,26 +6893,26 @@ public interface ThingmlPackage extends EPackage {
 	EClass getLengthWindow();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.sintef.thingml.LengthWindow#getNbEvents <em>Nb Events</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.LengthWindow#getSize <em>Size</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Nb Events</em>'.
-	 * @see org.sintef.thingml.LengthWindow#getNbEvents()
+	 * @return the meta object for the containment reference '<em>Size</em>'.
+	 * @see org.sintef.thingml.LengthWindow#getSize()
 	 * @see #getLengthWindow()
 	 * @generated
 	 */
-	EAttribute getLengthWindow_NbEvents();
+	EReference getLengthWindow_Size();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.sintef.thingml.LengthWindow#getStep <em>Step</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.LengthWindow#getStep <em>Step</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Step</em>'.
+	 * @return the meta object for the containment reference '<em>Step</em>'.
 	 * @see org.sintef.thingml.LengthWindow#getStep()
 	 * @see #getLengthWindow()
 	 * @generated
 	 */
-	EAttribute getLengthWindow_Step();
+	EReference getLengthWindow_Step();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.TimeWindow <em>Time Window</em>}'.
@@ -6925,26 +6925,26 @@ public interface ThingmlPackage extends EPackage {
 	EClass getTimeWindow();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.sintef.thingml.TimeWindow#getStep <em>Step</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.TimeWindow#getDuration <em>Duration</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Step</em>'.
+	 * @return the meta object for the containment reference '<em>Duration</em>'.
+	 * @see org.sintef.thingml.TimeWindow#getDuration()
+	 * @see #getTimeWindow()
+	 * @generated
+	 */
+	EReference getTimeWindow_Duration();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.TimeWindow#getStep <em>Step</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Step</em>'.
 	 * @see org.sintef.thingml.TimeWindow#getStep()
 	 * @see #getTimeWindow()
 	 * @generated
 	 */
-	EAttribute getTimeWindow_Step();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.sintef.thingml.TimeWindow#getSize <em>Size</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Size</em>'.
-	 * @see org.sintef.thingml.TimeWindow#getSize()
-	 * @see #getTimeWindow()
-	 * @generated
-	 */
-	EAttribute getTimeWindow_Size();
+	EReference getTimeWindow_Step();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.ParamReference <em>Param Reference</em>}'.
@@ -8914,20 +8914,20 @@ public interface ThingmlPackage extends EPackage {
 		EClass LENGTH_WINDOW = eINSTANCE.getLengthWindow();
 
 		/**
-		 * The meta object literal for the '<em><b>Nb Events</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Size</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute LENGTH_WINDOW__NB_EVENTS = eINSTANCE.getLengthWindow_NbEvents();
+		EReference LENGTH_WINDOW__SIZE = eINSTANCE.getLengthWindow_Size();
 
 		/**
-		 * The meta object literal for the '<em><b>Step</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Step</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute LENGTH_WINDOW__STEP = eINSTANCE.getLengthWindow_Step();
+		EReference LENGTH_WINDOW__STEP = eINSTANCE.getLengthWindow_Step();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.TimeWindowImpl <em>Time Window</em>}' class.
@@ -8940,20 +8940,20 @@ public interface ThingmlPackage extends EPackage {
 		EClass TIME_WINDOW = eINSTANCE.getTimeWindow();
 
 		/**
-		 * The meta object literal for the '<em><b>Step</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Duration</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TIME_WINDOW__STEP = eINSTANCE.getTimeWindow_Step();
+		EReference TIME_WINDOW__DURATION = eINSTANCE.getTimeWindow_Duration();
 
 		/**
-		 * The meta object literal for the '<em><b>Size</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Step</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TIME_WINDOW__SIZE = eINSTANCE.getTimeWindow_Size();
+		EReference TIME_WINDOW__STEP = eINSTANCE.getTimeWindow_Step();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ParamReferenceImpl <em>Param Reference</em>}' class.

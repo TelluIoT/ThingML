@@ -279,8 +279,8 @@ RULES {
 	MessageParameter ::= name[] ":" msgRef[];
 	
 	Filter ::= "keep if" #1 guard ;
-	LengthWindow ::= "buffer" #1 nbEvents[INTEGER_LITERAL] (#1 "by" #1 step[INTEGER_LITERAL])? ;
-	TimeWindow ::= "during" #1 size[INTEGER_LITERAL] (#1 "by" #1 step[INTEGER_LITERAL])? ;
+	LengthWindow ::= "buffer" #1 size (#1 "by" #1 step)? ;
+	TimeWindow ::= "during" #1 duration (#1 "by" #1 step)? ;
 		
 	SimpleSource ::= name[] ":" message ("::" operators)*;	
 	JoinSources ::= name[] ":" #1 "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;

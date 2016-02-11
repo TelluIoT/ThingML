@@ -40,15 +40,25 @@ public class JSCepViewCompiler extends ThingCepViewCompiler {
 
     @Override
     public void generate(TimeWindow timeWindow, StringBuilder builder, Context context) {
-        builder.append(".bufferWithTime(" + timeWindow.getSize() + "," + timeWindow.getStep() + ")");
+        builder.append(".bufferWithTime(");
+        context.getCompiler().getThingActionCompiler().generate(timeWindow.getDuration(), builder, context);
+        builder.append(",");
+        if (timeWindow.getStep() != null)
+            context.getCompiler().getThingActionCompiler().generate(timeWindow.getStep(), builder, context);
+        else
+            context.getCompiler().getThingActionCompiler().generate(timeWindow.getDuration(), builder, context);
+        builder.append(")");
     }
 
     @Override
     public void generate(LengthWindow lengthWindow, StringBuilder builder, Context context) {
-        builder.append(".bufferWithCount(" + lengthWindow.getNbEvents());
-        if (lengthWindow.getStep() != -1) {
-            builder.append(", " + lengthWindow.getStep());
-        }
+        builder.append(".bufferWithCount(");
+        context.getCompiler().getThingActionCompiler().generate(lengthWindow.getSize(), builder, context);
+        builder.append(", ");
+        if (lengthWindow.getStep() != null)
+            context.getCompiler().getThingActionCompiler().generate(lengthWindow.getStep(), builder, context);
+        else
+            context.getCompiler().getThingActionCompiler().generate(lengthWindow.getSize(), builder, context);
         builder.append(")");
     }
 }
