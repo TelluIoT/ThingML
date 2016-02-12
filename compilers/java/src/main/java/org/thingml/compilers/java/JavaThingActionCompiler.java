@@ -17,6 +17,7 @@ package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.constraints.Types;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
@@ -29,6 +30,25 @@ import java.util.List;
  * Created by bmori on 01.12.2014.
  */
 public class JavaThingActionCompiler extends CommonThingActionCompiler {
+
+    @Override
+    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
+        Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
+        Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
+        if (leftType.isA(Types.OBJECT_TYPE)) {
+            generate(expression.getLhs(), builder, ctx);
+            builder.append(".equals(");
+            generate(expression.getRhs(), builder, ctx);
+            builder.append(")");
+        } else if (rightType.isA(Types.OBJECT_TYPE)) {
+            generate(expression.getRhs(), builder, ctx);
+            builder.append(".equals(");
+            generate(expression.getLhs(), builder, ctx);
+            builder.append(")");
+        } else {
+            super.generate(expression, builder, ctx);
+        }
+    }
 
     @Override
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
@@ -212,10 +232,17 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     public void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
 
         if (!(type instanceof Enumeration)) {
-            if (!isArray)
-                builder.append("(" + type.annotation("java_type").toArray()[0] + ") ");
-            else
-                builder.append("(" + type.annotation("java_type").toArray()[0] + "[]) ");
+            if (type.hasAnnotation("java_type")) {
+                if (!isArray)
+                    builder.append("(" + type.annotation("java_type").toArray()[0] + ") ");
+                else
+                    builder.append("(" + type.annotation("java_type").toArray()[0] + "[]) ");
+            } else {
+                if (!isArray)
+                    builder.append("(Object) ");
+                else
+                    builder.append("(Object[]) ");
+            }
         }
         builder.append("(");
         generate(exp, builder, ctx);

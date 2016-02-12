@@ -31,6 +31,7 @@ public class Types {
     public static Type STRING_TYPE;
     public static Type REAL_TYPE;
     public static Type VOID_TYPE;
+    public static Type OBJECT_TYPE;
 
     static {
         ThingmlFactory factory = ThingmlPackageImpl.init().getThingmlFactory();
@@ -76,5 +77,11 @@ public class Types {
         _void.setName("type_checker");
         _void.setValue("Void");
         VOID_TYPE.getAnnotations().add(_void);
+        OBJECT_TYPE = factory.createPrimitiveType();
+        OBJECT_TYPE.setName("Object");
+        PlatformAnnotation _object = factory.createPlatformAnnotation();
+        _object.setName("type_checker");
+        _object.setValue("Object");
+        OBJECT_TYPE.getAnnotations().add(_object);
     }
 }

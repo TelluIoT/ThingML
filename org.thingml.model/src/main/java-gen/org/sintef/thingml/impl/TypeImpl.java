@@ -17,6 +17,7 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.sintef.thingml.ObjectType;
 import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Type;
@@ -68,8 +69,12 @@ public abstract class TypeImpl extends AnnotatedElementImpl implements Type {
 				return Types.ERROR_TYPE;
 			else if (ty.equals("Void"))
 				return Types.VOID_TYPE;
+			else if (ty.equals("Object"))
+				return Types.OBJECT_TYPE;
 			else
 				return Types.ANY_TYPE;
+		} else if (this instanceof ObjectType) {
+			return Types.OBJECT_TYPE;
 		}
 		return Types.ANY_TYPE;
 	}
@@ -80,11 +85,13 @@ public abstract class TypeImpl extends AnnotatedElementImpl implements Type {
 	 * @return
      */
 	public boolean isA(Type t) {
-		if (t.getBroadType() == Types.ANY_TYPE)
+		if (t.getBroadType() == Types.ANY_TYPE)//anything is an Any
 			return true;
 		if (getBroadType() == t.getBroadType())
 			return true;
-		if (getBroadType() == Types.INTEGER_TYPE && t.getBroadType() == Types.REAL_TYPE)
+		if (getBroadType() == Types.INTEGER_TYPE && t.getBroadType() == Types.REAL_TYPE) //an Integer is a Real
+			return true;
+		if (getBroadType() == Types.STRING_TYPE && t.getBroadType() == Types.OBJECT_TYPE)//a String is an Object
 			return true;
 		return false;
 	}
