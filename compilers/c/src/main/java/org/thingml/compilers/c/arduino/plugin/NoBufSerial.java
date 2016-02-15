@@ -287,7 +287,8 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
                 } else {
                     if(protocol.isDefined("serializer", "MSP")) {
                         CMSPSerializer Aser = new CMSPSerializer(ctx, cfg);
-                        Aser.generateMessageParser(ecos.iterator().next(), readerImpl);
+                        //Aser.generateMessageParser(ecos.iterator().next(), readerImpl);
+                        Aser.generateMessageParser(portName, messages, readerImpl);
                     }
                     
                     parserImpl.append("bool /*PORT_NAME*/_parse() {\n");

@@ -205,12 +205,15 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
             String res ="";
             switch(idHWTimer) {
                 case 0:
-                    res = "// Run timer0 interrupt up counting at 250kHz \n" +
+                    res = "// Plugging into timer0 \n" +
+    "               OCR0A = 0xAF;\n" +
+    "               TIMSK0 |= _BV(OCIE0A);\n";
+                    /*res = "// Run timer0 interrupt up counting at 250kHz \n" +
     "            TCCR0A = 0;\n" +
     "            TCCR0B = 0<<CS02 | 1<<CS01 | 1<<CS00;\n" +
     "\n" +
     "            //Timer0 Overflow Interrupt Enable\n" +
-    "            TIMSK0 |= 1<<TOIE0;\n";
+    "            TIMSK0 |= 1<<TOIE0;\n";*/
                     break;
                 case 1:
                     res = "// Run timer1 interrupt up counting at 16MHz \n" +
@@ -245,8 +248,9 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
             String res ="";
             switch(idHWTimer) {
                 case 0:
-                    res = "SIGNAL(TIMER0_OVF_vect) {\n" + 
-                            "TCNT0 = 5;\n";
+                    res = "SIGNAL(TIMER0_COMPA_vect) {\n";
+                    /*res = "SIGNAL(TIMER0_OVF_vect) {\n" + 
+                            "TCNT0 = 5;\n";*/
                     break;
                 case 1:
                     res = "SIGNAL(TIMER1_OVF_vect) {\n" + 
@@ -414,10 +418,11 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
                             }
                         }
                         for(Message msg : timeoutMessages) {
-                            //instructions.append("enqueue_buf[0] = (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " >> 8) & 0xFF;\n");
-                            //instructions.append("enqueue_buf[1] = " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " & 0xFF;\n");
-                            //instructions.append("externalMessageEnqueue(enqueue_buf, 2, " + timerName + "_instance.listener_id);\n");
-                            instructions.append("dispatch_" + msg.getName()+ "(" + timerName + "_instance.listener_id);\n");
+                            instructions.append("uint8_t enqueue_buf[2];\n");
+                            instructions.append("enqueue_buf[0] = (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " >> 8) & 0xFF;\n");
+                            instructions.append("enqueue_buf[1] = " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " & 0xFF;\n");
+                            instructions.append("externalMessageEnqueue(enqueue_buf, 2, " + timerName + "_instance.listener_id);\n");
+                            //instructions.append("dispatch_" + msg.getName()+ "(" + timerName + "_instance.listener_id);\n");
                         }
                         instructions.append("}\n\n");
                     }

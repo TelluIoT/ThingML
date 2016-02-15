@@ -88,17 +88,41 @@ public class CMSPSerializer extends CMessageSerializer {
         return j;
     }
 
-    @Override
-    public void generateMessageParser(ExternalConnector eco, StringBuilder builder) {
-        builder.append("void " + eco.getProtocol().getName() + "_parser(byte * msg, int size, int listener_id) {\n");
-        builder.append("    byte msg_buf[size-1];\n");
+    public void generateMessageParser(String portName, Set<Message> messages, StringBuilder builder) {
+        builder.append("void " + portName + "_parser(byte * msg, int size, int listener_id) {\n");
+        builder.append("    byte msg_buf[size];\n");
         builder.append("    msg_buf[0] = 1;\n");
-        builder.append("    uint16_t i;\n");
-        builder.append("    for(i = 1; i < (size-1); i++) {\n");
-        builder.append("        msg_buf[i] = msg[i];\n");
+        builder.append("    msg_buf[1] = msg[1];\n");
+        builder.append("    uint16_t msgID = 256 + msg[1];\n");
+        builder.append("    uint16_t index = 2;\n");
+        
+        
+        builder.append("    switch(msgID) {\n");
+        for(Message m : messages) {
+            builder.append("        case " + ctx.getHandlerCode(cfg, m) + ":\n");
+            int j = 2;
+            
+            for(Parameter pt : m.getParameters()) {
+                
+                for(int i = ctx.getCByteSize(pt.getType(), 0) - 1; i >= 0; i--) {
+                        builder.append("            msg_buf[index] = msg[" + (j + i) + "];\n");
+                        builder.append("            index++;\n");
+                }
+                j += ctx.getCByteSize(pt.getType(), 0);
+            }
+            
+            builder.append("        break;\n");
+        }
+        
         builder.append("    }\n");
+        
         builder.append("    externalMessageEnqueue((uint8_t *) msg_buf, size, listener_id);\n");
         builder.append("}\n");
+    }
+
+    @Override
+    public void generateMessageParser(ExternalConnector eco, StringBuilder builder) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
