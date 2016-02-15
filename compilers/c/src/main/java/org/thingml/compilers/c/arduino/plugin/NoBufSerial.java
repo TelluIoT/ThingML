@@ -301,7 +301,7 @@ public class NoBufSerial extends CNetworkLibraryGenerator {
                          parserImpl.append("" + port + ".readBytes(&bytebuf, 1);\n");
                          parserImpl.append("msgbuf[0] = 1;\n");
                          parserImpl.append("index++;\n");
-                         parserImpl.append("index += Serial2.readBytes(&msgbuf[1], 1);\n");
+                         parserImpl.append("index += " + port + ".readBytes(&msgbuf[1], 1);\n");
                     } else {
                         parserImpl.append("index += " + port + ".readBytes(&msgbuf[index], 2);\n");
                     }
