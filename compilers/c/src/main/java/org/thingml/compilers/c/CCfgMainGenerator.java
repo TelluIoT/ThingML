@@ -1177,25 +1177,34 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append("\n}\n\n");
             }
 
-            
-            for(Map.Entry<Instance, Port> mySender: syncSenderList) {
-                Port p = mySender.getValue();
-                Thing owner = mySender.getKey().getType();
-                headerbuilder.append("void " + "sync_dispatch_" + ctx.getSenderName(owner, p, m));
-                ctx.appendFormalParameters(owner, headerbuilder, m);
-                headerbuilder.append(";\n");
-                    
-                builder.append("void " + getCppNameScope() + "sync_dispatch_" + ctx.getSenderName(owner, p, m));
-                ctx.appendFormalParameters(owner, builder, m);
-                builder.append("{\n");
-                builder.append("dispatch_" + m.getName());
-                builder.append("(_instance->id_" + p.getName());
+            if(!syncSenderList.isEmpty()) {
+                Set<Map.Entry<Thing, Port>> thingSenders = new HashSet<>();
+                for(Map.Entry<Instance, Port> mySender: syncSenderList) {
+                    Map.Entry<Thing, Port> TP = new HashMap.SimpleEntry<>(mySender.getKey().getType(), mySender.getValue());
+                    if(!thingSenders.contains(TP)) {
+                        thingSenders.add(TP);
+                    }
+                }
+                for(Map.Entry<Thing, Port> TP: thingSenders) {
+                    Port p = TP.getValue();
+                    Thing owner = TP.getKey();
+                    headerbuilder.append("void " + "sync_dispatch_" + ctx.getSenderName(owner, p, m));
+                    ctx.appendFormalParameters(owner, headerbuilder, m);
+                    headerbuilder.append(";\n");
 
-                for (Parameter param : m.getParameters()) {
-                    builder.append(", ");
-                    builder.append(param.getName());
-        }
-                builder.append(");\n}\n");
+                    builder.append("void " + getCppNameScope() + "sync_dispatch_" + ctx.getSenderName(owner, p, m));
+                    ctx.appendFormalParameters(owner, builder, m);
+                    builder.append("{\n");
+                    builder.append("dispatch_" + m.getName());
+                    builder.append("(_instance->id_" + p.getName());
+
+                    for (Parameter param : m.getParameters()) {
+                        builder.append(", ");
+                        builder.append(param.getName());
+                    }
+                    builder.append(");\n");
+                    builder.append("}\n");
+                }
             }
         }
         

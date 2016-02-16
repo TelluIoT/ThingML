@@ -73,10 +73,10 @@ thing TestSerialization includes Test
 
 			internal event e : harnessIn?testIn
 			guard e.c == '\'7\''	
-			action pout!m7(3325658145)	
+			action pout!m7('3325658145')	
 
 			internal event e : pin?m7
-			guard e.p == 3325658145
+			guard e.p == '3325658145'
 			action harnessOut!testOut('\'7\'')
 
 			internal event e : harnessIn?testIn

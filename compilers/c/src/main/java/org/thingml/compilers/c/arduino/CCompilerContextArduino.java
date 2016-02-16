@@ -76,7 +76,8 @@ public class CCompilerContextArduino extends CCompilerContext {
 
         pde.append(generatedCode.get(main).toString());
 
-        writeTextFile(getCurrentConfiguration().getName() + ".pde", pde.toString());
+        //writeTextFile(getCurrentConfiguration().getName() + ".pde", pde.toString());
+        writeTextFile(getCurrentConfiguration().getName() + ".ino", pde.toString());
 
     }
     
