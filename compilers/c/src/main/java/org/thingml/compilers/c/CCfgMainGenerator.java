@@ -1741,7 +1741,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
         for (Property p : inst.getType().allPropertiesInDepth()) {
             if (p.getCardinality() != null) {//array
-                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = &");
+                //builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = &");
+                //TOCHECK
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getVariableName(p));
                 builder.append(";\n");
             }
