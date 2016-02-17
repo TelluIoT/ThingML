@@ -70,9 +70,11 @@ public class CMSPSerializer extends CMessageSerializer {
                     builder.append("} u_" + v + ";\n");
                     builder.append("u_" + v + ".p = " + v + ";\n");
 
-                    while (i > 0) {
-                        i = i - 1;
-                        builder.append(BufferName + "[" + j + "] = (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
+                    //while (i > 0) {
+                    //    i = i - 1;
+                    for(int k1 = 0; k1 < i; k1++) {
+                        //builder.append(BufferName + "[" + j + "] = (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
+                        builder.append(BufferName + "[" + j + "] = (u_" + v + ".bytebuffer[" + k1 + "] & 0xFF);\n");
                         j++;
                     }
                 }

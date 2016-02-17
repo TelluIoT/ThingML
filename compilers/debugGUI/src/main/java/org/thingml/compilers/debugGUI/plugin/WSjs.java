@@ -26,6 +26,7 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
+import org.sintef.thingml.PrimitiveType;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.debugGUI.DebugGUINetworkLibraryGenerator;
 
@@ -80,7 +81,7 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
         "	var tmp = i;\n" +
         "	var res = \"\";\n" +
         "	while(n > 1){\n" +
-        "		res += intToXdigitString(Math.floor(tmp / Math.pow(256, n)), 3);\n" +
+        "		res += intToXdigitString(Math.floor(tmp / Math.pow(256, n-1)), 3);\n" +
         "		tmp = i - res;\n" +
         "		n--;\n" +
         "	}\n" +
@@ -131,7 +132,9 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
                        }
                        builder.append("tmp_param = document.getElementById(\"param_" + m.getName() + "_" + p.getName() + "\").value;\n");
                        builder.append("tolog += tmp_param;\n");
-                       builder.append("tosend += intToBytes(tmp_param, " + p.getType().annotation("c_byte_size").iterator().next() + ");\n");
+                       //builder.append("tosend += intToBytes(tmp_param, " + p.getType().annotation("c_byte_size").iterator().next() + ");\n");
+                       PrimitiveType ty = (PrimitiveType) p.getType();
+                       builder.append("tosend += intToBytes(tmp_param, " + ty.getByteSize() + ");\n");
                     }
 
                     builder.append("}\n");
@@ -176,7 +179,9 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
                    }
                    
                    builder.append("parsedMsg += readByte(msg.substring(" + char_i);
-                   param_l = parseInt(p.getType().annotation("c_byte_size").iterator().next());
+                   PrimitiveType ty = (PrimitiveType) p.getType();
+                   //param_l = parseInt(p.getType().annotation("c_byte_size").iterator().next());
+                   param_l = ty.getByteSize();
                    char_i += param_l * 3;
                    builder.append(", " + char_i + "), " + param_l + ");\n");
                 }
