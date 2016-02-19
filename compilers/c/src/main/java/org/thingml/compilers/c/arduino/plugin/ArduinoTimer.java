@@ -360,7 +360,9 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
                             + "}\n"
                             + "}\n\n");
                 }
+				//System.out.println("*******> timeOut = " + timeOut);
                 if(timeOut) {
+				
                     instructions.append("void " + timerName + "_timeout(uint8_t id) {\n"
                             + "uint8_t enqueue_buf[3];\n");
 
@@ -381,6 +383,7 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
                             }
                         }
                     }
+					//System.out.println("*******> #Timeout messages = " + timeoutMessages.size());
                     for(Message msg : timeoutMessages) {
                         instructions.append("enqueue_buf[0] = (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " >> 8) & 0xFF;\n");
                         instructions.append("enqueue_buf[1] = " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " & 0xFF;\n");
@@ -418,11 +421,13 @@ public class ArduinoTimer extends CNetworkLibraryGenerator {
                             }
                         }
                         for(Message msg : timeoutMessages) {
+							instructions.append("{\n");
                             instructions.append("uint8_t enqueue_buf[2];\n");
                             instructions.append("enqueue_buf[0] = (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " >> 8) & 0xFF;\n");
                             instructions.append("enqueue_buf[1] = " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " & 0xFF;\n");
                             instructions.append("externalMessageEnqueue(enqueue_buf, 2, " + timerName + "_instance.listener_id);\n");
                             //instructions.append("dispatch_" + msg.getName()+ "(" + timerName + "_instance.listener_id);\n");
+							instructions.append("}\n");
                         }
                         instructions.append("}\n\n");
                     }
