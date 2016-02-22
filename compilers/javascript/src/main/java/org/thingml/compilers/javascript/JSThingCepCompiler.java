@@ -42,7 +42,7 @@ public class JSThingCepCompiler extends ThingCepCompiler {
             generateSubscription(stream, builder, ctx, paramName, simpleSource.getMessage().getMessage());
         } else if (stream.getInput() instanceof SourceComposition) {
             Message output = ((SourceComposition) stream.getInput()).getResultMessage();
-            generateSubscription(stream, builder, ctx, output.getName(), ((SourceComposition) stream.getInput()).getResultMessage());
+            generateSubscription(stream, builder, ctx, output.getName(), ((SourceComposition) stream.getInput()).getResultMessage());//FIXME last param already exist in local variable
         } else {
             throw UnsupportedException.sourceException(stream.getClass().getName());
         }
