@@ -43,6 +43,7 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 	protected org.sintef.thingml.resource.thingml.analysis.InstanceRefInstanceReferenceResolver instanceRefInstanceReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.InstanceRefInstanceReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.SendActionPortReferenceResolver sendActionPortReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.SendActionPortReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.SendActionMessageReferenceResolver sendActionMessageReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.SendActionMessageReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.ForkActionSessionReferenceResolver forkActionSessionReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.ForkActionSessionReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.VariableAssignmentPropertyReferenceResolver variableAssignmentPropertyReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.VariableAssignmentPropertyReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.FunctionCallFunctionReferenceResolver functionCallFunctionReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.FunctionCallFunctionReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.MessageParameterMsgRefReferenceResolver messageParameterMsgRefReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.MessageParameterMsgRefReferenceResolver();
@@ -137,6 +138,10 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getSendAction_Message(), sendActionMessageReferenceResolver);
 	}
 	
+	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ForkAction, org.sintef.thingml.Session> getForkActionSessionReferenceResolver() {
+		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getForkAction_Session(), forkActionSessionReferenceResolver);
+	}
+	
 	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.VariableAssignment, org.sintef.thingml.Variable> getVariableAssignmentPropertyReferenceResolver() {
 		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getVariableAssignment_Property(), variableAssignmentPropertyReferenceResolver);
 	}
@@ -199,6 +204,7 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		instanceRefInstanceReferenceResolver.setOptions(options);
 		sendActionPortReferenceResolver.setOptions(options);
 		sendActionMessageReferenceResolver.setOptions(options);
+		forkActionSessionReferenceResolver.setOptions(options);
 		variableAssignmentPropertyReferenceResolver.setOptions(options);
 		functionCallFunctionReferenceResolver.setOptions(options);
 		messageParameterMsgRefReferenceResolver.setOptions(options);
@@ -382,6 +388,14 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 				sendActionMessageReferenceResolver.resolve(identifier, (org.sintef.thingml.SendAction) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
 			}
 		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getForkAction().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.Session> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Session>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("session")) {
+				forkActionSessionReferenceResolver.resolve(identifier, (org.sintef.thingml.ForkAction) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
 		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getVariableAssignment().isInstance(container)) {
 			ThingmlFuzzyResolveResult<org.sintef.thingml.Variable> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Variable>(result);
 			String referenceName = reference.getName();
@@ -519,6 +533,9 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		}
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getSendAction_Message()) {
 			return getResolverChain(reference, sendActionMessageReferenceResolver);
+		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getForkAction_Session()) {
+			return getResolverChain(reference, forkActionSessionReferenceResolver);
 		}
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getVariableAssignment_Property()) {
 			return getResolverChain(reference, variableAssignmentPropertyReferenceResolver);

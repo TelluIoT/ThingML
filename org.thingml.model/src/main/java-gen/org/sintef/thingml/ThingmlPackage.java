@@ -1121,7 +1121,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getCompositeState()
 	 * @generated
 	 */
-	int COMPOSITE_STATE = 23;
+	int COMPOSITE_STATE = 24;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1578,6 +1578,97 @@ public interface ThingmlPackage extends EPackage {
 	int INTERNAL_TRANSITION_FEATURE_COUNT = HANDLER_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.FinalStateImpl <em>Final State</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.FinalStateImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFinalState()
+	 * @generated
+	 */
+	int FINAL_STATE = 23;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINAL_STATE__NAME = STATE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINAL_STATE__ANNOTATIONS = STATE__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Outgoing</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINAL_STATE__OUTGOING = STATE__OUTGOING;
+
+	/**
+	 * The feature id for the '<em><b>Incoming</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINAL_STATE__INCOMING = STATE__INCOMING;
+
+	/**
+	 * The feature id for the '<em><b>Entry</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINAL_STATE__ENTRY = STATE__ENTRY;
+
+	/**
+	 * The feature id for the '<em><b>Exit</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINAL_STATE__EXIT = STATE__EXIT;
+
+	/**
+	 * The feature id for the '<em><b>Properties</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINAL_STATE__PROPERTIES = STATE__PROPERTIES;
+
+	/**
+	 * The feature id for the '<em><b>Internal</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINAL_STATE__INTERNAL = STATE__INTERNAL;
+
+	/**
+	 * The number of structural features of the '<em>Final State</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FINAL_STATE_FEATURE_COUNT = STATE_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.RegionImpl <em>Region</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1585,7 +1676,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getRegion()
 	 * @generated
 	 */
-	int REGION = 24;
+	int REGION = 25;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1649,7 +1740,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getParallelRegion()
 	 * @generated
 	 */
-	int PARALLEL_REGION = 25;
+	int PARALLEL_REGION = 26;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1706,6 +1797,70 @@ public interface ThingmlPackage extends EPackage {
 	int PARALLEL_REGION_FEATURE_COUNT = REGION_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.SessionImpl <em>Session</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.SessionImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSession()
+	 * @generated
+	 */
+	int SESSION = 27;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__NAME = PARALLEL_REGION__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__ANNOTATIONS = PARALLEL_REGION__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Substate</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__SUBSTATE = PARALLEL_REGION__SUBSTATE;
+
+	/**
+	 * The feature id for the '<em><b>Initial</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__INITIAL = PARALLEL_REGION__INITIAL;
+
+	/**
+	 * The feature id for the '<em><b>History</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__HISTORY = PARALLEL_REGION__HISTORY;
+
+	/**
+	 * The number of structural features of the '<em>Session</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION_FEATURE_COUNT = PARALLEL_REGION_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ActionImpl <em>Action</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1713,7 +1868,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getAction()
 	 * @generated
 	 */
-	int ACTION = 26;
+	int ACTION = 28;
 
 	/**
 	 * The number of structural features of the '<em>Action</em>' class.
@@ -1732,7 +1887,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getActionBlock()
 	 * @generated
 	 */
-	int ACTION_BLOCK = 27;
+	int ACTION_BLOCK = 29;
 
 	/**
 	 * The feature id for the '<em><b>Actions</b></em>' containment reference list.
@@ -1760,7 +1915,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getExternStatement()
 	 * @generated
 	 */
-	int EXTERN_STATEMENT = 28;
+	int EXTERN_STATEMENT = 30;
 
 	/**
 	 * The feature id for the '<em><b>Statement</b></em>' attribute.
@@ -1797,7 +1952,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getExpression()
 	 * @generated
 	 */
-	int EXPRESSION = 29;
+	int EXPRESSION = 31;
 
 	/**
 	 * The number of structural features of the '<em>Expression</em>' class.
@@ -1816,7 +1971,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getExternExpression()
 	 * @generated
 	 */
-	int EXTERN_EXPRESSION = 30;
+	int EXTERN_EXPRESSION = 32;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' attribute.
@@ -1853,7 +2008,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSendAction()
 	 * @generated
 	 */
-	int SEND_ACTION = 31;
+	int SEND_ACTION = 33;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
@@ -1899,7 +2054,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getVariableAssignment()
 	 * @generated
 	 */
-	int VARIABLE_ASSIGNMENT = 32;
+	int VARIABLE_ASSIGNMENT = 34;
 
 	/**
 	 * The feature id for the '<em><b>Property</b></em>' reference.
@@ -1945,7 +2100,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getEvent()
 	 * @generated
 	 */
-	int EVENT = 33;
+	int EVENT = 35;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1973,7 +2128,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReceiveMessage()
 	 * @generated
 	 */
-	int RECEIVE_MESSAGE = 34;
+	int RECEIVE_MESSAGE = 36;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2019,7 +2174,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPort()
 	 * @generated
 	 */
-	int PORT = 35;
+	int PORT = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2083,7 +2238,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getRequiredPort()
 	 * @generated
 	 */
-	int REQUIRED_PORT = 36;
+	int REQUIRED_PORT = 38;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2156,7 +2311,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getProvidedPort()
 	 * @generated
 	 */
-	int PROVIDED_PORT = 37;
+	int PROVIDED_PORT = 39;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2220,7 +2375,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getInternalPort()
 	 * @generated
 	 */
-	int INTERNAL_PORT = 38;
+	int INTERNAL_PORT = 40;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2284,7 +2439,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLiteral()
 	 * @generated
 	 */
-	int LITERAL = 39;
+	int LITERAL = 41;
 
 	/**
 	 * The number of structural features of the '<em>Literal</em>' class.
@@ -2303,7 +2458,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getEnumLiteralRef()
 	 * @generated
 	 */
-	int ENUM_LITERAL_REF = 40;
+	int ENUM_LITERAL_REF = 42;
 
 	/**
 	 * The feature id for the '<em><b>Enum</b></em>' reference.
@@ -2340,7 +2495,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getIntegerLiteral()
 	 * @generated
 	 */
-	int INTEGER_LITERAL = 41;
+	int INTEGER_LITERAL = 43;
 
 	/**
 	 * The feature id for the '<em><b>Int Value</b></em>' attribute.
@@ -2368,7 +2523,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getBooleanLiteral()
 	 * @generated
 	 */
-	int BOOLEAN_LITERAL = 42;
+	int BOOLEAN_LITERAL = 44;
 
 	/**
 	 * The feature id for the '<em><b>Bool Value</b></em>' attribute.
@@ -2396,7 +2551,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStringLiteral()
 	 * @generated
 	 */
-	int STRING_LITERAL = 43;
+	int STRING_LITERAL = 45;
 
 	/**
 	 * The feature id for the '<em><b>String Value</b></em>' attribute.
@@ -2424,7 +2579,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getDoubleLiteral()
 	 * @generated
 	 */
-	int DOUBLE_LITERAL = 44;
+	int DOUBLE_LITERAL = 46;
 
 	/**
 	 * The feature id for the '<em><b>Double Value</b></em>' attribute.
@@ -2452,7 +2607,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getUnaryExpression()
 	 * @generated
 	 */
-	int UNARY_EXPRESSION = 45;
+	int UNARY_EXPRESSION = 47;
 
 	/**
 	 * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -2480,7 +2635,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getNotExpression()
 	 * @generated
 	 */
-	int NOT_EXPRESSION = 46;
+	int NOT_EXPRESSION = 48;
 
 	/**
 	 * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -2508,7 +2663,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getUnaryMinus()
 	 * @generated
 	 */
-	int UNARY_MINUS = 47;
+	int UNARY_MINUS = 49;
 
 	/**
 	 * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -2536,7 +2691,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getBinaryExpression()
 	 * @generated
 	 */
-	int BINARY_EXPRESSION = 48;
+	int BINARY_EXPRESSION = 50;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2573,7 +2728,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPlusExpression()
 	 * @generated
 	 */
-	int PLUS_EXPRESSION = 49;
+	int PLUS_EXPRESSION = 51;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2610,7 +2765,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getIncrement()
 	 * @generated
 	 */
-	int INCREMENT = 61;
+	int INCREMENT = 64;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.DecrementImpl <em>Decrement</em>}' class.
@@ -2620,7 +2775,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getDecrement()
 	 * @generated
 	 */
-	int DECREMENT = 62;
+	int DECREMENT = 65;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.MinusExpressionImpl <em>Minus Expression</em>}' class.
@@ -2630,7 +2785,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMinusExpression()
 	 * @generated
 	 */
-	int MINUS_EXPRESSION = 50;
+	int MINUS_EXPRESSION = 52;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2667,7 +2822,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getTimesExpression()
 	 * @generated
 	 */
-	int TIMES_EXPRESSION = 51;
+	int TIMES_EXPRESSION = 53;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2704,7 +2859,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getDivExpression()
 	 * @generated
 	 */
-	int DIV_EXPRESSION = 52;
+	int DIV_EXPRESSION = 54;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2741,7 +2896,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getModExpression()
 	 * @generated
 	 */
-	int MOD_EXPRESSION = 53;
+	int MOD_EXPRESSION = 55;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2778,7 +2933,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getEqualsExpression()
 	 * @generated
 	 */
-	int EQUALS_EXPRESSION = 54;
+	int EQUALS_EXPRESSION = 56;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2808,6 +2963,43 @@ public interface ThingmlPackage extends EPackage {
 	int EQUALS_EXPRESSION_FEATURE_COUNT = BINARY_EXPRESSION_FEATURE_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.NotEqualsExpressionImpl <em>Not Equals Expression</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.NotEqualsExpressionImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getNotEqualsExpression()
+	 * @generated
+	 */
+	int NOT_EQUALS_EXPRESSION = 57;
+
+	/**
+	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOT_EQUALS_EXPRESSION__LHS = BINARY_EXPRESSION__LHS;
+
+	/**
+	 * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOT_EQUALS_EXPRESSION__RHS = BINARY_EXPRESSION__RHS;
+
+	/**
+	 * The number of structural features of the '<em>Not Equals Expression</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOT_EQUALS_EXPRESSION_FEATURE_COUNT = BINARY_EXPRESSION_FEATURE_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.GreaterExpressionImpl <em>Greater Expression</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2815,7 +3007,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getGreaterExpression()
 	 * @generated
 	 */
-	int GREATER_EXPRESSION = 55;
+	int GREATER_EXPRESSION = 58;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2852,7 +3044,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLowerExpression()
 	 * @generated
 	 */
-	int LOWER_EXPRESSION = 56;
+	int LOWER_EXPRESSION = 59;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2889,7 +3081,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getGreaterOrEqualExpression()
 	 * @generated
 	 */
-	int GREATER_OR_EQUAL_EXPRESSION = 57;
+	int GREATER_OR_EQUAL_EXPRESSION = 60;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2926,7 +3118,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLowerOrEqualExpression()
 	 * @generated
 	 */
-	int LOWER_OR_EQUAL_EXPRESSION = 58;
+	int LOWER_OR_EQUAL_EXPRESSION = 61;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -2963,7 +3155,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getAndExpression()
 	 * @generated
 	 */
-	int AND_EXPRESSION = 59;
+	int AND_EXPRESSION = 62;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3000,7 +3192,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getOrExpression()
 	 * @generated
 	 */
-	int OR_EXPRESSION = 60;
+	int OR_EXPRESSION = 63;
 
 	/**
 	 * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3073,7 +3265,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getControlStructure()
 	 * @generated
 	 */
-	int CONTROL_STRUCTURE = 63;
+	int CONTROL_STRUCTURE = 66;
 
 	/**
 	 * The feature id for the '<em><b>Action</b></em>' containment reference.
@@ -3110,7 +3302,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLoopAction()
 	 * @generated
 	 */
-	int LOOP_ACTION = 64;
+	int LOOP_ACTION = 67;
 
 	/**
 	 * The feature id for the '<em><b>Action</b></em>' containment reference.
@@ -3147,7 +3339,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getConditionalAction()
 	 * @generated
 	 */
-	int CONDITIONAL_ACTION = 65;
+	int CONDITIONAL_ACTION = 68;
 
 	/**
 	 * The feature id for the '<em><b>Action</b></em>' containment reference.
@@ -3193,7 +3385,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPropertyReference()
 	 * @generated
 	 */
-	int PROPERTY_REFERENCE = 66;
+	int PROPERTY_REFERENCE = 69;
 
 	/**
 	 * The feature id for the '<em><b>Property</b></em>' reference.
@@ -3221,7 +3413,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getArrayIndex()
 	 * @generated
 	 */
-	int ARRAY_INDEX = 67;
+	int ARRAY_INDEX = 70;
 
 	/**
 	 * The feature id for the '<em><b>Array</b></em>' containment reference.
@@ -3258,7 +3450,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getExpressionGroup()
 	 * @generated
 	 */
-	int EXPRESSION_GROUP = 68;
+	int EXPRESSION_GROUP = 71;
 
 	/**
 	 * The feature id for the '<em><b>Exp</b></em>' containment reference.
@@ -3286,7 +3478,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReturnAction()
 	 * @generated
 	 */
-	int RETURN_ACTION = 69;
+	int RETURN_ACTION = 72;
 
 	/**
 	 * The feature id for the '<em><b>Exp</b></em>' containment reference.
@@ -3314,7 +3506,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPrintAction()
 	 * @generated
 	 */
-	int PRINT_ACTION = 70;
+	int PRINT_ACTION = 73;
 
 	/**
 	 * The feature id for the '<em><b>Msg</b></em>' containment reference.
@@ -3342,7 +3534,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getErrorAction()
 	 * @generated
 	 */
-	int ERROR_ACTION = 71;
+	int ERROR_ACTION = 74;
 
 	/**
 	 * The feature id for the '<em><b>Msg</b></em>' containment reference.
@@ -3363,6 +3555,34 @@ public interface ThingmlPackage extends EPackage {
 	int ERROR_ACTION_FEATURE_COUNT = ACTION_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.sintef.thingml.impl.ForkActionImpl <em>Fork Action</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.sintef.thingml.impl.ForkActionImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getForkAction()
+	 * @generated
+	 */
+	int FORK_ACTION = 75;
+
+	/**
+	 * The feature id for the '<em><b>Session</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FORK_ACTION__SESSION = ACTION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Fork Action</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FORK_ACTION_FEATURE_COUNT = ACTION_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ConfigurationImpl <em>Configuration</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3370,7 +3590,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getConfiguration()
 	 * @generated
 	 */
-	int CONFIGURATION = 72;
+	int CONFIGURATION = 76;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3434,7 +3654,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getInstance()
 	 * @generated
 	 */
-	int INSTANCE = 73;
+	int INSTANCE = 77;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3480,7 +3700,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getAbstractConnector()
 	 * @generated
 	 */
-	int ABSTRACT_CONNECTOR = 76;
+	int ABSTRACT_CONNECTOR = 80;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3517,7 +3737,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getConnector()
 	 * @generated
 	 */
-	int CONNECTOR = 74;
+	int CONNECTOR = 78;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3590,7 +3810,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getExternalConnector()
 	 * @generated
 	 */
-	int EXTERNAL_CONNECTOR = 75;
+	int EXTERNAL_CONNECTOR = 79;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3654,7 +3874,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getConfigPropertyAssign()
 	 * @generated
 	 */
-	int CONFIG_PROPERTY_ASSIGN = 77;
+	int CONFIG_PROPERTY_ASSIGN = 81;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3727,7 +3947,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getInstanceRef()
 	 * @generated
 	 */
-	int INSTANCE_REF = 78;
+	int INSTANCE_REF = 82;
 
 	/**
 	 * The feature id for the '<em><b>Instance</b></em>' reference.
@@ -3755,7 +3975,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFunctionCall()
 	 * @generated
 	 */
-	int FUNCTION_CALL = 79;
+	int FUNCTION_CALL = 83;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
@@ -3792,7 +4012,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFunctionCallStatement()
 	 * @generated
 	 */
-	int FUNCTION_CALL_STATEMENT = 80;
+	int FUNCTION_CALL_STATEMENT = 84;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
@@ -3829,7 +4049,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFunctionCallExpression()
 	 * @generated
 	 */
-	int FUNCTION_CALL_EXPRESSION = 81;
+	int FUNCTION_CALL_EXPRESSION = 85;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
@@ -3866,7 +4086,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLocalVariable()
 	 * @generated
 	 */
-	int LOCAL_VARIABLE = 82;
+	int LOCAL_VARIABLE = 86;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' reference.
@@ -3949,7 +4169,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStream()
 	 * @generated
 	 */
-	int STREAM = 83;
+	int STREAM = 87;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4013,7 +4233,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSource()
 	 * @generated
 	 */
-	int SOURCE = 84;
+	int SOURCE = 88;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4050,7 +4270,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSourceComposition()
 	 * @generated
 	 */
-	int SOURCE_COMPOSITION = 85;
+	int SOURCE_COMPOSITION = 89;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4105,7 +4325,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getJoinSources()
 	 * @generated
 	 */
-	int JOIN_SOURCES = 86;
+	int JOIN_SOURCES = 90;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4169,7 +4389,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMergeSources()
 	 * @generated
 	 */
-	int MERGE_SOURCES = 87;
+	int MERGE_SOURCES = 91;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4224,7 +4444,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleSource()
 	 * @generated
 	 */
-	int SIMPLE_SOURCE = 88;
+	int SIMPLE_SOURCE = 92;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4270,7 +4490,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getViewSource()
 	 * @generated
 	 */
-	int VIEW_SOURCE = 89;
+	int VIEW_SOURCE = 93;
 
 	/**
 	 * The number of structural features of the '<em>View Source</em>' class.
@@ -4289,7 +4509,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFilter()
 	 * @generated
 	 */
-	int FILTER = 90;
+	int FILTER = 94;
 
 	/**
 	 * The feature id for the '<em><b>Guard</b></em>' containment reference.
@@ -4318,7 +4538,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessageParameter()
 	 * @generated
 	 */
-	int MESSAGE_PARAMETER = 91;
+	int MESSAGE_PARAMETER = 95;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4355,7 +4575,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReference()
 	 * @generated
 	 */
-	int REFERENCE = 92;
+	int REFERENCE = 96;
 
 	/**
 	 * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -4392,7 +4612,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReferencedElmt()
 	 * @generated
 	 */
-	int REFERENCED_ELMT = 93;
+	int REFERENCED_ELMT = 97;
 
 	/**
 	 * The number of structural features of the '<em>Referenced Elmt</em>' class.
@@ -4412,7 +4632,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthWindow()
 	 * @generated
 	 */
-	int LENGTH_WINDOW = 94;
+	int LENGTH_WINDOW = 98;
 
 	/**
 	 * The feature id for the '<em><b>Size</b></em>' containment reference.
@@ -4450,7 +4670,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getTimeWindow()
 	 * @generated
 	 */
-	int TIME_WINDOW = 95;
+	int TIME_WINDOW = 99;
 
 	/**
 	 * The feature id for the '<em><b>Duration</b></em>' containment reference.
@@ -4488,7 +4708,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getElmtProperty()
 	 * @generated
 	 */
-	int ELMT_PROPERTY = 99;
+	int ELMT_PROPERTY = 103;
 
 	/**
 	 * The number of structural features of the '<em>Elmt Property</em>' class.
@@ -4507,7 +4727,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getParamReference()
 	 * @generated
 	 */
-	int PARAM_REFERENCE = 96;
+	int PARAM_REFERENCE = 100;
 
 	/**
 	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -4536,7 +4756,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleParamRef()
 	 * @generated
 	 */
-	int SIMPLE_PARAM_REF = 97;
+	int SIMPLE_PARAM_REF = 101;
 
 	/**
 	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -4564,7 +4784,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getArrayParamRef()
 	 * @generated
 	 */
-	int ARRAY_PARAM_REF = 98;
+	int ARRAY_PARAM_REF = 102;
 
 	/**
 	 * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -4593,7 +4813,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getPredifinedProperty()
 	 * @generated
 	 */
-	int PREDIFINED_PROPERTY = 100;
+	int PREDIFINED_PROPERTY = 104;
 
 	/**
 	 * The number of structural features of the '<em>Predifined Property</em>' class.
@@ -4612,7 +4832,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getLengthArray()
 	 * @generated
 	 */
-	int LENGTH_ARRAY = 101;
+	int LENGTH_ARRAY = 105;
 
 	/**
 	 * The number of structural features of the '<em>Length Array</em>' class.
@@ -4632,7 +4852,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getProtocol()
 	 * @generated
 	 */
-	int PROTOCOL = 102;
+	int PROTOCOL = 106;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4670,7 +4890,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getObjectType()
 	 * @generated
 	 */
-	int OBJECT_TYPE = 103;
+	int OBJECT_TYPE = 107;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5381,6 +5601,16 @@ public interface ThingmlPackage extends EPackage {
 	EReference getState_Internal();
 
 	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.FinalState <em>Final State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Final State</em>'.
+	 * @see org.sintef.thingml.FinalState
+	 * @generated
+	 */
+	EClass getFinalState();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.CompositeState <em>Composite State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5453,6 +5683,16 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getParallelRegion();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.Session <em>Session</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Session</em>'.
+	 * @see org.sintef.thingml.Session
+	 * @generated
+	 */
+	EClass getSession();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Action <em>Action</em>}'.
@@ -6062,6 +6302,16 @@ public interface ThingmlPackage extends EPackage {
 	EClass getEqualsExpression();
 
 	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.NotEqualsExpression <em>Not Equals Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Not Equals Expression</em>'.
+	 * @see org.sintef.thingml.NotEqualsExpression
+	 * @generated
+	 */
+	EClass getNotEqualsExpression();
+
+	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.GreaterExpression <em>Greater Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6320,6 +6570,27 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getErrorAction_Msg();
+
+	/**
+	 * Returns the meta object for class '{@link org.sintef.thingml.ForkAction <em>Fork Action</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Fork Action</em>'.
+	 * @see org.sintef.thingml.ForkAction
+	 * @generated
+	 */
+	EClass getForkAction();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.ForkAction#getSession <em>Session</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Session</em>'.
+	 * @see org.sintef.thingml.ForkAction#getSession()
+	 * @see #getForkAction()
+	 * @generated
+	 */
+	EReference getForkAction_Session();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Configuration <em>Configuration</em>}'.
@@ -7618,6 +7889,16 @@ public interface ThingmlPackage extends EPackage {
 		EReference STATE__INTERNAL = eINSTANCE.getState_Internal();
 
 		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.FinalStateImpl <em>Final State</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.FinalStateImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFinalState()
+		 * @generated
+		 */
+		EClass FINAL_STATE = eINSTANCE.getFinalState();
+
+		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.CompositeStateImpl <em>Composite State</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -7678,6 +7959,16 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass PARALLEL_REGION = eINSTANCE.getParallelRegion();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.SessionImpl <em>Session</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.SessionImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSession()
+		 * @generated
+		 */
+		EClass SESSION = eINSTANCE.getSession();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ActionImpl <em>Action</em>}' class.
@@ -8206,6 +8497,16 @@ public interface ThingmlPackage extends EPackage {
 		EClass EQUALS_EXPRESSION = eINSTANCE.getEqualsExpression();
 
 		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.NotEqualsExpressionImpl <em>Not Equals Expression</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.NotEqualsExpressionImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getNotEqualsExpression()
+		 * @generated
+		 */
+		EClass NOT_EQUALS_EXPRESSION = eINSTANCE.getNotEqualsExpression();
+
+		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.GreaterExpressionImpl <em>Greater Expression</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -8434,6 +8735,24 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ERROR_ACTION__MSG = eINSTANCE.getErrorAction_Msg();
+
+		/**
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.ForkActionImpl <em>Fork Action</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.sintef.thingml.impl.ForkActionImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getForkAction()
+		 * @generated
+		 */
+		EClass FORK_ACTION = eINSTANCE.getForkAction();
+
+		/**
+		 * The meta object literal for the '<em><b>Session</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FORK_ACTION__SESSION = eINSTANCE.getForkAction_Session();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ConfigurationImpl <em>Configuration</em>}' class.

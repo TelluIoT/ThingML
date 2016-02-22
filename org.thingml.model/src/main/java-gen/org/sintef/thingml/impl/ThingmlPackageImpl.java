@@ -55,6 +55,8 @@ import org.sintef.thingml.ExternExpression;
 import org.sintef.thingml.ExternStatement;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Filter;
+import org.sintef.thingml.FinalState;
+import org.sintef.thingml.ForkAction;
 import org.sintef.thingml.Function;
 import org.sintef.thingml.FunctionCall;
 import org.sintef.thingml.FunctionCallExpression;
@@ -82,6 +84,7 @@ import org.sintef.thingml.Message;
 import org.sintef.thingml.MessageParameter;
 import org.sintef.thingml.MinusExpression;
 import org.sintef.thingml.ModExpression;
+import org.sintef.thingml.NotEqualsExpression;
 import org.sintef.thingml.NotExpression;
 import org.sintef.thingml.ObjectType;
 import org.sintef.thingml.OrExpression;
@@ -107,6 +110,7 @@ import org.sintef.thingml.Region;
 import org.sintef.thingml.RequiredPort;
 import org.sintef.thingml.ReturnAction;
 import org.sintef.thingml.SendAction;
+import org.sintef.thingml.Session;
 import org.sintef.thingml.SimpleParamRef;
 import org.sintef.thingml.SimpleSource;
 import org.sintef.thingml.Source;
@@ -304,6 +308,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass finalStateEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass compositeStateEClass = null;
 
 	/**
@@ -319,6 +330,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass parallelRegionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass sessionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -542,6 +560,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass notEqualsExpressionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass greaterExpressionEClass = null;
 
 	/**
@@ -641,6 +666,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass errorActionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass forkActionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1508,6 +1540,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getFinalState() {
+		return finalStateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getCompositeState() {
 		return compositeStateEClass;
 	}
@@ -1564,6 +1605,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EClass getParallelRegion() {
 		return parallelRegionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getSession() {
+		return sessionEClass;
 	}
 
 	/**
@@ -2093,6 +2143,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getNotEqualsExpression() {
+		return notEqualsExpressionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getGreaterExpression() {
 		return greaterExpressionEClass;
 	}
@@ -2311,6 +2370,24 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EReference getErrorAction_Msg() {
 		return (EReference)errorActionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getForkAction() {
+		return forkActionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getForkAction_Session() {
+		return (EReference)forkActionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3040,6 +3117,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEReference(stateEClass, STATE__PROPERTIES);
 		createEReference(stateEClass, STATE__INTERNAL);
 
+		finalStateEClass = createEClass(FINAL_STATE);
+
 		compositeStateEClass = createEClass(COMPOSITE_STATE);
 		createEReference(compositeStateEClass, COMPOSITE_STATE__REGION);
 
@@ -3049,6 +3128,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		createEAttribute(regionEClass, REGION__HISTORY);
 
 		parallelRegionEClass = createEClass(PARALLEL_REGION);
+
+		sessionEClass = createEClass(SESSION);
 
 		actionEClass = createEClass(ACTION);
 
@@ -3133,6 +3214,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		equalsExpressionEClass = createEClass(EQUALS_EXPRESSION);
 
+		notEqualsExpressionEClass = createEClass(NOT_EQUALS_EXPRESSION);
+
 		greaterExpressionEClass = createEClass(GREATER_EXPRESSION);
 
 		lowerExpressionEClass = createEClass(LOWER_EXPRESSION);
@@ -3178,6 +3261,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		errorActionEClass = createEClass(ERROR_ACTION);
 		createEReference(errorActionEClass, ERROR_ACTION__MSG);
+
+		forkActionEClass = createEClass(FORK_ACTION);
+		createEReference(forkActionEClass, FORK_ACTION__SESSION);
 
 		configurationEClass = createEClass(CONFIGURATION);
 		createEReference(configurationEClass, CONFIGURATION__INSTANCES);
@@ -3333,10 +3419,12 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		transitionEClass.getESuperTypes().add(this.getHandler());
 		internalTransitionEClass.getESuperTypes().add(this.getHandler());
 		stateEClass.getESuperTypes().add(this.getAnnotatedElement());
+		finalStateEClass.getESuperTypes().add(this.getState());
 		compositeStateEClass.getESuperTypes().add(this.getState());
 		compositeStateEClass.getESuperTypes().add(this.getRegion());
 		regionEClass.getESuperTypes().add(this.getAnnotatedElement());
 		parallelRegionEClass.getESuperTypes().add(this.getRegion());
+		sessionEClass.getESuperTypes().add(this.getParallelRegion());
 		actionBlockEClass.getESuperTypes().add(this.getAction());
 		externStatementEClass.getESuperTypes().add(this.getAction());
 		externExpressionEClass.getESuperTypes().add(this.getExpression());
@@ -3366,6 +3454,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		divExpressionEClass.getESuperTypes().add(this.getBinaryExpression());
 		modExpressionEClass.getESuperTypes().add(this.getBinaryExpression());
 		equalsExpressionEClass.getESuperTypes().add(this.getBinaryExpression());
+		notEqualsExpressionEClass.getESuperTypes().add(this.getBinaryExpression());
 		greaterExpressionEClass.getESuperTypes().add(this.getBinaryExpression());
 		lowerExpressionEClass.getESuperTypes().add(this.getBinaryExpression());
 		greaterOrEqualExpressionEClass.getESuperTypes().add(this.getBinaryExpression());
@@ -3383,6 +3472,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		returnActionEClass.getESuperTypes().add(this.getAction());
 		printActionEClass.getESuperTypes().add(this.getAction());
 		errorActionEClass.getESuperTypes().add(this.getAction());
+		forkActionEClass.getESuperTypes().add(this.getAction());
 		configurationEClass.getESuperTypes().add(this.getAnnotatedElement());
 		instanceEClass.getESuperTypes().add(this.getAnnotatedElement());
 		connectorEClass.getESuperTypes().add(this.getAbstractConnector());
@@ -3506,6 +3596,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEReference(getState_Properties(), this.getProperty(), null, "properties", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getState_Internal(), this.getInternalTransition(), null, "internal", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(finalStateEClass, FinalState.class, "FinalState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		initEClass(compositeStateEClass, CompositeState.class, "CompositeState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getCompositeState_Region(), this.getParallelRegion(), null, "region", null, 0, -1, CompositeState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -3515,6 +3607,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEAttribute(getRegion_History(), ecorePackage.getEBoolean(), "history", null, 0, 1, Region.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(parallelRegionEClass, ParallelRegion.class, "ParallelRegion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(sessionEClass, Session.class, "Session", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(actionEClass, Action.class, "Action", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -3599,6 +3693,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		initEClass(equalsExpressionEClass, EqualsExpression.class, "EqualsExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+		initEClass(notEqualsExpressionEClass, NotEqualsExpression.class, "NotEqualsExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		initEClass(greaterExpressionEClass, GreaterExpression.class, "GreaterExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(lowerExpressionEClass, LowerExpression.class, "LowerExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3644,6 +3740,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		initEClass(errorActionEClass, ErrorAction.class, "ErrorAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getErrorAction_Msg(), this.getExpression(), null, "msg", null, 1, 1, ErrorAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(forkActionEClass, ForkAction.class, "ForkAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getForkAction_Session(), this.getSession(), null, "session", null, 1, 1, ForkAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(configurationEClass, Configuration.class, "Configuration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getConfiguration_Instances(), this.getInstance(), null, "instances", null, 0, -1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

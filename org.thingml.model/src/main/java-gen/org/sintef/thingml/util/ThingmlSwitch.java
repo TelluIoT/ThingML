@@ -271,6 +271,15 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.FINAL_STATE: {
+				FinalState finalState = (FinalState)theEObject;
+				T result = caseFinalState(finalState);
+				if (result == null) result = caseState(finalState);
+				if (result == null) result = caseAnnotatedElement(finalState);
+				if (result == null) result = caseThingMLElement(finalState);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.COMPOSITE_STATE: {
 				CompositeState compositeState = (CompositeState)theEObject;
 				T result = caseCompositeState(compositeState);
@@ -295,6 +304,16 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = caseRegion(parallelRegion);
 				if (result == null) result = caseAnnotatedElement(parallelRegion);
 				if (result == null) result = caseThingMLElement(parallelRegion);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.SESSION: {
+				Session session = (Session)theEObject;
+				T result = caseSession(session);
+				if (result == null) result = caseParallelRegion(session);
+				if (result == null) result = caseRegion(session);
+				if (result == null) result = caseAnnotatedElement(session);
+				if (result == null) result = caseThingMLElement(session);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -522,6 +541,14 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.NOT_EQUALS_EXPRESSION: {
+				NotEqualsExpression notEqualsExpression = (NotEqualsExpression)theEObject;
+				T result = caseNotEqualsExpression(notEqualsExpression);
+				if (result == null) result = caseBinaryExpression(notEqualsExpression);
+				if (result == null) result = caseExpression(notEqualsExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.GREATER_EXPRESSION: {
 				GreaterExpression greaterExpression = (GreaterExpression)theEObject;
 				T result = caseGreaterExpression(greaterExpression);
@@ -646,6 +673,13 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				ErrorAction errorAction = (ErrorAction)theEObject;
 				T result = caseErrorAction(errorAction);
 				if (result == null) result = caseAction(errorAction);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case ThingmlPackage.FORK_ACTION: {
+				ForkAction forkAction = (ForkAction)theEObject;
+				T result = caseForkAction(forkAction);
+				if (result == null) result = caseAction(forkAction);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1256,6 +1290,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Final State</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Final State</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseFinalState(FinalState object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Composite State</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1297,6 +1346,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseParallelRegion(ParallelRegion object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Session</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Session</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSession(Session object) {
 		return null;
 	}
 
@@ -1766,6 +1830,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Not Equals Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Not Equals Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNotEqualsExpression(NotEqualsExpression object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>Greater Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -1987,6 +2066,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseErrorAction(ErrorAction object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Fork Action</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Fork Action</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseForkAction(ForkAction object) {
 		return null;
 	}
 

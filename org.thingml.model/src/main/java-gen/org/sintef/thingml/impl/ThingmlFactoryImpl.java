@@ -163,8 +163,10 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.TRANSITION: return createTransition();
 			case ThingmlPackage.INTERNAL_TRANSITION: return createInternalTransition();
 			case ThingmlPackage.STATE: return createState();
+			case ThingmlPackage.FINAL_STATE: return createFinalState();
 			case ThingmlPackage.COMPOSITE_STATE: return createCompositeState();
 			case ThingmlPackage.PARALLEL_REGION: return createParallelRegion();
+			case ThingmlPackage.SESSION: return createSession();
 			case ThingmlPackage.ACTION_BLOCK: return createActionBlock();
 			case ThingmlPackage.EXTERN_STATEMENT: return createExternStatement();
 			case ThingmlPackage.EXTERN_EXPRESSION: return createExternExpression();
@@ -187,6 +189,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.DIV_EXPRESSION: return createDivExpression();
 			case ThingmlPackage.MOD_EXPRESSION: return createModExpression();
 			case ThingmlPackage.EQUALS_EXPRESSION: return createEqualsExpression();
+			case ThingmlPackage.NOT_EQUALS_EXPRESSION: return createNotEqualsExpression();
 			case ThingmlPackage.GREATER_EXPRESSION: return createGreaterExpression();
 			case ThingmlPackage.LOWER_EXPRESSION: return createLowerExpression();
 			case ThingmlPackage.GREATER_OR_EQUAL_EXPRESSION: return createGreaterOrEqualExpression();
@@ -203,6 +206,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.RETURN_ACTION: return createReturnAction();
 			case ThingmlPackage.PRINT_ACTION: return createPrintAction();
 			case ThingmlPackage.ERROR_ACTION: return createErrorAction();
+			case ThingmlPackage.FORK_ACTION: return createForkAction();
 			case ThingmlPackage.CONFIGURATION: return createConfiguration();
 			case ThingmlPackage.INSTANCE: return createInstance();
 			case ThingmlPackage.CONNECTOR: return createConnector();
@@ -386,6 +390,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public FinalState createFinalState() {
+		FinalStateImpl finalState = new FinalStateImpl();
+		return finalState;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CompositeState createCompositeState() {
 		CompositeStateImpl compositeState = new CompositeStateImpl();
 		return compositeState;
@@ -399,6 +413,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ParallelRegion createParallelRegion() {
 		ParallelRegionImpl parallelRegion = new ParallelRegionImpl();
 		return parallelRegion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Session createSession() {
+		SessionImpl session = new SessionImpl();
+		return session;
 	}
 
 	/**
@@ -646,6 +670,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public NotEqualsExpression createNotEqualsExpression() {
+		NotEqualsExpressionImpl notEqualsExpression = new NotEqualsExpressionImpl();
+		return notEqualsExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public GreaterExpression createGreaterExpression() {
 		GreaterExpressionImpl greaterExpression = new GreaterExpressionImpl();
 		return greaterExpression;
@@ -779,6 +813,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ErrorAction createErrorAction() {
 		ErrorActionImpl errorAction = new ErrorActionImpl();
 		return errorAction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ForkAction createForkAction() {
+		ForkActionImpl forkAction = new ForkActionImpl();
+		return forkAction;
 	}
 
 	/**

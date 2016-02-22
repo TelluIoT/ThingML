@@ -173,6 +173,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createStateAdapter();
 			}
 			@Override
+			public Adapter caseFinalState(FinalState object) {
+				return createFinalStateAdapter();
+			}
+			@Override
 			public Adapter caseCompositeState(CompositeState object) {
 				return createCompositeStateAdapter();
 			}
@@ -183,6 +187,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseParallelRegion(ParallelRegion object) {
 				return createParallelRegionAdapter();
+			}
+			@Override
+			public Adapter caseSession(Session object) {
+				return createSessionAdapter();
 			}
 			@Override
 			public Adapter caseAction(Action object) {
@@ -301,6 +309,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createEqualsExpressionAdapter();
 			}
 			@Override
+			public Adapter caseNotEqualsExpression(NotEqualsExpression object) {
+				return createNotEqualsExpressionAdapter();
+			}
+			@Override
 			public Adapter caseGreaterExpression(GreaterExpression object) {
 				return createGreaterExpressionAdapter();
 			}
@@ -367,6 +379,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseErrorAction(ErrorAction object) {
 				return createErrorActionAdapter();
+			}
+			@Override
+			public Adapter caseForkAction(ForkAction object) {
+				return createForkActionAdapter();
 			}
 			@Override
 			public Adapter caseConfiguration(Configuration object) {
@@ -839,6 +855,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.FinalState <em>Final State</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.FinalState
+	 * @generated
+	 */
+	public Adapter createFinalStateAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.CompositeState <em>Composite State</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -877,6 +907,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createParallelRegionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.Session <em>Session</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.Session
+	 * @generated
+	 */
+	public Adapter createSessionAdapter() {
 		return null;
 	}
 
@@ -1315,6 +1359,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.NotEqualsExpression <em>Not Equals Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.NotEqualsExpression
+	 * @generated
+	 */
+	public Adapter createNotEqualsExpressionAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.GreaterExpression <em>Greater Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1521,6 +1579,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createErrorActionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ForkAction <em>Fork Action</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.ForkAction
+	 * @generated
+	 */
+	public Adapter createForkActionAdapter() {
 		return null;
 	}
 

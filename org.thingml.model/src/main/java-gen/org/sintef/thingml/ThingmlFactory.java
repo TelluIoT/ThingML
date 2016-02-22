@@ -170,6 +170,15 @@ public interface ThingmlFactory extends EFactory {
 	State createState();
 
 	/**
+	 * Returns a new object of class '<em>Final State</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Final State</em>'.
+	 * @generated
+	 */
+	FinalState createFinalState();
+
+	/**
 	 * Returns a new object of class '<em>Composite State</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -186,6 +195,15 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	ParallelRegion createParallelRegion();
+
+	/**
+	 * Returns a new object of class '<em>Session</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Session</em>'.
+	 * @generated
+	 */
+	Session createSession();
 
 	/**
 	 * Returns a new object of class '<em>Action Block</em>'.
@@ -404,6 +422,15 @@ public interface ThingmlFactory extends EFactory {
 	EqualsExpression createEqualsExpression();
 
 	/**
+	 * Returns a new object of class '<em>Not Equals Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Not Equals Expression</em>'.
+	 * @generated
+	 */
+	NotEqualsExpression createNotEqualsExpression();
+
+	/**
 	 * Returns a new object of class '<em>Greater Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -528,6 +555,15 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	ErrorAction createErrorAction();
+
+	/**
+	 * Returns a new object of class '<em>Fork Action</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Fork Action</em>'.
+	 * @generated
+	 */
+	ForkAction createForkAction();
 
 	/**
 	 * Returns a new object of class '<em>Configuration</em>'.

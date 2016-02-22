@@ -120,6 +120,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="internal" upperBound="-1"
         eType="#//InternalTransition" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FinalState" eSuperTypes="#//State"/>
   <eClassifiers xsi:type="ecore:EClass" name="CompositeState" eSuperTypes="#//State #//Region">
     <eStructuralFeatures xsi:type="ecore:EReference" name="region" upperBound="-1"
         eType="#//ParallelRegion" containment="true"/>
@@ -132,6 +133,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="history" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ParallelRegion" eSuperTypes="#//Region"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Session" eSuperTypes="#//ParallelRegion"/>
   <eClassifiers xsi:type="ecore:EClass" name="Action" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ActionBlock" eSuperTypes="#//Action">
     <eStructuralFeatures xsi:type="ecore:EReference" name="actions" upperBound="-1"
@@ -222,6 +224,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="DivExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="ModExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="EqualsExpression" eSuperTypes="#//BinaryExpression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NotEqualsExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="GreaterExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="LowerExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="GreaterOrEqualExpression" eSuperTypes="#//BinaryExpression"/>
@@ -270,6 +273,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="ErrorAction" eSuperTypes="#//Action">
     <eStructuralFeatures xsi:type="ecore:EReference" name="msg" lowerBound="1" eType="#//Expression"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ForkAction" eSuperTypes="#//Action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="session" lowerBound="1"
+        eType="#//Session"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Configuration" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="instances" upperBound="-1"

@@ -114,6 +114,7 @@ TOKENSTYLES{
 	"entry" COLOR #A22000, BOLD;
 	"exit" COLOR #A22000, BOLD;
 	"region" COLOR #A22000, BOLD;
+	"session" COLOR #AECF08, BOLD;
 	"internal" COLOR #A22000, BOLD;
 	"transition" COLOR #A22000, BOLD;
 	"init" COLOR #A22000, BOLD;
@@ -145,6 +146,7 @@ TOKENSTYLES{
 	"not" COLOR #444444, BOLD;
 	"and" COLOR #444444, BOLD;
 	"or" COLOR #444444, BOLD;
+	"fork" COLOR #AECF08, BOLD;
 	
 	//Protocols
 	"protocol" COLOR #65BA9E, BOLD;
@@ -215,9 +217,13 @@ RULES {
 	
 	State::= "state" #1 name[] (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" entry )? ( !1 "on" "exit" exit )? ( outgoing | internal )* !0 "}"  ;
 	
+	FinalState::= "final state" #1 name[] (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" entry )? !0 "}"  ;
+	
 	CompositeState::= "composite" #1 "state" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" #1 entry )? ( !1 "on" #1 "exit" #1 exit )? ( outgoing | internal | (!1 substate))* (!1 region)* !0 "}"  ;
 	
 	ParallelRegion ::= "region" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{"(!1 substate)* !0 "}"  ;
+	
+	Session ::= "session" #1 name[] #1 "init" #1 initial[] (annotations)* #1 "{"(!1 substate)* !0 "}"  ;
 	
 	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? ;
 
@@ -229,7 +235,7 @@ RULES {
 	
 	Increment ::= var[] #1 "++" ;
 	
-	Decrement ::= var[] "--" ;
+	Decrement ::= var[] #1 "--" ;
 
 	// *******************************
 	// * Configurations and Instances
@@ -252,6 +258,8 @@ RULES {
 	// *********************
 	
 	SendAction::= port[] "!" message[] "(" (parameters ("," #1 parameters)* )? ")";
+	
+	ForkAction::= "fork" #1 session[];
 	
 	VariableAssignment ::= property[] #1 ("[" index "]")* "=" #1 expression ; 
 	
@@ -320,6 +328,9 @@ RULES {
 	
 	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
 	EqualsExpression ::= lhs #1 "==" #1  rhs;
+	
+	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
+	NotEqualsExpression ::= lhs #1 "!=" #1  rhs;
 	
 	@Operator(type="binary_left_associative", weight="4", superclass="Expression")
 	PlusExpression ::= lhs #1 "+" #1  rhs;

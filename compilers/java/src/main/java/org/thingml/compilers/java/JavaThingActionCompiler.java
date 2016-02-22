@@ -51,6 +51,27 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
+    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
+        Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
+        Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
+        if (leftType.isA(Types.OBJECT_TYPE)) {
+            builder.append("!(");
+            generate(expression.getLhs(), builder, ctx);
+            builder.append(".equals(");
+            generate(expression.getRhs(), builder, ctx);
+            builder.append("))");
+        } else if (rightType.isA(Types.OBJECT_TYPE)) {
+            builder.append("!(");
+            generate(expression.getRhs(), builder, ctx);
+            builder.append(".equals(");
+            generate(expression.getLhs(), builder, ctx);
+            builder.append("))");
+        } else {
+            super.generate(expression, builder, ctx);
+        }
+    }
+
+    @Override
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
         if ((action.getProperty().eContainer() instanceof Thing) && action.getProperty().getCardinality() == null) {//FIXME: support debugging of arrays (needs to copy array)
             builder.append("debug_" + ctx.getVariableName(action.getProperty()) + " = " + ctx.getVariableName(action.getProperty()) + ";\n");

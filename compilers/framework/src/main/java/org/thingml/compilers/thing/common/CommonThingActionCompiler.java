@@ -218,6 +218,13 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     }
 
     @Override
+    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" != ");
+        generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
     public void generate(PlusExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" + ");
