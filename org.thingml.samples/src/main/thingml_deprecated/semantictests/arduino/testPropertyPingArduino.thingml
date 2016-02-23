@@ -1,8 +1,0 @@
-import "../extended/testPropertyPing.thingml"
-import "arduinoharness.thingml"
-
-configuration TestPropertyPingArduino {
-	group test : TestPropertyPingFrag
-	group harness : ArduinoHarness
-	connector test.test.harness => harness.harness.test  
-}

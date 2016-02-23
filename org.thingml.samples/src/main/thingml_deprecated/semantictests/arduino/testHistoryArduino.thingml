@@ -1,8 +1,0 @@
-import "../core/testHistory.thingml"
-import "arduinoharness.thingml"
-
-configuration TestHistoryArduino {
-	instance test : TestHistory 
-	group harness : ArduinoHarness
-	connector test.harness => harness.harness.test
-}

@@ -1,8 +1,0 @@
-import "../core/testCompStatesExit.thingml"
-import "arduinoharness.thingml"
-
-configuration TestCompStatesExitArduino {
-	instance test : TestCompStatesExit 
-	group harness : ArduinoHarness
-	connector test.harness => harness.harness.test
-}
