@@ -310,7 +310,8 @@ public class ThingmlSwitch<T> extends Switch<T> {
 			case ThingmlPackage.SESSION: {
 				Session session = (Session)theEObject;
 				T result = caseSession(session);
-				if (result == null) result = caseParallelRegion(session);
+				if (result == null) result = caseCompositeState(session);
+				if (result == null) result = caseState(session);
 				if (result == null) result = caseRegion(session);
 				if (result == null) result = caseAnnotatedElement(session);
 				if (result == null) result = caseThingMLElement(session);
@@ -676,10 +677,10 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case ThingmlPackage.FORK_ACTION: {
-				ForkAction forkAction = (ForkAction)theEObject;
-				T result = caseForkAction(forkAction);
-				if (result == null) result = caseAction(forkAction);
+			case ThingmlPackage.START_SESSION: {
+				StartSession startSession = (StartSession)theEObject;
+				T result = caseStartSession(startSession);
+				if (result == null) result = caseAction(startSession);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -2070,17 +2071,17 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Fork Action</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Start Session</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Fork Action</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Start Session</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseForkAction(ForkAction object) {
+	public T caseStartSession(StartSession object) {
 		return null;
 	}
 

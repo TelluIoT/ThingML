@@ -206,7 +206,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.RETURN_ACTION: return createReturnAction();
 			case ThingmlPackage.PRINT_ACTION: return createPrintAction();
 			case ThingmlPackage.ERROR_ACTION: return createErrorAction();
-			case ThingmlPackage.FORK_ACTION: return createForkAction();
+			case ThingmlPackage.START_SESSION: return createStartSession();
 			case ThingmlPackage.CONFIGURATION: return createConfiguration();
 			case ThingmlPackage.INSTANCE: return createInstance();
 			case ThingmlPackage.CONNECTOR: return createConnector();
@@ -820,9 +820,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ForkAction createForkAction() {
-		ForkActionImpl forkAction = new ForkActionImpl();
-		return forkAction;
+	public StartSession createStartSession() {
+		StartSessionImpl startSession = new StartSessionImpl();
+		return startSession;
 	}
 
 	/**

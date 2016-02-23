@@ -1813,7 +1813,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SESSION__NAME = PARALLEL_REGION__NAME;
+	int SESSION__NAME = COMPOSITE_STATE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1822,7 +1822,61 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SESSION__ANNOTATIONS = PARALLEL_REGION__ANNOTATIONS;
+	int SESSION__ANNOTATIONS = COMPOSITE_STATE__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Outgoing</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__OUTGOING = COMPOSITE_STATE__OUTGOING;
+
+	/**
+	 * The feature id for the '<em><b>Incoming</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__INCOMING = COMPOSITE_STATE__INCOMING;
+
+	/**
+	 * The feature id for the '<em><b>Entry</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__ENTRY = COMPOSITE_STATE__ENTRY;
+
+	/**
+	 * The feature id for the '<em><b>Exit</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__EXIT = COMPOSITE_STATE__EXIT;
+
+	/**
+	 * The feature id for the '<em><b>Properties</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__PROPERTIES = COMPOSITE_STATE__PROPERTIES;
+
+	/**
+	 * The feature id for the '<em><b>Internal</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__INTERNAL = COMPOSITE_STATE__INTERNAL;
 
 	/**
 	 * The feature id for the '<em><b>Substate</b></em>' containment reference list.
@@ -1831,7 +1885,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SESSION__SUBSTATE = PARALLEL_REGION__SUBSTATE;
+	int SESSION__SUBSTATE = COMPOSITE_STATE__SUBSTATE;
 
 	/**
 	 * The feature id for the '<em><b>Initial</b></em>' reference.
@@ -1840,7 +1894,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SESSION__INITIAL = PARALLEL_REGION__INITIAL;
+	int SESSION__INITIAL = COMPOSITE_STATE__INITIAL;
 
 	/**
 	 * The feature id for the '<em><b>History</b></em>' attribute.
@@ -1849,7 +1903,16 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SESSION__HISTORY = PARALLEL_REGION__HISTORY;
+	int SESSION__HISTORY = COMPOSITE_STATE__HISTORY;
+
+	/**
+	 * The feature id for the '<em><b>Region</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__REGION = COMPOSITE_STATE__REGION;
 
 	/**
 	 * The number of structural features of the '<em>Session</em>' class.
@@ -1858,7 +1921,7 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int SESSION_FEATURE_COUNT = PARALLEL_REGION_FEATURE_COUNT + 0;
+	int SESSION_FEATURE_COUNT = COMPOSITE_STATE_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ActionImpl <em>Action</em>}' class.
@@ -3555,14 +3618,14 @@ public interface ThingmlPackage extends EPackage {
 	int ERROR_ACTION_FEATURE_COUNT = ACTION_FEATURE_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.sintef.thingml.impl.ForkActionImpl <em>Fork Action</em>}' class.
+	 * The meta object id for the '{@link org.sintef.thingml.impl.StartSessionImpl <em>Start Session</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.sintef.thingml.impl.ForkActionImpl
-	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getForkAction()
+	 * @see org.sintef.thingml.impl.StartSessionImpl
+	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStartSession()
 	 * @generated
 	 */
-	int FORK_ACTION = 75;
+	int START_SESSION = 75;
 
 	/**
 	 * The feature id for the '<em><b>Session</b></em>' reference.
@@ -3571,16 +3634,25 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORK_ACTION__SESSION = ACTION_FEATURE_COUNT + 0;
+	int START_SESSION__SESSION = ACTION_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Fork Action</em>' class.
+	 * The feature id for the '<em><b>Constructor</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FORK_ACTION_FEATURE_COUNT = ACTION_FEATURE_COUNT + 1;
+	int START_SESSION__CONSTRUCTOR = ACTION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Start Session</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int START_SESSION_FEATURE_COUNT = ACTION_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ConfigurationImpl <em>Configuration</em>}' class.
@@ -6572,25 +6644,36 @@ public interface ThingmlPackage extends EPackage {
 	EReference getErrorAction_Msg();
 
 	/**
-	 * Returns the meta object for class '{@link org.sintef.thingml.ForkAction <em>Fork Action</em>}'.
+	 * Returns the meta object for class '{@link org.sintef.thingml.StartSession <em>Start Session</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Fork Action</em>'.
-	 * @see org.sintef.thingml.ForkAction
+	 * @return the meta object for class '<em>Start Session</em>'.
+	 * @see org.sintef.thingml.StartSession
 	 * @generated
 	 */
-	EClass getForkAction();
+	EClass getStartSession();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.ForkAction#getSession <em>Session</em>}'.
+	 * Returns the meta object for the reference '{@link org.sintef.thingml.StartSession#getSession <em>Session</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Session</em>'.
-	 * @see org.sintef.thingml.ForkAction#getSession()
-	 * @see #getForkAction()
+	 * @see org.sintef.thingml.StartSession#getSession()
+	 * @see #getStartSession()
 	 * @generated
 	 */
-	EReference getForkAction_Session();
+	EReference getStartSession_Session();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.sintef.thingml.StartSession#getConstructor <em>Constructor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Constructor</em>'.
+	 * @see org.sintef.thingml.StartSession#getConstructor()
+	 * @see #getStartSession()
+	 * @generated
+	 */
+	EReference getStartSession_Constructor();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Configuration <em>Configuration</em>}'.
@@ -8737,14 +8820,14 @@ public interface ThingmlPackage extends EPackage {
 		EReference ERROR_ACTION__MSG = eINSTANCE.getErrorAction_Msg();
 
 		/**
-		 * The meta object literal for the '{@link org.sintef.thingml.impl.ForkActionImpl <em>Fork Action</em>}' class.
+		 * The meta object literal for the '{@link org.sintef.thingml.impl.StartSessionImpl <em>Start Session</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.sintef.thingml.impl.ForkActionImpl
-		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getForkAction()
+		 * @see org.sintef.thingml.impl.StartSessionImpl
+		 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getStartSession()
 		 * @generated
 		 */
-		EClass FORK_ACTION = eINSTANCE.getForkAction();
+		EClass START_SESSION = eINSTANCE.getStartSession();
 
 		/**
 		 * The meta object literal for the '<em><b>Session</b></em>' reference feature.
@@ -8752,7 +8835,15 @@ public interface ThingmlPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference FORK_ACTION__SESSION = eINSTANCE.getForkAction_Session();
+		EReference START_SESSION__SESSION = eINSTANCE.getStartSession_Session();
+
+		/**
+		 * The meta object literal for the '<em><b>Constructor</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference START_SESSION__CONSTRUCTOR = eINSTANCE.getStartSession_Constructor();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ConfigurationImpl <em>Configuration</em>}' class.

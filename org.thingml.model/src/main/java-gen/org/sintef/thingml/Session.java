@@ -28,5 +28,5 @@ package org.sintef.thingml;
  * @model
  * @generated
  */
-public interface Session extends ParallelRegion {
+public interface Session extends CompositeState {
 } // Session

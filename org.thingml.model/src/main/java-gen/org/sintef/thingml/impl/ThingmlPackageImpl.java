@@ -38,8 +38,6 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Connector;
 import org.sintef.thingml.ControlStructure;
 import org.sintef.thingml.Decrement;
-import org.sintef.thingml.Dictionary;
-import org.sintef.thingml.DictionaryReference;
 import org.sintef.thingml.DivExpression;
 import org.sintef.thingml.DoubleLiteral;
 import org.sintef.thingml.ElmtProperty;
@@ -56,7 +54,6 @@ import org.sintef.thingml.ExternStatement;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Filter;
 import org.sintef.thingml.FinalState;
-import org.sintef.thingml.ForkAction;
 import org.sintef.thingml.Function;
 import org.sintef.thingml.FunctionCall;
 import org.sintef.thingml.FunctionCallExpression;
@@ -115,6 +112,7 @@ import org.sintef.thingml.SimpleParamRef;
 import org.sintef.thingml.SimpleSource;
 import org.sintef.thingml.Source;
 import org.sintef.thingml.SourceComposition;
+import org.sintef.thingml.StartSession;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Stream;
@@ -672,7 +670,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass forkActionEClass = null;
+	private EClass startSessionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2377,8 +2375,8 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getForkAction() {
-		return forkActionEClass;
+	public EClass getStartSession() {
+		return startSessionEClass;
 	}
 
 	/**
@@ -2386,8 +2384,17 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getForkAction_Session() {
-		return (EReference)forkActionEClass.getEStructuralFeatures().get(0);
+	public EReference getStartSession_Session() {
+		return (EReference)startSessionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getStartSession_Constructor() {
+		return (EReference)startSessionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -3262,8 +3269,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		errorActionEClass = createEClass(ERROR_ACTION);
 		createEReference(errorActionEClass, ERROR_ACTION__MSG);
 
-		forkActionEClass = createEClass(FORK_ACTION);
-		createEReference(forkActionEClass, FORK_ACTION__SESSION);
+		startSessionEClass = createEClass(START_SESSION);
+		createEReference(startSessionEClass, START_SESSION__SESSION);
+		createEReference(startSessionEClass, START_SESSION__CONSTRUCTOR);
 
 		configurationEClass = createEClass(CONFIGURATION);
 		createEReference(configurationEClass, CONFIGURATION__INSTANCES);
@@ -3424,7 +3432,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		compositeStateEClass.getESuperTypes().add(this.getRegion());
 		regionEClass.getESuperTypes().add(this.getAnnotatedElement());
 		parallelRegionEClass.getESuperTypes().add(this.getRegion());
-		sessionEClass.getESuperTypes().add(this.getParallelRegion());
+		sessionEClass.getESuperTypes().add(this.getCompositeState());
 		actionBlockEClass.getESuperTypes().add(this.getAction());
 		externStatementEClass.getESuperTypes().add(this.getAction());
 		externExpressionEClass.getESuperTypes().add(this.getExpression());
@@ -3472,7 +3480,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		returnActionEClass.getESuperTypes().add(this.getAction());
 		printActionEClass.getESuperTypes().add(this.getAction());
 		errorActionEClass.getESuperTypes().add(this.getAction());
-		forkActionEClass.getESuperTypes().add(this.getAction());
+		startSessionEClass.getESuperTypes().add(this.getAction());
 		configurationEClass.getESuperTypes().add(this.getAnnotatedElement());
 		instanceEClass.getESuperTypes().add(this.getAnnotatedElement());
 		connectorEClass.getESuperTypes().add(this.getAbstractConnector());
@@ -3741,8 +3749,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(errorActionEClass, ErrorAction.class, "ErrorAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getErrorAction_Msg(), this.getExpression(), null, "msg", null, 1, 1, ErrorAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(forkActionEClass, ForkAction.class, "ForkAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getForkAction_Session(), this.getSession(), null, "session", null, 1, 1, ForkAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(startSessionEClass, StartSession.class, "StartSession", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getStartSession_Session(), this.getSession(), null, "session", null, 1, 1, StartSession.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getStartSession_Constructor(), this.getPropertyAssign(), null, "constructor", null, 0, -1, StartSession.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(configurationEClass, Configuration.class, "Configuration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getConfiguration_Instances(), this.getInstance(), null, "instances", null, 0, -1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

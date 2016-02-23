@@ -405,14 +405,33 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
             }
         }
         for (State s : getSubstate()) {
-            if (s instanceof Region) {
+            if (s instanceof Region && !(s instanceof Session)) {
                 result.addAll(((Region)s).allContainedRegions());
             }
         }
         return result;
     }
 
-    /**
+	@Override
+	public List<Session> allContainedSessions() {
+		List<Session> result = new ArrayList<Session>();
+		if (this instanceof CompositeState) {
+			for(Region r : ((CompositeState)this).getRegion()) {
+				if (r instanceof Session) {
+					result.add((Session)r);
+				}
+				result.addAll(r.allContainedSessions());
+			}
+		}
+		for (State s : getSubstate()) {
+			if (s instanceof Session) {
+				result.addAll(((Session)s).allContainedSessions());
+			}
+		}
+		return result;
+	}
+
+	/**
      *
      * @return
      * @generated NOT
@@ -436,12 +455,24 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
         List<Region> result = new ArrayList<Region>();
         result.add(this);
         for (Region r : getRegion()){
+			if (!(r instanceof Session))
                 result.addAll(r.allContainedRegions());
         }
         return result;
     }
 
-    /**
+	@Override
+	public List<Session> directSubSessions() {
+		List<Session> result = new ArrayList<Session>();
+		for (Region r : getRegion()){
+			if (r instanceof Session)
+				result.add((Session)r);
+			result.addAll(r.allContainedSessions());
+		}
+		return result;
+	}
+
+	/**
      *
      * @return
      * @generated NOT

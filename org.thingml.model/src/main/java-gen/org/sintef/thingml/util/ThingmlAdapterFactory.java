@@ -381,8 +381,8 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createErrorActionAdapter();
 			}
 			@Override
-			public Adapter caseForkAction(ForkAction object) {
-				return createForkActionAdapter();
+			public Adapter caseStartSession(StartSession object) {
+				return createStartSessionAdapter();
 			}
 			@Override
 			public Adapter caseConfiguration(Configuration object) {
@@ -1583,16 +1583,16 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.ForkAction <em>Fork Action</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StartSession <em>Start Session</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.sintef.thingml.ForkAction
+	 * @see org.sintef.thingml.StartSession
 	 * @generated
 	 */
-	public Adapter createForkActionAdapter() {
+	public Adapter createStartSessionAdapter() {
 		return null;
 	}
 

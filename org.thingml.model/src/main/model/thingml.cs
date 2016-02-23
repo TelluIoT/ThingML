@@ -24,7 +24,7 @@ OPTIONS {
 	//generateUIPlugin = "false";
 	//removeEclipseDependentCode = "true";
 	
-	// 2. FOR ECLIPSE Comment the lines bellow
+	// 2. FOR ECLIPSE Comment the lines below
 	srcGenFolder = "src/main/java-gen";
 	
 	
@@ -40,7 +40,7 @@ TOKENS{
 		DEFINE BOOLEAN_LITERAL $'true'|'false'$;
 		
 		DEFINE INTEGER_LITERAL $('1'..'9') ('0'..'9')* | '0'$;
-		//DEFINE REAL_LITERAL $ (('1'..'9') ('0'..'9')* | '0') '.' ('0'..'9')+ (('e'|'E') ('+'|'-')? ('0'..'9')*)?$;
+		DEFINE REAL_LITERAL $ (('1'..'9') ('0'..'9')* | '0') '.' ('0'..'9')+ (('e'|'E') ('+'|'-')? ('0'..'9')*)?$;
 		DEFINE STRING_LITERAL $'"'('\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')|('\\''u'('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F'))|'\\'('0'..'7')|~('\\'|'"'))*'"'$;
 
 		DEFINE STRING_EXT $'\''('\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')|('\\''u'('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F'))|'\\'('0'..'7')|~('\\'|'\''))*'\''$;
@@ -114,7 +114,7 @@ TOKENSTYLES{
 	"entry" COLOR #A22000, BOLD;
 	"exit" COLOR #A22000, BOLD;
 	"region" COLOR #A22000, BOLD;
-	"session" COLOR #AECF08, BOLD;
+	"session" COLOR #097A41, BOLD;
 	"internal" COLOR #A22000, BOLD;
 	"transition" COLOR #A22000, BOLD;
 	"init" COLOR #A22000, BOLD;
@@ -146,7 +146,7 @@ TOKENSTYLES{
 	"not" COLOR #444444, BOLD;
 	"and" COLOR #444444, BOLD;
 	"or" COLOR #444444, BOLD;
-	"fork" COLOR #AECF08, BOLD;
+	"spawn" COLOR #097A41, BOLD;
 	
 	//Protocols
 	"protocol" COLOR #65BA9E, BOLD;
@@ -222,8 +222,8 @@ RULES {
 	CompositeState::= "composite" #1 "state" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" #1 entry )? ( !1 "on" #1 "exit" #1 exit )? ( outgoing | internal | (!1 substate))* (!1 region)* !0 "}"  ;
 	
 	ParallelRegion ::= "region" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{"(!1 substate)* !0 "}"  ;
-	
-	Session ::= "session" #1 name[] #1 "init" #1 initial[] (annotations)* #1 "{"(!1 substate)* !0 "}"  ;
+		
+	Session::= "session" #1 name[] #1 "init" #1 initial[] (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" #1 entry )? (internal | (!1 substate))* (!1 region)* !0 "}"  ;
 	
 	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? ;
 
@@ -259,8 +259,8 @@ RULES {
 	
 	SendAction::= port[] "!" message[] "(" (parameters ("," #1 parameters)* )? ")";
 	
-	ForkAction::= "fork" #1 session[];
-	
+	StartSession ::= "spawn" #1 session[] (constructor)*;
+		
 	VariableAssignment ::= property[] #1 ("[" index "]")* "=" #1 expression ; 
 	
 	ActionBlock::= "do" ( !1 actions  )* !0 "end"  ;
@@ -312,8 +312,7 @@ RULES {
 	
 	@Operator(type="binary_left_associative", weight="2", superclass="Expression")
 	AndExpression ::= lhs #1 "and" #1 rhs;
-	
-	
+		
 	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
 	LowerExpression ::= lhs #1 "<" #1  rhs;
 	
@@ -353,7 +352,6 @@ RULES {
 	@Operator(type="unary_prefix", weight="7", superclass="Expression")	
 	NotExpression ::= "not" #1 term;
 	
-	//CEP	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	Reference ::= reference[] "." parameter;	
 	
@@ -365,6 +363,9 @@ RULES {
 
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	IntegerLiteral ::= intValue[INTEGER_LITERAL];
+	
+	@Operator(type="primitive", weight="9", superclass="Expression")
+	DoubleLiteral ::= doubleValue[REAL_LITERAL];
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	StringLiteral ::= stringValue[STRING_LITERAL];

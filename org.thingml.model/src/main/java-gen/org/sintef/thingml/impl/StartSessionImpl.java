@@ -18,33 +18,43 @@
 package org.sintef.thingml.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.Expression;
-import org.sintef.thingml.ForkAction;
+import org.sintef.thingml.PropertyAssign;
 import org.sintef.thingml.Session;
+import org.sintef.thingml.StartSession;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Fork Action</b></em>'.
+ * An implementation of the model object '<em><b>Start Session</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.ForkActionImpl#getSession <em>Session</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.StartSessionImpl#getSession <em>Session</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.StartSessionImpl#getConstructor <em>Constructor</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ForkActionImpl extends ActionImpl implements ForkAction {
+public class StartSessionImpl extends ActionImpl implements StartSession {
 	/**
 	 * The cached value of the '{@link #getSession() <em>Session</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -56,11 +66,21 @@ public class ForkActionImpl extends ActionImpl implements ForkAction {
 	protected Session session;
 
 	/**
+	 * The cached value of the '{@link #getConstructor() <em>Constructor</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConstructor()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<PropertyAssign> constructor;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ForkActionImpl() {
+	protected StartSessionImpl() {
 		super();
 	}
 
@@ -71,7 +91,7 @@ public class ForkActionImpl extends ActionImpl implements ForkAction {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return ThingmlPackage.Literals.FORK_ACTION;
+		return ThingmlPackage.Literals.START_SESSION;
 	}
 
 	/**
@@ -85,7 +105,7 @@ public class ForkActionImpl extends ActionImpl implements ForkAction {
 			session = (Session)eResolveProxy(oldSession);
 			if (session != oldSession) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.FORK_ACTION__SESSION, oldSession, session));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.START_SESSION__SESSION, oldSession, session));
 			}
 		}
 		return session;
@@ -109,7 +129,33 @@ public class ForkActionImpl extends ActionImpl implements ForkAction {
 		Session oldSession = session;
 		session = newSession;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.FORK_ACTION__SESSION, oldSession, session));
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.START_SESSION__SESSION, oldSession, session));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<PropertyAssign> getConstructor() {
+		if (constructor == null) {
+			constructor = new EObjectContainmentEList<PropertyAssign>(PropertyAssign.class, this, ThingmlPackage.START_SESSION__CONSTRUCTOR);
+		}
+		return constructor;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.START_SESSION__CONSTRUCTOR:
+				return ((InternalEList<?>)getConstructor()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -120,9 +166,11 @@ public class ForkActionImpl extends ActionImpl implements ForkAction {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.FORK_ACTION__SESSION:
+			case ThingmlPackage.START_SESSION__SESSION:
 				if (resolve) return getSession();
 				return basicGetSession();
+			case ThingmlPackage.START_SESSION__CONSTRUCTOR:
+				return getConstructor();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -132,11 +180,16 @@ public class ForkActionImpl extends ActionImpl implements ForkAction {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.FORK_ACTION__SESSION:
+			case ThingmlPackage.START_SESSION__SESSION:
 				setSession((Session)newValue);
+				return;
+			case ThingmlPackage.START_SESSION__CONSTRUCTOR:
+				getConstructor().clear();
+				getConstructor().addAll((Collection<? extends PropertyAssign>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -150,8 +203,11 @@ public class ForkActionImpl extends ActionImpl implements ForkAction {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.FORK_ACTION__SESSION:
+			case ThingmlPackage.START_SESSION__SESSION:
 				setSession((Session)null);
+				return;
+			case ThingmlPackage.START_SESSION__CONSTRUCTOR:
+				getConstructor().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -165,8 +221,10 @@ public class ForkActionImpl extends ActionImpl implements ForkAction {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.FORK_ACTION__SESSION:
+			case ThingmlPackage.START_SESSION__SESSION:
 				return session != null;
+			case ThingmlPackage.START_SESSION__CONSTRUCTOR:
+				return constructor != null && !constructor.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -181,4 +239,4 @@ public class ForkActionImpl extends ActionImpl implements ForkAction {
 		return new ArrayList<Expression>();
 	}
 
-} //ForkActionImpl
+} //StartSessionImpl

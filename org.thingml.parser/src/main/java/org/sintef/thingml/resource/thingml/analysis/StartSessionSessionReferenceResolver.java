@@ -15,15 +15,15 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-public class ForkActionSessionReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ForkAction, org.sintef.thingml.Session> {
+public class StartSessionSessionReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.StartSession, org.sintef.thingml.Session> {
 	
-	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.ForkAction, org.sintef.thingml.Session> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.ForkAction, org.sintef.thingml.Session>();
+	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.StartSession, org.sintef.thingml.Session> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.StartSession, org.sintef.thingml.Session>();
 	
-	public void resolve(String identifier, org.sintef.thingml.ForkAction container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Session> result) {
+	public void resolve(String identifier, org.sintef.thingml.StartSession container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Session> result) {
 		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
 	}
 	
-	public String deResolve(org.sintef.thingml.Session element, org.sintef.thingml.ForkAction container, org.eclipse.emf.ecore.EReference reference) {
+	public String deResolve(org.sintef.thingml.Session element, org.sintef.thingml.StartSession container, org.eclipse.emf.ecore.EReference reference) {
 		return delegate.deResolve(element, container, reference);
 	}
 	

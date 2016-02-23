@@ -207,8 +207,9 @@
     <genClasses ecoreClass="thingml.ecore#//ErrorAction">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ErrorAction/msg"/>
     </genClasses>
-    <genClasses ecoreClass="thingml.ecore#//ForkAction">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//ForkAction/session"/>
+    <genClasses ecoreClass="thingml.ecore#//StartSession">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StartSession/session"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StartSession/constructor"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Configuration">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/instances"/>
