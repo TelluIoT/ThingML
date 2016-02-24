@@ -123,6 +123,13 @@ public interface Region extends AnnotatedElement {
      */
     List<Region> allContainedRegions();
 
+	/**
+	 *
+	 * @return
+	 * @generated NOT
+	 */
+	List<Session> allContainedSessions();
+
     /**
      *
      * @return
@@ -136,6 +143,13 @@ public interface Region extends AnnotatedElement {
      * @generated NOT
      */
     List<Region> directSubRegions();
+
+	/**
+	 *
+	 * @return
+	 * @generated NOT
+	 */
+	List<Session> directSubSessions();
 
     /**
      *

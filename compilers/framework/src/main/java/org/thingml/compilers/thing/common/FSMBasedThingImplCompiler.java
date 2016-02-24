@@ -29,26 +29,32 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
             generateStateMachine((StateMachine) s, builder, ctx);
         } else if (s instanceof CompositeState) {
             generateCompositeState((CompositeState) s, builder, ctx);
+        } else if (s instanceof FinalState) {
+            generateFinalState((FinalState) s, builder, ctx);
         } else {
             generateAtomicState(s, builder, ctx);
         }
     }
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented");
+        throw new UnsupportedOperationException("State Machine to be implemented");
     }
 
     protected void generateCompositeState(CompositeState cs, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented");
+        throw new UnsupportedOperationException("Composite State to be implemented");
     }
 
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented");
+        throw new UnsupportedOperationException("Atomic State to be implemented");
+    }
+
+    protected void generateFinalState(FinalState s, StringBuilder builder, Context ctx) {
+        throw new UnsupportedOperationException("Final State to be implemented");
     }
 
 
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented");
+        throw new UnsupportedOperationException("Region to be implemented");
     }
 
 
@@ -61,11 +67,11 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
     }
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented");
+        throw new UnsupportedOperationException("Transition to be implemented");
     }
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        throw new UnsupportedOperationException("to be implemented");
+        throw new UnsupportedOperationException("Internal Transition to be implemented");
     }
 
     //TODO: we might want to have one method for the generation of empty handlers (with no associated events)

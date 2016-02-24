@@ -269,8 +269,8 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_17, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.CompositeState) {
-			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_18, foundFormattingElements);
+		if (element instanceof org.sintef.thingml.ParallelRegion) {
+			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_19, foundFormattingElements);
 			return;
 		}
 		if (element instanceof org.sintef.thingml.Session) {
@@ -329,7 +329,7 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_33, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.ForkAction) {
+		if (element instanceof org.sintef.thingml.StartSession) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_34, foundFormattingElements);
 			return;
 		}
@@ -493,36 +493,40 @@ public class ThingmlPrinter2 implements org.sintef.thingml.resource.thingml.IThi
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_74, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.StringLiteral) {
+		if (element instanceof org.sintef.thingml.DoubleLiteral) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_75, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.BooleanLiteral) {
+		if (element instanceof org.sintef.thingml.StringLiteral) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_76, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.EnumLiteralRef) {
+		if (element instanceof org.sintef.thingml.BooleanLiteral) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_77, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.ArrayIndex) {
+		if (element instanceof org.sintef.thingml.EnumLiteralRef) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_78, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.FunctionCallExpression) {
+		if (element instanceof org.sintef.thingml.ArrayIndex) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_79, foundFormattingElements);
 			return;
 		}
-		if (element instanceof org.sintef.thingml.ExternExpression) {
+		if (element instanceof org.sintef.thingml.FunctionCallExpression) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_80, foundFormattingElements);
+			return;
+		}
+		if (element instanceof org.sintef.thingml.ExternExpression) {
+			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_81, foundFormattingElements);
+			return;
+		}
+		if (element instanceof org.sintef.thingml.CompositeState) {
+			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_18, foundFormattingElements);
 			return;
 		}
 		if (element instanceof org.sintef.thingml.State) {
 			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_16, foundFormattingElements);
-			return;
-		}
-		if (element instanceof org.sintef.thingml.ParallelRegion) {
-			printInternal(element, org.sintef.thingml.resource.thingml.grammar.ThingmlGrammarInformationProvider.THINGML_19, foundFormattingElements);
 			return;
 		}
 		

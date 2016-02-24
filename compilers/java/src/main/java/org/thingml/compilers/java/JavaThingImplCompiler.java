@@ -214,6 +214,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("public boolean isDebug() {return debug;}\n");
         builder.append("public void setDebug(boolean debug) {this.debug = debug;}\n");
 
+        builder.append("private long sessionCounter = 0;\n\n");//FIXME: not a good idea (will overflow at some point...)
+
         builder.append("@Override\npublic String toString() {\n");
         builder.append("String result = \"instance \" + getName() + \"\\n\";\n");
         for(Property p : thing.allPropertiesInDepth()) {
@@ -440,6 +442,10 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             for (Region r : b.allContainedRegions()) {
                 ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(r, builder, ctx);
             }
+            for(Session s : b.allContainedSessions()) {//Session are only allowed at the root
+                System.out.println("Session " + s.getName());
+                generateRegion(s, builder, ctx);
+            }
         }
 
         builder.append("public Component buildBehavior() {\n");
@@ -493,15 +499,16 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("final List<AtomicState> states_" + c.qname("_") + " = new ArrayList<AtomicState>();\n");
         for (State s : c.getSubstate()) {
-            if (s instanceof CompositeState) {
-                CompositeState cs = (CompositeState) s;
-                builder.append("final CompositeState state_" + cs.qname("_") + " = build" + cs.qname("_") + "();\n");
-                builder.append("states_" + c.qname("_") + ".add(state_" + cs.qname("_") + ");\n");
-            } else {
-                generateState(s, builder, ctx);
+            if (!(s instanceof Session)) {
+                if (s instanceof CompositeState) {
+                    CompositeState cs = (CompositeState) s;
+                    builder.append("final CompositeState state_" + cs.qname("_") + " = build" + cs.qname("_") + "();\n");
+                    builder.append("states_" + c.qname("_") + ".add(state_" + cs.qname("_") + ");\n");
+                } else {
+                    generateState(s, builder, ctx);
+                }
             }
         }
-        int numReg = c.getRegion().size();
         builder.append("final List<Region> regions_" + c.qname("_") + " = new ArrayList<Region>();\n");
         for (Region r : c.getRegion()) {
             builder.append("regions_" + c.qname("_") + ".add(build" + r.qname("_") + "());\n");
@@ -517,16 +524,36 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
 
+
         builder.append("final CompositeState state_" + c.qname("_") + " = ");
         builder.append("new CompositeState(\"" + c.getName() + "\", states_" + c.qname("_") + ", state_" + c.getInitial().qname("_") + ", transitions_" + c.qname("_") + ", regions_" + c.qname("_") + ", ");
+
         if (c.isHistory())
             builder.append("true");
         else
             builder.append("false");
         builder.append(")");
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(c.findContainingThing());
-        if (c.getEntry() != null || c.getExit() != null || debugProfile.isDebugBehavior()) {
+        if (c.getEntry() != null || c.getExit() != null || debugProfile.isDebugBehavior() || c.getProperties().size() > 0) {
             builder.append("{\n");
+
+            for(Property p : c.getProperties()) {
+                builder.append("private " + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + " " + ctx.getVariableName(p));
+                if (c instanceof Session) {
+                    builder.append(" = " + ctx.getVariableName(p) + "_");
+                } else {
+                    if (p.getInit() != null) {
+                        builder.append(" = ");
+                        ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), builder, ctx);
+                    }
+                }
+                builder.append(";\n");
+                builder.append("public " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p) + ";\n}\n\n");
+                //if (p.isChangeable()) {
+                builder.append("public void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n}\n\n");
+                //}
+            }
+
             if (c.getEntry() != null || debugProfile.isDebugBehavior()) {
                 builder.append("@Override\n");
                 builder.append("public void onEntry() {\n");
@@ -556,12 +583,16 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append(";\n");
     }
 
+    protected void generateFinalState(FinalState s, StringBuilder builder, Context ctx) {
+        generateAtomicState(s, builder, ctx);
+    }
+
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
         builder.append("final AtomicState state_" + s.qname("_") + " = new AtomicState(\"" + s.getName() + "\")\n");
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(s.findContainingThing());
-        if (s.getEntry() != null || s.getExit() != null || debugProfile.isDebugBehavior()) {
+        if (s.getEntry() != null || s.getExit() != null || debugProfile.isDebugBehavior() || s instanceof FinalState) {
             builder.append("{\n");
-            if (s.getEntry() != null || debugProfile.isDebugBehavior()) {
+            if (s.getEntry() != null || debugProfile.isDebugBehavior() || s instanceof FinalState) {
                 builder.append("@Override\n");
                 builder.append("public void onEntry() {\n");
                 if (debugProfile.isDebugBehavior()) {
@@ -570,6 +601,16 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 }
                 if (s.getEntry() != null)
                     ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
+                if (s instanceof FinalState) {
+                    if (s.findContainingRegion() instanceof Session) {
+                        builder.append("behavior.removeSession(\"" + s.findContainingRegion().getName() + "\" + id);\n");
+                    } else {
+                        builder.append("stop();\n");
+                        builder.append("behavior = null;\n");
+                        builder.append("queue = null;\n");
+                        builder.append("cepDispatcher = null;\n");
+                    }
+                }
                 builder.append("}\n\n");
             }
 
@@ -597,7 +638,14 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         if (r instanceof CompositeState) {
             CompositeState c = (CompositeState) r;
-            builder.append("private CompositeState build" + r.qname("_") + "(){\n");
+            if (!(c instanceof Session))
+                builder.append("private CompositeState build" + r.qname("_") + "(){\n");
+            else {
+                builder.append("private CompositeState build" + r.qname("_") + "(long id, ");
+                Session s = (Session) c;
+                JavaHelper.generateParameter(s, builder, ctx);
+                builder.append(") {\n");
+            }
             generateState(c, builder, ctx);
             builder.append("return state_" + r.qname("_") + ";\n");
         } else {

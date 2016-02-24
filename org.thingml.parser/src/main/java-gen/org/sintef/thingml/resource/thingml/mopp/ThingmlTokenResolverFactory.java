@@ -35,6 +35,7 @@ public class ThingmlTokenResolverFactory implements org.sintef.thingml.resource.
 		registerTokenResolver("ANNOTATION", new org.sintef.thingml.resource.thingml.analysis.ThingmlANNOTATIONTokenResolver());
 		registerTokenResolver("BOOLEAN_LITERAL", new org.sintef.thingml.resource.thingml.analysis.ThingmlBOOLEAN_LITERALTokenResolver());
 		registerTokenResolver("INTEGER_LITERAL", new org.sintef.thingml.resource.thingml.analysis.ThingmlINTEGER_LITERALTokenResolver());
+		registerTokenResolver("REAL_LITERAL", new org.sintef.thingml.resource.thingml.analysis.ThingmlREAL_LITERALTokenResolver());
 		registerTokenResolver("STRING_LITERAL", new org.sintef.thingml.resource.thingml.analysis.ThingmlSTRING_LITERALTokenResolver());
 		registerTokenResolver("STRING_EXT", new org.sintef.thingml.resource.thingml.analysis.ThingmlSTRING_EXTTokenResolver());
 		registerTokenResolver("T_READONLY", new org.sintef.thingml.resource.thingml.analysis.ThingmlT_READONLYTokenResolver());

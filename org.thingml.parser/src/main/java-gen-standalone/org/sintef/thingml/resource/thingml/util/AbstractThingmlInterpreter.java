@@ -175,6 +175,12 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.Session) {
+			result = interprete_org_sintef_thingml_Session((org.sintef.thingml.Session) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		if (object instanceof org.sintef.thingml.CompositeState) {
 			result = interprete_org_sintef_thingml_CompositeState((org.sintef.thingml.CompositeState) object, context);
 		}
@@ -183,12 +189,6 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		}
 		if (object instanceof org.sintef.thingml.State) {
 			result = interprete_org_sintef_thingml_State((org.sintef.thingml.State) object, context);
-		}
-		if (result != null) {
-			return result;
-		}
-		if (object instanceof org.sintef.thingml.Session) {
-			result = interprete_org_sintef_thingml_Session((org.sintef.thingml.Session) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -517,8 +517,8 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
-		if (object instanceof org.sintef.thingml.ForkAction) {
-			result = interprete_org_sintef_thingml_ForkAction((org.sintef.thingml.ForkAction) object, context);
+		if (object instanceof org.sintef.thingml.StartSession) {
+			result = interprete_org_sintef_thingml_StartSession((org.sintef.thingml.StartSession) object, context);
 		}
 		if (result != null) {
 			return result;
@@ -1018,7 +1018,7 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		return null;
 	}
 	
-	public ResultType interprete_org_sintef_thingml_ForkAction(org.sintef.thingml.ForkAction forkAction, ContextType context) {
+	public ResultType interprete_org_sintef_thingml_StartSession(org.sintef.thingml.StartSession startSession, ContextType context) {
 		return null;
 	}
 	

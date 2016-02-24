@@ -75,6 +75,11 @@ public class StateMachineImpl extends CompositeStateImpl implements StateMachine
         return super.allContainedRegions();
     }
 
+    @Override
+    public List<Session> allContainedSessions() {
+        return super.allContainedSessions();
+    }
+
     /**
      *
      * @return
@@ -93,6 +98,11 @@ public class StateMachineImpl extends CompositeStateImpl implements StateMachine
     @Override
     public List<Region> directSubRegions() {
         return super.directSubRegions();
+    }
+
+    @Override
+    public List<Session> directSubSessions() {
+        return super.directSubSessions();
     }
 
     /**

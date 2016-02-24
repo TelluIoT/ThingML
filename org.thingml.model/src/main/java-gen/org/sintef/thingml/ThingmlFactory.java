@@ -557,13 +557,13 @@ public interface ThingmlFactory extends EFactory {
 	ErrorAction createErrorAction();
 
 	/**
-	 * Returns a new object of class '<em>Fork Action</em>'.
+	 * Returns a new object of class '<em>Start Session</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Fork Action</em>'.
+	 * @return a new object of class '<em>Start Session</em>'.
 	 * @generated
 	 */
-	ForkAction createForkAction();
+	StartSession createStartSession();
 
 	/**
 	 * Returns a new object of class '<em>Configuration</em>'.

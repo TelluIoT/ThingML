@@ -116,6 +116,15 @@ public class JavaHelper {
         }
     }
 
+    public static void generateParameter(Session s, StringBuilder builder, Context ctx) {
+        int i = 0;
+        for (Property pa : s.getProperties()) {
+            if (i > 0)
+                builder.append(", ");
+            builder.append(JavaHelper.getJavaType(pa.getType(), pa.isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)) + "_");
+            i++;
+        }
+    }
     /**
      *
      * @return

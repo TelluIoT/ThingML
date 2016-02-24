@@ -92,6 +92,10 @@ public class ThingMLHelpers {
 		return findContainer(object,Handler.class);
 	}
 	
+	public static StartSession findContainingStartSession(EObject object) {
+		return findContainer(object, StartSession.class);
+	}
+	
 	/* ***********************************************************
 	 * Type checking and expressions
 	 * ***********************************************************/
