@@ -24,18 +24,17 @@ import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
 
-import java.net.SocketPermission;
-
 public class ArduinoThingCepCompiler extends ThingCepCompiler {
     public ArduinoThingCepCompiler(ThingCepViewCompiler cepViewCompiler, ThingCepSourceDeclaration sourceDeclaration) {
         super(cepViewCompiler, sourceDeclaration);
     }
 
+    public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
+    }
+
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
-        builder.append("coucou: ");
-        builder.append("Message: ");
         if (stream.getInput() instanceof SimpleSource) {
             SimpleSource simpleSource = (SimpleSource) stream.getInput();
             String paramName = simpleSource.getMessage().getName();
@@ -44,8 +43,5 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             Message outPut = ((SourceComposition)stream.getInput()).getResultMessage();
             generateSubscription(stream, builder, ctx, outPut.getName(), outPut);
         }
-    }
-
-    public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName,Message outPut) {
     }
 }

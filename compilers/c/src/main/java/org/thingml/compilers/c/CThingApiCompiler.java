@@ -17,11 +17,11 @@ package org.thingml.compilers.c;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
 import java.util.List;
 import java.util.Map;
-import org.thingml.compilers.DebugProfile;
 
 
 public class CThingApiCompiler extends ThingApiCompiler {
@@ -173,6 +173,20 @@ public class CThingApiCompiler extends ThingApiCompiler {
                 builder.append("]");
             }*/
             builder.append(";\n");
+        }
+        builder.append("// CEP stream pointers\n");
+        for (Stream s : thing.getStreams()) {
+            for (ViewSource vs : s.getInput().getOperators()) {
+                if (vs instanceof LengthWindow) {
+                    builder.append("Fifo* cep_" + s.getName() + "\n");
+                } else if (vs instanceof TimeWindow) {
+                    builder.append("TemporalFifo* cep_" + s.getName() + "\n");
+                }
+                //else if (vs instanceof Filter) {
+                //    ctx.getCompiler().getThingActionCompiler().generate(((Filter)vs).getGuard(), builder, ctx);
+                //    builder.append("filter: " + ((Filter)vs).getGuard() + "\n");
+                //}
+            }
         }
         builder.append("\n};\n");
     }
