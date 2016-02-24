@@ -378,7 +378,7 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
     public List<State> allContainedStates() {
         final List<State> result = new ArrayList<State>();
         for(Region r : allContainedRegions()) {
-            if (r instanceof State) {
+            if (r instanceof State && !(r instanceof Session)) {
                 result.add((State)r);
             }
             for(State s : r.getSubstate()) {
@@ -481,7 +481,7 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
     public List<CompositeState> allContainedCompositeStates() {
         List<CompositeState> result = new ArrayList<CompositeState>();
         for(State s : allContainedStates()) {
-            if (s instanceof CompositeState) {
+            if (s instanceof CompositeState && !(s instanceof Session)) {
                 result.add((CompositeState)s);
             }
         }
