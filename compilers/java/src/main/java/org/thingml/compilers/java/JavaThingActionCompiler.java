@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.java;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
@@ -105,6 +106,37 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             i++;
         }
         builder.append(");\n");
+    }
+
+    @Override
+    public void generate(StartSession action, StringBuilder builder, Context ctx) {
+        //FIXME: generate unique ids for sessions in case we spawn to similar sessions in the same block (to avoid re-defining a var in the generated code)
+        builder.append("final CompositeState " + action.getSession().getName() +  " = build" + action.getSession().qname("_") + "(sessionCounter");
+        for(Property p : action.getSession().getProperties()) {//FIXME: this code is probably somewhere in a derived property...
+            builder.append(", ");
+            //FIXME: arrays
+            boolean init = false;
+            for(PropertyAssign pa : action.getConstructor()) {
+                if (EcoreUtil.equals(p, pa.getProperty())) {
+                    ctx.getCompiler().getThingActionCompiler().generate(pa.getInit(), builder, ctx);
+                    init = true;
+                    break;
+                }
+            }
+            if (!init) {
+                if (p.getInit() != null) {
+                    ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), builder, ctx);
+                } else {
+                    builder.append(JavaHelper.getDefaultValue(p.getType()));
+                }
+            }
+        }
+
+        builder.append(");\n");
+        builder.append(action.getSession().getName() + ".onEntry();\n");
+        builder.append("while (" + action.getSession().getName() + ".dispatch(ne, null)) {;}//trigger all empty transitions\n");
+        builder.append("behavior.addSession(\"" + action.getSession().getName() + "\" + sessionCounter, " + action.getSession().getName() + ");\n");
+        builder.append("sessionCounter++;\n");
     }
 
     @Override

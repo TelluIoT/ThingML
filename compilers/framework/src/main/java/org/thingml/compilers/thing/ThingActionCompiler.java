@@ -59,10 +59,17 @@ public class ThingActionCompiler {
             generate ((Increment) action, builder, ctx);
         else if (action instanceof Decrement)
             generate ((Decrement) action, builder, ctx);
+        else if (action instanceof StartSession) {
+            generate ((StartSession) action, builder, ctx);
+        }
 
     }
 
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(StartSession action, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
@@ -133,6 +140,8 @@ public class ThingActionCompiler {
             generate((GreaterOrEqualExpression) expression, builder, ctx);
         } else if (expression instanceof EqualsExpression) {
             generate((EqualsExpression) expression, builder, ctx);
+        } else if (expression instanceof NotEqualsExpression) {
+            generate((NotEqualsExpression) expression, builder, ctx);
         } else if (expression instanceof PlusExpression) {
             generate((PlusExpression) expression, builder, ctx);
         } else if (expression instanceof MinusExpression) {

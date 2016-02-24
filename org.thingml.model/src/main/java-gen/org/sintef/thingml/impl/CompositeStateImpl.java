@@ -415,17 +415,9 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
 	@Override
 	public List<Session> allContainedSessions() {
 		List<Session> result = new ArrayList<Session>();
-		if (this instanceof CompositeState) {
-			for(Region r : ((CompositeState)this).getRegion()) {
-				if (r instanceof Session) {
-					result.add((Session)r);
-				}
-				result.addAll(r.allContainedSessions());
-			}
-		}
 		for (State s : getSubstate()) {
 			if (s instanceof Session) {
-				result.addAll(((Session)s).allContainedSessions());
+				result.add(((Session)s));
 			}
 		}
 		return result;
