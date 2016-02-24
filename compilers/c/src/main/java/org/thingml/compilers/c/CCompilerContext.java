@@ -537,31 +537,11 @@ public abstract class CCompilerContext extends Context {
             PrimitiveType pt = (PrimitiveType) t;
             return pt.getByteSize();
         }
-        /*if (t.hasAnnotation("c_byte_size")) {
-            String v = t.annotation("c_byte_size").iterator().next();
-            if (v.equals("*")) {
-                return pointerSize;
-            } else {
-                try {
-                    return Integer.parseInt(v);
-                } catch (NumberFormatException e) {
-                    System.err.println("Warning: Wrong annotation c_byte_size for type " + t.getName() + ", should be an Integer or *.");
-                }
-            }
-        }
-        System.err.println("Warning: Missing annotation c_byte_size for type " + t.getName() + ", using 2 as the byte size.");
-        return 2;*/
     }
 
     public boolean isPointer(Type t) {
         return t instanceof ObjectType;
         
-        /*if (t.hasAnnotation("c_byte_size")) {
-            String v = t.annotation("c_byte_size").iterator().next();
-            return v.equals("*");
-        }
-        System.err.println("Warning: Missing annotation c_byte_size for type " + t.getName() + ", using 2 as the byte size.");
-        return false;*/
     }
 
     public boolean hasByteBuffer(Type t) {
@@ -657,16 +637,16 @@ public abstract class CCompilerContext extends Context {
                     builder.append("} u_" + v + ";\n");
                     builder.append("u_" + v + ".p = " + v + ";\n");
 
-            while (i > 0) {
-                i = i - 1;
+                    while (i > 0) {
+                        i = i - 1;
                         //if (i == 0) 
                         //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
                         builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                         j++;
+                    }
+                }
             }
         }
-    }
-}
         
         if(j == 2) {
             return j;

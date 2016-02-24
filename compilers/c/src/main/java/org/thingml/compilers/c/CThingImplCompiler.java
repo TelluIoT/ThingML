@@ -424,6 +424,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(" {\n");
 
+               
+                
                 //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, port, msg)) {
                 if(debugProfile.getDebugMessages().containsKey(port)) {
                     if(debugProfile.getDebugMessages().get(port).contains(msg)) {
