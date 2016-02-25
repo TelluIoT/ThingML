@@ -62,11 +62,11 @@
         </dependency>
 
         <!--FIXME: should be only here if debug-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
             <version>1.11</version>
-        </dependency>
+        </dependency>-->
 
         <!--<dependency>
             <groupId>junit</groupId>

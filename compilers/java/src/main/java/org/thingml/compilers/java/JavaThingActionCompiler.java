@@ -135,7 +135,10 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append(");\n");
         builder.append(action.getSession().getName() + ".onEntry();\n");
         builder.append("while (" + action.getSession().getName() + ".dispatch(ne, null)) {;}//trigger all empty transitions\n");
-        builder.append("behavior.addSession(\"" + action.getSession().getName() + "\" + sessionCounter, " + action.getSession().getName() + ");\n");
+        builder.append("final Region r" + action.getSession().getName() + " = behavior.addSession(\"" + action.getSession().getName() + "\" + sessionCounter, " + action.getSession().getName() + ");\n");
+        builder.append("if ((((CompositeState)r" + action.getSession().getName() + ".initial).regions[0].current instanceof FinalState)){\n");
+        builder.append("behavior.removeSession(\"" + action.getSession().getName() + "\" + sessionCounter);\n");
+        builder.append("}\n");
         builder.append("sessionCounter++;\n");
     }
 
@@ -238,10 +241,35 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
+    public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
+        if (action.getProperty() instanceof Property && !(action.getProperty().eContainer() instanceof Thing)) {
+            if (action.getProperty().findContainingRegion() instanceof Session) {
+                builder.append("properties.get(\"" + action.getProperty().findContainingRegion().getName() + "\" + id).put(\"" + action.getProperty().getName() + "\", ");
+                ctx.getCompiler().getThingActionCompiler().generate(action.getExpression(), builder, ctx);
+                builder.append(");\n");
+            } else {
+                builder.append("properties.get(\"" + action.getProperty().findContainingRegion().getName() + "\").put(\"" + action.getProperty().getName() + "\", ");
+                ctx.getCompiler().getThingActionCompiler().generate(action.getExpression(), builder, ctx);
+                builder.append(");\n");
+            }
+        } else {
+            super.generate(action, builder, ctx);
+        }
+    }
+
+    @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
         if(!ctx.getAtInitTimeLock()) {
             if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
-                builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
+                if (expression.getProperty().eContainer() instanceof Thing) {
+                    builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
+                } else { //Composite or session
+                    if (expression.getProperty().findContainingRegion() instanceof Session) {
+                        builder.append("(" + JavaHelper.getJavaType(expression.getProperty().getType(), false, ctx) + ")properties.get(\"" + expression.getProperty().findContainingRegion().getName() + "\" + id).get(\"" + expression.getProperty().getName() + "\")");
+                    } else {
+                        builder.append("(" + JavaHelper.getJavaType(expression.getProperty().getType(), false, ctx) + ")properties.get(\"" + expression.getProperty().findContainingRegion().getName() + "\").get(\"" + expression.getProperty().getName() + "\")");
+                    }
+                }
             else
                 builder.append(ctx.getVariableName(expression.getProperty()));
         } else {
