@@ -1,0 +1,85 @@
+import "../datatypes.thingml"
+
+
+/*****************************************************************************
+ * Definition of the built-in things and messages
+ *****************************************************************************/
+ 
+thing fragment TimerMsgs {
+	// Start the Timer
+	message timer_start(delay : Integer);
+	// Cancel the Timer
+	message timer_cancel();
+	// Notification that the timer has expired
+	message timer_timeout();
+}
+
+thing fragment Timer includes TimerMsgs
+{
+	provided port timer
+    {
+		sends timer_timeout
+		receives timer_start, timer_cancel
+	}
+}
+
+thing fragment TimerClient includes TimerMsgs
+{
+	required port timer
+    {
+		receives timer_timeout
+		sends timer_start, timer_cancel
+	}
+    
+}
+
+thing SimpleTimerClient includes TimerClient 
+{
+    property t1 : Long = 1000
+    property t2 : Long = 5000
+    
+    statechart Default init Tick {
+        
+        property counter : Integer = 0
+        
+        state Tick {
+            on entry 
+            do
+                print("sending timer_start\n")
+                timer!timer_start(t1)
+                print("sending timer_cancel\n")
+                timer!timer_cancel()//just to test we can stop and restart a timer
+                print("sending timer_start\n")
+                timer!timer_start(t1)
+            end
+            
+            
+            transition tock -> Tick
+            event timer?timer_timeout
+            guard counter%2 == 0
+            action do 
+                print("tick\n")
+                print(counter)
+                print("\n")
+                counter = counter + 1
+            end
+            
+            internal event tick : timer?timer_timeout
+            guard counter%2 == 1
+            action do
+                print("tock\n")
+                print(counter)
+                print("\n")
+                counter = counter + 1
+                print("sending timer_start\n")
+                timer!timer_start(t2)
+                print("sending timer_cancel\n")
+                timer!timer_cancel()
+                print("sending timer_start\n")
+                timer!timer_start(t2)               
+            end
+        }         
+           
+    }   
+
+}

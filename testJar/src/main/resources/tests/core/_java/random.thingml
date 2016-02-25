@@ -1,0 +1,16 @@
+import "../random.thingml"
+
+object JavaRandom
+@java_type "java.util.Random";
+
+thing RandomJava includes Random
+{
+	property rn : JavaRandom = 'new java.util.Random()'
+    statechart Random init waiting {
+        state waiting {
+          internal waiting
+            event random?request
+            action random!answer('' & rn & '.nextInt(Short.MAX_VALUE + 1)')
+        }
+    }
+}

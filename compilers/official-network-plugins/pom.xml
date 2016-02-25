@@ -6,6 +6,7 @@
         <artifactId>compilers</artifactId>
         <version>0.6.0-SNAPSHOT</version>
     </parent>
+    <groupId>org.thingml</groupId>
     <artifactId>official-network-plugins</artifactId>
     <name>ThingML :: Compilers :: Network Plugins</name>
     <packaging>jar</packaging>

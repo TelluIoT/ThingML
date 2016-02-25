@@ -60,6 +60,15 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <name>Nicolas Harrand</name>
+            <id>nharrand</id>
+            <email>first.last@sintef.no</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
     </developers>
 
     <build>
@@ -210,6 +219,7 @@
         <module>../org.thingml.editor.standaloneApp</module>-->
         <!--module>org.thingml.tests</module--><!--BUILT SEPARATELY-->
         <module>ArduinoIDEPlugin</module>
+        <module>testJar</module>
     </modules>
 
     <distributionManagement>

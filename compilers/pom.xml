@@ -20,7 +20,7 @@
         <module>c</module>
         <module>uml</module>
         <module>debugGUI</module>
-        <!--<module>deprescala</module>-->
+        <module>thingmltools</module>
         <module>registry</module>
         <module>official-network-plugins</module>
     </modules>
