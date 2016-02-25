@@ -1,0 +1,6 @@
+org.thingml.networkplugins.c.arduino.ArduinoSerialPlugin
+org.thingml.networkplugins.c.arduino.ArduinoTimerPlugin
+org.thingml.networkplugins.c.posix.PosixWebSocketPlugin
+org.thingml.networkplugins.c.posix.PosixMQTTPlugin
+org.thingml.networkplugins.c.posix.PosixNoPollWSPlugin
+org.thingml.networkplugins.c.posix.PosixSerialPlugin

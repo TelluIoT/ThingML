@@ -28,7 +28,10 @@ import org.thingml.compilers.debugGUI.DebugGUICompiler;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 import java.util.Set;
+import org.thingml.compilers.spi.NetworkPlugin;
 
 /**
  * Created by ffl on 25.11.14.
@@ -36,8 +39,10 @@ import java.util.Set;
 public class ThingMLCompilerRegistry {
 
     private static ThingMLCompilerRegistry instance;
+    private static ServiceLoader<NetworkPlugin> plugins = ServiceLoader.load(NetworkPlugin.class);
 
     public static ThingMLCompilerRegistry getInstance() {
+        
         if (instance == null) {
             instance =  new ThingMLCompilerRegistry();
             instance.addCompiler(new ArduinoCompiler());
@@ -50,6 +55,15 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new DebugGUICompiler());
 
         }
+        
+        plugins.reload();
+        Iterator<NetworkPlugin> it = plugins.iterator();
+        System.out.println("Plugin list:");
+        while(it.hasNext()) {
+            NetworkPlugin p = it.next();
+            System.out.println("    Plugin: " + p.getPluginID());
+        }
+        
         return instance;
     }
 
