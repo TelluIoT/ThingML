@@ -48,7 +48,6 @@ public class TestJar {
         
         for(File testFile : testFiles) {
             System.out.println("Test: " + testFile.getName());
-            //testEnv.testCompilation(testFile);
             testEnv.testGeneration(testFile);
             //testGen.generateTestCfg(testFile, tmpDir);
         }
