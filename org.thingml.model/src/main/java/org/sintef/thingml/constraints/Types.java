@@ -28,6 +28,7 @@ public class Types {
     public static Type ERROR_TYPE;
     public static Type INTEGER_TYPE;
     public static Type BOOLEAN_TYPE;
+    public static Type CHARACTER_TYPE;
     public static Type STRING_TYPE;
     public static Type REAL_TYPE;
     public static Type VOID_TYPE;
@@ -59,6 +60,14 @@ public class Types {
         bool.setName("type_checker");
         bool.setValue("Boolean");
         BOOLEAN_TYPE.getAnnotations().add(bool);
+        
+        CHARACTER_TYPE = factory.createPrimitiveType();
+        CHARACTER_TYPE.setName("Character");
+        PlatformAnnotation character = factory.createPlatformAnnotation();
+        character.setName("type_checker");
+        character.setValue("Character");
+        CHARACTER_TYPE.getAnnotations().add(integer);
+        
         STRING_TYPE = factory.createPrimitiveType();
         STRING_TYPE.setName("String");
         PlatformAnnotation string = factory.createPlatformAnnotation();

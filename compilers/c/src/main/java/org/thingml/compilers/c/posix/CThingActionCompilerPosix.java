@@ -43,6 +43,8 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
         if (actual != null) {
             if (actual.getName().equals("Integer")) {
                 builder.append("fprintf(stdout, \"%i\"," + b.toString() + ");\n");
+            } else if (actual.getName().equals("Character")) {
+                builder.append("fprintf(stdout, \"%c\"," + b.toString() + ");\n");
             } else if (actual.getName().equals("String")) {
                 builder.append("fprintf(stdout, " + b.toString() + ");\n");
             } else if (actual.getName().equals("Real")) {

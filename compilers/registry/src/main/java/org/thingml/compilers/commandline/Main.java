@@ -95,7 +95,7 @@ public class Main {
             }
             if(args[0].trim().compareToIgnoreCase("testconfigurationgen") == 0) {
                 System.out.println("Test Configuration Generation");
-                TestConfigurationGenerator cfgGen = new TestConfigurationGenerator();
+                TestConfigurationGenerator cfgGen = new TestConfigurationGenerator(outdir);
                 cfgGen.generateThingMLFrom(input_model);
             } else {
                 if (input_model.allConfigurations().isEmpty()) {

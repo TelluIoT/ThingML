@@ -20,6 +20,11 @@
  */
 package org.thingml.thingmltools;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
 
@@ -28,7 +33,12 @@ import org.sintef.thingml.ThingMLModel;
  * @author sintef
  */
 public class TestConfigurationGenerator extends ThingMLTool{
+    
 
+    public TestConfigurationGenerator(File outdir) {
+        super(outdir);
+    }
+    
     @Override
     public void generateThingMLFrom(ThingMLModel model) {
         System.out.println("Generate ThingML from model");
@@ -43,6 +53,21 @@ public class TestConfigurationGenerator extends ThingMLTool{
                 }
             }
         }
+    }
+    
+    public void generateTester(StringBuilder builder, Thing t, String in, String out) {
+        builder.append("thing Tester includes TestHarness, TimerClient {\n");
+        
+        builder.append("statechart TestChart init\n");
+        builder.append("}\n");
+        
+        builder.append("}\n");
+    }
+    
+    public void generateCfg(Thing t, String in, String out) {
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append("import \"../../../src/main/resources/tests/thingml.thingml\"\n\n");
     }
     
 }

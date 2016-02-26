@@ -20,6 +20,10 @@
  */
 package org.thingml.thingmltools;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import org.sintef.thingml.ThingMLModel;
 
 /**
@@ -27,5 +31,39 @@ import org.sintef.thingml.ThingMLModel;
  * @author sintef
  */
 public abstract class ThingMLTool {
+    File outDir;
+    Map<String, StringBuilder> generatedCode = new HashMap<>();
+    
+    public ThingMLTool(File outdir) {
+        this.outDir = outdir;
+    }
+    
     public abstract void generateThingMLFrom(ThingMLModel model);
+    
+    public void writeGeneratedCodeToFiles() {
+        for (Map.Entry<String, StringBuilder> e : generatedCode.entrySet()) {
+            writeTextFile(e.getKey(), e.getValue().toString());
+        }
+    }
+
+    /**
+     * Allows to writeTextFile additional files (not generated in the normal generatedCode)
+     *
+     * @param path
+     * @param content
+     */
+    public void writeTextFile(String path, String content) {
+        try {
+            File file = new File(outDir, path);
+            if (!file.getParentFile().exists())
+                file.getParentFile().mkdirs();
+            PrintWriter w = new PrintWriter(file);
+            w.print(content);
+            w.close();
+        } catch (Exception ex) {
+            System.err.println("Problem while dumping the code");
+            ex.printStackTrace();
+        }
+    }
+    
 }
