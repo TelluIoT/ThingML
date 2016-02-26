@@ -453,9 +453,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     // it can only be an internal handler so the last param can be null (in theory)
                     generateMessageHandlers(thing, sm, port, msg, builder, null, sm, ctx, debugProfile);
                 }
-                if (hasStreamForPort(thing, port, msg)) {
 
-                }
+                generateStreamDispatch(thing, port, msg, ctx, builder);
+
                 builder.append("}\n");
             }
         }
@@ -487,13 +487,20 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     //TODO move a proper file
-    private boolean hasStreamForPort(Thing thing, Port port, Message msg) {
+    // may be specific to Arduino board
+    private void generateStreamDispatch(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {
         boolean ret = false;
         for (Stream s : thing.getStreams()) {
+            Source source = s.getInput();
+
+            if (source instanceof SimpleSource) {
+                if (((SimpleSource) source).getMessage().getMessage().getName().equals(msg.getName())) {
+                    ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
+                }
+            }
             // TODO check if a stream correspond, or maybe even do the actual code generation with
             // the "produce" action
         }
-        return ret;
     }
 
     public void generateEmptyHandlers(Thing thing, State s, StringBuilder builder, CompositeState cs, Region r, CCompilerContext ctx, DebugProfile debugProfile) {

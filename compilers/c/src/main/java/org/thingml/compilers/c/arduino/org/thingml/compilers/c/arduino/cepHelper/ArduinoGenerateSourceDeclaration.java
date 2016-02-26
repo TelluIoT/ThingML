@@ -15,20 +15,17 @@
  */
 package org.thingml.compilers.c.arduino.org.thingml.compilers.c.arduino.cepHelper;
 
-import org.sintef.thingml.*;
+import org.sintef.thingml.JoinSources;
+import org.sintef.thingml.MergeSources;
+import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.Stream;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 
 public class ArduinoGenerateSourceDeclaration extends ThingCepSourceDeclaration{
     @Override
     public void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
-        builder.append("simple source:\n ");
-        builder.append(source.getMessage().getMessage().getName() + "\n");
-        builder.append(source.getName() + "\n");
-        for (ViewSource vSource : source.getOperators()) {
-            builder.append("vSource" + vSource);
-        }
-        builder.append("end of cep simple source\n");
+
     }
 
     @Override
