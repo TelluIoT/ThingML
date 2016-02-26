@@ -508,6 +508,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
                         }
                     }
+                    for (LocalVariable lv : s.getSelection()) {
+                        builder.append(ctx.getCType(lv.getType()) + " " + lv.getName() + " = ");
+                        ctx.getCompiler().getThingActionCompiler().generate(lv.getInit(), builder, ctx);
+                        builder.append(";\n");
+                    }
                     ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
                     for (int i = 0; i < nbCondition; i++) {
                         builder.append("}\n");
