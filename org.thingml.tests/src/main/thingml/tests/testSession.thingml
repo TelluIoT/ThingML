@@ -1,11 +1,11 @@
 import "thingml.thingml"
 
-thing TestProperties includes Test 
-@test " AB # AABB"
+thing TestSession includes Test 
+@test "AB # AABB"
 {
     property a : Char = '\'A\''
     
-	statechart TestProperties init I {
+	statechart TestSession init I {
 	 
         state I {
 			internal event m : harnessIn?testIn
