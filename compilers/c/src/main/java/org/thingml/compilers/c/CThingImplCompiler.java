@@ -494,12 +494,26 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             Source source = s.getInput();
 
             if (source instanceof SimpleSource) {
+                int nbCondition = 0;
                 if (((SimpleSource) source).getMessage().getMessage().getName().equals(msg.getName())) {
+                    for (ViewSource vs : s.getInput().getOperators()) {
+                        if (vs instanceof Filter) {
+                            builder.append("if (");
+                            ctx.getCompiler().getThingActionCompiler().generate(((Filter) vs).getGuard(), builder, ctx);
+                            nbCondition++;
+                            builder.append(") {\n");
+                        } else if (vs instanceof LengthWindow) {
+
+                        } else if (vs instanceof TimeWindow) {
+
+                        }
+                    }
                     ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
+                    for (int i = 0; i < nbCondition; i++) {
+                        builder.append("}\n");
+                    }
                 }
             }
-            // TODO check if a stream correspond, or maybe even do the actual code generation with
-            // the "produce" action
         }
     }
 
