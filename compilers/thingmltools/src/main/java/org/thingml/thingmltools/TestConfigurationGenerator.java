@@ -70,17 +70,19 @@ public class TestConfigurationGenerator extends ThingMLTool{
         int i = 0;
         builder.append("    statechart TestChart init e0 {\n");
         for(char c : in.toCharArray()) {
-            builder.append("        state e" + i + " {\n");
-            builder.append("            on entry timer!timer_start(10)\n");
-            builder.append("            transition ->e" + (i+1) + "\n");
-            builder.append("            event timer?timer_timeout\n");
-            builder.append("            action test!testIn('\\'" + c + "\\')\n");
-            builder.append("        }\n");
-            i++;
+            if(c != ' ') {
+                builder.append("        state e" + i + " {\n");
+                builder.append("            on entry timer!timer_start(10)\n");
+                builder.append("            transition -> e" + (i+1) + "\n");
+                builder.append("            event timer?timer_timeout\n");
+                builder.append("            action test!testIn('\\'" + c + "\\')\n");
+                builder.append("        }\n");
+                i++;
+            }
         }
         builder.append("        state e" + i + " {\n");
         builder.append("            on entry timer!timer_start(250)\n");
-        builder.append("            transition ->e" + (i+1) + "\n");
+        builder.append("            transition -> e" + (i+1) + "\n");
         builder.append("            event timer?timer_timeout\n");
         builder.append("        }\n");
         i++;
@@ -137,7 +139,7 @@ public class TestConfigurationGenerator extends ThingMLTool{
         
         builder.append("}\n");
         
-        generatedCode.put(lang.outputDir.getAbsolutePath() + "/" + t.getName() + testNumber + ".thingml", builder);
+        generatedCode.put("_" + lang.longName + "/" + t.getName() + testNumber + ".thingml", builder);
     }
     
 }

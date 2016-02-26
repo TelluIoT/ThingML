@@ -54,6 +54,7 @@ public abstract class ThingMLTool {
      */
     public void writeTextFile(String path, String content) {
         try {
+            //System.out.println("[PATH] " + path);
             File file = new File(outDir, path);
             if (!file.getParentFile().exists())
                 file.getParentFile().mkdirs();
