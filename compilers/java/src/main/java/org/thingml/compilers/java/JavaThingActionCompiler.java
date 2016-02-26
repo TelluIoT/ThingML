@@ -89,6 +89,40 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+        if (action.getVar().eContainer() instanceof Thing || action.getVar().eContainer() instanceof ActionBlock) {
+            super.generate(action, builder, ctx);
+        } else {
+            if (action.getVar().findContainingRegion() instanceof Session) {
+                builder.append("properties.get(\"" + action.getVar().findContainingRegion().getName() + "\" + id).put(\"" + action.getVar().getName() + "\", ");
+                builder.append("((" + JavaHelper.getJavaType(action.getVar().getType(), action.getVar().getCardinality()!=null, ctx) + ")properties.get(\"" + action.getVar().findContainingRegion().getName() + "\" + id).get(\"" + action.getVar().getName() + "\")) + 1");
+                builder.append(");\n");
+            } else {
+                builder.append("properties.get(\"" + action.getVar().findContainingRegion().getName() + "\").put(\"" + action.getVar().getName() + "\", ");
+                builder.append("((" + JavaHelper.getJavaType(action.getVar().getType(), action.getVar().getCardinality()!=null, ctx) + ")properties.get(\"" + action.getVar().findContainingRegion().getName() + "\").get(\"" + action.getVar().getName() + "\")) + 1");
+                builder.append(");\n");
+            }
+        }
+    }
+
+    @Override
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+        if (action.getVar().eContainer() instanceof Thing || action.getVar().eContainer() instanceof ActionBlock) {
+            super.generate(action, builder, ctx);
+        } else {
+            if (action.getVar().findContainingRegion() instanceof Session) {
+                builder.append("properties.get(\"" + action.getVar().findContainingRegion().getName() + "\" + id).put(\"" + action.getVar().getName() + "\", ");
+                builder.append("((" + JavaHelper.getJavaType(action.getVar().getType(), action.getVar().getCardinality()!=null, ctx) + ")properties.get(\"" + action.getVar().findContainingRegion().getName() + "\" + id).get(\"" + action.getVar().getName() + "\")) - 1");
+                builder.append(");\n");
+            } else {
+                builder.append("properties.get(\"" + action.getVar().findContainingRegion().getName() + "\").put(\"" + action.getVar().getName() + "\", ");
+                builder.append("((" + JavaHelper.getJavaType(action.getVar().getType(), action.getVar().getCardinality()!=null, ctx) + ")properties.get(\"" + action.getVar().findContainingRegion().getName() + "\").get(\"" + action.getVar().getName() + "\")) - 1");
+                builder.append(");\n");
+            }
+        }
+    }
+
+    @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
         builder.append("send" + ctx.firstToUpper(action.getMessage().getName()) + "_via_" + action.getPort().getName() + "(");
         int i = 0;
@@ -237,7 +271,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         } else {//else : ArrayParamRef
             builder.append(ctx.protectKeyword(messageName) + ".size()");
         }
-
     }
 
     @Override

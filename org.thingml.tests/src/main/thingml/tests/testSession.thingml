@@ -1,0 +1,32 @@
+import "thingml.thingml"
+
+thing TestSession includes Test 
+@test "AB # AABB"
+{
+    property a : Char = '\'A\''
+    
+	statechart TestSession init I {
+	 
+        state I {
+			internal event m : harnessIn?testIn
+			action do
+				spawn s
+					set id = m.c
+			end
+		}
+		
+		session s init Init {
+			
+			property id : Char
+			
+			state Init {
+				on entry harnessOut!testOut(id)
+				transition -> Stop
+			}
+			
+			final state Stop {
+				on entry harnessOut!testOut(id)
+			}
+		}
+	}
+}

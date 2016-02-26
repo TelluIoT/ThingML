@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import org.sintef.thingml.Property;
 import org.sintef.thingml.Session;
+import org.sintef.thingml.StartSession;
 import org.sintef.thingml.State;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
@@ -28,11 +29,14 @@ public class PropertyAssignPropertyReferenceResolver implements org.sintef.thing
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.PropertyAssign, org.sintef.thingml.Property> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.PropertyAssign, org.sintef.thingml.Property>();
 	
 	public void resolve(String identifier, org.sintef.thingml.PropertyAssign container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Property> result) {
-		ArrayList<Property> ps;
+		ArrayList<Property> ps = new ArrayList<>();
 		
-		Session session = ThingMLHelpers.findContainingStartSession(container).getSession();
-		if (session != null) {
-			ps = ThingMLHelpers.findProperty(session, identifier, resolveFuzzy);
+		StartSession ss = ThingMLHelpers.findContainingStartSession(container);
+		if (ss != null) {
+			Session session = ss.getSession();
+			if (session != null) {
+				ps = ThingMLHelpers.findProperty(session, identifier, resolveFuzzy);
+			}
 		}
 		else {
 			Thing s = ThingMLHelpers.findContainingThing(container);
