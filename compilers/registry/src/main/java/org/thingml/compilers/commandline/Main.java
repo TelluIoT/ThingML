@@ -13,6 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package org.thingml.compilers.commandline;
 
 import org.eclipse.emf.common.util.URI;
@@ -26,6 +32,7 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 
 import java.io.File;
+import org.thingml.thingmltools.TestConfigurationGenerator;
 
 /**
  * Created by ffl on 15.06.15.
@@ -82,24 +89,32 @@ public class Main {
 
         try {
             ThingMLModel input_model = ThingMLCompiler.loadModel(input);
-            if (input_model == null)//Models contains errors
-                return;
-            if (input_model.allConfigurations().isEmpty()) {
-                System.out.println("ERROR: The input model does not contain any configuration to be compiled.");
+            if (input_model == null) {
+                System.out.println("ERROR: The input model contains errors.");
                 return;
             }
-
-            for (Configuration cfg : input_model.allConfigurations()) {
-                ThingMLCompiler compiler = registry.createCompilerInstanceByName(args[0].trim());
-                if (compiler == null) {
-                    System.out.println("ERROR: Cannot find compiler " + args[0].trim() + ". Use -help to check the list of registered compilers.");
+            if(args[0].trim().compareToIgnoreCase("testconfigurationgen") == 0) {
+                System.out.println("Test Configuration Generation");
+                TestConfigurationGenerator cfgGen = new TestConfigurationGenerator();
+                cfgGen.generateThingMLFrom(input_model);
+            } else {
+                if (input_model.allConfigurations().isEmpty()) {
+                    System.out.println("ERROR: The input model does not contain any configuration to be compiled.");
                     return;
                 }
-                compiler.setOutputDirectory(outdir);
-                System.out.println("Generating code for configuration: " + cfg.getName());
-                compiler.compile(cfg);
+
+                for (Configuration cfg : input_model.allConfigurations()) {
+                    ThingMLCompiler compiler = registry.createCompilerInstanceByName(args[0].trim());
+                    if (compiler == null) {
+                        System.out.println("ERROR: Cannot find compiler " + args[0].trim() + ". Use -help to check the list of registered compilers.");
+                        return;
+                    }
+                    compiler.setOutputDirectory(outdir);
+                    System.out.println("Generating code for configuration: " + cfg.getName());
+                    compiler.compile(cfg);
+                }
+                System.out.println("SUCCESS.");
             }
-            System.out.println("SUCCESS.");
 
         } catch (Exception e) {
             System.out.println("FATAL ERROR: " + e.getMessage());

@@ -1,66 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.thingml</groupId>
-    <artifactId>compilers.registry</artifactId>
-    <name>ThingML :: Compilers :: Registry</name>
+    <artifactId>testJar</artifactId>
     <packaging>jar</packaging>
+    <name>ThingML :: Test :: Compilers</name>
 
     <parent>
-        <artifactId>compilers</artifactId>
         <groupId>org.thingml</groupId>
+        <artifactId>org.thingml.root</artifactId>
         <version>0.6.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>compilers.c</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>compilers.java</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>compilers.javascript</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>compilers.uml</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>compilers.debugGUI</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>compilers.thingmltools</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.parser.standalone</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>org.thingml.compilers</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
-
-
     <build>
         <plugins>
 
@@ -69,7 +35,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.thingml.compilers.commandline.Main</mainClass>
+                            <mainClass>org.thingml.testjar.TestJar</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -91,5 +57,4 @@
 
         </plugins>
     </build>
-
 </project>
