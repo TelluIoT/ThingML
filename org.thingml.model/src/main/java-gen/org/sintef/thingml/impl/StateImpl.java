@@ -517,23 +517,12 @@ public class StateImpl extends AnnotatedElementImpl implements State {
             for(InternalTransition i : s.getInternal()) {
                 handlers.add(i);
             }
-            for(Handler t : handlers){
+            for (Handler t : handlers) {
                 //println("  Processisng handler " + t + " Event = " + t.getEvent)
                 for(Event e : t.getEvent()){
                     if (e instanceof ReceiveMessage) {
-						//System.out.println("Handler: " + t + " event " + e);
-						ReceiveMessage rm = (ReceiveMessage)e;
-                        Map<Message, List<Handler>> phdlrs = result.get(rm.getPort());
-                        if (phdlrs == null) {
-                            phdlrs = new HashMap<Message, List<Handler>>();
-                            result.put(rm.getPort(), phdlrs);
-                        }
-                        List<Handler> hdlrs = phdlrs.get(rm.getMessage());
-                        if (hdlrs == null) {
-                            hdlrs = new ArrayList<Handler>();
-                            phdlrs.put(rm.getMessage(), hdlrs);
-                        }
-                        hdlrs.add(t);
+                        addMessageToHandlers(result, (ReceiveMessage) e, t);
+                        //System.out.println("Handler: " + t + " event " + e);
                     }
                 }
             }
@@ -542,33 +531,54 @@ public class StateImpl extends AnnotatedElementImpl implements State {
 		//add stream handlers if not present
 		if (this instanceof StateMachine) {
 			for (Stream s : this.findContainingThing().getStreams()) {
-				Message msg;
 				ReceiveMessage rMsg;
 
 				if (s.getInput() instanceof SimpleSource) {
 					rMsg = ((SimpleSource) s.getInput()).getMessage();
-					//System.out.println("rMsg name " + rMsg.getMessage().getName());
-					Map<Message, List<Handler>> phdlrs = result.get(rMsg.getPort());
+                    addMessageToHandlers(result, rMsg, null);
+                } else if (s.getInput() instanceof JoinSources) {
+                    for (Source source : ((JoinSources) s.getInput()).getSources()) {
+                        if (source instanceof SimpleSource) {
+                            rMsg = ((SimpleSource) source).getMessage();
+                            addMessageToHandlers(result, rMsg, null);
+                        }
+                    }
+                } else if (s.getInput() instanceof MergeSources) {
+                    for (Source source : ((MergeSources) s.getInput()).getSources()) {
+                        if (source instanceof SimpleSource) {
+                            rMsg = ((SimpleSource) source).getMessage();
+                            addMessageToHandlers(result, rMsg, null);
+                        }
 
-					if (phdlrs == null) {
-						phdlrs = new HashMap<>();
-						result.put(rMsg.getPort(), phdlrs);
-					}
-					List<Handler> hdlrs = phdlrs.get(rMsg.getMessage());
-					if (hdlrs == null) {
-						hdlrs = new ArrayList<>();
-						phdlrs.put(rMsg.getMessage(), hdlrs);
-					}
-				} else if (s.getInput() instanceof JoinSources) {
-					msg = ((JoinSources) s.getInput()).getResultMessage();
-				} else if (s.getInput() instanceof MergeSources) {
-					msg = ((MergeSources) s.getInput()).getResultMessage();
-				}
+                    }
+                }
 
 			}
 		}
 
         return result;
+    }
+
+    /**
+     * Add a new handler to the list of current found handler.
+     *
+     * @param handlers Set of all current handler
+     * @param rm       Message to add
+     * @param t
+     */
+    private void addMessageToHandlers(Map<Port, Map<Message, List<Handler>>> handlers, ReceiveMessage rm, Handler t) {
+        Map<Message, List<Handler>> phdlrs = handlers.get(rm.getPort());
+        if (phdlrs == null) {
+            phdlrs = new HashMap<>();
+            handlers.put(rm.getPort(), phdlrs);
+        }
+        List<Handler> hdlrs = phdlrs.get(rm.getMessage());
+        if (hdlrs == null) {
+            hdlrs = new ArrayList<>();
+            phdlrs.put(rm.getMessage(), hdlrs);
+        }
+        if (t != null)
+            hdlrs.add(t);
     }
 
     /**
