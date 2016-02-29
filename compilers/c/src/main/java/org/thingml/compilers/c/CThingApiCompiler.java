@@ -97,6 +97,16 @@ public class CThingApiCompiler extends ThingApiCompiler {
             }
             builder.append("\n// END: Code from the c_header annotation " + thing.getName() + "\n\n");
         }
+
+        boolean shouldIncludeArduinoCEP = false;
+        for (Stream s : thing.getStreams()) {
+            if (s.getInput() instanceof JoinSources || s.getInput() instanceof MergeSources) {
+                shouldIncludeArduinoCEP = true;
+            }
+        }
+        if (shouldIncludeArduinoCEP) {
+            builder.append("#include \"cep.h\"\n");
+        }
     }
 
     protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {

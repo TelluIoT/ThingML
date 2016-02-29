@@ -425,8 +425,17 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         Map<Port, Map<Message, List<Handler>>> handlers = sm.allMessageHandlers();
 
+        for (Port p : handlers.keySet()) {
+            for (Message msg : handlers.get(p).keySet()) {
+                builder.append("Port: " + p.getName() + " msg: " + msg.getName() + "\n");
+            }
+        }
+
+        builder.append("\n\n\n");
+
         for (Port port : handlers.keySet()) {
             for (Message msg : handlers.get(port).keySet()) {
+
                 builder.append("void " + getCppNameScope() + ctx.getHandlerName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(" {\n");
@@ -489,7 +498,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     //TODO move a proper file
     // may be specific to Arduino board
     private void generateStreamDispatch(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {
-        boolean ret = false;
         for (Stream s : thing.getStreams()) {
             Source source = s.getInput();
 
@@ -516,6 +524,34 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
                     for (int i = 0; i < nbCondition; i++) {
                         builder.append("}\n");
+                    }
+                }
+
+            } else if (source instanceof MergeSources) {
+                builder.append("//append to fifo\n");
+
+            } else if (source instanceof JoinSources) {
+
+                for (Source sc : ((JoinSources) source).getSources()) {
+                    if (sc.getName().equals(msg.getName())) {
+                        int nbCondition = 0;
+                        for (ViewSource viewSource : sc.getOperators()) {
+                            if (viewSource instanceof Filter) {
+                                builder.append("if (");
+                                ctx.getCompiler().getThingActionCompiler().generate(((Filter) viewSource).getGuard(), builder, ctx);
+                                nbCondition++;
+                                builder.append(") {\n");
+
+                            } else if (viewSource instanceof LengthWindow) {
+
+                            } else if (viewSource instanceof TimeWindow) {
+
+                            }
+                        }
+                        for (int i = 0; i < nbCondition; i++) {
+                            builder.append("}\n");
+                        }
+
                     }
                 }
             }
