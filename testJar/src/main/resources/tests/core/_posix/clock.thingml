@@ -13,7 +13,7 @@ thing fragment Clock includes ClockMsgs
 	}
 }
 
-thing ClockLinux includes Clock 
+thing ClockPosix includes Clock 
 @c_headers "#include <sys/time.h>"
 {
 
@@ -45,7 +45,7 @@ thing ClockTestApp includes ClockMsgs {
 	required port clock1 { receives clock_tick }
 	required port clock2 { receives clock_tick }
 	
-	statechart 	LinuxClockTestAppImpl init Running {
+	statechart 	PosixClockTestAppImpl init Running {
 		state Running {
 			internal event clock1?clock_tick action print "Tick 1\n"
 			internal event clock2?clock_tick action print "Tick 2\n"
@@ -53,7 +53,7 @@ thing ClockTestApp includes ClockMsgs {
 	}
 }
 
-configuration LinuxClockTest 
+configuration PosixClockTest 
   //@output_folder "/home/thingml_out/"
   @debug "true"
   @debug_fifo "true"
@@ -61,11 +61,11 @@ configuration LinuxClockTest
   @debug_message_receive ".*"
 {
 	// Create a first clock with a 2 sec period
-	instance c1 : ClockLinux 
+	instance c1 : ClockPosix 
 	set c1.period = 2000
 	
 	// Create a second clock with a 5 sec period
-	instance c2 : ClockLinux
+	instance c2 : ClockPosix
 	set c2.period = 5000
 	
 	// Create and connect the test app

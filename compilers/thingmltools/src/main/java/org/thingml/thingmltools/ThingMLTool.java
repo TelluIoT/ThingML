@@ -31,8 +31,8 @@ import org.sintef.thingml.ThingMLModel;
  * @author sintef
  */
 public abstract class ThingMLTool {
-    File outDir;
-    Map<String, StringBuilder> generatedCode = new HashMap<>();
+    public File outDir;
+    public Map<String, StringBuilder> generatedCode = new HashMap<>();
     
     public ThingMLTool(File outdir) {
         this.outDir = outdir;

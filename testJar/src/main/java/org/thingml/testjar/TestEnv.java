@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,7 +59,7 @@ public class TestEnv {
         return failures;
     }
     
-    public void testGeneration(File testFile) {
+    public void testGeneration(File testFile, Set<Callable<String>> tasks) {
         String[] execCmd = new String[6];//"java -jar "
         execCmd[0] = "java";
         execCmd[1] = "-jar";
@@ -65,55 +68,10 @@ public class TestEnv {
         execCmd[4] = testFile.getAbsolutePath();
         execCmd[5] = tmpDir.getAbsolutePath();
         
-        Runtime runtime = Runtime.getRuntime();
-        final Process process;
-        try {
-            process = runtime.exec(execCmd);
-            // Consommation de la sortie standard de l'application externe dans un Thread separe
-            new Thread() {
-                public void run() {
-                    try {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        String line = "";
-                        try {
-                            while((line = reader.readLine()) != null) {
-                                System.out.println("[Output] "+ line);
-                            }
-                        } finally {
-                            reader.close();
-                        }
-                    } catch(IOException ioe) {
-                        ioe.printStackTrace();
-                    }
-                }
-            }.start();
-
-            // Consommation de la sortie d'erreur de l'application externe dans un Thread separe
-            new Thread() {
-                public void run() {
-                    try {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                        String line = "";
-                        try {
-                            while((line = reader.readLine()) != null) {
-                                System.out.println("[Error] "+ line);
-                            }
-                        } finally {
-                            reader.close();
-                        }
-                    } catch(IOException ioe) {
-                        ioe.printStackTrace();
-                    }
-                }
-            }.start();
-        } catch (IOException ex) {
-            Logger.getLogger(TestEnv.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        String error = "";
-        String output = "";
+        tasks.add(new Command(execCmd, "(.)*SUCCESS(.)*", null, "Error at generation"));
     }
     
-    public void testCompilation(File testFile) {
+    public void testCompilation(File testFile, Set<Callable<String>> tasks) {
         String[] execCmd = new String[6];//"java -jar "
         execCmd[0] = "java";
         execCmd[1] = "-jar";
@@ -122,51 +80,34 @@ public class TestEnv {
         execCmd[4] = testFile.getAbsolutePath();
         execCmd[5] = tmpDir.getAbsolutePath();
         
-        Runtime runtime = Runtime.getRuntime();
-        final Process process;
-        try {
-            process = runtime.exec(execCmd);
-            // Consommation de la sortie standard de l'application externe dans un Thread separe
-            new Thread() {
-                public void run() {
-                    try {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        String line = "";
-                        try {
-                            while((line = reader.readLine()) != null) {
-                                System.out.println("[Output] "+ line);
-                            }
-                        } finally {
-                            reader.close();
-                        }
-                    } catch(IOException ioe) {
-                        ioe.printStackTrace();
-                    }
-                }
-            }.start();
-
-            // Consommation de la sortie d'erreur de l'application externe dans un Thread separe
-            new Thread() {
-                public void run() {
-                    try {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                        String line = "";
-                        try {
-                            while((line = reader.readLine()) != null) {
-                                System.out.println("[Error] "+ line);
-                            }
-                        } finally {
-                            reader.close();
-                        }
-                    } catch(IOException ioe) {
-                        ioe.printStackTrace();
-                    }
-                }
-            }.start();
-        } catch (IOException ex) {
-            Logger.getLogger(TestEnv.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        String error = "";
-        String output = "";
+        tasks.add(new Command(execCmd, "(.)*SUCCESS(.)*", "(.)*FATAL ERROR(.)*", "Error at ThingML compilation"));
+    }
+    
+    public void testGeneratedSourcesCompilation(File testFile, Set<Callable<String>> tasks) {
+    
+    }
+    
+    public void javaCompileAndRun(File testFile, Set<Callable<String>> tasks, String success, String failure) {
+        String[] execCmd = new String[4];
+        execCmd[0] = "mvn";
+        execCmd[1] = "clean";
+        execCmd[2] = "install";
+        execCmd[3] = "exec:java";
+        
+        tasks.add(new Command(execCmd, success, failure, "Error at java compilation or execution"));
+    }
+    
+    public void posixCompile(File dir, Set<Callable<String>> tasks, String success, String failure) {
+        String[] execCmd = new String[1];
+        execCmd[0] = "make";
+        
+        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", dir));
+    }
+    
+    public void posixRun(File testFile, Set<Callable<String>> tasks, String success, String failure) {
+        String[] execCmd = new String[1];
+        execCmd[0] = "make";
+        
+        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", testFile));
     }
 }

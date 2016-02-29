@@ -32,7 +32,7 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 
 import java.io.File;
-import org.thingml.thingmltools.TestConfigurationGenerator;
+import org.thingml.testconfigurationgenerator.TestConfigurationGenerator;
 
 /**
  * Created by ffl on 15.06.15.
@@ -97,6 +97,7 @@ public class Main {
                 System.out.println("Test Configuration Generation");
                 TestConfigurationGenerator cfgGen = new TestConfigurationGenerator(outdir);
                 cfgGen.generateThingMLFrom(input_model);
+                
             } else {
                 if (input_model.allConfigurations().isEmpty()) {
                     System.out.println("ERROR: The input model does not contain any configuration to be compiled.");
@@ -113,8 +114,8 @@ public class Main {
                     System.out.println("Generating code for configuration: " + cfg.getName());
                     compiler.compile(cfg);
                 }
-                System.out.println("SUCCESS.");
             }
+            System.out.println("SUCCESS.");
 
         } catch (Exception e) {
             System.out.println("FATAL ERROR: " + e.getMessage());
