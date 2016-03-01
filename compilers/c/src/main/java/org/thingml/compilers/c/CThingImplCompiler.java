@@ -426,14 +426,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         Map<Port, Map<Message, List<Handler>>> handlers = sm.allMessageHandlers();
 
-        for (Port p : handlers.keySet()) {
-            for (Message msg : handlers.get(p).keySet()) {
-                builder.append("Port: " + p.getName() + " msg: " + msg.getName() + "\n");
-            }
-        }
-
-        builder.append("\n\n\n");
-
         for (Port port : handlers.keySet()) {
             for (Message msg : handlers.get(port).keySet()) {
 
@@ -496,9 +488,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    //TODO move a proper file
     // may be specific to Arduino board
-    // need to refactor the 3 cast impl
     private void generateStreamDispatch(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {
         for (Stream s : thing.getStreams()) {
             Source source = s.getInput();
