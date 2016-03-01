@@ -2,7 +2,7 @@ import "../test.thingml"
 datatype double<8>
 @c_type "double";
 
-thing TestDumpLinux includes TestDump
+thing TestDumpPosix includes TestDump
 @c_header "#include <stdio.h>
 #include <sys/time.h>"
 @c_global "FILE* testFile = NULL;
@@ -18,7 +18,7 @@ FILE* cpuFile = NULL;"
 	    printf("%c\n",c);'
 	end
 
-	statechart LinuxHarness init Testing {
+	statechart PosixHarness init Testing {
 		property transitionsCount : Long = 0
  	    property stateNumber: String = ""
         property time : LongLong = 0

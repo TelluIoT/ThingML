@@ -18,7 +18,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.thingmltools;
+package org.thingml.testconfigurationgenerator;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -27,8 +27,9 @@ import java.util.Map;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
-import org.thingml.thingmltools.config.Language;
-import org.thingml.thingmltools.config.TestGenConfig;
+import org.thingml.thingmltools.ThingMLTool;
+import org.thingml.testconfigurationgenerator.Language;
+import org.thingml.testconfigurationgenerator.TestGenConfig;
 
 /**
  *
@@ -69,13 +70,14 @@ public class TestConfigurationGenerator extends ThingMLTool{
         
         int i = 0;
         builder.append("    statechart TestChart init e0 {\n");
+        builder.append("        on entry print \"\\n[Test] \"\n");
         for(char c : in.toCharArray()) {
             if(c != ' ') {
                 builder.append("        state e" + i + " {\n");
                 builder.append("            on entry timer!timer_start(10)\n");
                 builder.append("            transition -> e" + (i+1) + "\n");
                 builder.append("            event timer?timer_timeout\n");
-                builder.append("            action test!testIn('\\'" + c + "\\')\n");
+                builder.append("            action test!testIn('\\'" + c + "\\'')\n");
                 builder.append("        }\n");
                 i++;
             }
@@ -88,7 +90,10 @@ public class TestConfigurationGenerator extends ThingMLTool{
         i++;
         
         builder.append("        state e" + i + " {\n");
-        builder.append("            on entry testEnd!testEnd()\n");
+        builder.append("            on entry do"
+                     + "                print \"\\n\"\n"
+                     + "                testEnd!testEnd()\n"
+                     + "            end");
         builder.append("        }\n");
             
         builder.append("    }\n");
@@ -102,7 +107,7 @@ public class TestConfigurationGenerator extends ThingMLTool{
         if(str.length() < 2)
             return str.toLowerCase();
         
-        return str.substring(0, 1).toLowerCase() + str.substring(1, str.length()-1);
+        return str.substring(0, 1).toLowerCase() + str.substring(1, str.length());
     }
     
     public void generateCfg(Thing t, String in, String out, Language lang, int testNumber) {
@@ -110,11 +115,11 @@ public class TestConfigurationGenerator extends ThingMLTool{
         
         StringBuilder builder = new StringBuilder();
         
-        builder.append("import \"../../../src/main/resources/tests/thingml.thingml\"\n\n");
+        builder.append("import \"../../src/main/resources/tests/thingml.thingml\"\n\n");
         
-        builder.append("import \"../../../src/main/resources/tests/_" + lang.longName + "/test.thingml\"\n");
-        builder.append("import \"../../../src/main/resources/tests/" + LowerFirstLetter(t.getName()) + ".thingml\"\n");
-        builder.append("import \"../../../src/main/resources/tests/_" + lang.longName + "/timer.thingml\"\n");
+        builder.append("import \"../../src/main/resources/tests/core/_" + lang.longName + "/test.thingml\"\n");
+        builder.append("import \"../../src/main/resources/tests/" + LowerFirstLetter(t.getName()) + ".thingml\"\n");
+        builder.append("import \"../../src/main/resources/tests/core/_" + lang.longName + "/timer.thingml\"\n");
         
         builder.append("\n");
         generateTester(builder, t, in, out);
@@ -125,7 +130,7 @@ public class TestConfigurationGenerator extends ThingMLTool{
         
 	builder.append("    instance harness : Tester\n");
 	builder.append("    instance dump : TestDump" + lang.shortName + "\n");
-	builder.append("    instance test : TestArrays\n");
+	builder.append("    instance test : " + t.getName() + "\n");
  	builder.append("    instance timer : Timer" + lang.shortName + "\n");
         builder.append("\n");
 	builder.append("    connector harness.testEnd => dump.dumpEnd\n");
@@ -139,7 +144,7 @@ public class TestConfigurationGenerator extends ThingMLTool{
         
         builder.append("}\n");
         
-        generatedCode.put("_" + lang.longName + "/" + t.getName() + testNumber + ".thingml", builder);
+        generatedCode.put("_" + lang.longName + "/" + t.getName() + "_" + testNumber + ".thingml", builder);
     }
     
 }

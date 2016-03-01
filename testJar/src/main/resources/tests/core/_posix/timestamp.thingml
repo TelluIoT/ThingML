@@ -5,7 +5,7 @@ import "../timestamp.thingml"
  * Definition of the built-in things and messages
  *****************************************************************************/
 
-thing TimestampLinux includes Timestamp 
+thing TimestampPosix includes Timestamp 
 @pim "Timestamp"
 @platform "linux"
 {
