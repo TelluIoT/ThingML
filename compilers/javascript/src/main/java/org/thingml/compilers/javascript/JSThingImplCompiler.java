@@ -261,12 +261,16 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         else
             builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this." + sm.qname("_") + ", StateJS.PseudoStateKind.Initial);\n");
         for (Region r : sm.getRegion()) {
-            ctx.addContextAnnotation("container", "this." + sm.qname("_"));
-            generateRegion(r, builder, ctx);
+            if (!(r instanceof Session)) {
+                ctx.addContextAnnotation("container", "this." + sm.qname("_"));
+                generateRegion(r, builder, ctx);
+            }
         }
         for (State s : sm.getSubstate()) {
-            ctx.addContextAnnotation("container", "this." + sm.qname("_"));
-            generateState(s, builder, ctx);
+            if (!(s instanceof Session)) {
+                ctx.addContextAnnotation("container", "this." + sm.qname("_"));
+                generateState(s, builder, ctx);
+            }
         }
         builder.append("this._initial_" + sm.qname("_") + ".to(" + sm.getInitial().qname("_") + ");\n");
         for (Handler h : sm.allEmptyHandlers()) {
@@ -348,25 +352,34 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("_initial_" + c.qname("_") + ".to(" + c.getInitial().qname("_") + ");\n");
     }
 
+    @Override
+    protected void generateFinalState(FinalState s, StringBuilder builder, Context ctx) {
+        generateAtomicState(s, builder, ctx);
+    }
+
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
         String containerName = ctx.getContextAnnotation("container");
-        builder.append("var " + s.qname("_") + " = new StateJS.State(\"" + s.getName() + "\", " + containerName + ")");
+        if (s instanceof FinalState) {
+            builder.append("var " + s.qname("_") + " = new StateJS.FinalState(\"" + s.getName() + "\", " + containerName + ")");
+        } else {
+            builder.append("var " + s.qname("_") + " = new StateJS.State(\"" + s.getName() + "\", " + containerName + ")");
+        }
         generateActionsForState(s, builder, ctx);
         builder.append(";\n");
     }
 
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
-        String containerName = ctx.getContextAnnotation("container");
-        builder.append("var " + r.qname("_") + "_reg = new StateJS.Region(\"" + r.getName() + "\", " + containerName + ");\n");
-        if (r.isHistory())
-            builder.append("var _initial_" + r.qname("_") + "_reg = new StateJS.PseudoState(\"_initial\", " + r.qname("_") + "_reg, StateJS.PseudoStateKind.ShallowHistory);\n");
-        else
-            builder.append("var _initial_" + r.qname("_") + "_reg = new StateJS.PseudoState(\"_initial\", " + r.qname("_") + "_reg, StateJS.PseudoStateKind.Initial);\n");
-        for (State s : r.getSubstate()) {
-            ctx.addContextAnnotation("container", r.qname("_") + "_reg");
-            generateState(s, builder, ctx);
-        }
-        builder.append("_initial_" + r.qname("_") + "_reg.to(" + r.getInitial().qname("_") + ");\n");
+            String containerName = ctx.getContextAnnotation("container");
+            builder.append("var " + r.qname("_") + "_reg = new StateJS.Region(\"" + r.getName() + "\", " + containerName + ");\n");
+            if (r.isHistory())
+                builder.append("var _initial_" + r.qname("_") + "_reg = new StateJS.PseudoState(\"_initial\", " + r.qname("_") + "_reg, StateJS.PseudoStateKind.ShallowHistory);\n");
+            else
+                builder.append("var _initial_" + r.qname("_") + "_reg = new StateJS.PseudoState(\"_initial\", " + r.qname("_") + "_reg, StateJS.PseudoStateKind.Initial);\n");
+            for (State s : r.getSubstate()) {
+                ctx.addContextAnnotation("container", r.qname("_") + "_reg");
+                generateState(s, builder, ctx);
+            }
+            builder.append("_initial_" + r.qname("_") + "_reg.to(" + r.getInitial().qname("_") + ");\n");
     }
 
     //FIXME: avoid duplication in the following 3 methods!!!

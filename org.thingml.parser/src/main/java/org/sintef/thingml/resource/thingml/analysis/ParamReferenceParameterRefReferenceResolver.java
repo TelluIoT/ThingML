@@ -40,8 +40,9 @@ public class ParamReferenceParameterRefReferenceResolver implements org.sintef.t
 			}*/
 		} else if(elmt instanceof SimpleSource) {
 			message = ((SimpleSource)elmt).getMessage().getMessage();
-		} else if(elmt instanceof SourceComposition) {
-			message = ((SourceComposition)elmt).getResultMessage();
+		} else if (elmt instanceof SourceComposition) {
+			SourceComposition sc = (SourceComposition) elmt;
+			message = sc.getResultMessage();			
 		} else if(elmt instanceof Message) {
 			message = (Message) elmt;
 		} else if (elmt instanceof Reference) {

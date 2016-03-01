@@ -181,6 +181,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.BOOLEAN_LITERAL: return createBooleanLiteral();
 			case ThingmlPackage.STRING_LITERAL: return createStringLiteral();
 			case ThingmlPackage.DOUBLE_LITERAL: return createDoubleLiteral();
+			case ThingmlPackage.CHARACTER_LITERAL: return createCharacterLiteral();
 			case ThingmlPackage.NOT_EXPRESSION: return createNotExpression();
 			case ThingmlPackage.UNARY_MINUS: return createUnaryMinus();
 			case ThingmlPackage.PLUS_EXPRESSION: return createPlusExpression();
@@ -563,6 +564,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public DoubleLiteral createDoubleLiteral() {
 		DoubleLiteralImpl doubleLiteral = new DoubleLiteralImpl();
 		return doubleLiteral;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CharacterLiteral createCharacterLiteral() {
+		CharacterLiteralImpl characterLiteral = new CharacterLiteralImpl();
+		return characterLiteral;
 	}
 
 	/**

@@ -31,6 +31,7 @@ import org.sintef.thingml.ArrayIndex;
 import org.sintef.thingml.ArrayParamRef;
 import org.sintef.thingml.BinaryExpression;
 import org.sintef.thingml.BooleanLiteral;
+import org.sintef.thingml.CharacterLiteral;
 import org.sintef.thingml.CompositeState;
 import org.sintef.thingml.ConditionalAction;
 import org.sintef.thingml.ConfigPropertyAssign;
@@ -468,6 +469,13 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * @generated
 	 */
 	private EClass doubleLiteralEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass characterLiteralEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1988,6 +1996,24 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getCharacterLiteral() {
+		return characterLiteralEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCharacterLiteral_CharLiteral() {
+		return (EAttribute)characterLiteralEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getUnaryExpression() {
 		return unaryExpressionEClass;
 	}
@@ -3198,6 +3224,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		doubleLiteralEClass = createEClass(DOUBLE_LITERAL);
 		createEAttribute(doubleLiteralEClass, DOUBLE_LITERAL__DOUBLE_VALUE);
 
+		characterLiteralEClass = createEClass(CHARACTER_LITERAL);
+		createEAttribute(characterLiteralEClass, CHARACTER_LITERAL__CHAR_LITERAL);
+
 		unaryExpressionEClass = createEClass(UNARY_EXPRESSION);
 		createEReference(unaryExpressionEClass, UNARY_EXPRESSION__TERM);
 
@@ -3452,6 +3481,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		booleanLiteralEClass.getESuperTypes().add(this.getLiteral());
 		stringLiteralEClass.getESuperTypes().add(this.getLiteral());
 		doubleLiteralEClass.getESuperTypes().add(this.getLiteral());
+		characterLiteralEClass.getESuperTypes().add(this.getLiteral());
 		unaryExpressionEClass.getESuperTypes().add(this.getExpression());
 		notExpressionEClass.getESuperTypes().add(this.getUnaryExpression());
 		unaryMinusEClass.getESuperTypes().add(this.getUnaryExpression());
@@ -3677,6 +3707,9 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 		initEClass(doubleLiteralEClass, DoubleLiteral.class, "DoubleLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDoubleLiteral_DoubleValue(), ecorePackage.getEDouble(), "doubleValue", null, 1, 1, DoubleLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(characterLiteralEClass, CharacterLiteral.class, "CharacterLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCharacterLiteral_CharLiteral(), ecorePackage.getEChar(), "charLiteral", null, 1, 1, CharacterLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(unaryExpressionEClass, UnaryExpression.class, "UnaryExpression", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getUnaryExpression_Term(), this.getExpression(), null, "term", null, 1, 1, UnaryExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

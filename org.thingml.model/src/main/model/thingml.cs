@@ -42,8 +42,7 @@ TOKENS{
 		DEFINE INTEGER_LITERAL $('1'..'9') ('0'..'9')* | '0'$;
 		DEFINE REAL_LITERAL $ (('1'..'9') ('0'..'9')* | '0') '.' ('0'..'9')+ (('e'|'E') ('+'|'-')? ('0'..'9')*)?$;
 		DEFINE STRING_LITERAL $'"'('\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')|('\\''u'('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F'))|'\\'('0'..'7')|~('\\'|'"'))*'"'$;
-
-		DEFINE STRING_EXT $'\''('\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')|('\\''u'('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F'))|'\\'('0'..'7')|~('\\'|'\''))*'\''$;
+	    DEFINE STRING_EXT $'\''('\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')|('\\''u'('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F'))|'\\'('0'..'7')|~('\\'|'\''))*'\''$;
 		
 		DEFINE T_READONLY $'readonly'$;
 		
@@ -183,7 +182,7 @@ RULES {
 	
 	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (types | configs | protocols) )* ;
 		
-	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
+	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* (";")?  ;
 	
 	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? )? #1 body ;
 	
@@ -201,11 +200,11 @@ RULES {
 		
 	Parameter::= name[]  ":"  type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))?;
 	
-	PrimitiveType::= "datatype" #1 name[]  #1 "<"  #1 ByteSize[INTEGER_LITERAL]  #1 ">" (annotations)* ";" ;
+	PrimitiveType::= "datatype" #1 name[]  #1 "<"  #1 ByteSize[INTEGER_LITERAL]  #1 ">" (annotations)* (";")? ;
 	
-	ObjectType::= "object" #1 name[] (annotations)* ";" ;
+	ObjectType::= "object" #1 name[] (annotations)* (";")? ;
 	
-	Protocol::= "protocol" #1 name[] (annotations)* ";" ;
+	Protocol::= "protocol" #1 name[] (annotations)* (";")? ;
 	
 	Enumeration::= "enumeration" #1 name[] (annotations)* !0 "{" (literals)* "}" ;
 	
@@ -291,12 +290,12 @@ RULES {
 	TimeWindow ::= "during" #1 duration (#1 "by" #1 step)? ;
 		
 	SimpleSource ::= name[] ":" message ("::" operators)*;	
-	JoinSources ::= name[] ":" #1 "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
-	MergeSources ::= name[] ":" #1 "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] #1 "]" ("::" operators)*;
+	JoinSources  ::= name[] ":" #1 "[" #1 sources #1 ("&" #1 sources #1)+ #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" #1 "]" ("::" operators)* ;
+	MergeSources ::= name[] ":" #1 "[" #1 sources #1 ("|" #1 sources #1)+ #1 "->" resultMessage[] #1 "]" ("::" operators)* ;
 	
 	Stream ::= "stream" #1 name[] #1 (annotations)*
 					 !1 "from" #1 input
-					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
+					 (!1 "select" #1 ( selection ((",")? #1 selection)* )?)?
 					 !1 "produce" #1 output ;
 	
 	SimpleParamRef ::= parameterRef[];	
@@ -366,7 +365,7 @@ RULES {
 	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	DoubleLiteral ::= doubleValue[REAL_LITERAL];
-	
+		
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	StringLiteral ::= stringValue[STRING_LITERAL];
 	

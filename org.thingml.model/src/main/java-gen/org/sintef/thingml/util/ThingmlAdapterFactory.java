@@ -269,6 +269,10 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createDoubleLiteralAdapter();
 			}
 			@Override
+			public Adapter caseCharacterLiteral(CharacterLiteral object) {
+				return createCharacterLiteralAdapter();
+			}
+			@Override
 			public Adapter caseUnaryExpression(UnaryExpression object) {
 				return createUnaryExpressionAdapter();
 			}
@@ -1187,6 +1191,20 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDoubleLiteralAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.CharacterLiteral <em>Character Literal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.CharacterLiteral
+	 * @generated
+	 */
+	public Adapter createCharacterLiteralAdapter() {
 		return null;
 	}
 

@@ -20,6 +20,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
+import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -54,6 +55,19 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             generate(p, builder, ctx);
         }
         builder.append(");\n");
+    }
+
+    @Override
+    public void generate(StartSession action, StringBuilder builder, Context ctx) {
+        Session session = action.getSession();
+        ctx.addContextAnnotation("container", "this." + session.findContainingRegion().qname("_"));
+        builder.append("var " + session.qname("_") + "_session = new StateJS.Region(\"" + session.getName() + "\", _this." + ((StateMachine)session.eContainer()).qname("_") + ");\n");
+        builder.append("var _initial_" + session.qname("_") + "_session = new StateJS.PseudoState(\"_initial\", " + session.qname("_") + "_session, StateJS.PseudoStateKind.Initial);\n");
+        for (State s : session.getSubstate()) {
+            ctx.addContextAnnotation("container", session.qname("_") + "_session");
+            ((FSMBasedThingImplCompiler)ctx.getCompiler().getThingImplCompiler()).generateState(s, builder, ctx);
+        }
+        builder.append("_initial_" + session.qname("_") + "_session.to(" + session.getInitial().qname("_") + ");\n");
     }
 
     @Override
