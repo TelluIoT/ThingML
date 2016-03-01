@@ -464,6 +464,14 @@ public class ThingmlSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ThingmlPackage.CHARACTER_LITERAL: {
+				CharacterLiteral characterLiteral = (CharacterLiteral)theEObject;
+				T result = caseCharacterLiteral(characterLiteral);
+				if (result == null) result = caseLiteral(characterLiteral);
+				if (result == null) result = caseExpression(characterLiteral);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ThingmlPackage.UNARY_EXPRESSION: {
 				UnaryExpression unaryExpression = (UnaryExpression)theEObject;
 				T result = caseUnaryExpression(unaryExpression);
@@ -1647,6 +1655,21 @@ public class ThingmlSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseDoubleLiteral(DoubleLiteral object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Character Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Character Literal</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCharacterLiteral(CharacterLiteral object) {
 		return null;
 	}
 

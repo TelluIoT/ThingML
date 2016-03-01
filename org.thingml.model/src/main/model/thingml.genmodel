@@ -152,6 +152,9 @@
     <genClasses ecoreClass="thingml.ecore#//DoubleLiteral">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//DoubleLiteral/doubleValue"/>
     </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//CharacterLiteral">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//CharacterLiteral/charLiteral"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="thingml.ecore#//UnaryExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//UnaryExpression/term"/>
     </genClasses>

@@ -68,6 +68,7 @@ public abstract class SourceCompositionImpl extends SourceImpl implements Source
 	 * @ordered
 	 */
 	protected Message resultMessage;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

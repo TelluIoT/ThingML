@@ -332,6 +332,15 @@ public interface ThingmlFactory extends EFactory {
 	DoubleLiteral createDoubleLiteral();
 
 	/**
+	 * Returns a new object of class '<em>Character Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Character Literal</em>'.
+	 * @generated
+	 */
+	CharacterLiteral createCharacterLiteral();
+
+	/**
 	 * Returns a new object of class '<em>Not Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

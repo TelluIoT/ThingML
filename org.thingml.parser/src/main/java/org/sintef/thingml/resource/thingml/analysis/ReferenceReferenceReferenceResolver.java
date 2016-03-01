@@ -58,12 +58,26 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 			if (!result.wasResolved())
 				result.setErrorMessage("Cannot resolve receive message (event): " + identifier);
 		} else if(parent instanceof SourceComposition) {//we reference an event in one of the stream inputs
-			SourceComposition sc = (SourceComposition) parent;
+			SourceComposition sc = (SourceComposition) parent; //FIXME: to be improved
+			
+			System.out.println("SourceComposition " + sc.getName());
+			
 			if(resolveFuzzy && sc.getName().startsWith(identifier)) {
-				result.addMapping(sc.getName(), sc.getResultMessage());
+				for(Source s : sc.getSources()) {
+					if (s instanceof SimpleSource) {
+						SimpleSource ss = (SimpleSource) s;
+						result.addMapping(sc.getName(), ss.getMessage());
+					}
+						
+				}						
 			} else if(!resolveFuzzy && sc.getName().equals(identifier)) {
-				result.addMapping(sc.getName(), sc.getResultMessage());
-			}
+				for(Source s : sc.getSources()) {
+					if (s instanceof SimpleSource) {
+						SimpleSource ss = (SimpleSource) s;
+						result.addMapping(sc.getName(), ss.getMessage());
+					}
+						
+				}				}
 			//if(!result.wasResolved()) {
 				for(Source source : ((SourceComposition) parent).getSources()) {
 					ReceiveMessage receiveMessage = ((SimpleSource) source).getMessage();
@@ -91,12 +105,12 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 				Stream stream = ThingMLHelpers.findContainingStream(parent);
 				result.setErrorMessage("Cannot resolve receive message " + identifier + " in the sources of " + stream.getName());
 			}
-		} else if(parent instanceof Source) {//we reference an event in one of the stream inputs			
-			Source source = (Source) parent; 
+		} else if(parent instanceof SimpleSource) {//we reference an event in one of the stream inputs			
+			SimpleSource source = (SimpleSource) parent; 
 			if(resolveFuzzy && source.getName().startsWith(identifier)) {
-				result.addMapping(source.getName(),source);
+				result.addMapping(source.getName(),source.getMessage());
 			} else if(!resolveFuzzy && source.getName().equals(identifier)) {
-				result.addMapping(source.getName(),source);
+				result.addMapping(source.getName(),source.getMessage());
 			}			
 
 			if(!result.wasResolved()) {
