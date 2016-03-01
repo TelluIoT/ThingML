@@ -21,6 +21,7 @@ import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -497,43 +498,85 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     //TODO move a proper file
     // may be specific to Arduino board
+    // need to refactor the 3 cast impl
     private void generateStreamDispatch(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {
         for (Stream s : thing.getStreams()) {
             Source source = s.getInput();
 
+            Map<SimpleSource, String> sourceMap = new HashMap();
+            if (source instanceof SimpleSource)
+                sourceMap.put((SimpleSource) source, ((SimpleSource) source).getMessage().getMessage().getName());
+            else if (source instanceof JoinSources)
+                for (Source sc : ((JoinSources) source).getSources())
+                    sourceMap.put((SimpleSource) sc, ((SimpleSource) sc).getMessage().getMessage().getName());
+            else if (source instanceof MergeSources)
+                for (Source sc : ((MergeSources) source).getSources())
+                    sourceMap.put((SimpleSource) sc, ((SimpleSource) sc).getMessage().getMessage().getName());
+
+
+            for (SimpleSource sc : sourceMap.keySet()) {
+                if (sourceMap.get(sc).equals(msg.getName())) {
+                    int nbCondition = 0;
+                    // guard
+                    for (ViewSource vs : sc.getOperators()) {
+                        if (vs instanceof Filter) {
+                            builder.append("if (");
+                            ctx.getCompiler().getThingActionCompiler().generate(((Filter) vs).getGuard(), builder, ctx);
+                            nbCondition++;
+                            builder.append(") {\n");
+                        }
+                    }
+
+                    // select
+                    for (LocalVariable lv : s.getSelection()) {
+                        builder.append(ctx.getCType(lv.getType()) + " " + lv.getName() + " = ");
+                        ctx.getCompiler().getThingActionCompiler().generate(lv.getInit(), builder, ctx);
+                        builder.append(";\n");
+                    }
+
+                    // produce the action or propagate the event
+                    if (source instanceof SimpleSource) {
+                        ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
+                    } else if (source instanceof SourceComposition) {
+                        //TODO add message as parameter and other stuff maybe
+                        builder.append("_instance->cep_" + s.getName() + "->enqueue();\n");
+                    }
+
+                    // closing braces, see guards
+                    for (int i = 0; i < nbCondition; i++) {
+                        builder.append("}\n");
+                    }
+                }
+            }
+/*
             if (source instanceof SimpleSource) {
-                int nbCondition = 0;
                 if (((SimpleSource) source).getMessage().getMessage().getName().equals(msg.getName())) {
+                    int nbCondition = 0;
                     for (ViewSource vs : s.getInput().getOperators()) {
                         if (vs instanceof Filter) {
                             builder.append("if (");
                             ctx.getCompiler().getThingActionCompiler().generate(((Filter) vs).getGuard(), builder, ctx);
                             nbCondition++;
                             builder.append(") {\n");
-                        } else if (vs instanceof LengthWindow) {
-
-                        } else if (vs instanceof TimeWindow) {
-
                         }
                     }
+
                     for (LocalVariable lv : s.getSelection()) {
                         builder.append(ctx.getCType(lv.getType()) + " " + lv.getName() + " = ");
                         ctx.getCompiler().getThingActionCompiler().generate(lv.getInit(), builder, ctx);
                         builder.append(";\n");
                     }
+
                     ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
+
                     for (int i = 0; i < nbCondition; i++) {
                         builder.append("}\n");
                     }
                 }
 
             } else if (source instanceof MergeSources) {
-                builder.append("//append to fifo\n");
-
-            } else if (source instanceof JoinSources) {
-
-                for (Source sc : ((JoinSources) source).getSources()) {
-                    if (sc.getName().equals(msg.getName())) {
+                for (Source sc : ((MergeSources) source).getSources()) {
+                    if (((SimpleSource)sc).getMessage().getMessage().getName().equals(msg.getName())) {
                         int nbCondition = 0;
                         for (ViewSource viewSource : sc.getOperators()) {
                             if (viewSource instanceof Filter) {
@@ -542,12 +585,38 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                                 nbCondition++;
                                 builder.append(") {\n");
 
-                            } else if (viewSource instanceof LengthWindow) {
+                            }
+                        }
 
-                            } else if (viewSource instanceof TimeWindow) {
+                        //TODO add message as parameter and other stuff maybe
+                        builder.append("_instance->cep_" + s.getName() + "->enqueue();\n");
+
+
+                        for (int i = 0; i < nbCondition; i++) {
+                            builder.append("}\n");
+                        }
+                    }
+                }
+
+            } else if (source instanceof JoinSources) {
+
+                for (Source sc : ((JoinSources) source).getSources()) {
+                    if (((SimpleSource)sc).getMessage().getMessage().getName().equals(msg.getName())) {
+                        int nbCondition = 0;
+                        for (ViewSource viewSource : sc.getOperators()) {
+                            if (viewSource instanceof Filter) {
+                                builder.append("if (");
+                                ctx.getCompiler().getThingActionCompiler().generate(((Filter) viewSource).getGuard(), builder, ctx);
+                                nbCondition++;
+                                builder.append(") {\n");
 
                             }
                         }
+
+                        //TODO add message as parameter and other stuff maybe
+                        builder.append("_instance->cep_" + s.getName() + "->enqueue();\n");
+
+
                         for (int i = 0; i < nbCondition; i++) {
                             builder.append("}\n");
                         }
@@ -555,6 +624,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     }
                 }
             }
+            */
         }
     }
 
