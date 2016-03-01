@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -59,8 +60,16 @@ public class Command implements Callable<String>{
         }
     }
     public Command(String[] cmd, String successCrit, String failureCrit, String errorMsg, File dir) {
+        System.out.println("Cmd:" + cmd[0] + " (" + dir.getName() + ")");
         this.dir = dir;
-        new Command(cmd, successCrit, failureCrit, errorMsg);
+        this.cmd = cmd;
+        this.errorMsg = errorMsg;
+        if(successCrit != null) {
+            success = Pattern.compile(successCrit);
+        }
+        if(failureCrit != null) {
+            failure = Pattern.compile(failureCrit);
+        }
     }
     
     @Override
@@ -71,13 +80,13 @@ public class Command implements Callable<String>{
         Set<Callable<String>>  todo = new HashSet<>();
         final Process process;
             if(dir == null) {
-                process = runtime.exec(cmd);
+                process = runtime.exec(cmd, null);
             } else {
                 process = runtime.exec(cmd, null, dir);
             }
             // Consommation de la sortie standard de l'application externe dans un Thread separe
-            
-            todo.add(new Callable<String>() {
+            String r1 = (new Callable<String>() {
+            //todo.add(new Callable<String>() {
                 public String call() {
                     String r = null;
                     try {
@@ -94,12 +103,6 @@ public class Command implements Callable<String>{
                                         }
                                     }
                                 }
-                                if(failure != null) {
-                                    Matcher m = failure.matcher(line);
-                                    if(m.find()) {
-                                        r = errorMsg;
-                                    }
-                                }
                                 //System.out.println("[Output] "+ line);
                             }
                         } finally {
@@ -110,49 +113,42 @@ public class Command implements Callable<String>{
                     }
                     return r;
                 }
-            });
+            }).call();
 
-            // Consommation de la sortie d'erreur de l'application externe dans un Thread separe
-            todo.add(new Callable<String>() {
-                public String call() {
-                    String r = null;
+        // Consommation de la sortie d'erreur de l'application externe dans un Thread separe
+        //todo.add(new Callable<String>() {
+        String r0 = (new Callable<String>() {
+            public String call() {
+                String r = null;
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    String line = "";
                     try {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                        String line = "";
-                        try {
-                            while((line = reader.readLine()) != null) {
-                                if(failure != null) {
-                                    Matcher m = failure.matcher(line);
-                                    if(m.find()) {
-                                        r = errorMsg;
-                                    }
+                        while((line = reader.readLine()) != null) {
+                            if(failure != null) {
+                                Matcher m = failure.matcher(line);
+                                if(m.find()) {
+                                    r = errorMsg;
                                 }
-                                System.out.println("[Error] "+ line);
                             }
-                        } finally {
-                            reader.close();
+                            System.out.println("[Error] "+ line);
                         }
-                    } catch(IOException ioe) {
-                        ioe.printStackTrace();
+                    } finally {
+                        reader.close();
                     }
-                    return r;
+                } catch(IOException ioe) {
+                    ioe.printStackTrace();
                 }
-            });
-        List<Future<String>> Results = executor.invokeAll(todo);
-        
-        String r0 = Results.get(0).get();
-        String r1 = Results.get(1).get();
-        
-        if((r0 != null) && (r1 != null)) {
-            if(r0.contains("[SUCCESS]")) {
-                return r1;
-            } else {
-                return r0;
+                return r;
             }
+        }).call();
+            
+        if(r1 != null) {
+            return r1;
         } else if (r0 != null){
             return r0;
         } else {
-            return r1;
+            return "[SUCCESS]";
         }
     }
     

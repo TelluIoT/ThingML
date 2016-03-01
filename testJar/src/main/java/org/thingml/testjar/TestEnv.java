@@ -83,18 +83,22 @@ public class TestEnv {
         tasks.add(new Command(execCmd, "(.)*SUCCESS(.)*", "(.)*FATAL ERROR(.)*", "Error at ThingML compilation"));
     }
     
-    public void testGeneratedSourcesCompilation(File testFile, Set<Callable<String>> tasks) {
-    
+    public void testGeneratedSourcesCompilation(File dir, Set<Callable<String>> tasks, String success, String failure, String lang) {
+        if(lang.compareToIgnoreCase("posix") == 0) {
+            posixCompile(dir, tasks, success, failure);
+        } else if(lang.compareToIgnoreCase("java") == 0) {
+            javaCompile(dir, tasks, success, failure);
+        } else if(lang.compareToIgnoreCase("nodejs") == 0) {
+            nodejsCompile(dir, tasks, success, failure);
+        } else {}
     }
     
-    public void javaCompileAndRun(File testFile, Set<Callable<String>> tasks, String success, String failure) {
-        String[] execCmd = new String[4];
-        execCmd[0] = "mvn";
-        execCmd[1] = "clean";
-        execCmd[2] = "install";
-        execCmd[3] = "exec:java";
-        
-        tasks.add(new Command(execCmd, success, failure, "Error at java compilation or execution"));
+    public void testGeneratedSourcesRun(File dir, Set<Callable<String>> tasks, String success, String failure, String lang) {
+        if(lang.compareToIgnoreCase("posix") == 0) {
+            posixRun(dir, tasks, success, failure);
+        } else if(lang.compareToIgnoreCase("nodejs") == 0) {
+            nodejsRun(dir, tasks, success, failure);
+        } else {}
     }
     
     public void posixCompile(File dir, Set<Callable<String>> tasks, String success, String failure) {
@@ -105,9 +109,37 @@ public class TestEnv {
     }
     
     public void posixRun(File testFile, Set<Callable<String>> tasks, String success, String failure) {
+        String prg[] = testFile.getName().split("\\.");
+        
         String[] execCmd = new String[1];
-        execCmd[0] = "make";
+        execCmd[0] = "./" + prg[0];
         
         tasks.add(new Command(execCmd, success, failure, "Error at c compilation", testFile));
+    }
+    
+    public void nodejsCompile(File dir, Set<Callable<String>> tasks, String success, String failure) {
+        String[] execCmd = new String[2];
+        execCmd[0] = "npm";
+        execCmd[1] = "install";
+        
+        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", dir));
+    }
+    
+    public void nodejsRun(File testFile, Set<Callable<String>> tasks, String success, String failure) {
+        String[] execCmd = new String[2];
+        execCmd[0] = "node";
+        execCmd[1] = "mains.js";
+        
+        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", testFile));
+    }
+    
+    public void javaCompile(File dir, Set<Callable<String>> tasks, String success, String failure) {
+        String[] execCmd = new String[2];
+        execCmd[0] = "mvn";
+        execCmd[0] = "clean";
+        execCmd[0] = "install";
+        execCmd[1] = "exec:java";
+        
+        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", dir));
     }
 }

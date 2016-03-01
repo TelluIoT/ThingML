@@ -102,7 +102,25 @@ public class TestJar {
             TestEnv testL = new TestEnv(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), compilerJar, lang);
             for(File f : listTestDir(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), testDirPattern)) {
                 System.out.println("[" + lang + "] Dir: " + f.getName());
-                testL.posixCompile(f, tasks, "cc", "error");
+                testL.testGeneratedSourcesCompilation(f, tasks, null, ".*", lang);
+            }
+            
+            try {
+                results = executor.invokeAll(tasks);
+                for(Future<String> f : results) {
+                    System.out.println("[" + lang + "] " + f.get());
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TestJar.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        tasks.clear();
+        for(String lang : languages) {
+            TestEnv testL = new TestEnv(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), compilerJar, lang);
+            for(File f : listTestDir(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), testDirPattern)) {
+                System.out.println("[" + lang + "] run: " + f.getName());
+                testL.testGeneratedSourcesRun(f, tasks, ".*", null, lang);
             }
             
             try {

@@ -125,7 +125,7 @@ public class TestConfigurationGenerator extends ThingMLTool{
         generateTester(builder, t, in, out);
         builder.append("\n");
         
-        builder.append("configuration " + t.getName() + "_Cfg\n");
+        builder.append("configuration " + t.getName() + "_" + testNumber + "_Cfg\n");
         builder.append("{\n");
         
 	builder.append("    instance harness : Tester\n");
