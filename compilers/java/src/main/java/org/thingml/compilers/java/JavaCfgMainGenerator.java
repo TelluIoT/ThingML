@@ -62,7 +62,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 
                 builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + ") new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + " (" + i.getType().getName() + ")\"");
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                for (Property prop : i.getType().allProperties()) {//TODO: not optimal, to be improved
+                for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
                     for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
                         if (p.getKey().equals(prop) && prop.getCardinality() == null) {
                             String result = "";
@@ -100,7 +100,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                         }
                     }
                 }
-                builder.append(").buildBehavior();\n");
+                builder.append(").buildBehavior(null, null);\n");
             }
         }
 

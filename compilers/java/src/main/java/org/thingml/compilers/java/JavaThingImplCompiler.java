@@ -57,7 +57,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("public Event instantiate(Port port, Map<String, Object> params) {");
         builder.append("return instantiate(port");
         for (Parameter p : m.getParameters()) {
-            String cast = "";
+            String cast;
             if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("int"))
                 cast = "Integer";
             else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("char"))
@@ -214,10 +214,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("public boolean isDebug() {return debug;}\n");
         builder.append("public void setDebug(boolean debug) {this.debug = debug;}\n");
 
-        builder.append("private long sessionCounter = 0;\n\n");//FIXME: not a good idea (will overflow at some point...)
-        builder.append("private Map<String, Map<String, Object>> properties = /*Collections.synchronizedMap(*/new HashMap<String, Map<String, Object>>()/*)*/;//hold properties defined in composites and sessions \n");
-
-
         builder.append("@Override\npublic String toString() {\n");
         builder.append("String result = \"instance \" + getName() + \"\\n\";\n");
         for(Property p : thing.allProperties()) {
@@ -347,7 +343,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         builder.append("//Attributes\n");
-        for (Property p : thing.allProperties()) {
+        for (Property p : thing.allPropertiesInDepth()) {
             builder.append("private ");
             if (!p.isChangeable()) {
                 builder.append("final ");
@@ -355,7 +351,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p) + ";\n");
         }
 
-        for(Property p : thing.allProperties()/*debugProfile.getDebugProperties()*/) {//FIXME: we should only generate overhead for the properties we actually want to debug!
+        for(Property p : thing.allPropertiesInDepth()/*debugProfile.getDebugProperties()*/) {//FIXME: we should only generate overhead for the properties we actually want to debug!
             builder.append("private ");
             builder.append(JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " debug_" + ctx.getVariableName(p) + ";\n");
         }
@@ -375,7 +371,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("//Empty Constructor\n");
         builder.append("public " + ctx.firstToUpper(thing.getName()) + "() {\nsuper();\n");
         //builder.append("org.fusesource.jansi.AnsiConsole.systemInstall();\n");//FIXME: only if debug
-        for (Property p : thing.allProperties()) {
+        for (Property p : thing.allPropertiesInDepth()) {
             Expression e = thing.initExpression(p);
             if (e != null) {
                 builder.append(ctx.getVariableName(p) + " = ");
@@ -386,7 +382,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n\n");
 
         boolean hasReadonly = false;
-        for (Property p : thing.allProperties()) {
+        for (Property p : thing.allPropertiesInDepth()) {
             if (!p.isChangeable()) {
                 hasReadonly = true;
                 break;
@@ -397,7 +393,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("//Constructor (only readonly (final) attributes)\n");
             builder.append("public " + ctx.firstToUpper(thing.getName()) + "(");
             int i = 0;
-            for (Property p : thing.allProperties()) {
+            for (Property p : thing.allPropertiesInDepth()) {
                 if (!p.isChangeable()) {
                     if (i > 0)
                         builder.append(", ");
@@ -407,7 +403,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
             builder.append(") {\n");
             builder.append("super();\n");
-            for (Property p : thing.allProperties()) {
+            for (Property p : thing.allPropertiesInDepth()) {
                 if (!p.isChangeable()) {
                     builder.append("this." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
                 }
@@ -417,18 +413,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//Constructor (all attributes)\n");
         builder.append("public " + ctx.firstToUpper(thing.getName()) + "(String name");
-        for (Property p : thing.allProperties()) {
+        for (Property p : thing.allPropertiesInDepth()) {
             builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p));
         }
         builder.append(") {\n");
         builder.append("super(name);\n");
-        for (Property p : thing.allProperties()) {
+        for (Property p : thing.allPropertiesInDepth()) {
             builder.append("this." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
         }
         builder.append("}\n\n");
 
         builder.append("//Getters and Setters for non readonly/final attributes\n");
-        for (Property p : thing.allProperties()) {
+        for (Property p : thing.allPropertiesInDepth()) {
             builder.append("public " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p) + ";\n}\n\n");
             if (p.isChangeable()) {
                 builder.append("public void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n}\n\n");
@@ -445,13 +441,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(r, builder, ctx);
             }
             for(Session s : b.allContainedSessions()) {//Session are only allowed at the root
-                System.out.println("Session " + s.getName());
-                generateRegion(s, builder, ctx);
+                ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(s, builder, ctx);
             }
         }
 
-        builder.append("public Component buildBehavior() {\n");
-
+        builder.append("public Component buildBehavior(String session, Component root) {\n");
         builder.append("//Init ports\n");
         for (Port p : thing.allPorts()) {
             builder.append(p.getName() + "_port = new Port(");
@@ -464,10 +458,21 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("createCepStreams();");
 
+        builder.append("if (session == null){\n");
         builder.append("//Init state machine\n");
         for (StateMachine b : thing.allStateMachines()) {
             builder.append("behavior = build" + b.qname("_") + "();\n");
         }
+
+        builder.append("}\n");
+        for(StateMachine b : thing.allStateMachines()) {
+            for(Session s : b.allContainedSessions()) {
+                builder.append("else if (\"" + s.getName() + "\".equals(session)) {\n");
+                builder.append("behavior = build" + s.qname("_") + "();\n");
+                builder.append("}\n");
+            }
+        }
+
         builder.append("return this;\n");
         builder.append("}\n\n");
 
@@ -643,36 +648,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
 
         if (r instanceof CompositeState) {
+            builder.append("private CompositeState build" + r.qname("_") + "(){\n");
             CompositeState c = (CompositeState) r;
-            if (!(c instanceof Session)) {
-                builder.append("private CompositeState build" + r.qname("_") + "(){\n");
-                builder.append("Map<String, Object> myProperties = properties.get(\"" + c.getName() + "\");\n");
-                builder.append("if(myProperties == null){\n");
-                builder.append("myProperties = new HashMap<String, Object>();\n");
-                builder.append("properties.put(\"" + c.getName() + "\", myProperties);\n");
-                builder.append("}\n");
-                for (Property p : c.getProperties()) {
-                    if (p.getInit() != null) {
-                        builder.append("myProperties.put(\"" + p.getName() + "\", ");
-                        ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), builder, ctx);
-                        builder.append(");\n");
-                    }
-                }
-            }
-            else {
-                builder.append("private CompositeState build" + r.qname("_") + "(long id, ");
-                Session s = (Session) c;
-                JavaHelper.generateParameter(s, builder, ctx);
-                builder.append(") {\n");
-                builder.append("Map<String, Object> myProperties = properties.get(\"" + s.getName() + "\" + id);\n");
-                builder.append("if(myProperties == null){\n");
-                builder.append("myProperties = new HashMap<String, Object>();\n");
-                builder.append("properties.put(\"" + s.getName() + "\" + id, myProperties);\n");
-                builder.append("}\n");
-                for(Property p : s.getProperties()) {
-                    builder.append("myProperties.put(\"" + p.getName() + "\", " + ctx.protectKeyword(ctx.getVariableName(p)) + "_" + ");\n");
-                }
-            }
             generateState(c, builder, ctx);
             builder.append("return state_" + r.qname("_") + ";\n");
         } else {
