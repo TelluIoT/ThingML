@@ -90,15 +90,21 @@ public class TestEnv {
             javaCompile(dir, tasks, success, failure);
         } else if(lang.compareToIgnoreCase("nodejs") == 0) {
             nodejsCompile(dir, tasks, success, failure);
-        } else {}
+        } else {
+            throw new UnsupportedOperationException("Compiler " + lang + " not supported");
+        }
     }
     
     public void testGeneratedSourcesRun(File dir, Set<Callable<String>> tasks, String success, String failure, String lang) {
         if(lang.compareToIgnoreCase("posix") == 0) {
             posixRun(dir, tasks, success, failure);
+        } else if(lang.compareToIgnoreCase("java") == 0) {
+            javaRun(dir, tasks, success, failure);
         } else if(lang.compareToIgnoreCase("nodejs") == 0) {
             nodejsRun(dir, tasks, success, failure);
-        } else {}
+        } else {
+            throw new UnsupportedOperationException("Compiler " + lang + " not supported");
+        }
     }
     
     public void posixCompile(File dir, Set<Callable<String>> tasks, String success, String failure) {
@@ -136,10 +142,16 @@ public class TestEnv {
     public void javaCompile(File dir, Set<Callable<String>> tasks, String success, String failure) {
         String[] execCmd = new String[2];
         execCmd[0] = "mvn";
-        execCmd[0] = "clean";
-        execCmd[0] = "install";
+        execCmd[1] = "clean install";
+
+        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", dir));
+    }
+
+    public void javaRun(File dir, Set<Callable<String>> tasks, String success, String failure) {
+        String[] execCmd = new String[2];
+        execCmd[0] = "mvn";
         execCmd[1] = "exec:java";
-        
+
         tasks.add(new Command(execCmd, success, failure, "Error at c compilation", dir));
     }
 }

@@ -25,11 +25,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -62,7 +58,7 @@ public class TestJar {
             //testGen.generateTestCfg(testFile, tmpDir);
         }
         List<Future<String>> results = new ArrayList<Future<String>>();
-        ExecutorService executor = Executors.newFixedThreadPool(12);
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         
         try {
             results = executor.invokeAll(tasks);
@@ -130,6 +126,18 @@ public class TestJar {
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(TestJar.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        for(Future<String> r : results) {//
+            try {
+                final String res = r.get(30, TimeUnit.SECONDS);
+                System.out.println(res);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                System.err.println("one task did not complete on time");
+                r.cancel(true);
             }
         }
         /*
