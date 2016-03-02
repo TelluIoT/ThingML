@@ -111,6 +111,13 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("this.ready = false;\n");
 
+        builder.append("//Children\n");
+        builder.append("this.forkID = 0;\n");
+        builder.append("const forks = [];\n");
+        builder.append("this.getForks = function() {\n");
+        builder.append("return forks;\n");
+        builder.append("}\n\n");
+
         builder.append("//Attributes\n");
         for (Property p : thing.allPropertiesInDepth()) {
             if (p.isDefined("private", "true") || !(p.eContainer() instanceof Thing)) {
@@ -222,11 +229,56 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         generateSendMethods(thing, builder, ctx);
 
         builder.append("//State machine (states and regions)\n");
-        builder.append("this.build = function() {\n");
+        builder.append("this.build = function(session, root) {//optional session name and root instance to fork a new session\n");
+        builder.append("if (session === null || session == undefined) {\n");
         for (StateMachine b : thing.allStateMachines()) {
             ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(b, builder, ctx);
         }
         builder.append("}\n");
+        for(StateMachine b : thing.allStateMachines()) {
+            for(Session s : b.allContainedSessions()) {//FIXME: lots of code duplication here.....
+                builder.append("else if(session === \"" + s.getName() + "\") {\n");
+                builder.append("this.root = root;\n");
+                builder.append("root.forkID = root.forkID + 1;\n");
+                builder.append("this.forkID = root.forkID;\n");
+                builder.append("this.statemachine = new StateJS.StateMachine(\"" + s.getName() + "\");\n");
+                ctx.addContextAnnotation("container", "this." + s.findContainingRegion().qname("_"));
+                builder.append("var " + s.qname("_") + "_session = new StateJS.Region(\"" + s.getName() + "\", _this.statemachine);\n");
+                builder.append("var _initial_" + s.qname("_") + "_session = new StateJS.PseudoState(\"_initial\", " + s.qname("_") + "_session, StateJS.PseudoStateKind.Initial);\n");
+                for (State st : s.getSubstate()) {
+                    ctx.addContextAnnotation("container", s.qname("_") + "_session");
+                    ((FSMBasedThingImplCompiler)ctx.getCompiler().getThingImplCompiler()).generateState(st, builder, ctx);
+                }
+                builder.append("_initial_" + s.qname("_") + "_session.to(" + s.getInitial().qname("_") + ");\n");
+                for (Handler h : s.allEmptyHandlers()) {
+                    generateHandler(h, null, null, builder, ctx);
+                }
+                final Map<Port, Map<Message, List<Handler>>> allHanders = s.allMessageHandlers();
+                for (Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
+                    final Port p = entry.getKey();
+                    final Map<Message, List<Handler>> map = entry.getValue();
+                    for (Map.Entry<Message, List<Handler>> entry2 : map.entrySet()) {
+                        final List<Handler> handlers = entry2.getValue();
+                        final Message m = entry2.getKey();
+                        for (Handler h : handlers) {
+                            generateHandler(h, m, p, builder, ctx);
+                        }
+                    }
+                }
+
+                //TODO: copy attributes
+
+                for (Port p : thing.allPorts()) {
+                    for (Message m : p.getSends()) {
+                        builder.append("const arrayLength_" + p.getName() + "_" + m.getName() + " = root.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().length;\n");
+                        builder.append("for (var _i = 0; _i < arrayLength_" + p.getName() + "_" + m.getName() + "; _i++) {\n");
+                        builder.append("this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(root.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners()[_i]);\n");
+                        builder.append("}\n\n");
+                    }
+                }
+                builder.append("}\n");
+            }
+        }
 
         for (Stream stream : thing.getStreams()) {
             ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);
@@ -247,28 +299,29 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("result += \"\";\n");
         builder.append("return result;\n");
+        builder.append("}\n");
         builder.append("};\n\n");
 
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
     }
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
-        builder.append("this." + sm.qname("_") + " = new StateJS.StateMachine(\"" + sm.getName() + "\")");
+        builder.append("this.statemachine = new StateJS.StateMachine(\"" + sm.getName() + "\")");
         generateActionsForState(sm, builder, ctx);
         builder.append(";\n");
         if (sm.isHistory())
-            builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this." + sm.qname("_") + ", StateJS.PseudoStateKind.ShallowHistory);\n");
+            builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this.statemachine, StateJS.PseudoStateKind.ShallowHistory);\n");
         else
-            builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this." + sm.qname("_") + ", StateJS.PseudoStateKind.Initial);\n");
+            builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this.statemachine, StateJS.PseudoStateKind.Initial);\n");
         for (Region r : sm.getRegion()) {
             if (!(r instanceof Session)) {
-                ctx.addContextAnnotation("container", "this." + sm.qname("_"));
+                ctx.addContextAnnotation("container", "this.statemachine");
                 generateRegion(r, builder, ctx);
             }
         }
         for (State s : sm.getSubstate()) {
             if (!(s instanceof Session)) {
-                ctx.addContextAnnotation("container", "this." + sm.qname("_"));
+                ctx.addContextAnnotation("container", "this.statemachine");
                 generateState(s, builder, ctx);
             }
         }
@@ -293,7 +346,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     private void generateActionsForState(State s, StringBuilder builder, Context ctx) {
-        if (s.getEntry() != null || debugProfile.isDebugBehavior()) {
+        if (s.getEntry() != null || debugProfile.isDebugBehavior() || s instanceof FinalState) {
             builder.append(".entry(function () {\n");
             if (debugProfile.isDebugBehavior()) {
                 //builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"(" + s.findContainingThing().getName() + "): enters " + s.qualifiedName(":") + "\"));\n");
@@ -301,6 +354,18 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
             if (s.getEntry() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
+            if (s instanceof FinalState) {
+                builder.append("_this._stop();\n");
+                builder.append("const forkLength = _this.getForks().length;\n");
+                builder.append("var idFork = 0;");
+                builder.append("for (var _i = 0; _i < forkLength; _i++) {\n");
+                builder.append("if (this.getForks()[_i] === _this) {\n");
+                builder.append("idFork = _i\n");
+                builder.append("}\n");
+                builder.append("}\n");
+                builder.append("_this.root.getForks().splice(idFork, 1);\n");
+                builder.append("_this = null;\n");
+            }
             builder.append("})");
         }
         if (s.getExit() != null || debugProfile.isDebugBehavior()) {

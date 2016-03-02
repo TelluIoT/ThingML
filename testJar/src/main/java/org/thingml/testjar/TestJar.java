@@ -21,6 +21,8 @@
 package org.thingml.testjar;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,16 +43,19 @@ public class TestJar {
     public static void main(String[] args) throws ExecutionException {
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
         final File workingDir = new File(System.getProperty("user.dir"));
-        final File tmpDir = new File(System.getProperty("user.dir") + "/tmp");
-        final File compilerJar = new File(workingDir + "/../compilers/registry/target/compilers.registry-0.6.0-SNAPSHOT-jar-with-dependencies.jar");
-        
-        final File testFolder = new File("./src/main/resources/tests");
+        final File tmpDir = new File(workingDir, "testJar/tmp");
+        final File compilerJar = new File(workingDir, "compilers/registry/target/compilers.registry-0.6.0-SNAPSHOT-jar-with-dependencies.jar");
+
+        System.out.println(tmpDir);
+
+
+        final File testFolder = new File(TestJar.class.getClassLoader().getResource("tests").getFile());
         String testPattern = "test(.+)\\.thingml";
         Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
         Set<Callable<String>> tasks = new HashSet<>();
         
-        TestEnv testEnv = new TestEnv(tmpDir, compilerJar, "posix");
+        TestEnv testEnv = new TestEnv(tmpDir, compilerJar, "java");
         
         for(File testFile : testFiles) {
             System.out.println("Test: " + testFile.getName());
@@ -72,12 +77,15 @@ public class TestJar {
         tasks.clear();
         String testConfigPattern = "Test(.+)\\.thingml";
         List<String> languages = new ArrayList<>();
-        //languages.add("java");
+        languages.add("java");
         //languages.add("javascript");
-        languages.add("posix");
+        //languages.add("posix");
         for(String lang : languages) {
-            TestEnv testL = new TestEnv(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), compilerJar, lang);
-            for(File f : listTestFiles(new File (tmpDir.getAbsolutePath() + "/_" + lang), testConfigPattern)) {
+            TestEnv testL = new TestEnv(new File(tmpDir, "thingml-gen/_" + lang), compilerJar, lang);
+
+            System.out.println("debug " + new File(tmpDir, "_" + lang));
+
+            for(File f : listTestFiles(new File(tmpDir, "_" + lang), testConfigPattern)) {
                 System.out.println("[" + lang + "] Test: " + f.getName());
                 testL.testCompilation(f, tasks);
             }
@@ -93,7 +101,7 @@ public class TestJar {
         }
         
         tasks.clear();
-        String testDirPattern = "Test(.+)_Cfg";
+        String testDirPattern = "Test(.+)";
         for(String lang : languages) {
             TestEnv testL = new TestEnv(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), compilerJar, lang);
             for(File f : listTestDir(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), testDirPattern)) {
@@ -183,7 +191,7 @@ public class TestJar {
         
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
-                res.addAll(listTestFiles(fileEntry, pattern));
+                //res.addAll(listTestFiles(fileEntry, pattern));
                 Matcher m = p.matcher(fileEntry.getName());
                 
                 if (m.matches()) {

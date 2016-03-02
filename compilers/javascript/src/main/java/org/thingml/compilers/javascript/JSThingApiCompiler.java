@@ -49,15 +49,12 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._init = function() {\n");
             ctx.addMarker("useThis");
             ctx.addContextAnnotation("thisRef", "this.");
-            //execute onEntry of the root state machine
-            /*if (thing.allStateMachines().get(0).getEntry() != null)
-                ctx.getCompiler().getThingActionCompiler().generate(thing.allStateMachines().get(0).getEntry(), builder, ctx);*///Work around not needed anymore
             builder.append("this." + thing.allStateMachines().get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + thing.allStateMachines().get(0).getName() + "_instance" + "\");\n");
-            builder.append("StateJS.initialise( this." + thing.allStateMachines().get(0).qname("_") + ", this." + thing.allStateMachines().get(0).getName() + "_instance" + " );\n");
+            builder.append("StateJS.initialise(this.statemachine, this." + thing.allStateMachines().get(0).getName() + "_instance" + " );\n");
 
             builder.append("var msg = this.getQueue().shift();\n");
             builder.append("while(msg !== undefined) {\n");
-            builder.append("StateJS.evaluate(this." + thing.allStateMachines().get(0).qname("_") + ", this." + thing.allStateMachines().get(0).getName() + "_instance" + ", msg);\n");
+            builder.append("StateJS.evaluate(this.statemachine, this." + thing.allStateMachines().get(0).getName() + "_instance" + ", msg);\n");
             builder.append("msg = this.getQueue().shift();\n");
             builder.append("}\n");
             builder.append("this.ready = true;\n");
@@ -72,7 +69,11 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("if (this.ready) {\n");
             builder.append("var msg = this.getQueue().shift();\n");
             builder.append("while(msg !== undefined) {\n");
-            builder.append("StateJS.evaluate(this." + thing.allStateMachines().get(0).qname("_") + ", this." + thing.allStateMachines().get(0).getName() + "_instance" + ", msg);\n");
+            builder.append("StateJS.evaluate(this.statemachine, this." + thing.allStateMachines().get(0).getName() + "_instance" + ", msg);\n");
+            builder.append("const forkLength = this.getForks().length;\n");
+            builder.append("for (var _i = 0; _i < forkLength; _i++) {\n");
+            builder.append("this.getForks()[_i]._receive.apply(this.getForks()[_i], msg);\n");
+            builder.append("}\n");
             builder.append("msg = this.getQueue().shift();\n");
             builder.append("}\n");
             builder.append("}\n");

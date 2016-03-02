@@ -60,14 +60,15 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
         Session session = action.getSession();
-        ctx.addContextAnnotation("container", "this." + session.findContainingRegion().qname("_"));
-        builder.append("var " + session.qname("_") + "_session = new StateJS.Region(\"" + session.getName() + "\", _this." + ((StateMachine)session.eContainer()).qname("_") + ");\n");
-        builder.append("var _initial_" + session.qname("_") + "_session = new StateJS.PseudoState(\"_initial\", " + session.qname("_") + "_session, StateJS.PseudoStateKind.Initial);\n");
-        for (State s : session.getSubstate()) {
-            ctx.addContextAnnotation("container", session.qname("_") + "_session");
-            ((FSMBasedThingImplCompiler)ctx.getCompiler().getThingImplCompiler()).generateState(s, builder, ctx);
+        builder.append("var " + session.getName() + " = new " + session.findContainingThing().getName() + "(\"" + session.getName() + "\"");
+        for (Property p :session.findContainingThing().allProperties()) {
+            builder.append(", " + p.qname("_") + "_var");
         }
-        builder.append("_initial_" + session.qname("_") + "_session.to(" + session.getInitial().qname("_") + ");\n");
+        builder.append(", true);\n"); //FIXME: debug true only if needed
+        builder.append(session.getName() + ".setThis(" + session.getName() + ");\n");
+        builder.append(session.getName() + ".build(\"" + session.getName() + "\", _this);\n");
+        builder.append(session.getName() + "._init();\n");
+        builder.append("_this.getForks().push(" + session.getName() + ");\n");
     }
 
     @Override

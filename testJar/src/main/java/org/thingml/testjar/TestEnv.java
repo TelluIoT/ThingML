@@ -78,12 +78,13 @@ public class TestEnv {
         execCmd[2] = compilerJar.getAbsolutePath();
         execCmd[3] = language;
         execCmd[4] = testFile.getAbsolutePath();
-        execCmd[5] = tmpDir.getAbsolutePath();
+        execCmd[5] = tmpDir.getAbsolutePath() + "/" + testFile.getName().split("\\.thingml")[0];
         
         tasks.add(new Command(execCmd, "(.)*SUCCESS(.)*", "(.)*FATAL ERROR(.)*", "Error at ThingML compilation"));
     }
     
     public void testGeneratedSourcesCompilation(File dir, Set<Callable<String>> tasks, String success, String failure, String lang) {
+        System.out.println("testGeneratedSourcesCompilation(" + lang + ")");
         if(lang.compareToIgnoreCase("posix") == 0) {
             posixCompile(dir, tasks, success, failure);
         } else if(lang.compareToIgnoreCase("java") == 0) {
@@ -120,38 +121,40 @@ public class TestEnv {
         String[] execCmd = new String[1];
         execCmd[0] = "./" + prg[0];
         
-        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", testFile));
+        tasks.add(new Command(execCmd, success, failure, "Error at c execution", testFile));
     }
     
     public void nodejsCompile(File dir, Set<Callable<String>> tasks, String success, String failure) {
-        String[] execCmd = new String[2];
-        execCmd[0] = "npm";
-        execCmd[1] = "install";
+        String[] execCmd = new String[1];
+        execCmd[0] = "npm install";
         
-        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", dir));
+        tasks.add(new Command(execCmd, success, failure, "Error at JS install", dir));
     }
     
     public void nodejsRun(File testFile, Set<Callable<String>> tasks, String success, String failure) {
-        String[] execCmd = new String[2];
-        execCmd[0] = "node";
-        execCmd[1] = "mains.js";
+        String[] execCmd = new String[1];
+        execCmd[0] = "node main.js";
         
-        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", testFile));
+        tasks.add(new Command(execCmd, success, failure, "Error at JS execution", testFile));
     }
     
     public void javaCompile(File dir, Set<Callable<String>> tasks, String success, String failure) {
-        String[] execCmd = new String[2];
-        execCmd[0] = "mvn";
-        execCmd[1] = "clean install";
+        String[] execCmd = new String[3];
+        String maven = System.getenv("M2_HOME");
+        execCmd[0] = maven + "\\bin\\mvn.bat";  //FIXME: not portable
+        execCmd[1] = "clean";
+        execCmd[2] = "install";
 
-        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", dir));
+        tasks.add(new Command(execCmd, success, failure, "Error at Java compilation", dir));
     }
 
     public void javaRun(File dir, Set<Callable<String>> tasks, String success, String failure) {
         String[] execCmd = new String[2];
-        execCmd[0] = "mvn";
+        String maven = System.getenv("M2_HOME");
+        execCmd[0] = maven + "\\bin\\mvn.bat"; //FIXME: not portable
         execCmd[1] = "exec:java";
 
-        tasks.add(new Command(execCmd, success, failure, "Error at c compilation", dir));
+
+        tasks.add(new Command(execCmd, success, failure, "Error at Java execution", dir));
     }
 }
