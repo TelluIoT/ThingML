@@ -446,6 +446,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         builder.append("public Component buildBehavior(String session, Component root) {\n");
+        builder.append("if (root == null) {\n");
         builder.append("//Init ports\n");
         for (Port p : thing.allPorts()) {
             builder.append(p.getName() + "_port = new Port(");
@@ -455,6 +456,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("PortType.REQUIRED");
             builder.append(", \"" + p.getName() + "\", this);\n");
         }
+        builder.append("} else {\n");
+        for (Port p : thing.allPorts()) {
+            builder.append(p.getName() + "_port = ((" + thing.getName() + ")root)." + p.getName() + "_port;\n");
+        }
+        builder.append("}\n");
 
         builder.append("createCepStreams();");
 
@@ -614,14 +620,10 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
                 if (s instanceof FinalState) {
                     if (s.findContainingRegion() instanceof Session) {
-                        //builder.append("synchronized (" + s.findContainingThing().getName() + ".this.forks) {\n");
-                        builder.append(s.findContainingThing().getName() + ".this.forks.remove(forkId);\n");
-                        //builder.append("}\n");
+                        builder.append(s.findContainingThing().getName() + ".this.stop();\n");
+                        builder.append(s.findContainingThing().getName() + ".this.root.forks.remove(forkId);\n");
                     } else {
                         builder.append("stop();\n");
-                        builder.append("behavior = null;\n");
-                        builder.append("queue = null;\n");
-                        builder.append("cepDispatcher = null;\n");
                     }
                 }
                 builder.append("}\n\n");

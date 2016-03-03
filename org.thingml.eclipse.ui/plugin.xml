@@ -107,43 +107,7 @@
 </extension>
    
    
-    <extension point="org.eclipse.emf.validation.constraintProviders">
-       <category
-             id="org.thingml.constraints"
-             name="ThingML constraints">
-       </category>               
-      <constraintProvider cache="true">         
-         <package namespaceUri="http://thingml"/>         
-         <constraints categories="org.thingml.constraints">
-             <constraint
-             	   lang="Java"
-                   class="org.thingml.eclipse.ui.commands.EclipseChecker"
-                   severity="ERROR"                   
-                   id="checkConfiguration"
-                   name="Check Configuration"
-                   statusCode="11">
-               <description>
-                  A Configuration should be valid.
-               </description>
-               <message>Configuration "{0}" is invalid</message>
-               <target class="Configuration">
-               </target>
-            </constraint>            
-         </constraints>
-      </constraintProvider>
-   </extension>  
 
- 	 <extension
-         point="org.eclipse.emf.validation.constraintBindings">
-      <clientContext
-            default="false"
-            id="org.thingml.constraints.Context">
-         <selector class="org.thingml.eclipse.ui.commands.CheckThingMLFile"/>
-      </clientContext>
-      <binding
-            context="org.thingml.constraints.Context"
-            category="org.thingml.constraints"/>
-   </extension>
    
 
 </plugin>

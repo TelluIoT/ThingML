@@ -118,12 +118,11 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append(").buildBehavior(\"" + action.getSession().getName() + "\", " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this);\n");
         builder.append(ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId + 1;\n");
         builder.append(action.getSession().getName() + ".forkId = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId;\n");
+        builder.append(action.getSession().getName() + ".root = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this;\n");
         builder.append(action.getSession().getName() + ".init();\n");
         //TODO: connectors
         builder.append(action.getSession().getName() + ".start();\n");
-        //builder.append("synchronized (" + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forks) {\n");
-        builder.append(ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forks.put(" + action.getSession().getName() + ".forkId, " + action.getSession().getName() + ");\n");
-        //builder.append("}\n");
+        builder.append(action.getSession().getName() + ".root.forks.put(" + action.getSession().getName() + ".forkId, " + action.getSession().getName() + ");\n");
     }
 
     @Override

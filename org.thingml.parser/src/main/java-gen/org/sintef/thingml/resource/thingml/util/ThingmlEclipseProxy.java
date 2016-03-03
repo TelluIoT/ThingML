@@ -99,7 +99,7 @@ public class ThingmlEclipseProxy {
 	 * Checks all registered EMF validation constraints. Note: EMF validation does not
 	 * work if OSGi is not running.
 	 */
-	@SuppressWarnings("restriction")	
+	/*@SuppressWarnings("restriction")	
 	public void checkEMFValidationConstraints(org.sintef.thingml.resource.thingml.IThingmlTextResource resource, org.eclipse.emf.ecore.EObject root) {
 		// The EMF validation framework code throws a NPE if the validation plug-in is not
 		// loaded. This is a bug, which is fixed in the Helios release. Nonetheless, we
@@ -148,7 +148,7 @@ public class ThingmlEclipseProxy {
 		for (org.eclipse.core.runtime.IStatus child : status.getChildren()) {
 			addStatus(child, resource, root);
 		}
-	}
+	}*/
 	
 	/**
 	 * Returns the encoding for this resource that is specified in the workspace file
