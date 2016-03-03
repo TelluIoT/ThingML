@@ -45,23 +45,6 @@
    
    
    
-   <extension point="org.eclipse.ui.commands">
-  <command
-        description="Make the ThingML Console visible."
-        id="thingml.showconsole"
-        name="Show Console...">
-  </command>
-  <command
-        description="Compile ThingML Program"
-        id="thingml.compile"
-        name="Compile">
-     <commandParameter
-           id="org.thingml.eclipse.ui.commandParameterCompilerName"
-           name="compiler_name"
-           optional="true">
-     </commandParameter>
-  </command>
-</extension>
 
 <extension point="org.eclipse.ui.handlers">
   <handler
