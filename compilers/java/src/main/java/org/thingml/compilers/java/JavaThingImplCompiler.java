@@ -614,7 +614,9 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
                 if (s instanceof FinalState) {
                     if (s.findContainingRegion() instanceof Session) {
-                        builder.append("behavior.removeSession(\"" + s.findContainingRegion().getName() + "\" + id);\n");
+                        //builder.append("synchronized (" + s.findContainingThing().getName() + ".this.forks) {\n");
+                        builder.append(s.findContainingThing().getName() + ".this.forks.remove(forkId);\n");
+                        //builder.append("}\n");
                     } else {
                         builder.append("stop();\n");
                         builder.append("behavior = null;\n");

@@ -121,6 +121,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append(action.getSession().getName() + ".init();\n");
         //TODO: connectors
         builder.append(action.getSession().getName() + ".start();\n");
+        //builder.append("synchronized (" + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forks) {\n");
+        builder.append(ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forks.put(" + action.getSession().getName() + ".forkId, " + action.getSession().getName() + ");\n");
+        //builder.append("}\n");
     }
 
     @Override
