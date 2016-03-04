@@ -60,7 +60,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
         Session session = action.getSession();
-        builder.append("var " + session.getName() + " = new " + session.findContainingThing().getName() + "(\"" + session.getName() + "\"");
+        builder.append("var " + session.getName() + " = new " + session.findContainingThing().getName() + "(\"" + session.getName() + "\", _this");
         for (Property p :session.findContainingThing().allProperties()) {
             builder.append(", " + p.qname("_") + "_var");
         }

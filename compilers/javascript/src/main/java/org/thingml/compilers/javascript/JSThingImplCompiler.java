@@ -62,7 +62,19 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     j++;
                 }
                 builder.append(") {\n");
+                builder.append("if (root === null || root === undefined) {\n");
                 ((JSThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(thing, p, m, builder, ctx, debugProfile);
+                builder.append("} else {\n");
+                builder.append("this.root.send" + ctx.firstToUpper(m.getName()) + "On" + ctx.firstToUpper(p.getName()) + "(");
+                j = 0;
+                for (Parameter pa : m.getParameters()) {
+                    if (j > 0)
+                        builder.append(", ");
+                    builder.append(ctx.protectKeyword(pa.getName()));
+                    j++;
+                }
+                builder.append(");\n");
+                builder.append("}\n");
                 builder.append("}\n\n");
             }
         }
@@ -92,7 +104,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append(" * Definition for type : " + thing.getName() + "\n");
         builder.append(" **/\n");
 
-        builder.append("function " + ctx.firstToUpper(thing.getName()) + "(name");
+        builder.append("function " + ctx.firstToUpper(thing.getName()) + "(name, root");
         for (Property p : thing.allPropertiesInDepth()) {
             if (!p.isDefined("private", "true") && p.eContainer() instanceof Thing) {
                 builder.append(", ");
@@ -102,6 +114,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append(", debug) {\n\n");
 
         builder.append("this.name = name;\n");
+        builder.append("this.root = root;\n");
         builder.append("this.debug = debug;\n");
 
         builder.append("var _this;\n");
@@ -270,10 +283,11 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
                 for (Port p : thing.allPorts()) {
                     for (Message m : p.getSends()) {
-                        builder.append("const arrayLength_" + p.getName() + "_" + m.getName() + " = root.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().length;\n");
+                        builder.append(m.getName() + "On" + p.getName() + "Listeners.push.apply(" + m.getName() + "On" + p.getName() + "Listeners, root." + m.getName() + "On" + p.getName() + "Listeners);\n");
+                        /*builder.append("const arrayLength_" + p.getName() + "_" + m.getName() + " = root.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().length;\n");
                         builder.append("for (var _i = 0; _i < arrayLength_" + p.getName() + "_" + m.getName() + "; _i++) {\n");
                         builder.append("this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(root.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners()[_i]);\n");
-                        builder.append("}\n\n");
+                        builder.append("}\n\n");*/
                     }
                 }
                 builder.append("}\n");

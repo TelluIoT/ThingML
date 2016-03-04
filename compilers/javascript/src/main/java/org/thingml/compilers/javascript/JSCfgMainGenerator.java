@@ -73,9 +73,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
 
         if (useThis) {
-            builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\"");
+            builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
         } else {
-            builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i .getName() + "\"");
+            builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i .getName() + "\", null");
         }
 
         for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
