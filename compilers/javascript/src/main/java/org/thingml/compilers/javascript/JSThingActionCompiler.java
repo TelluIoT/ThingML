@@ -49,7 +49,12 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()));
+        builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + ".bind(");
+        if (ctx.getContextAnnotation("session") != null) {
+            builder.append("_this.root)\n");
+        } else {
+            builder.append("_this)\n");
+        }
         for (Expression p : action.getParameters()) {
             builder.append(", ");
             generate(p, builder, ctx);

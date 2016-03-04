@@ -147,7 +147,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
         if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
             builder.append("//notify listeners\n");
-            builder.append(const_() + "arrayLength = " + m.getName() + "On" + p.getName() + "Listeners.length;\n");
+            builder.append(const_() + "arrayLength = this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().length;\n");
 
             if(debug) {
                 builder.append("if (arrayLength < 1) {\n");
@@ -156,7 +156,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             }
 
             builder.append("for (var _i = 0; _i < arrayLength; _i++) {\n");
-            builder.append(m.getName() + "On" + p.getName() + "Listeners[_i](");
+            builder.append("this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners()[_i](");
             int i = 0;
             for (Parameter pa : m.getParameters()) {
                 if (i > 0) {

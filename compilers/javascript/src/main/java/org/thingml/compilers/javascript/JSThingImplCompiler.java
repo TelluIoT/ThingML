@@ -62,14 +62,12 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     j++;
                 }
                 builder.append(") {\n");
-                builder.append("if (root === null || root === undefined) {\n");
+                builder.append("if (this.root === null || this.root === undefined) {\n");
                 ((JSThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(thing, p, m, builder, ctx, debugProfile);
                 builder.append("} else {\n");
-                builder.append("this.root.send" + ctx.firstToUpper(m.getName()) + "On" + ctx.firstToUpper(p.getName()) + "(");
-                j = 0;
+                builder.append("send" + ctx.firstToUpper(m.getName()) + "On" + ctx.firstToUpper(p.getName()) + ".call(this.root");
                 for (Parameter pa : m.getParameters()) {
-                    if (j > 0)
-                        builder.append(", ");
+                    builder.append(", ");
                     builder.append(ctx.protectKeyword(pa.getName()));
                     j++;
                 }
@@ -179,6 +177,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n");
 
         builder.append("//ThingML-defined functions\n");
+        ctx.addContextAnnotation("function", "true");
         for (Function f : thing.allFunctions()) {   //FIXME: should be extracted
             if (!f.isDefined("abstract", "true")) {//should be refined in a PSM thing
                 builder.append("function " + f.getName() + "(");
@@ -234,6 +233,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("};\n\n");
             }
         }
+        ctx.removeContextAnnotation("function");
 
         builder.append("//Internal functions\n");
 
@@ -249,6 +249,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("}\n");
         for(StateMachine b : thing.allStateMachines()) {
+            ctx.addContextAnnotation("session", "true");
             for(Session s : b.allContainedSessions()) {//FIXME: lots of code duplication here.....
                 builder.append("else if(session === \"" + s.getName() + "\") {\n");
                 builder.append("this.root = root;\n");
@@ -278,20 +279,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                         }
                     }
                 }
-
-                //TODO: copy attributes
-
-                for (Port p : thing.allPorts()) {
-                    for (Message m : p.getSends()) {
-                        builder.append(m.getName() + "On" + p.getName() + "Listeners.push.apply(" + m.getName() + "On" + p.getName() + "Listeners, root." + m.getName() + "On" + p.getName() + "Listeners);\n");
-                        /*builder.append("const arrayLength_" + p.getName() + "_" + m.getName() + " = root.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().length;\n");
-                        builder.append("for (var _i = 0; _i < arrayLength_" + p.getName() + "_" + m.getName() + "; _i++) {\n");
-                        builder.append("this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(root.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners()[_i]);\n");
-                        builder.append("}\n\n");*/
-                    }
-                }
                 builder.append("}\n");
             }
+            ctx.removeContextAnnotation("session");
         }
 
         for (Stream stream : thing.getStreams()) {
