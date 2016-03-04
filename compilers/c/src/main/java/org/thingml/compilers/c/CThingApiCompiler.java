@@ -18,6 +18,7 @@ package org.thingml.compilers.c;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
 import java.util.List;
@@ -98,14 +99,14 @@ public class CThingApiCompiler extends ThingApiCompiler {
             builder.append("\n// END: Code from the c_header annotation " + thing.getName() + "\n\n");
         }
 
-        boolean shouldIncludeArduinoCEP = false;
+        boolean shouldGenerateCEPLib = false;
         for (Stream s : thing.getStreams()) {
             if (s.getInput() instanceof JoinSources || s.getInput() instanceof MergeSources) {
-                shouldIncludeArduinoCEP = true;
+                shouldGenerateCEPLib = true;
             }
         }
-        if (shouldIncludeArduinoCEP) {
-            builder.append("#include \"cep.h\"\n");
+        if (shouldGenerateCEPLib) {
+            ArduinoThingCepCompiler.generateCEPLib(thing, builder, ctx);
         }
     }
 
@@ -185,19 +186,8 @@ public class CThingApiCompiler extends ThingApiCompiler {
             builder.append(";\n");
         }
         builder.append("// CEP stream pointers\n");
-        for (Stream s : thing.getStreams()) {
-            for (ViewSource vs : s.getInput().getOperators()) {
-                if (vs instanceof LengthWindow) {
-                    builder.append("Fifo* cep_" + s.getName() + "\n");
-                } else if (vs instanceof TimeWindow) {
-                    builder.append("TemporalFifo* cep_" + s.getName() + "\n");
-                }
-                //else if (vs instanceof Filter) {
-                //    ctx.getCompiler().getThingActionCompiler().generate(((Filter)vs).getGuard(), builder, ctx);
-                //    builder.append("filter: " + ((Filter)vs).getGuard() + "\n");
-                //}
-            }
-        }
+        for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(thing))
+            builder.append("stream_" + s.getName() + "* cep_" + s.getName() + ";\n");
         builder.append("\n};\n");
     }
 

@@ -15,25 +15,31 @@
  */
 package org.thingml.compilers.c;
 
-import java.util.ArrayList;
-import org.thingml.compilers.NetworkLibraryGenerator;
-import java.util.HashSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
-import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.NetworkLibraryGenerator;
+import org.thingml.compilers.ThingMLCompiler;
 
+import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by ffl on 01.06.15.
  */
 public abstract class CCompilerContext extends Context {
 
+    public String instance_var_name = null;
+    // Argh!!
+    protected Instance concreteInstance = null;
+    // The concrete thing for which the code is being generated
+    protected Thing concreteThing = null;
+    protected Hashtable<Message, Integer> handlerCodes = new Hashtable<Message, Integer>();
+    protected int handlerCodeCpt = 1;
+    StringBuilder pollCode = new StringBuilder();
+    StringBuilder initCode = new StringBuilder();
     private Set<NetworkLibraryGenerator> NetworkLibraryGenerators;
 
     public CCompilerContext(ThingMLCompiler c) {
@@ -128,31 +134,31 @@ public abstract class CCompilerContext extends Context {
     public String getNetworkLibWebsocketClientHeaderTemplate() {
         return getTemplateByID("ctemplates/network_lib/posix/PosixWebsocketForwardClient.h");
     }
-    
+
     public String getNetworkLibNopollWebsocketClientTemplate() {
         return getTemplateByID("ctemplates/network_lib/posix/PosixNopollWebsocketClient.c");
     }
-    
+
     public String getNetworkLibNopollWebsocketClientHeaderTemplate() {
         return getTemplateByID("ctemplates/network_lib/posix/PosixNopollWebsocketClient.h");
     }
-    
+
     public String getNetworkLibMQTTTemplateYun() {
         return getTemplateByID("ctemplates/network_lib/posix/PosixMQTTClient.c");
     }
-    
+
     public String getNetworkLibMQTTTemplate() {
         return getTemplateByID("ctemplates/network_lib/posix/PosixMQTTClient2.c");
     }
-    
+
     public String getNetworkLibMQTTHeaderTemplate() {
         return getTemplateByID("ctemplates/network_lib/posix/PosixMQTTClient.h");
     }
-    
+
     public String getNetworkLibWebsocketDependancy() {
         return getTemplateByID("ctemplates/network_lib/posix/lws_config.h");
     }
-    
+
     public String getCfgMainTemplate() {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_main.c");
     }
@@ -181,45 +187,69 @@ public abstract class CCompilerContext extends Context {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thingml_typedefs.h");
     }
 
+    public String getCEPLibTemplateClass() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/" + getCompiler().getID() + "_libCEP_class.h");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplateMethodsSignatures() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/" + getCompiler().getID() + "_libCEP_methods_signatures.h");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplateAttributesSignatures() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/" + getCompiler().getID() + "_libCEP_attributes_signatures.h");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplateConstants() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/" + getCompiler().getID() + "_libCEP_constants.h");
+        }
+        return null;
+    }
+
     public boolean hasAnnotationWithValue(Configuration cfg, String annotation, String value) {
-        for(String st : cfg.annotation(annotation)) {
+        for (String st : cfg.annotation(annotation)) {
             if (st.compareToIgnoreCase(value) == 0) {
-               return true;
+                return true;
             }
         }
         return false;
     }
+
     public boolean containsParam(List<Parameter> list, Parameter element) {
-        for(Parameter e : list) {
+        for (Parameter e : list) {
             if (EcoreUtil.equals(e, element))
                 return true;
         }
         return false;
-    }
-    // Argh!!
-    protected Instance concreteInstance = null;
-
-    public void setConcreteInstance(Instance inst) {
-        concreteInstance = inst;
     }
 
     public Instance getConcreteInstance() {
         return concreteInstance;
     }
 
+    public void setConcreteInstance(Instance inst) {
+        concreteInstance = inst;
+    }
+
     public void clearConcreteInstance() {
         concreteInstance = null;
-    }
-    
-    // The concrete thing for which the code is being generated
-    protected Thing concreteThing = null;
-
-    public void setConcreteThing(Thing t) {
-        concreteThing = t;
     }
 
     public Thing getConcreteThing() {
         return concreteThing;
+    }
+
+    public void setConcreteThing(Thing t) {
+        concreteThing = t;
     }
 
     public void clearConcreteThing() {
@@ -243,7 +273,6 @@ public abstract class CCompilerContext extends Context {
         return false;
     }
 
-
     /**************************************************************************
      * HELPER FUNCTIONS shared by different parts of the compiler
      **************************************************************************/
@@ -265,8 +294,6 @@ public abstract class CCompilerContext extends Context {
             return "0";
         }
     }
-
-    public String instance_var_name = null;
 
     public void changeInstanceVarName(String new_name) {
         instance_var_name = new_name;
@@ -307,9 +334,6 @@ public abstract class CCompilerContext extends Context {
         }
         return result;
     }
-    protected Hashtable<Message, Integer> handlerCodes = new Hashtable<Message, Integer>();
-    protected int handlerCodeCpt = 1;
-
 
     public int getHandlerCode(Configuration cfg, Message m) {
         Integer result = handlerCodes.get(m);
@@ -393,9 +417,11 @@ public abstract class CCompilerContext extends Context {
         }
     }
 
+    // FUNCTIONS FOR MESSAGES and PARAMETERS
+
     public String getTraceFunctionForInt(Configuration cfg) {
-        if(getCompiler().getID().compareTo("arduino") == 0) {
-            if(cfg.hasAnnotation("arduino_stdout")) {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            if (cfg.hasAnnotation("arduino_stdout")) {
                 return cfg.annotation("arduino_stdout").iterator().next() + ".print(";
             } else {
                 return "//";
@@ -404,20 +430,18 @@ public abstract class CCompilerContext extends Context {
             return "printf(\"%i\", ";
         }
     }
-    
+
     boolean traceLevelIsAbove(AnnotatedElement E, int level) {
         Integer traceLevel = 0;
-        if(E.hasAnnotation("trace_level")) {
+        if (E.hasAnnotation("trace_level")) {
             traceLevel = Integer.parseInt(E.annotation("trace_level").iterator().next());
         }
-        if(traceLevel >= level) {
+        if (traceLevel >= level) {
             return true;
         } else {
             return false;
         }
     }
-
-    // FUNCTIONS FOR MESSAGES and PARAMETERS
 
     public void appendFormalParametersForDispatcher(StringBuilder builder, Message m) {
         builder.append("(");
@@ -430,6 +454,15 @@ public abstract class CCompilerContext extends Context {
         }
         builder.append(")");
     }
+
+    //public List<String> getFormalParameterNamelist(Thing thing, Message m) {
+    //    List<String> paramList = new ArrayList<String>();
+    //    
+    //    for (Parameter p : m.getParameters()) {
+    //        paramList.add(p.getName());
+    //    }
+    //    return paramList;
+    //}
 
     public void appendActualParametersForDispatcher(Thing thing, StringBuilder builder, Message m, String instance_param) {
         if (instance_param == null) instance_param = getInstanceVarName();
@@ -454,15 +487,6 @@ public abstract class CCompilerContext extends Context {
         builder.append(")");
     }
 
-    //public List<String> getFormalParameterNamelist(Thing thing, Message m) {
-    //    List<String> paramList = new ArrayList<String>();
-    //    
-    //    for (Parameter p : m.getParameters()) {
-    //        paramList.add(p.getName());
-    //    }
-    //    return paramList;
-    //}
-
     public void appendFormalParameterDeclarations(StringBuilder builder, Message m) {
         for (Parameter p : m.getParameters()) {
             builder.append(getCType(p.getType()));
@@ -472,7 +496,6 @@ public abstract class CCompilerContext extends Context {
         }
     }
 
-    
     public void appendActualParameters(Thing thing, StringBuilder builder, Message m, String instance_param) {
         if (instance_param == null) instance_param = getInstanceVarName();
         builder.append("(");
@@ -490,6 +513,8 @@ public abstract class CCompilerContext extends Context {
         builder.append(")");
     }
 
+    // FUNCTIONS FOR TYPES
+
     public void appendFormalTypeSignature(Thing thing, StringBuilder builder, Message m) {
         builder.append("(");
         builder.append("struct " + getInstanceStructName(thing) + " *");
@@ -504,13 +529,11 @@ public abstract class CCompilerContext extends Context {
     public int getMessageSerializationSize(Message m) {
         int result = 2; // 2 bytes to store the port/message code
         result += 2; // to store the id of the source instance
-        for(Parameter p : m.getParameters()) {
+        for (Parameter p : m.getParameters()) {
             result += this.getCByteSize(p.getType(), 0);
         }
         return result;
     }
-
-    // FUNCTIONS FOR TYPES
 
     public String getCType(Type t) {
         if (t.hasAnnotation("c_type")) {
@@ -555,7 +578,7 @@ public abstract class CCompilerContext extends Context {
 
     public boolean isPointer(Type t) {
         return t instanceof ObjectType;
-        
+
         /*if (t.hasAnnotation("c_byte_size")) {
             String v = t.annotation("c_byte_size").iterator().next();
             return v.equals("*");
@@ -563,6 +586,8 @@ public abstract class CCompilerContext extends Context {
         System.err.println("Warning: Missing annotation c_byte_size for type " + t.getName() + ", using 2 as the byte size.");
         return false;*/
     }
+
+    // FUNCTIONS TO SERIALIZE AND DESERIALIZE TYPES
 
     public boolean hasByteBuffer(Type t) {
         return t.hasAnnotation("c_byte_buffer");
@@ -576,9 +601,7 @@ public abstract class CCompilerContext extends Context {
             return t.getName() + "_buf";
         }
     }
-
-    // FUNCTIONS TO SERIALIZE AND DESERIALIZE TYPES
-
+    
     public String deserializeFromByte(Type t, String buffer, int idx, Context ctx) {
         String result = "";
         int i = getCByteSize(t, 0);
@@ -610,7 +633,7 @@ public abstract class CCompilerContext extends Context {
             if(pt.isIsArray()) {
                 builder.append("\n// cardinality: \n");
                throw new Error("ERROR: Attempting to serialize an array (for type " + t.getName() + "). This is not allowed.");
-                
+
                 //TODO enqueue dequeue of array
             } else {
                 builder.append("union u_" + v + "_t {\n");
@@ -618,10 +641,10 @@ public abstract class CCompilerContext extends Context {
                 builder.append("byte bytebuffer[" + getCByteSize(t, 0) + "];\n");
                 builder.append("} u_" + v + ";\n");
                 builder.append("u_" + v + ".p = " + v + ";\n");
-            
+
                 while (i > 0) {
                     i = i - 1;
-                    //if (i == 0) 
+                    //if (i == 0)
                     //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
                     builder.append("_fifo_enqueue( u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
                     //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
@@ -631,7 +654,7 @@ public abstract class CCompilerContext extends Context {
     }
     
     public int generateSerializationForForwarder(Message m, StringBuilder builder, int HandlerCode, Set<String> ignoreList) {
-       
+
         builder.append("byte forward_buf[" + (this.getMessageSerializationSize(m) - 2) + "];\n");
 
         builder.append("forward_buf[0] = (" + HandlerCode + " >> 8) & 0xFF;\n");
@@ -659,7 +682,7 @@ public abstract class CCompilerContext extends Context {
 
             while (i > 0) {
                 i = i - 1;
-                        //if (i == 0) 
+                //if (i == 0)
                         //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
                         builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                         j++;
@@ -667,15 +690,13 @@ public abstract class CCompilerContext extends Context {
         }
     }
 }
-        
+
         if(j == 2) {
             return j;
         } else {
             return j-1;
         }
     }
-    
-    StringBuilder pollCode = new StringBuilder();
     
     public void addToPollCode(String s) {
         pollCode.append("\n" + s);
@@ -684,8 +705,7 @@ public abstract class CCompilerContext extends Context {
     public String getPollCode() {
         return pollCode.toString();
     }
-    
-    StringBuilder initCode = new StringBuilder();
+
     public void addToInitCode(String s) {
         initCode.append("\n" + s);
     }

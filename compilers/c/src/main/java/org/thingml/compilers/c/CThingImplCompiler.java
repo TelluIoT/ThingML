@@ -489,6 +489,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     // may be specific to Arduino board
+    // maybe Handler should be better than Dispatch in the signature name
     private void generateStreamDispatch(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {
         for (Stream s : thing.getStreams()) {
             Source source = s.getInput();

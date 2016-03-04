@@ -1,0 +1,22 @@
+#define TTL 4000
+#define TIMESTAMP_DATASIZE 4
+#define DEFAULT_NUMBER_MSG 10
+
+// computed size: buffer_size * (stamp size + sum(data_size))
+
+/*STREAM_CONSTANTS*/
+
+class stream_/*STREAM_NAME*/
+{
+  public:
+    stream_/*STREAM_NAME*/();
+    ~stream_/*STREAM_NAME*/();
+
+    /*METHOD_SIGNATURES*/
+
+    void checkTrigger();
+
+  private:
+   /*ATTRIBUTES_SIGNATURES*/
+
+};
