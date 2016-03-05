@@ -35,7 +35,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         builder.append("//Things\n");
         for (Instance i : cfg.allInstances()) {
             if (i.getType().hasAnnotation("mock")) {
-                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + "Mock) new " + ctx.firstToUpper(i.getType().getName()) + "Mock(\"" + ctx.getInstanceName(i) + "\").buildBehavior();\n");
+                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + "Mock) new " + ctx.firstToUpper(i.getType().getName()) + "Mock(\"" + ctx.getInstanceName(i) + "\").buildBehavior(null, null);\n");
             } else {
 
 

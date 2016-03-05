@@ -42,7 +42,7 @@ public void start(){
         }
 
 @Override
-public Component buildBehavior(){
+public Component buildBehavior(String session, Component root){
         behavior=new CompositeState("$NAME$",Collections.EMPTY_LIST,new AtomicState("dummy"),Collections.EMPTY_LIST){
 @Override
 public boolean dispatch(Event event,Port port){
