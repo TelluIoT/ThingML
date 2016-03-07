@@ -526,6 +526,7 @@ public abstract class CCompilerContext extends Context {
         builder.append(")");
     }
 
+    //FIXME: should use context variable to store the port sizes, used in ArduinoThingCepCompiler
     public int getMessageSerializationSize(Message m) {
         int result = 2; // 2 bytes to store the port/message code
         result += 2; // to store the id of the source instance

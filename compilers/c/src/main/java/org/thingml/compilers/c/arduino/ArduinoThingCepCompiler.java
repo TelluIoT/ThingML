@@ -84,21 +84,29 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
     public static void generateCEPLib(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(thing)) {
+
             //debug, restrict to one stream
-            if (s.getName().equals("filteredJoin1")) {
+            // if (s.getName().equals("filteredJoin1")) {
+
                 String cepTemplate = ctx.getCEPLibTemplateClass();
 
                 String constants = "";
                 String methodsSignatures = "";
                 String attributesSignatures = "";
                 for (Message msg : ArduinoThingCepCompiler.getMessageFromStream(s)) {
-                    System.out.println("Msg: " + msg.getName());
                     String constantTemplate = ctx.getCEPLibTemplateConstants();
+                    int messageSize = ctx.getMessageSerializationSize(msg) - 4; //substract the ports size
                     constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
+                    constantTemplate = constantTemplate.replace("/*STRUCT_SIZE*/", Integer.toString(messageSize));
                     constants += constantTemplate;
 
                     String methodsTemplate = ctx.getCEPLibTemplateMethodsSignatures();
                     methodsTemplate = methodsTemplate.replace("/*MESSAGE_NAME*/", msg.getName().toUpperCase());
+                    List<String> param = new ArrayList<>();
+                    for (Parameter p : msg.getParameters())
+                        param.add(ctx.getCType(p.getType()) + (p.getCardinality() != null ? "*" : "") + " " + p.getName());
+
+                    methodsTemplate = methodsTemplate.replace("/*MESSAGE_PARAMETERS*/", String.join(", ", param));
                     methodsSignatures += methodsTemplate;
 
                     String attributesTemplate = ctx.getCEPLibTemplateAttributesSignatures();
@@ -112,7 +120,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 cepTemplate = cepTemplate.replace("/*STREAM_CONSTANTS*/", constants);
 
                 builder.append(cepTemplate);
-            }
+            //} /* remove me*/
         }
     }
 
