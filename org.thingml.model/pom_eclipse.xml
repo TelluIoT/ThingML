@@ -23,7 +23,7 @@
 		<relativePath>../org.thingml.eclipse/pom_eclipse.xml</relativePath>
 		<groupId>org.thingml</groupId>
 		<artifactId>eclipse_parent</artifactId>
-		<version>0.6.0-SNAPSHOT</version>
+		<version>0.6.0</version>
 	</parent>
 
 	<artifactId>org.sintef.thingml.model</artifactId>

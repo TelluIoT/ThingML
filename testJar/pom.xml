@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.thingml</groupId>
         <artifactId>org.thingml.root</artifactId>
-        <version>0.6.0-SNAPSHOT</version>
+        <version>0.6.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.compilers</artifactId>
+            <artifactId>compilers.registry</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
