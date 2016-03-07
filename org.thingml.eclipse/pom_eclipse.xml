@@ -49,11 +49,6 @@
       <url>http://update.emftext.org/release</url>
     </repository>
     
-    <repository>
-    	<id>thingml-release</id>
-        <name>thingml-release</name>
-        <url>http://maven.thingml.org/archiva/repository/thingml-release/</url>
-    </repository> 
   </repositories>
 
   <build>
