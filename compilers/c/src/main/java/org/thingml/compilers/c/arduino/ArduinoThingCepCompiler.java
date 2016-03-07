@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
+ * <p>
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
+ * <p>
+ * http://www.gnu.org/licenses/lgpl-3.0.txt
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -142,6 +142,11 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ctx.appendFormalParameters(thing, paramBuilder, msg);
                 messageImpl = messageImpl.replace("/*MESSAGE_PARAMETERS*/", paramBuilder);
 
+                String queueImpl = "";
+                String popImpl = "";
+
+                messageImpl = messageImpl.replace("/*QUEUE_IMPL*/", queueImpl);
+                messageImpl = messageImpl.replace("/*POP_IMPL*/", popImpl);
                 msgsImpl += messageImpl;
             }
 
@@ -158,6 +163,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                     triggerImpl += m.getName() + "_popEvent();\n";
 
                 StringBuilder outAction = new StringBuilder();
+                //TODO check the output guard filter
                 ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), outAction, ctx);
                 triggerImpl += outAction + "\n}\n";
             }
