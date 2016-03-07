@@ -16,7 +16,7 @@
 
 -->
 <site>
-   <feature url="features/org.thingml.eclipse.feature_0.6.0.jar" id="org.thingml.eclipse.feature" version="0.6.0">
+   <feature url="features/org.thingml.eclipse.feature_0.7.0.qualifier.jar" id="org.thingml.eclipse.feature" version="0.7.0.qualifier">
       <category name="org.thingml"/>
    </feature>
    <category-def name="org.thingml" label="ThingML"/>

@@ -7,7 +7,7 @@
     <name>ThingML :: Root</name>
     <url>http://www.thingml.org</url>
 
-    <version>0.6.0</version>
+    <version>0.7.0-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
