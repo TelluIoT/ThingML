@@ -57,7 +57,7 @@
 								<artifactItem>
 									<artifactId>org.thingml.editor.standaloneApp</artifactId>
 									<groupId>org.thingml</groupId>
-									<version>${version}</version>
+									<version>${project.version}</version>
 									<outputDirectory>lib</outputDirectory>
 								</artifactItem>
 							</artifactItems>
