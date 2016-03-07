@@ -104,11 +104,11 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                 String methodsTemplate = ctx.getCEPLibTemplateMethodsSignatures();
                 methodsTemplate = methodsTemplate.replace("/*MESSAGE_NAME*/", msg.getName());
-                List<String> param = new ArrayList<>();
-                for (Parameter p : msg.getParameters())
-                    param.add(ctx.getCType(p.getType()) + (p.getCardinality() != null ? "*" : "") + " " + p.getName());
 
-                methodsTemplate = methodsTemplate.replace("/*MESSAGE_PARAMETERS*/", String.join(", ", param));
+                StringBuilder paramBuilder = new StringBuilder();
+                ctx.appendFormalParameters(thing, paramBuilder, msg);
+                methodsTemplate = methodsTemplate.replace("/*MESSAGE_PARAMETERS*/", paramBuilder);
+
                 methodsSignatures += methodsTemplate;
 
                 String attributesTemplate = ctx.getCEPLibTemplateAttributesSignatures();
@@ -120,6 +120,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             cepTemplate = cepTemplate.replace("/*STREAM_NAME*/", s.getName());
             cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
             cepTemplate = cepTemplate.replace("/*ATTRIBUTES_SIGNATURES*/", attributesSignatures);
+            cepTemplate = cepTemplate.replace("/*TRIGGER_INST_PARAM*/", "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName());
             cepTemplate = cepTemplate.replace("/*STREAM_CONSTANTS*/", constants);
 
             builder.append(cepTemplate);
@@ -137,18 +138,34 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 messageImpl = messageImpl.replace("/*MESSAGE_NAME*/", msg.getName());
                 messageImpl = messageImpl.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
 
-                List<String> param = new ArrayList<>();
-                for (Parameter p : msg.getParameters())
-                    param.add(ctx.getCType(p.getType()) + (p.getCardinality() != null ? "*" : "") + " " + p.getName());
-
-                messageImpl = messageImpl.replace("/*MESSAGE_PARAMETERS*/", String.join(", ", param));
+                StringBuilder paramBuilder = new StringBuilder();
+                ctx.appendFormalParameters(thing, paramBuilder, msg);
+                messageImpl = messageImpl.replace("/*MESSAGE_PARAMETERS*/", paramBuilder);
 
                 msgsImpl += messageImpl;
             }
 
             String classImpl = ctx.getCEPLibTemplateClassImpl();
+            String triggerImpl = "";
+            if (s.getInput() instanceof JoinSources) {
+                List<Message> msgs = ArduinoThingCepCompiler.getMessageFromStream(s);
+                List<String> triggerCondition = new ArrayList<>();
+                for (Message m : msgs)
+                    triggerCondition.add("!" + m.getName() + "_isEmpty()");
+                triggerImpl = "if (" + String.join(" && ", triggerCondition) + " )\n {\n";
+
+                for (Message m : msgs)
+                    triggerImpl += m.getName() + "_popEvent();\n";
+
+                StringBuilder outAction = new StringBuilder();
+                ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), outAction, ctx);
+                triggerImpl += outAction + "\n}\n";
+            }
+
             classImpl = classImpl.replace("/*STREAM_NAME*/", s.getName());
             classImpl = classImpl.replace("/*MESSAGE_IMPL*/", msgsImpl);
+            classImpl = classImpl.replace("/*TRIGGER_INST_PARAM*/", "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName());
+            classImpl = classImpl.replace("/*TRIGGER_IMPL*/", triggerImpl);
             builder.append(classImpl);
         }
     }

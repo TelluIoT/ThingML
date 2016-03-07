@@ -530,7 +530,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
                     } else if (source instanceof SourceComposition) {
                         //TODO add message as parameter and other stuff maybe
-                        builder.append("_instance->cep_" + s.getName() + "->enqueue();\n");
+                        builder.append("_instance->cep_" + s.getName() + "->enqueue(" + ");\n");
                     }
 
                     // closing braces, see guards

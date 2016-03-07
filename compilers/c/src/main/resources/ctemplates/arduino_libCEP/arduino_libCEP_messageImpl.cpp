@@ -15,7 +15,7 @@ inline boolean stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_isEmpty()
     return /*MESSAGE_NAME*/_fifo_tail == /*MESSAGE_NAME*/_fifo_head;
 }
 
-void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_queueEvent(/*MESSAGE_PARAMETERS*/)
+void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_queueEvent/*MESSAGE_PARAMETERS*/
 {
 }
 

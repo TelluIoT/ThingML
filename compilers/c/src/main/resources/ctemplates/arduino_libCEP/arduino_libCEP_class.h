@@ -10,7 +10,7 @@ class stream_/*STREAM_NAME*/
     ~stream_/*STREAM_NAME*/();
 
 /*METHOD_SIGNATURES*/
-    void checkTrigger();
+    void checkTrigger(/*TRIGGER_INST_PARAM*/);
 
   private:
 /*ATTRIBUTES_SIGNATURES*/
