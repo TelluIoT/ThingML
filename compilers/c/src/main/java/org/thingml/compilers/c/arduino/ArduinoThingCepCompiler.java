@@ -37,8 +37,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
      * We generate a buffer for Join and Merge operations or if the source has a
      * Length or Window specified
      *
-     * @param thing
-     * @return
+     * @param thing Thing implementing some stream.
+     * @return List of Stream needing a buffer in order to produce their result.
      */
     public static List<Stream> getStreamWithBuffer(Thing thing) {
         List<Stream> ret = new ArrayList<>();
