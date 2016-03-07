@@ -21,6 +21,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;
+import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
 import org.thingml.compilers.c.arduino.plugin.ArduinoSerial;
 import org.thingml.compilers.c.arduino.plugin.ArduinoTimer;
 import org.thingml.compilers.c.arduino.plugin.NoBufSerial;
@@ -1759,30 +1760,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("\n");
 
         // init cep streams variables
-        //TODO refactor with CThingAPICompiler line 187
-        for (Stream s : inst.getType().getStreams()) {
-            //Join stream need a buffer of the size of the
-            if (s.getInput() instanceof JoinSources) {
-                //get @TTL annotation value
-                int nbInput = ((SourceComposition) s.getInput()).getSources().size();
-                builder.append(ctx.getInstanceVarName(inst) + ".cep_" + s.getName() + " = new TemporalFifo(" + nbInput +
-                        "0);\n");
-            }
-            for (ViewSource vs : s.getInput().getOperators()) {
-                if (vs instanceof LengthWindow) {
-                    builder.append(ctx.getInstanceVarName(inst) + ".cep_" + s.getName() + "= new Fifo(");
-                    ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getSize(), builder, ctx);
-                    builder.append(", ");
-                    ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getStep(), builder, ctx);
-                    builder.append(");\n");
-                } else if (vs instanceof TimeWindow) {
-                    builder.append(ctx.getInstanceVarName(inst) + ".cep_" + s.getName() + "= new TemporalFifo(");
-                    ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getDuration(), builder, ctx);
-                    builder.append(", ");
-                    ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), builder, ctx);
-                    builder.append(");\n");
-                }
-            }
+        for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(inst.getType())) {
+            builder.append(ctx.getInstanceVarName(inst) + ".cep_" + s.getName() + " = new stream_" + s.getName() + "();\n");
         }
 
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());

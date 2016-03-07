@@ -83,44 +83,73 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
     }
 
     public static void generateCEPLib(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+        generateCEPLibAPI(thing, builder, ctx);
+        generateCEPLibImpl(thing, builder, ctx);
+    }
+
+    public static void generateCEPLibAPI(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(thing)) {
 
-            //debug, restrict to one stream
-            // if (s.getName().equals("filteredJoin1")) {
+            String cepTemplate = ctx.getCEPLibTemplateClass();
 
-                String cepTemplate = ctx.getCEPLibTemplateClass();
+            String constants = "";
+            String methodsSignatures = "";
+            String attributesSignatures = "";
+            for (Message msg : ArduinoThingCepCompiler.getMessageFromStream(s)) {
+                String constantTemplate = ctx.getCEPLibTemplateConstants();
+                int messageSize = ctx.getMessageSerializationSize(msg) - 4; //substract the ports size
+                constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
+                constantTemplate = constantTemplate.replace("/*STRUCT_SIZE*/", Integer.toString(messageSize));
+                constants += constantTemplate;
 
-                String constants = "";
-                String methodsSignatures = "";
-                String attributesSignatures = "";
-                for (Message msg : ArduinoThingCepCompiler.getMessageFromStream(s)) {
-                    String constantTemplate = ctx.getCEPLibTemplateConstants();
-                    int messageSize = ctx.getMessageSerializationSize(msg) - 4; //substract the ports size
-                    constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
-                    constantTemplate = constantTemplate.replace("/*STRUCT_SIZE*/", Integer.toString(messageSize));
-                    constants += constantTemplate;
+                String methodsTemplate = ctx.getCEPLibTemplateMethodsSignatures();
+                methodsTemplate = methodsTemplate.replace("/*MESSAGE_NAME*/", msg.getName());
+                List<String> param = new ArrayList<>();
+                for (Parameter p : msg.getParameters())
+                    param.add(ctx.getCType(p.getType()) + (p.getCardinality() != null ? "*" : "") + " " + p.getName());
 
-                    String methodsTemplate = ctx.getCEPLibTemplateMethodsSignatures();
-                    methodsTemplate = methodsTemplate.replace("/*MESSAGE_NAME*/", msg.getName().toUpperCase());
-                    List<String> param = new ArrayList<>();
-                    for (Parameter p : msg.getParameters())
-                        param.add(ctx.getCType(p.getType()) + (p.getCardinality() != null ? "*" : "") + " " + p.getName());
+                methodsTemplate = methodsTemplate.replace("/*MESSAGE_PARAMETERS*/", String.join(", ", param));
+                methodsSignatures += methodsTemplate;
 
-                    methodsTemplate = methodsTemplate.replace("/*MESSAGE_PARAMETERS*/", String.join(", ", param));
-                    methodsSignatures += methodsTemplate;
+                String attributesTemplate = ctx.getCEPLibTemplateAttributesSignatures();
+                attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME*/", msg.getName());
+                attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
+                attributesSignatures += attributesTemplate;
+            }
 
-                    String attributesTemplate = ctx.getCEPLibTemplateAttributesSignatures();
-                    attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME*/", msg.getName());
-                    attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
-                    attributesSignatures += attributesTemplate;
-                }
-                cepTemplate = cepTemplate.replace("/*STREAM_NAME*/", s.getName());
-                cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
-                cepTemplate = cepTemplate.replace("/*ATTRIBUTES_SIGNATURES*/", attributesSignatures);
-                cepTemplate = cepTemplate.replace("/*STREAM_CONSTANTS*/", constants);
+            cepTemplate = cepTemplate.replace("/*STREAM_NAME*/", s.getName());
+            cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
+            cepTemplate = cepTemplate.replace("/*ATTRIBUTES_SIGNATURES*/", attributesSignatures);
+            cepTemplate = cepTemplate.replace("/*STREAM_CONSTANTS*/", constants);
 
-                builder.append(cepTemplate);
-            //} /* remove me*/
+            builder.append(cepTemplate);
+        }
+    }
+
+    public static void generateCEPLibImpl(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+
+        for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(thing)) {
+
+            String msgsImpl = "";
+            for (Message msg : ArduinoThingCepCompiler.getMessageFromStream(s)) {
+                String messageImpl = ctx.getCEPLibTemplatesMessageImpl();
+                messageImpl = messageImpl.replace("/*STREAM_NAME*/", s.getName());
+                messageImpl = messageImpl.replace("/*MESSAGE_NAME*/", msg.getName());
+                messageImpl = messageImpl.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
+
+                List<String> param = new ArrayList<>();
+                for (Parameter p : msg.getParameters())
+                    param.add(ctx.getCType(p.getType()) + (p.getCardinality() != null ? "*" : "") + " " + p.getName());
+
+                messageImpl = messageImpl.replace("/*MESSAGE_PARAMETERS*/", String.join(", ", param));
+
+                msgsImpl += messageImpl;
+            }
+
+            String classImpl = ctx.getCEPLibTemplateClassImpl();
+            classImpl = classImpl.replace("/*STREAM_NAME*/", s.getName());
+            classImpl = classImpl.replace("/*MESSAGE_IMPL*/", msgsImpl);
+            builder.append(classImpl);
         }
     }
 
@@ -131,8 +160,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             SimpleSource simpleSource = (SimpleSource) stream.getInput();
             String paramName = simpleSource.getMessage().getName();
             generateSubscription(stream, builder, ctx, paramName, simpleSource.getMessage().getMessage());
-        } else if (stream.getInput() instanceof SourceComposition){
-            Message outPut = ((SourceComposition)stream.getInput()).getResultMessage();
+        } else if (stream.getInput() instanceof SourceComposition) {
+            Message outPut = ((SourceComposition) stream.getInput()).getResultMessage();
             generateSubscription(stream, builder, ctx, outPut.getName(), outPut);
         }
     }

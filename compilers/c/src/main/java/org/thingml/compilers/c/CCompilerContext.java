@@ -189,28 +189,42 @@ public abstract class CCompilerContext extends Context {
 
     public String getCEPLibTemplateClass() {
         if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/" + getCompiler().getID() + "_libCEP_class.h");
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_class.h");
         }
         return null;
     }
 
     public String getCEPLibTemplateMethodsSignatures() {
         if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/" + getCompiler().getID() + "_libCEP_methods_signatures.h");
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_methods_signatures.h");
         }
         return null;
     }
 
     public String getCEPLibTemplateAttributesSignatures() {
         if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/" + getCompiler().getID() + "_libCEP_attributes_signatures.h");
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_attributes_signatures.h");
         }
         return null;
     }
 
     public String getCEPLibTemplateConstants() {
         if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/" + getCompiler().getID() + "_libCEP_constants.h");
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_constants.h");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplateClassImpl() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_classImpl.cpp");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplatesMessageImpl() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_messageImpl.cpp");
         }
         return null;
     }
