@@ -142,11 +142,54 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ctx.appendFormalParameters(thing, paramBuilder, msg);
                 messageImpl = messageImpl.replace("/*MESSAGE_PARAMETERS*/", paramBuilder);
 
+
+                /**
+                 * Queue Impl
+                 */
+                int fifo_buffer_index = 4; // just after the stamp
                 String queueImpl = "";
-                String popImpl = "";
+                for (Parameter p : msg.getParameters()) {
+                    queueImpl += "union u_" + msg.getName() + "_" + p.getName() + "_t {\n";
+                    queueImpl += ctx.getCType(p.getType()) + " p;\n";
+                    queueImpl += "byte bytebuffer[" + ctx.getCByteSize(p.getType(), 0) + "];\n";
+                    queueImpl += "} u_" + msg.getName() + "_" + p.getName() + ";\n";
+
+                    queueImpl += "u_" + msg.getName() + "_" + p.getName() + ".p = " + p.getName() + ";\n";
+
+                    for (int i = ctx.getCByteSize(p.getType(), 0) - 1; i >= 0; i--) {
+
+                        queueImpl += msg.getName() + "_fifo[" + msg.getName() + "_fifo_tail + " + fifo_buffer_index + "]";
+                        queueImpl += " = u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "];\n";
+
+                        fifo_buffer_index++;
+                    }
+
+                }
 
                 messageImpl = messageImpl.replace("/*QUEUE_IMPL*/", queueImpl);
+                /**
+                 * Pop Impl
+                 */
+                String popImpl = "";
+                fifo_buffer_index = 4; // reset the index after the stamp
+                for (Parameter p : msg.getParameters()) {
+                    popImpl += "union u_" + msg.getName() + "_" + p.getName() + "_t {\n";
+                    popImpl += ctx.getCType(p.getType()) + " p;\n";
+                    popImpl += "byte bytebuffer[" + ctx.getCByteSize(p.getType(), 0) + "];\n";
+                    popImpl += "} u_" + msg.getName() + "_" + p.getName() + ";\n";
+
+                    for (int i = ctx.getCByteSize(p.getType(), 0) - 1; i >= 0; i--) {
+
+                        popImpl += "u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "]";
+                        popImpl += " = " + msg.getName() + "_fifo[(" + msg.getName() + "_fifo_head + " + fifo_buffer_index +
+                                ") % " + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
+
+                        fifo_buffer_index++;
+                    }
+
+                }
                 messageImpl = messageImpl.replace("/*POP_IMPL*/", popImpl);
+
                 msgsImpl += messageImpl;
             }
 
