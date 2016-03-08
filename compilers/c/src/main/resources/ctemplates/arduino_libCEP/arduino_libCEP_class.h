@@ -1,4 +1,4 @@
-#define TTL 4000
+#define TTL /*TTL*/
 #define TIMESTAMP_DATASIZE 4
 #define DEFAULT_NUMBER_MSG 10
 

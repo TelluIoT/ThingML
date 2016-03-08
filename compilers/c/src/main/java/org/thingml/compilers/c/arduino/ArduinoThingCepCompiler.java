@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- * <p>
+ *
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.gnu.org/licenses/lgpl-3.0.txt
- * <p>
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -87,6 +87,22 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
         generateCEPLibImpl(thing, builder, ctx);
     }
 
+    public static String getStreamSize(Stream s, CCompilerContext ctx) {
+        List<ViewSource> vsList = s.getInput().getOperators();
+        String ret = "DEFAULT_NUMBER_MSG";
+        for (ViewSource vs : vsList) {
+            StringBuilder b = new StringBuilder();
+            if (vs instanceof LengthWindow) {
+                ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getSize(), b, ctx);
+                ret = b.toString();
+            } else if (vs instanceof TimeWindow) {
+                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getDuration(), b, ctx);
+                ret = "(" + b.toString() + "/TTL)";
+            }
+        }
+        return ret;
+    }
+
     public static void generateCEPLibAPI(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(thing)) {
 
@@ -100,6 +116,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 int messageSize = ctx.getMessageSerializationSize(msg) - 4; //substract the ports size
                 constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
                 constantTemplate = constantTemplate.replace("/*STRUCT_SIZE*/", Integer.toString(messageSize));
+                constantTemplate = constantTemplate.replace("/*STREAM_SIZE*/", getStreamSize(s, ctx));
                 constants += constantTemplate;
 
                 String methodsTemplate = ctx.getCEPLibTemplateMethodsSignatures();
@@ -117,6 +134,13 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 attributesSignatures += attributesTemplate;
             }
 
+            String streamTTL = "250"; // Default value out of f'''' nowhere
+            if (s.hasAnnotation("TTL")) {
+                for (String v : s.annotation("TTL"))
+                    streamTTL = v;
+
+            }
+            cepTemplate = cepTemplate.replace("/*TTL*/", streamTTL);
             cepTemplate = cepTemplate.replace("/*STREAM_NAME*/", s.getName());
             cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
             cepTemplate = cepTemplate.replace("/*ATTRIBUTES_SIGNATURES*/", attributesSignatures);

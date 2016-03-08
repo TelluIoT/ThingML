@@ -125,12 +125,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         generatePrivateMessageSendingOperations(thing, builder, ctx, debugProfile);
         builder.append("\n");
 
-        builder.append("// Cep\n");
-        for (Stream stream : thing.getStreams()) {
-            ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);
-        }
-
-
         // Get the template and replace the values
         String itemplate = ctx.getThingImplTemplate();
         itemplate = itemplate.replace("/*NAME*/", thing.getName());
