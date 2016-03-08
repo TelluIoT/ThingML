@@ -54,6 +54,8 @@ public class ThingmlSyntaxCoverageInformationProvider {
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getInstanceRef(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getSendAction(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getStartSession(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getStartStream(),
+			org.sintef.thingml.ThingmlPackage.eINSTANCE.getStopStream(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getVariableAssignment(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getActionBlock(),
 			org.sintef.thingml.ThingmlPackage.eINSTANCE.getLocalVariable(),

@@ -44,6 +44,8 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 	protected org.sintef.thingml.resource.thingml.analysis.SendActionPortReferenceResolver sendActionPortReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.SendActionPortReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.SendActionMessageReferenceResolver sendActionMessageReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.SendActionMessageReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.StartSessionSessionReferenceResolver startSessionSessionReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.StartSessionSessionReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.StartStreamStreamReferenceResolver startStreamStreamReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.StartStreamStreamReferenceResolver();
+	protected org.sintef.thingml.resource.thingml.analysis.StopStreamStreamReferenceResolver stopStreamStreamReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.StopStreamStreamReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.VariableAssignmentPropertyReferenceResolver variableAssignmentPropertyReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.VariableAssignmentPropertyReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.FunctionCallFunctionReferenceResolver functionCallFunctionReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.FunctionCallFunctionReferenceResolver();
 	protected org.sintef.thingml.resource.thingml.analysis.MessageParameterMsgRefReferenceResolver messageParameterMsgRefReferenceResolver = new org.sintef.thingml.resource.thingml.analysis.MessageParameterMsgRefReferenceResolver();
@@ -142,6 +144,14 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStartSession_Session(), startSessionSessionReferenceResolver);
 	}
 	
+	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.StartStream, org.sintef.thingml.Stream> getStartStreamStreamReferenceResolver() {
+		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStartStream_Stream(), startStreamStreamReferenceResolver);
+	}
+	
+	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.StopStream, org.sintef.thingml.Stream> getStopStreamStreamReferenceResolver() {
+		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getStopStream_Stream(), stopStreamStreamReferenceResolver);
+	}
+	
 	public org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.VariableAssignment, org.sintef.thingml.Variable> getVariableAssignmentPropertyReferenceResolver() {
 		return getResolverChain(org.sintef.thingml.ThingmlPackage.eINSTANCE.getVariableAssignment_Property(), variableAssignmentPropertyReferenceResolver);
 	}
@@ -205,6 +215,8 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		sendActionPortReferenceResolver.setOptions(options);
 		sendActionMessageReferenceResolver.setOptions(options);
 		startSessionSessionReferenceResolver.setOptions(options);
+		startStreamStreamReferenceResolver.setOptions(options);
+		stopStreamStreamReferenceResolver.setOptions(options);
 		variableAssignmentPropertyReferenceResolver.setOptions(options);
 		functionCallFunctionReferenceResolver.setOptions(options);
 		messageParameterMsgRefReferenceResolver.setOptions(options);
@@ -396,6 +408,22 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 				startSessionSessionReferenceResolver.resolve(identifier, (org.sintef.thingml.StartSession) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
 			}
 		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getStartStream().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.Stream> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Stream>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("stream")) {
+				startStreamStreamReferenceResolver.resolve(identifier, (org.sintef.thingml.StartStream) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
+		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getStopStream().isInstance(container)) {
+			ThingmlFuzzyResolveResult<org.sintef.thingml.Stream> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Stream>(result);
+			String referenceName = reference.getName();
+			org.eclipse.emf.ecore.EStructuralFeature feature = container.eClass().getEStructuralFeature(referenceName);
+			if (feature != null && feature instanceof org.eclipse.emf.ecore.EReference && referenceName != null && referenceName.equals("stream")) {
+				stopStreamStreamReferenceResolver.resolve(identifier, (org.sintef.thingml.StopStream) container, (org.eclipse.emf.ecore.EReference) feature, position, true, frr);
+			}
+		}
 		if (org.sintef.thingml.ThingmlPackage.eINSTANCE.getVariableAssignment().isInstance(container)) {
 			ThingmlFuzzyResolveResult<org.sintef.thingml.Variable> frr = new ThingmlFuzzyResolveResult<org.sintef.thingml.Variable>(result);
 			String referenceName = reference.getName();
@@ -536,6 +564,12 @@ public class ThingmlReferenceResolverSwitch implements org.sintef.thingml.resour
 		}
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getStartSession_Session()) {
 			return getResolverChain(reference, startSessionSessionReferenceResolver);
+		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getStartStream_Stream()) {
+			return getResolverChain(reference, startStreamStreamReferenceResolver);
+		}
+		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getStopStream_Stream()) {
+			return getResolverChain(reference, stopStreamStreamReferenceResolver);
 		}
 		if (reference == org.sintef.thingml.ThingmlPackage.eINSTANCE.getVariableAssignment_Property()) {
 			return getResolverChain(reference, variableAssignmentPropertyReferenceResolver);

@@ -77,6 +77,17 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
+    public void generate(StartStream action, StringBuilder builder, Context ctx) {
+        builder.append("start" + action.getStream().getInput().qname("_") + "();\n");
+    }
+
+    @Override
+    public void generate(StopStream action, StringBuilder builder, Context ctx) {
+        builder.append("stop" + action.getStream().getInput().qname("_") + "();\n");
+    }
+
+
+    @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
         if (ctx.hasContextAnnotation("useThis"))
             builder.append("this.");

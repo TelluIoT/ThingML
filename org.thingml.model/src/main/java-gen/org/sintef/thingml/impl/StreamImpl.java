@@ -49,6 +49,7 @@ import org.sintef.thingml.ThingmlPackage;
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getSelection <em>Selection</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getOutput <em>Output</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.StreamImpl#getInput <em>Input</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.StreamImpl#isDynamic <em>Dynamic</em>}</li>
  * </ul>
  *
  * @generated
@@ -83,6 +84,26 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 	 * @ordered
 	 */
 	protected Source input;
+
+	/**
+	 * The default value of the '{@link #isDynamic() <em>Dynamic</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDynamic()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DYNAMIC_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDynamic() <em>Dynamic</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDynamic()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean dynamic = DYNAMIC_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -206,6 +227,27 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isDynamic() {
+		return dynamic;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDynamic(boolean newDynamic) {
+		boolean oldDynamic = dynamic;
+		dynamic = newDynamic;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.STREAM__DYNAMIC, oldDynamic, dynamic));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -233,6 +275,8 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 				return getOutput();
 			case ThingmlPackage.STREAM__INPUT:
 				return getInput();
+			case ThingmlPackage.STREAM__DYNAMIC:
+				return isDynamic();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -256,6 +300,9 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 			case ThingmlPackage.STREAM__INPUT:
 				setInput((Source)newValue);
 				return;
+			case ThingmlPackage.STREAM__DYNAMIC:
+				setDynamic((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -277,6 +324,9 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 			case ThingmlPackage.STREAM__INPUT:
 				setInput((Source)null);
 				return;
+			case ThingmlPackage.STREAM__DYNAMIC:
+				setDynamic(DYNAMIC_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -295,8 +345,26 @@ public class StreamImpl extends AnnotatedElementImpl implements Stream {
 				return output != null;
 			case ThingmlPackage.STREAM__INPUT:
 				return input != null;
+			case ThingmlPackage.STREAM__DYNAMIC:
+				return dynamic != DYNAMIC_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (dynamic: ");
+		result.append(dynamic);
+		result.append(')');
+		return result.toString();
 	}
 
 } //StreamImpl

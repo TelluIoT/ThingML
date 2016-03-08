@@ -529,6 +529,18 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 		if (result != null) {
 			return result;
 		}
+		if (object instanceof org.sintef.thingml.StartStream) {
+			result = interprete_org_sintef_thingml_StartStream((org.sintef.thingml.StartStream) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
+		if (object instanceof org.sintef.thingml.StopStream) {
+			result = interprete_org_sintef_thingml_StopStream((org.sintef.thingml.StopStream) object, context);
+		}
+		if (result != null) {
+			return result;
+		}
 		if (object instanceof org.sintef.thingml.Configuration) {
 			result = interprete_org_sintef_thingml_Configuration((org.sintef.thingml.Configuration) object, context);
 		}
@@ -1029,6 +1041,14 @@ public class AbstractThingmlInterpreter<ResultType, ContextType> {
 	}
 	
 	public ResultType interprete_org_sintef_thingml_StartSession(org.sintef.thingml.StartSession startSession, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_StartStream(org.sintef.thingml.StartStream startStream, ContextType context) {
+		return null;
+	}
+	
+	public ResultType interprete_org_sintef_thingml_StopStream(org.sintef.thingml.StopStream stopStream, ContextType context) {
 		return null;
 	}
 	

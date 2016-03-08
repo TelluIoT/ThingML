@@ -732,9 +732,9 @@ public class ThingmlResource extends org.eclipse.emf.ecore.resource.impl.Resourc
 		// checking constraints provided by EMF validator classes was disabled by option
 		// 'disableEValidators'.
 		
-		/*if (new org.sintef.thingml.resource.thingml.util.ThingmlRuntimeUtil().isEclipsePlatformAvailable()) {
+		if (new org.sintef.thingml.resource.thingml.util.ThingmlRuntimeUtil().isEclipsePlatformAvailable()) {
 			new org.sintef.thingml.resource.thingml.util.ThingmlEclipseProxy().checkEMFValidationConstraints(this, root);
-		}*/
+		}
 	}
 	
 	public org.sintef.thingml.resource.thingml.IThingmlQuickFix getQuickFix(String quickFixContext) {

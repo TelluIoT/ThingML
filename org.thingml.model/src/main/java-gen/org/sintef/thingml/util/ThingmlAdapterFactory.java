@@ -389,6 +389,14 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 				return createStartSessionAdapter();
 			}
 			@Override
+			public Adapter caseStartStream(StartStream object) {
+				return createStartStreamAdapter();
+			}
+			@Override
+			public Adapter caseStopStream(StopStream object) {
+				return createStopStreamAdapter();
+			}
+			@Override
 			public Adapter caseConfiguration(Configuration object) {
 				return createConfigurationAdapter();
 			}
@@ -1611,6 +1619,34 @@ public class ThingmlAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStartSessionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StartStream <em>Start Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.StartStream
+	 * @generated
+	 */
+	public Adapter createStartStreamAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.sintef.thingml.StopStream <em>Stop Stream</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.sintef.thingml.StopStream
+	 * @generated
+	 */
+	public Adapter createStopStreamAdapter() {
 		return null;
 	}
 

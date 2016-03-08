@@ -31,6 +31,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#getInput <em>Input</em>}</li>
+ *   <li>{@link org.sintef.thingml.Stream#isDynamic <em>Dynamic</em>}</li>
  * </ul>
  *
  * @see org.sintef.thingml.ThingmlPackage#getStream()
@@ -105,5 +106,32 @@ public interface Stream extends AnnotatedElement {
 	 * @generated
 	 */
 	void setInput(Source value);
+
+	/**
+	 * Returns the value of the '<em><b>Dynamic</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Dynamic</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Dynamic</em>' attribute.
+	 * @see #setDynamic(boolean)
+	 * @see org.sintef.thingml.ThingmlPackage#getStream_Dynamic()
+	 * @model default="false"
+	 * @generated
+	 */
+	boolean isDynamic();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.Stream#isDynamic <em>Dynamic</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dynamic</em>' attribute.
+	 * @see #isDynamic()
+	 * @generated
+	 */
+	void setDynamic(boolean value);
 
 } // Stream
