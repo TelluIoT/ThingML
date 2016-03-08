@@ -33,9 +33,31 @@ import org.sintef.thingml.ThingMLModel;
 public abstract class ThingMLTool {
     public File outDir;
     public Map<String, StringBuilder> generatedCode = new HashMap<>();
+    public String options;
     
-    public ThingMLTool(File outdir) {
-        this.outDir = outdir;
+    public ThingMLTool() {}
+    
+    public abstract String getID();
+
+    public abstract String getName();
+
+    public abstract String getDescription();
+    
+    public abstract ThingMLTool clone();
+
+    public void setOutputDirectory(File outputDirectory) {
+        outputDirectory.mkdirs();
+        if (!outputDirectory.exists())
+            throw new Error("ERROR: The output directory does not exist (" + outputDirectory.getAbsolutePath() + ").");
+        if (!outputDirectory.isDirectory())
+            throw new Error("ERROR: The output directory has to be a directory (" + outputDirectory.getAbsolutePath() + ").");
+        if (!outputDirectory.canWrite())
+            throw new Error("ERROR: The output directory is not writable (" + outputDirectory.getAbsolutePath() + ").");
+        outDir = outputDirectory;
+    }
+
+    public File getOutputDirectory() {
+        return outDir;
     }
     
     public abstract void generateThingMLFrom(ThingMLModel model);

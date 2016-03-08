@@ -34,48 +34,81 @@ import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import java.io.File;
 import org.thingml.testconfigurationgenerator.TestConfigurationGenerator;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.*;
+import org.thingml.compilers.registry.ThingMLToolRegistry;
+import org.thingml.thingmltools.ThingMLTool;
+
 /**
  * Created by ffl on 15.06.15.
  */
 public class Main {
-
-
+    @Parameter(names={"--source", "-s"}, required = true, description = "A thingml file to compile (should include at least one configuration)")
+    String source;
+    @Parameter(names={"--output", "-o"}, description = "Optional output directory - by default current directory is used")
+    String output;
+    @Parameter(names ={"--help", "-h"}, help = true, description = "Display this message.")
+    private boolean help;
+    @Parameter(names={"--compiler", "-c"}, description = "Compiler ID")
+    String compiler;
+    @Parameter(names={"--tool", "-t"}, description = "Tool ID")
+    String tool;
+    @Parameter(names={"--options"}, description = "additional options for ThingML tools.")
+    String tooloptions;
+    
+    boolean toolUsed, compilerUsed;
+    
     public static void main(String[] args) {
+        Main main = new Main();
         ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
-
-        if (args.length < 2 || args.length > 3 || (args.length > 0 && args[0].equals("-help"))) {
-            System.out.println("ARGUMENTS: <compiler> <source> (<output dir>)");
-            System.out.println(" | <compiler>   : ");
+        ThingMLToolRegistry toolregistry = ThingMLToolRegistry.getInstance();
+        JCommander jcom = new JCommander(main, args);
+        
+        // HELP Handling
+        if(main.help) {
+            jcom.usage();
+            
+            System.out.println("Compiler Id must belong to the following list:");
             for (ThingMLCompiler c : registry.getCompilerPrototypes()) {
                 System.out.println(" |     " + c.getID() + "\t- " + c.getDescription());
             }
-            System.out.println(" | <source>     : A thingml file to compile (should include at least one configuration)");
-            System.out.println(" | <output dir> : Optional output directory - by default current directory is used");
-            System.out.println("Bye.");
+            
+            System.out.println();
+            
+            System.out.println("Tool Id must belong to the following list:");
+            for (ThingMLTool t : toolregistry.getToolPrototypes()) {
+                System.out.println(" |     " + t.getID() + "\t- " + t.getDescription());
+            }
+            
+            
             return;
         }
-
-        System.out.print("Running " + args[0] + " " + args[1]);
-        if (args.length == 3)
-            System.out.print(" " + args[2]);
-        System.out.println();
-
-        File input = new File(args[1]);
+        
+        // COMPILER/TOOL Handling
+        main.toolUsed = main.tool != null;
+        main.compilerUsed = main.compiler != null;
+        if(!((main.compiler != null) ^ (main.tool != null))) {
+            System.out.println("One (and only one) of the option --compiler or --tool must be used (or their short version -c and -t).");
+            return;
+        }
+        
+        //SOURCE Handling
+        File input = new File(main.source);
 
         if (!input.exists() || !input.isFile() || !input.canRead()) {
             System.out.println("ERROR: Cannot find or read input file " + input.getAbsolutePath() + ".");
             return;
         }
 
+        
+        //OUTPUT Handling
         File outdir = null;
 
-        for(String s : args) {
-            System.out.println(s);
-        }
-        if (args.length == 3) {
-            File o = new File(args[2]);
+        if (main.output != null) {
+            File o = new File(main.output);
             if (!o.exists()) {
-                new File(args[2]).mkdirs();
+                new File(main.output).mkdirs();
             }
             if (!o.exists() || !o.isDirectory() || !o.canWrite()) {
                 System.out.println("ERROR: Cannot find or write in output dir " + o.getAbsolutePath() + ".");
@@ -86,33 +119,57 @@ public class Main {
             outdir = new File(System.getProperty("user.dir"));
         }
 
+        //RECAP
+        System.out.print("Running ThingML");
+        
+        if (main.compiler != null)
+            System.out.print(" -c " + main.compiler);
+        
+        if (main.tool != null)
+            System.out.print(" -t " + main.tool);
+        
+        System.out.print(" -s " + main.source);
+        
+        if (main.output != null)
+            System.out.print(" -o " + main.output);
+        
+        System.out.println();
 
+        //EXECUTION
         try {
             ThingMLModel input_model = ThingMLCompiler.loadModel(input);
             if (input_model == null) {
                 System.out.println("ERROR: The input model contains errors.");
                 return;
             }
-            if(args[0].trim().compareToIgnoreCase("testconfigurationgen") == 0) {
-                System.out.println("Test Configuration Generation");
-                TestConfigurationGenerator cfgGen = new TestConfigurationGenerator(outdir);
-                cfgGen.generateThingMLFrom(input_model);
+            
+            if(main.toolUsed) {
                 
-            } else {
+                ThingMLTool thingmlTool = toolregistry.createToolInstanceByName(main.tool.trim());
+                if (thingmlTool == null) {
+                    System.out.println("ERROR: Cannot find tool " + main.tool.trim() + ". Use --help (or -h) to check the list of registered compilers.");
+                    return;
+                }
+                thingmlTool.setOutputDirectory(outdir);
+                thingmlTool.options = main.tooloptions;
+                System.out.println("Generating code for input model. ");
+                thingmlTool.generateThingMLFrom(input_model);
+            }
+            
+            if(main.compilerUsed) {
                 if (input_model.allConfigurations().isEmpty()) {
                     System.out.println("ERROR: The input model does not contain any configuration to be compiled.");
                     return;
                 }
-
                 for (Configuration cfg : input_model.allConfigurations()) {
-                    ThingMLCompiler compiler = registry.createCompilerInstanceByName(args[0].trim());
-                    if (compiler == null) {
-                        System.out.println("ERROR: Cannot find compiler " + args[0].trim() + ". Use -help to check the list of registered compilers.");
+                    ThingMLCompiler thingmlCompiler = registry.createCompilerInstanceByName(main.compiler.trim());
+                    if (thingmlCompiler == null) {
+                        System.out.println("ERROR: Cannot find compiler " + main.compiler.trim() + ". Use --help (or -h) to check the list of registered compilers.");
                         return;
                     }
-                    compiler.setOutputDirectory(outdir);
+                    thingmlCompiler.setOutputDirectory(outdir);
                     System.out.println("Generating code for configuration: " + cfg.getName());
-                    compiler.compile(cfg);
+                    thingmlCompiler.compile(cfg);
                 }
             }
             System.out.println("SUCCESS.");
@@ -125,6 +182,5 @@ public class Main {
 
         return;
     }
-
 
 }

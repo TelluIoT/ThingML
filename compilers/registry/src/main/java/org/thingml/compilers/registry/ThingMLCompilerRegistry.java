@@ -82,7 +82,11 @@ public class ThingMLCompilerRegistry {
     }
 
     public ThingMLCompiler createCompilerInstanceByName(String id) {
-        return compilers.get(id).clone();
+        if(compilers.get(id) == null) {
+            return null;
+        } else {
+            return compilers.get(id).clone();
+        }
     }
 
 }

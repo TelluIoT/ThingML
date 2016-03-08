@@ -38,8 +38,28 @@ import org.thingml.testconfigurationgenerator.TestGenConfig;
 public class TestConfigurationGenerator extends ThingMLTool{
     
 
-    public TestConfigurationGenerator(File outdir) {
-        super(outdir);
+    public TestConfigurationGenerator() {
+        super();
+    }
+
+    @Override
+    public String getID() {
+        return "testconfigurationgen";
+    }
+
+    @Override
+    public String getName() {
+        return "Test Configuration Generator";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Generates test configuration for things annnotated with @test \"input # output\".";
+    }
+
+    @Override
+    public ThingMLTool clone() {
+        return new TestConfigurationGenerator();
     }
     
     @Override
@@ -54,7 +74,7 @@ public class TestConfigurationGenerator extends ThingMLTool{
                     testInputs = testAn[0];
                     testOutputs = testAn[1];
                     System.out.println("in: " + testInputs + ", out: " + testOutputs);
-                    for(Language lang : TestGenConfig.getLanguages(outDir)) {
+                    for(Language lang : TestGenConfig.getLanguages(outDir, this.options)) {
                         generateCfg(t, testInputs, testOutputs,lang, i);
                     }
                     i++;

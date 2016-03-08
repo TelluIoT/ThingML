@@ -57,6 +57,12 @@
             <artifactId>org.thingml.parser.standalone</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.48</version>
+          </dependency>
 
     </dependencies>
 
