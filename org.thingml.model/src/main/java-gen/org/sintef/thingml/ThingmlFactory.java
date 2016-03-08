@@ -575,6 +575,24 @@ public interface ThingmlFactory extends EFactory {
 	StartSession createStartSession();
 
 	/**
+	 * Returns a new object of class '<em>Start Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Start Stream</em>'.
+	 * @generated
+	 */
+	StartStream createStartStream();
+
+	/**
+	 * Returns a new object of class '<em>Stop Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stop Stream</em>'.
+	 * @generated
+	 */
+	StopStream createStopStream();
+
+	/**
 	 * Returns a new object of class '<em>Configuration</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -50,8 +50,10 @@ public class JSThingCepCompiler extends ThingCepCompiler {
     }
 
     public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
-        builder.append(stream.getInput().qname("_") + ".subscribe(\n")
-                .append("function( " + paramName + ") { \n");
+        if (!stream.isDynamic()) {
+            builder.append(stream.getInput().qname("_") + ".subscribe(\n");
+        }
+        builder.append("function sub_" + stream.getInput().qname("_") + "( " + paramName + ") { \n");
 
         List<ViewSource> operators = stream.getInput().getOperators();
         boolean hasWindow = false;
@@ -75,6 +77,22 @@ public class JSThingCepCompiler extends ThingCepCompiler {
         }
 
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
-        builder.append("\t});\n");
+        builder.append("}");
+        if (!stream.isDynamic()) {
+            builder.append(");\n");
+        }
+
+        if (stream.isDynamic()) {
+            builder.append("function start" + stream.getInput().qname("_") + "(){\n");
+            builder.append("if (this." + stream.getInput().qname("_") + "_hook === null || this." + stream.getInput().qname("_") + "_hook === undefined) {\n");
+            builder.append("this." + stream.getInput().qname("_") + "_hook = " + stream.getInput().qname("_") + ".subscribe(sub_" + stream.getInput().qname("_") + ");\n");
+            builder.append("}\n");
+            builder.append("}\n");
+
+            builder.append("function stop" + stream.getInput().qname("_") + "(){\n");
+            builder.append("this." + stream.getInput().qname("_") + "_hook.dispose();\n");
+            builder.append("this." + stream.getInput().qname("_") + "_hook == null;\n");
+            builder.append("}\n");
+        }
     }
 }

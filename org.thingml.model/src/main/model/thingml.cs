@@ -50,6 +50,7 @@ TOKENS{
 		
 		DEFINE T_ASPECT $'fragment'$;
 		DEFINE T_HISTORY $'history'$;
+		DEFINE T_DYNAMIC $'dynamic'$;
 		
 		DEFINE WHITESPACE $(' '|'\t'|'\f')$;
 		DEFINE LINEBREAKS $('\r\n'|'\r'|'\n')$;
@@ -80,10 +81,10 @@ TOKENSTYLES{
 	"&" COLOR #0055bb, BOLD;
 	
 	// Literals
-	"STRING_LITERAL" COLOR #0055bb;
+	"STRING_LITERAL" COLOR #548A42;
 	"INTEGER_LITERAL" COLOR #0055bb;
 	"REAL_LITERAL" COLOR #0055bb;	
-	"BOOLEAN_LITERAL" COLOR #0055bb, BOLD;
+	"BOOLEAN_LITERAL" COLOR #6A2980, BOLD;
 	
 	// Definition of types and messages
 	"T_READONLY" COLOR #CC8000, BOLD;
@@ -130,6 +131,7 @@ TOKENSTYLES{
 	"during" COLOR #CF4729, BOLD;
 	"buffer" COLOR #CF4729, BOLD;	
 	"by" COLOR #CF4729, BOLD;
+	"T_DYNAMIC" COLOR #CF4729, BOLD;
 	
 	
 	// Action language
@@ -142,10 +144,10 @@ TOKENSTYLES{
 	"while" COLOR #444444, BOLD;
 	"print" COLOR #444444, BOLD;
 	"error" COLOR #444444, BOLD;
-	"not" COLOR #444444, BOLD;
-	"and" COLOR #444444, BOLD;
-	"or" COLOR #444444, BOLD;
-	"spawn" COLOR #097A41, BOLD;
+	"not" COLOR #6A2980, BOLD;
+	"and" COLOR #6A2980, BOLD;
+	"or" COLOR #6A2980, BOLD;
+	"fork" COLOR #097A41, BOLD;
 	
 	//Protocols
 	"protocol" COLOR #65BA9E, BOLD;
@@ -159,7 +161,6 @@ TOKENSTYLES{
 
 	// Special keywords
 	"T_ASPECT" COLOR #444444, BOLD;
-	"includes" COLOR #444444, BOLD;
 	"import" COLOR #444444, BOLD;
 	"set" COLOR #444444, BOLD;
 	
@@ -258,7 +259,11 @@ RULES {
 	
 	SendAction::= port[] "!" message[] "(" (parameters ("," #1 parameters)* )? ")";
 	
-	StartSession ::= "spawn" #1 session[] (constructor)*;
+	StartSession ::= "fork" #1 session[] (constructor)*;
+	
+	StartStream ::= "start" #1 stream[] ;
+	
+	StopStream ::= "stop" #1 stream[] ;
 		
 	VariableAssignment ::= property[] #1 ("[" index "]")* "=" #1 expression ; 
 	
@@ -293,7 +298,7 @@ RULES {
 	JoinSources  ::= name[] ":" #1 "[" #1 sources #1 ("&" #1 sources #1)+ #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" #1 "]" ("::" operators)* ;
 	MergeSources ::= name[] ":" #1 "[" #1 sources #1 ("|" #1 sources #1)+ #1 "->" resultMessage[] #1 "]" ("::" operators)* ;
 	
-	Stream ::= "stream" #1 name[] #1 (annotations)*
+	Stream ::= (dynamic[T_DYNAMIC] #1)? "stream" #1 name[] #1 (annotations)*
 					 !1 "from" #1 input
 					 (!1 "select" #1 ( selection ((",")? #1 selection)* )?)?
 					 !1 "produce" #1 output ;

@@ -61,8 +61,13 @@ public class ThingActionCompiler {
             generate ((Decrement) action, builder, ctx);
         else if (action instanceof StartSession) {
             generate ((StartSession) action, builder, ctx);
+        } else if (action instanceof StartStream) {
+            generate((StartStream) action, builder, ctx);
+        } else if (action instanceof StopStream) {
+            generate((StopStream) action, builder, ctx);
+        } else {
+            throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
-
     }
 
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
@@ -70,6 +75,14 @@ public class ThingActionCompiler {
     }
 
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(StartStream action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(StopStream action, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
@@ -176,6 +189,8 @@ public class ThingActionCompiler {
             generate((ExternExpression) expression, builder, ctx);
         } else if (expression instanceof FunctionCallExpression) {
             generate((FunctionCallExpression) expression, builder, ctx);
+        } else {
+            throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
     }
 

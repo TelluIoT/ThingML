@@ -284,6 +284,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="constructor" upperBound="-1"
         eType="#//PropertyAssign" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StartStream" eSuperTypes="#//Action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stream" lowerBound="1"
+        eType="#//Stream"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StopStream" eSuperTypes="#//Action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stream" lowerBound="1"
+        eType="#//Stream"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Configuration" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="instances" upperBound="-1"
         eType="#//Instance" containment="true"/>
@@ -346,6 +354,8 @@
         eType="#//SendAction" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="input" lowerBound="1" eType="#//Source"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dynamic" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true" eSuperTypes="#//ThingMLElement #//ReferencedElmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"

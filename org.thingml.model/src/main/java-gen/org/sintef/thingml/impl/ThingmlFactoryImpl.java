@@ -208,6 +208,8 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.PRINT_ACTION: return createPrintAction();
 			case ThingmlPackage.ERROR_ACTION: return createErrorAction();
 			case ThingmlPackage.START_SESSION: return createStartSession();
+			case ThingmlPackage.START_STREAM: return createStartStream();
+			case ThingmlPackage.STOP_STREAM: return createStopStream();
 			case ThingmlPackage.CONFIGURATION: return createConfiguration();
 			case ThingmlPackage.INSTANCE: return createInstance();
 			case ThingmlPackage.CONNECTOR: return createConnector();
@@ -834,6 +836,26 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public StartSession createStartSession() {
 		StartSessionImpl startSession = new StartSessionImpl();
 		return startSession;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StartStream createStartStream() {
+		StartStreamImpl startStream = new StartStreamImpl();
+		return startStream;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StopStream createStopStream() {
+		StopStreamImpl stopStream = new StopStreamImpl();
+		return stopStream;
 	}
 
 	/**

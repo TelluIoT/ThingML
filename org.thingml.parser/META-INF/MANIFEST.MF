@@ -1,18 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: EMFText Parser Plugin: thingml
+Bundle-Name: SINTEF
 Bundle-SymbolicName: org.sintef.thingml.resource.thingml;singleton:=true
 Bundle-Version: 0.7.0.qualifier
-Bundle-Vendor: SINTEF
+Bundle-Vendor: Software Technology Group - TU Dresden Germany
 Require-Bundle: org.eclipse.core.runtime;resolution:=optional,
- org.eclipse.emf.ecore,
- org.eclipse.emf.ecore.change,
- org.emftext.access;resolution:=optional,
- org.eclipse.debug.core;resolution:=optional,
- org.emftext.commons.antlr3_4_0,
- org.sintef.thingml.model
+  org.eclipse.emf.ecore,
+  org.eclipse.emf.ecore.change,
+  org.eclipse.emf.validation;resolution:=optional,
+  org.emftext.access;resolution:=optional,
+  org.eclipse.debug.core;resolution:=optional,
+  org.emftext.commons.antlr3_4_0,
+  org.sintef.thingml.model
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.sintef.thingml.resource.thingml,
   org.sintef.thingml.resource.thingml.analysis,
   org.sintef.thingml.resource.thingml.mopp,

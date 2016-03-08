@@ -214,6 +214,12 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StartSession/session"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StartSession/constructor"/>
     </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//StartStream">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StartStream/stream"/>
+    </genClasses>
+    <genClasses ecoreClass="thingml.ecore#//StopStream">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference thingml.ecore#//StopStream/stream"/>
+    </genClasses>
     <genClasses ecoreClass="thingml.ecore#//Configuration">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/instances"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Configuration/connectors"/>
@@ -256,6 +262,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/selection"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/output"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Stream/input"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Stream/dynamic"/>
     </genClasses>
     <genClasses image="false" ecoreClass="thingml.ecore#//Source">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Source/operators"/>
