@@ -44,20 +44,42 @@ import org.thingml.thingmltools.ThingMLTool;
  * Created by ffl on 15.06.15.
  */
 public class Main {
-    @Parameter(names={"--source", "-s"}, required = true, description = "A thingml file to compile (should include at least one configuration)")
+    @Parameter(names={"--source", "-s"}, description = "A thingml file to compile (should include at least one configuration)")
     String source;
     @Parameter(names={"--output", "-o"}, description = "Optional output directory - by default current directory is used")
     String output;
     @Parameter(names ={"--help", "-h"}, help = true, description = "Display this message.")
     private boolean help;
-    @Parameter(names={"--compiler", "-c"}, description = "Compiler ID")
+    @Parameter(names={"--compiler", "-c"}, description = "Compiler ID (Mandatory unless --tool (-t) is used)")
     String compiler;
-    @Parameter(names={"--tool", "-t"}, description = "Tool ID")
+    @Parameter(names={"--tool", "-t"}, description = "Tool ID (Mandatory unless --compiler (-c) is used)")
     String tool;
     @Parameter(names={"--options"}, description = "additional options for ThingML tools.")
     String tooloptions;
     
     boolean toolUsed, compilerUsed;
+    
+    public static void printUsage(JCommander jcom, ThingMLCompilerRegistry registry, ThingMLToolRegistry toolregistry) {
+        System.out.println(" --- ThingML help ---");
+        
+        System.out.println("Typical usages: ");
+        System.out.println("    java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>]");
+        System.out.println("    java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>]");
+        
+        jcom.usage();
+
+        System.out.println("Compiler Id must belong to the following list:");
+        for (ThingMLCompiler c : registry.getCompilerPrototypes()) {
+            System.out.println(" |     " + c.getID() + "\t- " + c.getDescription());
+        }
+
+        System.out.println();
+
+        System.out.println("Tool Id must belong to the following list:");
+        for (ThingMLTool t : toolregistry.getToolPrototypes()) {
+            System.out.println(" |     " + t.getID() + "\t- " + t.getDescription());
+        }
+    }
     
     public static void main(String[] args) {
         Main main = new Main();
@@ -66,22 +88,8 @@ public class Main {
         JCommander jcom = new JCommander(main, args);
         
         // HELP Handling
-        if(main.help) {
-            jcom.usage();
-            
-            System.out.println("Compiler Id must belong to the following list:");
-            for (ThingMLCompiler c : registry.getCompilerPrototypes()) {
-                System.out.println(" |     " + c.getID() + "\t- " + c.getDescription());
-            }
-            
-            System.out.println();
-            
-            System.out.println("Tool Id must belong to the following list:");
-            for (ThingMLTool t : toolregistry.getToolPrototypes()) {
-                System.out.println(" |     " + t.getID() + "\t- " + t.getDescription());
-            }
-            
-            
+        if(main.help || ((main.compiler == null) && (main.tool == null))) {
+            printUsage(jcom, registry, toolregistry);
             return;
         }
         
@@ -94,7 +102,13 @@ public class Main {
         }
         
         //SOURCE Handling
-        File input = new File(main.source);
+        File input = null;
+        if(main.source != null) {
+            input = new File(main.source);
+        } else {
+            System.out.println("--source (or -s) is a mandatory parameter.");
+            return;
+        }
 
         if (!input.exists() || !input.isFile() || !input.canRead()) {
             System.out.println("ERROR: Cannot find or read input file " + input.getAbsolutePath() + ".");
