@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
@@ -17,7 +16,7 @@
 
 -->
 <site>
-   <feature url="features/org.thingml.eclipse.feature_0.6.0.qualifier.jar" id="org.thingml.eclipse.feature" version="0.6.0.qualifier">
+   <feature url="features/org.thingml.eclipse.feature_0.7.0.qualifier.jar" id="org.thingml.eclipse.feature" version="0.7.0.qualifier">
       <category name="org.thingml"/>
    </feature>
    <category-def name="org.thingml" label="ThingML"/>

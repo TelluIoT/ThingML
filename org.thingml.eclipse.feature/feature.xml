@@ -19,7 +19,7 @@
 <feature
       id="org.thingml.eclipse.feature"
       label="ThingML"
-      version="0.6.0.qualifier"
+      version="0.7.0.qualifier"
       provider-name="SINTEF-9012">
 
    <description url="http://thingml.org">
