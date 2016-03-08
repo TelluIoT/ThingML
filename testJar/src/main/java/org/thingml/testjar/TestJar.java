@@ -44,7 +44,7 @@ public class TestJar {
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
         final File workingDir = new File(System.getProperty("user.dir"));
         final File tmpDir = new File(workingDir, "testJar/tmp");
-        final File compilerJar = new File(workingDir, "compilers/registry/target/compilers.registry-0.6.0-SNAPSHOT-jar-with-dependencies.jar");
+        final File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.6.0-SNAPSHOT-jar-with-dependencies.jar");
 
         System.out.println(tmpDir);
 
