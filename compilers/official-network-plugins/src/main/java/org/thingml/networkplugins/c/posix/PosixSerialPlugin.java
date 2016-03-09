@@ -20,6 +20,8 @@
  */
 package org.thingml.networkplugins.c.posix;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Protocol;
@@ -36,8 +38,10 @@ public class PosixSerialPlugin extends NetworkPlugin {
         return "PosixSerialPlugin";
     }
 
-    public String getSupportedProtocolName() {
-        return "Serial";
+    public List<String> getSupportedProtocols() {
+        List<String> res = new ArrayList<>();
+        res.add("Serial");
+        return res;
     }
 
     public String getTargetedLanguage() {

@@ -20,8 +20,10 @@
  */
 package org.thingml.networkplugins.c.arduino;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
@@ -53,8 +55,14 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
         return "ArduinoSerialPlugin";
     }
 
-    public String getSupportedProtocolName() {
-        return "Serial";
+    public List<String> getSupportedProtocols() {
+        List<String> res = new ArrayList<>();
+        res.add("Serial");
+        res.add("Serial0");
+        res.add("Serial1");
+        res.add("Serial2");
+        res.add("Serial3");
+        return res;
     }
 
     public String getTargetedLanguage() {

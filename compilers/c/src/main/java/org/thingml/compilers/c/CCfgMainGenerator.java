@@ -39,6 +39,7 @@ import org.thingml.compilers.c.posix.plugin.PosixMQTT;
 import org.thingml.compilers.c.posix.plugin.PosixSerial;
 import org.thingml.compilers.c.posix.plugin.PosixWS;
 import org.thingml.compilers.cpp.sintefboard.plugin.SintefboardPort;
+import org.thingml.compilers.spi.NetworkPlugin;
 
 /**
  * Created by ffl on 29.05.15.
@@ -55,14 +56,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         CCompilerContext c = (CCompilerContext)ctx;
-        generateNetworkLibs(cfg, c);
+        ctx.generateNetworkLibs(cfg);
         generateCommonHeader(cfg, c);
         generateRuntimeModule(cfg, c);
         generateConfigurationImplementation(cfg, model, c);
     }
     
-    public void generateNetworkLibs(Configuration cfg, CCompilerContext ctx) {
-        PosixWS WSgen = new PosixWS(cfg, ctx);
+    /*public void generateNetworkLibs(Configuration cfg, CCompilerContext ctx) {
+        
+        /*PosixWS WSgen = new PosixWS(cfg, ctx);
         ctx.addNetworkLibraryGenerator(WSgen);
         
         NopollWS nopollWSgen = new NopollWS(cfg, ctx);
@@ -130,7 +132,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         aSerialgen.generateNetworkLibrary();
         aTimergen.generateNetworkLibrary();
         sPortgen.generateNetworkLibrary();
-    }
+    }*/
     
     protected void generateConfigurationImplementation(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
 
