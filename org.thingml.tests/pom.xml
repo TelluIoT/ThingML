@@ -33,7 +33,7 @@
     <dependencies>
          <dependency>
             <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.cmd</artifactId>
+            <artifactId>compilers.registry</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

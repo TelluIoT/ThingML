@@ -13,8 +13,7 @@ thing TimerJava includes Timer
     statechart SoftTimer init default {
         state default {
 
-          internal start
-            event m : timer?timer_start
+          internal event m : timer?timer_start
             guard m.delay > 0
             action do
              /*if (not(timer == 'null')) do
@@ -40,8 +39,7 @@ thing TimerJava includes Timer
               '' & timer & '.start();'                
             end
             
-          internal cancel
-            event m : timer?timer_cancel
+          internal event m : timer?timer_cancel
             action do
               if (not(timer == 'null')) do
                 'try {'
