@@ -32,7 +32,6 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
         super(cepViewCompiler, sourceDeclaration);
     }
 
-
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
@@ -76,13 +75,14 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
             outPutType = "List<" + outPutType + ">";
         }
 
-        builder.append(name + ".subscribe(new Action1<" + outPutType + ">() {\n")
-                .append("@Override\n")
-                .append("public void call(" + outPutType + " " + outPutName + ") {\n");
 
-        if(hasWindow) {
-            builder.append("int i;\n");
-            for(Parameter parameter : outPut.getParameters()) {
+       builder.append("this.sub_" + name + " = new Action1<" + outPutType + ">() {\n")
+               .append("@Override\n")
+               .append("public void call(" + outPutType + " " + outPutName + ") {\n");
+
+       if(hasWindow) {
+           builder.append("int i;\n");
+           for(Parameter parameter : outPut.getParameters()) {
                builder.append(JavaHelper.getJavaType(parameter.getType(), false, context) + "[] " + outPutName + parameter.getName() + " = new " + JavaHelper.getJavaType(parameter.getType(), false, context) + "[" + outPutName + ".size()];\n")
                        .append("i = 0;\n")
                        .append("for(" + messageType + " " + outPutName + "_msg : " + outPutName + ") {\n")
@@ -90,16 +90,20 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
                        .append("i++;\n")
                        .append("}\n");
            }
-        }
+       }
 
        for(LocalVariable lv : stream.getSelection()) {
            context.getCompiler().getThingActionCompiler().generate(lv, builder, context);
        }
 
-        context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
+       context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
 
-       builder.append("}\n")
-                .append("});\n");
+       builder.append("}};\n");
+
+
+        if (!stream.isDynamic()) {
+            builder.append("start" + stream.getInput().qname("_") + "();\n");
+        }
     }
 
 

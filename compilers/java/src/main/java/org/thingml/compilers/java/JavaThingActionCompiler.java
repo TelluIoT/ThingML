@@ -125,6 +125,24 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
+    public void generate(StartStream action, StringBuilder builder, Context ctx) {
+        //if(action.getStream().getInput() instanceof SimpleSource) {
+            builder.append("start" + action.getStream().getInput().qname("_") + "();\n");
+        /*} else if (action.getStream().getInput() instanceof SourceComposition) {
+            builder.append("start" + action.getStream().qname("_") + "();\n");
+        }*/
+    }
+
+    @Override
+    public void generate(StopStream action, StringBuilder builder, Context ctx) {
+        //if(action.getStream().getInput() instanceof SimpleSource) {
+            builder.append("stop" + action.getStream().getInput().qname("_") + "();\n");
+        /*} else if (action.getStream().getInput() instanceof SourceComposition) {
+            builder.append("stop" + action.getStream().qname("_") + "();\n");
+        }*/
+    }
+
+    @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
         if (action.getFunction().isDefined("fork_thread", "true") && action.getFunction().getType() != null) {
             System.err.println("function " + action.getFunction().getName() + "cannot be called with @fork_thread, as its return type (" + action.getFunction().getType().getName() + ") is not void");
@@ -225,15 +243,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
         if(!ctx.getAtInitTimeLock()) {
             if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
-                //if (expression.getProperty().eContainer() instanceof Thing) {
-                    builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
-                /*} else { //Composite or session
-                    if (expression.getProperty().findContainingRegion() instanceof Session) {
-                        builder.append("(" + JavaHelper.getJavaType(expression.getProperty().getType(), false, ctx) + ")properties.get(\"" + expression.getProperty().findContainingRegion().getName() + "\" + id).get(\"" + expression.getProperty().getName() + "\")");
-                    } else {
-                        builder.append("(" + JavaHelper.getJavaType(expression.getProperty().getType(), false, ctx) + ")properties.get(\"" + expression.getProperty().findContainingRegion().getName() + "\").get(\"" + expression.getProperty().getName() + "\")");
-                    }
-                }*/
+                builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
             else
                 builder.append(ctx.getVariableName(expression.getProperty()));
         } else {
