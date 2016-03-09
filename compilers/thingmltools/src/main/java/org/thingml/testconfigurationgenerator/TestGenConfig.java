@@ -29,7 +29,7 @@ import java.util.Set;
  * @author sintef
  */
 public class TestGenConfig {
-    static public Set<Language> getLanguages(File outputDir) {
+    static public Set<Language> getLanguages(File outputDir, String options) {
         Set<Language> languages = new HashSet<>();
         
         Language javascript = new Language(outputDir, "JS", "javascript");
@@ -37,9 +37,19 @@ public class TestGenConfig {
         Language java = new Language(outputDir, "Java", "java");
         Language arduino = new Language(outputDir, "Arduino", "arduino");
         
-        languages.add(javascript);
-        languages.add(posix);
-        languages.add(java);
+        if(options == null) {
+            options = "all";
+        }
+        
+        if((options.compareToIgnoreCase(javascript.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+            languages.add(javascript);
+        }
+        if((options.compareToIgnoreCase(posix.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+            languages.add(posix);
+        }
+        if((options.compareToIgnoreCase(java.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+            languages.add(java);
+        }
         //languages.add(arduino);
         
         return languages;
