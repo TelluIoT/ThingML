@@ -4,3 +4,4 @@
 
     void /*MESSAGE_NAME*/_queueEvent/*MESSAGE_PARAMETERS*/;
     void /*MESSAGE_NAME*/_popEvent();
+    void check/*MESSAGE_NAME*/TTL();

@@ -135,11 +135,10 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             }
 
             String streamTTL = "250"; // Default value out of f'''' nowhere
-            if (s.hasAnnotation("TTL")) {
+            if (s.hasAnnotation("TTL"))
                 for (String v : s.annotation("TTL"))
                     streamTTL = v;
 
-            }
             cepTemplate = cepTemplate.replace("/*TTL*/", streamTTL);
             cepTemplate = cepTemplate.replace("/*STREAM_NAME*/", s.getName());
             cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
@@ -222,8 +221,10 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             if (s.getInput() instanceof JoinSources) {
                 List<Message> msgs = ArduinoThingCepCompiler.getMessageFromStream(s);
                 List<String> triggerCondition = new ArrayList<>();
-                for (Message m : msgs)
+                for (Message m : msgs) {
+                    triggerImpl += "check" + m.getName() + "TTL();\n";
                     triggerCondition.add("!" + m.getName() + "_isEmpty()");
+                }
                 triggerImpl = "if (" + String.join(" && ", triggerCondition) + " )\n {\n";
 
                 for (Message m : msgs)
@@ -234,6 +235,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), outAction, ctx);
                 triggerImpl += outAction + "\n}\n";
             }
+
 
             classImpl = classImpl.replace("/*STREAM_NAME*/", s.getName());
             classImpl = classImpl.replace("/*MESSAGE_IMPL*/", msgsImpl);
