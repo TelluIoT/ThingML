@@ -79,6 +79,9 @@ public class Main {
         for (ThingMLTool t : toolregistry.getToolPrototypes()) {
             System.out.println(" |     " + t.getID() + "\t- " + t.getDescription());
         }
+        
+        System.out.println();
+        registry.printNetworkPluginList();
     }
     
     public static void main(String[] args) {

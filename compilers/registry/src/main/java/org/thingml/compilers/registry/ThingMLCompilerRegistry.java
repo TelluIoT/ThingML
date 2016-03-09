@@ -28,6 +28,7 @@ import org.thingml.compilers.debugGUI.DebugGUICompiler;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -40,6 +41,7 @@ public class ThingMLCompilerRegistry {
 
     private static ThingMLCompilerRegistry instance;
     private static ServiceLoader<NetworkPlugin> plugins = ServiceLoader.load(NetworkPlugin.class);
+    private static Set<NetworkPlugin> loadedPlugins;
 
     public static ThingMLCompilerRegistry getInstance() {
         
@@ -55,13 +57,12 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new DebugGUICompiler());
 
         }
-        
+        loadedPlugins = new HashSet<>();
         plugins.reload();
         Iterator<NetworkPlugin> it = plugins.iterator();
-        System.out.println("Plugin list:");
         while(it.hasNext()) {
             NetworkPlugin p = it.next();
-            System.out.println("    Plugin: " + p.getPluginID());
+            loadedPlugins.add(p);
         }
         
         return instance;
@@ -85,7 +86,22 @@ public class ThingMLCompilerRegistry {
         if(compilers.get(id) == null) {
             return null;
         } else {
-            return compilers.get(id).clone();
+            ThingMLCompiler c = compilers.get(id).clone();
+            for(NetworkPlugin np : loadedPlugins) {
+                if(np.getTargetedLanguage().compareTo(id) == 0) {
+                    c.addNetworkPlugin(np);
+                }
+            }
+            return c;
+        }
+    }
+    
+    public void printNetworkPluginList() {
+            System.out.println("Plugin list: ");
+        for(NetworkPlugin np : loadedPlugins) {
+            System.out.println("    | " + np.getPluginID() 
+                    + "\t handles " + np.getSupportedProtocolName() 
+                    + "\t for Compiler: " +np.getTargetedLanguage());
         }
     }
 

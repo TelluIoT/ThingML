@@ -33,6 +33,7 @@ import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import java.io.File;
 import java.io.OutputStream;
 import java.util.*;
+import org.thingml.compilers.spi.NetworkPlugin;
 
 /**
  * Created by ffl on 23.11.14.
@@ -358,6 +359,42 @@ public abstract class ThingMLCompiler {
     public File getOutputDirectory() {
         return outputDirectory;
     }
-
+    
+    Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
+    
+    public void addNetworkPlugin(NetworkPlugin np) {
+        String prot = np.getSupportedProtocolName();
+        if(networkPluginsPerProtocol.containsKey(prot)) {
+            networkPluginsPerProtocol.get(prot).add(np);
+        } else {
+            Set<NetworkPlugin> plugins = new HashSet<>();
+            plugins.add(np);
+            networkPluginsPerProtocol.put(prot, plugins);
+        }
+    }
+    
+    public Set<NetworkPlugin> getNetworkPlugins(Protocol prot) {
+        return networkPluginsPerProtocol.get(prot.getName());
+    }
+    
+    public NetworkPlugin getNetworkPlugin(Protocol prot) {
+        Set<NetworkPlugin> plugins = networkPluginsPerProtocol.get(prot.getName());
+        if(plugins == null) {
+            System.out.println("[ERROR] No plugin found for protocol: " + prot.getName());
+            return null;
+        }
+        if(prot.hasAnnotation("nlg")) {
+            String pluginID = prot.annotation("nlg").get(0);
+            for(NetworkPlugin np : plugins) {
+                if(np.getPluginID().compareTo(pluginID) == 0) {
+                    return np;
+                }
+            }
+            System.out.println("[ERROR] No plugin found for protocol: " + prot.getName() + " with annotation @nlg \"" + pluginID + "\"");
+            return null;
+        } else {
+            return plugins.iterator().next();
+        }
+    }
 
 }
