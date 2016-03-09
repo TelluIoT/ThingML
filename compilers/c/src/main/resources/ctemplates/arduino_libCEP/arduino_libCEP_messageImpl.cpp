@@ -21,7 +21,7 @@ void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_queueEvent/*MESSAGE_PARAMETERS*/
     //nothing may be removed, hence the two ifs
     if (/*MESSAGE_NAME*/_available() == 0)
     {
-        //move head according to step
+        /*SLIDING_IMPL*/
     }
 
     if (/*MESSAGE_NAME*/_available() > /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE)

@@ -103,6 +103,40 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
         return ret;
     }
 
+    public static String getSlidingStep(Stream s, CCompilerContext ctx) {
+        String slidingImpl = "";
+        for (ViewSource vs : s.getInput().getOperators()) {
+            if (vs instanceof LengthWindow) {
+                StringBuilder b = new StringBuilder();
+                ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getStep(), b, ctx);
+                int step = Integer.parseInt(b.toString());
+                int streamSize = Integer.parseInt(getStreamSize(s, ctx));
+                if (step > streamSize)
+                    throw (new UnsupportedOperationException("The step can't be bigger than the window size."));
+
+                slidingImpl += "int step = " + step + ";\n";
+                slidingImpl += "if (/*MESSAGE_NAME*/_available() > " + step + ")\n\tstep = /*MESSAGE_NAME*/_available();\n";
+
+                slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + " + step + " * /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
+
+                break; // we stop at first match, a stream can have only one window right?
+            }
+            if (vs instanceof TimeWindow) {
+                StringBuilder b = new StringBuilder();
+                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), b, ctx);
+                b.toString();
+            }
+
+        }
+
+        /* If no window is specified */
+        if (slidingImpl.equals(""))
+            slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
+
+        return slidingImpl;
+    }
+
+
     public static void generateCEPLibAPI(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(thing)) {
 
@@ -165,6 +199,18 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ctx.appendFormalParameters(thing, paramBuilder, msg);
                 messageImpl = messageImpl.replace("/*MESSAGE_PARAMETERS*/", paramBuilder);
 
+
+                /**
+                 * Sliding Window Impl
+                 * Here we have basically 3 cases
+                 * - the stream has no window specified, we only remove one message
+                 * - the stream is a LenghtWindow, we remove `step` element(s)
+                 * - the stream is a TimeWindow, we do other stuff
+                 */
+                String slidingImp = getSlidingStep(s, ctx);
+                slidingImp = slidingImp.replace("/*MESSAGE_NAME*/", msg.getName());
+                slidingImp = slidingImp.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
+                messageImpl = messageImpl.replace("/*SLIDING_IMPL*/", slidingImp);
 
                 /**
                  * Queue Impl
