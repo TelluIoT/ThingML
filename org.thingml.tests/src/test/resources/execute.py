@@ -114,9 +114,9 @@ for (a,b) in results:
 		if deleteTemporaryFiles and os.path.exists(capitalizedName):
 			os.system("rm -r ../../../../../target/tmp/_"+smallType+"/")
 		if ((not type == "Java") and (not type == "Javascript")):
-			os.system("mvn -f ../../../../../../compilers/registry/pom.xml exec:java -Dexec.mainClass=\"org.thingml.compilers.commandline.Main\" -Dexec.args=\""+compiler+" ../_"+smallType+"/"+fileName+".thingml ../../../../../target/tmp/_" + smallType+ "\"")
+			os.system("mvn -f ../../../../../../compilers/registry/pom.xml exec:java -Dexec.mainClass=\"org.thingml.compilers.commandline.Main\" -Dexec.args=\"-c "+compiler+" -s ../_"+smallType+"/"+fileName+".thingml -o ../../../../../target/tmp/_" + smallType+ "\"")
 		else:
-			os.system("mvn -f ../../../../../../compilers/registry/pom.xml exec:java -Dexec.mainClass=\"org.thingml.compilers.commandline.Main\" -Dexec.args=\""+compiler+" ../_"+smallType+"/"+fileName+".thingml ../../../../../target/tmp/_" + smallType+"/"+capitalizedName + "\"")
+			os.system("mvn -f ../../../../../../compilers/registry/pom.xml exec:java -Dexec.mainClass=\"org.thingml.compilers.commandline.Main\" -Dexec.args=\"-c "+compiler+" -s ../_"+smallType+"/"+fileName+".thingml -o ../../../../../target/tmp/_" + smallType+"/"+capitalizedName + "\"")
 
 		dump=open(dumpDir+'/target/dump/'+fileName+type+'.dump', 'a')
 		os.chdir(testsDirectory + "/../../../../../target/tmp/_"+smallType+"/"+capitalizedName)
