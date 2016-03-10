@@ -147,13 +147,13 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(Increment action, StringBuilder builder, Context ctx) {
-        builder.append(ctx.getVariableName(action.getVar()));
+        generate(action.getVar(), builder, ctx);
         builder.append("++;\n");
     }
 
     @Override
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
-        builder.append(ctx.getVariableName(action.getVar()));
+        generate(action.getVar(), builder, ctx);
         builder.append("--;\n");
     }
 

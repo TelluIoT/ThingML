@@ -57,7 +57,6 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-
         CCompilerContext context = (CCompilerContext) ctx;
 
         builder.append(context.getCName(action.getFunction(), context.getConcreteThing()));
@@ -67,6 +66,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
             builder.append(", ");
             generate(p, builder, context);
         }
+        
         builder.append(");\n");
     }
 

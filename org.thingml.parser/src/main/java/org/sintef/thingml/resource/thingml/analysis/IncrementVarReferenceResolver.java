@@ -15,15 +15,15 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-public class IncrementVarReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Increment, org.sintef.thingml.Variable> {
+public class IncrementVarReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Increment, org.sintef.thingml.PropertyReference> {
 	
-	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Increment, org.sintef.thingml.Variable> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Increment, org.sintef.thingml.Variable>();
+	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Increment, org.sintef.thingml.PropertyReference> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.Increment, org.sintef.thingml.PropertyReference>();
 	
-	public void resolve(String identifier, org.sintef.thingml.Increment container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Variable> result) {
+	public void resolve(String identifier, org.sintef.thingml.Increment container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.PropertyReference> result) {
 		delegate.resolve(identifier, container, reference, position, resolveFuzzy, result);
 	}
 	
-	public String deResolve(org.sintef.thingml.Variable element, org.sintef.thingml.Increment container, org.eclipse.emf.ecore.EReference reference) {
+	public String deResolve(org.sintef.thingml.PropertyReference element, org.sintef.thingml.Increment container, org.eclipse.emf.ecore.EReference reference) {
 		return delegate.deResolve(element, container, reference);
 	}
 	

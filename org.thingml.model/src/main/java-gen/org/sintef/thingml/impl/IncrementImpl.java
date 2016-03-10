@@ -18,12 +18,14 @@
 package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.Increment;
+import org.sintef.thingml.PropertyReference;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Variable;
 
@@ -45,14 +47,14 @@ import java.util.List;
  */
 public class IncrementImpl extends ActionImpl implements Increment {
 	/**
-	 * The cached value of the '{@link #getVar() <em>Var</em>}' reference.
+	 * The cached value of the '{@link #getVar() <em>Var</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getVar()
 	 * @generated
 	 * @ordered
 	 */
-	protected Variable var;
+	protected PropertyReference var;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -77,15 +79,7 @@ public class IncrementImpl extends ActionImpl implements Increment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Variable getVar() {
-		if (var != null && var.eIsProxy()) {
-			InternalEObject oldVar = (InternalEObject)var;
-			var = (Variable)eResolveProxy(oldVar);
-			if (var != oldVar) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingmlPackage.INCREMENT__VAR, oldVar, var));
-			}
-		}
+	public PropertyReference getVar() {
 		return var;
 	}
 
@@ -94,20 +88,47 @@ public class IncrementImpl extends ActionImpl implements Increment {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Variable basicGetVar() {
-		return var;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setVar(Variable newVar) {
-		Variable oldVar = var;
+	public NotificationChain basicSetVar(PropertyReference newVar, NotificationChain msgs) {
+		PropertyReference oldVar = var;
 		var = newVar;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.INCREMENT__VAR, oldVar, var));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.INCREMENT__VAR, oldVar, newVar);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setVar(PropertyReference newVar) {
+		if (newVar != var) {
+			NotificationChain msgs = null;
+			if (var != null)
+				msgs = ((InternalEObject)var).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.INCREMENT__VAR, null, msgs);
+			if (newVar != null)
+				msgs = ((InternalEObject)newVar).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.INCREMENT__VAR, null, msgs);
+			msgs = basicSetVar(newVar, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.INCREMENT__VAR, newVar, newVar));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.INCREMENT__VAR:
+				return basicSetVar(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -119,8 +140,7 @@ public class IncrementImpl extends ActionImpl implements Increment {
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case ThingmlPackage.INCREMENT__VAR:
-				if (resolve) return getVar();
-				return basicGetVar();
+				return getVar();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -134,7 +154,7 @@ public class IncrementImpl extends ActionImpl implements Increment {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ThingmlPackage.INCREMENT__VAR:
-				setVar((Variable)newValue);
+				setVar((PropertyReference)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -149,7 +169,7 @@ public class IncrementImpl extends ActionImpl implements Increment {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ThingmlPackage.INCREMENT__VAR:
-				setVar((Variable)null);
+				setVar((PropertyReference)null);
 				return;
 		}
 		super.eUnset(featureID);

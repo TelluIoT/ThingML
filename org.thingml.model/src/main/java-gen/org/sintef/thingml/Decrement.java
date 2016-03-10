@@ -37,28 +37,28 @@ package org.sintef.thingml;
 public interface Decrement extends Action {
 
 	/**
-	 * Returns the value of the '<em><b>Var</b></em>' reference.
+	 * Returns the value of the '<em><b>Var</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Var</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Var</em>' reference.
-	 * @see #setVar(Variable)
+	 * @return the value of the '<em>Var</em>' containment reference.
+	 * @see #setVar(PropertyReference)
 	 * @see org.sintef.thingml.ThingmlPackage#getDecrement_Var()
-	 * @model required="true"
+	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	Variable getVar();
+	PropertyReference getVar();
 
 	/**
-	 * Sets the value of the '{@link org.sintef.thingml.Decrement#getVar <em>Var</em>}' reference.
+	 * Sets the value of the '{@link org.sintef.thingml.Decrement#getVar <em>Var</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Var</em>' reference.
+	 * @param value the new value of the '<em>Var</em>' containment reference.
 	 * @see #getVar()
 	 * @generated
 	 */
-	void setVar(Variable value);
+	void setVar(PropertyReference value);
 } // Decrement

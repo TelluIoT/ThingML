@@ -5698,6 +5698,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	
 	
 	public void print_org_sintef_thingml_Increment(org.sintef.thingml.Increment element, String outertab, java.io.PrintWriter out) {
+		String localtab = outertab;
 		// The printCountingMap contains a mapping from feature names to the number of
 		// remaining elements that still need to be printed. The map is initialized with
 		// the number of elements stored in each structural feature. For lists this is the
@@ -5709,14 +5710,12 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		printCountingMap.put("var", temp == null ? 0 : 1);
 		// print collected hidden tokens
 		int count;
-		// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("var");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INCREMENT__VAR));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getIncrementVarReferenceResolver().deResolve((org.sintef.thingml.Variable) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INCREMENT__VAR)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.INCREMENT__VAR), element));
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
 			printCountingMap.put("var", count - 1);
 		}
@@ -5728,6 +5727,7 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 	
 	
 	public void print_org_sintef_thingml_Decrement(org.sintef.thingml.Decrement element, String outertab, java.io.PrintWriter out) {
+		String localtab = outertab;
 		// The printCountingMap contains a mapping from feature names to the number of
 		// remaining elements that still need to be printed. The map is initialized with
 		// the number of elements stored in each structural feature. For lists this is the
@@ -5739,14 +5739,12 @@ public class ThingmlPrinter implements org.sintef.thingml.resource.thingml.IThin
 		printCountingMap.put("var", temp == null ? 0 : 1);
 		// print collected hidden tokens
 		int count;
-		// DEFINITION PART BEGINS (PlaceholderUsingDefaultToken)
+		// DEFINITION PART BEGINS (Containment)
 		count = printCountingMap.get("var");
 		if (count > 0) {
 			Object o = element.eGet(element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.DECREMENT__VAR));
 			if (o != null) {
-				org.sintef.thingml.resource.thingml.IThingmlTokenResolver resolver = tokenResolverFactory.createTokenResolver("TEXT");
-				resolver.setOptions(getOptions());
-				out.print(resolver.deResolve(getReferenceResolverSwitch() == null ? null : getReferenceResolverSwitch().getDecrementVarReferenceResolver().deResolve((org.sintef.thingml.Variable) o, element, (org.eclipse.emf.ecore.EReference) element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.DECREMENT__VAR)), element.eClass().getEStructuralFeature(org.sintef.thingml.ThingmlPackage.DECREMENT__VAR), element));
+				doPrint((org.eclipse.emf.ecore.EObject) o, out, localtab);
 			}
 			printCountingMap.put("var", count - 1);
 		}

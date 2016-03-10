@@ -233,9 +233,9 @@ RULES {
 	
 	PropertyAssign ::= "set" #1 property[] ("[" index "]")* #1 "=" #1 init ; 
 	
-	Increment ::= var[] #1 "++" ;
+	Increment ::= var #1 "++" ;
 	
-	Decrement ::= var[] #1 "--" ;
+	Decrement ::= var #1 "--" ;
 
 	// *******************************
 	// * Configurations and Instances

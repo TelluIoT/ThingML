@@ -20,6 +20,8 @@
  */
 package org.thingml.networkplugins.c;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Message;
@@ -34,8 +36,13 @@ import org.thingml.compilers.spi.SerializationPlugin;
  */
 public class CMSPSerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
-    public CMSPSerializerPlugin(Context ctx, Configuration cfg) {
-        super(ctx, cfg);
+    public CMSPSerializerPlugin() {
+        super();
+    }
+
+    @Override
+    public void setContext(Context ctx) {
+        context = ctx;
         cctx = (CCompilerContext) context;
     }
 
@@ -123,8 +130,12 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public String getTargetedLanguage() {
-        return "C";
+    public List<String> getTargetedLanguages() {
+        
+        List<String> res = new ArrayList<>();
+        res.add("posix");
+        res.add("arduino");
+        return res;
     }
     
 }

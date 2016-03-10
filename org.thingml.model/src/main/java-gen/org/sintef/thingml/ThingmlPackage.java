@@ -3313,7 +3313,7 @@ public interface ThingmlPackage extends EPackage {
 	int OR_EXPRESSION_FEATURE_COUNT = BINARY_EXPRESSION_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Var</b></em>' reference.
+	 * The feature id for the '<em><b>Var</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -3331,7 +3331,7 @@ public interface ThingmlPackage extends EPackage {
 	int INCREMENT_FEATURE_COUNT = ACTION_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Var</b></em>' reference.
+	 * The feature id for the '<em><b>Var</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -6406,10 +6406,10 @@ public interface ThingmlPackage extends EPackage {
 	EClass getIncrement();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.Increment#getVar <em>Var</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Increment#getVar <em>Var</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Var</em>'.
+	 * @return the meta object for the containment reference '<em>Var</em>'.
 	 * @see org.sintef.thingml.Increment#getVar()
 	 * @see #getIncrement()
 	 * @generated
@@ -6427,10 +6427,10 @@ public interface ThingmlPackage extends EPackage {
 	EClass getDecrement();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.sintef.thingml.Decrement#getVar <em>Var</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Decrement#getVar <em>Var</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Var</em>'.
+	 * @return the meta object for the containment reference '<em>Var</em>'.
 	 * @see org.sintef.thingml.Decrement#getVar()
 	 * @see #getDecrement()
 	 * @generated
@@ -8689,7 +8689,7 @@ public interface ThingmlPackage extends EPackage {
 		EClass INCREMENT = eINSTANCE.getIncrement();
 
 		/**
-		 * The meta object literal for the '<em><b>Var</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Var</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -8707,7 +8707,7 @@ public interface ThingmlPackage extends EPackage {
 		EClass DECREMENT = eINSTANCE.getDecrement();
 
 		/**
-		 * The meta object literal for the '<em><b>Var</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Var</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
