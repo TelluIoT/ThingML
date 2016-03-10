@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.*;
 import org.sintef.thingml.Expression;
+import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Function;
 import org.sintef.thingml.InternalTransition;
 import org.sintef.thingml.Message;
@@ -33,11 +34,13 @@ import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.PropertyReference;
+import org.sintef.thingml.Protocol;
 import org.sintef.thingml.Region;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.Transition;
+import org.thingml.compilers.spi.NetworkPlugin;
 
 public class Context {
 
@@ -456,5 +459,22 @@ public class Context {
         currentInstance = inst;
         getCompiler().getThingActionCompiler().generate(a, builder, this);
         atInitTimeLock = false;
+    }
+    
+    public void generateNetworkLibs(Configuration cfg) {
+        Set<Protocol> protocols = new HashSet<>();
+        for(ExternalConnector eco : cfg.getExternalConnectors()) {
+            if(!protocols.contains(eco.getProtocol())) {
+                protocols.add(eco.getProtocol());
+            }
+        }
+        for(Protocol p : protocols) {
+            this.getCompiler().getNetworkPlugin(p).addProtocol(p);
+        }
+        for(NetworkPlugin np : this.getCompiler().getNetworkPlugins()) {
+            if(!np.getAssignedProtocols().isEmpty()) {
+                np.generateNetworkLibrary(cfg, this);
+            }
+        }
     }
 }

@@ -26,6 +26,7 @@ package org.thingml.compilers.spi;
  */
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
@@ -54,11 +55,23 @@ public abstract class NetworkPlugin extends Rule {
     */
     public abstract String getPluginID();
     
-    public abstract String getSupportedProtocolName();
+    public abstract List<String> getSupportedProtocols();
     
     public abstract String getTargetedLanguage();
     
     public abstract void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols);
+    
+    Set<Protocol> assignedProtocols = new HashSet<>();
+    public void addProtocol(Protocol p) {
+        assignedProtocols.add(p);
+    }
+    public Set<Protocol> getAssignedProtocols() {
+        return assignedProtocols;
+    }
+    
+    public void generateNetworkLibrary(Configuration cfg, Context ctx) {
+        generateNetworkLibrary(cfg, ctx, assignedProtocols);
+    }
     
     /* Should be overriden if the plugin need to perform
      * some specific checking.

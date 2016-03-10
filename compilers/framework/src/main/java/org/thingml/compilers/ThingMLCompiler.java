@@ -363,18 +363,32 @@ public abstract class ThingMLCompiler {
     Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
     
     public void addNetworkPlugin(NetworkPlugin np) {
-        String prot = np.getSupportedProtocolName();
-        if(networkPluginsPerProtocol.containsKey(prot)) {
-            networkPluginsPerProtocol.get(prot).add(np);
-        } else {
-            Set<NetworkPlugin> plugins = new HashSet<>();
-            plugins.add(np);
-            networkPluginsPerProtocol.put(prot, plugins);
+        List<String> protocols = np.getSupportedProtocols();
+        for(String prot : protocols) {
+            if(networkPluginsPerProtocol.containsKey(prot)) {
+                networkPluginsPerProtocol.get(prot).add(np);
+            } else {
+                Set<NetworkPlugin> plugins = new HashSet<>();
+                plugins.add(np);
+                networkPluginsPerProtocol.put(prot, plugins);
+            }
         }
     }
     
     public Set<NetworkPlugin> getNetworkPlugins(Protocol prot) {
         return networkPluginsPerProtocol.get(prot.getName());
+    }
+    
+    public Set<NetworkPlugin> getNetworkPlugins() {
+        Set<NetworkPlugin> res = new HashSet<>();
+        for(String key : networkPluginsPerProtocol.keySet()) {
+            for(NetworkPlugin np : networkPluginsPerProtocol.get(key)) {
+                if(!res.contains(np)) {
+                    res.add(np);
+                }
+            }
+        }
+        return res;
     }
     
     public NetworkPlugin getNetworkPlugin(Protocol prot) {

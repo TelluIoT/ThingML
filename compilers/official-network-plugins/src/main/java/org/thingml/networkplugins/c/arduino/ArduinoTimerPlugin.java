@@ -21,6 +21,7 @@
 package org.thingml.networkplugins.c.arduino;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,8 +49,10 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
         return "ArduinoTimerPlugin";
     }
 
-    public String getSupportedProtocolName() {
-        return "Timer";
+    public List<String> getSupportedProtocols() {
+        List<String> res = new ArrayList<>();
+        res.add("Timer");
+        return res;
     }
 
     public String getTargetedLanguage() {

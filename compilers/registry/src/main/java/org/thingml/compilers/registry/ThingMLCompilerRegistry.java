@@ -99,9 +99,10 @@ public class ThingMLCompilerRegistry {
     public void printNetworkPluginList() {
             System.out.println("Plugin list: ");
         for(NetworkPlugin np : loadedPlugins) {
-            System.out.println("    | " + np.getPluginID() 
-                    + "\t handles " + np.getSupportedProtocolName() 
-                    + "\t for Compiler: " +np.getTargetedLanguage());
+            System.out.println("    | " + np.getPluginID() + " (" + np.getTargetedLanguage() + ") handles:");
+            for(String p : np.getSupportedProtocols()) {
+                System.out.println("        | " + p);
+            }
         }
     }
 
