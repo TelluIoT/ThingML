@@ -112,9 +112,9 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 String step = b.toString();
 
                 slidingImpl += "int step = " + step + ";\n";
-                slidingImpl += "if (/*MESSAGE_NAME*/_available() > " + step + ")\n\tstep = /*MESSAGE_NAME*/_available();\n";
+                slidingImpl += "if (/*MESSAGE_NAME*/_length() < " + step + ")\n\tstep = /*MESSAGE_NAME*/_length();\n";
 
-                slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + " + step + " * /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
+                slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + step * /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
 
                 break; // we stop at first match, a stream can have only one window right?
             }
