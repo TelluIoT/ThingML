@@ -40,6 +40,7 @@ import org.thingml.compilers.c.CNetworkLibraryGenerator;
 import org.thingml.compilers.c.arduino.plugin.ArduinoMessagePackSerializer;
 import org.thingml.compilers.c.plugin.CByteArraySerializer;
 import org.thingml.compilers.c.plugin.CMSPSerializer;
+import org.thingml.compilers.spi.SerializationPlugin;
 
 /**
  *
@@ -119,14 +120,17 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
             //if (eco.hasAnnotation("c_external_send")) {
             Thing t = eco.getInst().getInstance().getType();
             Port p = eco.getPort();
-            CMessageSerializer Aser;
+            
+            SerializationPlugin sp = ctx.getSerializationPlugin(prot);
+            
+            /*CMessageSerializer Aser;
             if(eco.getProtocol().isDefined("serializer", "MSP")) {
                 Aser = new CMSPSerializer(ctx, cfg);
             } else if (eco.getProtocol().isDefined("serializer", "msgpack")) {
                 Aser = new ArduinoMessagePackSerializer(ctx, cfg);
             } else {
                 Aser = new CByteArraySerializer(ctx, cfg);
-            }
+            }*/
             
             for (Message m : p.getSends()) {
                 Set<String> ignoreList = new HashSet<String>();
@@ -137,14 +141,12 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 builder.append("{\n");
                 
                 
-                
-                int i = Aser.generateMessageSerialzer(eco, m, builder, "forward_buf", new LinkedList<Parameter>());
+                int i = sp.generateSerialization(builder, "forward_buf", m);
+                //int i = Aser.generateMessageSerialzer(eco, m, builder, "forward_buf", new LinkedList<Parameter>());
                 //ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
 
                 builder.append("\n//Forwarding with specified function \n");
                 builder.append(eco.getName() + "_forwardMessage(forward_buf, " + i + ");\n");
-                
-        //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
                 builder.append("}\n\n");
             }
                 
@@ -163,6 +165,7 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
         boolean escape;
         int baudrate;
         CMessageSerializer ser;
+        SerializationPlugin sp;
         
         HWSerial() {
             ecos = new HashSet<>();

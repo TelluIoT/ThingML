@@ -82,6 +82,9 @@ public class Main {
         
         System.out.println();
         registry.printNetworkPluginList();
+        
+        System.out.println();
+        registry.printSerializationPluginList();
     }
     
     public static void main(String[] args) {

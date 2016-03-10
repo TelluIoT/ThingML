@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.util.*;
 import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
 
 /**
  * Created by ffl on 23.11.14.
@@ -410,5 +411,20 @@ public abstract class ThingMLCompiler {
             return plugins.iterator().next();
         }
     }
-
+    
+    Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
+    
+    public void addSerializationPlugin(SerializationPlugin sp) {
+        if(!serializationPlugins.containsKey(sp.getPluginID())) {
+            serializationPlugins.put(sp.getPluginID(), sp);
+        }
+    }
+    
+    public Set<SerializationPlugin> getSerializationPlugins() {
+        return new HashSet<SerializationPlugin>(serializationPlugins.values());
+    }
+    
+    public SerializationPlugin getSerializationPlugin(String id) {
+        return serializationPlugins.get(id);
+    }
 }
