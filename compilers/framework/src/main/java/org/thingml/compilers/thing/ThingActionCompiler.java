@@ -21,6 +21,8 @@ import org.thingml.compilers.Context;
 public class ThingActionCompiler {
 
     public void generate(Object o, StringBuilder builder, Context ctx) {
+        if(o == null)
+            return;
         if (o instanceof Action) {
             generate((Action) o, builder, ctx);
         } else if (o instanceof Expression) {
@@ -33,6 +35,8 @@ public class ThingActionCompiler {
 
     // ThingML Actions
     public void generate(Action action, StringBuilder builder, Context ctx) {
+        if(action == null)
+            return;
         if (action instanceof SendAction)
             generate((SendAction) action, builder, ctx);
         else if (action instanceof VariableAssignment)

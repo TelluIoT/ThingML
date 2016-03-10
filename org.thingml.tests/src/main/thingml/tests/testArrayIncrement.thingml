@@ -1,0 +1,34 @@
+import "thingml.thingml"
+
+thing TestArrayIncrement includes Test 
+@test "x # abc"
+{
+    property x : Integer[1]
+  
+    statechart TestArrayIncrement init INIT {
+        
+    
+    	state INIT {
+			
+		on entry do
+			x[0] = 0
+			x[0]++
+			x[0]++
+			if(x[0] == 2) do 
+				harnessOut!testOut('\'a\'')
+			end
+			x[0]--
+			if(x[0] == 1) do 
+				harnessOut!testOut('\'b\'')
+			end
+
+			harnessOut!testOut('\'c\'')
+        end
+		transition -> STOP
+	}
+
+	state STOP {
+
+	}
+    }
+}

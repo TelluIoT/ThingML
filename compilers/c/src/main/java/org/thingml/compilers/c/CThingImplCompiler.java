@@ -621,7 +621,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName() + ");\n");
                 // Set the new current state
                 builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
-
+                
                 // Do the action
                 ctx.getCompiler().getThingActionCompiler().generate(et.getAction(), builder, ctx);
 
