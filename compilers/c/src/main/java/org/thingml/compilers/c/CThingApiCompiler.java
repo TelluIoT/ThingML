@@ -99,12 +99,9 @@ public class CThingApiCompiler extends ThingApiCompiler {
             builder.append("\n// END: Code from the c_header annotation " + thing.getName() + "\n\n");
         }
 
-        for (Stream s : thing.getStreams()) {
-            if (s.getInput() instanceof JoinSources || s.getInput() instanceof MergeSources) {
-                ArduinoThingCepCompiler.generateCEPLib(thing, builder, ctx);
-                break;
-            }
-        }
+        //FIXME: Yay another direct static call
+        if (!ArduinoThingCepCompiler.getStreamWithBuffer(thing).isEmpty())
+            ArduinoThingCepCompiler.generateCEPLib(thing, builder, ctx);
     }
 
     protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {

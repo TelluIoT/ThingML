@@ -109,10 +109,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             if (vs instanceof LengthWindow) {
                 StringBuilder b = new StringBuilder();
                 ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getStep(), b, ctx);
-                int step = Integer.parseInt(b.toString());
-                int streamSize = Integer.parseInt(getStreamSize(s, ctx));
-                if (step > streamSize)
-                    throw (new UnsupportedOperationException("The step can't be bigger than the window size."));
+                String step = b.toString();
 
                 slidingImpl += "int step = " + step + ";\n";
                 slidingImpl += "if (/*MESSAGE_NAME*/_available() > " + step + ")\n\tstep = /*MESSAGE_NAME*/_available();\n";
