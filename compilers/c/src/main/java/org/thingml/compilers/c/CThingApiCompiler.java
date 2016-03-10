@@ -17,11 +17,12 @@ package org.thingml.compilers.c;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
 import java.util.List;
 import java.util.Map;
-import org.thingml.compilers.DebugProfile;
 
 
 public class CThingApiCompiler extends ThingApiCompiler {
@@ -97,6 +98,10 @@ public class CThingApiCompiler extends ThingApiCompiler {
             }
             builder.append("\n// END: Code from the c_header annotation " + thing.getName() + "\n\n");
         }
+
+        //FIXME: Yay another direct static call
+        if (!ArduinoThingCepCompiler.getStreamWithBuffer(thing).isEmpty())
+            ArduinoThingCepCompiler.generateCEPLib(thing, builder, ctx);
     }
 
     protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
@@ -174,6 +179,9 @@ public class CThingApiCompiler extends ThingApiCompiler {
             }*/
             builder.append(";\n");
         }
+        builder.append("// CEP stream pointers\n");
+        for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(thing))
+            builder.append("stream_" + s.getName() + "* cep_" + s.getName() + ";\n");
         builder.append("\n};\n");
     }
 

@@ -15,32 +15,20 @@
  */
 package org.sintef.thingml.impl;
 
-import java.util.Collection;
-import java.util.*;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
-import org.sintef.thingml.Action;
-import org.sintef.thingml.InternalTransition;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.State;
-import org.sintef.thingml.ThingmlPackage;
-import org.sintef.thingml.Transition;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+
+import java.util.*;
 
 /**
  * <!-- begin-user-doc -->
@@ -178,14 +166,17 @@ public class StateImpl extends AnnotatedElementImpl implements State {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetEntry(Action newEntry, NotificationChain msgs) {
-		Action oldEntry = entry;
-		entry = newEntry;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.STATE__ENTRY, oldEntry, newEntry);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
+	public void setEntry(Action newEntry) {
+		if (newEntry != entry) {
+			NotificationChain msgs = null;
+			if (entry != null)
+				msgs = ((InternalEObject) entry).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.STATE__ENTRY, null, msgs);
+			if (newEntry != null)
+				msgs = ((InternalEObject) newEntry).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.STATE__ENTRY, null, msgs);
+			msgs = basicSetEntry(newEntry, msgs);
+			if (msgs != null) msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.STATE__ENTRY, newEntry, newEntry));
 	}
 
 	/**
@@ -193,18 +184,15 @@ public class StateImpl extends AnnotatedElementImpl implements State {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setEntry(Action newEntry) {
-		if (newEntry != entry) {
-			NotificationChain msgs = null;
-			if (entry != null)
-				msgs = ((InternalEObject)entry).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.STATE__ENTRY, null, msgs);
-			if (newEntry != null)
-				msgs = ((InternalEObject)newEntry).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.STATE__ENTRY, null, msgs);
-			msgs = basicSetEntry(newEntry, msgs);
-			if (msgs != null) msgs.dispatch();
+	public NotificationChain basicSetEntry(Action newEntry, NotificationChain msgs) {
+		Action oldEntry = entry;
+		entry = newEntry;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.STATE__ENTRY, oldEntry, newEntry);
+			if (msgs == null) msgs = notification;
+			else msgs.add(notification);
 		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.STATE__ENTRY, newEntry, newEntry));
+		return msgs;
 	}
 
 	/**
@@ -221,14 +209,17 @@ public class StateImpl extends AnnotatedElementImpl implements State {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetExit(Action newExit, NotificationChain msgs) {
-		Action oldExit = exit;
-		exit = newExit;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.STATE__EXIT, oldExit, newExit);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
+	public void setExit(Action newExit) {
+		if (newExit != exit) {
+			NotificationChain msgs = null;
+			if (exit != null)
+				msgs = ((InternalEObject) exit).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.STATE__EXIT, null, msgs);
+			if (newExit != null)
+				msgs = ((InternalEObject) newExit).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.STATE__EXIT, null, msgs);
+			msgs = basicSetExit(newExit, msgs);
+			if (msgs != null) msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.STATE__EXIT, newExit, newExit));
 	}
 
 	/**
@@ -236,18 +227,15 @@ public class StateImpl extends AnnotatedElementImpl implements State {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setExit(Action newExit) {
-		if (newExit != exit) {
-			NotificationChain msgs = null;
-			if (exit != null)
-				msgs = ((InternalEObject)exit).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.STATE__EXIT, null, msgs);
-			if (newExit != null)
-				msgs = ((InternalEObject)newExit).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.STATE__EXIT, null, msgs);
-			msgs = basicSetExit(newExit, msgs);
-			if (msgs != null) msgs.dispatch();
+	public NotificationChain basicSetExit(Action newExit, NotificationChain msgs) {
+		Action oldExit = exit;
+		exit = newExit;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.STATE__EXIT, oldExit, newExit);
+			if (msgs == null) msgs = notification;
+			else msgs.add(notification);
 		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.STATE__EXIT, newExit, newExit));
+		return msgs;
 	}
 
 	/**
@@ -529,27 +517,69 @@ public class StateImpl extends AnnotatedElementImpl implements State {
             for(InternalTransition i : s.getInternal()) {
                 handlers.add(i);
             }
-            for(Handler t : handlers){
+            for (Handler t : handlers) {
                 //println("  Processisng handler " + t + " Event = " + t.getEvent)
                 for(Event e : t.getEvent()){
                     if (e instanceof ReceiveMessage) {
-                        ReceiveMessage rm = (ReceiveMessage)e;
-                        Map<Message, List<Handler>> phdlrs = result.get(rm.getPort());
-                        if (phdlrs == null) {
-                            phdlrs = new HashMap<Message, List<Handler>>();
-                            result.put(rm.getPort(), phdlrs);
-                        }
-                        List<Handler> hdlrs = phdlrs.get(rm.getMessage());
-                        if (hdlrs == null) {
-                            hdlrs = new ArrayList<Handler>();
-                            phdlrs.put(rm.getMessage(), hdlrs);
-                        }
-                        hdlrs.add(t);
+                        addMessageToHandlers(result, (ReceiveMessage) e, t);
+                        //System.out.println("Handler: " + t + " event " + e);
                     }
                 }
             }
         }
+
+		//add stream handlers if not present
+		if (this instanceof StateMachine) {
+			for (Stream s : this.findContainingThing().getStreams()) {
+				ReceiveMessage rMsg;
+
+				if (s.getInput() instanceof SimpleSource) {
+					rMsg = ((SimpleSource) s.getInput()).getMessage();
+                    addMessageToHandlers(result, rMsg, null);
+                } else if (s.getInput() instanceof JoinSources) {
+                    for (Source source : ((JoinSources) s.getInput()).getSources()) {
+                        if (source instanceof SimpleSource) {
+                            rMsg = ((SimpleSource) source).getMessage();
+                            addMessageToHandlers(result, rMsg, null);
+                        }
+                    }
+                } else if (s.getInput() instanceof MergeSources) {
+                    for (Source source : ((MergeSources) s.getInput()).getSources()) {
+                        if (source instanceof SimpleSource) {
+                            rMsg = ((SimpleSource) source).getMessage();
+                            addMessageToHandlers(result, rMsg, null);
+                        }
+
+                    }
+                }
+
+			}
+		}
+
         return result;
+    }
+
+    /**
+     * Add a new handler to the list of current found handler.
+     *
+     * @param handlers Set of all current handler
+     * @param rm       Message to add
+     * @param t
+	 * @generated NOT
+	 */
+    private void addMessageToHandlers(Map<Port, Map<Message, List<Handler>>> handlers, ReceiveMessage rm, Handler t) {
+        Map<Message, List<Handler>> phdlrs = handlers.get(rm.getPort());
+        if (phdlrs == null) {
+            phdlrs = new HashMap<>();
+            handlers.put(rm.getPort(), phdlrs);
+        }
+        List<Handler> hdlrs = phdlrs.get(rm.getMessage());
+        if (hdlrs == null) {
+            hdlrs = new ArrayList<>();
+            phdlrs.put(rm.getMessage(), hdlrs);
+        }
+        if (t != null)
+            hdlrs.add(t);
     }
 
     /**
