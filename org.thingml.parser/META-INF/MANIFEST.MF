@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: SINTEF
+Bundle-Name: EMFText Parser Plugin: thingml
 Bundle-SymbolicName: org.sintef.thingml.resource.thingml;singleton:=true
-Bundle-Version: 0.7.0.qualifier
+Bundle-Version: 1.0.0
 Bundle-Vendor: Software Technology Group - TU Dresden Germany
 Require-Bundle: org.eclipse.core.runtime;resolution:=optional,
   org.eclipse.emf.ecore,

@@ -32,9 +32,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.Expression;
+
 import org.sintef.thingml.PropertyAssign;
 import org.sintef.thingml.Session;
 import org.sintef.thingml.StartSession;
@@ -229,14 +229,20 @@ public class StartSessionImpl extends ActionImpl implements StartSession {
 		return super.eIsSet(featureID);
 	}
 
-	@Override
-	public List<Expression> getAllExpressions() {
-		return new ArrayList<Expression>();
-	}
+    /**
+     * @generated NOT
+     * @return 
+     */
+    public List<Expression> getAllExpressions() {
+        return new ArrayList<>();
+    }
 
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		return new ArrayList<Expression>();
-	}
+    /**
+     * @generated NOT
+     * @return 
+     */
+    public List<Expression> getAllExpressions(Class clazz) {
+        return new ArrayList<>();
+    }
 
 } //StartSessionImpl

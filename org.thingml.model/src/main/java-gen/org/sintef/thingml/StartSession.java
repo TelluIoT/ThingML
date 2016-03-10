@@ -19,7 +19,6 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.common.util.EList;
 
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Start Session</b></em>'.
@@ -69,7 +68,7 @@ public interface StartSession extends Action {
 	 * The list contents are of type {@link org.sintef.thingml.PropertyAssign}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Constructor</em>' reference list isn't clear,
+	 * If the meaning of the '<em>Constructor</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->

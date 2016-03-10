@@ -236,10 +236,12 @@
   <eClassifiers xsi:type="ecore:EClass" name="AndExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="OrExpression" eSuperTypes="#//BinaryExpression"/>
   <eClassifiers xsi:type="ecore:EClass" name="Increment" eSuperTypes="#//Action">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="var" lowerBound="1" eType="#//Variable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="var" lowerBound="1" eType="#//PropertyReference"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Decrement" eSuperTypes="#//Action">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="var" lowerBound="1" eType="#//Variable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="var" lowerBound="1" eType="#//PropertyReference"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ControlStructure" abstract="true" eSuperTypes="#//Action">
     <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="1"
