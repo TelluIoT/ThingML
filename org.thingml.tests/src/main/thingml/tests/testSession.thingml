@@ -3,29 +3,30 @@ import "thingml.thingml"
 thing TestSession includes Test 
 @test "AB # AABB"
 {
-    property a : Char = '\'A\''
+    property id : Char
     
 	statechart TestSession init I {
 	 
         state I {
 			internal event m : harnessIn?testIn
 			action do
-				spawn s
-					set id = m.c
+				id = m.c
+        			fork s
 			end
 		}
 		
-		session s init Init {
-			
-			property id : Char
-			
+		session s init Init {						
 			state Init {
-				on entry harnessOut!testOut(id)
+				on entry do
+					harnessOut!testOut(id)
+				end
 				transition -> Stop
 			}
 			
 			final state Stop {
-				on entry harnessOut!testOut(id)
+				on entry do
+					harnessOut!testOut(id)
+				end
 			}
 		}
 	}
