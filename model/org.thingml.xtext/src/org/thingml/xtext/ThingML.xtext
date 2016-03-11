@@ -1,0 +1,340 @@
+grammar org.thingml.xtext.ThingML hidden(WS, ML_COMMENT, SL_COMMENT)
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate thingML "http://www.thingml.org/xtext/ThingML"
+
+
+ThingMLModel returns ThingMLModel:
+		('import' imports+=[ThingMLModel|STRING_LIT])*
+		(types+=Type | protocols+=Protocol | configs+=Configuration)*;	
+
+PlatformAnnotation returns PlatformAnnotation:
+	'@' name=ID value=STRING_LIT ; 
+
+/*****************************************************************************
+ *       TYPES / ENUMERATIONS                                                *
+ *****************************************************************************/
+
+Type returns Type:
+	PrimitiveType | ObjectType | Enumeration | Thing ;
+
+PrimitiveType returns PrimitiveType:
+	'datatype' name=ID '<' ByteSize=INT '>'	( annotations+=PlatformAnnotation )* ';';
+	
+ObjectType returns ObjectType:
+	'object' name=ID ( annotations+=PlatformAnnotation )* ';';
+
+Enumeration returns Enumeration:
+	'enumeration' name=ID ( annotations+=PlatformAnnotation )* '{' (literals+=EnumerationLiteral)* '}';
+
+EnumerationLiteral returns EnumerationLiteral:
+	name=ID ( annotations+=PlatformAnnotation )* ;
+
+/*****************************************************************************
+ *       THING / COMPONENT MODEL                                             *
+ *****************************************************************************/
+
+Thing returns Thing:
+	'thing' (^fragment?='fragment')? name=ID ('includes' includes+=[Thing|ID] ( "," includes+=[Thing|ID])*)? 
+	( annotations+=PlatformAnnotation )*'{'
+		(messages+=Message | ports += Port | properties+=Property | functions+=Function | assign+=PropertyAssign | behaviour+=StateMachine | streams+=Stream)* 
+	'}';
+
+PropertyAssign returns PropertyAssign:
+	'set' property=[Property|ID] ('[' index+=Expression ']')* '=' init=Expression ( annotations+=PlatformAnnotation )*;
+
+Protocol returns Protocol:
+	'protocol' name=ID ( annotations+=PlatformAnnotation )* ';';
+
+Function returns Function:
+	'function' name=ID '('parameters+=Parameter ( "," parameters+=Parameter)* ')' (':' type=[Type|ID])? ( annotations+=PlatformAnnotation )* 'is' body=Action
+		//('isArray' isArray=EBoolean)?
+		//('cardinality' cardinality=Expression)?
+;
+
+Property returns Property:
+	'property' name=ID ':' type=[Type|ID] ( '=' init=Expression)?
+	( annotations+=PlatformAnnotation )*
+		//('isArray' isArray=EBoolean)?
+		//('changeable' changeable=EBoolean)?
+		//('cardinality' cardinality=Expression)?
+;
+
+Message returns Message:
+	'message' name=ID '(' ( parameters+=Parameter ( "," parameters+=Parameter)* )? ')'
+	( annotations+=PlatformAnnotation )* ';';
+	
+Parameter returns Parameter:
+	name=ID ':' type=[Type|ID] ( annotations+=PlatformAnnotation )*
+//		('isArray' isArray=EBoolean)?
+//		('cardinality' cardinality=Expression)?
+;
+
+Port returns Port:
+	RequiredPort | ProvidedPort | InternalPort;
+	
+	
+RequiredPort returns RequiredPort:
+	(optional?='optional')? 'required' 'port' name=ID ( annotations+=PlatformAnnotation )* '{'
+		(('sends' sends+=[Message|ID] ( "," sends+=[Message|ID])* ) | 
+		('receives' receives+=[Message|ID] ( "," receives+=[Message|ID])* ))*
+	'}';
+
+ProvidedPort returns ProvidedPort:
+	'provided' 'port' name=ID ( annotations+=PlatformAnnotation )* '{'
+		(('sends' sends+=[Message|ID] ( "," sends+=[Message|ID])* ) | 
+		('receives' receives+=[Message|ID] ( "," receives+=[Message|ID])* ))*
+	'}';
+
+InternalPort returns InternalPort:
+	'internal' 'port' name=ID ( annotations+=PlatformAnnotation )* '{'
+		(('sends' sends+=[Message|ID] ( "," sends+=[Message|ID])* ) | 
+		('receives' receives+=[Message|ID] ( "," receives+=[Message|ID])* ))*
+	'}';
+
+/*****************************************************************************
+ *       CEP STREAMS                                                         *
+ *****************************************************************************/
+	
+Stream returns Stream:
+	'stream' name=ID ( annotations+=PlatformAnnotation )* 'from' input=Source
+	('select' selection+=LocalVariable ( "," selection+=LocalVariable)*)?
+	'produce' output=SendAction ;
+	
+Source returns Source:
+	JoinSources | MergeSources | SimpleSource;
+
+ViewSource returns ViewSource:
+	Filter | LengthWindow | TimeWindow;	
+
+ReferencedElmt returns ReferencedElmt:
+	Message | Parameter | Property | ReceiveMessage | LocalVariable | JoinSources | MergeSources | SimpleSource | MessageParameter;
+
+ElmtProperty returns ElmtProperty:
+	SimpleParamRef | ArrayParamRef | LengthArray;
+
+
+JoinSources returns JoinSources:
+	'join' name=ID ':' '[' sources+=Source ( "&" sources+=Source)* '->' resultMessage=[Message|ID] '(' rules+=Expression ( "," rules+=Expression)* ')' ']' ('::' operators+=ViewSource)*;
+
+MergeSources returns MergeSources:
+	'merge' name=ID ':' '[' sources+=Source ( "|" sources+=Source)* '->' resultMessage=[Message|ID] ']' ('::' operators+=ViewSource)*;
+
+SimpleSource returns SimpleSource:
+	name=ID ':' message=ReceiveMessage  ('::' operators+=ViewSource)*;
+
+Filter returns Filter:
+	'keep' 'if' guard=Expression;
+
+LengthWindow returns LengthWindow:
+	'buffer' size=Expression ('by' step=Expression)?;
+
+TimeWindow returns TimeWindow:
+	'during' duration=Expression ('by' step=Expression)?;
+
+MessageParameter returns MessageParameter:
+	name=ID ':' msgRef=[Message|ID] ;
+
+SimpleParamRef returns SimpleParamRef:
+	parameterRef=[Parameter|ID];
+
+ArrayParamRef returns ArrayParamRef:
+	parameterRef=[Parameter|ID] '[' ']';
+
+LengthArray returns LengthArray:
+	{LengthArray}
+	'length';
+
+/*****************************************************************************
+ *       STATE MECHINES                                                      *
+ *****************************************************************************/
+
+StateMachine returns StateMachine:
+	'statechart' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
+		('on' 'entry' entry=Action)?
+		('on' 'exit' exit=Action)?
+		(properties+=Property | substate+=State | internal+=InternalTransition)*
+		(region+=ParallelRegion)*
+	'}';
+	
+State returns State:
+	State_Impl | StateMachine | FinalState | CompositeState_Impl | Session;
+
+Region returns Region:
+	CompositeState_Impl | ParallelRegion | Session;
+
+State_Impl returns State:
+	'state' name=ID ( annotations+=PlatformAnnotation )* '{'
+		('on' 'entry' entry=Action)?
+		('on' 'exit' exit=Action)?
+		(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
+	'}';
+
+FinalState returns FinalState:
+	'final' 'state' name=ID ( annotations+=PlatformAnnotation )* ';'
+;
+
+CompositeState_Impl returns CompositeState:
+	'composite' 'state' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
+		('on' 'entry' entry=Action)?
+		('on' 'exit' exit=Action)?
+		(properties+=Property | substate+=State | internal+=InternalTransition | outgoing+=Transition)*
+		(region+=ParallelRegion)*
+	'}';
+
+Session returns Session:
+	'session' (name=ID)? 'init' initial=[State|ID] ( annotations+=PlatformAnnotation )* '{'
+		('on' 'entry' entry=Action)?
+		('on' 'exit' exit=Action)?
+		(properties+=Property | substate+=State | internal+=InternalTransition)*
+		(region+=ParallelRegion)*
+	'}';
+
+ParallelRegion returns ParallelRegion:
+	'region' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
+		(substate+=State)*
+	'}';
+
+Transition returns Transition:
+	'transition' (name=ID)? '->' target=[State|ID] 
+	( annotations+=PlatformAnnotation )*
+	('event' event+=Event)*
+	('guard' guard=Expression)?
+	('action' action=Action)?;
+
+InternalTransition returns InternalTransition:
+	{InternalTransition}
+	'internal' (name=ID)?
+	( annotations+=PlatformAnnotation )*
+	('event' event+=Event)*
+	('guard' guard=Expression)?
+	('action' action=Action)?;
+
+Event returns Event:
+	ReceiveMessage;
+
+ReceiveMessage returns ReceiveMessage:
+	port=[Port|ID]'?'message=[Message|ID];
+
+/*****************************************************************************
+ *       ACTIONS                                                             *
+ *****************************************************************************/
+ 
+Action returns Action:
+	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction | ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
+
+Variable returns Variable:
+	Parameter | Property | LocalVariable;
+
+ActionBlock returns ActionBlock:
+	{ActionBlock}
+	'do' (actions+=Action)* 'end';
+
+ExternStatement returns ExternStatement:
+	statement = STRING_EXT ('&' segments+=Expression)*;
+	
+LocalVariable returns LocalVariable:
+	(^changeable?='readonly')? 'var' name=ID ':'  type=[Type|ID] ( '=' init=Expression)? ( annotations+=PlatformAnnotation )*
+		//('isArray' isArray=EBoolean)?
+		//('cardinality' cardinality=Expression)?
+;
+
+SendAction returns SendAction:
+	port=[Port|ID] '!' message=[Message|ID] '(' parameters+=Expression ( "," parameters+=Expression)* ')';
+
+VariableAssignment returns VariableAssignment:
+	property=[Variable|ID] ('[' index+=Expression ']')* '=' expression=Expression;
+
+
+Increment returns Increment:
+	var=[Variable|ID] '++';
+
+Decrement returns Decrement:
+	var=[Variable|ID] '--';
+
+LoopAction returns LoopAction:
+	'while' '(' condition=Expression ')' action=Action;
+
+ConditionalAction returns ConditionalAction:
+	'if' '(' condition=Expression ')' action=Action ('else' elseAction=Action)?;
+
+ReturnAction returns ReturnAction:
+	'return' exp=Expression;
+
+PrintAction returns PrintAction:
+	'print' msg=Expression;
+
+ErrorAction returns ErrorAction:
+	'error' msg=Expression;
+
+StartSession returns StartSession:
+	'spawn' session=[Session|ID] '{' (constructor+=PropertyAssign)* '}';
+
+
+FunctionCallStatement returns FunctionCallStatement:
+	function=[Function|ID] '(' parameters+=Expression ( "," parameters+=Expression)* ')';
+
+
+/*****************************************************************************
+ *       EXPRESSIONS                                                         *
+ *****************************************************************************/
+
+Expression returns Expression:
+	ExternExpression;
+	//ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
+
+ExternExpression returns ExternExpression:
+	expression = STRING_EXT ('&' segments+=Expression)*;
+	
+/*****************************************************************************
+ *       CONFIGURATIONS                                                      *
+ *****************************************************************************/
+
+Configuration returns Configuration:
+	'configuration' name=ID ( annotations+=PlatformAnnotation )* '{'
+	(instances+=Instance | connectors+=AbstractConnector | propassigns+=ConfigPropertyAssign)*
+	'}';
+
+
+Instance returns Instance:
+	'instance' name=ID ':' type=[Thing|ID] ( annotations+=PlatformAnnotation )*;
+
+ConfigPropertyAssign returns ConfigPropertyAssign:
+	'set' instance=InstanceRef '.' property=[Property|ID] ('[' index+=Expression ']')* '=' init=Expression ( annotations+=PlatformAnnotation )*;
+
+
+AbstractConnector returns AbstractConnector:
+	Connector | ExternalConnector;
+	
+Connector returns Connector:
+	'connector'	(name=ID)? cli=InstanceRef '.' required=[RequiredPort|ID] '=>' srv=InstanceRef '.' provided=[ProvidedPort|ID] ( annotations+=PlatformAnnotation )*;
+
+ExternalConnector returns ExternalConnector:
+	'connector'	(name=ID)? inst=InstanceRef '.' port=[Port|ID] 'over' protocol=[Protocol|ID] ( annotations+=PlatformAnnotation )*;
+
+InstanceRef returns InstanceRef:
+	instance=[Instance|ID];
+
+
+/*****************************************************************************
+ *       TERMINALS                                                           *
+ *****************************************************************************/
+
+terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+
+terminal INT returns ecore::EInt: ('0'..'9')+;
+
+terminal STRING_EXT:  
+			"'" ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|"'") )* "'";
+
+terminal STRING_LIT	: 
+			'"' ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|'"') )* '"';
+
+terminal ML_COMMENT	: '/*' -> '*/';
+terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
+
+terminal WS			: (' '|'\t'|'\r'|'\n')+;
+
+terminal ANY_OTHER: .;
+	
