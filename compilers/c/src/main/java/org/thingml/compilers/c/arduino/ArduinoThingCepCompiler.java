@@ -111,10 +111,10 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getStep(), b, ctx);
                 String step = b.toString();
 
-                slidingImpl += "int step = " + step + ";\n";
-                slidingImpl += "if (/*MESSAGE_NAME*/_length() < " + step + ")\n\tstep = /*MESSAGE_NAME*/_length();\n";
+                slidingImpl += "int step = " + step + " * /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE;\n";
+                slidingImpl += "if (/*MESSAGE_NAME*/_length() < step )\n\tstep = /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;\n";
 
-                slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + step * /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
+                slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + step) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
 
                 break; // we stop at first match, a stream can have only one window right?
             }
@@ -224,7 +224,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                     for (int i = ctx.getCByteSize(p.getType(), 0) - 1; i >= 0; i--) {
 
-                        queueImpl += msg.getName() + "_fifo[" + msg.getName() + "_fifo_tail + " + fifo_buffer_index + "]";
+                        queueImpl += msg.getName() + "_fifo[(" + msg.getName() + "_fifo_tail + " + fifo_buffer_index + ") % " + msg.getName().toUpperCase() + "_FIFO_SIZE]";
                         queueImpl += " = u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "];\n";
 
                         fifo_buffer_index++;
