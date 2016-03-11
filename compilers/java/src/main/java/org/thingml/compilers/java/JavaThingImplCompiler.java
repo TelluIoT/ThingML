@@ -368,6 +368,19 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             generateMessages(m, ctx, hasAPI(thing));
         }
 
+        builder.append("//CEP Streams\n");
+        for (Stream stream : thing.getStreams()) {
+            if(stream.getInput() instanceof SimpleSource) {
+                builder.append("private rx.Observable " + stream.getInput().qname("_") + ";\n");
+                builder.append("private Action1 sub_" + stream.getInput().qname("_") + ";\n");
+                builder.append("private rx.Subscription hook_" + stream.getInput().qname("_") + ";\n");
+            } else if (stream.getInput() instanceof SourceComposition) {
+                builder.append("private rx.Observable " + stream.qname("_") + ";\n");
+                builder.append("private Action1 sub_" + stream.qname("_") + ";\n");
+                builder.append("private rx.Subscription hook_" + stream.qname("_") + ";\n");
+            }
+        }
+
         builder.append("//Empty Constructor\n");
         builder.append("public " + ctx.firstToUpper(thing.getName()) + "() {\nsuper();\n");
         //builder.append("org.fusesource.jansi.AnsiConsole.systemInstall();\n");//FIXME: only if debug
@@ -487,9 +500,44 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                    .append("protected void createCepStreams() {\n");
 
             for (Stream stream : thing.getStreams()) {
-                ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);
+                builder.append("create" + stream.getInput().qname("_") + "();\n");
             }
-            builder.append("}");
+            builder.append("}\n\n");
+
+            builder.append("protected void stopAllStreams() {\n");
+            for (Stream stream : thing.getStreams()) {
+                builder.append("stop" + stream.getInput().qname("_") + "();\n");
+            }
+            builder.append("}\n\n");
+
+            builder.append("@Override\npublic void stop(){\nsuper.stop();\nstopAllStreams();\n}\n\n");
+
+            for (Stream stream : thing.getStreams()) {
+
+                builder.append("private void create" + stream.getInput().qname("_") + "() {\n");
+                ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);
+                builder.append("}\n\n");
+
+                builder.append("private void start" + stream.getInput().qname("_") + "(){\n");
+                if(stream.getInput() instanceof SimpleSource) {
+                    builder.append("if (this.hook_" + stream.getInput().qname("_") + " == null)");
+                    builder.append("this.hook_" + stream.getInput().qname("_") + " = this." + stream.getInput().qname("_") + ".subscribe(this.sub_" + stream.getInput().qname("_") + ");\n");
+                } else if (stream.getInput() instanceof SourceComposition) {
+                    builder.append("if (this.hook_" + stream.qname("_") + " == null)");
+                    builder.append("this.hook_" + stream.qname("_") + " = this." + stream.qname("_") + ".subscribe(this.sub_" + stream.qname("_") + ");\n");
+                }
+                builder.append("}\n\n");
+
+                builder.append("private void stop" + stream.getInput().qname("_") + "(){\n");
+                if(stream.getInput() instanceof SimpleSource) {
+                    builder.append("this.hook_" + stream.getInput().qname("_") + ".unsubscribe();\n");
+                    builder.append("this.hook_" + stream.getInput().qname("_") + " = null;\n");
+                } else if (stream.getInput() instanceof SourceComposition) {
+                    builder.append("this.hook_" + stream.qname("_") + ".unsubscribe();\n");
+                    builder.append("this.hook_" + stream.qname("_") + " = null;\n");
+                }
+                builder.append("}\n\n");
+            }
         }
 
         for (Function f : thing.allFunctions()) {
