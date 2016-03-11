@@ -24,7 +24,7 @@ void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_queueEvent/*MESSAGE_PARAMETERS*/
         /*SLIDING_IMPL*/
     }
 
-    if (/*MESSAGE_NAME*/_available() > /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE)
+    if (/*MESSAGE_NAME*/_available() >= /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE)
     {
         union stamp_t {
             unsigned long time;

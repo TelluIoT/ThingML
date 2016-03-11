@@ -521,10 +521,16 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         builder.append(";\n");
                     }
 
+                    boolean hasWindowView = false;
+                    for (ViewSource vs : source.getOperators())
+                        if (vs instanceof LengthWindow || vs instanceof TimeWindow)
+                            hasWindowView = true;
+
                     // produce the action or propagate the event
                     if (source instanceof SimpleSource) {
                         ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
-                    } else if (source instanceof SourceComposition) {
+                    }
+                    if (source instanceof SourceComposition || hasWindowView) {
                         builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
                         ctx.appendActualParameters(thing, builder, msg, "_instance");
                         builder.append(";\n");
