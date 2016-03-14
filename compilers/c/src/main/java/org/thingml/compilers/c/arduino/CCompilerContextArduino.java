@@ -15,17 +15,12 @@
  */
 package org.thingml.compilers.c.arduino;
 
+import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 
 import java.util.ArrayList;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 
 /**
  * Created by ffl on 11.06.15.
@@ -66,6 +61,7 @@ public class CCompilerContextArduino extends CCompilerContext {
 
         StringBuilder pde = new StringBuilder();
 
+        pde.append("#include <Arduino.h>\n");
         for (String f : headers) {
             pde.append(generatedCode.get(f).toString());
         }
