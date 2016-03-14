@@ -20,6 +20,8 @@
  */
 package org.thingml.networkplugins.c.posix;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Message;
@@ -34,8 +36,13 @@ import org.thingml.compilers.spi.SerializationPlugin;
  */
 public class PosixTextDigitSerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
-    public PosixTextDigitSerializerPlugin(Context ctx, Configuration cfg) {
-        super(ctx, cfg);
+    public PosixTextDigitSerializerPlugin() {
+        super();
+    }
+
+    @Override
+    public void setContext(Context ctx) {
+        context = ctx;
         cctx = (CCompilerContext) context;
     }
 
@@ -123,8 +130,11 @@ public class PosixTextDigitSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public String getTargetedLanguage() {
-        return "posix";
+    public List<String> getTargetedLanguages() {
+        
+        List<String> res = new ArrayList<>();
+        res.add("posix");
+        return res;
     }
 
     

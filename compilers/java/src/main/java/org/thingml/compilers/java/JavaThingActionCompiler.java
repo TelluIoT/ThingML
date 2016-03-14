@@ -33,6 +33,20 @@ import java.util.List;
 public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+        builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
+        builder.append("get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+        builder.append(" + 1);\n");
+    }
+
+    @Override
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+        builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
+        builder.append("get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+        builder.append(" - 1);\n");
+    }
+
+    @Override
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
         Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
         Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
@@ -122,6 +136,24 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append(action.getSession().getName() + ".init();\n");
         builder.append(action.getSession().getName() + ".start();\n");
         builder.append(action.getSession().getName() + ".root.forks.add(" + action.getSession().getName() + ");\n");
+    }
+
+    @Override
+    public void generate(StartStream action, StringBuilder builder, Context ctx) {
+        //if(action.getStream().getInput() instanceof SimpleSource) {
+            builder.append("start" + action.getStream().getInput().qname("_") + "();\n");
+        /*} else if (action.getStream().getInput() instanceof SourceComposition) {
+            builder.append("start" + action.getStream().qname("_") + "();\n");
+        }*/
+    }
+
+    @Override
+    public void generate(StopStream action, StringBuilder builder, Context ctx) {
+        //if(action.getStream().getInput() instanceof SimpleSource) {
+            builder.append("stop" + action.getStream().getInput().qname("_") + "();\n");
+        /*} else if (action.getStream().getInput() instanceof SourceComposition) {
+            builder.append("stop" + action.getStream().qname("_") + "();\n");
+        }*/
     }
 
     @Override
@@ -225,15 +257,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
         if(!ctx.getAtInitTimeLock()) {
             if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
-                //if (expression.getProperty().eContainer() instanceof Thing) {
-                    builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
-                /*} else { //Composite or session
-                    if (expression.getProperty().findContainingRegion() instanceof Session) {
-                        builder.append("(" + JavaHelper.getJavaType(expression.getProperty().getType(), false, ctx) + ")properties.get(\"" + expression.getProperty().findContainingRegion().getName() + "\" + id).get(\"" + expression.getProperty().getName() + "\")");
-                    } else {
-                        builder.append("(" + JavaHelper.getJavaType(expression.getProperty().getType(), false, ctx) + ")properties.get(\"" + expression.getProperty().findContainingRegion().getName() + "\").get(\"" + expression.getProperty().getName() + "\")");
-                    }
-                }*/
+                builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
             else
                 builder.append(ctx.getVariableName(expression.getProperty()));
         } else {

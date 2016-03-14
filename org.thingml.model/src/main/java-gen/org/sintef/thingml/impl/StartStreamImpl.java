@@ -19,7 +19,6 @@ package org.sintef.thingml.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
@@ -27,6 +26,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.sintef.thingml.Expression;
+
 import org.sintef.thingml.StartStream;
 import org.sintef.thingml.Stream;
 import org.sintef.thingml.ThingmlPackage;
@@ -170,21 +170,22 @@ public class StartStreamImpl extends ActionImpl implements StartStream {
 		}
 		return super.eIsSet(featureID);
 	}
+        
+    /**
+     * @generated NOT
+     * @return 
+     */
+    public List<Expression> getAllExpressions() {
+        return new ArrayList<>();
+    }
 
-	/**
-	 * @generated NOT
-	 */
-	@Override
-	public List<Expression> getAllExpressions() {
-		return new ArrayList<Expression>();
-	}
-
-	/**
-	 * @generated NOT
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		return new ArrayList<Expression>();
-	}
+    /**
+     * @generated NOT
+     * @return 
+     */
+    public List<Expression> getAllExpressions(Class clazz) {
+        return new ArrayList<>();
+    }
+        
 
 } //StartStreamImpl

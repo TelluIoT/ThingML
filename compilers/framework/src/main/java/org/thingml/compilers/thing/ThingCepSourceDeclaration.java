@@ -53,7 +53,7 @@ public class ThingCepSourceDeclaration {
     protected void generateOperatorCalls(String name, Source source, StringBuilder builder, Context context) {
         List<ViewSource> windows = new ArrayList<ViewSource>();
         if (source.getOperators().size() > 0) {
-            builder.append(name + " = " + name);
+            builder.append("this." + name + " = " + name);
             for (ViewSource view : source.getOperators()) {
                 if (!(view instanceof TimeWindow) && !(view instanceof LengthWindow)) {
                     context.getCompiler().getCepCompiler().getCepViewCompiler().generate(view, builder, context);

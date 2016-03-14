@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.Set;
 import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
 
 /**
  * Created by ffl on 25.11.14.
@@ -42,6 +43,8 @@ public class ThingMLCompilerRegistry {
     private static ThingMLCompilerRegistry instance;
     private static ServiceLoader<NetworkPlugin> plugins = ServiceLoader.load(NetworkPlugin.class);
     private static Set<NetworkPlugin> loadedPlugins;
+    private static ServiceLoader<SerializationPlugin> serPlugins = ServiceLoader.load(SerializationPlugin.class);
+    private static Set<SerializationPlugin> loadedSerPlugins;
 
     public static ThingMLCompilerRegistry getInstance() {
         
@@ -63,6 +66,13 @@ public class ThingMLCompilerRegistry {
         while(it.hasNext()) {
             NetworkPlugin p = it.next();
             loadedPlugins.add(p);
+        }
+        loadedSerPlugins = new HashSet<>();
+        serPlugins.reload();
+        Iterator<SerializationPlugin> sit = serPlugins.iterator();
+        while(sit.hasNext()) {
+            SerializationPlugin sp = sit.next();
+            loadedSerPlugins.add(sp);
         }
         
         return instance;
@@ -92,17 +102,39 @@ public class ThingMLCompilerRegistry {
                     c.addNetworkPlugin(np);
                 }
             }
+            for(SerializationPlugin sp : loadedSerPlugins) {
+                if(sp.getTargetedLanguages().contains(id)) {
+                    c.addSerializationPlugin(sp);
+                }
+            }
             return c;
         }
     }
     
     public void printNetworkPluginList() {
-            System.out.println("Plugin list: ");
+        System.out.println("Network Plugin list: ");
         for(NetworkPlugin np : loadedPlugins) {
             System.out.println("    | " + np.getPluginID() + " (" + np.getTargetedLanguage() + ") handles:");
             for(String p : np.getSupportedProtocols()) {
                 System.out.println("        | " + p);
             }
+        }
+    }
+    
+    public void printSerializationPluginList() {
+        System.out.println("Serialization Plugin list: ");
+        for(SerializationPlugin sp : loadedSerPlugins) {
+            System.out.print("    | " + sp.getPluginID() + " (");
+            boolean first = true;
+            for(String lang : sp.getTargetedLanguages()) {
+                if(first) {
+                    first = false;
+                } else {
+                    System.out.print(", ");
+                }
+                System.out.print(lang);
+            }
+            System.out.println(")");
         }
     }
 

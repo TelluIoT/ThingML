@@ -1,0 +1,3 @@
+org.thingml.networkplugins.c.posix.PosixTextDigitSerializerPlugin
+org.thingml.networkplugins.c.CByteArraySerializerPlugin
+org.thingml.networkplugins.c.CMSPSerializerPlugin

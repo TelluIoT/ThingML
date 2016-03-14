@@ -14,8 +14,8 @@
     </parent>
 
     <modules>
-        <module>version_standalone</module>
         <module>version_eclipse</module>
+        <module>version_standalone</module>        
     </modules>
 
 </project>

@@ -16,7 +16,7 @@
 
 #When set to False, does not remove source code after execution. 
 #May cause secondary inputs to use files from the first input
-deleteTemporaryFiles = False
+deleteTemporaryFiles = True
 
 #Chooses which compilers should be used
 testLanguages=[]

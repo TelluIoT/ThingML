@@ -41,6 +41,7 @@ import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.Transition;
 import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
 
 public class Context {
 
@@ -461,7 +462,16 @@ public class Context {
         atInitTimeLock = false;
     }
     
+    public void initSerializationPlugins(Configuration cfg) {
+        for(SerializationPlugin sp : this.getCompiler().getSerializationPlugins()) {
+            sp.setConfiguration(cfg);
+            sp.setContext(this);
+        }
+    }
+    
     public void generateNetworkLibs(Configuration cfg) {
+        initSerializationPlugins(cfg);
+        
         Set<Protocol> protocols = new HashSet<>();
         for(ExternalConnector eco : cfg.getExternalConnectors()) {
             if(!protocols.contains(eco.getProtocol())) {
@@ -476,5 +486,20 @@ public class Context {
                 np.generateNetworkLibrary(cfg, this);
             }
         }
+    }
+    
+    public SerializationPlugin getSerializationPlugin(Protocol p) {
+        SerializationPlugin sp;
+        String serID;
+        if(p.hasAnnotation("serializer")) {
+            serID = p.annotation("serializer").get(0);
+        } else {
+            serID = "CByteArraySerializerPlugin";
+        }
+        sp = this.getCompiler().getSerializationPlugin(serID);
+        if(sp == null) {
+            System.out.println("[ERROR] The serialization plugin: " + serID + " is not loaded.");
+        }
+        return sp;
     }
 }

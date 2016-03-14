@@ -37,9 +37,15 @@ public abstract class SerializationPlugin extends Rule  {
     public Context context;
     public Configuration configuration;
     
-    public SerializationPlugin (Context ctx, Configuration cfg) {
+    public SerializationPlugin () {
+    }
+    
+    public void setConfiguration(Configuration cfg) {
+        this.configuration = cfg;
+    }
+    
+    public void setContext(Context ctx) {
         context = ctx;
-        configuration = cfg;
     }
     
     /* ------------ Plugin Body (Mandatory) ------------ */
@@ -93,7 +99,7 @@ public abstract class SerializationPlugin extends Rule  {
     */
     public abstract String getPluginID();
     
-    public abstract String getTargetedLanguage();
+    public abstract List<String> getTargetedLanguages();
     
     
     

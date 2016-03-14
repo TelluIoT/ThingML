@@ -20,6 +20,8 @@
  */
 package org.thingml.networkplugins.c;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Message;
@@ -34,8 +36,13 @@ import org.thingml.compilers.spi.SerializationPlugin;
  */
 public class CMSPSerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
-    public CMSPSerializerPlugin(Context ctx, Configuration cfg) {
-        super(ctx, cfg);
+    public CMSPSerializerPlugin() {
+        super();
+    }
+
+    @Override
+    public void setContext(Context ctx) {
+        context = ctx;
         cctx = (CCompilerContext) context;
     }
 
@@ -44,13 +51,14 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
         builder.append("byte " + bufferName + "[" + cctx.getMessageSerializationSize(m)+ "];\n");
 
         int HandlerCode = cctx.getHandlerCode(configuration, m);
-
+        //TODO Relay HEADER to network layer
         builder.append(bufferName + "[0] = '<';\n");
+        
+        
         builder.append(bufferName + "[1] = " + (cctx.getMessageSerializationSize(m) - 4) + ";\n");
         builder.append(bufferName + "[2] = " + HandlerCode + " & 0xFF;\n\n");
 
         int j = 3;
-
         for (Parameter pt : m.getParameters()) {
             builder.append("\n// parameter " + pt.getName() + "\n");
             int i = cctx.getCByteSize(pt.getType(), 0);
@@ -65,11 +73,7 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
                     builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getType(), 0) + "];\n");
                     builder.append("} u_" + v + ";\n");
                     builder.append("u_" + v + ".p = " + v + ";\n");
-
-                    //while (i > 0) {
-                    //    i = i - 1;
                     for(int k1 = 0; k1 < i; k1++) {
-                        //builder.append(BufferName + "[" + j + "] = (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                         builder.append(bufferName + "[" + j + "] = (u_" + v + ".bytebuffer[" + k1 + "] & 0xFF);\n");
                         j++;
                     }
@@ -93,27 +97,20 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
         builder.append("    msg_buf[1] = " + bufferName + "[1];\n");
         builder.append("    uint16_t msgID = 256 + " + bufferName + "[1];\n");
         builder.append("    uint16_t index = 2;\n");
-        
-        
         builder.append("    switch(msgID) {\n");
         for(Message m : messages) {
             builder.append("        case " + cctx.getHandlerCode(configuration, m) + ":\n");
             int j = 2;
-            
             for(Parameter pt : m.getParameters()) {
-                
                 for(int i = cctx.getCByteSize(pt.getType(), 0) - 1; i >= 0; i--) {
                         builder.append("            msg_buf[index] = " + bufferName + "[" + (j + i) + "];\n");
                         builder.append("            index++;\n");
                 }
                 j += cctx.getCByteSize(pt.getType(), 0);
             }
-            
             builder.append("        break;\n");
         }
-        
         builder.append("    }\n");
-        
         builder.append("    externalMessageEnqueue((uint8_t *) msg_buf, size, " + sender + ");\n");
     }
 
@@ -123,8 +120,12 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public String getTargetedLanguage() {
-        return "C";
+    public List<String> getTargetedLanguages() {
+        
+        List<String> res = new ArrayList<>();
+        res.add("posix");
+        res.add("arduino");
+        return res;
     }
     
 }
