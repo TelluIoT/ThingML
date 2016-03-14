@@ -118,7 +118,11 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             ctx.addToInitCode(hwtimer0.timerName + "_setup();\n");
             ctx.addToPollCode(hwtimer0.timerName + "_read();\n");
             
-            ctx.getBuilder(hwtimer0.timerName + ".c").append(hwtimer0.generateTimerLibrary(ctx));
+            StringBuilder lib = new StringBuilder();
+            lib.append(hwtimer0.generateTimerLibrary(ctx));
+            hwtimer0.generateInstructions(ctx, lib);
+            
+            ctx.getBuilder(hwtimer0.timerName + ".c").append(lib);
             ctx.getBuilder(hwtimer0.timerName + ".h").append("//" + hwtimer0.timerName + "\n");
         }
         if(!hwtimer1.ExternalConnectors.isEmpty()) {
@@ -126,7 +130,11 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             ctx.addToInitCode(hwtimer1.timerName + "_setup();\n");
             ctx.addToPollCode(hwtimer1.timerName + "_read();\n");
             
-            ctx.getBuilder(hwtimer1.timerName + ".c").append(hwtimer1.generateTimerLibrary(ctx));
+            StringBuilder lib = new StringBuilder();
+            lib.append(hwtimer1.generateTimerLibrary(ctx));
+            hwtimer1.generateInstructions(ctx, lib);
+            
+            ctx.getBuilder(hwtimer1.timerName + ".c").append(lib);
             ctx.getBuilder(hwtimer1.timerName + ".h").append("//" + hwtimer1.timerName + "\n");
         }
         if(!hwtimer2.ExternalConnectors.isEmpty()) {
@@ -134,7 +142,11 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             ctx.addToInitCode(hwtimer2.timerName + "_setup();\n");
             ctx.addToPollCode(hwtimer2.timerName + "_read();\n");
             
-            ctx.getBuilder(hwtimer2.timerName + ".c").append(hwtimer2.generateTimerLibrary(ctx));
+            StringBuilder lib = new StringBuilder();
+            lib.append(hwtimer2.generateTimerLibrary(ctx));
+            hwtimer2.generateInstructions(ctx, lib);
+            
+            ctx.getBuilder(hwtimer2.timerName + ".c").append(lib);
             ctx.getBuilder(hwtimer2.timerName + ".h").append("//" + hwtimer2.timerName + "\n");
         }
         if(!hwtimer3.ExternalConnectors.isEmpty()) {
@@ -142,7 +154,11 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             ctx.addToInitCode(hwtimer3.timerName + "_setup();\n");
             ctx.addToPollCode(hwtimer3.timerName + "_read();\n");
             
-            ctx.getBuilder(hwtimer3.timerName + ".c").append(hwtimer3.generateTimerLibrary(ctx));
+            StringBuilder lib = new StringBuilder();
+            lib.append(hwtimer3.generateTimerLibrary(ctx));
+            hwtimer3.generateInstructions(ctx, lib);
+            
+            ctx.getBuilder(hwtimer3.timerName + ".c").append(lib);
             ctx.getBuilder(hwtimer3.timerName + ".h").append("//" + hwtimer3.timerName + "\n");
         }
     }
@@ -220,12 +236,6 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                     res = "// Plugging into timer0 \n" +
     "               OCR0A = 0xAF;\n" +
     "               TIMSK0 |= _BV(OCIE0A);\n";
-                    /*res = "// Run timer0 interrupt up counting at 250kHz \n" +
-    "            TCCR0A = 0;\n" +
-    "            TCCR0B = 0<<CS02 | 1<<CS01 | 1<<CS00;\n" +
-    "\n" +
-    "            //Timer0 Overflow Interrupt Enable\n" +
-    "            TIMSK0 |= 1<<TOIE0;\n";*/
                     break;
                 case 1:
                     res = "// Run timer1 interrupt up counting at 16MHz \n" +
@@ -261,8 +271,6 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             switch(idHWTimer) {
                 case 0:
                     res = "SIGNAL(TIMER0_COMPA_vect) {\n";
-                    /*res = "SIGNAL(TIMER0_OVF_vect) {\n" + 
-                            "TCNT0 = 5;\n";*/
                     break;
                 case 1:
                     res = "SIGNAL(TIMER1_OVF_vect) {\n" + 
@@ -339,7 +347,6 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                 
                 initTimer.append(timer_init());
 
-                //interruptVector.append("SIGNAL(TIMER0_OVF_vect) {\n");
                 interruptVector.append(timer_interrupt());
                 interruptVector.append(timerName + "_interrupt_counter++;\n");
 
@@ -395,7 +402,6 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                             }
                         }
                     }
-					//System.out.println("*******> #Timeout messages = " + timeoutMessages.size());
                     for(Message msg : timeoutMessages) {
                         instructions.append("enqueue_buf[0] = (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " >> 8) & 0xFF;\n");
                         instructions.append("enqueue_buf[1] = " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " & 0xFF;\n");
@@ -409,8 +415,6 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                     for(BigInteger bi : tics) {
                         instructions.append("void " + timerName + "_"+ bi.longValue() +"ms_tic() {\n");
                         
-                        
-                        //instructions.append("uint8_t enqueue_buf[2];\n");
 
                         Set<Message> timeoutMessages = new HashSet<Message>();
                         for(ExternalConnector eco : ExternalConnectors) {
@@ -438,8 +442,7 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                             instructions.append("enqueue_buf[0] = (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " >> 8) & 0xFF;\n");
                             instructions.append("enqueue_buf[1] = " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), msg) + " & 0xFF;\n");
                             instructions.append("externalMessageEnqueue(enqueue_buf, 2, " + timerName + "_instance.listener_id);\n");
-                            //instructions.append("dispatch_" + msg.getName()+ "(" + timerName + "_instance.listener_id);\n");
-							instructions.append("}\n");
+                            instructions.append("}\n");
                         }
                         instructions.append("}\n\n");
                     }
@@ -448,7 +451,6 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                  ctemplate = ctemplate.replace("/*INSTRUCTIONS*/", instructions);
 
                  StringBuilder poll = new StringBuilder();
-                //Boolean timerStart = false, timerCancel = false, timeOut = false, xmsTic = false;
                 if(nbSoftTimer == 0) {
                     nbSoftTimer = 4;
                 }
@@ -471,7 +473,6 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
         
         public void generateInstructions(CCompilerContext ctx, StringBuilder builder) {
             for(ExternalConnector eco : ExternalConnectors) {
-                //if (eco.hasAnnotation("c_external_send")) {
                 Thing t = eco.getInst().getInstance().getType();
                 Port p = eco.getPort();
 
