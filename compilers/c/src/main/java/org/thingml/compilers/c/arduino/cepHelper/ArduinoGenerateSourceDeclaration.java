@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c.arduino.org.thingml.compilers.c.arduino.cepHelper;
+package org.thingml.compilers.c.arduino.cepHelper;
 
-import org.sintef.thingml.Filter;
-import org.sintef.thingml.LengthWindow;
-import org.sintef.thingml.TimeWindow;
+import org.sintef.thingml.JoinSources;
+import org.sintef.thingml.MergeSources;
+import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.Stream;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.thing.ThingCepViewCompiler;
+import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 
-public class ArduinoCepViewCompiler extends ThingCepViewCompiler{
-
+public class ArduinoGenerateSourceDeclaration extends ThingCepSourceDeclaration{
     @Override
-    public void generate(Filter filter, StringBuilder builder, Context context) {
+    public void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
 
     }
 
     @Override
-    public void generate(TimeWindow timeWindow, StringBuilder builder, Context context) {
+    public void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
 
     }
 
     @Override
-    public void generate(LengthWindow lengthWindow, StringBuilder builder, Context context) {
+    public void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
 
     }
 }
