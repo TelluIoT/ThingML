@@ -194,6 +194,9 @@ public class TestConfigurationGenerator extends ThingMLTool {
             generateArduinoProtocol(builder);
 
         builder.append("configuration " + t.getName() + "_" + testNumber + "_Cfg\n");
+        if (lang.longName.equals("arduino"))
+            builder.append("@arduino_stdout \"Serial\"\n");
+
         builder.append("{\n");
 
         builder.append("    instance harness : Tester\n");
