@@ -227,6 +227,13 @@ public class CThingApiCompiler extends ThingApiCompiler {
                 builder.append(";\n");
             }
 
+            for (Stream s : thing.getStreams()) {
+                SendAction sa = s.getOutput();
+                builder.append("void " + ctx.getSenderName(thing, sa.getPort(), sa.getMessage()));
+                ctx.appendFormalParameters(thing, builder, sa.getMessage());
+                builder.append(";\n");
+            }
+
             // Message Handlers
             Map<Port, Map<Message, List<Handler>>> handlers = sm.allMessageHandlers();
             for (Port port : handlers.keySet()) {
