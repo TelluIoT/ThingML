@@ -20,30 +20,24 @@
  */
 package org.thingml.networkplugins.c.arduino;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Protocol;
-import org.sintef.thingml.Thing;
+import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.plugin.CByteArraySerializer;
 import org.thingml.compilers.spi.NetworkPlugin;
+
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  *
  * @author sintef
  */
 public class ArduinoTimerPlugin extends NetworkPlugin {
+
+    CCompilerContext ctx;
+    HWTimer hwtimer0, hwtimer1, hwtimer2, hwtimer3;
+    Boolean isInit = false;
 
     public String getPluginID() {
         return "ArduinoTimerPlugin";
@@ -59,20 +53,12 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
         return "arduino";
     }
 
-    
-    CCompilerContext ctx;
-    
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
         this.ctx = (CCompilerContext) ctx;
         for(Protocol prot : protocols) {
             generateNetworkLibrary(cfg, prot);
         }
     }
-    
-    
-    HWTimer hwtimer0, hwtimer1, hwtimer2, hwtimer3;
-    Boolean isInit = false;
-    
     
     public void Init(Configuration cfg, Protocol prot) {
         if(!isInit) {
@@ -180,14 +166,61 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
     }
     
     private class HWTimer {
+        public Set<ExternalConnector> ExternalConnectors;
+        public String timerName;
         Boolean timerStart = false, timerCancel = false, timeOut = false, xmsTic = false;
         int idHWTimer;
-        public Set<ExternalConnector> ExternalConnectors;
         Set<BigInteger> tics;
         BigInteger scm;
         String interruptCounterType;
-        public String timerName;
         int nbSoftTimer = 0;
+
+        public HWTimer(int idHWTimer, Set<ExternalConnector> ExternalConnectors) {
+            this.idHWTimer = idHWTimer;
+            this.ExternalConnectors = ExternalConnectors;
+            this.timerName = "timer" + idHWTimer;
+            this.tics = new HashSet<BigInteger>();
+
+            for (ExternalConnector eco : ExternalConnectors) {
+                eco.setName(timerName);
+                //System.out.println("eco now named:" + eco.getName());
+
+                for (Message msg : eco.getPort().getSends()) {
+                    if (msg.hasAnnotation("timer_start")) {
+                        timerStart |= true;
+                    }
+                    if (msg.hasAnnotation("timer_cancel")) {
+                        timerCancel |= true;
+                    }
+                }
+                for (Message msg : eco.getPort().getReceives()) {
+                    if (msg.hasAnnotation("timeout")) {
+                        timeOut |= true;
+                    }
+                    if (msg.hasAnnotation("xms_tic")) {
+                        xmsTic |= true;
+                        BigInteger mytic = BigInteger.valueOf(Integer.parseInt(msg.annotation("xms_tic").iterator().next()));
+                        Boolean found = false;
+                        for (BigInteger i : tics) {
+                            if (mytic.compareTo(i) == 0) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            tics.add(mytic);
+                        }
+                    }
+                }
+
+                if (eco.hasAnnotation("nb_soft_timer")) {
+                    nbSoftTimer += Integer.parseInt(eco.annotation("nb_soft_timer").iterator().next());
+                }
+            }
+
+            this.findSCM();
+
+        }
         
         BigInteger SCM(List<BigInteger> l) {
             if(l.isEmpty()) {
@@ -212,10 +245,10 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                 l.add(bi);
                 //System.out.println(bi.longValue() + " tics");
             }
-            
+
             scm = SCM(l);
             //System.out.println("scm: " + scm.longValue());
-            
+
             if(scm != null) {
                 if(scm.longValue() < 256) {
                     interruptCounterType = "uint8_t";
@@ -266,73 +299,26 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
         }
         
         String timer_interrupt() {
-        
+
             String res ="";
             switch(idHWTimer) {
                 case 0:
                     res = "SIGNAL(TIMER0_COMPA_vect) {\n";
                     break;
                 case 1:
-                    res = "SIGNAL(TIMER1_OVF_vect) {\n" + 
+                    res = "SIGNAL(TIMER1_OVF_vect) {\n" +
                             "TCNT1 = 49536;\n";
                     break;
                 case 2:
-                    res = "SIGNAL(TIMER2_OVF_vect) {\n" + 
+                    res = "SIGNAL(TIMER2_OVF_vect) {\n" +
                             "TCNT2 = 5;\n";
                     break;
                 case 3:
-                    res = "SIGNAL(TIMER3_OVF_vect) {\n" + 
+                    res = "SIGNAL(TIMER3_OVF_vect) {\n" +
                             "TCNT3 = 49536;\n";
                     break;
             }
             return res;
-        }
-        
-        public HWTimer(int idHWTimer, Set<ExternalConnector> ExternalConnectors) {
-            this.idHWTimer = idHWTimer;
-            this.ExternalConnectors = ExternalConnectors;
-            this.timerName = "timer" + idHWTimer;
-            this.tics = new HashSet<BigInteger>();
-            
-            for(ExternalConnector eco : ExternalConnectors) {
-                eco.setName(timerName);
-                //System.out.println("eco now named:" + eco.getName());
-                
-                for(Message msg : eco.getPort().getSends()) {
-                    if(msg.hasAnnotation("timer_start")) {
-                        timerStart |= true;
-                    }
-                    if(msg.hasAnnotation("timer_cancel")) {
-                        timerCancel |= true;
-                    }
-                }
-                for(Message msg : eco.getPort().getReceives()) {
-                    if(msg.hasAnnotation("timeout")) {
-                        timeOut |= true;
-                    }
-                    if(msg.hasAnnotation("xms_tic")) {
-                        xmsTic |= true;
-                        BigInteger mytic = BigInteger.valueOf(Integer.parseInt(msg.annotation("xms_tic").iterator().next()));
-                        Boolean found = false;
-                        for(BigInteger i : tics) {
-                            if(mytic.compareTo(i) == 0) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if(!found) {
-                            tics.add(mytic);
-                        }
-                    }
-                }
-                
-                if(eco.hasAnnotation("nb_soft_timer")) {
-                    nbSoftTimer += Integer.parseInt(eco.annotation("nb_soft_timer").iterator().next());
-                }
-            }
-            
-            this.findSCM();
-            
         }
         
         public String generateTimerLibrary(CCompilerContext ctx) {
@@ -379,6 +365,9 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                             + "}\n"
                             + "}\n\n");
                 }
+                if (timeOut || xmsTic)
+                    instructions.append("void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);\n");
+
 				//System.out.println("*******> timeOut = " + timeOut);
                 if(timeOut) {
 				
