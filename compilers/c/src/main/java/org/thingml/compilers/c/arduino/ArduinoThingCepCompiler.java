@@ -143,6 +143,9 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             String methodsSignatures = "";
             String attributesSignatures = "";
             for (Message msg : ArduinoThingCepCompiler.getMessageFromStream(s)) {
+                /*
+                 * Constants
+                 */
                 String constantTemplate = ctx.getCEPLibTemplateConstants();
                 int messageSize = ctx.getMessageSerializationSize(msg) - 4; //substract the ports size
                 constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
@@ -150,9 +153,18 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 constantTemplate = constantTemplate.replace("/*STREAM_SIZE*/", getStreamSize(s, ctx));
                 constants += constantTemplate;
 
+                /*
+                 * Methods Signatures
+                 */
                 String methodsTemplate = ctx.getCEPLibTemplateMethodsSignatures();
                 methodsTemplate = methodsTemplate.replace("/*MESSAGE_NAME*/", msg.getName());
 
+                List<String> popParameters = new ArrayList<>();
+                for (Parameter p : msg.getParameters())
+                    popParameters.add(ctx.getCType(p.getType()) + "* " + p.getName());
+
+                methodsTemplate = methodsTemplate.replace("/*POP_PARAMETERS*/", "unsigned long* " + msg.getName() +
+                        "Time, " + String.join(", ", popParameters));
                 StringBuilder paramBuilder = new StringBuilder();
                 ctx.appendFormalParameters(thing, paramBuilder, msg);
                 methodsTemplate = methodsTemplate.replace("/*MESSAGE_PARAMETERS*/", paramBuilder);
@@ -197,7 +209,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 messageImpl = messageImpl.replace("/*MESSAGE_PARAMETERS*/", paramBuilder);
 
 
-                /**
+                /*
                  * Sliding Window Impl
                  * Here we have basically 3 cases
                  * - the stream has no window specified, we only remove one message
@@ -209,7 +221,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 slidingImp = slidingImp.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
                 messageImpl = messageImpl.replace("/*SLIDING_IMPL*/", slidingImp);
 
-                /**
+                /*
                  * Queue Impl
                  */
                 int fifo_buffer_index = 4; // just after the stamp
@@ -233,9 +245,15 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 }
 
                 messageImpl = messageImpl.replace("/*QUEUE_IMPL*/", queueImpl);
-                /**
+                /*
                  * Pop Impl
                  */
+                List<String> popParameters = new ArrayList<>();
+                for (Parameter p : msg.getParameters())
+                    popParameters.add(ctx.getCType(p.getType()) + "* " + p.getName());
+
+                messageImpl = messageImpl.replace("/*POP_PARAMETERS*/", String.join(", ", popParameters));
+
                 String popImpl = "";
                 fifo_buffer_index = 4; // reset the index after the stamp
                 for (Parameter p : msg.getParameters()) {
@@ -253,12 +271,17 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                         fifo_buffer_index++;
                     }
 
+                    popImpl += "*" + p.getName() + " = u_" + msg.getName() + "_" + p.getName() + ".p;\n";
+
                 }
                 messageImpl = messageImpl.replace("/*POP_IMPL*/", popImpl);
 
                 msgsImpl += messageImpl;
             }
 
+            /*
+             * Trigger Impl
+             */
             String classImpl = ctx.getCEPLibTemplateClassImpl();
             String triggerImpl = "";
             if (s.getInput() instanceof JoinSources) {
@@ -270,10 +293,26 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 }
                 triggerImpl = "if (" + String.join(" && ", triggerCondition) + " )\n {\n";
 
-                for (Message m : msgs)
-                    triggerImpl += m.getName() + "_popEvent();\n";
+                for (Message m : msgs) {
+                    triggerImpl += "unsigned long " + m.getName() + "Time;\n";
+                    for (Parameter p : m.getParameters())
+                        triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
+
+                    triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time, ";
+                    List<String> pList = new ArrayList<>();
+                    for (Parameter p : m.getParameters())
+                        pList.add("&" + p.getName());
+                    triggerImpl += String.join(", ", pList);
+                    triggerImpl += ");\n";
+                }
 
                 StringBuilder outAction = new StringBuilder();
+
+                for (Expression e : ((JoinSources) s.getInput()).getRules()) {
+                    ctx.getCompiler().getThingActionCompiler().generate(e, outAction, ctx);
+                    outAction.append(";\n");
+                }
+
                 //TODO check the output guard filter
                 ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), outAction, ctx);
                 triggerImpl += outAction + "\n}\n";

@@ -44,7 +44,7 @@ void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_queueEvent/*MESSAGE_PARAMETERS*/
     }
 }
 
-void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_popEvent()
+void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_popEvent(unsigned long* /*MESSAGE_NAME*/Time, /*POP_PARAMETERS*/)
 {
     if (!/*MESSAGE_NAME*/_isEmpty())
     {
@@ -56,6 +56,7 @@ void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_popEvent()
         stamp.time_buffer[2] = /*MESSAGE_NAME*/_fifo[(/*MESSAGE_NAME*/_fifo_head + 1) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE];
         stamp.time_buffer[1] = /*MESSAGE_NAME*/_fifo[(/*MESSAGE_NAME*/_fifo_head + 2) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE];
         stamp.time_buffer[0] = /*MESSAGE_NAME*/_fifo[(/*MESSAGE_NAME*/_fifo_head + 3) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE];
+        */*MESSAGE_NAME*/Time = stamp.time;
 
 /*POP_IMPL*/
 
