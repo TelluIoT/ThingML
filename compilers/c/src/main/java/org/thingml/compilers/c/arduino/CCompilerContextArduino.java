@@ -61,7 +61,6 @@ public class CCompilerContextArduino extends CCompilerContext {
 
         StringBuilder pde = new StringBuilder();
 
-        pde.append("#include <Arduino.h>\n");
         for (String f : headers) {
             pde.append(generatedCode.get(f).toString());
         }
