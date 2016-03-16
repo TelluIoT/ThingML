@@ -18,6 +18,7 @@ package org.thingml.compilers.c.arduino;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
@@ -31,55 +32,6 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
     }
 
     public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
-    }
-
-    /**
-     * We generate a buffer for Join and Merge operations or if the source has a
-     * Length or Window specified
-     *
-     * @param thing Thing implementing some stream.
-     * @return List of Stream needing a buffer in order to produce their result.
-     */
-    public static List<Stream> getStreamWithBuffer(Thing thing) {
-        List<Stream> ret = new ArrayList<>();
-        for (Stream s : thing.getStreams()) {
-            Source source = s.getInput();
-            if (source instanceof SourceComposition) {
-                ret.add(s);
-            } else {
-                for (ViewSource vs : source.getOperators()) {
-                    if (vs instanceof LengthWindow) {
-                        ret.add(s);
-                    } else if (vs instanceof TimeWindow) {
-                        ret.add(s);
-                    }
-                }
-            }
-        }
-        return ret;
-    }
-
-    public static List<Message> getMessageFromStream(Stream stream) {
-        List<Message> ret = new ArrayList<>();
-        Source source = stream.getInput();
-
-        if (source instanceof SimpleSource) {
-            ret.add(((SimpleSource) source).getMessage().getMessage());
-        } else if (source instanceof MergeSources) {
-            for (Source s : ((MergeSources) source).getSources()) {
-                if (s instanceof SimpleSource) {
-                    ret.add(((SimpleSource) s).getMessage().getMessage());
-                }
-            }
-        } else if (source instanceof JoinSources) {
-            for (Source s : ((JoinSources) source).getSources()) {
-                if (s instanceof SimpleSource) {
-                    ret.add(((SimpleSource) s).getMessage().getMessage());
-                }
-            }
-
-        }
-        return ret;
     }
 
     public static void generateCEPLib(Thing thing, StringBuilder builder, CCompilerContext ctx) {
@@ -135,14 +87,14 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
 
     public static void generateCEPLibAPI(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(thing)) {
+        for (Stream s : ArduinoCepHelper.getStreamWithBuffer(thing)) {
 
             String cepTemplate = ctx.getCEPLibTemplateClass();
 
             String constants = "";
             String methodsSignatures = "";
             String attributesSignatures = "";
-            for (Message msg : ArduinoThingCepCompiler.getMessageFromStream(s)) {
+            for (Message msg : ArduinoCepHelper.getMessageFromStream(s)) {
                 /*
                  * Constants
                  */
@@ -195,10 +147,10 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
     public static void generateCEPLibImpl(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
-        for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(thing)) {
+        for (Stream s : ArduinoCepHelper.getStreamWithBuffer(thing)) {
 
             String msgsImpl = "";
-            for (Message msg : ArduinoThingCepCompiler.getMessageFromStream(s)) {
+            for (Message msg : ArduinoCepHelper.getMessageFromStream(s)) {
                 String messageImpl = ctx.getCEPLibTemplatesMessageImpl();
                 messageImpl = messageImpl.replace("/*STREAM_NAME*/", s.getName());
                 messageImpl = messageImpl.replace("/*MESSAGE_NAME*/", msg.getName());
@@ -285,7 +237,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             String classImpl = ctx.getCEPLibTemplateClassImpl();
             String triggerImpl = "";
             if (s.getInput() instanceof JoinSources) {
-                List<Message> msgs = ArduinoThingCepCompiler.getMessageFromStream(s);
+                List<Message> msgs = ArduinoCepHelper.getMessageFromStream(s);
                 List<String> triggerCondition = new ArrayList<>();
                 for (Message m : msgs) {
                     triggerImpl += "check" + m.getName() + "TTL();\n";
