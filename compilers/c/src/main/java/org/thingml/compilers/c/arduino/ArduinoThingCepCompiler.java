@@ -34,11 +34,6 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
     public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
     }
 
-    public static void generateCEPLib(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        generateCEPLibAPI(thing, builder, ctx);
-        generateCEPLibImpl(thing, builder, ctx);
-    }
-
     public static String getStreamSize(Stream s, CCompilerContext ctx) {
         List<ViewSource> vsList = s.getInput().getOperators();
         String ret = "DEFAULT_NUMBER_MSG";

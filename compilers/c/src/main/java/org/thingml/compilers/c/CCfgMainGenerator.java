@@ -21,17 +21,8 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;
-import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
-import org.thingml.compilers.c.arduino.plugin.ArduinoSerial;
-import org.thingml.compilers.c.arduino.plugin.ArduinoTimer;
-import org.thingml.compilers.c.arduino.plugin.NoBufSerial;
-import org.thingml.compilers.c.posix.plugin.NopollWS;
-import org.thingml.compilers.c.posix.plugin.PosixMQTT;
-import org.thingml.compilers.c.posix.plugin.PosixSerial;
-import org.thingml.compilers.c.posix.plugin.PosixWS;
+import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.cpp.sintefboard.plugin.SintefboardPort;
-import org.thingml.compilers.spi.NetworkPlugin;
 
 import java.util.*;
 
@@ -1762,7 +1753,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("\n");
 
         // init cep streams variables
-        for (Stream s : ArduinoThingCepCompiler.getStreamWithBuffer(inst.getType())) {
+        for (Stream s : ArduinoCepHelper.getStreamWithBuffer(inst.getType())) {
             builder.append(ctx.getInstanceVarName(inst) + ".cep_" + s.getName() + " = new stream_" + s.getName() + "();\n");
         }
 

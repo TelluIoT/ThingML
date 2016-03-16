@@ -18,12 +18,15 @@ package org.thingml.compilers.c;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
+import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by ffl on 17.06.15.
@@ -62,6 +65,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append(" *****************************************************************************/\n\n");
 
         generateCGlobalAnnotation(thing, builder, ctx);
+
+        //FIXME: should call getCompiler
+        if (!ArduinoCepHelper.getStreamWithBuffer(thing).isEmpty())
+            ArduinoThingCepCompiler.generateCEPLibImpl(thing, builder, ctx);
 
         builder.append("// Declaration of prototypes:\n");
 
