@@ -66,10 +66,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         generateCGlobalAnnotation(thing, builder, ctx);
 
-        //FIXME: should call getCompiler
-        if (!ArduinoCepHelper.getStreamWithBuffer(thing).isEmpty())
-            ArduinoThingCepCompiler.generateCEPLibImpl(thing, builder, ctx);
-
         builder.append("// Declaration of prototypes:\n");
 
         //FIXME: If we need these cpp directives, they should be added in the specific compilers which needs them
@@ -131,6 +127,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("// Observers for outgoing messages:\n");
         generatePrivateMessageSendingOperations(thing, builder, ctx, debugProfile);
         builder.append("\n");
+
+
+        //FIXME: should call getCompiler
+        if (!ArduinoCepHelper.getStreamWithBuffer(thing).isEmpty())
+            ArduinoThingCepCompiler.generateCEPLibImpl(thing, builder, ctx);
 
         // Get the template and replace the values
         String itemplate = ctx.getThingImplTemplate();
@@ -522,11 +523,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     }
 
                     // select
-                    for (LocalVariable lv : s.getSelection()) {
-                        builder.append(ctx.getCType(lv.getType()) + " " + lv.getName() + " = ");
-                        ctx.getCompiler().getThingActionCompiler().generate(lv.getInit(), builder, ctx);
-                        builder.append(";\n");
-                    }
+                    //for (LocalVariable lv : s.getSelection()) {
+                    //    builder.append(ctx.getCType(lv.getType()) + " " + lv.getName() + " = ");
+                    //    ctx.getCompiler().getThingActionCompiler().generate(lv.getInit(), builder, ctx);
+                    //    builder.append(";\n");
+                    //}
 
                     boolean hasWindowView = false;
                     for (ViewSource vs : source.getOperators())
