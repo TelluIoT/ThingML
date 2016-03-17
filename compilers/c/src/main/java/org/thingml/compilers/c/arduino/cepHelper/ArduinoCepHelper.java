@@ -16,6 +16,7 @@
 package org.thingml.compilers.c.arduino.cepHelper;
 
 import org.sintef.thingml.*;
+import org.thingml.compilers.c.CCompilerContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,4 +81,18 @@ public class ArduinoCepHelper {
         return ret;
     }
 
+    public static String getStreamTTL(Stream stream, CCompilerContext ctx) {
+        String streamTTL = "250"; // Default value out of f'''' nowhere
+        if (stream.hasAnnotation("TTL"))
+            for (String v : stream.annotation("TTL"))
+                streamTTL = v;
+        for (ViewSource vs : stream.getInput().getOperators()) {
+            if (vs instanceof TimeWindow) {
+                StringBuilder builder = new StringBuilder();
+                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), builder, ctx);
+                streamTTL = builder.toString();
+            }
+        }
+        return streamTTL;
+    }
 }

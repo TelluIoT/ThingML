@@ -44,7 +44,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ret = b.toString();
             } else if (vs instanceof TimeWindow) {
                 ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getDuration(), b, ctx);
-                ret = "(" + b.toString() + "/TTL)";
+                ret = "(" + b.toString() + "/" + s.getName().toUpperCase() + "TTL)";
             }
         }
         return ret;
@@ -86,14 +86,18 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
             String cepTemplate = ctx.getCEPLibTemplateClass();
 
-            String constants = "";
+            String constants = ctx.getCEPLibTemplateStreamConstants();
+            constants = constants.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
+            constants = constants.replace("/*TTL*/", ArduinoCepHelper.getStreamTTL(s, ctx));
+
             String methodsSignatures = "";
             String attributesSignatures = "";
             for (Message msg : ArduinoCepHelper.getMessageFromStream(s)) {
                 /*
                  * Constants
                  */
-                String constantTemplate = ctx.getCEPLibTemplateConstants();
+                String constantTemplate = ctx.getCEPLibTemplateMessageConstants();
+
                 int messageSize = ctx.getMessageSerializationSize(msg) - 4; //substract the ports size
                 constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
                 constantTemplate = constantTemplate.replace("/*STRUCT_SIZE*/", Integer.toString(messageSize));
@@ -124,12 +128,6 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 attributesSignatures += attributesTemplate;
             }
 
-            String streamTTL = "250"; // Default value out of f'''' nowhere
-            if (s.hasAnnotation("TTL"))
-                for (String v : s.annotation("TTL"))
-                    streamTTL = v;
-
-            cepTemplate = cepTemplate.replace("/*TTL*/", streamTTL);
             cepTemplate = cepTemplate.replace("/*STREAM_NAME*/", s.getName());
             cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
             cepTemplate = cepTemplate.replace("/*ATTRIBUTES_SIGNATURES*/", attributesSignatures);
@@ -148,6 +146,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             for (Message msg : ArduinoCepHelper.getMessageFromStream(s)) {
                 String messageImpl = ctx.getCEPLibTemplatesMessageImpl();
                 messageImpl = messageImpl.replace("/*STREAM_NAME*/", s.getName());
+                messageImpl = messageImpl.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
                 messageImpl = messageImpl.replace("/*MESSAGE_NAME*/", msg.getName());
                 messageImpl = messageImpl.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
 

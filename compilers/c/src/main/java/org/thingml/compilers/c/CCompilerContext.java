@@ -208,9 +208,16 @@ public abstract class CCompilerContext extends Context {
         return null;
     }
 
-    public String getCEPLibTemplateConstants() {
+    public String getCEPLibTemplateMessageConstants() {
         if (getCompiler().getID().compareTo("arduino") == 0) {
-            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_constants.h");
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_message_constants.h");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplateStreamConstants() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_stream_constants.h");
         }
         return null;
     }

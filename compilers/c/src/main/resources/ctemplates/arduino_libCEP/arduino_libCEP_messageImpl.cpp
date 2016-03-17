@@ -79,7 +79,7 @@ void stream_/*STREAM_NAME*/::check/*MESSAGE_NAME*/TTL()
     stamp.time_buffer[1] = /*MESSAGE_NAME*/_fifo[(/*MESSAGE_NAME*/_fifo_head + 2) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE];
     stamp.time_buffer[0] = /*MESSAGE_NAME*/_fifo[(/*MESSAGE_NAME*/_fifo_head + 3) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE];
 
-    if (stamp.time > TTL)
+    if ((millis() - stamp.time) > /*STREAM_NAME_UPPER*/TTL)
     {
         /*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;
         check/*MESSAGE_NAME*/TTL();
