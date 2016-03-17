@@ -242,8 +242,10 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                 for (Message m : msgs) {
                     triggerImpl += "unsigned long " + m.getName() + "Time;\n";
-                    for (Parameter p : m.getParameters())
+                    for (Parameter p : m.getParameters()) {
+                        p.setName(m.getName() + p.getName());
                         triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
+                    }
 
                     triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time, ";
                     List<String> pList = new ArrayList<>();
@@ -255,9 +257,18 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                 StringBuilder outAction = new StringBuilder();
 
+                int resultMessageParamaterIndex = 0;
                 for (Expression e : ((JoinSources) s.getInput()).getRules()) {
+                    Parameter p = ((JoinSources) s.getInput()).getResultMessage().getParameters().get(resultMessageParamaterIndex);
+                    outAction.append(ctx.getCType(p.getType()) + " " + p.getName() + " = ");
                     ctx.getCompiler().getThingActionCompiler().generate(e, outAction, ctx);
                     outAction.append(";\n");
+                    resultMessageParamaterIndex++;
+                }
+
+                for (LocalVariable lv : s.getSelection()) {
+                    lv.setName("local" + lv.getName());
+                    ctx.getCompiler().getThingActionCompiler().generate(lv, outAction, ctx);
                 }
 
                 //TODO check the output guard filter
