@@ -89,7 +89,7 @@ public class ArduinoCepHelper {
         for (ViewSource vs : stream.getInput().getOperators()) {
             if (vs instanceof TimeWindow) {
                 StringBuilder builder = new StringBuilder();
-                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), builder, ctx);
+                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getDuration(), builder, ctx);
                 streamTTL = builder.toString();
             }
         }

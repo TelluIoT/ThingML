@@ -44,7 +44,9 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ret = b.toString();
             } else if (vs instanceof TimeWindow) {
                 ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getDuration(), b, ctx);
-                ret = "(" + b.toString() + "/" + s.getName().toUpperCase() + "TTL)";
+                StringBuilder step = new StringBuilder();
+                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), step, ctx);
+                ret = "(" + b.toString() + "/" + step.toString() + ")";
             }
         }
         return ret;
