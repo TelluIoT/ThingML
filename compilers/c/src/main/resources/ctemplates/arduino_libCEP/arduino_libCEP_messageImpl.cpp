@@ -44,7 +44,7 @@ void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_queueEvent/*MESSAGE_PARAMETERS*/
     }
 }
 
-void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_popEvent(unsigned long* /*MESSAGE_NAME*/Time, /*POP_PARAMETERS*/)
+void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_popEvent(unsigned long* /*MESSAGE_NAME*/Time/*POP_PARAMETERS*/)
 {
     if (!/*MESSAGE_NAME*/_isEmpty())
     {

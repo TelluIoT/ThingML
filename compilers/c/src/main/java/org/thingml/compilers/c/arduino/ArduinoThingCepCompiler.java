@@ -116,8 +116,12 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 for (Parameter p : msg.getParameters())
                     popParameters.add(ctx.getCType(p.getType()) + "* " + p.getName());
 
+                String popParametersString = "";
+                if (!popParameters.isEmpty())
+                    popParametersString = ", " + String.join(", ", popParameters);
+
                 methodsTemplate = methodsTemplate.replace("/*POP_PARAMETERS*/", "unsigned long* " + msg.getName() +
-                        "Time, " + String.join(", ", popParameters));
+                        "Time" + popParametersString);
                 StringBuilder paramBuilder = new StringBuilder();
                 ctx.appendFormalParameters(thing, paramBuilder, msg);
                 methodsTemplate = methodsTemplate.replace("/*MESSAGE_PARAMETERS*/", paramBuilder);
@@ -200,7 +204,11 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 for (Parameter p : msg.getParameters())
                     popParameters.add(ctx.getCType(p.getType()) + "* " + p.getName());
 
-                messageImpl = messageImpl.replace("/*POP_PARAMETERS*/", String.join(", ", popParameters));
+                String popParametersString = "";
+                if (!popParameters.isEmpty())
+                    popParametersString = ", " + String.join(", ", popParameters);
+
+                messageImpl = messageImpl.replace("/*POP_PARAMETERS*/", popParametersString);
 
                 String popImpl = "";
                 fifo_buffer_index = 4; // reset the index after the stamp
