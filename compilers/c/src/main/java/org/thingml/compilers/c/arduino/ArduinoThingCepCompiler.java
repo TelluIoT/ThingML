@@ -256,11 +256,11 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                         triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
                     }
 
-                    triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time, ";
-                    List<String> pList = new ArrayList<>();
+                    triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time";
+
                     for (Parameter p : m.getParameters())
-                        pList.add("&" + p.getName());
-                    triggerImpl += String.join(", ", pList);
+                        triggerImpl += ", &" + p.getName();
+
                     triggerImpl += ");\n";
                 }
 
