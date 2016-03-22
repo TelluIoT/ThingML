@@ -235,63 +235,72 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 msgsImpl += messageImpl;
             }
 
-            /*
-             * Trigger Impl
-             */
             String classImpl = ctx.getCEPLibTemplateClassImpl();
-            String triggerImpl = "";
-            if (s.getInput() instanceof JoinSources) {
-                List<Message> msgs = ArduinoCepHelper.getMessageFromStream(s);
-                List<String> triggerCondition = new ArrayList<>();
-                for (Message m : msgs) {
-                    triggerImpl += "check" + m.getName() + "TTL();\n";
-                    triggerCondition.add("!" + m.getName() + "_isEmpty()");
-                }
-                triggerImpl = "if (" + String.join(" && ", triggerCondition) + " )\n {\n";
-
-                for (Message m : msgs) {
-                    triggerImpl += "unsigned long " + m.getName() + "Time;\n";
-                    for (Parameter p : m.getParameters()) {
-                        p.setName(m.getName() + p.getName());
-                        triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
-                    }
-
-                    triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time";
-
-                    for (Parameter p : m.getParameters())
-                        triggerImpl += ", &" + p.getName();
-
-                    triggerImpl += ");\n";
-                }
-
-                StringBuilder outAction = new StringBuilder();
-
-                int resultMessageParamaterIndex = 0;
-                for (Expression e : ((JoinSources) s.getInput()).getRules()) {
-                    Parameter p = ((JoinSources) s.getInput()).getResultMessage().getParameters().get(resultMessageParamaterIndex);
-                    outAction.append(ctx.getCType(p.getType()) + " " + p.getName() + " = ");
-                    ctx.getCompiler().getThingActionCompiler().generate(e, outAction, ctx);
-                    outAction.append(";\n");
-                    resultMessageParamaterIndex++;
-                }
-
-                for (LocalVariable lv : s.getSelection()) {
-                    lv.setName("local" + lv.getName());
-                    ctx.getCompiler().getThingActionCompiler().generate(lv, outAction, ctx);
-                }
-
-                //TODO check the output guard filter
-                ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), outAction, ctx);
-                triggerImpl += outAction + "\n}\n";
-            }
-
 
             classImpl = classImpl.replace("/*STREAM_NAME*/", s.getName());
             classImpl = classImpl.replace("/*MESSAGE_IMPL*/", msgsImpl);
             classImpl = classImpl.replace("/*TRIGGER_INST_PARAM*/", "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName());
-            classImpl = classImpl.replace("/*TRIGGER_IMPL*/", triggerImpl);
+            classImpl = classImpl.replace("/*TRIGGER_IMPL*/", generateTriggerImpl(s, ctx));
             builder.append(classImpl);
         }
+    }
+
+    /**
+     * Generate the implementation of the function checkTrigger used to detect
+     * if a stream can output its actions.
+     *
+     * @param s   A object stream, streams have exactly one checkTrigger function
+     * @param ctx Compiler context
+     * @return Code as a String object.
+     */
+    private static String generateTriggerImpl(Stream s, CCompilerContext ctx) {
+        String triggerImpl = "";
+
+        if (s.getInput() instanceof JoinSources) {
+            List<Message> msgs = ArduinoCepHelper.getMessageFromStream(s);
+            List<String> triggerCondition = new ArrayList<>();
+            for (Message m : msgs) {
+                triggerImpl += "check" + m.getName() + "TTL();\n";
+                triggerCondition.add("!" + m.getName() + "_isEmpty()");
+            }
+            triggerImpl = "if (" + String.join(" && ", triggerCondition) + " )\n {\n";
+
+            for (Message m : msgs) {
+                triggerImpl += "unsigned long " + m.getName() + "Time;\n";
+                for (Parameter p : m.getParameters()) {
+                    p.setName(m.getName() + p.getName());
+                    triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
+                }
+
+                triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time";
+
+                for (Parameter p : m.getParameters())
+                    triggerImpl += ", &" + p.getName();
+
+                triggerImpl += ");\n";
+            }
+
+            StringBuilder outAction = new StringBuilder();
+
+            int resultMessageParamaterIndex = 0;
+            for (Expression e : ((JoinSources) s.getInput()).getRules()) {
+                Parameter p = ((JoinSources) s.getInput()).getResultMessage().getParameters().get(resultMessageParamaterIndex);
+                outAction.append(ctx.getCType(p.getType()) + " " + p.getName() + " = ");
+                ctx.getCompiler().getThingActionCompiler().generate(e, outAction, ctx);
+                outAction.append(";\n");
+                resultMessageParamaterIndex++;
+            }
+
+            for (LocalVariable lv : s.getSelection()) {
+                lv.setName("local" + lv.getName());
+                ctx.getCompiler().getThingActionCompiler().generate(lv, outAction, ctx);
+            }
+
+            //TODO check the output guard filter
+            ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), outAction, ctx);
+            triggerImpl += outAction + "\n}\n";
+        }
+        return triggerImpl;
     }
 
     @Override

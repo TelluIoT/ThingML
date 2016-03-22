@@ -537,11 +537,25 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     // produce the action or propagate the event
                     if (source instanceof SimpleSource) {
                         ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
-                    }
-                    if (source instanceof SourceComposition || hasWindowView) {
+                    } else if (source instanceof JoinSources || hasWindowView) {
                         builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
                         ctx.appendActualParameters(thing, builder, msg, "_instance");
                         builder.append(";\n");
+                    } else if (source instanceof MergeSources) {
+                        Message rMsg = ((MergeSources) source).getResultMessage();
+                        int paramIndex = 0;
+                        for (Parameter p : rMsg.getParameters()) {
+                            builder.append(ctx.getCType(p.getType()) + " " + p.getName() + " = " + msg.getParameters().get(paramIndex).getName() + ";\n");
+                            paramIndex++;
+                        }
+
+                        for (LocalVariable lv : s.getSelection()) {
+                            lv.setName("local" + lv.getName());
+                            ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
+                        }
+
+                        //TODO check the output guard filter
+                        ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
                     }
 
                     // closing braces, see guards
