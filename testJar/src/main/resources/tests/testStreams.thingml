@@ -1,6 +1,7 @@
 import "thingml.thingml"
     
 datatype JInt<2>
+    @c_type "int"
     @java_type "int";
 
 thing fragment CepMsgs 

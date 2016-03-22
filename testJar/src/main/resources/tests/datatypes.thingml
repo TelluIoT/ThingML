@@ -71,6 +71,9 @@ datatype Int32<4>
     @scala_type "Int"
     @SenML_type "Double";
 
+datatype UInt32<4>	
+	@c_type "uint32_t";
+
 datatype Long<4>	
 	@c_type "long"
 	@c_byte_size "4"
