@@ -214,6 +214,7 @@ public class TestConfigurationGenerator extends ThingMLTool {
         builder.append("    connector test.harnessIn => harness.test\n");
 
         for (String an : t.annotation("conf")) {
+            an = an.replaceAll("''(.)''", "'\\\\'$1\\\\''"); //black magic
             builder.append("    " + an + "\n");
         }
 
