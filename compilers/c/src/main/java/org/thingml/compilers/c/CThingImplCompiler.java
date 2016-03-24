@@ -435,8 +435,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(" {\n");
 
-               
-                
+
                 //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, port, msg)) {
                 if (debugProfile.getDebugMessages().containsKey(port)) {
                     if (debugProfile.getDebugMessages().get(port).contains(msg)) {
@@ -492,6 +491,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
+    // FIXME: ugly code
     // may be specific to Arduino board
     // maybe Handler should be better than Dispatch in the signature name
     private void generateStreamDispatch(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {
@@ -536,13 +536,22 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
                     // produce the action or propagate the event
                     if (source instanceof SimpleSource) {
+                        for (LocalVariable lv : s.getSelection()) {
+                            lv.setName(lv.qname("_"));
+                            ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
+                        }
+
                         ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
+
+                        builder.append("// End of current stream -------\n");
                     } else if (source instanceof JoinSources || hasWindowView) {
                         builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
                         ctx.appendActualParameters(thing, builder, msg, "_instance");
                         builder.append(";\n");
+
                     } else if (source instanceof MergeSources) {
                         Message rMsg = ((MergeSources) source).getResultMessage();
+
                         int paramIndex = 0;
                         for (Parameter p : rMsg.getParameters()) {
                             builder.append(ctx.getCType(p.getType()) + " " + p.getName() + " = " + msg.getParameters().get(paramIndex).getName() + ";\n");
@@ -550,10 +559,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         }
 
                         for (LocalVariable lv : s.getSelection()) {
-                            lv.setName("local" + lv.getName());
+                            lv.setName(lv.qname("_"));
                             ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
                         }
 
+                        builder.append("// End of current stream -------\n");
                         //TODO check the output guard filter
                         ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
                     }
@@ -710,7 +720,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(thing.allStateMachines().get(0).qname("_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName() + ");\n");
                 // Set the new current state
                 builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
-                
+
                 // Do the action
                 ctx.getCompiler().getThingActionCompiler().generate(et.getAction(), builder, ctx);
 
