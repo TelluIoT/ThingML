@@ -263,7 +263,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 triggerImpl += "check" + m.getName() + "TTL();\n";
                 triggerCondition.add("!" + m.getName() + "_isEmpty()");
             }
-            triggerImpl = "if (" + String.join(" && ", triggerCondition) + " )\n {\n";
+            triggerImpl += "if (" + String.join(" && ", triggerCondition) + " )\n {\n";
 
             for (Message m : msgs) {
                 triggerImpl += "unsigned long " + m.getName() + "Time;\n";
