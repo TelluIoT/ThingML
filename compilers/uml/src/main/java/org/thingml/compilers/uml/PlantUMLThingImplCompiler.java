@@ -124,6 +124,11 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n");
     }
 
+    protected void generateFinalState(FinalState s, StringBuilder builder, Context ctx) {
+        generateAtomicState(s, builder, ctx);
+        builder.append(s.getName() + " --> [*]\n");
+    }
+
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
         builder.append("--\n");
         builder.append("[*] --> " + r.getInitial().getName() + "\n");

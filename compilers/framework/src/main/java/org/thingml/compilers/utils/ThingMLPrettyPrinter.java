@@ -257,7 +257,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
-        builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()) + "\"");
+        builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()).replace("\\n", "\\\\n") + "\"");
     }
 
     @Override
@@ -289,5 +289,17 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
             generate(p, builder, ctx);
         }
         builder.append(")");
+    }
+
+    @Override
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+        generate(action.getVar(), builder, ctx);
+        builder.append("++;\n");
+    }
+
+    @Override
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+        generate(action.getVar(), builder, ctx);
+        builder.append("--;\n");
     }
 }
