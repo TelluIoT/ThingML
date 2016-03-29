@@ -119,7 +119,6 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
             internal
             event e : rcvPort?cep2
             action do
-                //print "cep2 message receive with values (" + e.val1 + ";" + e.val2 +")."
                 if(e.val1 == 8 and e.val2 == 24) harnessOut!testOut('\'2\'')
                 if(e.val1 == 21 and e.val2 == 25) harnessOut!testOut('\'3\'')
             end
@@ -134,7 +133,6 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
             internal
             event e : rcvPort?cep4
             action do
-                //print "cep4 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ")."
                 if(e.a == 1 and e.b == 2 and e.c == 0) harnessOut!testOut('\'5\'')
                 if(e.a == 4 and e.b == 5 and e.c == 0) harnessOut!testOut('\'6\'')
             end
@@ -142,7 +140,6 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
             internal
             event e : rcvPort?cep5
             action do
-                //print "cep5 message receive with values (" + e.a + ";" + e.b + ";" + e.c + ")."
                 if(e.a == 10 and e.b == 40 and e.c == 90) harnessOut!testOut('\'7\'')
             end
         }
