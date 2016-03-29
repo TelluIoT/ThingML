@@ -145,13 +145,7 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
         Set<ExternalConnector> ecos;
         Protocol protocol;
         String port;
-        String header;
-        String tail;
-        char escapeChar;
-        char[] charToEscape;
-        boolean escape;
-        int baudrate;
-        CMessageSerializer ser;
+        Set<Message> messages;
         SerializationPlugin sp;
         
         HWSerial() {
@@ -159,32 +153,132 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
         }
         
         void generateNetworkLibrary(CCompilerContext ctx, Configuration cfg) {
+                
             if(!ecos.isEmpty()) {
-                readAnnotations();
-                String ctemplate = ctx.getNetworkLibNoBufSerialTemplate();
-                StringBuilder listenerState = new StringBuilder();
-                StringBuilder parserImpl = new StringBuilder();
-                StringBuilder tailHandling = new StringBuilder();
-                StringBuilder readerImpl = new StringBuilder();
+                boolean ring = false;
+                String ctemplate = ctx.getNetworkLibSerialTemplate();
+                String htemplate = ctx.getNetworkLibSerialHeaderTemplate();
+                if(protocol.hasAnnotation("serial_ring")) {
+                    if(protocol.annotation("serial_ring").iterator().next().compareToIgnoreCase("true") == 0) {
+                        ring = true;
+                        ctemplate = ctx.getNetworkLibSerialRingTemplate();
+                        htemplate = ctx.getNetworkLibSerialHeaderTemplate();
 
-                if(header != null) {
-                   
-                }
-                
-                if(tail != null) {
-                    
+                        Integer maxTTL;
+                        if(protocol.hasAnnotation("serial_ring_max_ttl")) {
+                            maxTTL = Integer.parseInt(protocol.annotation("serial_ring_max_ttl").iterator().next());
+                        } else {
+                            maxTTL = 1;
+                        }
+                        ctemplate = ctemplate.replace("/*TTL_MAX*/", maxTTL.toString());
+                    }
                 }
 
-                if(escape) {
-                    
-                }
+                String portName = protocol.getName();
                 
-                ctemplate = ctemplate.replace("/*BAUDRATE*/", ""+baudrate);
-                ctemplate = ctemplate.replace("/*LISTENER_STATE*/", listenerState);
-                ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", parserImpl);
-                ctemplate = ctemplate.replace("/*READER_IMPLEMENTATION*/", readerImpl);
-                ctemplate = ctemplate.replace("/*OTHER_CASES*/", tailHandling);
-                ctemplate = ctemplate.replace("/*PROTOCOL*/", port);
+                for(ExternalConnector eco : ecos) {
+                    eco.setName(portName);
+                }
+
+                Integer baudrate;
+                if(protocol.hasAnnotation("serial_baudrate")) {
+                    baudrate = Integer.parseInt(protocol.annotation("serial_baudrate").iterator().next());
+                } else {
+                    baudrate = 115200;
+                }
+                ctemplate = ctemplate.replace("/*BAUDRATE*/", baudrate.toString());
+
+                ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
+                htemplate = htemplate.replace("/*PORT_NAME*/", portName);
+
+                String startByte;
+                if(protocol.hasAnnotation("serial_start_byte")) {
+                    startByte = protocol.annotation("serial_start_byte").iterator().next();
+                } else {
+                    startByte = "18";
+                }
+                ctemplate = ctemplate.replace("/*START_BYTE*/", startByte);
+
+                String stopByte;
+                if(protocol.hasAnnotation("serial_stop_byte")) {
+                    stopByte = protocol.annotation("serial_stop_byte").iterator().next();
+                } else {
+                    stopByte = "19";
+                }
+                ctemplate = ctemplate.replace("/*STOP_BYTE*/", stopByte);
+
+                String escapeByte;
+                if(protocol.hasAnnotation("serial_escape_byte")) {
+                    escapeByte = protocol.annotation("serial_escape_byte").iterator().next();
+                } else {
+                    escapeByte = "125";
+                }
+                ctemplate = ctemplate.replace("/*ESCAPE_BYTE*/", escapeByte);
+
+                Integer maxMsgSize = 0;
+                for(Message m : protocol.getPort().getReceives()) {
+                    if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
+                        maxMsgSize = ctx.getMessageSerializationSize(m);
+                    }
+                }
+                maxMsgSize = maxMsgSize - 2;
+
+                ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
+
+                if(ring) {
+                    maxMsgSize++;
+                }
+
+                String limitBytePerLoop;
+                if(protocol.hasAnnotation("serial_limit_byte_per_loop")) {
+                    limitBytePerLoop = protocol.annotation("serial_limit_byte_per_loop").iterator().next();
+                } else {
+                    Integer tmp = maxMsgSize*2;
+                    limitBytePerLoop = tmp.toString();
+                }
+                ctemplate = ctemplate.replace("/*LIMIT_BYTE_PER_LOOP*/", limitBytePerLoop);
+
+
+
+                String msgBufferSize;
+                if(protocol.hasAnnotation("serial_msg_buffer_size")) {
+                    msgBufferSize = protocol.annotation("serial_limit_byte_per_loop").iterator().next();
+                    Integer tmp = Integer.parseInt(msgBufferSize);
+                    if(tmp != null) {
+                        if(tmp < maxMsgSize) {
+                            System.err.println("Warning: @serial_limit_byte_per_loop should specify a size greater than the maximal size of a message.");
+                            msgBufferSize = maxMsgSize.toString();
+                        }
+                    }
+                } else {
+                    Integer tmp = maxMsgSize*2;
+                    msgBufferSize = tmp.toString();
+                }
+                ctemplate = ctemplate.replace("/*MSG_BUFFER_SIZE*/", msgBufferSize);
+
+
+                ctx.addToInitCode("\n" + portName + "_instance.listener_id = add_instance(&" + portName + "_instance);\n");
+                ctx.addToInitCode(portName + "_setup();\n");
+
+                //Connector Instanciation
+                StringBuilder eco_instance = new StringBuilder();
+                eco_instance.append("//Connector");
+
+                //De Serializer 
+                StringBuilder ParserImplementation = new StringBuilder();
+                ParserImplementation.append("void " + portName + "_parse_id(char * id, uint32_t id_size, uint16_t * id_res) {\n");
+                sp.generateParserBody(ParserImplementation, "msg_buf", "", messages, "");
+                ParserImplementation.append("externalMessageEnqueue(msg_buf, msg_size, " + portName + "_instance.listener_id);\n");
+                ParserImplementation.append("}\n");
+                
+                ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", ParserImplementation);
+
+                String ParserCall = portName + "_parser((char *) " + portName + "_serialBuffer, " + portName + "_serialMsgSize, " + portName + "_instance.listener_id);";
+                ctemplate = ctemplate.replace("/*PARSER_CALL*/", ParserCall);
+                //End De Serializer
+
+                
+                ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
 
                 ctx.addToInitCode("\n" + port + "_instance.listener_id = add_instance(&" + port + "_instance);\n");
                 ctx.addToInitCode(port + "_setup();\n");
@@ -197,53 +291,6 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 ctemplate += b;
                 
                 ctx.getBuilder(port + ".c").append(ctemplate);
-            }
-        }
-        
-        void readAnnotations() {
-            port = protocol.getName();
-            escape = false;
-            baudrate = 115200;
-            String toEscape = "";
-            if(protocol.hasAnnotation("serial_start_byte")) {
-                Integer i = Integer.parseInt(protocol.annotation("serial_start_byte").get(0));
-                header ="" + ((char) i.intValue());
-                System.out.println("header: " + i);
-                System.out.println("header: " + header);
-            }
-            if(protocol.hasAnnotation("serial_header")) {
-                header = protocol.annotation("serial_header").get(0);
-            }
-            if(protocol.hasAnnotation("serial_stop_byte")) {
-                Integer i = Integer.parseInt(protocol.annotation("serial_stop_byte").get(0));
-                tail = "" + ((char) i.intValue());
-                System.out.println("footer: " + i);
-                System.out.println("footer: " + tail);
-            }
-            if(protocol.hasAnnotation("serial_footer")) {
-                tail = protocol.annotation("serial_footer").get(0);
-            }
-            if(protocol.hasAnnotation("serial_escape_byte")) {
-                Integer i = Integer.parseInt(protocol.annotation("serial_escape_byte").get(0));
-                escapeChar = (char) i.intValue();
-                escape = true;
-            }
-            if(protocol.hasAnnotation("serial_escape_char")) {
-                escapeChar = protocol.annotation("serial_escape_byte").get(0).charAt(0);
-                escape = true;
-            }
-            if(protocol.hasAnnotation("serial_baudrate")) {
-                Integer i = Integer.parseInt(protocol.annotation("serial_baudrate").get(0));
-                baudrate = i.intValue();
-            }
-            if(escape) {
-                if(header != null)
-                    toEscape += header.charAt(0);
-                if(tail != null)
-                    toEscape += tail.charAt(0);
-                toEscape += escapeChar;
-                charToEscape = toEscape.toCharArray();
-                System.out.println("toEscape: " + toEscape);
             }
         }
     }

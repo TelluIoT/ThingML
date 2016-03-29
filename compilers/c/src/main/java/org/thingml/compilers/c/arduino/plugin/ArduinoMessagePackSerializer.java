@@ -143,12 +143,6 @@ public class ArduinoMessagePackSerializer extends CMessageSerializer {
             }
         }
         
-    
-        
-        //System.out.println(" ---- Begin experiment:");
-        //tree.root.print(0);
-        
-        //System.out.println(" ---- End experiment:");
         
         builder.append("bool " + portName + "_parse_id(char * id, uint32_t id_size, uint16_t * id_res) {\n");
         builder.append("uint32_t i = 0;\n");
