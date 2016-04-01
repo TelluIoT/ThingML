@@ -166,6 +166,20 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     }
 
     @Override
+    public void generate(LowerOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" <= ");
+        generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
+    public void generate(GreaterOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" >= ");
+        generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" == ");
