@@ -5,7 +5,7 @@
 ### With time window
 
 ```ruby
-stream simpleSource @TTL "500"
+stream joinStream @TTL "500"
 from join: [t: rcvP?temp & p: rcvP?pressure -> cep()]::during 5000 by 1000
 produce sendP!cep()
 ```
@@ -23,7 +23,7 @@ The output messages, `cep` will be saved for `5000`ms.
 Length window allow to store a particular number of output messages, here `cep`. Once the buffer is full the number of message to remove is specified by the step of the window.
 
 ```ruby
-stream simpleSource @TTL "500"
+stream joinStream @TTL "500"
 from join: [t: rcvP?temp & p: rcvP?pressure -> cep()]::buffer 5 by 2
 produce sendP!cep()
 ```
@@ -33,7 +33,7 @@ In this exemple the two oldest `cep` messages are removed from the buffer every 
 ### Without any window
 
 ```ruby
-stream simpleSource
+stream joinStream
 from join: [t: rcvP?temp & p: rcvP?pressure -> cep()]
 produce sendP!cep()
 ```
@@ -51,7 +51,7 @@ We garanty this property over the reception time of messages.
 Guards can be added to specify constaints over input and output messages in streams. For instance to filter input values you can do as follow:
 
 ```ruby
-stream simpleSource
+stream joinStream
 from join: [t: rcvP?temp::keep if t.value > 10 &
             p: rcvP?pressure
             -> cep()
@@ -64,7 +64,7 @@ produce sendP!cep()
 Considering this stream:
 
 ```ruby
-stream simpleSource @TTL "2000"
+stream joinStream @TTL "2000"
 from join: [t: rcvP?temp & p: rcvP?pressure -> cep()]::during 1000 by 1000
 produce sendP!cep()
 ```
@@ -74,7 +74,7 @@ If we suppose that `temp` messages are produced twice as often as `pressure` mes
 You can prevent this behavior by adding an annotation to a message or to a stream, impacting every input messages, as shown in the example bellow:
 
 ```ruby
-stream simpleSource @TTL "2000"
+stream joinStream @TTL "2000"
 from join: [t: rcvP?temp &
             p: rcvP?pressure @UseOnce "True"
             -> cep()
@@ -85,7 +85,7 @@ produce sendP!cep()
 or for all messages:
 
 ```ruby
-stream simpleSource @TTL "2000" @UseOnce "True"
+stream joinStream @TTL "2000" @UseOnce "True"
 from join: [t: rcvP?temp & p: rcvP?pressure -> cep()]::during 1000 by 1000
 produce sendP!cep()
 ```
@@ -98,7 +98,7 @@ Considering this stream joining temperature and pressure into a new message `sim
 containing both:
 
 ```ruby
-stream simpleSource
+stream joinStream
 from join: [t: rcvP?temp & p: rcvP?pressure -> simple_joined(t.v, p.v)]
 produce sendP!simple_joined(t.v, p.v)
 ```
@@ -118,11 +118,36 @@ simple_joined(23, 1033), simple_joined(23, 1024)
 To obtain `simple_joined(23, 1033), simple_joined(22, 1024)` you have to use both `@UseOnce` and `@Buffer` annotation, such as:
 
 ```ruby
-stream simpleSource @UseOnce "True" @Buffer "5"
+stream joinStream @UseOnce "True" @Buffer "5"
 from join: [t: rcvP?temp & p: rcvP?pressure -> simple_joined(t.v, p.v)]
 produce sendP!simple_joined(t.v, p.v)
 ```
 
 ## Merge Sources
 
+Merge streams work the same way as join streams except they work as a logical `OR` instead of a logical `AND`, meaning only one input event is needed to produce an output event. The syntax is as follow:
+
+```ruby
+stream mergeStream
+from m: [ e1: sensor1?temp | e2: sensor2?temp | e3: sensor3?temp -> res]
+produce sendP!res(m.value)
+```
+
+### Window and guards
+
+Like join streams, merge streams allow the same kind of time and length window and guards having the same effects.
+
 ## Simple Sources
+
+Simple source streams only wait for one event message, a basic syntax using a `select` statement calling a previously defined funcion is as follow:
+
+```ruby
+stream simpleStream
+from s: rcvP?temp
+select var a: Int = transformValue(s.value)
+produce sendP!res(a)
+```
+
+### Window and guards
+
+As every other stream simple source stream allow time and length window and also guards.
