@@ -32,7 +32,7 @@ Every time an input message is received we check if it is joinable with the othe
 
 We garanty this property over the reception time of messages.
 
-![equation](https://github.com/AlexandreRio/ThingML/tree/master/org.thingml.model/docs/join_time_property.png)
+![equation](https://raw.githubusercontent.com/AlexandreRio/ThingML/master/org.thingml.model/docs/join_time_property.png)
 
 ### Event consumption policy
 
