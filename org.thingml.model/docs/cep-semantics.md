@@ -46,6 +46,19 @@ We garanty this property over the reception time of messages.
 
 ![equation](https://raw.githubusercontent.com/AlexandreRio/ThingML/master/org.thingml.model/docs/join_time_property.png)
 
+### Adding guards
+
+Guards can be added to specify constaints over input and output messages in streams. For instance to filter input values you can do as follow:
+
+```ruby
+stream simpleSource
+from join: [t: rcvP?temp::keep if t.value > 10 &
+            p: rcvP?pressure
+            -> cep()
+            ]::keep if true
+produce sendP!cep()
+```
+
 ### Event consumption policy
 
 Considering this stream:
