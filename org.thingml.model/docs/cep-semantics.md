@@ -18,7 +18,19 @@ if the requirements are meant (`temp` and `pressure` events in a `500`ms time in
 
 The output messages, `cep` will be saved for `5000`ms.
 
-### Without time window
+### With length window
+
+Length window allow to store a particular number of output messages, here `cep`. Once the buffer is full the number of message to remove is specified by the step of the window.
+
+```ruby
+stream simpleSource @TTL "500"
+from join: [t: rcvP?temp & p: rcvP?pressure -> cep()]::buffer 5 by 2
+produce sendP!cep()
+```
+
+In this exemple the two oldest `cep` messages are removed from the buffer every time it reached the size of `5` messages.
+
+### Without any window
 
 ```ruby
 stream simpleSource
@@ -97,3 +109,7 @@ stream simpleSource @UseOnce "True" @Buffer "5"
 from join: [t: rcvP?temp & p: rcvP?pressure -> simple_joined(t.v, p.v)]
 produce sendP!simple_joined(t.v, p.v)
 ```
+
+## Merge Sources
+
+## Simple Sources
