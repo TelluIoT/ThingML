@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
+ * <p>
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
+ * <p>
+ * http://www.gnu.org/licenses/lgpl-3.0.txt
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,8 @@ import java.util.List;
  * Created by Alexandre RIO on 3/16/16.
  */
 public class ArduinoCepHelper {
+
+    public static final int DEFAULT_MESSAGE_TTL = 250;
 
     /**
      * We generate a buffer for Join and Merge operations or if the source has a
@@ -49,6 +51,45 @@ public class ArduinoCepHelper {
                 }
             }
         }
+        return ret;
+    }
+
+    /**
+     * Return whether stream input message handler should call for trigger check. If the handler does not call it
+     * it has to be done through a call back, like a timer.
+     *
+     * @param s   Stream object
+     * @param ctx Compiler context
+     * @return True if input message handler should call the trigger check
+     */
+    public static boolean handlerShouldTrigger(Stream s, CCompilerContext ctx) {
+        boolean ret = true;
+        for (ViewSource vs : s.getInput().getOperators())
+            if (vs instanceof LengthWindow || vs instanceof TimeWindow)
+                ret = false;
+
+        return ret;
+    }
+
+    /**
+     * From a message and a stream get the number of message to store. One is the default number unless a @Buffer
+     * annotation is added either to the stream or to the message. If both are specified the one on the message
+     * overrides the stream one.
+     *
+     * @param msg Stream input message
+     * @param s   Stream containing the input message
+     * @param ctx Compiler context
+     * @return Number of message to store
+     */
+    public static String getInputMessagesNumber(Message msg, Stream s, CCompilerContext ctx) {
+        String ret = "DEFAULT_NUMBER_MSG";
+
+        for (String v : s.annotation("Buffer"))
+            ret = v;
+
+        for (String v : msg.annotation("Buffer"))
+            ret = v;
+
         return ret;
     }
 
@@ -81,18 +122,31 @@ public class ArduinoCepHelper {
         return ret;
     }
 
-    public static String getStreamTTL(Stream stream, CCompilerContext ctx) {
-        String streamTTL = "250"; // Default value out of f'''' nowhere
+    public static String getInputMessagesStreamTTL(Stream stream, CCompilerContext ctx) {
+        String streamTTL = Integer.toString(DEFAULT_MESSAGE_TTL);
         if (stream.hasAnnotation("TTL"))
             for (String v : stream.annotation("TTL"))
                 streamTTL = v;
+        return streamTTL;
+    }
+
+    public static String getInputMessagesStreamTTL(Message msg, Stream stream, CCompilerContext ctx) {
+        String msgTTL = stream.getName().toUpperCase() + "_INPUT_TTL";
+        for (String v : msg.annotation("TTL"))
+            msgTTL = v;
+        return msgTTL;
+    }
+
+    public static String getOutputMessageStreamTTL(Stream stream, CCompilerContext ctx) {
+        String outputTTL = Integer.toString(DEFAULT_MESSAGE_TTL);
         for (ViewSource vs : stream.getInput().getOperators()) {
             if (vs instanceof TimeWindow) {
                 StringBuilder builder = new StringBuilder();
                 ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getDuration(), builder, ctx);
-                streamTTL = builder.toString();
+                outputTTL = builder.toString();
             }
         }
-        return streamTTL;
+        return outputTTL;
     }
+
 }

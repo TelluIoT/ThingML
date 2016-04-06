@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
+ * <p>
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
+ * <p>
+ * http://www.gnu.org/licenses/lgpl-3.0.txt
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,23 +34,6 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
     public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
     }
 
-    public static String getStreamSize(Stream s, CCompilerContext ctx) {
-        List<ViewSource> vsList = s.getInput().getOperators();
-        String ret = "DEFAULT_NUMBER_MSG";
-        for (ViewSource vs : vsList) {
-            StringBuilder b = new StringBuilder();
-            if (vs instanceof LengthWindow) {
-                ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getSize(), b, ctx);
-                ret = b.toString();
-            } else if (vs instanceof TimeWindow) {
-                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getDuration(), b, ctx);
-                StringBuilder step = new StringBuilder();
-                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), step, ctx);
-                ret = "(" + b.toString() + "/" + step.toString() + ")";
-            }
-        }
-        return ret;
-    }
 
     public static String getSlidingStep(Stream s, CCompilerContext ctx) {
         String slidingImpl = "";
@@ -90,7 +73,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
             String constants = ctx.getCEPLibTemplateStreamConstants();
             constants = constants.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
-            constants = constants.replace("/*TTL*/", ArduinoCepHelper.getStreamTTL(s, ctx));
+            constants = constants.replace("/*OUTPUT_TTL*/", ArduinoCepHelper.getOutputMessageStreamTTL(s, ctx));
+            constants = constants.replace("/*INPUT_TTL*/", ArduinoCepHelper.getInputMessagesStreamTTL(s, ctx));
 
             String methodsSignatures = "";
             String attributesSignatures = "";
@@ -101,9 +85,11 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 String constantTemplate = ctx.getCEPLibTemplateMessageConstants();
 
                 int messageSize = ctx.getMessageSerializationSize(msg) - 4; //substract the ports size
+                constantTemplate = constantTemplate.replace("/*MESSAGE_TTL*/", ArduinoCepHelper.getInputMessagesStreamTTL(msg, s, ctx));
                 constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
+                constantTemplate = constantTemplate.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
                 constantTemplate = constantTemplate.replace("/*STRUCT_SIZE*/", Integer.toString(messageSize));
-                constantTemplate = constantTemplate.replace("/*STREAM_SIZE*/", getStreamSize(s, ctx));
+                constantTemplate = constantTemplate.replace("/*NUMBER_MESSAGE*/", ArduinoCepHelper.getInputMessagesNumber(msg, s, ctx));
                 constants += constantTemplate;
 
                 /*
@@ -133,6 +119,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
                 attributesSignatures += attributesTemplate;
             }
+
+            //TODO check if need to store output
 
             cepTemplate = cepTemplate.replace("/*STREAM_NAME*/", s.getName());
             cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
@@ -195,6 +183,11 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                     }
 
                 }
+
+                if (ArduinoCepHelper.handlerShouldTrigger(s, ctx))
+                    messageImpl = messageImpl.replace("/*TRIGGER*/", "checkTrigger(_instance);\n");
+                else
+                    messageImpl = messageImpl.replace("/*TRIGGER*/", "");
 
                 messageImpl = messageImpl.replace("/*QUEUE_IMPL*/", queueImpl);
                 /*
