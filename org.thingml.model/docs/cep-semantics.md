@@ -1,4 +1,11 @@
-# Complex Event Processing Semantics in ThingML
+# Complex Event Processing semantics in ThingML targeting C languages
+
+__Disclaimer__:
+ThingML compilers for Java and Javascript use the third-party
+library [ReactiveX](http://reactivex.io). Even if ThingML vision aims for unifying
+CEP this document describes how it has been implemented for C languages (C,
+Arduino and C++).
+
 
 ## Join Sources
 
