@@ -10,3 +10,5 @@ void stream_/*STREAM_NAME*/::checkTrigger(/*TRIGGER_INST_PARAM*/)
 }
 
 /*MESSAGE_IMPL*/
+
+/*TRIGGER_TIMER_IMPL*/

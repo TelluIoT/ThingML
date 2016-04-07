@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- * <p>
+ *
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.gnu.org/licenses/lgpl-3.0.txt
- * <p>
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -67,6 +67,35 @@ public class ArduinoCepHelper {
         for (ViewSource vs : s.getInput().getOperators())
             if (vs instanceof LengthWindow || vs instanceof TimeWindow)
                 ret = false;
+
+        return ret;
+    }
+
+    /**
+     * Return wheter the output message of a stream is produced after a timer callback.
+     *
+     * @param s   Stream object
+     * @param ctx Compiler context
+     * @return True if the stream output is produced from a timer callback.
+     */
+    public static boolean shouldTriggerOnTimer(Stream s, CCompilerContext ctx) {
+        boolean ret = false;
+        for (ViewSource vs : s.getInput().getOperators())
+            if (vs instanceof TimeWindow)
+                ret = true;
+        return ret;
+    }
+
+    public static String getStreamTriggerTime(Stream s, CCompilerContext ctx) {
+        String ret = "-1";
+
+        for (ViewSource vs : s.getInput().getOperators()) {
+            if (vs instanceof TimeWindow) {
+                StringBuilder builder = new StringBuilder();
+                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), builder, ctx);
+                ret = builder.toString();
+            }
+        }
 
         return ret;
     }
@@ -147,6 +176,19 @@ public class ArduinoCepHelper {
             }
         }
         return outputTTL;
+    }
+
+    public static void generateTimerPolling(Configuration cfg, CCompilerContext ctx) {
+        String timerCall;
+        for (Instance instance : cfg.allInstances()) {
+            for (Stream stream : instance.getType().getStreams()) {
+                if (shouldTriggerOnTimer(stream, ctx)) {
+                    timerCall = "  " + ctx.getInstanceVarName(instance) + ".cep_" + stream.getName() + "->checkTimer(&";
+                    timerCall += ctx.getInstanceVarName(instance) + ");\n";
+                    ctx.addToPollCode(timerCall);
+                }
+            }
+        }
     }
 
 }

@@ -10,6 +10,7 @@ class stream_/*STREAM_NAME*/
 
 /*METHOD_SIGNATURES*/
     void checkTrigger(/*TRIGGER_INST_PARAM*/);
+    /*TRIGGER_TIMER_SIGNATURES*/
 
   private:
 /*ATTRIBUTES_SIGNATURES*/

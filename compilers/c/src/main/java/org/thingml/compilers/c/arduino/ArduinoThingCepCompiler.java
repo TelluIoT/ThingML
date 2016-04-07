@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- * <p>
+ *
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.gnu.org/licenses/lgpl-3.0.txt
- * <p>
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -114,10 +114,26 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                 methodsSignatures += methodsTemplate;
 
+                /*
+                 * Attributes
+                 */
                 String attributesTemplate = ctx.getCEPLibTemplateAttributesSignatures();
                 attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME*/", msg.getName());
                 attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
                 attributesSignatures += attributesTemplate;
+
+            }
+
+            if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx))
+                attributesSignatures += "    uint32_t last" + s.getName() + "Trigger = millis();\n";
+
+            /*
+             * Trigger timer
+             */
+            String triggerTimer = "";
+            if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx)) {
+                String param = "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName();
+                triggerTimer = "void checkTimer(" + param + ");\n";
             }
 
             //TODO check if need to store output
@@ -126,6 +142,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
             cepTemplate = cepTemplate.replace("/*ATTRIBUTES_SIGNATURES*/", attributesSignatures);
             cepTemplate = cepTemplate.replace("/*TRIGGER_INST_PARAM*/", "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName());
+            cepTemplate = cepTemplate.replace("/*TRIGGER_TIMER_SIGNATURES*/", triggerTimer);
             cepTemplate = cepTemplate.replace("/*STREAM_CONSTANTS*/", constants);
 
             builder.append(cepTemplate);
@@ -234,6 +251,12 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             classImpl = classImpl.replace("/*MESSAGE_IMPL*/", msgsImpl);
             classImpl = classImpl.replace("/*TRIGGER_INST_PARAM*/", "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName());
             classImpl = classImpl.replace("/*TRIGGER_IMPL*/", generateTriggerImpl(s, ctx));
+
+            if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx))
+                classImpl = classImpl.replace("/*TRIGGER_TIMER_IMPL*/", generateTriggerCallBack(s, ctx));
+            else
+                classImpl = classImpl.replace("/*TRIGGER_TIMER_IMPL*/", "");
+
             builder.append(classImpl);
         }
     }
@@ -294,6 +317,25 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             triggerImpl += outAction + "\n}\n";
         }
         return triggerImpl;
+    }
+
+    /**
+     * @param s
+     * @param ctx
+     */
+    private static String generateTriggerCallBack(Stream s, CCompilerContext ctx) {
+        String ret = "";
+        Thing t = s.findContainingThing();
+        String param = "struct " + ctx.getInstanceStructName(t) + " *" + ctx.getInstanceVarName();
+
+        ret += "\nvoid stream_" + s.getName() + "::checkTimer(" + param + ")\n{\n";
+        ret += "  if (millis() - last" + s.getName() + "Trigger > " + ArduinoCepHelper.getStreamTriggerTime(s, ctx) +
+                ")\n  {\n";
+        ret += "    last" + s.getName() + "Trigger = millis();\n";
+        ret += "    checkTrigger(_instance);\n";
+        ret += "  }\n";
+        ret += "}\n";
+        return ret;
     }
 
     @Override
