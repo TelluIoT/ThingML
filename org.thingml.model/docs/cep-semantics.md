@@ -83,7 +83,7 @@ You can prevent this behavior by adding an annotation to a message or to a strea
 ```ruby
 stream joinStream @TTL "2000"
 from join: [t: rcvP?temp &
-            p: rcvP?pressure @UseOnce "True"
+            p @UseOnce "True" : rcvP?pressure
             -> cep()
            ]::during 1000 by 1000
 produce sendP!cep()
@@ -128,6 +128,17 @@ To obtain `simple_joined(23, 1033), simple_joined(22, 1024)` you have to use bot
 stream joinStream @UseOnce "True" @Buffer "5"
 from join: [t: rcvP?temp & p: rcvP?pressure -> simple_joined(t.v, p.v)]
 produce sendP!simple_joined(t.v, p.v)
+```
+
+Input buffers can be specified at a source granularity, e.g.:
+
+```ruby
+stream joinStream
+from join: [t @Buffer "20" : rcvP?temp &
+            p @Buffer "10" : rcvP?pressure
+            -> cep()
+           ]::during 1000 by 1000
+produce sendP!cep()
 ```
 
 ## Merge Sources
