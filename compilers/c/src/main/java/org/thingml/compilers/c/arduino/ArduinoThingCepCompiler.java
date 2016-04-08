@@ -25,6 +25,8 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ArduinoThingCepCompiler extends ThingCepCompiler {
     public ArduinoThingCepCompiler(ThingCepViewCompiler cepViewCompiler, ThingCepSourceDeclaration sourceDeclaration) {
@@ -78,7 +80,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
             String methodsSignatures = "";
             String attributesSignatures = "";
-            for (Message msg : ArduinoCepHelper.getMessageFromStream(s)) {
+            Map<Message, SimpleSource> messagesFromStream = ArduinoCepHelper.getMessageFromStream(s);
+            for (Message msg : messagesFromStream.keySet()) {
                 /*
                  * Constants
                  */
@@ -89,7 +92,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
                 constantTemplate = constantTemplate.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
                 constantTemplate = constantTemplate.replace("/*STRUCT_SIZE*/", Integer.toString(messageSize));
-                constantTemplate = constantTemplate.replace("/*NUMBER_MESSAGE*/", ArduinoCepHelper.getInputMessagesNumber(msg, s, ctx));
+                constantTemplate = constantTemplate.replace("/*NUMBER_MESSAGE*/", ArduinoCepHelper.getInputMessagesNumber(messagesFromStream.get(msg), s, ctx));
                 constants += constantTemplate;
 
                 /*
@@ -154,7 +157,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
         for (Stream s : ArduinoCepHelper.getStreamWithBuffer(thing)) {
 
             String msgsImpl = "";
-            for (Message msg : ArduinoCepHelper.getMessageFromStream(s)) {
+            for (Message msg : ArduinoCepHelper.getMessageFromStream(s).keySet()) {
                 String messageImpl = ctx.getCEPLibTemplatesMessageImpl();
                 messageImpl = messageImpl.replace("/*STREAM_NAME*/", s.getName());
                 messageImpl = messageImpl.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
@@ -273,7 +276,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
         String triggerImpl = "";
 
         if (s.getInput() instanceof JoinSources) {
-            List<Message> msgs = ArduinoCepHelper.getMessageFromStream(s);
+            Set<Message> msgs = ArduinoCepHelper.getMessageFromStream(s).keySet();
             List<String> triggerCondition = new ArrayList<>();
             for (Message m : msgs) {
                 triggerImpl += "check" + m.getName() + "TTL();\n";

@@ -19,7 +19,9 @@ import org.sintef.thingml.*;
 import org.thingml.compilers.c.CCompilerContext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Alexandre RIO on 3/16/16.
@@ -105,18 +107,18 @@ public class ArduinoCepHelper {
      * annotation is added either to the stream or to the message. If both are specified the one on the message
      * overrides the stream one.
      *
-     * @param msg Stream input message
+     * @param src Stream input message
      * @param s   Stream containing the input message
      * @param ctx Compiler context
      * @return Number of message to store
      */
-    public static String getInputMessagesNumber(Message msg, Stream s, CCompilerContext ctx) {
+    public static String getInputMessagesNumber(SimpleSource src, Stream s, CCompilerContext ctx) {
         String ret = "DEFAULT_NUMBER_MSG";
 
         for (String v : s.annotation("Buffer"))
             ret = v;
 
-        for (String v : msg.annotation("Buffer"))
+        for (String v : src.annotation("Buffer"))
             ret = v;
 
         return ret;
@@ -128,22 +130,22 @@ public class ArduinoCepHelper {
      * @param stream A cep Stream
      * @return List of messages or empty list
      */
-    public static List<Message> getMessageFromStream(Stream stream) {
-        List<Message> ret = new ArrayList<>();
+    public static Map<Message, SimpleSource> getMessageFromStream(Stream stream) {
+        Map<Message, SimpleSource> ret = new HashMap<>();
         Source source = stream.getInput();
 
         if (source instanceof SimpleSource) {
-            ret.add(((SimpleSource) source).getMessage().getMessage());
+            ret.put(((SimpleSource) source).getMessage().getMessage(), (SimpleSource) source);
         } else if (source instanceof MergeSources) {
             for (Source s : ((MergeSources) source).getSources()) {
                 if (s instanceof SimpleSource) {
-                    ret.add(((SimpleSource) s).getMessage().getMessage());
+                    ret.put(((SimpleSource) s).getMessage().getMessage(), (SimpleSource) s);
                 }
             }
         } else if (source instanceof JoinSources) {
             for (Source s : ((JoinSources) source).getSources()) {
                 if (s instanceof SimpleSource) {
-                    ret.add(((SimpleSource) s).getMessage().getMessage());
+                    ret.put(((SimpleSource) s).getMessage().getMessage(), (SimpleSource) s);
                 }
             }
 
