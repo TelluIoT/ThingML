@@ -26,4 +26,5 @@ Export-Package: org.thingml.xtext.generator,
  org.thingml.xtext.parser.antlr.internal,
  org.thingml.xtext.scoping,
  org.thingml.xtext.services
-Import-Package: org.apache.log4j
+Import-Package: org.apache.log4j,
+ org.sintef.thingml
