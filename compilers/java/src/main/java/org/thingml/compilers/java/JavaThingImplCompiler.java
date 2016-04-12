@@ -17,6 +17,7 @@ package org.thingml.compilers.java;
 
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
@@ -41,8 +42,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         final StringBuilder builder = ctx.getNewBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(m.getName()) + "MessageType.java");
         JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, hasAPI, false, false);
+        builder.append("import java.nio.*;\n\n");
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "MessageType extends EventType {\n");
-        builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {name = \"" + m.getName() + "\";}\n\n");
+        builder.append("private final short code;");
+        builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType(short code) {super();\nthis.code = code;\n}\n\n");
+        builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {\nname = \"" + m.getName() + "\";\ncode = 0;\n}\n\n");
         builder.append("public Event instantiate(final Port port");
         for (Parameter p : m.getParameters()) {
             builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.protectKeyword(p.getName()));
@@ -70,6 +74,88 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append(");\n");
         builder.append("}\n\n");
+
+        //Instantiate message from binary
+        builder.append("/**Instantiates a message from a binary representation*/\n");
+        builder.append("public Event instantiate(Port port, byte[] payload, String serialization) {\n");
+        builder.append("if (serialization == null || serialization.equals(\"default\")) {\n");
+        builder.append("ByteBuffer buffer = ByteBuffer.wrap(payload);\n");
+        builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
+        builder.append("final short code = buffer.getShort();\n");
+        builder.append("if (code == this.code) {\n");
+        for (Parameter p : m.getParameters()) {
+            String cast;
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("int"))
+                cast = "Integer";
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("char"))
+                cast = "Character";
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).contains("."))
+                throw new UnsupportedException("Cannot serialize non-primitive types", "type", "java");
+            else
+                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
+            builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + " " + p.getName() + " = " + "buffer.get" + cast + "();\n");
+        }
+        builder.append("return instantiate(port");
+        int size = 2;
+        for (Parameter p : m.getParameters()) {
+            builder.append(", " + p.getName());
+            size = size + ((PrimitiveType)p.getType()).getByteSize();
+        }
+        builder.append(");\n");
+        builder.append("}\n");
+        builder.append("return null;\n");
+        builder.append("}\n");
+        builder.append("//Do NOT remove following comment. Might be used by a serialization plugin\n");
+        builder.append("/*BINARY_LOAD*/\n");
+        builder.append("return null;\n");
+        builder.append("}\n\n");
+
+
+        //Instantiate message from String
+        builder.append("/**Instantiates a message from a string representation*/\n");
+        builder.append("public Event instantiate(Port port, String payload, String serialization) {\n");
+        builder.append("if (serialization == null || serialization.equals(\"default\")) {\n");
+        builder.append("final String[] msg = payload.trim().replace(\" \", \"\").replace(\"\\t\", \"\").replace(\"\\n\", \"\").replace(\"\\\"\", \"\").replace(\")\", \"\").split(\"[(:,]+\");\n");
+        builder.append("return parse(port, msg);\n");
+        builder.append("} else if (serialization.equals(\"json-default\")) {\n");
+        builder.append("final String[] msg = payload.trim().replace(\" \", \"\").replace(\"\\t\", \"\").replace(\"\\n\", \"\").replace(\"\\\"\", \"\").replace(\"{\", \"\").replace(\"}\", \"\").split(\"[:,]+\");\n");
+        builder.append("return parse(port, msg);\n");
+        builder.append("}\n");
+        builder.append("//Do NOT remove following comment. Might be used by a serialization plugin\n");
+        builder.append("/*STRING_LOAD*/\n");
+        builder.append("return null;\n");
+        builder.append("}\n\n");
+
+
+        builder.append("private Event parse(Port port, String[] msg) {\n");
+        builder.append("if (msg.length != " + (2*m.getParameters().size()+1) + ")\n");
+        builder.append("return null;\n");
+        builder.append("if (\"" + m.getName() + "\".equals(msg[0])) {\n");
+        StringBuilder temp = new StringBuilder();
+        for (Parameter p : m.getParameters()) {
+            String cast;
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("int"))
+                cast = "Integer";
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("char"))
+                cast = "Character";
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).contains("."))
+                throw new UnsupportedException("Cannot serialize non-primitive types", "type", "java");
+            else
+                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
+
+            builder.append("if (\"" + p.getName() + "\".equals(msg[" + (2*m.getParameters().indexOf(p) + 1) + "])) {\n");
+            builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + " " + p.getName() + " = " + cast + ".parse" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx)) + "(msg[" + (2*m.getParameters().indexOf(p) + 2) + "]);\n");
+            temp.append(", " + p.getName());
+            if (m.getParameters().indexOf(p) == m.getParameters().size()-1) {
+                builder.append("return instantiate(port" + temp.toString() + ");\n");
+            }
+            builder.append("}\n");
+        }
+        builder.append("}\n");
+        builder.append("return null;\n");
+        builder.append("}\n\n");
+
+
 
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "Message extends Event implements java.io.Serializable {\n\n");
 
@@ -112,6 +198,45 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
 
         builder.append("}\n\n");
+
+
+        //Serialize message into String
+        builder.append("/**Serializes a message into a string*/\n");
+        builder.append("public String toString(" + ctx.firstToUpper(m.getName()) + "Message event, String serialization) {\n");
+        builder.append("if (serialization == null || serialization.equals(\"default\")) {\n");
+        builder.append("return event.toString();\n");
+        builder.append("} else if (serialization.equals(\"json-default\")) {");
+        builder.append("return \"{\\\"" + m.getName() + "\\\":{");
+        for (Parameter p : m.getParameters()) {
+            if (m.getParameters().indexOf(p)>0)
+                builder.append(",");
+            builder.append("\\\"" + p.getName() + "\\\":\" + event." + p.getName() + " + \"");
+        }
+        builder.append("}}\";\n");
+        builder.append("}\n");
+        builder.append("//Do NOT remove following comment. Might be used by a serialization plugin\n");
+        builder.append("/*STRING_SAVE*/\n");
+        builder.append("return null;\n");
+        builder.append("}\n\n");
+
+
+        //Serialize message into binary
+        builder.append("/**Serializes a message into a binary format*/\n");
+        builder.append("public byte[] toBytes(" + ctx.firstToUpper(m.getName()) + "Message event, String serialization) {\n");
+        builder.append("if (serialization == null || serialization.equals(\"default\")) {\n");
+        builder.append("ByteBuffer buffer = ByteBuffer.allocate(" + size + ");\n");
+        builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
+        builder.append("buffer.putShort(code);\n");
+        for (Parameter p : m.getParameters()) {
+            builder.append("buffer.put" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx)) + "(event." + p.getName() + ");\n");
+        }
+        builder.append("return buffer.array();\n");
+        builder.append("}\n");
+        builder.append("//Do NOT remove following comment. Might be used by a serialization plugin\n");
+        builder.append("/*BINARY_SAVE*/\n");
+        builder.append("return null;\n");
+        builder.append("}\n\n");
+
 
         builder.append("}\n\n");
     }
