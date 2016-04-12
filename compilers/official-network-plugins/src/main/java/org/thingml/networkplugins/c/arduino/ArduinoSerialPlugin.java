@@ -22,24 +22,17 @@ package org.thingml.networkplugins.c.arduino;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Protocol;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CMessageSerializer;
-import org.thingml.compilers.c.CNetworkLibraryGenerator;
-import org.thingml.compilers.c.arduino.plugin.ArduinoMessagePackSerializer;
-import org.thingml.compilers.c.plugin.CByteArraySerializer;
-import org.thingml.compilers.c.plugin.CMSPSerializer;
 import org.thingml.compilers.spi.SerializationPlugin;
 
 /**
@@ -69,12 +62,7 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
     public String getTargetedLanguage() {
         return "arduino";
     }
-
-        
-    /*HWSerial Serial0 = new HWSerial();
-    HWSerial Serial1 = new HWSerial();
-    HWSerial Serial2 = new HWSerial();
-    HWSerial Serial3 = new HWSerial();*/
+    
     CCompilerContext ctx;
     
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
@@ -90,37 +78,6 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
             port.generateNetworkLibrary(this.ctx, cfg);
         }
     }
-    
-    /*public void generateNetworkLibrary(Configuration cfg, Protocol prot) {
-        
-        for(ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
-            if((eco.getProtocol().getName().compareToIgnoreCase("Serial0") == 0) 
-                    || (eco.getProtocol().getName().compareToIgnoreCase("Serial") == 0)) {
-                Serial0.protocol = eco.getProtocol();
-                Serial0.ecos.add(eco);
-                eco.setName(eco.getProtocol().getName());
-            
-            } else if (eco.getProtocol().getName().compareToIgnoreCase("Serial1") == 0) {
-                Serial1.protocol = eco.getProtocol();
-                Serial1.ecos.add(eco);
-                eco.setName(eco.getProtocol().getName());
-            } else if (eco.getProtocol().getName().compareToIgnoreCase("Serial2") == 0) {
-                Serial2.protocol = eco.getProtocol();
-                Serial2.ecos.add(eco);
-                eco.setName(eco.getProtocol().getName());
-            } else if (eco.getProtocol().getName().compareToIgnoreCase("Serial3") == 0) {
-                Serial3.protocol = eco.getProtocol();
-                Serial3.ecos.add(eco);
-                eco.setName(eco.getProtocol().getName());
-            }
-            
-        }
-        
-        Serial0.generateNetworkLibrary(this.ctx, cfg);
-        Serial1.generateNetworkLibrary(this.ctx, cfg);
-        Serial2.generateNetworkLibrary(this.ctx, cfg);
-        Serial3.generateNetworkLibrary(this.ctx, cfg);
-    }*/
     
     
     private class HWSerial {
