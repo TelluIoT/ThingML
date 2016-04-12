@@ -62,78 +62,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         generateConfigurationImplementation(cfg, model, c);
     }
     
-    /*public void generateNetworkLibs(Configuration cfg, CCompilerContext ctx) {
-        
-        /*PosixWS WSgen = new PosixWS(cfg, ctx);
-        ctx.addNetworkLibraryGenerator(WSgen);
-        
-        NopollWS nopollWSgen = new NopollWS(cfg, ctx);
-        ctx.addNetworkLibraryGenerator(nopollWSgen);
-        
-        PosixMQTT MQTTgen = new PosixMQTT(cfg, ctx);
-        ctx.addNetworkLibraryGenerator(MQTTgen);
-        
-        PosixSerial pSerialgen = new PosixSerial(cfg, ctx);
-        ctx.addNetworkLibraryGenerator(pSerialgen);
-        
-        ArduinoSerial aSerialgen = new ArduinoSerial(cfg, ctx);
-        ctx.addNetworkLibraryGenerator(aSerialgen);
-        
-        NoBufSerial noBufSerial = new NoBufSerial(cfg, ctx);
-        ctx.addNetworkLibraryGenerator(noBufSerial);
-        
-        ArduinoTimer aTimergen = new ArduinoTimer(cfg, ctx);
-        ctx.addNetworkLibraryGenerator(aTimergen);
-        
-        SintefboardPort sPortgen = new SintefboardPort(cfg, ctx);
-        ctx.addNetworkLibraryGenerator(sPortgen);
-
-        //FIXME: Nicolas: I guess the if below are mutually exclusive... if so, use if/else if/else...
-        for(ExternalConnector eco : cfg.getExternalConnectors()) {
-            if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
-                if(eco.getProtocol().getName().startsWith("Serial")) {
-                    if(eco.getProtocol().isDefined("nlg", "NoBufSerial")) {
-                        System.out.println("nlg: NoBufSerial");
-                        noBufSerial.addExternalCnnector(eco);
-                    } else  {
-                        aSerialgen.addExternalCnnector(eco);
-                    }
-                }
-                if(eco.getProtocol().getName().startsWith("Timer")) {
-                    aTimergen.addExternalCnnector(eco);
-                }
-            }
-            if(ctx.getCompiler().getID().compareTo("sintefboard") == 0) {
-                if(eco.getProtocol().getName().startsWith("Port")) {
-                    sPortgen.addExternalCnnector(eco);
-                }
-            }
-            if(ctx.getCompiler().getID().compareTo("posix") == 0) {
-                if(eco.getProtocol().getName().startsWith("Serial")) {
-                    pSerialgen.addExternalCnnector(eco);
-                }
-                if(eco.getProtocol().getName().startsWith("Websocket")) {
-                  WSgen.addExternalCnnector(eco);
-                }
-                if(eco.getProtocol().getName().startsWith("NopollWS")) {
-                  nopollWSgen.addExternalCnnector(eco);
-                }
-                if(eco.getProtocol().getName().startsWith("MQTT")) {
-                    MQTTgen.addExternalCnnector(eco);
-                }
-            }
-        }
-        
-        noBufSerial.generateNetworkLibrary();
-        WSgen.generateNetworkLibrary();
-        nopollWSgen.generateNetworkLibrary();
-        MQTTgen.generateNetworkLibrary();
-        pSerialgen.generateNetworkLibrary();
-        aSerialgen.generateNetworkLibrary();
-        aTimergen.generateNetworkLibrary();
-        sPortgen.generateNetworkLibrary();
-    }*/
-    
     protected void generateConfigurationImplementation(Configuration cfg, ThingMLModel model, CCompilerContext ctx) {
 
         // GENERATE THE CONFIGURATION AND A MAIN
@@ -411,10 +339,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
             builder.append("#include \"" + t.getName() + ".h\"\n");
         }
-        for(ExternalConnector eco : cfg.getExternalConnectors()) {
-            builder.append("#include \"" + eco.getInst().getInstance().getName() 
-                    + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".h\"\n");
-    }
+        builder.append(ctx.getIncludeCode());
     }
 
     protected void generateMessageEnqueue(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
@@ -1604,26 +1529,29 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         for(Port p : inst.getType().allPorts()) {
             builder.append(ctx.getInstanceVarName(inst) + ".id_");
             builder.append(p.getName() + " = ");
-        builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
+            builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
 
             if(cfg.hasAnnotation("c_dyn_connectors")) {
-            int i = 0;
-            for(Message m : p.getReceives()) {
-                //myCfg_t2_p1_
-                //builder.append(cfg.getName() + "_" + inst.getName() + "_" + p.getName() + "_msgs[");
-                builder.append(inst.getName() + "_" + p.getName() + "_msgs[");
-                builder.append(i + "] = " + ctx.getHandlerCode(cfg, m) + ";\n");
-                //builder.append(cfg.getName() + "_" + inst.getName() + "_" + p.getName() + "_handlers_tab[");
-                builder.append(inst.getName() + "_" + p.getName() + "_handlers_tab[");//TODO Only when the handler exist
-                //i.e. when the event is taken into account in the sm
-                
-                if(inst.getType().allStateMachines() != null) {
-                    if(inst.getType().allStateMachines().get(0).allMessageHandlers() != null) {
-                        if(inst.getType().allStateMachines().get(0).allMessageHandlers().get(p) != null) {
-                            if(inst.getType().allStateMachines().get(0).allMessageHandlers().get(p).containsKey(m)) {
-                                builder.append(i + "] = (void*) &" + inst.getType().getName() + "_handle_" + p.getName()
-                                        + "_" + m.getName()
-                                        + ";\n");
+                int i = 0;
+                for(Message m : p.getReceives()) {
+                    //myCfg_t2_p1_
+                    //builder.append(cfg.getName() + "_" + inst.getName() + "_" + p.getName() + "_msgs[");
+                    builder.append(inst.getName() + "_" + p.getName() + "_msgs[");
+                    builder.append(i + "] = " + ctx.getHandlerCode(cfg, m) + ";\n");
+                    //builder.append(cfg.getName() + "_" + inst.getName() + "_" + p.getName() + "_handlers_tab[");
+                    builder.append(inst.getName() + "_" + p.getName() + "_handlers_tab[");//TODO Only when the handler exist
+                    //i.e. when the event is taken into account in the sm
+
+                    if(inst.getType().allStateMachines() != null) {
+                        if(inst.getType().allStateMachines().get(0).allMessageHandlers() != null) {
+                            if(inst.getType().allStateMachines().get(0).allMessageHandlers().get(p) != null) {
+                                if(inst.getType().allStateMachines().get(0).allMessageHandlers().get(p).containsKey(m)) {
+                                    builder.append(i + "] = (void*) &" + inst.getType().getName() + "_handle_" + p.getName()
+                                            + "_" + m.getName()
+                                            + ";\n");
+                                } else {
+                                    builder.append(i + "] = NULL;\n");
+                                }
                             } else {
                                 builder.append(i + "] = NULL;\n");
                             }
@@ -1633,85 +1561,82 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     } else {
                         builder.append(i + "] = NULL;\n");
                     }
-                } else {
-                    builder.append(i + "] = NULL;\n");
+
+                    i++;
+
                 }
-                
-                i++;
-                
-            }
-            if(i!= 0) {
-                builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
-                builder.append("nb_msg = " + i + ";\n");
-                builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
-                builder.append("msg = (uint16_t *) &" + inst.getName() 
-                        + "_" + p.getName() + "_msgs;\n");
-                builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
-                builder.append("msg_handler = (void **) &" + inst.getName() 
-                        + "_" + p.getName() + "_handlers_tab;\n");
-                builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
-                builder.append("instance = &" + ctx.getInstanceVarName(inst) + ";\n");
-                
-                builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_handlers = &");
-                builder.append(inst.getName() + "_" + p.getName() + "_handlers;\n");
-            }
-            
-            int head = nbConnectorSoFar;
-                
-            for(Connector co : cfg.allConnectors()) {
-                
-                if((co.getSrv().getInstance().getName().equals(inst.getName()))
-                        && (co.getProvided().getName().equals(p.getName()))
-                        && (!co.getProvided().getSends().isEmpty()) 
-                        && (!co.getRequired().getReceives().isEmpty())) {
-                    builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
-                    builder.append(co.getCli().getInstance().getName()
-                            + "_" + co.getRequired().getName() + "_handlers;\n");
-                    nbConnectorSoFar++;
+                if(i!= 0) {
+                    builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
+                    builder.append("nb_msg = " + i + ";\n");
+                    builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
+                    builder.append("msg = (uint16_t *) &" + inst.getName() 
+                            + "_" + p.getName() + "_msgs;\n");
+                    builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
+                    builder.append("msg_handler = (void **) &" + inst.getName() 
+                            + "_" + p.getName() + "_handlers_tab;\n");
+                    builder.append(inst.getName() + "_" + p.getName() + "_handlers.");
+                    builder.append("instance = &" + ctx.getInstanceVarName(inst) + ";\n");
+
+                    builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_handlers = &");
+                    builder.append(inst.getName() + "_" + p.getName() + "_handlers;\n");
                 }
-                if((co.getCli().getInstance().getName().equals(inst.getName()))
-                        && (co.getRequired().getName().equals(p.getName()))
-                    //    && (co.getRequired() == p) 
-                        && (!co.getRequired().getSends().isEmpty()) 
-                        && (!co.getProvided().getReceives().isEmpty())) {
-                    builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
-                    builder.append(co.getSrv().getInstance().getName()
-                            + "_" + co.getProvided().getName() + "_handlers;\n");
-                    nbConnectorSoFar++;
+
+                int head = nbConnectorSoFar;
+
+                for(Connector co : cfg.allConnectors()) {
+
+                    if((co.getSrv().getInstance().getName().equals(inst.getName()))
+                            && (co.getProvided().getName().equals(p.getName()))
+                            && (!co.getProvided().getSends().isEmpty()) 
+                            && (!co.getRequired().getReceives().isEmpty())) {
+                        builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
+                        builder.append(co.getCli().getInstance().getName()
+                                + "_" + co.getRequired().getName() + "_handlers;\n");
+                        nbConnectorSoFar++;
+                    }
+                    if((co.getCli().getInstance().getName().equals(inst.getName()))
+                            && (co.getRequired().getName().equals(p.getName()))
+                        //    && (co.getRequired() == p) 
+                            && (!co.getRequired().getSends().isEmpty()) 
+                            && (!co.getProvided().getReceives().isEmpty())) {
+                        builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
+                        builder.append(co.getSrv().getInstance().getName()
+                                + "_" + co.getProvided().getName() + "_handlers;\n");
+                        nbConnectorSoFar++;
+                    }
                 }
-            }
-            
-            //Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet();
-            for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
-                if (entries.getKey().getName().equals(inst.getName())) {
-                    //System.out.println("inst " + inst.getName() + " found");
-                    for(Port ip : entries.getValue()) {
-                        if (ip.getName().compareTo(p.getName()) == 0) {
-                            //System.out.println("port " + p.getName() + " found");
-                            builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
-                            builder.append(inst.getName()
-                                    + "_" + p.getName() + "_handlers;\n");
-                            nbConnectorSoFar++;
+
+                //Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet();
+                for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+                    if (entries.getKey().getName().equals(inst.getName())) {
+                        //System.out.println("inst " + inst.getName() + " found");
+                        for(Port ip : entries.getValue()) {
+                            if (ip.getName().compareTo(p.getName()) == 0) {
+                                //System.out.println("port " + p.getName() + " found");
+                                builder.append(cfg.getName() + "_receivers[" + nbConnectorSoFar + "] = &");
+                                builder.append(inst.getName()
+                                        + "_" + p.getName() + "_handlers;\n");
+                                nbConnectorSoFar++;
+                            }
                         }
                     }
                 }
-            }
-            
-            if(head != nbConnectorSoFar) {
-                builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_head = &");
-                builder.append(cfg.getName() + "_receivers[" + head + "];\n");
-                builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_tail = &");
-                builder.append(cfg.getName() + "_receivers[" + (nbConnectorSoFar - 1) + "];\n");
-            } else {
-                if(!p.getSends().isEmpty()) {
-                    //Case where the port could sends messages but isn't connected
-                    builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_head = ");
-                    builder.append("NULL;\n");
-                    builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_tail = &");
+
+                if(head != nbConnectorSoFar) {
+                    builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_head = &");
                     builder.append(cfg.getName() + "_receivers[" + head + "];\n");
-                    }
+                    builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_tail = &");
+                    builder.append(cfg.getName() + "_receivers[" + (nbConnectorSoFar - 1) + "];\n");
+                } else {
+                    if(!p.getSends().isEmpty()) {
+                        //Case where the port could sends messages but isn't connected
+                        builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_head = ");
+                        builder.append("NULL;\n");
+                        builder.append(ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_tail = &");
+                        builder.append(cfg.getName() + "_receivers[" + head + "];\n");
+                        }
+                }
             }
-        }
         }
         
         
@@ -1866,7 +1791,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
 protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
-    ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
+    //ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
 
     //FIXME: Re-implement debug properly
     /*
@@ -1884,7 +1809,7 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
     builder.append("initialize_configuration_" + cfg.getName() + "();\n");
 
     // Serach for the ThingMLSheduler Thing
-    Thing arduino_scheduler = null;
+    /*Thing arduino_scheduler = null;
     for (Thing t : model.allThings()) {
         if (t.getName().equals("ThingMLScheduler"))  {
             arduino_scheduler = t;
@@ -1914,7 +1839,7 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
 
             }
 
-      }
+      }*/
     }
   
 
