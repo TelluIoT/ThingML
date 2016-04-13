@@ -84,16 +84,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("final short code = buffer.getShort();\n");
         builder.append("if (code == this.code) {\n");
         for (Parameter p : m.getParameters()) {
-            String cast;
-            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("int"))
-                cast = "Integer";
-            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("char"))
-                cast = "Character";
-            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).contains("."))
-                throw new UnsupportedException("Cannot serialize non-primitive types", "type", "java");
-            else
-                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
-            builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + " " + p.getName() + " = " + "buffer.get" + cast + "();\n");
+            builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + " " + p.getName() + " = " + "buffer.get" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx)) + "();\n");
         }
         builder.append("return instantiate(port");
         int size = 2;
@@ -149,6 +140,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             if (m.getParameters().indexOf(p) == m.getParameters().size()-1) {
                 builder.append("return instantiate(port" + temp.toString() + ");\n");
             }
+        }
+        for(int i = 0; i < m.getParameters().size(); i++) {
             builder.append("}\n");
         }
         builder.append("}\n");
