@@ -95,7 +95,7 @@ public class PosixSerialPlugin extends NetworkPlugin {
                     ctx.appendFormalParameters(t, builder, m);
                     builder.append("{\n");
 
-                    int i = sp.generateSerialization(builder, "forward_buf", m);
+                    String i = sp.generateSerialization(builder, "forward_buf", m);
 
                     builder.append("\n//Forwarding with specified function \n");
                     builder.append(prot.getName() + "_forwardMessage(forward_buf, " + i + ");\n");
@@ -217,7 +217,7 @@ public class PosixSerialPlugin extends NetworkPlugin {
                     sp.generateParserBody(ParserImplementation, "msg", "size", messages, portName + "_instance.listener_id");
                     ParserImplementation.append("}\n");
 
-                    ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", ParserImplementation);
+                    ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", sp.generateSubFunctions() + ParserImplementation);
 
                     String ParserCall = portName + "_parser(serialBuffer, serialMsgSize);";
                     ctemplate = ctemplate.replace("/*PARSER_CALL*/", ParserCall);

@@ -48,6 +48,14 @@ public abstract class SerializationPlugin extends Rule  {
         context = ctx;
     }
     
+    public String getIncludes() {
+        return "";
+    }
+    
+    public String generateSubFunctions() {
+        return "";
+    }
+    
     /* ------------ Plugin Body (Mandatory) ------------ */
     
     /* Methods: generateSerialization
@@ -68,7 +76,7 @@ public abstract class SerializationPlugin extends Rule  {
      * 
      * Note: All paramters annotated as ignored must be ignored.
     */
-    public abstract int generateSerialization(StringBuilder builder, String bufferName, Message m);
+    public abstract String generateSerialization(StringBuilder builder, String bufferName, Message m);
     
     /* Methods: generateParserBody
      * 
