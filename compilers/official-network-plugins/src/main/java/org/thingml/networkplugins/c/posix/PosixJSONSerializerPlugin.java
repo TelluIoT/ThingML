@@ -103,7 +103,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         builder.append("	char " + bufferName + "[len];\n" +
             "	int index = 0;\n");
         
-        builder.append("	index += sprintf(" + bufferName + "+index, \"{\\\"myMsg\\\":{\");\n");
+        builder.append("	index += sprintf(" + bufferName + "+index, \"{\\\"" + m.getName() + "\\\":{\");\n");
         
         
         first = true;
@@ -264,14 +264,14 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         if(!m.getParameters().isEmpty()) {
             messagesparser.append("	char *m = msg;\n" +
             "	int cp;\n" +
-            "	for(cp = 0; cp < 3; cp++) {\n" +
+            "	for(cp = 0; cp < " + m.getParameters().size() + "; cp++) {\n" +
             "		m = jumpspace(m);\n" +
             "\n" +
             "		if(*m != '\"') {return -1;} // \"\n" +
             "		m++;\n" +
             "\n" +
             "		m = jumpspace(m);\n" +
-            "		char param_name[" + maxParameterNameSize + "];\n" +
+            "		char param_name[" + (maxParameterNameSize+1) + "];\n" +
             "		int param_name_len = next_char(m, '\"', '\"');\n" +
             "		if(param_name_len <= 0) {return -1;} // empty name\n" +
             "		strncpy(param_name, m, param_name_len); // name\n" +

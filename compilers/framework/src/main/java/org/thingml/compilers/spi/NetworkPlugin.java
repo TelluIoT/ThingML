@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
@@ -105,6 +106,55 @@ public abstract class NetworkPlugin extends Rule {
             }
         }
         return ecos;
+    }
+    
+    public Set<ThingPortMessage> getMessagesSent(Configuration cfg, Protocol prot) {
+        Set<ThingPortMessage> res = new HashSet<ThingPortMessage>();
+        for(ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
+            for(Message m : eco.getPort().getSends()) {
+                ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getInstance().getType(), eco.getPort(), m);
+                if(!res.contains(tpm)) {
+                    res.add(tpm);
+                }
+            }
+        }
+        
+        return res;
+    }
+    
+    public Set<ThingPortMessage> getMessagesReceived(Configuration cfg, Protocol prot) {
+        Set<ThingPortMessage> res = new HashSet<ThingPortMessage>();
+        for(ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
+            for(Message m : eco.getPort().getReceives()) {
+                ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getInstance().getType(), eco.getPort(), m);
+                if(!res.contains(tpm)) {
+                    res.add(tpm);
+                }
+            }
+        }
+        return res;
+    }
+    
+    public class ThingPortMessage {
+        public Thing t;
+        public Port p;
+        public Message m;
+        
+        public ThingPortMessage (Thing t, Port p, Message m){
+            this.t = t;
+            this.p = p;
+            this.m = m;
+        }
+        
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof ThingPortMessage))
+                return false;
+            if (obj == this)
+                return true;
+            ThingPortMessage tpm = (ThingPortMessage) obj;
+            return EcoreUtil.equals(tpm.t, t) && EcoreUtil.equals(tpm.p, p) && EcoreUtil.equals(tpm.m, m);
+        }
     }
     
     
