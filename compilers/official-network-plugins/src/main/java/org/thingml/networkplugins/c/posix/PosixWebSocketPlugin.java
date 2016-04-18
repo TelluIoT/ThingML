@@ -53,6 +53,7 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
         res.add("WebSocket");
+        res.add("Websocket");
         return res;
     }
 
@@ -115,8 +116,8 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
             String htemplate;
             if(protocol.hasAnnotation("websocket_client")) {
                 if(protocol.annotation("websocket_client").iterator().next().equalsIgnoreCase("true")) {
-                    ctemplate = ctx.getNetworkLibWebsocketClientTemplate();
-                    htemplate = ctx.getNetworkLibWebsocketClientHeaderTemplate();
+                    ctemplate = ctx.getTemplateByID("templates/PosixWebsocketPluginClient.c");
+                    htemplate = ctx.getTemplateByID("templates/PosixWebsocketPluginClient.h");
                      String serverAddress;
                     if(protocol.hasAnnotation("websocket_server_address")) {
                         serverAddress = protocol.annotation("websocket_server_address").iterator().next();
@@ -127,12 +128,12 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
                     ctemplate = ctemplate.replace("/*ADDRESS*/", serverAddress);
 
                 } else {
-                    ctemplate = ctx.getNetworkLibWebsocketTemplate();
-                    htemplate = ctx.getNetworkLibWebsocketHeaderTemplate();
+                    ctemplate = ctx.getTemplateByID("templates/PosixWebsocketPlugin.c");
+                    htemplate = ctx.getTemplateByID("templates/PosixWebsocketPlugin.h");
                 }
             } else {
-                ctemplate = ctx.getNetworkLibWebsocketTemplate();
-                htemplate = ctx.getNetworkLibWebsocketHeaderTemplate();
+                ctemplate = ctx.getTemplateByID("templates/PosixWebsocketPlugin.c");
+                htemplate = ctx.getTemplateByID("templates/PosixWebsocketPlugin.h");
             }
 
             String portName = protocol.getName();
@@ -362,7 +363,7 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
             ctemplate += "\n" + b;
             htemplate += "\n" + h;
 
-            ctx.getBuilder("lws_config.h").append(ctx.getNetworkLibWebsocketDependancy());
+            ctx.getBuilder("lws_config.h").append(ctx.getTemplateByID("templates/lws_config.h"));
             ctx.getBuilder(protocol.getName() + ".c").append(ctemplate);
             ctx.getBuilder(protocol.getName() + ".h").append(htemplate);
             ctx.addToIncludes("#include \"" + protocol.getName() + ".h\"");

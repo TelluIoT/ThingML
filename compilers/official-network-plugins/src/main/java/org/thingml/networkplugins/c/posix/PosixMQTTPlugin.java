@@ -55,6 +55,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
         res.add("MQTT");
+        res.add("mqtt");
         return res;
     }
 
