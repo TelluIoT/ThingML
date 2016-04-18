@@ -4,7 +4,7 @@ __Disclaimer__:
 ThingML compilers for Java and Javascript use the third-party
 library [ReactiveX](http://reactivex.io). Even if ThingML vision aims for unifying
 CEP this document describes how it has been implemented for C languages (C,
-Arduino and C++).
+Arduino and C++). See the notes for main differences.
 
 
 ## Join Sources
@@ -25,6 +25,8 @@ if the requirements are meant (`temp` and `pressure` events in a `500`ms time in
 
 The output messages, `cep` will be saved for `5000`ms.
 
+__Note:__ ReactiveX implementation is a bit different, the equivalent output buffer used is `buffer(5000, 1000, TimeUnit.MILLISECONDS)` you can look at their [API](http://reactivex.io/RxJava/javadoc/rx/Observable.html#buffer%28long,%20long,%20java.util.concurrent.TimeUnit%29).
+
 ### With length window
 
 Length window allow to store a particular number of output messages, here `cep`. Once the buffer is full the number of message to remove is specified by the step of the window.
@@ -36,6 +38,8 @@ produce sendP!cep()
 ```
 
 In this exemple the two oldest `cep` messages are removed from the buffer every time it reached the size of `5` messages.
+
+__Note:__ ReactiveX implementation is a bit different, the equivalent output buffer used is `buffer(5, 2)` you can look at their [API](http://reactivex.io/RxJava/javadoc/rx/Observable.html#buffer%28int,%20int%29).
 
 ### Without any window
 
