@@ -130,6 +130,9 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx))
                 attributesSignatures += "    uint32_t last" + s.getName() + "Trigger = millis();\n";
 
+            if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+                attributesSignatures += "    uint8_t input" + s.getName() + "Trigger = 0;\n";
+
             /*
              * Trigger timer
              */
@@ -282,7 +285,16 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 triggerImpl += "check" + m.getName() + "TTL();\n";
                 triggerCondition.add("!" + m.getName() + "_isEmpty()");
             }
+
+            if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx)) {
+                triggerImpl += "input" + s.getName() + "Trigger++;\n";
+                triggerCondition.add("input" + s.getName() + "Trigger == " + ArduinoCepHelper.getStreamTriggerInputNumber(s, ctx));
+            }
+
             triggerImpl += "if (" + String.join(" && ", triggerCondition) + " )\n {\n";
+
+            if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+                triggerImpl += "input" + s.getName() + "Trigger = 0;\n";
 
             for (Message m : msgs) {
                 triggerImpl += "unsigned long " + m.getName() + "Time;\n";

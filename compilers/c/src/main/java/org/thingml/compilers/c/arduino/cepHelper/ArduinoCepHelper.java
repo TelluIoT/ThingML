@@ -88,6 +88,22 @@ public class ArduinoCepHelper {
         return ret;
     }
 
+    /**
+     * Return wheter the output message of a stream is produced after a particular amount
+     * of input messages received.
+     *
+     * @param s   Stream object
+     * @param ctx Compiler context
+     * @return True if the stream output is produced after an event reception.
+     */
+    public static boolean shouldTriggerOnInputNumber(Stream s, CCompilerContext ctx) {
+        boolean ret = false;
+        for (ViewSource vs : s.getInput().getOperators())
+            if (vs instanceof LengthWindow)
+                ret = true;
+        return ret;
+    }
+
     public static String getStreamTriggerTime(Stream s, CCompilerContext ctx) {
         String ret = "-1";
 
@@ -95,6 +111,20 @@ public class ArduinoCepHelper {
             if (vs instanceof TimeWindow) {
                 StringBuilder builder = new StringBuilder();
                 ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), builder, ctx);
+                ret = builder.toString();
+            }
+        }
+
+        return ret;
+    }
+
+    public static String getStreamTriggerInputNumber(Stream s, CCompilerContext ctx) {
+        String ret = "-1";
+
+        for (ViewSource vs : s.getInput().getOperators()) {
+            if (vs instanceof LengthWindow) {
+                StringBuilder builder = new StringBuilder();
+                ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getStep(), builder, ctx);
                 ret = builder.toString();
             }
         }

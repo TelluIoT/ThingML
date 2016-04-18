@@ -511,6 +511,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
             for (SimpleSource sc : sourceMap.keySet()) {
                 if (sourceMap.get(sc).equals(msg.getName())) {
+                    builder.append("//begin stream dispatch\n");
+
                     int nbCondition = 0;
                     // guard
                     for (ViewSource vs : sc.getOperators()) {
@@ -521,13 +523,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                             builder.append(") {\n");
                         }
                     }
-
-                    // select
-                    //for (LocalVariable lv : s.getSelection()) {
-                    //    builder.append(ctx.getCType(lv.getType()) + " " + lv.getName() + " = ");
-                    //    ctx.getCompiler().getThingActionCompiler().generate(lv.getInit(), builder, ctx);
-                    //    builder.append(";\n");
-                    //}
 
                     boolean hasWindowView = false;
                     for (ViewSource vs : source.getOperators())
@@ -543,7 +538,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
                         ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
 
-                        builder.append("// End of current stream -------\n");
                     } else if (source instanceof JoinSources || hasWindowView) {
                         builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
                         ctx.appendActualParameters(thing, builder, msg, "_instance");
@@ -563,15 +557,18 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                             ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
                         }
 
-                        builder.append("// End of current stream -------\n");
-                        //TODO check the output guard filter
                         ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
                     }
+
+                    // Length Window
+                    if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+                        builder.append("  _instance->cep_" + s.getName() + "->checkTrigger(_instance);\n");
 
                     // closing braces, see guards
                     for (int i = 0; i < nbCondition; i++) {
                         builder.append("}\n");
                     }
+                    builder.append("//End stream dispatch\n");
                 }
             }
         }
