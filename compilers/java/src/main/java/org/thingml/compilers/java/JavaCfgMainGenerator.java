@@ -104,6 +104,9 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
+        builder.append("Network components for external connectors\n");
+        builder.append("/*NETWORK*/\n");
+
         builder.append("//Connecting internal ports...\n");
         for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
             Instance i = entries.getKey();
@@ -131,6 +134,10 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                 builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port());\n");
             }
         }
+
+        builder.append("//External Connectors\n");
+        builder.append("/*EXT CONNECTOR*/\n");
+
     }
 
     @Override
@@ -214,6 +221,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             inst = instances.get(instances.size()-1);
             instances.remove(inst);
             builder.append(ctx.getInstanceName(inst) + ".start();\n");
+            //TODO: start network component
         }
 
         builder.append("//Hook to stop instances following client/server dependencies (clients firsts)\n");
@@ -225,6 +233,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             inst = instances.get(0);
             instances.remove(inst);
             builder.append(ctx.getInstanceName(inst) + ".stop();\n");
+            //TODO: stop network component
         }
         builder.append("System.out.println(\"ThingML app terminated. RIP!\");");
         builder.append("}\n");
