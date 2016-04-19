@@ -104,7 +104,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-        builder.append("Network components for external connectors\n");
+        builder.append("//Network components for external connectors\n");
         builder.append("/*NETWORK*/\n");
 
         builder.append("//Connecting internal ports...\n");
