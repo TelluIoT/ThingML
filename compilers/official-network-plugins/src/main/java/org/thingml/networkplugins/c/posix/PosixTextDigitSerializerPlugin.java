@@ -47,7 +47,7 @@ public class PosixTextDigitSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public int generateSerialization(StringBuilder builder, String bufferName, Message m) {
+    public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
         int size = 0;
         StringBuilder b = new StringBuilder();
 
@@ -88,7 +88,7 @@ public class PosixTextDigitSerializerPlugin extends SerializationPlugin {
         size++;
         builder.append("byte " + bufferName + "[" + size + "];\n");
         builder.append(b);
-        return size;
+        return size + "";
     }
 
     @Override

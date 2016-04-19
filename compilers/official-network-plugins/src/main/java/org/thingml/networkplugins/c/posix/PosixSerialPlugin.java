@@ -83,29 +83,28 @@ public class PosixSerialPlugin extends NetworkPlugin {
             messages = new HashSet();
         }
         public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder, Configuration cfg, Protocol prot) {
-            for (ExternalConnector eco : ecos) {
-                Thing t = eco.getInst().getInstance().getType();
-                Port p = eco.getPort();
+            for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
+                Thing t = tpm.t;
+                Port p = tpm.p;
+                Message m = tpm.m;
 
                 SerializationPlugin sp = ctx.getSerializationPlugin(prot);
 
-                for (Message m : p.getSends()) {
-                    builder.append("// Forwarding of messages " + prot.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                    builder.append("void forward_" + prot.getName() + "_" + ctx.getSenderName(t, p, m));
-                    ctx.appendFormalParameters(t, builder, m);
-                    builder.append("{\n");
+                builder.append("// Forwarding of messages " + prot.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                builder.append("void forward_" + prot.getName() + "_" + ctx.getSenderName(t, p, m));
+                ctx.appendFormalParameters(t, builder, m);
+                builder.append("{\n");
 
-                    int i = sp.generateSerialization(builder, "forward_buf", m);
+                String i = sp.generateSerialization(builder, "forward_buf", m);
 
-                    builder.append("\n//Forwarding with specified function \n");
-                    builder.append(prot.getName() + "_forwardMessage(forward_buf, " + i + ");\n");
-                    builder.append("}\n\n");
-                    
-                    headerbuilder.append("// Forwarding of messages " + prot.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                    headerbuilder.append("void forward_" + prot.getName() + "_" + ctx.getSenderName(t, p, m));
-                    ctx.appendFormalParameters(t, headerbuilder, m);
-                    headerbuilder.append(";\n");
-                }
+                builder.append("\n//Forwarding with specified function \n");
+                builder.append(prot.getName() + "_forwardMessage(forward_buf, " + i + ");\n");
+                builder.append("}\n\n");
+
+                headerbuilder.append("// Forwarding of messages " + prot.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                headerbuilder.append("void forward_" + prot.getName() + "_" + ctx.getSenderName(t, p, m));
+                ctx.appendFormalParameters(t, headerbuilder, m);
+                headerbuilder.append(";\n");
 
             }
         }
@@ -180,15 +179,14 @@ public class PosixSerialPlugin extends NetworkPlugin {
                     ctemplate = ctemplate.replace("/*ESCAPE_BYTE*/", escapeByte);
 
                     Integer maxMsgSize = 0;
-                    for(ExternalConnector eco : ecos) {
-                        for(Message m : eco.getPort().getReceives()) {
-                            messages.add(m);
-                            if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
-                                maxMsgSize = ctx.getMessageSerializationSize(m);
-                            }
+                    for (ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
+                        Message m = tpm.m;
+                        messages.add(m);
+                        if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
+                            maxMsgSize = ctx.getMessageSerializationSize(m);
                         }
                     }
-                    maxMsgSize = maxMsgSize - 2;
+                    maxMsgSize = maxMsgSize - 2;//FIXME @nicolas: get max message size from serialization plugin? if possible?
                     ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 
                     String msgBufferSize;
@@ -217,7 +215,7 @@ public class PosixSerialPlugin extends NetworkPlugin {
                     sp.generateParserBody(ParserImplementation, "msg", "size", messages, portName + "_instance.listener_id");
                     ParserImplementation.append("}\n");
 
-                    ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", ParserImplementation);
+                    ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", sp.generateSubFunctions() + ParserImplementation);
 
                     String ParserCall = portName + "_parser(serialBuffer, serialMsgSize);";
                     ctemplate = ctemplate.replace("/*PARSER_CALL*/", ParserCall);
