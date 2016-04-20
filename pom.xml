@@ -208,7 +208,7 @@
         <module>../org.thingml.editor.standaloneApp</module>-->
         <!--module>org.thingml.tests</module--><!--BUILT SEPARATELY-->
         <module>ArduinoIDEPlugin</module>
-        <module>testJar</module>
+        <!--<module>testJar</module>-->
     </modules>
 
     <distributionManagement>
