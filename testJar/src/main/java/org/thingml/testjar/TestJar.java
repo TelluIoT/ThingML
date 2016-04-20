@@ -47,7 +47,7 @@ public class TestJar {
     public static void main(String[] args) throws ExecutionException {
         final File workingDir = new File(System.getProperty("user.dir"));
         final File tmpDir = new File(workingDir, "testJar/tmp");
-        final File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.6.0-SNAPSHOT-jar-with-dependencies.jar");
+        final File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
         
         System.out.println("***********************************");
         System.out.println("*           Test Begin            *");
@@ -93,10 +93,10 @@ public class TestJar {
                 cmd.print();
                 cmd = lang.generateTargeted(tc);
                 cmd.print();
-                cmd = lang.compileTargeted(tc);
+                /*cmd = lang.compileTargeted(tc);
                 cmd.print();
                 cmd = lang.execTargeted(tc);
-                cmd.print();
+                cmd.print();*/
             }
         }
         
