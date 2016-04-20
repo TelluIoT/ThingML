@@ -45,7 +45,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("import java.nio.*;\n\n");
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "MessageType extends EventType {\n");
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType(short code) {super(\"" + m.getName() + "\", code);\n}\n\n");
-        builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {\nsuper(\"" + m.getName() + "\", (short) 0);\n}\n\n");
+        final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+        builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {\nsuper(\"" + m.getName() + "\", (short) " + code + ");\n}\n\n");
         builder.append("public Event instantiate(");
         for (Parameter p : m.getParameters()) {
             if (m.getParameters().indexOf(p) > 0)
