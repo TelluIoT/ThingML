@@ -87,7 +87,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("final short code = buffer.getShort();\n");
         builder.append("if (code == this.code) {\n");
         for (Parameter p : m.getParameters()) {
-            builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + " " + p.getName() + " = " + "buffer.get" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx)) + "();\n");
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("byte")) {
+                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "buffer.get();\n");
+            } else {
+                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "buffer.get" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx)) + "();\n");
+            }
         }
         builder.append("return instantiate(");
         int size = 2;
@@ -226,7 +230,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
         builder.append("buffer.putShort(code);\n");
         for (Parameter p : m.getParameters()) {
-            builder.append("buffer.put" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx)) + "(" + p.getName() + ");\n");
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("byte")) {
+                builder.append("buffer.put(" + p.getName() + ");\n");
+            } else {
+                builder.append("buffer.put" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx)) + "(" + p.getName() + ");\n");
+            }
         }
         builder.append("return buffer.array();\n");
         builder.append("}\n");
