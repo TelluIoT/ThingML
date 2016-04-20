@@ -1,6 +1,9 @@
 package org.thingml.generated.network;
 
 import org.thingml.java.*;
+import org.thingml.java.ext.*;
+
+import org.thingml.generated.messages.*;
 
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
@@ -12,18 +15,18 @@ import java.util.Arrays;
 public class SerialJava extends Component {
 
     private final String port;
-    private final long baudrate;
+    private final int baudrate;
 
     private final SerialPort serialPort;
-    private final byte start = 0x12;
-    private final byte stop = 0x13;
-    private final byte escape = 0x7D;
+    private final byte START_BYTE = 0x12;
+    private final byte STOP_BYTE = 0x13;
+    private final byte ESCAPE_BYTE = 0x7D;
 
     /*$MESSAGE TYPES$*/
 
     /*$PORTS$*/
 
-    public SerialJava(final String port, final long baudrate) {
+    public SerialJava(final String port, final int baudrate) {
         this.port = port;
         this.baudrate = baudrate;
         serialPort = new SerialPort(port);
@@ -39,14 +42,18 @@ public class SerialJava extends Component {
     }
 
     private void send(final byte[] payload) {
-        serialPort.writeByte(start);
-        for(byte b : payload) {
-            if (b == start || b == stop || b == escape) {
-                serialPort.writeByte(escape);
+        try {
+            serialPort.writeByte(START_BYTE);
+            for (byte b : payload) {
+                if (b == START_BYTE || b == STOP_BYTE || b == ESCAPE_BYTE) {
+                    serialPort.writeByte(ESCAPE_BYTE);
+                }
+                serialPort.writeByte(b);
             }
-            serialPort.writeByte(b);
+            serialPort.writeByte(STOP_BYTE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        serialPort.writeByte(stop);
     }
 
     private void parse(final byte[] payload) {
@@ -58,11 +65,16 @@ public class SerialJava extends Component {
         while(active) {
             try {
                 final Event e = queue.take();//should block if queue is empty, waiting for a message
-                send(e.toBytes());
+                send(e.toBytes("default"));
             } catch (InterruptedException e) {
                 //e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public Component buildBehavior(String id, Component root) {
+        return this;
     }
 
     class SerialPortReader implements SerialPortEventListener {
@@ -75,35 +87,39 @@ public class SerialJava extends Component {
         protected int state = RCV_WAIT;
 
         public void serialEvent(SerialPortEvent event) {
-            if(event.isRXCHAR() && event.getEventValue() > 0) {
-                byte[] received = serialPort.readBytes();
-                for(byte data : received) {
-                    if (state == RCV_WAIT) { // it should be a start byte or we just ignore it
-                        if (data == START_BYTE) {
-                            state = RCV_MSG;
-                            buffer_idx = 0;
-                        }
-                    } else if (state == RCV_MSG) {
-                        if (data == ESCAPE_BYTE) {
-                            state = RCV_ESC;
-                        } else if (data == STOP_BYTE) {
-                            parse(Arrays.copyOf(buffer), buffer_idx);
-                            state = RCV_WAIT;
-                        } else if (data == START_BYTE) {
-                            // Should not happen but we reset just in case
-                            state = RCV_MSG;
-                            buffer_idx = 0;
-                        } else { // it is just a byte to store
+            try {
+                if (event.isRXCHAR() && event.getEventValue() > 0) {
+                    byte[] received = serialPort.readBytes();
+                    for (byte data : received) {
+                        if (state == RCV_WAIT) { // it should be a start byte or we just ignore it
+                            if (data == START_BYTE) {
+                                state = RCV_MSG;
+                                buffer_idx = 0;
+                            }
+                        } else if (state == RCV_MSG) {
+                            if (data == ESCAPE_BYTE) {
+                                state = RCV_ESC;
+                            } else if (data == STOP_BYTE) {
+                                parse(Arrays.copyOf(buffer, buffer_idx));
+                                state = RCV_WAIT;
+                            } else if (data == START_BYTE) {
+                                // Should not happen but we reset just in case
+                                state = RCV_MSG;
+                                buffer_idx = 0;
+                            } else { // it is just a byte to store
+                                buffer[buffer_idx] = (byte) data;
+                                buffer_idx++;
+                            }
+                        } else if (state == RCV_ESC) {
+                            // Store the byte without looking at it
                             buffer[buffer_idx] = (byte) data;
                             buffer_idx++;
+                            state = RCV_MSG;
                         }
-                    } else if (state == RCV_ESC) {
-                        // Store the byte without looking at it
-                        buffer[buffer_idx] = (byte) data;
-                        buffer_idx++;
-                        state = RCV_MSG;
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

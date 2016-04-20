@@ -73,7 +73,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
             }
         }
         template = template.replace("/*PARSING CODE*/", parseBuilder.toString());
-        StringBuilder builder = ctx.getBuilder("src/main/java/org/thingml/generated/network/JavaSerialPlugin.java");
+        StringBuilder builder = ctx.getBuilder("src/main/java/org/thingml/generated/network/SerialJava.java");
         builder.append(template);
     }
 
