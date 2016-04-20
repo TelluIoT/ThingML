@@ -88,6 +88,7 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
         
         HWSerial() {
             ecos = new HashSet<>();
+            messages = new HashSet<>();
         }
         public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder, Configuration cfg, Protocol prot) {
             SerializationPlugin sp = ctx.getSerializationPlugin(prot);
@@ -170,6 +171,8 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 Integer maxMsgSize = 0;
                 for (ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
                     Message m = tpm.m;
+                    if(m != null)
+                        System.out.print("m: " + m.getName());
                     messages.add(m);
                     if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
                         maxMsgSize = ctx.getMessageSerializationSize(m);

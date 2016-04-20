@@ -32,6 +32,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.thingml.testjar.lang.TargetedLanguage;
+import org.thingml.testjar.lang.lJava;
+import org.thingml.testjar.lang.lJavaScript;
+import org.thingml.testjar.lang.lPosix;
 
 
 
@@ -41,20 +45,63 @@ import java.util.regex.Pattern;
  */
 public class TestJar {
     public static void main(String[] args) throws ExecutionException {
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
         final File workingDir = new File(System.getProperty("user.dir"));
         final File tmpDir = new File(workingDir, "testJar/tmp");
         final File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.6.0-SNAPSHOT-jar-with-dependencies.jar");
-
-        System.out.println(tmpDir);
+        
+        System.out.println("***********************************");
+        System.out.println("*           Test Begin            *");
+        System.out.println("***********************************");
+        
+        System.out.println("");
+        
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+        System.out.println("Tmp Directory = " + tmpDir);
+        System.out.println("Compiler = " + compilerJar);
+        System.out.println("");
 
 
         final File testFolder = new File(TestJar.class.getClassLoader().getResource("tests").getFile());
         String testPattern = "test(.+)\\.thingml";
         Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
-        Set<Callable<String>> tasks = new HashSet<>();
+        Set<Command> tasks = new HashSet<>();
+        List<Future<String>> results = new ArrayList<Future<String>>();
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         
+        Set<TargetedLanguage> langs = new HashSet<>();
+        
+        langs.add(new lPosix());
+        langs.add(new lJava());
+        langs.add(new lJavaScript());
+        
+        Set<TestCase> testCases = new HashSet<>();
+        
+        System.out.println("Test Files:");
+        for(File f : testFiles) {
+            for(TargetedLanguage lang : langs) {
+                TestCase tc = new TestCase(f, compilerJar, lang, tmpDir, new File(tmpDir, "_" + lang.compilerID));
+                testCases.add(tc);
+            }
+        }
+        
+        System.out.println("");
+        System.out.println("Test Cases:");
+        for(TestCase tc : testCases) {
+            for(TargetedLanguage lang : langs) {
+                Command cmd = lang.generateThingML(tc);
+                cmd.print();
+                cmd = lang.generateTargeted(tc);
+                cmd.print();
+                cmd = lang.compileTargeted(tc);
+                cmd.print();
+                cmd = lang.execTargeted(tc);
+                cmd.print();
+            }
+        }
+        
+        
+        /*
         TestEnv testEnv = new TestEnv(tmpDir, compilerJar, "java");
         
         for(File testFile : testFiles) {
@@ -62,8 +109,6 @@ public class TestJar {
             testEnv.testGeneration(testFile, tasks);
             //testGen.generateTestCfg(testFile, tmpDir);
         }
-        List<Future<String>> results = new ArrayList<Future<String>>();
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         
         try {
             results = executor.invokeAll(tasks);

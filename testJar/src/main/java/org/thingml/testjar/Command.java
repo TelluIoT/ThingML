@@ -43,6 +43,12 @@ import java.util.regex.Pattern;
  */
 public class Command implements Callable<String>{
     
+    /* New command*/
+    public boolean isSuccess;
+    public String log;
+    public String result;
+    /* New command*/
+    
     String[] cmd;
     Pattern success;
     Pattern failure;
@@ -59,8 +65,8 @@ public class Command implements Callable<String>{
             failure = Pattern.compile(failureCrit);
         }
     }
+    
     public Command(String[] cmd, String successCrit, String failureCrit, String errorMsg, File dir) {
-        System.out.println("Cmd:" + cmd[0] + " (" + dir.getName() + ")");
         this.dir = dir;
         this.cmd = cmd;
         this.errorMsg = errorMsg;
@@ -69,6 +75,18 @@ public class Command implements Callable<String>{
         }
         if(failureCrit != null) {
             failure = Pattern.compile(failureCrit);
+        }
+    }
+    
+    public void print() {
+        System.out.print("[Cmd]");
+        for(String str : cmd) {
+            System.out.print(" " + str);
+        }
+        if(dir == null) {
+            System.out.println(" (Cur dir)");
+        } else {
+            System.out.println(" (" + dir.getAbsolutePath() + ")");
         }
     }
     
