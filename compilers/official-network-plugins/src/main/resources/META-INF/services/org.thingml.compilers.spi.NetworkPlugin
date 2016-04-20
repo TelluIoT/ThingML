@@ -4,3 +4,4 @@ org.thingml.networkplugins.c.posix.PosixWebSocketPlugin
 org.thingml.networkplugins.c.posix.PosixMQTTPlugin
 org.thingml.networkplugins.c.posix.PosixNoPollWSPlugin
 org.thingml.networkplugins.c.posix.PosixSerialPlugin
+org.thingml.network.plugins.java.JavaSerialPlugin
