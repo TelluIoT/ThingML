@@ -105,7 +105,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("//Network components for external connectors\n");
-        builder.append("/*NETWORK*/\n");
+        builder.append("/*$NETWORK$*/\n");
 
         builder.append("//Connecting internal ports...\n");
         for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
@@ -136,7 +136,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("//External Connectors\n");
-        builder.append("/*EXT CONNECTOR*/\n");
+        builder.append("/*$EXT CONNECTORS$*/\n");
 
     }
 
@@ -178,6 +178,9 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             builder.append("import " + pack + ".gui.*;\n");
         }
 
+        if (cfg.getExternalConnectors().size() > 0) {
+            builder.append("import org.thingml.generated.network.*;\n");
+        }
 
         builder.append("public class Main {\n");
 
@@ -215,13 +218,13 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
+        builder.append("/*$START$*/\n");
         List<Instance> instances = cfg.orderInstanceInit();
         Instance inst;
         while(!instances.isEmpty()) {
             inst = instances.get(instances.size()-1);
             instances.remove(inst);
             builder.append(ctx.getInstanceName(inst) + ".start();\n");
-            //TODO: start network component
         }
 
         builder.append("//Hook to stop instances following client/server dependencies (clients firsts)\n");
@@ -233,7 +236,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             inst = instances.get(0);
             instances.remove(inst);
             builder.append(ctx.getInstanceName(inst) + ".stop();\n");
-            //TODO: stop network component
+            builder.append("/*$STOP$*/\n");
         }
         builder.append("System.out.println(\"ThingML app terminated. RIP!\");");
         builder.append("}\n");

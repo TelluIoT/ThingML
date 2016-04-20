@@ -74,6 +74,7 @@ public class SerialJava extends Component {
 
     @Override
     public Component buildBehavior(String id, Component root) {
+        /*$INIT PORTS$*/
         return this;
     }
 
