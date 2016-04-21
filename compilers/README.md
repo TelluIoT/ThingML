@@ -113,7 +113,7 @@ To use the compiler, just run the jar file on a command line. Java 7 or newer is
     $ java -jar compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar
      --- ThingML help ---
 	Typical usages: 
-		java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>]
+		java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>] [-d]
 		java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>]
 	Usage: <main class> [options]
 	  Options:
@@ -121,6 +121,9 @@ To use the compiler, just run the jar file on a command line. Java 7 or newer is
 		   Compiler ID (Mandatory unless --tool (-t) is used)
 		--help, -h
 		   Display this message.
+		   Default: false
+		--create-directory, -d
+		   Create a directory named after the configuration in which the generated code will be put.
 		   Default: false
 		--options
 		   additional options for ThingML tools.
