@@ -41,11 +41,12 @@ import java.util.regex.Pattern;
  *
  * @author sintef
  */
-public class Command implements Callable<String>{
+public class Command implements Callable<String> {
     
     /* New command*/
     public boolean isSuccess;
-    public String log;
+    public String stdlog;
+    public String errlog;
     public String result;
     /* New command*/
     
@@ -122,6 +123,7 @@ public class Command implements Callable<String>{
                                     }
                                 }
                                 //System.out.println("[Output] "+ line);
+                                stdlog += "[stdout] " + line + "\n";
                             }
                         } finally {
                             reader.close();
@@ -150,6 +152,7 @@ public class Command implements Callable<String>{
                                 }
                             }
                             System.out.println("[Error] "+ line);
+                            errlog += "[stderr] " + line + "\n";
                         }
                     } finally {
                         reader.close();
@@ -161,6 +164,17 @@ public class Command implements Callable<String>{
             }
         }).call();
             
+        if((success != null) && (failure != null)) {
+            this.isSuccess = (r1 != null) && (r0 == null);
+        } else if(success != null) {
+            this.isSuccess = (r1 != null);
+        } else if(failure != null) {
+            this.isSuccess = (r0 == null);
+        } else {
+            this.isSuccess = true;
+        }
+        
+        
         if(r1 != null) {
             return r1;
         } else if (r0 != null){

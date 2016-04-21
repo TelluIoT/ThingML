@@ -46,8 +46,22 @@ import org.thingml.testjar.lang.lPosix;
 public class TestJar {
     public static void main(String[] args) throws ExecutionException {
         final File workingDir = new File(System.getProperty("user.dir"));
-        final File tmpDir = new File(workingDir, "testJar/tmp");
+        File tmpDir = new File(workingDir, "../testJar/tmp");
+        final File testCfgDir = new File(tmpDir, "thingml");
+        final File codeDir = new File(tmpDir, "genCode");
+        final File logDir = new File(tmpDir, "log");
         final File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
+        
+        tmpDir.delete();
+        tmpDir = new File(workingDir, "../testJar/tmp");
+
+        final File testFolder = new File(TestJar.class.getClassLoader().getResource("tests").getFile());
+        String testPattern = "test(.+)\\.thingml";
+        //Set<File> testFiles = listTestFiles(testFolder, testPattern);
+        
+        Set<Command> tasks = new HashSet<>();
+        List<Future<String>> results = new ArrayList<Future<String>>();
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         
         System.out.println("***********************************");
         System.out.println("*           Test Begin            *");
@@ -59,15 +73,12 @@ public class TestJar {
         System.out.println("Tmp Directory = " + tmpDir);
         System.out.println("Compiler = " + compilerJar);
         System.out.println("");
-
-
-        final File testFolder = new File(TestJar.class.getClassLoader().getResource("tests").getFile());
-        String testPattern = "test(.+)\\.thingml";
-        Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
-        Set<Command> tasks = new HashSet<>();
-        List<Future<String>> results = new ArrayList<Future<String>>();
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        Set<String> wl = new HashSet<>();
+        wl.add("testEmptyTransition");
+        wl.add("testInstanceInitializationOrder4");
+        wl.add("testDeepCompositeStates");
+        Set<File> testFiles = whiteListFiles(testFolder, wl);
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
@@ -77,29 +88,67 @@ public class TestJar {
         
         Set<TestCase> testCases = new HashSet<>();
         
+        testCfgDir.mkdir();
+        codeDir.mkdir();
+        logDir.mkdir();
+        for(TargetedLanguage lang : langs) {
+            File lCfg = new File(testCfgDir, "_" + lang.compilerID);
+            lCfg.mkdir();
+            File lcode = new File(codeDir, "_" + lang.compilerID);
+            lcode.mkdir();
+            File llog = new File(logDir, "_" + lang.compilerID);
+            llog.mkdir();
+        }
+        
         System.out.println("Test Files:");
         for(File f : testFiles) {
+            System.out.println(f.getName());
             for(TargetedLanguage lang : langs) {
-                TestCase tc = new TestCase(f, compilerJar, lang, tmpDir, new File(tmpDir, "_" + lang.compilerID));
+                TestCase tc = new TestCase(f, compilerJar, lang, codeDir, testCfgDir, logDir);
                 testCases.add(tc);
             }
         }
+
         
         System.out.println("");
         System.out.println("Test Cases:");
         for(TestCase tc : testCases) {
-            for(TargetedLanguage lang : langs) {
-                Command cmd = lang.generateThingML(tc);
-                cmd.print();
-                cmd = lang.generateTargeted(tc);
-                cmd.print();
-                /*cmd = lang.compileTargeted(tc);
-                cmd.print();
-                cmd = lang.execTargeted(tc);
-                cmd.print();*/
-            }
+            Command cmd = tc.lang.generateThingML(tc);
+            cmd.print();
+            tasks.add(cmd);
         }
         
+        try {
+            results = executor.invokeAll(tasks);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(TestJar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        executor.shutdown();
+        tasks.clear();
+        System.out.println("Done.");
+        
+        System.out.println("");
+        System.out.println("Test Cfg:");
+        Set<TestCase> testCfg = new HashSet<>();
+        for(TestCase tc : testCases) {
+            testCfg.addAll(tc.generateChildren());
+        }
+        System.out.println("");
+        
+        System.out.println("Generate Targeted Code:");
+        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        testRun(testCfg, executor);
+        System.out.println("");
+        
+        System.out.println("Compile Targeted Code:");
+        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        testRun(testCfg, executor);
+        System.out.println("");
+        
+        System.out.println("Execute Targeted Code:");
+        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        testRun(testCfg, executor);
+        System.out.println("Done.");
         
         /*
         TestEnv testEnv = new TestEnv(tmpDir, compilerJar, "java");
@@ -229,6 +278,26 @@ public class TestJar {
         
         return res;
     }
+	
+
+    public static Set<File> whiteListFiles(final File folder, Set<String> whiteList) {
+        Set<File> res = new HashSet<>();
+        
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                res.addAll(whiteListFiles(fileEntry, whiteList));
+            } else {
+                String fileName = fileEntry.getName().split("\\.thingml")[0];
+                for(String s : whiteList) {
+                    if (fileName.compareTo(s) == 0) {
+                        res.add(fileEntry);
+                    }
+                }
+            }
+        }
+        
+        return res;
+    }
     
     public static Set<File> listTestDir(final File folder, String pattern) {
         Set<File> res = new HashSet<>();
@@ -246,5 +315,31 @@ public class TestJar {
         }
         
         return res;
+    }
+    
+    public static void testRun(Set<TestCase> tests, ExecutorService executor) {
+        System.out.println("");
+        System.out.println("Test Cases:");
+        Set<Command> tasks = new HashSet<>();
+        List<Future<String>> results = new ArrayList<Future<String>>();
+        for(TestCase tc : tests) {
+            if(tc.isLastStepASuccess) {
+                Command cmd = tc.ongoingCmd;
+                cmd.print();
+                tasks.add(cmd);
+            }
+        }
+        
+        try {
+            results = executor.invokeAll(tasks);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(TestJar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        executor.shutdown();
+        
+        for(TestCase tc : tests) {
+            tc.collectResults();
+        }
+        System.out.println("Done.");
     }
 }
