@@ -79,19 +79,20 @@ public class TestJar {
         
         Set<String> wl = new HashSet<>();
         //wl.add("testEmptyTransition");
-        wl.add("testInstanceInitializationOrder4");
-        wl.add("testInstanceInitializationOrder3");
-        wl.add("testInstanceInitializationOrder2");
-        wl.add("testInstanceInitializationOrder");
-        wl.add("testArrays");
+        //wl.add("testInstanceInitializationOrder4");
+        //wl.add("testInstanceInitializationOrder3");
+        //wl.add("testInstanceInitializationOrder2");
+        //wl.add("testInstanceInitializationOrder");
+        //wl.add("testArrays");
         //wl.add("testDeepCompositeStates");
-        Set<File> testFiles = whiteListFiles(testFolder, wl);
+        //Set<File> testFiles = whiteListFiles(testFolder, wl);
+        Set<File> testFiles = blackListFiles(testFolder, wl);
         //Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
         langs.add(new lPosix());
-        langs.add(new lJava());
+        //langs.add(new lJava());
         langs.add(new lJavaScript());
         
         Set<TestCase> testCases = new HashSet<>();
@@ -181,6 +182,7 @@ public class TestJar {
         
         System.out.println("");
         System.out.println("More details in " + tmpDir.getAbsolutePath() + "/results.html");
+        System.out.println("");
         
     }
 	
@@ -206,18 +208,46 @@ public class TestJar {
 	
 
     public static Set<File> whiteListFiles(final File folder, Set<String> whiteList) {
+        String testPattern = "test(.+)\\.thingml";
         Set<File> res = new HashSet<>();
         
-        for (final File fileEntry : folder.listFiles()) {
+        for (final File fileEntry : listTestFiles(folder, testPattern)) {
             if (fileEntry.isDirectory()) {
                 res.addAll(whiteListFiles(fileEntry, whiteList));
             } else {
                 String fileName = fileEntry.getName().split("\\.thingml")[0];
+                boolean found = false;
                 for(String s : whiteList) {
                     if (fileName.compareTo(s) == 0) {
-                        res.add(fileEntry);
+                        found = true;
                     }
                 }
+                if(found)
+                    res.add(fileEntry);
+            }
+        }
+        
+        return res;
+    }
+	
+
+    public static Set<File> blackListFiles(final File folder, Set<String> blackList) {
+        String testPattern = "test(.+)\\.thingml";
+        Set<File> res = new HashSet<>();
+        
+        for (final File fileEntry : listTestFiles(folder, testPattern)) {
+            if (fileEntry.isDirectory()) {
+                res.addAll(blackListFiles(fileEntry, blackList));
+            } else {
+                String fileName = fileEntry.getName().split("\\.thingml")[0];
+                boolean found = false;
+                for(String s : blackList) {
+                    if (fileName.compareTo(s) == 0) {
+                        found = true;
+                    }
+                }
+                if(!found)
+                    res.add(fileEntry);
             }
         }
         

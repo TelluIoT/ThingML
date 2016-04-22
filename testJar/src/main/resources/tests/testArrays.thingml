@@ -25,8 +25,6 @@ thing TestArrays includes Test
     statechart TestArrays init sstart {
     
     	state sstart {
-            on entry print("Start!!!")
-        
     		transition -> initialized
 			event m : harnessIn?testIn
 			guard m.c == '\'x\''
