@@ -2,7 +2,7 @@ import "../test.thingml"
 
 object fs;
 
-thing TestDumpJS includes TestDump
+thing TestDumpNodejs includes TestDump
 @javascript "node"
 {
     

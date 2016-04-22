@@ -50,17 +50,16 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
     //TODO: remove output param as we do not really it (and method is called with wrong args in case of Join/Merge....)
    private void generateSubscription(Stream stream, StringBuilder builder, Context context, Message outPut, String name) {
        String outPutName = stream.getName();
-       if (stream.getInput() instanceof JoinSources) {
-           outPutName = ((JoinSources)stream.getInput()).getResultMessage().getName();
-           outPut = ((JoinSources) stream.getInput()).getResultMessage();
-       }else if (stream.getInput() instanceof MergeSources) {
-           outPutName = ((MergeSources)stream.getInput()).getResultMessage().getName();
-           outPut = ((MergeSources) stream.getInput()).getResultMessage();
+       String messageType = "";
+       if (stream.getInput() instanceof SourceComposition) {
+           outPutName = ((SourceComposition)stream.getInput()).getName();
+           outPut = ((SourceComposition) stream.getInput()).getResultMessage();
+           messageType = context.firstToUpper( ((SourceComposition)stream.getInput()).getResultMessage().getName()) + "MessageType." + context.firstToUpper(((SourceComposition)stream.getInput()).getResultMessage().getName()) + "Message";
        } else if (stream.getInput() instanceof SimpleSource) {
            outPutName = ((SimpleSource)stream.getInput()).getMessage().getMessage().getName();
            outPut = ((SimpleSource)stream.getInput()).getMessage().getMessage();
+           messageType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
        }
-        final String messageType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
         String outPutType = messageType;
 
 
@@ -76,7 +75,7 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
         }
 
 
-       builder.append("this.sub_" + name + " = new Action1<" + outPutType + ">() {\n")
+       builder.append("sub_" + name + " = new Action1<" + outPutType + ">() {\n")
                .append("@Override\n")
                .append("public void call(" + outPutType + " " + outPutName + ") {\n");
 

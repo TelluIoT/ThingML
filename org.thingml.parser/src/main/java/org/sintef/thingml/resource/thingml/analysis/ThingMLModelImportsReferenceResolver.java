@@ -30,11 +30,7 @@ package org.sintef.thingml.resource.thingml.analysis;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 
 
 public class ThingMLModelImportsReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ThingMLModel, org.sintef.thingml.ThingMLModel> {

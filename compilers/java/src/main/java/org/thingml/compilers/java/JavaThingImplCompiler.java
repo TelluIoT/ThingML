@@ -45,7 +45,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("import java.nio.*;\n\n");
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "MessageType extends EventType {\n");
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType(short code) {super(\"" + m.getName() + "\", code);\n}\n\n");
-        builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {\nsuper(\"" + m.getName() + "\", (short) 0);\n}\n\n");
+        final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+        builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {\nsuper(\"" + m.getName() + "\", (short) " + code + ");\n}\n\n");
         builder.append("public Event instantiate(");
         for (Parameter p : m.getParameters()) {
             if (m.getParameters().indexOf(p) > 0)
@@ -87,7 +88,13 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("final short code = buffer.getShort();\n");
         builder.append("if (code == this.code) {\n");
         for (Parameter p : m.getParameters()) {
-            builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + " " + p.getName() + " = " + "buffer.get" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx)) + "();\n");
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("byte")) {
+                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "buffer.get();\n");
+            } else  if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("boolean")) {
+                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "buffer.get() == 0x00 ? false : true;\n");
+            } else {
+                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "buffer.get" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx)) + "();\n");
+            }
         }
         builder.append("return instantiate(");
         int size = 2;
@@ -226,7 +233,13 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
         builder.append("buffer.putShort(code);\n");
         for (Parameter p : m.getParameters()) {
-            builder.append("buffer.put" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx)) + "(" + p.getName() + ");\n");
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("byte")) {
+                builder.append("buffer.put(" + p.getName() + ");\n");
+            } else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("boolean")) {
+                builder.append("if(" + p.getName() + ") buffer.put((byte)0x01); else buffer.put((byte)0x00); ");
+            } else {
+                builder.append("buffer.put" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx)) + "(" + p.getName() + ");\n");
+            }
         }
         builder.append("return buffer.array();\n");
         builder.append("}\n");

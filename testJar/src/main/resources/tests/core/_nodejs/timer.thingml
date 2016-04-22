@@ -1,17 +1,17 @@
 import "../timer.thingml"
 
 // Manage a set of software timers.
-thing TimerJS includes Timer
+thing TimerNodejs includes Timer
 @pim "Timer"
 @platform "javascript"
 @javascript "node browser"
 {
-    function cancel() 
+    function tcancel() 
     do
         'clearTimeout(this.timer);'
     end
     
-    function start(delay : Integer)
+    function tstart(delay : Integer)
     do
         'this.timer = setTimeout(onTimeout,' & delay & ');'
     end
@@ -24,16 +24,16 @@ thing TimerJS includes Timer
     statechart SoftTimer init default {
         state default {
             
-          internal start
+          internal
             event m : timer?timer_start
             guard m.delay > 0
             action do
-                start(m.delay)
+                tstart(m.delay)
             end
             
-          internal cancel
+          internal
             event m : timer?timer_cancel
-            action cancel()    
+            action tcancel()    
         }
     }
 }

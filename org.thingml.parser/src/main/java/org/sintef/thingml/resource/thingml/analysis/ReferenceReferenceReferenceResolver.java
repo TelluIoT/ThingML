@@ -15,10 +15,19 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-
 import java.util.List;
+
+import org.sintef.thingml.Action;
+import org.sintef.thingml.Event;
+import org.sintef.thingml.Handler;
+import org.sintef.thingml.ReceiveMessage;
+import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.Source;
+import org.sintef.thingml.SourceComposition;
+import org.sintef.thingml.Stream;
+import org.sintef.thingml.ThingMLElement;
+import org.sintef.thingml.Variable;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
 public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Reference, org.sintef.thingml.ReferencedElmt> {
 
@@ -63,21 +72,24 @@ public class ReferenceReferenceReferenceResolver implements org.sintef.thingml.r
 			System.out.println("SourceComposition " + sc.getName());
 			
 			if(resolveFuzzy && sc.getName().startsWith(identifier)) {
-				for(Source s : sc.getSources()) {
+				result.addMapping(sc.getName(), sc.getResultMessage());
+				/*for(Source s : sc.getSources()) {
 					if (s instanceof SimpleSource) {
 						SimpleSource ss = (SimpleSource) s;
 						result.addMapping(sc.getName(), ss.getMessage());
 					}
 						
-				}						
+				}*/						
 			} else if(!resolveFuzzy && sc.getName().equals(identifier)) {
-				for(Source s : sc.getSources()) {
+				result.addMapping(sc.getName(), sc.getResultMessage());
+				/*for(Source s : sc.getSources()) {
 					if (s instanceof SimpleSource) {
 						SimpleSource ss = (SimpleSource) s;
 						result.addMapping(sc.getName(), ss.getMessage());
 					}
 						
-				}				}
+				}*/
+			}
 			//if(!result.wasResolved()) {
 				for(Source source : ((SourceComposition) parent).getSources()) {
 					ReceiveMessage receiveMessage = ((SimpleSource) source).getMessage();
