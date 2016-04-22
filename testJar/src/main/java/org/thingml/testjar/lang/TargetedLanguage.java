@@ -20,9 +20,8 @@
  */
 package org.thingml.testjar.lang;
 
-import java.io.File;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import org.thingml.testjar.Command;
 import org.thingml.testjar.TestCase;
 
@@ -33,6 +32,8 @@ import org.thingml.testjar.TestCase;
 public abstract class TargetedLanguage {
     
     public String compilerID;
+    public Set<String> failedTest = new HashSet<>();
+    public int testNb = 0;
     
     public Command generateThingML(TestCase t) {
         String[] execCmd = new String[11];

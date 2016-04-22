@@ -23,6 +23,7 @@ package org.thingml.testjar;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,26 +49,26 @@ import org.thingml.testjar.lang.lPosix;
 public class TestJar {
     public static void main(String[] args) throws ExecutionException {
         final File workingDir = new File(System.getProperty("user.dir"));
-        File tmpDir = new File(workingDir, "../testJar/tmp");
+        File tmpDir = new File(workingDir, "tmp");
         final File testCfgDir = new File(tmpDir, "thingml");
         final File codeDir = new File(tmpDir, "genCode");
         final File logDir = new File(tmpDir, "log");
         final File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
         
         tmpDir.delete();
-        tmpDir = new File(workingDir, "../testJar/tmp");
+        tmpDir = new File(workingDir, "tmp");
 
         final File testFolder = new File(TestJar.class.getClassLoader().getResource("tests").getFile());
         String testPattern = "test(.+)\\.thingml";
-        //Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
         Set<Command> tasks = new HashSet<>();
         List<Future<String>> results = new ArrayList<Future<String>>();
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         
-        System.out.println("***********************************");
-        System.out.println("*           Test Begin            *");
-        System.out.println("***********************************");
+        
+        System.out.println("****************************************");
+        System.out.println("*              Test Begin              *");
+        System.out.println("****************************************");
         
         System.out.println("");
         
@@ -77,10 +78,15 @@ public class TestJar {
         System.out.println("");
         
         Set<String> wl = new HashSet<>();
-        wl.add("testEmptyTransition");
+        //wl.add("testEmptyTransition");
         wl.add("testInstanceInitializationOrder4");
-        wl.add("testDeepCompositeStates");
+        wl.add("testInstanceInitializationOrder3");
+        wl.add("testInstanceInitializationOrder2");
+        wl.add("testInstanceInitializationOrder");
+        wl.add("testArrays");
+        //wl.add("testDeepCompositeStates");
         Set<File> testFiles = whiteListFiles(testFolder, wl);
+        //Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
@@ -115,7 +121,9 @@ public class TestJar {
 
         
         System.out.println("");
-        System.out.println("Test Cases:");
+        System.out.println("****************************************");
+        System.out.println("*           ThingML Generation         *");
+        System.out.println("****************************************");
         for(TestCase tc : testCases) {
             Command cmd = tc.lang.generateThingML(tc);
             cmd.print();
@@ -131,8 +139,6 @@ public class TestJar {
         tasks.clear();
         System.out.println("Done.");
         
-        System.out.println("");
-        System.out.println("Test Cfg:");
         Set<TestCase> testCfg = new HashSet<>();
         for(TestCase tc : testCases) {
             Set<TestCase> children = tc.generateChildren();
@@ -141,128 +147,41 @@ public class TestJar {
         }
         System.out.println("");
         
-        System.out.println("Generate Targeted Code:");
+        System.out.println("****************************************");
+        System.out.println("*          ThingML Compilation         *");
+        System.out.println("****************************************");
         executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         testRun(testCfg, executor);
         System.out.println("");
         
-        System.out.println("Compile Targeted Code:");
+        System.out.println("****************************************");
+        System.out.println("*      Generated Code Compilation      *");
+        System.out.println("****************************************");
         executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         testRun(testCfg, executor);
         System.out.println("");
         
-        System.out.println("Execute Targeted Code:");
+        
+        System.out.println("****************************************");
+        System.out.println("*       Generated Code Execution       *");
+        System.out.println("****************************************");
         executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         testRun(testCfg, executor);
-        System.out.println("Done.");
+        System.out.println("");
         
-        /*
-        TestEnv testEnv = new TestEnv(tmpDir, compilerJar, "java");
         
-        for(File testFile : testFiles) {
-            System.out.println("Test: " + testFile.getName());
-            testEnv.testGeneration(testFile, tasks);
-            //testGen.generateTestCfg(testFile, tmpDir);
-        }
+        System.out.println("****************************************");
+        System.out.println("*             Test Results             *");
+        System.out.println("****************************************");
         
-        try {
-            results = executor.invokeAll(tasks);
-            for(Future<String> f : results) {
-                System.out.println("[Result] " + f.get());
-            }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(TestJar.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        System.out.println("");
         
-        tasks.clear();
-        String testConfigPattern = "Test(.+)\\.thingml";
-        List<String> languages = new ArrayList<>();
-        languages.add("java");
-        //languages.add("javascript");
-        //languages.add("posix");
-        for(String lang : languages) {
-            TestEnv testL = new TestEnv(new File(tmpDir, "thingml-gen/_" + lang), compilerJar, lang);
-
-            System.out.println("debug " + new File(tmpDir, "_" + lang));
-
-            for(File f : listTestFiles(new File(tmpDir, "_" + lang), testConfigPattern)) {
-                System.out.println("[" + lang + "] Test: " + f.getName());
-                testL.testCompilation(f, tasks);
-            }
-            
-            try {
-                results = executor.invokeAll(tasks);
-                for(Future<String> f : results) {
-                    System.out.println("[" + lang + "] " + f.get());
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TestJar.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        writeResultsFile(new File(tmpDir, "results.html"), testBench, langs);
         
-        tasks.clear();
-        String testDirPattern = "Test(.+)";
-        for(String lang : languages) {
-            TestEnv testL = new TestEnv(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), compilerJar, lang);
-            for(File f : listTestDir(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), testDirPattern)) {
-                System.out.println("[" + lang + "] Dir: " + f.getName());
-                testL.testGeneratedSourcesCompilation(f, tasks, null, ".*", lang);
-            }
-            
-            try {
-                results = executor.invokeAll(tasks);
-                for(Future<String> f : results) {
-                    System.out.println("[" + lang + "] " + f.get());
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TestJar.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
         
-        tasks.clear();
-        for(String lang : languages) {
-            TestEnv testL = new TestEnv(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), compilerJar, lang);
-            for(File f : listTestDir(new File (tmpDir.getAbsolutePath() + "/thingml-gen/_" + lang), testDirPattern)) {
-                System.out.println("[" + lang + "] run: " + f.getName());
-                testL.testGeneratedSourcesRun(f, tasks, ".*", null, lang);
-            }
-            
-            try {
-                results = executor.invokeAll(tasks);
-                for(Future<String> f : results) {
-                    System.out.println("[" + lang + "] " + f.get());
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TestJar.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        for(Future<String> r : results) {//
-            try {
-                final String res = r.get(30, TimeUnit.SECONDS);
-                System.out.println(res);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                System.err.println("one task did not complete on time");
-                r.cancel(true);
-            }
-        }
-        /*
-        final File sampleFolder = new File("./src/main/resources/samples");
-        String samplePattern = "sample(.+)\\.thingml";
-        Set<File> sampleFiles = listTestFiles(sampleFolder, samplePattern);
-        for(File sampleFile : sampleFiles) {
-        System.out.println("Sample: " + sampleFile.getName());
-        }
-
-        final File crashFolder = new File("./src/main/resources/crashTests");
-        String crashPattern = "crash(.+)\\.thingml";
-        Set<File> crashFiles = listTestFiles(crashFolder, crashPattern);
-        for(File crashFile : crashFiles) {
-        System.out.println("Crash Test: " + crashFile.getName());
-        }
-        */
+        System.out.println("");
+        System.out.println("More details in " + tmpDir.getAbsolutePath() + "/results.html");
+        
     }
 	
 
@@ -347,5 +266,119 @@ public class TestJar {
             tc.collectResults();
         }
         System.out.println("Done.");
+    }
+    
+    public static void writeResultsFile(File results, Map<String,Map<TargetedLanguage,Set<TestCase>>> tests, Set<TargetedLanguage> langs) {
+        StringBuilder res = new StringBuilder();
+        
+        res.append("<!DOCTYPE html>\n" +
+        "<html>\n" +
+        "	<head>\n" +
+        "		<meta charset=\"utf-8\" />\n" +
+        "		<title>ThingML tests results</title>\n" +
+        "		<style>\n" +
+        "		table\n" +
+        "		{\n" +
+        "			border-collapse: collapse;\n" +
+        "		}\n" +
+        "		td, th \n" +
+        "		{\n" +
+        "			border: 1px solid black;\n" +
+        "		}\n" +
+        "		.green\n" +
+        "		{\n" +
+        "			background: lightgreen\n" +
+        "		}\n" +
+        "		.red\n" +
+        "		{\n" +
+        "			background: red\n" +
+        "		}\n" +
+        "		</style>\n" +
+        "	</head>\n" +
+        "	<body>\n" +
+        "           <table>\n" +
+        "               <tr>\n");
+        res.append("                <th>Test</th>\n");
+        
+        for(TargetedLanguage lang : langs) {
+            res.append("                    <th>" + lang.compilerID + "</th>\n");
+        }
+        res.append("                </tr>\n");
+        
+        
+        for(Map.Entry<String,Map<TargetedLanguage,Set<TestCase>>> line : tests.entrySet()) {
+            StringBuilder lineB = new StringBuilder();
+            boolean lineSuccess = true;
+            res.append("            <tr>\n");
+            res.append("            <td class=\"");
+            lineB.append("                " + line.getKey() + "\n");
+            lineB.append("            </td>\n");
+            
+            for(Map.Entry<TargetedLanguage,Set<TestCase>> cell : line.getValue().entrySet()) {
+                StringBuilder cellB = new StringBuilder();
+                boolean cellSuccess = true;
+                
+                lineB.append("              <td class=\"");
+                String cellRes = "";
+                
+                for(TestCase tc : cell.getValue()) {
+                    if(tc.isLastStepASuccess) {
+                        cellRes = "*";
+                    } else {
+                        cellRes = "!";
+                        cellSuccess = false;
+                    }
+                    cellB.append("                  <a href=" + tc.logFile.getAbsolutePath() + ">[" +cellRes+ "]</a>\n");
+                    
+                }
+                
+                if(cellSuccess) {
+                    lineB.append("green");
+                } else {
+                    lineB.append("red");
+                    cell.getKey().failedTest.add(line.getKey());
+                }
+                cell.getKey().testNb++;
+                lineB.append("\">\n");
+                lineB.append(cellB);
+                lineB.append("              </td>\n");
+                
+                lineSuccess &= cellSuccess;
+            }
+            
+            
+            if(lineSuccess) {
+                res.append("green");
+            } else {
+                res.append("red");
+            }
+            res.append("\">\n");
+            res.append(lineB);
+            res.append("            </tr>\n");
+        }
+        
+        res.append("        </table>\n"
+                + " </body>\n");
+        res.append("</html>");
+        
+        for(TargetedLanguage lang : langs) {
+            System.out.println("[" + lang.compilerID + "] " + lang.failedTest.size() + " failures out of " + lang.testNb);
+            System.out.println("    Failed tests:");
+            for(String fail : lang.failedTest) {
+                System.out.println("        ! " + fail);
+            }
+            System.out.println("");
+        }
+        
+        if (!results.getParentFile().exists())
+            results.getParentFile().mkdirs();
+        try {
+            PrintWriter w = new PrintWriter(results);
+            w.print(res.toString());
+            w.close();
+        } catch (Exception ex) {
+            System.err.println("Problem writting log");
+            ex.printStackTrace();
+        }
     }
 }

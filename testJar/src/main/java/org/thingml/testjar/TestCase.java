@@ -99,6 +99,7 @@ public class TestCase {
     public void collectResults() {
         if(isLastStepASuccess) {
             isLastStepASuccess = ongoingCmd.isSuccess;
+            log += "\n\n************************************************* ";
             log += "\n\n[Cmd] ";
             for(String str : ongoingCmd.cmd) {
                 log += str + " ";
@@ -159,18 +160,18 @@ public class TestCase {
         
         Pattern p = Pattern.compile(exp);
         Matcher m = p.matcher(actual);
-        
+        boolean res = m.find();
         String oracleLog = "";
         oracleLog += "[test] <" + name + ">" + " for " + lang.compilerID + "\n";
         oracleLog += "[expected] <" + exp + ">" + "\n";
         oracleLog += "[actual] <" + actual + ">" + "\n";
-        oracleLog += "[match] <" + m.find() + ">" + "\n";
+        oracleLog += "[match] <" + res + ">" + "\n";
         
         log += "\n\n[Oracle] \n" + oracleLog;
         
         System.out.println(oracleLog);
-        
-        return  m.find();
+        isLastStepASuccess = res;
+        return res;
     }
     
     public static String upperFirstChar(String str) {
