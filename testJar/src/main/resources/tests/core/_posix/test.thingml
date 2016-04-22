@@ -15,7 +15,7 @@ FILE* cpuFile = NULL;"
         if (testFile != NULL) {
             fprintf(testFile,"%c",c);
         }
-	    printf("%c\n",c);'
+	    printf("%c",c);'
 	end
 
 	statechart PosixHarness init Testing {
@@ -62,26 +62,8 @@ FILE* cpuFile = NULL;"
 		
 		state End {
 			on entry do
-'cpuFile = fopen("cputime", "w");
-if (cpuFile != NULL) {
-    fprintf(cpuFile,"%li\n",'&time&');
-}
-char cmd[80];
-sprintf(cmd, "ps -p %d -o %ccpu > stats",getpid(),\'%\');
-system(cmd);
-sprintf(cmd, "ps -p %d -o %cmem >> stats",getpid(),\'%\');
-system(cmd);'
-'sprintf(cmd, "echo \"%d\" > transitionsCount",' & transitionsCount & ');'
-'system(cmd);
-sprintf(cmd, "echo \"%f\" > cputime",'&time&');'
-'system(cmd);
-if (testFile != NULL) {
-    fclose(testFile);
-}
-if (cpuFile != NULL) {
-    fclose(cpuFile);
-}'
-print("End of thingml processus\n")
+
+print "End of thingml processus\n"
 'exit(0);'
 			end
 		}

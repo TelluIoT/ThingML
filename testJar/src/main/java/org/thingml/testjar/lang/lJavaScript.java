@@ -20,6 +20,7 @@
  */
 package org.thingml.testjar.lang;
 
+import java.io.File;
 import org.thingml.testjar.Command;
 import org.thingml.testjar.TestCase;
 
@@ -35,18 +36,20 @@ public class lJavaScript extends TargetedLanguage {
 
     @Override
     public Command compileTargeted(TestCase t) {
-        String[] execCmd = new String[1];
-        execCmd[0] = "npm install";
+        String[] execCmd = new String[2];
+        execCmd[0] = "npm";
+        execCmd[1] = "install";
         
-        return new Command(execCmd, null, ".+", "Error at JS install", t.genCodeDir);
+        return new Command(execCmd, null, ".+", "Error at JS install", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
 
     @Override
     public Command execTargeted(TestCase t) {
-        String[] execCmd = new String[1];
-        execCmd[0] = "node main.js";
+        String[] execCmd = new String[2];
+        execCmd[0] = "node";
+        execCmd[1] = "main.js";
         
-        return new Command(execCmd, ".+", null, "Error at JS execution", t.genCodeDir);
+        return new Command(execCmd, ".+", null, "Error at JS execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
     
 }

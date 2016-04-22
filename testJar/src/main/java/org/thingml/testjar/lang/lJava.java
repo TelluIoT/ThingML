@@ -20,6 +20,7 @@
  */
 package org.thingml.testjar.lang;
 
+import java.io.File;
 import org.thingml.testjar.Command;
 import org.thingml.testjar.TestCase;
 
@@ -41,7 +42,7 @@ public class lJava extends TargetedLanguage {
         execCmd[1] = "clean";
         execCmd[2] = "install";
 
-        return new Command(execCmd, null, ".+", "Error at Java compilation", t.genCodeDir);
+        return new Command(execCmd, "!(.*(ERROR|Error).*)", null, "Error at Java compilation", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
 
     @Override
@@ -52,7 +53,7 @@ public class lJava extends TargetedLanguage {
         execCmd[1] = "exec:java";
 
 
-        return new Command(execCmd, ".+", null, "Error at Java execution", t.genCodeDir);
+        return new Command(execCmd, ".+", null, "Error at Java execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
     
 }

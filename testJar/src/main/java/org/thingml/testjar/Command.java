@@ -112,6 +112,7 @@ public class Command implements Callable<String> {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                         String line = "";
                         try {
+                            stdlog += "\n";
                             while((line = reader.readLine()) != null) {
                                 if(success != null) {
                                     Matcher m = success.matcher(line);
@@ -144,6 +145,7 @@ public class Command implements Callable<String> {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                     String line = "";
                     try {
+                        errlog += "\n";
                         while((line = reader.readLine()) != null) {
                             if(failure != null) {
                                 Matcher m = failure.matcher(line);

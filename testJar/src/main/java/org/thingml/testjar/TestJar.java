@@ -24,8 +24,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
 import java.util.logging.Level;
@@ -87,6 +89,7 @@ public class TestJar {
         langs.add(new lJavaScript());
         
         Set<TestCase> testCases = new HashSet<>();
+        Map<String,Map<TargetedLanguage,Set<TestCase>>> testBench = new HashMap<>();
         
         testCfgDir.mkdir();
         codeDir.mkdir();
@@ -102,6 +105,7 @@ public class TestJar {
         
         System.out.println("Test Files:");
         for(File f : testFiles) {
+            testBench.put(f.getName(), new HashMap<TargetedLanguage,Set<TestCase>>());
             System.out.println(f.getName());
             for(TargetedLanguage lang : langs) {
                 TestCase tc = new TestCase(f, compilerJar, lang, codeDir, testCfgDir, logDir);
@@ -131,7 +135,9 @@ public class TestJar {
         System.out.println("Test Cfg:");
         Set<TestCase> testCfg = new HashSet<>();
         for(TestCase tc : testCases) {
-            testCfg.addAll(tc.generateChildren());
+            Set<TestCase> children = tc.generateChildren();
+            testCfg.addAll(children);
+            testBench.get(tc.srcTestCase.getName()).put(tc.lang, children);
         }
         System.out.println("");
         

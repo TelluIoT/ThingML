@@ -129,7 +129,10 @@ public class TestCase {
                     ongoingCmd = lang.execTargeted(this);
                     status = 3;
                 } else if (status == 3) {
-                    result = "Success";
+                    if(oracle())
+                        result = "Success";
+                    else
+                        result = "Failure";
                     log = result + "\n" + log;
                     writeLogFile();
                 } else {
@@ -139,6 +142,35 @@ public class TestCase {
                 }
             }
         }
+    }
+    
+    public boolean oracle() {
+        String exp = null, actual = null;
+        if(ongoingCmd.stdlog.split("\\[Expected\\] ").length > 1)
+            exp = ongoingCmd.stdlog.split("\\[Expected\\] ")[1].split(" \\[Test\\] ")[0];
+        else
+            return false;
+        if(ongoingCmd.stdlog.split(" \\[Test\\] ").length > 1)
+            actual = ongoingCmd.stdlog.split(" \\[Test\\] ")[1].split(" \\[Done\\]")[0];
+        else
+            return false;
+        if(exp.charAt(0) == ' ')
+            exp = exp.substring(1);
+        
+        Pattern p = Pattern.compile(exp);
+        Matcher m = p.matcher(actual);
+        
+        String oracleLog = "";
+        oracleLog += "[test] <" + name + ">" + " for " + lang.compilerID + "\n";
+        oracleLog += "[expected] <" + exp + ">" + "\n";
+        oracleLog += "[actual] <" + actual + ">" + "\n";
+        oracleLog += "[match] <" + m.find() + ">" + "\n";
+        
+        log += "\n\n[Oracle] \n" + oracleLog;
+        
+        System.out.println(oracleLog);
+        
+        return  m.find();
     }
     
     public static String upperFirstChar(String str) {
@@ -165,6 +197,8 @@ public class TestCase {
     }
     
     public void writeLogFile() {
+        if (!logFile.getParentFile().exists())
+            logFile.getParentFile().mkdirs();
         try {
             PrintWriter w = new PrintWriter(logFile);
             w.print(log);
@@ -174,6 +208,4 @@ public class TestCase {
             ex.printStackTrace();
         }
     }
-    
-    
 }

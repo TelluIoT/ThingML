@@ -20,6 +20,7 @@
  */
 package org.thingml.testjar.lang;
 
+import java.io.File;
 import org.thingml.testjar.Command;
 import org.thingml.testjar.TestCase;
 
@@ -38,17 +39,17 @@ public class lPosix extends TargetedLanguage {
         String[] execCmd = new String[1];
         execCmd[0] = "make";
         
-        return new Command(execCmd, null, ".+", "Error at c compilation", t.genCodeDir);
+        return new Command(execCmd, null, ".+", "Error at c compilation", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
 
     @Override
     public Command execTargeted(TestCase t) {
-        String prg[] = t.genCfg.getName().split("\\.");
+        String prg = t.name + "_Cfg";
         
         String[] execCmd = new String[1];
-        execCmd[0] = "./" + prg[0];
+        execCmd[0] = "./" + prg;
         
-        return new Command(execCmd, ".+", null, "Error at c execution", t.genCodeDir);
+        return new Command(execCmd, ".+", null, "Error at c execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
     
 }
