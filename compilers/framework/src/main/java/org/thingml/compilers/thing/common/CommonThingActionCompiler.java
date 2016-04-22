@@ -285,12 +285,12 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
            if (source instanceof SimpleSource) {
                ReceiveMessage rm = ((SimpleSource) source).getMessage();
                message = rm.getMessage();
-               messageName = message.getName();
+               messageName = source.getName();
            } else if (source instanceof SourceComposition){
                message = ((SourceComposition) source).getResultMessage();
-               messageName = message.getName();
+               messageName = source.getName();
            } else {
-               throw new UnsupportedException(source.getClass().getName(),"stream input","JavaThingActionCompiler");
+               throw new UnsupportedException(source.getClass().getName(),"stream input","CommonThingActionCompiler");
            }
        } else if (expression.getReference() instanceof MessageParameter) {
            MessageParameter mp = (MessageParameter) expression.getReference();

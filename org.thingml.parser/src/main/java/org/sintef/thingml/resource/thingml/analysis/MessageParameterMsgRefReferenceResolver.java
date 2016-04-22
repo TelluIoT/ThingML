@@ -20,12 +20,11 @@ import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
 public class MessageParameterMsgRefReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.MessageParameter, org.sintef.thingml.Message> {
-	
-	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.MessageParameter, org.sintef.thingml.Message> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.MessageParameter, org.sintef.thingml.Message>();
-	
-	public void resolve(String identifier, org.sintef.thingml.MessageParameter container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Message> result) {
-		Thing thing = ThingMLHelpers.findContainingThing(container);
 
+	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.MessageParameter, org.sintef.thingml.Message> delegate = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultResolverDelegate<org.sintef.thingml.MessageParameter, org.sintef.thingml.Message>();
+
+	public void resolve(String identifier, org.sintef.thingml.MessageParameter container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Message> result) {
+		final Thing thing = ThingMLHelpers.findContainingThing(container);
 		for(Message m : thing.allMessages()) {
 			if(resolveFuzzy && m.getName().startsWith(identifier)) {
 				result.addMapping(m.getName(),m);
@@ -33,18 +32,17 @@ public class MessageParameterMsgRefReferenceResolver implements org.sintef.thing
 				result.addMapping(m.getName(),m);
 			}
 		}
-
 		if (!result.wasResolved())
 			result.setErrorMessage("Cannot resolve message name: " + identifier);
 	}
-	
+
 	public String deResolve(org.sintef.thingml.Message element, org.sintef.thingml.MessageParameter container, org.eclipse.emf.ecore.EReference reference) {
 		return delegate.deResolve(element, container, reference);
 	}
-	
+
 	public void setOptions(java.util.Map<?,?> options) {
 		// save options in a field or leave method empty if this resolver does not depend
 		// on any option
 	}
-	
+
 }

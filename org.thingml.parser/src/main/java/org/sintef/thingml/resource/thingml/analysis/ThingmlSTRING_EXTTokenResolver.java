@@ -28,9 +28,6 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-import org.sintef.thingml.resource.thingml.analysis.helper.CharacterEscaper;
-
-
 public class ThingmlSTRING_EXTTokenResolver implements org.sintef.thingml.resource.thingml.IThingmlTokenResolver {
 	
 	private org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultTokenResolver defaultTokenResolver = new org.sintef.thingml.resource.thingml.analysis.ThingmlDefaultTokenResolver();

@@ -52,7 +52,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
         if (leftType.isA(Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
-                ExternExpression ext = (ExternExpression) expression.getRhs();
+                final ExternExpression ext = (ExternExpression) expression.getRhs();
                 if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
                     super.generate(expression, builder, ctx);
                     return;
@@ -64,7 +64,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             builder.append(")");
         } else if (rightType.isA(Types.OBJECT_TYPE)) {
             if (expression.getLhs() instanceof ExternExpression) {
-                ExternExpression ext = (ExternExpression) expression.getLhs();
+                final ExternExpression ext = (ExternExpression) expression.getLhs();
                 if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
                     super.generate(expression, builder, ctx);
                     return;
@@ -84,12 +84,26 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
         Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
         if (leftType.isA(Types.OBJECT_TYPE)) {
+            if (expression.getRhs() instanceof ExternExpression) {
+                final ExternExpression ext = (ExternExpression) expression.getRhs();
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                    super.generate(expression, builder, ctx);
+                    return;
+                }
+            }
             builder.append("!(");
             generate(expression.getLhs(), builder, ctx);
             builder.append(".equals(");
             generate(expression.getRhs(), builder, ctx);
             builder.append("))");
         } else if (rightType.isA(Types.OBJECT_TYPE)) {
+            if (expression.getRhs() instanceof ExternExpression) {
+                final ExternExpression ext = (ExternExpression) expression.getLhs();
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                    super.generate(expression, builder, ctx);
+                    return;
+                }
+            }
             builder.append("!(");
             generate(expression.getRhs(), builder, ctx);
             builder.append(".equals(");
