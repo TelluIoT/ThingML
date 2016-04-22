@@ -15,7 +15,14 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-import org.sintef.thingml.*;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.MessageParameter;
+import org.sintef.thingml.Parameter;
+import org.sintef.thingml.ReceiveMessage;
+import org.sintef.thingml.Reference;
+import org.sintef.thingml.ReferencedElmt;
+import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.SourceComposition;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
 public class ParamReferenceParameterRefReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ParamReference, org.sintef.thingml.Parameter> {

@@ -17,7 +17,6 @@ package org.sintef.thingml.resource.thingml.analysis;
 
 import java.util.ArrayList;
 
-import org.sintef.thingml.ThingMLElement;
 import org.sintef.thingml.Variable;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 

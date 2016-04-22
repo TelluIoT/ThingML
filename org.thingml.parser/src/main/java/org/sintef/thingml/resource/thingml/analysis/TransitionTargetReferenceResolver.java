@@ -28,8 +28,6 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-import org.sintef.thingml.CompositeState;
-import org.sintef.thingml.Port;
 import org.sintef.thingml.State;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 

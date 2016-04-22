@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.Session;
 import org.sintef.thingml.StartSession;
-import org.sintef.thingml.State;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
