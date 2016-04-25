@@ -54,7 +54,12 @@ public class TestJar {
         final File testCfgDir = new File(tmpDir, "thingml");
         final File codeDir = new File(tmpDir, "genCode");
         final File logDir = new File(tmpDir, "log");
-        final File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
+        File compilerJar;
+        if(args.length > 0) {
+            compilerJar = new File(workingDir, args[0]);
+        } else {
+            compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
+        }
         
         tmpDir.delete();
         tmpDir = new File(workingDir, "tmp");
@@ -87,15 +92,15 @@ public class TestJar {
         wl.add("testInstanceInitializationOrder");
         wl.add("testArrays");
         wl.add("testDeepCompositeStates");
-        Set<File> testFiles = whiteListFiles(testFolder, wl);
+        //Set<File> testFiles = whiteListFiles(testFolder, wl);
         //Set<File> testFiles = blackListFiles(testFolder, wl);
-        //Set<File> testFiles = listTestFiles(testFolder, testPattern);
+        Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
-        //langs.add(new lPosix());
+        langs.add(new lPosix());
         langs.add(new lJava());
-        //langs.add(new lJavaScript());
+        langs.add(new lJavaScript());
         //langs.add(new lArduino());
         
         Set<TestCase> testCases = new HashSet<>();
