@@ -1,6 +1,9 @@
 #Plugins
 
-##Goal
+In order to use plugins with the ThingML compiler:
+```
+java -cp .:$THINGML_DIR/compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar:$THINGML_DIR/compilers/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar org.thingml.compilers.commandline.Main
+```
 
 ##ThingML
 
@@ -47,3 +50,14 @@ configuration myCfg {
 ##Transport
 
 <p align="center"><img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/official-network-plugins/docs/ThingML_Network_plugins.png" alt="Test Chain" width="600"></p>
+
+##Adding a plugin
+
+In order to add a new plugin, one must implement one of this class:
+compilers/framework/src/main/java/org/thingml/compilers/spi/NetworkPlugin.java
+compilers/framework/src/main/java/org/thingml/compilers/spi/SerializationPlugin.java
+
+In the jar a file named (in a dir META-INF/services/):
+org.thingml.compilers.spi.NetworkPlugin
+org.thingml.compilers.spi.SerializationPlugin
+must be placed.
