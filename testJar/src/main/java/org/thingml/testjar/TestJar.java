@@ -87,9 +87,9 @@ public class TestJar {
         wl.add("testInstanceInitializationOrder");
         wl.add("testArrays");
         wl.add("testDeepCompositeStates");
-        //Set<File> testFiles = whiteListFiles(testFolder, wl);
+        Set<File> testFiles = whiteListFiles(testFolder, wl);
         //Set<File> testFiles = blackListFiles(testFolder, wl);
-        Set<File> testFiles = listTestFiles(testFolder, testPattern);
+        //Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
