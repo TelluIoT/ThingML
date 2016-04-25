@@ -61,3 +61,19 @@ In the jar a file named (in a dir META-INF/services/):
 org.thingml.compilers.spi.NetworkPlugin
 org.thingml.compilers.spi.SerializationPlugin
 must be placed.
+
+* A network plugin needs to generate messages forwarders. 
+(in c those methods have the following signature:
+```
+void forward_Protocol_Thing_send_Port_Message(struct PingServer_Instance *_instance (, param_type parame_name)*);
+```
+* It also need to generate whatever code is needed to receive messages and enqueue them.
+
+In order to do so, it can receive from the ThingML model:
+* Protocols
+* External connector
+* Messages
+It can transmit to the main compiler:
+* Initialization instructions
+* Main loop instructions
+* Dependancies
