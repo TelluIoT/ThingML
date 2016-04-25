@@ -64,8 +64,8 @@ public class TestJar {
         
         Set<Command> tasks = new HashSet<>();
         List<Future<String>> results = new ArrayList<Future<String>>();
-        //ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        ExecutorService executor = Executors.newFixedThreadPool(1);
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        //ExecutorService executor = Executors.newFixedThreadPool(1);
         
         
         System.out.println("****************************************");
@@ -87,16 +87,16 @@ public class TestJar {
         wl.add("testInstanceInitializationOrder");
         wl.add("testArrays");
         wl.add("testDeepCompositeStates");
-        Set<File> testFiles = whiteListFiles(testFolder, wl);
+        //Set<File> testFiles = whiteListFiles(testFolder, wl);
         //Set<File> testFiles = blackListFiles(testFolder, wl);
-        //Set<File> testFiles = listTestFiles(testFolder, testPattern);
+        Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
         //langs.add(new lPosix());
-        //langs.add(new lJava());
+        langs.add(new lJava());
         //langs.add(new lJavaScript());
-        langs.add(new lArduino());
+        //langs.add(new lArduino());
         
         Set<TestCase> testCases = new HashSet<>();
         Map<String,Map<TargetedLanguage,Set<TestCase>>> testBench = new HashMap<>();

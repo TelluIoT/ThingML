@@ -21,8 +21,8 @@ TIMEOUT=5
 
 echo "TestArdunio ($PWD)"
 ano upload
-echo "Coucou"
-screen -c ../../../../screenrc -d -m -L -S arduino /dev/ttyACM0 9600 &
+echo "" > output.log
+screen -c ../../../../screenrc -d -m -L -S arduino /dev/ttyACM0 115200 &
 sleep $TIMEOUT
 screen -X -S arduino quit
 sleep 1

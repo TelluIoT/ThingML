@@ -151,6 +151,7 @@ public class TestConfigurationGenerator extends ThingMLTool{
         
         builder.append("configuration " + t.getName() + "_" + testNumber + "_Cfg\n");
         builder.append("@arduino_stdout \"Serial\"\n");
+        builder.append("@arduino_stdout_baudrate \"115200\"\n");
         builder.append("{\n");
         
 	builder.append("    instance harness : Tester\n");
