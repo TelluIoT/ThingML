@@ -34,14 +34,14 @@ import java.util.List;
  */
 public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
-    public void generateMessages(Message m, Context ctx, boolean hasAPI) {
+    public void generateMessages(Message m, Context ctx) {
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
         String rootPack = pack;
         pack += ".messages";
 
         final StringBuilder builder = ctx.getNewBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(m.getName()) + "MessageType.java");
-        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, hasAPI, false, false);
+        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, false, false);
         builder.append("import java.nio.*;\n\n");
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "MessageType extends EventType {\n");
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType(short code) {super(\"" + m.getName() + "\", code);\n}\n\n");
@@ -253,8 +253,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n\n");
     }
 
-    private boolean hasAPI(Thing thing) {
-        boolean hasAPI = false;
+    /*private boolean hasAPI(Thing thing) {
+        boolean hasAPI = thing.getProperties().size() > 0;
         for (Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false")) {
                 hasAPI = true;
@@ -270,7 +270,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         return hasAPI;
-    }
+    }*/
 
     protected void generateFunction(Function f, Thing thing, StringBuilder builder, Context ctx) {
         if (!f.isDefined("abstract", "true")) {
@@ -314,7 +314,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         final StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(thing.getName()) + ".java");
         boolean hasMessages = thing.allMessages().size() > 0;
         boolean hasStream = thing.getStreams().size() > 0;
-        JavaHelper.generateHeader(pack, pack, builder, ctx, false, hasAPI(thing), hasMessages,hasStream);
+        JavaHelper.generateHeader(pack, pack, builder, ctx, false, hasMessages,hasStream);
 
         builder.append("\n/**\n");
         builder.append(" * Definition for type : " + thing.getName() + "\n");
@@ -506,7 +506,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         for (Message m : thing.allMessages()) {
             builder.append("protected final " + ctx.firstToUpper(m.getName()) + "MessageType " + m.getName() + "Type = new " + ctx.firstToUpper(m.getName()) + "MessageType();\n");
             builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType get" + ctx.firstToUpper(m.getName()) + "Type(){\nreturn " + m.getName() + "Type;\n}\n\n");
-            generateMessages(m, ctx, hasAPI(thing));
+            generateMessages(m, ctx);
         }
 
         builder.append("//CEP Streams\n");

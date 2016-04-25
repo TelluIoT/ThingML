@@ -173,7 +173,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-        JavaHelper.generateHeader(pack, pack, builder, ctx, true, api, cfg.allMessages().size() > 0,false);
+        JavaHelper.generateHeader(pack, pack, builder, ctx, true, api, false);
         if (gui) {
             builder.append("import " + pack + ".gui.*;\n");
         }
