@@ -1,6 +1,9 @@
 #Testing framework
 
 ##Test chain
+
+<p align="center"><img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/testJar/docs/Test_chain.png" alt="Test Chain" width="800"></p>
+
 A test case is a simple ThingML file (A) including one thing to be tested. Around this thing, a configuration is generated (1) with the help of the testconfiguration generator (in compilers package). This configuration (B) is then compiled (2) with the ThingML compiler to be tested, which is suppose to generated code in the targeted language (C). This code will be compiled (3), and the result (D) will be executed (4). The output produced will then be compared to the expected output predicted in the original test file (A).
 
 ##Running tests
