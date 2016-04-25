@@ -95,25 +95,27 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
                 //Connector Instanciation
                 StringBuilder eco_instance = new StringBuilder();
                 eco_instance.append("//Connector");
-                Port p = eco.getPort();
-                if(!p.getReceives().isEmpty()) {
-                //if(!p.getSends().isEmpty()) {
-                    eco_instance.append("// Pointer to receiver list\n");
-                    eco_instance.append("struct Msg_Handler ** ");
-                    eco_instance.append(p.getName());
-                    eco_instance.append("_receiver_list_head;\n");
+                Port p = eco.getPort();  
+                if(cfg.hasAnnotation("c_dyn_connectors")) {
+                    if(!p.getReceives().isEmpty()) {
+                    //if(!p.getSends().isEmpty()) {
+                        eco_instance.append("// Pointer to receiver list\n");
+                        eco_instance.append("struct Msg_Handler ** ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_receiver_list_head;\n");
 
-                    eco_instance.append("struct Msg_Handler ** ");
-                    eco_instance.append(p.getName());
-                    eco_instance.append("_receiver_list_tail;\n");
-                }
+                        eco_instance.append("struct Msg_Handler ** ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_receiver_list_tail;\n");
+                    }
 
-                if(!p.getSends().isEmpty()) {
-                //if(!p.getReceives().isEmpty()) {
-                    eco_instance.append("// Handler Array\n");
-                    eco_instance.append("struct Msg_Handler * ");
-                    eco_instance.append(p.getName());
-                    eco_instance.append("_handlers;\n");
+                    if(!p.getSends().isEmpty()) {
+                    //if(!p.getReceives().isEmpty()) {
+                        eco_instance.append("// Handler Array\n");
+                        eco_instance.append("struct Msg_Handler * ");
+                        eco_instance.append(p.getName());
+                        eco_instance.append("_handlers;\n");
+                    }
                 }
                 ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
 
@@ -137,7 +139,7 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
     
     private int findTimerNum(ExternalConnector eco) {
         String timername = eco.getProtocol();
-        System.out.println("findTimerInstance() found <" + timername + ">");
+        //System.out.println("findTimerInstance() found <" + timername + ">");
         int timernum = Integer.decode(timername.replace("Rcdtimer", ""));
         
         return timernum;
@@ -170,7 +172,7 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
                     String timername = eco.getName();
                     String timernum = timername.replace("Rcdtimer", "");
 
-                    if (m.getName().contentEquals("timer_start")) {
+                    if (m.getName().contentEquals("timer_start")) {  // TODO replace with annotation
                         builder.append("rcd_timer_start(" + timernum + ctx.getActualParametersSection(m) + ");\n");
                     } else if (m.getName().contentEquals("timer_cancel")) {
                         builder.append("rcd_timer_cancel(" + timernum + ");\n");

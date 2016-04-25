@@ -136,7 +136,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
 
                     builder.append("msgc_t   msg_out;      // Outgoing message\n");
                     builder.append("if( Ports_ptr->IsConnected(" + portnum + ") ) {\n");
-                    builder.append("APP_MSGC_comp" + ctx.getConcatenatedParameterTypes(m) + "(&msg_out, " + msgid + ctx.getActualParametersSection(m) + ");\n");
+                    builder.append("APP_MSGC_comp_" + msgid + "(&msg_out" + ctx.getActualParametersSection(m) + ");\n");
                     builder.append("Ports_ptr->SendMsgc(" + portnum + ", &msg_out);\n");
                     builder.append("}\n");
 
@@ -182,7 +182,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
             builder.append("case " + msgid + ":\n");
             builder.append("{\n");
             ctx.appendFormalParameterDeclarations(builder, m);
-            builder.append("APP_MSGC_decomp" + ctx.getConcatenatedParameterTypes(m) + "(&msg_out, " + msgid + ctx.getActualPtrParametersSection(m) + ");\n");
+            builder.append("APP_MSGC_decomp_" + msgid + "(msg_in_ptr" + ctx.getActualPtrParametersSection(m) + ");\n");
             builder.append("{\n");
             ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
             builder.append("externalMessageEnqueue(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ", " + portname + "_instance.listener_id);\n");
