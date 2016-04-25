@@ -147,7 +147,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
 
             builder.append("if (\"" + p.getName() + "\".equals(msg[" + (2*m.getParameters().indexOf(p) + 1) + "])) {\n");
-            builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + " " + p.getName() + " = " + cast + ".parse" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx)) + "(msg[" + (2*m.getParameters().indexOf(p) + 2) + "]);\n");
+            if (cast.equals("Character")) {
+                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "msg[" + (2 * m.getParameters().indexOf(p) + 2) + "].toCharArray()[0];\n");
+            } else {
+                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + cast + ".parse" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx)) + "(msg[" + (2 * m.getParameters().indexOf(p) + 2) + "]);\n");
+            }
             if (m.getParameters().indexOf(p) > 0)
                 temp.append(", ");
             temp.append(p.getName());
