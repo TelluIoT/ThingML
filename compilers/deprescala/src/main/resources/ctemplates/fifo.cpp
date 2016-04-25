@@ -62,6 +62,7 @@ int fifo_enqueue(byte b) {
 int _fifo_enqueue(byte b) {
   fifo[fifo_tail] = b;
   fifo_tail = (fifo_tail + 1) % FIFO_SIZE;
+  return 0; // Dummy added by steffend
 }
 
 // Dequeue 1 byte in the fifo.
@@ -81,6 +82,7 @@ void _fifo_enqueue_ptr(void * ptr) {
   ptr_union_t proxy;
   proxy.pointer = ptr;
   for (i = 0; i<PTR_MAX_SIZE; i++) _fifo_enqueue(proxy.buffer[i]);
+  return 0; // Dummy added by steffend
 }
 
 void * _fifo_dequeue_ptr() {
