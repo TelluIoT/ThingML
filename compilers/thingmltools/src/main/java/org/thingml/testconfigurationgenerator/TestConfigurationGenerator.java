@@ -107,7 +107,7 @@ public class TestConfigurationGenerator extends ThingMLTool{
             }
         }
         builder.append("        state e" + i + " {\n");
-        builder.append("            on entry timer!timer_start(10)\n");
+        builder.append("            on entry timer!timer_start(100)\n");
         builder.append("            transition -> e" + (i+1) + "\n");
         builder.append("            event timer?timer_timeout\n");
         builder.append("        }\n");
@@ -150,6 +150,7 @@ public class TestConfigurationGenerator extends ThingMLTool{
         builder.append("\n");
         
         builder.append("configuration " + t.getName() + "_" + testNumber + "_Cfg\n");
+        builder.append("@arduino_stdout \"Serial\"\n");
         builder.append("{\n");
         
 	builder.append("    instance harness : Tester\n");

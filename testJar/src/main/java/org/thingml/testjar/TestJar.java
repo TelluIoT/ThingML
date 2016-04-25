@@ -36,6 +36,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.thingml.testjar.lang.TargetedLanguage;
+import org.thingml.testjar.lang.lArduino;
 import org.thingml.testjar.lang.lJava;
 import org.thingml.testjar.lang.lJavaScript;
 import org.thingml.testjar.lang.lPosix;
@@ -63,7 +64,8 @@ public class TestJar {
         
         Set<Command> tasks = new HashSet<>();
         List<Future<String>> results = new ArrayList<Future<String>>();
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        //ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        ExecutorService executor = Executors.newFixedThreadPool(1);
         
         
         System.out.println("****************************************");
@@ -78,22 +80,23 @@ public class TestJar {
         System.out.println("");
         
         Set<String> wl = new HashSet<>();
-        //wl.add("testEmptyTransition");
-        //wl.add("testInstanceInitializationOrder4");
-        //wl.add("testInstanceInitializationOrder3");
-        //wl.add("testInstanceInitializationOrder2");
-        //wl.add("testInstanceInitializationOrder");
-        //wl.add("testArrays");
-        //wl.add("testDeepCompositeStates");
-        //Set<File> testFiles = whiteListFiles(testFolder, wl);
-        Set<File> testFiles = blackListFiles(testFolder, wl);
+        wl.add("testEmptyTransition");
+        wl.add("testInstanceInitializationOrder4");
+        wl.add("testInstanceInitializationOrder3");
+        wl.add("testInstanceInitializationOrder2");
+        wl.add("testInstanceInitializationOrder");
+        wl.add("testArrays");
+        wl.add("testDeepCompositeStates");
+        Set<File> testFiles = whiteListFiles(testFolder, wl);
+        //Set<File> testFiles = blackListFiles(testFolder, wl);
         //Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
-        langs.add(new lPosix());
+        //langs.add(new lPosix());
         //langs.add(new lJava());
-        langs.add(new lJavaScript());
+        //langs.add(new lJavaScript());
+        langs.add(new lArduino());
         
         Set<TestCase> testCases = new HashSet<>();
         Map<String,Map<TargetedLanguage,Set<TestCase>>> testBench = new HashMap<>();

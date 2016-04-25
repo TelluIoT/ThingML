@@ -50,6 +50,9 @@ public class TestGenConfig {
         if((options.compareToIgnoreCase(java.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
             languages.add(java);
         }
+        if((options.compareToIgnoreCase(arduino.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+            languages.add(arduino);
+        }
         //languages.add(arduino);
         
         return languages;
