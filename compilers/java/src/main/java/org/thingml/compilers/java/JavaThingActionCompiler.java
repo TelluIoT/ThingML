@@ -35,15 +35,17 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(Increment action, StringBuilder builder, Context ctx) {
         builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-        builder.append("get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
-        builder.append(" + 1);\n");
+        builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality()!=null, ctx) + ")");
+        builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+        builder.append(" + 1));\n");
     }
 
     @Override
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
         builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-        builder.append("get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
-        builder.append(" - 1);\n");
+        builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality()!=null, ctx) + ")");
+        builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+        builder.append(" - 1));\n");
     }
 
     @Override
