@@ -415,25 +415,34 @@ public class TestJar {
                 boolean cellSuccess = true;
                 
                 lineB.append("              <td class=\"");
+                cellB.append("                  <table>\n");
                 String cellRes = "";
-                boolean first = true;
                 for(TestCase tc : cell.getValue()) {
+                    cellB.append("                  <tr>\n");
+                    cellB.append("                  <td class=\"" );
                     if(tc.isLastStepASuccess) {
+                        cellB.append("green");
                         cellRes = "*";
                     } else {
                         cellRes = "!";
                         cellSuccess = false;
+                        cellB.append("red");
                     }
-                    if(first)
-                        first = false;
-                    else
-                         cellB.append("                  <br />\n");
-                        
-                    cellB.append("                  [<a href=" + tc.genCfg + ">t</a> | \n");
-                    cellB.append("                  <a href=" + tc.logFile.getPath() + ">l</a> | \n");
-                    cellB.append("                  -> " + cellRes + "]\n");
+                    cellB.append("\">\n");
+                    
+                    cellB.append("                      <a href=" + tc.genCfg + ">src</a> | \n");
+                    cellB.append("                      <a href=" + tc.logFile.getPath() + ">log</a>\n");
+                    /*if(tc.oracleExpected != null) {
+                    cellB.append("                      | " + tc.oracleExpected + "\n");
+                    }
+                    if((tc.oracleExpected != null) && (tc.oracleActual != null)) {
+                    cellB.append("                      | " + tc.oracleActual + "\n");
+                    }*/
+                    cellB.append("                  </td>\n" );
+                    cellB.append("                  </tr>\n");
                     
                 }
+                cellB.append("                  </table>\n");
                 
                 if(cellSuccess) {
                     lineB.append("green");

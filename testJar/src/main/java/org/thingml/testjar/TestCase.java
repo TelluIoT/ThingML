@@ -48,6 +48,8 @@ public class TestCase {
     public String log;
     public String result;
     public String name;
+    public String oracleExpected;
+    public String oracleActual;
     public Command ongoingCmd;
     
     public TestCase(File srcTestCase, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir) {
@@ -168,6 +170,9 @@ public class TestCase {
         oracleLog += "[expected] <" + exp + ">" + "\n";
         oracleLog += "[actual] <" + actual + ">" + "\n";
         oracleLog += "[match] <" + res + ">" + "\n";
+        
+        oracleExpected = exp;
+        oracleActual = actual;
         
         log += "\n\n[Oracle] \n" + oracleLog;
         

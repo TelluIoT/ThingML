@@ -37,6 +37,7 @@ thing TestDumpArduino includes TestDump
 		
 		state End {
 			on entry do
+				print "[Done]\n"
 			end
 		}
 	}
