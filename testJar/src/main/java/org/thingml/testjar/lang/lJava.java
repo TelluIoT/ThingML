@@ -31,7 +31,7 @@ import org.thingml.testjar.TestCase;
 public class lJava extends TargetedLanguage {
 
     private static String maven = "mvn";
-    
+
     public lJava () {
         compilerID = "java";
     }

@@ -480,7 +480,7 @@ public class TestJar {
             w.print(res.toString());
             w.close();
         } catch (Exception ex) {
-            System.err.println("Problem writting log");
+            System.err.println("Problem writing log");
             ex.printStackTrace();
         }
     }
