@@ -82,7 +82,7 @@ datatype Long<4>
 datatype ULong<4>	
 	@c_type "unsigned long"
 	@c_byte_size "4"
-	@java_type "int"
+	@java_type "long"
 	@java_primitive "true"
     @scala_type "Int"
     @SenML_type "Double";
