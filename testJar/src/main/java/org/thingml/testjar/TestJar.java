@@ -88,10 +88,10 @@ public class TestJar {
         //wl.add("testEmptyTransition");
         //wl.add("testInstanceInitializationOrder4");
         //wl.add("testInstanceInitializationOrder3");
-        //wl.add("testInstanceInitializationOrder2");
-        //wl.add("testInstanceInitializationOrder");
-        //wl.add("testArrays");
-        //wl.add("testDeepCompositeStates");
+        wl.add("testInstanceInitializationOrder2");
+        wl.add("testInstanceInitializationOrder");
+        wl.add("testArrays");
+        wl.add("testDeepCompositeStates");
         wl.add("testInternalTransition2");
         Set<File> testFiles = whiteListFiles(testFolder, wl);
         //Set<File> testFiles = blackListFiles(testFolder, wl);
@@ -99,10 +99,10 @@ public class TestJar {
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
-        langs.add(new lPosix());
+        //langs.add(new lPosix());
         langs.add(new lJava());
-        langs.add(new lJavaScript());
-        langs.add(new lArduino());
+        //langs.add(new lJavaScript());
+        //langs.add(new lArduino());
         
         Set<TestCase> testCases = new HashSet<>();
         Map<String,Map<TargetedLanguage,Set<TestCase>>> testBench = new HashMap<>();

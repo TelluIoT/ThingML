@@ -42,7 +42,7 @@ public class lJava extends TargetedLanguage {
         execCmd[1] = "clean";
         execCmd[2] = "install";
 
-        return new Command(execCmd, "!(.*(ERROR|Error).*)", null, "Error at Java compilation", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
+        return new Command(execCmd, ".*(BUILD SUCCESS).*", null, "Error at Java compilation", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
 
     @Override
