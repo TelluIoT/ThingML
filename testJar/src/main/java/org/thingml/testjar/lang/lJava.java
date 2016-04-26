@@ -34,6 +34,7 @@ public class lJava extends TargetedLanguage {
 
     public lJava () {
         compilerID = "java";
+        spareThreads = 2;
     }
     
     @Override

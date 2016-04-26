@@ -72,9 +72,6 @@ public class TestJar {
         
         Set<Command> tasks = new HashSet<>();
         List<Future<String>> results = new ArrayList<Future<String>>();
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        //ExecutorService executor = Executors.newFixedThreadPool(1);
-        
         
         System.out.println("****************************************");
         System.out.println("*              Test Begin              *");
@@ -137,7 +134,8 @@ public class TestJar {
         }
         
         Set<TargetedLanguage> langs = new HashSet<>();
-        
+
+        int spareThreads = 0;
         if(languageList != null) {
             for(String lstr :languageList.split(",")) {
                 if(lstr.trim().compareTo("arduino") == 0) {
@@ -148,6 +146,7 @@ public class TestJar {
                 }
                 if(lstr.trim().compareTo("java") == 0) {
                     langs.add(new lJava());
+                    spareThreads = 2;//FIXME: value to be taken from lJava directly
                 }
                 if(lstr.trim().compareTo("nodejs") == 0) {
                     langs.add(new lJavaScript());
@@ -159,8 +158,11 @@ public class TestJar {
             langs.add(new lJava());
             langs.add(new lJavaScript());
             langs.add(new lArduino());
+            spareThreads = 2;//FIXME: see above
         }
-        
+        int poolSize = Runtime.getRuntime().availableProcessors() - spareThreads;
+        ExecutorService executor = Executors.newFixedThreadPool(poolSize);
+
         Set<TestCase> testCases = new HashSet<>();
         Map<String,Map<TargetedLanguage,Set<TestCase>>> testBench = new HashMap<>();
         
@@ -217,14 +219,14 @@ public class TestJar {
         System.out.println("****************************************");
         System.out.println("*          ThingML Compilation         *");
         System.out.println("****************************************");
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        executor = Executors.newFixedThreadPool(poolSize);
         testRun(testCfg, executor);
         System.out.println("");
         
         System.out.println("****************************************");
         System.out.println("*      Generated Code Compilation      *");
         System.out.println("****************************************");
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        executor = Executors.newFixedThreadPool(poolSize);
         testRun(testCfg, executor);
         System.out.println("");
         
@@ -232,7 +234,7 @@ public class TestJar {
         System.out.println("****************************************");
         System.out.println("*       Generated Code Execution       *");
         System.out.println("****************************************");
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        executor = Executors.newFixedThreadPool(poolSize);
         testRun(testCfg, executor);
         System.out.println("");
         
