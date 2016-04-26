@@ -24,10 +24,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -98,7 +95,7 @@ public class Command implements Callable<String> {
         ExecutorService executor = Executors.newFixedThreadPool(2);
         Set<Callable<String>>  todo = new HashSet<>();
         final Process process;
-            if(dir == null) {
+        if(dir == null) {
                 process = runtime.exec(cmd, null);
             } else {
                 process = runtime.exec(cmd, null, dir);

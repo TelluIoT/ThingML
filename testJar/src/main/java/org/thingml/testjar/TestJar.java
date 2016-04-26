@@ -350,7 +350,7 @@ public class TestJar {
             boolean lineSuccess = true;
             res.append("            <tr>\n");
             res.append("            <td class=\"");
-            lineB.append("                <a href=\"" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+            lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
             lineB.append("            </td>\n");
             
             for(Map.Entry<TargetedLanguage,Set<TestCase>> cell : line.getValue().entrySet()) {
@@ -372,8 +372,8 @@ public class TestJar {
                     else
                          cellB.append("                  <br />\n");
                         
-                    cellB.append("                  [<a href=" + tc.genCfg + ">t</a> | \n");
-                    cellB.append("                  <a href=" + tc.logFile.getPath() + ">l</a> | \n");
+                    cellB.append("                  [<a href=\"file://" + tc.genCfg + "\">t</a> | \n");
+                    cellB.append("                  <a href=\"file://" + tc.logFile.getPath() + "\">l</a> | \n");
                     cellB.append("                  -> " + cellRes + "]\n");
                     
                 }

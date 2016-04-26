@@ -29,6 +29,8 @@ import org.thingml.testjar.TestCase;
  * @author sintef
  */
 public class lJava extends TargetedLanguage {
+
+    private static String maven = "mvn";
     
     public lJava () {
         compilerID = "java";
@@ -36,23 +38,36 @@ public class lJava extends TargetedLanguage {
     
     @Override
     public Command compileTargeted(TestCase t) {
-        String[] execCmd = new String[3];
-        //String maven = System.getenv("M2_HOME");
-        execCmd[0] = "mvn";//maven + "\\bin\\mvn.bat";  //FIXME: not portable
-        execCmd[1] = "clean";
-        execCmd[2] = "install";
-
+        String[] execCmd;
+        int i = 0;
+        if (System.getProperty("os.name").startsWith("Win")) {
+            execCmd = new String[5];
+            execCmd[0] = "cmd.exe";
+            execCmd[1] = "/c";
+            i = 2;
+        } else {
+            execCmd = new String[3];
+        }
+        execCmd[i] = maven;
+        execCmd[i+1] = "clean";
+        execCmd[i+2] = "install";
         return new Command(execCmd, ".*(BUILD SUCCESS).*", null, "Error at Java compilation", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
 
     @Override
     public Command execTargeted(TestCase t) {
-        String[] execCmd = new String[2];
-        //String maven = System.getenv("M2_HOME");
-        execCmd[0] = "mvn";//maven + "\\bin\\mvn.bat"; //FIXME: not portable
-        execCmd[1] = "exec:java";
-
-
+        String[] execCmd;
+        int i = 0;
+        if (System.getProperty("os.name").startsWith("Win")) {
+            execCmd = new String[4];
+            execCmd[0] = "cmd.exe";
+            execCmd[1] = "/c";
+            i = 2;
+        } else {
+            execCmd = new String[2];
+        }
+        execCmd[i] = maven;
+        execCmd[i+1] = "exec:java";
         return new Command(execCmd, ".+", null, "Error at Java execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
     
