@@ -22,13 +22,16 @@ package org.thingml.testjar;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.*;
 import java.util.logging.Level;
@@ -84,25 +87,79 @@ public class TestJar {
         System.out.println("Compiler = " + compilerJar);
         System.out.println("");
         
-        Set<String> wl = new HashSet<>();
-        //wl.add("testEmptyTransition");
-        //wl.add("testInstanceInitializationOrder4");
-        //wl.add("testInstanceInitializationOrder3");
-        wl.add("testInstanceInitializationOrder2");
-        wl.add("testInstanceInitializationOrder");
-        wl.add("testArrays");
-        wl.add("testDeepCompositeStates");
-        wl.add("testInternalTransition2");
-        Set<File> testFiles = whiteListFiles(testFolder, wl);
-        //Set<File> testFiles = blackListFiles(testFolder, wl);
-        //Set<File> testFiles = listTestFiles(testFolder, testPattern);
+        System.out.println("****************************************");
+        System.out.println("*         Properties Reading           *");
+        System.out.println("****************************************");
+        
+        System.out.println("");
+        Properties prop = new Properties();
+	InputStream input = null;
+        
+        String languageList = null, useBlackList = null, testList = null;
+        
+	try {
+
+		input = new FileInputStream(new File(workingDir, "config.properties"));
+
+		// load a properties file
+		prop.load(input);
+
+		// get the property value and print it out
+                languageList = prop.getProperty("languageList");
+                useBlackList = prop.getProperty("useBlackList");
+                testList = prop.getProperty("testList");
+		System.out.println("languageList:" + languageList);
+		System.out.println("useBlackList:" + useBlackList);
+		System.out.println("testList:" + testList);
+
+	} catch (IOException ex) {
+		ex.printStackTrace();
+	}
+        
+        Set<String> tl = new HashSet<>();
+        if(testList != null) {
+            for(String tstr : testList.split(",")) {
+                System.out.println("testList item: <" + tstr.trim() + ">");
+                tl.add(tstr.trim());
+            }
+        }
+        Set<File> testFiles;
+        if(useBlackList != null) {
+            if(useBlackList.compareToIgnoreCase("false") == 0) {
+                testFiles = whiteListFiles(testFolder, tl);
+            } else if (useBlackList.compareToIgnoreCase("true") == 0) {
+                testFiles = blackListFiles(testFolder, tl);
+            } else {
+                testFiles = listTestFiles(testFolder, testPattern);
+            }
+        } else {
+            testFiles = listTestFiles(testFolder, testPattern);
+        }
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
-        //langs.add(new lPosix());
-        langs.add(new lJava());
-        //langs.add(new lJavaScript());
-        //langs.add(new lArduino());
+        if(languageList != null) {
+            for(String lstr :languageList.split(",")) {
+                if(lstr.trim().compareTo("arduino") == 0) {
+                    langs.add(new lArduino());
+                }
+                if(lstr.trim().compareTo("posix") == 0) {
+                    langs.add(new lPosix());
+                }
+                if(lstr.trim().compareTo("java") == 0) {
+                    langs.add(new lJava());
+                }
+                if(lstr.trim().compareTo("nodejs") == 0) {
+                    langs.add(new lJavaScript());
+                }
+            }
+            
+        } else {
+            langs.add(new lPosix());
+            langs.add(new lJava());
+            langs.add(new lJavaScript());
+            langs.add(new lArduino());
+        }
         
         Set<TestCase> testCases = new HashSet<>();
         Map<String,Map<TargetedLanguage,Set<TestCase>>> testBench = new HashMap<>();
