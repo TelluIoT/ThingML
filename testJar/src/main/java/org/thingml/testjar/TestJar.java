@@ -85,23 +85,24 @@ public class TestJar {
         System.out.println("");
         
         Set<String> wl = new HashSet<>();
-        wl.add("testEmptyTransition");
-        wl.add("testInstanceInitializationOrder4");
-        wl.add("testInstanceInitializationOrder3");
-        wl.add("testInstanceInitializationOrder2");
-        wl.add("testInstanceInitializationOrder");
-        wl.add("testArrays");
-        wl.add("testDeepCompositeStates");
-        //Set<File> testFiles = whiteListFiles(testFolder, wl);
+        //wl.add("testEmptyTransition");
+        //wl.add("testInstanceInitializationOrder4");
+        //wl.add("testInstanceInitializationOrder3");
+        //wl.add("testInstanceInitializationOrder2");
+        //wl.add("testInstanceInitializationOrder");
+        //wl.add("testArrays");
+        //wl.add("testDeepCompositeStates");
+        wl.add("testInternalTransition2");
+        Set<File> testFiles = whiteListFiles(testFolder, wl);
         //Set<File> testFiles = blackListFiles(testFolder, wl);
-        Set<File> testFiles = listTestFiles(testFolder, testPattern);
+        //Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
         langs.add(new lPosix());
         langs.add(new lJava());
         langs.add(new lJavaScript());
-        //langs.add(new lArduino());
+        langs.add(new lArduino());
         
         Set<TestCase> testCases = new HashSet<>();
         Map<String,Map<TargetedLanguage,Set<TestCase>>> testBench = new HashMap<>();
@@ -185,7 +186,7 @@ public class TestJar {
         
         System.out.println("");
         
-        writeResultsFile(new File(tmpDir, "results.html"), testBench, langs);
+        writeResultsFile(new File(tmpDir, "results.html"), testBench, langs, testFolder);
         
         
         System.out.println("");
@@ -306,7 +307,7 @@ public class TestJar {
         System.out.println("Done.");
     }
     
-    public static void writeResultsFile(File results, Map<String,Map<TargetedLanguage,Set<TestCase>>> tests, Set<TargetedLanguage> langs) {
+    public static void writeResultsFile(File results, Map<String,Map<TargetedLanguage,Set<TestCase>>> tests, Set<TargetedLanguage> langs, File srcDir) {
         StringBuilder res = new StringBuilder();
         
         res.append("<!DOCTYPE html>\n" +
@@ -349,7 +350,7 @@ public class TestJar {
             boolean lineSuccess = true;
             res.append("            <tr>\n");
             res.append("            <td class=\"");
-            lineB.append("                " + line.getKey() + "\n");
+            lineB.append("                <a href=\"" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
             lineB.append("            </td>\n");
             
             for(Map.Entry<TargetedLanguage,Set<TestCase>> cell : line.getValue().entrySet()) {
@@ -358,7 +359,7 @@ public class TestJar {
                 
                 lineB.append("              <td class=\"");
                 String cellRes = "";
-                
+                boolean first = true;
                 for(TestCase tc : cell.getValue()) {
                     if(tc.isLastStepASuccess) {
                         cellRes = "*";
@@ -366,7 +367,14 @@ public class TestJar {
                         cellRes = "!";
                         cellSuccess = false;
                     }
-                    cellB.append("                  <a href=" + tc.logFile.getAbsolutePath() + ">[" +cellRes+ "]</a>\n");
+                    if(first)
+                        first = false;
+                    else
+                         cellB.append("                  <br />\n");
+                        
+                    cellB.append("                  [<a href=" + tc.genCfg + ">t</a> | \n");
+                    cellB.append("                  <a href=" + tc.logFile.getPath() + ">l</a> | \n");
+                    cellB.append("                  -> " + cellRes + "]\n");
                     
                 }
                 
