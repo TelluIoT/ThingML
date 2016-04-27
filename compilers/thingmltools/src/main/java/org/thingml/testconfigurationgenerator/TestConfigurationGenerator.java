@@ -107,6 +107,12 @@ public class TestConfigurationGenerator extends ThingMLTool{
             }
         }
         builder.append("        state e" + i + " {\n");
+        int testDuration = 250;
+        if(t.hasAnnotation("test_duration")) {
+            String timerDuration = t.annotation("test_duration").iterator().next();
+            Integer dur = Integer.parseInt(timerDuration);
+            testDuration = dur.intValue();
+        }
         builder.append("            on entry timer!timer_start(250)\n");
         builder.append("            transition -> e" + (i+1) + "\n");
         builder.append("            event timer?timer_timeout\n");
@@ -157,6 +163,10 @@ public class TestConfigurationGenerator extends ThingMLTool{
 	builder.append("    instance dump : TestDump" + lang.shortName + "\n");
 	builder.append("    instance test : " + t.getName() + "\n");
  	builder.append("    instance timer : Timer" + lang.shortName + "\n");
+        if(t.hasAnnotation("test_timer_instance")) {
+            String timer_inst_name = t.annotation("test_timer_instance").iterator().next();
+            builder.append("    instance " + timer_inst_name + " : Timer" + lang.shortName + "\n");
+        }
         builder.append("\n");
 	builder.append("    connector harness.testEnd => dump.dumpEnd\n");
  	builder.append("    connector harness.timer => timer.timer\n");

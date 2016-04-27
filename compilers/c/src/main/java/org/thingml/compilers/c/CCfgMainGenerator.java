@@ -1397,8 +1397,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         if (port.isDefined("sync_send", "true")) {
                             // This is for static call of dispatches
                             //builder.append("&" + getCppNameScope() + "dispatch_" + ctx.getSenderName(t, port, msg) + ");\n"); // sdalgard Next line to be fixed
-                            builder.append("sync_dispatch_" + ctx.getSenderName(t, port, msg) + ");\n");
-                        } else {
+                            builder.append("&" + getCppNameScope() + "sync_dispatch_" + ctx.getSenderName(t, port, msg) + ");\n");                        }
+                        else {
                             // This is to enquqe the message and let the scheduler forward it
                             builder.append("&" + getCppNameScope() + "enqueue_" + ctx.getSenderName(t, port, msg) + ");\n");
                         }

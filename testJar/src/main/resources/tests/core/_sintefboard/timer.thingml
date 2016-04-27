@@ -11,18 +11,17 @@ import "../scheduler.thingml"
 thing TimerSintefboard includes Timer//, ThingMLSchedulerMsg
 @pim "Timer"
 @platform "linux"
-@c_headers "#include <sys/time.h>"
 {
     
-    function getSystemTime() : ULong do
+    function getSystemTime() : LongLong do
     	'
         struct timeval tv;
 
         gettimeofday(&tv, NULL);
 
-        unsigned long long millisecondsSinceEpoch =
-        (unsigned long long)(tv.tv_sec) * 1000 +
-        (unsigned long long)(tv.tv_usec) / 1000;
+        long long millisecondsSinceEpoch =
+        (long long)(tv.tv_sec) * 1000 +
+        (long long)(tv.tv_usec) / 1000;
         
         //printf("Epoch = %llu\n", millisecondsSinceEpoch);
         '
@@ -32,7 +31,7 @@ thing TimerSintefboard includes Timer//, ThingMLSchedulerMsg
     
     statechart SoftTimer init Idle 
     {
-        property target : ULong = 0
+        property target : LongLong = 0
     
         state Idle 
         {

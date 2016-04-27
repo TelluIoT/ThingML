@@ -95,7 +95,6 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
     statechart Sample init Init {
         state Init {
             on entry do
-                print "Init"
                 sendPort!m1()
                 sendPort!m2(8,24)
 
@@ -111,8 +110,7 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
 
             internal
             event rcvPort?cep1
-            action do
-                print "cep1 message receive."
+            action do 
                 harnessOut!testOut('\'1\'')
             end
 
@@ -125,8 +123,7 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
 
             internal
             event rcvPort?cep3
-            action do
-                print "cep3 message receive."
+            action do 
                 harnessOut!testOut('\'4\'')
             end
 
