@@ -39,7 +39,7 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         String mtemplate = ctx.getTemplateByID("ctemplates/Makefile");
         mtemplate = mtemplate.replace("/*NAME*/", cfg.getName()+"Posix");
 
-        String compiler = "c++"; // default value
+        String compiler = "g++"; // default value
         if (cfg.hasAnnotation("c_compiler")) compiler = cfg.annotation("c_compiler").iterator().next();
         mtemplate = mtemplate.replace("/*CC*/", compiler);
         

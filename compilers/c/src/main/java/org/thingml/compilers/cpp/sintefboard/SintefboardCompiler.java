@@ -84,7 +84,11 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
         // GENERATE A MAKEFILE AND TEST FRAMEWORK FOR POSIX
         getCfgBuildCompiler().generateBuildScript(cfg, ctx);
-        
+
+        // Fetch header stuff from the context
+        String headerFromCtx = ctx.getCppHeaderCode().toString();
+        ctx.getBuilder(cfg.getName()+".h_ctx").append(headerFromCtx);
+
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
 
