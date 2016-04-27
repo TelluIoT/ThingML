@@ -81,7 +81,7 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
            for(Parameter parameter : outPut.getParameters()) {
                builder.append(JavaHelper.getJavaType(parameter.getType(), false, context) + "[] " + outPutName + parameter.getName() + " = new " + JavaHelper.getJavaType(parameter.getType(), false, context) + "[" + outPutName + ".size()];\n")
                        .append("i = 0;\n")
-                       .append("for(" + messageType + " " + outPutName + "_msg : " + outPutName + ") {\n")
+                       .append("for(" + messageType.replace("List<","").replace(">", "") + " " + outPutName + "_msg : " + outPutName + ") {\n")//FIXME: replace stuff is a dirty hack!
                        .append(outPutName + parameter.getName() + "[i] = " + outPutName + "_msg." + parameter.getName() + ";\n")
                        .append("i++;\n")
                        .append("}\n");
