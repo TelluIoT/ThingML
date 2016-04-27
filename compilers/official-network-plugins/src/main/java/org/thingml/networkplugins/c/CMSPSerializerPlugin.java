@@ -47,7 +47,7 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public int generateSerialization(StringBuilder builder, String bufferName, Message m) {
+    public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
         builder.append("byte " + bufferName + "[" + cctx.getMessageSerializationSize(m)+ "];\n");
 
         int HandlerCode = cctx.getHandlerCode(configuration, m);
@@ -87,7 +87,7 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
         }
         builder.append(bufferName + "[" + j + "] = crc;\n");
         j++;
-        return j;
+        return j + "";
     }
 
     @Override

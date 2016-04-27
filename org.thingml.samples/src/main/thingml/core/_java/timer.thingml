@@ -10,7 +10,7 @@ thing TimerJava includes Timer
 {
     property timer : JThread
     
-    function start(delay : Integer) do
+    function startTimer(delay : Integer) do
               /*if (not(timer == 'null')) do
                 '' & timer & '.interrupt();'
              end*/
@@ -49,10 +49,9 @@ thing TimerJava includes Timer
     statechart SoftTimer init default {
         state default {
 
-          internal start
-            event m : timer?timer_start
+          internal event m : timer?timer_start
             guard m.delay > 0
-            action start(m.delay)
+            action startTimer(m.delay)
             
           internal cancel
             event m : timer?timer_cancel

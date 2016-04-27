@@ -50,6 +50,10 @@ public class Main {
     String output;
     @Parameter(names ={"--help", "-h"}, help = true, description = "Display this message.")
     private boolean help;
+    
+    @Parameter(names ={"--create-dir", "-d"}, description = "Create a new directory named after the configuration for the output")
+    private boolean createDir;
+    
     @Parameter(names={"--compiler", "-c"}, description = "Compiler ID (Mandatory unless --tool (-t) is used)")
     String compiler;
     @Parameter(names={"--tool", "-t"}, description = "Tool ID (Mandatory unless --compiler (-c) is used)")
@@ -63,7 +67,7 @@ public class Main {
         System.out.println(" --- ThingML help ---");
         
         System.out.println("Typical usages: ");
-        System.out.println("    java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>]");
+        System.out.println("    java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>][-d]");
         System.out.println("    java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>]");
         
         jcom.usage();
@@ -187,6 +191,8 @@ public class Main {
                         System.out.println("ERROR: Cannot find compiler " + main.compiler.trim() + ". Use --help (or -h) to check the list of registered compilers.");
                         return;
                     }
+                    if(main.createDir)
+                        outdir = new File(outdir, cfg.getName());
                     thingmlCompiler.setOutputDirectory(outdir);
                     System.out.println("Generating code for configuration: " + cfg.getName());
                     thingmlCompiler.compile(cfg);

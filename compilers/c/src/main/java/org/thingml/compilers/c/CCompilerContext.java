@@ -716,6 +716,15 @@ public abstract class CCompilerContext extends Context {
         return initCode.toString();
     }
     
+    StringBuilder includeCode = new StringBuilder();
+    public void addToIncludes(String s) {
+        includeCode.append("\n" + s);
+    }
+    
+    public String getIncludeCode() {
+        return includeCode.toString();
+    }
+    
     
 
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {}

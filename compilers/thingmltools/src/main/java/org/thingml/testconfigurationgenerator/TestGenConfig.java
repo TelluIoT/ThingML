@@ -32,7 +32,7 @@ public class TestGenConfig {
     static public Set<Language> getLanguages(File outputDir, String options) {
         Set<Language> languages = new HashSet<>();
         
-        Language javascript = new Language(outputDir, "JS", "javascript");
+        Language javascript = new Language(outputDir, "Nodejs", "nodejs");
         Language posix = new Language(outputDir, "Posix", "posix");
         Language java = new Language(outputDir, "Java", "java");
         Language arduino = new Language(outputDir, "Arduino", "arduino");
@@ -50,10 +50,11 @@ public class TestGenConfig {
         if((options.compareToIgnoreCase(java.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
             languages.add(java);
         }
-        if ((options.compareToIgnoreCase(arduino.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+        if((options.compareToIgnoreCase(arduino.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
             languages.add(arduino);
         }
-
+        //languages.add(arduino);
+        
         return languages;
     } 
 }

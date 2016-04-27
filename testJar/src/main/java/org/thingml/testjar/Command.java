@@ -24,10 +24,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,7 +38,14 @@ import java.util.regex.Pattern;
  *
  * @author sintef
  */
-public class Command implements Callable<String>{
+public class Command implements Callable<String> {
+    
+    /* New command*/
+    public boolean isSuccess;
+    public String stdlog;
+    public String errlog;
+    public String result;
+    /* New command*/
     
     String[] cmd;
     Pattern success;
@@ -59,8 +63,8 @@ public class Command implements Callable<String>{
             failure = Pattern.compile(failureCrit);
         }
     }
+    
     public Command(String[] cmd, String successCrit, String failureCrit, String errorMsg, File dir) {
-        System.out.println("Cmd:" + cmd[0] + " (" + dir.getName() + ")");
         this.dir = dir;
         this.cmd = cmd;
         this.errorMsg = errorMsg;
@@ -72,6 +76,18 @@ public class Command implements Callable<String>{
         }
     }
     
+    public void print() {
+        System.out.print("[Cmd]");
+        for(String str : cmd) {
+            System.out.print(" " + str);
+        }
+        if(dir == null) {
+            System.out.println(" (Cur dir)");
+        } else {
+            System.out.println(" (" + dir.getAbsolutePath() + ")");
+        }
+    }
+    
     @Override
     public String call() throws Exception {
         Future<String> res = null, res2 =null;
@@ -79,7 +95,7 @@ public class Command implements Callable<String>{
         ExecutorService executor = Executors.newFixedThreadPool(2);
         Set<Callable<String>>  todo = new HashSet<>();
         final Process process;
-            if(dir == null) {
+        if(dir == null) {
                 process = runtime.exec(cmd, null);
             } else {
                 process = runtime.exec(cmd, null, dir);
@@ -93,6 +109,7 @@ public class Command implements Callable<String>{
                         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                         String line = "";
                         try {
+                            stdlog += "\n";
                             while((line = reader.readLine()) != null) {
                                 if(success != null) {
                                     Matcher m = success.matcher(line);
@@ -104,6 +121,7 @@ public class Command implements Callable<String>{
                                     }
                                 }
                                 //System.out.println("[Output] "+ line);
+                                stdlog += "[stdout] " + line + "\n";
                             }
                         } finally {
                             reader.close();
@@ -124,6 +142,7 @@ public class Command implements Callable<String>{
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                     String line = "";
                     try {
+                        errlog += "\n";
                         while((line = reader.readLine()) != null) {
                             if(failure != null) {
                                 Matcher m = failure.matcher(line);
@@ -132,6 +151,7 @@ public class Command implements Callable<String>{
                                 }
                             }
                             System.out.println("[Error] "+ line);
+                            errlog += "[stderr] " + line + "\n";
                         }
                     } finally {
                         reader.close();
@@ -143,6 +163,17 @@ public class Command implements Callable<String>{
             }
         }).call();
             
+        if((success != null) && (failure != null)) {
+            this.isSuccess = (r1 != null) && (r0 == null);
+        } else if(success != null) {
+            this.isSuccess = (r1 != null);
+        } else if(failure != null) {
+            this.isSuccess = (r0 == null);
+        } else {
+            this.isSuccess = true;
+        }
+        
+        
         if(r1 != null) {
             return r1;
         } else if (r0 != null){

@@ -7,10 +7,16 @@
 #define /*PROTOCOL*/_MAX_MSG_SIZE /*MAX_MSG_SIZE*/
 /*OTHER_VARS*/
 
+
 #define /*PROTOCOL*/_LISTENER_STATE_IDLE 0
-#define /*PROTOCOL*/_LISTENER_STATE_ERROR 1
-#define /*PROTOCOL*/_LISTENER_STATE_READ_BYTE 2
-/*OTHER_CASES*/
+#define /*PROTOCOL*/_LISTENER_STATE_READING 1
+#define /*PROTOCOL*/_LISTENER_STATE_ESCAPE 2
+#define /*PROTOCOL*/_LISTENER_STATE_ERROR 3
+
+
+#define /*PROTOCOL*/_START_BYTE /*START_BYTE*/
+#define /*PROTOCOL*/_STOP_BYTE /*STOP_BYTE*/
+#define /*PROTOCOL*/_ESCAPE_BYTE /*ESCAPE_BYTE*/
 
 struct /*PROTOCOL*/_instance_type {
     uint16_t listener_id;
@@ -29,12 +35,14 @@ void /*PROTOCOL*/_set_listener_id(uint16_t id) {
 }
 
 void /*PROTOCOL*/_forwardMessage(byte * msg, uint8_t size) {
-  /*WRITE_HEADER*/
+  /*PROTOCOL*/.write(/*PROTOCOL*/_START_BYTE);
   for(uint8_t i = 0; i < size; i++) {
-    /*WRITE_ESCAPE*/
+	if(msg[i] == /*PROTOCOL*/_ESCAPE_BYTE) {
+    	/*PROTOCOL*/.write(/*PROTOCOL*/_ESCAPE_BYTE);
+	}
     /*PROTOCOL*/.write(msg[i]);
   }
-  /*WRITE_FOOTER*/
+  /*PROTOCOL*/.write(/*PROTOCOL*/_STOP_BYTE);
 }
 
 /*PARSER_IMPLEMENTATION*/
@@ -42,31 +50,58 @@ void /*PROTOCOL*/_forwardMessage(byte * msg, uint8_t size) {
 uint8_t /*PROTOCOL*/_serialListenerState = 0;
 uint8_t /*PROTOCOL*/_msg_buf[/*PROTOCOL*/_MAX_MSG_SIZE];
 uint16_t /*PROTOCOL*/_msg_index = 0;
+uint8_t /*PROTOCOL*/_incoming = 0;
 
 void /*PROTOCOL*/_read() {
-	int loop_count = 0;
-	while ((/*PROTOCOL*/.available() > 0) && (loop_count < /*PROTOCOL*/_MAX_LOOP)) {
-		switch(/*PROTOCOL*/_serialListenerState) {
-			case /*PROTOCOL*/_LISTENER_STATE_IDLE:
-				/*PROTOCOL*/_msg_index = 0;
-				//TRANSITION TO READ_HEADER_0
-				//TRANSITION TO ERROR
-			break;
-			/*OTHER_CASES*/
-			case /*PROTOCOL*/_LISTENER_STATE_READ_BYTE:
-				//ESCAPE
-				//END soit un compteur, soit un char, parse call
-				//ERROR
-
-				/*PROTOCOL*/_msg_buf[/*PROTOCOL*/_msg_index] = /*PROTOCOL*/.read();
-				/*PROTOCOL*/_msg_index++;
-			break;
-			case /*PROTOCOL*/_LISTENER_STATE_ERROR:
-				//TRANSITION TO IDLE
-			break;
-		}
-		loop_count++;
-	}
+  byte limit = 0;
+  while ((/*PROTOCOL*/.available()) && (limit < /*PROTOCOL*/_MAX_LOOP)) {
+   limit++;
+    /*PROTOCOL*/_incoming = /*PROTOCOL*/.read();
+    
+    switch(/*PROTOCOL*/_serialListenerState) {
+      case /*PROTOCOL*/_LISTENER_STATE_IDLE:
+        if(/*PROTOCOL*/_incoming == /*PROTOCOL*/_START_BYTE) {
+          /*PROTOCOL*/_serialListenerState = /*PROTOCOL*/_LISTENER_STATE_READING;
+          /*PROTOCOL*/_msg_index = 0;
+        }
+      break;
+      
+      case /*PROTOCOL*/_LISTENER_STATE_READING:
+        if (/*PROTOCOL*/_msg_index > /*PROTOCOL*/_MAX_MSG_SIZE) {
+          /*PROTOCOL*/_serialListenerState = /*PROTOCOL*/_LISTENER_STATE_ERROR;
+        } else {
+          if(/*PROTOCOL*/_incoming == /*PROTOCOL*/_STOP_BYTE) {
+            /*PROTOCOL*/_serialListenerState = /*PROTOCOL*/_LISTENER_STATE_IDLE;
+            
+            
+            /*PARSER_CALL*/
+            
+          } else if (/*PROTOCOL*/_incoming == /*PROTOCOL*/_ESCAPE_BYTE) {
+            /*PROTOCOL*/_serialListenerState = /*PROTOCOL*/_LISTENER_STATE_ESCAPE;
+          } else {
+            /*PROTOCOL*/_msg_buf[/*PROTOCOL*/_msg_index] = /*PROTOCOL*/_incoming;
+            /*PROTOCOL*/_msg_index++;
+          }
+        }
+      break;
+      
+      case /*PROTOCOL*/_LISTENER_STATE_ESCAPE:
+        if (/*PROTOCOL*/_msg_index >= /*PROTOCOL*/_MAX_MSG_SIZE) {
+          /*PROTOCOL*/_serialListenerState = /*PROTOCOL*/_LISTENER_STATE_ERROR;
+        } else {
+          /*PROTOCOL*/_msg_buf[/*PROTOCOL*/_msg_index] = /*PROTOCOL*/_incoming;
+          /*PROTOCOL*/_msg_index++;
+          /*PROTOCOL*/_serialListenerState = /*PROTOCOL*/_LISTENER_STATE_READING;
+        }
+      break;
+      
+      case /*PROTOCOL*/_LISTENER_STATE_ERROR:
+        /*PROTOCOL*/_serialListenerState = /*PROTOCOL*/_LISTENER_STATE_IDLE;
+        /*PROTOCOL*/_msg_index = 0;
+      break;
+    }
+  }
+  
 }
 
 /*FORWARDERS*/

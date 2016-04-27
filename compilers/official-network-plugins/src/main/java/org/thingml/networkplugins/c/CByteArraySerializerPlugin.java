@@ -48,7 +48,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public int generateSerialization(StringBuilder builder, String bufferName, Message m) {
+    public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
         builder.append("byte " + bufferName + "[" + (cctx.getMessageSerializationSize(m) - 2) + "];\n");
 
         int HandlerCode = cctx.getHandlerCode(configuration, m);
@@ -81,7 +81,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
                 }
             }
         }
-        return j;
+        return j + "";
     }
 
     @Override

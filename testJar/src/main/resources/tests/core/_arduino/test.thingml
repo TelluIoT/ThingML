@@ -1,4 +1,5 @@
 import "../test.thingml"
+//import "../../hardware/arduino/arduino.thingml"
 
 datatype double<4>
 @c_type "double";
@@ -7,40 +8,37 @@ thing TestDumpArduino includes TestDump
 @pim "TestArness"
 @platform "arduino"
 {
-  property benchmark: Boolean = false
-  property pStart: double = 0
-  property pStop: double = 0
+ 	property benchmark: Boolean = false
+ 		
+	statechart ArduinoHarness init Testing {
+		property transitionsCount : Long = 0
+ 	property stateNumber: String = ""
+		
+		state Testing {
+            internal event m : dump?testOut
+            action do 
+				print m.c
+            	transitionsCount=transitionsCount+1
+            end
+            
+            transition -> Failed 
+            event dump?testFailure
+            action '//printf("*FAILURE*");'
+            
+            
+            transition -> End
+            event dumpEnd?testEnd
+            
+		}
+		
+		state Failed {
 
-    statechart ArduinoHarness init Testing {
-      property transitionsCount : Long = 0
-      property stateNumber: String = ""
-
-      state Testing {
-        on entry do 
-          'Serial.begin(9600);'
-        end
-
-        internal event m : dump?testOut
-        action do 'Serial.println('&m.c&');'
-        transitionsCount=transitionsCount+1
-        end
-
-        transition -> Failed 
-        event dump?testFailure
-        action '//printf("*FAILURE*");'
-
-        transition -> End
-        event dumpEnd?testEnd
-
-      }
-
-      state Failed {
-
-      }
-
-      state End {
-        on entry do
-        end
-      }
-    }
+		}
+		
+		state End {
+			on entry do
+				print "[Done]\n"
+			end
+		}
+	}
 }

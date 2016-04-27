@@ -35,15 +35,17 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(Increment action, StringBuilder builder, Context ctx) {
         builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-        builder.append("get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
-        builder.append(" + 1);\n");
+        builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality()!=null, ctx) + ")");
+        builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+        builder.append(" + 1));\n");
     }
 
     @Override
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
         builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-        builder.append("get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
-        builder.append(" - 1);\n");
+        builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality()!=null, ctx) + ")");
+        builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+        builder.append(" - 1));\n");
     }
 
     @Override
@@ -51,11 +53,25 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
         Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
         if (leftType.isA(Types.OBJECT_TYPE)) {
+            if (expression.getRhs() instanceof ExternExpression) {
+                final ExternExpression ext = (ExternExpression) expression.getRhs();
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                    super.generate(expression, builder, ctx);
+                    return;
+                }
+            }
             generate(expression.getLhs(), builder, ctx);
             builder.append(".equals(");
             generate(expression.getRhs(), builder, ctx);
             builder.append(")");
         } else if (rightType.isA(Types.OBJECT_TYPE)) {
+            if (expression.getLhs() instanceof ExternExpression) {
+                final ExternExpression ext = (ExternExpression) expression.getLhs();
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                    super.generate(expression, builder, ctx);
+                    return;
+                }
+            }
             generate(expression.getRhs(), builder, ctx);
             builder.append(".equals(");
             generate(expression.getLhs(), builder, ctx);
@@ -70,12 +86,26 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
         Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
         if (leftType.isA(Types.OBJECT_TYPE)) {
+            if (expression.getRhs() instanceof ExternExpression) {
+                final ExternExpression ext = (ExternExpression) expression.getRhs();
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                    super.generate(expression, builder, ctx);
+                    return;
+                }
+            }
             builder.append("!(");
             generate(expression.getLhs(), builder, ctx);
             builder.append(".equals(");
             generate(expression.getRhs(), builder, ctx);
             builder.append("))");
         } else if (rightType.isA(Types.OBJECT_TYPE)) {
+            if (expression.getRhs() instanceof ExternExpression) {
+                final ExternExpression ext = (ExternExpression) expression.getLhs();
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                    super.generate(expression, builder, ctx);
+                    return;
+                }
+            }
             builder.append("!(");
             generate(expression.getRhs(), builder, ctx);
             builder.append(".equals(");

@@ -28,11 +28,8 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-import org.sintef.thingml.Expression;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
-import org.sintef.thingml.Type;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 
 
 public class ReceiveMessageMessageReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ReceiveMessage, Message> {
