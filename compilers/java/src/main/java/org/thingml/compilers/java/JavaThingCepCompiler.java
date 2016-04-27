@@ -49,19 +49,15 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
 
     //TODO: remove output param as we do not really it (and method is called with wrong args in case of Join/Merge....)
    private void generateSubscription(Stream stream, StringBuilder builder, Context context, Message outPut, String name) {
-       String outPutName = stream.getName();
+       String outPutName = stream.getInput().getName();
        String messageType = "";
        if (stream.getInput() instanceof SourceComposition) {
-           outPutName = ((SourceComposition)stream.getInput()).getName();
            outPut = ((SourceComposition) stream.getInput()).getResultMessage();
            messageType = context.firstToUpper( ((SourceComposition)stream.getInput()).getResultMessage().getName()) + "MessageType." + context.firstToUpper(((SourceComposition)stream.getInput()).getResultMessage().getName()) + "Message";
        } else if (stream.getInput() instanceof SimpleSource) {
-           outPutName = ((SimpleSource)stream.getInput()).getMessage().getMessage().getName();
            outPut = ((SimpleSource)stream.getInput()).getMessage().getMessage();
-           messageType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
+           messageType = context.firstToUpper(outPut.getName()) + "MessageType." + context.firstToUpper(outPut.getName()) + "Message";
        }
-        String outPutType = messageType;
-
 
         List<ViewSource> operators = stream.getInput().getOperators();
        boolean hasWindow = false;
@@ -71,13 +67,14 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
                break;
        }
         if (hasWindow) {
-            outPutType = "List<" + outPutType + ">";
+            messageType = "List<" + messageType + ">";
         }
 
 
-       builder.append("sub_" + name + " = new Action1<" + outPutType + ">() {\n")
+        builder.append("this.sub_" + name.replace("_observable", "") + " = ");
+        builder.append("new Action1<" + messageType + ">() {\n")
                .append("@Override\n")
-               .append("public void call(" + outPutType + " " + outPutName + ") {\n");
+               .append("public void call(" + messageType + " " + outPutName + ") {\n");
 
        if(hasWindow) {
            builder.append("int i;\n");
