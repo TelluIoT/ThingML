@@ -193,7 +193,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("struct Msg_Handler * " + cfg.getName() + "_receivers[NB_MAX_CONNEXION];\n\n");
         }
         
-        
+        for (Instance inst : cfg.allInstances()) {
+            for (Property a : cfg.allArrays(inst)) {
+                builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
+                builder.append("[");
+                ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
+                builder.append("];\n");
+            }
+        }
         if (!isGeneratingCpp()) { // Declarations are made in header file for C++ - sdalgard
 
             builder.append("//Declaration of instance variables\n");
@@ -215,14 +223,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
             }*/
             
-        
+        /*
             for (Property a : cfg.allArrays(inst)) {
                 builder.append(ctx.getCType(a.getType()) + " ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
                 builder.append("[");
                 ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
                 builder.append("];\n");
-            }
+            }*/
             
             
             builder.append(ctx.getInstanceVarDecl(inst) + "\n");
