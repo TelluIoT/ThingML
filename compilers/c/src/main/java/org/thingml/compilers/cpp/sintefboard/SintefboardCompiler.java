@@ -23,9 +23,6 @@ import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.c.posix.CCompilerContextPosix;
-import org.thingml.compilers.c.posix.CThingActionCompilerPosix;
-import org.thingml.compilers.c.posix.PosixCCfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
@@ -40,7 +37,7 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
     public SintefboardCompiler() {
-        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGeneratorSintefboard(), new CfgBuildCompiler(), new CThingImplCompilerSintefboard(), new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
+        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGeneratorSintefboard(), new SintefboardCCfgBuildCompiler(), new CThingImplCompilerSintefboard(), new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
     }
 
     @Override
@@ -85,6 +82,9 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
         // GENERATE A MODULE FOR THE CONFIGURATION (+ its dependencies)
         getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 
+        // GENERATE A MAKEFILE AND TEST FRAMEWORK FOR POSIX
+        getCfgBuildCompiler().generateBuildScript(cfg, ctx);
+        
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
 

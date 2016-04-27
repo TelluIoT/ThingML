@@ -92,15 +92,15 @@ public class TestJar {
         wl.add("testInstanceInitializationOrder");
         wl.add("testArrays");
         wl.add("testDeepCompositeStates");
-        //Set<File> testFiles = whiteListFiles(testFolder, wl);
+        Set<File> testFiles = whiteListFiles(testFolder, wl);
         //Set<File> testFiles = blackListFiles(testFolder, wl);
-        Set<File> testFiles = listTestFiles(testFolder, testPattern);
+        //Set<File> testFiles = listTestFiles(testFolder, testPattern);
         
         Set<TargetedLanguage> langs = new HashSet<>();
         
-        langs.add(new lPosix());
-        langs.add(new lJava());
-        langs.add(new lJavaScript());
+        langs.add(new lSintefboard());
+        //langs.add(new lJava());
+        //langs.add(new lJavaScript());
         //langs.add(new lArduino());
         
         Set<TestCase> testCases = new HashSet<>();
