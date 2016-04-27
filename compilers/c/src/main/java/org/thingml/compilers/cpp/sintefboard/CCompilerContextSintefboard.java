@@ -40,7 +40,6 @@ public class CCompilerContextSintefboard extends CCompilerContext {
 
     @Override
     public void writeGeneratedCodeToFiles() {
-
         
         // COMBINE ALL THE GENERATED CODE IN TWO FILES "cfg.hpp" + cfg.cpp"
         
@@ -95,6 +94,7 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         String stringHeader = generatedCode.get(configName + ".h").toString();
         stringHeader = stringHeader.replace("/*NAME*/", configName);
         stringHeader = stringHeader.replace("/*RUNTIME_CLASS*/", generatedCode.get("runtime.h").toString());
+        stringHeader = stringHeader.replace("/*HEADER_CONTEXT*/", generatedCode.get(configName + ".h_ctx").toString());
         stringHeader = stringHeader.replace("/*HEADER_CLASS*/", builderHeader.toString());
         stringHeader = stringHeader.replace("/*CFG_CPPNAME_SCOPE*/", cfgCppnameScope);
         writeTextFile(configName + ".hpp", stringHeader);
