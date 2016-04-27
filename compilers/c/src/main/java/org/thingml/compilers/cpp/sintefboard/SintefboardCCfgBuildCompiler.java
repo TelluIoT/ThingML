@@ -109,7 +109,7 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         ctx.getBuilder("Makefile").append(mtemplate);
         
         //GENERATE THE TEST_MAIN FRAMEWORK
-        String testMainTemplate = ctx.getTemplateByID("ctemplates/"+ctx.getCompiler().getID()+"_test_main.cpp");
+        String testMainTemplate = ctx.getTemplateByID("ctemplates/"+ctx.getCompiler().getID()+"_posix_main.cpp");
         testMainTemplate = testMainTemplate.replace("/*NAME*/", cfg.getName());
         ctx.getBuilder(cfg.getName()+"Posix.cpp").append(testMainTemplate);
         

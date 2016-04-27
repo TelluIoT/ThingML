@@ -1,5 +1,5 @@
 /*****************************************************
- *      THIS IS A GENERATED FILE. DO NOT EDIT.   SINTEFBOARD_TEST_MAIN.C
+ *      THIS IS A GENERATED FILE. DO NOT EDIT.   SINTEFBOARD_POSIX_MAIN.C
  *      Implementation for Application /*NAME*/
  *  Generated from ThingML (http://www.thingml.org)
  *****************************************************/
@@ -23,7 +23,7 @@ typedef int uint16_t;
 int main(int argc, char *argv[]) {
 
 	struct timeval tv;
-    /*CFG_CPPNAME_SCOPE*/ThingMl;
+    /*NAME*/ ThingMl;
 
     ThingMl.setup();
     

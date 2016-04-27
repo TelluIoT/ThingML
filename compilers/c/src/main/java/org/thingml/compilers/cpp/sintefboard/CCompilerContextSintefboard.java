@@ -112,9 +112,8 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         String stringMake = generatedCode.get("Makefile").toString();
         writeTextFile("Makefile", stringMake);
         
-        String stringTestMain = generatedCode.get("TestMain.cpp").toString();
-        stringTestMain = stringTestMain.replace("/*CFG_CPPNAME_SCOPE*/", cfgCppnameScope);
-        writeTextFile("TestMain.cpp", stringTestMain);
+        String stringTestMain = generatedCode.get(configName+"Posix.cpp").toString();
+        writeTextFile(configName+"Posix.cpp", stringTestMain);
         
         
     }
