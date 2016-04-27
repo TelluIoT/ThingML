@@ -38,7 +38,7 @@ public class JSThingCepCompiler extends ThingCepCompiler {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
         if (stream.getInput() instanceof SimpleSource) {
             final SimpleSource simpleSource = (SimpleSource) stream.getInput();
-            final String paramName = simpleSource.getMessage().getMessage().getName();
+            final String paramName = simpleSource.getName();
             generateSubscription(stream, builder, ctx, paramName, simpleSource.getMessage().getMessage());
         } else if (stream.getInput() instanceof SourceComposition) {
             //final Message output = ((SourceComposition) stream.getInput()).getResultMessage();
@@ -64,9 +64,9 @@ public class JSThingCepCompiler extends ThingCepCompiler {
         }
         if (hasWindow) {
             for (Parameter parameter : outPut.getParameters()) {
-                builder.append("var " + outPut.getName() + parameter.getName() + " = [];\n")
+                builder.append("var " + paramName + parameter.getName() + " = [];\n")
                         .append("for(var i = 0; i< " + paramName + ".length; i++) {\n")
-                        .append(outPut.getName() + parameter.getName() + "[i] = ")
+                        .append(paramName + parameter.getName() + "[i] = ")
                         .append(paramName + "[i][" + JSHelper.getCorrectParamIndex(outPut, parameter) + "];\n")
                         .append("}");
             }

@@ -36,6 +36,7 @@ public class TestGenConfig {
         Language posix = new Language(outputDir, "Posix", "posix");
         Language java = new Language(outputDir, "Java", "java");
         Language arduino = new Language(outputDir, "Arduino", "arduino");
+        Language sintefboard = new Language(outputDir, "Sintefboard", "sintefboard");
         
         if(options == null) {
             options = "all";
@@ -52,6 +53,9 @@ public class TestGenConfig {
         }
         if((options.compareToIgnoreCase(arduino.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
             languages.add(arduino);
+        }
+        if((options.compareToIgnoreCase(sintefboard.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+            languages.add(sintefboard);
         }
         //languages.add(arduino);
         

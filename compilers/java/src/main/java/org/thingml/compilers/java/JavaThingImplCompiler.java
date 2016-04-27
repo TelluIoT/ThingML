@@ -371,24 +371,37 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             for (StateMachine sm : thing.getBehaviour()) {
                 int id = 0;
                 for (InternalTransition i : sm.getInternal()) {
-                    if (id > 0) {
-                        builder.append("else ");
-                    }
                     for (Event e : i.getEvent()) {
-                        id++;
                         ReceiveMessage rm = (ReceiveMessage) e;
-                        builder.append("if ((event.getType().equals(" + rm.getMessage().getName() + "Type))");
-                        if (i.getEvent().size() > 0 && i.getGuard() != null) {
-                            builder.append(" && (");
-                            ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
-                            builder.append(")");
-                        }
-                        builder.append(") {\n");
-                        builder.append("consumed = true;\n");
+                        builder.append("if (");
+                        if (id > 0)
+                            builder.append("!consumed && ");
+                        builder.append("event.getType().equals(" + rm.getMessage().getName() + "Type)) {\n");
                         builder.append("final " + ctx.firstToUpper(rm.getMessage().getName()) + "MessageType." + ctx.firstToUpper(rm.getMessage().getName()) + "Message " + rm.getMessage().getName() + " = (" + ctx.firstToUpper(rm.getMessage().getName()) + "MessageType." + ctx.firstToUpper(rm.getMessage().getName()) + "Message) event;\n");
+                        if (i.getGuard() != null) {
+                            builder.append(" if (");
+                            ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
+                            builder.append(") {\n");
+                        }
+                        builder.append("consumed = true;\n");
                         ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
                         builder.append("}\n");
+                        id++;
                     }
+                    if (i.getEvent().size() == 0) {//FIXME: some code duplication from above...
+                        if (i.getGuard() != null) {
+                            builder.append("if (");
+                            if (id > 0)
+                                builder.append("!consumed && ");
+                            ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
+                            builder.append(") {\n");
+                        }
+                        builder.append("consumed = true;\n");
+                        ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
+                        builder.append("}\n");
+                        id++;
+                    }
+                    builder.append("}\n");
                 }
             }
             builder.append("if (!consumed){\nsuper.receive(event, p);\n}\n");
