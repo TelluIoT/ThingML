@@ -401,7 +401,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                         builder.append("}\n");
                         id++;
                     }
-                    builder.append("}\n");
                 }
             }
             builder.append("if (!consumed){\nsuper.receive(event, p);\n}\n");
