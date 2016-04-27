@@ -26,6 +26,7 @@ org.thingml.compilers/src/test/resources/thingml
 *~
 ~*
 /launch.bat
+/testJar/config.properties
 org.thingml.cep.benchmark/tmp/
 Benchmarks/Scala-Avg-Bench/out/
 node_modules
