@@ -34,14 +34,14 @@ import java.util.List;
  */
 public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
-    public void generateMessages(Message m, Context ctx, boolean hasAPI) {
+    public void generateMessages(Message m, Context ctx) { //TODO: migrate code related to string/binary serialization into plugins
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
         String rootPack = pack;
         pack += ".messages";
 
         final StringBuilder builder = ctx.getNewBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(m.getName()) + "MessageType.java");
-        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, hasAPI, false, false);
+        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, false, false);
         builder.append("import java.nio.*;\n\n");
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "MessageType extends EventType {\n");
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType(short code) {super(\"" + m.getName() + "\", code);\n}\n\n");
@@ -147,7 +147,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
 
             builder.append("if (\"" + p.getName() + "\".equals(msg[" + (2*m.getParameters().indexOf(p) + 1) + "])) {\n");
-            builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + " " + p.getName() + " = " + cast + ".parse" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx)) + "(msg[" + (2*m.getParameters().indexOf(p) + 2) + "]);\n");
+            if (cast.equals("Character")) {
+                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "msg[" + (2 * m.getParameters().indexOf(p) + 2) + "].toCharArray()[0];\n");
+            } else {
+                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + cast + ".parse" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx)) + "(msg[" + (2 * m.getParameters().indexOf(p) + 2) + "]);\n");
+            }
             if (m.getParameters().indexOf(p) > 0)
                 temp.append(", ");
             temp.append(p.getName());
@@ -253,25 +257,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n\n");
     }
 
-    private boolean hasAPI(Thing thing) {
-        boolean hasAPI = false;
-        for (Port p : thing.allPorts()) {
-            if (!p.isDefined("public", "false")) {
-                hasAPI = true;
-                break;
-            }
-        }
-        if (!hasAPI) {
-            for (Type ty : ((ThingMLModel) thing.eContainer()).allUsedSimpleTypes()) {
-                if (ty instanceof Enumeration) {
-                    hasAPI = true;
-                    break;
-                }
-            }
-        }
-        return hasAPI;
-    }
-
     protected void generateFunction(Function f, Thing thing, StringBuilder builder, Context ctx) {
         if (!f.isDefined("abstract", "true")) {
             DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
@@ -314,7 +299,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         final StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(thing.getName()) + ".java");
         boolean hasMessages = thing.allMessages().size() > 0;
         boolean hasStream = thing.getStreams().size() > 0;
-        JavaHelper.generateHeader(pack, pack, builder, ctx, false, hasAPI(thing), hasMessages,hasStream);
+        JavaHelper.generateHeader(pack, pack, builder, ctx, false, hasMessages,hasStream);
 
         builder.append("\n/**\n");
         builder.append(" * Definition for type : " + thing.getName() + "\n");
@@ -372,6 +357,67 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
 
+        boolean overrideReceive = false;
+        for(StateMachine sm : thing.getBehaviour()) {
+            if (sm.getInternal().size() > 0) {
+                overrideReceive = true;
+                break;
+            }
+        }
+        if (overrideReceive) {
+            builder.append("@Override\npublic void receive(Event event, final Port p){\n");
+            builder.append("if (root == null) {\n");
+            builder.append("boolean consumed = false;\n");
+            for (StateMachine sm : thing.getBehaviour()) {
+                int id = 0;
+                for (InternalTransition i : sm.getInternal()) {
+                    for (Event e : i.getEvent()) {
+                        ReceiveMessage rm = (ReceiveMessage) e;
+                        builder.append("if (");
+                        if (id > 0)
+                            builder.append("!consumed && ");
+                        builder.append("event.getType().equals(" + rm.getMessage().getName() + "Type)) {\n");
+                        builder.append("final " + ctx.firstToUpper(rm.getMessage().getName()) + "MessageType." + ctx.firstToUpper(rm.getMessage().getName()) + "Message " + rm.getMessage().getName() + " = (" + ctx.firstToUpper(rm.getMessage().getName()) + "MessageType." + ctx.firstToUpper(rm.getMessage().getName()) + "Message) event;\n");
+                        if (i.getGuard() != null) {
+                            builder.append(" if (");
+                            ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
+                            builder.append(") {\n");
+                        }
+                        builder.append("consumed = true;\n");
+                        ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
+                        builder.append("}\n");
+                        id++;
+                    }
+                    if (i.getEvent().size() == 0) {//FIXME: some code duplication from above...
+                        if (i.getGuard() != null) {
+                            builder.append("if (");
+                            if (id > 0)
+                                builder.append("!consumed && ");
+                            ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
+                            builder.append(") {\n");
+                        }
+                        builder.append("consumed = true;\n");
+                        ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
+                        builder.append("}\n");
+                        id++;
+                    }
+                }
+            }
+            builder.append("if (!consumed){\nsuper.receive(event, p);\n}\n");
+            builder.append("else {");
+            builder.append("for (Component child : forks) {\n");
+            builder.append("Event child_e = event.clone();\n");
+            builder.append("child.receive(child_e, p);\n");
+            builder.append("}\n");
+            builder.append("for(int i = 0; i < behavior.regions.length; i++) {\n");
+            builder.append("behavior.regions[i].handle(event, p);");
+            builder.append("}\n");
+            builder.append("}\n");
+            builder.append("} else {\n");
+            builder.append("super.receive(event, p);\n");
+            builder.append("}\n");
+            builder.append("}\n\n");
+        }
 
         for (Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
@@ -388,7 +434,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
 
-        if (!debugProfile.getDebugMessages().isEmpty()) {
+        /*if (!debugProfile.getDebugMessages().isEmpty()) {//FIXME: receive is overridden elsewhere, cannot be overridden twice. To be merged.
             builder.append("@Override\npublic void receive(Event event, final Port p){\n");
             int i = 0;
             for (Port p : thing.allPorts()) {
@@ -414,7 +460,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
             builder.append("super.receive(event, p);\n");
             builder.append("}\n\n");
-        }
+        }*/
 
 
             for (Port p : thing.allPorts()) {
@@ -506,7 +552,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         for (Message m : thing.allMessages()) {
             builder.append("protected final " + ctx.firstToUpper(m.getName()) + "MessageType " + m.getName() + "Type = new " + ctx.firstToUpper(m.getName()) + "MessageType();\n");
             builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType get" + ctx.firstToUpper(m.getName()) + "Type(){\nreturn " + m.getName() + "Type;\n}\n\n");
-            generateMessages(m, ctx, hasAPI(thing));
+            generateMessages(m, ctx);
         }
 
         builder.append("//CEP Streams\n");

@@ -1801,8 +1801,13 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
     */
         //Initialize stdout if needed (for arduino)
         if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+            int baudrate = 9600;
+            if(ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout_baudrate")){
+                Integer intb = Integer.parseInt(ctx.getCurrentConfiguration().annotation("arduino_stdout_baudrate").iterator().next());
+                baudrate = intb.intValue();
+            }
             if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
-                builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".begin(9600);\n");
+                builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".begin(" + baudrate + ");\n");
             }
         }
     // Call the initialization function

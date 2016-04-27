@@ -37,19 +37,19 @@ public class JSThingCepCompiler extends ThingCepCompiler {
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
         if (stream.getInput() instanceof SimpleSource) {
-            SimpleSource simpleSource = (SimpleSource) stream.getInput();
-            String paramName = simpleSource.getMessage().getMessage().getName();
+            final SimpleSource simpleSource = (SimpleSource) stream.getInput();
+            final String paramName = simpleSource.getName();
             generateSubscription(stream, builder, ctx, paramName, simpleSource.getMessage().getMessage());
         } else if (stream.getInput() instanceof SourceComposition) {
-            Message output = ((SourceComposition) stream.getInput()).getResultMessage();
-            generateSubscription(stream, builder, ctx, output.getName(), ((SourceComposition) stream.getInput()).getResultMessage());
+            //final Message output = ((SourceComposition) stream.getInput()).getResultMessage();
+            generateSubscription(stream, builder, ctx, stream.getInput().getName(), ((SourceComposition) stream.getInput()).getResultMessage());
         } else {
             throw UnsupportedException.sourceException(stream.getClass().getName());
         }
 
     }
 
-    public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
+    public void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
         if (!stream.isDynamic()) {
             builder.append(stream.getInput().qname("_") + ".subscribe(\n");
         }
@@ -64,9 +64,9 @@ public class JSThingCepCompiler extends ThingCepCompiler {
         }
         if (hasWindow) {
             for (Parameter parameter : outPut.getParameters()) {
-                builder.append("var " + outPut.getName() + parameter.getName() + " = [];\n")
+                builder.append("var " + paramName + parameter.getName() + " = [];\n")
                         .append("for(var i = 0; i< " + paramName + ".length; i++) {\n")
-                        .append(outPut.getName() + parameter.getName() + "[i] = ")
+                        .append(paramName + parameter.getName() + "[i] = ")
                         .append(paramName + "[i][" + JSHelper.getCorrectParamIndex(outPut, parameter) + "];\n")
                         .append("}");
             }

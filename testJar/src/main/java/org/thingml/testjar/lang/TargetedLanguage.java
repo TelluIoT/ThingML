@@ -34,6 +34,13 @@ public abstract class TargetedLanguage {
     public String compilerID;
     public Set<String> failedTest = new HashSet<>();
     public int testNb = 0;
+
+    /**
+     * Some languages might use multiple threads during compilation and/or execution.
+     * Spare threads will not be allocated to commands, keeping some threads free to
+     * do other stuff (and avoid allocating too many threads, hence reducing context switching, etc)
+     **/
+    public int spareThreads = 0;
     
     public Command generateThingML(TestCase t) {
         String[] execCmd = new String[11];

@@ -36,18 +36,36 @@ public class lJavaScript extends TargetedLanguage {
 
     @Override
     public Command compileTargeted(TestCase t) {
-        String[] execCmd = new String[2];
-        execCmd[0] = "npm";
-        execCmd[1] = "install";
+        String[] execCmd;
+        int i = 0;
+        if (System.getProperty("os.name").startsWith("Win")) {
+            execCmd = new String[4];
+            execCmd[0] = "cmd.exe";
+            execCmd[1] = "/c";
+            i = 2;
+        } else {
+            execCmd = new String[2];
+        }
+        execCmd[i+0] = "npm";
+        execCmd[i+1] = "install";
         
         return new Command(execCmd, null, ".+", "Error at JS install", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
 
     @Override
     public Command execTargeted(TestCase t) {
-        String[] execCmd = new String[2];
-        execCmd[0] = "node";
-        execCmd[1] = "main.js";
+        String[] execCmd;
+        int i = 0;
+        if (System.getProperty("os.name").startsWith("Win")) {
+            execCmd = new String[4];
+            execCmd[0] = "cmd.exe";
+            execCmd[1] = "/c";
+            i = 2;
+        } else {
+            execCmd = new String[2];
+        }
+        execCmd[i+0] = "node";
+        execCmd[i+1] = "main.js";
         
         return new Command(execCmd, ".+", null, "Error at JS execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
