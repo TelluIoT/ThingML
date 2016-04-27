@@ -12,7 +12,7 @@ thing TestDumpArduino includes TestDump
  		
 	statechart ArduinoHarness init Testing {
 		property transitionsCount : Long = 0
- 	property stateNumber: String = ""
+ 		property stateNumber: String = ""
 		
 		state Testing {
             internal event m : dump?testOut
@@ -37,7 +37,7 @@ thing TestDumpArduino includes TestDump
 		
 		state End {
 			on entry do
-				print "[Done]\n"
+				print " [Done]\n"
 			end
 		}
 	}

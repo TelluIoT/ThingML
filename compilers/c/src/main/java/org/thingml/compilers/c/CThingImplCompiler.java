@@ -326,7 +326,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("switch(state) {\n");
         for(CompositeState cs : sm.allContainedCompositeStates()) {
-            builder.append("case " + ctx.getStateID(cs) + ":\n");
+            builder.append("case " + ctx.getStateID(cs) + ":{\n");
             if(debugProfile.isDebugBehavior()) {
                 builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
                         + ctx.traceOnEntry(thing, sm) + "\\n\");\n");
@@ -347,18 +347,18 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             for(Region r : regions) {
                 builder.append(sm.qname("_") + "_OnEntry(" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName() + ");\n");
             }
-            builder.append("break;\n");
+            builder.append("break;}\n");
         }
 
         for(State s : sm.allContainedSimpleStates()) {
-            builder.append("case " + ctx.getStateID(s) + ":\n");
+            builder.append("case " + ctx.getStateID(s) + ":{\n");
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
             if(debugProfile.isDebugBehavior()) {
                 builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
                         + ctx.traceOnEntry(thing, sm, s) + "\\n\");\n");
             }
             if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
-            builder.append("break;\n");
+            builder.append("break;}\n");
         }
 
         builder.append("default: break;\n");
@@ -378,7 +378,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
 
         for(CompositeState cs : sm.allContainedCompositeStates()) {
-            builder.append("case " + ctx.getStateID(cs) + ":\n");
+            builder.append("case " + ctx.getStateID(cs) + ":{\n");
             ArrayList<Region> regions = new ArrayList<Region>();
             regions.add(cs);
             regions.addAll(cs.getRegion());
@@ -388,12 +388,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             }
             // Execute Exit actions
             if (cs.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(cs.getExit(), builder, ctx);
-            builder.append("break;\n");
+            builder.append("break;}\n");
 
         }
 
         for(State s : sm.allContainedSimpleStates()) { // just a leaf state: execute exit actions
-            builder.append("case " + ctx.getStateID(s) + ":\n");
+            builder.append("case " + ctx.getStateID(s) + ":{\n");
             if (s.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
             
             
@@ -402,7 +402,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         + ctx.traceOnExit(thing, sm, s) + "\\n\");\n");
             }
             
-            builder.append("break;\n");
+            builder.append("break;}\n");
         }
 
         builder.append("default: break;\n");
