@@ -64,9 +64,9 @@ public class JSThingCepCompiler extends ThingCepCompiler {
         }
         if (hasWindow) {
             for (Parameter parameter : outPut.getParameters()) {
-                builder.append("var " + outPut.getName() + parameter.getName() + " = [];\n")
+                builder.append("var " + paramName + parameter.getName() + " = [];\n")
                         .append("for(var i = 0; i< " + paramName + ".length; i++) {\n")
-                        .append(outPut.getName() + parameter.getName() + "[i] = ")
+                        .append(paramName + parameter.getName() + "[i] = ")
                         .append(paramName + "[i][" + JSHelper.getCorrectParamIndex(outPut, parameter) + "];\n")
                         .append("}");
             }
