@@ -43,6 +43,7 @@ import org.thingml.testjar.lang.lArduino;
 import org.thingml.testjar.lang.lJava;
 import org.thingml.testjar.lang.lJavaScript;
 import org.thingml.testjar.lang.lPosix;
+import org.thingml.testjar.lang.lSintefboard;
 
 
 
@@ -151,6 +152,9 @@ public class TestJar {
                 if(lstr.trim().compareTo("nodejs") == 0) {
                     langs.add(new lJavaScript());
                 }
+                if(lstr.trim().compareTo("sintefboard") == 0) {
+                    langs.add(new lSintefboard());
+                }
             }
             
         } else {
@@ -158,6 +162,7 @@ public class TestJar {
             langs.add(new lJava());
             langs.add(new lJavaScript());
             langs.add(new lArduino());
+            langs.add(new lSintefboard());
             spareThreads = 2;//FIXME: see above
         }
         int poolSize = Runtime.getRuntime().availableProcessors() - spareThreads;

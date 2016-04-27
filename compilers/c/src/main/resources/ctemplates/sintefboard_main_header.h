@@ -13,15 +13,23 @@ typedef unsigned char byte;
 
 class /*NAME*/ : public ThingMlRuntime_class {
 private:
+#ifdef RCDPORT_IN_USE
 port_class *Ports_ptr;
+#endif
 /*HEADER_CLASS*/
 
 /*HEADER_CONFIGURATION*/
 
 public:
+#ifdef RCDPORT_IN_USE
 void setup(port_class *ports_ptr);
+#else
+void setup(void);
+#endif
 void loop(void);
+#ifdef RCDPORT_IN_USE
 void receive_forward(msgc_t *msg_in_ptr, int16_t from_port);
+#endif
 
 };
 

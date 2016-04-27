@@ -9,6 +9,9 @@ all : /*NAME*/
 .c.o :
 	${CC} ${CFLAGS} -c $< /*PREPROC_DIRECTIVES*/
 
+.cpp.o :
+	${CC} ${CFLAGS} -c $< /*PREPROC_DIRECTIVES*/
+
 /*NAME*/ : $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LIBS) -lm
 

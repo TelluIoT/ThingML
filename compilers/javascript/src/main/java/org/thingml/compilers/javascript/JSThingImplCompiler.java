@@ -507,14 +507,22 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
-            builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
+            if (t.eContainer() instanceof StateMachine) {
+                builder.append("this.statemachine.to(null)");
+            } else {
+                builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
+            }
             if (t.getGuard() != null) {
                 builder.append(".when(function(message) {return ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append(";})");
             }
         } else {
-            builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
+            if (t.eContainer() instanceof StateMachine) {
+                builder.append("this.statemachine.to(null)");
+            } else {
+                builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
+            }
             builder.append(".when(function (" + msg.getName() + ") {");
             builder.append("return " + msg.getName() + "[0] === \"" + p.getName() + "\" && " + msg.getName() + "[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {

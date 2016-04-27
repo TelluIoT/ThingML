@@ -725,6 +725,10 @@ public abstract class CCompilerContext extends Context {
         return includeCode.toString();
     }
     
+    StringBuilder cppHeaderCode = new StringBuilder();
+    public StringBuilder getCppHeaderCode() {
+        return cppHeaderCode;
+    }
     
 
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {}

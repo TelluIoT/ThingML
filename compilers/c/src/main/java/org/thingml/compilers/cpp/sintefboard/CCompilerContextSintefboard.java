@@ -107,6 +107,15 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         stringImpl = stringImpl.replace("/*CFG_CPPNAME_SCOPE*/", cfgCppnameScope);
         writeTextFile(configName + ".cpp", stringImpl);
 
+        
+        //GENERATE Posix test framework
+        String stringMake = generatedCode.get("Makefile").toString();
+        writeTextFile("Makefile", stringMake);
+        
+        String stringTestMain = generatedCode.get(configName+"Posix.cpp").toString();
+        writeTextFile(configName+"Posix.cpp", stringTestMain);
+        
+        
     }
 
 

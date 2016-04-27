@@ -21,9 +21,7 @@ thing TimerArduino includes Timer//, ThingMLSchedulerMsg
         
         state Counting 
         {    
-            //transition timeout -> Idle 
-            //event Polling?poll
-			internal
+			transition -> Idle
             guard not ('millis()' < target)
             action timer!timer_timeout()
                 
