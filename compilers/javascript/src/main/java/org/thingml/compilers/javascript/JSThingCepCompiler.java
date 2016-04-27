@@ -38,7 +38,7 @@ public class JSThingCepCompiler extends ThingCepCompiler {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
         if (stream.getInput() instanceof SimpleSource) {
             final SimpleSource simpleSource = (SimpleSource) stream.getInput();
-            final String paramName = simpleSource.getMessage().getMessage().getName();
+            final String paramName = simpleSource.getName();
             generateSubscription(stream, builder, ctx, paramName, simpleSource.getMessage().getMessage());
         } else if (stream.getInput() instanceof SourceComposition) {
             //final Message output = ((SourceComposition) stream.getInput()).getResultMessage();
