@@ -22,13 +22,16 @@ package org.thingml.testjar;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.*;
 import java.util.logging.Level;
@@ -40,6 +43,7 @@ import org.thingml.testjar.lang.lArduino;
 import org.thingml.testjar.lang.lJava;
 import org.thingml.testjar.lang.lJavaScript;
 import org.thingml.testjar.lang.lPosix;
+import org.thingml.testjar.lang.lSintefboard;
 
 
 
@@ -69,9 +73,6 @@ public class TestJar {
         
         Set<Command> tasks = new HashSet<>();
         List<Future<String>> results = new ArrayList<Future<String>>();
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        //ExecutorService executor = Executors.newFixedThreadPool(1);
-        
         
         System.out.println("****************************************");
         System.out.println("*              Test Begin              *");
@@ -84,25 +85,89 @@ public class TestJar {
         System.out.println("Compiler = " + compilerJar);
         System.out.println("");
         
-        Set<String> wl = new HashSet<>();
-        wl.add("testEmptyTransition");
-        wl.add("testInstanceInitializationOrder4");
-        wl.add("testInstanceInitializationOrder3");
-        wl.add("testInstanceInitializationOrder2");
-        wl.add("testInstanceInitializationOrder");
-        wl.add("testArrays");
-        wl.add("testDeepCompositeStates");
-        Set<File> testFiles = whiteListFiles(testFolder, wl);
-        //Set<File> testFiles = blackListFiles(testFolder, wl);
-        //Set<File> testFiles = listTestFiles(testFolder, testPattern);
+        System.out.println("****************************************");
+        System.out.println("*         Properties Reading           *");
+        System.out.println("****************************************");
+        
+        System.out.println("");
+        Properties prop = new Properties();
+	InputStream input = null;
+        
+        String languageList = null, useBlackList = null, testList = null;
+        
+	try {
+
+		input = new FileInputStream(new File(workingDir, "config.properties"));
+
+		// load a properties file
+		prop.load(input);
+
+		// get the property value and print it out
+                languageList = prop.getProperty("languageList");
+                useBlackList = prop.getProperty("useBlackList");
+                testList = prop.getProperty("testList");
+		System.out.println("languageList:" + languageList);
+		System.out.println("useBlackList:" + useBlackList);
+		System.out.println("testList:" + testList);
+
+	} catch (IOException ex) {
+		ex.printStackTrace();
+	}
+        
+        Set<String> tl = new HashSet<>();
+        if(testList != null) {
+            for(String tstr : testList.split(",")) {
+                System.out.println("testList item: <" + tstr.trim() + ">");
+                tl.add(tstr.trim());
+            }
+        }
+        Set<File> testFiles;
+        if(useBlackList != null) {
+            if(useBlackList.compareToIgnoreCase("false") == 0) {
+                testFiles = whiteListFiles(testFolder, tl);
+            } else if (useBlackList.compareToIgnoreCase("true") == 0) {
+                testFiles = blackListFiles(testFolder, tl);
+            } else {
+                testFiles = listTestFiles(testFolder, testPattern);
+            }
+        } else {
+            testFiles = listTestFiles(testFolder, testPattern);
+        }
         
         Set<TargetedLanguage> langs = new HashSet<>();
-        
-        langs.add(new lSintefboard());
-        //langs.add(new lJava());
-        //langs.add(new lJavaScript());
-        //langs.add(new lArduino());
-        
+
+        int spareThreads = 0;
+        if(languageList != null) {
+            for(String lstr :languageList.split(",")) {
+                if(lstr.trim().compareTo("arduino") == 0) {
+                    langs.add(new lArduino());
+                }
+                if(lstr.trim().compareTo("posix") == 0) {
+                    langs.add(new lPosix());
+                }
+                if(lstr.trim().compareTo("java") == 0) {
+                    langs.add(new lJava());
+                    spareThreads = 2;//FIXME: value to be taken from lJava directly
+                }
+                if(lstr.trim().compareTo("nodejs") == 0) {
+                    langs.add(new lJavaScript());
+                }
+                if(lstr.trim().compareTo("sintefboard") == 0) {
+                    langs.add(new lSintefboard());
+                }
+            }
+            
+        } else {
+            langs.add(new lPosix());
+            langs.add(new lJava());
+            langs.add(new lJavaScript());
+            langs.add(new lArduino());
+            langs.add(new lSintefboard());
+            spareThreads = 2;//FIXME: see above
+        }
+        int poolSize = Runtime.getRuntime().availableProcessors() - spareThreads;
+        ExecutorService executor = Executors.newFixedThreadPool(poolSize);
+
         Set<TestCase> testCases = new HashSet<>();
         Map<String,Map<TargetedLanguage,Set<TestCase>>> testBench = new HashMap<>();
         
@@ -159,14 +224,14 @@ public class TestJar {
         System.out.println("****************************************");
         System.out.println("*          ThingML Compilation         *");
         System.out.println("****************************************");
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        executor = Executors.newFixedThreadPool(poolSize);
         testRun(testCfg, executor);
         System.out.println("");
         
         System.out.println("****************************************");
         System.out.println("*      Generated Code Compilation      *");
         System.out.println("****************************************");
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        executor = Executors.newFixedThreadPool(poolSize);
         testRun(testCfg, executor);
         System.out.println("");
         
@@ -174,7 +239,7 @@ public class TestJar {
         System.out.println("****************************************");
         System.out.println("*       Generated Code Execution       *");
         System.out.println("****************************************");
-        executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        executor = Executors.newFixedThreadPool(poolSize);
         testRun(testCfg, executor);
         System.out.println("");
         
@@ -185,7 +250,7 @@ public class TestJar {
         
         System.out.println("");
         
-        writeResultsFile(new File(tmpDir, "results.html"), testBench, langs);
+        writeResultsFile(new File(tmpDir, "results.html"), testBench, langs, testFolder);
         
         
         System.out.println("");
@@ -306,7 +371,7 @@ public class TestJar {
         System.out.println("Done.");
     }
     
-    public static void writeResultsFile(File results, Map<String,Map<TargetedLanguage,Set<TestCase>>> tests, Set<TargetedLanguage> langs) {
+    public static void writeResultsFile(File results, Map<String,Map<TargetedLanguage,Set<TestCase>>> tests, Set<TargetedLanguage> langs, File srcDir) {
         StringBuilder res = new StringBuilder();
         
         res.append("<!DOCTYPE html>\n" +
@@ -349,7 +414,7 @@ public class TestJar {
             boolean lineSuccess = true;
             res.append("            <tr>\n");
             res.append("            <td class=\"");
-            lineB.append("                " + line.getKey() + "\n");
+            lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
             lineB.append("            </td>\n");
             
             for(Map.Entry<TargetedLanguage,Set<TestCase>> cell : line.getValue().entrySet()) {
@@ -357,18 +422,34 @@ public class TestJar {
                 boolean cellSuccess = true;
                 
                 lineB.append("              <td class=\"");
+                cellB.append("                  <table>\n");
                 String cellRes = "";
-                
                 for(TestCase tc : cell.getValue()) {
+                    cellB.append("                  <tr>\n");
+                    cellB.append("                  <td class=\"" );
                     if(tc.isLastStepASuccess) {
+                        cellB.append("green");
                         cellRes = "*";
                     } else {
                         cellRes = "!";
                         cellSuccess = false;
+                        cellB.append("red");
                     }
-                    cellB.append("                  <a href=" + tc.logFile.getAbsolutePath() + ">[" +cellRes+ "]</a>\n");
+                    cellB.append("\">\n");
+                    
+                    cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
+                    cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
+                    /*if(tc.oracleExpected != null) {
+                    cellB.append("                      | " + tc.oracleExpected + "\n");
+                    }
+                    if((tc.oracleExpected != null) && (tc.oracleActual != null)) {
+                    cellB.append("                      | " + tc.oracleActual + "\n");
+                    }*/
+                    cellB.append("                  </td>\n" );
+                    cellB.append("                  </tr>\n");
                     
                 }
+                cellB.append("                  </table>\n");
                 
                 if(cellSuccess) {
                     lineB.append("green");
@@ -415,7 +496,7 @@ public class TestJar {
             w.print(res.toString());
             w.close();
         } catch (Exception ex) {
-            System.err.println("Problem writting log");
+            System.err.println("Problem writing log");
             ex.printStackTrace();
         }
     }

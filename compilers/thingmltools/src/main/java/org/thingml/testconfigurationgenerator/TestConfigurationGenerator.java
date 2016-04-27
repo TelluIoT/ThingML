@@ -115,7 +115,6 @@ public class TestConfigurationGenerator extends ThingMLTool{
         
         builder.append("        state e" + i + " {\n");
         builder.append("            on entry do\n"
-                     + "                print \" [Done]\\n\"\n"
                      + "                testEnd!testEnd()\n"
                      + "            end");
         builder.append("        }\n");

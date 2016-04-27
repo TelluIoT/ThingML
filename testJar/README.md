@@ -17,6 +17,9 @@ mvn exec:java
 
 Results are sumed up into tmp/results.html, tmp/log contains detailed log of each test, tmp/thingml contains the test configurations for each test, and tmp/gen contains the generated code in targeted languages.
 
+##Configuration
+In the file config.properties you can find the list of languages to be tested, and select testcases to be run.
+
 ## Adding a test case
 In order to add a test case, one must add a ThingML file to the directory testJar/src/main/resources/tests/ containing the test. 
 A test consist in at least one thing.

@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
-    public void generateMessages(Message m, Context ctx) {
+    public void generateMessages(Message m, Context ctx) { //TODO: migrate code related to string/binary serialization into plugins
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
         String rootPack = pack;
@@ -257,25 +257,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n\n");
     }
 
-    /*private boolean hasAPI(Thing thing) {
-        boolean hasAPI = thing.getProperties().size() > 0;
-        for (Port p : thing.allPorts()) {
-            if (!p.isDefined("public", "false")) {
-                hasAPI = true;
-                break;
-            }
-        }
-        if (!hasAPI) {
-            for (Type ty : ((ThingMLModel) thing.eContainer()).allUsedSimpleTypes()) {
-                if (ty instanceof Enumeration) {
-                    hasAPI = true;
-                    break;
-                }
-            }
-        }
-        return hasAPI;
-    }*/
-
     protected void generateFunction(Function f, Thing thing, StringBuilder builder, Context ctx) {
         if (!f.isDefined("abstract", "true")) {
             DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
@@ -376,6 +357,68 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
 
+        boolean overrideReceive = false;
+        for(StateMachine sm : thing.getBehaviour()) {
+            if (sm.getInternal().size() > 0) {
+                overrideReceive = true;
+                break;
+            }
+        }
+        if (overrideReceive) {
+            builder.append("@Override\npublic void receive(Event event, final Port p){\n");
+            builder.append("if (root == null) {\n");
+            builder.append("boolean consumed = false;\n");
+            for (StateMachine sm : thing.getBehaviour()) {
+                int id = 0;
+                for (InternalTransition i : sm.getInternal()) {
+                    for (Event e : i.getEvent()) {
+                        ReceiveMessage rm = (ReceiveMessage) e;
+                        builder.append("if (");
+                        if (id > 0)
+                            builder.append("!consumed && ");
+                        builder.append("event.getType().equals(" + rm.getMessage().getName() + "Type)) {\n");
+                        builder.append("final " + ctx.firstToUpper(rm.getMessage().getName()) + "MessageType." + ctx.firstToUpper(rm.getMessage().getName()) + "Message " + rm.getMessage().getName() + " = (" + ctx.firstToUpper(rm.getMessage().getName()) + "MessageType." + ctx.firstToUpper(rm.getMessage().getName()) + "Message) event;\n");
+                        if (i.getGuard() != null) {
+                            builder.append(" if (");
+                            ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
+                            builder.append(") {\n");
+                        }
+                        builder.append("consumed = true;\n");
+                        ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
+                        builder.append("}\n");
+                        id++;
+                    }
+                    if (i.getEvent().size() == 0) {//FIXME: some code duplication from above...
+                        if (i.getGuard() != null) {
+                            builder.append("if (");
+                            if (id > 0)
+                                builder.append("!consumed && ");
+                            ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
+                            builder.append(") {\n");
+                        }
+                        builder.append("consumed = true;\n");
+                        ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
+                        builder.append("}\n");
+                        id++;
+                    }
+                    builder.append("}\n");
+                }
+            }
+            builder.append("if (!consumed){\nsuper.receive(event, p);\n}\n");
+            builder.append("else {");
+            builder.append("for (Component child : forks) {\n");
+            builder.append("Event child_e = event.clone();\n");
+            builder.append("child.receive(child_e, p);\n");
+            builder.append("}\n");
+            builder.append("for(int i = 0; i < behavior.regions.length; i++) {\n");
+            builder.append("behavior.regions[i].handle(event, p);");
+            builder.append("}\n");
+            builder.append("}\n");
+            builder.append("} else {\n");
+            builder.append("super.receive(event, p);\n");
+            builder.append("}\n");
+            builder.append("}\n\n");
+        }
 
         for (Port p : thing.allPorts()) {
             if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
@@ -392,7 +435,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
 
-        if (!debugProfile.getDebugMessages().isEmpty()) {
+        /*if (!debugProfile.getDebugMessages().isEmpty()) {//FIXME: receive is overridden elsewhere, cannot be overridden twice. To be merged.
             builder.append("@Override\npublic void receive(Event event, final Port p){\n");
             int i = 0;
             for (Port p : thing.allPorts()) {
@@ -418,7 +461,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
             builder.append("super.receive(event, p);\n");
             builder.append("}\n\n");
-        }
+        }*/
 
 
             for (Port p : thing.allPorts()) {

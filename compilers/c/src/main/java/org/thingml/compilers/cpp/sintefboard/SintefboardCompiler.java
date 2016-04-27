@@ -66,7 +66,7 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
         processDebug(cfg);
         
         ctx.setCurrentConfiguration(cfg);
-        ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
+        //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing: cfg.allThings()) {
