@@ -1,0 +1,5 @@
+import "A_Prop.thingml"
+
+thing fragment B_Prop includes A_Prop {
+	property B : Char = '\'B\''
+}
