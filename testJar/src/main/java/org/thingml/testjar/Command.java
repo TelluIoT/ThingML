@@ -90,51 +90,56 @@ public class Command implements Callable<String> {
     
     @Override
     public String call() throws Exception {
+        //System.out.print("[call] ");
+        
         Future<String> res = null, res2 =null;
         Runtime runtime = Runtime.getRuntime();
         ExecutorService executor = Executors.newFixedThreadPool(2);
         Set<Callable<String>>  todo = new HashSet<>();
         final Process process;
+        //System.out.print("[pre process] ");
         if(dir == null) {
-                process = runtime.exec(cmd, null);
-            } else {
-                process = runtime.exec(cmd, null, dir);
-            }
-            // Consommation de la sortie standard de l'application externe dans un Thread separe
-            String r1 = (new Callable<String>() {
-            //todo.add(new Callable<String>() {
-                public String call() {
-                    String r = null;
+            process = runtime.exec(cmd, null);
+        } else {
+            process = runtime.exec(cmd, null, dir);
+        }
+        // Consommation de la sortie standard de l'application externe dans un Thread separe
+        //System.out.println("[screen stdout] ");
+        String r1 = (new Callable<String>() {
+        //todo.add(new Callable<String>() {
+            public String call() {
+                String r = null;
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line = "";
                     try {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        String line = "";
-                        try {
-                            stdlog += "\n";
-                            while((line = reader.readLine()) != null) {
-                                if(success != null) {
-                                    Matcher m = success.matcher(line);
-                                    if(m.find()) {
-                                        if(r == null) {
-                                            r = "[SUCCESS] " + line;
-                                            //System.out.println("[SUCCESS] !!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                                        }
+                        stdlog += "\n";
+                        while((line = reader.readLine()) != null) {
+                            if(success != null) {
+                                Matcher m = success.matcher(line);
+                                if(m.find()) {
+                                    if(r == null) {
+                                        r = "[SUCCESS] " + line;
+                                        //System.out.println("[SUCCESS] !!!!!!!!!!!!!!!!!!!!!!!!!!!");
                                     }
                                 }
-                                //System.out.println("[Output] "+ line);
-                                stdlog += "[stdout] " + line + "\n";
                             }
-                        } finally {
-                            reader.close();
+                            //System.out.println("[Output] "+ line);
+                            stdlog += "[stdout] " + line + "\n";
                         }
-                    } catch(IOException ioe) {
-                        ioe.printStackTrace();
+                    } finally {
+                        reader.close();
                     }
-                    return r;
+                } catch(IOException ioe) {
+                    ioe.printStackTrace();
                 }
-            }).call();
+                return r;
+            }
+        }).call();
 
         // Consommation de la sortie d'erreur de l'application externe dans un Thread separe
         //todo.add(new Callable<String>() {
+        //System.out.println("[screen stderr] ");
         String r0 = (new Callable<String>() {
             public String call() {
                 String r = null;
@@ -162,6 +167,7 @@ public class Command implements Callable<String> {
                 return r;
             }
         }).call();
+        //System.out.println("[screen done] ");
             
         if((success != null) && (failure != null)) {
             this.isSuccess = (r1 != null) && (r0 == null);
@@ -173,6 +179,7 @@ public class Command implements Callable<String> {
             this.isSuccess = true;
         }
         
+            //System.out.println("[res done] ");
         
         if(r1 != null) {
             return r1;
