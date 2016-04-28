@@ -21,6 +21,7 @@ thing TestSession2 includes Test
 			action do
 				ID = e.c
 				fork s
+                p!m(ID)
 				ID = '\'M\''
 			end
 
