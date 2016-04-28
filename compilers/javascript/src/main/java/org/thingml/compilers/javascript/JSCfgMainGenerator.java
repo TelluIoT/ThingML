@@ -96,7 +96,11 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                     } else {
                         if (p.getValue() != null) {
                             StringBuilder tempbuilder = new StringBuilder();
-                            ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                            ctx.currentInstance = i;
+                            //ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                            ctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
+                            ctx.currentInstance = null;
+                            
                             result += tempbuilder.toString();
                         } else {
                             result += getDefaultValue(p.getKey().getType());
