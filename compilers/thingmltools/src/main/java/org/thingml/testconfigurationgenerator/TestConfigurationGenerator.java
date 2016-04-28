@@ -113,7 +113,7 @@ public class TestConfigurationGenerator extends ThingMLTool{
             Integer dur = Integer.parseInt(timerDuration);
             testDuration = dur.intValue();
         }
-        builder.append("            on entry timer!timer_start(250)\n");
+        builder.append("            on entry timer!timer_start(" + testDuration + ")\n");
         builder.append("            transition -> e" + (i+1) + "\n");
         builder.append("            event timer?timer_timeout\n");
         builder.append("        }\n");

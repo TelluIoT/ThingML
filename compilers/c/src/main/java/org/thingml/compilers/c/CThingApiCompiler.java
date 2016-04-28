@@ -274,14 +274,14 @@ public class CThingApiCompiler extends ThingApiCompiler {
         // Exit actions
 //        if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             // Add handler for empty transitions if needed - Added by sdalgard
-            if (sm.hasEmptyHandlers()) {
-                builder.append("int " + ctx.getEmptyHandlerName(thing));
-                ctx.appendFormalParametersEmptyHandler(thing, builder);
-                builder.append(";\n");
-            }
+ //           if (sm.hasEmptyHandlers()) {
+ //               builder.append("int " + ctx.getEmptyHandlerName(thing));
+ //               ctx.appendFormalParametersEmptyHandler(thing, builder);
+ //               builder.append(";\n");
+ //           }
 
 
-        }
+ //       }
 
 
 //        // Message Sending
