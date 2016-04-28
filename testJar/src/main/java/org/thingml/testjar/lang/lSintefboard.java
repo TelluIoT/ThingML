@@ -44,7 +44,7 @@ public class lSintefboard extends TargetedLanguage {
 
     @Override
     public Command execTargeted(TestCase t) {
-        String prg = t.name + "Posix";
+        String prg = t.name + "_CfgPosix";
         
         String[] execCmd = new String[1];
         execCmd[0] = "./" + prg;

@@ -54,6 +54,9 @@ public class Main {
     @Parameter(names ={"--create-dir", "-d"}, description = "Create a new directory named after the configuration for the output")
     private boolean createDir;
     
+    @Parameter(names ={"--list-plugins"}, description = "Display the list of available plugins")
+    private boolean listPlugins;
+    
     @Parameter(names={"--compiler", "-c"}, description = "Compiler ID (Mandatory unless --tool (-t) is used)")
     String compiler;
     @Parameter(names={"--tool", "-t"}, description = "Tool ID (Mandatory unless --compiler (-c) is used)")
@@ -83,8 +86,9 @@ public class Main {
         for (ThingMLTool t : toolregistry.getToolPrototypes()) {
             System.out.println(" |     " + t.getID() + "\t- " + t.getDescription());
         }
-        
-        System.out.println();
+    }
+    
+    public static void printPluginList(JCommander jcom, ThingMLCompilerRegistry registry, ThingMLToolRegistry toolregistry) {
         registry.printNetworkPluginList();
         
         System.out.println();
@@ -98,8 +102,17 @@ public class Main {
         JCommander jcom = new JCommander(main, args);
         
         // HELP Handling
-        if(main.help || ((main.compiler == null) && (main.tool == null))) {
+        if(main.help || ((main.compiler == null) && (main.tool == null) && (!main.listPlugins))) {
             printUsage(jcom, registry, toolregistry);
+            if(main.listPlugins) {
+                System.out.println();
+                printPluginList(jcom, registry, toolregistry);
+            }
+            return;
+        }
+        
+        if(main.listPlugins) {
+            printPluginList(jcom, registry, toolregistry);
             return;
         }
         

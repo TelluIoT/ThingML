@@ -165,19 +165,27 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         for (Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
             nbInternalPort += entries.getValue().size();
         }
-
-
-        int nbMaxConnexion = cfg.allConnectors().size() * 2 + cfg.getExternalConnectors().size() + nbInternalPort;
-        if (cfg.hasAnnotation("c_dyn_connectors")) {
-            if (cfg.annotation("c_dyn_connectors").iterator().next().compareToIgnoreCase("*") != 0) {
-                nbMaxConnexion = Integer.parseInt(cfg.annotation("c_dyn_connectors").iterator().next());
-            }
-            builder.append("//Declaration of connexion array\n");
-            builder.append("#define NB_MAX_CONNEXION " + nbMaxConnexion + "\n");
-            builder.append("struct Msg_Handler * " + cfg.getName() + "_receivers[NB_MAX_CONNEXION];\n\n");
+        
+        
+        int nbMaxConnexion = cfg.allConnectors().size()*2 + cfg.getExternalConnectors().size() + nbInternalPort;
+        if(cfg.hasAnnotation("c_dyn_connectors")) {
+            if(cfg.annotation("c_dyn_connectors").iterator().next().compareToIgnoreCase("*") != 0) {
+            nbMaxConnexion = Integer.parseInt(cfg.annotation("c_dyn_connectors").iterator().next());
         }
-
-
+        builder.append("//Declaration of connexion array\n");
+        builder.append("#define NB_MAX_CONNEXION " + nbMaxConnexion + "\n");
+        builder.append("struct Msg_Handler * " + cfg.getName() + "_receivers[NB_MAX_CONNEXION];\n\n");
+        }
+        
+        for (Instance inst : cfg.allInstances()) {
+            for (Property a : cfg.allArrays(inst)) {
+                builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
+                builder.append("[");
+                ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
+                builder.append("];\n");
+            }
+        }
         if (!isGeneratingCpp()) { // Declarations are made in header file for C++ - sdalgard
 
             builder.append("//Declaration of instance variables\n");
@@ -198,14 +206,29 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(";\n");
                 }
             }*/
-
-
-                for (Property a : cfg.allArrays(inst)) {
-                    builder.append(ctx.getCType(a.getType()) + " ");
-                    builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
-                    builder.append("[");
-                    ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
-                    builder.append("];\n");
+            
+        /*
+            for (Property a : cfg.allArrays(inst)) {
+                builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
+                builder.append("[");
+                ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
+                builder.append("];\n");
+            }*/
+            
+            
+            builder.append(ctx.getInstanceVarDecl(inst) + "\n");
+            
+            if(cfg.hasAnnotation("c_dyn_connectors")) {
+            for(Port p : inst.getType().allPorts()) {
+                if(!p.getReceives().isEmpty()) {
+                    builder.append("struct Msg_Handler " + inst.getName()
+                            + "_" + p.getName() + "_handlers;\n");
+                    builder.append("uint16_t " + inst.getName()
+                            + "_" + p.getName() + "_msgs[" + p.getReceives().size() + "];\n");
+                    builder.append("void * " + inst.getName()
+                            + "_" + p.getName() + "_handlers_tab[" + p.getReceives().size() + "];\n\n");
+                    
                 }
 
 
