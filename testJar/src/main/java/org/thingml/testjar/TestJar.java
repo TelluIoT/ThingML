@@ -419,7 +419,7 @@ public class TestJar {
             
             for(Map.Entry<TargetedLanguage,Set<TestCase>> cell : line.getValue().entrySet()) {
                 StringBuilder cellB = new StringBuilder();
-                boolean cellSuccess = true;
+                boolean cellSuccess = !cell.getValue().isEmpty();
                 
                 lineB.append("              <td class=\"");
                 cellB.append("                  <table>\n");
