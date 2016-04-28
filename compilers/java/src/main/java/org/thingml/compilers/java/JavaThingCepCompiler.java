@@ -89,6 +89,8 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
        }
 
        for(LocalVariable lv : stream.getSelection()) {
+           if(lv.isChangeable())//selection are readonly anyway, even if not specified in ThingML
+               builder.append("final ");
            context.getCompiler().getThingActionCompiler().generate(lv, builder, context);
        }
 
