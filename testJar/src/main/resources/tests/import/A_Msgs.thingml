@@ -1,0 +1,4 @@
+
+thing fragment A_Msgs {
+	message msgA()
+}
