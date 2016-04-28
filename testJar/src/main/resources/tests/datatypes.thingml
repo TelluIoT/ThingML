@@ -72,7 +72,9 @@ datatype Int32<4>
     @SenML_type "Double";
 
 datatype UInt32<4>	
-	@c_type "uint32_t";
+	@c_type "uint32_t"
+	@java_type "long"
+	@java_primitive "true";
 
 datatype Long<4>	
 	@c_type "long"

@@ -10,14 +10,15 @@ thing fragment TestMsgs {
   message cep();
 }
 
-thing TestJoinCustomTTL2 includes Test, TestMsgs, TimerClient
+thing TestJoinSkippedTTL includes Test, TestMsgs, TimerClient
 @c_header "#include <Arduino.h>"
 @test " # SS"
-@test_duration "500"
+@test_duration "1000"
 @test_timer_instance "t"
 @conf "connector test.timer => t.timer"
 @conf "connector test.recP => test.sendP"
 {
+
   provided port sendP {
     sends m1, m2, m3, m4, cep
   }
