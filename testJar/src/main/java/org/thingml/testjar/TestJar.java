@@ -170,7 +170,7 @@ public class TestJar {
         ExecutorService executor = Executors.newFixedThreadPool(poolSize);
 
         Set<TestCase> testCases = new HashSet<>();
-        Map<String,Map<TargetedLanguage,Set<TestCase>>> testBench = new HashMap<>();
+        Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> testBench = new HashMap<>();
         
         testCfgDir.mkdir();
         codeDir.mkdir();
@@ -186,7 +186,7 @@ public class TestJar {
         
         System.out.println("Test Files:");
         for(File f : testFiles) {
-            testBench.put(f.getName(), new HashMap<TargetedLanguage,Set<TestCase>>());
+            testBench.put(f.getName(), new LinkedList<Map.Entry<TargetedLanguage,List<TestCase>>>());
             System.out.println(f.getName());
             for(TargetedLanguage lang : langs) {
                 TestCase tc = new TestCase(f, compilerJar, lang, codeDir, testCfgDir, logDir);
@@ -214,11 +214,17 @@ public class TestJar {
         tasks.clear();
         System.out.println("Done.");
         
-        Set<TestCase> testCfg = new HashSet<>();
+        List<TestCase> testCfg = new LinkedList<>();
         for(TestCase tc : testCases) {
-            Set<TestCase> children = tc.generateChildren();
+            List<TestCase> children = tc.generateChildren();
             testCfg.addAll(children);
-            testBench.get(tc.srcTestCase.getName()).put(tc.lang, children);
+            for(TargetedLanguage lang : langs) {
+                for(TestCase c : children) {
+                    if(c.lang == lang) {
+                        testBench.get(tc.srcTestCase.getName()).add(new HashMap.SimpleEntry<>(tc.lang, children));
+                    }
+                }
+            }
         }
         System.out.println("");
         
@@ -346,7 +352,7 @@ public class TestJar {
         return res;
     }
     
-    public static void testRun(Set<TestCase> tests, ExecutorService executor) {
+    public static void testRun(List<TestCase> tests, ExecutorService executor) {
         System.out.println("");
         System.out.println("Test Cases:");
         Set<Command> tasks = new HashSet<>();
@@ -372,7 +378,7 @@ public class TestJar {
         System.out.println("Done.");
     }
     
-    public static void writeResultsFile(File results, Map<String,Map<TargetedLanguage,Set<TestCase>>> tests, List<TargetedLanguage> langs, File srcDir) {
+    public static void writeResultsFile(File results, Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> tests, List<TargetedLanguage> langs, File srcDir) {
         StringBuilder res = new StringBuilder();
         
         res.append("<!DOCTYPE html>\n" +
@@ -410,60 +416,63 @@ public class TestJar {
         res.append("                </tr>\n");
         
         
-        for(Map.Entry<String,Map<TargetedLanguage,Set<TestCase>>> line : tests.entrySet()) {
+        for(Map.Entry<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> line : tests.entrySet()) {
             StringBuilder lineB = new StringBuilder();
             boolean lineSuccess = true;
             res.append("            <tr>\n");
             res.append("            <td class=\"");
             lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
             lineB.append("            </td>\n");
-            
-            for(Map.Entry<TargetedLanguage,Set<TestCase>> cell : line.getValue().entrySet()) {
-                StringBuilder cellB = new StringBuilder();
-                boolean cellSuccess = !cell.getValue().isEmpty();
-                
-                lineB.append("              <td class=\"");
-                cellB.append("                  <table>\n");
-                String cellRes = "";
-                for(TestCase tc : cell.getValue()) {
-                    cellB.append("                  <tr>\n");
-                    cellB.append("                  <td class=\"" );
-                    if(tc.isLastStepASuccess) {
-                        cellB.append("green");
-                        cellRes = "*";
-                    } else {
-                        cellRes = "!";
-                        cellSuccess = false;
-                        cellB.append("red");
+            for(TargetedLanguage lang : langs) {
+                for(Map.Entry<TargetedLanguage,List<TestCase>> cell : line.getValue()) {
+                    if(cell.getKey() == lang) {
+                        StringBuilder cellB = new StringBuilder();
+                        boolean cellSuccess = !cell.getValue().isEmpty();
+
+                        lineB.append("              <td class=\"");
+                        cellB.append("                  <table>\n");
+                        String cellRes = "";
+                        for(TestCase tc : cell.getValue()) {
+                            cellB.append("                  <tr>\n");
+                            cellB.append("                  <td class=\"" );
+                            if(tc.isLastStepASuccess) {
+                                cellB.append("green");
+                                cellRes = "*";
+                            } else {
+                                cellRes = "!";
+                                cellSuccess = false;
+                                cellB.append("red");
+                            }
+                            cellB.append("\">\n");
+
+                            cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
+                            cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
+                            /*if(tc.oracleExpected != null) {
+                            cellB.append("                      | " + tc.oracleExpected + "\n");
+                            }
+                            if((tc.oracleExpected != null) && (tc.oracleActual != null)) {
+                            cellB.append("                      | " + tc.oracleActual + "\n");
+                            }*/
+                            cellB.append("                  </td>\n" );
+                            cellB.append("                  </tr>\n");
+
+                        }
+                        cellB.append("                  </table>\n");
+
+                        if(cellSuccess) {
+                            lineB.append("green");
+                        } else {
+                            lineB.append("red");
+                            cell.getKey().failedTest.add(line.getKey());
+                        }
+                        cell.getKey().testNb++;
+                        lineB.append("\">\n");
+                        lineB.append(cellB);
+                        lineB.append("              </td>\n");
+
+                        lineSuccess &= cellSuccess;
                     }
-                    cellB.append("\">\n");
-                    
-                    cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
-                    cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
-                    /*if(tc.oracleExpected != null) {
-                    cellB.append("                      | " + tc.oracleExpected + "\n");
-                    }
-                    if((tc.oracleExpected != null) && (tc.oracleActual != null)) {
-                    cellB.append("                      | " + tc.oracleActual + "\n");
-                    }*/
-                    cellB.append("                  </td>\n" );
-                    cellB.append("                  </tr>\n");
-                    
                 }
-                cellB.append("                  </table>\n");
-                
-                if(cellSuccess) {
-                    lineB.append("green");
-                } else {
-                    lineB.append("red");
-                    cell.getKey().failedTest.add(line.getKey());
-                }
-                cell.getKey().testNb++;
-                lineB.append("\">\n");
-                lineB.append(cellB);
-                lineB.append("              </td>\n");
-                
-                lineSuccess &= cellSuccess;
             }
             
             
