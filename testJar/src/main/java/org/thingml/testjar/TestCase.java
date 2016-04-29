@@ -172,7 +172,7 @@ public class TestCase {
                 res = m.find();
                 String oracleLog = "";
                 oracleLog += "[test] <" + name + ">" + " for " + lang.compilerID + "\n";
-                oracleLog += "[raw output] <\n" + ongoingCmd.stdlog + "\n>" + "\n";
+                //oracleLog += "[raw output] <\n" + ongoingCmd.stdlog + "\n>" + "\n";
                 oracleLog += "[expected] <" + exp + ">" + "\n";
                 oracleLog += "[actual] <" + actual + ">" + "\n";
                 oracleLog += "[match] <" + res + ">" + "\n";

@@ -55,7 +55,7 @@ thing TestDumpJava includes TestDump
 				'try{java.io.PrintWriter pw = new java.io.PrintWriter("cputime");'
 				'pw.println(""+'&time&');'
 				'pw.close();}catch(Exception e){;}'
-				print("[Done]\n End of thingml processus") 
+				print(" [Done]\n End of thingml processus") 
 				'((org.thingml.devices.Dumper)' & device & ').stop((int)'&transitionsCount&');
 				System.out.println("Memory: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));'
 				'System.exit(0);'

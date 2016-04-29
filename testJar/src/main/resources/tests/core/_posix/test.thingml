@@ -63,7 +63,7 @@ FILE* cpuFile = NULL;"
 		state End {
 			on entry do
 
-print "[Done]\n End of thingml processus\n"
+print " [Done]\n End of thingml processus\n"
 'exit(0);'
 			end
 		}
