@@ -87,9 +87,10 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("var Enum = require('./enums');\n");
         }
         builder.append("var StateJS = require('state.js');\n");
+        builder.append("StateJS.internalTransitionsTriggerCompletion = true;\n");
 
         if (debugProfile.isActive()) {
-            builder.append("var colors = require('colors/safe');\n");
+            //builder.append("var colors = require('colors/safe');\n");
             generatePrintDebugFunction(thing, builder, ctx);
         }
 
