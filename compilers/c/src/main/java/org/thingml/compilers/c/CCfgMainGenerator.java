@@ -31,13 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.thingml.compilers.DebugProfile;
-import org.thingml.compilers.c.arduino.plugin.ArduinoSerial;
-import org.thingml.compilers.c.arduino.plugin.ArduinoTimer;
-import org.thingml.compilers.c.arduino.plugin.NoBufSerial;
-import org.thingml.compilers.c.posix.plugin.NopollWS;
-import org.thingml.compilers.c.posix.plugin.PosixMQTT;
-import org.thingml.compilers.c.posix.plugin.PosixSerial;
-import org.thingml.compilers.c.posix.plugin.PosixWS;
 import org.thingml.compilers.cpp.sintefboard.plugin.SintefboardPort;
 import org.thingml.compilers.spi.NetworkPlugin;
 

@@ -29,6 +29,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -134,7 +135,7 @@ public class TestJar {
             testFiles = listTestFiles(testFolder, testPattern);
         }
         
-        Set<TargetedLanguage> langs = new HashSet<>();
+        List<TargetedLanguage> langs = new LinkedList<>();
 
         int spareThreads = 0;
         if(languageList != null) {
@@ -371,7 +372,7 @@ public class TestJar {
         System.out.println("Done.");
     }
     
-    public static void writeResultsFile(File results, Map<String,Map<TargetedLanguage,Set<TestCase>>> tests, Set<TargetedLanguage> langs, File srcDir) {
+    public static void writeResultsFile(File results, Map<String,Map<TargetedLanguage,Set<TestCase>>> tests, List<TargetedLanguage> langs, File srcDir) {
         StringBuilder res = new StringBuilder();
         
         res.append("<!DOCTYPE html>\n" +
