@@ -122,6 +122,9 @@ public class TestJar {
                 tl.add(tstr.trim());
             }
         }
+	
+	//Test Sources Selection
+
         Set<File> testFiles;
         if(useBlackList != null) {
             if(useBlackList.compareToIgnoreCase("false") == 0) {
@@ -134,6 +137,8 @@ public class TestJar {
         } else {
             testFiles = listTestFiles(testFolder, testPattern);
         }
+
+	//Language Selection
         
         List<TargetedLanguage> langs = new LinkedList<>();
 
@@ -166,8 +171,13 @@ public class TestJar {
             langs.add(new lSintefboard());
             spareThreads = 2;//FIXME: see above
         }
-        int poolSize = Runtime.getRuntime().availableProcessors() - spareThreads;
-        ExecutorService executor = Executors.newFixedThreadPool(poolSize);
+        
+	//Environement setup
+	int poolSize = Runtime.getRuntime().availableProcessors() - spareThreads;
+        if(poolSize <= 0) {
+		poolSize = 1;
+	}
+	ExecutorService executor = Executors.newFixedThreadPool(poolSize);
 
         Set<TestCase> testCases = new HashSet<>();
         Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> testBench = new HashMap<>();
