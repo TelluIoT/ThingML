@@ -70,15 +70,15 @@ public class CThingApiCompiler extends ThingApiCompiler {
         generatePublicPrototypes(thing, builder, ctx);
         generatePublicMessageSendingOperations(thing, builder, ctx);
 
-        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
-            generatePrivateCppPrototypes(thing, builder, ctx);
-        }
+//        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
+//            generatePrivateCppPrototypes(thing, builder, ctx);
+//        }
         
-        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
-            builder.append("// Observers for outgoing messages:\n");
-            generatePrivateCppMessageSendingPrototypes(thing, builder, ctx);
-            builder.append("\n");
-        }
+//        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
+//            builder.append("// Observers for outgoing messages:\n");
+//            generatePrivateCppMessageSendingPrototypes(thing, builder, ctx);
+//            builder.append("\n");
+//        }
         
         // This is in the header for now but it should be moved to the implementation
         // when a proper private "initialize_instance" operation will be provided
@@ -227,35 +227,35 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("\n");
     }
 
-    protected void generatePrivateCppPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+//    protected void generatePrivateCppPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         // NB sdalgard - This function is a duplicate of generatePrivateCPrototypes in class CThingImplCompiler
         
         
         // Exit actions
-        if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
-            StateMachine sm = thing.allStateMachines().get(0);
-            builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
-            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
+//        if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
+//            StateMachine sm = thing.allStateMachines().get(0);
+//            builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
+//            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
             
             // Add handler for empty transitions if needed - Added by sdalgard
-            if (sm.hasEmptyHandlers()) {
-                builder.append("int " + ctx.getEmptyHandlerName(thing));
-                ctx.appendFormalParametersEmptyHandler(thing, builder);
-                builder.append(";\n");
-            }
+//            if (sm.hasEmptyHandlers()) {
+//                builder.append("int " + ctx.getEmptyHandlerName(thing));
+//                ctx.appendFormalParametersEmptyHandler(thing, builder);
+//                builder.append(";\n");
+//            }
             
             
-        }
+//        }
 
 
-        // Message Sending
-        for(Port port : thing.getPorts()) {
-            for (Message msg : port.getSends()) {
-                builder.append("void " + ctx.getSenderName(thing, port, msg));
-                ctx.appendFormalParameters(thing, builder, msg);
-                builder.append(";\n");
-            }
-        }
+//        // Message Sending
+//        for(Port port : thing.getPorts()) {
+//            for (Message msg : port.getSends()) {
+//                builder.append("void " + ctx.getSenderName(thing, port, msg));
+//                ctx.appendFormalParameters(thing, builder, msg);
+//                builder.append(";\n");
+//            }
+//        }
 
         //TODO sdalgard - Check how this shall be handled for C++
         //for (Function f : thing.allFunctions()) {
@@ -267,27 +267,27 @@ public class CThingApiCompiler extends ThingApiCompiler {
         
         
         
-    }
+//    }
 
     
-    protected void generatePrivateCppMessageSendingPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+//    protected void generatePrivateCppMessageSendingPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
        // NB sdalgard - This function is duplicated in generatePrivateMessageSendingOperations in class CThingImplCompiler
-       for(Port port : thing.allPorts()) {
-            for (Message msg : port.getSends()) {
-                // Variable for the function pointer
-                builder.append("void (" + getCppNameScope() + "*" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                ctx.appendFormalTypeSignature(thing, builder, msg);
-                builder.append(";\n");
-
-                // Variable for the external function pointer
-                builder.append("void (" + getCppNameScope() + "*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                ctx.appendFormalTypeSignature(thing, builder, msg);
-                builder.append(";\n");
-
-            }
-        }
-        builder.append("\n");
-    }
+//       for(Port port : thing.allPorts()) {
+//            for (Message msg : port.getSends()) {
+//                // Variable for the function pointer
+//                builder.append("void (" + getCppNameScope() + "*" + ctx.getSenderName(thing, port, msg) + "_listener)");
+//                ctx.appendFormalTypeSignature(thing, builder, msg);
+//                builder.append(";\n");
+//
+//                // Variable for the external function pointer
+//                builder.append("void (" + getCppNameScope() + "*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
+//                ctx.appendFormalTypeSignature(thing, builder, msg);
+//                builder.append(";\n");
+//
+//            }
+//        }
+//        builder.append("\n");
+//    }
 
     protected void generateStateIDs(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 

@@ -87,9 +87,10 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("var Enum = require('./enums');\n");
         }
         builder.append("var StateJS = require('state.js');\n");
+        builder.append("StateJS.internalTransitionsTriggerCompletion = true;\n");
 
         if (debugProfile.isActive()) {
-            builder.append("var colors = require('colors/safe');\n");
+            //builder.append("var colors = require('colors/safe');\n");
             generatePrintDebugFunction(thing, builder, ctx);
         }
 
@@ -363,11 +364,11 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("const forkLength = _this.getForks().length;\n");
                 builder.append("var idFork = 0;");
                 builder.append("for (var _i = 0; _i < forkLength; _i++) {\n");
-                builder.append("if (this.getForks()[_i] === _this) {\n");
+                builder.append("if (_this.getForks()[_i] === _this) {\n");
                 builder.append("idFork = _i\n");
                 builder.append("}\n");
                 builder.append("}\n");
-                builder.append("_this.root.getForks().splice(idFork, 1);\n");
+                builder.append("_this.getForks().splice(idFork, 1);\n");
                 builder.append("_this = null;\n");
             }
             builder.append("})");

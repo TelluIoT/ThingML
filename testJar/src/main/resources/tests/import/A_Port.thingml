@@ -1,0 +1,10 @@
+
+
+thing fragment A_Port {
+	message msgA()
+
+	internal port A {
+		sends msgA
+		receives msgA
+	}
+}

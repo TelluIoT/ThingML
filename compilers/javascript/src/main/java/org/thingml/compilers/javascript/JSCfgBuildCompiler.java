@@ -53,21 +53,6 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonValue deps = json.get("dependencies");
             
-            /*try {
-                System.out.println("idep: " + deps.asString());
-            } catch(Exception e) {
-                System.out.println("idep: ");
-                e.printStackTrace();
-            }*/
-            /*System.out.println("configuration " + cfg.getName() + " {");
-            for(Instance i : cfg.allInstances()) {
-                System.out.println("instance " + i.getName() + " : " + i.getType().getName());
-            }
-            for(Connector c : cfg.allConnectors()) {
-                System.out.println("connector " + c.getCli().getInstance().getName() + " => " + c.getSrv().getInstance().getName());
-            }
-            System.out.println("}");*/
-            
             for (Thing t : cfg.allThings()) {
                 for (String dep : t.annotation("js_dep")) {
                     deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
@@ -76,9 +61,6 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
             }
 
             boolean addCEPdeps = false;
-            boolean addDebugDeps = ctx.getCompiler().containsDebug();
-            //boolean addDebugDeps = true;
-            
 
             for (Thing t : cfg.allThings()) {
                 if (t.getStreams().size() > 0) {
@@ -87,13 +69,9 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
             }
 
             if(addCEPdeps) {
-                deps.asObject().add("rx", "^2.5.3");
-                deps.asObject().add("events", "^1.0.2");
+                deps.asObject().add("rx", "^4.1.0");
+                deps.asObject().add("events", "^1.1.0");
             }
-
-            //if(addDebugDeps) {
-                deps.asObject().add("colors", "^1.1.2");
-            //}
             
             final File f = new File(ctx.getOutputDirectory() + "/package.json");
             f.setWritable(true);

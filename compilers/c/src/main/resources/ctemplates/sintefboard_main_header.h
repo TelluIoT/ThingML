@@ -18,7 +18,12 @@ port_class *Ports_ptr;
 #endif
 /*HEADER_CLASS*/
 
+//CTX begin
+/*HEADER_CONTEXT*/
+//CTX end
+//Conf begin
 /*HEADER_CONFIGURATION*/
+//Conf end
 
 public:
 #ifdef RCDPORT_IN_USE

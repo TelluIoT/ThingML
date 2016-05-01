@@ -385,6 +385,9 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                         }
                         builder.append("consumed = true;\n");
                         ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
+                        if (i.getGuard() != null) {
+                            builder.append("}\n");
+                        }
                         builder.append("}\n");
                         id++;
                     }

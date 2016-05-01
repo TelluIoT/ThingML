@@ -6,6 +6,10 @@
 
 
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -13,6 +17,11 @@
 #include <string.h>
 #include <math.h>
 #include <signal.h>
+#include <sys/time.h>
+
+#ifdef  __cplusplus
+}
+#endif
 
 typedef unsigned char uint8_t;
 typedef int uint16_t;

@@ -31,13 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.thingml.compilers.DebugProfile;
-import org.thingml.compilers.c.arduino.plugin.ArduinoSerial;
-import org.thingml.compilers.c.arduino.plugin.ArduinoTimer;
-import org.thingml.compilers.c.arduino.plugin.NoBufSerial;
-import org.thingml.compilers.c.posix.plugin.NopollWS;
-import org.thingml.compilers.c.posix.plugin.PosixMQTT;
-import org.thingml.compilers.c.posix.plugin.PosixSerial;
-import org.thingml.compilers.c.posix.plugin.PosixWS;
 import org.thingml.compilers.cpp.sintefboard.plugin.SintefboardPort;
 import org.thingml.compilers.spi.NetworkPlugin;
 
@@ -193,7 +186,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("struct Msg_Handler * " + cfg.getName() + "_receivers[NB_MAX_CONNEXION];\n\n");
         }
         
-        
+        for (Instance inst : cfg.allInstances()) {
+            for (Property a : cfg.allArrays(inst)) {
+                builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
+                builder.append("[");
+                ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
+                builder.append("];\n");
+            }
+        }
         if (!isGeneratingCpp()) { // Declarations are made in header file for C++ - sdalgard
 
             builder.append("//Declaration of instance variables\n");
@@ -215,14 +216,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
             }*/
             
-        
+        /*
             for (Property a : cfg.allArrays(inst)) {
                 builder.append(ctx.getCType(a.getType()) + " ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
                 builder.append("[");
                 ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
                 builder.append("];\n");
-            }
+            }*/
             
             
             builder.append(ctx.getInstanceVarDecl(inst) + "\n");
@@ -1412,7 +1413,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         if (port.isDefined("sync_send", "true")) {
                             // This is for static call of dispatches
                             //builder.append("&" + getCppNameScope() + "dispatch_" + ctx.getSenderName(t, port, msg) + ");\n"); // sdalgard Next line to be fixed
-                            builder.append("sync_dispatch_" + ctx.getSenderName(t, port, msg) + ");\n");                        }
+                            builder.append("&" + getCppNameScope() + "sync_dispatch_" + ctx.getSenderName(t, port, msg) + ");\n");                        }
                         else {
                             // This is to enquqe the message and let the scheduler forward it
                             builder.append("&" + getCppNameScope() + "enqueue_" + ctx.getSenderName(t, port, msg) + ");\n");

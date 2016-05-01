@@ -43,7 +43,6 @@ public class JSCompiler extends OpaqueThingMLCompiler {
     {
         Map<String, CfgExternalConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgExternalConnectorCompiler>();
         connectorCompilerMap.put("kevoree-js", new JS2Kevoree());
-        connectorCompilerMap.put("node-red", new JS2NodeRED());
         addConnectorCompilers(connectorCompilerMap);
     }
 

@@ -159,7 +159,45 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         if (expression.getProperty().isDefined("private", "true") || !(expression.getProperty().eContainer() instanceof Thing) || (expression.getProperty() instanceof Parameter) || (expression.getProperty() instanceof LocalVariable)) {
             builder.append(ctx.getVariableName(expression.getProperty()));
         } else {
-            builder.append("_this." + ctx.getVariableName(expression.getProperty()));
+            //builder.append("_this." + ctx.getVariableName(expression.getProperty()));
+            if (expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
+                builder.append(expression.getProperty().getName());
+            } else if (expression.getProperty() instanceof Property) {
+                if(!ctx.getAtInitTimeLock()) {
+                    if(ctx.currentInstance != null) {
+                        Property p = (Property) expression.getProperty();
+                        if (!p.isChangeable()) {
+                            boolean found = false;
+                            for(ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
+                                String tmp = pa.getInstance().getInstance().findContainingConfiguration().getName() + "_" + pa.getInstance().getInstance().getName();
+
+                                if(ctx.currentInstance.getName().equals(tmp)){
+                                    if(pa.getProperty().getName().compareTo(p.getName()) == 0) {
+                                        generate(pa.getInit(), builder, ctx);
+                                        found = true;
+                                        //System.out.println("ass: '" + tmp + "'");
+                                        //System.out.println("init: '" + tmp + "'");
+                                        //System.out.println("BuilderA: '" + builder + "'");
+                                        break;
+                                    }
+                                }
+                            }
+                            if(!found){
+                                generate(p.getInit(), builder, ctx);
+                                //System.out.println("BuilderB: '" + builder + "'");
+                            }
+                        } else {
+                            builder.append("_this." + ctx.getVariableName(expression.getProperty()));
+                        }
+                    } else {
+                        builder.append("_this." + ctx.getVariableName(expression.getProperty()));
+                    }
+                } else {
+                    Property p = (Property) expression.getProperty();
+                    Expression e = ctx.getCurrentConfiguration().initExpressions(ctx.currentInstance, p).get(0);
+                    generate(e, builder, ctx);
+                }
+            }
         }
     }
 

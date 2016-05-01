@@ -34,18 +34,26 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Increment action, StringBuilder builder, Context ctx) {
-        builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-        builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality()!=null, ctx) + ")");
-        builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
-        builder.append(" + 1));\n");
+        if (action.getVar().getProperty() instanceof Property) {
+            builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
+            builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality() != null, ctx) + ")");
+            builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+            builder.append(" + 1));\n");
+        } else {
+            super.generate(action, builder, ctx);
+        }
     }
 
     @Override
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
-        builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-        builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality()!=null, ctx) + ")");
-        builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
-        builder.append(" - 1));\n");
+        if (action.getVar().getProperty() instanceof Property) {
+            builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
+            builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality()!=null, ctx) + ")");
+            builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+            builder.append(" - 1));\n");
+        } else {
+            super.generate(action, builder, ctx);
+        }
     }
 
     @Override
@@ -164,8 +172,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append(action.getSession().getName() + ".forkId = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId;\n");
         builder.append(action.getSession().getName() + ".root = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this;\n");
         builder.append(action.getSession().getName() + ".init();\n");
-        builder.append(action.getSession().getName() + ".start();\n");
         builder.append(action.getSession().getName() + ".root.forks.add(" + action.getSession().getName() + ");\n");
+        builder.append(action.getSession().getName() + ".start();\n");
     }
 
     @Override

@@ -3,8 +3,6 @@ datatype double<8>
 @c_type "double";
 
 thing TestDumpSintefboard includes TestDump
-@c_header "#include <stdio.h>
-#include <sys/time.h>"
 @c_global "FILE* testFile = NULL;
 FILE* cpuFile = NULL;"
 {
@@ -62,9 +60,10 @@ FILE* cpuFile = NULL;"
 		
 		state End {
 			on entry do
-
-print "End of thingml processus\n"
-'exit(0);'
+				print " [Done]\n"
+				'fflush(stdout);'
+				print "End of thingml processus\n"
+				'exit(0);'
 			end
 		}
 	}

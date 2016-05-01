@@ -1,0 +1,7 @@
+import "A_Func.thingml"
+
+thing fragment B_Func includes A_Func {
+	function B() : Char do
+		return '\'B\''
+	end
+}
