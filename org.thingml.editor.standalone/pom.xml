@@ -55,6 +55,12 @@
             <artifactId>AppleJavaExtensions</artifactId>
             <version>1.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>official-network-plugins</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 

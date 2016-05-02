@@ -29,6 +29,8 @@ import org.thingml.compilers.checker.EMFWrapper;
 import org.thingml.compilers.checker.ErrorWrapper;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -44,10 +46,8 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -55,6 +55,28 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by bmori on 26.05.2015.
  */
 public class ThingMLPanel extends JPanel {
+
+    private static ServiceLoader<NetworkPlugin> plugins = ServiceLoader.load(NetworkPlugin.class);
+    private static Set<NetworkPlugin> loadedPlugins;
+    private static ServiceLoader<SerializationPlugin> serPlugins = ServiceLoader.load(SerializationPlugin.class);
+    private static Set<SerializationPlugin> loadedSerPlugins;
+
+    static {
+        loadedPlugins = new HashSet<>();
+        plugins.reload();
+        Iterator<NetworkPlugin> it = plugins.iterator();
+        while(it.hasNext()) {
+            NetworkPlugin p = it.next();
+            loadedPlugins.add(p);
+        }
+        loadedSerPlugins = new HashSet<>();
+        serPlugins.reload();
+        Iterator<SerializationPlugin> sit = serPlugins.iterator();
+        while(sit.hasNext()) {
+            SerializationPlugin sp = sit.next();
+            loadedSerPlugins.add(sp);
+        }
+    }
 
     File targetFile = null;
     JEditorPane codeEditor = new JEditorPane();
@@ -133,6 +155,16 @@ public class ThingMLPanel extends JPanel {
                                     ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
                                     for (Configuration cfg : thingmlModel.allConfigurations()) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                        for(NetworkPlugin np : loadedPlugins) {
+                                            if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
+                                                compiler.addNetworkPlugin(np);
+                                            }
+                                        }
+                                        for(SerializationPlugin sp : loadedSerPlugins) {
+                                            if(sp.getTargetedLanguages().contains(compiler.getID())) {
+                                                compiler.addSerializationPlugin(sp);
+                                            }
+                                        }
                                         compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
                                         compiler.compileConnector(connectorCompiler.getKey(), cfg);
                                     }
@@ -152,6 +184,16 @@ public class ThingMLPanel extends JPanel {
                                 if (thingmlModel != null) {
                                     for (Configuration cfg : thingmlModel.allConfigurations()) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                        for(NetworkPlugin np : loadedPlugins) {
+                                            if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
+                                                compiler.addNetworkPlugin(np);
+                                            }
+                                        }
+                                        for(SerializationPlugin sp : loadedSerPlugins) {
+                                            if(sp.getTargetedLanguages().contains(compiler.getID())) {
+                                                compiler.addSerializationPlugin(sp);
+                                            }
+                                        }
                                         compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
                                         compiler.compile(cfg);
                                     }
@@ -188,6 +230,16 @@ public class ThingMLPanel extends JPanel {
                                         ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
                                         for (Configuration cfg : thingmlModel.allConfigurations()) {
                                             final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                            for(NetworkPlugin np : loadedPlugins) {
+                                                if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
+                                                    compiler.addNetworkPlugin(np);
+                                                }
+                                            }
+                                            for(SerializationPlugin sp : loadedSerPlugins) {
+                                                if(sp.getTargetedLanguages().contains(compiler.getID())) {
+                                                    compiler.addSerializationPlugin(sp);
+                                                }
+                                            }
                                             compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
                                             compiler.compileConnector(connectorCompiler.getKey(), cfg);
                                         }
@@ -206,6 +258,16 @@ public class ThingMLPanel extends JPanel {
                                     ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
                                     for (Configuration cfg : thingmlModel.allConfigurations()) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
+                                        for(NetworkPlugin np : loadedPlugins) {
+                                            if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
+                                                compiler.addNetworkPlugin(np);
+                                            }
+                                        }
+                                        for(SerializationPlugin sp : loadedSerPlugins) {
+                                            if(sp.getTargetedLanguages().contains(compiler.getID())) {
+                                                compiler.addSerializationPlugin(sp);
+                                            }
+                                        }
                                         
                                         File myFileBuf = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName());
                                         compiler.setOutputDirectory(myFileBuf);

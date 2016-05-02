@@ -479,7 +479,9 @@ public class Context {
             }
         }
         for(Protocol p : protocols) {
-            this.getCompiler().getNetworkPlugin(p).addProtocol(p);
+            final NetworkPlugin netPlugin = this.getCompiler().getNetworkPlugin(p);
+            if (netPlugin != null)
+                netPlugin.addProtocol(p);
         }
         for(NetworkPlugin np : this.getCompiler().getNetworkPlugins()) {
             if(!np.getAssignedProtocols().isEmpty()) {
