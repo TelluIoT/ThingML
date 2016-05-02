@@ -51,10 +51,6 @@
         class="org.thingml.eclipse.ui.commands.ShowThingMLConsole"
         commandId="thingml.showconsole">
   </handler>
-  <handler
-        class="org.thingml.eclipse.ui.commands.CompileThingFile"
-        commandId="thingml.compile">
-  </handler>
 </extension>
    
    
@@ -63,7 +59,8 @@
      <menu
            icon="icons/heads.png"
            label="HEADS / ThingML">
-        <visibleWhen>
+        <visibleWhen
+              checkEnabled="true">
            <with
                  variable="activeMenuSelection">
               <iterate>
@@ -88,6 +85,19 @@
      </menu>
   </menuContribution>
 </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.thingml.eclipse.ui.commands.CompileThingFile"
+            id="thingml.compile"
+            name="compile">
+         <commandParameter
+               id="org.thingml.eclipse.ui.commandParameterCompilerName"
+               name="compiler"
+               optional="false">
+         </commandParameter>
+      </command>
+   </extension>
    
    
 

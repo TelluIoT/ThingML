@@ -54,6 +54,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Created by bmori on 26.05.2015.
  */
+//FIXME: A lot of duplication, which should be avoided
 public class ThingMLPanel extends JPanel {
 
     private static ServiceLoader<NetworkPlugin> plugins = ServiceLoader.load(NetworkPlugin.class);

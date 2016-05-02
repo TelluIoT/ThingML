@@ -102,7 +102,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             if (m.getParameters().indexOf(p) > 0)
                 builder.append(", ");
             builder.append(p.getName());
-            //size = size + ((PrimitiveType)p.getType()).getByteSize();
+            if (p.getType() instanceof PrimitiveType)
+                size = size + ((PrimitiveType)p.getType()).getByteSize();
         }
         builder.append(");\n");
         builder.append("}\n");
