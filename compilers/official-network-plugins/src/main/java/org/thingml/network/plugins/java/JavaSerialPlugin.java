@@ -55,26 +55,27 @@ public class JavaSerialPlugin extends NetworkPlugin {
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
-        final Set<Message> messages = new HashSet<>();
         //TODO: to be improved (e.g. to avoid duplicating messages and ports, etc).
         updatePOM(ctx, cfg);
+        StringBuilder builder = new StringBuilder();
         for (Protocol prot : protocols) {
+            String serializers = "";
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                Message m = tpm.m;
-                messages.add(m);
+                serializers += ctx.getSerializationPlugin(prot).generateSerialization(builder, prot.getName() + "BinaryProtocol", tpm.m);
             }
+            builder = new StringBuilder();
+            final Set<Message> messages = new HashSet<Message>();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
-                Message m = tpm.m;
-                messages.add(m);
+                messages.add(tpm.m);
             }
-            StringBuilder builder = new StringBuilder();
             ctx.getSerializationPlugin(prot).generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
+            final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);
             try {
                 final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
                 folder.mkdir();
                 final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/" + prot.getName() + "BinaryProtocol.java");
                 final OutputStream output = new FileOutputStream(f);
-                IOUtils.write(builder.toString(), output, Charset.forName("UTF-8"));
+                IOUtils.write(result, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
             } catch (Exception e) {
                 e.printStackTrace();

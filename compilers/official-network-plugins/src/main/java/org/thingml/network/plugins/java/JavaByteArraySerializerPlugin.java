@@ -48,6 +48,8 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
             }
         }
         //Serialize message into binary
+        final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+        builder.append("private static final " + context.firstToUpper(m.getName()) + "MessageType " + m.getName().toUpperCase() + " = new " + context.firstToUpper(m.getName()) + "MessageType((short) " + code + ");\n");
         builder.append("/**Serializes a message into a binary format*/\n");
         builder.append("private static byte[] toBytes(" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
         builder.append("ByteBuffer buffer = ByteBuffer.allocate(" + size + ");\n");
@@ -124,9 +126,10 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         builder.append("}\n");
         builder.append("}\n");
 
-        for(Message m : messages) {
+        /*for(Message m : messages) {
             generateSerialization(builder, bufferName, m);
-        }
+        }*/
+        builder.append("/*$SERIALIZERS$*/\n\n");
         builder.append("}\n");
     }
 
