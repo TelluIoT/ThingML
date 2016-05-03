@@ -20,27 +20,25 @@
  */
 package org.thingml.networkplugins.c.arduino;
 
+import org.sintef.thingml.*;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Protocol;
-import org.sintef.thingml.Thing;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.spi.SerializationPlugin;
 
 /**
  *
  * @author sintef
  */
 public class ArduinoSerialPlugin extends NetworkPlugin {
-    
+
+    CCompilerContext ctx;
+
     public ArduinoSerialPlugin() {
         super();
     }
@@ -62,8 +60,6 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
     public String getTargetedLanguage() {
         return "arduino";
     }
-    
-    CCompilerContext ctx;
     
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
         this.ctx = (CCompilerContext) ctx;
@@ -175,10 +171,9 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                         System.out.print("m: " + m.getName());
                     messages.add(m);
                     if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
-                        maxMsgSize = ctx.getMessageSerializationSize(m);
+                        maxMsgSize = ctx.getMessageSerializationSize(m) - 2;
                     }
                 }
-                maxMsgSize = maxMsgSize - 2; //FIXME @nicolas
 
                 ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 
