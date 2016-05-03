@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.Set;
+import org.thingml.compilers.c.posixmt.PosixMTCompiler;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
@@ -52,6 +53,7 @@ public class ThingMLCompilerRegistry {
             instance =  new ThingMLCompilerRegistry();
             instance.addCompiler(new ArduinoCompiler());
             instance.addCompiler(new PosixCompiler());
+            instance.addCompiler(new PosixMTCompiler());
             instance.addCompiler(new SintefboardCompiler());
             instance.addCompiler(new JavaCompiler());
             instance.addCompiler(new EspruinoCompiler());

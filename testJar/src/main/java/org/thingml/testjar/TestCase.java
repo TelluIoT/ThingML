@@ -68,6 +68,20 @@ public class TestCase {
         this.ongoingCmd = lang.generateThingML(this);
     }
     
+    public TestCase(File srcTestCase, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir, boolean notGen) {
+        this.lang = lang;
+        this.status = 1;
+        this.complerJar = complerJar;
+        this.srcTestCase = srcTestCase;
+        this.genCfgDir = genCfgDir;
+        this.genCodeDir = genCodeDir;
+        this.logFile = logDir;
+        this.log = "";
+        this.result = "";
+        this.name = srcTestCase.getName().split("\\.thingml")[0];
+        this.ongoingCmd = this.lang.generateTargeted(this);
+    }
+    
     public TestCase(File genCfg, TestCase t) {
         this.name = genCfg.getName().split("\\.thingml")[0];
         this.genCfg = genCfg;
@@ -125,7 +139,7 @@ public class TestCase {
                     result = "Unknown Error";
                 }
                 log = result + "\n" + log;
-                writeLogFile();
+                //writeLogFile();
             } else {
                 if (status == 1) {
                     ongoingCmd = lang.compileTargeted(this);
@@ -141,14 +155,15 @@ public class TestCase {
                     else
                         result = "Failure";
                     log = result + "\n" + log;
-                    writeLogFile();
+                    //writeLogFile();
                 } else {
                     result = "Unknown Error";
                     log = result + "\n" + log;
-                    writeLogFile();
+                    //writeLogFile();
                 }
             }
         }
+        writeLogFile();
     }
     
     public boolean oracle() {

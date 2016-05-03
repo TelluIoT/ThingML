@@ -203,27 +203,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append("//Instance " + inst.getName() + "\n");
             
             builder.append("// Variables for the properties of the instance\n");
-            /*for (Property p : inst.getType().allPropertiesInDepth()) {
-                if (p.getCardinality() != null) {//array
-                builder.append(ctx.getCType(p.getType()) + " ");
-                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(p));
-                builder.append("[");
-                ctx.setConcreteInstance(inst);
-                ctx.getCompiler().getThingActionCompiler().generate(p.getCardinality(), builder, ctx);
-                ctx.clearConcreteInstance();
-                builder.append("]");
-                builder.append(";\n");
-                }
-            }*/
-            
-        /*
-            for (Property a : cfg.allArrays(inst)) {
-                builder.append(ctx.getCType(a.getType()) + " ");
-                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
-                builder.append("[");
-                ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
-                builder.append("];\n");
-            }*/
             
             
             builder.append(ctx.getInstanceVarDecl(inst) + "\n");
@@ -265,8 +244,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
 
         generateMessageEnqueue(cfg, builder, headerbuilder, ctx);
-        //builder.append("\n");
-        //generateMessageDispatchers(cfg, builder, ctx);
         builder.append("\n");
         headerbuilder.append("\n");
         
@@ -292,33 +269,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     }
 
-//    protected void generateCppHeaderForConfiguration(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-//
-//        
-//        builder.append("\n");
-//        builder.append("/*****************************************************************************\n");
-//        builder.append(" * Definitions for configuration : " + cfg.getName() + "\n");
-//        builder.append(" *****************************************************************************/\n\n");
-//
-//        builder.append("//Declaration of instance variables\n");
-//
-//        for (Instance inst : cfg.allInstances()) {
-//            builder.append(ctx.getInstanceVarDecl(inst) + "\n");
-//        }
-//
-//        builder.append("\n");
-//
-//        generateCppHeaderMessageEnqueue(cfg, builder, ctx);
-//        builder.append("\n");
-//        generateCppHeaderMessageDispatchers(cfg, builder, ctx);
-//        builder.append("\n");
-//        generateCppHeaderMessageProcessQueue(cfg, builder, ctx);
-//
-//        builder.append("\n");
-//
-//        generateCppHeaderCfgInitializationCode(cfg, builder, ctx);
-//
-//    }
+
 
     protected void generateTypedefs(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
@@ -433,27 +384,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
         ctx.clearConcreteThing();
     }
-
-    /*protected void generateCppHeaderMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        // Added by sdalgard to handle method headers for C++
-        // Generate the Enqueue operation only for ports which are not marked as "sync"
-        for (Thing t : cfg.allThings()) {
-            for(Port p : t.allPorts()) {
-                if (p.isDefined("sync_send", "true")) continue; // do not generateMainAndInit for synchronous ports
-
-                ctx.setConcreteThing(t);
-                Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
-                for(Message m : allMessageDispatch.keySet()) {
-                    builder.append("// Enqueue of messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                    builder.append("void " + "enqueue_" + ctx.getSenderName(t, p, m));
-                    ctx.appendFormalParameters(t, builder, m);
-                    builder.append(";\n");
-
-                }
-            }
-        }
-        ctx.clearConcreteThing();
-    }*/
 
         
     public int generateSerializationForForwarder(CCompilerContext ctx, Message m, StringBuilder builder, int HandlerCode, Set<String> ignoreList) {
@@ -609,14 +539,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append("}\n");
         }
     }
-    
-    /*protected void generateCppHeaderExternalMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        // Added by sdalgard to handle method headers for C++
-        if(isThereNetworkListener(cfg)) {
-            builder.append("void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);\n"); 
-        }
-    }*/
-
+   
     
     protected void generateMessageForwarders(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         
@@ -1083,12 +1006,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                 for(ExternalConnector eco : externalSenders) {
                     String portName = eco.getName();
-                    /*String portName;
-                    if(eco.hasAnnotation("port_name")) {
-                        portName = eco.annotation("port_name").iterator().next();
-                    } else {
-                        portName = eco.getProtocol();
-                    }*/
+                    
                     builder.append("if (sender ==");
                     builder.append(" " + portName + "_instance.listener_id) {\n");
                     
@@ -1142,62 +1060,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
     }
     
-    /*protected void generateMessageDispatchers(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        for (Thing t : cfg.allThings()) {
-            for(Port p : t.allPorts()) {
-                ctx.setConcreteThing(t);
-                Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
-                for(Message m : allMessageDispatch.keySet()) {
-                    // definition of handler for message m coming from instances of t thought port p
-                    // Operation which calls on the function pointer if it is not NULL
-                    builder.append("// Dispatch for messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                    builder.append("void " + getCppNameScope() + "dispatch_" + ctx.getSenderName(t, p, m));
-                    ctx.appendFormalParameters(t, builder, m);
-                    builder.append("{\n");
-
-                    Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>> mtable = allMessageDispatch.get(m);
-
-                    for(Instance i : mtable.keySet()) { // i is the source instance of the message
-                        builder.append("if (_instance == &" + ctx.getInstanceVarName(i) + ") {\n");
-                        for(Map.Entry<Instance, Port> tgt : mtable.get(i)) {
-                            // dispatch to all connected instances which can handle the message
-                            if (tgt.getKey().getType().allStateMachines().size() == 0)
-                                continue; // there is no state machine
-                            StateMachine sm =  tgt.getKey().getType().allStateMachines().get(0);
-                            if (sm.canHandle(tgt.getValue(), m)) {
-                                builder.append(ctx.getHandlerName(tgt.getKey().getType(), tgt.getValue(), m));
-                                ctx.appendActualParameters(tgt.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(tgt.getKey()));
-                                builder.append(";\n");
-                            }
-                        }
-                        builder.append("}\n");
-                    }
-                    builder.append("}\n");
-                }
-            }
-        }
-        ctx.clearConcreteThing();
-    }*/
-
-    /*protected void generateCppHeaderMessageDispatchers(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        // Added by sdalgard to handle method headers for C++
-        for (Thing t : cfg.allThings()) {
-            for(Port p : t.allPorts()) {
-                ctx.setConcreteThing(t);
-                Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = cfg.allMessageDispatch(t, p);
-                for(Message m : allMessageDispatch.keySet()) {
-                    // definition of handler for message m coming from instances of t thought port p
-                    // Operation which calls on the function pointer if it is not NULL
-                    builder.append("// Dispatch for messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
-                    builder.append("void " + "dispatch_" + ctx.getSenderName(t, p, m));
-                    ctx.appendFormalParameters(t, builder, m);
-                    builder.append(";\n");
-                }
-            }
-        }
-        ctx.clearConcreteThing();
-    } */
-
     protected void generateMessageProcessQueue(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         //builder.append("void processMessageQueue() {\n");
         headerbuilder.append("int " + "processMessageQueue();\n"); 
@@ -1313,13 +1175,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
                     builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
 
-                    //builder.append("param_buf[" + (idx_bis + ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
-                    //builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
                 }
-
-
-                //builder.append(ctx.getCType(pt.getType()) + " * p_" + m.getName() + "_" + pt.getName() +";\n");
-                //builder.append("p_" + m.getName() + "_" + pt.getName() +" = (" + ctx.getCType(pt.getType()) + " *) &(param_buf[" + idx_bis + "]);\n");
 
 
                 idx_bis = idx_bis + ctx.getCByteSize(pt.getType(), 0);
@@ -1347,10 +1203,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("}\n");
     }
 
-    /*protected void generateCppHeaderMessageProcessQueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-        // Added by sdalgard to handle method headers for C++
-        builder.append("int " + "processMessageQueue();\n"); 
-    }*/
 
 
     protected void generateCfgInitializationCode(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
@@ -1379,12 +1231,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     boolean found = false;
                     //boolean remote = false;
                     for (Connector c : cfg.allConnectors()) {
-
-                        /*if ((c.hasAnnotation("c_external_send")) &&
-                                ((c.getProvided().getSends().contains(msg) && !c.getProvided().getOwner().hasAnnotation("remote")) ||
-                                        (c.getRequired().getSends().contains(msg) && !c.getRequired().getOwner().hasAnnotation("remote")))) {
-                            remote = true;
-                        }*/
 
                         if ((c.getRequired() == port && c.getProvided().getReceives().contains(msg)) ||
                         (c.getProvided() == port && c.getRequired().getReceives().contains(msg))) {
@@ -1464,11 +1310,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     public int generateExternalConnectorInitCode(ExternalConnector eco, Configuration cfg, StringBuilder builder, CCompilerContext ctx, int nbConnectorSoFar) {
         Port p = eco.getPort();
         String portName = eco.getName();
-        /*if(eco.hasAnnotation("port_name")) {
-            portName = eco.annotation("port_name").iterator().next();
-        } else {
-            portName = eco.getProtocol();
-        }*/
+        
         
         
         builder.append("// Init the ID, state variables and properties for external connector " + eco.getName() + "\n");
@@ -1756,26 +1598,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("\n");
         builder.append("// Network Initilization \n");
-        /*for (ExternalConnector eco : cfg.getExternalConnectors()) {
-            
-            builder.append("//" + eco.getName() + ":\n");
-            builder.append(eco.getName() + "_setup();\n");
-            if (ctx.getCompiler().getID().compareTo("posix") == 0) {
-                builder.append("pthread_t thread_");
-                builder.append(eco.getInst().getInstance().getName() + "_");
-                builder.append(eco.getPort().getName() + "_");
-                builder.append(eco.getProtocol());
-                builder.append(";\n");
-
-                builder.append("pthread_create( &thread_");
-                builder.append(eco.getInst().getInstance().getName() + "_");
-                builder.append(eco.getPort().getName() + "_");
-                builder.append(eco.getProtocol());
-                builder.append(", NULL, ");
-                builder.append(eco.getName() + "_start_receiver_process");
-                builder.append(", NULL);\n"); 
-            }
-        }*/
+        
         builder.append(ctx.getInitCode());
         builder.append("\n\n// End Network Initilization \n\n");
         
@@ -1790,62 +1613,27 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
     }
 
-protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
-
-    //ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
-
-    //FIXME: Re-implement debug properly
-    /*
-    if (context.debug) {
-      builder append context.init_debug_mode() + "\n"
-    }
-    */
-        //Initialize stdout if needed (for arduino)
-        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
-            int baudrate = 9600;
-            if(ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout_baudrate")){
-                Integer intb = Integer.parseInt(ctx.getCurrentConfiguration().annotation("arduino_stdout_baudrate").iterator().next());
-                baudrate = intb.intValue();
-            }
-            if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
-                builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".begin(" + baudrate + ");\n");
-            }
+    protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        //FIXME: Re-implement debug properly
+        /*
+        if (context.debug) {
+          builder append context.init_debug_mode() + "\n"
         }
-    // Call the initialization function
-    builder.append("initialize_configuration_" + cfg.getName() + "();\n");
-
-    // Serach for the ThingMLSheduler Thing
-    /*Thing arduino_scheduler = null;
-    for (Thing t : model.allThings()) {
-        if (t.getName().equals("ThingMLScheduler"))  {
-            arduino_scheduler = t;
-            break;
-        }
-    }
-
-    if (arduino_scheduler != null) {
-        
-         Message setup_msg = null;
-            for (Message m : arduino_scheduler.allMessages()) {
-                if (m.getName().equals("setup")) {
-                    setup_msg = m;
-                    break;
-            }
-            }
-        
-            if (setup_msg != null) {
-                // Send a poll message to all components which can receive it
-                for (Instance i : cfg.allInstances()) {
-                    for (Port p : i.getType().allPorts()) {
-                        if (p.getReceives().contains(setup_msg)) {
-                            builder.append(ctx.getHandlerName(i.getType(), p, setup_msg) + "(&" + ctx.getInstanceVarName(i) + ");\n");
-                        }
-                    }
+        */
+            //Initialize stdout if needed (for arduino)
+            if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                int baudrate = 9600;
+                if(ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout_baudrate")){
+                    Integer intb = Integer.parseInt(ctx.getCurrentConfiguration().annotation("arduino_stdout_baudrate").iterator().next());
+                    baudrate = intb.intValue();
                 }
-
+                if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
+                    builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".begin(" + baudrate + ");\n");
+                }
             }
+        // Call the initialization function
+        builder.append("initialize_configuration_" + cfg.getName() + "();\n");
 
-      }*/
     }
   
 
@@ -1857,27 +1645,13 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
 
         //Network Listener
         builder.append("\n// Network Listener\n");
-
-        /*for (Instance in : ctx.getCurrentConfiguration().allInstances()) {
-            for (String listenFunction : in.annotation("c_external_listen")) {
-                builder.append(listenFunction + ";\n");
-                        }
-        }*/
-        /*
-        for(ExternalConnector eco : cfg.getExternalConnectors()) {
-            //if(!eco.hasAnnotation("c_external_threaded_listener") && !eco.getPort().getReceives().isEmpty()) {
-            if((ctx.getCompiler().getID().compareTo("arduino") == 0) && !eco.getPort().getReceives().isEmpty()) {
-                builder.append(eco.getName() + "_read();\n");
-            }
-        }
-        */
         builder.append(ctx.getPollCode());
 
         if(ctx.getCompiler().getID().compareTo("arduino") != 0) { //FIXME Nicolas This code is awfull
-        //New Empty Event Handler
-        builder.append("int emptyEventConsumed = 1;\n");
-        builder.append("while (emptyEventConsumed != 0) {\n");
-        builder.append("emptyEventConsumed = 0;\n");
+            //New Empty Event Handler
+            builder.append("int emptyEventConsumed = 1;\n");
+            builder.append("while (emptyEventConsumed != 0) {\n");
+            builder.append("emptyEventConsumed = 0;\n");
         }
         
         // Call empty transition handler (if needed)
@@ -1892,15 +1666,13 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
                     builder.append(ctx.getEmptyHandlerName(i.getType()) + "(&" + ctx.getInstanceVarName(i) + ");\n");
                 }
             }
-
-
         }
         
         if(ctx.getCompiler().getID().compareTo("arduino") != 0) {
-        builder.append("}\n");
+            builder.append("}\n");
         }
 
-        }
+    }
 
     protected void generateDynamicConnectors(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         if(cfg.hasAnnotation("c_dyn_connectors_lib")) {
@@ -1917,7 +1689,7 @@ protected void generateInitializationCode(Configuration cfg, StringBuilder build
                         traceDynCo += "printf(\"[" + p.getName();
                         traceDynCo += "] %i";
                         traceDynCo += "\\n\", " + ctx.getInstanceVarName(inst) +  ".id_" + p.getName() + ");\n";
-    }
+                    }
                 }
                 for(ExternalConnector eco : cfg.getExternalConnectors()) {
                     traceDynCo += "printf(\"[" + eco.getPort().getName();

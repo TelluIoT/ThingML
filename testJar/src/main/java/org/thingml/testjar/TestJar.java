@@ -44,6 +44,7 @@ import org.thingml.testjar.lang.lArduino;
 import org.thingml.testjar.lang.lJava;
 import org.thingml.testjar.lang.lJavaScript;
 import org.thingml.testjar.lang.lPosix;
+import org.thingml.testjar.lang.lPosixMT;
 import org.thingml.testjar.lang.lSintefboard;
 
 
@@ -161,6 +162,9 @@ public class TestJar {
                 if(lstr.trim().compareTo("sintefboard") == 0) {
                     langs.add(new lSintefboard());
                 }
+                if(lstr.trim().compareTo("posixmt") == 0) {
+                    langs.add(new lPosixMT());
+                }
             }
             
         } else {
@@ -169,6 +173,7 @@ public class TestJar {
             langs.add(new lJavaScript());
             langs.add(new lArduino());
             langs.add(new lSintefboard());
+            langs.add(new lPosixMT());
             spareThreads = 2;//FIXME: see above
         }
         
@@ -204,8 +209,9 @@ public class TestJar {
             }
         }
 
-        
         System.out.println("");
+        
+        
         System.out.println("****************************************");
         System.out.println("*           ThingML Generation         *");
         System.out.println("****************************************");
@@ -224,6 +230,8 @@ public class TestJar {
         tasks.clear();
         System.out.println("Done.");
         
+        
+        // Concrete test case collection
         List<TestCase> testCfg = new LinkedList<>();
         for(TestCase tc : testCases) {
             List<TestCase> children = tc.generateChildren();
@@ -237,6 +245,7 @@ public class TestJar {
             }
         }
         System.out.println("");
+        
         
         System.out.println("****************************************");
         System.out.println("*          ThingML Compilation         *");
@@ -355,6 +364,36 @@ public class TestJar {
                 
                 if (m.matches()) {
                     res.add(fileEntry);
+                }
+            }
+        }
+        
+        return res;
+    }
+    
+    public static List<TestCase> listSamples(File srcDir, List<TargetedLanguage> langs, File compilerJar, File genCodeDir, File logDir) {
+        String pattern = "(.+)\\.thingml";
+        Pattern p = Pattern.compile(pattern);
+        List<TestCase> res = new LinkedList<>();
+        System.out.println("List samples:");
+        //Explorer de manière récursive les dossiers
+        for (final File fileEntry : srcDir.listFiles()) {
+            if (!fileEntry.isDirectory()) {
+                //res.addAll(listTestFiles(fileEntry, pattern));
+                Matcher m = p.matcher(fileEntry.getName());
+                
+                if (m.matches()) {
+                    boolean specificLang = false;
+                    for(TargetedLanguage lang : langs) {
+                        if(lang.compilerID.compareToIgnoreCase("_" + fileEntry.getParent()) == 0) {
+                            specificLang = true;
+                            System.out.println("    -" + fileEntry.getName() + "(" + lang.compilerID + ")");
+                            res.add(new TestCase(fileEntry, compilerJar, lang, genCodeDir, fileEntry.getParentFile().getParentFile(), logDir, true));
+                        }
+                    }
+                    
+                    if(!specificLang) {
+                    }
                 }
             }
         }
