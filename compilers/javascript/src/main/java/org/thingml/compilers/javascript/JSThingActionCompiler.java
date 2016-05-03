@@ -16,11 +16,9 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -66,7 +64,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
         Session session = action.getSession();
         builder.append("var " + session.getName() + " = new " + session.findContainingThing().getName() + "(\"" + session.getName() + "\", _this");
-        for (Property p :session.findContainingThing().allProperties()) {
+        for (Property p : session.findContainingThing().allProperties()) {
             builder.append(", _this." + p.qname("_") + "_var");
         }
         builder.append(", true);\n"); //FIXME: debug true only if needed
@@ -163,16 +161,16 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             if (expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
                 builder.append(expression.getProperty().getName());
             } else if (expression.getProperty() instanceof Property) {
-                if(!ctx.getAtInitTimeLock()) {
-                    if(ctx.currentInstance != null) {
+                if (!ctx.getAtInitTimeLock()) {
+                    if (ctx.currentInstance != null) {
                         Property p = (Property) expression.getProperty();
                         if (!p.isChangeable()) {
                             boolean found = false;
-                            for(ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
+                            for (ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
                                 String tmp = pa.getInstance().getInstance().findContainingConfiguration().getName() + "_" + pa.getInstance().getInstance().getName();
 
-                                if(ctx.currentInstance.getName().equals(tmp)){
-                                    if(pa.getProperty().getName().compareTo(p.getName()) == 0) {
+                                if (ctx.currentInstance.getName().equals(tmp)) {
+                                    if (pa.getProperty().getName().compareTo(p.getName()) == 0) {
                                         generate(pa.getInit(), builder, ctx);
                                         found = true;
                                         //System.out.println("ass: '" + tmp + "'");
@@ -182,7 +180,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                                     }
                                 }
                             }
-                            if(!found){
+                            if (!found) {
                                 generate(p.getInit(), builder, ctx);
                                 //System.out.println("BuilderB: '" + builder + "'");
                             }

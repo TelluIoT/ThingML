@@ -28,14 +28,12 @@ import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- *
- * @author sintef
- */
 public class JavaSerialPlugin extends NetworkPlugin {
 
     public JavaSerialPlugin() {
@@ -49,13 +47,6 @@ public class JavaSerialPlugin extends NetworkPlugin {
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
         res.add("Serial");
-        res.add("Serial1");
-        res.add("Serial2");
-        res.add("Serial3");
-        res.add("Serial4");
-        res.add("Serial5");
-        res.add("Serial6");
-        res.add("Serial7");
         return res;
     }
 
@@ -64,12 +55,31 @@ public class JavaSerialPlugin extends NetworkPlugin {
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
+        final Set<Message> messages = new HashSet<>();
         //TODO: to be improved (e.g. to avoid duplicating messages and ports, etc).
-        //ports.clear();
         updatePOM(ctx, cfg);
-        for(Protocol prot : protocols) {
-            SerialProtocol sp = new SerialProtocol(ctx, prot, cfg);
-            sp.generate();
+        for (Protocol prot : protocols) {
+            for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
+                Message m = tpm.m;
+                messages.add(m);
+            }
+            for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
+                Message m = tpm.m;
+                messages.add(m);
+            }
+            StringBuilder builder = new StringBuilder();
+            ctx.getSerializationPlugin(prot).generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
+            try {
+                final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
+                folder.mkdir();
+                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/" + prot.getName() + "BinaryProtocol.java");
+                final OutputStream output = new FileOutputStream(f);
+                IOUtils.write(builder.toString(), output, Charset.forName("UTF-8"));
+                IOUtils.closeQuietly(output);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            new SerialProtocol(ctx, prot, cfg).generate();
         }
     }
 
@@ -77,7 +87,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
         //Update POM.xml with JSSC Maven dependency
         try {
             final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/POM.xml");
-            final List<String> packLines = IOUtils.readLines(input);
+            final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
             String pom = "";
             for (String line : packLines) {
                 pom += line + "\n";
@@ -86,7 +96,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.scream3r</groupId>\n<artifactId>jssc</artifactId>\n<version>2.8.0</version>\n</dependency>\n<!--DEP-->");
             final File f = new File(ctx.getOutputDirectory() + "/POM.xml");
             final OutputStream output = new FileOutputStream(f);
-            IOUtils.write(pom, output);
+            IOUtils.write(pom, output, java.nio.charset.Charset.forName("UTF-8"));
             IOUtils.closeQuietly(output);
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,9 +110,15 @@ public class JavaSerialPlugin extends NetworkPlugin {
 
         private List<Port> ports = new ArrayList<Port>();
 
+        public SerialProtocol(Context ctx, Protocol prot, Configuration cfg) {
+            this.ctx = ctx;
+            this.prot = prot;
+            this.cfg = cfg;
+        }
+
         private void addPort(Port p) {
             boolean contains = false;
-            for(Port port : ports) {
+            for (Port port : ports) {
                 if (EcoreUtil.equals(port, p)) {
                     contains = true;
                     break;
@@ -113,35 +129,22 @@ public class JavaSerialPlugin extends NetworkPlugin {
             }
         }
 
-        public SerialProtocol(Context ctx, Protocol prot, Configuration cfg) {
-            this.ctx = ctx;
-            this.prot = prot;
-            this.cfg = cfg;
-        }
-
         public void generate() {
-            String template = loadTemplate();
-            StringBuilder parseBuilder = new StringBuilder();
-            parseBuilder.append("Event result = null;\n");
-
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                final Thing t = tpm.t;
-                final Port p = tpm.p;
-                final Message m = tpm.m;
-                template = generateInitCode(ctx, tpm, template);
-                parseBuilder.append("result = " + m.getName() + "Type.instantiate(payload, \"default\");\n");
-                parseBuilder.append("if (result != null) {\n" + p.getName() + "_port.send(result);\nresult = null;\n}\n");
+                addPort(tpm.p);
             }
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
-                final Thing t = tpm.t;
-                final Port p = tpm.p;
-                final Message m = tpm.m;
-                template = generateInitCode(ctx, tpm, template);
-                parseBuilder.append("result = " + m.getName() + "Type.instantiate(payload, \"default\");\n");
-                parseBuilder.append("if (result != null) {\n" + p.getName() + "_port.send(result);\nresult = null;\n}\n");
+                addPort(tpm.p);
             }
+            String template = ctx.getTemplateByID("templates/JavaSerialPlugin.java");
+            template = template.replace("/*$SERIALIZER$*/", prot.getName() + "BinaryProtocol");
+            StringBuilder parseBuilder = new StringBuilder();
+            parseBuilder.append("final Event event = " + prot.getName() + "BinaryProtocol.instantiate(payload);\n");
+            for(Port p : ports) {//FIXME
+                parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
+            };
             template = initPort(ctx, template);
-            for(ExternalConnector conn : getExternalConnectors(cfg, prot)) {
+            for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {
                 updateMain(ctx, cfg, conn);
             }
             template = template.replace("/*$PARSING CODE$*/", parseBuilder.toString());
@@ -151,25 +154,15 @@ public class JavaSerialPlugin extends NetworkPlugin {
                 folder.mkdir();
                 final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/SerialJava.java");
                 final OutputStream output = new FileOutputStream(f);
-                IOUtils.write(template, output);
+                IOUtils.write(template, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        private String generateInitCode(Context ctx, ThingPortMessage tpm, String template) {
-            final Thing t = tpm.t;
-            final Port p = tpm.p;
-            final Message m = tpm.m;
-            final String code = m.hasAnnotation("code")?m.annotation("code").get(0):"0";
-            template = template.replace("/*$MESSAGE TYPES$*/", "/*$MESSAGE TYPES$*/\nprotected final " + ctx.firstToUpper(m.getName()) + "MessageType " + m.getName() + "Type = new " + ctx.firstToUpper(m.getName()) + "MessageType((short)" + code + ");\n");
-            addPort(p);
-            return template;
-        }
-
         private String initPort(Context ctx, String template) {
-            for(Port p : ports) {
+            for (Port p : ports) {
                 template = template.replace("/*$PORTS$*/", "/*$PORTS$*/\nprivate Port " + p.getName() + "_port;\npublic Port get" + ctx.firstToUpper(p.getName()) + "_port(){return " + p.getName() + "_port;}\n");
                 String portType = "PortType.PROVIDED";
                 if (p instanceof RequiredPort)
@@ -205,27 +198,11 @@ public class JavaSerialPlugin extends NetworkPlugin {
 
                 final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/Main.java");
                 final OutputStream output = new FileOutputStream(f);
-                IOUtils.write(main, output);
+                IOUtils.write(main, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        private String loadTemplate() {
-            try {
-                InputStream input = this.getClass().getClassLoader().getResourceAsStream("templates/JavaSerialPlugin.java");
-                List<String> pomLines = IOUtils.readLines(input);
-                String pom = "";
-                for (String line : pomLines) {
-                    pom += line + "\n";
-                }
-                input.close();
-                return pom;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
         }
     }
 }

@@ -20,27 +20,29 @@
  */
 package org.thingml.compilers.c;
 
-import java.util.List;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
+
+import java.util.List;
 
 /**
  *
  * @author sintef
  */
 abstract public class CMessageSerializer {
-    
+
     public CCompilerContext ctx;
     public Configuration cfg;
-    
+
     public CMessageSerializer(CCompilerContext ctx, Configuration cfg) {
         this.ctx = ctx;
         this.cfg = cfg;
     }
-    
+
     public abstract int generateMessageSerialzer(ExternalConnector eco, Message m, StringBuilder builder, String BufferName, List<Parameter> IgnoreList);
+
     public abstract void generateMessageParser(ExternalConnector eco, StringBuilder builder);
-    
+
 }

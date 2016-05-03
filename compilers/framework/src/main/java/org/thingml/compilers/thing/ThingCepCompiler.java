@@ -31,7 +31,7 @@ public class ThingCepCompiler {
     }
 
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
-        throw(new UnsupportedOperationException("CEP libs are platform-specific."));
+        throw (new UnsupportedOperationException("CEP libs are platform-specific."));
     }
 
     public ThingCepViewCompiler getCepViewCompiler() {

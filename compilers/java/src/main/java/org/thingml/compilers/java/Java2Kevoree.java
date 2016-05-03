@@ -175,7 +175,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         }
         builder.append(";\n");
         builder.append("//Getters and Setters for non readonly/final attributes\n");
-        if(!isGlobal) {
+        if (!isGlobal) {
             builder.append("public " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + i.getName() + "_" + ctx.getVariableName(p) + ";\n}\n\n");
             builder.append("public void set" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + "){\n");
             builder.append("this." + i.getName() + "_" + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
@@ -280,10 +280,10 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
             }
         }
 
-        for(ExternalConnector c : cfg.getExternalConnectors()) {
+        for (ExternalConnector c : cfg.getExternalConnectors()) {
             final Instance i = c.getInst().getInstance();
             final Port p = c.getPort();
-            for(Message m : p.getSends()) {
+            for (Message m : p.getSends()) {
                 builder.append("@Output\n");
                 builder.append("private org.kevoree.api.Port " + shortName(i, p, m) + "Port_out;\n");
             }
@@ -336,7 +336,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("//Instantiates ThingML component instances and connectors\n");
         builder.append("private void initThingML() {\n");
         JavaCfgMainGenerator.generateInstances(cfg, ctx, builder);
-        for(Instance i : cfg.allInstances()) {
+        for (Instance i : cfg.allInstances()) {
             builder.append(ctx.getInstanceName(i) + ".addAttributeListener(this);\n");
         }
         StringBuilder tempBuilder = new StringBuilder();
@@ -379,12 +379,12 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
 
         builder.append("@Override\npublic void onUpdate(String instance, String attribute, Object value){\n");
         int index = 0;
-        for(Instance i : cfg.allInstances()) {
+        for (Instance i : cfg.allInstances()) {
             if (index > 0)
                 builder.append("else ");
             builder.append("if(instance.equals(" + ctx.getInstanceName(i) + ".getName())){\n");
             for (Property p : i.getType().allPropertiesInDepth()) {
-                if(p.hasAnnotation("kevoree")) {
+                if (p.hasAnnotation("kevoree")) {
                     String kevs = "";
                     if (p.isDefined("kevoree", "instance")) {
                         builder.append("if(!value.equals(get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "())){\n");

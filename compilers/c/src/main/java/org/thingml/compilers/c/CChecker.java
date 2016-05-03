@@ -20,20 +20,22 @@
  */
 package org.thingml.compilers.c;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.sintef.thingml.Configuration;
-import org.thingml.compilers.c.checkerRules.*;
+import org.thingml.compilers.c.checkerRules.ArrayCardinality;
+import org.thingml.compilers.c.checkerRules.PointerParameters;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author sintef
  */
-public abstract class CChecker extends Checker{
-    Set<Rule>CRules;
-    
+public abstract class CChecker extends Checker {
+    Set<Rule> CRules;
+
     public CChecker(String compiler) {
         super(compiler);
         CRules = new HashSet<Rule>();
@@ -44,13 +46,13 @@ public abstract class CChecker extends Checker{
     @Override
     public void do_generic_check(Configuration cfg) {
         String Cname = "C";
-        
-        for(Rule r : CRules) {
+
+        for (Rule r : CRules) {
             r.check(cfg, this);
         }
         //ADD C specific checks
-        
+
         super.do_generic_check(cfg);
     }
-    
+
 }

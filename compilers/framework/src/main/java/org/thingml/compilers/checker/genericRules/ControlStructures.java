@@ -64,35 +64,35 @@ public class ControlStructures extends Rule {
 
     @Override
     public void check(ThingMLModel model, Checker checker) {
-        for(Thing t : model.allThings()) {
+        for (Thing t : model.allThings()) {
             check(t, checker);
         }
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.allThings()) {
+        for (Thing t : cfg.allThings()) {
             check(t, checker);
         }
     }
 
     private void check(Thing t, Checker checker) {
-        for(Action a : t.getAllActions(ConditionalAction.class)) {
+        for (Action a : t.getAllActions(ConditionalAction.class)) {
             //FIXME @Brice see testIfElse
-            if(a instanceof ConditionalAction) {
-                ConditionalAction va = (ConditionalAction)a;
+            if (a instanceof ConditionalAction) {
+                ConditionalAction va = (ConditionalAction) a;
                 check(va.getCondition(), va, checker);
             }
         }
-        for(Action a : t.getAllActions(LoopAction.class)) {
+        for (Action a : t.getAllActions(LoopAction.class)) {
             //FIXME @Brice see testIfElse
-            if(a instanceof LoopAction) {
+            if (a instanceof LoopAction) {
                 LoopAction lv = (LoopAction) a;
                 check(lv.getCondition(), lv, checker);
             }
         }
-        for(Stream s : t.getStreams()) {
-            for(ViewSource vs : s.getInput().getOperators()) {
+        for (Stream s : t.getStreams()) {
+            for (ViewSource vs : s.getInput().getOperators()) {
                 if (vs instanceof Filter) {
                     Filter f = (Filter) vs;
                     check(f.getGuard(), f, checker);
@@ -100,5 +100,5 @@ public class ControlStructures extends Rule {
             }
         }
     }
-    
+
 }

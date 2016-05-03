@@ -15,17 +15,10 @@
  */
 package org.thingml.compilers.java;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -48,7 +41,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
         if (action.getVar().getProperty() instanceof Property) {
             builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-            builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality()!=null, ctx) + ")");
+            builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality() != null, ctx) + ")");
             builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
             builder.append(" - 1));\n");
         } else {
@@ -164,8 +157,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
         builder.append("Component " + action.getSession().getName() + " = new " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + "(\"" + action.getSession().getName() + "\"");
         for (Property p : action.getSession().findContainingThing().allPropertiesInDepth()) {
-                builder.append(", ");
-                builder.append(ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this." + ctx.getVariableName(p));
+            builder.append(", ");
+            builder.append(ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this." + ctx.getVariableName(p));
         }
         builder.append(").buildBehavior(\"" + action.getSession().getName() + "\", " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this);\n");
         builder.append(ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId + 1;\n");
@@ -179,7 +172,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(StartStream action, StringBuilder builder, Context ctx) {
         //if(action.getStream().getInput() instanceof SimpleSource) {
-            builder.append("start" + action.getStream().getInput().qname("_") + "();\n");
+        builder.append("start" + action.getStream().getInput().qname("_") + "();\n");
         /*} else if (action.getStream().getInput() instanceof SourceComposition) {
             builder.append("start" + action.getStream().qname("_") + "();\n");
         }*/
@@ -188,7 +181,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(StopStream action, StringBuilder builder, Context ctx) {
         //if(action.getStream().getInput() instanceof SimpleSource) {
-            builder.append("stop" + action.getStream().getInput().qname("_") + "();\n");
+        builder.append("stop" + action.getStream().getInput().qname("_") + "();\n");
         /*} else if (action.getStream().getInput() instanceof SourceComposition) {
             builder.append("stop" + action.getStream().qname("_") + "();\n");
         }*/
@@ -279,10 +272,10 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
-    protected void generateReference(Message message,String messageName,Reference expression, StringBuilder builder, Context ctx) {
+    protected void generateReference(Message message, String messageName, Reference expression, StringBuilder builder, Context ctx) {
         String paramResult = "";
         if (expression.getParameter() instanceof ParamReference) {
-            if(expression.getParameter() instanceof SimpleParamRef)
+            if (expression.getParameter() instanceof SimpleParamRef)
                 paramResult = ".";
             ParamReference paramReference = (ParamReference) expression.getParameter(); //this method is called only when the reference parameter is a ParamReference
             builder.append(ctx.protectKeyword(messageName) + paramResult + ctx.protectKeyword(paramReference.getParameterRef().getName()));
@@ -293,14 +286,14 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        if(!ctx.getAtInitTimeLock()) {
+        if (!ctx.getAtInitTimeLock()) {
             if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
                 builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
             else
                 builder.append(ctx.getVariableName(expression.getProperty()));
         } else {
             Property p = (Property) expression.getProperty();
-            if(p.isChangeable()) {
+            if (p.isChangeable()) {
                 System.out.println("Error: non Read-only property (" + p.getName() + ") used in array cardinality definition.");
             }
             Expression e = ctx.getCurrentConfiguration().initExpressions(ctx.currentInstance, p).get(0);

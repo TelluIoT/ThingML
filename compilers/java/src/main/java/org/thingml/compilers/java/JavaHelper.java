@@ -84,7 +84,7 @@ public class JavaHelper {
         if (hasMessages)
             builder.append("import " + rootPack + ".messages.*;\n\n");
 
-        if(hasStream) {
+        if (hasStream) {
             builder.append("import rx.functions.Action1;\n" +
                     "import rx.subjects.PublishSubject;" +
                     "import rx.functions.Func1;\n" +
@@ -124,6 +124,7 @@ public class JavaHelper {
             i++;
         }
     }
+
     /**
      *
      * @return
@@ -131,8 +132,8 @@ public class JavaHelper {
      */
     public static Set<String> allThingMLMavenDep(Configuration cfg) {//FIXME: should be moved in a JavaHelper
         Set<String> result = new HashSet<String>();
-        for(Thing t : cfg.allThings()) {
-            for(String dep : t.annotation("thingml_maven_dep")) {
+        for (Thing t : cfg.allThings()) {
+            for (String dep : t.annotation("thingml_maven_dep")) {
                 String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
                 result.add(cleanDep);
             }
@@ -147,8 +148,8 @@ public class JavaHelper {
      */
     public static Set<String> allMavenDep(Configuration cfg) {//FIXME: should be moved in a JavaHelper
         Set<String> result = new HashSet<String>();
-        for(Thing t : cfg.allThings()) {
-            for(String dep : t.annotation("maven_dep")) {
+        for (Thing t : cfg.allThings()) {
+            for (String dep : t.annotation("maven_dep")) {
                 String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
                 result.add(cleanDep);
             }

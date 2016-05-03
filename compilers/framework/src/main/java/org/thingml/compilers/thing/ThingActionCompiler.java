@@ -21,7 +21,7 @@ import org.thingml.compilers.Context;
 public class ThingActionCompiler {
 
     public void generate(Object o, StringBuilder builder, Context ctx) {
-        if(o == null)
+        if (o == null)
             return;
         if (o instanceof Action) {
             generate((Action) o, builder, ctx);
@@ -35,7 +35,7 @@ public class ThingActionCompiler {
 
     // ThingML Actions
     public void generate(Action action, StringBuilder builder, Context ctx) {
-        if(action == null)
+        if (action == null)
             return;
         if (action instanceof SendAction)
             generate((SendAction) action, builder, ctx);
@@ -60,11 +60,11 @@ public class ThingActionCompiler {
         else if (action instanceof FunctionCallStatement)
             generate((FunctionCallStatement) action, builder, ctx);
         else if (action instanceof Increment)
-            generate ((Increment) action, builder, ctx);
+            generate((Increment) action, builder, ctx);
         else if (action instanceof Decrement)
-            generate ((Decrement) action, builder, ctx);
+            generate((Decrement) action, builder, ctx);
         else if (action instanceof StartSession) {
-            generate ((StartSession) action, builder, ctx);
+            generate((StartSession) action, builder, ctx);
         } else if (action instanceof StartStream) {
             generate((StartStream) action, builder, ctx);
         } else if (action instanceof StopStream) {

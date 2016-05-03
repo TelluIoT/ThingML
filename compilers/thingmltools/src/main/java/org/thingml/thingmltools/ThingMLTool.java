@@ -20,11 +20,12 @@
  */
 package org.thingml.thingmltools;
 
+import org.sintef.thingml.ThingMLModel;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
-import org.sintef.thingml.ThingMLModel;
 
 /**
  *
@@ -34,16 +35,21 @@ public abstract class ThingMLTool {
     public File outDir;
     public Map<String, StringBuilder> generatedCode = new HashMap<>();
     public String options;
-    
-    public ThingMLTool() {}
-    
+
+    public ThingMLTool() {
+    }
+
     public abstract String getID();
 
     public abstract String getName();
 
     public abstract String getDescription();
-    
+
     public abstract ThingMLTool clone();
+
+    public File getOutputDirectory() {
+        return outDir;
+    }
 
     public void setOutputDirectory(File outputDirectory) {
         outputDirectory.mkdirs();
@@ -56,12 +62,8 @@ public abstract class ThingMLTool {
         outDir = outputDirectory;
     }
 
-    public File getOutputDirectory() {
-        return outDir;
-    }
-    
     public abstract void generateThingMLFrom(ThingMLModel model);
-    
+
     public void writeGeneratedCodeToFiles() {
         for (Map.Entry<String, StringBuilder> e : generatedCode.entrySet()) {
             writeTextFile(e.getKey(), e.getValue().toString());
@@ -88,5 +90,5 @@ public abstract class ThingMLTool {
             ex.printStackTrace();
         }
     }
-    
+
 }

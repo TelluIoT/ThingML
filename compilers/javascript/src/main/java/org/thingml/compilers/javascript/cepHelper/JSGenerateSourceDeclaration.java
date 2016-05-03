@@ -48,8 +48,8 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
                 .append("return {");
 
         int i = 2;
-        for(Parameter p : source.getResultMessage().getParameters()) {
-            if(source.getResultMessage().getParameters().indexOf(p) > 0)
+        for (Parameter p : source.getResultMessage().getParameters()) {
+            if (source.getResultMessage().getParameters().indexOf(p) > 0)
                 builder.append(",\n");
             builder.append("'" + i + "' : x[" + i + "]");
             i++;

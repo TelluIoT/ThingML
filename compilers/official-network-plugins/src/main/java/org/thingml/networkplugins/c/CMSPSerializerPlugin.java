@@ -20,15 +20,15 @@
  */
 package org.thingml.networkplugins.c;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -36,6 +36,7 @@ import org.thingml.compilers.spi.SerializationPlugin;
  */
 public class CMSPSerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
+
     public CMSPSerializerPlugin() {
         super();
     }
@@ -48,13 +49,13 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
 
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
-        builder.append("byte " + bufferName + "[" + cctx.getMessageSerializationSize(m)+ "];\n");
+        builder.append("byte " + bufferName + "[" + cctx.getMessageSerializationSize(m) + "];\n");
 
         int HandlerCode = cctx.getHandlerCode(configuration, m);
         //TODO Relay HEADER to network layer
         builder.append(bufferName + "[0] = '<';\n");
-        
-        
+
+
         builder.append(bufferName + "[1] = " + (cctx.getMessageSerializationSize(m) - 4) + ";\n");
         builder.append(bufferName + "[2] = " + HandlerCode + " & 0xFF;\n\n");
 
@@ -67,22 +68,22 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
                 // This should not happen and should be checked before.
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
-                if(!pt.isDefined("ignore", "true")) {
+                if (!pt.isDefined("ignore", "true")) {
                     builder.append("union u_" + v + "_t {\n");
                     builder.append(cctx.getCType(pt.getType()) + " p;\n");
                     builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getType(), 0) + "];\n");
                     builder.append("} u_" + v + ";\n");
                     builder.append("u_" + v + ".p = " + v + ";\n");
-                    for(int k1 = 0; k1 < i; k1++) {
+                    for (int k1 = 0; k1 < i; k1++) {
                         builder.append(bufferName + "[" + j + "] = (u_" + v + ".bytebuffer[" + k1 + "] & 0xFF);\n");
                         j++;
                     }
                 }
             }
         }
-        
+
         builder.append("byte crc = 0;\n");
-        for(int k = 1; k < (cctx.getMessageSerializationSize(m) - 1); k++) {
+        for (int k = 1; k < (cctx.getMessageSerializationSize(m) - 1); k++) {
             builder.append("crc ^= " + bufferName + "[" + k + "];\n");
         }
         builder.append(bufferName + "[" + j + "] = crc;\n");
@@ -98,13 +99,13 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
         builder.append("    uint16_t msgID = 256 + " + bufferName + "[1];\n");
         builder.append("    uint16_t index = 2;\n");
         builder.append("    switch(msgID) {\n");
-        for(Message m : messages) {
+        for (Message m : messages) {
             builder.append("        case " + cctx.getHandlerCode(configuration, m) + ":\n");
             int j = 2;
-            for(Parameter pt : m.getParameters()) {
-                for(int i = cctx.getCByteSize(pt.getType(), 0) - 1; i >= 0; i--) {
-                        builder.append("            msg_buf[index] = " + bufferName + "[" + (j + i) + "];\n");
-                        builder.append("            index++;\n");
+            for (Parameter pt : m.getParameters()) {
+                for (int i = cctx.getCByteSize(pt.getType(), 0) - 1; i >= 0; i--) {
+                    builder.append("            msg_buf[index] = " + bufferName + "[" + (j + i) + "];\n");
+                    builder.append("            index++;\n");
                 }
                 j += cctx.getCByteSize(pt.getType(), 0);
             }
@@ -121,11 +122,11 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
 
     @Override
     public List<String> getTargetedLanguages() {
-        
+
         List<String> res = new ArrayList<>();
         res.add("posix");
         res.add("arduino");
         return res;
     }
-    
+
 }

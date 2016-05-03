@@ -17,13 +17,12 @@ package org.thingml.compilers.java.cepHelper;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
 
 /**
  * @author ludovic
  */
-public class JavaCepViewCompiler extends ThingCepViewCompiler{
+public class JavaCepViewCompiler extends ThingCepViewCompiler {
     @Override
     public void generate(Filter filter, StringBuilder builder, Context context) {
         String param = "x";
@@ -59,11 +58,11 @@ public class JavaCepViewCompiler extends ThingCepViewCompiler{
         builder.append(".buffer(");
         context.getCompiler().getThingActionCompiler().generate(lengthWindow.getSize(), builder, context);
         builder.append(", ");
-        if(lengthWindow.getStep() != null) {
+        if (lengthWindow.getStep() != null) {
             context.getCompiler().getThingActionCompiler().generate(lengthWindow.getStep(), builder, context);
         } else { //step = size by default
             context.getCompiler().getThingActionCompiler().generate(lengthWindow.getSize(), builder, context);
         }
-        builder.append( ")");
+        builder.append(")");
     }
 }

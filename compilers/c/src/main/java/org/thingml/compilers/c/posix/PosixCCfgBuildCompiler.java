@@ -41,7 +41,7 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         String compiler = "cc"; // default value
         if (cfg.hasAnnotation("c_compiler")) compiler = cfg.annotation("c_compiler").iterator().next();
         mtemplate = mtemplate.replace("/*CC*/", compiler);
-        
+
         String flags;
         if (ctx.enableDebug()) flags = "CFLAGS = -DDEBUG";
         else flags = "CFLAGS = -O2 -w";

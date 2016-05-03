@@ -57,7 +57,7 @@ public class JSThingCepCompiler extends ThingCepCompiler {
 
         List<ViewSource> operators = stream.getInput().getOperators();
         boolean hasWindow = false;
-        for(ViewSource vs : operators) {
+        for (ViewSource vs : operators) {
             hasWindow = (vs instanceof TimeWindow) || (vs instanceof LengthWindow);
             if (hasWindow)
                 break;
@@ -72,7 +72,7 @@ public class JSThingCepCompiler extends ThingCepCompiler {
             }
         }
 
-        for(LocalVariable v : stream.getSelection()) {
+        for (LocalVariable v : stream.getSelection()) {
             context.getCompiler().getThingActionCompiler().generate(v, builder, context);
         }
 

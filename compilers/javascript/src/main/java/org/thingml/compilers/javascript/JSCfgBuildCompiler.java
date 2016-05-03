@@ -19,7 +19,6 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -29,8 +28,6 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
-import org.sintef.thingml.Connector;
-import org.sintef.thingml.Instance;
 
 /**
  * Created by bmori on 17.12.2014.
@@ -52,7 +49,7 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
 
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonValue deps = json.get("dependencies");
-            
+
             for (Thing t : cfg.allThings()) {
                 for (String dep : t.annotation("js_dep")) {
                     deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
@@ -68,11 +65,11 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
                 }
             }
 
-            if(addCEPdeps) {
+            if (addCEPdeps) {
                 deps.asObject().add("rx", "^4.1.0");
                 deps.asObject().add("events", "^1.1.0");
             }
-            
+
             final File f = new File(ctx.getOutputDirectory() + "/package.json");
             f.setWritable(true);
             final PrintWriter w = new PrintWriter(new FileWriter(f));

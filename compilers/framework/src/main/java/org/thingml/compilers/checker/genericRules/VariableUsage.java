@@ -21,7 +21,6 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.Types;
 import org.thingml.compilers.checker.Checker;
@@ -80,35 +79,35 @@ public class VariableUsage extends Rule {
 
     @Override
     public void check(ThingMLModel model, Checker checker) {
-        for(Thing t : model.allThings()) {
+        for (Thing t : model.allThings()) {
             check(t, checker);
         }
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.allThings()) {
+        for (Thing t : cfg.allThings()) {
             check(t, checker);
         }
     }
 
     private void check(Thing t, Checker checker) {
-        for(Action a : t.getAllActions(VariableAssignment.class)) {
+        for (Action a : t.getAllActions(VariableAssignment.class)) {
             //FIXME @Brice see testIfElse
-            if(a instanceof VariableAssignment) {
-                VariableAssignment va = (VariableAssignment)a;
-                if (va.getExpression()!=null)
+            if (a instanceof VariableAssignment) {
+                VariableAssignment va = (VariableAssignment) a;
+                if (va.getExpression() != null)
                     check(va.getProperty(), va.getExpression(), t, checker, va);
             }
         }
-        for(Action a : t.getAllActions(LocalVariable.class)) {
+        for (Action a : t.getAllActions(LocalVariable.class)) {
             //FIXME @Brice see testIfElse
-            if(a instanceof LocalVariable) {
+            if (a instanceof LocalVariable) {
                 LocalVariable lv = (LocalVariable) a;
                 if (lv.getInit() != null)
                     check(lv, lv.getInit(), t, checker, lv);
             }
         }
     }
-    
+
 }
