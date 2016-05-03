@@ -25,18 +25,19 @@
  */
 package org.thingml.networkplugins.c;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 public class CByteArraySerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
+
     public CByteArraySerializerPlugin() {
         super();
     }
@@ -66,7 +67,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
                 // This should not happen and should be checked before.
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
-                if(!pt.isDefined("ignore", "true")) {
+                if (!pt.isDefined("ignore", "true")) {
                     builder.append("union u_" + v + "_t {\n");
                     builder.append(cctx.getCType(pt.getType()) + " p;\n");
                     builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getType(), 0) + "];\n");
@@ -96,11 +97,11 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public List<String> getTargetedLanguages() {
-        
+
         List<String> res = new ArrayList<>();
         res.add("posix");
         res.add("arduino");
         return res;
     }
-    
+
 }

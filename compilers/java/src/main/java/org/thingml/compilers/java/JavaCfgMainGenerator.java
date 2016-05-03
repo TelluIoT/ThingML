@@ -15,16 +15,14 @@
  */
 package org.thingml.compilers.java;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -108,28 +106,28 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         builder.append("/*$NETWORK$*/\n");
 
         builder.append("//Connecting internal ports...\n");
-        for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+        for (Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
             Instance i = entries.getKey();
-            for(InternalPort p : entries.getValue()) {
+            for (InternalPort p : entries.getValue()) {
                 //for(Message rec : p.getReceives())  {
-                    //for(Message send : p.getSends()) {
-                        //if(EcoreUtil.equals(rec, send)) {
-                            builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port().addListener(");
-                            builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
-                            //break;
-                        //}
-                    //}
+                //for(Message send : p.getSends()) {
+                //if(EcoreUtil.equals(rec, send)) {
+                builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port().addListener(");
+                builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
+                //break;
+                //}
+                //}
                 //}
             }
         }
 
         builder.append("//Connectors\n");
         for (Connector c : cfg.allConnectors()) {
-            if(c.getProvided().getSends().size() > 0 && c.getRequired().getReceives().size() > 0) {
+            if (c.getProvided().getSends().size() > 0 && c.getRequired().getReceives().size() > 0) {
                 builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port().addListener(");
                 builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port());\n");
             }
-            if(c.getProvided().getReceives().size() > 0 && c.getRequired().getSends().size() > 0) {
+            if (c.getProvided().getReceives().size() > 0 && c.getRequired().getSends().size() > 0) {
                 builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port().addListener(");
                 builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port());\n");
             }
@@ -201,8 +199,8 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             //if (debug || i.isDefined("debug", "true")) {
             DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
             boolean debugInst = false;
-            for(Instance inst : debugProfile.getDebugInstances()) {
-                if(i.getName().equals(inst.getName())) {
+            for (Instance inst : debugProfile.getDebugInstances()) {
+                if (i.getName().equals(inst.getName())) {
                     debugInst = true;
                     break;
                 }
@@ -221,8 +219,8 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         builder.append("/*$START$*/\n");
         List<Instance> instances = cfg.orderInstanceInit();
         Instance inst;
-        while(!instances.isEmpty()) {
-            inst = instances.get(instances.size()-1);
+        while (!instances.isEmpty()) {
+            inst = instances.get(instances.size() - 1);
             instances.remove(inst);
             builder.append(ctx.getInstanceName(inst) + ".start();\n");
         }
@@ -232,7 +230,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         builder.append("public void run() {\n");
         builder.append("System.out.println(\"Terminating ThingML app...\");\n");
         instances = cfg.orderInstanceInit();
-        while(!instances.isEmpty()) {
+        while (!instances.isEmpty()) {
             inst = instances.get(0);
             instances.remove(inst);
             builder.append(ctx.getInstanceName(inst) + ".stop();\n");

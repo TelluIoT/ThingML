@@ -44,9 +44,9 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
         for (Connector c : cfg.allConnectors()) {
             builder.append("[" + c.getCli().getInstance().getName() + "] -> " + c.getProvided().getName() + "_" + c.getSrv().getInstance().getName() + " : " + c.getRequired().getName() + "\n");
         }
-	for (ExternalConnector eco : cfg.getExternalConnectors()) {
+        for (ExternalConnector eco : cfg.getExternalConnectors()) {
             builder.append("[" + cfg.getName() + "_" + eco.getInst().getInstance().getName() + "] ..> " + eco.getProtocol() + "\n");
-	}
+        }
         builder.append("}\n");
         builder.append("@enduml");
     }

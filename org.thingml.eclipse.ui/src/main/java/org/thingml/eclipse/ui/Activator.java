@@ -18,10 +18,6 @@ package org.thingml.eclipse.ui;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
-import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
-import org.sintef.thingml.resource.thingml.ui.ThingmlEditor;
-import org.sintef.thingml.resource.thingml.ui.ThingmlSourceViewerConfiguration;
 
 /**
  * The activator class controls the plug-in life cycle

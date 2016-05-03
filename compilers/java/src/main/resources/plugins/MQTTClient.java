@@ -1,13 +1,12 @@
 package org.thingml.generated.plugin;
 
 
+import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.thingml.generated.api.*;
 import org.thingml.generated.messages.*;
 import org.thingml.java.*;
 import org.thingml.java.ext.*;
-
-import org.eclipse.paho.client.mqttv3.*;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class MQTTClient/*NAME*/ extends Component {
 
@@ -15,25 +14,6 @@ public class MQTTClient/*NAME*/ extends Component {
     private final int qos = /*QOS*/;
 
     /*SEND_METHODS*/
-
-    /**
-     * Parse incoming MQTT payload into a ThingML message
-     * and forward it to the proper ThingML instance
-     * @param incoming MQTT payload
-     */
-    private void parse(String payload) {
-        /*PARSER*/
-    }
-
-    private void publish(byte[] payload, String topic) {
-        MqttMessage msg = new MqttMessage();
-        msg.setRetained(true);
-        msg.setQos(qos);
-        msg.setPayload(payload);
-        mqttClient.publish(topic, payload);
-    }
-
-    /*RECEIVE_METHODS*/
 
     public MQTTClient/*NAME*/() {
         try {
@@ -82,5 +62,25 @@ public class MQTTClient/*NAME*/ extends Component {
         } catch (MqttException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Parse incoming MQTT payload into a ThingML message
+     * and forward it to the proper ThingML instance
+     *
+     * @param incoming MQTT payload
+     */
+    private void parse(String payload) {
+        /*PARSER*/
+    }
+
+    /*RECEIVE_METHODS*/
+
+    private void publish(byte[] payload, String topic) {
+        MqttMessage msg = new MqttMessage();
+        msg.setRetained(true);
+        msg.setQos(qos);
+        msg.setPayload(payload);
+        mqttClient.publish(topic, payload);
     }
 }

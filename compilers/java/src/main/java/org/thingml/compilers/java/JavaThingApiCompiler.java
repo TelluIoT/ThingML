@@ -21,9 +21,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.List;
 
 

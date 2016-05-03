@@ -21,58 +21,46 @@
 
 package org.thingml.compilers.commandline;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.registry.ThingMLCompilerRegistry;
-
-import java.io.File;
-import org.thingml.testconfigurationgenerator.TestConfigurationGenerator;
-
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.*;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.ThingMLModel;
+import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.compilers.registry.ThingMLToolRegistry;
 import org.thingml.thingmltools.ThingMLTool;
+
+import java.io.File;
 
 /**
  * Created by ffl on 15.06.15.
  */
 public class Main {
-    @Parameter(names={"--source", "-s"}, description = "A thingml file to compile (should include at least one configuration)")
+    @Parameter(names = {"--source", "-s"}, description = "A thingml file to compile (should include at least one configuration)")
     String source;
-    @Parameter(names={"--output", "-o"}, description = "Optional output directory - by default current directory is used")
+    @Parameter(names = {"--output", "-o"}, description = "Optional output directory - by default current directory is used")
     String output;
-    @Parameter(names ={"--help", "-h"}, help = true, description = "Display this message.")
-    private boolean help;
-    
-    @Parameter(names ={"--create-dir", "-d"}, description = "Create a new directory named after the configuration for the output")
-    private boolean createDir;
-    
-    @Parameter(names ={"--list-plugins"}, description = "Display the list of available plugins")
-    private boolean listPlugins;
-    
-    @Parameter(names={"--compiler", "-c"}, description = "Compiler ID (Mandatory unless --tool (-t) is used)")
+    @Parameter(names = {"--compiler", "-c"}, description = "Compiler ID (Mandatory unless --tool (-t) is used)")
     String compiler;
-    @Parameter(names={"--tool", "-t"}, description = "Tool ID (Mandatory unless --compiler (-c) is used)")
+    @Parameter(names = {"--tool", "-t"}, description = "Tool ID (Mandatory unless --compiler (-c) is used)")
     String tool;
-    @Parameter(names={"--options"}, description = "additional options for ThingML tools.")
+    @Parameter(names = {"--options"}, description = "additional options for ThingML tools.")
     String tooloptions;
-    
     boolean toolUsed, compilerUsed;
-    
+    @Parameter(names = {"--help", "-h"}, help = true, description = "Display this message.")
+    private boolean help;
+    @Parameter(names = {"--create-dir", "-d"}, description = "Create a new directory named after the configuration for the output")
+    private boolean createDir;
+    @Parameter(names = {"--list-plugins"}, description = "Display the list of available plugins")
+    private boolean listPlugins;
+
     public static void printUsage(JCommander jcom, ThingMLCompilerRegistry registry, ThingMLToolRegistry toolregistry) {
         System.out.println(" --- ThingML help ---");
-        
+
         System.out.println("Typical usages: ");
         System.out.println("    java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>][-d]");
         System.out.println("    java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>]");
-        
+
         jcom.usage();
 
         System.out.println("Compiler Id must belong to the following list:");
@@ -87,46 +75,46 @@ public class Main {
             System.out.println(" |     " + t.getID() + "\t- " + t.getDescription());
         }
     }
-    
+
     public static void printPluginList(JCommander jcom, ThingMLCompilerRegistry registry, ThingMLToolRegistry toolregistry) {
         registry.printNetworkPluginList();
-        
+
         System.out.println();
         registry.printSerializationPluginList();
     }
-    
+
     public static void main(String[] args) {
         Main main = new Main();
         ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
         ThingMLToolRegistry toolregistry = ThingMLToolRegistry.getInstance();
         JCommander jcom = new JCommander(main, args);
-        
+
         // HELP Handling
-        if(main.help || ((main.compiler == null) && (main.tool == null) && (!main.listPlugins))) {
+        if (main.help || ((main.compiler == null) && (main.tool == null) && (!main.listPlugins))) {
             printUsage(jcom, registry, toolregistry);
-            if(main.listPlugins) {
+            if (main.listPlugins) {
                 System.out.println();
                 printPluginList(jcom, registry, toolregistry);
             }
             return;
         }
-        
-        if(main.listPlugins) {
+
+        if (main.listPlugins) {
             printPluginList(jcom, registry, toolregistry);
             return;
         }
-        
+
         // COMPILER/TOOL Handling
         main.toolUsed = main.tool != null;
         main.compilerUsed = main.compiler != null;
-        if(!((main.compiler != null) ^ (main.tool != null))) {
+        if (!((main.compiler != null) ^ (main.tool != null))) {
             System.out.println("One (and only one) of the option --compiler or --tool must be used (or their short version -c and -t).");
             return;
         }
-        
+
         //SOURCE Handling
         File input = null;
-        if(main.source != null) {
+        if (main.source != null) {
             input = new File(main.source);
         } else {
             System.out.println("--source (or -s) is a mandatory parameter.");
@@ -138,7 +126,7 @@ public class Main {
             return;
         }
 
-        
+
         //OUTPUT Handling
         File outdir = null;
 
@@ -158,18 +146,18 @@ public class Main {
 
         //RECAP
         System.out.print("Running ThingML");
-        
+
         if (main.compiler != null)
             System.out.print(" -c " + main.compiler);
-        
+
         if (main.tool != null)
             System.out.print(" -t " + main.tool);
-        
+
         System.out.print(" -s " + main.source);
-        
+
         if (main.output != null)
             System.out.print(" -o " + main.output);
-        
+
         System.out.println();
 
         //EXECUTION
@@ -179,9 +167,9 @@ public class Main {
                 System.out.println("ERROR: The input model contains errors.");
                 return;
             }
-            
-            if(main.toolUsed) {
-                
+
+            if (main.toolUsed) {
+
                 ThingMLTool thingmlTool = toolregistry.createToolInstanceByName(main.tool.trim());
                 if (thingmlTool == null) {
                     System.out.println("ERROR: Cannot find tool " + main.tool.trim() + ". Use --help (or -h) to check the list of registered compilers.");
@@ -192,8 +180,8 @@ public class Main {
                 System.out.println("Generating code for input model. ");
                 thingmlTool.generateThingMLFrom(input_model);
             }
-            
-            if(main.compilerUsed) {
+
+            if (main.compilerUsed) {
                 if (input_model.allConfigurations().isEmpty()) {
                     System.out.println("ERROR: The input model does not contain any configuration to be compiled.");
                     return;
@@ -204,7 +192,7 @@ public class Main {
                         System.out.println("ERROR: Cannot find compiler " + main.compiler.trim() + ". Use --help (or -h) to check the list of registered compilers.");
                         return;
                     }
-                    if(main.createDir)
+                    if (main.createDir)
                         outdir = new File(outdir, cfg.getName());
                     thingmlCompiler.setOutputDirectory(outdir);
                     System.out.println("Generating code for configuration: " + cfg.getName());

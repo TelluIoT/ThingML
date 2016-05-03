@@ -51,7 +51,7 @@ public class ShowThingMLConsole implements IHandler {
 		      for (Iterator<Object> iterator = strucSelection.iterator(); iterator
 		          .hasNext();) {
 		        Object element = iterator.next();
-		        ThingMLConsole.getInstance().printDebug("Selected : " + element.toString());
+		        ThingMLConsole.getInstance().printDebug("Selected : " + element.toString() + "\n");
 		      }
 		    }
 		    return null;

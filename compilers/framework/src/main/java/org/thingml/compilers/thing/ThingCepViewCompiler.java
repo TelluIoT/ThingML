@@ -25,13 +25,13 @@ import org.thingml.compilers.Context;
  * @author ludovic
  */
 public class ThingCepViewCompiler {
-    public void generate(ViewSource view,StringBuilder builder, Context context) {
-        if(view instanceof Filter) {
-            generate((Filter)view,builder,context);
-        } else if(view instanceof TimeWindow) {
-            generate((TimeWindow)view,builder,context);
-        } else if(view instanceof LengthWindow) {
-            generate((LengthWindow)view,builder,context);
+    public void generate(ViewSource view, StringBuilder builder, Context context) {
+        if (view instanceof Filter) {
+            generate((Filter) view, builder, context);
+        } else if (view instanceof TimeWindow) {
+            generate((TimeWindow) view, builder, context);
+        } else if (view instanceof LengthWindow) {
+            generate((LengthWindow) view, builder, context);
         } else {
             throw new UnsupportedOperationException("The view source (" + view.getClass().getName() + ")" +
                     "is unknown in the Java compiler. Please update it as the ThingML model has been changed.");

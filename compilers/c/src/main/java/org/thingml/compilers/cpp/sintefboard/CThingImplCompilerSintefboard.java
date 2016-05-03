@@ -38,5 +38,5 @@ public class CThingImplCompilerSintefboard extends CThingImplCompiler {
         return "/*CFG_CPPNAME_SCOPE*/";
     }
 
-    
+
 }

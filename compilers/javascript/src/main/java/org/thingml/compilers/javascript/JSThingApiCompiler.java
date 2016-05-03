@@ -15,7 +15,10 @@
  */
 package org.thingml.compilers.javascript;
 
-import org.sintef.thingml.*;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.Parameter;
+import org.sintef.thingml.Port;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.ThingApiCompiler;
@@ -132,7 +135,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         final boolean debug = debugProfile.getDebugMessages().get(p) != null && debugProfile.getDebugMessages().get(p).contains(m);
         if (debug) {
             //builder.append("if(_this.debug) console.log(colors.green(_this.name + \" (" + p.findContainingThing().getName() + ") : " + p.getName() + "!" + m.getName() + "(");
-            builder.append("" +t.getName() + "_print_debug(_this, \"" + ctx.traceSendMessage(p.getOwner(), p, m) + "(");
+            builder.append("" + t.getName() + "_print_debug(_this, \"" + ctx.traceSendMessage(p.getOwner(), p, m) + "(");
             int i = 0;
             for (Parameter pa : m.getParameters()) {
                 if (i > 0)
@@ -149,7 +152,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("//notify listeners\n");
             builder.append(const_() + "arrayLength = this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().length;\n");
 
-            if(debug) {
+            if (debug) {
                 builder.append("if (arrayLength < 1) {\n");
                 builder.append("" + t.getName() + "_print_debug(_this, \"(" + p.findContainingThing().getName() + "): message lost, because no connector/listener is defined!\");\n");
                 builder.append("}\n");

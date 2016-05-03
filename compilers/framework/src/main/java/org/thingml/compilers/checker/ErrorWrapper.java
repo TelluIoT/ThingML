@@ -22,5 +22,6 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ErrorWrapper {
     void addError(String msg, EObject el);
+
     void addWarning(String msg, EObject el);
 }

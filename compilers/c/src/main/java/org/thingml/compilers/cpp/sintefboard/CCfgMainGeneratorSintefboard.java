@@ -38,5 +38,5 @@ public class CCfgMainGeneratorSintefboard extends CCfgMainGenerator {
         return "/*CFG_CPPNAME_SCOPE*/";
     }
 
-    
+
 }

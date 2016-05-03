@@ -20,18 +20,15 @@
  */
 package org.thingml.compilers.c.plugin;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CMessageSerializer;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -45,7 +42,7 @@ public class CMSPSerializer extends CMessageSerializer {
 
     @Override
     public int generateMessageSerialzer(ExternalConnector eco, Message m, StringBuilder builder, String BufferName, List<Parameter> IgnoreList) {
-        builder.append("byte " + BufferName + "[" + ctx.getMessageSerializationSize(m)+ "];\n");
+        builder.append("byte " + BufferName + "[" + ctx.getMessageSerializationSize(m) + "];\n");
 
         int HandlerCode = ctx.getHandlerCode(cfg, m);
 
@@ -63,7 +60,7 @@ public class CMSPSerializer extends CMessageSerializer {
                 // This should not happen and should be checked before.
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
-                if(!ctx.containsParam(IgnoreList, pt)) {
+                if (!ctx.containsParam(IgnoreList, pt)) {
                     builder.append("union u_" + v + "_t {\n");
                     builder.append(ctx.getCType(pt.getType()) + " p;\n");
                     builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
@@ -72,7 +69,7 @@ public class CMSPSerializer extends CMessageSerializer {
 
                     //while (i > 0) {
                     //    i = i - 1;
-                    for(int k1 = 0; k1 < i; k1++) {
+                    for (int k1 = 0; k1 < i; k1++) {
                         //builder.append(BufferName + "[" + j + "] = (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                         builder.append(BufferName + "[" + j + "] = (u_" + v + ".bytebuffer[" + k1 + "] & 0xFF);\n");
                         j++;
@@ -80,9 +77,9 @@ public class CMSPSerializer extends CMessageSerializer {
                 }
             }
         }
-        
+
         builder.append("byte crc = 0;\n");
-        for(int k = 1; k < (ctx.getMessageSerializationSize(m) - 1); k++) {
+        for (int k = 1; k < (ctx.getMessageSerializationSize(m) - 1); k++) {
             builder.append("crc ^= " + BufferName + "[" + k + "];\n");
         }
         builder.append(BufferName + "[" + j + "] = crc;\n");
@@ -97,27 +94,27 @@ public class CMSPSerializer extends CMessageSerializer {
         builder.append("    msg_buf[1] = msg[1];\n");
         builder.append("    uint16_t msgID = 256 + msg[1];\n");
         builder.append("    uint16_t index = 2;\n");
-        
-        
+
+
         builder.append("    switch(msgID) {\n");
-        for(Message m : messages) {
+        for (Message m : messages) {
             builder.append("        case " + ctx.getHandlerCode(cfg, m) + ":\n");
             int j = 2;
-            
-            for(Parameter pt : m.getParameters()) {
-                
-                for(int i = ctx.getCByteSize(pt.getType(), 0) - 1; i >= 0; i--) {
-                        builder.append("            msg_buf[index] = msg[" + (j + i) + "];\n");
-                        builder.append("            index++;\n");
+
+            for (Parameter pt : m.getParameters()) {
+
+                for (int i = ctx.getCByteSize(pt.getType(), 0) - 1; i >= 0; i--) {
+                    builder.append("            msg_buf[index] = msg[" + (j + i) + "];\n");
+                    builder.append("            index++;\n");
                 }
                 j += ctx.getCByteSize(pt.getType(), 0);
             }
-            
+
             builder.append("        break;\n");
         }
-        
+
         builder.append("    }\n");
-        
+
         builder.append("    externalMessageEnqueue((uint8_t *) msg_buf, size, listener_id);\n");
         builder.append("}\n");
     }
@@ -126,6 +123,6 @@ public class CMSPSerializer extends CMessageSerializer {
     public void generateMessageParser(ExternalConnector eco, StringBuilder builder) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }
 

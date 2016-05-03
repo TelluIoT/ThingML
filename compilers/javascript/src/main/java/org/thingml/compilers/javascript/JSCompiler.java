@@ -31,7 +31,6 @@ import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -15,9 +15,7 @@
  */
 package org.thingml.compilers.cpp.sintefboard;
 
-import org.thingml.compilers.cpp.sintefboard.*;
 import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -37,12 +35,12 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
 
         //GENERATE THE MAKEFILE
         String mtemplate = ctx.getTemplateByID("ctemplates/Makefile");
-        mtemplate = mtemplate.replace("/*NAME*/", cfg.getName()+"Posix");
+        mtemplate = mtemplate.replace("/*NAME*/", cfg.getName() + "Posix");
 
         String compiler = "g++"; // default value
         if (cfg.hasAnnotation("c_compiler")) compiler = cfg.annotation("c_compiler").iterator().next();
         mtemplate = mtemplate.replace("/*CC*/", compiler);
-        
+
         String flags;
         if (ctx.enableDebug()) flags = "CFLAGS = -DDEBUG";
         else flags = "CFLAGS = -O2 -w";
@@ -51,8 +49,8 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         }
         mtemplate = mtemplate.replace("/*CFLAGS*/", flags);
 
-        String srcs = cfg.getName()+"Posix.cpp";
-        String objs = cfg.getName()+"Posix.o";
+        String srcs = cfg.getName() + "Posix.cpp";
+        String objs = cfg.getName() + "Posix.o";
 
         //// Add the modules for the Things
         //for (Thing t : cfg.allThings()) {
@@ -107,12 +105,12 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc);
 
         ctx.getBuilder("Makefile").append(mtemplate);
-        
+
         //GENERATE THE TEST_MAIN FRAMEWORK
-        String testMainTemplate = ctx.getTemplateByID("ctemplates/"+ctx.getCompiler().getID()+"_posix_main.cpp");
+        String testMainTemplate = ctx.getTemplateByID("ctemplates/" + ctx.getCompiler().getID() + "_posix_main.cpp");
         testMainTemplate = testMainTemplate.replace("/*NAME*/", cfg.getName());
-        ctx.getBuilder(cfg.getName()+"Posix.cpp").append(testMainTemplate);
-        
+        ctx.getBuilder(cfg.getName() + "Posix.cpp").append(testMainTemplate);
+
     }
 
 }

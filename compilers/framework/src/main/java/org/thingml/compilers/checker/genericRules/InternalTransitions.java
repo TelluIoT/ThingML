@@ -47,23 +47,23 @@ public class InternalTransitions extends Rule {
 
     @Override
     public void check(ThingMLModel model, Checker checker) {
-        for(Thing thing : model.allThings()) {
+        for (Thing thing : model.allThings()) {
             check(thing, checker);
         }
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.allThings()) {
+        for (Thing t : cfg.allThings()) {
             check(t, checker);
         }
     }
 
     private void check(Thing t, Checker checker) {
-        for(StateMachine sm : t.allStateMachines()) {
-            for(Handler h : sm.allEmptyHandlers()) {
-                if(h instanceof InternalTransition) {
-                    if(h.getGuard() == null) {
+        for (StateMachine sm : t.allStateMachines()) {
+            for (Handler h : sm.allEmptyHandlers()) {
+                if (h instanceof InternalTransition) {
+                    if (h.getGuard() == null) {
                         checker.addGenericError("Empty Internal Transition without guard.", h);
                     } else {
                         checker.addGenericNotice("Empty Internal Transition.", h);
@@ -72,5 +72,5 @@ public class InternalTransitions extends Rule {
             }
         }
     }
-    
+
 }

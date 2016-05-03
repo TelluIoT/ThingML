@@ -15,10 +15,12 @@
  */
 package org.thingml.eclipse.ui.commands;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.ServiceLoader;
+import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -27,29 +29,49 @@ import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker.CheckerInfo;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.eclipse.preferences.PreferenceConstants;
 import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
 
 public class CompileThingFile implements IHandler {
+	
+    private static ServiceLoader<NetworkPlugin> plugins = ServiceLoader.load(NetworkPlugin.class);
+    private static Set<NetworkPlugin> loadedPlugins;
+    private static ServiceLoader<SerializationPlugin> serPlugins = ServiceLoader.load(SerializationPlugin.class);
+    private static Set<SerializationPlugin> loadedSerPlugins;
+
+    static {
+    	loadedPlugins = new HashSet<>();
+        plugins.reload();
+        Iterator<NetworkPlugin> it = plugins.iterator();
+        ThingMLConsole.getInstance().printMessage("Loading network plugins:\n");
+        while(it.hasNext()) {        	
+            NetworkPlugin p = it.next();
+            loadedPlugins.add(p);
+            ThingMLConsole.getInstance().printMessage("\t-" + p.getName() + "\n");
+        }
+        loadedSerPlugins = new HashSet<>();
+        serPlugins.reload();
+        Iterator<SerializationPlugin> sit = serPlugins.iterator();
+        ThingMLConsole.getInstance().printMessage("Loading serialization plugins:\n");
+        while(sit.hasNext()) {
+            SerializationPlugin sp = sit.next();
+            loadedSerPlugins.add(sp);
+            ThingMLConsole.getInstance().printMessage("\t-" + sp.getName() + "\n");
+        }
+    }
+
 	
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
@@ -77,6 +99,16 @@ public class CompileThingFile implements IHandler {
 			}
 			
 			ThingMLCompiler compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
+			for(NetworkPlugin np : loadedPlugins) {
+                if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
+                    compiler.addNetworkPlugin(np);
+                }
+            }
+            for(SerializationPlugin sp : loadedSerPlugins) {
+                if(sp.getTargetedLanguages().contains(compiler.getID())) {
+                    compiler.addSerializationPlugin(sp);
+                }
+            }
 			ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\" (Platform: " + compiler.getID() + ")\n");
 
 			// Fetch the input model to be used

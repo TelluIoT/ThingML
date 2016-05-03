@@ -18,13 +18,12 @@ package org.thingml.compilers.javascript;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -75,7 +74,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         if (useThis) {
             builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
         } else {
-            builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i .getName() + "\", null");
+            builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
         }
 
         for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
@@ -100,7 +99,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                             //ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
                             ctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
                             ctx.currentInstance = null;
-                            
+
                             result += tempbuilder.toString();
                         } else {
                             result += getDefaultValue(p.getKey().getType());
@@ -121,8 +120,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         //if (debug || i.isDefined("debug", "true")) {
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
         boolean debugInst = false;
-        for(Instance inst : debugProfile.getDebugInstances()) {
-            if(i.getName().equals(inst.getName())) {
+        for (Instance inst : debugProfile.getDebugInstances()) {
+            if (i.getName().equals(inst.getName())) {
                 debugInst = true;
                 break;
             }
@@ -164,12 +163,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("//Connecting internal ports...\n");
-        for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+        for (Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
             Instance i = entries.getKey();
-            for(InternalPort p : entries.getValue()) {
-                for(Message rec : p.getReceives())  {
-                    for(Message send : p.getSends()) {
-                        if(EcoreUtil.equals(rec, send)) {
+            for (InternalPort p : entries.getValue()) {
+                for (Message rec : p.getReceives()) {
+                    for (Message send : p.getSends()) {
+                        if (EcoreUtil.equals(rec, send)) {
                             builder.append(prefix + i.getName() + ".get" + ctx.firstToUpper(send.getName()) + "on" + p.getName() + "Listeners().push(");
                             builder.append(prefix + i.getName() + ".receive" + rec.getName() + "On" + p.getName() + ".bind(" + prefix + i.getName() + ")");
                             builder.append(");\n");
@@ -217,10 +216,10 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         final StringBuilder builder = ctx.getBuilder("main.js");
 
         boolean debug = false;
-        if (cfg.isDefined("debug", "true"));
-            debug = true;
+        if (cfg.isDefined("debug", "true")) ;
+        debug = true;
         if (!debug) {
-            for(Instance i : cfg.allInstances()) {
+            for (Instance i : cfg.allInstances()) {
                 if (i.isDefined("debug", "true")) {
                     debug = true;
                     break;
@@ -247,8 +246,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
         List<Instance> instances = cfg.orderInstanceInit();
         Instance inst;
-        while(!instances.isEmpty()) {
-            inst = instances.get(instances.size()-1);
+        while (!instances.isEmpty()) {
+            inst = instances.get(instances.size() - 1);
             instances.remove(inst);
             builder.append(inst.getName() + "._init();\n");
         }
@@ -257,7 +256,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         builder.append("process.on('SIGINT', function() {\n");
         builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
         instances = cfg.orderInstanceInit();
-        while(!instances.isEmpty()) {
+        while (!instances.isEmpty()) {
             inst = instances.get(0);
             instances.remove(inst);
             builder.append(inst.getName() + "._stop();\n");

@@ -26,7 +26,7 @@ import java.util.Iterator;
 /**
  * @author ludovic
  */
-public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
+public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration {
     @Override
     public void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
         builder.append("PublishSubject " + source.qname("_") + "_subject" + " = PublishSubject.create();\n")
@@ -46,9 +46,9 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
     public void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
         String mergeParams = "";
         boolean firstParamDone = false;
-        for(Source s : source.getSources()) {
-            generate(stream,s,builder,context);
-            if(firstParamDone) {
+        for (Source s : source.getSources()) {
+            generate(stream, s, builder, context);
+            if (firstParamDone) {
                 mergeParams += ", ";
             } else {
                 firstParamDone = true;
@@ -67,7 +67,7 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
         int i = 0;
 
         //Param declaration
-        for(Parameter p : stream.getOutput().getMessage().getParameters()) {
+        for (Parameter p : stream.getOutput().getMessage().getParameters()) {
             if (!(p.getType() instanceof Enumeration)) {
                 if (!(p.getCardinality() != null))
                     builder.append(p.getType().annotation("java_type").toArray()[0] + " ");
@@ -81,7 +81,7 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
         }
 
         //param initialization
-        if(stream.getOutput().getParameters().size() > 0) {
+        if (stream.getOutput().getParameters().size() > 0) {
             boolean firstElementDone = false;
             for (Source simpleSource : source.getSources()) {
                 SimpleSource sSource = (SimpleSource) simpleSource;
@@ -113,7 +113,7 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
         }
 
         builder.append("return (" + resultType + ") " + resultName + "Type.instantiate(");
-        for(i = 0; i<stream.getOutput().getMessage().getParameters().size(); i++) {
+        for (i = 0; i < stream.getOutput().getMessage().getParameters().size(); i++) {
             if (i > 0)
                 builder.append(", ");
             builder.append("param" + i);
@@ -122,7 +122,7 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
                 .append("}\n")
                 .append("});");
 
-        generateOperatorCalls(stream.qname("_"),source,builder,context);
+        generateOperatorCalls(stream.qname("_"), source, builder, context);
     }
 
     @Override
@@ -167,11 +167,11 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
         String outPutName = outPut.getName();
         String outPutType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
 
-        generate(stream,simpleSource1,builder,context);
+        generate(stream, simpleSource1, builder, context);
         generate(stream, simpleSource2, builder, context);
         builder.append(stream.qname("_") + " = " + simpleSource1.qname("_"))
                 .append(".join(" + simpleSource2.qname("_") + ",wait_" + stream.qname("_") + "_1, wait_" + stream.qname("_") + "_2,\n")
-                .append("new Func2<" + eventMessage1 + ", " + eventMessage2 + ", " + outPutType +">(){\n")
+                .append("new Func2<" + eventMessage1 + ", " + eventMessage2 + ", " + outPutType + ">(){\n")
                 .append("@Override\n")
                 .append("public " + outPutType + " call(" + eventMessage1 + " " + message1Name + ", " + eventMessage2 + " " + message2Name + ") {\n");
 
@@ -181,12 +181,12 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
         Iterator<Expression> itRules = sources.getRules().iterator();
         Iterator<Parameter> itParamsResultMsgs = sources.getResultMessage().getParameters().iterator();
         int i = 0;
-        while(itRules.hasNext() && itParamsResultMsgs.hasNext()) {
+        while (itRules.hasNext() && itParamsResultMsgs.hasNext()) {
             if (i > 0)
                 builder.append(", ");
             Parameter parameter = itParamsResultMsgs.next();
             Expression rule = itRules.next();
-            javaCmpl.cast(parameter.getType(),parameter.isIsArray(), rule, builder, context);
+            javaCmpl.cast(parameter.getType(), parameter.isIsArray(), rule, builder, context);
             i++;
         }
 
@@ -197,6 +197,6 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
                 .append("}\n")
                 .append(");\n");
 
-        generateOperatorCalls(stream.qname("_"), sources, builder,context);
+        generateOperatorCalls(stream.qname("_"), sources, builder, context);
     }
 }

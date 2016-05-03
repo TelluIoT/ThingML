@@ -15,10 +15,6 @@
  */
 package org.thingml.compilers.cpp.sintefboard;
 
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
-import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 
 /**

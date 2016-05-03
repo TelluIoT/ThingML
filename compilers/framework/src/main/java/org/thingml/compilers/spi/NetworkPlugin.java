@@ -24,52 +24,48 @@ package org.thingml.compilers.spi;
  *
  * @author sintef
  */
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.Protocol;
-import org.sintef.thingml.Thing;
-import org.thingml.compilers.Context;
+import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
  * @author sintef
  */
 public abstract class NetworkPlugin extends Rule {
-    
-    public NetworkPlugin () {}
-    
-    /* In case of overlaping protocol support the 
+
+    Set<Protocol> assignedProtocols = new HashSet<>();
+
+    public NetworkPlugin() {
+    }
+
+    /* In case of overlaping protocol support the
      * choice of plugin will be specified with the
      * annotation @plugin "plugiID"
     */
     public abstract String getPluginID();
-    
+
     public abstract List<String> getSupportedProtocols();
-    
+
     public abstract String getTargetedLanguage();
-    
+
     public abstract void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols);
-    
-    Set<Protocol> assignedProtocols = new HashSet<>();
+
     public void addProtocol(Protocol p) {
         assignedProtocols.add(p);
     }
+
     public Set<Protocol> getAssignedProtocols() {
         return assignedProtocols;
     }
-    
+
     public void generateNetworkLibrary(Configuration cfg, Context ctx) {
         generateNetworkLibrary(cfg, ctx, assignedProtocols);
     }
@@ -77,75 +73,75 @@ public abstract class NetworkPlugin extends Rule {
     /* Should be overriden if the plugin need to perform
      * some specific checking.
     */
-    
+
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
     }
 
-    
+
     public String getName() {
         return this.getPluginID() + " plugin's rules";
     }
 
-    
+
     public String getDescription() {
         return "Check that " + this.getPluginID() + " plugin can be used.";
     }
 
-    
+
     public void check(Configuration cfg, Checker checker) {
-        
+
     }
-    
-   
+
+
     public Set<ExternalConnector> getExternalConnectors(Configuration cfg, Protocol prot) {
         Set<ExternalConnector> ecos = new HashSet<>();
-        for(ExternalConnector eco : cfg.getExternalConnectors()) {
-            if(eco.getProtocol() == prot) {
+        for (ExternalConnector eco : cfg.getExternalConnectors()) {
+            if (eco.getProtocol() == prot) {
                 ecos.add(eco);
             }
         }
         return ecos;
     }
-    
+
     public Set<ThingPortMessage> getMessagesSent(Configuration cfg, Protocol prot) {
         Set<ThingPortMessage> res = new HashSet<ThingPortMessage>();
-        for(ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
-            for(Message m : eco.getPort().getSends()) {
+        for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
+            for (Message m : eco.getPort().getSends()) {
                 ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getInstance().getType(), eco.getPort(), m);
-                if(!res.contains(tpm)) {
+                if (!res.contains(tpm)) {
                     res.add(tpm);
                 }
             }
         }
-        
+
         return res;
     }
-    
+
     public Set<ThingPortMessage> getMessagesReceived(Configuration cfg, Protocol prot) {
         Set<ThingPortMessage> res = new HashSet<ThingPortMessage>();
-        for(ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
-            for(Message m : eco.getPort().getReceives()) {
+        for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
+            for (Message m : eco.getPort().getReceives()) {
                 ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getInstance().getType(), eco.getPort(), m);
-                if(!res.contains(tpm)) {
+                if (!res.contains(tpm)) {
                     res.add(tpm);
                 }
             }
         }
         return res;
     }
-    
+
     public class ThingPortMessage {
         public Thing t;
         public Port p;
         public Message m;
-        
-        public ThingPortMessage (Thing t, Port p, Message m){
+
+        public ThingPortMessage(Thing t, Port p, Message m) {
             this.t = t;
             this.p = p;
             this.m = m;
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             if (!(obj instanceof ThingPortMessage))
@@ -156,8 +152,8 @@ public abstract class NetworkPlugin extends Rule {
             return EcoreUtil.equals(tpm.t, t) && EcoreUtil.equals(tpm.p, p) && EcoreUtil.equals(tpm.m, m);
         }
     }
-    
-    
+
+
 }
 
 

@@ -20,13 +20,14 @@
  */
 package org.thingml.networkplugins.c.posix;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Protocol;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.NetworkPlugin;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -51,5 +52,5 @@ public class PosixNoPollWSPlugin extends NetworkPlugin {
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }
