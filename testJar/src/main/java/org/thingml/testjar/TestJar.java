@@ -237,10 +237,8 @@ public class TestJar {
             List<TestCase> children = tc.generateChildren();
             testCfg.addAll(children);
             for(TargetedLanguage lang : langs) {
-                for(TestCase c : children) {
-                    if(c.lang == lang) {
-                        testBench.get(tc.srcTestCase.getName()).add(new HashMap.SimpleEntry<>(tc.lang, children));
-                    }
+                if(tc.lang == lang) {
+                    testBench.get(tc.srcTestCase.getName()).add(new HashMap.SimpleEntry<>(tc.lang, children));
                 }
             }
         }
@@ -470,7 +468,7 @@ public class TestJar {
             boolean lineSuccess = true;
             res.append("            <tr>\n");
             res.append("            <td class=\"");
-            lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+            lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "_" + line.getValue().size() + "_" + "</a>\n");
             lineB.append("            </td>\n");
             for(TargetedLanguage lang : langs) {
                 for(Map.Entry<TargetedLanguage,List<TestCase>> cell : line.getValue()) {
