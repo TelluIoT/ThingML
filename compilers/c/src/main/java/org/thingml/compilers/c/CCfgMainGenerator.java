@@ -1618,36 +1618,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
-        //ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
-
-        //FIXME: Re-implement debug properly
-    /*
-    if (context.debug) {
-      builder append context.init_debug_mode() + "\n"
-    }
-    */
-        //Initialize stdout if needed (for arduino)
-        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
-            int baudrate = 9600;
-            if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout_baudrate")) {
-                Integer intb = Integer.parseInt(ctx.getCurrentConfiguration().annotation("arduino_stdout_baudrate").iterator().next());
-                baudrate = intb.intValue();
-            }
-            if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
-                builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".begin(" + baudrate + ");\n");
-            }
-        }
-        // Call the initialization function
-        builder.append("initialize_configuration_" + cfg.getName() + "();\n");
-
-        // Serach for the ThingMLSheduler Thing
-    /*Thing arduino_scheduler = null;
-    for (Thing t : model.allThings()) {
-        if (t.getName().equals("ThingMLScheduler"))  {
-            arduino_scheduler = t;
-            break;
-        }
-        */
+        
             //Initialize stdout if needed (for arduino)
             if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 int baudrate = 9600;

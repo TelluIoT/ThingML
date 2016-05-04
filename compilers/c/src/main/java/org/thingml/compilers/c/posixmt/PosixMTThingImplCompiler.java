@@ -237,7 +237,11 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         }
         builder.append("while(1){\n");
         if (sm.hasEmptyHandlers()) {
-            builder.append(ctx.getEmptyHandlerName(thing) + "(_instance);\n");
+            builder.append("int emptyEventConsumed = 1;\n");
+            builder.append("while (emptyEventConsumed != 0) {\n");
+            builder.append("emptyEventConsumed = 0;\n");
+            builder.append("emptyEventConsumed += " + ctx.getEmptyHandlerName(thing) + "(_instance);\n");
+            builder.append("}\n");
         }
         builder.append(thing.getName() + "_processMessageQueue(_instance);\n");
         
