@@ -25,6 +25,8 @@
  */
 package org.thingml.network.plugins.js;
 
+import com.eclipsesource.json.JsonObject;
+import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.PrimitiveType;
@@ -32,6 +34,9 @@ import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.javascript.JSHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -39,9 +44,21 @@ import java.util.Set;
 public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
     private void updatePackageJSON() {
+        try {
+            final InputStream input = new FileInputStream(context.getOutputDirectory() + "/package.json");
+            final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
+            String pack = "";
+            for (String line : packLines) {
+                pack += line + "\n";
+            }
+            input.close();
 
-
-
+            final JsonObject json = JsonObject.readFrom(pack);
+            final JsonObject deps = json.get("dependencies").asObject();
+            deps.add("bytebuffer", "^5.0.1");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

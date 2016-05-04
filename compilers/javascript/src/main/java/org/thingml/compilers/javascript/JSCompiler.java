@@ -93,6 +93,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
         ctx.getCompiler().getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
+        ctx.generateNetworkLibs(cfg);
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
