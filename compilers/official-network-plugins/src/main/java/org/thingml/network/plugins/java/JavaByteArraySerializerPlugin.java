@@ -116,7 +116,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         builder.append("default: return null;\n");
         builder.append("}\n}\n");
 
-        builder.append("public static byte[] toBytes(Event e){\n");
+        /*builder.append("public static byte[] toBytes(Event e){\n");
         builder.append("switch(e.getType().getCode()){\n");
         for(Message m : messages) {
             final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
@@ -124,11 +124,8 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         }
         builder.append("default: return null;\n");
         builder.append("}\n");
-        builder.append("}\n");
+        builder.append("}\n");*///FIXME
 
-        /*for(Message m : messages) {
-            generateSerialization(builder, bufferName, m);
-        }*/
         builder.append("/*$SERIALIZERS$*/\n\n");
         builder.append("}\n");
     }
