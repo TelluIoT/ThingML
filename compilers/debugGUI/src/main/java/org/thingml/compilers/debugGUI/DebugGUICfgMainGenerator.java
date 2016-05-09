@@ -63,11 +63,11 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         StringBuilder sendForm = new StringBuilder();
         for (Message msg : eco.getPort().getReceives()) {
 
-            if (msg.hasAnnotation("code")) {
+            /*if (msg.hasAnnotation("code")) {
                 msgID = msg.annotation("code").iterator().next();
             } else {
                 System.out.println("[Warning] in order to generate working mock-up, messages ID must be specified with @code");
-            }
+            }*/
 
             sendForm.append("<tr>\n<td></td>\n");
             for (Parameter p : msg.getParameters()) {
@@ -172,7 +172,8 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-        builder.append("protocol Websocket;");
+        builder.append("protocol Websocket\n");
+        //builder.append("  @serializer \"JSON\";");
         builder.append("protocol " + eco.getProtocol().getName());
         for (PlatformAnnotation pan : eco.getProtocol().allAnnotations()) {
             builder.append(" @" + pan.getName() + " \"" + pan.getValue() + "\"");

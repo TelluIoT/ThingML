@@ -146,7 +146,7 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
 
             builder.append("function " + portName + "_parse(msg) {\n");
             builder.append("var parsedMsg = \"\";\n");
-            builder.append("var msgID = readByte(msg.substring(0, 6), 2);\n");
+            builder.append("for(msgID in msg) {\n");
             boolean mIsFirst = true;
             for (Message m : eco.getPort().getSends()) {
                 int char_i = 6;
@@ -163,8 +163,9 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
                     builder.append("else ");
                 }
 
-                builder.append("if(msgID == " + msgID + ") {\n");
+                builder.append("if(msgID == " + m.getName() + ") {\n");
                 builder.append("parsedMsg = \"" + m.getName() + "(\";\n");
+                builder.append("var index_param = 0;\n");
 
                 boolean pIsFirst = true;
                 for (Parameter p : m.getParameters()) {
@@ -173,18 +174,19 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
                     } else {
                         builder.append("parsedMsg += \", \";\n");
                     }
-
-                    builder.append("parsedMsg += readByte(msg.substring(" + char_i);
+                    builder.append("parsedMsg += msg.msgID[index_param++]");
+                    /*builder.append("parsedMsg += readByte(msg.substring(" + char_i);
                     PrimitiveType ty = (PrimitiveType) p.getType();
                     //param_l = parseInt(p.getType().annotation("c_byte_size").iterator().next());
                     param_l = ty.getByteSize();
                     char_i += param_l * 3;
-                    builder.append(", " + char_i + "), " + param_l + ");\n");
+                    builder.append(", " + char_i + "), " + param_l + ");\n");*/
                 }
                 builder.append("parsedMsg += \")\";\n");
 
                 builder.append("}\n");
             }
+                builder.append("}\n");
             builder.append("else {\n");
             builder.append("parsedMsg += \"Unknown message: \" + msg;\n");
             builder.append("}\n");
