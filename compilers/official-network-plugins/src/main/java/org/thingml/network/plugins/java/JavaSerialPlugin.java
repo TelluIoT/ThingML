@@ -60,6 +60,20 @@ public class JavaSerialPlugin extends NetworkPlugin {
         StringBuilder builder = new StringBuilder();
         for (Protocol prot : protocols) {
             String serializers = "";
+
+            ////////FIXME
+            builder.append("public static byte[] toBytes(Event e){\n");
+            builder.append("switch(e.getType().getCode()){\n");
+            for(ThingPortMessage tmp : getMessagesSent(cfg, prot)) {
+                final Message m = tmp.m;
+                final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+                builder.append("case " + code + ": return " + prot.getName() + "BinaryProtocol.toBytes((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e);\n");
+            }
+            builder.append("default: return null;\n");
+            builder.append("}\n");
+            builder.append("}\n");
+            ////////FIXME
+
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
                 serializers += ctx.getSerializationPlugin(prot).generateSerialization(builder, prot.getName() + "BinaryProtocol", tpm.m);
             }
