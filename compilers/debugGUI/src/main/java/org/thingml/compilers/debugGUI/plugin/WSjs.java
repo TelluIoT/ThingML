@@ -116,6 +116,7 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
 
             builder.append("function " + portName + "_parse(rawMsg) {\n");
             builder.append("    rawMsg = stripZ(rawMsg);\n");
+            builder.append("    var msg = JSON.parse(rawMsg);\n");
             builder.append("    var parsedMsg = \"\";\n");
             builder.append("    for(mID in msg) {\n" +
             "   parsedMsg += mID + \"(\";\n" +
