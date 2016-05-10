@@ -45,7 +45,7 @@ abstract public class Checker {
     private Set<Rule> Rules;
     private String compiler;
     private String generic;
-    private Context ctx;
+    public Context ctx;
 
     public Checker(String compiler) {
         Rules = new HashSet<Rule>();
