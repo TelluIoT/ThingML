@@ -62,7 +62,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         String sendFunction = portName + "_send", msgID = "";
         StringBuilder sendForm = new StringBuilder();
         for (Message msg : eco.getPort().getReceives()) {
-
+            msgID = msg.getName();
             /*if (msg.hasAnnotation("code")) {
                 msgID = msg.annotation("code").iterator().next();
             } else {
@@ -76,7 +76,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
             sendForm.append("</tr>\n");
 
             sendForm.append("<tr>\n<td><input type=\"submit\" class=\"btn\" value=\"" + msg.getName() + "\""
-                    + " onClick=\"" + sendFunction + "(" + msgID + ");\" /></td>\n");
+                    + " onClick=\"" + sendFunction + "(\"" + msgID + "\");\" /></td>\n");
             for (Parameter p : msg.getParameters()) {
                 sendForm.append("<td><input type=\"text\" class=\"bootstrap-frm\" id=\"param_" + msg.getName() + "_" + p.getName() + "\" /></td>\n");
             }
@@ -173,7 +173,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("protocol Websocket\n");
-        //builder.append("  @serializer \"JSON\";");
+        builder.append("  @serializer \"PosixJSONSerializerPlugin\";");
         builder.append("protocol " + eco.getProtocol().getName());
         for (PlatformAnnotation pan : eco.getProtocol().allAnnotations()) {
             builder.append(" @" + pan.getName() + " \"" + pan.getValue() + "\"");

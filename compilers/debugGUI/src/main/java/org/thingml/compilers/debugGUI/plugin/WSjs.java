@@ -56,45 +56,11 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
 
     @Override
     public void generateMessageForwarders(StringBuilder builder) {
-        builder.append("function intToXdigitString(i, digit) {\n" +
-                "	if ((i >= 0) && (digit > 0)) {\n" +
-                "		var buf = \"\" + i;\n" +
-                "		while (buf.length < digit) {\n" +
-                "			buf = \"0\" + buf;\n" +
-                "		}\n" +
-                "		return buf;\n" +
-                "	} else {\n" +
-                "		var buf = \"\";\n" +
-                "		while (buf.length < digit) {\n" +
-                "			buf = \"0\" + buf;\n" +
-                "		}\n" +
-                "		return buf;\n" +
-                "	}\n" +
-                "//return i;\n" +
-                "}\n\n"
-                + "function intToBytes(i, nbB) {\n" +
-                "	var n = nbB;\n" +
-                "	var tmp = i;\n" +
-                "	var res = \"\";\n" +
-                "	while(n > 1){\n" +
-                "		res += intToXdigitString(Math.floor(tmp / Math.pow(256, n-1)), 3);\n" +
-                "		tmp = i - res;\n" +
-                "		n--;\n" +
-                "	}\n" +
-                "	res += intToXdigitString(i % 256, 3);\n" +
-                "	return res;\n" +
-                "}\n" +
-                "\n" +
-                "function readByte(i, nbB) {\n" +
-                "	var n = nbB;\n" +
-                "	var res = 0;\n" +
-                "	var tmp = \"\";\n" +
-                "	while(n > 0) {\n" +
-                "		tmp = i.substring((nbB-n)*3, (nbB-n+1)*3);\n" +
-                "		res += Number(tmp) * Math.pow(256, (n-1));\n" +
-                "		n--;\n" +
-                "	}\n" +
-                "	return res;\n" +
+        builder.append("function stripZ(a) {\n" +
+                "        while(a[a.length-1] == '\\0') {\n" +
+                "                a = a.substring(0,a.length-2);\n" +
+                "        }\n" +
+                "        return a;" +
                 "}\n\n");
 
         for (ExternalConnector eco : this.getExternalConnectors()) {
@@ -110,86 +76,61 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
 
 
             builder.append("var tosend, tmp_param, tolog;\n\n");
-            builder.append("tosend = intToBytes(msgID, 2);\n");
+            builder.append("tosend = \"{\";\n");
 
             for (Message m : eco.getPort().getReceives()) {
                 String msgID = "";
                 if (m.hasAnnotation("code")) {
                     msgID = m.annotation("code").iterator().next();
 
-                    builder.append("if(msgID == " + msgID + ") {\n");
+                    builder.append("if(msgID == \"" + msgID + "\") {\n");
                     builder.append("tolog = \"" + m.getName() + "(\"\n");
+                    builder.append("tosend = \"" + m.getName() + " : {\";\n");
                     boolean pIsFirst = true;
                     for (Parameter p : m.getParameters()) {
                         if (pIsFirst) {
                             pIsFirst = false;
                         } else {
                             builder.append("tolog += \", \";\n");
+                            builder.append("tosend += \", \";\n");
                         }
                         builder.append("tmp_param = document.getElementById(\"param_" + m.getName() + "_" + p.getName() + "\").value;\n");
                         builder.append("tolog += tmp_param;\n");
                         //builder.append("tosend += intToBytes(tmp_param, " + p.getType().annotation("c_byte_size").iterator().next() + ");\n");
                         PrimitiveType ty = (PrimitiveType) p.getType();
-                        builder.append("tosend += intToBytes(tmp_param, " + ty.getByteSize() + ");\n");
+                        builder.append("tosend += \"" + p.getName() + " : \" + tmp_param;\n");
                     }
+                    builder.append("tosend = \"}\";\n");
 
                     builder.append("}\n");
                 } else {
                     System.out.println("[Warning] in order to generate working mock-up, messages ID must be specified with @code");
                 }
             }
+            builder.append("tosend = \"}\";\n");
             builder.append("tolog += \")\"\n");
             builder.append("document.getElementById(\"sent-logs\").textContent += \"\\n> \" + tolog;\n");
             builder.append(portName + "_socket.send(tosend);\n");
             builder.append("document.getElementById(\"sent-logs\").scrollBottom;\n");
             builder.append("}\n\n");
 
-            builder.append("function " + portName + "_parse(msg) {\n");
-            builder.append("var parsedMsg = \"\";\n");
-            builder.append("for(msgID in msg) {\n");
-            boolean mIsFirst = true;
-            for (Message m : eco.getPort().getSends()) {
-                int char_i = 6;
-                int param_l;
-                String msgID = "";
-                if (m.hasAnnotation("code")) {
-                    msgID = m.annotation("code").iterator().next();
-                } else {
-                    System.out.println("[Warning] in order to generate working mock-up, messages ID must be specified with @code");
-                }
-                if (mIsFirst) {
-                    mIsFirst = false;
-                } else {
-                    builder.append("else ");
-                }
-
-                builder.append("if(msgID == " + m.getName() + ") {\n");
-                builder.append("parsedMsg = \"" + m.getName() + "(\";\n");
-                builder.append("var index_param = 0;\n");
-
-                boolean pIsFirst = true;
-                for (Parameter p : m.getParameters()) {
-                    if (pIsFirst) {
-                        pIsFirst = false;
-                    } else {
-                        builder.append("parsedMsg += \", \";\n");
-                    }
-                    builder.append("parsedMsg += msg.msgID[index_param++]");
-                    /*builder.append("parsedMsg += readByte(msg.substring(" + char_i);
-                    PrimitiveType ty = (PrimitiveType) p.getType();
-                    //param_l = parseInt(p.getType().annotation("c_byte_size").iterator().next());
-                    param_l = ty.getByteSize();
-                    char_i += param_l * 3;
-                    builder.append(", " + char_i + "), " + param_l + ");\n");*/
-                }
-                builder.append("parsedMsg += \")\";\n");
-
-                builder.append("}\n");
-            }
-                builder.append("}\n");
-            builder.append("else {\n");
-            builder.append("parsedMsg += \"Unknown message: \" + msg;\n");
-            builder.append("}\n");
+            builder.append("function " + portName + "_parse(rawMsg) {\n");
+            builder.append("    rawMsg = stripZ(rawMsg);\n");
+            builder.append("    var parsedMsg = \"\";\n");
+            builder.append("    for(mID in msg) {\n" +
+            "   parsedMsg += mID + \"(\";\n" +
+            "   var isFirst = true;\n" +
+            "   for(param in msg[mID]) {\n" +
+            "        if(isFirst) {\n" +
+            "           isFirst = false;\n" +
+            "        } else {\n" +
+            "           parsedMsg += \", \";\n" +
+            "        }\n" +
+            "        parsedMsg += msg[mID][param];\n" +
+            "   }\n" +
+            "   parsedMsg += \")\";\n" +
+            "}");
+            
 
 
             builder.append("document.getElementById(\"received-logs\").textContent +=  \"\\n> \" + parsedMsg;\n");
