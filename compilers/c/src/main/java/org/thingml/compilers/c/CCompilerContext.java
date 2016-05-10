@@ -17,14 +17,12 @@ package org.thingml.compilers.c;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.Enumeration;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.ThingMLCompiler;
 
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by ffl on 01.06.15.
@@ -41,6 +39,7 @@ public abstract class CCompilerContext extends Context {
     StringBuilder pollCode = new StringBuilder();
     StringBuilder initCode = new StringBuilder();
     private Set<NetworkLibraryGenerator> NetworkLibraryGenerators;
+    private Map<String, Map<String, String>> mapCepMsgParamAndStream;
 
     public CCompilerContext(ThingMLCompiler c) {
         super(c);
@@ -733,4 +732,28 @@ public abstract class CCompilerContext extends Context {
 
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {}
 
+    public void putCepMsgParam(String msg, String param, String stream) {
+        if (this.mapCepMsgParamAndStream == null)
+            this.mapCepMsgParamAndStream = new HashMap<>();
+
+        Map<String, String> mapMsgStream = new HashMap<>();
+        mapMsgStream.put(msg, stream);
+        this.mapCepMsgParamAndStream.put(param, mapMsgStream);
+    }
+
+    /**
+     *
+     * @param param
+     * @return
+     */
+    public Map<String, String> getCepMsgFromParam(String param) {
+        if (this.mapCepMsgParamAndStream == null)
+            return null;
+
+        return this.mapCepMsgParamAndStream.get(param);
+    }
+
+    public void resetCepMsgContext() {
+        this.mapCepMsgParamAndStream = null;
+    }
 }

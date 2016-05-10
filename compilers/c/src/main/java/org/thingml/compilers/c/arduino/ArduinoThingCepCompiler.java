@@ -118,6 +118,13 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 methodsSignatures += methodsTemplate;
 
                 /*
+                 * Export methods
+                 */
+                //TODO check for input buffer
+                for (Parameter p : msg.getParameters())
+                    methodsSignatures += "    " + ctx.getCType(p.getType()) + "* export_" + msg.getName() + "_" + p.getName() + "();\n";
+
+                /*
                  * Attributes
                  */
                 String attributesTemplate = ctx.getCEPLibTemplateAttributesSignatures();
@@ -125,6 +132,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
                 attributesSignatures += attributesTemplate;
 
+                for (Parameter p : msg.getParameters())
+                    attributesSignatures += ctx.getCType(p.getType()) + " " + msg.getName() + p.getName() + " [" + msg.getName().toUpperCase() + "_NUMBER_MSG];\n";
             }
 
             if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx))
@@ -141,6 +150,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 String param = "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName();
                 triggerTimer = "void checkTimer(" + param + ");\n";
             }
+
+            constants += ArduinoCepHelper.getInputBufferMacros(s, ctx);
 
             //TODO check if need to store output
 
@@ -249,6 +260,40 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 messageImpl = messageImpl.replace("/*POP_IMPL*/", popImpl);
 
                 msgsImpl += messageImpl;
+
+                //TODO check if we want an input buffer
+                String exportImpl = "";
+
+                //TODO should be set to the offset
+                fifo_buffer_index = 4; // reset the index after the stamp
+                for (Parameter p : msg.getParameters()) {
+                    exportImpl += ctx.getCType(p.getType()) + "* stream_" + s.getName() +
+                            " ::export_" + msg.getName() + "_" + p.getName() + "()\n{\n";
+                    exportImpl += "  int size = " + msg.getName() + "_length();\n";
+                    exportImpl += "  for (int i=0; i<size; i++) {\n";
+
+                    //union de store the extracted value
+                    exportImpl += "    union u_" + msg.getName() + "_" + p.getName() + "_t {\n";
+                    exportImpl += "      " + ctx.getCType(p.getType()) + " p;\n";
+                    exportImpl += "      byte bytebuffer[" + ctx.getCByteSize(p.getType(), 0) + "];\n";
+                    exportImpl += "    } u_" + msg.getName() + "_" + p.getName() + ";\n";
+
+                    for (int i = ctx.getCByteSize(p.getType(), 0) - 1; i >= 0; i--) {
+
+                        exportImpl += "u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "]";
+                        exportImpl += " = " + msg.getName() + "_fifo[(" + msg.getName() + "_fifo_head + " + fifo_buffer_index +
+                                ") % " + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
+
+                        fifo_buffer_index++;
+                    }
+
+                    exportImpl += "    " + msg.getName() + p.getName() + "[i] = u_" + msg.getName() + "_" + p.getName() + ".p;\n";
+                    exportImpl += "  }\n";
+                    exportImpl += "  return " + msg.getName() + p.getName() + ";\n";
+                    exportImpl += "}\n";
+                }
+
+                msgsImpl += exportImpl;
             }
 
             String classImpl = ctx.getCEPLibTemplateClassImpl();

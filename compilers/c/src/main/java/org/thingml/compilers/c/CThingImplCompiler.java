@@ -156,7 +156,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(ctx.getCType(func.getType()));
                 if (func.getCardinality() != null) builder.append("*");
             } else builder.append("void");
-            
+
             if (!isPrototype) {
                 builder.append(" " + getCppNameScope() + ctx.getCName(func, thing) + "(");
             } else {
@@ -167,7 +167,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             for (Parameter p : func.getParameters()) {
                 builder.append(", ");
                 builder.append(ctx.getCType(p.getType()));
-                if (p.getCardinality() != null) builder.append("*");
+                if (p.getCardinality() != null || p.isIsArray()) builder.append("*");
                 builder.append(" " + p.getName());
             }
             builder.append(")");
@@ -189,9 +189,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generatePrivateCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         // NB sdalgard - ** Reference to be removed ** This function is duplicated in generatePrivateCppPrototypes in class CThingApiCompiler
         // Exit actions 
-        
+
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
-        
+
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0);
             builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
@@ -217,7 +217,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             if (!f.isDefined("abstract", "true")) {
                 generatePrototypeforThingDirect(f, builder, ctx, thing, true);
                 builder.append(";\n");
-                
+
                 if (isGeneratingCpp()) {
                     generatePrototypeforThingDirect(f, cppHeaderBuilder, ctx, thing, true);
                     cppHeaderBuilder.append(";\n");
@@ -256,7 +256,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             generatePrototypeforThingDirect(func, cppHeaderBuilder, ctx, thing, true);
             cppHeaderBuilder.append(";\n");
         }
-        
+
         builder.append("// Definition of function " + func.getName() + "\n");
         generatePrototypeforThingDirect(func, builder, ctx, thing, false);
         builder.append(" {\n");
@@ -363,9 +363,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
 
         builder.append("switch(state) {\n");
-        for(CompositeState cs : sm.allContainedCompositeStates()) {
+        for (CompositeState cs : sm.allContainedCompositeStates()) {
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
-            if(debugProfile.isDebugBehavior()) {
+            if (debugProfile.isDebugBehavior()) {
                 builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
                         + ctx.traceOnEntry(thing, sm) + "\\n\");\n");
             }
@@ -388,7 +388,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("break;}\n");
         }
 
-        for(State s : sm.allContainedSimpleStates()) {
+        for (State s : sm.allContainedSimpleStates()) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
             if (debugProfile.isDebugBehavior()) {
@@ -407,7 +407,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generateExitActions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
 
         if (thing.allStateMachines().isEmpty()) return;
-        
+
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
 
         StateMachine sm = thing.allStateMachines().get(0); // There has to be one and only one state machine here
@@ -421,7 +421,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("switch(state) {\n");
 
 
-        for(CompositeState cs : sm.allContainedCompositeStates()) {
+        for (CompositeState cs : sm.allContainedCompositeStates()) {
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
             ArrayList<Region> regions = new ArrayList<Region>();
             regions.add(cs);
@@ -436,7 +436,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         }
 
-        for(State s : sm.allContainedSimpleStates()) { // just a leaf state: execute exit actions
+        for (State s : sm.allContainedSimpleStates()) { // just a leaf state: execute exit actions
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             if (s.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
 
@@ -445,7 +445,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
                         + ctx.traceOnExit(thing, sm, s) + "\\n\");\n");
             }
-            
+
             builder.append("break;}\n");
         }
 
@@ -464,15 +464,15 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         Map<Port, Map<Message, List<Handler>>> handlers = sm.allMessageHandlers();
 
-        for(Port port : handlers.keySet()) {
-            for(Message msg : handlers.get(port).keySet() ) {
+        for (Port port : handlers.keySet()) {
+            for (Message msg : handlers.get(port).keySet()) {
                 // steffend - This is commented out because it is already generated as part of the API
                 //if (isGeneratingCpp()) {
                 //    cppHeaderBuilder.append("// generateEventHandlers\nvoid " + ctx.getHandlerName(thing, port, msg));
                 //    ctx.appendFormalParameters(thing, cppHeaderBuilder, msg);
                 //    cppHeaderBuilder.append(";\n");
                 //}
-                
+
                 builder.append("void " + getCppNameScope() + ctx.getHandlerName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(" {\n");
@@ -515,7 +515,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 ctx.appendFormalParametersEmptyHandler(thing, cppHeaderBuilder);
                 cppHeaderBuilder.append(";\n");
             }
-            
+
             //New Empty Event Method
             builder.append("int " + getCppNameScope() + ctx.getEmptyHandlerName(thing));
             //builder.append("int " + ctx.getEmptyHandlerName(thing));
@@ -545,6 +545,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         for (Stream s : thing.getStreams()) {
             Source source = s.getInput();
 
+            // Gather all the sources
             Map<SimpleSource, String> sourceMap = new HashMap();
             if (source instanceof SimpleSource)
                 sourceMap.put((SimpleSource) source, ((SimpleSource) source).getMessage().getMessage().getName());
@@ -559,6 +560,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             for (SimpleSource sc : sourceMap.keySet()) {
                 if (sourceMap.get(sc).equals(msg.getName())) {
                     builder.append("//begin stream dispatch\n");
+
+                    for (Parameter p : msg.getParameters()) {
+                        System.out.println("Adding " + msg.getName() + " " + " with " + p.getName());
+
+                        ctx.putCepMsgParam(msg.getName(), p.getName(), s.getName());
+                    }
 
                     int nbCondition = 0;
                     // guard
@@ -578,6 +585,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
                     // produce the action or propagate the event
                     if (source instanceof SimpleSource) {
+                        if (hasWindowView) {
+                            builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
+                            ctx.appendActualParameters(thing, builder, msg, "_instance");
+                            builder.append(";\n");
+                        }
                         for (LocalVariable lv : s.getSelection()) {
                             lv.setName(lv.qname("_"));
                             ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
@@ -616,6 +628,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         builder.append("}\n");
                     }
                     builder.append("//End stream dispatch\n");
+                    ctx.resetCepMsgContext();
                 }
             }
         }
@@ -825,7 +838,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     ctx.appendFormalParameters(thing, cppHeaderBuilder, msg);
                     cppHeaderBuilder.append(";\n");
                 }
-                if (!isGeneratingCpp()) { 
+                if (!isGeneratingCpp()) {
 
                     //for external messages
                     //var

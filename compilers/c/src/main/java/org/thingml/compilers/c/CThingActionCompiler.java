@@ -20,6 +20,8 @@ import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
+import java.util.Map;
+
 
 public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
@@ -66,7 +68,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
             builder.append(", ");
             generate(p, builder, context);
         }
-        
+
         builder.append(");\n");
     }
 
@@ -98,7 +100,9 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
         CCompilerContext context = (CCompilerContext) ctx;
 
-        String propertyName = context.getCType(action.getType()) + " " + action.getName();
+        String arr = action.isIsArray() ? "*" : "";
+
+        String propertyName = context.getCType(action.getType()) + arr + " " + action.getName();
         builder.append(";");
         builder.append(propertyName);
         if (action.getCardinality() != null) {//array declaration
@@ -143,23 +147,41 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     }
 
-   @Override
+    @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-       if(expression.getParameter() instanceof ParamReference) {
-           ParamReference paramReference = (ParamReference) expression.getParameter();
-           builder.append(paramReference.getParameterRef().getName());
-       } else if(expression.getParameter() instanceof PredifinedProperty) {
-           Parameter parameter = (Parameter) expression.getReference();
-           if(parameter.isIsArray()) {
-               builder.append(parameter.getName() + "[");
-               ctx.getCompiler().getThingActionCompiler().generate(parameter.getCardinality(), builder,ctx);
-               builder.append("]");
-           } else {
-               throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
-           }
-       } else {
-           throw new UnsupportedException(expression.getParameter().getClass().getName(),"parameter","CThingActionCompiler");
-       }
+        if (expression.getParameter() instanceof ArrayParamRef) {
+            if (ctx instanceof CCompilerContext) {
+                ArrayParamRef apr = (ArrayParamRef) expression.getParameter();
+
+                String paramName = apr.getParameterRef().getName();
+                Map<String, String> mapMsgStream = ((CCompilerContext) ctx).getCepMsgFromParam(paramName);
+                String msgName = "";
+                String streamName = "";
+                for (String s : mapMsgStream.keySet()) {
+                    msgName = s;
+                    streamName = mapMsgStream.get(s);
+                }
+
+                builder.append("_instance->cep_" + streamName + "->export_" + msgName + "_" + paramName + "()");
+            } else {
+
+            }
+
+        } else if (expression.getParameter() instanceof ParamReference) {
+            ParamReference paramReference = (ParamReference) expression.getParameter();
+            builder.append(paramReference.getParameterRef().getName());
+        } else if (expression.getParameter() instanceof PredifinedProperty) {
+            Parameter parameter = (Parameter) expression.getReference();
+            if (parameter.isIsArray()) {
+                builder.append(parameter.getName() + "[");
+                ctx.getCompiler().getThingActionCompiler().generate(parameter.getCardinality(), builder, ctx);
+                builder.append("]");
+            } else {
+                throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
+            }
+        } else {
+            throw new UnsupportedException(expression.getParameter().getClass().getName(), "parameter", "CThingActionCompiler");
+        }
 
     }
 
@@ -169,16 +191,16 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
         if (expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
             builder.append(expression.getProperty().getName());
         } else if (expression.getProperty() instanceof Property) {
-            if(!ctx.getAtInitTimeLock()) {
-                if(nctx.getConcreteInstance() != null) {
+            if (!ctx.getAtInitTimeLock()) {
+                if (nctx.getConcreteInstance() != null) {
                     Property p = (Property) expression.getProperty();
                     if (!p.isChangeable()) {
                         boolean found = false;
-                        for(ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
+                        for (ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
                             String tmp = pa.getInstance().getInstance().findContainingConfiguration().getName() + "_" + pa.getInstance().getInstance().getName();
 
-                            if(nctx.getConcreteInstance().getName().equals(tmp)){
-                                if(pa.getProperty().getName().compareTo(p.getName()) == 0) {
+                            if (nctx.getConcreteInstance().getName().equals(tmp)) {
+                                if (pa.getProperty().getName().compareTo(p.getName()) == 0) {
                                     generate(pa.getInit(), builder, ctx);
                                     found = true;
                                     //System.out.println("ass: '" + tmp + "'");
@@ -188,7 +210,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                                 }
                             }
                         }
-                        if(!found){
+                        if (!found) {
                             generate(p.getInit(), builder, ctx);
                             //System.out.println("BuilderB: '" + builder + "'");
                         }

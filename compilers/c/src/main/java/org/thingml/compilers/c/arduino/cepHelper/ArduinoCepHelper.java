@@ -210,6 +210,37 @@ public class ArduinoCepHelper {
         return outputTTL;
     }
 
+    public static String getInputBufferMacros(Stream stream, CCompilerContext ctx) {
+        String ret = "";
+
+        Source source = stream.getInput();
+        List<SimpleSource> lss = new ArrayList<>();
+
+        if (source instanceof SimpleSource) {
+            lss.add((SimpleSource)source);
+        } else if (source instanceof MergeSources) {
+            for (Source s : ((MergeSources) source).getSources()) {
+                if (s instanceof SimpleSource) {
+                    lss.add((SimpleSource) s);
+                }
+            }
+        } else if (source instanceof JoinSources) {
+            for (Source s : ((JoinSources) source).getSources()) {
+                if (s instanceof SimpleSource) {
+                    lss.add((SimpleSource) s);
+                }
+            }
+        }
+
+        for (SimpleSource src: lss) {
+            for (String s : src.annotation("BufferSize")) {
+                ret = "#define " + s + " _instance->cep_" + stream.getName() + "->" + src.getMessage().getMessage().getName() + "_length() / " + src.getMessage().getMessage().getName().toUpperCase() + "_ELEMENT_SIZE";
+            }
+        }
+
+        return ret;
+    }
+
     public static void generateTimerPolling(Configuration cfg, CCompilerContext ctx) {
         String timerCall;
         for (Instance instance : cfg.allInstances()) {
