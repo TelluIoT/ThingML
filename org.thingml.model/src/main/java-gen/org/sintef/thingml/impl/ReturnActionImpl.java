@@ -188,26 +188,4 @@ public class ReturnActionImpl extends ActionImpl implements ReturnAction {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		result.addAll(getExp().getAllExpressions());
-		return  result;
-	}
-
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		result.addAll(getExp().getAllExpressions(clazz));
-		return  result;
-	}
-
 } //ReturnActionImpl

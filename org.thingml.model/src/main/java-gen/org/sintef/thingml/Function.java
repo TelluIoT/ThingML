@@ -62,16 +62,6 @@ public interface Function extends AnnotatedElement, TypedElement, HasParameters 
 	 */
 	void setBody(Action value);
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	List<Action> getAllActions();
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	List<Action> getAllActions(Class clazz);
 
 } // Function

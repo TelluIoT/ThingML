@@ -254,30 +254,4 @@ public class ArrayIndexImpl extends ExpressionImpl implements ArrayIndex {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		result.add(this);
-		result.addAll(getIndex().getAllExpressions());
-		result.addAll(getArray().getAllExpressions());
-		return result;
-	}
-
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		if(clazz.isInstance(this))
-			result.add(this);
-		result.addAll(getIndex().getAllExpressions(clazz));
-		result.addAll(getArray().getAllExpressions(clazz));
-		return result;
-	}
 } //ArrayIndexImpl

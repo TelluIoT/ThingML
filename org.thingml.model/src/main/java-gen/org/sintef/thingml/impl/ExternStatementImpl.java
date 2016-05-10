@@ -233,30 +233,4 @@ public class ExternStatementImpl extends ActionImpl implements ExternStatement {
 		return result.toString();
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		for(Expression e : getSegments()) {
-			result.addAll(e.getAllExpressions());
-		}
-		return result;
-	}
-
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		for(Expression e : getSegments()) {
-			result.addAll(e.getAllExpressions(clazz));
-		}
-		return result;
-	}
-
 } //ExternStatementImpl

@@ -52,17 +52,6 @@ public interface ActionBlock extends Action {
 	 */
 	EList<Action> getActions();
 
-	/**
-	 * @generated NOT
-	 * @return
-     */
-	List<Action> allAction(Class clazz);
-
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	List<Expression> allExpression(Class clazz);
 
 
 

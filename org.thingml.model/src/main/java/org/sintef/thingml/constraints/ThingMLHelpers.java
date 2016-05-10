@@ -28,6 +28,7 @@
  */
 package org.sintef.thingml.constraints;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
@@ -756,6 +757,33 @@ public class ThingMLHelpers {
 			eObject = eObject.eContainer();
 		}
 		return (TypedElement) eObject;
+	}
+
+
+	public static List<Expression> getAllExpressions(ThingMLElement self, Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		TreeIterator<EObject> it = self.eAllContents();
+		while(it.hasNext()) {
+			EObject o = it.next();
+			if (clazz.isInstance(o)) result.add((Expression) o);
+		}
+
+		if (clazz.isInstance(self))result.add((Expression)self);
+		return result;
+	}
+
+
+	public static List<Expression> getAllExpressions(ThingMLElement self) {
+		return getAllExpressions(self, Expression.class);
+	}
+
+
+	public Set<Message> allMessages(ThingMLModel self) {
+		Set<Message> msg = new HashSet<Message>();
+		for(Thing t : allThings(self)) {
+			msg.addAll(t.allMessages());
+		}
+		return msg;
 	}
 
 }

@@ -319,31 +319,6 @@ public class SendActionImpl extends ActionImpl implements SendAction {
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
-
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		for(Expression e : getParameters()) {
-			result.addAll(e.getAllExpressions());
-		}
-		return result;
-	}
-
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		for(Expression e : getParameters()) {
-			result.addAll(e.getAllExpressions(clazz));
-		}
-		return result;
-	}
+	
 
 } //SendActionImpl

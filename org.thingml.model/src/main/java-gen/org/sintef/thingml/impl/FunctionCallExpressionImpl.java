@@ -51,31 +51,5 @@ public class FunctionCallExpressionImpl extends FunctionCallImpl implements Func
 		return ThingmlPackage.Literals.FUNCTION_CALL_EXPRESSION;
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		result.add(this);
-		for(Expression e : getParameters()) {
-			result.addAll(e.getAllExpressions());
-		}
-		return  result;
-	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		if(clazz.isInstance(this))
-			result.add(this);
-		for(Expression e : getParameters()) {
-			result.addAll(e.getAllExpressions(clazz));
-		}return  result;
-	}
 } //FunctionCallExpressionImpl

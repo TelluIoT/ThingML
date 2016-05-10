@@ -162,63 +162,6 @@ public abstract class AnnotatedElementImpl extends ThingMLElementImpl implements
 		return super.eIsSet(featureID);
 	}
 
-    //Derived properties
 
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    public List<PlatformAnnotation> allAnnotations() {
-        return this.getAnnotations();
-    }
-
-    /**
-     *
-     * @param annotation
-     * @param value
-     * @return
-     * @generated NOT
-     */
-    public boolean isDefined(String annotation, String value) {
-        for (PlatformAnnotation a : allAnnotations()) {
-            if (a.getName().equals(annotation)) {
-                if (a.getValue().equals(value))
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     *
-     * @param name
-     * @return
-     * @generated NOT
-     */
-    public boolean hasAnnotation(String name) {
-        for (PlatformAnnotation a : allAnnotations()) {
-            if (a.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     *
-     * @param name
-     * @return
-     * @generated NOT
-     */
-	public List<String> annotation(String name) {
-		List<String> result = new ArrayList<String>();
-		for (PlatformAnnotation a : getAnnotations()) {
-			if (a.getName().equals(name)) {
-				result.add(a.getValue());
-			}
-		}
-		return result;
-	}
 
 } //AnnotatedElementImpl

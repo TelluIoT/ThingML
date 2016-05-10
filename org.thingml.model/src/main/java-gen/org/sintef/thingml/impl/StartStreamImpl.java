@@ -170,22 +170,6 @@ public class StartStreamImpl extends ActionImpl implements StartStream {
 		}
 		return super.eIsSet(featureID);
 	}
-        
-    /**
-     * @generated NOT
-     * @return 
-     */
-    public List<Expression> getAllExpressions() {
-        return new ArrayList<>();
-    }
 
-    /**
-     * @generated NOT
-     * @return 
-     */
-    public List<Expression> getAllExpressions(Class clazz) {
-        return new ArrayList<>();
-    }
-        
 
 } //StartStreamImpl

@@ -206,20 +206,5 @@ public class MessageImpl extends AnnotatedElementImpl implements Message {
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
-				//Derived properties
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    public int getCode() {
-        List<String> codes = annotation("code");
-        if (codes.size() == 1) {
-            return Integer.parseInt(codes.get(0));
-        }
-        else //no code or multiple codes
-            return -1;
-    }
 
 } //MessageImpl

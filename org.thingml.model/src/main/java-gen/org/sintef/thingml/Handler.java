@@ -107,13 +107,4 @@ public interface Handler extends AnnotatedElement {
 	 */
 	void setAction(Action value);
 
-    //derived properties
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    Set<AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>> allTriggeringPorts();
-
 } // Handler
