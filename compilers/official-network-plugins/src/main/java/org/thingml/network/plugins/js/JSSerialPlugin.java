@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -58,17 +59,29 @@ public class JSSerialPlugin extends NetworkPlugin {
         //TODO: to be improved (e.g. to avoid duplicating messages and ports, etc).
         updatePackageJSON(ctx);
         StringBuilder builder = new StringBuilder();
+
+
         for (Protocol prot : protocols) {
+            SerializationPlugin sp = null;
+            try {
+               sp = ctx.getSerializationPlugin(prot);
+            } catch (UnsupportedEncodingException uee) {
+                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                uee.printStackTrace();
+                return;
+            }
+
             String serializers = "";
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                serializers += ctx.getSerializationPlugin(prot).generateSerialization(builder, prot.getName() + "BinaryProtocol", tpm.m);
+                serializers += sp.generateSerialization(builder, prot.getName() + "BinaryProtocol", tpm.m);
             }
+
             builder = new StringBuilder();
             final Set<Message> messages = new HashSet<Message>();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 messages.add(tpm.m);
             }
-            ctx.getSerializationPlugin(prot).generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
+            sp.generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
             final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);
             try {
                 final File f = new File(ctx.getOutputDirectory() + "/" + prot.getName() + "BinaryProtocol.js");

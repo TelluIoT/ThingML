@@ -26,6 +26,7 @@ import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -66,12 +67,18 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
         for (Protocol prot : protocols) {
             HWSerial port = new HWSerial();
             port.protocol = prot;
-            port.sp = ctx.getSerializationPlugin(prot);
-            for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
-                port.ecos.add(eco);
-                eco.setName(eco.getProtocol().getName());
+            try {
+                port.sp = ctx.getSerializationPlugin(prot);
+                for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
+                    port.ecos.add(eco);
+                    eco.setName(eco.getProtocol().getName());
+                }
+                port.generateNetworkLibrary(this.ctx, cfg);
+            } catch (UnsupportedEncodingException uee) {
+                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                uee.printStackTrace();
+                return;
             }
-            port.generateNetworkLibrary(this.ctx, cfg);
         }
     }
 
@@ -88,7 +95,13 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
         }
 
         public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder, Configuration cfg, Protocol prot) {
-            SerializationPlugin sp = ctx.getSerializationPlugin(prot);
+            try {
+                final SerializationPlugin sp = ctx.getSerializationPlugin(prot);
+            } catch (UnsupportedEncodingException uee) {
+                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                uee.printStackTrace();
+                return;
+            }
 
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
                 Thing t = tpm.t;

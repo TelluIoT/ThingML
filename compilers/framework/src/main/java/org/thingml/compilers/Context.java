@@ -17,13 +17,13 @@ package org.thingml.compilers;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 public class Context {
@@ -463,17 +463,17 @@ public class Context {
         }
     }
 
-    public SerializationPlugin getSerializationPlugin(Protocol p) {
+    public SerializationPlugin getSerializationPlugin(Protocol p) throws UnsupportedEncodingException {
         if (p.hasAnnotation("serializer")) {
             final String serID = p.annotation("serializer").get(0);
             final SerializationPlugin sp = this.getCompiler().getSerializationPlugin(serID);
             if (sp != null) {
                 return sp;
             } else {
-                throw new UnsupportedException("Serialization plugin " + serID + " is not loaded.", "Network/Serialization", "generic");
+                throw new UnsupportedEncodingException("Serialization plugin " + serID + " is not loaded. Please make sure it appears in resources/META-INF.services");
             }
         } else {
-            throw new UnsupportedException("Protocol " + p.getName() + " is not loaded.", "Network/Serialization", "generic");
+            throw new UnsupportedEncodingException("Protocol " + p.getName() + " has no @serializer annotation. Please provide one in your ThingML file!");
         }
     }
 }

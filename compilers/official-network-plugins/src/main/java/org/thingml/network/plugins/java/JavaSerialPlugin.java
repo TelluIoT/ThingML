@@ -74,15 +74,24 @@ public class JavaSerialPlugin extends NetworkPlugin {
             builder.append("}\n");
             ////////FIXME
 
+            SerializationPlugin sp = null;
+            try {
+                sp = ctx.getSerializationPlugin(prot);
+            } catch (UnsupportedEncodingException uee) {
+                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                uee.printStackTrace();
+                return;
+            }
+
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                serializers += ctx.getSerializationPlugin(prot).generateSerialization(builder, prot.getName() + "BinaryProtocol", tpm.m);
+                serializers += sp.generateSerialization(builder, prot.getName() + "BinaryProtocol", tpm.m);
             }
             builder = new StringBuilder();
             final Set<Message> messages = new HashSet<Message>();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 messages.add(tpm.m);
             }
-            ctx.getSerializationPlugin(prot).generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
+            sp.generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
             final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);
             try {
                 final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");

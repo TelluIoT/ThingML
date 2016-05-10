@@ -16,7 +16,6 @@
 package org.thingml.compilers.c;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
@@ -158,7 +157,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                 throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
             }
         } else {
-            throw new UnsupportedException(expression.getParameter().getClass().getName(), "parameter", "CThingActionCompiler");
+            throw new UnsupportedOperationException("Parameter " + expression.getParameter().getClass().getName() + " not supported");
         }
 
     }

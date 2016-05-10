@@ -16,7 +16,6 @@
 package org.thingml.compilers.thing;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class ThingCepSourceDeclaration {
         } else if (source instanceof JoinSources) {
             generate(stream, (JoinSources) source, builder, context);
         } else {
-            throw UnsupportedException.sourceException(source.getClass().getName());
+            throw new UnsupportedOperationException("CEP source " + source.getClass().getName() + " is not supported");
         }
     }
 

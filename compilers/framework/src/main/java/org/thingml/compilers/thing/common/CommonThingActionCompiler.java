@@ -17,7 +17,6 @@ package org.thingml.compilers.thing.common;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
@@ -288,7 +287,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
                 message = ((SourceComposition) source).getResultMessage();
                 messageName = source.getName();
             } else {
-                throw new UnsupportedException(source.getClass().getName(), "stream input", "CommonThingActionCompiler");
+                throw new UnsupportedOperationException("Source " + source.getClass().getName() + " not supported.");
             }
         } else if (expression.getReference() instanceof MessageParameter) {
             MessageParameter mp = (MessageParameter) expression.getReference();
@@ -307,7 +306,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
             messageName = msg.getName();
             message = msg;
         } else {
-            throw new UnsupportedException(expression.getReference().getClass().getName(), "reference", "CommonThingActionCompiler");
+            throw new UnsupportedOperationException("Reference " + expression.getReference().getClass().getName() + " not supported.");
         }
         generateReference(message, messageName, expression, builder, ctx);
 
