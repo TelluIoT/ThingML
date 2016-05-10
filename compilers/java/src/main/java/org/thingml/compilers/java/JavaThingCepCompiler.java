@@ -16,7 +16,6 @@
 package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
@@ -43,7 +42,7 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
             Message outPut = stream.getOutput().getMessage();
             generateSubscription(stream, builder, ctx, outPut, stream.qname("_"));
         } else {
-            throw UnsupportedException.sourceException(stream.getClass().getName());
+            throw new UnsupportedOperationException("Input " + stream.getClass().getName() + " is not supported");
         }
     }
 

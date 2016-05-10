@@ -26,6 +26,7 @@ import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -58,7 +59,13 @@ public class PosixSerialPlugin extends NetworkPlugin {
         for (Protocol prot : protocols) {
             HWSerial port = new HWSerial();
             port.protocol = prot;
-            port.sp = ctx.getSerializationPlugin(prot);
+            try {
+                port.sp = ctx.getSerializationPlugin(prot);
+            } catch (UnsupportedEncodingException uee) {
+                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                uee.printStackTrace();
+                return;
+            }
             for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
                 port.ecos.add(eco);
                 eco.setName(eco.getProtocol().getName());
@@ -85,7 +92,14 @@ public class PosixSerialPlugin extends NetworkPlugin {
                 Port p = tpm.p;
                 Message m = tpm.m;
 
-                SerializationPlugin sp = ctx.getSerializationPlugin(prot);
+                SerializationPlugin sp = null;
+                try {
+                    sp = ctx.getSerializationPlugin(prot);
+                } catch (UnsupportedEncodingException uee) {
+                    System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                    uee.printStackTrace();
+                    return;
+                }
 
                 builder.append("// Forwarding of messages " + prot.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
                 builder.append("void forward_" + prot.getName() + "_" + ctx.getSenderName(t, p, m));

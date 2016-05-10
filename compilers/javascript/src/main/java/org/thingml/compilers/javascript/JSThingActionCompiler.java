@@ -16,7 +16,6 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
@@ -147,7 +146,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         } else if (reference.getParameter() instanceof ArrayParamRef) {
             paramResult = paramReference.getParameterRef().getName();
         } else {
-            throw new UnsupportedException(reference.getParameter().getClass().getName(), "reference parameter", "JSThingActionCompiler");
+            throw new UnsupportedOperationException("Parameter " + reference.getParameter().getClass().getName() + " is not supported.");
         }
         builder.append(messageName + paramResult);
     }

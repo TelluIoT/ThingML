@@ -16,7 +16,6 @@
 package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
@@ -105,7 +104,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("char"))
                 cast = "Character";
             else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).contains("."))
-                throw new UnsupportedException("Cannot serialize non-primitive types", "type", "java");
+                throw new UnsupportedOperationException("Custom Java type " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " not supported.");
             else
                 cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx));
 
