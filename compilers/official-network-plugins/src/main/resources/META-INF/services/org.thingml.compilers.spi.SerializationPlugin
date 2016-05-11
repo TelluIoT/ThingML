@@ -2,5 +2,5 @@ org.thingml.networkplugins.c.posix.PosixTextDigitSerializerPlugin
 org.thingml.networkplugins.c.posix.PosixJSONSerializerPlugin
 org.thingml.networkplugins.c.CByteArraySerializerPlugin
 org.thingml.networkplugins.c.CMSPSerializerPlugin
-org.thingml.network.plugins.java.JavaByteArraySerializerPlugin
-org.thingml.network.plugins.js.JSByteArraySerializerPlugin
+org.thingml.networkplugins.java.JavaByteArraySerializerPlugin
+org.thingml.networkplugins.js.JSByteArraySerializerPlugin
