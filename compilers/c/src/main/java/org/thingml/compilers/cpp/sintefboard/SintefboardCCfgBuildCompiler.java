@@ -16,6 +16,7 @@
 package org.thingml.compilers.cpp.sintefboard;
 
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -38,13 +39,13 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         mtemplate = mtemplate.replace("/*NAME*/", cfg.getName() + "Posix");
 
         String compiler = "g++"; // default value
-        if (cfg.hasAnnotation("c_compiler")) compiler = cfg.annotation("c_compiler").iterator().next();
+        if (AnnotatedElementHelper.hasAnnotation(cfg, "c_compiler")) compiler = AnnotatedElementHelper.annotation(cfg, "c_compiler").iterator().next();
         mtemplate = mtemplate.replace("/*CC*/", compiler);
 
         String flags;
         if (ctx.enableDebug()) flags = "CFLAGS = -DDEBUG";
         else flags = "CFLAGS = -O2 -w";
-        for (String s : cfg.annotation("add_c_flags")) {
+        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_flags")) {
             flags += " " + s;
         }
         mtemplate = mtemplate.replace("/*CFLAGS*/", flags);
@@ -74,13 +75,13 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         objs = objs.trim();
 
         String libs = "";
-        for (String s : cfg.annotation("add_c_libraries")) {
+        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_libraries")) {
             String[] strs = s.split(" ");
             for (int i = 0; i < strs.length; i++) {
                 libs += "-l " + strs[i].trim() + " ";
             }
         }
-        for (String s : cfg.annotation("add_c_libraries_rep")) {
+        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_libraries_rep")) {
             String[] strs = s.split(" ");
             for (int i = 0; i < strs.length; i++) {
                 libs += "-L " + strs[i].trim() + " ";
@@ -89,7 +90,7 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         libs = libs.trim();
 
         String preproc = "";
-        for (String s : cfg.annotation("add_c_directives")) {
+        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_directives")) {
             String[] strs = s.split(" ");
             for (int i = 0; i < strs.length; i++) {
                 preproc += "-D " + strs[i].trim() + " ";

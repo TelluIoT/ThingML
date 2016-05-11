@@ -26,14 +26,14 @@ import java.util.List;
 public class ParallelRegionHelper {
 
 
-    public static List<Session> allContainedSessions(ParallelRegion self) {
+    public static List<Session> allContainedSessions(Region self) {
         List<Session> result = new ArrayList<Session>();
         if (self instanceof CompositeState) {
             for(Region r : ((CompositeState)self).getRegion()) {
                 if (r instanceof Session) {
                     result.add((Session)r);
                 }
-                result.addAll(ParallelRegionHelper.allContainedSessions((ParallelRegion) r));
+                result.addAll(ParallelRegionHelper.allContainedSessions(r));
             }
         }
         for (State s : self.getSubstate()) {
