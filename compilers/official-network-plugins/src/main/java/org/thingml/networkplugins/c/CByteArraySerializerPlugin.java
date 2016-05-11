@@ -104,4 +104,12 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
         return res;
     }
 
+    @Override
+    public List<String> getSupportedFormat() {
+
+        List<String> res = new ArrayList<>();
+        res.add("Binary");
+        return res;
+    }
+
 }

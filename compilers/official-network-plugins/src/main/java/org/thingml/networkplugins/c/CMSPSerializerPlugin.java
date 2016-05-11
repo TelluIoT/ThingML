@@ -129,4 +129,12 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
         return res;
     }
 
+    @Override
+    public List<String> getSupportedFormat() {
+
+        List<String> res = new ArrayList<>();
+        res.add("MSP");
+        return res;
+    }
+
 }

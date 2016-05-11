@@ -23,7 +23,7 @@
  *
  * @author sintef
  */
-package org.thingml.network.plugins.js;
+package org.thingml.networkplugins.js;
 
 import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.IOUtils;
@@ -122,6 +122,14 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
     public List<String> getTargetedLanguages() {
         List<String> res = new ArrayList<>();
         res.add("nodejs");
+        return res;
+    }
+
+    @Override
+    public List<String> getSupportedFormat() {
+
+        List<String> res = new ArrayList<>();
+        res.add("Binary");
         return res;
     }
 
