@@ -110,6 +110,8 @@ public abstract class SerializationPlugin extends Rule {
 
     public abstract List<String> getTargetedLanguages();
     
+    public abstract List<String> getSupportedFormat();
+    
     
     
     

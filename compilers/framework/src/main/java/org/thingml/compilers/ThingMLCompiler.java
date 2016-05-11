@@ -410,6 +410,11 @@ public abstract class ThingMLCompiler {
         if (!serializationPlugins.containsKey(sp.getPluginID())) {
             serializationPlugins.put(sp.getPluginID(), sp);
         }
+        for(String format : sp.getSupportedFormat()) {
+            if (!serializationPlugins.containsKey(format)) {
+                serializationPlugins.put(format, sp);
+            }
+        }
     }
 
     public Set<SerializationPlugin> getSerializationPlugins() {

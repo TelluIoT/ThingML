@@ -356,4 +356,12 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         return res;
     }
 
+    @Override
+    public List<String> getSupportedFormat() {
+
+        List<String> res = new ArrayList<>();
+        res.add("JSON");
+        return res;
+    }
+
 }

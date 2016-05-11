@@ -18,7 +18,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.network.plugins.js;
+package org.thingml.networkplugins.js;
 
 import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.IOUtils;

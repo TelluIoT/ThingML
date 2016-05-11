@@ -23,7 +23,7 @@
  *
  * @author sintef
  */
-package org.thingml.network.plugins.java;
+package org.thingml.networkplugins.java;
 
 import org.sintef.thingml.Message;
 import org.sintef.thingml.ObjectType;
@@ -139,6 +139,14 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
     public List<String> getTargetedLanguages() {
         List<String> res = new ArrayList<>();
         res.add("java");
+        return res;
+    }
+
+    @Override
+    public List<String> getSupportedFormat() {
+
+        List<String> res = new ArrayList<>();
+        res.add("Binary");
         return res;
     }
 
