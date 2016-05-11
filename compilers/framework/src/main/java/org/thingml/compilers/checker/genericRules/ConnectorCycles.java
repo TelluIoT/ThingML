@@ -22,6 +22,7 @@ package org.thingml.compilers.checker.genericRules;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Instance;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.Tarjan;
@@ -56,7 +57,7 @@ public class ConnectorCycles extends Rule {
     @Override
     public void check(Configuration cfg, Checker checker) {
 
-        Tarjan<Instance> t = new Tarjan(cfg, cfg.allInstances());
+        Tarjan<Instance> t = new Tarjan(cfg, ConfigurationHelper.allInstances(cfg));
         List<List<Instance>> cycles = t.findStronglyConnectedComponents();
 
         for (List<Instance> cycle : cycles) {

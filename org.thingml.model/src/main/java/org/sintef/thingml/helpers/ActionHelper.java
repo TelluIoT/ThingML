@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.sintef.thingml.Action;
 import org.sintef.thingml.Expression;
+import org.sintef.thingml.ThingMLElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.List;
 public class ActionHelper {
 
 
-    public static List<Action> getAllActions(Action self, Class clazz) {
+    public static List<Action> getAllActions(ThingMLElement self, Class clazz) {
         List<Action> result = new ArrayList<Action>();
 
         TreeIterator<EObject> it = self.eAllContents();
@@ -38,12 +39,12 @@ public class ActionHelper {
             if (clazz.isInstance(o)) result.add((Action) o);
         }
 
-        result.add(self);
+        if (clazz.isInstance(self)) result.add((Action)self);
         return result;
     }
 
 
-    public static List<Action> getAllActions(Action self) {
+    public static List<Action> getAllActions(ThingMLElement self) {
        return getAllActions(self, Action.class);
     }
 

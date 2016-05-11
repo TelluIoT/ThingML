@@ -23,7 +23,11 @@ package org.thingml.compilers.checker.genericRules;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
+import org.sintef.thingml.helpers.ActionHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.TyperHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -63,18 +67,18 @@ public class FunctionUsage extends Rule {
             } else {
                 for (Parameter p : f.getParameters()) {
                     Expression e = params.get(f.getParameters().indexOf(p));
-                    Type expected = p.getType().getBroadType();
+                    Type expected = TyperHelper.getBroadType(p.getType());
                     Type actual = checker.typeChecker.computeTypeOf(e);
                     if (actual != null) {
                         if (actual.equals(Types.ERROR_TYPE)) {
-                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
+                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
                         } else if (actual.equals(Types.ANY_TYPE)) {
-                            checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
-                        } else if (!actual.isA(expected)) {
-                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), o);
+                            checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
+                        } else if (!TyperHelper.isA(actual, expected)) {
+                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
                         }
                     }
-                    for (Action a : t.getAllActions(VariableAssignment.class)) {//TODO: implement allActions on Function directly
+                    for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {//TODO: implement allActions on Function directly
                         if (a instanceof VariableAssignment) {
                             VariableAssignment va = (VariableAssignment) a;
                             if (va.getProperty().equals(p)) {
@@ -94,7 +98,7 @@ public class FunctionUsage extends Rule {
     public void check(Checker checker, Thing t, Function f) {
         for (Parameter p : f.getParameters()) {
             boolean isUsed = false;
-            for (Expression exp : t.getAllExpressions(PropertyReference.class)) {//TODO: see above
+            for (Expression exp : ThingMLHelpers.getAllExpressions(t, PropertyReference.class)) {//TODO: see above
                 if (exp instanceof PropertyReference) {
                     PropertyReference pr = (PropertyReference) exp;
                     if (pr.getProperty().equals(p)) {
@@ -109,19 +113,19 @@ public class FunctionUsage extends Rule {
         }
 
         if (f.getType() != null) {
-            for (Action a : t.getAllActions(ReturnAction.class)) {
+            for (Action a : ActionHelper.getAllActions(t, ReturnAction.class)) {
                 EObject parent = a.eContainer();
                 while (parent != null && !EcoreUtil.equals(parent, f)) {
                     parent = parent.eContainer();
                 }
                 if (EcoreUtil.equals(parent, f)) {
-                    Type actualType = f.getType().getBroadType();
+                    Type actualType = TyperHelper.getBroadType(f.getType());
                     Type returnType = checker.typeChecker.computeTypeOf(((ReturnAction) a).getExp());
                     if (returnType.equals(Types.ERROR_TYPE)) {
                         checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
                     } else if (returnType.equals(Types.ANY_TYPE)) {
                         checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
-                    } else if (!returnType.isA(actualType)) {
+                    } else if (!TyperHelper.isA(returnType, actualType)) {
                         checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
                     }
                 }
@@ -131,23 +135,23 @@ public class FunctionUsage extends Rule {
 
     @Override
     public void check(ThingMLModel model, Checker checker) {
-        for (Thing thing : model.allThings()) {
+        for (Thing thing : ThingMLHelpers.allThings(model)) {
             check(thing, checker);
         }
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for (Thing t : cfg.allThings()) {
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
             check(t, checker);
         }
     }
 
     private void check(Thing t, Checker checker) {
-        for (Function f : t.allFunctions()) {
+        for (Function f : ThingMLHelpers.allFunctions(t)) {
             check(checker, t, f);
             boolean found = false;
-            for (Action b : t.getAllActions(FunctionCallStatement.class)) {
+            for (Action b : ActionHelper.getAllActions(t, FunctionCallStatement.class)) {
                 //FIXME brice
                 if (b instanceof FunctionCallStatement) {
                     FunctionCall a = (FunctionCall) b;
@@ -156,7 +160,7 @@ public class FunctionUsage extends Rule {
                     }
                 }
             }
-            for (Expression b : t.getAllExpressions(FunctionCallExpression.class)) {
+            for (Expression b : ThingMLHelpers.getAllExpressions(t, FunctionCallExpression.class)) {
                 //FIXME brice
                 if (b instanceof FunctionCallExpression) {
                     FunctionCallExpression a = (FunctionCallExpression) b;

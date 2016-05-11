@@ -1,7 +1,23 @@
+/**
+ * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ *
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.sintef.thingml.helpers;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 
 import java.util.*;
 
@@ -63,7 +79,7 @@ public class ConfigurationHelper {
             //final String key = prefix + "_" + inst.getName();
             Instance copy = null;
 
-            if (inst.getType().isSingleton()) {
+            if (ThingHelper.isSingleton(inst.getType())) {
                 // TODO: This could become slow if we have a large number of instances
                 List<Instance> others = new ArrayList<Instance>();
                 for(Instance i : instances.values()) {
@@ -86,7 +102,7 @@ public class ConfigurationHelper {
         }
 
         // Add the connectors
-        for(Connector c : self.getInternalConnectors()) {
+        for(Connector c : ConfigurationHelper.getInternalConnectors(self)) {
             Connector copy = EcoreUtil.copy(c);
             // look for the instances:
             Instance cli = instances.get(c.getCli().getInstance().getName());
@@ -98,7 +114,7 @@ public class ConfigurationHelper {
             connectors.add(copy);
         }
 
-        for(ExternalConnector c : self.getExternalConnectors()) {
+        for(ExternalConnector c : ConfigurationHelper.getExternalConnectors(self)) {
             ExternalConnector copy = EcoreUtil.copy(c);
             // look for the instances:
             Instance cli = instances.get(c.getInst().getInstance().getName());
@@ -156,7 +172,7 @@ public class ConfigurationHelper {
     public static Set<Connector> allConnectors(Configuration self) {
         Set<Connector> result = new HashSet<Connector>();
         MergedConfigurationCache.clearCache();
-        result.addAll(merge(self).getInternalConnectors());
+        result.addAll(ConfigurationHelper.getInternalConnectors(merge(self)));
         return result;
     }
 
@@ -209,7 +225,7 @@ public class ConfigurationHelper {
     public static Set<Message> allMessages(Configuration self) {
         Set<Message> result = new HashSet<Message>();
         for(Thing t : allThings(self)) {
-            result.addAll(t.allMessages());
+            result.addAll(ThingMLHelpers.allMessages(t));
         }
         return result;
     }
@@ -217,7 +233,7 @@ public class ConfigurationHelper {
 
     public static List<Property> allArrays(Configuration self, Instance i) {
         List<Property> result = new ArrayList<Property>();
-        for(Property p : i.getType().allPropertiesInDepth()) {
+        for(Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
             if (p.getCardinality() != null)
                 result.add(p);
         }
@@ -241,7 +257,7 @@ public class ConfigurationHelper {
 
         //println("init instance " + i.getName + " " + i.toString)
 
-        for(Property p : i.getType().allPropertiesInDepth()) {
+        for(Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
 
             Set<ConfigPropertyAssign> confassigns = new HashSet<ConfigPropertyAssign>();
             for(ConfigPropertyAssign a : allPropAssigns(self)) {
@@ -254,7 +270,7 @@ public class ConfigurationHelper {
                 result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, ((ConfigPropertyAssign)confassigns.toArray()[0]).getInit()));
             }
             else {
-                result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, i.getType().initExpression(p)));
+                result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, ThingHelper.initExpression(i.getType(), p)));
             }
         }
         return result;
@@ -268,7 +284,7 @@ public class ConfigurationHelper {
         for(Property p : allArrays(self, i)) {
             // look for assignements in the things:
 
-            for(PropertyAssign a : i.getType().initExpressionsForArray(p)) {
+            for(PropertyAssign a : ThingHelper.initExpressionsForArray(i.getType(), p)) {
                 initExpressionsForInstanceArraysHelper(self, result, "in thing " + ((Thing)a.eContainer()).getName(), p, a.getIndex().size(), (Expression)a.getIndex().toArray()[0], a.getInit());
             }
             for(ConfigPropertyAssign a : allPropAssigns(self)) {
@@ -411,7 +427,7 @@ public class ConfigurationHelper {
         Map<Instance, List<Port>> result = new HashMap<Instance, List<Port>>();
         for(Instance i : allInstances(self)) {
             List<Port> ports = new ArrayList<Port>();
-            for (Port p : i.getType().allPorts()) {
+            for (Port p : ThingMLHelpers.allPorts(i.getType())) {
                 boolean connected = false;
                 for(Connector c : allConnectors(self)) {
                     if ((EcoreUtil.equals(c.getCli().getInstance(), i) && EcoreUtil.equals(c.getRequired(), p)) || (EcoreUtil.equals(c.getProvided(), p) && EcoreUtil.equals(c.getSrv().getInstance(), i))) {
@@ -421,7 +437,7 @@ public class ConfigurationHelper {
                 }
                 for(ExternalConnector c : getExternalConnectors(self)) {
                     //System.out.println("External connector " + c.getInst().getInstance().qname("_") + "." + c.getPort().getName() + "? " + i.getName() + "." + p.getName());
-                    if (c.getInst().getInstance().qname("_").equals(i.getName()) && EcoreUtil.equals(c.getPort(), p)) {//FIXME: this is a hack, c.getInst.getInstance should be equal to i (at least in some cases...)
+                    if (ThingMLElementHelper.qname(c.getInst().getInstance(), "_").equals(i.getName()) && EcoreUtil.equals(c.getPort(), p)) {//FIXME: this is a hack, c.getInst.getInstance should be equal to i (at least in some cases...)
                         //if ((EcoreUtil.equals(c.getInst().getInstance(), i) && EcoreUtil.equals(c.getPort(), p))) {
                         //System.out.println("\tis connected to " + i.getName() + "." + p.getName());
                         connected = true;
@@ -442,7 +458,7 @@ public class ConfigurationHelper {
         Map<Instance, List<InternalPort>> result = new HashMap<Instance, List<InternalPort>>();
         for(Instance i : allInstances(self)) {
             List<InternalPort> iports = new ArrayList<InternalPort>();
-            for(Port p : i.getType().allPorts()) {
+            for(Port p : ThingMLHelpers.allPorts(i.getType())) {
                 if (p instanceof InternalPort) {
                     InternalPort iport = (InternalPort) p;
                     iports.add(iport);

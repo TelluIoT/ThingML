@@ -22,7 +22,11 @@ package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.EObject;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
+import org.sintef.thingml.helpers.ActionHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.TyperHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -63,15 +67,15 @@ public class VariableUsage extends Rule {
                 checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " has no type", va);
                 return;
             }
-            Type expected = va.getType().getBroadType();
+            Type expected = TyperHelper.getBroadType(va.getType());
             Type actual = checker.typeChecker.computeTypeOf(e);
             if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
                 if (actual.equals(Types.ERROR_TYPE)) {
-                    checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), o);
+                    checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
                 } else if (actual.equals(Types.ANY_TYPE)) {
-                    checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), o);
-                } else if (!actual.isA(expected)) {
-                    checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + expected.getBroadType().getName() + ", assigned with " + actual.getBroadType().getName(), o);
+                    checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
+                } else if (!TyperHelper.isA(actual, expected)) {
+                    checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
                 }
             }
         }
@@ -79,20 +83,20 @@ public class VariableUsage extends Rule {
 
     @Override
     public void check(ThingMLModel model, Checker checker) {
-        for (Thing t : model.allThings()) {
+        for (Thing t : ThingMLHelpers.allThings(model)) {
             check(t, checker);
         }
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for (Thing t : cfg.allThings()) {
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
             check(t, checker);
         }
     }
 
     private void check(Thing t, Checker checker) {
-        for (Action a : t.getAllActions(VariableAssignment.class)) {
+        for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {
             //FIXME @Brice see testIfElse
             if (a instanceof VariableAssignment) {
                 VariableAssignment va = (VariableAssignment) a;
@@ -100,7 +104,7 @@ public class VariableUsage extends Rule {
                     check(va.getProperty(), va.getExpression(), t, checker, va);
             }
         }
-        for (Action a : t.getAllActions(LocalVariable.class)) {
+        for (Action a : ActionHelper.getAllActions(t, LocalVariable.class)) {
             //FIXME @Brice see testIfElse
             if (a instanceof LocalVariable) {
                 LocalVariable lv = (LocalVariable) a;

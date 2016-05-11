@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ *
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.sintef.thingml.helpers;
 
 import org.sintef.thingml.*;
@@ -21,7 +36,7 @@ public class ThingHelper {
         //var result = new ArrayList[Handler]()
         final List<Transition> result = new ArrayList<Transition>();
         for(StateMachine sm : self.getBehaviour()) {
-            for(State s : sm.allStates()) {
+            for(State s : StateHelper.allStates(sm)) {
                 for(Transition o : s.getOutgoing()) {
                     if (o.getAction() != null) {
                         result.add(o);
@@ -36,7 +51,7 @@ public class ThingHelper {
         //var result = new ArrayList[Handler]()
         final List<InternalTransition> result = new ArrayList<InternalTransition>();
         for(StateMachine sm : self.getBehaviour()) {
-            for(State s : sm.allStates()) {
+            for(State s : StateHelper.allStates(sm)) {
                 for(InternalTransition o : s.getInternal()) {
                     if (o.getAction() != null) {
                         result.add(o);
@@ -51,7 +66,7 @@ public class ThingHelper {
     public static List<Property> allPropertiesInDepth(Thing self) {
         List<Property> result = ThingMLHelpers.allProperties(self);
         for(StateMachine sm : ThingMLHelpers.allStateMachines(self)) {
-            result.addAll(sm.allContainedProperties());
+            result.addAll(CompositeStateHelper.allContainedProperties(sm));
         }
         return result;
     }
@@ -83,7 +98,7 @@ public class ThingHelper {
 
             List<Thing> imports = new ArrayList<Thing>();
             for (Thing t : self.getIncludes()) {
-                if (t.allProperties().contains(p)) {
+                if (ThingMLHelpers.allProperties(t).contains(p)) {
                     imports.add(t);
                 }
             }
@@ -91,7 +106,8 @@ public class ThingHelper {
             if (imports.size() > 1)
                 System.out.println("Warning: Thing " + self.getName() + " gets property " + p.getName() + " from several paths, it should define its initial value");
 
-            return imports.get(0).initExpression(p);
+
+            return ThingHelper.initExpression(imports.get(0), p);
         } else { // It is a property of a state machine
             return p.getInit();
         }
@@ -106,8 +122,8 @@ public class ThingHelper {
 
             // collect assignment in the imported things first:
             for (Thing t : self.getIncludes()) {
-                if (t.allProperties().contains(p))
-                    result.addAll(t.initExpressionsForArray(p));
+                if (ThingMLHelpers.allProperties(t).contains(p))
+                    result.addAll(ThingHelper.initExpressionsForArray(t,p));
             }
             // collect assignments in this thing
             List<PropertyAssign> assigns = null;
