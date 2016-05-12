@@ -24,6 +24,7 @@ import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -194,8 +195,8 @@ public class JSSerialPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                final String speed = conn.getProtocol().hasAnnotation("baudrate") ? conn.getProtocol().annotation("baudrate").get(0) : "9600";
-                final String port = conn.getProtocol().hasAnnotation("port") ? conn.getProtocol().annotation("port").get(0) : "/dev/ttyACM0";
+                final String speed = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "baudrate") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "baudrate").get(0) : "9600";
+                final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";
 
                 //TODO
 

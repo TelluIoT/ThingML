@@ -46,6 +46,7 @@ import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.Type;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
@@ -77,7 +78,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
         String fifotemplate = ctx.getTemplateByID("ctemplates/fifo.c");
         fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + ctx.fifoSize());
-        //fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + cfg.allInstances().size());
+        //fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + ConfigurationHelper.allInstances(cfg).size());
         fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + ctx.numberInstancesAndPort(cfg));
 
         rtemplate = rtemplate.replace("/*FIFO*/", fifotemplate);
@@ -93,15 +94,15 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
 
         String c_global = "";
-        for (String s : cfg.annotation("c_global")) c_global += s + "\n";
+        for (String s : AnnotatedElementHelper.annotation(cfg, "c_global")) c_global += s + "\n";
         ctemplate = ctemplate.replace("/*C_GLOBALS*/", c_global);
 
         String c_header = "";
-        for (String s : cfg.annotation("c_header")) c_header += s + "\n";
+        for (String s : AnnotatedElementHelper.annotation(cfg, "c_header")) c_header += s + "\n";
         ctemplate = ctemplate.replace("/*C_HEADERS*/", c_header);
 
         String c_main = "";
-        for (String s : cfg.annotation("c_main")) c_main += s + "\n";
+        for (String s : AnnotatedElementHelper.annotation(cfg, "c_main")) c_main += s + "\n";
         ctemplate = ctemplate.replace("/*C_MAIN*/", c_main);
 
         generateIncludes(cfg, builder, ctx);
@@ -140,7 +141,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
     
     protected void generateTypedefs(Configuration cfg, StringBuilder builder, PosixMTCompilerContext ctx) {
 
-        for (Type t : cfg.findContainingModel().allUsedSimpleTypes()) {
+        for (Type t : ThingMLHelpers.allUsedSimpleTypes(ThingMLHelpers.findContainingModel(cfg))) {
             if (t instanceof Enumeration) {
                 builder.append("// Definition of Enumeration  " + t.getName() + "\n");
                 for (EnumerationLiteral l : ((Enumeration)t).getLiterals()) {
@@ -153,7 +154,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
     }
 
     protected void generateIncludes(Configuration cfg, StringBuilder builder, PosixMTCompilerContext ctx) {
-        for (Thing t : cfg.allThings()) {
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
             builder.append("#include \"" + t.getName() + ".h\"\n");
         }
         builder.append(ctx.getIncludeCode());
@@ -161,7 +162,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
     
     protected void generateMessageDispatchEnqueue(Configuration cfg, StringBuilder builder, PosixMTCompilerContext ctx) {
         
-        for (Message m : cfg.allMessages()) {
+        for (Message m : ConfigurationHelper.allMessages(cfg)) {
             Set<ExternalConnector> externalSenders = new HashSet<ExternalConnector>();
             
             Map<Map.Entry<Instance, Port>, Set<Map.Entry<Instance, Port>>> SenderList;
@@ -172,7 +173,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
             // Init
             SenderList = new HashMap<Map.Entry<Instance, Port>, Set<Map.Entry<Instance, Port>>>();
             
-            for(Connector co : cfg.allConnectors()) {
+            for(Connector co : ConfigurationHelper.allConnectors(cfg)) {
                 if(co.getProvided().getSends().contains(m)) {
                     Sender = new HashMap.SimpleEntry<Instance, Port>(co.getSrv().getInstance(),co.getProvided());
                     if(SenderList.containsKey(Sender)) {
@@ -202,7 +203,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
             }
             
             Set<Thing> things = new HashSet();
-            for(Map.Entry<Instance, List<InternalPort>> entrie : cfg.allInternalPorts().entrySet()) {
+            for(Map.Entry<Instance, List<InternalPort>> entrie : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
                 if(!things.contains(entrie.getKey())) {
                     things.add(entrie.getKey().getType());
                     for(InternalPort ip : entrie.getValue()) {
@@ -221,7 +222,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                 }
             }
             
-            for(ExternalConnector eco : cfg.getExternalConnectors()) {
+            for(ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
                 if(eco.getPort().getReceives().contains(m)) {
                     externalSenders.add(eco);
                 }
@@ -242,10 +243,10 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                     builder.append(".id_" + mySender.getValue().getName() + ") {\n");
                     
                     for(Map.Entry<Instance, Port> myReceiver : SenderList.get(mySender)) {
-                        if (myReceiver.getKey().getType().allStateMachines().size() == 0)
+                        if (ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).size() == 0)
                             continue; // there is no state machine
-                        StateMachine sm = myReceiver.getKey().getType().allStateMachines().get(0);
-                        if (sm.canHandle(myReceiver.getValue(), m)) {
+                        StateMachine sm = ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).get(0);
+                        if (StateHelper.canHandle(sm, myReceiver.getValue(), m)) {
                             builder.append("fifo_lock(" + ctx.getInstanceVarName(myReceiver.getKey()) + ".fifo);\n");
 
                             builder.append("if ( fifo_byte_available(" + ctx.getInstanceVarName(myReceiver.getKey()) + ".fifo) > " + ctx.getMessageSerializationSize(m) + " ) {\n\n");
@@ -286,16 +287,16 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         builder.append(" *****************************************************************************/\n\n");
         
         int nbInternalPort = 0;
-        for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+        for(Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             nbInternalPort += entries.getValue().size();
         }
         
         
-        int nbMaxConnexion = cfg.allConnectors().size() * 2 + cfg.getExternalConnectors().size() + nbInternalPort;
+        int nbMaxConnexion = ConfigurationHelper.allConnectors(cfg).size() * 2 + ConfigurationHelper.getExternalConnectors(cfg).size() + nbInternalPort;
         
         
-        for (Instance inst : cfg.allInstances()) {
-            for (Property a : cfg.allArrays(inst)) {
+        for (Instance inst : ConfigurationHelper.allInstances(cfg)) {
+            for (Property a : ConfigurationHelper.allArrays(cfg, inst)) {
                 builder.append(ctx.getCType(a.getType()) + " ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
                 builder.append("[");
@@ -306,7 +307,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("//Declaration of instance variables\n");
 
-        for (Instance inst : cfg.allInstances()) {
+        for (Instance inst : ConfigurationHelper.allInstances(cfg)) {
             builder.append("//Instance " + inst.getName() + "\n");
 
             builder.append("// Variables for the properties of the instance\n");
@@ -357,8 +358,8 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
     }
     public void generateMessageForwarders(Configuration cfg, StringBuilder builder, PosixMTCompilerContext ctx) {
         
-        for(Thing t : cfg.allThings()) {
-            for(Port port : t.allPorts()) {
+        for(Thing t : ConfigurationHelper.allThings(cfg)) {
+            for(Port port : ThingMLHelpers.allPorts(t)) {
                 
                 for (Message msg : port.getSends()) {
                     ctx.setConcreteThing(t);
@@ -366,7 +367,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                     // check if there is an connector for this message
                     boolean found = false;
                     //boolean remote = false;
-                    for (Connector c : cfg.allConnectors()) {
+                    for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
 
                         if ((c.getRequired() == port && c.getProvided().getReceives().contains(msg)) ||
                         (c.getProvided() == port && c.getRequired().getReceives().contains(msg))) {
@@ -375,7 +376,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                         }
                     }
                     
-                    for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+                    for(Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
                         if (entries.getKey().getType().getName().equals(t.getName())) {
                             //System.out.println("inst " + inst.getName() + " found");
                             for(Port ip : entries.getValue()) {
@@ -411,8 +412,8 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         builder.append("void initialize_configuration_" + cfg.getName() + "() {\n");
         builder.append("// Initialize connectors\n");
         
-        for(Thing t : cfg.allThings()) {
-            for(Port port : t.allPorts()) {
+        for(Thing t : ConfigurationHelper.allThings(cfg)) {
+            for(Port port : ThingMLHelpers.allPorts(t)) {
                 
                 for (Message msg : port.getSends()) {
                     ctx.setConcreteThing(t);
@@ -420,7 +421,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                     // check if there is an connector for this message
                     boolean found = false;
                     //boolean remote = false;
-                    for (Connector c : cfg.allConnectors()) {
+                    for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
 
                         if ((c.getRequired() == port && c.getProvided().getReceives().contains(msg)) ||
                         (c.getProvided() == port && c.getRequired().getReceives().contains(msg))) {
@@ -429,7 +430,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                         }
                     }
                     
-                    for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+                    for(Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
                         if (entries.getKey().getType().getName().equals(t.getName())) {
                             //System.out.println("inst " + inst.getName() + " found");
                             for(Port ip : entries.getValue()) {
@@ -462,7 +463,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         int nbConnectorSoFar = 0;
 
         System.out.println("Instance initialization order");
-        List<Instance> Instances = cfg.orderInstanceInit();
+        List<Instance> Instances = ConfigurationHelper.orderInstanceInit(cfg);
         Instance inst;
         while(!Instances.isEmpty()) {
             inst = Instances.get(Instances.size()-1);
@@ -479,21 +480,21 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         // Register the instance and set its ID and its port ID
         //builder.append(ctx.getInstanceVarName(inst) + ".id = ");
         //builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
-        for(Port p : inst.getType().allPorts()) {
+        for(Port p : ThingMLHelpers.allPorts(inst.getType())) {
             builder.append(ctx.getInstanceVarName(inst) + ".id_");
             builder.append(p.getName() + " = ");
             builder.append("add_instance( (void*) &" + ctx.getInstanceVarName(inst) + ");\n");
         }
         
         // init state variables:
-        if (inst.getType().allStateMachines().size() > 0) { // There is a state machine
-            for(Region r : inst.getType().allStateMachines().get(0).allContainedRegions()) {
+        if (ThingMLHelpers.allStateMachines(inst.getType()).size() > 0) { // There is a state machine
+            for(Region r : CompositeStateHelper.allContainedRegions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
         }
 
         // Init simple properties
-        for (Map.Entry<Property, Expression> init: cfg.initExpressionsForInstance(inst)) {
+        for (Map.Entry<Property, Expression> init: ConfigurationHelper.initExpressionsForInstance(cfg, inst)) {
             if (init.getValue() != null && init.getKey().getCardinality() == null) {
 
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(init.getKey()) + " = ");
@@ -504,7 +505,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         }
 
         
-        for (Property p : inst.getType().allPropertiesInDepth()) {
+        for (Property p : ThingHelper.allPropertiesInDepth(inst.getType())) {
             if (p.getCardinality() != null) {//array
                 //builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = &");
                 //TOCHECK
@@ -516,7 +517,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         
         
         // Init array properties
-        Map<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> expressions = cfg.initExpressionsForInstanceArrays(inst);
+        Map<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> expressions = ConfigurationHelper.initExpressionsForInstanceArrays(cfg, inst);
 
         for (Property p : expressions.keySet()) {
             for (Map.Entry<Expression, Expression> e : expressions.get(p)) {
@@ -561,7 +562,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
     private void generateInitializationCode(Configuration cfg, StringBuilder initb, PosixMTCompilerContext ctx) {
         initb.append("initialize_configuration_" + cfg.getName() + "();\n");
-        for(Instance i : cfg.allInstances()) {
+        for(Instance i : ConfigurationHelper.allInstances(cfg)) {
             
             initb.append("" + ctx.getInstanceVarName(i) + ".fifo = &" + i.getName() + "_fifo;\n");
             initb.append("" + i.getName() + "_fifo.fifo_size = 65535;\n");
@@ -572,7 +573,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
             initb.append("pthread_t thread_" + i.getName() + ";\n\n");
             //initb.append("pthread_create( &thread_" + i.getName() + ", NULL, " + i.getType().getName() + "_run, (void *) &" + ctx.getInstanceVarName(i) + ");\n\n");
         }
-        List<Instance> Instances = cfg.orderInstanceInit();
+        List<Instance> Instances = ConfigurationHelper.orderInstanceInit(cfg);
         Instance inst;
         while(!Instances.isEmpty()) {
             inst = Instances.get(Instances.size()-1);
@@ -585,7 +586,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
     private void generatePollingCode(Configuration cfg, StringBuilder pollb, PosixMTCompilerContext ctx) {
         pollb.append("while(1){sleep(1);};\n");
-        for(Instance i : cfg.allInstances()) {
+        for(Instance i : ConfigurationHelper.allInstances(cfg)) {
             pollb.append("pthread_join( &thread_" + i.getName() + ", NULL);\n");
         }
     }

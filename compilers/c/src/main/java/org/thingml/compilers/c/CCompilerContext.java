@@ -17,6 +17,10 @@ package org.thingml.compilers.c;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.ThingMLCompiler;
@@ -190,7 +194,7 @@ public abstract class CCompilerContext extends Context {
     }
 
     public boolean hasAnnotationWithValue(Configuration cfg, String annotation, String value) {
-        for (String st : cfg.annotation(annotation)) {
+        for (String st : AnnotatedElementHelper.annotation(cfg, annotation)) {
             if (st.compareToIgnoreCase(value) == 0) {
                 return true;
             }
@@ -253,7 +257,7 @@ public abstract class CCompilerContext extends Context {
 
     // FUNCTIONS FOR NAMING IN THE GENERATED CODE
     public String getInstanceStructName(Thing thing) {
-        return thing.qname("_") + "_Instance";
+        return ThingMLElementHelper.qname(thing, "_") + "_Instance";
     }
 
     public String getEnumLiteralName(Enumeration e, EnumerationLiteral l) {
@@ -261,8 +265,8 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getEnumLiteralValue(Enumeration e, EnumerationLiteral l) {
-        if (l.hasAnnotation("enum_val")) {
-            return l.annotation("enum_val").iterator().next();
+        if (AnnotatedElementHelper.hasAnnotation(l, "enum_val")) {
+            return AnnotatedElementHelper.annotation(l, "enum_val").iterator().next();
         } else {
             System.err.println("Warning: Missing annotation enum_val on litteral " + l.getName() + " in enum " + e.getName() + ", will use default value 0.");
             return "0";
@@ -291,19 +295,19 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getHandlerName(Thing thing, Port p, Message m) {
-        return thing.qname("_") + "_handle_" + p.getName() + "_" + m.getName();
+        return ThingMLElementHelper.qname(thing, "_") + "_handle_" + p.getName() + "_" + m.getName();
     }
 
     public int numberInstancesAndPort(Configuration cfg) {
         int result = 0;
-        for (Instance i : cfg.allInstances()) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             //result++;
-            for (Port p : i.getType().allPorts()) {
+            for (Port p : ThingMLHelpers.allPorts(i.getType())) {
                 result++;
             }
         }
         int i = result - 1;
-        for (ExternalConnector eco : cfg.getExternalConnectors()) {
+        for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
             result++;
         }
         return result;
@@ -312,8 +316,8 @@ public abstract class CCompilerContext extends Context {
     public int getHandlerCode(Configuration cfg, Message m) {
         Integer result = handlerCodes.get(m);
         if (result == null) {
-            if (m.hasAnnotation("code")) {
-                result = Integer.parseInt(m.annotation("code").iterator().next());
+            if (AnnotatedElementHelper.hasAnnotation(m, "code")) {
+                result = Integer.parseInt(AnnotatedElementHelper.annotation(m, "code").iterator().next());
                 if (result == null) {
                     System.err.println("Warning: @code must contain an Integer for message:" + m.getName());
                 }
@@ -322,19 +326,19 @@ public abstract class CCompilerContext extends Context {
 
                 while (!codeIsFree && (handlerCodeCpt < 65535)) {
                     codeIsFree = true;
-                    for (Thing th : cfg.allThings()) {
-                        for (Port po : th.allPorts()) {
+                    for (Thing th : ConfigurationHelper.allThings(cfg)) {
+                        for (Port po : ThingMLHelpers.allPorts(th)) {
                             for (Message me : po.getReceives()) {
-                                if (me.hasAnnotation("code")) {
-                                    if (Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
+                                if (AnnotatedElementHelper.hasAnnotation(me, "code")) {
+                                    if (Integer.parseInt(AnnotatedElementHelper.annotation(me, "code").iterator().next()) == handlerCodeCpt) {
                                         codeIsFree = false;
                                         handlerCodeCpt += 1;
                                     }
                                 }
                             }
                             for (Message me : po.getSends()) {
-                                if (me.hasAnnotation("code")) {
-                                    if (Integer.parseInt(me.annotation("code").iterator().next()) == handlerCodeCpt) {
+                                if (AnnotatedElementHelper.hasAnnotation(me, "code")) {
+                                    if (Integer.parseInt(AnnotatedElementHelper.annotation(me, "code").iterator().next()) == handlerCodeCpt) {
                                         codeIsFree = false;
                                         handlerCodeCpt += 1;
                                     }
@@ -356,11 +360,11 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getEmptyHandlerName(Thing thing) {
-        return thing.qname("_") + "_handle_empty_event";
+        return ThingMLElementHelper.qname(thing, "_") + "_handle_empty_event";
     }
 
     public String getSenderName(Thing thing, Port p, Message m) {
-        return thing.qname("_") + "_send_" + p.getName() + "_" + m.getName();
+        return ThingMLElementHelper.qname(thing, "_") + "_send_" + p.getName() + "_" + m.getName();
     }
 
     public String getCName(Function f, Thing thing) {
@@ -368,23 +372,23 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getStateVarName(Region r) {
-        return r.qname("_") + "_State";
+        return ThingMLElementHelper.qname(r, "_") + "_State";
     }
 
     public String getStateID(State s) {
-        return s.qname("_").toUpperCase() + "_STATE";
+        return ThingMLElementHelper.qname(s, "_").toUpperCase() + "_STATE";
     }
 
     // FUNCTIONS FOR MESSAGES and PARAMETERS
 
     public String getCVarName(Variable v) {
-        return v.qname("_") + "_var";
+        return ThingMLElementHelper.qname(v, "_") + "_var";
     }
 
     public String getTraceFunctionForString(Configuration cfg) {
         if (getCompiler().getID().compareTo("arduino") == 0) {
-            if (cfg.hasAnnotation("arduino_stdout")) {
-                return cfg.annotation("arduino_stdout").iterator().next() + ".print(";
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "arduino_stdout")) {
+                return AnnotatedElementHelper.annotation(cfg, "arduino_stdout").iterator().next() + ".print(";
             } else {
                 return "//";
             }
@@ -395,8 +399,8 @@ public abstract class CCompilerContext extends Context {
 
     public String getTraceFunctionForInt(Configuration cfg) {
         if (getCompiler().getID().compareTo("arduino") == 0) {
-            if (cfg.hasAnnotation("arduino_stdout")) {
-                return cfg.annotation("arduino_stdout").iterator().next() + ".print(";
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "arduino_stdout")) {
+                return AnnotatedElementHelper.annotation(cfg, "arduino_stdout").iterator().next() + ".print(";
             } else {
                 return "//";
             }
@@ -416,8 +420,8 @@ public abstract class CCompilerContext extends Context {
 
     boolean traceLevelIsAbove(AnnotatedElement E, int level) {
         Integer traceLevel = 0;
-        if (E.hasAnnotation("trace_level")) {
-            traceLevel = Integer.parseInt(E.annotation("trace_level").iterator().next());
+        if (AnnotatedElementHelper.hasAnnotation(E, "trace_level")) {
+            traceLevel = Integer.parseInt(AnnotatedElementHelper.annotation(E, "trace_level").iterator().next());
         }
         if (traceLevel >= level) {
             return true;
@@ -510,8 +514,8 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getCType(Type t) {
-        if (t.hasAnnotation("c_type")) {
-            return t.annotation("c_type").iterator().next();
+        if (AnnotatedElementHelper.hasAnnotation(t, "c_type")) {
+            return AnnotatedElementHelper.annotation(t, "c_type").iterator().next();
         } else {
             System.err.println("Warning: Missing annotation c_type for type " + t.getName() + ", using " + t.getName() + " as the C type.");
             return t.getName();
@@ -519,8 +523,8 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getROSType(Type t) {
-        if (t.hasAnnotation("ros_type")) {
-            return t.annotation("ros_type").iterator().next();
+        if (AnnotatedElementHelper.hasAnnotation(t, "ros_type")) {
+            return AnnotatedElementHelper.annotation(t, "ros_type").iterator().next();
         } else {
             System.err.println("Warning: Missing annotation ros_type for type " + t.getName() + ", using " + t.getName() + " as the ROS type.");
             return t.getName();
@@ -544,12 +548,12 @@ public abstract class CCompilerContext extends Context {
     }
 
     public boolean hasByteBuffer(Type t) {
-        return t.hasAnnotation("c_byte_buffer");
+        return AnnotatedElementHelper.hasAnnotation(t, "c_byte_buffer");
     }
 
     public String byteBufferName(Type t) {
-        if (t.hasAnnotation("c_byte_buffer")) {
-            return t.annotation("c_byte_buffer").iterator().next();
+        if (AnnotatedElementHelper.hasAnnotation(t, "c_byte_buffer")) {
+            return AnnotatedElementHelper.annotation(t, "c_byte_buffer").iterator().next();
         } else {
             System.err.println("Warning: Missing annotation c_byte_buffer for type " + t.getName() + ", using " + t.getName() + "_buf as as the buffer name.");
             return t.getName() + "_buf";

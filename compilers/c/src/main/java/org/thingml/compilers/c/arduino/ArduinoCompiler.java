@@ -18,6 +18,7 @@ package org.thingml.compilers.c.arduino;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
@@ -76,7 +77,7 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
 
 
         // GENERATE A MODULE FOR EACH THING
-        for (Thing thing : cfg.allThings()) {
+        for (Thing thing : ConfigurationHelper.allThings(cfg)) {
             ctx.setConcreteThing(thing);
             // GENERATE HEADER
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);

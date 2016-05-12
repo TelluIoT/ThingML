@@ -29,6 +29,9 @@ import org.sintef.thingml.Property;
 import org.sintef.thingml.Region;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.CompositeStateHelper;
+import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
@@ -61,7 +64,7 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
             builder.append("char * name;\n");
         }
         
-        for (Port p : thing.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
             builder.append("uint16_t id_");
             builder.append(p.getName());
             builder.append(";\n");
@@ -75,20 +78,20 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         builder.append("// Variables for the current instance state\n");
 
         // This should normally be checked before and should never be true
-        if (thing.allStateMachines().size() > 1) {
-            throw new Error("Info: Thing " + thing.getName() + " has " + thing.allStateMachines().size() + " state machines. " + "Error: Code generation for Things with several state machines not implemented.");
+        if (ThingMLHelpers.allStateMachines(thing).size() > 1) {
+            throw new Error("Info: Thing " + thing.getName() + " has " + ThingMLHelpers.allStateMachines(thing).size() + " state machines. " + "Error: Code generation for Things with several state machines not implemented.");
         }
 
-        if (thing.allStateMachines().size() > 0) {
-            StateMachine sm = thing.allStateMachines().get(0);
-            for (Region r : sm.allContainedRegions()) {
+        if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
+            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+            for (Region r : CompositeStateHelper.allContainedRegions(sm)) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
         }
 
         // Create variables for all the properties defined in the Thing and States
         builder.append("// Variables for the properties of the instance\n");
-        for (Property p : thing.allPropertiesInDepth()) {
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             builder.append(ctx.getCType(p.getType()) + " ");
             if (p.getCardinality() != null) {//array
                 builder.append("* ");

@@ -20,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 
@@ -34,9 +35,9 @@ import java.util.Map;
 public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
     private void generateKevScript(Context ctx, Configuration cfg) {
-        if (cfg.hasAnnotation("kevscript")) {
+        if (AnnotatedElementHelper.hasAnnotation(cfg, "kevscript")) {
             try {
-                FileUtils.copyFile(new File(cfg.annotation("kevscript").get(0)), new File(ctx.getOutputDirectory(), "/kevs/main.kevs"));
+                FileUtils.copyFile(new File(AnnotatedElementHelper.annotation(cfg, "kevscript").get(0)), new File(ctx.getOutputDirectory(), "/kevs/main.kevs"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -54,10 +55,10 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
             kevScript.append("//instantiate Kevoree/ThingML components\n");
             kevScript.append("add node0." + cfg.getName() + "_0 : my.package." + cfg.getName() + "\n");
 
-            for (String k : ctx.getCurrentConfiguration().annotation("kevscript_import")) {
+            for (String k : AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "kevscript_import")) {
                 kevScript.append(k);
             }
-            if (ctx.getCurrentConfiguration().hasAnnotation("kevscript_import"))
+            if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "kevscript_import"))
                 kevScript.append("\n");
 
             kevScript.append("start sync\n");
@@ -90,7 +91,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
             input.close();
             String dep = "";
             int i = 0;
-            for (String d : ctx.getCurrentConfiguration().annotation("kevoree_import")) {
+            for (String d : AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "kevoree_import")) {
                 if (i > 0)
                     dep += ", ";
                 dep += "'../" + d + "'";
@@ -185,10 +186,10 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
         List<String> attributes = new ArrayList<String>();
         builder.append("//Attributes\n");
-        for (Instance i : cfg.allInstances()) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : i.getType().allPropertiesInDepth()) {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
-                    if (p.isDefined("kevoree", "instance")) {
+                    if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
                         builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
                         final Expression e = cfg.initExpressions(i, p).get(0);
                         if (e != null) {
@@ -197,7 +198,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                             builder.append("null\n");
                         }
                         builder.append("},\n");
-                    } else if ((p.isDefined("kevoree", "merge") || p.isDefined("kevoree", "only")) && !attributes.contains(p.getName())) {
+                    } else if ((AnnotatedElementHelper.isDefined(p, "kevoree", "merge") || AnnotatedElementHelper.isDefined(p, "kevoree", "only")) && !attributes.contains(p.getName())) {
                         builder.append(getGlobalVariableName(p, ctx) + " : { \ndefaultValue: ");
                         final Expression e = cfg.initExpressions(i, p).get(0);
                         if (e != null) {
@@ -236,7 +237,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
 
         builder.append("start: function (done) {\n");
-        for (Instance i : cfg.allInstances()) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : i.getType().allPropertiesInDepth()) {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType().isDefined("java_primitive", "true") && p.eContainer() instanceof Thing) {
                     String accessor = "getValue";
@@ -245,10 +246,10 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                         accessor = "getNumber";
                         isNumber = true;
                     }
-                    if (p.isDefined("kevoree", "instance")) {
+                    if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
                         generateKevoreeListener(builder, ctx, isNumber, p, i, false, accessor);
                         generateThingMLListener(builder, ctx, p, i, accessor, false);
-                    } else if (p.isDefined("kevoree", "merge")) {
+                    } else if (AnnotatedElementHelper.isDefined(p, "kevoree", "merge")) {
                         generateKevoreeListener(builder, ctx, isNumber, p, i, true, accessor);//FIXME: should generate one listener that update all thingml attribute, rather than n listeners on the same attribute that update one thingml attribute...
                         generateThingMLListener(builder, ctx, p, i, accessor, true);
                     }
@@ -263,7 +264,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
 
 
         builder.append("stop: function (done) {\n");
-        for (Instance i : cfg.allInstances()) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             builder.append("this." + i.getName() + "._stop();\n");
         }
         builder.append("done();\n");

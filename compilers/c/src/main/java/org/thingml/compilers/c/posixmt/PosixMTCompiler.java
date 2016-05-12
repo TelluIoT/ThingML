@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.c.posixmt;
 
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.c.posix.*;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
@@ -77,7 +78,7 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
         this.checker.printNotices();
 
         // GENERATE A MODULE FOR EACH THING
-        for (Thing thing : cfg.allThings()) {
+        for (Thing thing : ConfigurationHelper.allThings(cfg)) {
             ctx.setConcreteThing(thing);
             // GENERATE HEADER
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);

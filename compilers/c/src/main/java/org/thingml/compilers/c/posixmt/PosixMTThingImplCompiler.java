@@ -34,6 +34,10 @@ import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.StateHelper;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
@@ -67,8 +71,8 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             builder.append("if(_instance->debug) {\n");
             
             if(ctx.getCompiler().getID().compareTo("arduino") == 0) {
-                if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
-                    String stdout = ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "arduino_stdout")) {
+                    String stdout = AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout").iterator().next();
                     builder.append(stdout + ".print(_instance->name);\n");
                     builder.append(stdout + ".print(str);\n");
                 } else {
@@ -131,7 +135,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         
         Set<Message> messageReceived = new HashSet<>();
         int max_msg_size = 4; // at least the code and the source instance id (2 bytes + 2 bytes)
-        for(Port p : thing.allPorts()) {
+        for(Port p : ThingMLHelpers.allPorts(thing)) {
             for (Message m : p.getReceives()) {
                 if(!messageReceived.contains(m)) {
                     messageReceived.add(m);
@@ -160,7 +164,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("switch(code) {\n");
         
         
-        for (Message m : thing.allIncomingMessages()) {
+        for (Message m : ThingMLHelpers.allIncomingMessages(thing)) {
             builder.append("case " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + ":{\n");
 
             builder.append("while (mbufi < " + (ctx.getMessageSerializationSize(m) - 2) + ") mbuf[mbufi++] = fifo_dequeue(_instance->fifo);\n");
@@ -193,10 +197,10 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             
             builder.append("uint16_t portID = (mbuf[0] << 8) + mbuf[1]; /* instance port*/\n");
             builder.append("switch(portID) {\n");
-            for(Port p : thing.allPorts()) {
+            for(Port p : ThingMLHelpers.allPorts(thing)) {
                 if(p.getReceives().contains(m)) {
-                    StateMachine sm = thing.allStateMachines().get(0);
-                    if (sm.canHandle(p, m)) {
+                    StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+                    if (StateHelper.canHandle(sm, p, m)) {
                     
                         builder.append("case " + ctx.getPortID(thing, p) + ":{\n");
                         
@@ -231,12 +235,12 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
 
     private void generateThingRun(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("void " + thing.getName() + "_run(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
-        StateMachine sm = thing.allStateMachines().get(0);
-        if (thing.allStateMachines().size() > 0) { // there is a state machine
-            builder.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(sm) + ", _instance);\n");
+        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+        if (ThingMLHelpers.allStateMachines(thing).size() > 0) { // there is a state machine
+            builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getStateID(sm) + ", _instance);\n");
         }
         builder.append("while(1){\n");
-        if (sm.hasEmptyHandlers()) {
+        if (StateHelper.hasEmptyHandlers(sm)) {
             builder.append("int emptyEventConsumed = 1;\n");
             builder.append("while (emptyEventConsumed != 0) {\n");
             builder.append("emptyEventConsumed = 0;\n");

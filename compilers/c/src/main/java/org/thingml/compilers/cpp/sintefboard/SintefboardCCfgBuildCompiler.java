@@ -54,7 +54,7 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         String objs = cfg.getName() + "Posix.o";
 
         //// Add the modules for the Things
-        //for (Thing t : cfg.allThings()) {
+        //for (Thing t : ConfigurationHelper.allThings(cfg)) {
         //    srcs += t.getName() + ".c ";
         //    objs += t.getName() + ".o ";
         //}
@@ -64,7 +64,7 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         //objs += cfg.getName() + "_cfg.o ";
 
         //// Add any additional modules from the annotations
-        //for (String s : cfg.annotation("add_c_modules")) {
+        //for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_modules")) {
         //    String[] mods = s.split(" ");
         //    for (int i = 0; i < mods.length; i++) {
         //        srcs += mods[i].trim() + ".c ";

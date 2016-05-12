@@ -74,7 +74,7 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
         this.checker.printNotices();
 
         // GENERATE A MODULE FOR EACH THING
-        for (Thing thing : cfg.allThings()) {
+        for (Thing thing : ConfigurationHelper.allThings(cfg)) {
             ctx.setConcreteThing(thing);
             // GENERATE HEADER
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);

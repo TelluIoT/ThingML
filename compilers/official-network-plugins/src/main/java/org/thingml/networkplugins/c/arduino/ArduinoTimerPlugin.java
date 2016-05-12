@@ -469,7 +469,7 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                     ctx.appendFormalParameters(t, builder, m);
                     builder.append("{\n");
 
-                    if (m.hasAnnotation("timer_start")) {
+                    if (AnnotatedElementHelper.hasAnnotation(m, "timer_start")) {
                         String paramID = "id", paramTime = "time";
                         for (Parameter pt : m.getParameters()) {
                             if (pt.allAnnotations() != null) {
@@ -484,7 +484,7 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
 
                         builder.append(timerName + "_timer_start(" + paramID + ", " + paramTime + ");");
                     }
-                    if (m.hasAnnotation("timer_cancel")) {
+                    if (AnnotatedElementHelper.hasAnnotation(m, "timer_cancel")) {
                         String paramID = "id";
                         for (Parameter pt : m.getParameters()) {
                             if (pt.allAnnotations() != null) {

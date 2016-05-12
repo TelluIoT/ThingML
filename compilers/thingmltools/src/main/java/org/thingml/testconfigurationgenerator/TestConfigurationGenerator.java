@@ -22,6 +22,8 @@ package org.thingml.testconfigurationgenerator;
 
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.thingmltools.ThingMLTool;
 
 /**
@@ -58,9 +60,9 @@ public class TestConfigurationGenerator extends ThingMLTool {
     @Override
     public void generateThingMLFrom(ThingMLModel model) {
         System.out.println("Generate ThingML from model");
-        for (Thing t : model.allThings()) {
+        for (Thing t : ThingMLHelpers.allThings(model)) {
             int i = 0;
-            for (String an : t.annotation("test")) {
+            for (String an : AnnotatedElementHelper.annotation(t, "test")) {
                 String[] testAn = an.split("#");
                 String testInputs, testOutputs;
                 if (testAn.length == 2) {
@@ -101,8 +103,8 @@ public class TestConfigurationGenerator extends ThingMLTool {
         }
         builder.append("        state e" + i + " {\n");
         int testDuration = 250;
-        if (t.hasAnnotation("test_duration")) {
-            String timerDuration = t.annotation("test_duration").iterator().next();
+        if (AnnotatedElementHelper.hasAnnotation(t, "test_duration")) {
+            String timerDuration = AnnotatedElementHelper.annotation(t, "test_duration").iterator().next();
             Integer dur = Integer.parseInt(timerDuration);
             testDuration = dur.intValue();
         }
@@ -156,8 +158,8 @@ public class TestConfigurationGenerator extends ThingMLTool {
         builder.append("    instance dump : TestDump" + lang.shortName + "\n");
         builder.append("    instance test : " + t.getName() + "\n");
         builder.append("    instance timer : Timer" + lang.shortName + "\n");
-        if (t.hasAnnotation("test_timer_instance")) {
-            String timer_inst_name = t.annotation("test_timer_instance").iterator().next();
+        if (AnnotatedElementHelper.hasAnnotation(t, "test_timer_instance")) {
+            String timer_inst_name = AnnotatedElementHelper.annotation(t, "test_timer_instance").iterator().next();
             builder.append("    instance " + timer_inst_name + " : Timer" + lang.shortName + "\n");
         }
         builder.append("\n");
@@ -166,7 +168,7 @@ public class TestConfigurationGenerator extends ThingMLTool {
         builder.append("    connector test.harnessOut => dump.dump\n");
         builder.append("    connector test.harnessIn => harness.test\n");
 
-        for (String an : t.annotation("conf")) {
+        for (String an : AnnotatedElementHelper.annotation(t, "conf")) {
             builder.append("    " + an + "\n");
         }
 

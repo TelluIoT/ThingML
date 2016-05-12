@@ -17,6 +17,7 @@ package org.thingml.compilers.javascript;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -79,7 +80,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
         for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
             for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
-                if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true") && prop.eContainer() instanceof Thing) {
+                if (p.getKey().equals(prop) && prop.getCardinality() == null && !proAnnotatedElementHelper.isDefined(p, "private", "true") && prop.eContainer() instanceof Thing) {
                     //System.out.println("Property " + prop);
                     String result = "";
                     if (prop.getType() instanceof Enumeration) {
@@ -110,7 +111,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 }
             }
             for (Property a : cfg.allArrays(i)) {
-                if (prop.equals(a) && !(prop.isDefined("private", "true")) && prop.eContainer() instanceof Thing) {
+                if (prop.equals(a) && !(proAnnotatedElementHelper.isDefined(p, "private", "true")) && prop.eContainer() instanceof Thing) {
                     //System.out.println("Array " + prop);
                     builder.append(", ");
                     builder.append(i.getName() + "_" + a.getName() + "_array");
@@ -153,7 +154,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
     public static void generateInstances(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
         final boolean debug = cfg.isDefined("debug", "true");
 
-        for (Instance i : cfg.allInstances()) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             generateInstance(i, cfg, builder, ctx, useThis, debug);
         }
 
@@ -163,7 +164,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("//Connecting internal ports...\n");
-        for (Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+        for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             Instance i = entries.getKey();
             for (InternalPort p : entries.getValue()) {
                 for (Message rec : p.getReceives()) {
@@ -219,7 +220,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         if (cfg.isDefined("debug", "true")) ;
         debug = true;
         if (!debug) {
-            for (Instance i : cfg.allInstances()) {
+            for (Instance i : ConfigurationHelper.allInstances(cfg)) {
                 if (i.isDefined("debug", "true")) {
                     debug = true;
                     break;

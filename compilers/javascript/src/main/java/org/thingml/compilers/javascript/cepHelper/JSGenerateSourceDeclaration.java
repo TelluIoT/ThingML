@@ -64,8 +64,8 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
     @Override
     public void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
         String ttl = "250";
-        if (stream.hasAnnotation("TTL"))
-            ttl = stream.annotation("TTL").get(0);
+        if (AnnotatedElementHelper.hasAnnotation(stream, "TTL"))
+            ttl = AnnotatedElementHelper.annotation(stream, ""TTL").get(0);
         builder.append("\n");
 
         SimpleSource simpleSource1 = (SimpleSource) sources.getSources().get(0),
@@ -73,11 +73,11 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
 
         String ttl1 = ttl;
         String ttl2 = ttl;
-        if (stream.hasAnnotation("TTL1")) {
-            ttl1 = stream.annotation("TTL1").get(0);
+        if (AnnotatedElementHelper.hasAnnotation(stream, "TTL1")) {
+            ttl1 = AnnotatedElementHelper.annotation(stream, ""TTL1").get(0);
         }
-        if (stream.hasAnnotation("TTL2")) {
-            ttl2 = stream.annotation("TTL2").get(0);
+        if (AnnotatedElementHelper.hasAnnotation(stream, "TTL2")) {
+            ttl2 = AnnotatedElementHelper.annotation(stream, ""TTL2").get(0);
         }
 
         builder.append("function wait_" + sources.qname("_") + "_1" + "() { return Rx.Observable.timer(" + ttl1 + "); }\n");
