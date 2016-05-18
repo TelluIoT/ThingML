@@ -55,6 +55,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         generateCGlobalAnnotation(thing, builder, ctx);
 
         builder.append("// Declaration of prototypes:\n");
+        generatePrivateCPrototypes(thing, builder, ctx);
 
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
 

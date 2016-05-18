@@ -110,7 +110,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
     private void updatePOM(Context ctx, Configuration cfg) {
         //Update POM.xml with JSSC Maven dependency
         try {
-            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/POM.xml");
+            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/pom.xml");
             final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
             String pom = "";
             for (String line : packLines) {
