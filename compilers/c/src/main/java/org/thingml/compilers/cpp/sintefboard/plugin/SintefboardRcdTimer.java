@@ -81,7 +81,7 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
             if(eco.hasAnnotation("port_name")) {
                 portName = eco.annotation("port_name").iterator().next();
             } else {
-                portName = eco.getProtocol();
+                portName = eco.getProtocol().getName();
             }
 
             eco.setName(portName);
@@ -138,7 +138,7 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
     }
     
     private int findTimerNum(ExternalConnector eco) {
-        String timername = eco.getProtocol();
+        String timername = eco.getProtocol().getName();
         //System.out.println("findTimerInstance() found <" + timername + ">");
         int timernum = Integer.decode(timername.replace("Rcdtimer", ""));
         

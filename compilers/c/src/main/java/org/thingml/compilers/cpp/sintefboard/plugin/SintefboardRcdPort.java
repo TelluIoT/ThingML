@@ -39,7 +39,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
     }
 
     public SintefboardRcdPort(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
-    public SintefboardPort(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
+    //public SintefboardPort(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
     }
 
