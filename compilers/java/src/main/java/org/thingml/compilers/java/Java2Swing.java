@@ -17,13 +17,14 @@ package org.thingml.compilers.java;
 
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
-import org.sintef.thingml.Enumeration;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 
-import javax.swing.*;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bmori on 27.01.2015.
@@ -295,7 +296,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                         tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JComboBox(values_" + p.getType().getName() + ".keySet().toArray());\n");
                     } else {
                         tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JTextField();\n");
-                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ".setText(\"" + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + "\");\n");
+                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ".setText(\"" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + "\");\n");
                     }
 
                     tempBuilder.append("c.gridx = 1;\n");
@@ -316,7 +317,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
             Port port = entry.getKey();
             for (Message msg : entry.getValue()) {
                 tempBuilder.append("Style receive" + msg.getName() + "_via_" + port.getName() + "Style = doc.addStyle(\"" + msg.getName() + "_via_" + port.getName() + "\", null);\n");
-                tempBuilder.append("StyleConstants.setBackground(receive" + msg.getName() + "_via_" + port.getName() + "Style, new Color(" + ((255 + (Math.abs(msg.getName().hashCode())%255))/2) + ", " + ((255 + (Math.abs(port.getName().hashCode())%255))/2) + ", " + ((255 + ((Math.abs(port.getName().hashCode()+msg.getName().hashCode()))%255))/2) + "));\n");
+                tempBuilder.append("StyleConstants.setBackground(receive" + msg.getName() + "_via_" + port.getName() + "Style, new Color(" + ((255 + (Math.abs(msg.getName().hashCode()) % 255)) / 2) + ", " + ((255 + (Math.abs(port.getName().hashCode()) % 255)) / 2) + ", " + ((255 + ((Math.abs(port.getName().hashCode() + msg.getName().hashCode())) % 255)) / 2) + "));\n");
             }
         }
 
@@ -343,7 +344,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                 parseBuilder.append("return;\n");
                 parseBuilder.append("}\n");
                 parseBuilder.append("params = params[1].substring(1,params[1].length()-1).split(\",\");\n");
-                if(msg.getParameters().size() == 0) {
+                if (msg.getParameters().size() == 0) {
                     parseBuilder.append("if (params[0].equals(\"\"))\n");
                     parseBuilder.append("params = new String[0];\n");
                 }

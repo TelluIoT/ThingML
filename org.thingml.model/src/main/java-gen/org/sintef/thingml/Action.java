@@ -17,6 +17,8 @@ package org.sintef.thingml;
 
 import org.eclipse.emf.ecore.EObject;
 
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Action</b></em>'.
@@ -28,4 +30,27 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Action extends EObject {
+    /**
+     * @generated NOT
+     * @return
+     */
+    List<Expression> getAllExpressions();
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    List<Expression> getAllExpressions(Class clazz);
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    List<Action> getAllActions();
+
+    /**
+     * @generated NOT
+     * @return
+     */
+    List<Action> getAllActions(Class clazz);
 } // Action

@@ -1,0 +1,61 @@
+
+/*****************************************************************************
+ * Definition of the built-in things and messages
+ *****************************************************************************/
+
+
+import "../timer.thingml"
+import "../scheduler.thingml"
+
+// Manage a set of software timers.
+thing TimerSintefboard includes Timer//, ThingMLSchedulerMsg
+@pim "Timer"
+@platform "linux"
+{
+    
+    function getSystemTime() : LongLong do
+    	'
+        struct timeval tv;
+
+        gettimeofday(&tv, NULL);
+
+        long long millisecondsSinceEpoch =
+        (long long)(tv.tv_sec) * 1000 +
+        (long long)(tv.tv_usec) / 1000;
+        
+        //printf("Epoch = %llu\n", millisecondsSinceEpoch);
+        '
+    
+        return 'millisecondsSinceEpoch' 
+    end
+    
+    statechart SoftTimer init Idle 
+    {
+        property target : LongLong = 0
+    
+        state Idle 
+        {
+            transition -> Counting
+            event m : timer?timer_start
+            guard m.delay > 0
+            action target = getSystemTime() + m.delay
+        }
+        
+        state Counting 
+        {    
+            transition -> Idle
+            guard not (getSystemTime() < target)
+            action timer!timer_timeout()
+                
+            internal
+            event m : timer?timer_start
+            guard m.delay > 0
+            action target = getSystemTime() + m.delay
+                
+            transition -> Idle
+            event m : timer?timer_cancel
+        }
+    }
+}
+
+

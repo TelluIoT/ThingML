@@ -20,16 +20,16 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import java.util.List;
-import java.util.Map;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -58,20 +58,20 @@ public class PortsUsage extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Map.Entry<Instance, List<Port>> entry: cfg.danglingPorts().entrySet()) {
+        for (Map.Entry<Instance, List<Port>> entry : cfg.danglingPorts().entrySet()) {
             boolean found = false;
-            for(Port p : entry.getValue()) {
-                for(ExternalConnector eco : cfg.getExternalConnectors()) {
-                    if(EcoreUtil.equals(eco.getInst().getInstance(), entry.getKey()) && EcoreUtil.equals(eco.getPort(), p)) {
+            for (Port p : entry.getValue()) {
+                for (ExternalConnector eco : cfg.getExternalConnectors()) {
+                    if (EcoreUtil.equals(eco.getInst().getInstance(), entry.getKey()) && EcoreUtil.equals(eco.getPort(), p)) {
                         found = true;
                         break;
                     }
                 }
-                if(!found) {
+                if (!found) {
                     checker.addGenericNotice("Port " + p.getName() + " is not connected.", entry.getKey());
                 }
             }
         }
     }
-    
+
 }

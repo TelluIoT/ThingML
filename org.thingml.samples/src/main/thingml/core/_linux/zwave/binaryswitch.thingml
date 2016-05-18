@@ -15,7 +15,7 @@ import "../../../thingml.thingml"
 import "config.thingml"
 import "controller.thingml"
 
-datatype BinarySwitch
+object BinarySwitch
 @c_type "BinarySwitch*";
 
 thing fragment BinarySwitchMsg {

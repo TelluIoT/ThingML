@@ -21,9 +21,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.List;
 
 
@@ -37,7 +35,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         if (pack == null) pack = "org.thingml.generated";
         //final String src = "src/main/java/" + pack.replaceAll(".", "/");
 
-        JavaHelper.generateHeader(pack + ".api", pack, builder, ctx, false, false, false,false);
+        JavaHelper.generateHeader(pack + ".api", pack, builder, ctx, false, false, false);
         String raw_type = "Object";
         if (!e.annotation("java_type").isEmpty()) raw_type = e.annotation("java_type").toArray()[0].toString();
 
@@ -77,7 +75,6 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         final String src = "src/main/java/" + pack.replace(".", "/") + "/api";
         final File f = new File(ctx.getOutputDirectory() + "/" + src + "/AttributeListener.java");
         if (!f.exists()) {
-            f.mkdirs();
             try {
                 InputStream input = this.getClass().getClassLoader().getResourceAsStream("javatemplates/AttributeListener.java");//FIXME: allow custom package in template
                 List<String> pomLines = IOUtils.readLines(input);
@@ -86,7 +83,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
                     pom += line + "\n";
                 }
                 input.close();
-                final StringBuilder builder = ctx.getBuilder(src + "/api/AttributeListener.java");
+                final StringBuilder builder = ctx.getNewBuilder(src + "/AttributeListener.java");
                 builder.append(pom);
             } catch (Exception e) {
                 e.printStackTrace();

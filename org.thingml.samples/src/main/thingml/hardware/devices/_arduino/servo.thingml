@@ -1,7 +1,7 @@
 import "../servo.thingml"
 import "../../arduino/_arduino/arduino.thingml"
 
-datatype ArduinoServo
+object ArduinoServo
 	@c_type "Servo";
 
 thing ServoArduino includes Servo

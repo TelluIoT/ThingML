@@ -1,6 +1,6 @@
 import "../test.thingml"
 
-datatype fs;
+object fs;
 
 thing TestDumpJS includes TestDump
 @javascript "node"

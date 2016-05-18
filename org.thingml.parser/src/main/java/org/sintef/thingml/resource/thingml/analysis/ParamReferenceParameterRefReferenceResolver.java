@@ -15,7 +15,14 @@
  */
 package org.sintef.thingml.resource.thingml.analysis;
 
-import org.sintef.thingml.*;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.MessageParameter;
+import org.sintef.thingml.Parameter;
+import org.sintef.thingml.ReceiveMessage;
+import org.sintef.thingml.Reference;
+import org.sintef.thingml.ReferencedElmt;
+import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.SourceComposition;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
 public class ParamReferenceParameterRefReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.ParamReference, org.sintef.thingml.Parameter> {
@@ -31,12 +38,28 @@ public class ParamReferenceParameterRefReferenceResolver implements org.sintef.t
 			message = ((ReceiveMessage) elmt).getMessage();
 		} else if(elmt instanceof MessageParameter) {
 			message = ((MessageParameter)elmt).getMsgRef();
+		} else if(elmt instanceof Parameter) {
+			Parameter parameter = (Parameter) elmt;
+			/*if(resolveFuzzy && parameter.getName().startsWith(identifier)) {
+				result.addMapping(parameter.getName(),parameter);
+			} else if(!resolveFuzzy && parameter.getName().equals(identifier)) {
+				result.addMapping(parameter.getName(),parameter);
+			}*/
 		} else if(elmt instanceof SimpleSource) {
 			message = ((SimpleSource)elmt).getMessage().getMessage();
-		} else if(elmt instanceof SourceComposition) {
-			message = ((SourceComposition)elmt).getResultMessage();
-		} else {
-			result.setErrorMessage("The reference is incorrect or a new referenced element has been added. " +
+		} else if (elmt instanceof SourceComposition) {
+			SourceComposition sc = (SourceComposition) elmt;
+			message = sc.getResultMessage();			
+		} else if(elmt instanceof Message) {
+			message = (Message) elmt;
+		} else if (elmt instanceof Reference) {
+			Reference r = (Reference) elmt;
+			if (r.getParameter() instanceof MessageParameter) {
+				message = ((MessageParameter)r.getParameter()).getMsgRef();
+			}				
+		}
+		else {
+			result.setErrorMessage("The reference is incorrect or a new referenced element has been added (" + elmt.getClass().getName() + "). " +
 					"May be you should update the resolver (" + this.getClass().getName() + ").");
 		}
 

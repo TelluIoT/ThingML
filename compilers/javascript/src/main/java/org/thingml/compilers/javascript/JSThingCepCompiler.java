@@ -16,7 +16,6 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
@@ -37,39 +36,62 @@ public class JSThingCepCompiler extends ThingCepCompiler {
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
         if (stream.getInput() instanceof SimpleSource) {
-            SimpleSource simpleSource = (SimpleSource) stream.getInput();
-            String paramName = simpleSource.getMessage().getMessage().getName();
+            final SimpleSource simpleSource = (SimpleSource) stream.getInput();
+            final String paramName = simpleSource.getName();
             generateSubscription(stream, builder, ctx, paramName, simpleSource.getMessage().getMessage());
         } else if (stream.getInput() instanceof SourceComposition) {
-            Message output = ((SourceComposition) stream.getInput()).getResultMessage();
-            generateSubscription(stream, builder, ctx, output.getName(), ((SourceComposition) stream.getInput()).getResultMessage());
+            //final Message output = ((SourceComposition) stream.getInput()).getResultMessage();
+            generateSubscription(stream, builder, ctx, stream.getInput().getName(), ((SourceComposition) stream.getInput()).getResultMessage());
         } else {
-            throw UnsupportedException.sourceException(stream.getClass().getName());
+            throw new UnsupportedOperationException("Input " + stream.getClass().getName() + "is not supported.");
         }
 
     }
 
-    public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
-        builder.append(stream.getInput().qname("_") + ".subscribe(\n")
-                .append("function( " + paramName + ") { \n");
+    public void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
+        if (!stream.isDynamic()) {
+            builder.append(stream.getInput().qname("_") + ".subscribe(\n");
+        }
+        builder.append("function sub_" + stream.getInput().qname("_") + "( " + paramName + ") { \n");
 
         List<ViewSource> operators = stream.getInput().getOperators();
-        if (operators.size() > 0) {
-            boolean lastOpIsWindow = false;
-            ViewSource lastOp = operators.get(operators.size() - 1);
-            if (lastOp instanceof WindowView) {
-                for (Parameter parameter : outPut.getParameters()) {
-                    builder.append("var " + outPut.getName() + parameter.getName() + " = [];\n")
-                            .append("for(var i = 0; i< " + paramName + ".length; i++) {\n")
-                            .append(outPut.getName() + parameter.getName() + "[i] = ")
-                            .append(paramName + "[i][" + JSHelper.getCorrectParamIndex(outPut, parameter) + "];\n")
-                            .append("}");
-                }
+        boolean hasWindow = false;
+        for (ViewSource vs : operators) {
+            hasWindow = (vs instanceof TimeWindow) || (vs instanceof LengthWindow);
+            if (hasWindow)
+                break;
+        }
+        if (hasWindow) {
+            for (Parameter parameter : outPut.getParameters()) {
+                builder.append("var " + paramName + parameter.getName() + " = [];\n")
+                        .append("for(var i = 0; i< " + paramName + ".length; i++) {\n")
+                        .append(paramName + parameter.getName() + "[i] = ")
+                        .append(paramName + "[i][" + JSHelper.getCorrectParamIndex(outPut, parameter) + "];\n")
+                        .append("}");
             }
         }
 
+        for (LocalVariable v : stream.getSelection()) {
+            context.getCompiler().getThingActionCompiler().generate(v, builder, context);
+        }
 
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
-        builder.append("\t});\n");
+        builder.append("}");
+        if (!stream.isDynamic()) {
+            builder.append(");\n");
+        }
+
+        if (stream.isDynamic()) {
+            builder.append("function start" + stream.getInput().qname("_") + "(){\n");
+            builder.append("if (this." + stream.getInput().qname("_") + "_hook === null || this." + stream.getInput().qname("_") + "_hook === undefined) {\n");
+            builder.append("this." + stream.getInput().qname("_") + "_hook = " + stream.getInput().qname("_") + ".subscribe(sub_" + stream.getInput().qname("_") + ");\n");
+            builder.append("}\n");
+            builder.append("}\n");
+
+            builder.append("function stop" + stream.getInput().qname("_") + "(){\n");
+            builder.append("this." + stream.getInput().qname("_") + "_hook.dispose();\n");
+            builder.append("this." + stream.getInput().qname("_") + "_hook == null;\n");
+            builder.append("}\n");
+        }
     }
 }

@@ -7,14 +7,13 @@
     <name>ThingML :: Root</name>
     <url>http://www.thingml.org</url>
 
-    <version>0.6.0-SNAPSHOT</version>
+    <version>0.7.0-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <thingml.version>${project.version}</thingml.version>
         <eclipse.version>3.8.0</eclipse.version>
         <emf.version>2.7.0</emf.version>
-        <scala.version>2.11.2</scala.version>
         <bundle.vendor>SINTEF</bundle.vendor>
     </properties>
 
@@ -56,6 +55,15 @@
             <email>first.last@sintef.no</email>
             <roles>
                 <role>admin</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>Nicolas Harrand</name>
+            <id>nharrand</id>
+            <email>first.last@sintef.no</email>
+            <roles>
                 <role>developer</role>
             </roles>
             <timezone>+1</timezone>
@@ -106,7 +114,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
+                <version>3.5.1</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -117,7 +125,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>2.7</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
@@ -126,7 +134,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.1.0</version>
+                <version>3.0.1</version>
                 <extensions>true</extensions>
             </plugin>
         </plugins>
@@ -187,32 +195,20 @@
             <url>http://maven.thingml.org/thirdparty/</url>
         </repository>
 
-        <repository>
-            <id>kevoree-libs-release-local</id>
-            <url>http://maven2.kevoree.org/release</url>
-        </repository>
-
-        <repository>
-            <id>kevoree-snapshots</id>
-            <url>http://maven2.kevoree.org/snapshots</url>
-        </repository>
-
     </repositories>
 
     <modules>
         <module>org.emftext.commons.antlr3_4_0</module>
-        <module>org.thingml.model</module>
+		<module>org.thingml.model</module>
         <module>org.thingml.parser</module>
         <module>compilers</module>
         <module>org.thingml.editor.standalone</module>
         <module>org.thingml.editor.eclipse</module>
-        <module>org.thingml.utils</module>
-        <module>org.thingml.utils.ws</module>
-        <module>org.thingml.samples.resources</module>
-        <module>org.thingml.samples.utils</module>
         <!-- The standalone app can only be built on the server which has the keystore to sign the jar
         <module>../org.thingml.editor.standaloneApp</module>-->
         <!--module>org.thingml.tests</module--><!--BUILT SEPARATELY-->
+        <module>ArduinoIDEPlugin</module>
+        <!--<module>testJar</module>-->
     </modules>
 
     <distributionManagement>

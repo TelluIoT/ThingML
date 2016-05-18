@@ -52,20 +52,30 @@ public class StatesUsage extends Rule {
     }
 
     @Override
-    public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.findContainingModel().allThings()) {
-            for(StateMachine sm : t.allStateMachines()) {
-                for(State s : sm.allStates()) {
-                    if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
-                        checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
-                    }
-                    if (s.getOutgoing().size() == 0 && !EcoreUtil.equals(s, sm)) {
-                        checker.addGenericNotice("Sink state " + s.getName() + " in Thing " + t.getName() + ".", s);
-                    }
-                }
-            }
-
+    public void check(ThingMLModel model, Checker checker) {
+        for (Thing t : model.allThings()) {
+            check(t, checker);
         }
     }
-    
+
+    @Override
+    public void check(Configuration cfg, Checker checker) {
+        for (Thing t : cfg.findContainingModel().allThings()) {
+            check(t, checker);
+        }
+    }
+
+    private void check(Thing t, Checker checker) {
+        for (StateMachine sm : t.allStateMachines()) {
+            for (State s : sm.allStates()) {
+                if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
+                    checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
+                }
+                if (s.getOutgoing().size() == 0 && !EcoreUtil.equals(s, sm)) {
+                    checker.addGenericNotice("Sink state " + s.getName() + " in Thing " + t.getName() + ".", s);
+                }
+            }
+        }
+    }
+
 }

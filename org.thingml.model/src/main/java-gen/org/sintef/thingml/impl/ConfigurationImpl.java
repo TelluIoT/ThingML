@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.AbstractConnector;
-import org.sintef.thingml.ConfigInclude;
 import org.sintef.thingml.ConfigPropertyAssign;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Instance;
@@ -41,14 +40,12 @@ import org.sintef.thingml.*;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#getInstances <em>Instances</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#getConnectors <em>Connectors</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#isFragment <em>Fragment</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#getConfigs <em>Configs</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConfigurationImpl#getPropassigns <em>Propassigns</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -72,36 +69,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 	 * @ordered
 	 */
     protected EList<AbstractConnector> connectors;
-
-    /**
-	 * The default value of the '{@link #isFragment() <em>Fragment</em>}' attribute.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #isFragment()
-	 * @generated
-	 * @ordered
-	 */
-    protected static final boolean FRAGMENT_EDEFAULT = false;
-
-    /**
-	 * The cached value of the '{@link #isFragment() <em>Fragment</em>}' attribute.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #isFragment()
-	 * @generated
-	 * @ordered
-	 */
-    protected boolean fragment = FRAGMENT_EDEFAULT;
-
-    /**
-	 * The cached value of the '{@link #getConfigs() <em>Configs</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @see #getConfigs()
-	 * @generated
-	 * @ordered
-	 */
-    protected EList<ConfigInclude> configs;
 
     /**
 	 * The cached value of the '{@link #getPropassigns() <em>Propassigns</em>}' containment reference list.
@@ -161,39 +128,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * <!-- end-user-doc -->
 	 * @generated
 	 */
-    public boolean isFragment() {
-		return fragment;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    public void setFragment(boolean newFragment) {
-		boolean oldFragment = fragment;
-		fragment = newFragment;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.CONFIGURATION__FRAGMENT, oldFragment, fragment));
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    public EList<ConfigInclude> getConfigs() {
-		if (configs == null) {
-			configs = new EObjectContainmentEList<ConfigInclude>(ConfigInclude.class, this, ThingmlPackage.CONFIGURATION__CONFIGS);
-		}
-		return configs;
-	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
     public EList<ConfigPropertyAssign> getPropassigns() {
 		if (propassigns == null) {
 			propassigns = new EObjectContainmentEList<ConfigPropertyAssign>(ConfigPropertyAssign.class, this, ThingmlPackage.CONFIGURATION__PROPASSIGNS);
@@ -213,8 +147,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 				return ((InternalEList<?>)getInstances()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.CONFIGURATION__CONNECTORS:
 				return ((InternalEList<?>)getConnectors()).basicRemove(otherEnd, msgs);
-			case ThingmlPackage.CONFIGURATION__CONFIGS:
-				return ((InternalEList<?>)getConfigs()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
 				return ((InternalEList<?>)getPropassigns()).basicRemove(otherEnd, msgs);
 		}
@@ -233,10 +165,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 				return getInstances();
 			case ThingmlPackage.CONFIGURATION__CONNECTORS:
 				return getConnectors();
-			case ThingmlPackage.CONFIGURATION__FRAGMENT:
-				return isFragment();
-			case ThingmlPackage.CONFIGURATION__CONFIGS:
-				return getConfigs();
 			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
 				return getPropassigns();
 		}
@@ -260,13 +188,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 				getConnectors().clear();
 				getConnectors().addAll((Collection<? extends AbstractConnector>)newValue);
 				return;
-			case ThingmlPackage.CONFIGURATION__FRAGMENT:
-				setFragment((Boolean)newValue);
-				return;
-			case ThingmlPackage.CONFIGURATION__CONFIGS:
-				getConfigs().clear();
-				getConfigs().addAll((Collection<? extends ConfigInclude>)newValue);
-				return;
 			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
 				getPropassigns().clear();
 				getPropassigns().addAll((Collection<? extends ConfigPropertyAssign>)newValue);
@@ -289,12 +210,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 			case ThingmlPackage.CONFIGURATION__CONNECTORS:
 				getConnectors().clear();
 				return;
-			case ThingmlPackage.CONFIGURATION__FRAGMENT:
-				setFragment(FRAGMENT_EDEFAULT);
-				return;
-			case ThingmlPackage.CONFIGURATION__CONFIGS:
-				getConfigs().clear();
-				return;
 			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
 				getPropassigns().clear();
 				return;
@@ -314,32 +229,11 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
 				return instances != null && !instances.isEmpty();
 			case ThingmlPackage.CONFIGURATION__CONNECTORS:
 				return connectors != null && !connectors.isEmpty();
-			case ThingmlPackage.CONFIGURATION__FRAGMENT:
-				return fragment != FRAGMENT_EDEFAULT;
-			case ThingmlPackage.CONFIGURATION__CONFIGS:
-				return configs != null && !configs.isEmpty();
 			case ThingmlPackage.CONFIGURATION__PROPASSIGNS:
 				return propassigns != null && !propassigns.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
-
-    /**
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @generated
-	 */
-    @Override
-    public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (fragment: ");
-		result.append(fragment);
-		result.append(')');
-		return result.toString();
-	}
-
 
     /**
      * @generated NOT
@@ -376,11 +270,9 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         final Map<String, Instance> instances = new HashMap<String, Instance>();
         final List<AbstractConnector> connectors = new ArrayList<AbstractConnector>();
         final Map<String, ConfigPropertyAssign> assigns = new HashMap<String, ConfigPropertyAssign>();
-        final String prefix = getName();
 
-        _merge(instances, connectors, assigns, prefix);
+        _merge(instances, connectors, assigns);
 
-        copy.getConfigs().clear();
         copy.getInstances().clear();
         copy.getConnectors().clear();
         copy.getPropassigns().clear();
@@ -399,19 +291,13 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
      * @param instances
      * @param connectors
      * @param assigns
-     * @param prefix
      * @generated NOT
      */
-    private void _merge(Map<String, Instance> instances, List<AbstractConnector> connectors, Map<String, ConfigPropertyAssign> assigns, String prefix) {
-        // Recursively deal with all groups first
-        for(ConfigInclude g : getConfigs()) {
-            ((ConfigurationImpl)g.getConfig())._merge(instances, connectors, assigns, prefix + "_" + g.getName());
-        }
-
+    private void _merge(Map<String, Instance> instances, List<AbstractConnector> connectors, Map<String, ConfigPropertyAssign> assigns) {
         // Add the instances of this configuration (actually a copy)
         for(Instance inst : getInstances()) {
 
-            final String key = prefix + "_" + inst.getName();
+            //final String key = prefix + "_" + inst.getName();
             Instance copy = null;
 
             if (inst.getType().isSingleton()) {
@@ -430,23 +316,20 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             }
             else {
                 copy = EcoreUtil.copy(inst);
-                copy.setName(key); // rename the instance with the prefix
+                copy.setName(inst.getName()); // rename the instance with the prefix
             }
 
-            instances.put(key, copy);
+            instances.put(inst.getName(), copy);
         }
 
         // Add the connectors
         for(Connector c : getInternalConnectors()) {
             Connector copy = EcoreUtil.copy(c);
             // look for the instances:
-            Instance cli = instances.get(getInstanceMergedName(prefix, c.getCli()));
-            Instance srv = instances.get(getInstanceMergedName(prefix, c.getSrv()));
+            Instance cli = instances.get(c.getCli().getInstance().getName());
+            Instance srv = instances.get(c.getSrv().getInstance().getName());
 
-            copy.getCli().getConfig().clear();
             copy.getCli().setInstance(cli);
-
-            copy.getSrv().getConfig().clear();
             copy.getSrv().setInstance(srv);
 
             connectors.add(copy);
@@ -455,9 +338,8 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         for(ExternalConnector c : getExternalConnectors()) {
             ExternalConnector copy = EcoreUtil.copy(c);
             // look for the instances:
-            Instance cli = instances.get(getInstanceMergedName(prefix, c.getInst()));
+            Instance cli = instances.get(c.getInst().getInstance().getName());
 
-            copy.getInst().getConfig().clear();
             copy.getInst().setInstance(cli);
 
             connectors.add(copy);
@@ -466,10 +348,9 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
         for(ConfigPropertyAssign a : getPropassigns()) {
             ConfigPropertyAssign copy = EcoreUtil.copy(a);
 
-            String inst_name = getInstanceMergedName(prefix, a.getInstance());
+            String inst_name = a.getInstance().getInstance().getName();
 
             Instance inst = instances.get(inst_name);
-            copy.getInstance().getConfig().clear();
             copy.getInstance().setInstance(inst);
 
             String id = inst_name + "_" + a.getProperty().getName();
@@ -482,22 +363,6 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             assigns.put(id, copy); // This will replace any previous initialization of the variable
         }
 
-    }
-
-    /**
-     *
-     * @param prefix
-     * @param ref
-     * @return
-     * @generated NOT
-     */
-    private String getInstanceMergedName(String prefix, InstanceRef ref) {
-        String result = prefix;
-        for (ConfigInclude c : ref.getConfig()) {
-            result += "_" + c.getName();
-        }
-        result += "_" + ref.getInstance().getName();
-        return result;
     }
 
     /**
@@ -668,24 +533,8 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
             if (confassigns.size() > 0) {  // There is an assignment for this property
                 result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, ((ConfigPropertyAssign)confassigns.toArray()[0]).getInit()));
             }
-            else { // Look on the instance and in the type to find an init expression
-                // get the init from the instance if there is an assignment
-
-                Set<PropertyAssign> assigns = new HashSet<PropertyAssign>();
-                for(PropertyAssign a : i.getAssign()) {
-                    if (EcoreUtil.equals(a.getProperty(), p)) {
-                        assigns.add(a);
-                    }
-                }
-                if (assigns.size() > 1)
-                    System.out.println("Error: Instance " + i.getName() + " contains several assignments for property " + p.getName());
-
-                if (assigns.size() > 0) {
-                    result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, ((PropertyAssign)assigns.toArray()[0]).getInit()));
-                }
-                else {
-                    result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, i.getType().initExpression(p)));
-                }
+            else {
+                result.add(new AbstractMap.SimpleImmutableEntry<Property, Expression>(p, i.getType().initExpression(p)));
             }
         }
         return result;
@@ -883,10 +732,10 @@ public class ConfigurationImpl extends AnnotatedElementImpl implements Configura
                     }
                 }
 				for(ExternalConnector c : getExternalConnectors()) {
-					System.out.println("External connector " + c.getInst().getInstance().qname("_") + "." + c.getPort().getName() + "? " + i.getName() + "." + p.getName());
+					//System.out.println("External connector " + c.getInst().getInstance().qname("_") + "." + c.getPort().getName() + "? " + i.getName() + "." + p.getName());
 					if (c.getInst().getInstance().qname("_").equals(i.getName()) && EcoreUtil.equals(c.getPort(), p)) {//FIXME: this is a hack, c.getInst.getInstance should be equal to i (at least in some cases...)
 					//if ((EcoreUtil.equals(c.getInst().getInstance(), i) && EcoreUtil.equals(c.getPort(), p))) {
-						System.out.println("\tis connected to " + i.getName() + "." + p.getName());
+						//System.out.println("\tis connected to " + i.getName() + "." + p.getName());
 						connected = true;
 						break;
 					}

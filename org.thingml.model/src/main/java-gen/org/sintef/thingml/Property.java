@@ -23,11 +23,11 @@ package org.sintef.thingml;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Property#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.Property#isChangeable <em>Changeable</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getProperty()
  * @model

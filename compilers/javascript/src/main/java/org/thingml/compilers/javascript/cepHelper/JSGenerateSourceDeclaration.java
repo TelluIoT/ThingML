@@ -46,15 +46,15 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
         builder.append("var " + source.qname("_") + " = Rx.Observable.merge(" + mergeParams + ").map(\n")
                 .append("function(x) {\n")
                 .append("return {");
+
         int i = 2;
-        for (Expression exp : source.getRules()) {
-            if (i > 2) {
-                builder.append(", ");
-            }
-            builder.append("'" + i + "' : ");
-            context.getCompiler().getThingActionCompiler().generate(exp, builder, context);
+        for (Parameter p : source.getResultMessage().getParameters()) {
+            if (source.getResultMessage().getParameters().indexOf(p) > 0)
+                builder.append(",\n");
+            builder.append("'" + i + "' : x[" + i + "]");
             i++;
         }
+
         builder.append("};\n")
                 .append("});\n");
 

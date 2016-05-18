@@ -20,22 +20,13 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Event;
-import org.sintef.thingml.Expression;
-import org.sintef.thingml.Handler;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.InternalTransition;
-import org.sintef.thingml.ReceiveMessage;
-import org.sintef.thingml.State;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.Transition;
+import org.sintef.thingml.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -57,63 +48,48 @@ public class NonDeterministicTransitions extends Rule {
     public String getDescription() {
         return "Check that no event can trigger two transition at the same time.";
     }
-    
-    public class Pair{
-        public Event e;
-        public Expression g;
-        public Pair(Event e, Expression g) {
-            this.e = e;
-            this.g = g;
+
+    @Override
+    public void check(ThingMLModel model, Checker checker) {
+        for (Thing t : model.allThings()) {
+            check(t, checker);
         }
-    }
-    
-    public Pair containsEvent(Set<Pair> set, Event element) {
-        for(Pair e : set) {
-            if (EcoreUtil.equals(e.e, element))
-                return e;
-        }
-        return null;
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.allThings()) {
-            for(StateMachine sm : t.allStateMachines()) {
-                for(State s : sm.allContainedStates()) {
-                    Set<Pair> events = new HashSet<Pair>();
-                    boolean existEmpty = false, emptyHaveGuard = false;
-                    for(Transition tr : s.getOutgoing()) {
-                        if(tr.getEvent().isEmpty()) {
-                            if(tr.getGuard() == null) {
-                                emptyHaveGuard = true;
-                            }
-                            if(existEmpty && emptyHaveGuard) {
-                                checker.addGenericError("Non deterministic behaviour: Two empty transitions, with at least one without a guard", s);
-                            }
-                            existEmpty = true;
-                        } else {
-                            for(Event e : tr.getEvent()) {
-                                Pair f = containsEvent(events, e);
-                                if(f == null) {
-                                    events.add(new Pair(e, tr.getGuard()));
-                                } else {
-                                    if((tr.getGuard() == null) || (f.g == null)) {
-                                        String msg;
-                                        if(e instanceof ReceiveMessage) {
-                                            ReceiveMessage r = (ReceiveMessage) e;
-                                            msg = r.getPort().getName() + "?" + r.getMessage().getName();
-                                        } else {
-                                            msg = "the same event";
-                                        }
-                                        checker.addGenericError("Non deterministic behaviour: Two transitions handling " + msg + ", with at least one without a guard", s);
-                                    }
-                                }
-                            }
+        for (Thing t : cfg.allThings()) {
+            check(t, checker);
+        }
+    }
+
+    private void check(Thing t, Checker checker) {
+        for (StateMachine sm : t.allStateMachines()) {
+            for (State s : sm.allStates()) {
+                List<Event> guarded = new ArrayList<Event>();
+                List<Event> notGuarded = new ArrayList<Event>();
+                for (Transition tr : s.getOutgoing()) {
+                    if (tr.getGuard() != null) {
+                        guarded.addAll(tr.getEvent());
+                    } else {
+                        notGuarded.addAll(tr.getEvent());
+                    }
+                }
+                for (InternalTransition it : s.getInternal()) {
+                    if (it.getGuard() != null) {
+                        guarded.addAll(it.getEvent());
+                    } else {
+                        notGuarded.addAll(it.getEvent());
+                    }
+                }
+                for (Event g : guarded) {
+                    for (Event ng : notGuarded) {
+                        if (EcoreUtil.equals(g, ng)) {
+                            checker.addGenericError("Non deterministic behaviour: Two transitions handling " + g.getName() + ", with at least one without a guard", g);
                         }
                     }
                 }
             }
         }
     }
-    
 }

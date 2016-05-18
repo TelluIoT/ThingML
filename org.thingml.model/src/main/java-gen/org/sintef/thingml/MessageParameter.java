@@ -25,16 +25,16 @@ package org.sintef.thingml;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.MessageParameter#getMsgRef <em>Msg Ref</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getMessageParameter()
  * @model
  * @generated
  */
-public interface MessageParameter extends ThingMLElement, ReferencedElmt {
+public interface MessageParameter extends ThingMLElement, ReferencedElmt, Expression {
 	/**
 	 * Returns the value of the '<em><b>Msg Ref</b></em>' reference.
 	 * <!-- begin-user-doc -->

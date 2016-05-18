@@ -1,7 +1,7 @@
 import "../i2c.thingml"
 
 
-datatype I2C
+object I2C
     @js_type "var";
 
 thing I2C includes I2CServer 

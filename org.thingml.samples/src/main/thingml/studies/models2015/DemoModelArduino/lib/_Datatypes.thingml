@@ -1,32 +1,32 @@
-datatype Char	
+datatype Char<1>	
 	@c_type "char"
 	@c_byte_size "1";
 	
-datatype String	
+object String	
 	@c_type "char *"
 	@c_byte_size "2";
     
-datatype Boolean	
+datatype Boolean<1>	
 	@c_type "uint8_t"
 	@c_byte_size "1";
 
-datatype UInt8	
+datatype UInt8<1>	
 	@c_type "uint8_t"
 	@c_byte_size "1";
 	
-datatype UInt16	
+datatype UInt16<2>	
 	@c_type "uint16_t"
 	@c_byte_size "2";
 
-datatype Integer	
+datatype Integer<2>	
 	@c_type "int16_t"
 	@c_byte_size "2";
 
-datatype Long	
+datatype Long<4>	
 	@c_type "long"
 	@c_byte_size "4";
 
-datatype Double	
+datatype Double<4>	
 	@c_type "double"
 	@c_byte_size "4";
 	
@@ -38,11 +38,11 @@ enumeration DigitalState
 	HIGH @enum_val "1"
 }
 
-datatype Int16	
+datatype Int16<2>	
 	@c_type "int"
     @c_byte_size "2";
     
-datatype Byte	
+datatype Byte<1>	
 	@c_type "uint8_t"
 	@c_byte_size "1"
 	@java_type "byte"

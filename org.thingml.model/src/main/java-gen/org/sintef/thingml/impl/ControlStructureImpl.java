@@ -23,6 +23,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.sintef.thingml.Action;
+import org.sintef.thingml.ControlStructure;
+import org.sintef.thingml.Expression;
+import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 
 import java.util.ArrayList;
@@ -34,11 +38,11 @@ import java.util.List;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ControlStructureImpl#getAction <em>Action</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ControlStructureImpl#getCondition <em>Condition</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -266,6 +270,54 @@ public abstract class ControlStructureImpl extends ActionImpl implements Control
 		} else if (getAction() instanceof ControlStructure) {
 			result.addAll(((ControlStructure)getAction()).allAction(clazz));
 		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.addAll(getCondition().getAllExpressions());
+		result.addAll(getAction().getAllExpressions());
+		return  result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		result.addAll(getCondition().getAllExpressions(clazz));
+		result.addAll(getAction().getAllExpressions(clazz));
+		return  result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions() {
+		List<Action> result = new ArrayList<Action>();
+		result.addAll(super.getAllActions());
+		result.addAll(getAction().getAllActions());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
+		result.addAll(super.getAllActions(clazz));
+   		result.addAll(getAction().getAllActions(clazz));
 		return result;
 	}
 

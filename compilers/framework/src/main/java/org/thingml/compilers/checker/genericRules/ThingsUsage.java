@@ -54,20 +54,20 @@ public class ThingsUsage extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.findContainingModel().allThings()) {
-            if(!t.isFragment()) {
+        for (Thing t : cfg.findContainingModel().allThings()) {
+            if (!t.isFragment()) {
                 boolean found = false;
-                for(Instance i : cfg.allInstances()) {
-                    if(i.getType().equals(t)) {
+                for (Instance i : cfg.allInstances()) {
+                    if (i.getType().equals(t)) {
                         found = true;
                         break;
                     }
                 }
-                if(!found) {
+                if (!found) {
                     checker.addGenericNotice("Thing " + t.getName() + " is declared but never instanciated.", cfg);
                 }
             }
         }
     }
-    
+
 }

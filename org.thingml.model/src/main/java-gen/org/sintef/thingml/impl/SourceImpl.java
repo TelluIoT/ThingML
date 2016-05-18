@@ -37,10 +37,10 @@ import java.util.Collection;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.SourceImpl#getOperators <em>Operators</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -17,15 +17,17 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.FunctionCallExpression;
 import org.sintef.thingml.ThingmlPackage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Function Call Expression</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */
@@ -49,4 +51,31 @@ public class FunctionCallExpressionImpl extends FunctionCallImpl implements Func
 		return ThingmlPackage.Literals.FUNCTION_CALL_EXPRESSION;
 	}
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.add(this);
+		for(Expression e : getParameters()) {
+			result.addAll(e.getAllExpressions());
+		}
+		return  result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		for(Expression e : getParameters()) {
+			result.addAll(e.getAllExpressions(clazz));
+		}return  result;
+	}
 } //FunctionCallExpressionImpl

@@ -1,6 +1,6 @@
 import "./timer.thingml"
 
-datatype GPIO;
+object GPIO;
 
 thing fragment Edison 
 @js_dep "mraa:^0.5.4"

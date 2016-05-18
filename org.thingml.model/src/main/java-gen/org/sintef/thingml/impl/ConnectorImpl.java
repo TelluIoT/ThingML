@@ -35,13 +35,13 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ConnectorImpl#getSrv <em>Srv</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConnectorImpl#getCli <em>Cli</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConnectorImpl#getRequired <em>Required</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConnectorImpl#getProvided <em>Provided</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

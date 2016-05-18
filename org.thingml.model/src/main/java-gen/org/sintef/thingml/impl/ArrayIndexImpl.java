@@ -27,17 +27,20 @@ import org.sintef.thingml.ArrayIndex;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Array Index</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ArrayIndexImpl#getArray <em>Array</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ArrayIndexImpl#getIndex <em>Index</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -251,4 +254,30 @@ public class ArrayIndexImpl extends ExpressionImpl implements ArrayIndex {
 		return super.eIsSet(featureID);
 	}
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.add(this);
+		result.addAll(getIndex().getAllExpressions());
+		result.addAll(getArray().getAllExpressions());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		result.addAll(getIndex().getAllExpressions(clazz));
+		result.addAll(getArray().getAllExpressions(clazz));
+		return result;
+	}
 } //ArrayIndexImpl

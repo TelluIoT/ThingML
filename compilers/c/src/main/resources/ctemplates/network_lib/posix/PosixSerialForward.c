@@ -29,6 +29,8 @@ void /*PORT_NAME*/_set_listener_id(uint16_t id) {
 	/*PORT_NAME*/_instance.listener_id = id;
 }
 
+/*PARSER_IMPLEMENTATION*/
+
 int /*PORT_NAME*/_setup() {
         char * device = "/*PATH_TO_DEVICE*/";
         uint32_t baudrate = /*BAUDRATE*/;
@@ -187,7 +189,8 @@ void /*PORT_NAME*/_start_receiver_process()
 								serialListenerState = /*PORT_NAME*/_LISTENER_STATE_IDLE;
 
                                                                 /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Message received\n");
-                                                                externalMessageEnqueue(serialBuffer, serialMsgSize, /*PORT_NAME*/_instance.listener_id);
+                                                                /*PARSER_CALL*/
+                                                                //externalMessageEnqueue(serialBuffer, serialMsgSize, /*PORT_NAME*/_instance.listener_id);
 
 							  } else if (buffer[i] == /*PORT_NAME*/_ESCAPE_BYTE) {
 								serialListenerState = /*PORT_NAME*/_LISTENER_STATE_ESCAPE;

@@ -1,9 +1,9 @@
 import "../ble.thingml"
 
-	datatype BLE
+	object BLE
     @js_type "var";
     
-    datatype Peripherals
+    object Peripherals
     @js_type "var";
 
 thing BLE includes BLEServer, BLEServerInternal

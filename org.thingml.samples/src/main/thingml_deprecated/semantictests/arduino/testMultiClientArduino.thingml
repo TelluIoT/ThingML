@@ -1,8 +1,0 @@
-import "../extended/testMultiClient.thingml"
-import "arduinoharness.thingml"
-
-configuration TestMultiClientArduino {
-	group test : TestMultiClientFrag
-	group harness : ArduinoHarness
-	connector test.test.harness => harness.harness.test 
-}

@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.thingml</groupId>
         <artifactId>org.thingml.root</artifactId>
-        <version>0.6.0-SNAPSHOT</version>
+        <version>0.7.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -50,45 +50,37 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--<dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>compilers.deprescala</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>-->
-
         <dependency>
             <groupId>com.apple</groupId>
             <artifactId>AppleJavaExtensions</artifactId>
             <version>1.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>official-network-plugins</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <mainClass>org.sintef.thingml.ThingMLApp</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-    <!--<repositories>
-        <repository>
-            <id>java.net-m2</id>
-            <name>java.net - Maven 2</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/java.net-m2</url>
-        </repository>
-    </repositories>-->
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>java</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <mainClass>org.sintef.thingml.ThingMLApp</mainClass>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
 
 </project>

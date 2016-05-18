@@ -7,7 +7,7 @@
 
 import "../servo.thingml"
 
-datatype ServoType
+object ServoType
 @c_type "Servo";
 
 thing ServoArduino includes ServoFrgmnt

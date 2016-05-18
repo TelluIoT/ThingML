@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.Function;
 import org.sintef.thingml.Message;
-import org.sintef.thingml.Operator;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.PropertyAssign;
@@ -49,6 +48,7 @@ import java.util.Map;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#isFragment <em>Fragment</em>}</li>
@@ -59,9 +59,7 @@ import java.util.Map;
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getMessages <em>Messages</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getFunctions <em>Functions</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingImpl#getStreams <em>Streams</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.ThingImpl#getOperators <em>Operators</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -165,16 +163,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 * @ordered
 	 */
 	protected EList<Stream> streams;
-
-	/**
-	 * The cached value of the '{@link #getOperators() <em>Operators</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getOperators()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Operator> operators;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -317,18 +305,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Operator> getOperators() {
-		if (operators == null) {
-			operators = new EObjectContainmentEList<Operator>(Operator.class, this, ThingmlPackage.THING__OPERATORS);
-		}
-		return operators;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -361,8 +337,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 				return ((InternalEList<?>)getFunctions()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.THING__STREAMS:
 				return ((InternalEList<?>)getStreams()).basicRemove(otherEnd, msgs);
-			case ThingmlPackage.THING__OPERATORS:
-				return ((InternalEList<?>)getOperators()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -393,8 +367,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 				return getFunctions();
 			case ThingmlPackage.THING__STREAMS:
 				return getStreams();
-			case ThingmlPackage.THING__OPERATORS:
-				return getOperators();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -443,10 +415,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 				getStreams().clear();
 				getStreams().addAll((Collection<? extends Stream>)newValue);
 				return;
-			case ThingmlPackage.THING__OPERATORS:
-				getOperators().clear();
-				getOperators().addAll((Collection<? extends Operator>)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -486,9 +454,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 			case ThingmlPackage.THING__STREAMS:
 				getStreams().clear();
 				return;
-			case ThingmlPackage.THING__OPERATORS:
-				getOperators().clear();
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -519,8 +484,6 @@ public class ThingImpl extends TypeImpl implements Thing {
 				return functions != null && !functions.isEmpty();
 			case ThingmlPackage.THING__STREAMS:
 				return streams != null && !streams.isEmpty();
-			case ThingmlPackage.THING__OPERATORS:
-				return operators != null && !operators.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -620,10 +583,6 @@ public class ThingImpl extends TypeImpl implements Thing {
         return ThingMLHelpers.allFunctions(this);
     }
 
-	@Override
-	public List<Operator> allOperators() {
-		return ThingMLHelpers.allOperators(this);
-	}
 
 	/**
      *
@@ -770,120 +729,65 @@ public class ThingImpl extends TypeImpl implements Thing {
         return result;
     }
 
-	/**
-	 * @generated NOT
-	 * @param action
-	 * @return
-     */
-	private List<Action> getAllAction(Class clazz, Action action) {
+	@Override
+	public List<Action> getAllActions() {
 		List<Action> result = new ArrayList<Action>();
-		if (clazz.isInstance(action)) {
-			result.add(action);
-		} else if (action instanceof ActionBlock) {
-			ActionBlock block = (ActionBlock) action;
-			result.addAll(block.allAction(clazz));
-		} else if (action instanceof ControlStructure) {
-			result.addAll(((ControlStructure)action).allAction(clazz));
-		} else if (action instanceof FunctionCall) {
-			result.addAll(getAllAction(clazz, ((FunctionCall)action).getFunction().getBody()));
-		}
-		return result;
-	}
-
-	/**
-	 * @generated NOT
-	 * @param clazz
-	 * @param action
-     * @return
-     */
-	private List<Expression> getAllExpression(Class clazz, Action action) {
-		List<Expression> result = new ArrayList<Expression>();
-		if (action instanceof PropertyAssign) {
-			PropertyAssign pa = (PropertyAssign) action;
-			if(clazz.isInstance(pa.getInit())) {
-				result.add(pa.getInit());
+		for(Function f : allFunctions())
+			result.addAll(f.getAllActions());
+		for(StateMachine sm : allStateMachines()) {
+			for(State s : sm.allStatesWithEntry()) {
+				result.addAll(s.getEntry().getAllActions());
 			}
-		} else if (action instanceof ControlStructure) {
-			ControlStructure cs = (ControlStructure) action;
-			if(clazz.isInstance(cs.getCondition())) {
-				result.add(cs.getCondition());
+			for(State s : sm.allStatesWithExit()) {
+				result.addAll(s.getExit().getAllActions());
 			}
-			result.addAll(getAllExpression(clazz, cs.getAction()));
-		} else if (action instanceof ActionBlock) {
-			ActionBlock b = (ActionBlock) action;
-			for(Action a : b.getActions()) {
-				result.addAll(getAllExpression(clazz, a));
-			}
-			//b.allExpression(clazz);
-		} else if (action instanceof VariableAssignment) {
-			VariableAssignment va = (VariableAssignment) action;
-			if(clazz.isInstance(va.getExpression())) {
-				result.add(va.getExpression());
-			}
-		} else if (action instanceof LocalVariable) {
-			LocalVariable lv = (LocalVariable) action;
-			if(clazz.isInstance(lv.getInit())) {
-				result.add(lv.getInit());
+			for(Map<Message, List<Handler>> values : sm.allMessageHandlers().values()) {
+				for(List<Handler> handlers : values.values()) {
+					for(Handler h : handlers) {
+						if(h.getAction()!=null)
+							result.addAll(h.getAction().getAllActions());
+					}
+				}
 			}
 		}
 		return result;
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-     */
-	public List<Action> allAction(Class clazz) {
+	@Override
+	public List<Action> getAllActions(Class clazz) {
 		List<Action> result = new ArrayList<Action>();
-		/*for (Function f : allFunctions()) {
-			System.out.println("analyzing function " + f.getName());
-			result.addAll(getAllSendAction(f.getBody()));
-		}*/
+		for(Function f : allFunctions())
+			result.addAll(f.getAllActions(clazz));
 		for(StateMachine sm : allStateMachines()) {
-			for(State s : sm.allStates()) {
-				if (s.getEntry() != null) {
-					result.addAll(getAllAction(clazz, s.getEntry()));
-				}
-				if (s.getExit() != null) {
-					result.addAll(getAllAction(clazz, s.getEntry()));
-				}
-				for(InternalTransition t : s.getInternal()) {
-					if (t.getAction() != null) {
-						result.addAll(getAllAction(clazz, t.getAction()));
-					}
-				}
-				for(Transition t : s.getOutgoing()) {
-					if (t.getAction() != null) {
-						result.addAll(getAllAction(clazz, t.getAction()));
+			for(State s : sm.allStatesWithEntry()) {
+				result.addAll(s.getEntry().getAllActions(clazz));
+			}
+			for(State s : sm.allStatesWithExit()) {
+				result.addAll(s.getExit().getAllActions(clazz));
+			}
+			for(Map<Message, List<Handler>> values : sm.allMessageHandlers().values()) {
+				for(List<Handler> handlers : values.values()) {
+					for(Handler h : handlers) {
+						if(h.getAction()!=null)
+							result.addAll(h.getAction().getAllActions(clazz));
 					}
 				}
 			}
 		}
-		return result;
-	}
+		return result;	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	public List<Expression> allExpression(Class clazz) {
+	@Override
+	public List<Expression> getAllExpressions() {
 		List<Expression> result = new ArrayList<Expression>();
+		for(Action a : getAllActions()) {
+			result.addAll(a.getAllExpressions());
+		}
 		for(StateMachine sm : allStateMachines()) {
-			for(State s : sm.allStates()) {
-				if (s.getEntry() != null) {
-					result.addAll(getAllExpression(clazz, s.getEntry()));
-				}
-				if (s.getExit() != null) {
-					result.addAll(getAllExpression(clazz, s.getEntry()));
-				}
-				for(InternalTransition t : s.getInternal()) {
-					if (t.getAction() != null) {
-						result.addAll(getAllExpression(clazz, t.getAction()));
-					}
-				}
-				for(Transition t : s.getOutgoing()) {
-					if (t.getAction() != null) {
-						result.addAll(getAllExpression(clazz, t.getAction()));
+			for(Map<Message, List<Handler>> values : sm.allMessageHandlers().values()) {
+				for(List<Handler> handlers : values.values()) {
+					for(Handler h : handlers) {
+						if(h.getGuard()!=null)
+							result.addAll(h.getGuard().getAllExpressions());
 					}
 				}
 			}
@@ -891,5 +795,22 @@ public class ThingImpl extends TypeImpl implements Thing {
 		return result;
 	}
 
-
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Action a : getAllActions()) {
+			result.addAll(a.getAllExpressions(clazz));
+		}
+		for(StateMachine sm : allStateMachines()) {
+			for(Map<Message, List<Handler>> values : sm.allMessageHandlers().values()) {
+				for(List<Handler> handlers : values.values()) {
+					for(Handler h : handlers) {
+						if(h.getGuard()!=null)
+							result.addAll(h.getGuard().getAllExpressions(clazz));
+					}
+				}
+			}
+		}
+		return result;
+	}
 } //ThingImpl

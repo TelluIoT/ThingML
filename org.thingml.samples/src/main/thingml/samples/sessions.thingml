@@ -1,0 +1,149 @@
+import "../datatypes.thingml"
+import "../core/_java/timer.thingml"
+
+thing fragment Msgs {
+
+    property id : LongLong = 0
+
+    message request(id : LongLong);
+    message response(id : LongLong);
+            
+}
+
+thing Client includes Msgs, TimerClient {
+    
+    message continue();
+    
+    internal port c {
+        sends continue
+        receives continue   
+    }
+    
+    readonly property batchSize : Long = 500
+    readonly property maxIteration : Long = 500
+    property iteration : Long = 0 
+    property responses : Long = 0
+
+    required port p {
+        sends request
+        receives response    
+    }
+
+    statechart behavior init Init {
+        state Init {
+            on entry print "init root client\n"
+            
+            transition -> fork    
+        }
+        
+        state fork {
+            on entry do
+                spawn clientSession
+                id++
+                timer!timer_start(1)
+            end
+            
+            transition -> fork
+            event timer?timer_timeout
+            guard id < batchSize
+            
+            transition -> Wait
+            event timer?timer_timeout
+            guard id == batchSize
+        }
+        
+        state Wait {
+            on entry do
+                id = 0
+                iteration++
+            end
+            
+            transition -> Stop
+            guard iteration == maxIteration
+            
+            transition -> fork
+            event c?continue
+        }
+        
+        final state Stop {
+            on entry print "Stop root client\n"
+        }
+        
+        session clientSession init Init {
+            state Init {
+                on entry do
+                    print "Init client session " + id + "\n"
+                    p!request(id)
+                end
+                
+                transition -> Stop
+            }   
+            
+            final state Stop {
+                on entry print "Stop client session " + id + "\n"   
+            }
+        }
+        
+        region waitResponses init Init {
+            state Init {
+                internal event p?response
+                action do
+                    responses++
+                    if (responses == batchSize) do
+                        c!continue()
+                        responses = 0
+                    end
+                end
+            }   
+        }
+    }            
+}
+
+thing Server includes Msgs {
+
+    provided port p {
+        receives request
+        sends response    
+    }
+    
+    statechart behavior init Init {
+        state Init {
+            on entry print "Init root server\n" 
+            
+            transition -> fork
+        }    
+        
+        state fork {
+            internal event req : p?request
+            action do
+                id = req.id
+                spawn serverSession
+            end
+        }
+        
+        session serverSession init Init {
+            state Init {
+                on entry do
+                    print "Init server session " + id + "\n"
+                    p!response(id)
+                end
+                
+                transition -> Stop
+            }    
+            
+            final state Stop {
+                on entry print "Stop server session " + id + "\n"
+            }
+        }
+    }
+            
+}
+
+configuration testSessions {
+    instance client : Client
+    instance server : Server
+    instance timer : TimerJava
+    
+    connector client.timer => timer.timer
+    connector client.p => server.p    
+}

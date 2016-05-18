@@ -1,6 +1,6 @@
 import "../../arduino/_arduino/arduino.thingml"
 
-datatype SensorDisplay
+object SensorDisplay
 @c_type "struct sensor_display_ *"
 @c_byte_size "*";
 

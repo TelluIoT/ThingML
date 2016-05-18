@@ -45,32 +45,11 @@
    
    
    
-   <extension point="org.eclipse.ui.commands">
-  <command
-        description="Make the ThingML Console visible."
-        id="thingml.showconsole"
-        name="Show Console...">
-  </command>
-  <command
-        description="Compile ThingML Program"
-        id="thingml.compile"
-        name="Compile">
-     <commandParameter
-           id="org.thingml.eclipse.ui.commandParameterCompilerName"
-           name="compiler_name"
-           optional="true">
-     </commandParameter>
-  </command>
-</extension>
 
 <extension point="org.eclipse.ui.handlers">
   <handler
         class="org.thingml.eclipse.ui.commands.ShowThingMLConsole"
         commandId="thingml.showconsole">
-  </handler>
-  <handler
-        class="org.thingml.eclipse.ui.commands.CompileThingFile"
-        commandId="thingml.compile">
   </handler>
 </extension>
    
@@ -78,8 +57,10 @@
    <extension point="org.eclipse.ui.menus">
   <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
      <menu
+           icon="icons/heads.png"
            label="HEADS / ThingML">
-        <visibleWhen>
+        <visibleWhen
+              checkEnabled="true">
            <with
                  variable="activeMenuSelection">
               <iterate>
@@ -104,11 +85,22 @@
      </menu>
   </menuContribution>
 </extension>
-   
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.thingml.eclipse.ui.commands.CompileThingFile"
+            id="thingml.compile"
+            name="compile">
+         <commandParameter
+               id="org.thingml.eclipse.ui.commandParameterCompilerName"
+               name="compiler"
+               optional="false">
+         </commandParameter>
+      </command>
+   </extension>
    
    
 
- 
    
 
 </plugin>

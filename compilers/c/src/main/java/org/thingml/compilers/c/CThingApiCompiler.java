@@ -17,11 +17,11 @@ package org.thingml.compilers.c;
 
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
 import java.util.List;
 import java.util.Map;
-import org.thingml.compilers.DebugProfile;
 
 
 public class CThingApiCompiler extends ThingApiCompiler {
@@ -70,16 +70,16 @@ public class CThingApiCompiler extends ThingApiCompiler {
         generatePublicPrototypes(thing, builder, ctx);
         generatePublicMessageSendingOperations(thing, builder, ctx);
 
-        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
-            generatePrivateCppPrototypes(thing, builder, ctx);
-        }
-        
-        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
-            builder.append("// Observers for outgoing messages:\n");
-            generatePrivateCppMessageSendingPrototypes(thing, builder, ctx);
-            builder.append("\n");
-        }
-        
+//        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
+//            generatePrivateCppPrototypes(thing, builder, ctx);
+//        }
+
+//        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
+//            builder.append("// Observers for outgoing messages:\n");
+//            generatePrivateCppMessageSendingPrototypes(thing, builder, ctx);
+//            builder.append("\n");
+//        }
+
         // This is in the header for now but it should be moved to the implementation
         // when a proper private "initialize_instance" operation will be provided
         generateStateIDs(thing, builder, ctx);
@@ -105,22 +105,22 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
         //builder.append("// Variables for the ID of the instance\n");
         //builder.append("int id;\n");
-        
+
         builder.append("// Variables for the ID of the ports of the instance\n");
-        
+
         //if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
-        if(debugProfile.isActive()) {
+        if (debugProfile.isActive()) {
             builder.append("bool debug;\n");
             builder.append("char * name;\n");
         }
-        
+
         for (Port p : thing.allPorts()) {
             builder.append("uint16_t id_");
             builder.append(p.getName());
             builder.append(";\n");
-            
-            if(ctx.getCurrentConfiguration().hasAnnotation("c_dyn_connectors")) {
-                if(!p.getSends().isEmpty()) {
+
+            if (ctx.getCurrentConfiguration().hasAnnotation("c_dyn_connectors")) {
+                if (!p.getSends().isEmpty()) {
                     builder.append("// Pointer to receiver list\n");
                     builder.append("struct Msg_Handler ** ");
                     builder.append(p.getName());
@@ -132,7 +132,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
                 }
 
 
-                if(!p.getReceives().isEmpty()) {
+                if (!p.getReceives().isEmpty()) {
                     builder.append("// Handler Array\n");
                     builder.append("struct Msg_Handler * ");
                     builder.append(p.getName());
@@ -141,8 +141,8 @@ public class CThingApiCompiler extends ThingApiCompiler {
                 }
             }
         }
-        
-        
+
+
         // Variables for each region to store its current state
         builder.append("// Variables for the current instance state\n");
 
@@ -208,7 +208,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
     protected void generatePublicMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of callbacks for incoming messages:\n");
-        for(Port port : thing.allPorts()) {
+        for (Port port : thing.allPorts()) {
             for (Message msg : port.getSends()) {
                 builder.append("void register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
                 builder.append("void (" + getCppNameScope() + "*_listener)");
@@ -221,41 +221,41 @@ public class CThingApiCompiler extends ThingApiCompiler {
                 ctx.appendFormalTypeSignature(thing, builder, msg);
                 builder.append(");\n");
 
-               
+
             }
         }
         builder.append("\n");
     }
 
-    protected void generatePrivateCppPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        // NB sdalgard - This function is a duplicate of generatePrivateCPrototypes in class CThingImplCompiler
-        
-        
-        // Exit actions
-        if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
-            StateMachine sm = thing.allStateMachines().get(0);
-            builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
-            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
-            
-            // Add handler for empty transitions if needed - Added by sdalgard
-            if (sm.hasEmptyHandlers()) {
-                builder.append("int " + ctx.getEmptyHandlerName(thing));
-                ctx.appendFormalParametersEmptyHandler(thing, builder);
-                builder.append(";\n");
-            }
-            
-            
-        }
+//    protected void generatePrivateCppPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+    // NB sdalgard - This function is a duplicate of generatePrivateCPrototypes in class CThingImplCompiler
 
-        // Message Sending
-        //for(Port port : thing.getPorts()) {
-        for(Port port : thing.allPorts()) {
-            for (Message msg : port.getSends()) {
-                builder.append("void " + ctx.getSenderName(thing, port, msg));
-                ctx.appendFormalParameters(thing, builder, msg);
-                builder.append(";\n");
-            }
-        }
+
+    // Exit actions
+//        if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
+//            StateMachine sm = thing.allStateMachines().get(0);
+//            builder.append("void " + sm.qname("_") + "_OnExit(int state, ");
+//            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
+
+    // Add handler for empty transitions if needed - Added by sdalgard
+//            if (sm.hasEmptyHandlers()) {
+//                builder.append("int " + ctx.getEmptyHandlerName(thing));
+//                ctx.appendFormalParametersEmptyHandler(thing, builder);
+//                builder.append(";\n");
+//            }
+
+
+//        }
+
+
+//        // Message Sending
+//        for(Port port : thing.getPorts()) {
+//            for (Message msg : port.getSends()) {
+//                builder.append("void " + ctx.getSenderName(thing, port, msg));
+//                ctx.appendFormalParameters(thing, builder, msg);
+//                builder.append(";\n");
+//            }
+//        }
 
         //TODO sdalgard - Check how this shall be handled for C++
         //for (Function f : thing.allFunctions()) {
@@ -264,30 +264,29 @@ public class CThingApiCompiler extends ThingApiCompiler {
         //        builder.append(";\n");
         //    }
         //}
-        
-        
-        
-    }
 
-    
-    protected void generatePrivateCppMessageSendingPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-       // NB sdalgard - This function is duplicated in generatePrivateMessageSendingOperations in class CThingImplCompiler
-       for(Port port : thing.allPorts()) {
-            for (Message msg : port.getSends()) {
-                // Variable for the function pointer
-                builder.append("void (" + getCppNameScope() + "*" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                ctx.appendFormalTypeSignature(thing, builder, msg);
-                builder.append(";\n");
 
-                // Variable for the external function pointer
-                builder.append("void (" + getCppNameScope() + "*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                ctx.appendFormalTypeSignature(thing, builder, msg);
-                builder.append(";\n");
+//    }
 
-            }
-        }
-        builder.append("\n");
-    }
+
+//    protected void generatePrivateCppMessageSendingPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+    // NB sdalgard - This function is duplicated in generatePrivateMessageSendingOperations in class CThingImplCompiler
+//       for(Port port : thing.allPorts()) {
+//            for (Message msg : port.getSends()) {
+//                // Variable for the function pointer
+//                builder.append("void (" + getCppNameScope() + "*" + ctx.getSenderName(thing, port, msg) + "_listener)");
+//                ctx.appendFormalTypeSignature(thing, builder, msg);
+//                builder.append(";\n");
+//
+//                // Variable for the external function pointer
+//                builder.append("void (" + getCppNameScope() + "*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
+//                ctx.appendFormalTypeSignature(thing, builder, msg);
+//                builder.append(";\n");
+//
+//            }
+//        }
+//        builder.append("\n");
+//    }
 
     protected void generateStateIDs(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
@@ -295,7 +294,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
             StateMachine sm = thing.allStateMachines().get(0);
             builder.append("// Definition of the states:\n");
             List<State> states = sm.allContainedStates();
-            for (int i=0; i<states.size(); i++) {
+            for (int i = 0; i < states.size(); i++) {
                 builder.append("#define " + ctx.getStateID(states.get(i)) + " " + i + "\n");
             }
             builder.append("\n");

@@ -9,13 +9,13 @@
     <parent>
         <groupId>org.thingml</groupId>
         <artifactId>org.thingml.root</artifactId>
-        <version>0.6.0-SNAPSHOT</version>
+        <version>0.7.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modules>
-        <module>version_standalone</module>
         <module>version_eclipse</module>
+        <module>version_standalone</module>        
     </modules>
 
 </project>

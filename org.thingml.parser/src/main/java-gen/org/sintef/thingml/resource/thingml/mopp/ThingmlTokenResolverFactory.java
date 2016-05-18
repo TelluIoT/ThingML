@@ -35,12 +35,14 @@ public class ThingmlTokenResolverFactory implements org.sintef.thingml.resource.
 		registerTokenResolver("ANNOTATION", new org.sintef.thingml.resource.thingml.analysis.ThingmlANNOTATIONTokenResolver());
 		registerTokenResolver("BOOLEAN_LITERAL", new org.sintef.thingml.resource.thingml.analysis.ThingmlBOOLEAN_LITERALTokenResolver());
 		registerTokenResolver("INTEGER_LITERAL", new org.sintef.thingml.resource.thingml.analysis.ThingmlINTEGER_LITERALTokenResolver());
+		registerTokenResolver("REAL_LITERAL", new org.sintef.thingml.resource.thingml.analysis.ThingmlREAL_LITERALTokenResolver());
 		registerTokenResolver("STRING_LITERAL", new org.sintef.thingml.resource.thingml.analysis.ThingmlSTRING_LITERALTokenResolver());
 		registerTokenResolver("STRING_EXT", new org.sintef.thingml.resource.thingml.analysis.ThingmlSTRING_EXTTokenResolver());
 		registerTokenResolver("T_READONLY", new org.sintef.thingml.resource.thingml.analysis.ThingmlT_READONLYTokenResolver());
 		registerTokenResolver("T_OPTIONAL", new org.sintef.thingml.resource.thingml.analysis.ThingmlT_OPTIONALTokenResolver());
 		registerTokenResolver("T_ASPECT", new org.sintef.thingml.resource.thingml.analysis.ThingmlT_ASPECTTokenResolver());
 		registerTokenResolver("T_HISTORY", new org.sintef.thingml.resource.thingml.analysis.ThingmlT_HISTORYTokenResolver());
+		registerTokenResolver("T_DYNAMIC", new org.sintef.thingml.resource.thingml.analysis.ThingmlT_DYNAMICTokenResolver());
 		registerTokenResolver("T_ARRAY", new org.sintef.thingml.resource.thingml.analysis.ThingmlT_ARRAYTokenResolver());
 		registerTokenResolver("TEXT", new org.sintef.thingml.resource.thingml.analysis.ThingmlTEXTTokenResolver());
 	}

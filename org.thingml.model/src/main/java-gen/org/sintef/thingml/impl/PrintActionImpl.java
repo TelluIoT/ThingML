@@ -27,16 +27,19 @@ import org.sintef.thingml.Expression;
 import org.sintef.thingml.PrintAction;
 import org.sintef.thingml.ThingmlPackage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Print Action</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.PrintActionImpl#getMsg <em>Msg</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -185,4 +188,27 @@ public class PrintActionImpl extends ActionImpl implements PrintAction {
 		return super.eIsSet(featureID);
 	}
 
+	/**
+	 * @generated NOT
+	 * @return
+     */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		if (getMsg()!=null)
+			result.addAll(getMsg().getAllExpressions());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if (getMsg()!=null)
+			result.addAll(getMsg().getAllExpressions(clazz));
+		return result;
+	}
 } //PrintActionImpl

@@ -15,20 +15,68 @@
  */
 package org.sintef.thingml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Properties;
 import javax.swing.*;
 
 /**
  * Created by bmori on 21.05.2015.
  */
 public class ThingMLApp {
-
+    
+    public static boolean debug = false;
+    
+    public static void displayStackTrace(String args[]) {
+        try {
+            Properties prop = ThingMLSettings.getInstance().get_settings();
+            if(prop.containsKey("debug")) {
+                debug = Boolean.parseBoolean(prop.getProperty("debug"));
+            } else {
+                prop.setProperty("debug", "false");
+                prop.store(new FileOutputStream(ThingMLSettings.getInstance().get_settings_file()), null);
+            }
+            for(String arg : args) {
+                if(arg.compareToIgnoreCase("-d") == 0) {
+                    debug = true;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    } 
+    
     public static void main(String args[]) {
-        ThingMLFrame f = new ThingMLFrame(args);
-        f.setSize(800, 600);
-        f.setPreferredSize(f.getSize());
-        f.pack();
-        f.setVisible(true);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        displayStackTrace(args);
+        try {
+            ThingMLFrame f = new ThingMLFrame(args);
+            f.setSize(800, 600);
+            f.setPreferredSize(f.getSize());
+            f.pack();
+            f.setVisible(true);
+            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        } catch (Exception e){
+            if(debug) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void runAsArduinoPlugin(String args[], ObservableString transferBuf) {
+        displayStackTrace(args);
+        try {
+            ThingMLFrame f = new ThingMLFrame(args, transferBuf);
+            f.setSize(800, 600);
+            f.setPreferredSize(f.getSize());
+            f.pack();
+            f.setVisible(true);
+            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        } catch (Exception e){
+            if(debug) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

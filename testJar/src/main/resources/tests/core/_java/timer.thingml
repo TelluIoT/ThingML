@@ -1,0 +1,65 @@
+import "../timer.thingml"
+
+object JThread
+@java_type "Thread";
+
+// Manage a set of software timers.
+thing TimerJava includes Timer
+@pim "Timer"
+@platform "java"
+{
+    property timer : JThread
+
+    statechart SoftTimer init default {
+        state default {
+
+          internal
+            event m : timer?timer_start
+            guard m.delay > 0
+            action do
+             /*if (not(timer == 'null')) do
+                '' & timer & '.interrupt();'
+             end*/
+             'Thread t = new Thread(){
+                public void run() {
+				try {
+					sleep(' & m.delay & ');'
+					timer!timer_timeout()
+				'} catch (InterruptedException ex) {
+                    System.err.println("WARNING: " + ex.getMessage() + ". If you did not explicitly cancelled the timer, then it is a bug.");                   
+				}  catch (Exception ex) {
+                    ex.printStackTrace();
+				} finally {
+                    yield();
+                    interrupt();
+                }
+				    
+			    }
+              };'
+             timer = 't' 
+              '' & timer & '.start();'                
+            end
+            
+          internal
+            event m : timer?timer_cancel
+            action do
+              if (not(timer == 'null')) do
+                'try {'
+                '' & timer & '.interrupt();'
+                '} catch (SecurityException ex) {
+                    System.err.println("WARNING: " + ex.getMessage());                   
+				}  catch (Exception ex) {
+                    ex.printStackTrace();
+				}'
+              end
+            end
+        }
+    }
+}
+
+/*configuration TestTimerJava {
+    instance timer : TimerJava
+    instance client : SimpleTimerClient
+        set client.t1 = 500
+    connector client.timer => timer.timer    
+}*/

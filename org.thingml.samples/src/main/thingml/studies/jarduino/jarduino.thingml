@@ -17,15 +17,15 @@
  */
 
 // Definition of some primitive types
-datatype Int8	
+datatype Int8<1>	
 	@c_type "uint8_t"
 	@java_type "byte";
 
-datatype Int16	
+datatype Int16<2>	
 	@c_type "int"
 	@java_type "short";
 
-datatype String
+object String
 	@c_type "string8"
 	@java_type "String"
 	@size "8";

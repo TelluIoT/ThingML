@@ -17,15 +17,17 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.Literal;
 import org.sintef.thingml.ThingmlPackage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Literal</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */
@@ -49,4 +51,27 @@ public abstract class LiteralImpl extends ExpressionImpl implements Literal {
 		return ThingmlPackage.Literals.LITERAL;
 	}
 
+
+	/**
+	 * @generated NOT
+	 * @return
+     */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.add(this);
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		return result;
+	}
 } //LiteralImpl

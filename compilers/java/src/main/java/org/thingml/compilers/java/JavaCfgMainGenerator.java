@@ -15,16 +15,14 @@
  */
 package org.thingml.compilers.java;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -35,29 +33,13 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         builder.append("//Things\n");
         for (Instance i : cfg.allInstances()) {
             if (i.getType().hasAnnotation("mock")) {
-                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + "Mock) new " + ctx.firstToUpper(i.getType().getName()) + "Mock(\"" + ctx.getInstanceName(i) + "\").buildBehavior();\n");
+                builder.append(ctx.getInstanceName(i) + " = (" + ctx.firstToUpper(i.getType().getName()) + "Mock) new " + ctx.firstToUpper(i.getType().getName()) + "Mock(\"" + ctx.getInstanceName(i) + "\").buildBehavior(null, null);\n");
             } else {
 
 
                 for (Property a : cfg.allArrays(i)) {
                     builder.append("final " + JavaHelper.getJavaType(a.getType(), true, ctx) + " " + i.getName() + "_" + a.getName() + "_array = new " + JavaHelper.getJavaType(a.getType(), false, ctx) + "[");
-                    if (a.getCardinality() instanceof PropertyReference) {
-                        PropertyReference pr = (PropertyReference) a.getCardinality();
-                        AbstractMap.SimpleImmutableEntry l = null;
-                        for (AbstractMap.SimpleImmutableEntry l2 : cfg.initExpressionsForInstance(i)) {
-                            if (l2.getKey().equals(pr.getProperty())) {
-                                l = l2;
-                                break;
-                            }
-                        }
-                        if (l != null) {
-                            ctx.getCompiler().getThingActionCompiler().generate(l.getValue(), builder, ctx);
-                        } else {
-                            ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
-                        }
-                    } else {
-                        ctx.getCompiler().getThingActionCompiler().generate(a.getCardinality(), builder, ctx);
-                    }
+                    ctx.generateFixedAtInitValue(cfg, i, a.getCardinality(), builder);
                     builder.append("];\n");
                 }
 
@@ -95,8 +77,11 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                             } else {
                                 if (p.getValue() != null) {
                                     StringBuilder tempbuilder = new StringBuilder();
-                                    tempbuilder.append("(" + JavaHelper.getJavaType(p.getKey().getType(), false, ctx) + ")");
-                                    ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                                    tempbuilder.append("(" + JavaHelper.getJavaType(p.getKey().getType(), false, ctx) + ") ");
+                                    tempbuilder.append("(");
+                                    //ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                                    ctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
+                                    tempbuilder.append(")");
                                     result += tempbuilder.toString();
                                 } else {
                                     result += "(" + JavaHelper.getJavaType(p.getKey().getType(), false, ctx) + ")"; //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
@@ -113,37 +98,44 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                         }
                     }
                 }
-                builder.append(").buildBehavior();\n");
+                builder.append(").buildBehavior(null, null);\n");
             }
         }
 
+        builder.append("//Network components for external connectors\n");
+        builder.append("/*$NETWORK$*/\n");
+
         builder.append("//Connecting internal ports...\n");
-        for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+        for (Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
             Instance i = entries.getKey();
-            for(InternalPort p : entries.getValue()) {
-                for(Message rec : p.getReceives())  {
-                    for(Message send : p.getSends()) {
-                        if(EcoreUtil.equals(rec, send)) {
-                            builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port().addListener(");
-                            builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
-                            break;
-                        }
-                    }
-                }
+            for (InternalPort p : entries.getValue()) {
+                //for(Message rec : p.getReceives())  {
+                //for(Message send : p.getSends()) {
+                //if(EcoreUtil.equals(rec, send)) {
+                builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port().addListener(");
+                builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
+                //break;
+                //}
+                //}
+                //}
             }
         }
 
         builder.append("//Connectors\n");
         for (Connector c : cfg.allConnectors()) {
-            if(c.getProvided().getSends().size() > 0 && c.getRequired().getReceives().size() > 0) {
+            if (c.getProvided().getSends().size() > 0 && c.getRequired().getReceives().size() > 0) {
                 builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port().addListener(");
                 builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port());\n");
             }
-            if(c.getProvided().getReceives().size() > 0 && c.getRequired().getSends().size() > 0) {
+            if (c.getProvided().getReceives().size() > 0 && c.getRequired().getSends().size() > 0) {
                 builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port().addListener(");
                 builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port());\n");
             }
         }
+
+        builder.append("//External Connectors\n");
+        builder.append("/*$EXT CONNECTORS$*/\n");
+
     }
 
     @Override
@@ -179,11 +171,14 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-        JavaHelper.generateHeader(pack, pack, builder, ctx, true, api, cfg.allMessages().size() > 0,false);
+        JavaHelper.generateHeader(pack, pack, builder, ctx, true, api, false);
         if (gui) {
             builder.append("import " + pack + ".gui.*;\n");
         }
 
+        if (cfg.getExternalConnectors().size() > 0) {
+            builder.append("import org.thingml.generated.network.*;\n");
+        }
 
         builder.append("public class Main {\n");
 
@@ -204,8 +199,8 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             //if (debug || i.isDefined("debug", "true")) {
             DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
             boolean debugInst = false;
-            for(Instance inst : debugProfile.getDebugInstances()) {
-                if(i.getName().equals(inst.getName())) {
+            for (Instance inst : debugProfile.getDebugInstances()) {
+                if (i.getName().equals(inst.getName())) {
                     debugInst = true;
                     break;
                 }
@@ -221,10 +216,11 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
+        builder.append("/*$START$*/\n");
         List<Instance> instances = cfg.orderInstanceInit();
         Instance inst;
-        while(!instances.isEmpty()) {
-            inst = instances.get(instances.size()-1);
+        while (!instances.isEmpty()) {
+            inst = instances.get(instances.size() - 1);
             instances.remove(inst);
             builder.append(ctx.getInstanceName(inst) + ".start();\n");
         }
@@ -234,10 +230,11 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         builder.append("public void run() {\n");
         builder.append("System.out.println(\"Terminating ThingML app...\");\n");
         instances = cfg.orderInstanceInit();
-        while(!instances.isEmpty()) {
+        while (!instances.isEmpty()) {
             inst = instances.get(0);
             instances.remove(inst);
             builder.append(ctx.getInstanceName(inst) + ".stop();\n");
+            builder.append("/*$STOP$*/\n");
         }
         builder.append("System.out.println(\"ThingML app terminated. RIP!\");");
         builder.append("}\n");

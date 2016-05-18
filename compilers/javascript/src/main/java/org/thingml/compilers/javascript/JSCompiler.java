@@ -31,7 +31,6 @@ import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +42,6 @@ public class JSCompiler extends OpaqueThingMLCompiler {
     {
         Map<String, CfgExternalConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgExternalConnectorCompiler>();
         connectorCompilerMap.put("kevoree-js", new JS2Kevoree());
-        connectorCompilerMap.put("node-red", new JS2NodeRED());
         addConnectorCompilers(connectorCompilerMap);
     }
 
@@ -95,6 +93,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
         ctx.getCompiler().getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
+        ctx.generateNetworkLibs(cfg);
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {

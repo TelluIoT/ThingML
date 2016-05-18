@@ -23,6 +23,85 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import org.sintef.thingml.ActionBlock;
+import org.sintef.thingml.AndExpression;
+import org.sintef.thingml.ArrayIndex;
+import org.sintef.thingml.ArrayParamRef;
+import org.sintef.thingml.BooleanLiteral;
+import org.sintef.thingml.CompositeState;
+import org.sintef.thingml.ConditionalAction;
+import org.sintef.thingml.ConfigPropertyAssign;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Connector;
+import org.sintef.thingml.Decrement;
+import org.sintef.thingml.DivExpression;
+import org.sintef.thingml.DoubleLiteral;
+import org.sintef.thingml.EnumLiteralRef;
+import org.sintef.thingml.Enumeration;
+import org.sintef.thingml.EnumerationLiteral;
+import org.sintef.thingml.EqualsExpression;
+import org.sintef.thingml.ErrorAction;
+import org.sintef.thingml.ExpressionGroup;
+import org.sintef.thingml.ExternExpression;
+import org.sintef.thingml.ExternStatement;
+import org.sintef.thingml.ExternalConnector;
+import org.sintef.thingml.Filter;
+import org.sintef.thingml.Function;
+import org.sintef.thingml.FunctionCallExpression;
+import org.sintef.thingml.FunctionCallStatement;
+import org.sintef.thingml.GreaterExpression;
+import org.sintef.thingml.GreaterOrEqualExpression;
+import org.sintef.thingml.Increment;
+import org.sintef.thingml.Instance;
+import org.sintef.thingml.InstanceRef;
+import org.sintef.thingml.IntegerLiteral;
+import org.sintef.thingml.InternalPort;
+import org.sintef.thingml.InternalTransition;
+import org.sintef.thingml.JoinSources;
+import org.sintef.thingml.LengthArray;
+import org.sintef.thingml.LengthWindow;
+import org.sintef.thingml.LocalVariable;
+import org.sintef.thingml.LoopAction;
+import org.sintef.thingml.LowerExpression;
+import org.sintef.thingml.LowerOrEqualExpression;
+import org.sintef.thingml.MergeSources;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.MessageParameter;
+import org.sintef.thingml.MinusExpression;
+import org.sintef.thingml.ModExpression;
+import org.sintef.thingml.NotExpression;
+import org.sintef.thingml.OrExpression;
+import org.sintef.thingml.ParallelRegion;
+import org.sintef.thingml.Parameter;
+import org.sintef.thingml.PlatformAnnotation;
+import org.sintef.thingml.PlusExpression;
+import org.sintef.thingml.PrimitiveType;
+import org.sintef.thingml.PrintAction;
+import org.sintef.thingml.Property;
+import org.sintef.thingml.PropertyAssign;
+import org.sintef.thingml.PropertyReference;
+import org.sintef.thingml.Protocol;
+import org.sintef.thingml.ProvidedPort;
+import org.sintef.thingml.ReceiveMessage;
+import org.sintef.thingml.Reference;
+import org.sintef.thingml.RequiredPort;
+import org.sintef.thingml.ReturnAction;
+import org.sintef.thingml.SendAction;
+import org.sintef.thingml.SimpleParamRef;
+import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.State;
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.Stream;
+import org.sintef.thingml.StringLiteral;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.ThingmlFactory;
+import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.TimeWindow;
+import org.sintef.thingml.TimesExpression;
+import org.sintef.thingml.Transition;
+import org.sintef.thingml.UnaryMinus;
+import org.sintef.thingml.VariableAssignment;
 import org.sintef.thingml.*;
 
 /**
@@ -84,8 +163,10 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.TRANSITION: return createTransition();
 			case ThingmlPackage.INTERNAL_TRANSITION: return createInternalTransition();
 			case ThingmlPackage.STATE: return createState();
+			case ThingmlPackage.FINAL_STATE: return createFinalState();
 			case ThingmlPackage.COMPOSITE_STATE: return createCompositeState();
 			case ThingmlPackage.PARALLEL_REGION: return createParallelRegion();
+			case ThingmlPackage.SESSION: return createSession();
 			case ThingmlPackage.ACTION_BLOCK: return createActionBlock();
 			case ThingmlPackage.EXTERN_STATEMENT: return createExternStatement();
 			case ThingmlPackage.EXTERN_EXPRESSION: return createExternExpression();
@@ -100,6 +181,7 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.BOOLEAN_LITERAL: return createBooleanLiteral();
 			case ThingmlPackage.STRING_LITERAL: return createStringLiteral();
 			case ThingmlPackage.DOUBLE_LITERAL: return createDoubleLiteral();
+			case ThingmlPackage.CHARACTER_LITERAL: return createCharacterLiteral();
 			case ThingmlPackage.NOT_EXPRESSION: return createNotExpression();
 			case ThingmlPackage.UNARY_MINUS: return createUnaryMinus();
 			case ThingmlPackage.PLUS_EXPRESSION: return createPlusExpression();
@@ -108,10 +190,15 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.DIV_EXPRESSION: return createDivExpression();
 			case ThingmlPackage.MOD_EXPRESSION: return createModExpression();
 			case ThingmlPackage.EQUALS_EXPRESSION: return createEqualsExpression();
+			case ThingmlPackage.NOT_EQUALS_EXPRESSION: return createNotEqualsExpression();
 			case ThingmlPackage.GREATER_EXPRESSION: return createGreaterExpression();
 			case ThingmlPackage.LOWER_EXPRESSION: return createLowerExpression();
+			case ThingmlPackage.GREATER_OR_EQUAL_EXPRESSION: return createGreaterOrEqualExpression();
+			case ThingmlPackage.LOWER_OR_EQUAL_EXPRESSION: return createLowerOrEqualExpression();
 			case ThingmlPackage.AND_EXPRESSION: return createAndExpression();
 			case ThingmlPackage.OR_EXPRESSION: return createOrExpression();
+			case ThingmlPackage.INCREMENT: return createIncrement();
+			case ThingmlPackage.DECREMENT: return createDecrement();
 			case ThingmlPackage.LOOP_ACTION: return createLoopAction();
 			case ThingmlPackage.CONDITIONAL_ACTION: return createConditionalAction();
 			case ThingmlPackage.PROPERTY_REFERENCE: return createPropertyReference();
@@ -120,33 +207,32 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 			case ThingmlPackage.RETURN_ACTION: return createReturnAction();
 			case ThingmlPackage.PRINT_ACTION: return createPrintAction();
 			case ThingmlPackage.ERROR_ACTION: return createErrorAction();
+			case ThingmlPackage.START_SESSION: return createStartSession();
+			case ThingmlPackage.START_STREAM: return createStartStream();
+			case ThingmlPackage.STOP_STREAM: return createStopStream();
 			case ThingmlPackage.CONFIGURATION: return createConfiguration();
 			case ThingmlPackage.INSTANCE: return createInstance();
 			case ThingmlPackage.CONNECTOR: return createConnector();
 			case ThingmlPackage.EXTERNAL_CONNECTOR: return createExternalConnector();
 			case ThingmlPackage.CONFIG_PROPERTY_ASSIGN: return createConfigPropertyAssign();
-			case ThingmlPackage.CONFIG_INCLUDE: return createConfigInclude();
 			case ThingmlPackage.INSTANCE_REF: return createInstanceRef();
 			case ThingmlPackage.FUNCTION_CALL_STATEMENT: return createFunctionCallStatement();
 			case ThingmlPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
 			case ThingmlPackage.LOCAL_VARIABLE: return createLocalVariable();
 			case ThingmlPackage.STREAM: return createStream();
-			case ThingmlPackage.STREAM_EXPRESSION: return createStreamExpression();
-			case ThingmlPackage.STREAM_PARAM_REFERENCE: return createStreamParamReference();
-			case ThingmlPackage.STREAM_OUTPUT: return createStreamOutput();
 			case ThingmlPackage.JOIN_SOURCES: return createJoinSources();
 			case ThingmlPackage.MERGE_SOURCES: return createMergeSources();
 			case ThingmlPackage.SIMPLE_SOURCE: return createSimpleSource();
 			case ThingmlPackage.FILTER: return createFilter();
 			case ThingmlPackage.MESSAGE_PARAMETER: return createMessageParameter();
-			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR_CALL: return createSglMsgParamOperatorCall();
 			case ThingmlPackage.REFERENCE: return createReference();
-			case ThingmlPackage.SGL_MSG_PARAM_OPERATOR: return createSglMsgParamOperator();
 			case ThingmlPackage.LENGTH_WINDOW: return createLengthWindow();
 			case ThingmlPackage.TIME_WINDOW: return createTimeWindow();
 			case ThingmlPackage.SIMPLE_PARAM_REF: return createSimpleParamRef();
 			case ThingmlPackage.ARRAY_PARAM_REF: return createArrayParamRef();
 			case ThingmlPackage.LENGTH_ARRAY: return createLengthArray();
+			case ThingmlPackage.PROTOCOL: return createProtocol();
+			case ThingmlPackage.OBJECT_TYPE: return createObjectType();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -307,6 +393,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public FinalState createFinalState() {
+		FinalStateImpl finalState = new FinalStateImpl();
+		return finalState;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CompositeState createCompositeState() {
 		CompositeStateImpl compositeState = new CompositeStateImpl();
 		return compositeState;
@@ -320,6 +416,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ParallelRegion createParallelRegion() {
 		ParallelRegionImpl parallelRegion = new ParallelRegionImpl();
 		return parallelRegion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Session createSession() {
+		SessionImpl session = new SessionImpl();
+		return session;
 	}
 
 	/**
@@ -467,6 +573,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public CharacterLiteral createCharacterLiteral() {
+		CharacterLiteralImpl characterLiteral = new CharacterLiteralImpl();
+		return characterLiteral;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public NotExpression createNotExpression() {
 		NotExpressionImpl notExpression = new NotExpressionImpl();
 		return notExpression;
@@ -490,6 +606,26 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public PlusExpression createPlusExpression() {
 		PlusExpressionImpl plusExpression = new PlusExpressionImpl();
 		return plusExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Increment createIncrement() {
+		IncrementImpl increment = new IncrementImpl();
+		return increment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Decrement createDecrement() {
+		DecrementImpl decrement = new DecrementImpl();
+		return decrement;
 	}
 
 	/**
@@ -547,6 +683,16 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public NotEqualsExpression createNotEqualsExpression() {
+		NotEqualsExpressionImpl notEqualsExpression = new NotEqualsExpressionImpl();
+		return notEqualsExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public GreaterExpression createGreaterExpression() {
 		GreaterExpressionImpl greaterExpression = new GreaterExpressionImpl();
 		return greaterExpression;
@@ -560,6 +706,26 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public LowerExpression createLowerExpression() {
 		LowerExpressionImpl lowerExpression = new LowerExpressionImpl();
 		return lowerExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public GreaterOrEqualExpression createGreaterOrEqualExpression() {
+		GreaterOrEqualExpressionImpl greaterOrEqualExpression = new GreaterOrEqualExpressionImpl();
+		return greaterOrEqualExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public LowerOrEqualExpression createLowerOrEqualExpression() {
+		LowerOrEqualExpressionImpl lowerOrEqualExpression = new LowerOrEqualExpressionImpl();
+		return lowerOrEqualExpression;
 	}
 
 	/**
@@ -667,6 +833,36 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public StartSession createStartSession() {
+		StartSessionImpl startSession = new StartSessionImpl();
+		return startSession;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StartStream createStartStream() {
+		StartStreamImpl startStream = new StartStreamImpl();
+		return startStream;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public StopStream createStopStream() {
+		StopStreamImpl stopStream = new StopStreamImpl();
+		return stopStream;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public Configuration createConfiguration() {
 		ConfigurationImpl configuration = new ConfigurationImpl();
 		return configuration;
@@ -710,16 +906,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public ConfigPropertyAssign createConfigPropertyAssign() {
 		ConfigPropertyAssignImpl configPropertyAssign = new ConfigPropertyAssignImpl();
 		return configPropertyAssign;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public ConfigInclude createConfigInclude() {
-		ConfigIncludeImpl configInclude = new ConfigIncludeImpl();
-		return configInclude;
 	}
 
 	/**
@@ -777,36 +963,6 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public StreamExpression createStreamExpression() {
-		StreamExpressionImpl streamExpression = new StreamExpressionImpl();
-		return streamExpression;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public StreamParamReference createStreamParamReference() {
-		StreamParamReferenceImpl streamParamReference = new StreamParamReferenceImpl();
-		return streamParamReference;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public StreamOutput createStreamOutput() {
-		StreamOutputImpl streamOutput = new StreamOutputImpl();
-		return streamOutput;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public JoinSources createJoinSources() {
 		JoinSourcesImpl joinSources = new JoinSourcesImpl();
 		return joinSources;
@@ -857,29 +1013,9 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public SglMsgParamOperatorCall createSglMsgParamOperatorCall() {
-		SglMsgParamOperatorCallImpl sglMsgParamOperatorCall = new SglMsgParamOperatorCallImpl();
-		return sglMsgParamOperatorCall;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public Reference createReference() {
 		ReferenceImpl reference = new ReferenceImpl();
 		return reference;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public SglMsgParamOperator createSglMsgParamOperator() {
-		SglMsgParamOperatorImpl sglMsgParamOperator = new SglMsgParamOperatorImpl();
-		return sglMsgParamOperator;
 	}
 
 	/**
@@ -930,6 +1066,26 @@ public class ThingmlFactoryImpl extends EFactoryImpl implements ThingmlFactory {
 	public LengthArray createLengthArray() {
 		LengthArrayImpl lengthArray = new LengthArrayImpl();
 		return lengthArray;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Protocol createProtocol() {
+		ProtocolImpl protocol = new ProtocolImpl();
+		return protocol;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ObjectType createObjectType() {
+		ObjectTypeImpl objectType = new ObjectTypeImpl();
+		return objectType;
 	}
 
 	/**

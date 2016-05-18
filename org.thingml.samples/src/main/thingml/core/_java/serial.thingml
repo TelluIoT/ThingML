@@ -2,7 +2,7 @@
 
 import "../comm.thingml"
 
-datatype JavaSerial
+object JavaSerial
 @java_type "org.thingml.comm.rxtx.Serial4ThingML";
 
 thing SerialJava includes IOByteArray

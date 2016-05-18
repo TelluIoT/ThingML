@@ -39,13 +39,13 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ConfigPropertyAssignImpl#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConfigPropertyAssignImpl#getProperty <em>Property</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConfigPropertyAssignImpl#getInstance <em>Instance</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ConfigPropertyAssignImpl#getIndex <em>Index</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

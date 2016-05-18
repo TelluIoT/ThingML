@@ -36,13 +36,11 @@ import org.sintef.thingml.Transition;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.TransitionImpl#getTarget <em>Target</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.TransitionImpl#getSource <em>Source</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.TransitionImpl#getAfter <em>After</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.TransitionImpl#getBefore <em>Before</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -56,26 +54,6 @@ public class TransitionImpl extends HandlerImpl implements Transition {
 	 * @ordered
 	 */
 	protected State target;
-
-	/**
-	 * The cached value of the '{@link #getAfter() <em>After</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getAfter()
-	 * @generated
-	 * @ordered
-	 */
-	protected Action after;
-
-	/**
-	 * The cached value of the '{@link #getBefore() <em>Before</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getBefore()
-	 * @generated
-	 * @ordered
-	 */
-	protected Action before;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -202,92 +180,6 @@ public class TransitionImpl extends HandlerImpl implements Transition {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Action getAfter() {
-		return after;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetAfter(Action newAfter, NotificationChain msgs) {
-		Action oldAfter = after;
-		after = newAfter;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.TRANSITION__AFTER, oldAfter, newAfter);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setAfter(Action newAfter) {
-		if (newAfter != after) {
-			NotificationChain msgs = null;
-			if (after != null)
-				msgs = ((InternalEObject)after).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TRANSITION__AFTER, null, msgs);
-			if (newAfter != null)
-				msgs = ((InternalEObject)newAfter).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TRANSITION__AFTER, null, msgs);
-			msgs = basicSetAfter(newAfter, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.TRANSITION__AFTER, newAfter, newAfter));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Action getBefore() {
-		return before;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetBefore(Action newBefore, NotificationChain msgs) {
-		Action oldBefore = before;
-		before = newBefore;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.TRANSITION__BEFORE, oldBefore, newBefore);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setBefore(Action newBefore) {
-		if (newBefore != before) {
-			NotificationChain msgs = null;
-			if (before != null)
-				msgs = ((InternalEObject)before).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TRANSITION__BEFORE, null, msgs);
-			if (newBefore != null)
-				msgs = ((InternalEObject)newBefore).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TRANSITION__BEFORE, null, msgs);
-			msgs = basicSetBefore(newBefore, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.TRANSITION__BEFORE, newBefore, newBefore));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -315,10 +207,6 @@ public class TransitionImpl extends HandlerImpl implements Transition {
 				return basicSetTarget(null, msgs);
 			case ThingmlPackage.TRANSITION__SOURCE:
 				return basicSetSource(null, msgs);
-			case ThingmlPackage.TRANSITION__AFTER:
-				return basicSetAfter(null, msgs);
-			case ThingmlPackage.TRANSITION__BEFORE:
-				return basicSetBefore(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -350,10 +238,6 @@ public class TransitionImpl extends HandlerImpl implements Transition {
 				return basicGetTarget();
 			case ThingmlPackage.TRANSITION__SOURCE:
 				return getSource();
-			case ThingmlPackage.TRANSITION__AFTER:
-				return getAfter();
-			case ThingmlPackage.TRANSITION__BEFORE:
-				return getBefore();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -371,12 +255,6 @@ public class TransitionImpl extends HandlerImpl implements Transition {
 				return;
 			case ThingmlPackage.TRANSITION__SOURCE:
 				setSource((State)newValue);
-				return;
-			case ThingmlPackage.TRANSITION__AFTER:
-				setAfter((Action)newValue);
-				return;
-			case ThingmlPackage.TRANSITION__BEFORE:
-				setBefore((Action)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -396,12 +274,6 @@ public class TransitionImpl extends HandlerImpl implements Transition {
 			case ThingmlPackage.TRANSITION__SOURCE:
 				setSource((State)null);
 				return;
-			case ThingmlPackage.TRANSITION__AFTER:
-				setAfter((Action)null);
-				return;
-			case ThingmlPackage.TRANSITION__BEFORE:
-				setBefore((Action)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -418,10 +290,6 @@ public class TransitionImpl extends HandlerImpl implements Transition {
 				return target != null;
 			case ThingmlPackage.TRANSITION__SOURCE:
 				return getSource() != null;
-			case ThingmlPackage.TRANSITION__AFTER:
-				return after != null;
-			case ThingmlPackage.TRANSITION__BEFORE:
-				return before != null;
 		}
 		return super.eIsSet(featureID);
 	}

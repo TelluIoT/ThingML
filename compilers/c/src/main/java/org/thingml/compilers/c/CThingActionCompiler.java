@@ -16,7 +16,6 @@
 package org.thingml.compilers.c;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
@@ -57,7 +56,6 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-
         CCompilerContext context = (CCompilerContext) ctx;
 
         builder.append(context.getCName(action.getFunction(), context.getConcreteThing()));
@@ -67,6 +65,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
             builder.append(", ");
             generate(p, builder, context);
         }
+
         builder.append(");\n");
     }
 
@@ -143,23 +142,23 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     }
 
-   @Override
+    @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-       if(expression.getParameter() instanceof ParamReference) {
-           ParamReference paramReference = (ParamReference) expression.getParameter();
-           builder.append(paramReference.getParameterRef().getName());
-       } else if(expression.getParameter() instanceof PredifinedProperty) {
-           Parameter parameter = (Parameter) expression.getReference();
-           if(parameter.isIsArray()) {
-               builder.append(parameter.getName() + "[");
-               ctx.getCompiler().getThingActionCompiler().generate(parameter.getCardinality(), builder,ctx);
-               builder.append("]");
-           } else {
-               throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
-           }
-       } else {
-           throw new UnsupportedException(expression.getParameter().getClass().getName(),"parameter","CThingActionCompiler");
-       }
+        if (expression.getParameter() instanceof ParamReference) {
+            ParamReference paramReference = (ParamReference) expression.getParameter();
+            builder.append(paramReference.getParameterRef().getName());
+        } else if (expression.getParameter() instanceof PredifinedProperty) {
+            Parameter parameter = (Parameter) expression.getReference();
+            if (parameter.isIsArray()) {
+                builder.append(parameter.getName() + "[");
+                ctx.getCompiler().getThingActionCompiler().generate(parameter.getCardinality(), builder, ctx);
+                builder.append("]");
+            } else {
+                throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
+            }
+        } else {
+            throw new UnsupportedOperationException("Parameter " + expression.getParameter().getClass().getName() + " not supported");
+        }
 
     }
 
@@ -169,33 +168,39 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
         if (expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
             builder.append(expression.getProperty().getName());
         } else if (expression.getProperty() instanceof Property) {
-            if(nctx.getConcreteInstance() != null) {
-                Property p = (Property) expression.getProperty();
-                if (!p.isChangeable()) {
-                    boolean found = false;
-                    for(ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
-                        String tmp = pa.getInstance().getInstance().findContainingConfiguration().getName() + "_" + pa.getInstance().getInstance().getName();
+            if (!ctx.getAtInitTimeLock()) {
+                if (nctx.getConcreteInstance() != null) {
+                    Property p = (Property) expression.getProperty();
+                    if (!p.isChangeable()) {
+                        boolean found = false;
+                        for (ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
+                            String tmp = pa.getInstance().getInstance().findContainingConfiguration().getName() + "_" + pa.getInstance().getInstance().getName();
 
-                        if(nctx.getConcreteInstance().getName().compareTo(tmp)==0){
-                            if(pa.getProperty().getName().compareTo(p.getName()) == 0) {
-                                generate(pa.getInit(), builder, ctx);
-                                found = true;
-                                //System.out.println("ass: '" + tmp + "'");
-                                //System.out.println("init: '" + tmp + "'");
-                                //System.out.println("BuilderA: '" + builder + "'");
-                                break;
+                            if (nctx.getConcreteInstance().getName().equals(tmp)) {
+                                if (pa.getProperty().getName().compareTo(p.getName()) == 0) {
+                                    generate(pa.getInit(), builder, ctx);
+                                    found = true;
+                                    //System.out.println("ass: '" + tmp + "'");
+                                    //System.out.println("init: '" + tmp + "'");
+                                    //System.out.println("BuilderA: '" + builder + "'");
+                                    break;
+                                }
                             }
                         }
-                    }
-                    if(!found){
-                        generate(p.getInit(), builder, ctx);
-                        //System.out.println("BuilderB: '" + builder + "'");
+                        if (!found) {
+                            generate(p.getInit(), builder, ctx);
+                            //System.out.println("BuilderB: '" + builder + "'");
+                        }
+                    } else {
+                        builder.append("_instance->" + expression.getProperty().qname("_") + "_var");
                     }
                 } else {
                     builder.append("_instance->" + expression.getProperty().qname("_") + "_var");
                 }
             } else {
-                builder.append("_instance->" + expression.getProperty().qname("_") + "_var");
+                Property p = (Property) expression.getProperty();
+                Expression e = ctx.getCurrentConfiguration().initExpressions(ctx.currentInstance, p).get(0);
+                generate(e, builder, ctx);
             }
         }
     }

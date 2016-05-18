@@ -26,12 +26,13 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.Stream#getSelection <em>Selection</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}</li>
  *   <li>{@link org.sintef.thingml.Stream#getInput <em>Input</em>}</li>
+ *   <li>{@link org.sintef.thingml.Stream#isDynamic <em>Dynamic</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getStream()
  * @model
@@ -40,7 +41,7 @@ import org.eclipse.emf.common.util.EList;
 public interface Stream extends AnnotatedElement {
 	/**
 	 * Returns the value of the '<em><b>Selection</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.StreamExpression}.
+	 * The list contents are of type {@link org.sintef.thingml.LocalVariable}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Selection</em>' containment reference list isn't clear,
@@ -52,7 +53,7 @@ public interface Stream extends AnnotatedElement {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<StreamExpression> getSelection();
+	EList<LocalVariable> getSelection();
 
 	/**
 	 * Returns the value of the '<em><b>Output</b></em>' containment reference.
@@ -63,12 +64,12 @@ public interface Stream extends AnnotatedElement {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Output</em>' containment reference.
-	 * @see #setOutput(StreamOutput)
+	 * @see #setOutput(SendAction)
 	 * @see org.sintef.thingml.ThingmlPackage#getStream_Output()
 	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	StreamOutput getOutput();
+	SendAction getOutput();
 
 	/**
 	 * Sets the value of the '{@link org.sintef.thingml.Stream#getOutput <em>Output</em>}' containment reference.
@@ -78,7 +79,7 @@ public interface Stream extends AnnotatedElement {
 	 * @see #getOutput()
 	 * @generated
 	 */
-	void setOutput(StreamOutput value);
+	void setOutput(SendAction value);
 
 	/**
 	 * Returns the value of the '<em><b>Input</b></em>' containment reference.
@@ -105,5 +106,32 @@ public interface Stream extends AnnotatedElement {
 	 * @generated
 	 */
 	void setInput(Source value);
+
+	/**
+	 * Returns the value of the '<em><b>Dynamic</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Dynamic</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Dynamic</em>' attribute.
+	 * @see #setDynamic(boolean)
+	 * @see org.sintef.thingml.ThingmlPackage#getStream_Dynamic()
+	 * @model default="false"
+	 * @generated
+	 */
+	boolean isDynamic();
+
+	/**
+	 * Sets the value of the '{@link org.sintef.thingml.Stream#isDynamic <em>Dynamic</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dynamic</em>' attribute.
+	 * @see #isDynamic()
+	 * @generated
+	 */
+	void setDynamic(boolean value);
 
 } // Stream

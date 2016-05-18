@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Protocol;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Type;
@@ -46,12 +47,13 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getTypes <em>Types</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getImports <em>Imports</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getConfigs <em>Configs</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.ThingMLModelImpl#getProtocols <em>Protocols</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -85,6 +87,16 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 	 * @ordered
 	 */
 	protected EList<Configuration> configs;
+
+	/**
+	 * The cached value of the '{@link #getProtocols() <em>Protocols</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getProtocols()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Protocol> protocols;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -146,6 +158,18 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Protocol> getProtocols() {
+		if (protocols == null) {
+			protocols = new EObjectContainmentEList<Protocol>(Protocol.class, this, ThingmlPackage.THING_ML_MODEL__PROTOCOLS);
+		}
+		return protocols;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -153,6 +177,8 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				return ((InternalEList<?>)getConfigs()).basicRemove(otherEnd, msgs);
+			case ThingmlPackage.THING_ML_MODEL__PROTOCOLS:
+				return ((InternalEList<?>)getProtocols()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -171,6 +197,8 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				return getImports();
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				return getConfigs();
+			case ThingmlPackage.THING_ML_MODEL__PROTOCOLS:
+				return getProtocols();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -196,6 +224,10 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				getConfigs().clear();
 				getConfigs().addAll((Collection<? extends Configuration>)newValue);
 				return;
+			case ThingmlPackage.THING_ML_MODEL__PROTOCOLS:
+				getProtocols().clear();
+				getProtocols().addAll((Collection<? extends Protocol>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -217,6 +249,9 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				getConfigs().clear();
 				return;
+			case ThingmlPackage.THING_ML_MODEL__PROTOCOLS:
+				getProtocols().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -235,6 +270,8 @@ public class ThingMLModelImpl extends EObjectImpl implements ThingMLModel {
 				return imports != null && !imports.isEmpty();
 			case ThingmlPackage.THING_ML_MODEL__CONFIGS:
 				return configs != null && !configs.isEmpty();
+			case ThingmlPackage.THING_ML_MODEL__PROTOCOLS:
+				return protocols != null && !protocols.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

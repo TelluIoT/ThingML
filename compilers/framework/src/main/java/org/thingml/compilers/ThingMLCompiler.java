@@ -15,11 +15,20 @@
  */
 package org.thingml.compilers;
 
-import org.thingml.compilers.checker.Checker;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.sintef.thingml.*;
+import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic;
+import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
+import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
+import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.compilers.thing.*;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
@@ -32,30 +41,32 @@ import java.util.*;
  */
 public abstract class ThingMLCompiler {
 
+    public static Checker checker;
+    //FIXME: the code below related to loading and errors should be refactored and probably moved. It is just here right now as a convenience.
+    public static List<String> errors;
+    public static List<String> warnings;
+    public static ThingmlResource resource;
     protected Context ctx = new Context(this);
-    public Checker checker;
-
+    Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
+    Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
     private ThingActionCompiler thingActionCompiler;
     private ThingApiCompiler thingApiCompiler;
     private CfgMainGenerator mainCompiler;
     private CfgBuildCompiler cfgBuildCompiler;
     private ThingImplCompiler thingImplCompiler;
     private ThingCepCompiler cepCompiler;
-
     //Debug
     private Map<Thing, DebugProfile> debugProfiles = new HashMap<>();
     private boolean containsDebug = false;
-
-    public Map<Thing, DebugProfile> getDebugProfiles() {
-        return debugProfiles;
-    }
-
-    public boolean containsDebug() {
-        return containsDebug;
-    }
-
     //we might need several connector compilers has different ports might use different connectors
     private Map<String, CfgExternalConnectorCompiler> connectorCompilers = new HashMap<String, CfgExternalConnectorCompiler>();
+    private OutputStream messageStream = System.out;
+    private OutputStream errorStream = System.err;
+    private File outputDirectory = null;
+
+    /**************************************************************
+     * Parameters common to all compilers
+     **************************************************************/
 
     public ThingMLCompiler() {
         this.thingActionCompiler = new ThingActionCompiler();
@@ -76,6 +87,75 @@ public abstract class ThingMLCompiler {
         this.cepCompiler = cepCompiler;
     }
 
+    public static ThingMLModel loadModel(File file) {
+        errors = new ArrayList<String>();
+        warnings = new ArrayList<String>();
+
+        Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+        reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
+
+        ResourceSet rs = new ResourceSetImpl();
+        URI xmiuri = URI.createFileURI(file.getAbsolutePath());
+        Resource model = rs.createResource(xmiuri);
+        resource = (ThingmlResource) model;
+        try {
+            model.load(null);
+            org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(model);
+            for (Resource r : model.getResourceSet().getResources()) {
+                checkEMFErrorsAndWarnings(r);
+            }
+            if (errors.isEmpty()) {
+                ThingMLModel m = (ThingMLModel) model.getContents().get(0);
+                for (Configuration cfg : m.allConfigurations()) {
+                    checker.do_generic_check(cfg);
+                }
+                if (errors.isEmpty()) {
+                    return m;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static boolean checkEMFErrorsAndWarnings(Resource model) {
+        System.out.println("Checking for EMF errors and warnings");
+        boolean isOK = true;
+        if (model.getErrors().size() > 0) {
+            isOK = false;
+            System.err.println("ERROR: The input model contains " + model.getErrors().size() + " errors.");
+            for (Resource.Diagnostic d : model.getErrors()) {
+                if (d instanceof IThingmlTextDiagnostic) {
+                    IThingmlTextDiagnostic e = (IThingmlTextDiagnostic) d;
+                    System.err.println("Syntax error in file " + d.getLocation() + " (" + e.getLine() + ", " + e.getColumn() + ")");
+                    errors.add("Syntax error in file " + d.getLocation() + " (" + e.getLine() + ", " + e.getColumn() + ")");
+                } else {
+                    System.err.println("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+                    errors.add("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+                }
+            }
+        }
+
+        if (model.getWarnings().size() > 0) {
+            System.out.println("WARNING: The input model contains " + model.getWarnings().size() + " warnings.");
+            for (Resource.Diagnostic d : model.getWarnings()) {
+                System.out.println("Warning in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+                warnings.add("Warning in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+            }
+        }
+        return isOK;
+    }
+
+    public Map<Thing, DebugProfile> getDebugProfiles() {
+        return debugProfiles;
+    }
+
+    public boolean containsDebug() {
+        return containsDebug;
+    }
+
     public abstract ThingMLCompiler clone();
 
     /**
@@ -88,10 +168,6 @@ public abstract class ThingMLCompiler {
     public abstract String getName();
 
     public abstract String getDescription();
-
-    /**************************************************************
-     * Parameters common to all compilers
-     **************************************************************/
 
     /**
      * ***********************************************************
@@ -128,17 +204,17 @@ public abstract class ThingMLCompiler {
             List<Property> debugProperties = new ArrayList<>();
             List<Instance> debugInstances = new ArrayList<>();
             Map<Port, List<Message>> debugMessages = new HashMap<>();
-            
-            
+
+
             for (Instance i : cfg.allInstances()) {
-                if(i.getType().getName().compareTo(thing.getName()) == 0) {
+                if (i.getType().getName().equals(thing.getName())) {
                     if (debugCfg) {
                         if (!i.isDefined("debug", "false")) {
                             debugInstances.add(i);
                         }
                     } else {
                         if (i.isDefined("debug", "true") || i.getType().isDefined("debug", "true")) {
-                           debugInstances.add(i);
+                            debugInstances.add(i);
                         }
                     }
                 }
@@ -173,7 +249,7 @@ public abstract class ThingMLCompiler {
                         }
                     }
                 } else {//collect everything marked with @debug "true"
-                    debugBehavior =  !thing.getBehaviour().isEmpty() && thing.getBehaviour().get(0).isDefined("debug", "true");
+                    debugBehavior = !thing.getBehaviour().isEmpty() && thing.getBehaviour().get(0).isDefined("debug", "true");
                     for (Function f : thing.allFunctions()) {
                         if (f.isDefined("debug", "true")) {
                             debugFunctions.add(f);
@@ -250,9 +326,6 @@ public abstract class ThingMLCompiler {
         return Collections.unmodifiableMap(connectorCompilers);
     }
 
-    private OutputStream messageStream = System.out;
-    private OutputStream errorStream = System.err;
-
     public OutputStream getErrorStream() {
         return errorStream;
     }
@@ -269,7 +342,9 @@ public abstract class ThingMLCompiler {
         this.messageStream = messageStream;
     }
 
-    private File outputDirectory = null;
+    public File getOutputDirectory() {
+        return outputDirectory;
+    }
 
     public void setOutputDirectory(File outDir) {
         outDir.mkdirs();
@@ -282,9 +357,71 @@ public abstract class ThingMLCompiler {
         outputDirectory = outDir;
     }
 
-    public File getOutputDirectory() {
-        return outputDirectory;
+    public void addNetworkPlugin(NetworkPlugin np) {
+        List<String> protocols = np.getSupportedProtocols();
+        for (String prot : protocols) {
+            if (networkPluginsPerProtocol.containsKey(prot)) {
+                networkPluginsPerProtocol.get(prot).add(np);
+            } else {
+                Set<NetworkPlugin> plugins = new HashSet<>();
+                plugins.add(np);
+                networkPluginsPerProtocol.put(prot, plugins);
+            }
+        }
     }
 
+    public Set<NetworkPlugin> getNetworkPlugins(Protocol prot) {
+        return networkPluginsPerProtocol.get(prot.getName());
+    }
 
+    public Set<NetworkPlugin> getNetworkPlugins() {
+        Set<NetworkPlugin> res = new HashSet<>();
+        for (String key : networkPluginsPerProtocol.keySet()) {
+            for (NetworkPlugin np : networkPluginsPerProtocol.get(key)) {
+                if (!res.contains(np)) {
+                    res.add(np);
+                }
+            }
+        }
+        return res;
+    }
+
+    public NetworkPlugin getNetworkPlugin(Protocol prot) {
+        Set<NetworkPlugin> plugins = networkPluginsPerProtocol.get(prot.getName());
+        if (plugins == null) {
+            System.out.println("[ERROR] No plugin found for protocol: " + prot.getName());
+            return null;
+        }
+        if (prot.hasAnnotation("nlg")) {
+            String pluginID = prot.annotation("nlg").get(0);
+            for (NetworkPlugin np : plugins) {
+                if (np.getPluginID().compareTo(pluginID) == 0) {
+                    return np;
+                }
+            }
+            System.out.println("[ERROR] No plugin found for protocol: " + prot.getName() + " with annotation @nlg \"" + pluginID + "\"");
+            return null;
+        } else {
+            return plugins.iterator().next();
+        }
+    }
+
+    public void addSerializationPlugin(SerializationPlugin sp) {
+        if (!serializationPlugins.containsKey(sp.getPluginID())) {
+            serializationPlugins.put(sp.getPluginID(), sp);
+        }
+        for(String format : sp.getSupportedFormat()) {
+            if (!serializationPlugins.containsKey(format)) {
+                serializationPlugins.put(format, sp);
+            }
+        }
+    }
+
+    public Set<SerializationPlugin> getSerializationPlugins() {
+        return new HashSet<SerializationPlugin>(serializationPlugins.values());
+    }
+
+    public SerializationPlugin getSerializationPlugin(String id) {
+        return serializationPlugins.get(id);
+    }
 }

@@ -17,15 +17,18 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.sintef.thingml.Action;
 import org.sintef.thingml.AndExpression;
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>And Expression</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */
@@ -48,5 +51,4 @@ public class AndExpressionImpl extends BinaryExpressionImpl implements AndExpres
 	protected EClass eStaticClass() {
 		return ThingmlPackage.Literals.AND_EXPRESSION;
 	}
-
 } //AndExpressionImpl

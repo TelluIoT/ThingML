@@ -22,9 +22,13 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.PropertyReference;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Variable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -32,10 +36,10 @@ import org.sintef.thingml.Variable;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.PropertyReferenceImpl#getProperty <em>Property</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -164,6 +168,29 @@ public class PropertyReferenceImpl extends ExpressionImpl implements PropertyRef
 				return property != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.add(this);
+		return  result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		return  result;
 	}
 
 } //PropertyReferenceImpl

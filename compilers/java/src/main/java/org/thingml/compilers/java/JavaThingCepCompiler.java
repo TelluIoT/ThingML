@@ -16,7 +16,6 @@
 package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
@@ -32,67 +31,76 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
         super(cepViewCompiler, sourceDeclaration);
     }
 
-
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
-        if(stream.getInput() instanceof SimpleSource) {
+        if (stream.getInput() instanceof SimpleSource) {
             SimpleSource source = (SimpleSource) stream.getInput();
             Message outPut = source.getMessage().getMessage();
             generateSubscription(stream, builder, ctx, outPut, source.qname("_") + "_observable");
-        } else if(stream.getInput() instanceof SourceComposition) {
+        } else if (stream.getInput() instanceof SourceComposition) {
             Message outPut = stream.getOutput().getMessage();
             generateSubscription(stream, builder, ctx, outPut, stream.qname("_"));
         } else {
-            throw UnsupportedException.sourceException(stream.getClass().getName());
+            throw new UnsupportedOperationException("Input " + stream.getClass().getName() + " is not supported");
         }
     }
 
     //TODO: remove output param as we do not really it (and method is called with wrong args in case of Join/Merge....)
-   private void generateSubscription(Stream stream, StringBuilder builder, Context context, Message outPut, String name) {
-       String outPutName = stream.getName();
-       if (stream.getInput() instanceof JoinSources) {
-           outPutName = ((JoinSources)stream.getInput()).getResultMessage().getName();
-           outPut = ((JoinSources) stream.getInput()).getResultMessage();
-       }else if (stream.getInput() instanceof MergeSources) {
-           outPutName = ((MergeSources)stream.getInput()).getResultMessage().getName();
-           outPut = ((MergeSources) stream.getInput()).getResultMessage();
-       } else if (stream.getInput() instanceof SimpleSource) {
-           outPutName = ((SimpleSource)stream.getInput()).getMessage().getMessage().getName();
-           outPut = ((SimpleSource)stream.getInput()).getMessage().getMessage();
-       }
-        final String messageType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
-        String outPutType = messageType;
-
+    private void generateSubscription(Stream stream, StringBuilder builder, Context context, Message outPut, String name) {
+        String outPutName = stream.getInput().getName();
+        String messageType = "";
+        if (stream.getInput() instanceof SourceComposition) {
+            outPut = ((SourceComposition) stream.getInput()).getResultMessage();
+            messageType = context.firstToUpper(((SourceComposition) stream.getInput()).getResultMessage().getName()) + "MessageType." + context.firstToUpper(((SourceComposition) stream.getInput()).getResultMessage().getName()) + "Message";
+        } else if (stream.getInput() instanceof SimpleSource) {
+            outPut = ((SimpleSource) stream.getInput()).getMessage().getMessage();
+            messageType = context.firstToUpper(outPut.getName()) + "MessageType." + context.firstToUpper(outPut.getName()) + "Message";
+        }
 
         List<ViewSource> operators = stream.getInput().getOperators();
-       boolean lastOpIsWindow = false;
-       if(operators.size() > 0) {
-           ViewSource lastOp = operators.get(operators.size() - 1);
-           lastOpIsWindow =  lastOp instanceof WindowView;
-       }
-        if (lastOpIsWindow) {
-            outPutType = "List<" + outPutType + ">";
+        boolean hasWindow = false;
+        for (ViewSource vs : operators) {
+            hasWindow = (vs instanceof TimeWindow) || (vs instanceof LengthWindow);
+            if (hasWindow)
+                break;
+        }
+        if (hasWindow) {
+            messageType = "List<" + messageType + ">";
         }
 
-        builder.append(name + ".subscribe(new Action1<" + outPutType + ">() {\n")
+
+        builder.append("this.sub_" + name.replace("_observable", "") + " = ");
+        builder.append("new Action1<" + messageType + ">() {\n")
                 .append("@Override\n")
-                .append("public void call(" + outPutType + " " + outPutName + ") {\n");
-        if(lastOpIsWindow) {
+                .append("public void call(" + messageType + " " + outPutName + ") {\n");
+
+        if (hasWindow) {
             builder.append("int i;\n");
-            for(Parameter parameter : outPut.getParameters()) {
-               builder.append(JavaHelper.getJavaType(parameter.getType(), false, context) + "[] " + outPutName + parameter.getName() + " = new " + JavaHelper.getJavaType(parameter.getType(), false, context) + "[" + outPutName + ".size()];\n")
-                       .append("i = 0;\n")
-                       .append("for(" + messageType + " " + outPutName + "_msg : " + outPutName + ") {\n")
-                       .append(outPutName + parameter.getName() + "[i] = " + outPutName + "_msg." + parameter.getName() + ";\n")
-                       .append("i++;\n")
-                       .append("}\n");
-           }
+            for (Parameter parameter : outPut.getParameters()) {
+                builder.append(JavaHelper.getJavaType(parameter.getType(), false, context) + "[] " + outPutName + parameter.getName() + " = new " + JavaHelper.getJavaType(parameter.getType(), false, context) + "[" + outPutName + ".size()];\n")
+                        .append("i = 0;\n")
+                        .append("for(" + messageType.replace("List<", "").replace(">", "") + " " + outPutName + "_msg : " + outPutName + ") {\n")//FIXME: replace stuff is a dirty hack!
+                        .append(outPutName + parameter.getName() + "[i] = " + outPutName + "_msg." + parameter.getName() + ";\n")
+                        .append("i++;\n")
+                        .append("}\n");
+            }
         }
+
+        for (LocalVariable lv : stream.getSelection()) {
+            if (lv.isChangeable())//selection are readonly anyway, even if not specified in ThingML
+                builder.append("final ");
+            context.getCompiler().getThingActionCompiler().generate(lv, builder, context);
+        }
+
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
 
-       builder.append("}\n")
-                .append("});\n");
+        builder.append("}};\n");
+
+
+        if (!stream.isDynamic()) {
+            builder.append("start" + stream.getInput().qname("_") + "();\n");
+        }
     }
 
 

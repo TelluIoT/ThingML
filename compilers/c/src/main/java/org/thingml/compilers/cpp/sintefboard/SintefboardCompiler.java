@@ -19,20 +19,11 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CThingApiCompiler;
-import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.c.posix.CCompilerContextPosix;
-import org.thingml.compilers.c.posix.CThingActionCompilerPosix;
-import org.thingml.compilers.c.posix.PosixCCfgBuildCompiler;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.compilers.utils.OpaqueThingMLCompiler;
-
-import java.io.File;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
 /**
  * Created by ffl on 25.11.14.
@@ -40,7 +31,7 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
     public SintefboardCompiler() {
-        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGeneratorSintefboard(), new CfgBuildCompiler(), new CThingImplCompilerSintefboard(), new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
+        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGeneratorSintefboard(), new SintefboardCCfgBuildCompiler(), new CThingImplCompilerSintefboard(), new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
     }
 
     @Override
@@ -67,12 +58,12 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
         CCompilerContext ctx = new CCompilerContextSintefboard(this);
         processDebug(cfg);
-        
+
         ctx.setCurrentConfiguration(cfg);
-        ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
+        //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
 
         // GENERATE A MODULE FOR EACH THING
-        for (Thing thing: cfg.allThings()) {
+        for (Thing thing : cfg.allThings()) {
             ctx.setConcreteThing(thing);
             // GENERATE HEADER
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
@@ -84,6 +75,13 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
         // GENERATE A MODULE FOR THE CONFIGURATION (+ its dependencies)
         getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
+
+        // GENERATE A MAKEFILE AND TEST FRAMEWORK FOR POSIX
+        getCfgBuildCompiler().generateBuildScript(cfg, ctx);
+
+        // Fetch header stuff from the context
+        String headerFromCtx = ctx.getCppHeaderCode().toString();
+        ctx.getBuilder(cfg.getName() + ".h_ctx").append(headerFromCtx);
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();

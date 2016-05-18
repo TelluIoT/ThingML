@@ -19,10 +19,13 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.LengthWindow;
 import org.sintef.thingml.ThingmlPackage;
 
@@ -32,54 +35,34 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.LengthWindowImpl#getNbEvents <em>Nb Events</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.LengthWindowImpl#getSize <em>Size</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.LengthWindowImpl#getStep <em>Step</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
-public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
+public class LengthWindowImpl extends ViewSourceImpl implements LengthWindow {
 	/**
-	 * The default value of the '{@link #getNbEvents() <em>Nb Events</em>}' attribute.
+	 * The cached value of the '{@link #getSize() <em>Size</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getNbEvents()
+	 * @see #getSize()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int NB_EVENTS_EDEFAULT = 1;
+	protected Expression size;
 
 	/**
-	 * The cached value of the '{@link #getNbEvents() <em>Nb Events</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getNbEvents()
-	 * @generated
-	 * @ordered
-	 */
-	protected int nbEvents = NB_EVENTS_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getStep() <em>Step</em>}' attribute.
+	 * The cached value of the '{@link #getStep() <em>Step</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getStep()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int STEP_EDEFAULT = -1;
-
-	/**
-	 * The cached value of the '{@link #getStep() <em>Step</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getStep()
-	 * @generated
-	 * @ordered
-	 */
-	protected int step = STEP_EDEFAULT;
+	protected Expression step;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -105,8 +88,8 @@ public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int getNbEvents() {
-		return nbEvents;
+	public Expression getSize() {
+		return size;
 	}
 
 	/**
@@ -114,11 +97,14 @@ public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setNbEvents(int newNbEvents) {
-		int oldNbEvents = nbEvents;
-		nbEvents = newNbEvents;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.LENGTH_WINDOW__NB_EVENTS, oldNbEvents, nbEvents));
+	public NotificationChain basicSetSize(Expression newSize, NotificationChain msgs) {
+		Expression oldSize = size;
+		size = newSize;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.LENGTH_WINDOW__SIZE, oldSize, newSize);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -126,7 +112,26 @@ public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int getStep() {
+	public void setSize(Expression newSize) {
+		if (newSize != size) {
+			NotificationChain msgs = null;
+			if (size != null)
+				msgs = ((InternalEObject)size).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.LENGTH_WINDOW__SIZE, null, msgs);
+			if (newSize != null)
+				msgs = ((InternalEObject)newSize).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.LENGTH_WINDOW__SIZE, null, msgs);
+			msgs = basicSetSize(newSize, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.LENGTH_WINDOW__SIZE, newSize, newSize));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Expression getStep() {
 		return step;
 	}
 
@@ -135,11 +140,49 @@ public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setStep(int newStep) {
-		int oldStep = step;
+	public NotificationChain basicSetStep(Expression newStep, NotificationChain msgs) {
+		Expression oldStep = step;
 		step = newStep;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.LENGTH_WINDOW__STEP, oldStep, step));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.LENGTH_WINDOW__STEP, oldStep, newStep);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setStep(Expression newStep) {
+		if (newStep != step) {
+			NotificationChain msgs = null;
+			if (step != null)
+				msgs = ((InternalEObject)step).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.LENGTH_WINDOW__STEP, null, msgs);
+			if (newStep != null)
+				msgs = ((InternalEObject)newStep).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.LENGTH_WINDOW__STEP, null, msgs);
+			msgs = basicSetStep(newStep, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.LENGTH_WINDOW__STEP, newStep, newStep));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.LENGTH_WINDOW__SIZE:
+				return basicSetSize(null, msgs);
+			case ThingmlPackage.LENGTH_WINDOW__STEP:
+				return basicSetStep(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -150,8 +193,8 @@ public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.LENGTH_WINDOW__NB_EVENTS:
-				return getNbEvents();
+			case ThingmlPackage.LENGTH_WINDOW__SIZE:
+				return getSize();
 			case ThingmlPackage.LENGTH_WINDOW__STEP:
 				return getStep();
 		}
@@ -166,11 +209,11 @@ public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.LENGTH_WINDOW__NB_EVENTS:
-				setNbEvents((Integer)newValue);
+			case ThingmlPackage.LENGTH_WINDOW__SIZE:
+				setSize((Expression)newValue);
 				return;
 			case ThingmlPackage.LENGTH_WINDOW__STEP:
-				setStep((Integer)newValue);
+				setStep((Expression)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -184,11 +227,11 @@ public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.LENGTH_WINDOW__NB_EVENTS:
-				setNbEvents(NB_EVENTS_EDEFAULT);
+			case ThingmlPackage.LENGTH_WINDOW__SIZE:
+				setSize((Expression)null);
 				return;
 			case ThingmlPackage.LENGTH_WINDOW__STEP:
-				setStep(STEP_EDEFAULT);
+				setStep((Expression)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -202,30 +245,12 @@ public class LengthWindowImpl extends WindowViewImpl implements LengthWindow {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.LENGTH_WINDOW__NB_EVENTS:
-				return nbEvents != NB_EVENTS_EDEFAULT;
+			case ThingmlPackage.LENGTH_WINDOW__SIZE:
+				return size != null;
 			case ThingmlPackage.LENGTH_WINDOW__STEP:
-				return step != STEP_EDEFAULT;
+				return step != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (nbEvents: ");
-		result.append(nbEvents);
-		result.append(", step: ");
-		result.append(step);
-		result.append(')');
-		return result.toString();
 	}
 
 } //LengthWindowImpl

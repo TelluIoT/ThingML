@@ -18,18 +18,15 @@ package org.thingml.compilers.c.arduino;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
-
-import java.io.File;
-import org.sintef.thingml.ExternalConnector;
 
 /**
  * Created by ffl on 25.11.14.
@@ -68,16 +65,16 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
         CCompilerContext ctx = new CCompilerContextArduino(this);
         processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
-        ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
-        
+        //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
+
         //Checks
-        
+
         this.checker.do_check(cfg);
         this.checker.printErrors();
         this.checker.printWarnings();
         this.checker.printNotices();
-        
-              
+
+
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : cfg.allThings()) {
             ctx.setConcreteThing(thing);

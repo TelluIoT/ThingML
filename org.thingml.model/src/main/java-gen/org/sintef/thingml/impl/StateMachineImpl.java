@@ -29,8 +29,6 @@ import java.util.Set;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>State Machine</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */
@@ -77,6 +75,11 @@ public class StateMachineImpl extends CompositeStateImpl implements StateMachine
         return super.allContainedRegions();
     }
 
+    @Override
+    public List<Session> allContainedSessions() {
+        return super.allContainedSessions();
+    }
+
     /**
      *
      * @return
@@ -95,6 +98,11 @@ public class StateMachineImpl extends CompositeStateImpl implements StateMachine
     @Override
     public List<Region> directSubRegions() {
         return super.directSubRegions();
+    }
+
+    @Override
+    public List<Session> directSubSessions() {
+        return super.directSubSessions();
     }
 
     /**

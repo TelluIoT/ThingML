@@ -11,7 +11,7 @@ cep4 message receive with values (4;6;17).
 cep5 message receive with values (10;40;90).
 */
 
-datatype Integer
+datatype Integer<2>
     @js_type "short"
     @java_type "int";
     

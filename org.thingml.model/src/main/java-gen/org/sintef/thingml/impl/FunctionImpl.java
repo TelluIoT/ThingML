@@ -15,7 +15,9 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -33,6 +35,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.sintef.thingml.Action;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.Function;
+import org.sintef.thingml.HasParameters;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.Type;
@@ -44,6 +47,7 @@ import org.sintef.thingml.TypedElement;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getCardinality <em>Cardinality</em>}</li>
@@ -51,7 +55,6 @@ import org.sintef.thingml.TypedElement;
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionImpl#getBody <em>Body</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -292,6 +295,21 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.FUNCTION__BODY, newBody, newBody));
 	}
 
+	@Override
+	public List<Action> getAllActions() {
+		List<Action> result = new ArrayList<Action>();
+		if (getBody()!=null)
+			result.addAll(getBody().getAllActions());
+		return result;
+	}
+
+	@Override
+	public List<Action> getAllActions(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
+		if (getBody()!=null)
+		result.addAll(getBody().getAllActions(clazz));
+		return result;	}
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -426,6 +444,12 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 				default: return -1;
 			}
 		}
+		if (baseClass == HasParameters.class) {
+			switch (derivedFeatureID) {
+				case ThingmlPackage.FUNCTION__PARAMETERS: return ThingmlPackage.HAS_PARAMETERS__PARAMETERS;
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -441,6 +465,12 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 				case ThingmlPackage.TYPED_ELEMENT__TYPE: return ThingmlPackage.FUNCTION__TYPE;
 				case ThingmlPackage.TYPED_ELEMENT__CARDINALITY: return ThingmlPackage.FUNCTION__CARDINALITY;
 				case ThingmlPackage.TYPED_ELEMENT__IS_ARRAY: return ThingmlPackage.FUNCTION__IS_ARRAY;
+				default: return -1;
+			}
+		}
+		if (baseClass == HasParameters.class) {
+			switch (baseFeatureID) {
+				case ThingmlPackage.HAS_PARAMETERS__PARAMETERS: return ThingmlPackage.FUNCTION__PARAMETERS;
 				default: return -1;
 			}
 		}

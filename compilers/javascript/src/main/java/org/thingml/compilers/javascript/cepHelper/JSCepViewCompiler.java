@@ -15,9 +15,7 @@
  */
 package org.thingml.compilers.javascript.cepHelper;
 
-import org.sintef.thingml.Filter;
-import org.sintef.thingml.LengthWindow;
-import org.sintef.thingml.TimeWindow;
+import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
 
@@ -27,20 +25,40 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 public class JSCepViewCompiler extends ThingCepViewCompiler {
     @Override
     public void generate(Filter filter, StringBuilder builder, Context context) {
-        builder.append(".filter(" + filter.getFilterOp().getOperatorRef().getName() + ")");
+        String param = "x";
+        if (filter.eContainer() instanceof SimpleSource) {
+            SimpleSource s = (SimpleSource) filter.eContainer();
+            param = s.getMessage().getMessage().getName();
+        } else if (filter.eContainer() instanceof SourceComposition) {
+            SourceComposition s = (SourceComposition) filter.eContainer();
+            param = s.getResultMessage().getName();
+        }
+        builder.append(".filter(function(" + param + ", idx, obs) {return ");
+        context.getCompiler().getThingActionCompiler().generate(filter.getGuard(), builder, context);
+        builder.append(";})");
     }
 
     @Override
     public void generate(TimeWindow timeWindow, StringBuilder builder, Context context) {
-        builder.append(".bufferWithTime(" + timeWindow.getSize() + "," + timeWindow.getStep() + ")");
+        builder.append(".bufferWithTime(");
+        context.getCompiler().getThingActionCompiler().generate(timeWindow.getDuration(), builder, context);
+        builder.append(",");
+        if (timeWindow.getStep() != null)
+            context.getCompiler().getThingActionCompiler().generate(timeWindow.getStep(), builder, context);
+        else
+            context.getCompiler().getThingActionCompiler().generate(timeWindow.getDuration(), builder, context);
+        builder.append(")");
     }
 
     @Override
     public void generate(LengthWindow lengthWindow, StringBuilder builder, Context context) {
-        builder.append(".bufferWithCount(" + lengthWindow.getNbEvents());
-        if (lengthWindow.getStep() != -1) {
-            builder.append(", " + lengthWindow.getStep());
-        }
+        builder.append(".bufferWithCount(");
+        context.getCompiler().getThingActionCompiler().generate(lengthWindow.getSize(), builder, context);
+        builder.append(", ");
+        if (lengthWindow.getStep() != null)
+            context.getCompiler().getThingActionCompiler().generate(lengthWindow.getStep(), builder, context);
+        else
+            context.getCompiler().getThingActionCompiler().generate(lengthWindow.getSize(), builder, context);
         builder.append(")");
     }
 }

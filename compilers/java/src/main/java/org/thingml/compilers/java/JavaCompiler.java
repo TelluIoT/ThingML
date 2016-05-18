@@ -108,5 +108,6 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         ctx.getCompiler().getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
         ctx.getCompiler().getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
+        ctx.generateNetworkLibs(cfg);
     }
 }

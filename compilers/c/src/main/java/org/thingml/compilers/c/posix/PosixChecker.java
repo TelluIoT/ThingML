@@ -32,13 +32,13 @@ public class PosixChecker extends CChecker {
     public PosixChecker(String compiler) {
         super(compiler);
     }
-    
+
     @Override
     public void do_check(Configuration cfg) {
-        
+
         //ADD Posix specific checks
         super.do_generic_check(cfg);
-        
+
     }
-    
+
 }

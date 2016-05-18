@@ -15,7 +15,7 @@
 import "../../../thingml.thingml"
 import "../../websocket.thingml"
 
-datatype WebSocketClient
+object WebSocketClient
 @c_type "WebSocketClient*";
 
 thing CPPWSClient includes WebSocketClient

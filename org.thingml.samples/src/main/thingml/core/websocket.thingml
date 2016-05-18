@@ -9,7 +9,7 @@ enumeration WS_ERR
     //TODO: to be completed
 }
 
-datatype CString
+object CString
     @c_type "const char*"
     @java_type "String";
 

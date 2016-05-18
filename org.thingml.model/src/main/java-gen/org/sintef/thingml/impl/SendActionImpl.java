@@ -15,7 +15,9 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -32,6 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.Message;
+import org.sintef.thingml.PassesParameters;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.SendAction;
 import org.sintef.thingml.ThingmlPackage;
@@ -42,12 +45,12 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.SendActionImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.SendActionImpl#getMessage <em>Message</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.SendActionImpl#getPort <em>Port</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -283,6 +286,64 @@ public class SendActionImpl extends ActionImpl implements SendAction {
 				return port != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == PassesParameters.class) {
+			switch (derivedFeatureID) {
+				case ThingmlPackage.SEND_ACTION__PARAMETERS: return ThingmlPackage.PASSES_PARAMETERS__PARAMETERS;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == PassesParameters.class) {
+			switch (baseFeatureID) {
+				case ThingmlPackage.PASSES_PARAMETERS__PARAMETERS: return ThingmlPackage.SEND_ACTION__PARAMETERS;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Expression e : getParameters()) {
+			result.addAll(e.getAllExpressions());
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Expression e : getParameters()) {
+			result.addAll(e.getAllExpressions(clazz));
+		}
+		return result;
 	}
 
 } //SendActionImpl

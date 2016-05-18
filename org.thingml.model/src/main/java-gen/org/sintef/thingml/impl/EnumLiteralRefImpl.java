@@ -33,11 +33,11 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.EnumLiteralRefImpl#getEnum <em>Enum</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.EnumLiteralRefImpl#getLiteral <em>Literal</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

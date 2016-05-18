@@ -19,10 +19,13 @@ package org.sintef.thingml.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.TimeWindow;
 
@@ -32,54 +35,34 @@ import org.sintef.thingml.TimeWindow;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * <ul>
- *   <li>{@link org.sintef.thingml.impl.TimeWindowImpl#getStep <em>Step</em>}</li>
- *   <li>{@link org.sintef.thingml.impl.TimeWindowImpl#getSize <em>Size</em>}</li>
- * </ul>
  * </p>
+ * <ul>
+ *   <li>{@link org.sintef.thingml.impl.TimeWindowImpl#getDuration <em>Duration</em>}</li>
+ *   <li>{@link org.sintef.thingml.impl.TimeWindowImpl#getStep <em>Step</em>}</li>
+ * </ul>
  *
  * @generated
  */
-public class TimeWindowImpl extends WindowViewImpl implements TimeWindow {
+public class TimeWindowImpl extends ViewSourceImpl implements TimeWindow {
 	/**
-	 * The default value of the '{@link #getStep() <em>Step</em>}' attribute.
+	 * The cached value of the '{@link #getDuration() <em>Duration</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDuration()
+	 * @generated
+	 * @ordered
+	 */
+	protected Expression duration;
+
+	/**
+	 * The cached value of the '{@link #getStep() <em>Step</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getStep()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final int STEP_EDEFAULT = 0;
-
-	/**
-	 * The cached value of the '{@link #getStep() <em>Step</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getStep()
-	 * @generated
-	 * @ordered
-	 */
-	protected int step = STEP_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getSize() <em>Size</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSize()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final int SIZE_EDEFAULT = 0;
-
-	/**
-	 * The cached value of the '{@link #getSize() <em>Size</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getSize()
-	 * @generated
-	 * @ordered
-	 */
-	protected int size = SIZE_EDEFAULT;
+	protected Expression step;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -105,7 +88,50 @@ public class TimeWindowImpl extends WindowViewImpl implements TimeWindow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int getStep() {
+	public Expression getDuration() {
+		return duration;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDuration(Expression newDuration, NotificationChain msgs) {
+		Expression oldDuration = duration;
+		duration = newDuration;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.TIME_WINDOW__DURATION, oldDuration, newDuration);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDuration(Expression newDuration) {
+		if (newDuration != duration) {
+			NotificationChain msgs = null;
+			if (duration != null)
+				msgs = ((InternalEObject)duration).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TIME_WINDOW__DURATION, null, msgs);
+			if (newDuration != null)
+				msgs = ((InternalEObject)newDuration).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TIME_WINDOW__DURATION, null, msgs);
+			msgs = basicSetDuration(newDuration, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.TIME_WINDOW__DURATION, newDuration, newDuration));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Expression getStep() {
 		return step;
 	}
 
@@ -114,11 +140,14 @@ public class TimeWindowImpl extends WindowViewImpl implements TimeWindow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setStep(int newStep) {
-		int oldStep = step;
+	public NotificationChain basicSetStep(Expression newStep, NotificationChain msgs) {
+		Expression oldStep = step;
 		step = newStep;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.TIME_WINDOW__STEP, oldStep, step));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingmlPackage.TIME_WINDOW__STEP, oldStep, newStep);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -126,8 +155,18 @@ public class TimeWindowImpl extends WindowViewImpl implements TimeWindow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public int getSize() {
-		return size;
+	public void setStep(Expression newStep) {
+		if (newStep != step) {
+			NotificationChain msgs = null;
+			if (step != null)
+				msgs = ((InternalEObject)step).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TIME_WINDOW__STEP, null, msgs);
+			if (newStep != null)
+				msgs = ((InternalEObject)newStep).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingmlPackage.TIME_WINDOW__STEP, null, msgs);
+			msgs = basicSetStep(newStep, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.TIME_WINDOW__STEP, newStep, newStep));
 	}
 
 	/**
@@ -135,11 +174,15 @@ public class TimeWindowImpl extends WindowViewImpl implements TimeWindow {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setSize(int newSize) {
-		int oldSize = size;
-		size = newSize;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.TIME_WINDOW__SIZE, oldSize, size));
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case ThingmlPackage.TIME_WINDOW__DURATION:
+				return basicSetDuration(null, msgs);
+			case ThingmlPackage.TIME_WINDOW__STEP:
+				return basicSetStep(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -150,10 +193,10 @@ public class TimeWindowImpl extends WindowViewImpl implements TimeWindow {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case ThingmlPackage.TIME_WINDOW__DURATION:
+				return getDuration();
 			case ThingmlPackage.TIME_WINDOW__STEP:
 				return getStep();
-			case ThingmlPackage.TIME_WINDOW__SIZE:
-				return getSize();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -166,11 +209,11 @@ public class TimeWindowImpl extends WindowViewImpl implements TimeWindow {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.TIME_WINDOW__STEP:
-				setStep((Integer)newValue);
+			case ThingmlPackage.TIME_WINDOW__DURATION:
+				setDuration((Expression)newValue);
 				return;
-			case ThingmlPackage.TIME_WINDOW__SIZE:
-				setSize((Integer)newValue);
+			case ThingmlPackage.TIME_WINDOW__STEP:
+				setStep((Expression)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -184,11 +227,11 @@ public class TimeWindowImpl extends WindowViewImpl implements TimeWindow {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.TIME_WINDOW__STEP:
-				setStep(STEP_EDEFAULT);
+			case ThingmlPackage.TIME_WINDOW__DURATION:
+				setDuration((Expression)null);
 				return;
-			case ThingmlPackage.TIME_WINDOW__SIZE:
-				setSize(SIZE_EDEFAULT);
+			case ThingmlPackage.TIME_WINDOW__STEP:
+				setStep((Expression)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -202,30 +245,12 @@ public class TimeWindowImpl extends WindowViewImpl implements TimeWindow {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case ThingmlPackage.TIME_WINDOW__DURATION:
+				return duration != null;
 			case ThingmlPackage.TIME_WINDOW__STEP:
-				return step != STEP_EDEFAULT;
-			case ThingmlPackage.TIME_WINDOW__SIZE:
-				return size != SIZE_EDEFAULT;
+				return step != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (step: ");
-		result.append(step);
-		result.append(", size: ");
-		result.append(size);
-		result.append(')');
-		return result.toString();
 	}
 
 } //TimeWindowImpl

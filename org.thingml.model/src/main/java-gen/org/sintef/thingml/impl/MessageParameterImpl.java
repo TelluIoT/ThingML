@@ -17,13 +17,16 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
+import org.sintef.thingml.Expression;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.MessageParameter;
 import org.sintef.thingml.ThingmlPackage;
@@ -34,10 +37,10 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.MessageParameterImpl#getMsgRef <em>Msg Ref</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -166,6 +169,21 @@ public class MessageParameterImpl extends ThingMLElementImpl implements MessageP
 				return msgRef != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.add(this);
+		return result;
+	}
+
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		return result;
 	}
 
 } //MessageParameterImpl

@@ -29,6 +29,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.Action;
+import org.sintef.thingml.ActionBlock;
+import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 
 /**
@@ -37,10 +40,10 @@ import org.sintef.thingml.*;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ActionBlockImpl#getActions <em>Actions</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -201,5 +204,55 @@ public class ActionBlockImpl extends ActionImpl implements ActionBlock {
 	}
 
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Action a : getActions()) {
+			result.addAll(a.getAllExpressions());
+		}
+		return result;
+	}
 
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Action a : getActions()) {
+			result.addAll(a.getAllExpressions(clazz));
+		}
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions() {
+		List<Action> result = new ArrayList<Action>();
+		result.addAll(super.getAllActions());
+		for(Action a : getActions())
+			result.addAll(a.getAllActions());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
+		result.addAll(super.getAllActions(clazz));
+		for(Action a : getActions())
+			result.addAll(a.getAllActions(clazz));
+		return result;
+	}
 } //ActionBlockImpl

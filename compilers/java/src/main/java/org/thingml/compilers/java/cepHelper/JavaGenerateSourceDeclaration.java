@@ -26,44 +26,48 @@ import java.util.Iterator;
 /**
  * @author ludovic
  */
-public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
+public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration {
     @Override
     public void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
-        builder.append("PublishSubject " + source.qname("_") + " = PublishSubject.create();\n")
+        builder.append("PublishSubject " + source.qname("_") + "_subject" + " = PublishSubject.create();\n")
                 .append("cepDispatcher.addSubs(")
                 .append(source.getMessage().getMessage().getName() + "Type,")
-                .append(source.qname("_") + ");\n");
+                .append(source.qname("_") + "_subject" + ");\n");
 
-        builder.append("rx.Observable " + source.qname("_") + "_observable" + " = " + source.qname("_") + ".asObservable();\n");
-        generateOperatorCalls(source.qname("_") + "_observable", source, builder, context);
+        if (source.eContainer() instanceof SourceComposition) {
+            builder.append("rx.Observable " + source.qname("_") + " = " + source.qname("_") + "_subject" + ".asObservable();\n");
+        } else {
+            builder.append("this." + source.qname("_") + " = " + source.qname("_") + "_subject" + ".asObservable();\n");
+        }
+        generateOperatorCalls(source.qname("_"), source, builder, context);
     }
 
     @Override
     public void generate(Stream stream, MergeSources source, StringBuilder builder, Context context) {
         String mergeParams = "";
         boolean firstParamDone = false;
-        for(Source s : source.getSources()) {
-            generate(stream,s,builder,context);
-            if(firstParamDone) {
+        for (Source s : source.getSources()) {
+            generate(stream, s, builder, context);
+            if (firstParamDone) {
                 mergeParams += ", ";
             } else {
                 firstParamDone = true;
             }
-            mergeParams += s.qname("_") + "_observable";
+            mergeParams += s.qname("_");
         }
 
         Message result = source.getResultMessage();
         String resultName = result.getName();
         String resultType = context.firstToUpper(resultName) + "MessageType." + context.firstToUpper(resultName) + "Message";
 
-        builder.append("rx.Observable " + stream.qname("_") + " = rx.Observable.merge(" + mergeParams + ").map(new Func1<Event," + resultType + ">() {\n")
+        builder.append(stream.qname("_") + " = rx.Observable.merge(" + mergeParams + ").map(new Func1<Event," + resultType + ">() {\n")
                 .append("@Override\n")
                 .append("public " + resultType + " call(Event event) {\n");
 
         int i = 0;
 
         //Param declaration
-        for(Parameter p : stream.getOutput().getMessage().getParameters()) {
+        for (Parameter p : stream.getOutput().getMessage().getParameters()) {
             if (!(p.getType() instanceof Enumeration)) {
                 if (!(p.getCardinality() != null))
                     builder.append(p.getType().annotation("java_type").toArray()[0] + " ");
@@ -77,7 +81,7 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
         }
 
         //param initialization
-        if(stream.getOutput().getParameters().size() > 0) {
+        if (stream.getOutput().getParameters().size() > 0) {
             boolean firstElementDone = false;
             for (Source simpleSource : source.getSources()) {
                 SimpleSource sSource = (SimpleSource) simpleSource;
@@ -108,25 +112,17 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
             }
         }
 
-        i = 0;
-        for(Expression exp : source.getRules()) {
-            if(!(exp instanceof StreamParamReference)) {
-                builder.append("param" + i + " = ");
-                context.getCompiler().getThingActionCompiler().generate(exp, builder, context);
-                builder.append(";\n");
-            }
-            i++;
-        }
-
-        builder.append("return (" + resultType + ") " + resultName + "Type.instantiate(" + stream.getOutput().getPort().getName() + "_port");
-        for(i = 0; i<stream.getOutput().getMessage().getParameters().size(); i++) {
-            builder.append(",param" + i);
+        builder.append("return (" + resultType + ") " + resultName + "Type.instantiate(");
+        for (i = 0; i < stream.getOutput().getMessage().getParameters().size(); i++) {
+            if (i > 0)
+                builder.append(", ");
+            builder.append("param" + i);
         }
         builder.append(");\n")
                 .append("}\n")
                 .append("});");
 
-        generateOperatorCalls(stream.qname("_"),source,builder,context);
+        generateOperatorCalls(stream.qname("_"), source, builder, context);
     }
 
     @Override
@@ -171,24 +167,27 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
         String outPutName = outPut.getName();
         String outPutType = context.firstToUpper(outPutName) + "MessageType." + context.firstToUpper(outPutName) + "Message";
 
-        generate(stream,simpleSource1,builder,context);
+        generate(stream, simpleSource1, builder, context);
         generate(stream, simpleSource2, builder, context);
-        builder.append("rx.Observable " + stream.qname("_") + " = " + simpleSource1.qname("_") + "_observable")
-                .append(".join(" + simpleSource2.qname("_") + "_observable" + ",wait_" + stream.qname("_") + "_1, wait_" + stream.qname("_") + "_2,\n")
-                .append("new Func2<" + eventMessage1 + ", " + eventMessage2 + ", " + outPutType +">(){\n")
+        builder.append(stream.qname("_") + " = " + simpleSource1.qname("_"))
+                .append(".join(" + simpleSource2.qname("_") + ",wait_" + stream.qname("_") + "_1, wait_" + stream.qname("_") + "_2,\n")
+                .append("new Func2<" + eventMessage1 + ", " + eventMessage2 + ", " + outPutType + ">(){\n")
                 .append("@Override\n")
                 .append("public " + outPutType + " call(" + eventMessage1 + " " + message1Name + ", " + eventMessage2 + " " + message2Name + ") {\n");
 
         JavaThingActionCompiler javaCmpl = ((JavaThingActionCompiler) context.getCompiler().getThingActionCompiler());
-        builder.append("return (" + outPutType + ") " + outPutName + "Type.instantiate("+ stream.getOutput().getPort().getName() + "_port");
+        builder.append("return (" + outPutType + ") " + outPutName + "Type.instantiate(");
 
         Iterator<Expression> itRules = sources.getRules().iterator();
         Iterator<Parameter> itParamsResultMsgs = sources.getResultMessage().getParameters().iterator();
-        while(itRules.hasNext() && itParamsResultMsgs.hasNext()) {
-            builder.append(", ");
+        int i = 0;
+        while (itRules.hasNext() && itParamsResultMsgs.hasNext()) {
+            if (i > 0)
+                builder.append(", ");
             Parameter parameter = itParamsResultMsgs.next();
             Expression rule = itRules.next();
-            javaCmpl.cast(parameter.getType(),parameter.isIsArray(), rule, builder, context);
+            javaCmpl.cast(parameter.getType(), parameter.isIsArray(), rule, builder, context);
+            i++;
         }
 
 
@@ -198,6 +197,6 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration{
                 .append("}\n")
                 .append(");\n");
 
-        generateOperatorCalls(stream.qname("_"), sources, builder,context);
+        generateOperatorCalls(stream.qname("_"), sources, builder, context);
     }
 }

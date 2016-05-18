@@ -175,7 +175,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         }
         builder.append(";\n");
         builder.append("//Getters and Setters for non readonly/final attributes\n");
-        if(!isGlobal) {
+        if (!isGlobal) {
             builder.append("public " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + i.getName() + "_" + ctx.getVariableName(p) + ";\n}\n\n");
             builder.append("public void set" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p) + "){\n");
             builder.append("this." + i.getName() + "_" + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
@@ -196,6 +196,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         }
     }
 
+    //TODO: refactor into a template
     private void generateWrapper(Context ctx, Configuration cfg, String pack) {
         //final String pack = ctx.getContextAnnotation("package").orElse("org.thingml.generated");
 
@@ -215,6 +216,8 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
             builder.append("import " + pack + ".gui.*;\n");
         }
         builder.append("import org.kevoree.annotation.*;\n");
+        //builder.append("import org.kevoree.api.Context;\n");
+        builder.append("import org.kevoree.api.ModelService;\n");
         builder.append("import org.kevoree.log.Log;\n");
         builder.append("import " + pack + ".api.*;\n");
         builder.append("import org.thingml.java.*;\n");
@@ -227,6 +230,8 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("@ComponentType\n ");
         builder.append("public class K" + ctx.firstToUpper(cfg.getName()) + " implements AttributeListener {//The Kevoree component wraps the whole ThingML configuration " + cfg.getName() + "\n");
 
+        builder.append("@KevoreeInject\nprivate ModelService modelService;\n");
+        //builder.append("@KevoreeInject\nprivate Context ctx;\n");
 
         builder.append("//Things\n");
 
@@ -249,7 +254,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                     for (Message m : p.getReceives()) {
                         if (id > 0)
                             builder.append("else ");
-                        builder.append("if (string.split(\":\")[0].equals(\"" + m.getName() + "\")) {\n");
+                        builder.append("if (string.split(\"@:@\")[0].equals(\"" + m.getName() + "\")) {\n");
                         builder.append("final Event msg = " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(m.getName()) + "Type().instantiate(" + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port()");
                         for (Parameter pa : m.getParameters()) {
                             builder.append(", ");
@@ -261,9 +266,9 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                             else if (t.equals("float")) builder.append(".Float.parseFloat(");
                             else if (t.equals("byte")) builder.append("Byte.parseByte(");
                             else if (t.equals("boolean")) builder.append("Boolean.parseBoolean(");
-                            builder.append("string.split(\":\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
+                            builder.append("string.split(\"@:@\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
                             if (t.equals("char")) builder.append(".charAt(0)");
-                            else builder.append(")");
+                            else if (!t.equals("String")) builder.append(")");
                         }
                         builder.append(");\n");
                         builder.append(ctx.getInstanceName(i) + ".receive(msg, " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
@@ -275,10 +280,10 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
             }
         }
 
-        for(ExternalConnector c : cfg.getExternalConnectors()) {
+        for (ExternalConnector c : cfg.getExternalConnectors()) {
             final Instance i = c.getInst().getInstance();
             final Port p = c.getPort();
-            for(Message m : p.getSends()) {
+            for (Message m : p.getSends()) {
                 builder.append("@Output\n");
                 builder.append("private org.kevoree.api.Port " + shortName(i, p, m) + "Port_out;\n");
             }
@@ -298,7 +303,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                     else if (t.equals("float")) builder.append(".Float.parseFloat(");
                     else if (t.equals("byte")) builder.append("Byte.parseByte(");
                     else if (t.equals("boolean")) builder.append("Boolean.parseBoolean(");
-                    builder.append("string.split(\":\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
+                    builder.append("string.split(\"@:@\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
                     if (t.equals("char")) builder.append(".charAt(0)");
                     else builder.append(")");
                 }
@@ -307,7 +312,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                 builder.append("}\n");
             }
         }
-        
+
         List<String> attributes = new ArrayList<String>();
         builder.append("//Attributes\n");
         for (Instance i : cfg.allInstances()) {
@@ -331,7 +336,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("//Instantiates ThingML component instances and connectors\n");
         builder.append("private void initThingML() {\n");
         JavaCfgMainGenerator.generateInstances(cfg, ctx, builder);
-        for(Instance i : cfg.allInstances()) {
+        for (Instance i : cfg.allInstances()) {
             builder.append(ctx.getInstanceName(i) + ".addAttributeListener(this);\n");
         }
         StringBuilder tempBuilder = new StringBuilder();
@@ -353,9 +358,9 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                             id++;
                         }
                         tempBuilder.append(") {\n");
-                        tempBuilder.append("final String msg = \"" + m.getName() + ":\"");
+                        tempBuilder.append("final String msg = \"" + m.getName() + "@:@\"");
                         for (Parameter pa : m.getParameters()) {
-                            tempBuilder.append(" + " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                            tempBuilder.append(" + " + ctx.protectKeyword(ctx.getVariableName(pa)) + " + \";\"");
                         }
                         tempBuilder.append(";\n");
                         tempBuilder.append("try {\n");
@@ -374,15 +379,23 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
 
         builder.append("@Override\npublic void onUpdate(String instance, String attribute, Object value){\n");
         int index = 0;
-        for(Instance i : cfg.allInstances()) {
+        for (Instance i : cfg.allInstances()) {
             if (index > 0)
                 builder.append("else ");
             builder.append("if(instance.equals(" + ctx.getInstanceName(i) + ".getName())){\n");
             for (Property p : i.getType().allPropertiesInDepth()) {
-                if (p.isDefined("kevoree", "instance")) {
-
-                } else if (p.isDefined("kevoree", "merge")) {
-                    //TODO
+                if (p.hasAnnotation("kevoree")) {
+                    String kevs = "";
+                    if (p.isDefined("kevoree", "instance")) {
+                        builder.append("if(!value.equals(get" + i.getName() + "_" + ctx.firstToUpper(ctx.getVariableName(p)) + "())){\n");
+                        kevs = "\"set \" + modelService.getNodeName() + \"." + cfg.getName() + "." + i.getName() + "_" + ctx.getVariableName(p) + " = \" + value";
+                    } else if (p.isDefined("kevoree", "merge")) {
+                        builder.append("if(!value.equals(get" + ctx.firstToUpper(ctx.getVariableName(p)) + "())){\n");
+                        kevs = "\"set \" + modelService.getNodeName() + \"." + cfg.getName() + "." + ctx.getVariableName(p) + " = \" + value";
+                    }
+                    System.out.println("DEBUG KEVS = " + kevs);
+                    builder.append("modelService.submitScript(" + kevs + ", done -> {\n");
+                    builder.append("if (!done) {\nLog.error(\"Error while updating attribute \" + attribute + \" of \" + instance + \" with value \" + value);\n}\n});\n}\n");
                 }
             }
             builder.append("}\n");

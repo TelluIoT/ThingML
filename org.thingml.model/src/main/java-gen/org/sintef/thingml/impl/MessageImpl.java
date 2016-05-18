@@ -29,8 +29,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.sintef.thingml.HasParameters;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
+import org.sintef.thingml.ReferencedElmt;
 import org.sintef.thingml.ThingmlPackage;
 
 /**
@@ -39,10 +41,10 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.MessageImpl#getParameters <em>Parameters</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -162,7 +164,49 @@ public class MessageImpl extends AnnotatedElementImpl implements Message {
 		return super.eIsSet(featureID);
 	}
 
-    //Derived properties
+    /**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == ReferencedElmt.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == HasParameters.class) {
+			switch (derivedFeatureID) {
+				case ThingmlPackage.MESSAGE__PARAMETERS: return ThingmlPackage.HAS_PARAMETERS__PARAMETERS;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == ReferencedElmt.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == HasParameters.class) {
+			switch (baseFeatureID) {
+				case ThingmlPackage.HAS_PARAMETERS__PARAMETERS: return ThingmlPackage.MESSAGE__PARAMETERS;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+				//Derived properties
 
     /**
      *

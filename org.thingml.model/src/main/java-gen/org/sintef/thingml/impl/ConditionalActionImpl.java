@@ -21,6 +21,9 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.sintef.thingml.Action;
+import org.sintef.thingml.ConditionalAction;
+import org.sintef.thingml.ThingmlPackage;
 import org.sintef.thingml.*;
 
 import java.util.ArrayList;
@@ -32,10 +35,10 @@ import java.util.List;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ConditionalActionImpl#getElseAction <em>Else Action</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

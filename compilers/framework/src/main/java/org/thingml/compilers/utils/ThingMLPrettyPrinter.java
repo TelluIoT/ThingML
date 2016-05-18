@@ -16,7 +16,6 @@
 package org.thingml.compilers.utils;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 
@@ -166,6 +165,20 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     }
 
     @Override
+    public void generate(LowerOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" <= ");
+        generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
+    public void generate(GreaterOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" >= ");
+        generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" == ");
@@ -220,17 +233,17 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         builder.append(")");
     }
 
-   @Override
+    @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-       ThingMLElement thingMLElement = (ThingMLElement) expression.getReference();
-       if(expression.getParameter() instanceof ParamReference) {
-           ParamReference paramReference = (ParamReference) expression.getParameter();
-           builder.append(thingMLElement.getName() + "." + paramReference.getParameterRef().getName());
-       } else if(expression.getParameter() instanceof ParamReference) {
-           throw new UnsupportedOperationException("Not yet implemented.");
-       } else {
-           throw new UnsupportedException(expression.getParameter().getClass().getName(),"element property","ThingMLPrettyPrinter");
-       }
+        ThingMLElement thingMLElement = (ThingMLElement) expression.getReference();
+        if (expression.getParameter() instanceof ParamReference) {
+            ParamReference paramReference = (ParamReference) expression.getParameter();
+            builder.append(thingMLElement.getName() + "." + paramReference.getParameterRef().getName());
+        } else if (expression.getParameter() instanceof ParamReference) {
+            throw new UnsupportedOperationException("Not yet implemented.");
+        } else {
+            throw new UnsupportedOperationException("Parameter " + expression.getReference().getClass().getName() + " is currently not supported.");
+        }
     }
 
     @Override
@@ -257,7 +270,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
-        builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()) + "\"");
+        builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()).replace("\\n", "\\\\n") + "\"");
     }
 
     @Override
@@ -289,5 +302,17 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
             generate(p, builder, ctx);
         }
         builder.append(")");
+    }
+
+    @Override
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+        generate(action.getVar(), builder, ctx);
+        builder.append("++;\n");
+    }
+
+    @Override
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+        generate(action.getVar(), builder, ctx);
+        builder.append("--;\n");
     }
 }

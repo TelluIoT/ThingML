@@ -22,6 +22,7 @@ package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.Types;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -51,47 +52,72 @@ public class MessagesUsage extends Rule {
     }
 
     @Override
+    public void check(ThingMLModel model, Checker checker) {
+        for (Thing t : model.allThings()) {
+            check(t, checker);
+        }
+    }
+
+    @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.allThings()) {
-            for(Port p : t.allPorts()) {
-                for (Message m : p.getSends()) {
-                    boolean found = false;
-                    for(Action b : t.allAction(SendAction.class)) {
-                        SendAction a = (SendAction)b;
-                        if (EcoreUtil.equals(a.getMessage(), m)) {
-                            found = true;
-                            if (m.getParameters().size() != a.getParameters().size()) {
-                                checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with wrong number of parameters. Expected " + m.getParameters().size() + ", called with " + a.getParameters().size(), a);
-                            } else {
-                                for (Parameter pa : m.getParameters()) {
-                                    Expression e = a.getParameters().get(m.getParameters().indexOf(pa));
-                                    Type expected = pa.getType().getBroadType();
-                                    Type actual = checker.typeChecker.computeTypeOf(e);
-                                    if (actual != null) {
-                                        if (actual.getName().equals("ERROR_TYPE")) {
-                                            checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
-                                        } else if (actual.getName().equals("ANY_TYPE")) {
-                                            checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
-                                        } else if (!actual.isA(expected)) {
-                                            checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
-                                        }
+        for (Thing t : cfg.allThings()) {
+            check(t, checker);
+        }
+    }
+
+    private void check(Thing t, Checker checker) {
+        for (Port p : t.allPorts()) {
+            for (Message m : p.getSends()) {
+                boolean found = false;
+                for (Action b : t.getAllActions(SendAction.class)) {
+                    SendAction a = (SendAction) b;
+                    if (EcoreUtil.equals(a.getMessage(), m)) {
+                        found = true;
+                        if (m.getParameters().size() != a.getParameters().size()) {
+                            checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with wrong number of parameters. Expected " + m.getParameters().size() + ", called with " + a.getParameters().size(), a);
+                        } else {
+                            for (Parameter pa : m.getParameters()) {
+                                Expression e = a.getParameters().get(m.getParameters().indexOf(pa));
+                                Type expected = pa.getType().getBroadType();
+                                Type actual = checker.typeChecker.computeTypeOf(e);
+                                if (actual != null) {
+                                    if (actual.equals(Types.ERROR_TYPE)) {
+                                        checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                    } else if (actual.equals(Types.ANY_TYPE)) {
+                                        checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                    } else if (!actual.isA(expected)) {
+                                        checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
                                     }
                                 }
                             }
                         }
                     }
-                    if (!found)
-                        checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", m);
                 }
-                for (Message m : p.getReceives()) {
-                    for (StateMachine sm : t.allStateMachines()) {
-                        if (sm.allMessageHandlers().get(p) == null || sm.allMessageHandlers().get(p).get(m) == null) {
-                            checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received.", m);
+                if (!found)
+                    checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", m);
+                else {//check if message is serializable
+                    for (Parameter pa : m.getParameters()) {
+                        if ((pa.getType() instanceof ObjectType) && !pa.isDefined("serializable", "true")) {
+                            checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.", pa);
+                            break;
                         }
+                    }
+                }
+            }
+            for (Message m : p.getReceives()) {
+                for (StateMachine sm : t.allStateMachines()) {
+                    if (sm.allMessageHandlers().get(p) == null || sm.allMessageHandlers().get(p).get(m) == null) {
+                        checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received.", m);
+                    }
+                }
+                for (Parameter pa : m.getParameters()) {
+                    if ((pa.getType() instanceof ObjectType) && !pa.isDefined("serializable", "true")) {
+                        checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be received from the network, please use only primitive datatypes.", pa);
+                        break;
                     }
                 }
             }
         }
     }
-    
+
 }

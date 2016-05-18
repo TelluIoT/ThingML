@@ -16,19 +16,106 @@
 package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
+import org.sintef.thingml.constraints.Types;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by bmori on 01.12.2014.
  */
 public class JavaThingActionCompiler extends CommonThingActionCompiler {
+
+    @Override
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+        if (action.getVar().getProperty() instanceof Property) {
+            builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
+            builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality() != null, ctx) + ")");
+            builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+            builder.append(" + 1));\n");
+        } else {
+            super.generate(action, builder, ctx);
+        }
+    }
+
+    @Override
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+        if (action.getVar().getProperty() instanceof Property) {
+            builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
+            builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality() != null, ctx) + ")");
+            builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+            builder.append(" - 1));\n");
+        } else {
+            super.generate(action, builder, ctx);
+        }
+    }
+
+    @Override
+    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
+        Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
+        Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
+        if (leftType.isA(Types.OBJECT_TYPE)) {
+            if (expression.getRhs() instanceof ExternExpression) {
+                final ExternExpression ext = (ExternExpression) expression.getRhs();
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                    super.generate(expression, builder, ctx);
+                    return;
+                }
+            }
+            generate(expression.getLhs(), builder, ctx);
+            builder.append(".equals(");
+            generate(expression.getRhs(), builder, ctx);
+            builder.append(")");
+        } else if (rightType.isA(Types.OBJECT_TYPE)) {
+            if (expression.getLhs() instanceof ExternExpression) {
+                final ExternExpression ext = (ExternExpression) expression.getLhs();
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                    super.generate(expression, builder, ctx);
+                    return;
+                }
+            }
+            generate(expression.getRhs(), builder, ctx);
+            builder.append(".equals(");
+            generate(expression.getLhs(), builder, ctx);
+            builder.append(")");
+        } else {
+            super.generate(expression, builder, ctx);
+        }
+    }
+
+    @Override
+    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
+        Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
+        Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
+        if (leftType.isA(Types.OBJECT_TYPE)) {
+            if (expression.getRhs() instanceof ExternExpression) {
+                final ExternExpression ext = (ExternExpression) expression.getRhs();
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                    super.generate(expression, builder, ctx);
+                    return;
+                }
+            }
+            builder.append("!(");
+            generate(expression.getLhs(), builder, ctx);
+            builder.append(".equals(");
+            generate(expression.getRhs(), builder, ctx);
+            builder.append("))");
+        } else if (rightType.isA(Types.OBJECT_TYPE)) {
+            if (expression.getRhs() instanceof ExternExpression) {
+                final ExternExpression ext = (ExternExpression) expression.getLhs();
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                    super.generate(expression, builder, ctx);
+                    return;
+                }
+            }
+            builder.append("!(");
+            generate(expression.getRhs(), builder, ctx);
+            builder.append(".equals(");
+            generate(expression.getLhs(), builder, ctx);
+            builder.append("))");
+        } else {
+            super.generate(expression, builder, ctx);
+        }
+    }
 
     @Override
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
@@ -67,20 +154,37 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
-    public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
-        builder.append("send" + ctx.firstToUpper(streamOutput.getMessage().getName()) + "_via_" + streamOutput.getPort().getName() + "(");
-        int i = 0;
-        for (StreamExpression p : streamOutput.getParameters()) {
-            if (i > 0)
-                builder.append(", ");
-            if (i < streamOutput.getMessage().getParameters().size()) {
-                Parameter fp = streamOutput.getMessage().getParameters().get(i);
-                cast(fp.getType(), fp.isIsArray(), p.getExpression(), builder, ctx);
-            }
-            i++;
+    public void generate(StartSession action, StringBuilder builder, Context ctx) {
+        builder.append("Component " + action.getSession().getName() + " = new " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + "(\"" + action.getSession().getName() + "\"");
+        for (Property p : action.getSession().findContainingThing().allPropertiesInDepth()) {
+            builder.append(", ");
+            builder.append(ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this." + ctx.getVariableName(p));
         }
+        builder.append(").buildBehavior(\"" + action.getSession().getName() + "\", " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this);\n");
+        builder.append(ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId + 1;\n");
+        builder.append(action.getSession().getName() + ".forkId = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId;\n");
+        builder.append(action.getSession().getName() + ".root = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this;\n");
+        builder.append(action.getSession().getName() + ".init();\n");
+        builder.append(action.getSession().getName() + ".root.forks.add(" + action.getSession().getName() + ");\n");
+        builder.append(action.getSession().getName() + ".start();\n");
+    }
 
-        builder.append(");\n");
+    @Override
+    public void generate(StartStream action, StringBuilder builder, Context ctx) {
+        //if(action.getStream().getInput() instanceof SimpleSource) {
+        builder.append("start" + action.getStream().getInput().qname("_") + "();\n");
+        /*} else if (action.getStream().getInput() instanceof SourceComposition) {
+            builder.append("start" + action.getStream().qname("_") + "();\n");
+        }*/
+    }
+
+    @Override
+    public void generate(StopStream action, StringBuilder builder, Context ctx) {
+        //if(action.getStream().getInput() instanceof SimpleSource) {
+        builder.append("stop" + action.getStream().getInput().qname("_") + "();\n");
+        /*} else if (action.getStream().getInput() instanceof SourceComposition) {
+            builder.append("stop" + action.getStream().qname("_") + "();\n");
+        }*/
     }
 
     @Override
@@ -168,65 +272,38 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
-    protected void generateReference(Message message,String messageName,Reference expression, StringBuilder builder, Context ctx) {
+    protected void generateReference(Message message, String messageName, Reference expression, StringBuilder builder, Context ctx) {
         String paramResult = "";
         if (expression.getParameter() instanceof ParamReference) {
-            if(expression.getParameter() instanceof SimpleParamRef)
+            if (expression.getParameter() instanceof SimpleParamRef)
                 paramResult = ".";
             ParamReference paramReference = (ParamReference) expression.getParameter(); //this method is called only when the reference parameter is a ParamReference
             builder.append(ctx.protectKeyword(messageName) + paramResult + ctx.protectKeyword(paramReference.getParameterRef().getName()));
         } else {//else : ArrayParamRef
             builder.append(ctx.protectKeyword(messageName) + ".size()");
         }
-
     }
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
-            builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
-        else
-            builder.append(ctx.getVariableName(expression.getProperty()));
+        if (!ctx.getAtInitTimeLock()) {
+            if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
+                builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
+            else
+                builder.append(ctx.getVariableName(expression.getProperty()));
+        } else {
+            Property p = (Property) expression.getProperty();
+            if (p.isChangeable()) {
+                System.out.println("Error: non Read-only property (" + p.getName() + ") used in array cardinality definition.");
+            }
+            Expression e = ctx.getCurrentConfiguration().initExpressions(ctx.currentInstance, p).get(0);
+            generate(e, builder, ctx);
+        }
     }
 
     @Override
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
         builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + ((ThingMLElement) expression.getLiteral().eContainer()).getName().toUpperCase() + "_" + expression.getLiteral().getName().toUpperCase());
-    }
-
-    @Override
-    public void generate(StreamParamReference expression, StringBuilder builder, Context ctx) {
-        Stream stream = ThingMLHelpers.findContainingStream(expression);
-        Source source = stream.getInput();
-        Message message;
-        if (source instanceof SimpleSource) {
-            message = ((SimpleSource) source).getMessage().getMessage();
-            builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());
-        } else if (source instanceof JoinSources) {
-            message = ((JoinSources) source).getResultMessage();
-            builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());
-        } else if (source instanceof MergeSources) {
-            boolean ok = false;
-            //if the expression is in the rule
-            Expression rootExp = ThingMLHelpers.findRootExpressions(expression);
-            for (Expression exp : ((MergeSources) source).getRules()) {
-                if (rootExp == exp) {
-                    builder.append("param" + expression.getIndexParam());
-                    ok = true;
-                    break;
-                }
-            }
-
-            //if the expression is in the "select" part
-            if (!ok) {
-                message = ((MergeSources) source).getResultMessage();
-                builder.append(message.getName() + "." + message.getParameters().get(expression.getIndexParam()).getName());
-            }
-
-        } else {
-            throw new UnsupportedOperationException("An input source has been added (" + source.getClass().getName() + ") to ThingML but the compiler did not updates." +
-                    "Please update JavaThingActionCompiler.generate for StreamParamReference expression .");
-        }
     }
 
     @Override
@@ -255,10 +332,17 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     public void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
 
         if (!(type instanceof Enumeration)) {
-            if (!isArray)
-                builder.append("(" + type.annotation("java_type").toArray()[0] + ") ");
-            else
-                builder.append("(" + type.annotation("java_type").toArray()[0] + "[]) ");
+            if (type.hasAnnotation("java_type")) {
+                if (!isArray)
+                    builder.append("(" + type.annotation("java_type").toArray()[0] + ") ");
+                else
+                    builder.append("(" + type.annotation("java_type").toArray()[0] + "[]) ");
+            } else {
+                if (!isArray)
+                    builder.append("(Object) ");
+                else
+                    builder.append("(Object[]) ");
+            }
         }
         builder.append("(");
         generate(exp, builder, ctx);

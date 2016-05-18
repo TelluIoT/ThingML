@@ -17,9 +17,7 @@ package org.sintef.thingml.resource.thingml.analysis;
 
 import java.util.ArrayList;
 
-import org.sintef.thingml.Configuration;
 import org.sintef.thingml.EnumerationLiteral;
-import org.sintef.thingml.Instance;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
 public class EnumLiteralRefLiteralReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.EnumLiteralRef, org.sintef.thingml.EnumerationLiteral> {

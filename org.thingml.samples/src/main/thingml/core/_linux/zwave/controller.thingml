@@ -23,7 +23,7 @@ thing fragment ControllerMsg {
   	message controllerReady(status : Boolean);
 }
 
-datatype TinyController
+object TinyController
 @c_type "TinyController*";
 
 

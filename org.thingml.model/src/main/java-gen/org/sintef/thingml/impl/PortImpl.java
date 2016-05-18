@@ -41,12 +41,12 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.PortImpl#getOwner <em>Owner</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.PortImpl#getReceives <em>Receives</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.PortImpl#getSends <em>Sends</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

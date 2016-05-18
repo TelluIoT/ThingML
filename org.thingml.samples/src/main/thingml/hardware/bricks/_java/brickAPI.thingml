@@ -1,6 +1,6 @@
 import "../../../thingml.thingml"
 
-datatype Device
+object Device
 @java_type "org.thingml.devices.DeviceJ";
 
 //Wrapped for the electronic bricks (for actuators)

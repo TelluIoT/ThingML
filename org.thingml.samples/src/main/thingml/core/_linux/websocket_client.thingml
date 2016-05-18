@@ -14,7 +14,7 @@
 import "../websocket.thingml"
 import "timer.thingml"
 
-datatype WebSocketClient
+object WebSocketClient
 @c_type "WebSocketClient*";
 
 thing WebSClient includes WebSocketClient

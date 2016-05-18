@@ -1,7 +1,7 @@
 
 // Definition of some primitive types used throuout the application
-datatype Integer	
-	@c_type "int"
+datatype Integer<2>	
+	@c_type "int16_t"
 	@java_type "short";
 	
 

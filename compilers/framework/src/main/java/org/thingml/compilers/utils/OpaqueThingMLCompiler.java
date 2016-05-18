@@ -16,12 +16,12 @@
 package org.thingml.compilers.utils;
 
 import org.sintef.thingml.Configuration;
-import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import java.io.OutputStream;
@@ -32,6 +32,8 @@ import java.io.PrintStream;
  */
 public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
+    PrintStream m, e;
+
     public OpaqueThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
         final OutputStream stream = getMessageStream();
@@ -40,8 +42,6 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
             e = new PrintStream(stream);
         }
     }
-
-    PrintStream m, e;
 
     protected void println(String msg) {
         if (m != null)

@@ -19,20 +19,53 @@
 <feature
       id="org.thingml.eclipse.feature"
       label="ThingML"
-      version="0.6.0.qualifier"
+      version="0.7.0.qualifier"
       provider-name="SINTEF-9012">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="http://thingml.org">
+      ThingML is a modelling language for embedded and distributed systems
+(Internet of Things). It is developed by the Networked Systems
+and Services department of SINTEF in Oslo, Norway. It is distributed
+under the LGPL licence.
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright url="http://www.gnu.org/licenses/lgpl-3.0.txt">
+      Copyright (C) 2016 SINTEF &lt;franck.fleurey@sintef.no&gt;
+Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version
+3, 29 June 2007;
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.gnu.org/licenses/lgpl-3.0.txt
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+or implied.
+See the License for the specific language governing permissions
+and
+limitations under the License.
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="http://www.gnu.org/licenses/lgpl-3.0.txt">
+      Copyright (C) 2016 SINTEF &lt;franck.fleurey@sintef.no&gt;
+Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version
+3, 29 June 2007;
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+http://www.gnu.org/licenses/lgpl-3.0.txt
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+or implied.
+See the License for the specific language governing permissions
+and
+limitations under the License.
    </license>
+
+   <url>
+      <update label="ThingML" url="http://thingml.org/dist/update/"/>
+      <discovery label="ThingML" url="http://thingml.org"/>
+      <discovery label="GitHub" url="https://github.com/SINTEF-9012/ThingML"/>
+   </url>
 
    <plugin
          id="org.sintef.thingml.model"

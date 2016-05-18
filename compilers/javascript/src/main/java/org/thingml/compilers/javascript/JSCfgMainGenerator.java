@@ -18,13 +18,12 @@ package org.thingml.compilers.javascript;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -52,102 +51,110 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             return "null";
     }
 
+    public static void generateInstance(Instance i, Configuration cfg, StringBuilder builder, Context ctx, boolean useThis, boolean debug) {
+        for (Property a : cfg.allArrays(i)) {
+            builder.append("var " + i.getName() + "_" + a.getName() + "_array = [];\n");
+        }
+
+        for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : cfg.initExpressionsForInstanceArrays(i).entrySet()) {
+            for (AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
+                String result = "";
+                StringBuilder tempBuilder = new StringBuilder();
+                result += i.getName() + "_" + entry.getKey().getName() + "_array [";
+                ctx.getCompiler().getThingActionCompiler().generate(e.getKey(), tempBuilder, ctx);
+                result += tempBuilder.toString();
+                result += "] = ";
+                tempBuilder = new StringBuilder();
+                ctx.getCompiler().getThingActionCompiler().generate(e.getValue(), tempBuilder, ctx);
+                result += tempBuilder.toString() + ";\n";
+                builder.append(result);
+            }
+        }
+
+        if (useThis) {
+            builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
+        } else {
+            builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
+        }
+
+        for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
+            for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
+                if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true") && prop.eContainer() instanceof Thing) {
+                    //System.out.println("Property " + prop);
+                    String result = "";
+                    if (prop.getType() instanceof Enumeration) {
+                        Enumeration enum_ = (Enumeration) prop.getType();
+                        EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
+                        StringBuilder tempbuilder = new StringBuilder();
+                        if (enumL == null) {
+                            tempbuilder.append("Enum." + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getLiterals().get(0).getName().toUpperCase());
+                        } else {
+                            tempbuilder.append("Enum" + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enumL.getLiteral().getName().toUpperCase());
+                        }
+                        result += tempbuilder.toString();
+                    } else {
+                        if (p.getValue() != null) {
+                            StringBuilder tempbuilder = new StringBuilder();
+                            ctx.currentInstance = i;
+                            //ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
+                            ctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
+                            ctx.currentInstance = null;
+
+                            result += tempbuilder.toString();
+                        } else {
+                            result += getDefaultValue(p.getKey().getType());
+                        }
+                    }
+                    builder.append(", ");
+                    builder.append(result);
+                }
+            }
+            for (Property a : cfg.allArrays(i)) {
+                if (prop.equals(a) && !(prop.isDefined("private", "true")) && prop.eContainer() instanceof Thing) {
+                    //System.out.println("Array " + prop);
+                    builder.append(", ");
+                    builder.append(i.getName() + "_" + a.getName() + "_array");
+                }
+            }
+        }
+        //if (debug || i.isDefined("debug", "true")) {
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
+        boolean debugInst = false;
+        for (Instance inst : debugProfile.getDebugInstances()) {
+            if (i.getName().equals(inst.getName())) {
+                debugInst = true;
+                break;
+            }
+        }
+        if (debugInst) {
+            builder.append(", true");
+        } else {
+            builder.append(", false");
+        }
+        builder.append(");\n");
+        builder.append(reference(i.getName(), useThis) + ".setThis(" + reference(i.getName(), useThis) + ");\n");
+        if (useThis) {
+            builder.append("this." + i.getName() + ".build();\n");
+            //if (debug || i.isDefined("debug", "true")) {
+            if (debug || debugProfile.getDebugInstances().contains(i)) {
+                //builder.append("console.log(colors.cyan(\"INIT: \" + this." + i.getName() + "));\n");
+                builder.append("this." + i.getName() + "." + i.getType().getName() + "_print_debug(this." + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
+            }
+        } else {
+            builder.append(i.getName() + ".build();\n");
+            //if (debug || i.isDefined("debug", "true")) {
+            if (debug || debugProfile.getDebugInstances().contains(i)) {
+                //builder.append("console.log(colors.cyan(\"INIT: \" + " + i.getName() + "));\n");
+                builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
+            }
+        }
+    }
+
     public static void generateInstances(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
         final boolean debug = cfg.isDefined("debug", "true");
 
         for (Instance i : cfg.allInstances()) {
-            for (Property a : cfg.allArrays(i)) {
-                builder.append("var " + i.getName() + "_" + a.getName() + "_array = [];\n");
-            }
-
-            for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : cfg.initExpressionsForInstanceArrays(i).entrySet()) {
-                for (AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
-                    String result = "";
-                    StringBuilder tempBuilder = new StringBuilder();
-                    result += i.getName() + "_" + entry.getKey().getName() + "_array [";
-                    ctx.getCompiler().getThingActionCompiler().generate(e.getKey(), tempBuilder, ctx);
-                    result += tempBuilder.toString();
-                    result += "] = ";
-                    tempBuilder = new StringBuilder();
-                    ctx.getCompiler().getThingActionCompiler().generate(e.getValue(), tempBuilder, ctx);
-                    result += tempBuilder.toString() + ";\n";
-                    builder.append(result);
-                }
-            }
-
-            if (useThis) {
-                builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\"");
-            } else {
-                builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i .getName() + "\"");
-            }
-
-            for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
-                for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
-                    if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true") && prop.eContainer() instanceof Thing) {
-                        //System.out.println("Property " + prop);
-                        String result = "";
-                        if (prop.getType() instanceof Enumeration) {
-                            Enumeration enum_ = (Enumeration) prop.getType();
-                            EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
-                            StringBuilder tempbuilder = new StringBuilder();
-                            if (enumL == null) {
-                                tempbuilder.append("Enum." + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getLiterals().get(0).getName().toUpperCase());
-                            } else {
-                                tempbuilder.append("Enum" + ctx.firstToUpper(enum_.getName()) + "_ENUM." + enumL.getLiteral().getName().toUpperCase());
-                            }
-                            result += tempbuilder.toString();
-                        } else {
-                            if (p.getValue() != null) {
-                                StringBuilder tempbuilder = new StringBuilder();
-                                ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
-                                result += tempbuilder.toString();
-                            } else {
-                                result += getDefaultValue(p.getKey().getType());
-                            }
-                        }
-                        builder.append(", ");
-                        builder.append(result);
-                    }
-                }
-                for (Property a : cfg.allArrays(i)) {
-                    if (prop.equals(a) && !(prop.isDefined("private", "true")) && prop.eContainer() instanceof Thing) {
-                        //System.out.println("Array " + prop);
-                        builder.append(", ");
-                        builder.append(i.getName() + "_" + a.getName() + "_array");
-                    }
-                }
-            }
-            //if (debug || i.isDefined("debug", "true")) {
-            DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
-            boolean debugInst = false;
-            for(Instance inst : debugProfile.getDebugInstances()) {
-                if(i.getName().equals(inst.getName())) {
-                    debugInst = true;
-                    break;
-                }
-            }
-            if (debugInst) {
-                builder.append(", true");
-            } else {
-                builder.append(", false");
-            }
-            builder.append(");\n");
-            builder.append(reference(i.getName(), useThis) + ".setThis(" + reference(i.getName(), useThis) + ");\n");
-            if (useThis) {
-                builder.append("this." + i.getName() + ".build();\n");
-                //if (debug || i.isDefined("debug", "true")) {
-                if (debug || debugProfile.getDebugInstances().contains(i)) {
-                    //builder.append("console.log(colors.cyan(\"INIT: \" + this." + i.getName() + "));\n");
-                    builder.append("this." + i.getName() + "." + i.getType().getName() + "_print_debug(this." + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
-                }
-            } else {
-                builder.append(i.getName() + ".build();\n");
-                //if (debug || i.isDefined("debug", "true")) {
-                if (debug || debugProfile.getDebugInstances().contains(i)) {
-                    //builder.append("console.log(colors.cyan(\"INIT: \" + " + i.getName() + "));\n");
-                    builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
-                }
-            }
+            generateInstance(i, cfg, builder, ctx, useThis, debug);
         }
 
         String prefix = "";
@@ -156,12 +163,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("//Connecting internal ports...\n");
-        for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+        for (Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
             Instance i = entries.getKey();
-            for(InternalPort p : entries.getValue()) {
-                for(Message rec : p.getReceives())  {
-                    for(Message send : p.getSends()) {
-                        if(EcoreUtil.equals(rec, send)) {
+            for (InternalPort p : entries.getValue()) {
+                for (Message rec : p.getReceives()) {
+                    for (Message send : p.getSends()) {
+                        if (EcoreUtil.equals(rec, send)) {
                             builder.append(prefix + i.getName() + ".get" + ctx.firstToUpper(send.getName()) + "on" + p.getName() + "Listeners().push(");
                             builder.append(prefix + i.getName() + ".receive" + rec.getName() + "On" + p.getName() + ".bind(" + prefix + i.getName() + ")");
                             builder.append(");\n");
@@ -209,10 +216,10 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         final StringBuilder builder = ctx.getBuilder("main.js");
 
         boolean debug = false;
-        if (cfg.isDefined("debug", "true"));
-            debug = true;
+        if (cfg.isDefined("debug", "true")) ;
+        debug = true;
         if (!debug) {
-            for(Instance i : cfg.allInstances()) {
+            for (Instance i : cfg.allInstances()) {
                 if (i.isDefined("debug", "true")) {
                     debug = true;
                     break;
@@ -239,8 +246,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
         List<Instance> instances = cfg.orderInstanceInit();
         Instance inst;
-        while(!instances.isEmpty()) {
-            inst = instances.get(instances.size()-1);
+        while (!instances.isEmpty()) {
+            inst = instances.get(instances.size() - 1);
             instances.remove(inst);
             builder.append(inst.getName() + "._init();\n");
         }
@@ -249,7 +256,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         builder.append("process.on('SIGINT', function() {\n");
         builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
         instances = cfg.orderInstanceInit();
-        while(!instances.isEmpty()) {
+        while (!instances.isEmpty()) {
             inst = instances.get(0);
             instances.remove(inst);
             builder.append(inst.getName() + "._stop();\n");

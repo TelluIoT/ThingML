@@ -20,9 +20,9 @@
  */
 package org.thingml.compilers.c.checkerRules;
 
-import java.util.LinkedList;
-import java.util.List;
-import org.sintef.thingml.*;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Property;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -51,15 +51,15 @@ public class ArrayCardinality extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.allThings()) {
-            for(Property p : t.allPropertiesInDepth()) {
-                if(p.isIsArray()) {
-                    if(p.getCardinality() == null) {
+        for (Thing t : cfg.allThings()) {
+            for (Property p : t.allPropertiesInDepth()) {
+                if (p.isIsArray()) {
+                    if (p.getCardinality() == null) {
                         checker.addError("C", "Array declared without cardinality is not allowed with C compiler.", p);
                     }
                 }
             }
         }
     }
-    
+
 }

@@ -24,7 +24,7 @@ OPTIONS {
 	//generateUIPlugin = "false";
 	//removeEclipseDependentCode = "true";
 	
-	// 2. FOR ECLIPSE Comment the lines bellow
+	// 2. FOR ECLIPSE Comment the lines below
 	srcGenFolder = "src/main/java-gen";
 	
 	
@@ -40,10 +40,9 @@ TOKENS{
 		DEFINE BOOLEAN_LITERAL $'true'|'false'$;
 		
 		DEFINE INTEGER_LITERAL $('1'..'9') ('0'..'9')* | '0'$;
-		//DEFINE REAL_LITERAL $ (('1'..'9') ('0'..'9')* | '0') '.' ('0'..'9')+ (('e'|'E') ('+'|'-')? ('0'..'9')*)?$;
+		DEFINE REAL_LITERAL $ (('1'..'9') ('0'..'9')* | '0') '.' ('0'..'9')+ (('e'|'E') ('+'|'-')? ('0'..'9')*)?$;
 		DEFINE STRING_LITERAL $'"'('\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')|('\\''u'('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F'))|'\\'('0'..'7')|~('\\'|'"'))*'"'$;
-
-		DEFINE STRING_EXT $'\''('\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')|('\\''u'('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F'))|'\\'('0'..'7')|~('\\'|'\''))*'\''$;
+	    DEFINE STRING_EXT $'\''('\\'('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')|('\\''u'('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F')('0'..'9'|'a'..'f'|'A'..'F'))|'\\'('0'..'7')|~('\\'|'\''))*'\''$;
 		
 		DEFINE T_READONLY $'readonly'$;
 		
@@ -51,6 +50,7 @@ TOKENS{
 		
 		DEFINE T_ASPECT $'fragment'$;
 		DEFINE T_HISTORY $'history'$;
+		DEFINE T_DYNAMIC $'dynamic'$;
 		
 		DEFINE WHITESPACE $(' '|'\t'|'\f')$;
 		DEFINE LINEBREAKS $('\r\n'|'\r'|'\n')$;
@@ -81,15 +81,17 @@ TOKENSTYLES{
 	"&" COLOR #0055bb, BOLD;
 	
 	// Literals
-	"STRING_LITERAL" COLOR #0055bb;
+	"STRING_LITERAL" COLOR #548A42;
 	"INTEGER_LITERAL" COLOR #0055bb;
-	"BOOLEAN_LITERAL" COLOR #0055bb, BOLD;
+	"REAL_LITERAL" COLOR #0055bb;	
+	"BOOLEAN_LITERAL" COLOR #6A2980, BOLD;
 	
 	// Definition of types and messages
 	"T_READONLY" COLOR #CC8000, BOLD;
 	"thing" COLOR #CC8000, BOLD;
 	"includes" COLOR #CC8000, BOLD;
 	"datatype" COLOR #CC8000, BOLD;
+	"object" COLOR #CC8000, BOLD, ITALIC;	
 	"enumeration" COLOR #CC8000, BOLD;
 	"sends" COLOR #CC8000, BOLD;
 	"receives" COLOR #CC8000, BOLD;
@@ -108,12 +110,11 @@ TOKENSTYLES{
 	"event" COLOR #A22000, BOLD;	
 	"guard" COLOR #A22000, BOLD;
 	"action" COLOR #A22000, BOLD;
-	"before" COLOR #A22000, BOLD;
-	"after" COLOR #A22000, BOLD;
 	"on" COLOR #A22000, BOLD;
 	"entry" COLOR #A22000, BOLD;
 	"exit" COLOR #A22000, BOLD;
 	"region" COLOR #A22000, BOLD;
+	"session" COLOR #097A41, BOLD;
 	"internal" COLOR #A22000, BOLD;
 	"transition" COLOR #A22000, BOLD;
 	"init" COLOR #A22000, BOLD;
@@ -122,9 +123,16 @@ TOKENSTYLES{
 	"->" COLOR #A22000, BOLD;
 	
 	//CEP
-	"stream" COLOR #A22000, BOLD;
-	"from" COLOR #A22000, BOLD;
-	"select" COLOR #A22000, BOLD;
+	"stream" COLOR #CF4729, BOLD;	
+	"from" COLOR #CF4729, BOLD;
+	"select" COLOR #CF4729, BOLD;
+	"produce" COLOR #CF4729, BOLD;
+	"keep if" COLOR #CF4729, BOLD;
+	"during" COLOR #CF4729, BOLD;
+	"buffer" COLOR #CF4729, BOLD;	
+	"by" COLOR #CF4729, BOLD;
+	"T_DYNAMIC" COLOR #CF4729, BOLD;
+	
 	
 	// Action language
 	"var" COLOR #444444, BOLD;
@@ -136,23 +144,23 @@ TOKENSTYLES{
 	"while" COLOR #444444, BOLD;
 	"print" COLOR #444444, BOLD;
 	"error" COLOR #444444, BOLD;
-	"not" COLOR #444444, BOLD;
-	"and" COLOR #444444, BOLD;
-	"or" COLOR #444444, BOLD;
-	"operator" COLOR #444444, BOLD;
-	"filter" COLOR #A22000, BOLD;
+	"not" COLOR #6A2980, BOLD;
+	"and" COLOR #6A2980, BOLD;
+	"or" COLOR #6A2980, BOLD;
+	"fork" COLOR #097A41, BOLD;
+	
+	//Protocols
+	"protocol" COLOR #65BA9E, BOLD;
 	
 	// Configurations and Instances
 	"configuration" COLOR #007F55, BOLD;
 	"instance" COLOR #007F55, BOLD;	
-	"connector" COLOR #007F55, BOLD;
-	"group" COLOR #007F55, BOLD;	
+	"connector" COLOR #007F55, BOLD;	
 	"=>" COLOR #007F55, BOLD;
 	"over" COLOR #006E54, BOLD;
 
 	// Special keywords
 	"T_ASPECT" COLOR #444444, BOLD;
-	"includes" COLOR #444444, BOLD;
 	"import" COLOR #444444, BOLD;
 	"set" COLOR #444444, BOLD;
 	
@@ -173,13 +181,13 @@ TOKENSTYLES{
 
 RULES {
 	
-	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (types | configs) )* ;
+	ThingMLModel::= ( !0 "import" #1 imports[STRING_LITERAL] )* ( !0 (types | configs | protocols) )* ;
 		
-	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ";"  ;
+	Message ::= "message" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* (";")?  ;
 	
 	Function ::= "function" #1 name[]  "(" (parameters ("," #1  parameters)* )? ")"(annotations)* ( #1 ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? )? #1 body ;
 	
-	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams | operators)* !0 "}" ;
+	Thing::= "thing" (#1 fragment[T_ASPECT])? #1 name[] (#1 "includes" #1 includes[] (","  #1 includes[])* )? (annotations)*  !0 "{" (  messages | functions | properties | assign | ports | behaviour | streams)* !0 "}" ;
 	
 	RequiredPort ::= !1 (optional[T_OPTIONAL])? "required" #1 "port" #1 name[] (annotations)* !0 "{" ( "receives" #1 receives[] (","  #1 receives[])* | "sends" #1 sends[] (","  #1 sends[])* )* !0 "}" ;
 
@@ -193,7 +201,11 @@ RULES {
 		
 	Parameter::= name[]  ":"  type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))?;
 	
-	PrimitiveType::= "datatype" #1 name[] (annotations)* ";" ;
+	PrimitiveType::= "datatype" #1 name[]  #1 "<"  #1 ByteSize[INTEGER_LITERAL]  #1 ">" (annotations)* (";")? ;
+	
+	ObjectType::= "object" #1 name[] (annotations)* (";")? ;
+	
+	Protocol::= "protocol" #1 name[] (annotations)* (";")? ;
 	
 	Enumeration::= "enumeration" #1 name[] (annotations)* !0 "{" (literals)* "}" ;
 	
@@ -205,11 +217,15 @@ RULES {
 	
 	State::= "state" #1 name[] (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" entry )? ( !1 "on" "exit" exit )? ( outgoing | internal )* !0 "}"  ;
 	
+	FinalState::= "final state" #1 name[] (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" entry )? !0 "}"  ;
+	
 	CompositeState::= "composite" #1 "state" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" #1 entry )? ( !1 "on" #1 "exit" #1 exit )? ( outgoing | internal | (!1 substate))* (!1 region)* !0 "}"  ;
 	
 	ParallelRegion ::= "region" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{"(!1 substate)* !0 "}"  ;
+		
+	Session::= "session" #1 name[] #1 "init" #1 initial[] (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" #1 entry )? (internal | (!1 substate))* (!1 region)* !0 "}"  ;
 	
-	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? (!1 "before" #1 before)? (!1 "after" #1 after)? ;
+	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? ;
 
 	InternalTransition ::= !1 "internal" (#1 name[])? (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)?  ;
 
@@ -217,16 +233,17 @@ RULES {
 	
 	PropertyAssign ::= "set" #1 property[] ("[" index "]")* #1 "=" #1 init ; 
 	
+	Increment ::= var #1 "++" ;
+	
+	Decrement ::= var #1 "--" ;
 
 	// *******************************
 	// * Configurations and Instances
 	// *******************************
 	
-	Configuration ::= "configuration" (#1 fragment[T_ASPECT])? #1 name[] (annotations)*  !0 "{" (  instances | connectors | configs | propassigns )* !0 "}" ;
+	Configuration ::= "configuration" #1 name[] (annotations)*  !0 "{" (  instances | connectors | propassigns )* !0 "}" ;
 	
-	ConfigInclude ::= "group" #1 name[] #1 ":" #1 config[] (annotations)* !0 ;
-	
-	Instance ::= "instance" #1 (name[] #1)? ":" #1 type[] (annotations)*  ; // !0 (  assign )* !0
+	Instance ::= "instance" #1 name[] #1 ":" #1 type[] (annotations)*  ; 
 	
 	Connector ::= "connector" #1 (name[] #1)? cli "." required[] "=>" srv "." provided[] (!0 annotations)*;
 	
@@ -234,7 +251,7 @@ RULES {
 	
 	ConfigPropertyAssign ::= "set" instance "." property[] ("[" index "]")* #1 "=" #1 init;
 	
-	InstanceRef ::= (config[] ".")* instance[];
+	InstanceRef ::= instance[];
 
 	// *********************
 	// * Actions
@@ -242,6 +259,12 @@ RULES {
 	
 	SendAction::= port[] "!" message[] "(" (parameters ("," #1 parameters)* )? ")";
 	
+	StartSession ::= "fork" #1 session[] (constructor)*;
+	
+	StartStream ::= "start" #1 stream[] ;
+	
+	StopStream ::= "stop" #1 stream[] ;
+		
 	VariableAssignment ::= property[] #1 ("[" index "]")* "=" #1 expression ; 
 	
 	ActionBlock::= "do" ( !1 actions  )* !0 "end"  ;
@@ -265,29 +288,22 @@ RULES {
 	// *******************************
 	// * CEP
 	// *******************************
-	SglMsgParamOperator ::= "operator" #1 name[] "(" parameter ")" ":" #1 type[] ( (isArray[T_ARRAY] cardinality "]") | (isArray["[]" : ""] ))? #1 body;
 	MessageParameter ::= name[] ":" msgRef[];
-
-	SglMsgParamOperatorCall ::= operatorRef[] "(" parameter[] ")";
 	
-	StreamExpression ::= name[] ":" expression;
-	StreamOutput ::= port[] "!" message[] "(" (parameters[] ("," #1 parameters[])*)? ")";
-	
-	Filter ::= "filter" "(" filterOp ")";
-	LengthWindow ::= "lengthWindow" "(" nbEvents[INTEGER_LITERAL] ("," step[INTEGER_LITERAL])? ")";
-	TimeWindow ::= "timeWindow" "(" step[INTEGER_LITERAL] "," size[INTEGER_LITERAL] ")";
+	Filter ::= "keep if" #1 guard ;
+	LengthWindow ::= "buffer" #1 size (#1 "by" #1 step)? ;
+	TimeWindow ::= "during" #1 duration (#1 "by" #1 step)? ;
 		
-	SimpleSource ::= ( (name[] ":" "[" message "]") | message) ("::" operators)*;	
-	JoinSources ::= (name[] ":" )? "[" #1 sources #1 "&" #1 sources #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)* ;
-	MergeSources ::= (name[] ":" )? "[" #1 sources #1 ("|" #1 sources #1)+ "->" resultMessage[] "(" (rules ("," rules)*)? ")" "]" ("::" operators)*;
+	SimpleSource ::= name[] ":" message ("::" operators)*;	
+	JoinSources  ::= name[] ":" #1 "[" #1 sources #1 ("&" #1 sources #1)+ #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" #1 "]" ("::" operators)* ;
+	MergeSources ::= name[] ":" #1 "[" #1 sources #1 ("|" #1 sources #1)+ #1 "->" resultMessage[] #1 "]" ("::" operators)* ;
 	
-	Stream ::= "stream" #1 name[] #1 (annotations)* "do"
+	Stream ::= (dynamic[T_DYNAMIC] #1)? "stream" #1 name[] #1 (annotations)*
 					 !1 "from" #1 input
-					 (!1 "select" #1 ( selection ("," #1 selection)* )?)?
-					 !1 "action" #1 output
-					 "end";
+					 (!1 "select" #1 ( selection ((",")? #1 selection)* )?)?
+					 !1 "produce" #1 output ;
 	
-	SimpleParamRef ::= parameterRef[];
+	SimpleParamRef ::= parameterRef[];	
 	ArrayParamRef ::= parameterRef[] "[]";		
 	LengthArray ::= "length";	 
 	
@@ -300,8 +316,7 @@ RULES {
 	
 	@Operator(type="binary_left_associative", weight="2", superclass="Expression")
 	AndExpression ::= lhs #1 "and" #1 rhs;
-	
-	
+		
 	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
 	LowerExpression ::= lhs #1 "<" #1  rhs;
 	
@@ -309,7 +324,16 @@ RULES {
 	GreaterExpression ::= lhs #1 ">" #1  rhs;
 	
 	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
+	LowerOrEqualExpression ::= lhs #1 "<=" #1  rhs;
+	
+	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
+	GreaterOrEqualExpression ::= lhs #1 ">=" #1  rhs;
+	
+	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
 	EqualsExpression ::= lhs #1 "==" #1  rhs;
+	
+	@Operator(type="binary_left_associative", weight="3", superclass="Expression")
+	NotEqualsExpression ::= lhs #1 "!=" #1  rhs;
 	
 	@Operator(type="binary_left_associative", weight="4", superclass="Expression")
 	PlusExpression ::= lhs #1 "+" #1  rhs;
@@ -332,10 +356,6 @@ RULES {
 	@Operator(type="unary_prefix", weight="7", superclass="Expression")	
 	NotExpression ::= "not" #1 term;
 	
-	//CEP
-	@Operator(type="primitive", weight="9", superclass="Expression")
-	StreamParamReference ::= "#" indexParam[INTEGER_LITERAL];
-	
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	Reference ::= reference[] "." parameter;	
 	
@@ -348,6 +368,9 @@ RULES {
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	IntegerLiteral ::= intValue[INTEGER_LITERAL];
 	
+	@Operator(type="primitive", weight="9", superclass="Expression")
+	DoubleLiteral ::= doubleValue[REAL_LITERAL];
+		
 	@Operator(type="primitive", weight="9", superclass="Expression")
 	StringLiteral ::= stringValue[STRING_LITERAL];
 	

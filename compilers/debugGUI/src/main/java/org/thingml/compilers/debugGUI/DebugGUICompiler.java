@@ -20,21 +20,14 @@
  */
 package org.thingml.compilers.debugGUI;
 
-import java.io.File;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.thing.ThingActionCompiler;
-import org.thingml.compilers.thing.ThingApiCompiler;
-import org.thingml.compilers.thing.ThingCepCompiler;
-import org.thingml.compilers.thing.ThingCepSourceDeclaration;
-import org.thingml.compilers.thing.ThingCepViewCompiler;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
+import org.thingml.compilers.thing.*;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+
+import java.io.File;
 
 /**
  *
@@ -44,28 +37,29 @@ public class DebugGUICompiler extends OpaqueThingMLCompiler {
 
     public DebugGUICompiler() {
         super(new ThingActionCompiler(), new ThingApiCompiler(), new DebugGUICfgMainGenerator(),
-                new CfgBuildCompiler(), null, 
+                new CfgBuildCompiler(), null,
                 new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
     }
 
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
-        
+
         DebugGUICompilerContext ctx = new DebugGUICompilerContext(this);
         processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
 
-        
+
         DebugGUICfgMainGenerator mainGen = (DebugGUICfgMainGenerator) getMainCompiler();
-        
-        mainGen.generateMockUp(mainGen.findExternalConnector(cfg), cfg, ctx);
+        ExternalConnector eco = mainGen.findExternalConnector(cfg);
+        if (eco != null)
+            mainGen.generateMockUp(eco, cfg, ctx);
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
     }
 
-    
+
     @Override
     public ThingMLCompiler clone() {
         return new DebugGUICompiler();

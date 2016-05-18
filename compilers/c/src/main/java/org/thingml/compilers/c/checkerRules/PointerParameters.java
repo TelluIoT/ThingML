@@ -20,11 +20,12 @@
  */
 package org.thingml.compilers.c.checkerRules;
 
-import java.util.LinkedList;
-import java.util.List;
 import org.sintef.thingml.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -50,18 +51,18 @@ public class PointerParameters extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.allThings()) {
-            for(Port p: t.allPorts()) {
-                if(!p.isDefined("sync_send", "true")) {
+        for (Thing t : cfg.allThings()) {
+            for (Port p : t.allPorts()) {
+                if (!p.isDefined("sync_send", "true")) {
                     List<Message> messages = new LinkedList<Message>();
                     messages.addAll(p.getReceives());
                     messages.addAll(p.getSends());
-                    for(Message m : messages) {
-                        for(Parameter pt : m.getParameters()) {
-                            if(pt.getType().isDefined("c_byte_size", "*")) {
+                    for (Message m : messages) {
+                        for (Parameter pt : m.getParameters()) {
+                            if (pt.getType().isDefined("c_byte_size", "*")) {
                                 checker.addError("C", "Message including pointer parameters sent/received asynchronously.", m);
                             }
-                            if(pt.isIsArray()) {
+                            if (pt.isIsArray()) {
                                 checker.addError("C", "Message including array parameters sent/received asynchronously.", m);
                             }
                         }
@@ -70,5 +71,5 @@ public class PointerParameters extends Rule {
             }
         }
     }
-    
+
 }

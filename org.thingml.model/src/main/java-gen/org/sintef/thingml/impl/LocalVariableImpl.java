@@ -40,11 +40,11 @@ import java.util.Set;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.LocalVariableImpl#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.LocalVariableImpl#isChangeable <em>Changeable</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -404,5 +404,52 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable {
         }
         return result;
     }
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		if (getInit() != null)
+			result.addAll(getInit().getAllExpressions());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if (getInit() != null)
+			result.addAll(getInit().getAllExpressions(clazz));
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions() {
+		List<Action> result = new ArrayList<Action>();
+		result.add(this);
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Action> getAllActions(Class clazz) {
+		List<Action> result = new ArrayList<Action>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		return result;
+	}
 
 } //LocalVariableImpl

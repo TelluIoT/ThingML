@@ -20,13 +20,17 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.sintef.thingml.*;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.State;
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.Tarjan;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -55,22 +59,22 @@ public class AutotransitionCycles extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing thing : cfg.allThings()) {
-            for(StateMachine sm : thing.allStateMachines()) {
+        for (Thing thing : cfg.allThings()) {
+            for (StateMachine sm : thing.allStateMachines()) {
                 Set<State> vertices = new HashSet<State>();
-                for(State s : sm.allContainedStates()) {
+                for (State s : sm.allContainedStates()) {
                     vertices.add(s);
                 }
                 Tarjan<State> t = new Tarjan(cfg, vertices);
                 List<List<State>> cycles = t.findStronglyConnectedComponents();
 
-                for(List<State> cycle : cycles) {
-                    if(cycle != null) {
-                        if(cycle.size() != 1) {
+                for (List<State> cycle : cycles) {
+                    if (cycle != null) {
+                        if (cycle.size() != 1) {
                             String msg = "Auto transition cycle: (";
                             boolean first = true;
-                            for(State j : cycle) {
-                                if(first) {
+                            for (State j : cycle) {
+                                if (first) {
                                     first = false;
                                 } else {
                                     msg += ", ";
@@ -85,5 +89,5 @@ public class AutotransitionCycles extends Rule {
             }
         }
     }
-    
+
 }

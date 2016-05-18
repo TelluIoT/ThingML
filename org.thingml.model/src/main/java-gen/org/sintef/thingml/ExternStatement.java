@@ -24,11 +24,11 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.ExternStatement#getStatement <em>Statement</em>}</li>
  *   <li>{@link org.sintef.thingml.ExternStatement#getSegments <em>Segments</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getExternStatement()
  * @model

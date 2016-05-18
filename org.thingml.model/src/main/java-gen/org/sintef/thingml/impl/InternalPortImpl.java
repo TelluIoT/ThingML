@@ -26,8 +26,6 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Internal Port</b></em>'.
  * <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */

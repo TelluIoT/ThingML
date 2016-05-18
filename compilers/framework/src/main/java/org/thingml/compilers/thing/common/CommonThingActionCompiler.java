@@ -17,7 +17,6 @@ package org.thingml.compilers.thing.common;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
@@ -129,7 +128,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
         TypedElement parent = ThingMLHelpers.findContainingFuncOp(action);
-        cast(parent.getType(),false,action.getExp(),builder,ctx);
+        cast(parent.getType(), false, action.getExp(), builder, ctx);
         builder.append(";\n");
     }
 
@@ -141,6 +140,18 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
         builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
+    }
+
+    @Override
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+        generate(action.getVar(), builder, ctx);
+        builder.append("++;\n");
+    }
+
+    @Override
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+        generate(action.getVar(), builder, ctx);
+        builder.append("--;\n");
     }
 
 
@@ -183,9 +194,30 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     }
 
     @Override
+    public void generate(LowerOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" <= ");
+        generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
+    public void generate(GreaterOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" >= ");
+        generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
         builder.append(" == ");
+        generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
+    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
+        generate(expression.getLhs(), builder, ctx);
+        builder.append(" != ");
         generate(expression.getRhs(), builder, ctx);
     }
 
@@ -237,42 +269,46 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append(")");
     }
 
-   @Override
+    @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-       String messageName = "";
-       Message message = null;
-       if (expression.getReference() instanceof ReceiveMessage) {
-           ReceiveMessage rm = (ReceiveMessage) expression.getReference();
-           message = rm.getMessage();
-           messageName = message.getName();
-       } else if (expression.getReference() instanceof Source) {
-           Source source = (Source) expression.getReference();
-           if (source instanceof SimpleSource) {
-               ReceiveMessage rm = ((SimpleSource) source).getMessage();
-               message = rm.getMessage();
-               messageName = message.getName();
-           } else if (source instanceof SourceComposition){
-               message = ((SourceComposition) source).getResultMessage();
-               messageName = message.getName();
-           } else {
-               throw new UnsupportedException(source.getClass().getName(),"stream input","JavaThingActionCompiler");
-           }
-       } else if (expression.getReference() instanceof MessageParameter) {
-           MessageParameter mp = (MessageParameter) expression.getReference();
-           messageName = mp.getName();
-           message = mp.getMsgRef();
-       } else if(expression.getReference() instanceof Variable) {
-           Variable var = (Variable) expression.getReference();
-           if(var.isIsArray()) {
-               generateReferenceArray(var,builder,ctx);
-               return;
-           } else {
-               throw new UnsupportedOperationException("The variable " + var.getName() + " must be an array.");
-           }
-       }else {
-           throw new UnsupportedException(expression.getReference().getClass().getName(),"reference","CommonThingActionCompiler");
-       }
-       generateReference(message, messageName, expression, builder, ctx);
+        String messageName = "";
+        Message message = null;
+        if (expression.getReference() instanceof ReceiveMessage) {
+            ReceiveMessage rm = (ReceiveMessage) expression.getReference();
+            message = rm.getMessage();
+            messageName = message.getName();
+        } else if (expression.getReference() instanceof Source) {
+            Source source = (Source) expression.getReference();
+            if (source instanceof SimpleSource) {
+                ReceiveMessage rm = ((SimpleSource) source).getMessage();
+                message = rm.getMessage();
+                messageName = source.getName();
+            } else if (source instanceof SourceComposition) {
+                message = ((SourceComposition) source).getResultMessage();
+                messageName = source.getName();
+            } else {
+                throw new UnsupportedOperationException("Source " + source.getClass().getName() + " not supported.");
+            }
+        } else if (expression.getReference() instanceof MessageParameter) {
+            MessageParameter mp = (MessageParameter) expression.getReference();
+            messageName = mp.getName();
+            message = mp.getMsgRef();
+        } else if (expression.getReference() instanceof Variable) {
+            Variable var = (Variable) expression.getReference();
+            if (var.isIsArray()) {
+                generateReferenceArray(var, builder, ctx);
+                return;
+            } else {
+                throw new UnsupportedOperationException("The variable " + var.getName() + " must be an array.");
+            }
+        } else if (expression.getReference() instanceof Message) {
+            Message msg = (Message) expression.getReference();
+            messageName = msg.getName();
+            message = msg;
+        } else {
+            throw new UnsupportedOperationException("Reference " + expression.getReference().getClass().getName() + " not supported.");
+        }
+        generateReference(message, messageName, expression, builder, ctx);
 
     }
 
@@ -280,7 +316,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append(context.getVariableName(variable) + ".length");
     }
 
-    protected void generateReference(Message message,String messageName, Reference reference, StringBuilder builder, Context ctx) {
+    protected void generateReference(Message message, String messageName, Reference reference, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This part of reference compiler (CommonThingActionCompiler) is platform specific and should be redefined."));
     }
 

@@ -15,7 +15,10 @@
  */
 package org.sintef.thingml.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -38,12 +41,12 @@ import org.sintef.thingml.VariableAssignment;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getProperty <em>Property</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getExpression <em>Expression</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.VariableAssignmentImpl#getIndex <em>Index</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -285,6 +288,34 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 				return index != null && !index.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Expression e : getIndex())
+			result.addAll(e.getAllExpressions());
+		if (getExpression() != null)
+			result.addAll(getExpression().getAllExpressions());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		for(Expression e : getIndex())
+			result.addAll(e.getAllExpressions(clazz));
+		if (getExpression() != null)
+			result.addAll(getExpression().getAllExpressions(clazz));
+		return result;
 	}
 
 } //VariableAssignmentImpl

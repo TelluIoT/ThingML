@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 
 public class ThingMLHelpers {
@@ -89,6 +90,10 @@ public class ThingMLHelpers {
 
 	public static Handler findContainingHandler(EObject object) {
 		return findContainer(object,Handler.class);
+	}
+	
+	public static StartSession findContainingStartSession(EObject object) {
+		return findContainer(object, StartSession.class);
 	}
 	
 	/* ***********************************************************
@@ -195,7 +200,7 @@ public class ThingMLHelpers {
 		ArrayList<Type> result = new ArrayList<Type>();
 		for (ThingMLModel m : allThingMLModelModels(model)) {
 			for (Type t : m.getTypes()) {
-				if ( (t instanceof PrimitiveType || t instanceof Enumeration) && !result.contains(t)) 
+				if ( (t instanceof ObjectType || t instanceof PrimitiveType || t instanceof Enumeration) && !result.contains(t)) 
 					result.add(t);
 			}
 		}
@@ -249,9 +254,11 @@ public class ThingMLHelpers {
 	public static ArrayList<Type> findSimpleType(ThingMLModel model, String name, boolean fuzzy) {
 		ArrayList<Type> result = new ArrayList<Type>();
 		for (Type t : allSimpleTypes(model)) {
-			if (t.getName().startsWith(name)) {
-				if (fuzzy) result.add(t);
-				else if (t.getName().equals(name)) result.add(t);
+			if (t.getName() != null) {
+				if (t.getName().startsWith(name)) {
+					if (fuzzy) result.add(t);
+					else if (t.getName().equals(name)) result.add(t);
+				}
 			}
 		}
 		return result;
@@ -301,14 +308,6 @@ public class ThingMLHelpers {
 		ArrayList<Function> result = new ArrayList<Function>();
 		for (Thing t : allThingFragments(thing)) {
 			result.addAll(t.getFunctions());
-		}
-		return result;
-	}
-
-	public static List<Operator> allOperators(Thing thing) {
-		ArrayList<Operator> result = new ArrayList<Operator>();
-		for (Thing t : allThingFragments(thing)) {
-			result.addAll(t.getOperators());
 		}
 		return result;
 	}
@@ -514,6 +513,12 @@ public class ThingMLHelpers {
 	public static ArrayList<Variable> allVisibleVariables (EObject container) {
 		ArrayList<Variable> result = new ArrayList<Variable>();
 		
+		if (container instanceof LocalVariable) {
+			if (container.eContainer() instanceof Stream) {
+				return allVisibleVariables(container.eContainer());
+			}
+		}
+		
 		// Add the variables of the block if we are in a block
 		ActionBlock b = findContainingActionBlock(container);
 		if (b != null) {
@@ -541,13 +546,18 @@ public class ThingMLHelpers {
 			result.addAll(allVisibleVariables(f.eContainer()));
 		}
 		
+		Stream stream = findContainingStream(container);
+		if (stream != null) {
+			result.addAll(stream.getSelection());
+		}	
+		
 		// Only the variables of the thing if we are in a thing:
 		Thing t = findContainingThing(container);
 		if (t != null) {
 			// Properties from the thing
 			result.addAll(allProperties(t));
 			return result;
-		}
+		}		
 				
 		return result;		
 		
@@ -556,7 +566,7 @@ public class ThingMLHelpers {
 	public static ArrayList<Variable> findVisibleVariables(EObject container, String name, boolean fuzzy) {
 		ArrayList<Variable> result = new ArrayList<Variable>();
 		for (Variable t : allVisibleVariables(container)) {
-			if (t.getName().startsWith(name)) {
+			if (t.getName() != null && t.getName().startsWith(name)) {
 				if (fuzzy) result.add(t);
 				else if (t.getName().equals(name)) result.add(t);
 			}
@@ -715,29 +725,18 @@ public class ThingMLHelpers {
 		return result;
 	}
 
-	public static Operator findContainingOperator(EObject eObject) {
-		return findContainer(eObject,Operator.class);
-	}
-
-	public static List<ReceiveMessage> findInputs(OperatorCall operatorCall) {
-		List<ReceiveMessage> result = new ArrayList<>();
-		Stream parent = findContainingStream(operatorCall);
-		if(parent != null) {
-			List<SimpleSource> simpleSources = allSimpleSources(parent.getInput());
-			for(SimpleSource ss : simpleSources) {
-				result.add(ss.getMessage());
-			}
-		}
-
-		return result;
-	}
-
 	public static ThingMLElement findReferenceContainer(Reference container) {
 		EObject parent = container.eContainer();
-
-		while (parent !=null && !(parent instanceof Handler || parent instanceof SglMsgParamOperator ||
-				parent instanceof StreamExpression || parent instanceof SourceComposition)) {
+		List<String> parents = new ArrayList<String>();
+		
+		while (parent !=null && !(parent instanceof Handler || parent instanceof Stream || parent instanceof SourceComposition || parent instanceof SimpleSource)) {
+			parents.add(parent.getClass().getName());
 			parent = parent.eContainer();
+		}
+		if (parent == null) {
+			for(String p : parents) {
+				System.out.println("Parent:" + parent);
+			}
 		}
 		return (ThingMLElement) parent;
 	}
@@ -753,7 +752,7 @@ public class ThingMLHelpers {
 	}
 
 	public static TypedElement findContainingFuncOp(EObject eObject) {
-		while(eObject != null && !(eObject instanceof Function || eObject instanceof Operator)) {
+		while(eObject != null && !(eObject instanceof Function)) {
 			eObject = eObject.eContainer();
 		}
 		return (TypedElement) eObject;

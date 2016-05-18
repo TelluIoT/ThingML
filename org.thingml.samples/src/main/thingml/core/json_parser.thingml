@@ -1,6 +1,6 @@
 import "../thingml.thingml"
 
-datatype CString
+object CString
 @c_type "const char*";
 
 

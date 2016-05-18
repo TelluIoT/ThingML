@@ -1,6 +1,6 @@
 import "../test.thingml"
 
-datatype Dumper
+object Dumper
 @java_type "org.thingml.devices.Dumper";
 
 thing TestDumpJava includes TestDump

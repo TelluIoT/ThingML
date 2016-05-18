@@ -110,18 +110,42 @@ The best way to execute and test the latest versions of compilers while developi
 
 To use the compiler, just run the jar file on a command line. Java 7 or newer is required. Running the JAR with no arguments should provide a short "help" message similar to what is displayed below:
 
-    $ java -jar compilers/registry/target/compilers.registry-0.6.0-SNAPSHOT-jar-with-dependencies.jar
-    ARGUMENTS: <compiler> <source> (<output dir>)
-     | <compiler>   :
-     |     java     - Generates plain Java code.
-     |     arduino  - Generates C/C++ code for Arduino or other AVR microcontrollers (AVR-GCC compiler).
-     |     UML      - Generates UML diagrams in PlantUML
-     |     espruino - Generates Javascript code for the Espruino platform.
-     |     nodejs   - Generates Javascript code for the NodeJS platform.
-     |     posix    - Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).
-     | <source>     : A thingml file to compile (should include at least one configuration)
-     | <output dir> : Optional output directory - by default current directory is used
-    Bye.
+    $ java -jar compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar
+     --- ThingML help ---
+	Typical usages: 
+		java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>] [-d]
+		java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>]
+	Usage: <main class> [options]
+	  Options:
+		--compiler, -c
+		   Compiler ID (Mandatory unless --tool (-t) is used)
+		--help, -h
+		   Display this message.
+		   Default: false
+		--create-directory, -d
+		   Create a directory named after the configuration in which the generated code will be put.
+		   Default: false
+		--options
+		   additional options for ThingML tools.
+		--output, -o
+		   Optional output directory - by default current directory is used
+		--source, -s
+		   A thingml file to compile (should include at least one configuration)
+		--tool, -t
+		   Tool ID (Mandatory unless --compiler (-c) is used)
+
+	Compiler Id must belong to the following list:
+	 |     sintefboard	- Generates C++ based in code for Arduino.
+	 |     java	- Generates plain Java code.
+	 |     arduino	- Generates C/C++ code for Arduino or other AVR microcontrollers (AVR-GCC compiler).
+	 |     UML	- Generates UML diagrams in PlantUML
+	 |     espruino	- Generates Javascript code for the Espruino platform.
+	 |     nodejs	- Generates Javascript code for the NodeJS platform.
+	 |     posix	- Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).
+	 |     debugGUI	- Generates html/js mock-up for other a ThingML external connector
+
+	Tool Id must belong to the following list:
+	 |     testconfigurationgen	- Generates test configuration for things annnotated with @test "input # output".
 
 In case you cannot see a message similar to this one, it means that something is not working with your setup. Check your Java version (should be 7 or newer) and try recompiling ThingML by running ``mvn clean install`` in the root ThingML directory.
 

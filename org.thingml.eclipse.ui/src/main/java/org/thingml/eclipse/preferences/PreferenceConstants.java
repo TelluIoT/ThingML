@@ -23,5 +23,6 @@ public class PreferenceConstants {
 	public static final String P_STRING = "ARDUINOFOLDER";
 	public static final String T_STRING = "LIBRARYFOLDER";
     public static final String PACK_STRING = "JAVAPACKAGE";
+    public static final String PRINT_NOTICE_STRING = "PRINTNOTICE";
 	
 }

@@ -32,8 +32,6 @@ import java.util.ArrayList;
 
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.Type;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 
 public class PortReceivesReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.Port, org.sintef.thingml.Message> {

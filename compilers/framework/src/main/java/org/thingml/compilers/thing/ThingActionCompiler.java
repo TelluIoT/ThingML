@@ -21,10 +21,10 @@ import org.thingml.compilers.Context;
 public class ThingActionCompiler {
 
     public void generate(Object o, StringBuilder builder, Context ctx) {
+        if (o == null)
+            return;
         if (o instanceof Action) {
             generate((Action) o, builder, ctx);
-        } else if (o instanceof StreamOutput) {
-            generate((StreamOutput) o, builder, ctx);
         } else if (o instanceof Expression) {
             generate((Expression) o, builder, ctx);
         } else {
@@ -35,6 +35,8 @@ public class ThingActionCompiler {
 
     // ThingML Actions
     public void generate(Action action, StringBuilder builder, Context ctx) {
+        if (action == null)
+            return;
         if (action instanceof SendAction)
             generate((SendAction) action, builder, ctx);
         else if (action instanceof VariableAssignment)
@@ -57,9 +59,34 @@ public class ThingActionCompiler {
             generate((LocalVariable) action, builder, ctx);
         else if (action instanceof FunctionCallStatement)
             generate((FunctionCallStatement) action, builder, ctx);
+        else if (action instanceof Increment)
+            generate((Increment) action, builder, ctx);
+        else if (action instanceof Decrement)
+            generate((Decrement) action, builder, ctx);
+        else if (action instanceof StartSession) {
+            generate((StartSession) action, builder, ctx);
+        } else if (action instanceof StartStream) {
+            generate((StartStream) action, builder, ctx);
+        } else if (action instanceof StopStream) {
+            generate((StopStream) action, builder, ctx);
+        } else {
+            throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
+        }
     }
 
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(StartSession action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(StartStream action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(StopStream action, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
@@ -103,6 +130,14 @@ public class ThingActionCompiler {
         throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
 
     //ThingML Expressions
     public void generate(Expression expression, StringBuilder builder, Context ctx) {
@@ -116,8 +151,14 @@ public class ThingActionCompiler {
             generate((LowerExpression) expression, builder, ctx);
         } else if (expression instanceof GreaterExpression) {
             generate((GreaterExpression) expression, builder, ctx);
+        } else if (expression instanceof LowerOrEqualExpression) {
+            generate((LowerOrEqualExpression) expression, builder, ctx);
+        } else if (expression instanceof GreaterOrEqualExpression) {
+            generate((GreaterOrEqualExpression) expression, builder, ctx);
         } else if (expression instanceof EqualsExpression) {
             generate((EqualsExpression) expression, builder, ctx);
+        } else if (expression instanceof NotEqualsExpression) {
+            generate((NotEqualsExpression) expression, builder, ctx);
         } else if (expression instanceof PlusExpression) {
             generate((PlusExpression) expression, builder, ctx);
         } else if (expression instanceof MinusExpression) {
@@ -152,8 +193,8 @@ public class ThingActionCompiler {
             generate((ExternExpression) expression, builder, ctx);
         } else if (expression instanceof FunctionCallExpression) {
             generate((FunctionCallExpression) expression, builder, ctx);
-        } else if(expression instanceof StreamParamReference) {
-            generate((StreamParamReference)expression,builder,ctx);
+        } else {
+            throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
     }
 
@@ -177,7 +218,19 @@ public class ThingActionCompiler {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
+    public void generate(LowerOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(GreaterOrEqualExpression expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+
+    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
@@ -248,14 +301,5 @@ public class ThingActionCompiler {
 
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
-    }
-
-    public void generate(StreamParamReference expression, StringBuilder builder, Context ctx) {
-        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
-    }
-
-    // CEP Action
-    public void generate(StreamOutput streamOutput, StringBuilder builder, Context ctx) {
-        throw (new UnsupportedOperationException("This CEP action (" + streamOutput.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 }

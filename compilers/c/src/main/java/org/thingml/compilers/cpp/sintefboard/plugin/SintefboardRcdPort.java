@@ -20,16 +20,13 @@
  */
 package org.thingml.compilers.cpp.sintefboard.plugin;
 
+import org.sintef.thingml.*;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CNetworkLibraryGenerator;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
-import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CNetworkLibraryGenerator;
 
 /**
  *
@@ -40,7 +37,9 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
     public SintefboardRcdPort(Configuration cfg, CCompilerContext ctx) {
         super(cfg, ctx);
     }
+
     public SintefboardRcdPort(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
+    public SintefboardPort(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
     }
 
@@ -54,20 +53,20 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
         return "/*CFG_CPPNAME_SCOPE*/";
     }
 
-    
+
     @Override
     public void generateNetworkLibrary() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
-        for(ExternalConnector eco : this.getExternalConnectors()) {
+        for (ExternalConnector eco : this.getExternalConnectors()) {
             //boolean ring = false;
             String ctemplate = ctx.getNetworkLibRcdPortTemplate();
             String htemplate = ctx.getNetworkLibRcdPortHeaderTemplate();
 
             String portName;
-            if(eco.hasAnnotation("port_name")) {
+            if (eco.hasAnnotation("port_name")) {
                 portName = eco.annotation("port_name").iterator().next();
             } else {
-                portName = eco.getProtocol();
+                portName = eco.getProtocol().getName();
             }
 
             eco.setName(portName);
@@ -75,11 +74,12 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
             ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
             htemplate = htemplate.replace("/*PORT_NAME*/", portName);
 
+
             //Connector Instanciation
             StringBuilder eco_instance = new StringBuilder();
             eco_instance.append("//Connector");
             Port p = eco.getPort();
-            if(!p.getReceives().isEmpty()) {
+            if (!p.getReceives().isEmpty()) {
             //if(!p.getSends().isEmpty()) {
                 eco_instance.append("// Pointer to receiver list\n");
                 eco_instance.append("struct Msg_Handler ** ");
@@ -91,7 +91,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
                 eco_instance.append("_receiver_list_tail;\n");
             }
 
-            if(!p.getSends().isEmpty()) {
+            if (!p.getSends().isEmpty()) {
             //if(!p.getReceives().isEmpty()) {
                 eco_instance.append("// Handler Array\n");
                 eco_instance.append("struct Msg_Handler * ");
@@ -100,8 +100,9 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
             }
             ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
 
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
+
+            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".c").append(ctemplate);
+            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".h").append(htemplate);
 
         }
     }
@@ -109,7 +110,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
     @Override
     public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
-        if(!this.getExternalConnectors().isEmpty()) {
+        if (!this.getExternalConnectors().isEmpty()) {
 
             //************ Generate methods for sending meassages to ports
             for (ExternalConnector eco : this.getExternalConnectors()) {
@@ -171,7 +172,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
 
     private void generatePortReceiver(String portname, Port p, StringBuilder builder) {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
-        
+
         builder.append("switch (msg_in_ptr->MsgId) {\n");
         for (Message m : p.getReceives()) {
             Set<String> ignoreList = new HashSet<String>();

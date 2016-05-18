@@ -13,7 +13,7 @@ import "../../../thingml.thingml"
 import "../../xml_parser_xpath.thingml"
 
 
-datatype ThingMLXPathParserContext
+object ThingMLXPathParserContext
 	@c_type "ThingMLXPATHParserCnxt*";
 	
 

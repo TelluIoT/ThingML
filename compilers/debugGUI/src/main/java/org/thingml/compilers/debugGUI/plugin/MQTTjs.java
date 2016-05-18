@@ -20,26 +20,12 @@
  */
 package org.thingml.compilers.debugGUI.plugin;
 
-import static java.lang.Integer.parseInt;
-import java.util.Set;
 import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Event;
 import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.InstanceRef;
-import org.sintef.thingml.InternalTransition;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.ReceiveMessage;
-import org.sintef.thingml.SendAction;
-import org.sintef.thingml.State;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingmlFactory;
-import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.debugGUI.DebugGUINetworkLibraryGenerator;
+
+import java.util.Set;
 
 /**
  *
@@ -50,15 +36,15 @@ public class MQTTjs extends DebugGUINetworkLibraryGenerator {
     public MQTTjs(Configuration cfg, Context ctx) {
         super(cfg, ctx);
     }
-    
+
     public MQTTjs(Configuration cfg, Context ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
     }
 
     @Override
     public void generateNetworkLibrary() {
-        
-        for(ExternalConnector eco : this.getExternalConnectors()) {
+
+        for (ExternalConnector eco : this.getExternalConnectors()) {
 
             //ctx.getBuilder(portName + ".js").append("");
         }
@@ -66,28 +52,28 @@ public class MQTTjs extends DebugGUINetworkLibraryGenerator {
 
     @Override
     public void generateMessageForwarders(StringBuilder builder) {
-        
+
     }
 
     @Override
     public String generateConnectionInterface(String portName) {
         StringBuilder res = new StringBuilder();
         res.append("<table><tr>\n" +
-"                   <td></td>\n" +
-"                   <td>Address</td>\n" +
-"                   <td>Port</td>\n" +
-"                   <td>Topic</td>\n" +
-"                   <td>Status</td>\n" +
-"		</tr>" +
-"		<tr>\n" +
-"                   <td><input class=\"btn\" type=\"submit\" onClick=\"" + portName + "_connect();\" value=\"Connect\"/></td>\n" +
-"                   <td><input id=\"address\" type=\"text\" /></td>\n" +
-"                   <td ><input id=\"port\" type=\"text\" /></td>\n" +
-"                   <td><input id=\"topic\" type=\"text\" value=\"ThingML\" /></td>\n" +
-"                   <td id=status>.</td>\n" +
-"		</tr></table>");
-        
+                "                   <td></td>\n" +
+                "                   <td>Address</td>\n" +
+                "                   <td>Port</td>\n" +
+                "                   <td>Topic</td>\n" +
+                "                   <td>Status</td>\n" +
+                "		</tr>" +
+                "		<tr>\n" +
+                "                   <td><input class=\"btn\" type=\"submit\" onClick=\"" + portName + "_connect();\" value=\"Connect\"/></td>\n" +
+                "                   <td><input id=\"address\" type=\"text\" /></td>\n" +
+                "                   <td ><input id=\"port\" type=\"text\" /></td>\n" +
+                "                   <td><input id=\"topic\" type=\"text\" value=\"ThingML\" /></td>\n" +
+                "                   <td id=status>.</td>\n" +
+                "		</tr></table>");
+
         return res.toString();
     }
-    
+
 }

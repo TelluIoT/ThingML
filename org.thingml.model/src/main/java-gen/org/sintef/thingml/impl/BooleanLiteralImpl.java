@@ -30,10 +30,10 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.BooleanLiteralImpl#isBoolValue <em>Bool Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

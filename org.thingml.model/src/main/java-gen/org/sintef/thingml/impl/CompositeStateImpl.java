@@ -44,13 +44,13 @@ import org.sintef.thingml.*;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.CompositeStateImpl#getSubstate <em>Substate</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.CompositeStateImpl#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.CompositeStateImpl#isHistory <em>History</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.CompositeStateImpl#getRegion <em>Region</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -378,7 +378,7 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
     public List<State> allContainedStates() {
         final List<State> result = new ArrayList<State>();
         for(Region r : allContainedRegions()) {
-            if (r instanceof State) {
+            if (r instanceof State && !(r instanceof Session)) {
                 result.add((State)r);
             }
             for(State s : r.getSubstate()) {
@@ -405,14 +405,25 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
             }
         }
         for (State s : getSubstate()) {
-            if (s instanceof Region) {
+            if (s instanceof Region && !(s instanceof Session)) {
                 result.addAll(((Region)s).allContainedRegions());
             }
         }
         return result;
     }
 
-    /**
+	@Override
+	public List<Session> allContainedSessions() {
+		List<Session> result = new ArrayList<Session>();
+		for (State s : getSubstate()) {
+			if (s instanceof Session) {
+				result.add(((Session)s));
+			}
+		}
+		return result;
+	}
+
+	/**
      *
      * @return
      * @generated NOT
@@ -436,12 +447,24 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
         List<Region> result = new ArrayList<Region>();
         result.add(this);
         for (Region r : getRegion()){
+			if (!(r instanceof Session))
                 result.addAll(r.allContainedRegions());
         }
         return result;
     }
 
-    /**
+	@Override
+	public List<Session> directSubSessions() {
+		List<Session> result = new ArrayList<Session>();
+		for (Region r : getRegion()){
+			if (r instanceof Session)
+				result.add((Session)r);
+			result.addAll(r.allContainedSessions());
+		}
+		return result;
+	}
+
+	/**
      *
      * @return
      * @generated NOT
@@ -450,7 +473,7 @@ public class CompositeStateImpl extends StateImpl implements CompositeState {
     public List<CompositeState> allContainedCompositeStates() {
         List<CompositeState> result = new ArrayList<CompositeState>();
         for(State s : allContainedStates()) {
-            if (s instanceof CompositeState) {
+            if (s instanceof CompositeState && !(s instanceof Session)) {
                 result.add((CompositeState)s);
             }
         }

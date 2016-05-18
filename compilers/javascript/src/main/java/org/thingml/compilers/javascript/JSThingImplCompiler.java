@@ -62,7 +62,17 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     j++;
                 }
                 builder.append(") {\n");
+                builder.append("if (this.root === null || this.root === undefined) {\n");
                 ((JSThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(thing, p, m, builder, ctx, debugProfile);
+                builder.append("} else {\n");
+                builder.append("send" + ctx.firstToUpper(m.getName()) + "On" + ctx.firstToUpper(p.getName()) + ".call(this.root");
+                for (Parameter pa : m.getParameters()) {
+                    builder.append(", ");
+                    builder.append(ctx.protectKeyword(pa.getName()));
+                    j++;
+                }
+                builder.append(");\n");
+                builder.append("}\n");
                 builder.append("}\n\n");
             }
         }
@@ -77,9 +87,10 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("var Enum = require('./enums');\n");
         }
         builder.append("var StateJS = require('state.js');\n");
+        builder.append("StateJS.internalTransitionsTriggerCompletion = true;\n");
 
         if (debugProfile.isActive()) {
-            builder.append("var colors = require('colors/safe');\n");
+            //builder.append("var colors = require('colors/safe');\n");
             generatePrintDebugFunction(thing, builder, ctx);
         }
 
@@ -92,7 +103,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append(" * Definition for type : " + thing.getName() + "\n");
         builder.append(" **/\n");
 
-        builder.append("function " + ctx.firstToUpper(thing.getName()) + "(name");
+        builder.append("function " + ctx.firstToUpper(thing.getName()) + "(name, root");
         for (Property p : thing.allPropertiesInDepth()) {
             if (!p.isDefined("private", "true") && p.eContainer() instanceof Thing) {
                 builder.append(", ");
@@ -102,6 +113,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append(", debug) {\n\n");
 
         builder.append("this.name = name;\n");
+        builder.append("this.root = root;\n");
         builder.append("this.debug = debug;\n");
 
         builder.append("var _this;\n");
@@ -110,6 +122,13 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("};\n\n");
 
         builder.append("this.ready = false;\n");
+
+        builder.append("//Children\n");
+        builder.append("this.forkID = 0;\n");
+        builder.append("const forks = [];\n");
+        builder.append("this.getForks = function() {\n");
+        builder.append("return forks;\n");
+        builder.append("}\n\n");
 
         builder.append("//Attributes\n");
         for (Property p : thing.allPropertiesInDepth()) {
@@ -159,6 +178,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n");
 
         builder.append("//ThingML-defined functions\n");
+        ctx.addContextAnnotation("function", "true");
         for (Function f : thing.allFunctions()) {   //FIXME: should be extracted
             if (!f.isDefined("abstract", "true")) {//should be refined in a PSM thing
                 builder.append("function " + f.getName() + "(");
@@ -170,7 +190,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     j++;
                 }
                 builder.append(") {\n");
-                if(debugProfile.getDebugFunctions().contains(f)) {
+                if (debugProfile.getDebugFunctions().contains(f)) {
                     //builder.append("if(_this.debug) console.log(colors.blue(_this.name + \"(" + thing.getName() + "): executing function " + f.getName() + "(");
                     builder.append("" + thing.getName() + "_print_debug(_this, \"" + ctx.traceFunctionBegin(thing, f) + "(");
                     int i = 0;
@@ -185,8 +205,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append(")...\");\n");
                 }
                 ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
-                
-                if(debugProfile.getDebugFunctions().contains(f)) {
+
+                if (debugProfile.getDebugFunctions().contains(f)) {
                     //builder.append("if(_this.debug) console.log(colors.blue(_this.name + \"(" + thing.getName() + "): executing function " + f.getName() + "(");
                     builder.append("" + thing.getName() + "_print_debug(_this, \"" + ctx.traceFunctionDone(thing, f) + "\");\n");
                 }
@@ -214,23 +234,55 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("};\n\n");
             }
         }
-
-        for (Operator operator : thing.allOperators()) {
-            generateOperator(operator, builder, ctx);
-        }
+        ctx.removeContextAnnotation("function");
 
         builder.append("//Internal functions\n");
-
 
 
         generateSendMethods(thing, builder, ctx);
 
         builder.append("//State machine (states and regions)\n");
-        builder.append("this.build = function() {\n");
+        builder.append("this.build = function(session, root) {//optional session name and root instance to fork a new session\n");
+        builder.append("if (session === null || session == undefined) {\n");
         for (StateMachine b : thing.allStateMachines()) {
             ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(b, builder, ctx);
         }
         builder.append("}\n");
+        for (StateMachine b : thing.allStateMachines()) {
+            ctx.addContextAnnotation("session", "true");
+            for (Session s : b.allContainedSessions()) {//FIXME: lots of code duplication here.....
+                builder.append("else if(session === \"" + s.getName() + "\") {\n");
+                builder.append("this.root = root;\n");
+                builder.append("root.forkID = root.forkID + 1;\n");
+                builder.append("this.forkID = root.forkID;\n");
+                builder.append("this.statemachine = new StateJS.StateMachine(\"" + s.getName() + "\");\n");
+                ctx.addContextAnnotation("container", "this." + s.findContainingRegion().qname("_"));
+                builder.append("var " + s.qname("_") + "_session = new StateJS.Region(\"" + s.getName() + "\", _this.statemachine);\n");
+                builder.append("var _initial_" + s.qname("_") + "_session = new StateJS.PseudoState(\"_initial\", " + s.qname("_") + "_session, StateJS.PseudoStateKind.Initial);\n");
+                for (State st : s.getSubstate()) {
+                    ctx.addContextAnnotation("container", s.qname("_") + "_session");
+                    ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(st, builder, ctx);
+                }
+                builder.append("_initial_" + s.qname("_") + "_session.to(" + s.getInitial().qname("_") + ");\n");
+                for (Handler h : s.allEmptyHandlers()) {
+                    generateHandler(h, null, null, builder, ctx);
+                }
+                final Map<Port, Map<Message, List<Handler>>> allHanders = s.allMessageHandlers();
+                for (Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
+                    final Port p = entry.getKey();
+                    final Map<Message, List<Handler>> map = entry.getValue();
+                    for (Map.Entry<Message, List<Handler>> entry2 : map.entrySet()) {
+                        final List<Handler> handlers = entry2.getValue();
+                        final Message m = entry2.getKey();
+                        for (Handler h : handlers) {
+                            generateHandler(h, m, p, builder, ctx);
+                        }
+                    }
+                }
+                builder.append("}\n");
+            }
+            ctx.removeContextAnnotation("session");
+        }
 
         for (Stream stream : thing.getStreams()) {
             ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);
@@ -246,44 +298,36 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.toString = function() {\n");
         builder.append("var result = \"instance \" + this.getName() + \"\\n\";\n");
-        for(Property p : thing.allPropertiesInDepth()) {
-            builder.append("result += \"\\t" + p.getName() + " = \" + this." + ctx.getVariableName(p)  + ";\n" );
+        for (Property p : thing.allPropertiesInDepth()) {
+            builder.append("result += \"\\t" + p.getName() + " = \" + this." + ctx.getVariableName(p) + ";\n");
         }
         builder.append("result += \"\";\n");
         builder.append("return result;\n");
+        builder.append("}\n");
         builder.append("};\n\n");
 
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
     }
 
-    private void generateOperator(Operator operator, StringBuilder builder, Context ctx) {
-        if (operator instanceof SglMsgParamOperator) {
-            SglMsgParamOperator sglMsgParamOperator = (SglMsgParamOperator) operator;
-            MessageParameter messageParameter = sglMsgParamOperator.getParameter();
-            builder.append("function " + sglMsgParamOperator.getName() + "(" + messageParameter.getName() + ") {\n");
-            ctx.getCompiler().getThingActionCompiler().generate(sglMsgParamOperator.getBody(), builder, ctx);
-            builder.append("}\n");
-        } else {
-            throw new UnsupportedOperationException("A new operator has been added to ThingML (" + operator.getClass().getName() + ")" +
-                    ". However, the JSThingImplCompiler has not been updated.");
-        }
-    }
-
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
-        builder.append("this." + sm.qname("_") + " = new StateJS.StateMachine(\"" + sm.getName() + "\")");
+        builder.append("this.statemachine = new StateJS.StateMachine(\"" + sm.getName() + "\")");
         generateActionsForState(sm, builder, ctx);
         builder.append(";\n");
         if (sm.isHistory())
-            builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this." + sm.qname("_") + ", StateJS.PseudoStateKind.ShallowHistory);\n");
+            builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this.statemachine, StateJS.PseudoStateKind.ShallowHistory);\n");
         else
-            builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this." + sm.qname("_") + ", StateJS.PseudoStateKind.Initial);\n");
+            builder.append("this._initial_" + sm.qname("_") + " = new StateJS.PseudoState(\"_initial\", this.statemachine, StateJS.PseudoStateKind.Initial);\n");
         for (Region r : sm.getRegion()) {
-            ctx.addContextAnnotation("container", "this." + sm.qname("_"));
-            generateRegion(r, builder, ctx);
+            if (!(r instanceof Session)) {
+                ctx.addContextAnnotation("container", "this.statemachine");
+                generateRegion(r, builder, ctx);
+            }
         }
         for (State s : sm.getSubstate()) {
-            ctx.addContextAnnotation("container", "this." + sm.qname("_"));
-            generateState(s, builder, ctx);
+            if (!(s instanceof Session)) {
+                ctx.addContextAnnotation("container", "this.statemachine");
+                generateState(s, builder, ctx);
+            }
         }
         builder.append("this._initial_" + sm.qname("_") + ".to(" + sm.getInitial().qname("_") + ");\n");
         for (Handler h : sm.allEmptyHandlers()) {
@@ -306,7 +350,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     private void generateActionsForState(State s, StringBuilder builder, Context ctx) {
-        if (s.getEntry() != null || debugProfile.isDebugBehavior()) {
+        if (s.getEntry() != null || debugProfile.isDebugBehavior() || s instanceof FinalState) {
             builder.append(".entry(function () {\n");
             if (debugProfile.isDebugBehavior()) {
                 //builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"(" + s.findContainingThing().getName() + "): enters " + s.qualifiedName(":") + "\"));\n");
@@ -314,6 +358,18 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
             if (s.getEntry() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
+            if (s instanceof FinalState) {
+                builder.append("_this._stop();\n");
+                builder.append("const forkLength = _this.getForks().length;\n");
+                builder.append("var idFork = 0;");
+                builder.append("for (var _i = 0; _i < forkLength; _i++) {\n");
+                builder.append("if (_this.getForks()[_i] === _this) {\n");
+                builder.append("idFork = _i\n");
+                builder.append("}\n");
+                builder.append("}\n");
+                builder.append("_this.getForks().splice(idFork, 1);\n");
+                builder.append("_this = null;\n");
+            }
             builder.append("})");
         }
         if (s.getExit() != null || debugProfile.isDebugBehavior()) {
@@ -365,9 +421,18 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("_initial_" + c.qname("_") + ".to(" + c.getInitial().qname("_") + ");\n");
     }
 
+    @Override
+    protected void generateFinalState(FinalState s, StringBuilder builder, Context ctx) {
+        generateAtomicState(s, builder, ctx);
+    }
+
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
         String containerName = ctx.getContextAnnotation("container");
-        builder.append("var " + s.qname("_") + " = new StateJS.State(\"" + s.getName() + "\", " + containerName + ")");
+        if (s instanceof FinalState) {
+            builder.append("var " + s.qname("_") + " = new StateJS.FinalState(\"" + s.getName() + "\", " + containerName + ")");
+        } else {
+            builder.append("var " + s.qname("_") + " = new StateJS.State(\"" + s.getName() + "\", " + containerName + ")");
+        }
         generateActionsForState(s, builder, ctx);
         builder.append(";\n");
     }
@@ -429,12 +494,12 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             generateHandlerAction(t, msg, builder, ctx, debugString);
         } else {
             if (debugProfile.isDebugBehavior()) {
-               builder.append(".effect(function () {\n");
-               builder.append("" + t.findContainingThing().getName() 
-                       + "_print_debug(_this, \"" 
-                       + ctx.traceTransition(t.findContainingThing(), t, p, msg) 
-                       + "\");\n");
-               builder.append("});\n");
+                builder.append(".effect(function () {\n");
+                builder.append("" + t.findContainingThing().getName()
+                        + "_print_debug(_this, \""
+                        + ctx.traceTransition(t.findContainingThing(), t, p, msg)
+                        + "\");\n");
+                builder.append("});\n");
             }
         }
         builder.append(";\n");
@@ -442,14 +507,22 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
-            builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
+            if (t.eContainer() instanceof StateMachine) {
+                builder.append("this.statemachine.to(null)");
+            } else {
+                builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
+            }
             if (t.getGuard() != null) {
                 builder.append(".when(function(message) {return ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
                 builder.append(";})");
             }
         } else {
-            builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
+            if (t.eContainer() instanceof StateMachine) {
+                builder.append("this.statemachine.to(null)");
+            } else {
+                builder.append(((State) t.eContainer()).qname("_") + ".to(null)");
+            }
             builder.append(".when(function (" + msg.getName() + ") {");
             builder.append("return " + msg.getName() + "[0] === \"" + p.getName() + "\" && " + msg.getName() + "[1] === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
@@ -467,32 +540,32 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         } else {
             if (p != null) {
                 if (debugProfile.isDebugBehavior()) {
-                   builder.append(".effect(function () {\n");
-                   builder.append("" + t.findContainingThing().getName() 
-                           + "_print_debug(_this, \"" 
-                           + ctx.traceInternal(t.findContainingThing(), p, msg) 
-                           + "\");\n");
-                   builder.append("});\n");
+                    builder.append(".effect(function () {\n");
+                    builder.append("" + t.findContainingThing().getName()
+                            + "_print_debug(_this, \""
+                            + ctx.traceInternal(t.findContainingThing(), p, msg)
+                            + "\");\n");
+                    builder.append("});\n");
                 }
             }
         }
         builder.append(";\n");
     }
-    
+
     protected void generatePrintDebugFunction(Thing thing, StringBuilder builder, Context ctx) {
         builder.append("//Trace function for " + thing.getName() + "\n");
         builder.append("function " + thing.getName() + "_print_debug(instance, msg) {\n");
         builder.append("if(instance.debug) {\n");
-        if(!ctx.getDebugWithID()) {
+        if (!ctx.getDebugWithID()) {
             builder.append("console.log(instance.name + msg +\"\");\n");
         }
         builder.append("}\n");
         builder.append("}\n\n");
         //A.prototype.A_print_debug = function(instance, msg) {
         //A_print_debug(instance, msg);};
-        builder.append(thing.getName() + ".prototype."+ thing.getName() + "_print_debug =function(instance, msg) {\n");
+        builder.append(thing.getName() + ".prototype." + thing.getName() + "_print_debug =function(instance, msg) {\n");
         builder.append(thing.getName() + "_print_debug(instance, msg);};");
-        
+
     }
 
 }

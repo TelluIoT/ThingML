@@ -1,0 +1,65 @@
+import "../test.thingml"
+
+object Dumper
+@java_type "org.thingml.devices.Dumper";
+
+thing TestDumpJava includes TestDump
+@thingml_maven_dep "org.thingml.samples.utils"
+{
+    readonly property device : Dumper = 'new org.thingml.devices.Dumper()'
+
+	function write(string : String) 
+	do
+    	'((org.thingml.devices.Dumper)' & device & ').write(' & string & ');'
+    	print(string)
+	end
+	
+	statechart JavaHarness init Testing {
+		property transitionsCount : Long = 0
+        property time : LongLong = 0
+		state Testing {
+
+            internal event m : dump?testOut
+            action do
+                write('Character.toString('&m.c&')')
+            	transitionsCount=transitionsCount+1
+            end
+
+            internal event dump?perfTestOut
+            action do
+                transitionsCount=transitionsCount+1
+            end
+            
+            transition -> Failed 
+            event dump?testFailure
+            
+            transition -> End
+            event dumpEnd?testEnd
+            
+            internal event m: dumpEnd?perfTestSize
+            action do
+                time = m.time
+                transitionsCount=transitionsCount+1
+            end
+		}
+		
+		state Failed {
+			on entry do
+			    write("*FAILURE*")
+			    'System.exit(-1);'
+			end
+		}
+
+		state End {
+			on entry do
+				'try{java.io.PrintWriter pw = new java.io.PrintWriter("cputime");'
+				'pw.println(""+'&time&');'
+				'pw.close();}catch(Exception e){;}'
+				print(" [Done]\n End of thingml processus") 
+				'((org.thingml.devices.Dumper)' & device & ').stop((int)'&transitionsCount&');
+				System.out.println("Memory: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));'
+				'System.exit(0);'
+			end
+		}
+	}
+}

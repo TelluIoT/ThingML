@@ -37,15 +37,15 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
         boolean oneThingHasStream = false;
 
         Iterator<Thing> it = cfg.allThings().iterator();
-        while(it.hasNext() && !oneThingHasStream) {
+        while (it.hasNext() && !oneThingHasStream) {
             Thing t = it.next();
             oneThingHasStream = oneThingHasStream || (t.getStreams().size() > 0);
         }
-        if(oneThingHasStream) {
+        if (oneThingHasStream) {
             return "<dependency>\n" +
                     "\t\t<groupId>io.reactivex</groupId>\n" +
                     "\t\t<artifactId>rxjava</artifactId>\n" +
-                    "\t\t<version>1.0.8</version>\n" +
+                    "\t\t<version>1.1.3</version>\n" +
                     "\t</dependency>";
         } else {
             return "";

@@ -1,0 +1,68 @@
+import "../../datatypes.thingml"
+import "../timer.thingml"
+
+/*****************************************************************************
+ * Definition of the built-in things and messages
+ *****************************************************************************/
+
+thing fragment ClockMsgs {
+	message clock_tick();
+}
+
+thing TimerPosix includes Timer, ClockMsgs 
+@c_headers "#include <sys/time.h>"
+@pim "Timer"
+@platform "linux"
+{
+
+	function sleep_ms(timeout_ms : Integer)
+	do
+		'struct timeval tv;
+        tv.tv_sec = '& timeout_ms &'/1000;
+        tv.tv_usec = ('& timeout_ms &'%1000) * 1000;
+        select(0, NULL, NULL, NULL, &tv);'
+	end
+	
+	function start_clock_process()
+	@fork_linux_thread "true"
+	do
+		while (1) do
+			sleep_ms(period)
+			clock!clock_tick()
+		end
+	end
+
+	internal port clock { 
+		receives clock_tick 
+		sends clock_tick 
+	}
+	
+	//To use timer in millisecond, set "millisecond" to true and "period" to the period of the clock
+	readonly property millisecond : Boolean = false
+	readonly property period : Integer = 100
+	
+	statechart ClockTimerImpl init Idle {
+		
+		property remaining : Integer = 0
+		
+		state Idle {
+			on entry do 
+				start_clock_process()
+			end
+			transition -> Counting event m : timer?timer_start action remaining = m.delay 
+		}
+		
+		state Counting {
+			transition -> Idle event timer?timer_cancel
+			transition -> Idle event clock?clock_tick guard remaining == 0 action timer!timer_timeout()
+			internal event clock?clock_tick guard remaining > 0 action do 
+				if (not millisecond) remaining = remaining - 1
+				if (millisecond) remaining = remaining - period
+			end 
+			
+		}
+	
+	}
+
+}
+

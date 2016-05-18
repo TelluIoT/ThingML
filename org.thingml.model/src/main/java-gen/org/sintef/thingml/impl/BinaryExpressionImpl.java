@@ -27,17 +27,20 @@ import org.sintef.thingml.BinaryExpression;
 import org.sintef.thingml.Expression;
 import org.sintef.thingml.ThingmlPackage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Binary Expression</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.BinaryExpressionImpl#getLhs <em>Lhs</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.BinaryExpressionImpl#getRhs <em>Rhs</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -251,4 +254,30 @@ public abstract class BinaryExpressionImpl extends ExpressionImpl implements Bin
 		return super.eIsSet(featureID);
 	}
 
+	/**
+	 * @generated NOT
+	 * @return
+     */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.add(this);
+		result.add(getLhs());
+		result.add(getRhs());
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		result.addAll(getLhs().getAllExpressions(clazz));
+		result.addAll(getRhs().getAllExpressions(clazz));
+		return result;
+	}
 } //BinaryExpressionImpl

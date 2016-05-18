@@ -42,25 +42,14 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.impl.FunctionCallImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.FunctionCallImpl#getFunction <em>Function</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
-public abstract class FunctionCallImpl extends EObjectImpl implements FunctionCall {
-	/**
-	 * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getParameters()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Expression> parameters;
-
+public abstract class FunctionCallImpl extends PassesParametersImpl implements FunctionCall {
 	/**
 	 * The cached value of the '{@link #getFunction() <em>Function</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -88,18 +77,6 @@ public abstract class FunctionCallImpl extends EObjectImpl implements FunctionCa
 	@Override
 	protected EClass eStaticClass() {
 		return ThingmlPackage.Literals.FUNCTION_CALL;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EList<Expression> getParameters() {
-		if (parameters == null) {
-			parameters = new EObjectContainmentEList<Expression>(Expression.class, this, ThingmlPackage.FUNCTION_CALL__PARAMETERS);
-		}
-		return parameters;
 	}
 
 	/**
@@ -146,24 +123,8 @@ public abstract class FunctionCallImpl extends EObjectImpl implements FunctionCa
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case ThingmlPackage.FUNCTION_CALL__PARAMETERS:
-				return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ThingmlPackage.FUNCTION_CALL__PARAMETERS:
-				return getParameters();
 			case ThingmlPackage.FUNCTION_CALL__FUNCTION:
 				if (resolve) return getFunction();
 				return basicGetFunction();
@@ -180,10 +141,6 @@ public abstract class FunctionCallImpl extends EObjectImpl implements FunctionCa
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ThingmlPackage.FUNCTION_CALL__PARAMETERS:
-				getParameters().clear();
-				getParameters().addAll((Collection<? extends Expression>)newValue);
-				return;
 			case ThingmlPackage.FUNCTION_CALL__FUNCTION:
 				setFunction((Function)newValue);
 				return;
@@ -199,9 +156,6 @@ public abstract class FunctionCallImpl extends EObjectImpl implements FunctionCa
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.FUNCTION_CALL__PARAMETERS:
-				getParameters().clear();
-				return;
 			case ThingmlPackage.FUNCTION_CALL__FUNCTION:
 				setFunction((Function)null);
 				return;
@@ -217,8 +171,6 @@ public abstract class FunctionCallImpl extends EObjectImpl implements FunctionCa
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ThingmlPackage.FUNCTION_CALL__PARAMETERS:
-				return parameters != null && !parameters.isEmpty();
 			case ThingmlPackage.FUNCTION_CALL__FUNCTION:
 				return function != null;
 		}

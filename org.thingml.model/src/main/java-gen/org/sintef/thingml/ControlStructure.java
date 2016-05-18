@@ -25,11 +25,11 @@ import java.util.List;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.ControlStructure#getAction <em>Action</em>}</li>
  *   <li>{@link org.sintef.thingml.ControlStructure#getCondition <em>Condition</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getControlStructure()
  * @model abstract="true"

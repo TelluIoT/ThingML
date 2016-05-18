@@ -40,11 +40,11 @@ import java.util.Set;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.PropertyImpl#getInit <em>Init</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.PropertyImpl#isChangeable <em>Changeable</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -268,7 +268,7 @@ public class PropertyImpl extends VariableImpl implements Property {
      * @generated NOT
      */
     public List<PlatformAnnotation> allAnnotations() {
-        return this.annotations;
+        return this.getAnnotations();
     }
 
     /**

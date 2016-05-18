@@ -12,13 +12,13 @@ import "../../../thingml.thingml"
 import "../../json_parser.thingml"
 
 
-datatype CSONObject
+object CSONObject
 	@c_type "cson_object*";
 	
-datatype CSONValue
+object CSONValue
 	@c_type "cson_value*";
 	
-datatype CSONValuePTP
+object CSONValuePTP
 	@c_type "cson_value**";
 
 thing JSONParserPSM includes JSONParserMsg

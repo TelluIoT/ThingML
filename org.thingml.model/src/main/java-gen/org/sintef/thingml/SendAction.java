@@ -24,34 +24,17 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
- *   <li>{@link org.sintef.thingml.SendAction#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.sintef.thingml.SendAction#getMessage <em>Message</em>}</li>
  *   <li>{@link org.sintef.thingml.SendAction#getPort <em>Port</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.sintef.thingml.ThingmlPackage#getSendAction()
  * @model
  * @generated
  */
-public interface SendAction extends Action {
-	/**
-	 * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
-	 * The list contents are of type {@link org.sintef.thingml.Expression}.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Parameters</em>' containment reference list isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Parameters</em>' containment reference list.
-	 * @see org.sintef.thingml.ThingmlPackage#getSendAction_Parameters()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<Expression> getParameters();
-
+public interface SendAction extends Action, PassesParameters {
 	/**
 	 * Returns the value of the '<em><b>Message</b></em>' reference.
 	 * <!-- begin-user-doc -->

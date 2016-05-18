@@ -15,17 +15,12 @@
  */
 package org.thingml.compilers.c.arduino;
 
+import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 
 import java.util.ArrayList;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 
 /**
  * Created by ffl on 11.06.15.
@@ -76,10 +71,11 @@ public class CCompilerContextArduino extends CCompilerContext {
 
         pde.append(generatedCode.get(main).toString());
 
-        writeTextFile(getCurrentConfiguration().getName() + ".pde", pde.toString());
+        //writeTextFile(getCurrentConfiguration().getName() + ".pde", pde.toString());
+        writeTextFile(getCurrentConfiguration().getName() + ".ino", pde.toString());
 
     }
-    
+
     @Override
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {
         ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);

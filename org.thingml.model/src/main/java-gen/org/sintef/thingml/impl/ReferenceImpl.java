@@ -26,11 +26,13 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.sintef.thingml.ElmtProperty;
-import org.sintef.thingml.ParamReference;
-import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Reference;
 import org.sintef.thingml.ReferencedElmt;
 import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- begin-user-doc -->
@@ -38,11 +40,11 @@ import org.sintef.thingml.ThingmlPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.sintef.thingml.impl.ReferenceImpl#getReference <em>Reference</em>}</li>
  *   <li>{@link org.sintef.thingml.impl.ReferenceImpl#getParameter <em>Parameter</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -250,4 +252,27 @@ public class ReferenceImpl extends ExpressionImpl implements Reference {
 		return super.eIsSet(featureID);
 	}
 
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		result.add(this);
+		return result;
+	}
+
+	/**
+	 * @generated NOT
+	 * @return
+	 */
+	@Override
+	public List<Expression> getAllExpressions(Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		if(clazz.isInstance(this))
+			result.add(this);
+		return result;
+	}
 } //ReferenceImpl

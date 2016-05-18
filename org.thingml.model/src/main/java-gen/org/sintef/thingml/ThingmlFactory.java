@@ -170,6 +170,15 @@ public interface ThingmlFactory extends EFactory {
 	State createState();
 
 	/**
+	 * Returns a new object of class '<em>Final State</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Final State</em>'.
+	 * @generated
+	 */
+	FinalState createFinalState();
+
+	/**
 	 * Returns a new object of class '<em>Composite State</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -186,6 +195,15 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	ParallelRegion createParallelRegion();
+
+	/**
+	 * Returns a new object of class '<em>Session</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Session</em>'.
+	 * @generated
+	 */
+	Session createSession();
 
 	/**
 	 * Returns a new object of class '<em>Action Block</em>'.
@@ -314,6 +332,15 @@ public interface ThingmlFactory extends EFactory {
 	DoubleLiteral createDoubleLiteral();
 
 	/**
+	 * Returns a new object of class '<em>Character Literal</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Character Literal</em>'.
+	 * @generated
+	 */
+	CharacterLiteral createCharacterLiteral();
+
+	/**
 	 * Returns a new object of class '<em>Not Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -339,6 +366,24 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	PlusExpression createPlusExpression();
+
+	/**
+	 * Returns a new object of class '<em>Increment</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Increment</em>'.
+	 * @generated
+	 */
+	Increment createIncrement();
+
+	/**
+	 * Returns a new object of class '<em>Decrement</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Decrement</em>'.
+	 * @generated
+	 */
+	Decrement createDecrement();
 
 	/**
 	 * Returns a new object of class '<em>Minus Expression</em>'.
@@ -386,6 +431,15 @@ public interface ThingmlFactory extends EFactory {
 	EqualsExpression createEqualsExpression();
 
 	/**
+	 * Returns a new object of class '<em>Not Equals Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Not Equals Expression</em>'.
+	 * @generated
+	 */
+	NotEqualsExpression createNotEqualsExpression();
+
+	/**
 	 * Returns a new object of class '<em>Greater Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -402,6 +456,24 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	LowerExpression createLowerExpression();
+
+	/**
+	 * Returns a new object of class '<em>Greater Or Equal Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Greater Or Equal Expression</em>'.
+	 * @generated
+	 */
+	GreaterOrEqualExpression createGreaterOrEqualExpression();
+
+	/**
+	 * Returns a new object of class '<em>Lower Or Equal Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Lower Or Equal Expression</em>'.
+	 * @generated
+	 */
+	LowerOrEqualExpression createLowerOrEqualExpression();
 
 	/**
 	 * Returns a new object of class '<em>And Expression</em>'.
@@ -494,6 +566,33 @@ public interface ThingmlFactory extends EFactory {
 	ErrorAction createErrorAction();
 
 	/**
+	 * Returns a new object of class '<em>Start Session</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Start Session</em>'.
+	 * @generated
+	 */
+	StartSession createStartSession();
+
+	/**
+	 * Returns a new object of class '<em>Start Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Start Stream</em>'.
+	 * @generated
+	 */
+	StartStream createStartStream();
+
+	/**
+	 * Returns a new object of class '<em>Stop Stream</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Stop Stream</em>'.
+	 * @generated
+	 */
+	StopStream createStopStream();
+
+	/**
 	 * Returns a new object of class '<em>Configuration</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -537,15 +636,6 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	ConfigPropertyAssign createConfigPropertyAssign();
-
-	/**
-	 * Returns a new object of class '<em>Config Include</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Config Include</em>'.
-	 * @generated
-	 */
-	ConfigInclude createConfigInclude();
 
 	/**
 	 * Returns a new object of class '<em>Instance Ref</em>'.
@@ -593,33 +683,6 @@ public interface ThingmlFactory extends EFactory {
 	Stream createStream();
 
 	/**
-	 * Returns a new object of class '<em>Stream Expression</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Stream Expression</em>'.
-	 * @generated
-	 */
-	StreamExpression createStreamExpression();
-
-	/**
-	 * Returns a new object of class '<em>Stream Param Reference</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Stream Param Reference</em>'.
-	 * @generated
-	 */
-	StreamParamReference createStreamParamReference();
-
-	/**
-	 * Returns a new object of class '<em>Stream Output</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Stream Output</em>'.
-	 * @generated
-	 */
-	StreamOutput createStreamOutput();
-
-	/**
 	 * Returns a new object of class '<em>Join Sources</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -665,15 +728,6 @@ public interface ThingmlFactory extends EFactory {
 	MessageParameter createMessageParameter();
 
 	/**
-	 * Returns a new object of class '<em>Sgl Msg Param Operator Call</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Sgl Msg Param Operator Call</em>'.
-	 * @generated
-	 */
-	SglMsgParamOperatorCall createSglMsgParamOperatorCall();
-
-	/**
 	 * Returns a new object of class '<em>Reference</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -681,15 +735,6 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	Reference createReference();
-
-	/**
-	 * Returns a new object of class '<em>Sgl Msg Param Operator</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Sgl Msg Param Operator</em>'.
-	 * @generated
-	 */
-	SglMsgParamOperator createSglMsgParamOperator();
 
 	/**
 	 * Returns a new object of class '<em>Length Window</em>'.
@@ -735,6 +780,24 @@ public interface ThingmlFactory extends EFactory {
 	 * @generated
 	 */
 	LengthArray createLengthArray();
+
+	/**
+	 * Returns a new object of class '<em>Protocol</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Protocol</em>'.
+	 * @generated
+	 */
+	Protocol createProtocol();
+
+	/**
+	 * Returns a new object of class '<em>Object Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Object Type</em>'.
+	 * @generated
+	 */
+	ObjectType createObjectType();
 
 	/**
 	 * Returns the package supported by this factory.
