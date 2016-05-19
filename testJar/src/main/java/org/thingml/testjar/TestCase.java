@@ -184,7 +184,8 @@ public class TestCase {
             Pattern p = Pattern.compile(exp);
             if(p != null) {
                 Matcher m = p.matcher(actual);
-                res = m.find();
+                res = m.matches();
+                //res = m.find();
                 String oracleLog = "";
                 oracleLog += "[test] <" + name + ">" + " for " + lang.compilerID + "\n";
                 //oracleLog += "[raw output] <\n" + ongoingCmd.stdlog + "\n>" + "\n";
