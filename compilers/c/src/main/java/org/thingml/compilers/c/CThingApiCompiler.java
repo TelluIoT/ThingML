@@ -15,6 +15,7 @@
  */
 package org.thingml.compilers.c;
 
+import java.util.ArrayList;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
@@ -287,13 +288,24 @@ public class CThingApiCompiler extends ThingApiCompiler {
 //        }
 //        builder.append("\n");
 //    }
-
+    
+    protected List<State> SessionStates(Region r) {
+        List<State> res = new ArrayList<State>();
+        res.addAll(r.allContainedSessions());
+        for(Session s: r.allContainedSessions()) {
+            res.addAll(s.allContainedStates());
+            res.addAll(SessionStates(s));
+        }
+        return res;
+    }
+    
     protected void generateStateIDs(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
             StateMachine sm = thing.allStateMachines().get(0);
             builder.append("// Definition of the states:\n");
             List<State> states = sm.allContainedStates();
+            states.addAll(SessionStates(sm));
             for (int i = 0; i < states.size(); i++) {
                 builder.append("#define " + ctx.getStateID(states.get(i)) + " " + i + "\n");
             }

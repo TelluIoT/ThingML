@@ -353,7 +353,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
 
         builder.append("switch(state) {\n");
-        for (CompositeState cs : sm.allContainedCompositeStates()) {
+        //for (CompositeState cs : sm.allContainedCompositeStates()) {
+        List<CompositeState> cstates = new ArrayList<>();
+        cstates.addAll(sm.allContainedCompositeStates());
+        for (Session s: sm.allContainedSessions()) cstates.addAll(s.allContainedCompositeStates());
+        for (CompositeState cs : cstates) {
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
             if (debugProfile.isDebugBehavior()) {
                 builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
@@ -378,7 +382,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("break;}\n");
         }
 
-        for (State s : sm.allContainedSimpleStates()) {
+        //for (State s : sm.allContainedSimpleStates()) {
+        List<State> states = new ArrayList<>();
+        states.addAll(sm.allContainedSimpleStates());
+        for (Session s: sm.allContainedSessions()) states.addAll(s.allContainedSimpleStates());
+        for (State s : states) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
             if (debugProfile.isDebugBehavior()) {
@@ -411,7 +419,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("switch(state) {\n");
 
 
-        for (CompositeState cs : sm.allContainedCompositeStates()) {
+        //for (CompositeState cs : sm.allContainedCompositeStates()) {
+        List<CompositeState> cstates = new ArrayList<>();
+        cstates.addAll(sm.allContainedCompositeStates());
+        for (Session s: sm.allContainedSessions()) cstates.addAll(s.allContainedCompositeStates());
+        for (CompositeState cs : cstates) {
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
             ArrayList<Region> regions = new ArrayList<Region>();
             regions.add(cs);
@@ -425,8 +437,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("break;}\n");
 
         }
-
-        for (State s : sm.allContainedSimpleStates()) { // just a leaf state: execute exit actions
+        
+        //for (State s : sm.allContainedSimpleStates()) {
+        List<State> states = new ArrayList<>();
+        states.addAll(sm.allContainedSimpleStates());
+        for (Session s: sm.allContainedSessions()) states.addAll(s.allContainedSimpleStates());
+        for (State s : states) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             if (s.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
 
@@ -453,6 +469,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         StateMachine sm = thing.allStateMachines().get(0); // There has to be one and only one state machine here
 
         Map<Port, Map<Message, List<Handler>>> handlers = sm.allMessageHandlers();
+        for(Session s : sm.allContainedSessions()) handlers.putAll(s.allMessageHandlers());
 
         for (Port port : handlers.keySet()) {
             for (Message msg : handlers.get(port).keySet()) {
@@ -584,6 +601,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         ArrayList<Region> regions = new ArrayList<Region>();
         regions.add(cs);
         regions.addAll(cs.getRegion());
+        regions.addAll(cs.allContainedSessions());
 
         for (Region r : regions) {
 

@@ -320,7 +320,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
             
             //Instances Fifo
             builder.append("// Variables for fifo of the instance\n");
-            builder.append("struct instance_fifo " + inst.getName() + "_fifo;\n");
+            //builder.append("struct instance_fifo " + inst.getName() + "_fifo;\n");
             builder.append("byte " + inst.getName() + "_fifo_array[65535];\n");
             
             
@@ -550,12 +550,12 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         initb.append("initialize_configuration_" + cfg.getName() + "();\n");
         for(Instance i : cfg.allInstances()) {
             
-            initb.append("" + ctx.getInstanceVarName(i) + ".fifo = &" + i.getName() + "_fifo;\n");
-            initb.append("" + i.getName() + "_fifo.fifo_size = 65535;\n");
-            initb.append("" + i.getName() + "_fifo.fifo_head = 0;\n");
-            initb.append("" + i.getName() + "_fifo.fifo_tail = 0;\n");
-            initb.append("" + i.getName() + "_fifo.fifo = &" + i.getName() + "_fifo_array;\n");
-            initb.append("init_runtime(" + ctx.getInstanceVarName(i) + ".fifo);\n");
+            //initb.append("" + ctx.getInstanceVarName(i) + ".fifo = &" + i.getName() + "_fifo;\n");
+            initb.append("" + ctx.getInstanceVarName(i) + ".fifo.fifo_size = 65535;\n");
+            initb.append("" + ctx.getInstanceVarName(i) + ".fifo.fifo_head = 0;\n");
+            initb.append("" + ctx.getInstanceVarName(i) + ".fifo.fifo_tail = 0;\n");
+            initb.append("" + ctx.getInstanceVarName(i) + ".fifo.fifo = &" + i.getName() + "_fifo_array;\n");
+            initb.append("init_runtime(&(" + ctx.getInstanceVarName(i) + ".fifo));\n");
             initb.append("pthread_t thread_" + i.getName() + ";\n\n");
             //initb.append("pthread_create( &thread_" + i.getName() + ", NULL, " + i.getType().getName() + "_run, (void *) &" + ctx.getInstanceVarName(i) + ");\n\n");
         }
@@ -564,6 +564,13 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         while(!Instances.isEmpty()) {
             inst = Instances.get(Instances.size()-1);
             Instances.remove(inst);
+            
+            StateMachine sm = inst.getType().allStateMachines().get(0);
+        
+            if (inst.getType().allStateMachines().size() > 0) { // there is a state machine
+                initb.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(sm) + ", &" + ctx.getInstanceVarName(inst) + ");\n");
+            }
+            
             initb.append("pthread_create( &thread_" + inst.getName() + ", NULL, " + inst.getType().getName() + "_run, (void *) &" + ctx.getInstanceVarName(inst) + ");\n");
         }
             

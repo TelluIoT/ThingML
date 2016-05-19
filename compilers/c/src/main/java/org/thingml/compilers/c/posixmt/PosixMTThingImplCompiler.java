@@ -105,6 +105,10 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("// Enqueue incoming messages:\n");
         generateMessageEnqueue(thing, builder, ctx, debugProfile);
         builder.append("\n");
+
+        builder.append("// Session functions:\n");
+        generateSessionFunctions(thing, builder, ctx, debugProfile);
+        builder.append("\n");
         
         
         builder.append("// Message Process Queue:\n");
@@ -126,10 +130,39 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
 
     }
     
-    private void generateSessionInitialization(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
+    private void generateSessionFunctions(Thing thing, Session s, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
+        builder.append("void fork_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
+        builder.append("struct session_t * new_session;\n");
+        builder.append("new_session = malloc(sizeof(struct session_t));\n");
+        //builder.append("new_session->s = *_instance;\n");
+        builder.append("memcpy(&(new_session->s), _instance, sizeof(struct session_t));\n");
+        builder.append("new_session->s.fifo.fifo = &(new_session->fifo_array);\n");
+        builder.append("new_session->s." + ctx.getStateVarName(thing.allStateMachines().get(0)) + " = " + ctx.getStateID(s.getInitial()) + ";\n");
+        builder.append("init_runtime(&(new_session->s.fifo));\n");
+
+        builder.append("fifo_lock(&(_instance->fifo));\n");
+        builder.append("new_session->next = _instance->sessions_" + s.getName() + ";\n");
+        builder.append("_instance->sessions_" + s.getName() + " = new_session->next;\n");
+        
+        StateMachine sm = thing.allStateMachines().get(0);
+        
+        if (thing.allStateMachines().size() > 0) { // there is a state machine
+            builder.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(s) + ", &(new_session->s));\n");
+            builder.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(s.getInitial()) + ", &(new_session->s));\n");
+        }
+        
+        builder.append("pthread_create( &(new_session->thread), NULL, " + thing.getName() + "_run, (void *) &(new_session->s));\n");
+        builder.append("fifo_unlock(&(_instance->fifo));\n");
+        builder.append("}\n");
+        for(Session se : s.allContainedSessions()) {
+            builder.append("\n");
+            generateSessionFunctions(thing, se, builder, ctx, debugProfile);
+        }
+    }
+    
+    private void generateSessionFunctions(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
         for(Session s : thing.allStateMachines().get(0).allContainedSessions()) {
-            builder.append(" {\n");
-            builder.append("}\n");
+            generateSessionFunctions(thing, s, builder, ctx, debugProfile);
         }
     }
 
@@ -139,9 +172,9 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("int " + thing.getName() + "_processMessageQueue(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n"); // Changed by sdalgard to return int
         
         
-        builder.append("fifo_lock(_instance->fifo);\n");
+        builder.append("fifo_lock(&(_instance->fifo));\n");
         //builder.append("while (fifo_empty(_instance->fifo)) fifo_wait(_instance->fifo);\n");
-        builder.append("if (fifo_empty(_instance->fifo)) fifo_wait(_instance->fifo);\n");
+        builder.append("if (fifo_empty(&(_instance->fifo))) fifo_wait(&(_instance->fifo));\n");
         
         Set<Message> messageReceived = new HashSet<>();
         int max_msg_size = 4; // at least the code and the source instance id (2 bytes + 2 bytes)
@@ -167,8 +200,8 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("uint8_t mbufi = 0;\n\n");
 
         builder.append("// Read the code of the next port/message in the queue\n");
-        builder.append("uint16_t code = fifo_dequeue(_instance->fifo) << 8;\n\n");
-        builder.append("code += fifo_dequeue(_instance->fifo);\n\n");
+        builder.append("uint16_t code = fifo_dequeue(&(_instance->fifo)) << 8;\n\n");
+        builder.append("code += fifo_dequeue(&(_instance->fifo));\n\n");
 
         builder.append("// Switch to call the appropriate handler\n");
         builder.append("switch(code) {\n");
@@ -177,10 +210,10 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         for (Message m : thing.allIncomingMessages()) {
             builder.append("case " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + ":{\n");
 
-            builder.append("while (mbufi < " + (ctx.getMessageSerializationSize(m) - 2) + ") mbuf[mbufi++] = fifo_dequeue(_instance->fifo);\n");
+            builder.append("while (mbufi < " + (ctx.getMessageSerializationSize(m) - 2) + ") mbuf[mbufi++] = fifo_dequeue(&(_instance->fifo));\n");
             // Fill the buffer
 
-            builder.append("fifo_unlock(_instance->fifo);\n");
+            builder.append("fifo_unlock(&(_instance->fifo));\n");
             //builder.append("fifo_unlock_and_notify(_instance->fifo);\n");
 
             // Begin Horrible deserialization trick
@@ -246,9 +279,12 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
     private void generateThingRun(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("void " + thing.getName() + "_run(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
         StateMachine sm = thing.allStateMachines().get(0);
+        
         if (thing.allStateMachines().size() > 0) { // there is a state machine
-            builder.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(sm) + ", _instance);\n");
+            //builder.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(sm) + ", _instance);\n");
+            //builder.append(sm.qname("_") + "_OnEntry(_instance->" + ctx.getStateVarName(sm) + ", _instance);\n");
         }
+        
         builder.append("while(1){\n");
         if (sm.hasEmptyHandlers()) {
             builder.append("int emptyEventConsumed = 1;\n");
@@ -271,38 +307,38 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                     builder.append("void enqueue_" + thing.getName() + "_" + p.getName() + "_" + m.getName());
                     ctx.appendFormalParametersForEnqueue(builder, thing, m);
                     builder.append(" {\n");
-                    builder.append("    fifo_lock(inst->fifo);\n");
+                    builder.append("    fifo_lock(&(inst->fifo));\n");
 
-                    builder.append("    if ( fifo_byte_available(inst->fifo) > " + ctx.getMessageSerializationSize(m) + " ) {\n\n");
+                    builder.append("    if ( fifo_byte_available(&(inst->fifo)) > " + ctx.getMessageSerializationSize(m) + " ) {\n\n");
 
-                    builder.append("        _fifo_enqueue(inst->fifo, (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + " >> 8) & 0xFF );\n");
-                    builder.append("        _fifo_enqueue(inst->fifo, " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + " & 0xFF );\n\n");
+                    builder.append("        _fifo_enqueue(&(inst->fifo), (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + " >> 8) & 0xFF );\n");
+                    builder.append("        _fifo_enqueue(&(inst->fifo), " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + " & 0xFF );\n\n");
 
                     builder.append("        // Reception Port\n");
-                    builder.append("        _fifo_enqueue(inst->fifo, (" + ctx.getPortID(thing, p) + " >> 8) & 0xFF );\n");
-                    builder.append("        _fifo_enqueue(inst->fifo, " + ctx.getPortID(thing, p) + " & 0xFF );\n");
+                    builder.append("        _fifo_enqueue(&(inst->fifo), (" + ctx.getPortID(thing, p) + " >> 8) & 0xFF );\n");
+                    builder.append("        _fifo_enqueue(&(inst->fifo), " + ctx.getPortID(thing, p) + " & 0xFF );\n");
 
                     for (Parameter pt : m.getParameters()) {
                         builder.append("\n// parameter " + pt.getName() + "\n");
-                        ctx.bytesToSerialize(pt.getType(), builder, pt.getName(), pt, "inst->fifo");
+                        ctx.bytesToSerialize(pt.getType(), builder, pt.getName(), pt, "&(inst->fifo)");
                     }
                     builder.append("    }\n");
                     
                     for(Session s : thing.allStateMachines().get(0).allContainedSessions()) {
-                        builder.append("    struct session_" + s.getName() + "_list * head_" + s.getName() + " = inst.sessions_" + s.getName() + ";\n");
+                        builder.append("    struct session_t * head_" + s.getName() + " = inst->sessions_" + s.getName() + ";\n");
                         builder.append("    while (head_" + s.getName() + " != NULL) {\n");
 
-                        builder.append("        void enqueue_" + thing.getName() + "_" + p.getName() + "_" + m.getName() + "(head_" + s.getName() + "->s");
+                        builder.append("        enqueue_" + thing.getName() + "_" + p.getName() + "_" + m.getName() + "(&(head_" + s.getName() + "->s)");
                         for (Parameter pt : m.getParameters()) {
                             builder.append(", " + pt.getName());
                         }
                         builder.append(");\n");
                         
-                        builder.append("        head_" + s.getName() + " = head_" + s.getName() + ".next;\n");
+                        builder.append("        head_" + s.getName() + " = head_" + s.getName() + "->next;\n");
                         builder.append("    }\n");
                     }
 
-                    builder.append("    fifo_unlock_and_notify(inst->fifo);\n");
+                    builder.append("    fifo_unlock_and_notify(&(inst->fifo));\n");
                     builder.append("}\n");
                 }
             }

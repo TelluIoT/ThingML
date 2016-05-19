@@ -37,7 +37,7 @@ import java.io.File;
 public class PosixMTCompiler extends OpaqueThingMLCompiler {
 
     public PosixMTCompiler() {
-        super(new CThingActionCompilerPosix(), new PosixMTThingApiCompiler(), new PosixMTCfgMainGenerator(),
+        super(new PosixMTThingActionCompiler(), new PosixMTThingApiCompiler(), new PosixMTCfgMainGenerator(),
                 new PosixCCfgBuildCompiler(), new PosixMTThingImplCompiler(),
                 new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
         this.checker = new PosixChecker(this.getID());

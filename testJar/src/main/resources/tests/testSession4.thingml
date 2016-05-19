@@ -29,7 +29,7 @@ thing TestSession4 includes Test
 				on entry do 
 					harnessOut!testOut(ID)
 					ID = '\'T\''
-					fork s
+					fork t
 				end
 			}
 

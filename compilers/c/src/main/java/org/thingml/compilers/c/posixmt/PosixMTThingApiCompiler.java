@@ -20,6 +20,7 @@
  */
 package org.thingml.compilers.c.posixmt;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.sintef.thingml.Handler;
@@ -46,15 +47,25 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         super.generateCHeaderAnnotation(thing, builder, ctx);
     }
     
+    protected void generateSessionListDeclaration(Region r, StringBuilder builder) {
+        for(Session s :r.allContainedSessions()) {
+            builder.append("struct session_t * sessions_" + s.getName() + ";\n");
+            generateSessionListDeclaration(s, builder);
+        }
+    }
+    
+    protected List<Region> regionSession(Region r) {
+        List<Region> res = new ArrayList<Region>();
+        res.addAll(r.allContainedSessions());
+        for(Session s : r.allContainedSessions()) res.addAll(regionSession(s));
+        return res;
+    }
+    
     @Override
     protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("// Definition of the sessions stuct:\n\n");
-        for(Session s :thing.allStateMachines().get(0).allContainedSessions()) {
-            builder.append("struct session_" + s.getName() + "_list * sessions_" + s.getName() + " {\n");
-            builder.append("    struct " + ctx.getInstanceStructName(thing) + " s;\n");
-            builder.append("    struct session_" + s.getName() + "_list * next\n");
-            
-            builder.append("}\n\n");
+        if(!thing.allStateMachines().get(0).allContainedSessions().isEmpty()) {
+            builder.append("struct session_t;\n\n");
         }
         
         builder.append("// Definition of the instance stuct:\n");
@@ -78,13 +89,14 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         }
         
         //fifo
-        builder.append("struct instance_fifo * fifo;\n");
+        builder.append("struct instance_fifo fifo;\n");
         
         //Sessions
         builder.append("\n// Instances of different sessions\n");
-        for(Session s :thing.allStateMachines().get(0).allContainedSessions()) {
-            builder.append("struct session_" + s.getName() + "_list * sessions_" + s.getName() + ";\n");
-        }
+        generateSessionListDeclaration(thing.allStateMachines().get(0), builder);
+        /*for(Session s :thing.allStateMachines().get(0).allContainedSessions()) {
+            builder.append("struct session_t * sessions_" + s.getName() + ";\n");
+        }*/
         
         
         // Variables for each region to store its current state
@@ -97,7 +109,10 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
 
         if (thing.allStateMachines().size() > 0) {
             StateMachine sm = thing.allStateMachines().get(0);
-            for (Region r : sm.allContainedRegions()) {
+            List<Region> regions = new ArrayList<>();
+            regions.addAll(regionSession(sm));
+            regions.addAll(sm.allContainedRegions());
+            for (Region r : regions) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
         }
@@ -114,6 +129,16 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
             builder.append(";\n");
         }
         builder.append("\n};\n");
+        
+        if(!thing.allStateMachines().get(0).allContainedSessions().isEmpty()) {
+            builder.append("struct session_t {\n");
+            builder.append("    struct " + ctx.getInstanceStructName(thing) + " s;\n");
+            builder.append("    pthread_t thread;\n");
+            builder.append("    byte fifo_array[65535];\n");
+            builder.append("    struct session_t * next;\n");
+            
+            builder.append("};\n\n");
+        }
     }
     
     @Override
