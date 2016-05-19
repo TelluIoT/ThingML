@@ -15,7 +15,6 @@ extern "C" {
 
 typedef unsigned char byte;
 
-#define MAX_INSTANCES 32
 
 /*********************************
  * Instance IDs and lookup
@@ -24,6 +23,11 @@ void * instance_by_id(uint16_t id);
 
 uint16_t add_instance(void * instance_struct);
 
+
+
+/*********************************
+ *              FIFO             *
+ *********************************/
 
 struct instance_fifo {
     pthread_mutex_t fifo_mut;

@@ -32,6 +32,7 @@ import org.sintef.thingml.Instance;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
+import org.sintef.thingml.Session;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.DebugProfile;
@@ -100,6 +101,10 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("// Observers for outgoing messages:\n");
         generatePrivateMessageSendingOperations(thing, builder, ctx, debugProfile);
         builder.append("\n");
+
+        builder.append("// Enqueue incoming messages:\n");
+        generateMessageEnqueue(thing, builder, ctx, debugProfile);
+        builder.append("\n");
         
         
         builder.append("// Message Process Queue:\n");
@@ -120,6 +125,13 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         ctx.getBuilder(ctx.getPrefix() + thing.getName() + ".c").append(itemplate);
 
     }
+    
+    private void generateSessionInitialization(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
+        for(Session s : thing.allStateMachines().get(0).allContainedSessions()) {
+            builder.append(" {\n");
+            builder.append("}\n");
+        }
+    }
 
     private void generateMessageProcessQueue(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
         
@@ -128,7 +140,8 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         
         
         builder.append("fifo_lock(_instance->fifo);\n");
-        builder.append("while (fifo_empty(_instance->fifo)) fifo_wait(_instance->fifo);\n");
+        //builder.append("while (fifo_empty(_instance->fifo)) fifo_wait(_instance->fifo);\n");
+        builder.append("if (fifo_empty(_instance->fifo)) fifo_wait(_instance->fifo);\n");
         
         Set<Message> messageReceived = new HashSet<>();
         int max_msg_size = 4; // at least the code and the source instance id (2 bytes + 2 bytes)
@@ -167,8 +180,8 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             builder.append("while (mbufi < " + (ctx.getMessageSerializationSize(m) - 2) + ") mbuf[mbufi++] = fifo_dequeue(_instance->fifo);\n");
             // Fill the buffer
 
-            //builder.append("fifo_unlock(_instance->fifo);\n");
-            builder.append("fifo_unlock_and_notify(_instance->fifo);\n");
+            builder.append("fifo_unlock(_instance->fifo);\n");
+            //builder.append("fifo_unlock_and_notify(_instance->fifo);\n");
 
             // Begin Horrible deserialization trick
             int idx_bis = 2;
@@ -248,5 +261,51 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         
         builder.append("}\n");
         builder.append("}\n");
+    }
+
+    private void generateMessageEnqueue(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
+        builder.append("// Message enqueue\n");
+        for (Port p : thing.allPorts()) {
+            for (Message m : p.getReceives()) {
+                if(thing.allStateMachines().get(0).canHandle(p, m)) {
+                    builder.append("void enqueue_" + thing.getName() + "_" + p.getName() + "_" + m.getName());
+                    ctx.appendFormalParametersForEnqueue(builder, thing, m);
+                    builder.append(" {\n");
+                    builder.append("    fifo_lock(inst->fifo);\n");
+
+                    builder.append("    if ( fifo_byte_available(inst->fifo) > " + ctx.getMessageSerializationSize(m) + " ) {\n\n");
+
+                    builder.append("        _fifo_enqueue(inst->fifo, (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + " >> 8) & 0xFF );\n");
+                    builder.append("        _fifo_enqueue(inst->fifo, " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + " & 0xFF );\n\n");
+
+                    builder.append("        // Reception Port\n");
+                    builder.append("        _fifo_enqueue(inst->fifo, (" + ctx.getPortID(thing, p) + " >> 8) & 0xFF );\n");
+                    builder.append("        _fifo_enqueue(inst->fifo, " + ctx.getPortID(thing, p) + " & 0xFF );\n");
+
+                    for (Parameter pt : m.getParameters()) {
+                        builder.append("\n// parameter " + pt.getName() + "\n");
+                        ctx.bytesToSerialize(pt.getType(), builder, pt.getName(), pt, "inst->fifo");
+                    }
+                    builder.append("    }\n");
+                    
+                    for(Session s : thing.allStateMachines().get(0).allContainedSessions()) {
+                        builder.append("    struct session_" + s.getName() + "_list * head_" + s.getName() + " = inst.sessions_" + s.getName() + ";\n");
+                        builder.append("    while (head_" + s.getName() + " != NULL) {\n");
+
+                        builder.append("        void enqueue_" + thing.getName() + "_" + p.getName() + "_" + m.getName() + "(head_" + s.getName() + "->s");
+                        for (Parameter pt : m.getParameters()) {
+                            builder.append(", " + pt.getName());
+                        }
+                        builder.append(");\n");
+                        
+                        builder.append("        head_" + s.getName() + " = head_" + s.getName() + ".next;\n");
+                        builder.append("    }\n");
+                    }
+
+                    builder.append("    fifo_unlock_and_notify(inst->fifo);\n");
+                    builder.append("}\n");
+                }
+            }
+        }
     }
 }

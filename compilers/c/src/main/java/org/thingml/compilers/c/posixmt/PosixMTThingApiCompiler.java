@@ -27,6 +27,7 @@ import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.Region;
+import org.sintef.thingml.Session;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.DebugProfile;
@@ -47,6 +48,15 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
     
     @Override
     protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+        builder.append("// Definition of the sessions stuct:\n\n");
+        for(Session s :thing.allStateMachines().get(0).allContainedSessions()) {
+            builder.append("struct session_" + s.getName() + "_list * sessions_" + s.getName() + " {\n");
+            builder.append("    struct " + ctx.getInstanceStructName(thing) + " s;\n");
+            builder.append("    struct session_" + s.getName() + "_list * next\n");
+            
+            builder.append("}\n\n");
+        }
+        
         builder.append("// Definition of the instance stuct:\n");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
@@ -70,9 +80,15 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         //fifo
         builder.append("struct instance_fifo * fifo;\n");
         
+        //Sessions
+        builder.append("\n// Instances of different sessions\n");
+        for(Session s :thing.allStateMachines().get(0).allContainedSessions()) {
+            builder.append("struct session_" + s.getName() + "_list * sessions_" + s.getName() + ";\n");
+        }
+        
         
         // Variables for each region to store its current state
-        builder.append("// Variables for the current instance state\n");
+        builder.append("\n// Variables for the current instance state\n");
 
         // This should normally be checked before and should never be true
         if (thing.allStateMachines().size() > 1) {
@@ -101,10 +117,24 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
     }
     
     @Override
-    protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        builder.append("// ProcessMessageQueue\n");
-        builder.append("int " + thing.getName() + "_processMessageQueue(struct " + ctx.getInstanceStructName(thing) + " * _instance);\n");
-        builder.append("void " + thing.getName() + "_run(struct " + ctx.getInstanceStructName(thing) + " * _instance);\n");
+    protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext cctx) {
+        PosixMTCompilerContext ctx = (PosixMTCompilerContext) cctx;
+        
+        builder.append("// Message enqueue\n");
+        for (Port p : thing.allPorts()) {
+            for (Message m : p.getReceives()) {
+                if(thing.allStateMachines().get(0).canHandle(p, m)) {
+                    builder.append("void enqueue_" + thing.getName() + "_" + p.getName() + "_" + m.getName());
+                    ctx.appendFormalParametersForEnqueue(builder, thing, m);
+                    builder.append(";\n");
+                }
+            }
+        }
+        
+        builder.append("\n// ProcessMessageQueue\n");
+        builder.append("int " + thing.getName() + "_processMessageQueue(struct " + ctx.getInstanceStructName(thing) + " * _instance);\n\n");
+        builder.append("// Run\n");
+        builder.append("void " + thing.getName() + "_run(struct " + ctx.getInstanceStructName(thing) + " * _instance);\n\n");
         
     }
 }
