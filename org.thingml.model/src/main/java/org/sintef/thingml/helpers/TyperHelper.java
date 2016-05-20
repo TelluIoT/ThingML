@@ -28,7 +28,7 @@ public class TyperHelper {
 
     public static Type getBroadType(Type self) {
         if (AnnotatedElementHelper.hasAnnotation(self, "type_checker")) {
-            String ty = AnnotatedElementHelper.annotation(self, "type_checker").get(0);
+            final String ty = AnnotatedElementHelper.annotation(self, "type_checker").get(0);
             if (ty.equals("Integer"))
                 return Types.INTEGER_TYPE;
             else if (ty.equals("Real"))
@@ -39,6 +39,8 @@ public class TyperHelper {
                 return Types.CHARACTER_TYPE;
             else if (ty.equals("String"))
                 return Types.STRING_TYPE;
+            else if (ty.equals("Object"))
+                return Types.OBJECT_TYPE;
             else if (ty.equals("Error"))
                 return Types.ERROR_TYPE;
             else if (ty.equals("Void"))
@@ -52,13 +54,13 @@ public class TyperHelper {
     }
 
     public static boolean isA(Type self, Type t) {
-        if (getBroadType(self) == Types.ANY_TYPE)//anything is an Any
+        if (getBroadType(t) == Types.ANY_TYPE)//anything is an Any
             return true;
-        if (getBroadType(self) == getBroadType(self))
+        if (getBroadType(self) == getBroadType(t))
             return true;
-        if (getBroadType(self) == Types.INTEGER_TYPE && getBroadType(self) == Types.REAL_TYPE) //an Integer is a Real
+        if (getBroadType(self) == Types.INTEGER_TYPE && getBroadType(t) == Types.REAL_TYPE) //an Integer is a Real
             return true;
-        if (getBroadType(self) == Types.STRING_TYPE && getBroadType(self) == Types.OBJECT_TYPE)//a String is an Object
+        if (getBroadType(self) == Types.STRING_TYPE && getBroadType(t) == Types.OBJECT_TYPE)//a String is an Object
             return true;
         return false;
     }

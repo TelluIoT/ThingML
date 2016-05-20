@@ -52,9 +52,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
-    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
-        Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
-        Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
+    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) { //FIXME: avoid duplication
+        final Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
+        final Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
         if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getRhs();
@@ -85,9 +85,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
-    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
-        Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
-        Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
+    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) { //FIXME: avoid duplication
+        final Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
+        final Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
         if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getRhs();

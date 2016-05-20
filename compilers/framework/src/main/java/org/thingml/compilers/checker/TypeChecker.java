@@ -138,7 +138,6 @@ public class TypeChecker extends ThingmlSwitch<Type> {
     }
 
     private Type caseComparison(Type t1, Type t2) {
-        System.out.println("caseComparison(" + t1.getName() + ", " + t2.getName() + ")");
         if ((t1.equals(Types.INTEGER_TYPE) || t1.equals(Types.REAL_TYPE) || t1.equals(Types.ANY_TYPE)) && (t2.equals(Types.INTEGER_TYPE) || t2.equals(Types.REAL_TYPE) || t2.equals(Types.ANY_TYPE)))
             return Types.BOOLEAN_TYPE;
         if ((t1.equals(Types.BOOLEAN_TYPE) || t1.equals(Types.ANY_TYPE)) && (t2.equals(Types.BOOLEAN_TYPE) || t2.equals(Types.ANY_TYPE)))
