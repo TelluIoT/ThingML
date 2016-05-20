@@ -1,4 +1,4 @@
-// SintefboardPortForward.c *** Dummy to make first step in reverse engineering .... sdalgard
+// RcdPortForward.c *** Dummy to make first step in reverse engineering .... sdalgard
 
 
 void /*CFG_CPPNAME_SCOPE*//*PORT_NAME*/_setup(void) {

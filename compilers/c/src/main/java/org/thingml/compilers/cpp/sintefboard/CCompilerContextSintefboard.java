@@ -57,6 +57,9 @@ public class CCompilerContextSintefboard extends CCompilerContext {
             } else if (filename.startsWith(configName)) {
                 // These files will be handled later
                 System.out.println("Special handling2 of " + filename);
+            } else if (filename.startsWith("hashdefines")) {
+                // These files will be handled later
+                System.out.println("Special handling3 of " + filename);
             } else if (filename.endsWith(".h")) {
                 headers.add(filename);
                 System.out.println("Adding " + filename + " to headers");
@@ -88,6 +91,7 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         }
 
         String stringHeader = generatedCode.get(configName + ".h").toString();
+        stringHeader = stringHeader.replace("/*HASH_DEFINES*/", generatedCode.get("hashdefines").toString());
         stringHeader = stringHeader.replace("/*NAME*/", configName);
         stringHeader = stringHeader.replace("/*RUNTIME_CLASS*/", generatedCode.get("runtime.h").toString());
         stringHeader = stringHeader.replace("/*HEADER_CONTEXT*/", generatedCode.get(configName + ".h_ctx").toString());

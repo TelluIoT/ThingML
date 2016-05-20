@@ -4,6 +4,8 @@
  *  Generated from ThingML (http://www.thingml.org)
  *****************************************************/
 
+/*HASH_DEFINES*/
+
 typedef unsigned char byte; 
 /*TYPEDEFS*/
 
