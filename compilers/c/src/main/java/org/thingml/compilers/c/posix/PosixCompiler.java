@@ -18,6 +18,7 @@ package org.thingml.compilers.c.posix;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;

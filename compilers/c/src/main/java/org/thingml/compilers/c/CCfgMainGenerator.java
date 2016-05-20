@@ -562,7 +562,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         //Instance Port Message Forwarders
 
         for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
-            //if (eco.hasAnnotation("c_external_send")) {
+            //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
             Thing t = eco.getInst().getInstance().getType();
             Port p = eco.getPort();
 
@@ -837,8 +837,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     for (ExternalConnector eco : messageExternalSenders.get(m)) {
                         String portName = eco.getName();
                         /*String portName;
-                        if(eco.hasAnnotation("port_name")) {
-                            portName = eco.annotation("port_name").iterator().next();
+                        if(AnnotatedElementHelper.hasAnnotation(eco, "port_name")) {
+                            portName = AnnotatedElementHelper.annotation(eco, "port_name").iterator().next();
                         } else {
                             portName = eco.getProtocol();
                         }*/

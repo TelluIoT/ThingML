@@ -35,7 +35,7 @@ public class SourceCompositionResultMessageReferenceResolver implements org.sint
 
 		if (!result.wasResolved()) {
 			Thing thing = ThingMLHelpers.findContainingThing(container);
-			for(Message m : thing.allMessages()) {
+			for(Message m : ThingMLHelpers.allMessages(thing)) {
 				if(resolveFuzzy && m.getName().startsWith(identifier)) {
 					result.addMapping(m.getName(),m);
 				} else if(!resolveFuzzy && m.getName().equals(identifier)) {

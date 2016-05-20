@@ -75,7 +75,7 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
 
 
         for (ExternalConnector eco : this.getExternalConnectors()) {
-            //if (eco.hasAnnotation("c_external_send")) {
+            //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
             Thing t = eco.getInst().getInstance().getType();
             Port p = eco.getPort();
 
@@ -98,7 +98,7 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
                 builder.append("\n//Forwarding with specified function \n");
                 builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
 
-                //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                //builder.append(AnnotatedElementHelper.annotation(eco, "c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
                 builder.append("}\n\n");
             }
 
@@ -110,7 +110,7 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
 
 
         for (ExternalConnector eco : this.getExternalConnectors()) {
-            //if (eco.hasAnnotation("c_external_send")) {
+            //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
             Thing t = eco.getInst().getInstance().getType();
             Port p = eco.getPort();
 
@@ -128,7 +128,7 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
                 builder.append("\n//Forwarding with specified function \n");
                 builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
 
-                //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                //builder.append(AnnotatedElementHelper.annotation(eco, "c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
                 builder.append("}\n\n");
             }
 

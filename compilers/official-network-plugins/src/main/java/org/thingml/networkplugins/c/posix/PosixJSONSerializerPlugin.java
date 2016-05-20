@@ -22,6 +22,7 @@ package org.thingml.networkplugins.c.posix;
 
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
 
@@ -74,25 +75,25 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                 builder.append("	len += " + (p.getName().length() + 4) + ";//,\"" + p.getName().length() + "\":\n");
             }
 
-            if (p.getType().isDefined("c_type", "uint8_t")
-                    || p.getType().isDefined("c_type", "uint16_t")
-                    || p.getType().isDefined("c_type", "uint32_t")
-                    || p.getType().isDefined("c_type", "uint64_t")
-                    || p.getType().isDefined("c_type", "int8_t")
-                    || p.getType().isDefined("c_type", "int16_t")
-                    || p.getType().isDefined("c_type", "int32_t")
-                    || p.getType().isDefined("c_type", "int64_t")
-                    || p.getType().isDefined("c_type", "int")
-                    || p.getType().isDefined("c_type", "byte")
-                    || p.getType().isDefined("c_type", "long int")
-                    || p.getType().isDefined("c_type", "unsigned int")
-                    || p.getType().isDefined("c_type", "long")) {
+            if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
                 builder.append("	len += snprintf(NULL, 0, \"%i\", " + p.getName() + ");\n");
-            } else if (p.getType().isDefined("c_type", "float")
-                    || p.getType().isDefined("c_type", "double")) {
+            } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
                 builder.append("	len += snprintf(NULL, 0, \"%g\", " + p.getName() + ");\n");
-            } else if (p.getType().isDefined("c_type", "bool")
-                    || p.getType().isDefined("c_type", "boolean")) {
+            } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
                 builder.append("	len += snprintf(NULL, 0, " + p.getName() + " ? \"true\" : \"false\");\n");
             } else {
                 builder.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
@@ -113,25 +114,25 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                 builder.append("	index += sprintf(" + bufferName + "+index, \",\");\n");
             }
 
-            if (p.getType().isDefined("c_type", "uint8_t")
-                    || p.getType().isDefined("c_type", "uint16_t")
-                    || p.getType().isDefined("c_type", "uint32_t")
-                    || p.getType().isDefined("c_type", "uint64_t")
-                    || p.getType().isDefined("c_type", "int8_t")
-                    || p.getType().isDefined("c_type", "int16_t")
-                    || p.getType().isDefined("c_type", "int32_t")
-                    || p.getType().isDefined("c_type", "int64_t")
-                    || p.getType().isDefined("c_type", "int")
-                    || p.getType().isDefined("c_type", "byte")
-                    || p.getType().isDefined("c_type", "long int")
-                    || p.getType().isDefined("c_type", "unsigned int")
-                    || p.getType().isDefined("c_type", "long")) {
+            if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
                 builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%i\", " + p.getName() + ");\n");
-            } else if (p.getType().isDefined("c_type", "float")
-                    || p.getType().isDefined("c_type", "double")) {
+            } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
                 builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%g\", " + p.getName() + ");\n");
-            } else if (p.getType().isDefined("c_type", "bool")
-                    || p.getType().isDefined("c_type", "boolean")) {
+            } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
+                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
                 builder.append("	index += sprintf(" + bufferName + "+index, " + p.getName() + " ? \"true\" : \"false\");\n");
             } else {
                 builder.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
@@ -291,25 +292,25 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                 messagesparser.append("		if(strcmp(\"" + p.getName() + "\", param_name) == 0) { //" + p.getName() + "\n");
 
 
-                if (p.getType().isDefined("c_type", "uint8_t")
-                        || p.getType().isDefined("c_type", "uint16_t")
-                        || p.getType().isDefined("c_type", "uint32_t")
-                        || p.getType().isDefined("c_type", "uint64_t")
-                        || p.getType().isDefined("c_type", "int8_t")
-                        || p.getType().isDefined("c_type", "int16_t")
-                        || p.getType().isDefined("c_type", "int32_t")
-                        || p.getType().isDefined("c_type", "int64_t")
-                        || p.getType().isDefined("c_type", "int")
-                        || p.getType().isDefined("c_type", "byte")
-                        || p.getType().isDefined("c_type", "long int")
-                        || p.getType().isDefined("c_type", "unsigned int")
-                        || p.getType().isDefined("c_type", "long")) {
+                if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
                     messagesparser.append("			*" + p.getName() + " = (" + ctx.getCType(p.getType()) + ") strtol(m, &mend, 10);\n");
-                } else if (p.getType().isDefined("c_type", "float")
-                        || p.getType().isDefined("c_type", "double")) {
+                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
                     messagesparser.append("			*" + p.getName() + " = (" + ctx.getCType(p.getType()) + ") strtof(m, &mend);\n");
-                } else if (p.getType().isDefined("c_type", "bool")
-                        || p.getType().isDefined("c_type", "boolean")) {
+                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
                     messagesparser.append("			if(param_val_len < 4) {return -1;} // incorrect val\n" +
                             "			char param_val_bool[5];\n" +
                             "			param_val_bool[4] = '\\0';\n" +

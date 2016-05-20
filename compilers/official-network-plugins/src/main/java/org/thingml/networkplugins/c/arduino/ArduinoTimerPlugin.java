@@ -22,6 +22,7 @@ package org.thingml.networkplugins.c.arduino;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
@@ -70,8 +71,8 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             //How many Hardware timers?
             int nbHWTimer = 0;
             for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
-                if (eco.hasAnnotation("hardware_timer")) {
-                    int thisTimer = Integer.parseInt(eco.annotation("hardware_timer").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(eco, "hardware_timer")) {
+                    int thisTimer = Integer.parseInt(AnnotatedElementHelper.annotation(eco, "hardware_timer").iterator().next());
                     if (thisTimer == 0) {
                         eco0.add(eco);
                     } else if (thisTimer == 1) {
@@ -186,20 +187,20 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                 //System.out.println("eco now named:" + eco.getName());
 
                 for (Message msg : eco.getPort().getSends()) {
-                    if (msg.hasAnnotation("timer_start")) {
+                    if (AnnotatedElementHelper.hasAnnotation(msg, "timer_start")) {
                         timerStart |= true;
                     }
-                    if (msg.hasAnnotation("timer_cancel")) {
+                    if (AnnotatedElementHelper.hasAnnotation(msg, "timer_cancel")) {
                         timerCancel |= true;
                     }
                 }
                 for (Message msg : eco.getPort().getReceives()) {
-                    if (msg.hasAnnotation("timeout")) {
+                    if (AnnotatedElementHelper.hasAnnotation(msg, "timeout")) {
                         timeOut |= true;
                     }
-                    if (msg.hasAnnotation("xms_tic")) {
+                    if (AnnotatedElementHelper.hasAnnotation(msg, "xms_tic")) {
                         xmsTic |= true;
-                        BigInteger mytic = BigInteger.valueOf(Integer.parseInt(msg.annotation("xms_tic").iterator().next()));
+                        BigInteger mytic = BigInteger.valueOf(Integer.parseInt(AnnotatedElementHelper.annotation(msg, "xms_tic").iterator().next()));
                         Boolean found = false;
                         for (BigInteger i : tics) {
                             if (mytic.compareTo(i) == 0) {
@@ -213,8 +214,8 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                     }
                 }
 
-                if (eco.hasAnnotation("nb_soft_timer")) {
-                    nbSoftTimer += Integer.parseInt(eco.annotation("nb_soft_timer").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(eco, "nb_soft_timer")) {
+                    nbSoftTimer += Integer.parseInt(AnnotatedElementHelper.annotation(eco, "nb_soft_timer").iterator().next());
                 }
             }
 
@@ -374,7 +375,7 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                     Set<Message> timeoutMessages = new HashSet<Message>();
                     for (ExternalConnector eco : ExternalConnectors) {
                         for (Message msg : eco.getPort().getReceives()) {
-                            if (msg.hasAnnotation("timeout")) {
+                            if (AnnotatedElementHelper.hasAnnotation(msg, "timeout")) {
                                 Boolean found = false;
                                 for (Message m : timeoutMessages) {
                                     if (EcoreUtil.equals(msg, m)) {
@@ -405,8 +406,8 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                         Set<Message> timeoutMessages = new HashSet<Message>();
                         for (ExternalConnector eco : ExternalConnectors) {
                             for (Message msg : eco.getPort().getReceives()) {
-                                if (msg.hasAnnotation("xms_tic")) {
-                                    BigInteger x = BigInteger.valueOf(Integer.parseInt(msg.annotation("xms_tic").iterator().next()));
+                                if (AnnotatedElementHelper.hasAnnotation(msg, "xms_tic")) {
+                                    BigInteger x = BigInteger.valueOf(Integer.parseInt(AnnotatedElementHelper.annotation(msg, "xms_tic").iterator().next()));
                                     if (x.compareTo(bi) == 0) {
                                         Boolean found = false;
                                         for (Message m : timeoutMessages) {
@@ -472,11 +473,11 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                     if (AnnotatedElementHelper.hasAnnotation(m, "timer_start")) {
                         String paramID = "id", paramTime = "time";
                         for (Parameter pt : m.getParameters()) {
-                            if (pt.allAnnotations() != null) {
-                                if (pt.hasAnnotation("id")) {
+                            if (AnnotatedElementHelper.allAnnotations(pt) != null) {
+                                if (AnnotatedElementHelper.hasAnnotation(pt, "id")) {
                                     paramID = pt.getName();
                                 }
-                                if (pt.hasAnnotation("time")) {
+                                if (AnnotatedElementHelper.hasAnnotation(pt, "time")) {
                                     paramTime = pt.getName();
                                 }
                             }
@@ -487,8 +488,8 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                     if (AnnotatedElementHelper.hasAnnotation(m, "timer_cancel")) {
                         String paramID = "id";
                         for (Parameter pt : m.getParameters()) {
-                            if (pt.allAnnotations() != null) {
-                                if (pt.hasAnnotation("id")) {
+                            if (AnnotatedElementHelper.allAnnotations(pt) != null) {
+                                if (AnnotatedElementHelper.hasAnnotation(pt, "id")) {
                                     paramID = pt.getName();
                                 }
                             }

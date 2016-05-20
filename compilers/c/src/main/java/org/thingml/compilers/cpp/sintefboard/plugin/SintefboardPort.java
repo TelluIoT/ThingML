@@ -73,8 +73,8 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
             //System.out.println("eco name:"+eco.getName());
 
             //Integer baudrate;
-            //if(eco.hasAnnotation("serial_baudrate")) {
-            //    baudrate = Integer.parseInt(eco.annotation("serial_baudrate").iterator().next());
+            //if(AnnotatedElementHelper.hasAnnotation(eco, "serial_baudrate")) {
+            //    baudrate = Integer.parseInt(AnnotatedElementHelper.annotation(eco, "serial_baudrate").iterator().next());
             //} else {
             //    baudrate = 115200;
             //}
@@ -125,7 +125,7 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
 
             //************ Generate methods for sending meassages to ports
             for (ExternalConnector eco : this.getExternalConnectors()) {
-                //if (eco.hasAnnotation("c_external_send")) {
+                //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
                 Thing t = eco.getInst().getInstance().getType();
                 Port p = eco.getPort();
 
@@ -172,7 +172,7 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
                     //builder.append("\n//Forwarding with specified function \n");
                     //builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
 
-                    //builder.append(eco.annotation("c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+                    //builder.append(AnnotatedElementHelper.annotation(eco, "c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
                     builder.append("}\n\n");
                 }
             }
@@ -188,7 +188,7 @@ public class SintefboardPort extends CNetworkLibraryGenerator {
             builder.append("{\n");
             builder.append("switch (from_port) {\n");
             for (ExternalConnector eco : this.getExternalConnectors()) {
-                //if (eco.hasAnnotation("c_external_send")) {
+                //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
                 Thing t = eco.getInst().getInstance().getType();
                 Port p = eco.getPort();
                 String portname = eco.getName();

@@ -66,8 +66,8 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         StringBuilder sendForm = new StringBuilder();
         for (Message msg : eco.getPort().getReceives()) {
             msgID = msg.getName();
-            /*if (msg.hasAnnotation("code")) {
-                msgID = msg.annotation("code").iterator().next();
+            /*if (AnnotatedElementHelper.hasAnnotation(msg, "code")) {
+                msgID = AnnotatedElementHelper.annotation(msg, "code").iterator().next();
             } else {
                 System.out.println("[Warning] in order to generate working mock-up, messages ID must be specified with @code");
             }*/
