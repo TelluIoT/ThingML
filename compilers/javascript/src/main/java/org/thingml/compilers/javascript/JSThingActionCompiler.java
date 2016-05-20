@@ -16,6 +16,10 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
@@ -27,7 +31,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
         if (action.getProperty().eContainer() instanceof Thing) {
-            builder.append("debug_" + action.getProperty().qname("_") + "_var = _this." + action.getProperty().qname("_") + "_var;\n");
+            builder.append("debug_" + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var = _this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var;\n");
         }
     }
 
@@ -40,7 +44,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             builder.append("for (var _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
             builder.append("_this.propertyListener['" + action.getProperty().getName() + "'][_i](_this." + ctx.getVariableName(action.getProperty()) + ");\n");
             builder.append("}\n}\n");
-            builder.append("if(_this.debug) console.log(colors.magenta(_this.name + \"(" + action.getProperty().findContainingThing().getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + action.getProperty().qname("_") + "_var" + " + \" to \" + _this." + action.getProperty().qname("_") + "_var));\n");
+            builder.append("if(_this.debug) console.log(colors.magenta(_this.name + \"(" + ThingMLHelpers.findContainingThing(action.getProperty()).getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + ThingMLElementHelper.qname( action.getProperty(), "_") + "_var" + " + \" to \" + _this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var));\n");
         }
     }
 
@@ -62,9 +66,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
         Session session = action.getSession();
-        builder.append("var " + session.getName() + " = new " + session.findContainingThing().getName() + "(\"" + session.getName() + "\", _this");
-        for (Property p : session.findContainingThing().allProperties()) {
-            builder.append(", _this." + p.qname("_") + "_var");
+        builder.append("var " + session.getName() + " = new " + ThingMLHelpers.findContainingThing(session).getName() + "(\"" + session.getName() + "\", _this");
+        for (Property p : ThingMLHelpers.allProperties(ThingMLHelpers.findContainingThing(session))) {
+            builder.append(", _this." + ThingMLElementHelper.qname(p, "_") + "_var");
         }
         builder.append(", true);\n"); //FIXME: debug true only if needed
         builder.append(session.getName() + ".setThis(" + session.getName() + ");\n");
@@ -75,12 +79,12 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(StartStream action, StringBuilder builder, Context ctx) {
-        builder.append("start" + action.getStream().getInput().qname("_") + "();\n");
+        builder.append("start" + ThingMLElementHelper.qname(action.getStream().getInput(), "_") + "();\n");
     }
 
     @Override
     public void generate(StopStream action, StringBuilder builder, Context ctx) {
-        builder.append("stop" + action.getStream().getInput().qname("_") + "();\n");
+        builder.append("stop" + ThingMLElementHelper.qname(action.getStream().getInput(), "_") + "();\n");
     }
 
 
@@ -153,7 +157,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        if (expression.getProperty().isDefined("private", "true") || !(expression.getProperty().eContainer() instanceof Thing) || (expression.getProperty() instanceof Parameter) || (expression.getProperty() instanceof LocalVariable)) {
+        if (AnnotatedElementHelper.isDefined(expression.getProperty(), "private", "true") || !(expression.getProperty().eContainer() instanceof Thing) || (expression.getProperty() instanceof Parameter) || (expression.getProperty() instanceof LocalVariable)) {
             builder.append(ctx.getVariableName(expression.getProperty()));
         } else {
             //builder.append("_this." + ctx.getVariableName(expression.getProperty()));
@@ -166,7 +170,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                         if (!p.isChangeable()) {
                             boolean found = false;
                             for (ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
-                                String tmp = pa.getInstance().getInstance().findContainingConfiguration().getName() + "_" + pa.getInstance().getInstance().getName();
+                                String tmp = ThingMLElementHelper.findContainingConfiguration(pa.getInstance().getInstance()).getName() + "_" + pa.getInstance().getInstance().getName();
 
                                 if (ctx.currentInstance.getName().equals(tmp)) {
                                     if (pa.getProperty().getName().compareTo(p.getName()) == 0) {
@@ -191,7 +195,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                     }
                 } else {
                     Property p = (Property) expression.getProperty();
-                    Expression e = ctx.getCurrentConfiguration().initExpressions(ctx.currentInstance, p).get(0);
+                    Expression e = ConfigurationHelper.initExpressions(ctx.getCurrentConfiguration(), ctx.currentInstance, p).get(0);
                     generate(e, builder, ctx);
                 }
             }

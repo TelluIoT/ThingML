@@ -41,6 +41,7 @@ import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.Region;
+import org.sintef.thingml.Session;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
@@ -70,19 +71,17 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         // GENERATE THE RUNTIME HEADER
         String rhtemplate = ctx.getRuntimeHeaderTemplate();
         rhtemplate = rhtemplate.replace("/*NAME*/", cfg.getName());
-        ctx.getBuilder(ctx.getPrefix() + "runtime.h").append(rhtemplate);
 
         // GENERATE THE RUNTIME IMPL
         String rtemplate = ctx.getRuntimeImplTemplate();
         rtemplate = rtemplate.replace("/*NAME*/", cfg.getName());
 
-        String fifotemplate = ctx.getTemplateByID("ctemplates/fifo.c");
-        fifotemplate = fifotemplate.replace("#define FIFO_SIZE 256", "#define FIFO_SIZE " + ctx.fifoSize());
-        //fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + ConfigurationHelper.allInstances(cfg).size());
-        fifotemplate = fifotemplate.replace("#define MAX_INSTANCES 32", "#define MAX_INSTANCES " + ctx.numberInstancesAndPort(cfg));
+        String fifotemplate = "#define MAX_INSTANCES " + ctx.numberInstancesAndPort(cfg);
 
         rtemplate = rtemplate.replace("/*FIFO*/", fifotemplate);
+        
         ctx.getBuilder(ctx.getPrefix() + "runtime.c").append(rtemplate);
+        ctx.getBuilder(ctx.getPrefix() + "runtime.h").append(rhtemplate);
     }
     
     protected void generateConfigurationImplementation(Configuration cfg, ThingMLModel model, PosixMTCompilerContext ctx) {
@@ -229,14 +228,13 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
             }
             
             if((!SenderList.isEmpty()) || (!externalSenders.isEmpty())) {
-                    
-                builder.append("\n//New dispatcher for messages\n");
-                builder.append("void dispatch_enqueue_" + m.getName());
+                
+                builder.append("\n//Dispatcher for messages\n");
+                builder.append("void dispatch_" + m.getName());
                 ctx.appendFormalParametersForDispatcher(builder, m);
                 builder.append(" {\n");
 
-                //builder.append("switch(sender) {\n");
-
+                // Dispatch
                 for(Map.Entry<Instance, Port> mySender : SenderList.keySet()) {
                     builder.append("if (sender ==");
                     builder.append(" " + mySender.getKey().getName() + "_var");
@@ -245,30 +243,17 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                     for(Map.Entry<Instance, Port> myReceiver : SenderList.get(mySender)) {
                         if (ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).size() == 0)
                             continue; // there is no state machine
+
+                        
                         StateMachine sm = ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).get(0);
                         if (StateHelper.canHandle(sm, myReceiver.getValue(), m)) {
-                            builder.append("fifo_lock(" + ctx.getInstanceVarName(myReceiver.getKey()) + ".fifo);\n");
-
-                            builder.append("if ( fifo_byte_available(" + ctx.getInstanceVarName(myReceiver.getKey()) + ".fifo) > " + ctx.getMessageSerializationSize(m) + " ) {\n\n");
-
-                            builder.append("_fifo_enqueue(" + ctx.getInstanceVarName(myReceiver.getKey()) + ".fifo, (" + ctx.getHandlerCode(cfg, m) + " >> 8) & 0xFF );\n");
-                            builder.append("_fifo_enqueue(" + ctx.getInstanceVarName(myReceiver.getKey()) + ".fifo, " + ctx.getHandlerCode(cfg, m) + " & 0xFF );\n\n");
-
-                            builder.append("// Reception Port\n");
-                            builder.append("_fifo_enqueue(" + ctx.getInstanceVarName(myReceiver.getKey()) + ".fifo, (" + ctx.getPortID(myReceiver.getKey().getType(), myReceiver.getValue()) + " >> 8) & 0xFF );\n");
-                            builder.append("_fifo_enqueue(" + ctx.getInstanceVarName(myReceiver.getKey()) + ".fifo, " + ctx.getPortID(myReceiver.getKey().getType(), myReceiver.getValue()) + " & 0xFF );\n");
-
+                            builder.append("enqueue_" + myReceiver.getKey().getType().getName() + "_" + myReceiver.getValue().getName() + "_" + m.getName() + "(&" + ctx.getInstanceVarName(myReceiver.getKey()));
                             
-                            
-
                             for (Parameter pt : m.getParameters()) {
-                                builder.append("\n// parameter " + pt.getName() + "\n");
-                                ctx.bytesToSerialize(pt.getType(), builder, pt.getName(), pt, ctx.getInstanceVarName(myReceiver.getKey()));
+                                builder.append(", " + pt.getName());
                             }
-                            builder.append("}\n");
                             
-                            builder.append("fifo_unlock_and_notify(" + ctx.getInstanceVarName(myReceiver.getKey()) + ".fifo);\n");
-                            
+                            builder.append(");\n");
                         }
                     }
                     builder.append("\n}\n");
@@ -334,7 +319,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
             
             //Instances Fifo
             builder.append("// Variables for fifo of the instance\n");
-            builder.append("struct instance_fifo " + inst.getName() + "_fifo;\n");
+            //builder.append("struct instance_fifo " + inst.getName() + "_fifo;\n");
             builder.append("byte " + inst.getName() + "_fifo_array[65535];\n");
             
             
@@ -394,7 +379,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                         builder.append("void " + ctx.getSenderName(t, port, msg) + "_sender");
                         ctx.appendFormalParameters(t, builder, msg);
                         builder.append(" {\n");
-                        builder.append("dispatch_enqueue_" + msg.getName());
+                        builder.append("dispatch_" + msg.getName());
                         ctx.appendActualParametersForDispatcher(t, builder, msg, "_instance->id_" + port.getName());
                         builder.append(";\n}\n");
                     }
@@ -564,12 +549,12 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         initb.append("initialize_configuration_" + cfg.getName() + "();\n");
         for(Instance i : ConfigurationHelper.allInstances(cfg)) {
             
-            initb.append("" + ctx.getInstanceVarName(i) + ".fifo = &" + i.getName() + "_fifo;\n");
-            initb.append("" + i.getName() + "_fifo.fifo_size = 65535;\n");
-            initb.append("" + i.getName() + "_fifo.fifo_head = 0;\n");
-            initb.append("" + i.getName() + "_fifo.fifo_tail = 0;\n");
-            initb.append("" + i.getName() + "_fifo.fifo = &" + i.getName() + "_fifo_array;\n");
-            initb.append("init_runtime(" + ctx.getInstanceVarName(i) + ".fifo);\n");
+            //initb.append("" + ctx.getInstanceVarName(i) + ".fifo = &" + i.getName() + "_fifo;\n");
+            initb.append("" + ctx.getInstanceVarName(i) + ".fifo.fifo_size = 65535;\n");
+            initb.append("" + ctx.getInstanceVarName(i) + ".fifo.fifo_head = 0;\n");
+            initb.append("" + ctx.getInstanceVarName(i) + ".fifo.fifo_tail = 0;\n");
+            initb.append("" + ctx.getInstanceVarName(i) + ".fifo.fifo = &" + i.getName() + "_fifo_array;\n");
+            initb.append("init_runtime(&(" + ctx.getInstanceVarName(i) + ".fifo));\n");
             initb.append("pthread_t thread_" + i.getName() + ";\n\n");
             //initb.append("pthread_create( &thread_" + i.getName() + ", NULL, " + i.getType().getName() + "_run, (void *) &" + ctx.getInstanceVarName(i) + ");\n\n");
         }
@@ -578,6 +563,13 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         while(!Instances.isEmpty()) {
             inst = Instances.get(Instances.size()-1);
             Instances.remove(inst);
+            
+            StateMachine sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
+        
+            if (ThingMLHelpers.allStateMachines(inst.getType()).size() > 0) { // there is a state machine
+                initb.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getStateID(sm) + ", &" + ctx.getInstanceVarName(inst) + ");\n");
+            }
+            
             initb.append("pthread_create( &thread_" + inst.getName() + ", NULL, " + inst.getType().getName() + "_run, (void *) &" + ctx.getInstanceVarName(inst) + ");\n");
         }
             

@@ -19,6 +19,8 @@ import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.ThingApiCompiler;
@@ -154,7 +156,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
             if (debug) {
                 builder.append("if (arrayLength < 1) {\n");
-                builder.append("" + t.getName() + "_print_debug(_this, \"(" + p.findContainingThing().getName() + "): message lost, because no connector/listener is defined!\");\n");
+                builder.append("" + t.getName() + "_print_debug(_this, \"(" + ThingMLHelpers.findContainingThing(p).getName() + "): message lost, because no connector/listener is defined!\");\n");
                 builder.append("}\n");
             }
 

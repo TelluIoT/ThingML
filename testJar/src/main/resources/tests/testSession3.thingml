@@ -1,0 +1,48 @@
+import "thingml.thingml"
+
+thing TestSession3 includes Test
+@test "xyzy # T"
+@test "xyyzyyyy # TT"
+{
+	
+	message m(id : Char)
+	message m1(id : Char)
+	message m2(id : Char)
+
+	internal port p {
+		sends m, m1, m2
+		receives m, m1, m2
+	}
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			internal 
+			event e : harnessIn?testIn
+			guard e.c == '\'x\''
+			action fork s
+    	}
+
+		session s init S1 {
+			state S1 {
+				on entry fork t
+
+				transition -> S2
+				event e : harnessIn?testIn
+				guard e.c == '\'z\''
+			}
+
+			final state S2 {
+			}
+
+			session t init T1 {
+				state T1 {
+					internal 
+					event e : harnessIn?testIn
+					guard e.c == '\'y\''
+					action harnessOut!testOut('\'T\'')
+				}		
+			}
+		}
+    }
+}

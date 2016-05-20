@@ -687,5 +687,5 @@ public abstract class CCompilerContext extends Context {
 
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {
     }
-
+    
 }

@@ -20,6 +20,7 @@
  */
 package org.thingml.compilers.c.posixmt;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.sintef.thingml.Handler;
@@ -27,10 +28,13 @@ import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.Region;
+import org.sintef.thingml.Session;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.CompositeStateHelper;
+import org.sintef.thingml.helpers.ParallelRegionHelper;
+import org.sintef.thingml.helpers.StateHelper;
 import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
@@ -48,8 +52,27 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         super.generateCHeaderAnnotation(thing, builder, ctx);
     }
     
+    protected void generateSessionListDeclaration(Region r, StringBuilder builder) {
+        for(Session s : ParallelRegionHelper.allContainedSessions(r)) {
+            builder.append("struct session_t * sessions_" + s.getName() + ";\n");
+            generateSessionListDeclaration(s, builder);
+        }
+    }
+    
+    protected List<Region> regionSession(Region r) {
+        List<Region> res = new ArrayList<Region>();
+        res.addAll(ParallelRegionHelper.allContainedSessions(r));
+        for(Session s : ParallelRegionHelper.allContainedSessions(r)) res.addAll(regionSession(s));
+        return res;
+    }
+    
     @Override
     protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+        builder.append("// Definition of the sessions stuct:\n\n");
+        if(!CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
+            builder.append("struct session_t;\n\n");
+        }
+        
         builder.append("// Definition of the instance stuct:\n");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
@@ -71,11 +94,18 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         }
         
         //fifo
-        builder.append("struct instance_fifo * fifo;\n");
+        builder.append("struct instance_fifo fifo;\n");
+        
+        //Sessions
+        builder.append("\n// Instances of different sessions\n");
+        generateSessionListDeclaration(ThingMLHelpers.allStateMachines(thing).get(0), builder);
+        /*for(Session s :thing.allStateMachines().get(0).allContainedSessions()) {
+            builder.append("struct session_t * sessions_" + s.getName() + ";\n");
+        }*/
         
         
         // Variables for each region to store its current state
-        builder.append("// Variables for the current instance state\n");
+        builder.append("\n// Variables for the current instance state\n");
 
         // This should normally be checked before and should never be true
         if (ThingMLHelpers.allStateMachines(thing).size() > 1) {
@@ -84,7 +114,10 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
             StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
-            for (Region r : CompositeStateHelper.allContainedRegions(sm)) {
+            List<Region> regions = new ArrayList<>();
+            regions.addAll(regionSession(sm));
+            regions.addAll(CompositeStateHelper.allContainedRegions(sm));
+            for (Region r : regions) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
         }
@@ -101,13 +134,37 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
             builder.append(";\n");
         }
         builder.append("\n};\n");
+        
+        if(!CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
+            builder.append("struct session_t {\n");
+            builder.append("    struct " + ctx.getInstanceStructName(thing) + " s;\n");
+            builder.append("    pthread_t thread;\n");
+            builder.append("    byte fifo_array[65535];\n");
+            builder.append("    struct session_t * next;\n");
+            
+            builder.append("};\n\n");
+        }
     }
     
     @Override
-    protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        builder.append("// ProcessMessageQueue\n");
-        builder.append("int " + thing.getName() + "_processMessageQueue(struct " + ctx.getInstanceStructName(thing) + " * _instance);\n");
-        builder.append("void " + thing.getName() + "_run(struct " + ctx.getInstanceStructName(thing) + " * _instance);\n");
+    protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext cctx) {
+        PosixMTCompilerContext ctx = (PosixMTCompilerContext) cctx;
+        
+        builder.append("// Message enqueue\n");
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
+            for (Message m : p.getReceives()) {
+                if(StateHelper.canHandle(ThingMLHelpers.allStateMachines(thing).get(0), p, m)) {
+                    builder.append("void enqueue_" + thing.getName() + "_" + p.getName() + "_" + m.getName());
+                    ctx.appendFormalParametersForEnqueue(builder, thing, m);
+                    builder.append(";\n");
+                }
+            }
+        }
+        
+        builder.append("\n// ProcessMessageQueue\n");
+        builder.append("int " + thing.getName() + "_processMessageQueue(struct " + ctx.getInstanceStructName(thing) + " * _instance);\n\n");
+        builder.append("// Run\n");
+        builder.append("void " + thing.getName() + "_run(struct " + ctx.getInstanceStructName(thing) + " * _instance);\n\n");
         
     }
 }

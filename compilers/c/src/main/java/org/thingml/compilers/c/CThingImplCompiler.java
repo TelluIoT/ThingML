@@ -358,7 +358,13 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
 
         builder.append("switch(state) {\n");
-        for (CompositeState cs : CompositeStateHelper.allContainedCompositeStates(sm)) {
+
+        //for (CompositeState cs : sm.allContainedCompositeStates()) {
+        List<CompositeState> cstates = new ArrayList<>();
+        cstates.addAll(CompositeStateHelper.allContainedCompositeStates(sm));
+        for (Session s: CompositeStateHelper.allContainedSessions(sm)) cstates.addAll(CompositeStateHelper.allContainedCompositeStates(s));
+        for (CompositeState cs : cstates) {
+
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
             if (debugProfile.isDebugBehavior()) {
                 builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
@@ -383,7 +389,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("break;}\n");
         }
 
-        for (State s : CompositeStateHelper.allContainedSimpleStates(sm)) {
+
+        //for (State s : sm.allContainedSimpleStates()) {
+        List<State> states = new ArrayList<>();
+        states.addAll(CompositeStateHelper.allContainedSimpleStates(sm));
+        for (Session s: CompositeStateHelper.allContainedSessions(sm)) states.addAll(CompositeStateHelper.allContainedSimpleStates(s));
+        for (State s : states) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
             if (debugProfile.isDebugBehavior()) {
@@ -414,9 +425,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("void " + getCppNameScope() + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
         builder.append("switch(state) {\n");
-
-
-        for (CompositeState cs : CompositeStateHelper.allContainedCompositeStates(sm)) {
+        //for (CompositeState cs : sm.allContainedCompositeStates()) {
+        List<CompositeState> cstates = new ArrayList<>();
+        cstates.addAll(CompositeStateHelper.allContainedCompositeStates(sm));
+        for (Session s: CompositeStateHelper.allContainedSessions(sm)) cstates.addAll(CompositeStateHelper.allContainedCompositeStates(s));
+        for (CompositeState cs : cstates) {
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
             ArrayList<Region> regions = new ArrayList<Region>();
             regions.add(cs);
@@ -431,7 +444,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         }
 
-        for (State s : CompositeStateHelper.allContainedSimpleStates(sm)) { // just a leaf state: execute exit actions
+        List<State> states = new ArrayList<>();
+        states.addAll(CompositeStateHelper.allContainedSimpleStates(sm));
+        for (Session s: CompositeStateHelper.allContainedSessions(sm)) states.addAll(CompositeStateHelper.allContainedSimpleStates(s));
+        for (State s : states) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             if (s.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
 
@@ -458,6 +474,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
 
         Map<Port, Map<Message, List<Handler>>> handlers = StateHelper.allMessageHandlers(sm);
+        for(Session s : CompositeStateHelper.allContainedSessions(sm)) handlers.putAll(StateHelper.allMessageHandlers(s));
 
         for (Port port : handlers.keySet()) {
             for (Message msg : handlers.get(port).keySet()) {
@@ -589,6 +606,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         ArrayList<Region> regions = new ArrayList<Region>();
         regions.add(cs);
         regions.addAll(cs.getRegion());
+        regions.addAll(CompositeStateHelper.allContainedSessions(cs));
 
         for (Region r : regions) {
 
