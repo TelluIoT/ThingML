@@ -118,9 +118,9 @@ public class RcdPortPlugin extends NetworkPlugin {
             
             String portnum = prot.annotation("rcdport_number").iterator().next();
             String portName = prot.getName();
-            builder.append("//portnum is() " + portnum + "\n");
+            builder.append("// "+portName+" portnum is() " + portnum + "\n");
             builder.append("case " + portnum + ":\n");
-            builder.append(portName + "_parser(msgc_t *msg_in_ptr);\n");
+            builder.append(portName + "_parser(msg_in_ptr);\n");
             builder.append("break;\n");
             
         }
@@ -232,7 +232,7 @@ public class RcdPortPlugin extends NetworkPlugin {
                 builder.append("{\n");
                 builder.append("uint8_t *rcv_buf_ptr;\n");
                 builder.append("uint8_t rcv_len;\n");
-                builder.append("APP_MSGC_decomp_" + tunnel_msgid + "(msg_in_ptr, rcv_buf_ptr, &rcv_len);\n");
+                builder.append("APP_MSGC_decomp_" + tunnel_msgid + "(msg_in_ptr, &rcv_buf_ptr, &rcv_len);\n");
                 sp.generateParserBody(builder, "rcv_buf_ptr", "rcv_len", rcvMessages, portName + "_instance.listener_id");
                 builder.append("}\n");
                 builder.append("break;\n");
