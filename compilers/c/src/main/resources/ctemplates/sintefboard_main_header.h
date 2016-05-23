@@ -13,7 +13,7 @@ typedef unsigned char byte;
 
 /*RUNTIME_CLASS*/
 
-class /*NAME*/ : public ThingMlRuntime_class {
+class /*NAME*/ : public /*NAME*/_ThingMlRuntime_class {
 private:
 #ifdef RCDPORT_IN_USE
 port_class *Ports_ptr;

@@ -1,7 +1,7 @@
 #define MAX_INSTANCES 32
 #define FIFO_SIZE 256
 
-class ThingMlRuntime_class {
+class /*NAME*/_ThingMlRuntime_class {
 private:
 
 
@@ -23,7 +23,7 @@ uint16_t instances_count;
 
 public:
 
-ThingMlRuntime_class(); 
+/*NAME*/_ThingMlRuntime_class(); 
 
 /* Returns the number of byte currently in the fifo */
 int fifo_byte_length();
