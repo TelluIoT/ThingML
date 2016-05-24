@@ -16,6 +16,7 @@
 package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
@@ -50,9 +51,9 @@ public class JSThingCepCompiler extends ThingCepCompiler {
 
     public void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
         if (!stream.isDynamic()) {
-            builder.append(stream.getInput().qname("_") + ".subscribe(\n");
+            builder.append(ThingMLElementHelper.qname(stream.getInput(), "_") + ".subscribe(\n");
         }
-        builder.append("function sub_" + stream.getInput().qname("_") + "( " + paramName + ") { \n");
+        builder.append("function sub_" + ThingMLElementHelper.qname(stream.getInput(), "_") + "( " + paramName + ") { \n");
 
         List<ViewSource> operators = stream.getInput().getOperators();
         boolean hasWindow = false;
@@ -82,15 +83,15 @@ public class JSThingCepCompiler extends ThingCepCompiler {
         }
 
         if (stream.isDynamic()) {
-            builder.append("function start" + stream.getInput().qname("_") + "(){\n");
-            builder.append("if (this." + stream.getInput().qname("_") + "_hook === null || this." + stream.getInput().qname("_") + "_hook === undefined) {\n");
-            builder.append("this." + stream.getInput().qname("_") + "_hook = " + stream.getInput().qname("_") + ".subscribe(sub_" + stream.getInput().qname("_") + ");\n");
+            builder.append("function start" + ThingMLElementHelper.qname(stream.getInput(), "_") + "(){\n");
+            builder.append("if (this." + ThingMLElementHelper.qname(stream.getInput(), "_") + "_hook === null || this." + ThingMLElementHelper.qname(stream.getInput(), "_") + "_hook === undefined) {\n");
+            builder.append("this." + ThingMLElementHelper.qname(stream.getInput(), "_") + "_hook = " + ThingMLElementHelper.qname(stream.getInput(), "_") + ".subscribe(sub_" + ThingMLElementHelper.qname(stream.getInput(), "_") + ");\n");
             builder.append("}\n");
             builder.append("}\n");
 
-            builder.append("function stop" + stream.getInput().qname("_") + "(){\n");
-            builder.append("this." + stream.getInput().qname("_") + "_hook.dispose();\n");
-            builder.append("this." + stream.getInput().qname("_") + "_hook == null;\n");
+            builder.append("function stop" + ThingMLElementHelper.qname(stream.getInput(), "_") + "(){\n");
+            builder.append("this." + ThingMLElementHelper.qname(stream.getInput(), "_") + "_hook.dispose();\n");
+            builder.append("this." + ThingMLElementHelper.qname(stream.getInput(), "_") + "_hook == null;\n");
             builder.append("}\n");
         }
     }

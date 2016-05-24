@@ -16,6 +16,7 @@
 package org.thingml.compilers.uml;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
@@ -167,7 +168,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        builder.append("\t" + t.findContainingState().getName() + " : internal " + msg.getName() + "?" + p.getName());
+        builder.append("\t" + ThingMLHelpers.findContainingState(t).getName() + " : internal " + msg.getName() + "?" + p.getName());
         generateGuardAndActions(t, builder, ctx);
         builder.append("\n");
     }

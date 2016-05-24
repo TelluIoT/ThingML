@@ -20,6 +20,7 @@
  */
 package org.thingml.compilers.c.posixmt;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.sintef.thingml.Handler;
@@ -30,6 +31,11 @@ import org.sintef.thingml.Region;
 import org.sintef.thingml.Session;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.CompositeStateHelper;
+import org.sintef.thingml.helpers.ParallelRegionHelper;
+import org.sintef.thingml.helpers.StateHelper;
+import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
@@ -46,15 +52,25 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         super.generateCHeaderAnnotation(thing, builder, ctx);
     }
     
+    protected void generateSessionListDeclaration(Region r, StringBuilder builder) {
+        for(Session s : ParallelRegionHelper.allContainedSessions(r)) {
+            builder.append("struct session_t * sessions_" + s.getName() + ";\n");
+            generateSessionListDeclaration(s, builder);
+        }
+    }
+    
+    protected List<Region> regionSession(Region r) {
+        List<Region> res = new ArrayList<Region>();
+        res.addAll(ParallelRegionHelper.allContainedSessions(r));
+        for(Session s : ParallelRegionHelper.allContainedSessions(r)) res.addAll(regionSession(s));
+        return res;
+    }
+    
     @Override
     protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("// Definition of the sessions stuct:\n\n");
-        for(Session s :thing.allStateMachines().get(0).allContainedSessions()) {
-            builder.append("struct session_" + s.getName() + "_list * sessions_" + s.getName() + " {\n");
-            builder.append("    struct " + ctx.getInstanceStructName(thing) + " s;\n");
-            builder.append("    struct session_" + s.getName() + "_list * next\n");
-            
-            builder.append("}\n\n");
+        if(!CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
+            builder.append("struct session_t;\n\n");
         }
         
         builder.append("// Definition of the instance stuct:\n");
@@ -71,40 +87,44 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
             builder.append("char * name;\n");
         }
         
-        for (Port p : thing.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
             builder.append("uint16_t id_");
             builder.append(p.getName());
             builder.append(";\n");
         }
         
         //fifo
-        builder.append("struct instance_fifo * fifo;\n");
+        builder.append("struct instance_fifo fifo;\n");
         
         //Sessions
         builder.append("\n// Instances of different sessions\n");
-        for(Session s :thing.allStateMachines().get(0).allContainedSessions()) {
-            builder.append("struct session_" + s.getName() + "_list * sessions_" + s.getName() + ";\n");
-        }
+        generateSessionListDeclaration(ThingMLHelpers.allStateMachines(thing).get(0), builder);
+        /*for(Session s :thing.allStateMachines().get(0).allContainedSessions()) {
+            builder.append("struct session_t * sessions_" + s.getName() + ";\n");
+        }*/
         
         
         // Variables for each region to store its current state
         builder.append("\n// Variables for the current instance state\n");
 
         // This should normally be checked before and should never be true
-        if (thing.allStateMachines().size() > 1) {
-            throw new Error("Info: Thing " + thing.getName() + " has " + thing.allStateMachines().size() + " state machines. " + "Error: Code generation for Things with several state machines not implemented.");
+        if (ThingMLHelpers.allStateMachines(thing).size() > 1) {
+            throw new Error("Info: Thing " + thing.getName() + " has " + ThingMLHelpers.allStateMachines(thing).size() + " state machines. " + "Error: Code generation for Things with several state machines not implemented.");
         }
 
-        if (thing.allStateMachines().size() > 0) {
-            StateMachine sm = thing.allStateMachines().get(0);
-            for (Region r : sm.allContainedRegions()) {
+        if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
+            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+            List<Region> regions = new ArrayList<>();
+            regions.addAll(regionSession(sm));
+            regions.addAll(CompositeStateHelper.allContainedRegions(sm));
+            for (Region r : regions) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
         }
 
         // Create variables for all the properties defined in the Thing and States
         builder.append("// Variables for the properties of the instance\n");
-        for (Property p : thing.allPropertiesInDepth()) {
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             builder.append(ctx.getCType(p.getType()) + " ");
             if (p.getCardinality() != null) {//array
                 builder.append("* ");
@@ -114,6 +134,16 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
             builder.append(";\n");
         }
         builder.append("\n};\n");
+        
+        if(!CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
+            builder.append("struct session_t {\n");
+            builder.append("    struct " + ctx.getInstanceStructName(thing) + " s;\n");
+            builder.append("    pthread_t thread;\n");
+            builder.append("    byte fifo_array[65535];\n");
+            builder.append("    struct session_t * next;\n");
+            
+            builder.append("};\n\n");
+        }
     }
     
     @Override
@@ -121,9 +151,9 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         PosixMTCompilerContext ctx = (PosixMTCompilerContext) cctx;
         
         builder.append("// Message enqueue\n");
-        for (Port p : thing.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
             for (Message m : p.getReceives()) {
-                if(thing.allStateMachines().get(0).canHandle(p, m)) {
+                if(StateHelper.canHandle(ThingMLHelpers.allStateMachines(thing).get(0), p, m)) {
                     builder.append("void enqueue_" + thing.getName() + "_" + p.getName() + "_" + m.getName());
                     ctx.appendFormalParametersForEnqueue(builder, thing, m);
                     builder.append(";\n");

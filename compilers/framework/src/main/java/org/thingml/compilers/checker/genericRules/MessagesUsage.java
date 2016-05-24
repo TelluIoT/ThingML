@@ -22,7 +22,9 @@ package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
+import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -53,23 +55,23 @@ public class MessagesUsage extends Rule {
 
     @Override
     public void check(ThingMLModel model, Checker checker) {
-        for (Thing t : model.allThings()) {
+        for (Thing t : ThingMLHelpers.allThings(model)) {
             check(t, checker);
         }
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for (Thing t : cfg.allThings()) {
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
             check(t, checker);
         }
     }
 
     private void check(Thing t, Checker checker) {
-        for (Port p : t.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(t)) {
             for (Message m : p.getSends()) {
                 boolean found = false;
-                for (Action b : t.getAllActions(SendAction.class)) {
+                for (Action b : ActionHelper.getAllActions(t, SendAction.class)) {
                     SendAction a = (SendAction) b;
                     if (EcoreUtil.equals(a.getMessage(), m)) {
                         found = true;
@@ -78,15 +80,15 @@ public class MessagesUsage extends Rule {
                         } else {
                             for (Parameter pa : m.getParameters()) {
                                 Expression e = a.getParameters().get(m.getParameters().indexOf(pa));
-                                Type expected = pa.getType().getBroadType();
+                                Type expected = TyperHelper.getBroadType(pa.getType());
                                 Type actual = checker.typeChecker.computeTypeOf(e);
                                 if (actual != null) {
                                     if (actual.equals(Types.ERROR_TYPE)) {
-                                        checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                        checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), a);
                                     } else if (actual.equals(Types.ANY_TYPE)) {
-                                        checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with a parameter which cannot be typed. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
-                                    } else if (!actual.isA(expected)) {
-                                        checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + expected.getBroadType().getName() + ", called with " + actual.getBroadType().getName(), a);
+                                        checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with a parameter which cannot be typed. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), a);
+                                    } else if (!TyperHelper.isA(actual, expected)) {
+                                        checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), a);
                                     }
                                 }
                             }
@@ -97,7 +99,7 @@ public class MessagesUsage extends Rule {
                     checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", m);
                 else {//check if message is serializable
                     for (Parameter pa : m.getParameters()) {
-                        if ((pa.getType() instanceof ObjectType) && !pa.isDefined("serializable", "true")) {
+                        if ((pa.getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
                             checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.", pa);
                             break;
                         }
@@ -105,13 +107,13 @@ public class MessagesUsage extends Rule {
                 }
             }
             for (Message m : p.getReceives()) {
-                for (StateMachine sm : t.allStateMachines()) {
-                    if (sm.allMessageHandlers().get(p) == null || sm.allMessageHandlers().get(p).get(m) == null) {
+                for (StateMachine sm : ThingMLHelpers.allStateMachines(t)) {
+                    if (StateHelper.allMessageHandlers(sm).get(p) == null || StateHelper.allMessageHandlers(sm).get(p).get(m) == null) {
                         checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received.", m);
                     }
                 }
                 for (Parameter pa : m.getParameters()) {
-                    if ((pa.getType() instanceof ObjectType) && !pa.isDefined("serializable", "true")) {
+                    if ((pa.getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
                         checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be received from the network, please use only primitive datatypes.", pa);
                         break;
                     }

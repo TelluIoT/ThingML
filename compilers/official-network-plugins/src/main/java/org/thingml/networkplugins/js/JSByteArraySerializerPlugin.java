@@ -30,6 +30,7 @@ import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.PrimitiveType;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.javascript.JSHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -70,7 +71,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
             }
         }
         //Serialize message into binary
-        final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+        final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
         builder.append(bufferName + ".prototype." + m.getName() + "ToBytes(");
         for(Parameter p : m.getParameters()) {
             if (m.getParameters().indexOf(p) > 0)
@@ -80,7 +81,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
         builder.append(") {\n");
         builder.append("var bb = new ByteBuffer(capacity=" + size + ", littleEndian=false).writeShort(" + code + ")\n");
         for(Parameter p : m.getParameters()) {
-            final String ctype = p.getType().hasAnnotation("c_type") ? p.getType().annotation("c_type").get(0) : "byte";
+            final String ctype = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type") ? AnnotatedElementHelper.annotation(p.getType(), "c_type").get(0) : "byte";
             if (p.getType() instanceof PrimitiveType) {
                 builder.append(".write" + context.firstToUpper(ctype) + "(" + p.getName() + ")\n");
             } else {
@@ -102,7 +103,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
         builder.append("var bb : ByteBuffer.wrap(bytes, littleEndian=false);");
         builder.append("switch(bb.readShort()) {\n");
         for(Message m : messages) {
-            final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+            final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
             builder.append("case " + code + ": ");
         }
         builder.append("case default: return null;\n");

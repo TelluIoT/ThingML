@@ -25,6 +25,7 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.Port;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -58,10 +59,10 @@ public class PortsUsage extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for (Map.Entry<Instance, List<Port>> entry : cfg.danglingPorts().entrySet()) {
+        for (Map.Entry<Instance, List<Port>> entry : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
             boolean found = false;
             for (Port p : entry.getValue()) {
-                for (ExternalConnector eco : cfg.getExternalConnectors()) {
+                for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
                     if (EcoreUtil.equals(eco.getInst().getInstance(), entry.getKey()) && EcoreUtil.equals(eco.getPort(), p)) {
                         found = true;
                         break;

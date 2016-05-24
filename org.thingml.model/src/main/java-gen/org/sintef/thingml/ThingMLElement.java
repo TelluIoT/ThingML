@@ -60,56 +60,5 @@ public interface ThingMLElement extends EObject {
 	 */
 	void setName(String value);
 
-    //Derived properties
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    ThingMLModel findContainingModel();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    Thing findContainingThing();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    Configuration findContainingConfiguration();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    State findContainingState();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    Region findContainingRegion();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    Handler findContainingHandler();
-
-    /**
-     *
-     * @param separator
-     * @return
-     * @generated NOT
-     */
-    String qname(String separator);
 
 } // ThingMLElement

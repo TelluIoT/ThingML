@@ -17,6 +17,9 @@ package org.thingml.compilers.java;
 
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
@@ -37,7 +40,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
 
         JavaHelper.generateHeader(pack + ".api", pack, builder, ctx, false, false, false);
         String raw_type = "Object";
-        if (!e.annotation("java_type").isEmpty()) raw_type = e.annotation("java_type").toArray()[0].toString();
+        if (!AnnotatedElementHelper.annotation(e, "java_type").isEmpty()) raw_type = AnnotatedElementHelper.annotation(e, "java_type").toArray()[0].toString();
 
         String enumName = ctx.firstToUpper(e.getName()) + "_ENUM";
 
@@ -48,8 +51,8 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
             for (EnumerationLiteral l : e.getLiterals()) {
                 String java_name = ((ThingMLElement) l.eContainer()).getName().toUpperCase() + "_" + l.getName().toUpperCase();
                 String enum_val = "";
-                if (!l.annotation("enum_val").isEmpty()) {
-                    enum_val = l.annotation("enum_val").toArray()[0].toString();
+                if (!AnnotatedElementHelper.annotation(l, "enum_val").isEmpty()) {
+                    enum_val = AnnotatedElementHelper.annotation(l, "enum_val").toArray()[0].toString();
                 } else {
                     throw new Exception("Cannot find value for enum " + l);
                 }
@@ -100,7 +103,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         final String src = "src/main/java/" + pack.replace(".", "/");
 
         //Enumerations
-        for (Type t : thing.findContainingModel().allUsedSimpleTypes()) {
+        for (Type t : ThingMLHelpers.allUsedSimpleTypes(ThingMLElementHelper.findContainingModel(thing))) {
             if (t instanceof Enumeration) {
                 Enumeration e = (Enumeration) t;
                 final StringBuilder builder = ctx.getNewBuilder(src + "/api/" + ctx.firstToUpper(e.getName()) + "_ENUM.java");
@@ -117,8 +120,8 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         //Lifecycle API (start/stop) comes from the JaSM component which things extends **
 
         //Generate interfaces that the thing will implement, for others to call this API
-        for (Port p : thing.allPorts()) {
-            if (!p.isDefined("public", "false") && p.getReceives().size() > 0) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
+            if (!AnnotatedElementHelper.isDefined(p, "public", "false") && p.getReceives().size() > 0) {
                 final StringBuilder builder = ctx.getNewBuilder(src + "/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + ".java");
                 builder.append("package " + pack + ".api;\n\n");
                 builder.append("import " + pack + ".api.*;\n\n");
@@ -133,8 +136,8 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         }
 
         //generateMainAndInit interfaces for the others to implement, so that the thing can notify them
-        for (Port p : thing.allPorts()) {
-            if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
+            if (!AnnotatedElementHelper.isDefined(p, "public", "false") && p.getSends().size() > 0) {
                 final StringBuilder builder = ctx.getNewBuilder(src + "/api/I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client.java");
                 builder.append("package " + pack + ".api;\n\n");
                 builder.append("import " + pack + ".api.*;\n\n");

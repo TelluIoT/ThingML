@@ -303,20 +303,6 @@ public abstract class HandlerImpl extends AnnotatedElementImpl implements Handle
 
     //Derived properties
 
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    public Set<AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>> allTriggeringPorts() {
-        Set<AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>> result = new HashSet<AbstractMap.SimpleImmutableEntry<Port,ReceiveMessage>>();
-        for(Event e : getEvent()) {
-            if (e instanceof  ReceiveMessage) {
-                ReceiveMessage r = (ReceiveMessage)e;
-                result.add(new AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>(r.getPort(), r));
-            }
-        }
-        return result;
-    }
+
 
 } //HandlerImpl

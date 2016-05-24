@@ -21,6 +21,7 @@
 package org.thingml.networkplugins.c.arduino;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
@@ -144,8 +145,8 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 }
 
                 Integer baudrate;
-                if (protocol.hasAnnotation("serial_baudrate")) {
-                    baudrate = Integer.parseInt(protocol.annotation("serial_baudrate").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_baudrate")) {
+                    baudrate = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "serial_baudrate").iterator().next());
                 } else {
                     baudrate = 115200;
                 }
@@ -155,24 +156,24 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 htemplate = htemplate.replace("/*PROTOCOL*/", portName);
 
                 String startByte;
-                if (protocol.hasAnnotation("serial_start_byte")) {
-                    startByte = protocol.annotation("serial_start_byte").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_start_byte")) {
+                    startByte = AnnotatedElementHelper.annotation(protocol, "serial_start_byte").iterator().next();
                 } else {
                     startByte = "18";
                 }
                 ctemplate = ctemplate.replace("/*START_BYTE*/", startByte);
 
                 String stopByte;
-                if (protocol.hasAnnotation("serial_stop_byte")) {
-                    stopByte = protocol.annotation("serial_stop_byte").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_stop_byte")) {
+                    stopByte = AnnotatedElementHelper.annotation(protocol, "serial_stop_byte").iterator().next();
                 } else {
                     stopByte = "19";
                 }
                 ctemplate = ctemplate.replace("/*STOP_BYTE*/", stopByte);
 
                 String escapeByte;
-                if (protocol.hasAnnotation("serial_escape_byte")) {
-                    escapeByte = protocol.annotation("serial_escape_byte").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_escape_byte")) {
+                    escapeByte = AnnotatedElementHelper.annotation(protocol, "serial_escape_byte").iterator().next();
                 } else {
                     escapeByte = "125";
                 }
@@ -197,8 +198,8 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 }
 
                 String limitBytePerLoop;
-                if (protocol.hasAnnotation("serial_limit_byte_per_loop")) {
-                    limitBytePerLoop = protocol.annotation("serial_limit_byte_per_loop").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_limit_byte_per_loop")) {
+                    limitBytePerLoop = AnnotatedElementHelper.annotation(protocol, "serial_limit_byte_per_loop").iterator().next();
                 } else {
                     Integer tmp = maxMsgSize * 2;
                     limitBytePerLoop = tmp.toString();
@@ -207,8 +208,8 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
 
 
                 String msgBufferSize;
-                if (protocol.hasAnnotation("serial_msg_buffer_size")) {
-                    msgBufferSize = protocol.annotation("serial_msg_buffer_size").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_msg_buffer_size")) {
+                    msgBufferSize = AnnotatedElementHelper.annotation(protocol, "serial_msg_buffer_size").iterator().next();
                     Integer tmp = Integer.parseInt(msgBufferSize);
                     if (tmp != null) {
                         if (tmp < maxMsgSize) {

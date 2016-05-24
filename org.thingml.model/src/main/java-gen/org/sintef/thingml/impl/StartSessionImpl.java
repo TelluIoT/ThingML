@@ -229,20 +229,5 @@ public class StartSessionImpl extends ActionImpl implements StartSession {
 		return super.eIsSet(featureID);
 	}
 
-    /**
-     * @generated NOT
-     * @return 
-     */
-    public List<Expression> getAllExpressions() {
-        return new ArrayList<>();
-    }
-
-    /**
-     * @generated NOT
-     * @return 
-     */
-    public List<Expression> getAllExpressions(Class clazz) {
-        return new ArrayList<>();
-    }
 
 } //StartSessionImpl

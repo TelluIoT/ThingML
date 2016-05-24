@@ -171,19 +171,4 @@ public class MessageParameterImpl extends ThingMLElementImpl implements MessageP
 		return super.eIsSet(featureID);
 	}
 
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		result.add(this);
-		return result;
-	}
-
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		if(clazz.isInstance(this))
-			result.add(this);
-		return result;
-	}
-
 } //MessageParameterImpl

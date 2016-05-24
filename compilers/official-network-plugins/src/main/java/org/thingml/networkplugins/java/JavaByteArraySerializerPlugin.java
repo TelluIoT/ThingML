@@ -29,6 +29,7 @@ import org.sintef.thingml.Message;
 import org.sintef.thingml.ObjectType;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.PrimitiveType;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -48,7 +49,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
             }
         }
         //Serialize message into binary
-        final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+        final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
         builder.append("private static final " + context.firstToUpper(m.getName()) + "MessageType " + m.getName().toUpperCase() + " = new " + context.firstToUpper(m.getName()) + "MessageType((short) " + code + ");\n");
         builder.append("/**Serializes a message into a binary format*/\n");
         builder.append("private static byte[] toBytes(" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
@@ -80,7 +81,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         builder.append("import java.nio.ByteOrder;\n");
         builder.append("public class " + bufferName + " {\n");
         for(Message m : messages) {
-            final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+            final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
             builder.append("private static final " + context.firstToUpper(m.getName()) + "MessageType " + m.getName().toUpperCase() + " = new " + context.firstToUpper(m.getName()) + "MessageType((short) " + code + ");\n");
         }
         //Instantiate message from binary
@@ -90,7 +91,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         builder.append("final short code = buffer.getShort();\n");
         builder.append("switch(code) {\n");
         for(Message m : messages) {
-            final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+            final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
             builder.append("case " + code + ":{\n");
             for (Parameter p : m.getParameters()) {
                 final String javaType = JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context);
@@ -119,7 +120,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         /*builder.append("public static byte[] toBytes(Event e){\n");
         builder.append("switch(e.getType().getCode()){\n");
         for(Message m : messages) {
-            final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+            final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
             builder.append("case " + code + ": return toBytes((" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message)e);\n");
         }
         builder.append("default: return null;\n");

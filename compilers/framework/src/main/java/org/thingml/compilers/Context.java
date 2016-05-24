@@ -17,6 +17,10 @@ package org.thingml.compilers;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
@@ -235,7 +239,7 @@ public class Context {
     }
 
     public String getVariableName(Variable var) {
-        return var.qname("_") + "_var";
+        return ThingMLElementHelper.qname(var, "_") + "_var";
     }
 
     public String getInstanceName(Instance i) {
@@ -446,7 +450,7 @@ public class Context {
         initSerializationPlugins(cfg);
 
         Set<Protocol> protocols = new HashSet<>();
-        for (ExternalConnector eco : cfg.getExternalConnectors()) {
+        for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
             if (!protocols.contains(eco.getProtocol())) {
                 protocols.add(eco.getProtocol());
             }
@@ -464,8 +468,8 @@ public class Context {
     }
 
     public SerializationPlugin getSerializationPlugin(Protocol p) throws UnsupportedEncodingException {
-        if (p.hasAnnotation("serializer")) {
-            final String serID = p.annotation("serializer").get(0);
+        if (AnnotatedElementHelper.hasAnnotation(p, "serializer")) {
+            final String serID = AnnotatedElementHelper.annotation(p, "serializer").get(0);
             final SerializationPlugin sp = this.getCompiler().getSerializationPlugin(serID);
             if (sp != null) {
                 return sp;

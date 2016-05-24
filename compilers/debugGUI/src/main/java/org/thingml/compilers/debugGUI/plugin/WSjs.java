@@ -21,6 +21,7 @@
 package org.thingml.compilers.debugGUI.plugin;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.debugGUI.DebugGUINetworkLibraryGenerator;
 
@@ -44,8 +45,8 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
     public void generateNetworkLibrary() {
         for (ExternalConnector eco : this.getExternalConnectors()) {
             String portName;
-            if (eco.hasAnnotation("port_name")) {
-                portName = eco.annotation("port_name").iterator().next();
+            if (AnnotatedElementHelper.hasAnnotation(eco, "port_name")) {
+                portName = AnnotatedElementHelper.annotation(eco, "port_name").iterator().next();
             } else {
                 portName = eco.getProtocol().getName();
             }
@@ -65,8 +66,8 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
 
         for (ExternalConnector eco : this.getExternalConnectors()) {
             String portName;
-            if (eco.hasAnnotation("port_name")) {
-                portName = eco.annotation("port_name").iterator().next();
+            if (AnnotatedElementHelper.hasAnnotation(eco, "port_name")) {
+                portName = AnnotatedElementHelper.annotation(eco, "port_name").iterator().next();
             } else {
                 portName = eco.getProtocol().getName();
             }
@@ -80,8 +81,8 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
 
             for (Message m : eco.getPort().getReceives()) {
                 String msgID = "";
-                if (m.hasAnnotation("code")) {
-                    msgID = m.annotation("code").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(m, "code")) {
+                    msgID = AnnotatedElementHelper.annotation(m, "code").iterator().next();
 
                     builder.append("if(msgID == \"" + msgID + "\") {\n");
                     builder.append("tolog = \"" + m.getName() + "(\"\n");

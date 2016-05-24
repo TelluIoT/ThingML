@@ -66,7 +66,7 @@ public class Types {
         PlatformAnnotation character = factory.createPlatformAnnotation();
         character.setName("type_checker");
         character.setValue("Character");
-        CHARACTER_TYPE.getAnnotations().add(integer);
+        CHARACTER_TYPE.getAnnotations().add(character);
         
         STRING_TYPE = factory.createPrimitiveType();
         STRING_TYPE.setName("String");

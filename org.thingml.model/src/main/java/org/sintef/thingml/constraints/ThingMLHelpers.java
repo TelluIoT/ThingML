@@ -28,9 +28,11 @@
  */
 package org.sintef.thingml.constraints;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.ThingHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -159,11 +161,11 @@ public class ThingMLHelpers {
         Set<Type> result = new HashSet<Type>();
         for(Type t : allTypes(model)) {
             for(Thing thing : allThings(model)) {
-                for(Property p : thing.allPropertiesInDepth()) {
+                for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
                     if (EcoreUtil.equals(p.getType(), t))
                         result.add(t);
                 }
-                for(Message m : thing.allMessages()) {
+                for(Message m : ThingMLHelpers.allMessages(thing)) {
                     for(Parameter p : m.getParameters()) {
                         if (EcoreUtil.equals(p.getType(), t)) {
                             result.add(t);
@@ -180,11 +182,11 @@ public class ThingMLHelpers {
         Set<Type> result = new HashSet<Type>();
         for(Type t : allSimpleTypes(model)) {
             for(Thing thing : allThings(model)) {
-                for(Property p : thing.allPropertiesInDepth()) {
+                for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
                     if (EcoreUtil.equals(p.getType(), t))
                         result.add(t);
                 }
-                for(Message m : thing.allMessages()) {
+                for(Message m : ThingMLHelpers.allMessages(thing)) {
                     for(Parameter p : m.getParameters()) {
                         if (EcoreUtil.equals(p.getType(), t)) {
                             result.add(t);
@@ -756,6 +758,33 @@ public class ThingMLHelpers {
 			eObject = eObject.eContainer();
 		}
 		return (TypedElement) eObject;
+	}
+
+
+	public static List<Expression> getAllExpressions(ThingMLElement self, Class clazz) {
+		List<Expression> result = new ArrayList<Expression>();
+		TreeIterator<EObject> it = self.eAllContents();
+		while(it.hasNext()) {
+			EObject o = it.next();
+			if (clazz.isInstance(o)) result.add((Expression) o);
+		}
+
+		if (clazz.isInstance(self))result.add((Expression)self);
+		return result;
+	}
+
+
+	public static List<Expression> getAllExpressions(ThingMLElement self) {
+		return getAllExpressions(self, Expression.class);
+	}
+
+
+	public Set<Message> allMessages(ThingMLModel self) {
+		Set<Message> msg = new HashSet<Message>();
+		for(Thing t : allThings(self)) {
+			msg.addAll(ThingMLHelpers.allMessages(t));
+		}
+		return msg;
 	}
 
 }

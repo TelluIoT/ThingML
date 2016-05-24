@@ -186,15 +186,5 @@ public class SimpleSourceImpl extends SourceImpl implements SimpleSource {
 		return super.eIsSet(featureID);
 	}
 
-	@Override
-	public String qname(String separator) {
-		if(separator == null) {
-			separator = "_";
-		}
 
-		Stream stream = ThingMLHelpers.findContainingStream(this);
-		return stream.getName() + separator + this.getMessage().getPort().getName() +
-				separator + this.getMessage().getMessage().getName();
-
-	}
 } //SimpleSourceImpl

@@ -22,6 +22,7 @@ package org.thingml.compilers.checker;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -62,7 +63,7 @@ public class Tarjan<T extends ThingMLElement> {
     public List<Annotated<T>> findChildren(T el) {
         List<Annotated<T>> res = new LinkedList<Annotated<T>>();
         if (el instanceof Instance) {
-            for (Connector co : cfg.allConnectors()) {
+            for (Connector co : ConfigurationHelper.allConnectors(cfg)) {
                 if (EcoreUtil.equals(co.getCli().getInstance(), el)) {
                     res.add(findElement((T) co.getSrv().getInstance()));
                 }

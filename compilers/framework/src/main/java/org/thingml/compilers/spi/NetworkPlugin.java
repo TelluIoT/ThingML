@@ -27,6 +27,7 @@ package org.thingml.compilers.spi;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
@@ -96,7 +97,7 @@ public abstract class NetworkPlugin extends Rule {
 
     public Set<ExternalConnector> getExternalConnectors(Configuration cfg, Protocol prot) {
         Set<ExternalConnector> ecos = new HashSet<>();
-        for (ExternalConnector eco : cfg.getExternalConnectors()) {
+        for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
             if (eco.getProtocol() == prot) {
                 ecos.add(eco);
             }

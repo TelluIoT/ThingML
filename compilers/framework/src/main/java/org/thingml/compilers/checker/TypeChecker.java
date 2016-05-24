@@ -31,6 +31,7 @@ package org.thingml.compilers.checker;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.Types;
+import org.sintef.thingml.helpers.TyperHelper;
 import org.sintef.thingml.util.ThingmlSwitch;
 
 
@@ -91,7 +92,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
         if ((!t1.equals(Types.INTEGER_TYPE) && !t1.equals(Types.REAL_TYPE)) || (!t2.equals(Types.INTEGER_TYPE) && !t2.equals(Types.REAL_TYPE))) {
             return Types.ERROR_TYPE;
         }
-        if (!t1.getBroadType().getName().equals(t2.getBroadType().getName())) //One Integer and one Real
+        if (!TyperHelper.getBroadType(t1).getName().equals(TyperHelper.getBroadType(t2).getName())) //One Integer and one Real
             return Types.REAL_TYPE;
         return t1;
     }
@@ -137,12 +138,11 @@ public class TypeChecker extends ThingmlSwitch<Type> {
     }
 
     private Type caseComparison(Type t1, Type t2) {
-        System.out.println("caseComparison(" + t1.getName() + ", " + t2.getName() + ")");
         if ((t1.equals(Types.INTEGER_TYPE) || t1.equals(Types.REAL_TYPE) || t1.equals(Types.ANY_TYPE)) && (t2.equals(Types.INTEGER_TYPE) || t2.equals(Types.REAL_TYPE) || t2.equals(Types.ANY_TYPE)))
             return Types.BOOLEAN_TYPE;
         if ((t1.equals(Types.BOOLEAN_TYPE) || t1.equals(Types.ANY_TYPE)) && (t2.equals(Types.BOOLEAN_TYPE) || t2.equals(Types.ANY_TYPE)))
             return Types.BOOLEAN_TYPE;
-        if (t1.isA(Types.ANY_TYPE) && t2.isA(Types.ANY_TYPE))
+        if (TyperHelper.isA(t1, Types.ANY_TYPE) && TyperHelper.isA(t2, Types.ANY_TYPE))
             return Types.BOOLEAN_TYPE;
         return Types.ERROR_TYPE;
     }
@@ -220,7 +220,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 
     @Override
     public Type casePropertyReference(PropertyReference object) {
-        return object.getProperty().getType().getBroadType();
+        return TyperHelper.getBroadType(object.getProperty().getType());
     }
 
     @Override
@@ -236,13 +236,13 @@ public class TypeChecker extends ThingmlSwitch<Type> {
                 SimpleParamRef ref = (SimpleParamRef) object.getParameter();
                 if (ref.getParameterRef().getType() == null)
                     return Types.ERROR_TYPE;
-                return ref.getParameterRef().getType().getBroadType();
+                return TyperHelper.getBroadType(ref.getParameterRef().getType());
             }
         } else if (object instanceof PropertyReference) {
             PropertyReference pr = (PropertyReference) object;
             if (pr.getProperty().getType() == null)
                 return Types.ERROR_TYPE;
-            return pr.getProperty().getType().getBroadType();
+            return TyperHelper.getBroadType(pr.getProperty().getType());
         }
         return Types.ANY_TYPE;
     }
@@ -251,7 +251,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
     public Type caseFunctionCallExpression(FunctionCallExpression object) {
         if (object.getFunction().getType() == null)
             return Types.VOID_TYPE;
-        return object.getFunction().getType().getBroadType();
+        return TyperHelper.getBroadType(object.getFunction().getType());
     }
 
     @Override

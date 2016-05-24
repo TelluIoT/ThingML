@@ -17,6 +17,7 @@ package org.thingml.compilers.c.arduino;
 
 import org.sintef.thingml.ErrorAction;
 import org.sintef.thingml.PrintAction;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CThingActionCompiler;
 
@@ -37,8 +38,8 @@ public class CThingActionCompilerArduino extends CThingActionCompiler {
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
         generate(action.getMsg(), b, ctx);
-        if (ctx.getCurrentConfiguration().hasAnnotation("arduino_stdout")) {
-            builder.append(ctx.getCurrentConfiguration().annotation("arduino_stdout").iterator().next() + ".print(" + b.toString() + ");\n");
+        if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "arduino_stdout")) {
+            builder.append(AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout").iterator().next() + ".print(" + b.toString() + ");\n");
         } else {
             builder.append("// PRINT: " + b.toString());
         }

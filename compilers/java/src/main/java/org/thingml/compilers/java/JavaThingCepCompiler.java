@@ -16,6 +16,7 @@
 package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
@@ -37,10 +38,10 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
         if (stream.getInput() instanceof SimpleSource) {
             SimpleSource source = (SimpleSource) stream.getInput();
             Message outPut = source.getMessage().getMessage();
-            generateSubscription(stream, builder, ctx, outPut, source.qname("_") + "_observable");
+            generateSubscription(stream, builder, ctx, outPut, ThingMLElementHelper.qname(source, "_") + "_observable");
         } else if (stream.getInput() instanceof SourceComposition) {
             Message outPut = stream.getOutput().getMessage();
-            generateSubscription(stream, builder, ctx, outPut, stream.qname("_"));
+            generateSubscription(stream, builder, ctx, outPut, ThingMLElementHelper.qname(stream, "_"));
         } else {
             throw new UnsupportedOperationException("Input " + stream.getClass().getName() + " is not supported");
         }
@@ -99,7 +100,7 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
 
 
         if (!stream.isDynamic()) {
-            builder.append("start" + stream.getInput().qname("_") + "();\n");
+            builder.append("start" + ThingMLElementHelper.qname(stream.getInput(), "_") + "();\n");
         }
     }
 

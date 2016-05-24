@@ -53,36 +53,6 @@ public interface AnnotatedElement extends ThingMLElement {
 	 */
 	EList<PlatformAnnotation> getAnnotations();
 
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    public List<PlatformAnnotation> allAnnotations();
 
-    /**
-     *
-     * @param annotation
-     * @param value
-     * @return
-     * @generated NOT
-     */
-    boolean isDefined(String annotation, String value);
-
-    /**
-     *
-     * @param name
-     * @return
-     * @generated NOT
-     */
-    boolean hasAnnotation(String name);
-
-    /**
-     *
-     * @param name
-     * @return
-     * @generated NOT
-     */
-    List<String> annotation(String name);
 
 } // AnnotatedElement

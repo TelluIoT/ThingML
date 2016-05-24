@@ -188,27 +188,5 @@ public class PrintActionImpl extends ActionImpl implements PrintAction {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-     */
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		if (getMsg()!=null)
-			result.addAll(getMsg().getAllExpressions());
-		return result;
-	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		if (getMsg()!=null)
-			result.addAll(getMsg().getAllExpressions(clazz));
-		return result;
-	}
 } //PrintActionImpl
