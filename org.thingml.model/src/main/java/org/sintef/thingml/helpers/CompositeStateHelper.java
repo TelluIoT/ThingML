@@ -117,7 +117,8 @@ public class CompositeStateHelper {
 
     public static List<Region> directSubRegions(CompositeState self) {
         List<Region> result = new ArrayList<Region>();
-        result.add(self);
+        if (!(self instanceof Session))
+            result.add(self);
         for (Region r : self.getRegion()){
             if (!(r instanceof Session))
                 result.addAll(RegionHelper.allContainedRegions(r));
