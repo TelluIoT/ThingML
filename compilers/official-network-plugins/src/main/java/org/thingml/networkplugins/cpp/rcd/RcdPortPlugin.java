@@ -83,51 +83,53 @@ public class RcdPortPlugin extends NetworkPlugin {
         rcdPorts = new HashSet<RcdPort>();
         
         //System.out.println("RcdPortPlugin.generateNetworkLibrary() " + protocols);
-        StringBuilder builder = new StringBuilder();
-        
-        ctx.getBuilder("hashdefines").append("#define RCDPORT_IN_USE\n");
-        
-        //************ Generate method for receiving messages from rcdports
+        if (!protocols.isEmpty()) {
+            StringBuilder builder = new StringBuilder();
 
-        //This header is part of the "sintefboard_main_header.h" template file
-        //headerbuilder.append("// Receive forwarding of messages from ports\n");
-        //headerbuilder.append("void " + "rcdport_receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
-        //headerbuilder.append(";\n");
-        builder.append("// Receive forwarding of messages from ports\n");
-        builder.append("void " + getCppNameScope() + "rcd_port_receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
-        builder.append("{\n");
-        builder.append("switch (from_port) {\n");
-        
-        for (Protocol prot : protocols) {
-            RcdPort port = new RcdPort();
-            rcdPorts.add(port);
-            port.protocol = prot;
-            //System.out.println("Protocol " + prot.getName() + " => "+ prot.getAnnotations());
-            try {
-                port.sp = ctx.getSerializationPlugin(prot);
-            } catch (UnsupportedEncodingException uee) {
-                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
-                uee.printStackTrace();
-                return;
+            ctx.getBuilder("hashdefines").append("#define RCDPORT_IN_USE\n");
+
+            //************ Generate method for receiving messages from rcdports
+
+            //This header is part of the "sintefboard_main_header.h" template file
+            //headerbuilder.append("// Receive forwarding of messages from ports\n");
+            //headerbuilder.append("void " + "rcdport_receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
+            //headerbuilder.append(";\n");
+            builder.append("// Receive forwarding of messages from ports\n");
+            builder.append("void " + getCppNameScope() + "rcd_port_receive_forward(msgc_t *msg_in_ptr, int16_t from_port)");
+            builder.append("{\n");
+            builder.append("switch (from_port) {\n");
+
+            for (Protocol prot : protocols) {
+                RcdPort port = new RcdPort();
+                rcdPorts.add(port);
+                port.protocol = prot;
+                //System.out.println("Protocol " + prot.getName() + " => "+ prot.getAnnotations());
+                try {
+                    port.sp = ctx.getSerializationPlugin(prot);
+                } catch (UnsupportedEncodingException uee) {
+                    System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                    uee.printStackTrace();
+                    return;
+                }
+                for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
+                  port.ecos.add(eco);
+                  eco.setName(eco.getProtocol().getName());
+                }
+                port.generateNetworkLibrary(this.ctx, cfg);
+
+                String portnum = prot.annotation("rcdport_number").iterator().next();
+                String portName = prot.getName();
+                builder.append("// "+portName+" portnum is() " + portnum + "\n");
+                builder.append("case " + portnum + ":\n");
+                builder.append(portName + "_parser(msg_in_ptr);\n");
+                builder.append("break;\n");
+
             }
-            for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
-              port.ecos.add(eco);
-              eco.setName(eco.getProtocol().getName());
-            }
-            port.generateNetworkLibrary(this.ctx, cfg);
-            
-            String portnum = prot.annotation("rcdport_number").iterator().next();
-            String portName = prot.getName();
-            builder.append("// "+portName+" portnum is() " + portnum + "\n");
-            builder.append("case " + portnum + ":\n");
-            builder.append(portName + "_parser(msg_in_ptr);\n");
-            builder.append("break;\n");
-            
+            builder.append("} // switch from port\n");
+            builder.append("}\n");
+
+            ctx.getBuilder("RcdPortPlugin" + ".c").append(builder.toString());
         }
-        builder.append("} // switch from port\n");
-        builder.append("}\n");
-        
-        ctx.getBuilder("RcdPortPlugin" + ".c").append(builder.toString());
         
     }
 
@@ -253,9 +255,6 @@ public class RcdPortPlugin extends NetworkPlugin {
                 ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
                 htemplate = htemplate.replace("/*PORT_NAME*/", portName);
 
-                //Connector Instanciation
-
-
                 StringBuilder b = new StringBuilder();
                 StringBuilder h = new StringBuilder();
                 
@@ -269,6 +268,7 @@ public class RcdPortPlugin extends NetworkPlugin {
                 ctx.getBuilder(protocol.getName() + ".c").append(ctemplate);
                 ctx.getBuilder(protocol.getName() + ".h").append(htemplate);
 
+                ctx.addToInitCode("\n" + portName + "_instance.listener_id = add_instance(&" + portName + "_instance);\n");
             }
         }
     }

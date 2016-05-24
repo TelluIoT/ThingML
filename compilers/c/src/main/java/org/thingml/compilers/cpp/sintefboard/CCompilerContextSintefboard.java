@@ -19,6 +19,7 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by ffl on 11.06.15.
@@ -78,7 +79,10 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         StringBuilder builderImpl = new StringBuilder();
         StringBuilder builderInit = new StringBuilder();
 
+        
+        Collections.sort(headers); // Sort the headers to control order of the declarations
         for (String f : headers) {
+            System.out.println("Appending " + f + " to builderHeader");
             builderHeader.append(generatedCode.get(f).toString());
         }
 
