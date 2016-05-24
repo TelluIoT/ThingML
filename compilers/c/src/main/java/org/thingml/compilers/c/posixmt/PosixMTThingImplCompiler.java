@@ -126,9 +126,36 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
 
     }
     
-    private void generateSessionInitialization(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
+    private void generateSessionFunctions(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
         for(Session s : thing.allStateMachines().get(0).allContainedSessions()) {
-            builder.append(" {\n");
+            
+            //Main Mettre un param de plus a run tout court?
+            builder.append("void run_session_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
+            StateMachine sm = thing.allStateMachines().get(0);
+            if (thing.allStateMachines().size() > 0) { // there is a state machine
+                builder.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(s.getInitial()) + ", _instance);\n");
+            }
+            builder.append("while(1){\n");
+            if (sm.hasEmptyHandlers()) {
+                builder.append("int emptyEventConsumed = 1;\n");
+                builder.append("while (emptyEventConsumed != 0) {\n");
+                builder.append("emptyEventConsumed = 0;\n");
+                builder.append("emptyEventConsumed += " + ctx.getEmptyHandlerName(thing) + "(_instance);\n");
+                builder.append("}\n");
+            }
+            builder.append(thing.getName() + "_processMessageQueue(_instance);\n");
+
+            builder.append("}\n");
+            builder.append("}\n");
+            
+            //Kill
+            
+            //Init
+            builder.append("void fork_session_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
+            //Trouver la tête
+            //alloc space
+            //link
+            //init
             builder.append("}\n");
         }
     }
