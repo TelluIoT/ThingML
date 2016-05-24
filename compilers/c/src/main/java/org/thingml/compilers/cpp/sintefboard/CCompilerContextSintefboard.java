@@ -58,9 +58,12 @@ public class CCompilerContextSintefboard extends CCompilerContext {
             } else if (filename.startsWith(configName)) {
                 // These files will be handled later
                 System.out.println("Special handling2 of " + filename);
-            } else if (filename.startsWith("hashdefines")) {
+            } else if (filename.contentEquals("hashdefines")) {
                 // These files will be handled later
                 System.out.println("Special handling3 of " + filename);
+            } else if (filename.contentEquals("rcdportinfo")) {
+                // These files will be handled later
+                System.out.println("Special handling4 of " + filename);
             } else if (filename.endsWith(".h")) {
                 headers.add(filename);
                 System.out.println("Adding " + filename + " to headers");
@@ -104,6 +107,7 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         writeTextFile(configName + ".hpp", stringHeader);
 
         String stringImpl = generatedCode.get(configName + "_cfg.c").toString();
+        stringImpl = stringImpl.replace("/*RCDPORTINFO*/", generatedCode.get("rcdportinfo").toString());
         stringImpl = stringImpl.replace("/*NAME*/", configName);
         stringImpl = stringImpl.replace("/*RUNTIME_CLASS*/", generatedCode.get("runtime.c").toString());
         stringImpl = stringImpl.replace("/*CODE*/", builderImpl.toString());

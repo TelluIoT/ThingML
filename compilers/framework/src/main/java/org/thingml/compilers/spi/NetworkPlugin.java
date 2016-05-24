@@ -93,7 +93,6 @@ public abstract class NetworkPlugin extends Rule {
 
     }
 
-
     public Set<ExternalConnector> getExternalConnectors(Configuration cfg, Protocol prot) {
         Set<ExternalConnector> ecos = new HashSet<>();
         for (ExternalConnector eco : cfg.getExternalConnectors()) {
@@ -102,6 +101,22 @@ public abstract class NetworkPlugin extends Rule {
             }
         }
         return ecos;
+    }
+
+    public Set<Port> getPorts(Configuration cfg, Protocol prot) {
+        Set<Port> res = new HashSet<>();
+        for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
+            res.add(eco.getPort());
+        }
+        return res;
+    }
+
+    public Set<Thing> getThings(Configuration cfg, Protocol prot) {
+        Set<Thing> res = new HashSet<>();
+        for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
+            res.add(eco.getInst().getInstance().getType());
+        }
+        return res;
     }
 
     public Set<ThingPortMessage> getMessagesSent(Configuration cfg, Protocol prot) {

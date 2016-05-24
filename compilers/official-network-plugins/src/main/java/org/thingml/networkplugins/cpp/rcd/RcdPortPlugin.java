@@ -103,6 +103,7 @@ public class RcdPortPlugin extends NetworkPlugin {
                 RcdPort port = new RcdPort();
                 rcdPorts.add(port);
                 port.protocol = prot;
+                port.cfg = cfg;
                 //System.out.println("Protocol " + prot.getName() + " => "+ prot.getAnnotations());
                 try {
                     port.sp = ctx.getSerializationPlugin(prot);
@@ -115,7 +116,7 @@ public class RcdPortPlugin extends NetworkPlugin {
                   port.ecos.add(eco);
                   eco.setName(eco.getProtocol().getName());
                 }
-                port.generateNetworkLibrary(this.ctx, cfg);
+                port.generateNetworkLibrary(this.ctx);
 
                 String portnum = prot.annotation("rcdport_number").iterator().next();
                 String portName = prot.getName();
@@ -129,11 +130,29 @@ public class RcdPortPlugin extends NetworkPlugin {
             builder.append("}\n");
 
             ctx.getBuilder("RcdPortPlugin" + ".c").append(builder.toString());
+
+            generatePortInfo();
         }
         
     }
 
+    private void generatePortInfo() {
+        StringBuilder rcdportinfoBbuilder = new StringBuilder();
+        
+        rcdportinfoBbuilder.append("#define NUM_OF_PORTS_IN_TASK "+rcdPorts.size()+"\n\n");  
+        rcdportinfoBbuilder.append("const static port_info_entry_t _class_port_info[] = {\n");  
+
+        for (RcdPort port : rcdPorts) {
+            rcdportinfoBbuilder.append("{"+port.getPortNumber()+", "+port.getPortRole()+", \""+port.getPortName()+"\"},\n");  
+        }
+        rcdportinfoBbuilder.append("{-1, PORT_END, \"\"},\n");
+        rcdportinfoBbuilder.append("};\n");  
+
+        ctx.getBuilder("rcdportinfo").append(rcdportinfoBbuilder.toString());
+    }
+    
     private class RcdPort {
+        Configuration cfg;
         Set<ExternalConnector> ecos;
         Protocol protocol;
         SerializationPlugin sp;
@@ -141,12 +160,53 @@ public class RcdPortPlugin extends NetworkPlugin {
         RcdPort() {
             ecos = new HashSet<>();
         }
+        
+        public String getPortNumber() {
+            return protocol.annotation("rcdport_number").iterator().next();
+        }
 
-        public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder, Configuration cfg, Protocol prot) {
+        public String getPortRole() {
+            String ret = "";
+            Port p = getPorts(cfg, protocol).iterator().next();
+            if (p instanceof RequiredPort) {
+                ret = "PORT_REQUIRED";
+            }
+            if (p instanceof ProvidedPort) {
+                ret = "PORT_PROVIDED";
+            }
+            return ret;
+        }
+        
+        public String getPortName() {
+            String ret = "";
+            Port p = getPorts(cfg, protocol).iterator().next();
+            Thing t = getThings(cfg, protocol).iterator().next();
+            ret = t.getName()+":"+p.getName();
+            
+            if (protocol.hasAnnotation("rcdport_name")) {
+                ret = protocol.annotation("rcdport_name").iterator().next();
+            }
+
+            return ret;
+        }
+        
+        public void printPortInfo(int i, Port p) {
+            System.out.print("RcdPort("+i+") "+ protocol.getName() +" is connected to port "+ p.getName()+ " ");
+            if (p instanceof RequiredPort) {
+                System.out.print("ProvidedPort ");
+            }
+            if (p instanceof ProvidedPort) {
+                System.out.print("RequiredPort ");
+            }
+            System.out.println();
+        }
+        
+        public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder, Protocol prot) {
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
                 Thing t = tpm.t;
                 Port p = tpm.p;
                 Message m = tpm.m;
+                
 
                 headerbuilder.append("// Forwarding of messages " + prot.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
                 headerbuilder.append("void " + "forward_" + prot.getName() + "_" + ctx.getSenderName(t, p, m));
@@ -187,7 +247,7 @@ public class RcdPortPlugin extends NetworkPlugin {
             }
         }
 
-        public void generatePortDeserializer(StringBuilder builder, StringBuilder headerbuilder, Configuration cfg, Protocol prot) {
+        public void generatePortDeserializer(StringBuilder builder, StringBuilder headerbuilder, Protocol prot) {
             
             String portName = protocol.getName();
             
@@ -244,7 +304,7 @@ public class RcdPortPlugin extends NetworkPlugin {
             builder.append("}\n\n");
         }
         
-        void generateNetworkLibrary(CCompilerContext ctx, Configuration cfg) {
+        void generateNetworkLibrary(CCompilerContext ctx) {
             if (!ecos.isEmpty()) {
                 String ctemplate = ctx.getTemplateByID("templates/RcdPortForward.c");
                 String htemplate = ctx.getTemplateByID("templates/RcdPortForward.h");
@@ -258,9 +318,9 @@ public class RcdPortPlugin extends NetworkPlugin {
                 StringBuilder b = new StringBuilder();
                 StringBuilder h = new StringBuilder();
                 
-                generatePortDeserializer(b, h, cfg, protocol);
+                generatePortDeserializer(b, h, protocol);
                 
-                generateMessageForwarders(b, h, cfg, protocol);
+                generateMessageForwarders(b, h, protocol);
 
                 ctemplate += "\n" + b;
                 htemplate += "\n" + h;
@@ -269,6 +329,11 @@ public class RcdPortPlugin extends NetworkPlugin {
                 ctx.getBuilder(protocol.getName() + ".h").append(htemplate);
 
                 ctx.addToInitCode("\n" + portName + "_instance.listener_id = add_instance(&" + portName + "_instance);\n");
+
+                int i = 0;
+                for (Port p : getPorts(cfg, protocol)) {
+                    printPortInfo(++i, p);
+                }
             }
         }
     }

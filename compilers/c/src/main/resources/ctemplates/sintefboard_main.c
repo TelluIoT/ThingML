@@ -9,6 +9,8 @@
 
 /*C_GLOBALS*/
 
+/*RCDPORTINFO*/
+
 // START OF ****** RUNTIME_CLASS
 /*RUNTIME_CLASS*/
 
