@@ -106,12 +106,8 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("// Definition of the instance stuct:\n");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
-        //builder.append("// Variables for the ID of the instance\n");
-        //builder.append("int id;\n");
-
         builder.append("// Variables for the ID of the ports of the instance\n");
 
-        //if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
         if (debugProfile.isActive()) {
             builder.append("bool debug;\n");
             builder.append("char * name;\n");
@@ -139,8 +135,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
                     builder.append("// Handler Array\n");
                     builder.append("struct Msg_Handler * ");
                     builder.append(p.getName());
-                    builder.append("_handlers;\n");//[");
-                    //builder.append(p.getReceives().size() + "];");
+                    builder.append("_handlers;\n");
                 }
             }
         }
@@ -156,7 +151,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
             StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
-            for (Region r : CompositeStateHelper.allContainedRegions(sm)) {
+            for (Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
         }
@@ -169,12 +164,6 @@ public class CThingApiCompiler extends ThingApiCompiler {
                 builder.append("* ");
             }
             builder.append(ctx.getCVarName(p));
-            
-            /*if (p.getCardinality() != null) {//array
-                builder.append("[");
-                ctx.getCompiler().getThingActionCompiler().generate(p.getCardinality(), builder, ctx);
-                builder.append("]");
-            }*/
             builder.append(";\n");
         }
         builder.append("\n};\n");
@@ -189,14 +178,6 @@ public class CThingApiCompiler extends ThingApiCompiler {
             builder.append("void " + ThingMLElementHelper.qname(sm, "_") + "_OnEntry(int state, ");
             builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
-            // Message Handlers
-            /*for (Port port : ThingMLHelpers.allPorts(thing)) {
-                for (Message msg : port.getReceives()) {
-                    builder.append("void " + ctx.getHandlerName(thing, port, msg));
-                    ctx.appendFormalParameters(thing, builder, msg);
-                    builder.append(";\n");
-                }
-            }*/
             // Message Handlers
             Map<Port, Map<Message, List<Handler>>> handlers = StateHelper.allMessageHandlers(sm);
             for (Port port : handlers.keySet()) {
@@ -230,76 +211,6 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("\n");
     }
 
-//    protected void generatePrivateCppPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-    // NB sdalgard - This function is a duplicate of generatePrivateCPrototypes in class CThingImplCompiler
-
-
-    // Exit actions
-//        if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
-//            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
-//            builder.append("void " + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
-//            builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
-
-    // Add handler for empty transitions if needed - Added by sdalgard
-//            if (sm.hasEmptyHandlers()) {
-//                builder.append("int " + ctx.getEmptyHandlerName(thing));
-//                ctx.appendFormalParametersEmptyHandler(thing, builder);
-//                builder.append(";\n");
-//            }
-
-
-//        }
-
-
-//        // Message Sending
-//        for(Port port : thing.getPorts()) {
-//            for (Message msg : port.getSends()) {
-//                builder.append("void " + ctx.getSenderName(thing, port, msg));
-//                ctx.appendFormalParameters(thing, builder, msg);
-//                builder.append(";\n");
-//            }
-//        }
-
-    //TODO sdalgard - Check how this shall be handled for C++
-    //for (Function f : ThingMLHelpers.allFunctions(thing)) {
-    //    if (!f.isDefined("abstract", "true")) {
-    //        generatePrototypeforThingDirect(f, builder, ctx, thing);
-    //        builder.append(";\n");
-    //    }
-    //}
-
-
-//    }
-
-
-//    protected void generatePrivateCppMessageSendingPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-    // NB sdalgard - This function is duplicated in generatePrivateMessageSendingOperations in class CThingImplCompiler
-//       for(Port port : ThingMLHelpers.allPorts(thing)) {
-//            for (Message msg : port.getSends()) {
-//                // Variable for the function pointer
-//                builder.append("void (" + getCppNameScope() + "*" + ctx.getSenderName(thing, port, msg) + "_listener)");
-//                ctx.appendFormalTypeSignature(thing, builder, msg);
-//                builder.append(";\n");
-//
-//                // Variable for the external function pointer
-//                builder.append("void (" + getCppNameScope() + "*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
-//                ctx.appendFormalTypeSignature(thing, builder, msg);
-//                builder.append(";\n");
-//
-//            }
-//        }
-//        builder.append("\n");
-//    }
-    
-    protected List<State> SessionStates(Region r) {
-        List<State> res = new ArrayList<State>();
-        res.addAll(ParallelRegionHelper.allContainedSessions(r));
-        for(Session s: ParallelRegionHelper.allContainedSessions(r)) {
-            res.addAll(CompositeStateHelper.allContainedStates(s));
-            res.addAll(SessionStates(s));
-        }
-        return res;
-    }
     
     protected void generateStateIDs(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
@@ -307,8 +218,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
             StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
             builder.append("// Definition of the states:\n");
 
-            List<State> states = CompositeStateHelper.allContainedStates(sm);
-            states.addAll(SessionStates(sm));
+            List<State> states = CompositeStateHelper.allContainedStatesIncludingSessions(sm);
             for (int i = 0; i < states.size(); i++) {
                 builder.append("#define " + ctx.getStateID(states.get(i)) + " " + i + "\n");
             }

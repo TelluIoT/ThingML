@@ -33,7 +33,7 @@ import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.CompositeStateHelper;
-import org.sintef.thingml.helpers.ParallelRegionHelper;
+import org.sintef.thingml.helpers.RegionHelper;
 import org.sintef.thingml.helpers.StateHelper;
 import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.DebugProfile;
@@ -52,24 +52,18 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         super.generateCHeaderAnnotation(thing, builder, ctx);
     }
     
-    protected void generateSessionListDeclaration(Region r, StringBuilder builder) {
-        for(Session s : ParallelRegionHelper.allContainedSessions(r)) {
-            builder.append("struct session_t * sessions_" + s.getName() + ";\n");
-            generateSessionListDeclaration(s, builder);
-        }
-    }
-    
     protected List<Region> regionSession(Region r) {
         List<Region> res = new ArrayList<Region>();
-        res.addAll(ParallelRegionHelper.allContainedSessions(r));
-        for(Session s : ParallelRegionHelper.allContainedSessions(r)) res.addAll(regionSession(s));
+        res.addAll(RegionHelper.allContainedSessions(r));
+        for(Session s : RegionHelper.allContainedSessions(r)) res.addAll(regionSession(s));
         return res;
     }
     
     @Override
     protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("// Definition of the sessions stuct:\n\n");
-        if(!CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
+        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+        if(!CompositeStateHelper.allContainedSessions(sm).isEmpty()) {
             builder.append("struct session_t;\n\n");
         }
         
@@ -98,10 +92,9 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         
         //Sessions
         builder.append("\n// Instances of different sessions\n");
-        generateSessionListDeclaration(ThingMLHelpers.allStateMachines(thing).get(0), builder);
-        /*for(Session s :thing.allStateMachines().get(0).allContainedSessions()) {
+        for(Session s : RegionHelper.allContainedSessions(sm)) {
             builder.append("struct session_t * sessions_" + s.getName() + ";\n");
-        }*/
+        }
         
         
         // Variables for each region to store its current state
@@ -113,11 +106,7 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         }
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
-            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
-            List<Region> regions = new ArrayList<>();
-            regions.addAll(regionSession(sm));
-            regions.addAll(CompositeStateHelper.allContainedRegions(sm));
-            for (Region r : regions) {
+            for (Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
         }
@@ -159,6 +148,11 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
                     builder.append(";\n");
                 }
             }
+        }
+        
+        builder.append("\n// Fork Sessions\n");
+        for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+            builder.append("void fork_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance);\n\n");
         }
         
         builder.append("\n// ProcessMessageQueue\n");

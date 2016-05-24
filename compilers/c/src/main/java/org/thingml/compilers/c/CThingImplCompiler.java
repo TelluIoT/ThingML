@@ -359,11 +359,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("switch(state) {\n");
 
-        //for (CompositeState cs : sm.allContainedCompositeStates()) {
-        List<CompositeState> cstates = new ArrayList<>();
-        cstates.addAll(CompositeStateHelper.allContainedCompositeStates(sm));
-        for (Session s: CompositeStateHelper.allContainedSessions(sm)) cstates.addAll(CompositeStateHelper.allContainedCompositeStates(s));
-        for (CompositeState cs : cstates) {
+        
+        for (CompositeState cs : CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm)) {
 
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
             if (debugProfile.isDebugBehavior()) {
@@ -390,11 +387,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
 
-        //for (State s : sm.allContainedSimpleStates()) {
-        List<State> states = new ArrayList<>();
-        states.addAll(CompositeStateHelper.allContainedSimpleStates(sm));
-        for (Session s: CompositeStateHelper.allContainedSessions(sm)) states.addAll(CompositeStateHelper.allContainedSimpleStates(s));
-        for (State s : states) {
+        
+        for (State s : CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
             if (debugProfile.isDebugBehavior()) {
@@ -425,11 +419,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("void " + getCppNameScope() + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
         builder.append("switch(state) {\n");
-        //for (CompositeState cs : sm.allContainedCompositeStates()) {
-        List<CompositeState> cstates = new ArrayList<>();
-        cstates.addAll(CompositeStateHelper.allContainedCompositeStates(sm));
-        for (Session s: CompositeStateHelper.allContainedSessions(sm)) cstates.addAll(CompositeStateHelper.allContainedCompositeStates(s));
-        for (CompositeState cs : cstates) {
+        
+        for (CompositeState cs : CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
             ArrayList<Region> regions = new ArrayList<Region>();
             regions.add(cs);
@@ -444,10 +435,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         }
 
-        List<State> states = new ArrayList<>();
-        states.addAll(CompositeStateHelper.allContainedSimpleStates(sm));
-        for (Session s: CompositeStateHelper.allContainedSessions(sm)) states.addAll(CompositeStateHelper.allContainedSimpleStates(s));
-        for (State s : states) {
+        for (State s : CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             if (s.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
 
@@ -473,8 +461,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
 
-        Map<Port, Map<Message, List<Handler>>> handlers = StateHelper.allMessageHandlers(sm);
-        for(Session s : CompositeStateHelper.allContainedSessions(sm)) handlers.putAll(StateHelper.allMessageHandlers(s));
+        Map<Port, Map<Message, List<Handler>>> handlers = StateHelper.allMessageHandlersIncludingSessions(sm);
 
         for (Port port : handlers.keySet()) {
             for (Message msg : handlers.get(port).keySet()) {
@@ -517,7 +504,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         // Add handler for empty transitions if needed
-        if (StateHelper.hasEmptyHandlers(sm)) {
+        if (StateHelper.hasEmptyHandlersIncludingSessions(sm)) {
 
             if (isGeneratingCpp()) {
                 cppHeaderBuilder.append("// generateEventHandlers2\nint " + ctx.getEmptyHandlerName(thing));
@@ -536,7 +523,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             // dispatch the current message to sub-regions
             dispatchEmptyToSubRegions(thing, builder, sm, ctx, debugProfile);
             // If the state machine itself has a handler
-            if (StateHelper.hasEmptyHandlers(sm)) {
+            if (StateHelper.hasEmptyHandlersIncludingSessions(sm)) {
                 // it can only be an internal handler so the last param can be null (in theory)
                 generateEmptyHandlers(thing, sm, builder, null, sm, ctx, debugProfile);
             }

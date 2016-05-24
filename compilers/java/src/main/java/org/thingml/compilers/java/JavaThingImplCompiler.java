@@ -582,7 +582,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             for (Region r : RegionHelper.allContainedRegions(b)) {
                 ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(r, builder, ctx);
             }
-            for (Session s : ParallelRegionHelper.allContainedSessions(b)) {//Session are only allowed at the root
+            for (Session s : RegionHelper.allContainedSessions(b)) {//Session are only allowed at the root
                 ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(s, builder, ctx);
             }
         }
@@ -614,7 +614,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("}\n");
         for (StateMachine b : ThingMLHelpers.allStateMachines(thing)) {
-            for (Session s : ParallelRegionHelper.allContainedSessions(b)) {
+            for (Session s : RegionHelper.allContainedSessions(b)) {
                 builder.append("else if (\"" + s.getName() + "\".equals(session)) {\n");
                 builder.append("behavior = build" + ThingMLElementHelper.qname(s, "_") + "();\n");
                 builder.append("}\n");

@@ -27,11 +27,25 @@ import java.util.Set;
  */
 public class CompositeStateHelper {
 
-
     public static List<State> allContainedStates(CompositeState self) {
         final List<State> result = new ArrayList<State>();
         for(Region r : allContainedRegions(self)) {
             if (r instanceof State && !(r instanceof Session)) {
+                result.add((State)r);
+            }
+            for(State s : r.getSubstate()) {
+                if (! (s instanceof Region)) {
+                    result.add(s);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<State> allContainedStatesIncludingSessions(CompositeState self) {
+        final List<State> result = new ArrayList<State>();
+        for(Region r : allContainedRegionsAndSessions(self)) {
+            if (r instanceof State) {
                 result.add((State)r);
             }
             for(State s : r.getSubstate()) {
@@ -61,12 +75,32 @@ public class CompositeStateHelper {
     }
 
 
+    public static List<Region> allContainedRegionsAndSessions(CompositeState self) {
+        List<Region> result = new ArrayList<Region>();
+        result.add(self);
+        if (self instanceof CompositeState) {
+            for(Region r : ((CompositeState)self).getRegion()) {
+                result.addAll(RegionHelper.allContainedRegionsAndSessions(r));
+            }
+        }
+        for (State s : self.getSubstate()) {
+            if (s instanceof Region) {
+                result.addAll(RegionHelper.allContainedRegionsAndSessions((Region)s));
+            }
+        }
+        return result;
+    }
+
+
     public static List<Session> allContainedSessions(CompositeState self) {
         List<Session> result = new ArrayList<Session>();
         for (State s :self.getSubstate()) {
             if (s instanceof Session) {
                 result.add(((Session)s));
             }
+        }
+        for(Region r: self.getRegion()) {
+            result.addAll(RegionHelper.allContainedSessions(r));
         }
         return result;
     }
@@ -96,7 +130,7 @@ public class CompositeStateHelper {
         for (Region r : self.getRegion()){
             if (r instanceof Session)
                 result.add((Session)r);
-            result.addAll(ParallelRegionHelper.allContainedSessions((ParallelRegion)r));
+            result.addAll(RegionHelper.allContainedSessions((ParallelRegion)r));
         }
         return result;
     }
@@ -116,6 +150,24 @@ public class CompositeStateHelper {
     public static List<State> allContainedSimpleStates(CompositeState self) {
         final List<State> result = allContainedStates(self);
         result.removeAll(allContainedCompositeStates(self));
+        return result;
+    }
+
+
+    public static List<CompositeState> allContainedCompositeStatesIncludingSessions(CompositeState self) {
+        List<CompositeState> result = new ArrayList<CompositeState>();
+        for(State s : allContainedStatesIncludingSessions(self)) {
+            if (s instanceof CompositeState) {
+                result.add((CompositeState)s);
+            }
+        }
+        return result;
+    }
+
+
+    public static List<State> allContainedSimpleStatesIncludingSessions(CompositeState self) {
+        final List<State> result = allContainedStatesIncludingSessions(self);
+        result.removeAll(allContainedCompositeStatesIncludingSessions(self));
         return result;
     }
 

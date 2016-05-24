@@ -34,6 +34,14 @@ public class StateHelper {
         }
     }
 
+    public static List<State> allStatesIncludingSessions(State self) {
+        if (self instanceof CompositeState) {
+            return CompositeStateHelper.allContainedStatesIncludingSessions((CompositeState)self);
+        } else {
+            return Collections.singletonList((State)self);
+        }
+    }
+
 
     public static List<State> allStatesWithEntry(State self) {
         final List<State> result = new ArrayList<State>();
@@ -79,10 +87,52 @@ public class StateHelper {
     }
 
 
+    public static List<Handler> allHandlersIncludingSessions(State self, Port p, Message m) {
+        Map<Port, Map<Message, List<Handler>>> handlers = allMessageHandlersIncludingSessions(self);
+        if (!handlers.containsKey(p) || !handlers.get(p).containsKey(m))
+            return new ArrayList<Handler>();
+        else
+            return handlers.get(p).get(m);
+    }
 
+    
     public static Map<Port, Map<Message, List<Handler>>> allMessageHandlers(State self) {
         Map<Port, Map<Message, List<Handler>>> result = new HashMap<Port, Map<Message, List<Handler>>>();
         for(State s : allStates(self)) {
+            //println("Processisng state " + s.getName)
+            List<Handler> handlers = new ArrayList<Handler>();
+            for(Transition t : s.getOutgoing()){
+                handlers.add(t);
+            }
+            for(InternalTransition i : s.getInternal()) {
+                handlers.add(i);
+            }
+            for(Handler t : handlers){
+                //println("  Processisng handler " + t + " Event = " + t.getEvent)
+                for(Event e : t.getEvent()){
+                    if (e instanceof ReceiveMessage) {
+                        ReceiveMessage rm = (ReceiveMessage)e;
+                        Map<Message, List<Handler>> phdlrs = result.get(rm.getPort());
+                        if (phdlrs == null) {
+                            phdlrs = new HashMap<Message, List<Handler>>();
+                            result.put(rm.getPort(), phdlrs);
+                        }
+                        List<Handler> hdlrs = phdlrs.get(rm.getMessage());
+                        if (hdlrs == null) {
+                            hdlrs = new ArrayList<Handler>();
+                            phdlrs.put(rm.getMessage(), hdlrs);
+                        }
+                        hdlrs.add(t);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    
+    public static Map<Port, Map<Message, List<Handler>>> allMessageHandlersIncludingSessions(State self) {
+        Map<Port, Map<Message, List<Handler>>> result = new HashMap<Port, Map<Message, List<Handler>>>();
+        for(State s : allStatesIncludingSessions(self)) {
             //println("Processisng state " + s.getName)
             List<Handler> handlers = new ArrayList<Handler>();
             for(Transition t : s.getOutgoing()){
@@ -128,9 +178,42 @@ public class StateHelper {
     }
 
 
+    public static boolean canHandleIncludingSessions(State self, Port p, Message m) {
+        Map<Port, Map<Message, List<Handler>>> handlers = allMessageHandlersIncludingSessions(self);
+        if (!handlers.containsKey(p))
+            return false;
+        else
+            return handlers.get(p).containsKey(m);
+    }
+
+    public static boolean hasEmptyHandlersIncludingSessions(State self) {
+        return !allEmptyHandlersIncludingSessions(self).isEmpty();
+    }
+
+
     public static List<Handler> allEmptyHandlers(State self) {
         final List<Handler> result = new ArrayList<Handler>();
         for(State s : allStates(self)){
+            List<Handler> handlers = new ArrayList<Handler>();
+            for(Transition t : s.getOutgoing()){
+                handlers.add(t);
+            }
+            for(InternalTransition i : s.getInternal()) {
+                handlers.add(i);
+            }
+            for(Handler t : handlers) {
+                if (t.getEvent().isEmpty()) {
+                    result.add(t);
+                }
+            }
+        }
+        return result;
+    }
+
+
+    public static List<Handler> allEmptyHandlersIncludingSessions(State self) {
+        final List<Handler> result = new ArrayList<Handler>();
+        for(State s : allStatesIncludingSessions(self)){
             List<Handler> handlers = new ArrayList<Handler>();
             for(Transition t : s.getOutgoing()){
                 handlers.add(t);

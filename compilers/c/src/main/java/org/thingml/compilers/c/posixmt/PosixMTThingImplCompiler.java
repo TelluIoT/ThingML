@@ -38,7 +38,6 @@ import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ParallelRegionHelper;
 import org.sintef.thingml.helpers.RegionHelper;
 import org.sintef.thingml.helpers.StateHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
@@ -162,7 +161,6 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) { // there is a state machine
             builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getStateID(s) + ", &(new_session->s));\n");
-            builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getStateID(s.getInitial()) + ", &(new_session->s));\n");
         }
         
         builder.append("pthread_create( &(new_session->thread), NULL, " + thing.getName() + "_run, (void *) &(new_session->s));\n");
@@ -172,7 +170,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
     }
     
     private void generateSessionFunctions(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
-        for(Session s : ParallelRegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+        for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
             generateSessionFunctions(thing, s, builder, ctx, debugProfile);
         }
     }
@@ -254,7 +252,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             for(Port p : ThingMLHelpers.allPorts(thing)) {
                 if(p.getReceives().contains(m)) {
                     StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
-                    if (StateHelper.canHandle(sm, p, m)) {
+                    if (StateHelper.canHandleIncludingSessions(sm, p, m)) {
                     
                         builder.append("case " + ctx.getPortID(thing, p) + ":{\n");
                         
@@ -315,7 +313,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("// Message enqueue\n");
         for (Port p : ThingMLHelpers.allPorts(thing)) {
             for (Message m : p.getReceives()) {
-                if(StateHelper.canHandle(ThingMLHelpers.allStateMachines(thing).get(0), p, m)) {
+                if(StateHelper.canHandleIncludingSessions(ThingMLHelpers.allStateMachines(thing).get(0), p, m)) {
                     builder.append("void enqueue_" + thing.getName() + "_" + p.getName() + "_" + m.getName());
                     ctx.appendFormalParametersForEnqueue(builder, thing, m);
                     builder.append(" {\n");
@@ -336,7 +334,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                     }
                     builder.append("    }\n");
                     
-                    for(Session s : ParallelRegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+                    for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
                         builder.append("    struct session_t * head_" + s.getName() + " = inst->sessions_" + s.getName() + ";\n");
                         builder.append("    while (head_" + s.getName() + " != NULL) {\n");
 

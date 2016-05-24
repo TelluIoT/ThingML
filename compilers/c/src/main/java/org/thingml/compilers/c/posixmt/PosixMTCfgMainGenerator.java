@@ -246,7 +246,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
                         
                         StateMachine sm = ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).get(0);
-                        if (StateHelper.canHandle(sm, myReceiver.getValue(), m)) {
+                        if (StateHelper.canHandleIncludingSessions(sm, myReceiver.getValue(), m)) {
                             builder.append("enqueue_" + myReceiver.getKey().getType().getName() + "_" + myReceiver.getValue().getName() + "_" + m.getName() + "(&" + ctx.getInstanceVarName(myReceiver.getKey()));
                             
                             for (Parameter pt : m.getParameters()) {
