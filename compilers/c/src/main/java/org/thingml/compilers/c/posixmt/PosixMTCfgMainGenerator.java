@@ -477,6 +477,8 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
         }
+        builder.append(ctx.getInstanceVarName(inst) + ".active = true;\n");
+        builder.append(ctx.getInstanceVarName(inst) + ".alive = true;\n");
 
         // Init simple properties
         for (Map.Entry<Property, Expression> init: ConfigurationHelper.initExpressionsForInstance(cfg, inst)) {
