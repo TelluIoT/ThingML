@@ -344,7 +344,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             for (Message m : msgs) {
                 triggerImpl += "unsigned long " + m.getName() + "Time;\n";
                 for (Parameter p : m.getParameters()) {
-                    p.setName(m.getName() + p.getName());
+                    //p.setName(m.getName() + p.getName()); //TODO fix conflict in parameters naming in trigger scope
                     triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
                 }
 
