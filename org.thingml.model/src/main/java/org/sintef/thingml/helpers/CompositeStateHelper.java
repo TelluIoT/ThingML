@@ -98,6 +98,8 @@ public class CompositeStateHelper {
             if (s instanceof Session) {
                 result.add(((Session)s));
             }
+            if(s instanceof CompositeState)
+                result.addAll(allContainedSessions((CompositeState)s));
         }
         for(Region r: self.getRegion()) {
             result.addAll(RegionHelper.allContainedSessions(r));
@@ -120,8 +122,10 @@ public class CompositeStateHelper {
         if (!(self instanceof Session))
             result.add(self);
         for (Region r : self.getRegion()){
+            //if (!(r instanceof Session))
+            //    result.addAll(RegionHelper.allContainedRegions(r));
             if (!(r instanceof Session))
-                result.addAll(RegionHelper.allContainedRegions(r));
+                result.add(r);
         }
         return result;
     }
@@ -131,7 +135,7 @@ public class CompositeStateHelper {
         for (Region r : self.getRegion()){
             if (r instanceof Session)
                 result.add((Session)r);
-            result.addAll(RegionHelper.allContainedSessions((ParallelRegion)r));
+            //result.addAll(RegionHelper.allContainedSessions((ParallelRegion)r));
         }
         return result;
     }

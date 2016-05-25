@@ -383,7 +383,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             for (Region r : regions) {
                 builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName() + ");\n");
             }
-            builder.append("break;}\n");
+            builder.append("break;\n}\n");
         }
 
 
@@ -396,7 +396,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         + ctx.traceOnEntry(thing, sm, s) + "\\n\");\n");
             }
             if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
-            builder.append("break;}\n");
+            builder.append("break;\n}\n");
         }
 
         builder.append("default: break;\n");
@@ -591,7 +591,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
     
     protected void dispatchToSessions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
-       
+        builder.append("//Session list: " );
+        for (Region r : CompositeStateHelper.allContainedSessions(cs)) {
+            builder.append(r.getName() + " ");
+        }
+        builder.append("\n");
+        
         for (Region r : CompositeStateHelper.allContainedSessions(cs)) {
             builder.append("//Session " + r.getName() + "\n");
             builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
@@ -626,26 +631,33 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
-
+        
+       /* builder.append("//Region list: " );
         for (Region r : CompositeStateHelper.directSubRegions(cs)) {
-            if(r instanceof Session) continue;
-            builder.append("//Region " + r.getName() + "\n");
+            builder.append(r.getName() + " ");
+        }
+        builder.append("\n");*/
+        
+        for (Region r : CompositeStateHelper.directSubRegions(cs)) {
+            if(!(r instanceof Session)){
+                builder.append("//Region " + r.getName() + "\n");
 
-            // for all states of the region, if the state can handle the message and that state is active we forward the message
-            builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
+                // for all states of the region, if the state can handle the message and that state is active we forward the message
+                builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
 
-            ArrayList<State> states = new ArrayList<State>();
-            for (State s : r.getSubstate()) if (StateHelper.canHandle(s, port, msg)) states.add(s);
-            for (State s : states) {
-                if (states.get(0) != s) builder.append("else ");
-                builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
-                if (s instanceof CompositeState) {
-                    dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx, debugProfile);
+                ArrayList<State> states = new ArrayList<State>();
+                for (State s : r.getSubstate()) if (StateHelper.canHandle(s, port, msg)) states.add(s);
+                for (State s : states) {
+                    if (states.get(0) != s) builder.append("else ");
+                    builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
+                    if (s instanceof CompositeState) {
+                        dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx, debugProfile);
+                    }
+                    generateMessageHandlers(thing, s, port, msg, builder, cs, r, ctx, debugProfile);
+                    builder.append("}\n");
                 }
-                generateMessageHandlers(thing, s, port, msg, builder, cs, r, ctx, debugProfile);
-                builder.append("}\n");
+                builder.append("//End Region " + r.getName() + "\n");
             }
-            builder.append("//End Region " + r.getName() + "\n");
         }
 
         if ((cs.eContainer() instanceof Region) && (!(cs.eContainer() instanceof Session))) {
