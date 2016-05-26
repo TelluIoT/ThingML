@@ -582,9 +582,9 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
     }
 
     private void generatePollingCode(Configuration cfg, StringBuilder pollb, PosixMTCompilerContext ctx) {
-        pollb.append("while(1){sleep(1);};\n");
+        //pollb.append("while(1){sleep(1);};\n");
         for(Instance i : ConfigurationHelper.allInstances(cfg)) {
-            pollb.append("pthread_join( &thread_" + i.getName() + ", NULL);\n");
+            pollb.append("pthread_join( thread_" + i.getName() + ", NULL);\n");
         }
     }
 }

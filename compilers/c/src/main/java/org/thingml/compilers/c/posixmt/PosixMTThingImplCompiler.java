@@ -265,7 +265,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                 builder.append("    head_" + s.getName() + " = _instance->sessions_" + s.getName() + ";\n");
                 builder.append("    struct session_t * prev_" + s.getName() + ";\n");
                 builder.append("    while (head_" + s.getName() + " != NULL) {\n");
-                builder.append("        pthread_join( &(head_" + s.getName() + "->thread), NULL);\n");
+                builder.append("        pthread_join( head_" + s.getName() + "->thread, NULL);\n");
                 builder.append("        prev_" + s.getName() + " = head_" + s.getName() + ";\n");
                 builder.append("        head_" + s.getName() + " = head_" + s.getName() + "->next;\n");
                 builder.append("        free(prev_" + s.getName() + ");\n");
