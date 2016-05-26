@@ -246,7 +246,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
                         
                         StateMachine sm = ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).get(0);
-                        if (StateHelper.canHandle(sm, myReceiver.getValue(), m)) {
+                        if (StateHelper.canHandleIncludingSessions(sm, myReceiver.getValue(), m)) {
                             builder.append("enqueue_" + myReceiver.getKey().getType().getName() + "_" + myReceiver.getValue().getName() + "_" + m.getName() + "(&" + ctx.getInstanceVarName(myReceiver.getKey()));
                             
                             for (Parameter pt : m.getParameters()) {
@@ -476,7 +476,12 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
             for(Region r : CompositeStateHelper.allContainedRegions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
+            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(s) + " = -1;\n");
+            }
         }
+        builder.append(ctx.getInstanceVarName(inst) + ".active = true;\n");
+        builder.append(ctx.getInstanceVarName(inst) + ".alive = true;\n");
 
         // Init simple properties
         for (Map.Entry<Property, Expression> init: ConfigurationHelper.initExpressionsForInstance(cfg, inst)) {

@@ -359,11 +359,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("switch(state) {\n");
 
-        //for (CompositeState cs : sm.allContainedCompositeStates()) {
-        List<CompositeState> cstates = new ArrayList<>();
-        cstates.addAll(CompositeStateHelper.allContainedCompositeStates(sm));
-        for (Session s: CompositeStateHelper.allContainedSessions(sm)) cstates.addAll(CompositeStateHelper.allContainedCompositeStates(s));
-        for (CompositeState cs : cstates) {
+        
+        for (CompositeState cs : CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm)) {
 
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
             if (debugProfile.isDebugBehavior()) {
@@ -386,15 +383,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             for (Region r : regions) {
                 builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName() + ");\n");
             }
-            builder.append("break;}\n");
+            builder.append("break;\n}\n");
         }
 
 
-        //for (State s : sm.allContainedSimpleStates()) {
-        List<State> states = new ArrayList<>();
-        states.addAll(CompositeStateHelper.allContainedSimpleStates(sm));
-        for (Session s: CompositeStateHelper.allContainedSessions(sm)) states.addAll(CompositeStateHelper.allContainedSimpleStates(s));
-        for (State s : states) {
+        
+        for (State s : CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
             if (debugProfile.isDebugBehavior()) {
@@ -402,7 +396,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         + ctx.traceOnEntry(thing, sm, s) + "\\n\");\n");
             }
             if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
-            builder.append("break;}\n");
+            builder.append("break;\n}\n");
         }
 
         builder.append("default: break;\n");
@@ -425,11 +419,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("void " + getCppNameScope() + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
         builder.append("switch(state) {\n");
-        //for (CompositeState cs : sm.allContainedCompositeStates()) {
-        List<CompositeState> cstates = new ArrayList<>();
-        cstates.addAll(CompositeStateHelper.allContainedCompositeStates(sm));
-        for (Session s: CompositeStateHelper.allContainedSessions(sm)) cstates.addAll(CompositeStateHelper.allContainedCompositeStates(s));
-        for (CompositeState cs : cstates) {
+        
+        for (CompositeState cs : CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
             ArrayList<Region> regions = new ArrayList<Region>();
             regions.add(cs);
@@ -444,10 +435,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         }
 
-        List<State> states = new ArrayList<>();
-        states.addAll(CompositeStateHelper.allContainedSimpleStates(sm));
-        for (Session s: CompositeStateHelper.allContainedSessions(sm)) states.addAll(CompositeStateHelper.allContainedSimpleStates(s));
-        for (State s : states) {
+        for (State s : CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             if (s.getExit() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
 
@@ -473,8 +461,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
 
-        Map<Port, Map<Message, List<Handler>>> handlers = StateHelper.allMessageHandlers(sm);
-        for(Session s : CompositeStateHelper.allContainedSessions(sm)) handlers.putAll(StateHelper.allMessageHandlers(s));
+        Map<Port, Map<Message, List<Handler>>> handlers = StateHelper.allMessageHandlersIncludingSessions(sm);
 
         for (Port port : handlers.keySet()) {
             for (Message msg : handlers.get(port).keySet()) {
@@ -507,6 +494,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
                 // dispatch the current message to sub-regions
                 dispatchToSubRegions(thing, builder, sm, port, msg, ctx, debugProfile);
+                dispatchToSessions(thing, builder, sm, port, msg, ctx, debugProfile);
                 // If the state machine itself has a handler
                 if (StateHelper.canHandle(sm, port, msg)) {
                     // it can only be an internal handler so the last param can be null (in theory)
@@ -517,7 +505,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         // Add handler for empty transitions if needed
-        if (StateHelper.hasEmptyHandlers(sm)) {
+        if (StateHelper.hasEmptyHandlersIncludingSessions(sm)) {
 
             if (isGeneratingCpp()) {
                 cppHeaderBuilder.append("// generateEventHandlers2\nint " + ctx.getEmptyHandlerName(thing));
@@ -535,8 +523,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
             // dispatch the current message to sub-regions
             dispatchEmptyToSubRegions(thing, builder, sm, ctx, debugProfile);
+            dispatchEmptyToSessions(thing, builder, sm, ctx, debugProfile);
             // If the state machine itself has a handler
-            if (StateHelper.hasEmptyHandlers(sm)) {
+            if (StateHelper.hasEmptyHandlersIncludingSessions(sm)) {
                 // it can only be an internal handler so the last param can be null (in theory)
                 generateEmptyHandlers(thing, sm, builder, null, sm, ctx, debugProfile);
             }
@@ -600,21 +589,25 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
     }
-
-    protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
-
-        ArrayList<Region> regions = new ArrayList<Region>();
-        regions.add(cs);
-        regions.addAll(cs.getRegion());
-        regions.addAll(CompositeStateHelper.allContainedSessions(cs));
-
-        for (Region r : regions) {
-
-            // for all states of the region, if the state can handle the message and that state is active we forward the message
+    
+    protected void dispatchToSessions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
+        builder.append("//Session list: " );
+        for (Region r : CompositeStateHelper.allContainedSessions(cs)) {
+            builder.append(r.getName() + " ");
+        }
+        builder.append("\n");
+        
+        for (Region r : CompositeStateHelper.allContainedSessions(cs)) {
+            builder.append("//Session " + r.getName() + "\n");
             builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
+            // for all states of the region, if the state can handle the message and that state is active we forward the message
+            
+            /*if (CompositeStateHelper.allContainedSessions(cs).get(0) == r) {
+                builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
+            }*/
 
             ArrayList<State> states = new ArrayList<State>();
-            for (State s : r.getSubstate()) if (StateHelper.canHandle(s, port, msg)) states.add(s);
+            for (State s : r.getSubstate()) if (StateHelper.canHandleIncludingSessions(s, port, msg)) states.add(s);
             for (State s : states) {
                 if (states.get(0) != s) builder.append("else ");
                 builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
@@ -624,9 +617,50 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 generateMessageHandlers(thing, s, port, msg, builder, cs, r, ctx, debugProfile);
                 builder.append("}\n");
             }
+            builder.append("//End Session " + r.getName() + "\n");
         }
 
-        if (cs.eContainer() instanceof Region) {
+        /*if (cs.eContainer() instanceof Region) {
+            builder.append(ctx.getStateVarName((Region) cs.eContainer()) + "_event_consumed = 0 ");
+            for (Region r : CompositeStateHelper.directSubRegions(cs)) {
+                // for all states of the region, if the state can handle the message and that state is active we forward the message
+                builder.append("| " + ctx.getStateVarName(r) + "_event_consumed ");
+            }
+            builder.append(";\n");
+        }*/
+    }
+
+    protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
+        
+       /* builder.append("//Region list: " );
+        for (Region r : CompositeStateHelper.directSubRegions(cs)) {
+            builder.append(r.getName() + " ");
+        }
+        builder.append("\n");*/
+        
+        for (Region r : CompositeStateHelper.directSubRegions(cs)) {
+            if(!(r instanceof Session)){
+                builder.append("//Region " + r.getName() + "\n");
+
+                // for all states of the region, if the state can handle the message and that state is active we forward the message
+                builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
+
+                ArrayList<State> states = new ArrayList<State>();
+                for (State s : r.getSubstate()) if (StateHelper.canHandle(s, port, msg)) states.add(s);
+                for (State s : states) {
+                    if (states.get(0) != s) builder.append("else ");
+                    builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
+                    if (s instanceof CompositeState) {
+                        dispatchToSubRegions(thing, builder, (CompositeState) s, port, msg, ctx, debugProfile);
+                    }
+                    generateMessageHandlers(thing, s, port, msg, builder, cs, r, ctx, debugProfile);
+                    builder.append("}\n");
+                }
+                builder.append("//End Region " + r.getName() + "\n");
+            }
+        }
+
+        if ((cs.eContainer() instanceof Region) && (!(cs.eContainer() instanceof Session))) {
             builder.append(ctx.getStateVarName((Region) cs.eContainer()) + "_event_consumed = 0 ");
             for (Region r : CompositeStateHelper.directSubRegions(cs)) {
                 // for all states of the region, if the state can handle the message and that state is active we forward the message
@@ -634,6 +668,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             }
             builder.append(";\n");
         }
+        builder.append("//End dsregion " + cs.getName() + "\n");
     }
 
 
@@ -706,11 +741,34 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx, DebugProfile debugProfile) {
-
+        if(cs instanceof Session) return;
         for (Region r : CompositeStateHelper.directSubRegions(cs)) {
+            builder.append("//Region " + r.getName() + "\n");
 
             ArrayList<State> states = new ArrayList<State>();
             for (State s : r.getSubstate()) if (StateHelper.hasEmptyHandlers(s)) states.add(s);
+            for (State s : states) {
+                if (states.get(0) != s) builder.append("else ");
+                builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state
+                // dispatch to sub-regions if it is a composite
+                if (s instanceof CompositeState) {
+                    dispatchEmptyToSubRegions(thing, builder, (CompositeState) s, ctx, debugProfile);
+                }
+                // handle message locally
+                generateEmptyHandlers(thing, s, builder, cs, r, ctx, debugProfile);
+
+                builder.append("}\n");
+            }
+        }
+    }
+
+    protected void dispatchEmptyToSessions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx, DebugProfile debugProfile) {
+
+        for (Region r : CompositeStateHelper.directSubSessions(cs)) {
+            builder.append("//Session " + r.getName() + "\n");
+
+            ArrayList<State> states = new ArrayList<State>();
+            for (State s : r.getSubstate()) if (StateHelper.hasEmptyHandlersIncludingSessions(s)) states.add(s);
             for (State s : states) {
                 if (states.get(0) != s) builder.append("else ");
                 builder.append("if (" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " == " + ctx.getStateID(s) + ") {\n"); // s is the current state

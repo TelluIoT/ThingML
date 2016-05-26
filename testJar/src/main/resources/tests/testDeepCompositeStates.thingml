@@ -52,51 +52,52 @@ thing TestDeepCompositeStates includes Test
 				}
 			}
 		}
+
 		region r init r_I{
-		state r_I {
-			transition -> r_C1
-			event m : harnessIn?testIn
-			guard m.c == '\'n\''
-		}
-		
-		composite state r_C1 init r_C2 {
-		
-		on entry harnessOut!testOut('\'a\'')
-		on exit harnessOut!testOut('\'f\'')
-		transition -> r_I
-		event m : harnessIn?testIn
-		guard m.c == '\'a\''
-		
-			state r_C1S1 {
-				on entry harnessOut!testOut('\'e\'')
-                on exit harnessOut!testOut('\'i\'')
-			}
-			
-			composite state r_C2 init r_C3 {
-				
-				on entry harnessOut!testOut('\'b\'')
-				transition -> r_C1S1
+			state r_I {
+				transition -> r_C1
 				event m : harnessIn?testIn
-				guard m.c == '\'a\''
-				
-				state r_C2S1 {	
-					on entry harnessOut!testOut('\'d\'')
-                    on exit harnessOut!testOut('\'h\'')
+				guard m.c == '\'n\''
+			}
+		
+			composite state r_C1 init r_C2 {
+		
+			on entry harnessOut!testOut('\'a\'')
+			on exit harnessOut!testOut('\'f\'')
+			transition -> r_I
+			event m : harnessIn?testIn
+			guard m.c == '\'a\''
+		
+				state r_C1S1 {
+					on entry harnessOut!testOut('\'e\'')
+		            on exit harnessOut!testOut('\'i\'')
 				}
+			
+				composite state r_C2 init r_C3 {
 				
-				composite state r_C3 init r_C3S1 {
-				
-					on entry harnessOut!testOut('\'c\'')
-                    on exit harnessOut!testOut('\'g\'')
-					transition -> r_C2S1
+					on entry harnessOut!testOut('\'b\'')
+					transition -> r_C1S1
 					event m : harnessIn?testIn
 					guard m.c == '\'a\''
+				
+					state r_C2S1 {	
+						on entry harnessOut!testOut('\'d\'')
+		                on exit harnessOut!testOut('\'h\'')
+					}
+				
+					composite state r_C3 init r_C3S1 {
+				
+						on entry harnessOut!testOut('\'c\'')
+		                on exit harnessOut!testOut('\'g\'')
+						transition -> r_C2S1
+						event m : harnessIn?testIn
+						guard m.c == '\'a\''
 					
-					state r_C3S1{
+						state r_C3S1{
+						}
 					}
 				}
 			}
-		}
 		}
 	}
 }

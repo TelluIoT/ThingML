@@ -8,7 +8,7 @@ thing TestSession5 includes Test
 	statechart Chart init A {
     	state A {}
 			
-			region R init INIT {
+		region R init INIT {
 		  	state INIT {
 					internal 
 					event e : harnessIn?testIn
@@ -19,11 +19,11 @@ thing TestSession5 includes Test
 					end
 		  	}
 
-				session s init S1 {
-					final state S1 {
-						on entry harnessOut!testOut(ID)
-					}		
-				}
+			session s init S1 {
+				final state S1 {
+					on entry harnessOut!testOut(ID)
+				}		
 			}
+		}
     }
 }

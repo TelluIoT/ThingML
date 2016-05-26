@@ -61,6 +61,48 @@ public class RegionHelper {
         }
         return result;
     }
+    
+    public static List<Region> allContainedRegionsAndSessions(Region self) {
+        final List<Region> result = new ArrayList<Region>();
+        result.add(self);
+        if (self instanceof CompositeState) {
+            for(Region r : ((CompositeState)self).getRegion()) {
+                result.addAll(RegionHelper.allContainedRegionsAndSessions(r));
+            }
+        }
+        if (self instanceof Session) {
+            for(Region r : ((Session)self).getRegion()) {
+                result.addAll(RegionHelper.allContainedRegionsAndSessions(r));
+            }
+        }
+        for (State s : self.getSubstate()) {
+            if (s instanceof Region) {
+                result.addAll(RegionHelper.allContainedRegionsAndSessions((Region)s));
+            }
+        }
+        return result;
+    }
+    
+    public static List<Session> allContainedSessions(Region self) {
+        final List<Session> result = new ArrayList<Session>();
+        if (self instanceof CompositeState) {
+            for(Region r : ((CompositeState)self).getRegion()) {
+                result.addAll(RegionHelper.allContainedSessions(r));
+            }
+        }
+        if (self instanceof Session) {
+            result.add((Session)self);
+            for(Region r : ((Session)self).getRegion()) {
+                result.addAll(RegionHelper.allContainedSessions(r));
+            }
+        }
+        for (State s : self.getSubstate()) {
+            if (s instanceof Session) {
+                result.addAll(RegionHelper.allContainedSessions((Session)s));
+            }
+        }
+        return result;
+    }
 
 
     public static List<Property> allContainedProperties(Region self) {
