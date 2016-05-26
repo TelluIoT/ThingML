@@ -285,8 +285,10 @@ public class ThingMLHelpers {
 		ArrayList<Thing> result = new ArrayList<Thing>();
 		result.add(thing);
 		for (Thing t : thing.getIncludes())
-			for (Thing c : allThingFragments(t))
-				if (!result.contains(c))result.add(c);
+			if (t != thing) {
+				for (Thing c : allThingFragments(t))
+					if (!result.contains(c)) result.add(c);
+			}
 		return result;
 	}
 	
