@@ -222,7 +222,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         
         StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
         for(Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
-            if(!RegionHelper.allContainedRegionsAndSessions(s).contains(r)) {
+            if((!RegionHelper.allContainedRegionsAndSessions(s).contains(r)) || ((r instanceof Session) && (r != s))) {
                 builder.append("new_session->s." + ctx.getStateVarName(r) + " = -1;\n");
             } else {
                 builder.append("new_session->s." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
@@ -273,6 +273,27 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             }
             builder.append("    _instance->alive = false;\n");
             builder.append("    fifo_unlock(&(_instance->fifo));\n");
+            builder.append("}\n");
+            
+            builder.append("void " + thing.getName() + "_clean_sessions(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
+            builder.append("        fifo_lock(&(_instance->fifo));\n");
+            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+                builder.append("        struct session_t * head_" + s.getName() + " = _instance->sessions_" + s.getName() + ";\n");
+                builder.append("        struct session_t ** prev_" + s.getName() + " = &(_instance->sessions_" + s.getName() + ");\n");
+                builder.append("        struct session_t * next_" + s.getName() + ";\n");
+                builder.append("        while (head_" + s.getName() + " != NULL) {\n");
+                builder.append("            next_" + s.getName() + " = head_" + s.getName() + "->next;\n");
+                builder.append("            if (!head_" + s.getName() + "->s.alive) {\n");
+                builder.append("                fifo_lock(&(head_" + s.getName() + "->s.fifo));\n");
+                builder.append("                *prev_" + s.getName() + " = next_" + s.getName() + ";\n");
+                builder.append("                free(head_" + s.getName() + ");\n");
+                builder.append("            } else {\n");
+                builder.append("                prev_" + s.getName() + " = &(head_" + s.getName() + "->next);\n");
+                builder.append("            }\n");
+                builder.append("            head_" + s.getName() + " = next_" + s.getName() + ";\n");
+                builder.append("        }\n");
+            }
+            builder.append("        fifo_unlock(&(_instance->fifo));\n");
             builder.append("}\n");
         }
     }
@@ -409,25 +430,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         
         
         if(!RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
-            builder.append("        //Clean up dead sessions\n");
-            builder.append("fifo_lock(&(_instance->fifo));\n");
-            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
-                builder.append("        struct session_t * head_" + s.getName() + " = _instance->sessions_" + s.getName() + ";\n");
-                builder.append("        struct session_t * prev_" + s.getName() + " = _instance->sessions_" + s.getName() + ";\n");
-                builder.append("        struct session_t * next_" + s.getName() + ";\n");
-                builder.append("        while (head_" + s.getName() + " != NULL) {\n");
-                builder.append("            next_" + s.getName() + " = head_" + s.getName() + "->next;\n");
-                builder.append("            if (!head_" + s.getName() + "->s.alive) {\n");
-                builder.append("                fifo_lock(&(head_" + s.getName() + "->s.fifo));\n");
-                builder.append("                prev_" + s.getName() + "->next = next_" + s.getName() + ";\n");
-                builder.append("                free(head_" + s.getName() + ");\n");
-                builder.append("                head_" + s.getName() + " = prev_" + s.getName() + ";\n");
-                builder.append("            }\n");
-                builder.append("            prev_" + s.getName() + " = head_" + s.getName() + ";\n");
-                builder.append("            head_" + s.getName() + " = next_" + s.getName() + ";\n");
-                builder.append("        }\n");
-            }
-            builder.append("fifo_unlock(&(_instance->fifo));\n");
+            builder.append("        " + thing.getName() + "_clean_sessions(_instance);\n");
             builder.append("        //Termination\n");
             builder.append("        if(!_instance->active) {\n");
             builder.append("            " + thing.getName() + "_terminate(_instance);\n");
@@ -468,13 +471,13 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                         builder.append("    struct session_t * head_" + s.getName() + " = inst->sessions_" + s.getName() + ";\n");
                         builder.append("    while (head_" + s.getName() + " != NULL) {\n");
 
-                        builder.append("    if (head_" + s.getName() + "->s.active) {\n");
+                        builder.append("        if (head_" + s.getName() + "->s.active) {\n");
                         builder.append("            enqueue_" + thing.getName() + "_" + p.getName() + "_" + m.getName() + "(&(head_" + s.getName() + "->s)");
                         for (Parameter pt : m.getParameters()) {
                             builder.append(", " + pt.getName());
                         }
                         builder.append(");\n");
-                        builder.append("    }\n");
+                        builder.append("        }\n");
                         
                         builder.append("        head_" + s.getName() + " = head_" + s.getName() + "->next;\n");
                         builder.append("    }\n");

@@ -1,6 +1,7 @@
 import "thingml.thingml"
 
 thing TestSession3 includes Test
+@test "xyy # TT"
 @test "xyzy # T"
 @test "xyyzyyyy # TT"
 {

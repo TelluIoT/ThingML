@@ -476,6 +476,9 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
             for(Region r : CompositeStateHelper.allContainedRegions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
+            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(s) + " = -1;\n");
+            }
         }
         builder.append(ctx.getInstanceVarName(inst) + ".active = true;\n");
         builder.append(ctx.getInstanceVarName(inst) + ".alive = true;\n");
