@@ -87,7 +87,7 @@ You can prevent this behavior by adding an annotation to a message or to a strea
 ```ruby
 stream joinStream @TTL "2000"
 from join: [t: rcvP?temp &
-            p @UseOnce "True" : rcvP?pressure
+            p @UseOnce "False" : rcvP?pressure
             -> cep()
            ]::during 1000 by 1000
 produce sendP!cep()
@@ -96,7 +96,7 @@ produce sendP!cep()
 or for all messages:
 
 ```ruby
-stream joinStream @TTL "2000" @UseOnce "True"
+stream joinStream @TTL "2000" @UseOnce "False"
 from join: [t: rcvP?temp & p: rcvP?pressure -> cep()]::during 1000 by 1000
 produce sendP!cep()
 ```
