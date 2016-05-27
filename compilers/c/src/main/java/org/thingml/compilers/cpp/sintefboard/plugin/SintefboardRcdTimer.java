@@ -28,6 +28,7 @@ import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
 
@@ -78,8 +79,8 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
             String htemplate = ctx.getNetworkLibRcdTimerInstanceHeaderTemplate();
 
             String portName;
-            if(eco.hasAnnotation("port_name")) {
-                portName = eco.annotation("port_name").iterator().next();
+            if(AnnotatedElementHelper.hasAnnotation(eco, "port_name")) {
+                portName = AnnotatedElementHelper.annotation(eco, "port_name").iterator().next();
             } else {
                 portName = eco.getProtocol().getName();
             }
@@ -96,7 +97,7 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
                 StringBuilder eco_instance = new StringBuilder();
                 eco_instance.append("//Connector");
                 Port p = eco.getPort();  
-                if(cfg.hasAnnotation("c_dyn_connectors")) {
+                if(AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors")) {
                     if(!p.getReceives().isEmpty()) {
                     //if(!p.getSends().isEmpty()) {
                         eco_instance.append("// Pointer to receiver list\n");

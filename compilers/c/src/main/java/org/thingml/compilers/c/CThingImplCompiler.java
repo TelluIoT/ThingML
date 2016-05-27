@@ -201,7 +201,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         // Message Sending
         //for(Port port : thing.getPorts()) {
-        for(Port port : thing.allPorts()) {
+        for(Port port : ThingMLHelpers.allPorts(thing)) {
             for (Message msg : port.getSends()) {
                 builder.append("void " + ctx.getSenderName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
