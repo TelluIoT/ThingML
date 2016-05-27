@@ -51,8 +51,10 @@ public class JavaSerialPlugin extends NetworkPlugin {
         return res;
     }
 
-    public String getTargetedLanguage() {
-        return "java";
+    public List<String> getTargetedLanguages() {
+        List<String> res = new ArrayList<>();
+        res.add("java");
+        return res;
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {

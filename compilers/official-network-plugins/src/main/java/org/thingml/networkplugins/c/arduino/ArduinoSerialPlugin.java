@@ -59,8 +59,10 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
         return res;
     }
 
-    public String getTargetedLanguage() {
-        return "arduino";
+    public List<String> getTargetedLanguages() {
+        List<String> res = new ArrayList<>();
+        res.add("arduino");
+        return res;
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {

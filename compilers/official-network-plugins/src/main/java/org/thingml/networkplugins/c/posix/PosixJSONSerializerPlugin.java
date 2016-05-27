@@ -354,6 +354,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
         List<String> res = new ArrayList<>();
         res.add("posix");
+        res.add("posixmt");
         return res;
     }
 

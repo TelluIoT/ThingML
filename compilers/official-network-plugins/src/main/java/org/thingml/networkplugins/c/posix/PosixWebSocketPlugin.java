@@ -53,8 +53,11 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
         return res;
     }
 
-    public String getTargetedLanguage() {
-        return "posix";
+    public List<String> getTargetedLanguages() {
+        List<String> res = new ArrayList<>();
+        res.add("posix");
+        res.add("posixmt");
+        return res;
     }
 
     private void addDependencies() {

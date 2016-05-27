@@ -258,6 +258,24 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                     }
                     builder.append("\n}\n");
                 }
+                for (ExternalConnector eco : externalSenders) {
+                    String portName = eco.getName();
+                    
+                    builder.append("if (sender ==");
+                    builder.append(" " + portName + "_instance.listener_id) {\n");
+
+                    StateMachine sm = ThingMLHelpers.allStateMachines(eco.getInst().getInstance().getType()).get(0);
+                    if (StateHelper.canHandleIncludingSessions(sm, eco.getPort(), m)) {
+                            builder.append("enqueue_" + eco.getInst().getInstance().getType().getName() + "_" + eco.getPort().getName() + "_" + m.getName() + "(&" + ctx.getInstanceVarName(eco.getInst().getInstance()));
+                            
+                            for (Parameter pt : m.getParameters()) {
+                                builder.append(", " + pt.getName());
+                            }
+                            
+                            builder.append(");\n");
+                        }
+                    builder.append("\n}\n");
+                }
 
                 builder.append("\n}\n\n");
             }
@@ -327,7 +345,8 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("\n");
 
-        
+        generateExternalMessageEnqueue(cfg,builder,ctx);
+        builder.append("\n");
 
         generateMessageDispatchEnqueue(cfg, builder, ctx);
         builder.append("\n");
@@ -341,6 +360,85 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
 
     }
+
+    protected boolean isThereNetworkListener(Configuration cfg) {
+        boolean ret = false;
+
+        for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
+            if (!eco.getPort().getReceives().isEmpty()) {
+                ret = true;
+                break;
+            }
+        }
+
+        if (!ConfigurationHelper.getExternalConnectors(cfg).isEmpty()) {
+            ret = true;
+        }
+
+        return ret;
+    }
+    
+    protected void generateExternalMessageEnqueue(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+
+        if (isThereNetworkListener(cfg)) {
+            builder.append("void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id) {\n");
+
+            builder.append("if ((msgSize >= 2) && (msg != NULL)) {\n");
+
+            builder.append("uint8_t msgSizeOK = 0;\n");
+            builder.append("switch(msg[0] * 256 + msg[1]) {\n");
+
+            Set<Message> externalMessages = new HashSet<Message>();
+            for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
+                for (Message m : eco.getPort().getReceives()) {
+                    if (!externalMessages.contains(m)) {
+                        externalMessages.add(m);
+                    }
+                }
+            }
+            for (Message m : externalMessages) {
+                builder.append("case ");
+                builder.append(ctx.getHandlerCode(cfg, m));
+                builder.append(":\n");
+                builder.append("if(msgSize == ");
+                builder.append(ctx.getMessageSerializationSize(m) - 2);
+                builder.append(") {\n");
+                
+                int idx_bis = 2;
+
+                for (Parameter pt : m.getParameters()) {
+                    builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
+                    builder.append(ctx.getCType(pt.getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append("} u_" + m.getName() + "_" + pt.getName() + ";\n");
+
+                    for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+
+                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                        builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
+
+                    }
+                    idx_bis = idx_bis + ctx.getCByteSize(pt.getType(), 0);
+                }
+                
+                builder.append("dispatch_" + m.getName() + "(listener_id");
+                builder.append("\n");
+                for (Parameter pt : m.getParameters()) {
+                    builder.append(",\n u_" + m.getName() + "_" + pt.getName() + ".p /* " + pt.getName() + " */ ");
+                }
+
+                builder.append(");\n");
+                
+                builder.append("}\n");
+                builder.append("break;\n");
+            }
+
+            builder.append("}\n");
+            builder.append("}\n");
+            builder.append("}\n");
+        }
+    }
+    
     public void generateMessageForwarders(Configuration cfg, StringBuilder builder, PosixMTCompilerContext ctx) {
         
         for(Thing t : ConfigurationHelper.allThings(cfg)) {
@@ -552,6 +650,10 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
     private void generateInitializationCode(Configuration cfg, StringBuilder initb, PosixMTCompilerContext ctx) {
         initb.append("initialize_configuration_" + cfg.getName() + "();\n");
+        initb.append("\n");
+        initb.append("// Network Initilization \n");
+        initb.append(ctx.getInitCode());
+        initb.append("\n");
         for(Instance i : ConfigurationHelper.allInstances(cfg)) {
             
             //initb.append("" + ctx.getInstanceVarName(i) + ".fifo = &" + i.getName() + "_fifo;\n");
