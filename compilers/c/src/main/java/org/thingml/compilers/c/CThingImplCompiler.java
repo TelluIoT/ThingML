@@ -562,8 +562,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append("//begin stream dispatch\n");
 
                     for (Parameter p : msg.getParameters()) {
-                        System.out.println("Adding " + msg.getName() + " " + " with " + p.getName());
-
                         ctx.putCepMsgParam(msg.getName(), p.getName(), s.getName());
                     }
 

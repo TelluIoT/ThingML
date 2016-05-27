@@ -149,6 +149,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
+        //FIXME: only support CEP buffers, not real arrays
         if (expression.getParameter() instanceof ArrayParamRef) {
             if (ctx instanceof CCompilerContext) {
                 ArrayParamRef apr = (ArrayParamRef) expression.getParameter();
@@ -157,9 +158,14 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                 Map<String, String> mapMsgStream = ((CCompilerContext) ctx).getCepMsgFromParam(paramName);
                 String msgName = "";
                 String streamName = "";
-                for (String s : mapMsgStream.keySet()) {
-                    msgName = s;
-                    streamName = mapMsgStream.get(s);
+                if (mapMsgStream != null) {
+                    for (String s : mapMsgStream.keySet()) {
+                        msgName = s;
+                        streamName = mapMsgStream.get(s);
+                    }
+                } else {
+
+
                 }
 
                 builder.append("_instance->cep_" + streamName + "->export_" + msgName + "_" + paramName + "()");
