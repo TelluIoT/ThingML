@@ -582,9 +582,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             for (Region r : RegionHelper.allContainedRegions(b)) {
                 ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(r, builder, ctx);
             }
-            for (Session s : RegionHelper.allContainedSessions(b)) {//Session are only allowed at the root
-                ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(s, builder, ctx);
-            }
         }
 
         builder.append("public Component buildBehavior(String session, Component root) {\n");
