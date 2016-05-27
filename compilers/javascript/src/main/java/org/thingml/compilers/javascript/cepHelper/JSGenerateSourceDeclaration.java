@@ -16,6 +16,8 @@
 package org.thingml.compilers.javascript.cepHelper;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 
@@ -26,8 +28,8 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
 
     @Override
     public void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
-        builder.append("var " + source.qname("_") + " = Rx.Observable.fromEvent(this.eventEmitterForStream" + ", '" + source.qname("_") + "');\n");
-        generateOperatorCalls(source.qname("_"), source, builder, context);
+        builder.append("var " + ThingMLElementHelper.qname(source, "_") + " = Rx.Observable.fromEvent(this.eventEmitterForStream" + ", '" + ThingMLElementHelper.qname(source, "_") + "');\n");
+        generateOperatorCalls(ThingMLElementHelper.qname(source, "_"), source, builder, context);
     }
 
     @Override
@@ -41,15 +43,15 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
             } else {
                 firstParamDone = true;
             }
-            mergeParams += s.qname("_");
+            mergeParams += ThingMLElementHelper.qname(s, "_");
         }
-        builder.append("var " + source.qname("_") + " = Rx.Observable.merge(" + mergeParams + ").map(\n")
+        builder.append("var " + ThingMLElementHelper.qname(source, "_") + " = Rx.Observable.merge(" + mergeParams + ").map(\n")
                 .append("function(x) {\n")
                 .append("return {");
 
         int i = 2;
-        for(Parameter p : source.getResultMessage().getParameters()) {
-            if(source.getResultMessage().getParameters().indexOf(p) > 0)
+        for (Parameter p : source.getResultMessage().getParameters()) {
+            if (source.getResultMessage().getParameters().indexOf(p) > 0)
                 builder.append(",\n");
             builder.append("'" + i + "' : x[" + i + "]");
             i++;
@@ -58,14 +60,14 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
         builder.append("};\n")
                 .append("});\n");
 
-        generateOperatorCalls(source.qname("_"), source, builder, context);
+        generateOperatorCalls(ThingMLElementHelper.qname(source, "_"), source, builder, context);
     }
 
     @Override
     public void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
         String ttl = "250";
-        if (stream.hasAnnotation("TTL"))
-            ttl = stream.annotation("TTL").get(0);
+        if (AnnotatedElementHelper.hasAnnotation(stream, "TTL"))
+            ttl = AnnotatedElementHelper.annotation(stream, "TTL").get(0);
         builder.append("\n");
 
         SimpleSource simpleSource1 = (SimpleSource) sources.getSources().get(0),
@@ -73,15 +75,15 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
 
         String ttl1 = ttl;
         String ttl2 = ttl;
-        if (stream.hasAnnotation("TTL1")) {
-            ttl1 = stream.annotation("TTL1").get(0);
+        if (AnnotatedElementHelper.hasAnnotation(stream, "TTL1")) {
+            ttl1 = AnnotatedElementHelper.annotation(stream, "TTL1").get(0);
         }
-        if (stream.hasAnnotation("TTL2")) {
-            ttl2 = stream.annotation("TTL2").get(0);
+        if (AnnotatedElementHelper.hasAnnotation(stream, "TTL2")) {
+            ttl2 = AnnotatedElementHelper.annotation(stream, "TTL2").get(0);
         }
 
-        builder.append("function wait_" + sources.qname("_") + "_1" + "() { return Rx.Observable.timer(" + ttl1 + "); }\n");
-        builder.append("function wait_" + sources.qname("_") + "_2" + "() { return Rx.Observable.timer(" + ttl2 + "); }\n");
+        builder.append("function wait_" + ThingMLElementHelper.qname(sources, "_") + "_1" + "() { return Rx.Observable.timer(" + ttl1 + "); }\n");
+        builder.append("function wait_" + ThingMLElementHelper.qname(sources, "_") + "_2" + "() { return Rx.Observable.timer(" + ttl2 + "); }\n");
 
         String message1Name = simpleSource1.getMessage().getMessage().getName(),
                 message2Name = simpleSource2.getMessage().getMessage().getName();
@@ -89,8 +91,8 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
 
         generate(stream, simpleSource1, builder, context);
         generate(stream, simpleSource2, builder, context);
-        builder.append("var " + sources.qname("_") + " = " + simpleSource1.qname("_") + ".join(" + simpleSource2.qname("_"))
-                .append(",wait_" + sources.qname("_") + "_1" + ",wait_" + sources.qname("_") + "_2" + ",\n")
+        builder.append("var " + ThingMLElementHelper.qname(sources, "_") + " = " +  ThingMLElementHelper.qname(simpleSource1, "_") + ".join(" +  ThingMLElementHelper.qname(simpleSource2, "_"))
+                .append(",wait_" + ThingMLElementHelper.qname(sources, "_") + "_1" + ",wait_" + ThingMLElementHelper.qname(sources, "_") + "_2" + ",\n")
                 .append("\tfunction(" + message1Name + "," + message2Name + ") {\n");
 
         builder.append("\t\treturn { ");
@@ -109,7 +111,7 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
         builder.append("};\n");
         builder.append("\t});\n");
 
-        generateOperatorCalls(sources.qname("_"), sources, builder, context);
+        generateOperatorCalls(ThingMLElementHelper.qname(sources, "_"), sources, builder, context);
     }
 }
 

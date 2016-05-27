@@ -233,32 +233,4 @@ public class ExternExpressionImpl extends ExpressionImpl implements ExternExpres
 		return result.toString();
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-     */
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		result.add(this);
-		for(Expression e : getSegments()) {
-			result.addAll(e.getAllExpressions());
-		}
-		return result;
-	}
-
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		if (clazz.isInstance(this))
-			result.add(this);
-		for(Expression e : getSegments()) {
-			result.addAll(e.getAllExpressions(clazz));
-		}
-		return result;
-	}
 } //ExternExpressionImpl

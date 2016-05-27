@@ -17,14 +17,17 @@ package org.thingml.compilers.javascript;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.thingml.compilers.DebugProfile;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -32,32 +35,32 @@ import org.thingml.compilers.DebugProfile;
 public class JSCfgMainGenerator extends CfgMainGenerator {
 
     public static String getDefaultValue(Type type) {
-        if (type.isDefined("js_type", "boolean"))
+        if (AnnotatedElementHelper.isDefined(type, "js_type", "boolean"))
             return "false";
-        else if (type.isDefined("js_type", "int"))
+        else if (AnnotatedElementHelper.isDefined(type, "js_type", "int"))
             return "0";
-        else if (type.isDefined("js_type", "long"))
+        else if (AnnotatedElementHelper.isDefined(type, "js_type", "long"))
             return "0";
-        else if (type.isDefined("js_type", "float"))
+        else if (AnnotatedElementHelper.isDefined(type, "js_type", "float"))
             return "0.0f";
-        else if (type.isDefined("js_type", "double"))
+        else if (AnnotatedElementHelper.isDefined(type, "js_type", "double"))
             return "0.0d";
-        else if (type.isDefined("js_type", "byte"))
+        else if (AnnotatedElementHelper.isDefined(type, "js_type", "byte"))
             return "0";
-        else if (type.isDefined("js_type", "short"))
+        else if (AnnotatedElementHelper.isDefined(type, "js_type", "short"))
             return "0";
-        else if (type.isDefined("js_type", "char"))
+        else if (AnnotatedElementHelper.isDefined(type, "js_type", "char"))
             return "'\u0000'";
         else
             return "null";
     }
 
     public static void generateInstance(Instance i, Configuration cfg, StringBuilder builder, Context ctx, boolean useThis, boolean debug) {
-        for (Property a : cfg.allArrays(i)) {
+        for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
             builder.append("var " + i.getName() + "_" + a.getName() + "_array = [];\n");
         }
 
-        for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : cfg.initExpressionsForInstanceArrays(i).entrySet()) {
+        for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : ConfigurationHelper.initExpressionsForInstanceArrays(cfg, i).entrySet()) {
             for (AbstractMap.SimpleImmutableEntry<Expression, Expression> e : entry.getValue()) {
                 String result = "";
                 StringBuilder tempBuilder = new StringBuilder();
@@ -75,12 +78,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         if (useThis) {
             builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
         } else {
-            builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i .getName() + "\", null");
+            builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
         }
 
-        for (Property prop : i.getType().allPropertiesInDepth()) {//TODO: not optimal, to be improved
-            for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : cfg.initExpressionsForInstance(i)) {
-                if (p.getKey().equals(prop) && prop.getCardinality() == null && !prop.isDefined("private", "true") && prop.eContainer() instanceof Thing) {
+        for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: not optimal, to be improved
+            for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
+                if (p.getKey().equals(prop) && prop.getCardinality() == null && !AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
                     //System.out.println("Property " + prop);
                     String result = "";
                     if (prop.getType() instanceof Enumeration) {
@@ -100,7 +103,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                             //ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
                             ctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
                             ctx.currentInstance = null;
-                            
+
                             result += tempbuilder.toString();
                         } else {
                             result += getDefaultValue(p.getKey().getType());
@@ -110,8 +113,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                     builder.append(result);
                 }
             }
-            for (Property a : cfg.allArrays(i)) {
-                if (prop.equals(a) && !(prop.isDefined("private", "true")) && prop.eContainer() instanceof Thing) {
+            for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
+                if (prop.equals(a) && !(AnnotatedElementHelper.isDefined(prop, "private", "true")) && prop.eContainer() instanceof Thing) {
                     //System.out.println("Array " + prop);
                     builder.append(", ");
                     builder.append(i.getName() + "_" + a.getName() + "_array");
@@ -121,8 +124,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         //if (debug || i.isDefined("debug", "true")) {
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
         boolean debugInst = false;
-        for(Instance inst : debugProfile.getDebugInstances()) {
-            if(i.getName().equals(inst.getName())) {
+        for (Instance inst : debugProfile.getDebugInstances()) {
+            if (i.getName().equals(inst.getName())) {
                 debugInst = true;
                 break;
             }
@@ -152,9 +155,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
     }
 
     public static void generateInstances(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
-        final boolean debug = cfg.isDefined("debug", "true");
+        final boolean debug = AnnotatedElementHelper.isDefined(cfg, "debug", "true");
 
-        for (Instance i : cfg.allInstances()) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             generateInstance(i, cfg, builder, ctx, useThis, debug);
         }
 
@@ -164,12 +167,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("//Connecting internal ports...\n");
-        for(Map.Entry<Instance, List<InternalPort>> entries : cfg.allInternalPorts().entrySet()) {
+        for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             Instance i = entries.getKey();
-            for(InternalPort p : entries.getValue()) {
-                for(Message rec : p.getReceives())  {
-                    for(Message send : p.getSends()) {
-                        if(EcoreUtil.equals(rec, send)) {
+            for (InternalPort p : entries.getValue()) {
+                for (Message rec : p.getReceives()) {
+                    for (Message send : p.getSends()) {
+                        if (EcoreUtil.equals(rec, send)) {
                             builder.append(prefix + i.getName() + ".get" + ctx.firstToUpper(send.getName()) + "on" + p.getName() + "Listeners().push(");
                             builder.append(prefix + i.getName() + ".receive" + rec.getName() + "On" + p.getName() + ".bind(" + prefix + i.getName() + ")");
                             builder.append(");\n");
@@ -181,7 +184,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
 
         builder.append("//Connecting ports...\n");
-        for (Connector c : cfg.allConnectors()) {
+        for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
             for (Message req : c.getRequired().getReceives()) {
                 for (Message prov : c.getProvided().getSends()) {
                     if (req.getName().equals(prov.getName())) {
@@ -217,11 +220,11 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         final StringBuilder builder = ctx.getBuilder("main.js");
 
         boolean debug = false;
-        if (cfg.isDefined("debug", "true"));
-            debug = true;
+        if (AnnotatedElementHelper.isDefined(cfg, "debug", "true")) ;
+        debug = true;
         if (!debug) {
-            for(Instance i : cfg.allInstances()) {
-                if (i.isDefined("debug", "true")) {
+            for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+                if (AnnotatedElementHelper.isDefined(i, "debug", "true")) {
                     debug = true;
                     break;
                 }
@@ -232,23 +235,23 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             builder.append("var colors = require('colors/safe');\n");
         }
 
-        for (Type ty : model.allUsedSimpleTypes()) {
+        for (Type ty : ThingMLHelpers.allUsedSimpleTypes(model)) {
             if (ty instanceof Enumeration) {
                 builder.append("var Enum = require('./enums');\n");
                 break;
             }
         }
-        for (Thing t : cfg.allThings()) {
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
             builder.append("var " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
         }
         //builder.append("process.stdin.resume();//to keep Node.js alive even when it is nothing more to do...\n");
 
         generateInstances(cfg, builder, ctx, false);
 
-        List<Instance> instances = cfg.orderInstanceInit();
+        List<Instance> instances = ConfigurationHelper.orderInstanceInit(cfg);
         Instance inst;
-        while(!instances.isEmpty()) {
-            inst = instances.get(instances.size()-1);
+        while (!instances.isEmpty()) {
+            inst = instances.get(instances.size() - 1);
             instances.remove(inst);
             builder.append(inst.getName() + "._init();\n");
         }
@@ -256,8 +259,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         builder.append("//terminate all things on SIGINT (e.g. CTRL+C)\n");
         builder.append("process.on('SIGINT', function() {\n");
         builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
-        instances = cfg.orderInstanceInit();
-        while(!instances.isEmpty()) {
+        instances = ConfigurationHelper.orderInstanceInit(cfg);
+        while (!instances.isEmpty()) {
             inst = instances.get(0);
             instances.remove(inst);
             builder.append(inst.getName() + "._stop();\n");

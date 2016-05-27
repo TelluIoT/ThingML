@@ -17,7 +17,7 @@ package org.thingml.compilers.checker;
 
 import org.eclipse.emf.ecore.EObject;
 import org.thingml.compilers.ThingMLCompiler;
-import org.sintef.thingml.resource.thingml.*;//FIXME: import just what is needed
+import org.sintef.thingml.resource.thingml.*;
 
 import java.util.Collections;
 
@@ -27,22 +27,44 @@ import java.util.Collections;
 public class EMFWrapper implements ErrorWrapper {
     @Override
     public void addError(final String msg, final EObject el) {
-        IThingmlProblem problem = new IThingmlProblem(){
-            public String getMessage(){return msg;}
-            public org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity getSeverity(){return ThingmlEProblemSeverity.ERROR;}
-            public org.sintef.thingml.resource.thingml.ThingmlEProblemType getType(){return ThingmlEProblemType.UNKNOWN;}
-            public java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlQuickFix> getQuickFixes(){return Collections.EMPTY_LIST;}
+        IThingmlProblem problem = new IThingmlProblem() {
+            public String getMessage() {
+                return msg;
+            }
+
+            public org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity getSeverity() {
+                return ThingmlEProblemSeverity.ERROR;
+            }
+
+            public org.sintef.thingml.resource.thingml.ThingmlEProblemType getType() {
+                return ThingmlEProblemType.UNKNOWN;
+            }
+
+            public java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlQuickFix> getQuickFixes() {
+                return Collections.EMPTY_LIST;
+            }
         };
         ThingMLCompiler.resource.addProblem(problem, el);
     }
 
     @Override
     public void addWarning(final String msg, final EObject el) {
-        IThingmlProblem problem = new IThingmlProblem(){
-            public String getMessage(){return msg;}
-            public org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity getSeverity(){return ThingmlEProblemSeverity.WARNING;}
-            public org.sintef.thingml.resource.thingml.ThingmlEProblemType getType(){return ThingmlEProblemType.UNKNOWN;}
-            public java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlQuickFix> getQuickFixes(){return Collections.EMPTY_LIST;}
+        IThingmlProblem problem = new IThingmlProblem() {
+            public String getMessage() {
+                return msg;
+            }
+
+            public org.sintef.thingml.resource.thingml.ThingmlEProblemSeverity getSeverity() {
+                return ThingmlEProblemSeverity.WARNING;
+            }
+
+            public org.sintef.thingml.resource.thingml.ThingmlEProblemType getType() {
+                return ThingmlEProblemType.UNKNOWN;
+            }
+
+            public java.util.Collection<org.sintef.thingml.resource.thingml.IThingmlQuickFix> getQuickFixes() {
+                return Collections.EMPTY_LIST;
+            }
         };
         ThingMLCompiler.resource.addProblem(problem, el);
     }

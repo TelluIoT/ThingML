@@ -19,52 +19,58 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.thingml.compilers.checker.Checker;
+import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.ThingHelper;
+import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
-import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic;
-import org.sintef.thingml.*;
+import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.compilers.thing.*;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import java.io.File;
 import java.io.OutputStream;
 import java.util.*;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
 
 /**
  * Created by ffl on 23.11.14.
  */
 public abstract class ThingMLCompiler {
 
-    protected Context ctx = new Context(this);
     public static Checker checker;
-
+    //FIXME: the code below related to loading and errors should be refactored and probably moved. It is just here right now as a convenience.
+    public static List<String> errors;
+    public static List<String> warnings;
+    public static ThingmlResource resource;
+    protected Context ctx = new Context(this);
+    Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
+    Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
     private ThingActionCompiler thingActionCompiler;
     private ThingApiCompiler thingApiCompiler;
     private CfgMainGenerator mainCompiler;
     private CfgBuildCompiler cfgBuildCompiler;
     private ThingImplCompiler thingImplCompiler;
     private ThingCepCompiler cepCompiler;
-
     //Debug
     private Map<Thing, DebugProfile> debugProfiles = new HashMap<>();
     private boolean containsDebug = false;
-
-    public Map<Thing, DebugProfile> getDebugProfiles() {
-        return debugProfiles;
-    }
-
-    public boolean containsDebug() {
-        return containsDebug;
-    }
-
     //we might need several connector compilers has different ports might use different connectors
     private Map<String, CfgExternalConnectorCompiler> connectorCompilers = new HashMap<String, CfgExternalConnectorCompiler>();
+    private OutputStream messageStream = System.out;
+    private OutputStream errorStream = System.err;
+    private File outputDirectory = null;
+
+    /**************************************************************
+     * Parameters common to all compilers
+     **************************************************************/
 
     public ThingMLCompiler() {
         this.thingActionCompiler = new ThingActionCompiler();
@@ -85,66 +91,37 @@ public abstract class ThingMLCompiler {
         this.cepCompiler = cepCompiler;
     }
 
-    public abstract ThingMLCompiler clone();
-
-    /**
-     * ***********************************************************
-     * META-DATA about this particular compiler
-     * ************************************************************
-     */
-    public abstract String getID();
-
-    public abstract String getName();
-
-    public abstract String getDescription();
-
-    /**************************************************************
-     * Parameters common to all compilers
-     **************************************************************/
-
-    /**
-     * ***********************************************************
-     * Entry point of the compiler
-     * ************************************************************
-     */
-    public abstract boolean compile(Configuration cfg, String... options);
-
-    //FIXME: the code below related to loading and errors should be refactored and probably moved. It is just here right now as a convenience.
-    public static List<String> errors;
-    public static List<String> warnings;
-    public static ThingmlResource resource;
-
     public static ThingMLModel loadModel(File file) {
         errors = new ArrayList<String>();
         warnings = new ArrayList<String>();
 
-            Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-            reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
+        Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+        reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
 
-            ResourceSet rs = new ResourceSetImpl();
-            URI xmiuri = URI.createFileURI(file.getAbsolutePath());
-            Resource model = rs.createResource(xmiuri);
-            resource = (ThingmlResource) model;
-            try {
-                model.load(null);
-                org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(model);
-                for(Resource r : model.getResourceSet().getResources()) {
-                    checkEMFErrorsAndWarnings(r);
+        ResourceSet rs = new ResourceSetImpl();
+        URI xmiuri = URI.createFileURI(file.getAbsolutePath());
+        Resource model = rs.createResource(xmiuri);
+        resource = (ThingmlResource) model;
+        try {
+            model.load(null);
+            org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(model);
+            for (Resource r : model.getResourceSet().getResources()) {
+                checkEMFErrorsAndWarnings(r);
+            }
+            if (errors.isEmpty()) {
+                ThingMLModel m = (ThingMLModel) model.getContents().get(0);
+                for (Configuration cfg : ThingMLHelpers.allConfigurations(m)) {
+                    checker.do_generic_check(cfg);
                 }
                 if (errors.isEmpty()) {
-                    ThingMLModel m = (ThingMLModel) model.getContents().get(0);
-                    for (Configuration cfg : m.allConfigurations()) {
-                        checker.do_generic_check(cfg);
-                    }
-                    if (errors.isEmpty()) {
-                        return m;
-                    }
+                    return m;
                 }
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-            return null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static boolean checkEMFErrorsAndWarnings(Resource model) {
@@ -159,8 +136,8 @@ public abstract class ThingMLCompiler {
                     System.err.println("Syntax error in file " + d.getLocation() + " (" + e.getLine() + ", " + e.getColumn() + ")");
                     errors.add("Syntax error in file " + d.getLocation() + " (" + e.getLine() + ", " + e.getColumn() + ")");
                 } else {
-                    System.err.println("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn()  + "): " + d.getMessage());
-                    errors.add("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn()  + "): " + d.getMessage());
+                    System.err.println("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+                    errors.add("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
                 }
             }
         }
@@ -175,69 +152,97 @@ public abstract class ThingMLCompiler {
         return isOK;
     }
 
+    public Map<Thing, DebugProfile> getDebugProfiles() {
+        return debugProfiles;
+    }
+
+    public boolean containsDebug() {
+        return containsDebug;
+    }
+
+    public abstract ThingMLCompiler clone();
+
+    /**
+     * ***********************************************************
+     * META-DATA about this particular compiler
+     * ************************************************************
+     */
+    public abstract String getID();
+
+    public abstract String getName();
+
+    public abstract String getDescription();
+
+    /**
+     * ***********************************************************
+     * Entry point of the compiler
+     * ************************************************************
+     */
+    public abstract boolean compile(Configuration cfg, String... options);
+
     /**
      * Creates debug profiles
      * @param cfg
      */
     //FIXME: refactor code to avoid code duplication (should be possible to have one sub-method that we call twice with different params)
     public void processDebug(Configuration cfg) {
-        final boolean debugCfg = cfg.isDefined("debug", "true");
+        final boolean debugCfg = AnnotatedElementHelper.isDefined(cfg, "debug", "true");
         this.containsDebug = this.containsDebug || debugCfg;
 
         Set<Thing> debugThings = new HashSet<>();
-        for (Instance i : cfg.allInstances()) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             if (debugCfg) {
-                if (!i.isDefined("debug", "false")) {
+                if (!AnnotatedElementHelper.isDefined(i, "debug", "false")) {
                     debugThings.add(i.getType());
                 }
             } else {
-                if (i.isDefined("debug", "true") || i.getType().isDefined("debug", "true")) {
+                if (AnnotatedElementHelper.isDefined(i, "debug", "true") || AnnotatedElementHelper.isDefined(i.getType(), "debug", "true")) {
                     debugThings.add(i.getType());
                 }
             }
         }
 
-        for (Thing thing : cfg.allThings()) {
+        for (Thing thing : ConfigurationHelper.allThings(cfg)) {
             boolean debugBehavior = false;
             List<Function> debugFunctions = new ArrayList<Function>();
             List<Property> debugProperties = new ArrayList<>();
             List<Instance> debugInstances = new ArrayList<>();
             Map<Port, List<Message>> debugMessages = new HashMap<>();
-            
-            
-            for (Instance i : cfg.allInstances()) {
-                if(i.getType().getName().equals(thing.getName())) {
+
+
+            for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+                if (i.getType().getName().equals(thing.getName())) {
                     if (debugCfg) {
-                        if (!i.isDefined("debug", "false")) {
+                        if (!AnnotatedElementHelper.isDefined(i, "debug", "false")) {
                             debugInstances.add(i);
                         }
                     } else {
-                        if (i.isDefined("debug", "true") || i.getType().isDefined("debug", "true")) {
-                           debugInstances.add(i);
+                        if (AnnotatedElementHelper.isDefined(i, "debug", "true") || AnnotatedElementHelper.isDefined(i.getType(), "debug", "true")) {
+                            debugInstances.add(i);
                         }
                     }
                 }
             }
 
             if (debugThings.contains(thing)) {
-                if (!thing.isDefined("debug", "false")) {//collect everything not marked with @debug "false"
-                    debugBehavior = !thing.getBehaviour().isEmpty() && !thing.getBehaviour().get(0).isDefined("debug", "false");
-                    for (Function f : thing.allFunctions()) {
-                        if (!f.isDefined("debug", "false")) {
+                if (!AnnotatedElementHelper.isDefined(thing, "debug", "false")) {//collect everything not marked with @debug "false"
+                    debugBehavior = !thing.getBehaviour().isEmpty() && !AnnotatedElementHelper.isDefined(thing.getBehaviour().get(0), "debug", "false");
+                    for (Function f : ThingMLHelpers.allFunctions(thing)) {
+                        if (!AnnotatedElementHelper.isDefined(f, "debug", "false")) {
                             debugFunctions.add(f);
                         }
                     }
-                    for (Property p : thing.allPropertiesInDepth()) {
-                        if (!p.isDefined("debug", "false")) {
+                    for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+                        if (!AnnotatedElementHelper.isDefined(p, "debug", "false")) {
                             debugProperties.add(p);
                         }
                     }
-                    for (Port p : thing.allPorts()) {
+                    for (Port p : ThingMLHelpers.allPorts(thing)) {
                         List<Message> msg = new LinkedList<Message>();
                         msg.addAll(p.getReceives());
                         msg.addAll(p.getSends());
                         for (Message m : msg) {
-                            if ((!p.isDefined("debug", "false") && !m.isDefined("debug", "false")) || m.isDefined("debug", "true")) {//TODO: check the rules for debugging of messages/ports
+                            if ((!AnnotatedElementHelper.isDefined(p, "debug", "false") && !AnnotatedElementHelper.isDefined(m, "debug", "false")) || AnnotatedElementHelper.isDefined(m, "debug", "true")) {//TODO: check the rules for debugging of messages/ports
                                 List<Message> l = debugMessages.get(p);
                                 if (l == null) {
                                     l = new ArrayList<>();
@@ -248,23 +253,23 @@ public abstract class ThingMLCompiler {
                         }
                     }
                 } else {//collect everything marked with @debug "true"
-                    debugBehavior =  !thing.getBehaviour().isEmpty() && thing.getBehaviour().get(0).isDefined("debug", "true");
-                    for (Function f : thing.allFunctions()) {
-                        if (f.isDefined("debug", "true")) {
+                    debugBehavior = !thing.getBehaviour().isEmpty() && AnnotatedElementHelper.isDefined(thing.getBehaviour().get(0), "debug", "true");
+                    for (Function f : ThingMLHelpers.allFunctions(thing)) {
+                        if (AnnotatedElementHelper.isDefined(f, "debug", "true")) {
                             debugFunctions.add(f);
                         }
                     }
-                    for (Property p : thing.allPropertiesInDepth()) {
-                        if (p.isDefined("debug", "true")) {
+                    for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+                        if (AnnotatedElementHelper.isDefined(p, "debug", "true")) {
                             debugProperties.add(p);
                         }
                     }
-                    for (Port p : thing.allPorts()) {
+                    for (Port p : ThingMLHelpers.allPorts(thing)) {
                         List<Message> msg = new LinkedList<Message>();
                         msg.addAll(p.getReceives());
                         msg.addAll(p.getSends());
                         for (Message m : msg) {
-                            if ((p.isDefined("debug", "true") && !m.isDefined("debug", "false")) || m.isDefined("debug", "true")) {//TODO: check the rules for debugging of messages/ports
+                            if ((AnnotatedElementHelper.isDefined(p, "debug", "true") && !AnnotatedElementHelper.isDefined(m, "debug", "false")) || AnnotatedElementHelper.isDefined(m, "debug", "true")) {//TODO: check the rules for debugging of messages/ports
                                 List<Message> l = debugMessages.get(p);
                                 if (l == null) {
                                     l = new ArrayList<>();
@@ -325,9 +330,6 @@ public abstract class ThingMLCompiler {
         return Collections.unmodifiableMap(connectorCompilers);
     }
 
-    private OutputStream messageStream = System.out;
-    private OutputStream errorStream = System.err;
-
     public OutputStream getErrorStream() {
         return errorStream;
     }
@@ -344,7 +346,9 @@ public abstract class ThingMLCompiler {
         this.messageStream = messageStream;
     }
 
-    private File outputDirectory = null;
+    public File getOutputDirectory() {
+        return outputDirectory;
+    }
 
     public void setOutputDirectory(File outDir) {
         outDir.mkdirs();
@@ -357,16 +361,10 @@ public abstract class ThingMLCompiler {
         outputDirectory = outDir;
     }
 
-    public File getOutputDirectory() {
-        return outputDirectory;
-    }
-    
-    Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
-    
     public void addNetworkPlugin(NetworkPlugin np) {
         List<String> protocols = np.getSupportedProtocols();
-        for(String prot : protocols) {
-            if(networkPluginsPerProtocol.containsKey(prot)) {
+        for (String prot : protocols) {
+            if (networkPluginsPerProtocol.containsKey(prot)) {
                 networkPluginsPerProtocol.get(prot).add(np);
             } else {
                 Set<NetworkPlugin> plugins = new HashSet<>();
@@ -375,33 +373,33 @@ public abstract class ThingMLCompiler {
             }
         }
     }
-    
+
     public Set<NetworkPlugin> getNetworkPlugins(Protocol prot) {
         return networkPluginsPerProtocol.get(prot.getName());
     }
-    
+
     public Set<NetworkPlugin> getNetworkPlugins() {
         Set<NetworkPlugin> res = new HashSet<>();
-        for(String key : networkPluginsPerProtocol.keySet()) {
-            for(NetworkPlugin np : networkPluginsPerProtocol.get(key)) {
-                if(!res.contains(np)) {
+        for (String key : networkPluginsPerProtocol.keySet()) {
+            for (NetworkPlugin np : networkPluginsPerProtocol.get(key)) {
+                if (!res.contains(np)) {
                     res.add(np);
                 }
             }
         }
         return res;
     }
-    
+
     public NetworkPlugin getNetworkPlugin(Protocol prot) {
         Set<NetworkPlugin> plugins = networkPluginsPerProtocol.get(prot.getName());
-        if(plugins == null) {
+        if (plugins == null) {
             System.out.println("[ERROR] No plugin found for protocol: " + prot.getName());
             return null;
         }
-        if(prot.hasAnnotation("nlg")) {
-            String pluginID = prot.annotation("nlg").get(0);
-            for(NetworkPlugin np : plugins) {
-                if(np.getPluginID().compareTo(pluginID) == 0) {
+        if (AnnotatedElementHelper.hasAnnotation(prot, "nlg")) {
+            String pluginID = AnnotatedElementHelper.annotation(prot, "nlg").get(0);
+            for (NetworkPlugin np : plugins) {
+                if (np.getPluginID().compareTo(pluginID) == 0) {
                     return np;
                 }
             }
@@ -411,19 +409,22 @@ public abstract class ThingMLCompiler {
             return plugins.iterator().next();
         }
     }
-    
-    Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
-    
+
     public void addSerializationPlugin(SerializationPlugin sp) {
-        if(!serializationPlugins.containsKey(sp.getPluginID())) {
+        if (!serializationPlugins.containsKey(sp.getPluginID())) {
             serializationPlugins.put(sp.getPluginID(), sp);
         }
+        for(String format : sp.getSupportedFormat()) {
+            if (!serializationPlugins.containsKey(format)) {
+                serializationPlugins.put(format, sp);
+            }
+        }
     }
-    
+
     public Set<SerializationPlugin> getSerializationPlugins() {
         return new HashSet<SerializationPlugin>(serializationPlugins.values());
     }
-    
+
     public SerializationPlugin getSerializationPlugin(String id) {
         return serializationPlugins.get(id);
     }

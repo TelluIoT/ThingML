@@ -28,17 +28,4 @@ package org.sintef.thingml;
  */
 public interface Type extends AnnotatedElement {
 
-    /**
-     * @generated NOT
-     * @return
-     */
-    Type getBroadType();
-
-    /**
-     * @generated NOT
-     * @param t
-     * @return
-     */
-    boolean isA(Type t);
-
 } // Type

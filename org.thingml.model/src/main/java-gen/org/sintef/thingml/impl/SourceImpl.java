@@ -160,9 +160,5 @@ public abstract class SourceImpl extends AnnotatedElementImpl implements Source 
 		return super.eIsSet(featureID);
 	}
 
-	@Override
-	public String qname(String separator) {
-		Stream stream = ThingMLHelpers.findContainingStream(this);
-		return stream.getName();
-	}
+
 } //SourceImpl

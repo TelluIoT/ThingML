@@ -290,32 +290,5 @@ public class VariableAssignmentImpl extends ActionImpl implements VariableAssign
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		for(Expression e : getIndex())
-			result.addAll(e.getAllExpressions());
-		if (getExpression() != null)
-			result.addAll(getExpression().getAllExpressions());
-		return result;
-	}
-
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		for(Expression e : getIndex())
-			result.addAll(e.getAllExpressions(clazz));
-		if (getExpression() != null)
-			result.addAll(getExpression().getAllExpressions(clazz));
-		return result;
-	}
 
 } //VariableAssignmentImpl

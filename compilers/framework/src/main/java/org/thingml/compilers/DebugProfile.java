@@ -17,8 +17,6 @@ package org.thingml.compilers;
 
 import org.sintef.thingml.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +60,7 @@ public class DebugProfile {
     public Map<Port, List<Message>> getDebugMessages() {
         return debugMessages;
     }
-    
+
     public List<Instance> getDebugInstances() {
         return debugInstances;
     }

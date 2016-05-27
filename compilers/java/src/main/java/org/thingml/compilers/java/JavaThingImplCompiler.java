@@ -15,17 +15,13 @@
  */
 package org.thingml.compilers.java;
 
-import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +41,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("import java.nio.*;\n\n");
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "MessageType extends EventType {\n");
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType(short code) {super(\"" + m.getName() + "\", code);\n}\n\n");
-        final String code = m.hasAnnotation("code") ? m.annotation("code").get(0) : "0";
+        final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {\nsuper(\"" + m.getName() + "\", (short) " + code + ");\n}\n\n");
         builder.append("public Event instantiate(");
         for (Parameter p : m.getParameters()) {
@@ -64,14 +60,14 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("return instantiate(");
         for (Parameter p : m.getParameters()) {
             String cast;
-            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("int"))
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("int"))
                 cast = "Integer";
-            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("char"))
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("char"))
                 cast = "Character";
-            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).contains("."))
-                cast = JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx); //extern datatype with full qualified name
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).contains("."))
+                cast = JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx); //extern datatype with full qualified name
             else
-                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
+                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx));
             if (m.getParameters().indexOf(p) > 0)
                 builder.append(", ");
             builder.append("(" + cast + ") params.get(\"" + ctx.protectKeyword(p.getName()) + "\")");
@@ -79,39 +75,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append(");\n");
         builder.append("}\n\n");
 
-        //Instantiate message from binary
-        builder.append("/**Instantiates a message from a binary representation*/\n");
-        builder.append("@Override\npublic Event instantiate(byte[] payload, String serialization) {\n");
-        builder.append("if (serialization == null || serialization.equals(\"default\")) {\n");
-        builder.append("ByteBuffer buffer = ByteBuffer.wrap(payload);\n");
-        builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
-        builder.append("final short code = buffer.getShort();\n");
-        builder.append("if (code == this.code) {\n");
-        for (Parameter p : m.getParameters()) {
-            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("byte")) {
-                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "buffer.get();\n");
-            } else  if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("boolean")) {
-                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "buffer.get() == 0x00 ? false : true;\n");
-            } else {
-                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "buffer.get" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx)) + "();\n");
-            }
-        }
-        builder.append("return instantiate(");
-        int size = 2;
-        for (Parameter p : m.getParameters()) {
-            if (m.getParameters().indexOf(p) > 0)
-                builder.append(", ");
-            builder.append(p.getName());
-            size = size + ((PrimitiveType)p.getType()).getByteSize();
-        }
-        builder.append(");\n");
-        builder.append("}\n");
-        builder.append("return null;\n");
-        builder.append("}\n");
-        builder.append("//Do NOT remove following comment. Might be used by a serialization plugin\n");
-        builder.append("/*BINARY_LOAD*/\n");
-        builder.append("return null;\n");
-        builder.append("}\n\n");
+
 
 
         //Instantiate message from String
@@ -131,22 +95,22 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
 
         builder.append("private Event parse(String[] msg) {\n");
-        builder.append("if (msg.length != " + (2*m.getParameters().size()+1) + ")\n");
+        builder.append("if (msg.length != " + (2 * m.getParameters().size() + 1) + ")\n");
         builder.append("return null;\n");
         builder.append("if (\"" + m.getName() + "\".equals(msg[0])) {\n");
         StringBuilder temp = new StringBuilder();
         for (Parameter p : m.getParameters()) {
             String cast;
-            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("int"))
+            if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("int"))
                 cast = "Integer";
-            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("char"))
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("char"))
                 cast = "Character";
-            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).contains("."))
-                throw new UnsupportedException("Cannot serialize non-primitive types", "type", "java");
+            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).contains("."))
+                throw new UnsupportedOperationException("Custom Java type " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " not supported.");
             else
-                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx));
+                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx));
 
-            builder.append("if (\"" + p.getName() + "\".equals(msg[" + (2*m.getParameters().indexOf(p) + 1) + "])) {\n");
+            builder.append("if (\"" + p.getName() + "\".equals(msg[" + (2 * m.getParameters().indexOf(p) + 1) + "])) {\n");
             if (cast.equals("Character")) {
                 builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "msg[" + (2 * m.getParameters().indexOf(p) + 2) + "].toCharArray()[0];\n");
             } else {
@@ -155,17 +119,16 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             if (m.getParameters().indexOf(p) > 0)
                 temp.append(", ");
             temp.append(p.getName());
-            if (m.getParameters().indexOf(p) == m.getParameters().size()-1) {
+            if (m.getParameters().indexOf(p) == m.getParameters().size() - 1) {
                 builder.append("return instantiate(" + temp.toString() + ");\n");
             }
         }
-        for(int i = 0; i < m.getParameters().size(); i++) {
+        for (int i = 0; i < m.getParameters().size(); i++) {
             builder.append("}\n");
         }
         builder.append("}\n");
         builder.append("return null;\n");
         builder.append("}\n\n");
-
 
 
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "Message extends Event implements java.io.Serializable {\n\n");
@@ -217,7 +180,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("} else if (serialization.equals(\"json-default\")) {");
         builder.append("return \"{\\\"" + m.getName() + "\\\":{");
         for (Parameter p : m.getParameters()) {
-            if (m.getParameters().indexOf(p)>0)
+            if (m.getParameters().indexOf(p) > 0)
                 builder.append(",");
             builder.append("\\\"" + p.getName() + "\\\":\" + " + p.getName() + " + \"");
         }
@@ -228,39 +191,15 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("return null;\n");
         builder.append("}\n\n");
 
-
-        //Serialize message into binary
-        builder.append("/**Serializes a message into a binary format*/\n");
-        builder.append("@Override\npublic byte[] toBytes(String serialization) {\n");
-        builder.append("if (serialization == null || serialization.equals(\"default\")) {\n");
-        builder.append("ByteBuffer buffer = ByteBuffer.allocate(" + size + ");\n");
-        builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
-        builder.append("buffer.putShort(code);\n");
-        for (Parameter p : m.getParameters()) {
-            if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("byte")) {
-                builder.append("buffer.put(" + p.getName() + ");\n");
-            } else if (JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx).equals("boolean")) {
-                builder.append("if(" + p.getName() + ") buffer.put((byte)0x01); else buffer.put((byte)0x00); ");
-            } else {
-                builder.append("buffer.put" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx)) + "(" + p.getName() + ");\n");
-            }
-        }
-        builder.append("return buffer.array();\n");
-        builder.append("}\n");
-        builder.append("//Do NOT remove following comment. Might be used by a serialization plugin\n");
-        builder.append("/*BINARY_SAVE*/\n");
-        builder.append("return null;\n");
-        builder.append("}\n\n");
-
         builder.append("}\n\n");
 
         builder.append("}\n\n");
     }
 
     protected void generateFunction(Function f, Thing thing, StringBuilder builder, Context ctx) {
-        if (!f.isDefined("abstract", "true")) {
+        if (!AnnotatedElementHelper.isDefined(f, "abstract", "true")) {
             DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
-            if (f.hasAnnotation("override") || f.hasAnnotation("implements")) {
+            if (AnnotatedElementHelper.hasAnnotation(f, "override") || AnnotatedElementHelper.hasAnnotation(f, "implements")) {
                 builder.append("@Override\npublic ");
             } else {
                 builder.append("private ");
@@ -269,7 +208,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(returnType + " " + f.getName() + "(");
             JavaHelper.generateParameter(f, builder, ctx);
             builder.append(") {\n");
-            if(!(debugProfile==null) && debugProfile.getDebugFunctions().contains(f)) {
+            if (!(debugProfile == null) && debugProfile.getDebugFunctions().contains(f)) {
                 //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|blue \" + getName() + \": executing function " + f.getName() + "(");
                 builder.append("printDebug(\"" + ctx.traceFunctionBegin(thing, f) + "(\"");
                 int i = 0;
@@ -282,7 +221,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("+ \")\");\n");
             }
             ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
-            if(!(debugProfile==null) && debugProfile.getDebugFunctions().contains(f)) {
+            if (!(debugProfile == null) && debugProfile.getDebugFunctions().contains(f)) {
                 builder.append("printDebug(\"" + ctx.traceFunctionDone(thing, f) + "\");");
             }
             builder.append("}\n");
@@ -297,22 +236,22 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         if (pack == null) pack = "org.thingml.generated";
 
         final StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(thing.getName()) + ".java");
-        boolean hasMessages = thing.allMessages().size() > 0;
+        boolean hasMessages = ThingMLHelpers.allMessages(thing).size() > 0;
         boolean hasStream = thing.getStreams().size() > 0;
-        JavaHelper.generateHeader(pack, pack, builder, ctx, false, hasMessages,hasStream);
+        JavaHelper.generateHeader(pack, pack, builder, ctx, false, hasMessages, hasStream);
 
         builder.append("\n/**\n");
         builder.append(" * Definition for type : " + thing.getName() + "\n");
         builder.append(" **/\n");
 
         List<String> interfaces = new ArrayList<String>();
-        for (Port p : thing.allPorts()) {
-            if (!p.isDefined("public", "false") && p.getReceives().size() > 0) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
+            if (!AnnotatedElementHelper.isDefined(p, "public", "false") && p.getReceives().size() > 0) {
                 interfaces.add("I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName());
             }
         }
-        if (thing.hasAnnotation("java_interface")) {
-            interfaces.addAll(thing.annotation("java_interface"));
+        if (AnnotatedElementHelper.hasAnnotation(thing, "java_interface")) {
+            interfaces.addAll(AnnotatedElementHelper.annotation(thing, "java_interface"));
         }
         builder.append("public class " + ctx.firstToUpper(thing.getName()) + " extends Component ");
         if (interfaces.size() > 0) {
@@ -338,27 +277,27 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("@Override\npublic String toString() {\n");
         builder.append("String result = \"instance \" + getName() + \"\\n\";\n");
-        for(Property p : thing.allProperties()) {
-            builder.append("result += \"\\t" + p.getName() + " = \" + " + ctx.getVariableName(p)  + ";\n" );
+        for (Property p : ThingMLHelpers.allProperties(thing)) {
+            builder.append("result += \"\\t" + p.getName() + " = \" + " + ctx.getVariableName(p) + ";\n");
         }
         builder.append("result += \"\";\n");
         builder.append("return result;\n");
         builder.append("}\n\n");
-        
-        if(debugProfile.isActive()) {
-        builder.append("public String instanceName;");
-        builder.append("public void printDebug(");
-        builder.append("String trace");//if debugWithString
-        builder.append(") {\n");
-        builder.append("if(this.isDebug()) {\n");
-        builder.append("System.out.println(this.instanceName + trace);\n");
-        builder.append("}\n");
-        builder.append("}\n\n");
+
+        if (debugProfile.isActive()) {
+            builder.append("public String instanceName;");
+            builder.append("public void printDebug(");
+            builder.append("String trace");//if debugWithString
+            builder.append(") {\n");
+            builder.append("if(this.isDebug()) {\n");
+            builder.append("System.out.println(this.instanceName + trace);\n");
+            builder.append("}\n");
+            builder.append("}\n\n");
         }
 
 
         boolean overrideReceive = false;
-        for(StateMachine sm : thing.getBehaviour()) {
+        for (StateMachine sm : thing.getBehaviour()) {
             if (sm.getInternal().size() > 0) {
                 overrideReceive = true;
                 break;
@@ -385,6 +324,9 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                         }
                         builder.append("consumed = true;\n");
                         ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
+                        if (i.getGuard() != null) {
+                            builder.append("}\n");
+                        }
                         builder.append("}\n");
                         id++;
                     }
@@ -419,8 +361,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("}\n\n");
         }
 
-        for (Port p : thing.allPorts()) {
-            if (!p.isDefined("public", "false") && p.getSends().size() > 0) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
+            if (!AnnotatedElementHelper.isDefined(p, "public", "false") && p.getSends().size() > 0) {
                 builder.append("private Collection<I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client> " + p.getName() + "_clients = Collections.synchronizedCollection(new LinkedList<I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client>());\n");
 
                 builder.append("public synchronized void registerOn" + ctx.firstToUpper(p.getName()) + "(I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client client){\n");
@@ -437,7 +379,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         /*if (!debugProfile.getDebugMessages().isEmpty()) {//FIXME: receive is overridden elsewhere, cannot be overridden twice. To be merged.
             builder.append("@Override\npublic void receive(Event event, final Port p){\n");
             int i = 0;
-            for (Port p : thing.allPorts()) {
+            for (Port p : ThingMLHelpers.allPorts(thing)) {
                 for (Message m : p.getReceives()) {
                     if (debugProfile.getDebugMessages().containsKey(p) && debugProfile.getDebugMessages().get(p).contains(m)) {
                         if (i > 0)
@@ -463,8 +405,8 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }*/
 
 
-            for (Port p : thing.allPorts()) {
-            if (!p.isDefined("public", "false")) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
+            if (!AnnotatedElementHelper.isDefined(p, "public", "false")) {
                 for (Message m : p.getReceives()) {
                     builder.append("@Override\n");
                     builder.append("public synchronized void " + m.getName() + "_via_" + p.getName() + "(");
@@ -483,7 +425,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
 
-        for (Port p : thing.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
             for (Message m : p.getSends()) {
                 builder.append("private void send" + ctx.firstToUpper(m.getName()) + "_via_" + p.getName() + "(");
                 JavaHelper.generateParameter(m, builder, ctx);
@@ -510,7 +452,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 }
                 builder.append("));\n");
 
-                if (!p.isDefined("public", "false")) {
+                if (!AnnotatedElementHelper.isDefined(p, "public", "false")) {
                     builder.append("//send to other clients\n");
                     builder.append("for(I" + ctx.firstToUpper(thing.getName()) + "_" + p.getName() + "Client client : " + p.getName() + "_clients){\n");
                     builder.append("client." + m.getName() + "_from_" + p.getName() + "(");
@@ -530,7 +472,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         builder.append("//Attributes\n");
-        for (Property p : thing.allPropertiesInDepth()) {
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             builder.append("private ");
             if (!p.isChangeable()) {
                 builder.append("final ");
@@ -538,18 +480,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p) + ";\n");
         }
 
-        for(Property p : thing.allPropertiesInDepth()/*debugProfile.getDebugProperties()*/) {//FIXME: we should only generate overhead for the properties we actually want to debug!
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)/*debugProfile.getDebugProperties()*/) {//FIXME: we should only generate overhead for the properties we actually want to debug!
             builder.append("private ");
             builder.append(JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " debug_" + ctx.getVariableName(p) + ";\n");
         }
 
         builder.append("//Ports\n");
-        for (Port p : thing.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
             builder.append("private Port " + p.getName() + "_port;\n");
         }
 
         builder.append("//Message types\n");
-        for (Message m : thing.allMessages()) {
+        for (Message m : ThingMLHelpers.allMessages(thing)) {
             builder.append("protected final " + ctx.firstToUpper(m.getName()) + "MessageType " + m.getName() + "Type = new " + ctx.firstToUpper(m.getName()) + "MessageType();\n");
             builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType get" + ctx.firstToUpper(m.getName()) + "Type(){\nreturn " + m.getName() + "Type;\n}\n\n");
             generateMessages(m, ctx);
@@ -557,22 +499,22 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//CEP Streams\n");
         for (Stream stream : thing.getStreams()) {
-            if(stream.getInput() instanceof SimpleSource) {
-                builder.append("private rx.Observable " + stream.getInput().qname("_") + ";\n");
-                builder.append("private Action1 sub_" + stream.getInput().qname("_") + ";\n");
-                builder.append("private rx.Subscription hook_" + stream.getInput().qname("_") + ";\n");
+            if (stream.getInput() instanceof SimpleSource) {
+                builder.append("private rx.Observable " + ThingMLElementHelper.qname(stream.getInput(), "_") + ";\n");
+                builder.append("private Action1 sub_" + ThingMLElementHelper.qname(stream.getInput(), "_") + ";\n");
+                builder.append("private rx.Subscription hook_" + ThingMLElementHelper.qname(stream.getInput(), "_") + ";\n");
             } else if (stream.getInput() instanceof SourceComposition) {
-                builder.append("private rx.Observable " + stream.qname("_") + ";\n");
-                builder.append("private Action1 sub_" + stream.qname("_") + ";\n");
-                builder.append("private rx.Subscription hook_" + stream.qname("_") + ";\n");
+                builder.append("private rx.Observable " + ThingMLElementHelper.qname(stream, "_") + ";\n");
+                builder.append("private Action1 sub_" + ThingMLElementHelper.qname(stream, "_") + ";\n");
+                builder.append("private rx.Subscription hook_" + ThingMLElementHelper.qname(stream, "_") + ";\n");
             }
         }
 
         builder.append("//Empty Constructor\n");
         builder.append("public " + ctx.firstToUpper(thing.getName()) + "() {\nsuper();\n");
         //builder.append("org.fusesource.jansi.AnsiConsole.systemInstall();\n");//FIXME: only if debug
-        for (Property p : thing.allPropertiesInDepth()) {
-            Expression e = thing.initExpression(p);
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+            Expression e = ThingHelper.initExpression(thing, p);
             if (e != null) {
                 builder.append(ctx.getVariableName(p) + " = ");
                 ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
@@ -582,7 +524,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n\n");
 
         boolean hasReadonly = false;
-        for (Property p : thing.allPropertiesInDepth()) {
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             if (!p.isChangeable()) {
                 hasReadonly = true;
                 break;
@@ -593,7 +535,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("//Constructor (only readonly (final) attributes)\n");
             builder.append("public " + ctx.firstToUpper(thing.getName()) + "(");
             int i = 0;
-            for (Property p : thing.allPropertiesInDepth()) {
+            for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
                 if (!p.isChangeable()) {
                     if (i > 0)
                         builder.append(", ");
@@ -603,7 +545,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
             builder.append(") {\n");
             builder.append("super();\n");
-            for (Property p : thing.allPropertiesInDepth()) {
+            for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
                 if (!p.isChangeable()) {
                     builder.append("this." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
                 }
@@ -613,18 +555,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//Constructor (all attributes)\n");
         builder.append("public " + ctx.firstToUpper(thing.getName()) + "(String name");
-        for (Property p : thing.allPropertiesInDepth()) {
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             builder.append(", final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p));
         }
         builder.append(") {\n");
         builder.append("super(name);\n");
-        for (Property p : thing.allPropertiesInDepth()) {
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             builder.append("this." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
         }
         builder.append("}\n\n");
 
         builder.append("//Getters and Setters for non readonly/final attributes\n");
-        for (Property p : thing.allPropertiesInDepth()) {
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             builder.append("public " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p) + ";\n}\n\n");
             if (p.isChangeable()) {
                 builder.append("public void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n}\n\n");
@@ -632,23 +574,20 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         builder.append("//Getters for Ports\n");
-        for (Port p : thing.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
             builder.append("public Port get" + ctx.firstToUpper(p.getName()) + "_port() {\nreturn " + p.getName() + "_port;\n}\n");
         }
 
-        for (StateMachine b : thing.allStateMachines()) {
-            for (Region r : b.allContainedRegions()) {
+        for (StateMachine b : ThingMLHelpers.allStateMachines(thing)) {
+            for (Region r : RegionHelper.allContainedRegions(b)) {
                 ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(r, builder, ctx);
-            }
-            for(Session s : b.allContainedSessions()) {//Session are only allowed at the root
-                ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(s, builder, ctx);
             }
         }
 
         builder.append("public Component buildBehavior(String session, Component root) {\n");
         builder.append("if (root == null) {\n");
         builder.append("//Init ports\n");
-        for (Port p : thing.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
             builder.append(p.getName() + "_port = new Port(");
             if (p instanceof ProvidedPort)
                 builder.append("PortType.PROVIDED");
@@ -657,7 +596,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(", \"" + p.getName() + "\", this);\n");
         }
         builder.append("} else {\n");
-        for (Port p : thing.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
             builder.append(p.getName() + "_port = ((" + thing.getName() + ")root)." + p.getName() + "_port;\n");
         }
         builder.append("}\n");
@@ -666,15 +605,15 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("if (session == null){\n");
         builder.append("//Init state machine\n");
-        for (StateMachine b : thing.allStateMachines()) {
-            builder.append("behavior = build" + b.qname("_") + "();\n");
+        for (StateMachine b : ThingMLHelpers.allStateMachines(thing)) {
+            builder.append("behavior = build" + ThingMLElementHelper.qname(b, "_") + "();\n");
         }
 
         builder.append("}\n");
-        for(StateMachine b : thing.allStateMachines()) {
-            for(Session s : b.allContainedSessions()) {
+        for (StateMachine b : ThingMLHelpers.allStateMachines(thing)) {
+            for (Session s : RegionHelper.allContainedSessions(b)) {
                 builder.append("else if (\"" + s.getName() + "\".equals(session)) {\n");
-                builder.append("behavior = build" + s.qname("_") + "();\n");
+                builder.append("behavior = build" + ThingMLElementHelper.qname(s, "_") + "();\n");
                 builder.append("}\n");
             }
         }
@@ -682,18 +621,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("return this;\n");
         builder.append("}\n\n");
 
-        if(thing.getStreams().size() > 0) {
+        if (thing.getStreams().size() > 0) {
             builder.append("@Override\n")
-                   .append("protected void createCepStreams() {\n");
+                    .append("protected void createCepStreams() {\n");
 
             for (Stream stream : thing.getStreams()) {
-                builder.append("create" + stream.getInput().qname("_") + "();\n");
+                builder.append("create" + ThingMLElementHelper.qname(stream.getInput(), "_") + "();\n");
             }
             builder.append("}\n\n");
 
             builder.append("protected void stopAllStreams() {\n");
             for (Stream stream : thing.getStreams()) {
-                builder.append("stop" + stream.getInput().qname("_") + "();\n");
+                builder.append("stop" + ThingMLElementHelper.qname(stream.getInput(), "_") + "();\n");
             }
             builder.append("}\n\n");
 
@@ -701,33 +640,33 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
             for (Stream stream : thing.getStreams()) {
 
-                builder.append("private void create" + stream.getInput().qname("_") + "() {\n");
+                builder.append("private void create" + ThingMLElementHelper.qname(stream.getInput(), "_") + "() {\n");
                 ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);
                 builder.append("}\n\n");
 
-                builder.append("private void start" + stream.getInput().qname("_") + "(){\n");
-                if(stream.getInput() instanceof SimpleSource) {
-                    builder.append("if (this.hook_" + stream.getInput().qname("_") + " == null)");
-                    builder.append("this.hook_" + stream.getInput().qname("_") + " = this." + stream.getInput().qname("_") + ".subscribe(this.sub_" + stream.getInput().qname("_") + ");\n");
+                builder.append("private void start" + ThingMLElementHelper.qname(stream.getInput(), "_") + "(){\n");
+                if (stream.getInput() instanceof SimpleSource) {
+                    builder.append("if (this.hook_" + ThingMLElementHelper.qname(stream.getInput(), "_") + " == null)");
+                    builder.append("this.hook_" + ThingMLElementHelper.qname(stream.getInput(), "_") + " = this." + ThingMLElementHelper.qname(stream.getInput(), "_") + ".subscribe(this.sub_" + ThingMLElementHelper.qname(stream.getInput(), "_") + ");\n");
                 } else if (stream.getInput() instanceof SourceComposition) {
-                    builder.append("if (this.hook_" + stream.qname("_") + " == null)");
-                    builder.append("this.hook_" + stream.qname("_") + " = this." + stream.qname("_") + ".subscribe(this.sub_" + stream.qname("_") + ");\n");
+                    builder.append("if (this.hook_" + ThingMLElementHelper.qname(stream, "_") + " == null)");
+                    builder.append("this.hook_" + ThingMLElementHelper.qname(stream, "_") + " = this." + ThingMLElementHelper.qname(stream, "_") + ".subscribe(this.sub_" + ThingMLElementHelper.qname(stream, "_") + ");\n");
                 }
                 builder.append("}\n\n");
 
-                builder.append("private void stop" + stream.getInput().qname("_") + "(){\n");
-                if(stream.getInput() instanceof SimpleSource) {
-                    builder.append("this.hook_" + stream.getInput().qname("_") + ".unsubscribe();\n");
-                    builder.append("this.hook_" + stream.getInput().qname("_") + " = null;\n");
+                builder.append("private void stop" + ThingMLElementHelper.qname(stream.getInput(), "_") + "(){\n");
+                if (stream.getInput() instanceof SimpleSource) {
+                    builder.append("this.hook_" + ThingMLElementHelper.qname(stream.getInput(), "_") + ".unsubscribe();\n");
+                    builder.append("this.hook_" + ThingMLElementHelper.qname(stream.getInput(), "_") + " = null;\n");
                 } else if (stream.getInput() instanceof SourceComposition) {
-                    builder.append("this.hook_" + stream.qname("_") + ".unsubscribe();\n");
-                    builder.append("this.hook_" + stream.qname("_") + " = null;\n");
+                    builder.append("this.hook_" + ThingMLElementHelper.qname(stream, "_") + ".unsubscribe();\n");
+                    builder.append("this.hook_" + ThingMLElementHelper.qname(stream, "_") + " = null;\n");
                 }
                 builder.append("}\n\n");
             }
         }
 
-        for (Function f : thing.allFunctions()) {
+        for (Function f : ThingMLHelpers.allFunctions(thing)) {
             generateFunction(f, thing, builder, ctx);
         }
 
@@ -743,26 +682,26 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateCompositeState(CompositeState c, StringBuilder builder, Context ctx) {
-        final String actionName = (c.getEntry() != null || c.getExit() != null) ? ctx.firstToUpper(c.qname("_")) + "Action" : "NullStateAction";
+        final String actionName = (c.getEntry() != null || c.getExit() != null) ? ctx.firstToUpper(ThingMLElementHelper.qname(c, "_")) + "Action" : "NullStateAction";
 
-        builder.append("final List<AtomicState> states_" + c.qname("_") + " = new ArrayList<AtomicState>();\n");
+        builder.append("final List<AtomicState> states_" + ThingMLElementHelper.qname(c, "_") + " = new ArrayList<AtomicState>();\n");
         for (State s : c.getSubstate()) {
             if (!(s instanceof Session)) {
                 if (s instanceof CompositeState) {
                     CompositeState cs = (CompositeState) s;
-                    builder.append("final CompositeState state_" + cs.qname("_") + " = build" + cs.qname("_") + "();\n");
-                    builder.append("states_" + c.qname("_") + ".add(state_" + cs.qname("_") + ");\n");
+                    builder.append("final CompositeState state_" + ThingMLElementHelper.qname(s, "_") + " = build" + ThingMLElementHelper.qname(s, "_") + "();\n");
+                    builder.append("states_" + ThingMLElementHelper.qname(c, "_") + ".add(state_" + ThingMLElementHelper.qname(s, "_") + ");\n");
                 } else {
                     generateState(s, builder, ctx);
                 }
             }
         }
-        builder.append("final List<Region> regions_" + c.qname("_") + " = new ArrayList<Region>();\n");
+        builder.append("final List<Region> regions_" + ThingMLElementHelper.qname(c, "_") + " = new ArrayList<Region>();\n");
         for (Region r : c.getRegion()) {
-            builder.append("regions_" + c.qname("_") + ".add(build" + r.qname("_") + "());\n");
+            builder.append("regions_" + ThingMLElementHelper.qname(c, "_") + ".add(build" + ThingMLElementHelper.qname(r, "_") + "());\n");
         }
 
-        builder.append("final List<Handler> transitions_" + c.qname("_") + " = new ArrayList<Handler>();\n");
+        builder.append("final List<Handler> transitions_" + ThingMLElementHelper.qname(c, "_") + " = new ArrayList<Handler>();\n");
         for (State s : c.getSubstate()) {
             for (InternalTransition i : s.getInternal()) {
                 buildTransitionsHelper(builder, ctx, s, i);
@@ -773,20 +712,20 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
 
-        builder.append("final CompositeState state_" + c.qname("_") + " = ");
-        builder.append("new CompositeState(\"" + c.getName() + "\", states_" + c.qname("_") + ", state_" + c.getInitial().qname("_") + ", transitions_" + c.qname("_") + ", regions_" + c.qname("_") + ", ");
+        builder.append("final CompositeState state_" + ThingMLElementHelper.qname(c, "_") + " = ");
+        builder.append("new CompositeState(\"" + c.getName() + "\", states_" + ThingMLElementHelper.qname(c, "_") + ", state_" + ThingMLElementHelper.qname(c.getInitial(), "_") + ", transitions_" + ThingMLElementHelper.qname(c, "_") + ", regions_" + ThingMLElementHelper.qname(c, "_") + ", ");
 
         if (c.isHistory())
             builder.append("true");
         else
             builder.append("false");
         builder.append(")");
-        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(c.findContainingThing());
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(ThingMLHelpers.findContainingThing(c));
         if (c.getEntry() != null || c.getExit() != null || debugProfile.isDebugBehavior() || c.getProperties().size() > 0) {
             builder.append("{\n");
 
-            for(Property p : c.getProperties()) {
-                builder.append("private " + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + " " + ctx.getVariableName(p));
+            for (Property p : c.getProperties()) {
+                builder.append("private " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + ctx.getVariableName(p));
                 if (c instanceof Session) {
                     builder.append(" = " + ctx.getVariableName(p) + "_");
                 } else {
@@ -807,7 +746,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("public void onEntry() {\n");
                 if (debugProfile.isDebugBehavior()) {
                     //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + getName() + \": enters " + c.qualifiedName(":") + "|@\"));\n");
-                    builder.append("printDebug(\"" + ctx.traceOnEntry(c.findContainingThing(), c.findContainingRegion(), c.findContainingState()) + "\");\n");
+                    builder.append("printDebug(\"" + ctx.traceOnEntry(ThingMLHelpers.findContainingThing(c), ThingMLHelpers.findContainingRegion(c), ThingMLHelpers.findContainingState(c)) + "\");\n");
                 }
                 if (c.getEntry() != null)
                     ctx.getCompiler().getThingActionCompiler().generate(c.getEntry(), builder, ctx);
@@ -820,7 +759,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("super.onExit();\n");
                 if (debugProfile.isDebugBehavior()) {
                     //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + getName() + \": exits " + c.qualifiedName(":") + "|@\"));\n");
-                    builder.append("printDebug(\"" + ctx.traceOnExit(c.findContainingThing(), c.findContainingRegion(), c.findContainingState()) + "\");\n");
+                    builder.append("printDebug(\"" + ctx.traceOnExit(ThingMLHelpers.findContainingThing(c), ThingMLHelpers.findContainingRegion(c), ThingMLHelpers.findContainingState(c)) + "\");\n");
                 }
                 if (c.getExit() != null)
                     ctx.getCompiler().getThingActionCompiler().generate(c.getExit(), builder, ctx);
@@ -837,11 +776,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
         if (s instanceof FinalState) {
-            builder.append("final FinalState state_" + s.qname("_") + " = new FinalState(\"" + s.getName() + "\")\n");
+            builder.append("final FinalState state_" + ThingMLElementHelper.qname(s, "_") + " = new FinalState(\"" + s.getName() + "\")\n");
         } else {
-            builder.append("final AtomicState state_" + s.qname("_") + " = new AtomicState(\"" + s.getName() + "\")\n");
+            builder.append("final AtomicState state_" + ThingMLElementHelper.qname(s, "_") + " = new AtomicState(\"" + s.getName() + "\")\n");
         }
-        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(s.findContainingThing());
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(ThingMLHelpers.findContainingThing(s));
         if (s.getEntry() != null || s.getExit() != null || debugProfile.isDebugBehavior() || s instanceof FinalState) {
             builder.append("{\n");
             if (s.getEntry() != null || debugProfile.isDebugBehavior() || s instanceof FinalState) {
@@ -849,7 +788,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("public void onEntry() {\n");
                 if (debugProfile.isDebugBehavior()) {
                     //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + getName() + \": enters " + s.qualifiedName(":") + "|@\"));\n");
-                    builder.append("printDebug(\"" + ctx.traceOnEntry(s.findContainingThing(), s.findContainingRegion(), s) + "\");\n");
+                    builder.append("printDebug(\"" + ctx.traceOnEntry(ThingMLHelpers.findContainingThing(s), ThingMLHelpers.findContainingRegion(s), s) + "\");\n");
                 }
                 if (s.getEntry() != null)
                     ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
@@ -866,7 +805,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("public void onExit() {\n");
                 if (debugProfile.isDebugBehavior()) {
                     //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + getName() + \": enters " + s.qualifiedName(":") + "|@\"));\n");
-                    builder.append("printDebug(\"" + ctx.traceOnExit(s.findContainingThing(), s.findContainingRegion(), s) + "\");\n");
+                    builder.append("printDebug(\"" + ctx.traceOnExit(ThingMLHelpers.findContainingThing(s), ThingMLHelpers.findContainingRegion(s), s) + "\");\n");
                 }
                 if (s.getExit() != null)
                     ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
@@ -877,36 +816,36 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append(";\n");
 
         if (s.eContainer() instanceof State || s.eContainer() instanceof Region) {
-            builder.append("states_" + ((ThingMLElement) s.eContainer()).qname("_") + ".add(state_" + s.qname("_") + ");\n");
+            builder.append("states_" + ThingMLElementHelper.qname(((ThingMLElement) s.eContainer()), "_") + ".add(state_" + ThingMLElementHelper.qname(s, "_") + ");\n");
         }
     }
 
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
 
         if (r instanceof CompositeState) {
-            builder.append("private CompositeState build" + r.qname("_") + "(){\n");
+            builder.append("private CompositeState build" + ThingMLElementHelper.qname(r, "_") + "(){\n");
             CompositeState c = (CompositeState) r;
             generateState(c, builder, ctx);
-            builder.append("return state_" + r.qname("_") + ";\n");
+            builder.append("return state_" + ThingMLElementHelper.qname(r, "_") + ";\n");
         } else {
-            builder.append("private Region build" + r.qname("_") + "(){\n");
+            builder.append("private Region build" + ThingMLElementHelper.qname(r, "_") + "(){\n");
             buildRegion(r, builder, ctx);
-            builder.append("return reg_" + r.qname("_") + ";\n");
+            builder.append("return reg_" + ThingMLElementHelper.qname(r, "_") + ";\n");
         }
         builder.append("}\n\n");
     }
 
     private void buildRegion(Region r, StringBuilder builder, Context ctx) {
-        builder.append("final List<AtomicState> states_" + r.qname("_") + " = new ArrayList<AtomicState>();\n");
+        builder.append("final List<AtomicState> states_" + ThingMLElementHelper.qname(r, "_") + " = new ArrayList<AtomicState>();\n");
         for (State s : r.getSubstate()) {
             if (s instanceof CompositeState) {
-                builder.append("CompositeState state_" + s.qname("_") + " = build" + s.qname("_") + "();\n");
-                builder.append("states_" + r.qname("_") + ".add(state_" + s.qname("_") + ");\n");
+                builder.append("CompositeState state_" + ThingMLElementHelper.qname(s, "_") + " = build" + ThingMLElementHelper.qname(s, "_") + "();\n");
+                builder.append("states_" + ThingMLElementHelper.qname(r, "_") + ".add(state_" + ThingMLElementHelper.qname(s, "_") + ");\n");
             } else {
                 generateState(s, builder, ctx);
             }
         }
-        builder.append("final List<Handler> transitions_" + r.qname("_") + " = new ArrayList<Handler>();\n");
+        builder.append("final List<Handler> transitions_" + ThingMLElementHelper.qname(r, "_") + " = new ArrayList<Handler>();\n");
         for (State s : r.getSubstate()) {
             for (InternalTransition i : s.getInternal()) {
                 buildTransitionsHelper(builder, ctx, s, i);
@@ -915,7 +854,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 buildTransitionsHelper(builder, ctx, s, t);
             }
         }
-        builder.append("final Region reg_" + r.qname("_") + " = new Region(\"" + r.getName() + "\", states_" + r.qname("_") + ", state_" + r.getInitial().qname("_") + ", transitions_" + r.qname("_") + ", ");
+        builder.append("final Region reg_" + ThingMLElementHelper.qname(r, "_") + " = new Region(\"" + r.getName() + "\", states_" + ThingMLElementHelper.qname(r, "_") + ", state_" + ThingMLElementHelper.qname(r.getInitial(), "_") + ", transitions_" + ThingMLElementHelper.qname(r, "_") + ", ");
         if (r.isHistory())
             builder.append("true");
         else
@@ -924,26 +863,26 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     private void buildTransitionsHelper(StringBuilder builder, Context ctx, State s, Handler i) {
-        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(s.findContainingThing());
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(ThingMLHelpers.findContainingThing(s));
         if (i.getEvent() != null && i.getEvent().size() > 0) {
             for (Event e : i.getEvent()) {
                 ReceiveMessage r = (ReceiveMessage) e;
                 if (i instanceof Transition) {
                     Transition t = (Transition) i;
-                    builder.append("transitions_" + ((ThingMLElement) s.eContainer()).qname("_") + ".add(new Transition(\"");
+                    builder.append("transitions_" + ThingMLElementHelper.qname(((ThingMLElement) s.eContainer()), "_") + ".add(new Transition(\"");
                     if (i.getName() != null)
                         builder.append(i.getName());
                     else
                         builder.append(i.hashCode());
-                    builder.append("\"," + r.getMessage().getName() + "Type, " + r.getPort().getName() + "_port, state_" + s.qname("_") + ", state_" + t.getTarget().qname("_") + ")");
+                    builder.append("\"," + r.getMessage().getName() + "Type, " + r.getPort().getName() + "_port, state_" + ThingMLElementHelper.qname(s, "_") + ", state_" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
                 } else {
                     InternalTransition h = (InternalTransition) i;
-                    builder.append("transitions_" + ((ThingMLElement) s.eContainer()).qname("_") + ".add(new InternalTransition(\"");
+                    builder.append("transitions_" + ThingMLElementHelper.qname(((ThingMLElement) s.eContainer()), "_") + ".add(new InternalTransition(\"");
                     if (i.getName() != null)
                         builder.append(i.getName());
                     else
                         builder.append(i.hashCode());
-                    builder.append("\"," + r.getMessage().getName() + "Type, " + r.getPort().getName() + "_port, state_" + s.qname("_") + ")");
+                    builder.append("\"," + r.getMessage().getName() + "Type, " + r.getPort().getName() + "_port, state_" + ThingMLElementHelper.qname(s, "_") + ")");
                 }
                 if (i.getGuard() != null || i.getAction() != null || debugProfile.isDebugBehavior())
                     builder.append("{\n");
@@ -967,10 +906,10 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                         if (i instanceof Transition) {
                             Transition t = (Transition) i;
                             //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + getName() + \": on " + r.getPort().getName() + "?" + r.getMessage().getName() + " from " + ((State) t.eContainer()).qualifiedName(":") + " to " + t.getTarget().qualifiedName(":") + "|@\"));\n");
-                            builder.append("printDebug(\"" + ctx.traceTransition(s.findContainingThing(), t, r.getPort(), r.getMessage()) + "\");\n");
+                            builder.append("printDebug(\"" + ctx.traceTransition(ThingMLHelpers.findContainingThing(s), t, r.getPort(), r.getMessage()) + "\");\n");
                         } else {
                             //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + getName() + \": on " + r.getPort().getName() + "?" + r.getMessage().getName() +  " in state " + ((State) i.eContainer()).qualifiedName(":") + "|@\"));\n");
-                            builder.append("printDebug(\"" + ctx.traceInternal(s.findContainingThing(), r.getPort(), r.getMessage()) + "\");\n");
+                            builder.append("printDebug(\"" + ctx.traceInternal(ThingMLHelpers.findContainingThing(s), r.getPort(), r.getMessage()) + "\");\n");
                         }
                     }
                     if (e != null) {
@@ -989,20 +928,20 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         } else {    //FIXME: lots of duplication here from above
             if (i instanceof Transition) {
                 Transition t = (Transition) i;
-                builder.append("transitions_" + ((ThingMLElement) s.eContainer()).qname("_") + ".add(new Transition(\"");
+                builder.append("transitions_" + ThingMLElementHelper.qname(((ThingMLElement) s.eContainer()), "_") + ".add(new Transition(\"");
                 if (i.getName() != null)
                     builder.append(i.getName());
                 else
                     builder.append(i.hashCode());
-                builder.append("\", new NullEventType(), null, state_" + s.qname("_") + ", state_" + t.getTarget().qname("_") + ")");
+                builder.append("\", new NullEventType(), null, state_" + ThingMLElementHelper.qname(s, "_") + ", state_" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
             } else {
                 InternalTransition h = (InternalTransition) i;
-                builder.append("transitions_" + ((ThingMLElement) s.eContainer()).qname("_") + ".add(new InternalTransition(\"");
+                builder.append("transitions_" + ThingMLElementHelper.qname(((ThingMLElement) s.eContainer()), "_") + ".add(new InternalTransition(\"");
                 if (i.getName() != null)
                     builder.append(i.getName());
                 else
                     builder.append(i.hashCode());
-                builder.append("\", new NullEventType(), null, state_" + s.qname("_") + ")");
+                builder.append("\", new NullEventType(), null, state_" + ThingMLElementHelper.qname(s, "_") + ")");
             }
             if (i.getGuard() != null || i.getAction() != null || debugProfile.isDebugBehavior())
                 builder.append("{\n");
@@ -1023,10 +962,10 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     if (i instanceof Transition) {
                         Transition t = (Transition) i;
                         //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + getName() + \": auto from " + ((State) t.eContainer()).qualifiedName(":") + " to " + t.getTarget().qualifiedName(":") + "|@\"));\n");
-                        builder.append("printDebug(\"" + ctx.traceTransition(s.findContainingThing(), t) + "\");\n");
+                        builder.append("printDebug(\"" + ctx.traceTransition(ThingMLHelpers.findContainingThing(s), t) + "\");\n");
                     } else {
                         //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|yellow \" + getName() + \": auto in state " + ((State) i.eContainer()).qualifiedName(":") + "|@\"));\n");
-                        //builder.append("printDebug(\"" + ctx.traceInternal(s.findContainingThing()) + "\");\n");
+                        //builder.append("printDebug(\"" + ctx.traceInternal(ThingMLHelpers.findContainingThing(s)) + "\");\n");
                     }
                 }
                 builder.append("final NullEvent ce = (NullEvent) e;\n");

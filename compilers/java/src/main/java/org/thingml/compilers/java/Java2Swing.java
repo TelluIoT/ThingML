@@ -17,13 +17,17 @@ package org.thingml.compilers.java;
 
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.*;
-import org.sintef.thingml.Enumeration;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 
-import javax.swing.*;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bmori on 27.01.2015.
@@ -68,24 +72,24 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         b2.append(command);
 
 
-        for (Instance i : cfg.allInstances()) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             compileType(i.getType(), ctx, pack);
         }
         ctx.writeGeneratedCodeToFiles();
     }
 
     protected void compileType(Thing t, Context ctx, String pack) {
-        if (!t.hasAnnotation("mock"))
+        if (!AnnotatedElementHelper.hasAnnotation(t, "mock"))
             return;
         final Map<Port, List<Message>> messageToSend = new HashMap<>();
-        for (Port p : t.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(t)) {
             if (p.getSends().size() > 0) {
                 messageToSend.put(p, new ArrayList<Message>(p.getSends()));
             }
         }
 
         final Map<Port, List<Message>> messageToReceive = new HashMap<>();
-        for (Port p : t.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(t)) {
             if (p.getReceives().size() > 0) {
                 messageToReceive.put(p, new ArrayList<Message>(p.getReceives()));
             }
@@ -119,7 +123,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         builder.append("public boolean isDebug() {return debug;}\n");
         builder.append("public void setDebug(boolean debug) {this.debug = debug;}\n");
 
-        for (Type ty : t.findContainingModel().allUsedSimpleTypes()) {
+        for (Type ty : ThingMLHelpers.allUsedSimpleTypes(ThingMLHelpers.findContainingModel(t))) {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;
                 builder.append("private static final Map<String, " + ctx.firstToUpper(e.getName()) + "_ENUM> values_" + e.getName() + " = new HashMap<String, " + ctx.firstToUpper(e.getName()) + "_ENUM>();\n");
@@ -132,11 +136,11 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         }
 
         builder.append("//Message types\n");
-        for (Message m : t.allMessages()) {
+        for (Message m : ThingMLHelpers.allMessages(t)) {
             builder.append("private final " + ctx.firstToUpper(m.getName()) + "MessageType " + m.getName() + "Type = new " + ctx.firstToUpper(m.getName()) + "MessageType();\n");
         }
 
-        for (Port p : t.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(t)) {
             builder.append("final Port " + "port_" + ctx.firstToUpper(t.getName()) + "_" + p.getName() + ";\n");
             builder.append("public Port get" + ctx.firstToUpper(p.getName()) + "_port(){return port_" + ctx.firstToUpper(t.getName()) + "_" + p.getName() + ";}\n");
         }
@@ -162,7 +166,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
 
         StringBuilder tempBuilder = new StringBuilder();
 
-        for (Port p : t.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(t)) {
             tempBuilder.append("port_" + ctx.firstToUpper(t.getName()) + "_" + p.getName() + " = new Port(");
             if (p instanceof ProvidedPort)
                 tempBuilder.append("PortType.PROVIDED");
@@ -295,7 +299,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                         tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JComboBox(values_" + p.getType().getName() + ".keySet().toArray());\n");
                     } else {
                         tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JTextField();\n");
-                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ".setText(\"" + JavaHelper.getJavaType(p.getType(), p.getCardinality()!=null, ctx) + "\");\n");
+                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ".setText(\"" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + "\");\n");
                     }
 
                     tempBuilder.append("c.gridx = 1;\n");
@@ -316,7 +320,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
             Port port = entry.getKey();
             for (Message msg : entry.getValue()) {
                 tempBuilder.append("Style receive" + msg.getName() + "_via_" + port.getName() + "Style = doc.addStyle(\"" + msg.getName() + "_via_" + port.getName() + "\", null);\n");
-                tempBuilder.append("StyleConstants.setBackground(receive" + msg.getName() + "_via_" + port.getName() + "Style, new Color(" + ((255 + (Math.abs(msg.getName().hashCode())%255))/2) + ", " + ((255 + (Math.abs(port.getName().hashCode())%255))/2) + ", " + ((255 + ((Math.abs(port.getName().hashCode()+msg.getName().hashCode()))%255))/2) + "));\n");
+                tempBuilder.append("StyleConstants.setBackground(receive" + msg.getName() + "_via_" + port.getName() + "Style, new Color(" + ((255 + (Math.abs(msg.getName().hashCode()) % 255)) / 2) + ", " + ((255 + (Math.abs(port.getName().hashCode()) % 255)) / 2) + ", " + ((255 + ((Math.abs(port.getName().hashCode() + msg.getName().hashCode())) % 255)) / 2) + "));\n");
             }
         }
 
@@ -343,7 +347,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                 parseBuilder.append("return;\n");
                 parseBuilder.append("}\n");
                 parseBuilder.append("params = params[1].substring(1,params[1].length()-1).split(\",\");\n");
-                if(msg.getParameters().size() == 0) {
+                if (msg.getParameters().size() == 0) {
                     parseBuilder.append("if (params[0].equals(\"\"))\n");
                     parseBuilder.append("params = new String[0];\n");
                 }

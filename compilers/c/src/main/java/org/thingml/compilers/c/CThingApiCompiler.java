@@ -15,7 +15,10 @@
  */
 package org.thingml.compilers.c;
 
+import java.util.ArrayList;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
@@ -79,13 +82,13 @@ public class CThingApiCompiler extends ThingApiCompiler {
 //        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
 //            generatePrivateCppPrototypes(thing, builder, ctx);
 //        }
-        
+
 //        if (isGeneratingCpp()) { // Private prototypes will be generated as part of implementation for C
 //            builder.append("// Observers for outgoing messages:\n");
 //            generatePrivateCppMessageSendingPrototypes(thing, builder, ctx);
 //            builder.append("\n");
 //        }
-        
+
         // This is in the header for now but it should be moved to the implementation
         // when a proper private "initialize_instance" operation will be provided
         generateStateIDs(thing, builder, ctx);
@@ -95,9 +98,9 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
     protected void generateCHeaderAnnotation(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
-        if (thing.hasAnnotation("c_header")) {
+        if (AnnotatedElementHelper.hasAnnotation(thing, "c_header")) {
             builder.append("\n// BEGIN: Code from the c_header annotation " + thing.getName());
-            for (String code : thing.annotation("c_header")) {
+            for (String code : AnnotatedElementHelper.annotation(thing, "c_header")) {
                 builder.append("\n");
                 builder.append(code);
             }
@@ -109,23 +112,19 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("// Definition of the instance stuct:\n");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
-        //builder.append("// Variables for the ID of the instance\n");
-        //builder.append("int id;\n");
-
         builder.append("// Variables for the ID of the ports of the instance\n");
 
-        //if(ctx.containsDebug(ctx.getCurrentConfiguration(), thing)) {
         if (debugProfile.isActive()) {
             builder.append("bool debug;\n");
             builder.append("char * name;\n");
         }
 
-        for (Port p : thing.allPorts()) {
+        for (Port p : ThingMLHelpers.allPorts(thing)) {
             builder.append("uint16_t id_");
             builder.append(p.getName());
             builder.append(";\n");
 
-            if (ctx.getCurrentConfiguration().hasAnnotation("c_dyn_connectors")) {
+            if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "c_dyn_connectors")) {
                 if (!p.getSends().isEmpty()) {
                     builder.append("// Pointer to receiver list\n");
                     builder.append("struct Msg_Handler ** ");
@@ -142,8 +141,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
                     builder.append("// Handler Array\n");
                     builder.append("struct Msg_Handler * ");
                     builder.append(p.getName());
-                    builder.append("_handlers;\n");//[");
-                    //builder.append(p.getReceives().size() + "];");
+                    builder.append("_handlers;\n");
                 }
             }
         }
@@ -153,31 +151,25 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("// Variables for the current instance state\n");
 
         // This should normally be checked before and should never be true
-        if (thing.allStateMachines().size() > 1) {
-            throw new Error("Info: Thing " + thing.getName() + " has " + thing.allStateMachines().size() + " state machines. " + "Error: Code generation for Things with several state machines not implemented.");
+        if (ThingMLHelpers.allStateMachines(thing).size() > 1) {
+            throw new Error("Info: Thing " + thing.getName() + " has " + ThingMLHelpers.allStateMachines(thing).size() + " state machines. " + "Error: Code generation for Things with several state machines not implemented.");
         }
 
-        if (thing.allStateMachines().size() > 0) {
-            StateMachine sm = thing.allStateMachines().get(0);
-            for (Region r : sm.allContainedRegions()) {
+        if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
+            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+            for (Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
         }
 
         // Create variables for all the properties defined in the Thing and States
         builder.append("// Variables for the properties of the instance\n");
-        for (Property p : thing.allPropertiesInDepth()) {
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             builder.append(ctx.getCType(p.getType()) + " ");
             if (p.getCardinality() != null) {//array
                 builder.append("* ");
             }
             builder.append(ctx.getCVarName(p));
-            
-            /*if (p.getCardinality() != null) {//array
-                builder.append("[");
-                ctx.getCompiler().getThingActionCompiler().generate(p.getCardinality(), builder, ctx);
-                builder.append("]");
-            }*/
             builder.append(";\n");
         }
         builder.append("// CEP stream pointers\n");
@@ -189,53 +181,14 @@ public class CThingApiCompiler extends ThingApiCompiler {
     protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of prototypes outgoing messages:\n");
 
-        if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
-            StateMachine sm = thing.allStateMachines().get(0); // There should be one and only one
+        if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
+            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0); // There should be one and only one
             // Entry actions
-            builder.append("void " + sm.qname("_") + "_OnEntry(int state, ");
+            builder.append("void " + ThingMLElementHelper.qname(sm, "_") + "_OnEntry(int state, ");
             builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
             // Message Handlers
-            /*for (Port port : thing.allPorts()) {
-                for (Message msg : port.getReceives()) {
-                    builder.append("void " + ctx.getHandlerName(thing, port, msg));
-                    ctx.appendFormalParameters(thing, builder, msg);
-                    builder.append(";\n");
-                }
-            }*/
-            List<SendAction> sendActionList = new ArrayList<>();
-            for (State s : sm.allStates()) {
-                if (s.getEntry() != null)
-                    for (Action a : s.getEntry().getAllActions())
-                        if (a instanceof SendAction)
-                            sendActionList.add((SendAction) a);
-
-                for (Transition t : s.getOutgoing())
-                    if (t.getAction() != null)
-                        for (Action a : t.getAction().getAllActions())
-                            if (a instanceof SendAction)
-                                sendActionList.add((SendAction) a);
-
-                if (s.getExit() != null)
-                    for (Action a : s.getExit().getAllActions())
-                        if (a instanceof SendAction)
-                            sendActionList.add((SendAction) a);
-            }
-            for (SendAction sa : sendActionList) {
-                builder.append("void " + ctx.getSenderName(thing, sa.getPort(), sa.getMessage()));
-                ctx.appendFormalParameters(thing, builder, sa.getMessage());
-                builder.append(";\n");
-            }
-
-            for (Stream s : thing.getStreams()) {
-                SendAction sa = s.getOutput();
-                builder.append("void " + ctx.getSenderName(thing, sa.getPort(), sa.getMessage()));
-                ctx.appendFormalParameters(thing, builder, sa.getMessage());
-                builder.append(";\n");
-            }
-
-            // Message Handlers
-            Map<Port, Map<Message, List<Handler>>> handlers = sm.allMessageHandlers();
+            Map<Port, Map<Message, List<Handler>>> handlers = StateHelper.allMessageHandlers(sm);
             for (Port port : handlers.keySet()) {
                 for (Message msg : handlers.get(port).keySet()) {
                     builder.append("void " + ctx.getHandlerName(thing, port, msg));
@@ -248,7 +201,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
     protected void generatePublicMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         builder.append("// Declaration of callbacks for incoming messages:\n");
-        for (Port port : thing.allPorts()) {
+        for (Port port : ThingMLHelpers.allPorts(thing)) {
             for (Message msg : port.getSends()) {
                 builder.append("void register_" + ctx.getSenderName(thing, port, msg) + "_listener(");
                 builder.append("void (" + getCppNameScope() + "*_listener)");
@@ -267,70 +220,14 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("\n");
     }
 
-//    protected void generatePrivateCppPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        // NB sdalgard - This function is a duplicate of generatePrivateCPrototypes in class CThingImplCompiler
-
-
-        // Exit actions
-//        if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
-            // Add handler for empty transitions if needed - Added by sdalgard
- //           if (sm.hasEmptyHandlers()) {
- //               builder.append("int " + ctx.getEmptyHandlerName(thing));
- //               ctx.appendFormalParametersEmptyHandler(thing, builder);
- //               builder.append(";\n");
- //           }
-
-
- //       }
-
-
-//        // Message Sending
-//        for(Port port : thing.getPorts()) {
-//            for (Message msg : port.getSends()) {
-//                builder.append("void " + ctx.getSenderName(thing, port, msg));
-//                ctx.appendFormalParameters(thing, builder, msg);
-//                builder.append(";\n");
-//            }
-//        }
-
-        //TODO sdalgard - Check how this shall be handled for C++
-        //for (Function f : thing.allFunctions()) {
-        //    if (!f.isDefined("abstract", "true")) {
-        //        generatePrototypeforThingDirect(f, builder, ctx, thing);
-        //        builder.append(";\n");
-        //    }
-        //}
-        
-        
-        
-//    }
-
-    
-//    protected void generatePrivateCppMessageSendingPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-       // NB sdalgard - This function is duplicated in generatePrivateMessageSendingOperations in class CThingImplCompiler
-//       for(Port port : thing.allPorts()) {
-//            for (Message msg : port.getSends()) {
-//                // Variable for the function pointer
-//                builder.append("void (" + getCppNameScope() + "*" + ctx.getSenderName(thing, port, msg) + "_listener)");
-//                ctx.appendFormalTypeSignature(thing, builder, msg);
-//                builder.append(";\n");
-//
-//                // Variable for the external function pointer
-//                builder.append("void (" + getCppNameScope() + "*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
-//                ctx.appendFormalTypeSignature(thing, builder, msg);
-//                builder.append(";\n");
-//
-//            }
-//        }
-//        builder.append("\n");
-//    }
 
     protected void generateStateIDs(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
-        if (thing.allStateMachines().size() > 0) {// There should be only one if there is one
-            StateMachine sm = thing.allStateMachines().get(0);
+        if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
+            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
             builder.append("// Definition of the states:\n");
-            List<State> states = sm.allContainedStates();
+
+            List<State> states = CompositeStateHelper.allContainedStatesIncludingSessions(sm);
             for (int i = 0; i < states.size(); i++) {
                 builder.append("#define " + ctx.getStateID(states.get(i)) + " " + i + "\n");
             }

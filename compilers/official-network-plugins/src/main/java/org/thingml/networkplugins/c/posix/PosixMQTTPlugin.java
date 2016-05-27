@@ -20,25 +20,19 @@
  */
 package org.thingml.networkplugins.c.posix;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.PlatformAnnotation;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Protocol;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingmlFactory;
+import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -47,7 +41,7 @@ import org.thingml.compilers.spi.SerializationPlugin;
 public class PosixMQTTPlugin extends NetworkPlugin {
     CCompilerContext ctx;
     Configuration cfg;
-    
+
     public String getPluginID() {
         return "PosixMQTTPlugin";
     }
@@ -62,50 +56,56 @@ public class PosixMQTTPlugin extends NetworkPlugin {
     public String getTargetedLanguage() {
         return "posix";
     }
-    
+
     private void addDependencies() {
-        if(!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "mosquitto")) {
+        if (!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "mosquitto")) {
             ThingmlFactory factory;
             factory = ThingmlFactoryImpl.init();
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("add_c_libraries");
             pan.setValue("mosquitto");
-            cfg.allAnnotations().add(pan);
+            AnnotatedElementHelper.allAnnotations(cfg).add(pan);
         }
     }
-    
+
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
         this.ctx = (CCompilerContext) ctx;
         this.cfg = cfg;
 
-        if(!protocols.isEmpty()) {
+        if (!protocols.isEmpty()) {
             addDependencies();
         }
-        for(Protocol prot : protocols) {
+        for (Protocol prot : protocols) {
             MQTTPort port = new MQTTPort();
             port.protocol = prot;
-            port.sp = ctx.getSerializationPlugin(prot);
-            for(ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
+            try {
+                port.sp = ctx.getSerializationPlugin(prot);
+            } catch (UnsupportedEncodingException uee) {
+                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                uee.printStackTrace();
+                return;
+            }
+            for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
                 port.ecos.add(eco);
                 eco.setName(eco.getProtocol().getName());
             }
             port.generateNetworkLibrary();
         }
     }
-    
+
     private class MQTTPort {
         Set<ExternalConnector> ecos;
         Protocol protocol;
         Set<Message> messages;
         SerializationPlugin sp;
-        
+
         MQTTPort() {
             ecos = new HashSet<>();
             messages = new HashSet();
         }
-        
+
         public void generateNetworkLibrary() {
-            if(!ecos.isEmpty()) {
+            if (!ecos.isEmpty()) {
                 for (ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
                     Message m = tpm.m;
                     messages.add(m);
@@ -113,13 +113,13 @@ public class PosixMQTTPlugin extends NetworkPlugin {
 
                 String platform = "";
                 String ctemplate = "";
-                if(protocol.hasAnnotation("platform")) {
-                    platform = protocol.annotation("platform").iterator().next();
-                    if(platform.compareToIgnoreCase("x86") == 0) {
-                        ctemplate =  ctx.getTemplateByID("templates/PosixMQTTPluginX86.c");
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "platform")) {
+                    platform = AnnotatedElementHelper.annotation(protocol, "platform").iterator().next();
+                    if (platform.compareToIgnoreCase("x86") == 0) {
+                        ctemplate = ctx.getTemplateByID("templates/PosixMQTTPluginX86.c");
                     }
                 } else {
-                    ctemplate =  ctx.getTemplateByID("templates/PosixMQTTPlugin.c");
+                    ctemplate = ctx.getTemplateByID("templates/PosixMQTTPlugin.c");
                 }
                 String htemplate = ctx.getTemplateByID("templates/PosixMQTTPlugin.h");
 
@@ -138,7 +138,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 initThread.append(protocol.getName());
                 initThread.append(", NULL, ");
                 initThread.append(protocol.getName() + "_start_receiver_process");
-                initThread.append(", NULL);\n"); 
+                initThread.append(", NULL);\n");
                 ctx.addToInitCode(initThread.toString());
                 //Threaded listener --- END
 
@@ -146,8 +146,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 htemplate = htemplate.replace("/*PORT_NAME*/", portName);
 
                 String hostAddr;
-                if(protocol.hasAnnotation("mqtt_broker_address")) {
-                    hostAddr = protocol.annotation("mqtt_broker_address").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_broker_address")) {
+                    hostAddr = AnnotatedElementHelper.annotation(protocol, "mqtt_broker_address").iterator().next();
                 } else {
                     hostAddr = "localhost";
                 }
@@ -156,13 +156,12 @@ public class PosixMQTTPlugin extends NetworkPlugin {
 
 
                 Integer portNumber;
-                if(protocol.hasAnnotation("mqtt_port_number")) {
-                    portNumber = Integer.parseInt(protocol.annotation("mqtt_port_number").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_port_number")) {
+                    portNumber = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "mqtt_port_number").iterator().next());
                 } else {
                     portNumber = 1883;
                 }
                 ctemplate = ctemplate.replace("/*PORT_NUMBER*/", portNumber.toString());
-
 
 
                 //Connector Instanciation
@@ -193,16 +192,16 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 htemplate = htemplate.replace("/*PATH_TO_C*/", protocol.getName() + ".c");
 
                 //if(!eco.getPort().getReceives().isEmpty()) {
-                List<String> topicList = protocol.annotation("mqtt_topic");
-                if(topicList.isEmpty()) {
+                List<String> topicList = AnnotatedElementHelper.annotation(protocol, "mqtt_topic");
+                if (topicList.isEmpty()) {
                     topicList.add("ThingML");
                 }
-                if(topicList.size() > 1) {
-                    ctemplate = ctemplate.replace("/*TOPIC_VAR*/", "static char **" 
+                if (topicList.size() > 1) {
+                    ctemplate = ctemplate.replace("/*TOPIC_VAR*/", "static char **"
                             + portName + "_topics[" + topicList.size() + "];\n"
                             + "static int " + portName + "_topic_count = " + topicList.size() + ";"
                     );
-                    if(!messages.isEmpty()) {
+                    if (!messages.isEmpty()) {
                         ctemplate = ctemplate.replace("/*SUBSCRUBE_MULTI_OR_MONO*/", "for(i=0; i<"
                                 + portName + "_topic_count; i++){\n"
                                 + "mosquitto_subscribe("
@@ -213,7 +212,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                     }
                     StringBuilder topicsInit = new StringBuilder();
                     int j = 0;
-                    for(String topic : topicList) {
+                    for (String topic : topicList) {
                         topicsInit.append(portName + "_topics[" + j + "] = \"" + topic + "\";\n");
                         j++;
                     }
@@ -221,82 +220,82 @@ public class PosixMQTTPlugin extends NetworkPlugin {
 
                     String publishSelection = null;
                     boolean publishSelect = false;
-                    if(protocol.hasAnnotation("mqtt_multi_topic_publish_selection")) {
-                        publishSelection = protocol.annotation("mqtt_multi_topic_publish_selection").iterator().next();
+                    if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_multi_topic_publish_selection")) {
+                        publishSelection = AnnotatedElementHelper.annotation(protocol, "mqtt_multi_topic_publish_selection").iterator().next();
                     }
-                    if(publishSelection != null) {
-                        if(publishSelection.compareTo("true") == 0) {
-                        publishSelect = true;
+                    if (publishSelection != null) {
+                        if (publishSelection.compareTo("true") == 0) {
+                            publishSelect = true;
                         }
                     }
 
-                    if(publishSelect) {
+                    if (publishSelect) {
                         ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_DECLARATION*/", ", uint16_t topicID");
                         htemplate = htemplate.replace("/*PUBLISH_MULTI_OR_MONO_DECLARATION*/", ", uint16_t topicID");
 
-                        if(!getMessagesSent(cfg, protocol).isEmpty()) {
-                        ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_CORE*/", ""
-                                + "if(topicID == 65535) {"
-                                + "int j;\n"
-                                + "for(j = 0; j < "
-                                + portName + "_topic_count; j++) {\n"
-                                + "/*TRACE_LEVEL_3*/printf(\"["
-                                + portName + "] publish:\\\"%s\\\" on topic: %s \\n\", p, "
-                                + portName + "_topics[j]);\n"
-                                + "mosquitto_publish(" + portName + "_mosq, "
-                                + "&" + portName + "_mid_sent, "
-                                + portName + "_topics[j], "
-                                + "length, "
-                                + "p, "
-                                + portName + "_qos, "
-                                + portName + "_retain);\n"
-                                + "}\n} else {\n"
-                                + "/*TRACE_LEVEL_3*/printf(\"["
-                                + portName + "] publish:\\\"%s\\\" on topic: %s \\n\", p, "
-                                + portName + "_topics[topicID]);\n"
-                                + "mosquitto_publish(" + portName + "_mosq, "
-                                + "&" + portName + "_mid_sent, "
-                                + portName + "_topics[topicID], "
-                                + "length, "
-                                + "p, "
-                                + portName + "_qos, "
-                                + portName + "_retain);\n"
-                                + "}\n");
+                        if (!getMessagesSent(cfg, protocol).isEmpty()) {
+                            ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_CORE*/", ""
+                                    + "if(topicID == 65535) {"
+                                    + "int j;\n"
+                                    + "for(j = 0; j < "
+                                    + portName + "_topic_count; j++) {\n"
+                                    + "/*TRACE_LEVEL_3*/printf(\"["
+                                    + portName + "] publish:\\\"%s\\\" on topic: %s \\n\", p, "
+                                    + portName + "_topics[j]);\n"
+                                    + "mosquitto_publish(" + portName + "_mosq, "
+                                    + "&" + portName + "_mid_sent, "
+                                    + portName + "_topics[j], "
+                                    + "length, "
+                                    + "p, "
+                                    + portName + "_qos, "
+                                    + portName + "_retain);\n"
+                                    + "}\n} else {\n"
+                                    + "/*TRACE_LEVEL_3*/printf(\"["
+                                    + portName + "] publish:\\\"%s\\\" on topic: %s \\n\", p, "
+                                    + portName + "_topics[topicID]);\n"
+                                    + "mosquitto_publish(" + portName + "_mosq, "
+                                    + "&" + portName + "_mid_sent, "
+                                    + portName + "_topics[topicID], "
+                                    + "length, "
+                                    + "p, "
+                                    + portName + "_qos, "
+                                    + portName + "_retain);\n"
+                                    + "}\n");
                         }
                     } else {
                         ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_DECLARATION*/", "");
                         htemplate = htemplate.replace("/*PUBLISH_MULTI_OR_MONO_DECLARATION*/", "");
-                        if(!getMessagesSent(cfg, protocol).isEmpty()) {
-                        ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_CORE*/", ""
-                                + "int j;\n"
-                                + "for(j = 0; j < "
-                                + portName + "_topic_count; j++) {\n"
-                                + "/*TRACE_LEVEL_3*/printf(\"["
-                                + portName + "] publish:\\\"%s\\\" on topic: %s \\n\", p, "
-                                + portName + "_topics[j]);\n"
-                                + "mosquitto_publish(" + portName + "_mosq, "
-                                + "&" + portName + "_mid_sent, "
-                                + portName + "_topics[j], "
-                                + "length, "
-                                + "p, "
-                                + portName + "_qos, "
-                                + portName + "_retain);\n"
-                                + "}\n");
+                        if (!getMessagesSent(cfg, protocol).isEmpty()) {
+                            ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_CORE*/", ""
+                                    + "int j;\n"
+                                    + "for(j = 0; j < "
+                                    + portName + "_topic_count; j++) {\n"
+                                    + "/*TRACE_LEVEL_3*/printf(\"["
+                                    + portName + "] publish:\\\"%s\\\" on topic: %s \\n\", p, "
+                                    + portName + "_topics[j]);\n"
+                                    + "mosquitto_publish(" + portName + "_mosq, "
+                                    + "&" + portName + "_mid_sent, "
+                                    + portName + "_topics[j], "
+                                    + "length, "
+                                    + "p, "
+                                    + portName + "_qos, "
+                                    + portName + "_retain);\n"
+                                    + "}\n");
                         }
                     }
                 } else {
                     ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_DECLARATION*/", "");
                     htemplate = htemplate.replace("/*PUBLISH_MULTI_OR_MONO_DECLARATION*/", "");
-                    ctemplate = ctemplate.replace("/*TOPIC_VAR*/", "static char *" 
+                    ctemplate = ctemplate.replace("/*TOPIC_VAR*/", "static char *"
                             + portName + "_topic = \"" + topicList.get(0) + "\";");
-                    if(!messages.isEmpty()) {
+                    if (!messages.isEmpty()) {
                         ctemplate = ctemplate.replace("/*SUBSCRUBE_MULTI_OR_MONO*/", "mosquitto_subscribe("
                                 + portName + "_mosq, NULL, "
                                 + portName + "_topic, "
                                 + portName + "_topic_qos);");
                     }
 
-                    if(!getMessagesSent(cfg, protocol).isEmpty()) {
+                    if (!getMessagesSent(cfg, protocol).isEmpty()) {
 
                         ctemplate = ctemplate.replace("/*PUBLISH_MULTI_OR_MONO_CORE*/", ""
                                 + "/*TRACE_LEVEL_3*/printf(\"[" + portName + "] publish:\\\"%s\\\"\\n\", p);\n"
@@ -320,35 +319,35 @@ public class PosixMQTTPlugin extends NetworkPlugin {
 
 
                 Integer traceLevel;
-                if(protocol.hasAnnotation("trace_level")) {
-                    traceLevel = Integer.parseInt(protocol.annotation("trace_level").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "trace_level")) {
+                    traceLevel = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "trace_level").iterator().next());
                 } else {
                     traceLevel = 1;
                 }
-                if(traceLevel == null) {
+                if (traceLevel == null) {
                     traceLevel = 1;
                 }
                 //System.out.println("TRACE_LEVEL:"+traceLevel);
 
-                if(traceLevel.intValue() >= 3) {
+                if (traceLevel.intValue() >= 3) {
                     ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "");
                     //System.out.println("/*TRACE_LEVEL_3*/");
                 } else {
                     ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "//");
                 }
-                if(traceLevel.intValue() >= 2) {
+                if (traceLevel.intValue() >= 2) {
                     ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "");
                     //System.out.println("/*TRACE_LEVEL_2*/");
                 } else {
                     ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "//");
                 }
-                if(traceLevel.intValue() >= 1) {
+                if (traceLevel.intValue() >= 1) {
                     ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "");
                     //System.out.println("/*TRACE_LEVEL_1*/");
                 } else {
                     ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "//");
                 }
-                
+
                 StringBuilder b = new StringBuilder();
                 StringBuilder h = new StringBuilder();
                 generateMessageForwarders(b, h, cfg, protocol);
@@ -361,14 +360,21 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 ctx.addToIncludes("#include \"" + protocol.getName() + ".h\"");
             }
         }
-        
+
         public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder, Configuration cfg, Protocol prot) {
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
                 Thing t = tpm.t;
                 Port p = tpm.p;
                 Message m = tpm.m;
 
-                SerializationPlugin sp = ctx.getSerializationPlugin(prot);
+                SerializationPlugin sp = null;
+                try {
+                    sp = ctx.getSerializationPlugin(prot);
+                } catch (UnsupportedEncodingException uee) {
+                    System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                    uee.printStackTrace();
+                    return;
+                }
 
                 builder.append("// Forwarding of messages " + prot.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
                 builder.append("void forward_" + prot.getName() + "_" + ctx.getSenderName(t, p, m));

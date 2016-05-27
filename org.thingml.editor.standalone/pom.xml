@@ -50,16 +50,16 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--<dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>compilers.deprescala</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>-->
-
         <dependency>
             <groupId>com.apple</groupId>
             <artifactId>AppleJavaExtensions</artifactId>
             <version>1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>official-network-plugins</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -82,13 +82,5 @@
                 </plugin>
             </plugins>
         </build>
-
-    <!--<repositories>
-        <repository>
-            <id>java.net-m2</id>
-            <name>java.net - Maven 2</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/java.net-m2</url>
-        </repository>
-    </repositories>-->
 
 </project>

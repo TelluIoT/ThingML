@@ -61,30 +61,6 @@ public interface PrimitiveType extends Type {
 	 */
 	void setByteSize(int value);
 
-				/**
-     * @generated NOT
-     */
-    boolean isNumber();
 
-    /**
-     * @generated NOT
-     */
-    boolean isBoolean();
-
-    /**
-     * @generated NOT
-     */
-    boolean isString();
-
-    /**
-     * @generated NOT
-     */
-    boolean isChar();
-
-
-    /**
-     * @generated NOT
-     */
-    boolean isByte();
 
 } // PrimitiveType

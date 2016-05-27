@@ -385,7 +385,9 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
      */
     private static String generateTriggerCallBack(Stream s, CCompilerContext ctx) {
         String ret = "";
-        Thing t = s.findContainingThing();
+
+        //Thing t = s.findContainingThing();
+        Thing t = ctx.getConcreteThing();
         String param = "struct " + ctx.getInstanceStructName(t) + " *" + ctx.getInstanceVarName();
 
         ret += "\nvoid stream_" + s.getName() + "::checkTimer(" + param + ")\n{\n";

@@ -16,6 +16,7 @@
 package org.thingml.compilers.c.arduino.cepHelper;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.c.CCompilerContext;
 
 import java.util.ArrayList;
@@ -145,11 +146,12 @@ public class ArduinoCepHelper {
     public static String getInputMessagesNumber(SimpleSource src, Stream s, CCompilerContext ctx) {
         String ret = "DEFAULT_NUMBER_MSG";
 
-        for (String v : s.annotation("Buffer"))
-            ret = v;
 
-        for (String v : src.annotation("Buffer"))
-            ret = v;
+        if (AnnotatedElementHelper.hasAnnotation(s, "Buffer"))
+            ret = AnnotatedElementHelper.annotation(s, "Buffer").iterator().next();
+
+        if (AnnotatedElementHelper.hasAnnotation(src, "Buffer"))
+            ret = AnnotatedElementHelper.annotation(src, "Buffer").iterator().next();
 
         return ret;
     }
@@ -185,16 +187,18 @@ public class ArduinoCepHelper {
 
     public static String getInputMessagesStreamTTL(Stream stream, CCompilerContext ctx) {
         String streamTTL = Integer.toString(DEFAULT_MESSAGE_TTL);
-        if (stream.hasAnnotation("TTL"))
-            for (String v : stream.annotation("TTL"))
-                streamTTL = v;
+        if (AnnotatedElementHelper.hasAnnotation(stream, "TTL"))
+            streamTTL = AnnotatedElementHelper.annotation(stream, "TTL").iterator().next();
+
         return streamTTL;
     }
 
     public static String getInputMessagesStreamTTL(Message msg, Stream stream, CCompilerContext ctx) {
         String msgTTL = stream.getName().toUpperCase() + "_INPUT_TTL";
-        for (String v : msg.annotation("TTL"))
-            msgTTL = v;
+
+        if (AnnotatedElementHelper.hasAnnotation(msg, "TTL"))
+            msgTTL = AnnotatedElementHelper.annotation(msg, "TTL").iterator().next();
+
         return msgTTL;
     }
 
@@ -217,7 +221,7 @@ public class ArduinoCepHelper {
         List<SimpleSource> lss = new ArrayList<>();
 
         if (source instanceof SimpleSource) {
-            lss.add((SimpleSource)source);
+            lss.add((SimpleSource) source);
         } else if (source instanceof MergeSources) {
             for (Source s : ((MergeSources) source).getSources()) {
                 if (s instanceof SimpleSource) {
@@ -232,10 +236,9 @@ public class ArduinoCepHelper {
             }
         }
 
-        for (SimpleSource src: lss) {
-            for (String s : src.annotation("BufferSize")) {
+        for (SimpleSource src : lss) {
+            for (String s : AnnotatedElementHelper.annotation(src, "BufferSize"))
                 ret = "#define " + s + " _instance->cep_" + stream.getName() + "->" + src.getMessage().getMessage().getName() + "_length() / " + src.getMessage().getMessage().getName().toUpperCase() + "_ELEMENT_SIZE";
-            }
         }
 
         return ret;
@@ -243,7 +246,8 @@ public class ArduinoCepHelper {
 
     public static void generateTimerPolling(Configuration cfg, CCompilerContext ctx) {
         String timerCall;
-        for (Instance instance : cfg.allInstances()) {
+
+        for (Instance instance : cfg.getInstances()) {
             for (Stream stream : instance.getType().getStreams()) {
                 if (shouldTriggerOnTimer(stream, ctx)) {
                     timerCall = "  " + ctx.getInstanceVarName(instance) + ".cep_" + stream.getName() + "->checkTimer(&";

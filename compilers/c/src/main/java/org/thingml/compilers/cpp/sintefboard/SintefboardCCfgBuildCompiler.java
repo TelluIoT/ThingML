@@ -15,9 +15,8 @@
  */
 package org.thingml.compilers.cpp.sintefboard;
 
-import org.thingml.compilers.cpp.sintefboard.*;
 import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Thing;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -37,25 +36,25 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
 
         //GENERATE THE MAKEFILE
         String mtemplate = ctx.getTemplateByID("ctemplates/Makefile");
-        mtemplate = mtemplate.replace("/*NAME*/", cfg.getName()+"Posix");
+        mtemplate = mtemplate.replace("/*NAME*/", cfg.getName() + "Posix");
 
         String compiler = "g++"; // default value
-        if (cfg.hasAnnotation("c_compiler")) compiler = cfg.annotation("c_compiler").iterator().next();
+        if (AnnotatedElementHelper.hasAnnotation(cfg, "c_compiler")) compiler = AnnotatedElementHelper.annotation(cfg, "c_compiler").iterator().next();
         mtemplate = mtemplate.replace("/*CC*/", compiler);
-        
+
         String flags;
         if (ctx.enableDebug()) flags = "CFLAGS = -DDEBUG";
         else flags = "CFLAGS = -O2 -w";
-        for (String s : cfg.annotation("add_c_flags")) {
+        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_flags")) {
             flags += " " + s;
         }
         mtemplate = mtemplate.replace("/*CFLAGS*/", flags);
 
-        String srcs = cfg.getName()+"Posix.cpp";
-        String objs = cfg.getName()+"Posix.o";
+        String srcs = cfg.getName() + "Posix.cpp";
+        String objs = cfg.getName() + "Posix.o";
 
         //// Add the modules for the Things
-        //for (Thing t : cfg.allThings()) {
+        //for (Thing t : ConfigurationHelper.allThings(cfg)) {
         //    srcs += t.getName() + ".c ";
         //    objs += t.getName() + ".o ";
         //}
@@ -65,7 +64,7 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         //objs += cfg.getName() + "_cfg.o ";
 
         //// Add any additional modules from the annotations
-        //for (String s : cfg.annotation("add_c_modules")) {
+        //for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_modules")) {
         //    String[] mods = s.split(" ");
         //    for (int i = 0; i < mods.length; i++) {
         //        srcs += mods[i].trim() + ".c ";
@@ -76,13 +75,13 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         objs = objs.trim();
 
         String libs = "";
-        for (String s : cfg.annotation("add_c_libraries")) {
+        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_libraries")) {
             String[] strs = s.split(" ");
             for (int i = 0; i < strs.length; i++) {
                 libs += "-l " + strs[i].trim() + " ";
             }
         }
-        for (String s : cfg.annotation("add_c_libraries_rep")) {
+        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_libraries_rep")) {
             String[] strs = s.split(" ");
             for (int i = 0; i < strs.length; i++) {
                 libs += "-L " + strs[i].trim() + " ";
@@ -91,7 +90,7 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         libs = libs.trim();
 
         String preproc = "";
-        for (String s : cfg.annotation("add_c_directives")) {
+        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_directives")) {
             String[] strs = s.split(" ");
             for (int i = 0; i < strs.length; i++) {
                 preproc += "-D " + strs[i].trim() + " ";
@@ -107,12 +106,12 @@ public class SintefboardCCfgBuildCompiler extends CfgBuildCompiler {
         mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc);
 
         ctx.getBuilder("Makefile").append(mtemplate);
-        
+
         //GENERATE THE TEST_MAIN FRAMEWORK
-        String testMainTemplate = ctx.getTemplateByID("ctemplates/"+ctx.getCompiler().getID()+"_posix_main.cpp");
+        String testMainTemplate = ctx.getTemplateByID("ctemplates/" + ctx.getCompiler().getID() + "_posix_main.cpp");
         testMainTemplate = testMainTemplate.replace("/*NAME*/", cfg.getName());
-        ctx.getBuilder(cfg.getName()+"Posix.cpp").append(testMainTemplate);
-        
+        ctx.getBuilder(cfg.getName() + "Posix.cpp").append(testMainTemplate);
+
     }
 
 }

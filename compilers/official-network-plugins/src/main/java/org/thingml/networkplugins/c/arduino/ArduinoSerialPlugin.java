@@ -21,11 +21,13 @@
 package org.thingml.networkplugins.c.arduino;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -60,35 +62,48 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
     public String getTargetedLanguage() {
         return "arduino";
     }
-    
+
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
         this.ctx = (CCompilerContext) ctx;
-        for(Protocol prot : protocols) {
+        for (Protocol prot : protocols) {
             HWSerial port = new HWSerial();
             port.protocol = prot;
-            port.sp = ctx.getSerializationPlugin(prot);
-            for(ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
-                port.ecos.add(eco);
-                eco.setName(eco.getProtocol().getName());
+            try {
+                port.sp = ctx.getSerializationPlugin(prot);
+                for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
+                    port.ecos.add(eco);
+                    eco.setName(eco.getProtocol().getName());
+                }
+                port.generateNetworkLibrary(this.ctx, cfg);
+            } catch (UnsupportedEncodingException uee) {
+                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                uee.printStackTrace();
+                return;
             }
-            port.generateNetworkLibrary(this.ctx, cfg);
         }
     }
-    
-    
+
+
     private class HWSerial {
         Set<ExternalConnector> ecos;
         Protocol protocol;
         Set<Message> messages;
         SerializationPlugin sp;
-        
+
         HWSerial() {
             ecos = new HashSet<>();
             messages = new HashSet<>();
         }
+
         public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder, Configuration cfg, Protocol prot) {
-            SerializationPlugin sp = ctx.getSerializationPlugin(prot);
-            
+            try {
+                final SerializationPlugin sp = ctx.getSerializationPlugin(prot);
+            } catch (UnsupportedEncodingException uee) {
+                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                uee.printStackTrace();
+                return;
+            }
+
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
                 Thing t = tpm.t;
                 Port p = tpm.p;
@@ -112,26 +127,26 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
 
             }
         }
-        
-        
+
+
         void generateNetworkLibrary(CCompilerContext ctx, Configuration cfg) {
-            if(!ecos.isEmpty()) {
-                
-                
+            if (!ecos.isEmpty()) {
+
+
                 boolean ring = false;
                 String ctemplate = ctx.getTemplateByID("templates/ArduinoSerialPlugin.c");
                 String htemplate = ctx.getTemplateByID("templates/ArduinoSerialPlugin.h");
-                
+
 
                 String portName = protocol.getName();
-                
-                for(ExternalConnector eco : ecos) {
+
+                for (ExternalConnector eco : ecos) {
                     eco.setName(portName);
                 }
 
                 Integer baudrate;
-                if(protocol.hasAnnotation("serial_baudrate")) {
-                    baudrate = Integer.parseInt(protocol.annotation("serial_baudrate").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_baudrate")) {
+                    baudrate = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "serial_baudrate").iterator().next());
                 } else {
                     baudrate = 115200;
                 }
@@ -141,24 +156,24 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 htemplate = htemplate.replace("/*PROTOCOL*/", portName);
 
                 String startByte;
-                if(protocol.hasAnnotation("serial_start_byte")) {
-                    startByte = protocol.annotation("serial_start_byte").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_start_byte")) {
+                    startByte = AnnotatedElementHelper.annotation(protocol, "serial_start_byte").iterator().next();
                 } else {
                     startByte = "18";
                 }
                 ctemplate = ctemplate.replace("/*START_BYTE*/", startByte);
 
                 String stopByte;
-                if(protocol.hasAnnotation("serial_stop_byte")) {
-                    stopByte = protocol.annotation("serial_stop_byte").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_stop_byte")) {
+                    stopByte = AnnotatedElementHelper.annotation(protocol, "serial_stop_byte").iterator().next();
                 } else {
                     stopByte = "19";
                 }
                 ctemplate = ctemplate.replace("/*STOP_BYTE*/", stopByte);
 
                 String escapeByte;
-                if(protocol.hasAnnotation("serial_escape_byte")) {
-                    escapeByte = protocol.annotation("serial_escape_byte").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_escape_byte")) {
+                    escapeByte = AnnotatedElementHelper.annotation(protocol, "serial_escape_byte").iterator().next();
                 } else {
                     escapeByte = "125";
                 }
@@ -167,43 +182,42 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 Integer maxMsgSize = 0;
                 for (ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
                     Message m = tpm.m;
-                    if(m != null)
+                    if (m != null)
                         System.out.print("m: " + m.getName());
                     messages.add(m);
-                    if(ctx.getMessageSerializationSize(m) > maxMsgSize) {
+                    if (ctx.getMessageSerializationSize(m) > maxMsgSize) {
                         maxMsgSize = ctx.getMessageSerializationSize(m) - 2;
                     }
                 }
 
                 ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 
-                if(ring) {
+                if (ring) {
                     maxMsgSize++;
                 }
 
                 String limitBytePerLoop;
-                if(protocol.hasAnnotation("serial_limit_byte_per_loop")) {
-                    limitBytePerLoop = protocol.annotation("serial_limit_byte_per_loop").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_limit_byte_per_loop")) {
+                    limitBytePerLoop = AnnotatedElementHelper.annotation(protocol, "serial_limit_byte_per_loop").iterator().next();
                 } else {
-                    Integer tmp = maxMsgSize*2;
+                    Integer tmp = maxMsgSize * 2;
                     limitBytePerLoop = tmp.toString();
                 }
                 ctemplate = ctemplate.replace("/*MAX_LOOP*/", limitBytePerLoop);
 
 
-
                 String msgBufferSize;
-                if(protocol.hasAnnotation("serial_msg_buffer_size")) {
-                    msgBufferSize = protocol.annotation("serial_msg_buffer_size").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_msg_buffer_size")) {
+                    msgBufferSize = AnnotatedElementHelper.annotation(protocol, "serial_msg_buffer_size").iterator().next();
                     Integer tmp = Integer.parseInt(msgBufferSize);
-                    if(tmp != null) {
-                        if(tmp < maxMsgSize) {
+                    if (tmp != null) {
+                        if (tmp < maxMsgSize) {
                             System.err.println("Warning: @serial_limit_byte_per_loop should specify a size greater than the maximal size of a message.");
                             msgBufferSize = maxMsgSize.toString();
                         }
                     }
                 } else {
-                    Integer tmp = maxMsgSize*2;
+                    Integer tmp = maxMsgSize * 2;
                     msgBufferSize = tmp.toString();
                 }
                 ctemplate = ctemplate.replace("/*MSG_MSG_SIZE*/", msgBufferSize);
@@ -217,14 +231,14 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 ParserImplementation.append("void " + portName + "_parser(byte * msg, uint16_t size) {\n");
                 sp.generateParserBody(ParserImplementation, "msg", "size", messages, portName + "_instance.listener_id");
                 ParserImplementation.append("}\n");
-                
+
                 ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", sp.generateSubFunctions() + ParserImplementation);
 
                 String ParserCall = portName + "_parser(" + portName + "_msg_buf, " + portName + "_msg_index);";
                 ctemplate = ctemplate.replace("/*PARSER_CALL*/", ParserCall);
                 //End De Serializer
 
-                
+
                 ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
 
                 ctx.addToInitCode("\n" + portName + "_instance.listener_id = add_instance(&" + portName + "_instance);\n");
@@ -234,14 +248,14 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                 StringBuilder b = new StringBuilder();
                 StringBuilder h = new StringBuilder();
                 generateMessageForwarders(b, h, cfg, protocol);
-                
+
                 ctemplate += b;
                 htemplate += h;
-                
+
                 ctx.getBuilder(portName + ".c").append(ctemplate);
                 ctx.getBuilder(portName + ".h").append(htemplate);
             }
         }
     }
-    
+
 }

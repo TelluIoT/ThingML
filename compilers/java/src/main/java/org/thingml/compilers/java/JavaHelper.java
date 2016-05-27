@@ -16,6 +16,8 @@
 package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 
 import java.util.HashSet;
@@ -27,21 +29,21 @@ import java.util.Set;
 public class JavaHelper {
 
     public static String getDefaultValue(Type type) {
-        if (type.isDefined("java_type", "boolean"))
+        if (AnnotatedElementHelper.isDefined(type, "java_type", "boolean"))
             return "false";
-        else if (type.isDefined("java_type", "int"))
+        else if (AnnotatedElementHelper.isDefined(type, "java_type", "int"))
             return "0";
-        else if (type.isDefined("java_type", "long"))
+        else if (AnnotatedElementHelper.isDefined(type, "java_type", "long"))
             return "0";
-        else if (type.isDefined("java_type", "float"))
+        else if (AnnotatedElementHelper.isDefined(type, "java_type", "float"))
             return "0.0f";
-        else if (type.isDefined("java_type", "double"))
+        else if (AnnotatedElementHelper.isDefined(type, "java_type", "double"))
             return "0.0d";
-        else if (type.isDefined("java_type", "byte"))
+        else if (AnnotatedElementHelper.isDefined(type, "java_type", "byte"))
             return "0";
-        else if (type.isDefined("java_type", "short"))
+        else if (AnnotatedElementHelper.isDefined(type, "java_type", "short"))
             return "0";
-        else if (type.isDefined("java_type", "char"))
+        else if (AnnotatedElementHelper.isDefined(type, "java_type", "char"))
             return "'\u0000'";
         else
             return "null";
@@ -54,8 +56,8 @@ public class JavaHelper {
         } else if (type instanceof Enumeration) {//enumeration
             builder.append(ctx.firstToUpper(type.getName()) + "_ENUM");
         } else {
-            if (type.hasAnnotation("java_type")) {
-                builder.append(type.annotation("java_type").toArray()[0]);
+            if (AnnotatedElementHelper.hasAnnotation(type, "java_type")) {
+                builder.append(AnnotatedElementHelper.annotation(type, "java_type").toArray()[0]);
             } else {
                 System.err.println("WARNING: no Java type defined for ThingML datatype " + type.getName());
                 builder.append("/*No Java type was explicitly defined*/ Object");
@@ -84,7 +86,7 @@ public class JavaHelper {
         if (hasMessages)
             builder.append("import " + rootPack + ".messages.*;\n\n");
 
-        if(hasStream) {
+        if (hasStream) {
             builder.append("import rx.functions.Action1;\n" +
                     "import rx.subjects.PublishSubject;" +
                     "import rx.functions.Func1;\n" +
@@ -124,6 +126,7 @@ public class JavaHelper {
             i++;
         }
     }
+
     /**
      *
      * @return
@@ -131,8 +134,8 @@ public class JavaHelper {
      */
     public static Set<String> allThingMLMavenDep(Configuration cfg) {//FIXME: should be moved in a JavaHelper
         Set<String> result = new HashSet<String>();
-        for(Thing t : cfg.allThings()) {
-            for(String dep : t.annotation("thingml_maven_dep")) {
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
+            for (String dep : AnnotatedElementHelper.annotation(t, "thingml_maven_dep")) {
                 String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
                 result.add(cleanDep);
             }
@@ -147,8 +150,8 @@ public class JavaHelper {
      */
     public static Set<String> allMavenDep(Configuration cfg) {//FIXME: should be moved in a JavaHelper
         Set<String> result = new HashSet<String>();
-        for(Thing t : cfg.allThings()) {
-            for(String dep : t.annotation("maven_dep")) {
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
+            for (String dep : AnnotatedElementHelper.annotation(t, "maven_dep")) {
                 String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
                 result.add(cleanDep);
             }

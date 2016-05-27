@@ -20,12 +20,16 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import java.util.*;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.StateHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -50,39 +54,39 @@ public class NonDeterministicTransitions extends Rule {
 
     @Override
     public void check(ThingMLModel model, Checker checker) {
-        for(Thing t : model.allThings()) {
+        for (Thing t : ThingMLHelpers.allThings(model)) {
             check(t, checker);
         }
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Thing t : cfg.allThings()) {
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
             check(t, checker);
         }
     }
 
     private void check(Thing t, Checker checker) {
-        for (StateMachine sm : t.allStateMachines()) {
-            for(State s : sm.allStates()) {
+        for (StateMachine sm : ThingMLHelpers.allStateMachines(t)) {
+            for (State s : StateHelper.allStates(sm)) {
                 List<Event> guarded = new ArrayList<Event>();
                 List<Event> notGuarded = new ArrayList<Event>();
-                for(Transition tr : s.getOutgoing()) {
+                for (Transition tr : s.getOutgoing()) {
                     if (tr.getGuard() != null) {
                         guarded.addAll(tr.getEvent());
                     } else {
                         notGuarded.addAll(tr.getEvent());
                     }
                 }
-                for(InternalTransition it : s.getInternal()) {
+                for (InternalTransition it : s.getInternal()) {
                     if (it.getGuard() != null) {
                         guarded.addAll(it.getEvent());
                     } else {
                         notGuarded.addAll(it.getEvent());
                     }
                 }
-                for(Event g : guarded) {
-                    for(Event ng : notGuarded) {
+                for (Event g : guarded) {
+                    for (Event ng : notGuarded) {
                         if (EcoreUtil.equals(g, ng)) {
                             checker.addGenericError("Non deterministic behaviour: Two transitions handling " + g.getName() + ", with at least one without a guard", g);
                         }

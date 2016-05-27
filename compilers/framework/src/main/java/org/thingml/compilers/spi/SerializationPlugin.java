@@ -20,44 +20,45 @@
  */
 package org.thingml.compilers.spi;
 
-import java.util.List;
-import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Message;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  *
  * @author sintef
  */
-public abstract class SerializationPlugin extends Rule  {
-    
+public abstract class SerializationPlugin extends Rule {
+
     public Context context;
     public Configuration configuration;
-    
-    public SerializationPlugin () {
+
+    public SerializationPlugin() {
     }
-    
+
     public void setConfiguration(Configuration cfg) {
         this.configuration = cfg;
     }
-    
+
     public void setContext(Context ctx) {
         context = ctx;
     }
-    
+
     public String getIncludes() {
         return "";
     }
-    
+
     public String generateSubFunctions() {
         return "";
     }
     
     /* ------------ Plugin Body (Mandatory) ------------ */
-    
+
     /* Methods: generateSerialization
      * 
      * Parameters:
@@ -74,10 +75,10 @@ public abstract class SerializationPlugin extends Rule  {
      *      contain a serialization of message m. The size of
      *      the buffer is returned by the method.
      * 
-     * Note: All paramters annotated as ignored must be ignored.
+     * Note: All parameters annotated as ignored must be ignored.
     */
     public abstract String generateSerialization(StringBuilder builder, String bufferName, Message m);
-    
+
     /* Methods: generateParserBody
      * 
      * Parameters:
@@ -87,7 +88,7 @@ public abstract class SerializationPlugin extends Rule  {
      *                    the raw information to be parsed
      *      - bufferSizeName : name of the variable that contains
      *                    the size of buffer.
-     *      - messages : Model of the messages to be parseded
+     *      - messages : Model of the messages to be parsed
      *      - sender : name of the variable describing the externalport
      * 
      * Results:
@@ -99,40 +100,42 @@ public abstract class SerializationPlugin extends Rule  {
     public abstract void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender);
     
     /* ------------ Plugin Info (Mandatory) ------------ */
-    
+
     /*
-     * In case of overlaping protocol support the 
+     * In case of overlapping protocol support, the
      * choice of plugin will be specified with the
      * annotation @plugin "plugiID"
     */
     public abstract String getPluginID();
-    
+
     public abstract List<String> getTargetedLanguages();
+    
+    public abstract List<String> getSupportedFormat();
     
     
     
     
     /* ------------ Rule Checkng (Optional) ------------
-     * Should be overriden if the plugin need to perform
+     * Should be overridden if the plugin need to perform
      * some specific checking.
     */
-    
+
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
     }
 
-    
+
     public String getName() {
         return this.getPluginID() + " plugin's rules";
     }
 
-    
+
     public String getDescription() {
         return "Check that " + this.getPluginID() + " plugin can be used.";
     }
 
-    
+
     public void check(Configuration cfg, Checker checker) {
-        
+
     }
 }

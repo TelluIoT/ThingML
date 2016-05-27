@@ -23,6 +23,8 @@ package org.thingml.testjar;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
@@ -66,6 +68,20 @@ public class TestCase {
         this.ongoingCmd = lang.generateThingML(this);
     }
     
+    public TestCase(File srcTestCase, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir, boolean notGen) {
+        this.lang = lang;
+        this.status = 1;
+        this.complerJar = complerJar;
+        this.srcTestCase = srcTestCase;
+        this.genCfgDir = genCfgDir;
+        this.genCodeDir = genCodeDir;
+        this.logFile = logDir;
+        this.log = "";
+        this.result = "";
+        this.name = srcTestCase.getName().split("\\.thingml")[0];
+        this.ongoingCmd = this.lang.generateTargeted(this);
+    }
+    
     public TestCase(File genCfg, TestCase t) {
         this.name = genCfg.getName().split("\\.thingml")[0];
         this.genCfg = genCfg;
@@ -84,8 +100,8 @@ public class TestCase {
         this.ongoingCmd = lang.generateTargeted(this);
     }
     
-    public Set<TestCase> generateChildren() {
-        HashSet<TestCase> res = new HashSet<>();
+    public List<TestCase> generateChildren() {
+        LinkedList<TestCase> res = new LinkedList<>();
         
         String testConfigPattern = upperFirstChar(name) + "_([0-9]+)\\.thingml";
         File dir = new File(genCfgDir, "_" + lang.compilerID);
@@ -123,7 +139,7 @@ public class TestCase {
                     result = "Unknown Error";
                 }
                 log = result + "\n" + log;
-                writeLogFile();
+                //writeLogFile();
             } else {
                 if (status == 1) {
                     ongoingCmd = lang.compileTargeted(this);
@@ -139,14 +155,15 @@ public class TestCase {
                     else
                         result = "Failure";
                     log = result + "\n" + log;
-                    writeLogFile();
+                    //writeLogFile();
                 } else {
                     result = "Unknown Error";
                     log = result + "\n" + log;
-                    writeLogFile();
+                    //writeLogFile();
                 }
             }
         }
+        writeLogFile();
     }
     
     public boolean oracle() {
@@ -162,22 +179,37 @@ public class TestCase {
         if(exp.charAt(0) == ' ')
             exp = exp.substring(1);
         
-        Pattern p = Pattern.compile(exp);
-        Matcher m = p.matcher(actual);
-        boolean res = m.find();
-        String oracleLog = "";
-        oracleLog += "[test] <" + name + ">" + " for " + lang.compilerID + "\n";
-        oracleLog += "[expected] <" + exp + ">" + "\n";
-        oracleLog += "[actual] <" + actual + ">" + "\n";
-        oracleLog += "[match] <" + res + ">" + "\n";
-        
-        oracleExpected = exp;
-        oracleActual = actual;
-        
-        log += "\n\n[Oracle] \n" + oracleLog;
-        
-        System.out.println(oracleLog);
-        isLastStepASuccess = res;
+        boolean res = false;
+        if((exp != null) && (actual != null)) {
+            Pattern p = Pattern.compile(exp);
+            if(p != null) {
+                Matcher m = p.matcher(actual);
+                res = m.matches();
+                //res = m.find();
+                String oracleLog = "";
+                oracleLog += "[test] <" + name + ">" + " for " + lang.compilerID + "\n";
+                //oracleLog += "[raw output] <\n" + ongoingCmd.stdlog + "\n>" + "\n";
+                oracleLog += "[expected] <" + exp + ">" + "\n";
+                oracleLog += "[ actual ] <" + actual + ">" + "\n";
+                oracleLog += "[ match? ] <" + res + ">" + "\n";
+
+                oracleExpected = exp;
+                oracleActual = actual;
+
+                log += "\n\n[Oracle] \n" + oracleLog;
+
+                System.out.println(oracleLog);
+                isLastStepASuccess = res;
+            } else {
+                oracleExpected = "Error at Expected pattern compilation";
+                oracleActual = "Error at Expected pattern compilation";
+                log += "\n\n[Oracle] \n" + "Error at Expected pattern compilation";
+            }
+        } else {
+            oracleExpected = "Error at Output reading";
+            oracleActual = "Error at Output reading";
+            log += "\n\n[Oracle] \n" + "Error at Output reading";
+        }
         return res;
     }
     

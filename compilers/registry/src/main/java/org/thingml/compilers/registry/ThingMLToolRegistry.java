@@ -20,31 +20,32 @@
  */
 package org.thingml.compilers.registry;
 
+import org.thingml.testconfigurationgenerator.TestConfigurationGenerator;
+import org.thingml.thingmltools.ThingMLTool;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
-import org.thingml.testconfigurationgenerator.TestConfigurationGenerator;
-import org.thingml.thingmltools.ThingMLTool;
 
 /**
  *
  * @author sintef
  */
 public class ThingMLToolRegistry {
-    
+
     private static ThingMLToolRegistry instance;
+    private HashMap<String, ThingMLTool> tools = new HashMap<String, ThingMLTool>();
+
     public static ThingMLToolRegistry getInstance() {
-        
+
         if (instance == null) {
-            instance =  new ThingMLToolRegistry();
+            instance = new ThingMLToolRegistry();
             instance.addTool(new TestConfigurationGenerator());
 
         }
-        
+
         return instance;
     }
-
-    private HashMap<String, ThingMLTool> tools = new HashMap<String, ThingMLTool>();
 
     public Set<String> getToolIds() {
         return tools.keySet();
@@ -59,7 +60,7 @@ public class ThingMLToolRegistry {
     }
 
     public ThingMLTool createToolInstanceByName(String id) {
-        if(tools.get(id) == null) {
+        if (tools.get(id) == null) {
             return null;
         } else {
             return tools.get(id).clone();

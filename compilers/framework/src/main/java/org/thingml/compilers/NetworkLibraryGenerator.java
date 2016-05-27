@@ -20,47 +20,45 @@
  */
 package org.thingml.compilers;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author sintef
  */
 public abstract class NetworkLibraryGenerator {
-    private Set<ExternalConnector> ecoList;
     public Context ctx;
     public Configuration cfg;
-    
-    
+    private Set<ExternalConnector> ecoList;
+
+
     public NetworkLibraryGenerator(Configuration cfg, Context ctx) {
         this.cfg = cfg;
         this.ctx = ctx;
         this.ecoList = new HashSet<ExternalConnector>();
     }
-    
+
     public NetworkLibraryGenerator(Configuration cfg, Context ctx, Set<ExternalConnector> ExternalConnectors) {
         this.cfg = cfg;
         this.ctx = ctx;
         this.ecoList = ExternalConnectors;
     }
-    
+
     public Set<ExternalConnector> getExternalConnectors() {
         return ecoList;
     }
-    
+
     public void addExternalCnnector(ExternalConnector eco) {
         ecoList.add(eco);
     }
-    
-    
+
+
     public abstract void generateNetworkLibrary();
-    
+
     /*
      * For each PORT_NAME::Thing::Port::Message
      */

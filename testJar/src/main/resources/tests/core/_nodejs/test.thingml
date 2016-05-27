@@ -67,7 +67,7 @@ thing TestDumpNodejs includes TestDump
 			on entry do
                 //write cputime
                 '' & fs & '.appendFileSync("cputime", ' & time & ');'
-                print "[Done]\n"
+                print " [Done]\n"
                 print(time)
                 
                 //write number of transitions

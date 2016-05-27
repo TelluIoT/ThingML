@@ -18,6 +18,7 @@ package org.thingml.compilers.java;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 
@@ -36,12 +37,12 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
     private String addReactiveXDep(Configuration cfg) {
         boolean oneThingHasStream = false;
 
-        Iterator<Thing> it = cfg.allThings().iterator();
-        while(it.hasNext() && !oneThingHasStream) {
+        Iterator<Thing> it = ConfigurationHelper.allThings(cfg).iterator();
+        while (it.hasNext() && !oneThingHasStream) {
             Thing t = it.next();
             oneThingHasStream = oneThingHasStream || (t.getStreams().size() > 0);
         }
-        if(oneThingHasStream) {
+        if (oneThingHasStream) {
             return "<dependency>\n" +
                     "\t\t<groupId>io.reactivex</groupId>\n" +
                     "\t\t<artifactId>rxjava</artifactId>\n" +

@@ -20,11 +20,12 @@
  */
 package org.thingml.compilers.debugGUI;
 
-import java.util.Set;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.NetworkLibraryGenerator;
+
+import java.util.Set;
 
 /**
  *
@@ -35,11 +36,11 @@ public abstract class DebugGUINetworkLibraryGenerator extends NetworkLibraryGene
     public DebugGUINetworkLibraryGenerator(Configuration cfg, Context ctx) {
         super(cfg, ctx);
     }
-    
+
     public DebugGUINetworkLibraryGenerator(Configuration cfg, Context ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
     }
 
     public abstract String generateConnectionInterface(String portName);
-    
+
 }

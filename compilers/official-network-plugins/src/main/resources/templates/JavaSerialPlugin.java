@@ -1,14 +1,12 @@
 package org.thingml.generated.network;
 
-import org.thingml.java.*;
-import org.thingml.java.ext.*;
-
-import org.thingml.generated.messages.*;
-
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
+import org.thingml.generated.messages.*;
+import org.thingml.java.*;
+import org.thingml.java.ext.*;
 
 import java.util.Arrays;
 
@@ -35,8 +33,7 @@ public class SerialJava extends Component {
             serialPort.setParams(baudrate, 8, 1, 0);
             serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
             serialPort.addEventListener(new SerialPortReader());
-        }
-        catch (SerialPortException ex) {
+        } catch (SerialPortException ex) {
             System.out.println(ex);
         }
     }
@@ -62,10 +59,12 @@ public class SerialJava extends Component {
 
     @Override
     public void run() {
-        while(active) {
+        while (active) {
             try {
                 final Event e = queue.take();//should block if queue is empty, waiting for a message
-                send(e.toBytes("default"));
+                final byte[] payload = /*$SERIALIZER$*/.toBytes(e);
+                if (payload != null)
+                    send(payload);
             } catch (InterruptedException e) {
                 //e.printStackTrace();
             }
@@ -83,9 +82,9 @@ public class SerialJava extends Component {
         public static final int RCV_WAIT = 0;
         public static final int RCV_MSG = 1;
         public static final int RCV_ESC = 2;
-        private byte[] buffer = new byte[256];
         protected int buffer_idx = 0;
         protected int state = RCV_WAIT;
+        private byte[] buffer = new byte[256];
 
         public void serialEvent(SerialPortEvent event) {
             try {

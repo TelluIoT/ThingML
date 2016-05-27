@@ -18,6 +18,7 @@ package org.thingml.compilers.java;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
@@ -101,7 +102,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         ctx.addContextAnnotation("package", pack);
         ctx.setCurrentConfiguration(cfg);
         processDebug(cfg);
-        for (Thing th : cfg.allThings()) {
+        for (Thing th : ConfigurationHelper.allThings(cfg)) {
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(th, ctx);
             ctx.getCompiler().getThingImplCompiler().generateImplementation(th, ctx);
         }

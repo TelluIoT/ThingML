@@ -27,19 +27,19 @@ import org.thingml.compilers.c.CChecker;
  *
  * @author sintef
  */
-public class ArduinoChecker extends CChecker{
+public class ArduinoChecker extends CChecker {
 
     public ArduinoChecker(String compiler) {
         super(compiler);
     }
-    
+
     @Override
     public void do_check(Configuration cfg) {
-        
+
         //ADD Arduino specific checks
-        
+
         super.do_generic_check(cfg);
-        
+
     }
-    
+
 }

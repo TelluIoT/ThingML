@@ -15,17 +15,12 @@
  */
 package org.thingml.compilers.java;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
+import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -34,25 +29,33 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Increment action, StringBuilder builder, Context ctx) {
-        builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-        builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality()!=null, ctx) + ")");
-        builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
-        builder.append(" + 1));\n");
+        if (action.getVar().getProperty() instanceof Property) {
+            builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
+            builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality() != null, ctx) + ")");
+            builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+            builder.append(" + 1));\n");
+        } else {
+            super.generate(action, builder, ctx);
+        }
     }
 
     @Override
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
-        builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-        builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality()!=null, ctx) + ")");
-        builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
-        builder.append(" - 1));\n");
+        if (action.getVar().getProperty() instanceof Property) {
+            builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
+            builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality() != null, ctx) + ")");
+            builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+            builder.append(" - 1));\n");
+        } else {
+            super.generate(action, builder, ctx);
+        }
     }
 
     @Override
-    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
-        Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
-        Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
-        if (leftType.isA(Types.OBJECT_TYPE)) {
+    public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) { //FIXME: avoid duplication
+        final Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
+        final Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
+        if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getRhs();
                 if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
@@ -64,7 +67,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             builder.append(".equals(");
             generate(expression.getRhs(), builder, ctx);
             builder.append(")");
-        } else if (rightType.isA(Types.OBJECT_TYPE)) {
+        } else if (TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
             if (expression.getLhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getLhs();
                 if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
@@ -82,10 +85,10 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
-    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) {
-        Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
-        Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
-        if (leftType.isA(Types.OBJECT_TYPE)) {
+    public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) { //FIXME: avoid duplication
+        final Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
+        final Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
+        if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getRhs();
                 if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
@@ -98,7 +101,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             builder.append(".equals(");
             generate(expression.getRhs(), builder, ctx);
             builder.append("))");
-        } else if (rightType.isA(Types.OBJECT_TYPE)) {
+        } else if (TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getLhs();
                 if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
@@ -154,15 +157,15 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
-        builder.append("Component " + action.getSession().getName() + " = new " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + "(\"" + action.getSession().getName() + "\"");
-        for (Property p : action.getSession().findContainingThing().allPropertiesInDepth()) {
-                builder.append(", ");
-                builder.append(ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this." + ctx.getVariableName(p));
+        builder.append("Component " + action.getSession().getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + "(\"" + action.getSession().getName() + "\"");
+        for (Property p : ThingHelper.allPropertiesInDepth(ThingMLHelpers.findContainingThing(action.getSession()))) {
+            builder.append(", ");
+            builder.append(ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this." + ctx.getVariableName(p));
         }
-        builder.append(").buildBehavior(\"" + action.getSession().getName() + "\", " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this);\n");
-        builder.append(ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId + 1;\n");
-        builder.append(action.getSession().getName() + ".forkId = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this.forkId;\n");
-        builder.append(action.getSession().getName() + ".root = " + ctx.firstToUpper(action.getSession().findContainingThing().getName()) + ".this;\n");
+        builder.append(").buildBehavior(\"" + action.getSession().getName() + "\", " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this);\n");
+        builder.append(ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this.forkId = " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this.forkId + 1;\n");
+        builder.append(action.getSession().getName() + ".forkId = " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this.forkId;\n");
+        builder.append(action.getSession().getName() + ".root = " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this;\n");
         builder.append(action.getSession().getName() + ".init();\n");
         builder.append(action.getSession().getName() + ".root.forks.add(" + action.getSession().getName() + ");\n");
         builder.append(action.getSession().getName() + ".start();\n");
@@ -171,7 +174,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(StartStream action, StringBuilder builder, Context ctx) {
         //if(action.getStream().getInput() instanceof SimpleSource) {
-            builder.append("start" + action.getStream().getInput().qname("_") + "();\n");
+        builder.append("start" + ThingMLElementHelper.qname(action.getStream().getInput(), "_") + "();\n");
         /*} else if (action.getStream().getInput() instanceof SourceComposition) {
             builder.append("start" + action.getStream().qname("_") + "();\n");
         }*/
@@ -180,7 +183,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(StopStream action, StringBuilder builder, Context ctx) {
         //if(action.getStream().getInput() instanceof SimpleSource) {
-            builder.append("stop" + action.getStream().getInput().qname("_") + "();\n");
+        builder.append("stop" + ThingMLElementHelper.qname(action.getStream().getInput(), "_") + "();\n");
         /*} else if (action.getStream().getInput() instanceof SourceComposition) {
             builder.append("stop" + action.getStream().qname("_") + "();\n");
         }*/
@@ -188,12 +191,12 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        if (action.getFunction().isDefined("fork_thread", "true") && action.getFunction().getType() != null) {
+        if (AnnotatedElementHelper.isDefined(action.getFunction(), "fork_thread", "true") && action.getFunction().getType() != null) {
             System.err.println("function " + action.getFunction().getName() + "cannot be called with @fork_thread, as its return type (" + action.getFunction().getType().getName() + ") is not void");
             throw new UnsupportedOperationException("function " + action.getFunction().getName() + "cannot be called with @fork_thread, as its return type (" + action.getFunction().getType().getName() + ") is not void");
         }
 
-        if (action.getFunction().isDefined("fork_thread", "true")) {
+        if (AnnotatedElementHelper.isDefined(action.getFunction(), "fork_thread", "true")) {
             builder.append("new Thread(new Runnable(){public void run() {\n");
         }
 
@@ -214,7 +217,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         }
         builder.append(");\n");
 
-        if (action.getFunction().isDefined("fork_thread", "true")) {
+        if (AnnotatedElementHelper.isDefined(action.getFunction(), "fork_thread", "true")) {
             builder.append("}}).start();\n");
         }
     }
@@ -246,7 +249,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
                 generate(action.getCardinality(), builder, ctx);
                 builder.append("];");
             } else {
-                if (action.getType().isDefined("java_primitive", "true")) {
+                if (AnnotatedElementHelper.isDefined(action.getType(), "java_primitive", "true")) {
                     builder.append(" = " + JavaHelper.getDefaultValue(action.getType()) + ";");
                 } else {
                     builder.append(" = null;");
@@ -271,10 +274,10 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     }
 
     @Override
-    protected void generateReference(Message message,String messageName,Reference expression, StringBuilder builder, Context ctx) {
+    protected void generateReference(Message message, String messageName, Reference expression, StringBuilder builder, Context ctx) {
         String paramResult = "";
         if (expression.getParameter() instanceof ParamReference) {
-            if(expression.getParameter() instanceof SimpleParamRef)
+            if (expression.getParameter() instanceof SimpleParamRef)
                 paramResult = ".";
             ParamReference paramReference = (ParamReference) expression.getParameter(); //this method is called only when the reference parameter is a ParamReference
             builder.append(ctx.protectKeyword(messageName) + paramResult + ctx.protectKeyword(paramReference.getParameterRef().getName()));
@@ -285,17 +288,17 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        if(!ctx.getAtInitTimeLock()) {
+        if (!ctx.getAtInitTimeLock()) {
             if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
                 builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
             else
                 builder.append(ctx.getVariableName(expression.getProperty()));
         } else {
             Property p = (Property) expression.getProperty();
-            if(p.isChangeable()) {
+            if (p.isChangeable()) {
                 System.out.println("Error: non Read-only property (" + p.getName() + ") used in array cardinality definition.");
             }
-            Expression e = ctx.getCurrentConfiguration().initExpressions(ctx.currentInstance, p).get(0);
+            Expression e = ConfigurationHelper.initExpressions(ctx.getCurrentConfiguration(), ctx.currentInstance, p).get(0);
             generate(e, builder, ctx);
         }
     }
@@ -331,11 +334,11 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     public void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
 
         if (!(type instanceof Enumeration)) {
-            if (type.hasAnnotation("java_type")) {
+            if (AnnotatedElementHelper.hasAnnotation(type, "java_type")) {
                 if (!isArray)
-                    builder.append("(" + type.annotation("java_type").toArray()[0] + ") ");
+                    builder.append("(" + AnnotatedElementHelper.annotation(type, "java_type").toArray()[0] + ") ");
                 else
-                    builder.append("(" + type.annotation("java_type").toArray()[0] + "[]) ");
+                    builder.append("(" + AnnotatedElementHelper.annotation(type, "java_type").toArray()[0] + "[]) ");
             } else {
                 if (!isArray)
                     builder.append("(Object) ");

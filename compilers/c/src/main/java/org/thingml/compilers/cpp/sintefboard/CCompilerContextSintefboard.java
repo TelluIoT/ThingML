@@ -19,7 +19,6 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by ffl on 11.06.15.
@@ -40,9 +39,9 @@ public class CCompilerContextSintefboard extends CCompilerContext {
 
     @Override
     public void writeGeneratedCodeToFiles() {
-        
+
         // COMBINE ALL THE GENERATED CODE IN TWO FILES "cfg.hpp" + cfg.cpp"
-        
+
         String configName = getCurrentConfiguration().getName();
         String cfgCppnameScope = configName + "::";
         System.out.println("Processing config name " + configName);
@@ -55,16 +54,13 @@ public class CCompilerContextSintefboard extends CCompilerContext {
             if (filename.startsWith("runtime")) {
                 // These files will be handled later
                 System.out.println("Special handling1 of " + filename);
-            }
-            else if (filename.startsWith(configName)) {
+            } else if (filename.startsWith(configName)) {
                 // These files will be handled later
                 System.out.println("Special handling2 of " + filename);
-            } 
-            else if (filename.endsWith(".h")) {
+            } else if (filename.endsWith(".h")) {
                 headers.add(filename);
                 System.out.println("Adding " + filename + " to headers");
-            } 
-            else if (filename.endsWith(".c")) {
+            } else if (filename.endsWith(".c")) {
                 if (filename.endsWith("init.c")) {
                     init.add(filename);
                     System.out.println("Adding " + filename + " to init");
@@ -98,7 +94,7 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         stringHeader = stringHeader.replace("/*HEADER_CLASS*/", builderHeader.toString());
         stringHeader = stringHeader.replace("/*CFG_CPPNAME_SCOPE*/", cfgCppnameScope);
         writeTextFile(configName + ".hpp", stringHeader);
-        
+
         String stringImpl = generatedCode.get(configName + "_cfg.c").toString();
         stringImpl = stringImpl.replace("/*NAME*/", configName);
         stringImpl = stringImpl.replace("/*RUNTIME_CLASS*/", generatedCode.get("runtime.c").toString());
@@ -107,15 +103,15 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         stringImpl = stringImpl.replace("/*CFG_CPPNAME_SCOPE*/", cfgCppnameScope);
         writeTextFile(configName + ".cpp", stringImpl);
 
-        
+
         //GENERATE Posix test framework
         String stringMake = generatedCode.get("Makefile").toString();
         writeTextFile("Makefile", stringMake);
-        
-        String stringTestMain = generatedCode.get(configName+"Posix.cpp").toString();
-        writeTextFile(configName+"Posix.cpp", stringTestMain);
-        
-        
+
+        String stringTestMain = generatedCode.get(configName + "Posix.cpp").toString();
+        writeTextFile(configName + "Posix.cpp", stringTestMain);
+
+
     }
 
 

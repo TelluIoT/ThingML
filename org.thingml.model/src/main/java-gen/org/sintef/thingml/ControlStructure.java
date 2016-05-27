@@ -88,10 +88,6 @@ public interface ControlStructure extends Action {
 	 */
 	void setCondition(Expression value);
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	List<Action> allAction(Class clazz);
+
 
 } // ControlStructure

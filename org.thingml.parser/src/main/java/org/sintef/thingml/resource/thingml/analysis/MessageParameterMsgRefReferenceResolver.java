@@ -18,6 +18,7 @@ package org.sintef.thingml.resource.thingml.analysis;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.*;
 
 public class MessageParameterMsgRefReferenceResolver implements org.sintef.thingml.resource.thingml.IThingmlReferenceResolver<org.sintef.thingml.MessageParameter, org.sintef.thingml.Message> {
 
@@ -25,7 +26,7 @@ public class MessageParameterMsgRefReferenceResolver implements org.sintef.thing
 
 	public void resolve(String identifier, org.sintef.thingml.MessageParameter container, org.eclipse.emf.ecore.EReference reference, int position, boolean resolveFuzzy, final org.sintef.thingml.resource.thingml.IThingmlReferenceResolveResult<org.sintef.thingml.Message> result) {
 		final Thing thing = ThingMLHelpers.findContainingThing(container);
-		for(Message m : thing.allMessages()) {
+		for(Message m : ThingMLHelpers.allMessages(thing)) {
 			if(resolveFuzzy && m.getName().startsWith(identifier)) {
 				result.addMapping(m.getName(),m);
 			} else if(!resolveFuzzy && m.getName().equals(identifier)) {

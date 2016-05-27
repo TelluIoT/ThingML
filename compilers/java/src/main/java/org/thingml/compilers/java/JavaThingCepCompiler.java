@@ -16,7 +16,7 @@
 package org.thingml.compilers.java;
 
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.cepHelper.UnsupportedException;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
@@ -35,37 +35,37 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
-        if(stream.getInput() instanceof SimpleSource) {
+        if (stream.getInput() instanceof SimpleSource) {
             SimpleSource source = (SimpleSource) stream.getInput();
             Message outPut = source.getMessage().getMessage();
-            generateSubscription(stream, builder, ctx, outPut, source.qname("_") + "_observable");
-        } else if(stream.getInput() instanceof SourceComposition) {
+            generateSubscription(stream, builder, ctx, outPut, ThingMLElementHelper.qname(source, "_") + "_observable");
+        } else if (stream.getInput() instanceof SourceComposition) {
             Message outPut = stream.getOutput().getMessage();
-            generateSubscription(stream, builder, ctx, outPut, stream.qname("_"));
+            generateSubscription(stream, builder, ctx, outPut, ThingMLElementHelper.qname(stream, "_"));
         } else {
-            throw UnsupportedException.sourceException(stream.getClass().getName());
+            throw new UnsupportedOperationException("Input " + stream.getClass().getName() + " is not supported");
         }
     }
 
     //TODO: remove output param as we do not really it (and method is called with wrong args in case of Join/Merge....)
-   private void generateSubscription(Stream stream, StringBuilder builder, Context context, Message outPut, String name) {
-       String outPutName = stream.getInput().getName();
-       String messageType = "";
-       if (stream.getInput() instanceof SourceComposition) {
-           outPut = ((SourceComposition) stream.getInput()).getResultMessage();
-           messageType = context.firstToUpper( ((SourceComposition)stream.getInput()).getResultMessage().getName()) + "MessageType." + context.firstToUpper(((SourceComposition)stream.getInput()).getResultMessage().getName()) + "Message";
-       } else if (stream.getInput() instanceof SimpleSource) {
-           outPut = ((SimpleSource)stream.getInput()).getMessage().getMessage();
-           messageType = context.firstToUpper(outPut.getName()) + "MessageType." + context.firstToUpper(outPut.getName()) + "Message";
-       }
+    private void generateSubscription(Stream stream, StringBuilder builder, Context context, Message outPut, String name) {
+        String outPutName = stream.getInput().getName();
+        String messageType = "";
+        if (stream.getInput() instanceof SourceComposition) {
+            outPut = ((SourceComposition) stream.getInput()).getResultMessage();
+            messageType = context.firstToUpper(((SourceComposition) stream.getInput()).getResultMessage().getName()) + "MessageType." + context.firstToUpper(((SourceComposition) stream.getInput()).getResultMessage().getName()) + "Message";
+        } else if (stream.getInput() instanceof SimpleSource) {
+            outPut = ((SimpleSource) stream.getInput()).getMessage().getMessage();
+            messageType = context.firstToUpper(outPut.getName()) + "MessageType." + context.firstToUpper(outPut.getName()) + "Message";
+        }
 
         List<ViewSource> operators = stream.getInput().getOperators();
-       boolean hasWindow = false;
-       for(ViewSource vs : operators) {
-           hasWindow =  (vs instanceof TimeWindow) || (vs instanceof LengthWindow);
-           if (hasWindow)
-               break;
-       }
+        boolean hasWindow = false;
+        for (ViewSource vs : operators) {
+            hasWindow = (vs instanceof TimeWindow) || (vs instanceof LengthWindow);
+            if (hasWindow)
+                break;
+        }
         if (hasWindow) {
             messageType = "List<" + messageType + ">";
         }
@@ -73,34 +73,34 @@ public class JavaThingCepCompiler extends ThingCepCompiler {
 
         builder.append("this.sub_" + name.replace("_observable", "") + " = ");
         builder.append("new Action1<" + messageType + ">() {\n")
-               .append("@Override\n")
-               .append("public void call(" + messageType + " " + outPutName + ") {\n");
+                .append("@Override\n")
+                .append("public void call(" + messageType + " " + outPutName + ") {\n");
 
-       if(hasWindow) {
-           builder.append("int i;\n");
-           for(Parameter parameter : outPut.getParameters()) {
-               builder.append(JavaHelper.getJavaType(parameter.getType(), false, context) + "[] " + outPutName + parameter.getName() + " = new " + JavaHelper.getJavaType(parameter.getType(), false, context) + "[" + outPutName + ".size()];\n")
-                       .append("i = 0;\n")
-                       .append("for(" + messageType.replace("List<","").replace(">", "") + " " + outPutName + "_msg : " + outPutName + ") {\n")//FIXME: replace stuff is a dirty hack!
-                       .append(outPutName + parameter.getName() + "[i] = " + outPutName + "_msg." + parameter.getName() + ";\n")
-                       .append("i++;\n")
-                       .append("}\n");
-           }
-       }
+        if (hasWindow) {
+            builder.append("int i;\n");
+            for (Parameter parameter : outPut.getParameters()) {
+                builder.append(JavaHelper.getJavaType(parameter.getType(), false, context) + "[] " + outPutName + parameter.getName() + " = new " + JavaHelper.getJavaType(parameter.getType(), false, context) + "[" + outPutName + ".size()];\n")
+                        .append("i = 0;\n")
+                        .append("for(" + messageType.replace("List<", "").replace(">", "") + " " + outPutName + "_msg : " + outPutName + ") {\n")//FIXME: replace stuff is a dirty hack!
+                        .append(outPutName + parameter.getName() + "[i] = " + outPutName + "_msg." + parameter.getName() + ";\n")
+                        .append("i++;\n")
+                        .append("}\n");
+            }
+        }
 
-       for(LocalVariable lv : stream.getSelection()) {
-           if(lv.isChangeable())//selection are readonly anyway, even if not specified in ThingML
-               builder.append("final ");
-           context.getCompiler().getThingActionCompiler().generate(lv, builder, context);
-       }
+        for (LocalVariable lv : stream.getSelection()) {
+            if (lv.isChangeable())//selection are readonly anyway, even if not specified in ThingML
+                builder.append("final ");
+            context.getCompiler().getThingActionCompiler().generate(lv, builder, context);
+        }
 
-       context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
+        context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
 
-       builder.append("}};\n");
+        builder.append("}};\n");
 
 
         if (!stream.isDynamic()) {
-            builder.append("start" + stream.getInput().qname("_") + "();\n");
+            builder.append("start" + ThingMLElementHelper.qname(stream.getInput(), "_") + "();\n");
         }
     }
 

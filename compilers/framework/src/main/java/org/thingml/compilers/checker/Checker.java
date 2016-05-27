@@ -20,47 +20,45 @@
  */
 package org.thingml.compilers.checker;
 
-import java.util.*;
-
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.ThingMLElement;
+import org.sintef.thingml.ThingMLModel;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.genericRules.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
  * @author sintef
  */
 abstract public class Checker {
-    private Set<Rule> Rules;
-    
     public Set<CheckerInfo> Errors;
     public Set<CheckerInfo> Warnings;
     public Set<CheckerInfo> Notices;
     public List<ErrorWrapper> wrappers;
-    
+    public TypeChecker typeChecker = new TypeChecker();
+    private Set<Rule> Rules;
     private String compiler;
     private String generic;
-    
-    private Context ctx;
+    public Context ctx;
 
-    public TypeChecker typeChecker = new TypeChecker();
-
-    public Checker (String compiler) {
+    public Checker(String compiler) {
         Rules = new HashSet<Rule>();
         Errors = new HashSet<CheckerInfo>();
         Warnings = new HashSet<CheckerInfo>();
         Notices = new HashSet<CheckerInfo>();
         wrappers = new ArrayList<ErrorWrapper>();
         wrappers.add(new EMFWrapper());
-        
+
         this.ctx = new Context(null);
         this.compiler = compiler;
         generic = "ThingML";
-        
+
         Rules.add(new ThingsUsage());
         Rules.add(new PortsUsage());
         Rules.add(new MessagesUsage());
@@ -73,10 +71,10 @@ abstract public class Checker {
         Rules.add(new VariableUsage());
         Rules.add(new ControlStructures());
     }
-    
+
     public void do_generic_check(Configuration cfg) {
         long start = System.currentTimeMillis();
-        for(Rule r : Rules) {
+        for (Rule r : Rules) {
             r.check(cfg, this);
         }
         System.out.println("checker took " + (System.currentTimeMillis() - start) + " ms");
@@ -84,149 +82,151 @@ abstract public class Checker {
 
     public void do_generic_check(ThingMLModel model) {
         long start = System.currentTimeMillis();
-        for(Rule r : Rules) {
+        for (Rule r : Rules) {
             r.check(model, this);
         }
         System.out.println("checker took " + (System.currentTimeMillis() - start) + " ms");
     }
-    
+
     // Must be implemented and must contain a call to do_generic_check(cfg)
     abstract public void do_check(Configuration cfg);
-    
-    
+
+
     // ---------------------- Accessors ----------------------
-    
+
     public void addError(String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
-        for(ErrorWrapper wrapper : wrappers) {
+        for (ErrorWrapper wrapper : wrappers) {
             wrapper.addError(msg, el);
         }
     }
-    
+
     public void addError(String compiler, String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
-        for(ErrorWrapper wrapper : wrappers) {
+        for (ErrorWrapper wrapper : wrappers) {
             wrapper.addError(msg, el);
         }
     }
-    
+
     public void addGenericError(String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, generic, msg, el));
-        for(ErrorWrapper wrapper : wrappers) {
+        for (ErrorWrapper wrapper : wrappers) {
             wrapper.addError(msg, el);
         }
     }
-    
+
     public void addWarning(String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
-        for(ErrorWrapper wrapper : wrappers) {
+        for (ErrorWrapper wrapper : wrappers) {
             wrapper.addWarning(msg, el);
         }
     }
-    
+
     public void addWarning(String compiler, String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
-        for(ErrorWrapper wrapper : wrappers) {
+        for (ErrorWrapper wrapper : wrappers) {
             wrapper.addWarning(msg, el);
         }
     }
-    
+
     public void addGenericWarning(String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, generic, msg, el));
-        for(ErrorWrapper wrapper : wrappers) {
+        for (ErrorWrapper wrapper : wrappers) {
             wrapper.addWarning(msg, el);
         }
     }
-    
+
     public void addNotice(String msg, EObject el) {
         Notices.add(new CheckerInfo(InfoType.NOTICE, compiler, msg, el));
     }
-    
+
     public void addNotice(String compiler, String msg, EObject el) {
         Notices.add(new CheckerInfo(InfoType.NOTICE, compiler, msg, el));
     }
-    
+
     public void addGenericNotice(String msg, EObject el) {
         Notices.add(new CheckerInfo(InfoType.NOTICE, generic, msg, el));
     }
-    
+
     public boolean containsErrors() {
         return Errors.isEmpty();
     }
-    
+
     public boolean containsWarnings() {
         return Warnings.isEmpty();
     }
-    
+
     public boolean containsNotices() {
         return Notices.isEmpty();
     }
-    
+
     public void printErrors() {
-        for(final CheckerInfo i : Errors) {
+        for (final CheckerInfo i : Errors) {
             System.out.print(i.toString());
         }
     }
-    
+
     public void printWarnings() {
-        for(final CheckerInfo i : Warnings) {
+        for (final CheckerInfo i : Warnings) {
             System.out.print(i.toString());
         }
     }
-    
+
     public void printNotices() {
-        for(CheckerInfo i : Notices) {
+        for (CheckerInfo i : Notices) {
             System.out.print(i.toString());
         }
     }
-    
+
     // ---------------------- Structures ----------------------
-    
-    public enum InfoType {ERROR, WARNING, NOTICE};
-    
+
+    public enum InfoType {ERROR, WARNING, NOTICE}
+
+    ;
+
     public class CheckerInfo {
         public InfoType type;
         public String source;
         public String message;
         public EObject element;
-        
+
         public CheckerInfo(InfoType type, String source, String message, EObject element) {
             this.type = type;
             this.source = source;
             this.message = message;
             this.element = element;
         }
-        
+
         public String print(EObject el) {
-            if(el == null)
+            if (el == null)
                 return "";
             if (el instanceof ThingMLElement) {
-                if(((ThingMLElement)el).getName() != null) {
-                    return ((ThingMLElement)el).getName();
+                if (((ThingMLElement) el).getName() != null) {
+                    return ((ThingMLElement) el).getName();
                 }
             }
             return el.toString();
         }
-        
+
         public String toString() {
             String t;
-            switch(type) {
+            switch (type) {
                 case NOTICE:
                     t = "NOTICE";
                     break;
-                    
+
                 case WARNING:
                     t = "WARNING";
                     break;
-                    
+
                 case ERROR:
                     t = "ERROR";
                     break;
                 default:
                     t = "";
             }
-            
-            
+
+
             return "[" + t + "] " + source + ": " + message + " (in " + print(element) + ")\n";
         }
     }

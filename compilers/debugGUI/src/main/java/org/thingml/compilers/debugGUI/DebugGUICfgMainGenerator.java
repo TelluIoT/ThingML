@@ -20,43 +20,18 @@
  */
 package org.thingml.compilers.debugGUI;
 
+import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.impl.ThingmlFactoryImpl;
+import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.debugGUI.plugin.WSjs;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Enumeration;
-import org.sintef.thingml.EnumerationLiteral;
-import org.sintef.thingml.Event;
-import org.sintef.thingml.Expression;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.InstanceRef;
-import org.sintef.thingml.InternalTransition;
-import org.sintef.thingml.MessageParameter;
-import org.sintef.thingml.ObjectType;
-import org.sintef.thingml.PlatformAnnotation;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.PrimitiveType;
-import org.sintef.thingml.ReceiveMessage;
-import org.sintef.thingml.SendAction;
-import org.sintef.thingml.State;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.ThingmlFactory;
-import org.sintef.thingml.Type;
-import org.sintef.thingml.impl.ThingMLModelImpl;
-import org.sintef.thingml.impl.ThingmlFactoryImpl;
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.debugGUI.plugin.MQTTjs;
-import org.thingml.compilers.debugGUI.plugin.WSjs;
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.posix.PosixCompiler;
 
 /**
  *
@@ -64,24 +39,24 @@ import org.thingml.compilers.c.posix.PosixCompiler;
  */
 public class DebugGUICfgMainGenerator extends CfgMainGenerator {
     public ExternalConnector findExternalConnector(Configuration cfg) {
-        for(ExternalConnector eco : cfg.getExternalConnectors()) {
-            if(eco.hasAnnotation("generate_debugGUI")) {
-                if(eco.annotation("generate_debugGUI").iterator().next().compareToIgnoreCase("true") == 0) {
+        for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
+            if (AnnotatedElementHelper.hasAnnotation(eco, "generate_debugGUI")) {
+                if (AnnotatedElementHelper.annotation(eco, "generate_debugGUI").iterator().next().compareToIgnoreCase("true") == 0) {
                     return eco;
                 }
             }
         }
-        
+
         System.out.println("[Error] No external connector with @generate_debugGUI found.");
         return null;
     }
-    
+
     public void generateMockUp(ExternalConnector eco, Configuration cfg, DebugGUICompilerContext ctx) {
         String htmlTemp = ctx.getHtmlTemplate();
-        
+
         String portName;
-        if(eco.hasAnnotation("port_name")) {
-            portName = eco.annotation("port_name").iterator().next();
+        if (AnnotatedElementHelper.hasAnnotation(eco, "port_name")) {
+            portName = AnnotatedElementHelper.annotation(eco, "port_name").iterator().next();
         } else {
             portName = eco.getProtocol().getName();
         }
@@ -90,89 +65,89 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         String sendFunction = portName + "_send", msgID = "";
         StringBuilder sendForm = new StringBuilder();
         for (Message msg : eco.getPort().getReceives()) {
-            
-            if(msg.hasAnnotation("code")) {
-                msgID = msg.annotation("code").iterator().next();
+            msgID = msg.getName();
+            /*if (AnnotatedElementHelper.hasAnnotation(msg, "code")) {
+                msgID = AnnotatedElementHelper.annotation(msg, "code").iterator().next();
             } else {
                 System.out.println("[Warning] in order to generate working mock-up, messages ID must be specified with @code");
-            }
-            
+            }*/
+
             sendForm.append("<tr>\n<td></td>\n");
-            for(Parameter p : msg.getParameters()) {
+            for (Parameter p : msg.getParameters()) {
                 sendForm.append("<td>" + p.getName() + "</td>\n");
             }
             sendForm.append("</tr>\n");
-            
+
             sendForm.append("<tr>\n<td><input type=\"submit\" class=\"btn\" value=\"" + msg.getName() + "\""
-                    + " onClick=\"" + sendFunction + "(" + msgID + ");\" /></td>\n");
-            for(Parameter p : msg.getParameters()) {
+                    + " onClick=\"" + sendFunction + "(\"" + msgID + "\");\" /></td>\n");
+            for (Parameter p : msg.getParameters()) {
                 sendForm.append("<td><input type=\"text\" class=\"bootstrap-frm\" id=\"param_" + msg.getName() + "_" + p.getName() + "\" /></td>\n");
             }
             sendForm.append("</tr>\n");
         }
         htmlTemp = htmlTemp.replace("/*SEND*/", sendForm);
-        
+
         String title = "Mock-up for debugging " + cfg.getName() + " :: " + portName + "";
         htmlTemp = htmlTemp.replace("/*TITLE*/", title);
         
         /*Network Library*/
-        if(eco.getProtocol().getName().startsWith("Websocket")) {
+        if (eco.getProtocol().getName().startsWith("Websocket")) {
             WSjs WSgen = new WSjs(cfg, ctx);
             WSgen.addExternalCnnector(eco);
-            
+
             htmlTemp = htmlTemp.replace("/*CONNECT*/", WSgen.generateConnectionInterface(portName));
-            
+
             StringBuilder script = new StringBuilder();
             WSgen.generateMessageForwarders(script);
             htmlTemp = htmlTemp.replace("/*SCRIPT*/", script);
         } else {
             //Proxy
             //if(eco.getProtocol().startsWith("MQTT")) {
-                WSjs WSgen = new WSjs(cfg, ctx);
-                WSgen.addExternalCnnector(eco);
+            WSjs WSgen = new WSjs(cfg, ctx);
+            WSgen.addExternalCnnector(eco);
 
-                htmlTemp = htmlTemp.replace("/*CONNECT*/", WSgen.generateConnectionInterface(portName));
+            htmlTemp = htmlTemp.replace("/*CONNECT*/", WSgen.generateConnectionInterface(portName));
 
-                StringBuilder script = new StringBuilder();
-                WSgen.generateMessageForwarders(script);
-                htmlTemp = htmlTemp.replace("/*SCRIPT*/", script);
-                
-                StringBuilder proxyThingML = new StringBuilder();
-                
-                ThingmlFactory factory;
-                factory = ThingmlFactoryImpl.init();
-                List<PlatformAnnotation> lpan = new LinkedList<PlatformAnnotation>();
-                PlatformAnnotation pan = factory.createPlatformAnnotation();
-                pan.setName("platform");
-                pan.setValue("x86");
-                lpan.add(pan);
-                
-                generateProxy(eco, lpan, proxyThingML, cfg);
-                
-                ctx.getBuilder(portName + "Proxy.thingml").append(proxyThingML);
+            StringBuilder script = new StringBuilder();
+            WSgen.generateMessageForwarders(script);
+            htmlTemp = htmlTemp.replace("/*SCRIPT*/", script);
+
+            StringBuilder proxyThingML = new StringBuilder();
+
+            ThingmlFactory factory;
+            factory = ThingmlFactoryImpl.init();
+            List<PlatformAnnotation> lpan = new LinkedList<PlatformAnnotation>();
+            PlatformAnnotation pan = factory.createPlatformAnnotation();
+            pan.setName("platform");
+            pan.setValue("x86");
+            lpan.add(pan);
+
+            generateProxy(eco, lpan, proxyThingML, cfg);
+
+            ctx.getBuilder(portName + "Proxy.thingml").append(proxyThingML);
                 /*ThingMLCompiler proxyCompiler = new PosixCompiler();
                 
                 proxyCompiler.setOutputDirectory(ctx.getOutputDirectory());
                 proxyCompiler.compile(proxy, "");*/
-                
+
             //}
         }
-        
-        
+
+
         htmlTemp = htmlTemp.replace("/*CSS*/", portName + ".css");
-        
+
         //System.out.print(htmlTemp);
-        
+
         ctx.getBuilder(portName + ".html").append(htmlTemp);
         ctx.getBuilder(portName + ".css").append(ctx.getCSSTemplate());
     }
-    
+
     public void generateProxy(ExternalConnector eco, List<PlatformAnnotation> annotations, StringBuilder builder, Configuration cfg) {
-        
+
         // Datatypes generation
-        
-        for (Type t : cfg.findContainingModel().allSimpleTypes()) {
-            if(t instanceof ObjectType) {
+
+        for (Type t : ThingMLHelpers.allSimpleTypes(ThingMLHelpers.findContainingModel(cfg))) {
+            if (t instanceof ObjectType) {
                 builder.append("object " + t.getName() + "\n");
             } else if (t instanceof PrimitiveType) {
                 PrimitiveType pt = (PrimitiveType) t;
@@ -180,72 +155,73 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
             } else if (t instanceof Enumeration) {
                 builder.append("enumeration " + t.getName() + "\n");
             }
-            for(PlatformAnnotation pan : t.allAnnotations()) {
+            for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(t)) {
                 builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");
             }
-            if(t instanceof Enumeration) {
+            if (t instanceof Enumeration) {
                 Enumeration et = (Enumeration) t;
                 builder.append("{\n");
-                for(EnumerationLiteral l : et.getLiterals()) {
-                     builder.append(l.getName());
-                    for(PlatformAnnotation pan : l.allAnnotations()) {
+                for (EnumerationLiteral l : et.getLiterals()) {
+                    builder.append(l.getName());
+                    for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(l)) {
                         builder.append(" @" + pan.getName() + " \"" + pan.getValue() + "\"");
                     }
-                builder.append("\n");
+                    builder.append("\n");
                 }
                 builder.append("}\n");
-                
+
             } else {
                 builder.append(";\n\n");
             }
         }
-        
-        builder.append("protocol Websocket;");
+
+        builder.append("protocol Websocket\n");
+        builder.append("  @serializer \"PosixJSONSerializerPlugin\";");
         builder.append("protocol " + eco.getProtocol().getName());
-        for(PlatformAnnotation pan : eco.getProtocol().allAnnotations()) {
+        for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(eco.getProtocol())) {
             builder.append(" @" + pan.getName() + " \"" + pan.getValue() + "\"");
         }
         builder.append(";\n\n");
-        
+
         //Proxy Conf generation
-        
+
         builder.append("configuration proxyCfg {\n" +
-                        "	instance p : proxyType\n" +
-                        "\n" +
-                        "	connector p.Browser over Websocket\n" +
-                        "	connector p.Debug over " + eco.getProtocol().getName() + "\n");
-        
-        for(PlatformAnnotation pan: annotations) {
+                "	instance p : proxyType\n" +
+                "\n" +
+                "	connector p.Browser over Websocket\n" +
+                "	connector p.Debug over " + eco.getProtocol().getName() + "\n");
+
+        for (PlatformAnnotation pan : annotations) {
             builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");
         }
-        
+
         builder.append("}\n" +
-                        "\n");
-        
+                "\n");
+
         // Messages declaration
-        
-        Set<Message> Messages= new HashSet<Message>();
+
+        Set<Message> Messages = new HashSet<Message>();
         Set<String> MessagesNames = new HashSet<String>();
-        for(Message m : eco.getPort().getReceives()) {
-            if(!MessagesNames.contains(m.getName())) {
+        for (Message m : eco.getPort().getReceives()) {
+            if (!MessagesNames.contains(m.getName())) {
                 MessagesNames.add(m.getName());
                 Messages.add(m);
             }
         }
-        for(Message m : eco.getPort().getSends()) {
-            if(!MessagesNames.contains(m.getName())) {
+        for (Message m : eco.getPort().getSends()) {
+            if (!MessagesNames.contains(m.getName())) {
                 MessagesNames.add(m.getName());
                 Messages.add(m);
             }
         }
-        
+
         builder.append("thing fragment Msgs {\n");
-        
-        for(Message m : Messages) {
+
+        for (Message m : Messages) {
             builder.append("    message " + m.getName() + "(");
             boolean isFirst = true;
-            for(Parameter p : m.getParameters()) {
-                if(isFirst) {
+            for (Parameter p : m.getParameters()) {
+                if (isFirst) {
                     isFirst = false;
                 } else {
                     builder.append(", ");
@@ -253,25 +229,25 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append(p.getName() + " : " + p.getType().getName());
             }
             builder.append(")");
-            for(PlatformAnnotation pan : m.allAnnotations()) {
+            for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(m)) {
                 builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");
             }
             builder.append(";\n");
         }
-        
+
         builder.append("}\n\n");
-        
+
         //Proxy Thing generation
-        
+
         builder.append("thing proxyType includes Msgs {\n" +
-                        "\n" +
-                        "	provided port Browser {\n");
-        
-        if(!eco.getPort().getReceives().isEmpty()) {
+                "\n" +
+                "	provided port Browser {\n");
+
+        if (!eco.getPort().getReceives().isEmpty()) {
             builder.append("       receives ");
             boolean isFirst = true;
-            for(Message m : eco.getPort().getReceives()) {
-                if(isFirst) {
+            for (Message m : eco.getPort().getReceives()) {
+                if (isFirst) {
                     isFirst = false;
                 } else {
                     builder.append(", ");
@@ -279,11 +255,11 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append(m.getName());
             }
         }
-        if(!eco.getPort().getSends().isEmpty()) {
+        if (!eco.getPort().getSends().isEmpty()) {
             builder.append("\n       sends ");
             boolean isFirst = true;
-            for(Message m : eco.getPort().getSends()) {
-                if(isFirst) {
+            for (Message m : eco.getPort().getSends()) {
+                if (isFirst) {
                     isFirst = false;
                 } else {
                     builder.append(", ");
@@ -291,16 +267,16 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append(m.getName());
             }
         }
-        
+
         builder.append("\n	}\n" +
-                        "\n" +
-                        "	provided port Debug {\n");
-        
-        if(!eco.getPort().getReceives().isEmpty()) {
+                "\n" +
+                "	provided port Debug {\n");
+
+        if (!eco.getPort().getReceives().isEmpty()) {
             builder.append("       sends ");
             boolean isFirst = true;
-            for(Message m : eco.getPort().getReceives()) {
-                if(isFirst) {
+            for (Message m : eco.getPort().getReceives()) {
+                if (isFirst) {
                     isFirst = false;
                 } else {
                     builder.append(", ");
@@ -308,11 +284,11 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append(m.getName());
             }
         }
-        if(!eco.getPort().getSends().isEmpty()) {
+        if (!eco.getPort().getSends().isEmpty()) {
             builder.append("\n       receives ");
             boolean isFirst = true;
-            for(Message m : eco.getPort().getSends()) {
-                if(isFirst) {
+            for (Message m : eco.getPort().getSends()) {
+                if (isFirst) {
                     isFirst = false;
                 } else {
                     builder.append(", ");
@@ -320,19 +296,19 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append(m.getName());
             }
         }
-        
+
         builder.append("\n	}\n" +
-                        "	\n" +
-                        "	statechart proxChart init Active {\n" +
-                        "		state Active {\n");
-        
-        if(!eco.getPort().getReceives().isEmpty()) {
-            for(Message m : eco.getPort().getReceives()) {
+                "	\n" +
+                "	statechart proxChart init Active {\n" +
+                "		state Active {\n");
+
+        if (!eco.getPort().getReceives().isEmpty()) {
+            for (Message m : eco.getPort().getReceives()) {
                 builder.append("            internal event e : Browser?" + m.getName() + "\n");
                 builder.append("            action Debug!" + m.getName() + "(");
                 boolean isFirst = true;
-                for(Parameter p : m.getParameters()) {
-                    if(isFirst) {
+                for (Parameter p : m.getParameters()) {
+                    if (isFirst) {
                         isFirst = false;
                     } else {
                         builder.append(", ");
@@ -342,13 +318,13 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append(")\n");
             }
         }
-        if(!eco.getPort().getSends().isEmpty()) {
-            for(Message m : eco.getPort().getSends()) {
+        if (!eco.getPort().getSends().isEmpty()) {
+            for (Message m : eco.getPort().getSends()) {
                 builder.append("            internal event e : Debug?" + m.getName() + "\n");
                 builder.append("            action Browser!" + m.getName() + "(");
                 boolean isFirst = true;
-                for(Parameter p : m.getParameters()) {
-                    if(isFirst) {
+                for (Parameter p : m.getParameters()) {
+                    if (isFirst) {
                         isFirst = false;
                     } else {
                         builder.append(", ");
@@ -358,10 +334,10 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append(")\n");
             }
         }
-        
+
         builder.append("		}\n" +
-                        "	}\n" +
-                        "}");
-    
+                "	}\n" +
+                "}");
+
     }
 }

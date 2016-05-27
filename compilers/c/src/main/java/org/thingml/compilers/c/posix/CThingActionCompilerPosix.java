@@ -21,7 +21,6 @@ import org.sintef.thingml.Type;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CThingActionCompiler;
 import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.TypeChecker;
 
 /**
  * Created by ffl on 11.06.15.
@@ -57,8 +56,8 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
         } else {
             builder.append("//Error in type detection\n");
         }
-        
-        
+
+
     }
 
 }

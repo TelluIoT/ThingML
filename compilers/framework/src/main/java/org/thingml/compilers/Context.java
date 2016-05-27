@@ -16,56 +16,77 @@
 package org.thingml.compilers;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Connector;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.Variable;
+import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
-import org.sintef.thingml.Expression;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Function;
-import org.sintef.thingml.InternalTransition;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.PropertyReference;
-import org.sintef.thingml.Protocol;
-import org.sintef.thingml.Region;
-import org.sintef.thingml.State;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.Transition;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
 
 public class Context {
 
+    public Instance currentInstance;
+    // Store the output of the compilers. The key is typically a file name but finer grained generatedCode may also be used by the compilers.
+    protected Map<String, StringBuilder> generatedCode = new HashMap<String, StringBuilder>();
+    boolean debugTraceWithID = false;
+    Map<Integer, String> debugStrings;
     private ThingMLCompiler compiler;
     private Configuration currentConfiguration;
+    // Any any annotation to the context
+    private Map<String, String> contextAnnotations = new HashMap<String, String>();
+    /**
+     * *****************************************************************************************
+     * Keyword protection API. To be used by all compilers which need to protect against clashes
+     * with target language keywords
+     * ******************************************************************************************
+     */
 
+    private Set<String> keywords = new HashSet<String>();
+    private String preKeywordEscape = "`";
+    private String postKeywordEscape = "`";
+    private File outputDirectory = null;
+    private Boolean atInitTimeLock = false;
+
+    public Context(ThingMLCompiler compiler) {
+        this.debugStrings = new HashMap<Integer, String>();
+        this.compiler = compiler;
+    }
+
+
+    public Context(ThingMLCompiler compiler, String... keywords) {
+        this.debugStrings = new HashMap<Integer, String>();
+        this.compiler = compiler;
+        for (String k : keywords) {
+            this.keywords.add(k);
+        }
+    }
 
     //Some Helpers to overcome bug in EMF related to broken equals
     public boolean containsInstance(List<Instance> list, Instance element) {
-        for(Instance e : list) {
+        for (Instance e : list) {
             if (EcoreUtil.equals(e, element))
                 return true;
         }
         return false;
     }
+
     public boolean containsInstance(Set<Instance> list, Instance element) {
-        for(Instance e : list) {
+        for (Instance e : list) {
             if (EcoreUtil.equals(e, element))
                 return true;
         }
         return false;
     }
+
     public boolean containsMessage(Set<Message> list, Message element) {
-        for(Message e : list) {
+        for (Message e : list) {
             if (EcoreUtil.equals(e, element))
                 return true;
         }
@@ -73,7 +94,7 @@ public class Context {
     }
 
     public boolean containsAllInstances(List<Instance> thisList, List<Instance> thatList) {
-        for(Instance e : thatList) {
+        for (Instance e : thatList) {
             if (!containsInstance(thisList, e))
                 return false;
         }
@@ -81,30 +102,16 @@ public class Context {
     }
 
     public boolean containsParam(List<Parameter> list, Parameter element) {
-        for(Parameter e : list) {
+        for (Parameter e : list) {
             if (EcoreUtil.equals(e, element))
                 return true;
         }
         return false;
     }
 
-    public Context(ThingMLCompiler compiler) {
-        this.debugStrings = new HashMap<Integer,String>();
-        this.compiler = compiler;
-    }
-
-
-    // Store the output of the compilers. The key is typically a file name but finer grained generatedCode may also be used by the compilers.
-    protected Map<String, StringBuilder> generatedCode = new HashMap<String, StringBuilder>();
-
-    // Any any annotation to the context
-    private Map<String, String> contextAnnotations = new HashMap<String, String>();
-
-
     public ThingMLCompiler getCompiler() {
         return compiler;
     }
-
 
     public Configuration getCurrentConfiguration() {
         return currentConfiguration;
@@ -113,7 +120,6 @@ public class Context {
     public void setCurrentConfiguration(Configuration currentConfiguration) {
         this.currentConfiguration = currentConfiguration;
     }
-
 
     /**
      * @param path (relative to outputDir) where the code should be generated
@@ -141,7 +147,6 @@ public class Context {
         return b;
     }
 
-
     /**
      * Dumps the whole code generated in the generatedCode
      */
@@ -150,6 +155,10 @@ public class Context {
             writeTextFile(e.getKey(), e.getValue().toString());
         }
     }
+
+    /********************************************************************************************
+     * Helper functions reused by different compilers
+     ********************************************************************************************/
 
     /**
      * Allows to writeTextFile additional files (not generated in the normal generatedCode)
@@ -171,13 +180,12 @@ public class Context {
         }
     }
 
-
     public String getTemplateByID(String template_id) {
         final InputStream input = this.getClass().getClassLoader().getResourceAsStream(template_id);
         String result = null;
         try {
             if (input != null) {
-                result = org.apache.commons.io.IOUtils.toString(input);
+                result = org.apache.commons.io.IOUtils.toString(input, java.nio.charset.Charset.forName("UTF-8"));
                 input.close();
             } else {
                 System.out.println("[Error] Template not found: " + template_id);
@@ -217,10 +225,6 @@ public class Context {
         return contextAnnotations.containsKey(key);
     }
 
-    /********************************************************************************************
-     * Helper functions reused by different compilers
-     ********************************************************************************************/
-
     /**
      * @param value, a String of at least a character
      * @return value with first letter in upper case
@@ -235,7 +239,7 @@ public class Context {
     }
 
     public String getVariableName(Variable var) {
-        return var.qname("_") + "_var";
+        return ThingMLElementHelper.qname(var, "_") + "_var";
     }
 
     public String getInstanceName(Instance i) {
@@ -254,25 +258,6 @@ public class Context {
         return builder.toString();
     }
 
-    /**
-     * *****************************************************************************************
-     * Keyword protection API. To be used by all compilers which need to protect against clashes
-     * with target language keywords
-     * ******************************************************************************************
-     */
-
-    private Set<String> keywords = new HashSet<String>();
-    private String preKeywordEscape = "`";
-    private String postKeywordEscape = "`";
-
-    public Context(ThingMLCompiler compiler, String... keywords) {
-        this.debugStrings = new HashMap<Integer,String>();
-        this.compiler = compiler;
-        for (String k : keywords) {
-            this.keywords.add(k);
-        }
-    }
-
     public Set<String> getKeywords() {
         return keywords;
     }
@@ -288,6 +273,8 @@ public class Context {
     public String getPostKeywordEscape() {
         return postKeywordEscape;
     }
+
+    //Debug traces
 
     public void setPostKeywordEscape(String postKeywordEscape) {
         this.postKeywordEscape = postKeywordEscape;
@@ -305,8 +292,10 @@ public class Context {
         }
     }
 
-
-    private File outputDirectory = null;
+    public File getOutputDirectory() {
+        if (outputDirectory == null) return compiler.getOutputDirectory();
+        else return outputDirectory;
+    }
 
     public void setOutputDirectory(File outDir) {
         outDir.mkdirs();
@@ -319,87 +308,78 @@ public class Context {
         outputDirectory = outDir;
     }
 
-    public File getOutputDirectory() {
-        if (outputDirectory == null) return compiler.getOutputDirectory();
-        else return outputDirectory;
-    }
-
-    //Debug traces
-    
-    boolean debugTraceWithID = false;
-    Map<Integer,String> debugStrings;
-    
-    public void setDebugWithID(boolean b) {
-        debugTraceWithID = b;
-    }
     public boolean getDebugWithID() {
         return debugTraceWithID;
     }
-    
+
+    public void setDebugWithID(boolean b) {
+        debugTraceWithID = b;
+    }
+
     public String traceOnEntry(Thing t, StateMachine sm) {
-        if(!debugTraceWithID) {
+        if (!debugTraceWithID) {
             return " (" + t.getName() + "): Enters " + sm.getName();
         } else {
             return null;
         }
     }
-    
+
     public String traceOnEntry(Thing t, Region r, State s) {
-        if(!debugTraceWithID) {
+        if (!debugTraceWithID) {
             return " (" + t.getName() + "): Enters " + r.getName() + ":" + s.getName();
         } else {
             return null;
         }
     }
-    
+
     public String traceOnExit(Thing t, Region r, State s) {
-        if(!debugTraceWithID) {
+        if (!debugTraceWithID) {
             return " (" + t.getName() + "): Exits " + r.getName() + ":" + s.getName();
         } else {
             return null;
         }
     }
-    
+
     public String traceSendMessage(Thing t, Port p, Message m) {
-        if(!debugTraceWithID) {
+        if (!debugTraceWithID) {
             return " (" + t.getName() + "): " + p.getName() + "!" + m.getName();
         } else {
             return null;
         }
     }
-    
+
     public String traceReceiveMessage(Thing t, Port p, Message m) {
-        if(!debugTraceWithID) {
+        if (!debugTraceWithID) {
             return " (" + t.getName() + "): " + p.getName() + "?" + m.getName();
         } else {
             return null;
         }
     }
-    
+
     public String traceFunctionBegin(Thing t, Function f) {
-        if(!debugTraceWithID) {
+        if (!debugTraceWithID) {
             return " (" + t.getName() + "): Start " + f.getName();
         } else {
             return null;
         }
     }
-    
+
     public String traceFunctionDone(Thing t, Function f) {
-        if(!debugTraceWithID) {
+        if (!debugTraceWithID) {
             return " (" + t.getName() + "): " + f.getName() + " Done.";
         } else {
             return null;
         }
     }
-    
+
     public String traceTransition(Thing t, Transition tr, Port p, Message m) {
-        if(!debugTraceWithID) {
-            if(p != null) {
-                return " (" + t.getName() 
-                        + "): transition " 
-                        + tr.getSource().getName() 
-                        + " -> " + tr.getTarget().getName() + " event " 
-                        + p.getName() + "?" 
+        if (!debugTraceWithID) {
+            if (p != null) {
+                return " (" + t.getName()
+                        + "): transition "
+                        + tr.getSource().getName()
+                        + " -> " + tr.getTarget().getName() + " event "
+                        + p.getName() + "?"
                         + m.getName();
             } else {
                 return traceTransition(t, tr);
@@ -408,22 +388,22 @@ public class Context {
             return null;
         }
     }
-    
+
     public String traceTransition(Thing t, Transition tr) {
-        if(!debugTraceWithID) {
-            return " (" + t.getName() 
-                    + "): transition " 
-                    + tr.getSource().getName() 
+        if (!debugTraceWithID) {
+            return " (" + t.getName()
+                    + "): transition "
+                    + tr.getSource().getName()
                     + " -> " + tr.getTarget().getName();
         } else {
             return null;
         }
     }
-    
+
     public String traceInternal(Thing t, Port p, Message m) {
-        if(!debugTraceWithID) {
-            if(p != null) {
-                return " (" + t.getName() + "): internal event " + p.getName() + "?" + m.getName(); 
+        if (!debugTraceWithID) {
+            if (p != null) {
+                return " (" + t.getName() + "): internal event " + p.getName() + "?" + m.getName();
             } else {
                 return traceInternal(t);
             }
@@ -431,75 +411,73 @@ public class Context {
             return null;
         }
     }
-    
+
     public String traceInternal(Thing t) {
-        if(!debugTraceWithID) {
-            return " (" + t.getName() + "): internal" ;
+        if (!debugTraceWithID) {
+            return " (" + t.getName() + "): internal";
         } else {
             return null;
         }
     }
-    
+
     public String traceInit(Thing t) {
-        if(!debugTraceWithID) {
+        if (!debugTraceWithID) {
             return " (" + t.getName() + "): Init";
         } else {
             return null;
         }
     }
-    
-    private Boolean atInitTimeLock = false;
-    public Instance currentInstance;
-    
+
     public Boolean getAtInitTimeLock() {
         return atInitTimeLock;
     }
-    
+
     public void generateFixedAtInitValue(Configuration cfg, Instance inst, Expression a, StringBuilder builder) {
         atInitTimeLock = true;
         currentInstance = inst;
         getCompiler().getThingActionCompiler().generate(a, builder, this);
         atInitTimeLock = false;
     }
-    
+
     public void initSerializationPlugins(Configuration cfg) {
-        for(SerializationPlugin sp : this.getCompiler().getSerializationPlugins()) {
+        for (SerializationPlugin sp : this.getCompiler().getSerializationPlugins()) {
             sp.setConfiguration(cfg);
             sp.setContext(this);
         }
     }
-    
+
     public void generateNetworkLibs(Configuration cfg) {
         initSerializationPlugins(cfg);
-        
+
         Set<Protocol> protocols = new HashSet<>();
-        for(ExternalConnector eco : cfg.getExternalConnectors()) {
-            if(!protocols.contains(eco.getProtocol())) {
+        for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
+            if (!protocols.contains(eco.getProtocol())) {
                 protocols.add(eco.getProtocol());
             }
         }
-        for(Protocol p : protocols) {
-            this.getCompiler().getNetworkPlugin(p).addProtocol(p);
+        for (Protocol p : protocols) {
+            final NetworkPlugin netPlugin = this.getCompiler().getNetworkPlugin(p);
+            if (netPlugin != null)
+                netPlugin.addProtocol(p);
         }
-        for(NetworkPlugin np : this.getCompiler().getNetworkPlugins()) {
-            if(!np.getAssignedProtocols().isEmpty()) {
+        for (NetworkPlugin np : this.getCompiler().getNetworkPlugins()) {
+            if (!np.getAssignedProtocols().isEmpty()) {
                 np.generateNetworkLibrary(cfg, this);
             }
         }
     }
-    
-    public SerializationPlugin getSerializationPlugin(Protocol p) {
-        SerializationPlugin sp;
-        String serID;
-        if(p.hasAnnotation("serializer")) {
-            serID = p.annotation("serializer").get(0);
+
+    public SerializationPlugin getSerializationPlugin(Protocol p) throws UnsupportedEncodingException {
+        if (AnnotatedElementHelper.hasAnnotation(p, "serializer")) {
+            final String serID = AnnotatedElementHelper.annotation(p, "serializer").get(0);
+            final SerializationPlugin sp = this.getCompiler().getSerializationPlugin(serID);
+            if (sp != null) {
+                return sp;
+            } else {
+                throw new UnsupportedEncodingException("Serialization plugin " + serID + " is not loaded. Please make sure it appears in resources/META-INF.services");
+            }
         } else {
-            serID = "CByteArraySerializerPlugin";
+            throw new UnsupportedEncodingException("Protocol " + p.getName() + " has no @serializer annotation. Please provide one in your ThingML file!");
         }
-        sp = this.getCompiler().getSerializationPlugin(serID);
-        if(sp == null) {
-            System.out.println("[ERROR] The serialization plugin: " + serID + " is not loaded.");
-        }
-        return sp;
     }
 }

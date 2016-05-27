@@ -31,34 +31,38 @@ import java.util.Set;
 public class TestGenConfig {
     static public Set<Language> getLanguages(File outputDir, String options) {
         Set<Language> languages = new HashSet<>();
-        
+
         Language javascript = new Language(outputDir, "Nodejs", "nodejs");
         Language posix = new Language(outputDir, "Posix", "posix");
         Language java = new Language(outputDir, "Java", "java");
         Language arduino = new Language(outputDir, "Arduino", "arduino");
         Language sintefboard = new Language(outputDir, "Sintefboard", "sintefboard");
+        Language posixmt = new Language(outputDir, "Posixmt", "posixmt");
         
         if(options == null) {
             options = "all";
         }
-        
-        if((options.compareToIgnoreCase(javascript.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+
+        if ((options.compareToIgnoreCase(javascript.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
             languages.add(javascript);
         }
-        if((options.compareToIgnoreCase(posix.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+        if ((options.compareToIgnoreCase(posix.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
             languages.add(posix);
         }
-        if((options.compareToIgnoreCase(java.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+        if ((options.compareToIgnoreCase(java.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
             languages.add(java);
         }
-        if((options.compareToIgnoreCase(arduino.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+        if ((options.compareToIgnoreCase(arduino.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
             languages.add(arduino);
         }
-        if((options.compareToIgnoreCase(sintefboard.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+        if ((options.compareToIgnoreCase(sintefboard.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
             languages.add(sintefboard);
         }
+        if((options.compareToIgnoreCase(posixmt.longName) == 0) || (options.compareToIgnoreCase("all") == 0)) {
+            languages.add(posixmt);
+        }
         //languages.add(arduino);
-        
+
         return languages;
-    } 
+    }
 }

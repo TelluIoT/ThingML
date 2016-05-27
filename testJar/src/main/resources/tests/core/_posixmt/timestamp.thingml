@@ -1,0 +1,18 @@
+import "../../datatypes.thingml"
+import "../timestamp.thingml"
+
+/*****************************************************************************
+ * Definition of the built-in things and messages
+ *****************************************************************************/
+
+thing TimestampPosix includes Timestamp 
+@pim "Timestamp"
+@platform "linux"
+{
+
+    function timestamp() : LongLong do
+        'struct timeval  tv;
+        gettimeofday(&tv, NULL);'
+        return '(long long) ((tv.tv_sec) * 1000 + (tv.tv_usec) / 1000)'
+    end
+}

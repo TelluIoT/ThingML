@@ -1,0 +1,21 @@
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/test.thingml"
+import "../testFunction.thingml"
+import "../tester.thingml"
+import "../../../../../../org.thingml.samples/src/main/thingml/core/_linux/timer.thingml"
+
+configuration TestFunctionC 
+@output_folder "/home/thingml_out/" {
+	instance harness : Tester
+	instance dump : TestDumpLinux
+	instance test : TestFunction
+ group timer : TimerLinux
+ set timer.timer.millisecond = true
+ set timer.timer.period = 10
+ set timer.clock.period = 10
+
+ connector harness.timer => timer.timer.timer
+	connector harness.testEnd => dump.dumpEnd
+ connector test.testEnd => dump.dumpEnd
+	connector test.harnessOut => dump.dump
+	connector test.harnessIn => harness.test
+}

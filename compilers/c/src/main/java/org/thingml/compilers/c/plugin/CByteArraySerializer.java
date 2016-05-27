@@ -20,18 +20,14 @@
  */
 package org.thingml.compilers.c.plugin;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CMessageSerializer;
+
+import java.util.List;
 
 /**
  *
@@ -62,7 +58,7 @@ public class CByteArraySerializer extends CMessageSerializer {
                 // This should not happen and should be checked before.
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
-                if(!ctx.containsParam(IgnoreList, pt)) {
+                if (!ctx.containsParam(IgnoreList, pt)) {
                     builder.append("union u_" + v + "_t {\n");
                     builder.append(ctx.getCType(pt.getType()) + " p;\n");
                     builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
@@ -86,5 +82,5 @@ public class CByteArraySerializer extends CMessageSerializer {
         builder.append("    externalMessageEnqueue((uint8_t *) msg, size, listener_id);\n");
         builder.append("}\n");
     }
-    
+
 }

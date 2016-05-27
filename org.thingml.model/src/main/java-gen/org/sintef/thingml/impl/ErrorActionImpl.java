@@ -188,26 +188,4 @@ public class ErrorActionImpl extends ActionImpl implements ErrorAction {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		result.addAll(getMsg().getAllExpressions());
-		return  result;
-	}
-
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		result.addAll(getMsg().getAllExpressions(clazz));
-		return  result;
-	}
-
 } //ErrorActionImpl

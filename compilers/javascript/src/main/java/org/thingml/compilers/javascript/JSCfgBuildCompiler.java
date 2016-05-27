@@ -19,8 +19,9 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Port;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 
@@ -29,8 +30,6 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
-import org.sintef.thingml.Connector;
-import org.sintef.thingml.Instance;
 
 /**
  * Created by bmori on 17.12.2014.
@@ -52,49 +51,27 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
 
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonValue deps = json.get("dependencies");
-            
-            /*try {
-                System.out.println("idep: " + deps.asString());
-            } catch(Exception e) {
-                System.out.println("idep: ");
-                e.printStackTrace();
-            }*/
-            /*System.out.println("configuration " + cfg.getName() + " {");
-            for(Instance i : cfg.allInstances()) {
-                System.out.println("instance " + i.getName() + " : " + i.getType().getName());
-            }
-            for(Connector c : cfg.allConnectors()) {
-                System.out.println("connector " + c.getCli().getInstance().getName() + " => " + c.getSrv().getInstance().getName());
-            }
-            System.out.println("}");*/
-            
-            for (Thing t : cfg.allThings()) {
-                for (String dep : t.annotation("js_dep")) {
+
+            for (Thing t : ConfigurationHelper.allThings(cfg)) {
+                for (String dep : AnnotatedElementHelper.annotation(cfg, "js_dep")) {
                     deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
                 }
 
             }
 
             boolean addCEPdeps = false;
-            boolean addDebugDeps = ctx.getCompiler().containsDebug();
-            //boolean addDebugDeps = true;
-            
 
-            for (Thing t : cfg.allThings()) {
+            for (Thing t : ConfigurationHelper.allThings(cfg)) {
                 if (t.getStreams().size() > 0) {
                     addCEPdeps = true;
                 }
             }
 
-            if(addCEPdeps) {
-                deps.asObject().add("rx", "^2.5.3");
-                deps.asObject().add("events", "^1.0.2");
+            if (addCEPdeps) {
+                deps.asObject().add("rx", "^4.1.0");
+                deps.asObject().add("events", "^1.1.0");
             }
 
-            //if(addDebugDeps) {
-                deps.asObject().add("colors", "^1.1.2");
-            //}
-            
             final File f = new File(ctx.getOutputDirectory() + "/package.json");
             f.setWritable(true);
             final PrintWriter w = new PrintWriter(new FileWriter(f));

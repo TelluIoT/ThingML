@@ -23,12 +23,13 @@ import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.thing.*;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.thing.*;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.utils.ThingMLPrettyPrinter;
@@ -110,8 +111,8 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     }
 
     private void exportPNG(Configuration t) {
-        for (Thing th : t.allThings()) {
-            for (StateMachine sm : th.allStateMachines()) {
+        for (Thing th : ConfigurationHelper.allThings(t)) {
+            for (StateMachine sm : ThingMLHelpers.allStateMachines(th)) {
                 SourceStringReader reader = new SourceStringReader(ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml").toString());
 // Write the first image to "png"
                 try {
@@ -138,8 +139,8 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     }
 
     private void exportSVG(Configuration t) {
-        for (Thing th : t.allThings()) {
-            for (StateMachine sm : th.allStateMachines()) {
+        for (Thing th : ConfigurationHelper.allThings(t)) {
+            for (StateMachine sm : ThingMLHelpers.allStateMachines(th)) {
                 SourceStringReader reader = new SourceStringReader(ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml").toString());
                 final ByteArrayOutputStream os = new ByteArrayOutputStream();
                 // Write the first image to "os"
@@ -172,8 +173,8 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
-        for (Thing th : t.allThings()) {
-            for (StateMachine sm : th.allStateMachines()) {
+        for (Thing th : ConfigurationHelper.allThings(t)) {
+            for (StateMachine sm : ThingMLHelpers.allStateMachines(th)) {
                 ((FSMBasedThingImplCompiler) getThingImplCompiler()).generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
             }
         }

@@ -18,18 +18,13 @@ package org.thingml.compilers.cpp.sintefboard;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CThingApiCompiler;
-import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.compilers.utils.OpaqueThingMLCompiler;
-
-import java.io.File;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
 /**
  * Created by ffl on 25.11.14.
@@ -64,12 +59,12 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
         CCompilerContext ctx = new CCompilerContextSintefboard(this);
         processDebug(cfg);
-        
+
         ctx.setCurrentConfiguration(cfg);
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
 
         // GENERATE A MODULE FOR EACH THING
-        for (Thing thing: cfg.allThings()) {
+        for (Thing thing : ConfigurationHelper.allThings(cfg)) {
             ctx.setConcreteThing(thing);
             // GENERATE HEADER
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
@@ -87,7 +82,7 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
         // Fetch header stuff from the context
         String headerFromCtx = ctx.getCppHeaderCode().toString();
-        ctx.getBuilder(cfg.getName()+".h_ctx").append(headerFromCtx);
+        ctx.getBuilder(cfg.getName() + ".h_ctx").append(headerFromCtx);
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();

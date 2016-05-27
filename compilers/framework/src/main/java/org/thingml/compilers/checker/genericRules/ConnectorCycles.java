@@ -20,13 +20,14 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import java.util.List;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Instance;
-import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.Tarjan;
+
+import java.util.List;
 
 /**
  *
@@ -55,17 +56,17 @@ public class ConnectorCycles extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        
-        Tarjan<Instance> t = new Tarjan(cfg, cfg.allInstances());
+
+        Tarjan<Instance> t = new Tarjan(cfg, ConfigurationHelper.allInstances(cfg));
         List<List<Instance>> cycles = t.findStronglyConnectedComponents();
-        
-        for(List<Instance> cycle : cycles) {
-            if(cycle != null) {
-                if(cycle.size() != 1) {
+
+        for (List<Instance> cycle : cycles) {
+            if (cycle != null) {
+                if (cycle.size() != 1) {
                     String msg = "Dependancies cycle: (";
                     boolean first = true;
-                    for(Instance j : cycle) {
-                        if(first) {
+                    for (Instance j : cycle) {
+                        if (first) {
                             first = false;
                         } else {
                             msg += ", ";
@@ -80,5 +81,5 @@ public class ConnectorCycles extends Rule {
             }
         }
     }
-    
+
 }
