@@ -17,6 +17,7 @@ package org.thingml.compilers.javascript;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
@@ -98,7 +99,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
         processDebug(t);
-        for (Type ty : model.allUsedSimpleTypes()) {
+        for (Type ty : ThingMLHelpers.allUsedSimpleTypes(model)) {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;
                 ctx.addContextAnnotation("hasEnum", "true");
@@ -116,7 +117,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
                 builder.append("exports." + e.getName() + "_ENUM = " + e.getName() + "_ENUM;\n");
             }
         }
-        for (Thing thing : t.allThings()) {
+        for (Thing thing : ConfigurationHelper.allThings(t)) {
             ctx.getCompiler().getThingImplCompiler().generateImplementation(thing, ctx);
         }
         ctx.getCompiler().getMainCompiler().generateMainAndInit(t, model, ctx);

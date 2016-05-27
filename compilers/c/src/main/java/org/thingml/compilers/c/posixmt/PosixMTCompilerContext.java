@@ -66,7 +66,7 @@ public class PosixMTCompilerContext extends CCompilerContextPosix{
         return id;
     }
     
-    public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt, String instanceVarName) {
+    public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt, String fifo) {
         int i = getCByteSize(t, 0);
         String v = variable;
         if (isPointer(t)) {
@@ -91,7 +91,8 @@ public class PosixMTCompilerContext extends CCompilerContextPosix{
                     i = i - 1;
                     //if (i == 0) 
                     //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
-                    builder.append("_fifo_enqueue(" + instanceVarName + ".fifo,  u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
+                    
+                    builder.append("_fifo_enqueue(" + fifo + ",  u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
                     //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
         }
             }
@@ -102,6 +103,17 @@ public class PosixMTCompilerContext extends CCompilerContextPosix{
     public void appendFormalParametersForDispatcher(StringBuilder builder, Message m) {
         builder.append("(");
         builder.append("uint16_t sender");
+        for (Parameter p : m.getParameters()) {
+            builder.append(", ");
+            builder.append(getCType(p.getType()));
+            if (p.getCardinality() != null) builder.append("*");
+            builder.append(" " + p.getName());
+        }
+        builder.append(")");
+    }
+    
+    public void appendFormalParametersForEnqueue(StringBuilder builder, Thing t, Message m) {
+        builder.append("(struct " + getInstanceStructName(t) + " * inst");
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
             builder.append(getCType(p.getType()));

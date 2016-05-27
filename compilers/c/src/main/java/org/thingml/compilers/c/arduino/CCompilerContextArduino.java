@@ -17,6 +17,7 @@ package org.thingml.compilers.c.arduino;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 
@@ -83,7 +84,7 @@ public class CCompilerContextArduino extends CCompilerContext {
         // FIXME: Extract the arduino specific part bellow
 
         Thing arduino_scheduler = null;
-        for (Thing t : model.allThings()) {
+        for (Thing t : ThingMLHelpers.allThings(model)) {
             if (t.getName().equals("ThingMLScheduler")) {
                 arduino_scheduler = t;
                 break;
@@ -91,7 +92,7 @@ public class CCompilerContextArduino extends CCompilerContext {
         }
         if (arduino_scheduler != null) {
             Message poll_msg = null;
-            for (Message m : arduino_scheduler.allMessages()) {
+            for (Message m : ThingMLHelpers.allMessages(arduino_scheduler)) {
                 if (m.getName().equals("poll")) {
                     poll_msg = m;
                     break;
@@ -100,8 +101,8 @@ public class CCompilerContextArduino extends CCompilerContext {
 
             if (poll_msg != null) {
                 // Send a poll message to all components which can receive it
-                for (Instance i : cfg.allInstances()) {
-                    for (Port p : i.getType().allPorts()) {
+                for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+                    for (Port p : ThingMLHelpers.allPorts(i.getType())) {
                         if (p.getReceives().contains(poll_msg)) {
                             builder.append(this.getHandlerName(i.getType(), p, poll_msg) + "(&" + this.getInstanceVarName(i) + ");\n");
                         }

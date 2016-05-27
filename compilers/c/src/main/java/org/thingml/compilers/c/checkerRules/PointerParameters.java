@@ -21,6 +21,9 @@
 package org.thingml.compilers.c.checkerRules;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -51,15 +54,15 @@ public class PointerParameters extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for (Thing t : cfg.allThings()) {
-            for (Port p : t.allPorts()) {
-                if (!p.isDefined("sync_send", "true")) {
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
+            for (Port p : ThingMLHelpers.allPorts(t)) {
+                if (!AnnotatedElementHelper.isDefined(p, "sync_send", "true")) {
                     List<Message> messages = new LinkedList<Message>();
                     messages.addAll(p.getReceives());
                     messages.addAll(p.getSends());
                     for (Message m : messages) {
                         for (Parameter pt : m.getParameters()) {
-                            if (pt.getType().isDefined("c_byte_size", "*")) {
+                            if (AnnotatedElementHelper.isDefined(pt.getType(), "c_byte_size", "*")) {
                                 checker.addError("C", "Message including pointer parameters sent/received asynchronously.", m);
                             }
                             if (pt.isIsArray()) {

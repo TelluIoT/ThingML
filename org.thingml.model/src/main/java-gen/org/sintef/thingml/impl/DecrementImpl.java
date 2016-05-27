@@ -189,26 +189,4 @@ public class DecrementImpl extends ActionImpl implements Decrement {
 		return super.eIsSet(featureID);
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions() {
-		List<Expression> result = new ArrayList<Expression>();
-		//TODO: should refer to a Reference rather than to the variable directly
-		return result;
-	}
-
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Expression> getAllExpressions(Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
-		//TODO: should refer to a Reference rather than to the variable directly
-		return result;
-	}
-
 } //DecrementImpl

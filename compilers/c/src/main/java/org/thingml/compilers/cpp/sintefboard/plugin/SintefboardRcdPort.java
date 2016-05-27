@@ -21,6 +21,7 @@
 package org.thingml.compilers.cpp.sintefboard.plugin;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
 
@@ -63,13 +64,21 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
             String htemplate = ctx.getNetworkLibRcdPortHeaderTemplate();
 
             String portName;
-            if (eco.hasAnnotation("port_name")) {
-                portName = eco.annotation("port_name").iterator().next();
+            if (AnnotatedElementHelper.hasAnnotation(eco, "port_name")) {
+                portName = AnnotatedElementHelper.annotation(eco, "port_name").iterator().next();
             } else {
                 portName = eco.getProtocol().getName();
             }
 
             eco.setName(portName);
+
+            //Integer baudrate;
+            //if(AnnotatedElementHelper.hasAnnotation(eco, "serial_baudrate")) {
+            //    baudrate = Integer.parseInt(AnnotatedElementHelper.annotation(eco, "serial_baudrate").iterator().next());
+            //} else {
+            //    baudrate = 115200;
+            //}
+            //ctemplate = ctemplate.replace("/*BAUDRATE*/", baudrate.toString());
 
             ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
             htemplate = htemplate.replace("/*PORT_NAME*/", portName);
@@ -114,6 +123,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
 
             //************ Generate methods for sending meassages to ports
             for (ExternalConnector eco : this.getExternalConnectors()) {
+                //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
                 Thing t = eco.getInst().getInstance().getType();
                 Port p = eco.getPort();
 
@@ -133,7 +143,11 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
 
                     String portname = eco.getName();
                     String portnum = portname.replace("Rcdport", "");
-                    String msgid = m.annotation("rcdport_msgid").iterator().next();
+                    String msgid = AnnotatedElementHelper.annotation(m, "rcdport_msgid").iterator().next();
+                    //builder.append("//AnnotatedElementHelper.annotation(m, "rcdport_msgid) is " +  msgid + "\n");
+                    String composeproto = AnnotatedElementHelper.annotation(m, "rcdport_composeproto").iterator().next();
+                    //builder.append("//AnnotatedElementHelper.annotation(m, "rcdport_composeproto) is " +  composeproto + "\n");
+                    String composestr = composeproto.replace("/*MSG_PTR*/", "&msg_out").replace("/*MSGID*/", msgid);
 
                     builder.append("msgc_t   msg_out;      // Outgoing message\n");
                     builder.append("if( Ports_ptr->IsConnected(" + portnum + ") ) {\n");
@@ -141,6 +155,12 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
                     builder.append("Ports_ptr->SendMsgc(" + portnum + ", &msg_out);\n");
                     builder.append("}\n");
 
+                    //ctx.generateSerializationForForwarder(m, builder, ctx.getHandlerCode(cfg, m), ignoreList);
+
+                    //builder.append("\n//Forwarding with specified function \n");
+                    //builder.append(eco.getName() + "_forwardMessage(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
+
+                    //builder.append(AnnotatedElementHelper.annotation(eco, "c_external_send").iterator().next() + "(forward_buf, " + (ctx.getMessageSerializationSize(m) - 2) + ");\n");
                     builder.append("}\n\n");
                 }
             }
@@ -156,6 +176,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
             builder.append("{\n");
             builder.append("switch (from_port) {\n");
             for (ExternalConnector eco : this.getExternalConnectors()) {
+                //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
                 Thing t = eco.getInst().getInstance().getType();
                 Port p = eco.getPort();
                 String portname = eco.getName();
@@ -176,10 +197,10 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
         builder.append("switch (msg_in_ptr->MsgId) {\n");
         for (Message m : p.getReceives()) {
             Set<String> ignoreList = new HashSet<String>();
-            String msgid = m.annotation("rcdport_msgid").iterator().next();
-            builder.append("//m.annotation(rcdport_msgid) is " +  msgid + "\n");
-            String decompproto = m.annotation("rcdport_decompproto").iterator().next();
-            builder.append("//m.annotation(rcdport_decompproto) is " +  decompproto + "\n");
+            String msgid = AnnotatedElementHelper.annotation(m, "rcdport_msgid").iterator().next();
+            builder.append("//AnnotatedElementHelper.annotation(m, \"rcdport_msgid) is " + msgid + "\n");
+            String decompproto = AnnotatedElementHelper.annotation(m, "rcdport_decompproto").iterator().next();
+            builder.append("//AnnotatedElementHelper.annotation(m, \"rcdport_decompproto) is " + decompproto + "\n");
             builder.append("case " + msgid + ":\n");
             builder.append("{\n");
             ctx.appendFormalParameterDeclarations(builder, m);

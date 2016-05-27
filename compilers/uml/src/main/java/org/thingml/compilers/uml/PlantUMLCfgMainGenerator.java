@@ -16,6 +16,8 @@
 package org.thingml.compilers.uml;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
@@ -29,9 +31,9 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
         final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/docs/" + cfg.getName() + ".plantuml");
         builder.append("@startuml\n");
         builder.append("node \"" + cfg.getName() + "\"{\n");
-        for (Instance i : cfg.allInstances()) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             boolean hasPort = false;
-            for (Port p : i.getType().allPorts()) {
+            for (Port p : ThingMLHelpers.allPorts(i.getType())) {
                 if (p instanceof ProvidedPort) {
                     builder.append(p.getName() + "_" + i.getName() + " - [" + i.getName() + "]\n");
                     hasPort = true;
@@ -41,11 +43,11 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                 builder.append("[" + i.getName() + "]\n");
             }
         }
-        for (Connector c : cfg.allConnectors()) {
+        for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
             builder.append("[" + c.getCli().getInstance().getName() + "] -> " + c.getProvided().getName() + "_" + c.getSrv().getInstance().getName() + " : " + c.getRequired().getName() + "\n");
         }
-        for (ExternalConnector eco : cfg.getExternalConnectors()) {
-            builder.append("[" + cfg.getName() + "_" + eco.getInst().getInstance().getName() + "] ..> " + eco.getProtocol() + "\n");
+        for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
+            builder.append("[" + cfg.getName() + "_" + eco.getInst().getInstance().getName() + "] ..> " + eco.getProtocol().getName() + "\n");
         }
         builder.append("}\n");
         builder.append("@enduml");

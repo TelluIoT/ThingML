@@ -1,17 +1,22 @@
 import "thingml.thingml"
 
 thing TestVariables includes Test 
-@test "xx # abcdefxxxbxxgabcabcdefxx"
+@test "xxx # abcdefxxxbxxgabcabcdefxx"
 {
 
 	property pa : Char = '\'a\''
 	
 	readonly property pb : Char = '\'b\''
     
-    statechart TestPropertyPing init state1 {
+    statechart TestPropertyPing init state0 {
     
     property pc : Char = '\'c\''
-    
+    	state state0 {
+			transition -> state1 
+			event e : harnessIn?testIn
+			guard e.c == '\'x\''
+		}
+
     	state state1 {
     		
     		property pd : Char = '\'d\''

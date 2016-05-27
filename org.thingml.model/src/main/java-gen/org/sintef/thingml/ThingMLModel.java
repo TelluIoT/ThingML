@@ -106,62 +106,6 @@ public interface ThingMLModel extends EObject {
 	 */
 	EList<Protocol> getProtocols();
 
-				//Derived properties
 
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    List<ThingMLModel> allThingMLModelModels();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    List<Type> allTypes();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    Set<Type> allUsedTypes();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    List<Type> allSimpleTypes();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    Set<Type> allUsedSimpleTypes();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    List<Thing> allThings();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    Set<Message> allMessages();
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    List<Configuration> allConfigurations();
 
 } // ThingMLModel

@@ -23,6 +23,8 @@ package org.thingml.compilers.checker.genericRules;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Instance;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;
@@ -54,10 +56,10 @@ public class ThingsUsage extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for (Thing t : cfg.findContainingModel().allThings()) {
+        for (Thing t : ThingMLHelpers.allThings(ThingMLHelpers.findContainingModel(cfg))) {
             if (!t.isFragment()) {
                 boolean found = false;
-                for (Instance i : cfg.allInstances()) {
+                for (Instance i : ConfigurationHelper.allInstances(cfg)) {
                     if (i.getType().equals(t)) {
                         found = true;
                         break;

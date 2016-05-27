@@ -25,6 +25,7 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.compilers.registry.ThingMLToolRegistry;
@@ -182,11 +183,11 @@ public class Main {
             }
 
             if (main.compilerUsed) {
-                if (input_model.allConfigurations().isEmpty()) {
+                if (ThingMLHelpers.allConfigurations(input_model).isEmpty()) {
                     System.out.println("ERROR: The input model does not contain any configuration to be compiled.");
                     return;
                 }
-                for (Configuration cfg : input_model.allConfigurations()) {
+                for (Configuration cfg : ThingMLHelpers.allConfigurations(input_model)) {
                     ThingMLCompiler thingmlCompiler = registry.createCompilerInstanceByName(main.compiler.trim());
                     if (thingmlCompiler == null) {
                         System.out.println("ERROR: Cannot find compiler " + main.compiler.trim() + ". Use --help (or -h) to check the list of registered compilers.");

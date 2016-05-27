@@ -20,6 +20,8 @@ import com.eclipsesource.json.JsonValue;
 import org.apache.commons.io.IOUtils;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 
@@ -50,8 +52,8 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonValue deps = json.get("dependencies");
 
-            for (Thing t : cfg.allThings()) {
-                for (String dep : t.annotation("js_dep")) {
+            for (Thing t : ConfigurationHelper.allThings(cfg)) {
+                for (String dep : AnnotatedElementHelper.annotation(cfg, "js_dep")) {
                     deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
                 }
 
@@ -59,7 +61,7 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
 
             boolean addCEPdeps = false;
 
-            for (Thing t : cfg.allThings()) {
+            for (Thing t : ConfigurationHelper.allThings(cfg)) {
                 if (t.getStreams().size() > 0) {
                     addCEPdeps = true;
                 }

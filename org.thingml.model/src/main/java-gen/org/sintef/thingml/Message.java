@@ -28,11 +28,6 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface Message extends AnnotatedElement, ReferencedElmt, HasParameters {
-	/**
-     *
-     * @return
-     * @generated NOT
-     */
-    int getCode();
+
 
 } // Message

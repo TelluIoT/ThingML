@@ -53,7 +53,6 @@ thing TestMergeStreams includes CepMsgs,  SampleMsgs, Test
    statechart Sample init Init {
         state Init {
             on entry do
-                print "Init"
                 sendPort!m1()
                 sendPort!m2()
                 sendPort!m3()
@@ -67,14 +66,12 @@ thing TestMergeStreams includes CepMsgs,  SampleMsgs, Test
             internal
             event rcvPort?cep1
             action do 
-                print "cep1 message receive."
                 harnessOut!testOut('\'1\'')
             end
              
             internal 
             event e : rcvPort?cep2
             action do
-                print "cep2 message receive with values (" + e.val1 + ";" + e.val2 + e.val3 + ")."
                 if(e.val1 == 1 and e.val2 == 2 and e.val3 == 3) harnessOut!testOut('\'2\'')
                 if(e.val1 == 4 and e.val2 == 5 and e.val3 == 3) harnessOut!testOut('\'3\'')
                 if(e.val1 == 7 and e.val2 == 8 and e.val3 == 3) harnessOut!testOut('\'4\'')

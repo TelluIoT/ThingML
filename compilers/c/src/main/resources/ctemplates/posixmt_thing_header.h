@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 #include "thingml_typedefs.h"
+#include "runtime.h"
 
 /*HEADER*/
 

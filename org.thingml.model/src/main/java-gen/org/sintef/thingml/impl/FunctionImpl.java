@@ -295,20 +295,6 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function {
 			eNotify(new ENotificationImpl(this, Notification.SET, ThingmlPackage.FUNCTION__BODY, newBody, newBody));
 	}
 
-	@Override
-	public List<Action> getAllActions() {
-		List<Action> result = new ArrayList<Action>();
-		if (getBody()!=null)
-			result.addAll(getBody().getAllActions());
-		return result;
-	}
-
-	@Override
-	public List<Action> getAllActions(Class clazz) {
-		List<Action> result = new ArrayList<Action>();
-		if (getBody()!=null)
-		result.addAll(getBody().getAllActions(clazz));
-		return result;	}
 
 	/**
 	 * <!-- begin-user-doc -->

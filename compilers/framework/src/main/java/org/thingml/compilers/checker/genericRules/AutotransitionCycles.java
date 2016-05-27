@@ -24,6 +24,10 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.CompositeStateHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.Tarjan;
@@ -59,10 +63,10 @@ public class AutotransitionCycles extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for (Thing thing : cfg.allThings()) {
-            for (StateMachine sm : thing.allStateMachines()) {
+        for (Thing thing : ConfigurationHelper.allThings(cfg)) {
+            for (StateMachine sm : ThingMLHelpers.allStateMachines(thing)) {
                 Set<State> vertices = new HashSet<State>();
-                for (State s : sm.allContainedStates()) {
+                for (State s : CompositeStateHelper.allContainedStates(sm)) {
                     vertices.add(s);
                 }
                 Tarjan<State> t = new Tarjan(cfg, vertices);

@@ -22,6 +22,7 @@ package org.thingml.networkplugins.c.posix;
 
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -70,7 +71,7 @@ public class PosixTextDigitSerializerPlugin extends SerializationPlugin {
                 // This should not happen and should be checked before.
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
-                if (!pt.isDefined("ignore", "true")) {
+                if (!AnnotatedElementHelper.isDefined(pt, "ignore", "true")) {
                     b.append("union u_" + v + "_t {\n");
                     b.append(cctx.getCType(pt.getType()) + " p;\n");
                     b.append("byte bytebuffer[" + cctx.getCByteSize(pt.getType(), 0) + "];\n");

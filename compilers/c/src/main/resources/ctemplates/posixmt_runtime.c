@@ -15,7 +15,7 @@
 
 #include "runtime.h"
 
-#define MAX_INSTANCES 32
+/*FIFO*/
 
 /*********************************
  * Instance IDs and lookup
@@ -93,17 +93,17 @@ byte fifo_dequeue(struct instance_fifo *fifo) {
  ******************************************/
 
 void fifo_lock(struct instance_fifo *fifo) {
-  pthread_mutex_lock (&(*fifo).fifo_mut);
+  pthread_mutex_lock (&(fifo->fifo_mut));
 }
 void fifo_unlock(struct instance_fifo *fifo) {
-  pthread_mutex_unlock (&(*fifo).fifo_mut);	  
+  pthread_mutex_unlock (&(fifo->fifo_mut));	  
 }
 void fifo_wait(struct instance_fifo *fifo) {
-  pthread_cond_wait (&(*fifo).fifo_cond, &(*fifo).fifo_mut);
+  pthread_cond_wait (&(fifo->fifo_cond), &(fifo->fifo_mut));
 }
 void fifo_unlock_and_notify(struct instance_fifo *fifo) {
-  pthread_mutex_unlock (&(*fifo).fifo_mut);
-  pthread_cond_signal (&(*fifo).fifo_cond);
+  pthread_cond_signal (&(fifo->fifo_cond));
+  pthread_mutex_unlock (&(fifo->fifo_mut));
 }
 
 

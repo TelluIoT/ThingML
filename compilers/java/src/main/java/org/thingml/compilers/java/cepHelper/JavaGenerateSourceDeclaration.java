@@ -16,6 +16,8 @@
 package org.thingml.compilers.java.cepHelper;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.java.JavaThingActionCompiler;
@@ -29,17 +31,17 @@ import java.util.Iterator;
 public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration {
     @Override
     public void generate(Stream stream, SimpleSource source, StringBuilder builder, Context context) {
-        builder.append("PublishSubject " + source.qname("_") + "_subject" + " = PublishSubject.create();\n")
+        builder.append("PublishSubject " + ThingMLElementHelper.qname(source, "_") + "_subject" + " = PublishSubject.create();\n")
                 .append("cepDispatcher.addSubs(")
                 .append(source.getMessage().getMessage().getName() + "Type,")
-                .append(source.qname("_") + "_subject" + ");\n");
+                .append(ThingMLElementHelper.qname(source, "_") + "_subject" + ");\n");
 
         if (source.eContainer() instanceof SourceComposition) {
-            builder.append("rx.Observable " + source.qname("_") + " = " + source.qname("_") + "_subject" + ".asObservable();\n");
+            builder.append("rx.Observable " + ThingMLElementHelper.qname(source, "_") + " = " + ThingMLElementHelper.qname(source, "_") + "_subject" + ".asObservable();\n");
         } else {
-            builder.append("this." + source.qname("_") + " = " + source.qname("_") + "_subject" + ".asObservable();\n");
+            builder.append("this." + ThingMLElementHelper.qname(source, "_") + " = " + ThingMLElementHelper.qname(source, "_") + "_subject" + ".asObservable();\n");
         }
-        generateOperatorCalls(source.qname("_"), source, builder, context);
+        generateOperatorCalls(ThingMLElementHelper.qname(source, "_"), source, builder, context);
     }
 
     @Override
@@ -53,14 +55,14 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration {
             } else {
                 firstParamDone = true;
             }
-            mergeParams += s.qname("_");
+            mergeParams += ThingMLElementHelper.qname(s, "_");
         }
 
         Message result = source.getResultMessage();
         String resultName = result.getName();
         String resultType = context.firstToUpper(resultName) + "MessageType." + context.firstToUpper(resultName) + "Message";
 
-        builder.append(stream.qname("_") + " = rx.Observable.merge(" + mergeParams + ").map(new Func1<Event," + resultType + ">() {\n")
+        builder.append(ThingMLElementHelper.qname(stream, "_") + " = rx.Observable.merge(" + mergeParams + ").map(new Func1<Event," + resultType + ">() {\n")
                 .append("@Override\n")
                 .append("public " + resultType + " call(Event event) {\n");
 
@@ -70,9 +72,9 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration {
         for (Parameter p : stream.getOutput().getMessage().getParameters()) {
             if (!(p.getType() instanceof Enumeration)) {
                 if (!(p.getCardinality() != null))
-                    builder.append(p.getType().annotation("java_type").toArray()[0] + " ");
+                    builder.append(AnnotatedElementHelper.annotation(p.getType(), "java_type").toArray()[0] + " ");
                 else
-                    builder.append(p.getType().annotation("java_type").toArray()[0] + "[] ");
+                    builder.append(AnnotatedElementHelper.annotation(p.getType(), "java_type").toArray()[0] + "[] ");
             }
             builder.append("param" + i + " = ");
             builder.append(JavaHelper.getDefaultValue(p.getType()));
@@ -122,35 +124,35 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration {
                 .append("}\n")
                 .append("});");
 
-        generateOperatorCalls(stream.qname("_"), source, builder, context);
+        generateOperatorCalls(ThingMLElementHelper.qname(stream, "_"), source, builder, context);
     }
 
     @Override
     public void generate(Stream stream, JoinSources sources, StringBuilder builder, Context context) {
         String ttl = "250";
-        if (stream.hasAnnotation("TTL"))
-            ttl = stream.annotation("TTL").get(0);
+        if (AnnotatedElementHelper.hasAnnotation(stream, "TTL"))
+            ttl = AnnotatedElementHelper.annotation(stream, "TTL").get(0);
 
         String ttl1 = ttl;
         String ttl2 = ttl;
 
         SimpleSource simpleSource1 = (SimpleSource) sources.getSources().get(0),
                 simpleSource2 = (SimpleSource) sources.getSources().get(1);
-        if (stream.hasAnnotation("TTL1")) {
-            ttl1 = stream.annotation("TTL1").get(0);
+        if (AnnotatedElementHelper.hasAnnotation(stream, "TTL1")) {
+            ttl1 = AnnotatedElementHelper.annotation(stream, "TTL1").get(0);
         }
-        if (stream.hasAnnotation("TTL2")) {
-            ttl2 = stream.annotation("TTL2").get(0);
+        if (AnnotatedElementHelper.hasAnnotation(stream, "TTL2")) {
+            ttl2 = AnnotatedElementHelper.annotation(stream, "TTL2").get(0);
         }
 
         builder.append("\n");
-        builder.append("Func1 wait_" + stream.qname("_") + "_1 = new Func1() {\n" +
+        builder.append("Func1 wait_" + ThingMLElementHelper.qname(stream, "_") + "_1 = new Func1() {\n" +
                 "@Override\n" +
                 "public Object call(Object o) {\n" +
                 "return rx.Observable.timer(" + ttl1 + ", TimeUnit.MILLISECONDS);\n" +
                 "}\n" +
                 "};\n");
-        builder.append("Func1 wait_" + stream.qname("_") + "_2 = new Func1() {\n" +
+        builder.append("Func1 wait_" + ThingMLElementHelper.qname(stream, "_") + "_2 = new Func1() {\n" +
                 "@Override\n" +
                 "public Object call(Object o) {\n" +
                 "return rx.Observable.timer(" + ttl2 + ", TimeUnit.MILLISECONDS);\n" +
@@ -169,8 +171,8 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration {
 
         generate(stream, simpleSource1, builder, context);
         generate(stream, simpleSource2, builder, context);
-        builder.append(stream.qname("_") + " = " + simpleSource1.qname("_"))
-                .append(".join(" + simpleSource2.qname("_") + ",wait_" + stream.qname("_") + "_1, wait_" + stream.qname("_") + "_2,\n")
+        builder.append(ThingMLElementHelper.qname(stream, "_") + " = " + ThingMLElementHelper.qname(simpleSource1, "_"))
+                .append(".join(" + ThingMLElementHelper.qname(simpleSource2, "_") + ",wait_" + ThingMLElementHelper.qname(stream, "_") + "_1, wait_" + ThingMLElementHelper.qname(stream, "_") + "_2,\n")
                 .append("new Func2<" + eventMessage1 + ", " + eventMessage2 + ", " + outPutType + ">(){\n")
                 .append("@Override\n")
                 .append("public " + outPutType + " call(" + eventMessage1 + " " + message1Name + ", " + eventMessage2 + " " + message2Name + ") {\n");
@@ -197,6 +199,6 @@ public class JavaGenerateSourceDeclaration extends ThingCepSourceDeclaration {
                 .append("}\n")
                 .append(");\n");
 
-        generateOperatorCalls(stream.qname("_"), sources, builder, context);
+        generateOperatorCalls(ThingMLElementHelper.qname(stream, "_"), sources, builder, context);
     }
 }

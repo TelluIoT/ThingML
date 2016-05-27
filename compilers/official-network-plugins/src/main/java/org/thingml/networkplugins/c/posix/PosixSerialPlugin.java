@@ -21,6 +21,7 @@
 package org.thingml.networkplugins.c.posix;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
@@ -151,14 +152,14 @@ public class PosixSerialPlugin extends NetworkPlugin {
 
 
                 String pathToDevice;
-                if (protocol.hasAnnotation("serial_path_to_device")) {
-                    pathToDevice = protocol.annotation("serial_path_to_device").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_path_to_device")) {
+                    pathToDevice = AnnotatedElementHelper.annotation(protocol, "serial_path_to_device").iterator().next();
                     ctemplate = ctemplate.replace("/*PATH_TO_DEVICE*/", pathToDevice);
                 }
 
                 Integer baudrate;
-                if (protocol.hasAnnotation("serial_baudrate")) {
-                    baudrate = Integer.parseInt(protocol.annotation("serial_baudrate").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_baudrate")) {
+                    baudrate = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "serial_baudrate").iterator().next());
                 } else {
                     baudrate = 115200;
                 }
@@ -166,24 +167,24 @@ public class PosixSerialPlugin extends NetworkPlugin {
                 ctemplate = ctemplate.replace("/*BAUDRATE*/", baudrate.toString());
 
                 String startByte;
-                if (protocol.hasAnnotation("serial_start_byte")) {
-                    startByte = protocol.annotation("serial_start_byte").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_start_byte")) {
+                    startByte = AnnotatedElementHelper.annotation(protocol, "serial_start_byte").iterator().next();
                 } else {
                     startByte = "18";
                 }
                 ctemplate = ctemplate.replace("/*START_BYTE*/", startByte);
 
                 String stopByte;
-                if (protocol.hasAnnotation("serial_stop_byte")) {
-                    stopByte = protocol.annotation("serial_stop_byte").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_stop_byte")) {
+                    stopByte = AnnotatedElementHelper.annotation(protocol, "serial_stop_byte").iterator().next();
                 } else {
                     stopByte = "19";
                 }
                 ctemplate = ctemplate.replace("/*STOP_BYTE*/", stopByte);
 
                 String escapeByte;
-                if (protocol.hasAnnotation("serial_escape_byte")) {
-                    escapeByte = protocol.annotation("serial_escape_byte").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_escape_byte")) {
+                    escapeByte = AnnotatedElementHelper.annotation(protocol, "serial_escape_byte").iterator().next();
                 } else {
                     escapeByte = "125";
                 }
@@ -201,8 +202,8 @@ public class PosixSerialPlugin extends NetworkPlugin {
                 ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 
                 String msgBufferSize;
-                if (protocol.hasAnnotation("serial_msg_buffer_size")) {
-                    msgBufferSize = protocol.annotation("serial_limit_byte_per_loop").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_msg_buffer_size")) {
+                    msgBufferSize = AnnotatedElementHelper.annotation(protocol, "serial_limit_byte_per_loop").iterator().next();
                     Integer tmp = Integer.parseInt(msgBufferSize);
                     if (tmp != null) {
                         if (tmp < maxMsgSize) {
@@ -234,8 +235,8 @@ public class PosixSerialPlugin extends NetworkPlugin {
                 //End De Serializer
 
                 Integer traceLevel;
-                if (protocol.hasAnnotation("trace_level")) {
-                    traceLevel = Integer.parseInt(protocol.annotation("trace_level").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "trace_level")) {
+                    traceLevel = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "trace_level").iterator().next());
                 } else {
                     traceLevel = 1;
                 }

@@ -22,6 +22,8 @@ package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.StateHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;
@@ -53,21 +55,21 @@ public class StatesUsage extends Rule {
 
     @Override
     public void check(ThingMLModel model, Checker checker) {
-        for (Thing t : model.allThings()) {
+        for (Thing t : ThingMLHelpers.allThings(model)) {
             check(t, checker);
         }
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for (Thing t : cfg.findContainingModel().allThings()) {
+        for (Thing t : ThingMLHelpers.allThings(ThingMLHelpers.findContainingModel(cfg))) {
             check(t, checker);
         }
     }
 
     private void check(Thing t, Checker checker) {
-        for (StateMachine sm : t.allStateMachines()) {
-            for (State s : sm.allStates()) {
+        for (StateMachine sm : ThingMLHelpers.allStateMachines(t)) {
+            for (State s : StateHelper.allStates(sm)) {
                 if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
                     checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
                 }

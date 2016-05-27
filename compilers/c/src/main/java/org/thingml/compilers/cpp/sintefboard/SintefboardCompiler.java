@@ -18,6 +18,7 @@ package org.thingml.compilers.cpp.sintefboard;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.thing.ThingCepCompiler;
@@ -63,7 +64,7 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
 
         // GENERATE A MODULE FOR EACH THING
-        for (Thing thing : cfg.allThings()) {
+        for (Thing thing : ConfigurationHelper.allThings(cfg)) {
             ctx.setConcreteThing(thing);
             // GENERATE HEADER
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);

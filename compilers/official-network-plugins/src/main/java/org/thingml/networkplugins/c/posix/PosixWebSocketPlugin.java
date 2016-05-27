@@ -21,6 +21,7 @@
 package org.thingml.networkplugins.c.posix;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
@@ -64,7 +65,7 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("add_c_libraries");
             pan.setValue("websockets");
-            cfg.allAnnotations().add(pan);
+            AnnotatedElementHelper.allAnnotations(cfg).add(pan);
         }
     }
 
@@ -114,13 +115,13 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
 
                 String ctemplate;
                 String htemplate;
-                if (protocol.hasAnnotation("websocket_client")) {
-                    if (protocol.annotation("websocket_client").iterator().next().equalsIgnoreCase("true")) {
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "websocket_client")) {
+                    if (AnnotatedElementHelper.annotation(protocol, "websocket_client").iterator().next().equalsIgnoreCase("true")) {
                         ctemplate = ctx.getTemplateByID("templates/PosixWebsocketPluginClient.c");
                         htemplate = ctx.getTemplateByID("templates/PosixWebsocketPluginClient.h");
                         String serverAddress;
-                        if (protocol.hasAnnotation("websocket_server_address")) {
-                            serverAddress = protocol.annotation("websocket_server_address").iterator().next();
+                        if (AnnotatedElementHelper.hasAnnotation(protocol, "websocket_server_address")) {
+                            serverAddress = AnnotatedElementHelper.annotation(protocol, "websocket_server_address").iterator().next();
                         } else {
                             serverAddress = "127.0.0.1";
                         }
@@ -160,8 +161,8 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
 
 
                 Integer portNumber;
-                if (protocol.hasAnnotation("websocket_port_number")) {
-                    portNumber = Integer.parseInt(protocol.annotation("websocket_port_number").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "websocket_port_number")) {
+                    portNumber = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "websocket_port_number").iterator().next());
                 } else {
                     portNumber = 9000;
                 }
@@ -172,7 +173,7 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
 
                 StringBuilder connectorReady = new StringBuilder();
                 for (Message m : messages) {
-                    if (m.hasAnnotation("websocket_connector_ready")) {
+                    if (AnnotatedElementHelper.hasAnnotation(m, "websocket_connector_ready")) {
                         connectorReady.append("//Notify app with " + m.getName() + "\n");
                         connectorReady.append("byte forward_buf[2];\n");
                         connectorReady.append("forward_buf[0] = (" + ctx.getHandlerCode(cfg, m) + " >> 8) & 0xFF;\n");
@@ -187,7 +188,7 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
                 //Server ready
                 StringBuilder listenerReady = new StringBuilder();
                 for (Message m : messages) {
-                    if (m.hasAnnotation("websocket_server_ready")) {
+                    if (AnnotatedElementHelper.hasAnnotation(m, "websocket_server_ready")) {
                         listenerReady.append("//Notify app with " + m.getName() + "\n");
                         listenerReady.append("byte forward_buf[2];\n");
                         listenerReady.append("forward_buf[0] = (" + ctx.getHandlerCode(cfg, m) + " >> 8) & 0xFF;\n");
@@ -201,8 +202,8 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
 
 
                 Integer nbClientMax;
-                if (protocol.hasAnnotation("websocket_nb_client_max")) {
-                    nbClientMax = Integer.parseInt(protocol.annotation("websocket_nb_client_max").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "websocket_nb_client_max")) {
+                    nbClientMax = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "websocket_nb_client_max").iterator().next());
                 } else {
                     nbClientMax = 16;
                 }
@@ -237,8 +238,8 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
                 //UNICAST vs BROADCAST
                 String enableUnicast = null;
                 boolean unicast = false;
-                if (protocol.hasAnnotation("websocket_enable_unicast")) {
-                    enableUnicast = protocol.annotation("websocket_enable_unicast").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "websocket_enable_unicast")) {
+                    enableUnicast = AnnotatedElementHelper.annotation(protocol, "websocket_enable_unicast").iterator().next();
                 }
                 if (enableUnicast != null) {
                     if (enableUnicast.compareTo("true") == 0) {
@@ -253,7 +254,7 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
                 /*NEW_CLIENT*/
                     StringBuilder newClient = new StringBuilder();
                     for (Message m : messages) {
-                        if (m.hasAnnotation("websocket_new_client")) {
+                        if (AnnotatedElementHelper.hasAnnotation(m, "websocket_new_client")) {
                             newClient.append("//Notify app with " + m.getName() + "\n");
                             newClient.append("byte forward_buf[4];\n");
                             newClient.append("forward_buf[0] = (" + ctx.getHandlerCode(cfg, m) + " >> 8) & 0xFF;\n");
@@ -267,7 +268,7 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
                 /*CLIENT_DECO*/
                     StringBuilder clientDC = new StringBuilder();
                     for (Message m : messages) {
-                        if (m.hasAnnotation("websocket_client_disconnected")) {
+                        if (AnnotatedElementHelper.hasAnnotation(m, "websocket_client_disconnected")) {
                             clientDC.append("//Notify app with " + m.getName() + "\n");
                             clientDC.append("byte forward_buf[4];\n");
                             clientDC.append("forward_buf[0] = (" + ctx.getHandlerCode(cfg, m) + " >> 8) & 0xFF;\n");
@@ -326,8 +327,8 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
 
 
                 Integer traceLevel;
-                if (protocol.hasAnnotation("trace_level")) {
-                    traceLevel = Integer.parseInt(protocol.annotation("trace_level").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "trace_level")) {
+                    traceLevel = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "trace_level").iterator().next());
                 } else {
                     traceLevel = 1;
                 }

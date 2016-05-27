@@ -53,27 +53,6 @@ public abstract class ActionImpl extends EObjectImpl implements Action {
 		return ThingmlPackage.Literals.ACTION;
 	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Action> getAllActions() {
-		List<Action> result = new ArrayList<Action>();
-		result.add(this);
-		return result;
-	}
 
-	/**
-	 * @generated NOT
-	 * @return
-	 */
-	@Override
-	public List<Action> getAllActions(Class clazz) {
-		List<Action> result = new ArrayList<Action>();
-		if(clazz.isInstance(this))
-			result.add(this);
-		return result;
-	}
 
 } //ActionImpl

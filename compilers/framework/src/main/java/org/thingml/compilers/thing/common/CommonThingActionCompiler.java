@@ -17,6 +17,8 @@ package org.thingml.compilers.thing.common;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
@@ -47,7 +49,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         traceVariablePre(action, builder, ctx);
         if (action.getProperty().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
             for (Expression i : action.getIndex()) {
-                builder.append(action.getProperty().qname("_") + "_var");
+                builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
                 StringBuilder tempBuilder = new StringBuilder();
                 generate(i, tempBuilder, ctx);
                 builder.append("[" + tempBuilder.toString() + "]");
@@ -58,10 +60,10 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
             }
         } else {//simple variable or we re-affect the whole array
-            if (action.getProperty().eContainer() instanceof Thing && !(action.getProperty().isDefined("private", "true"))) {
+            if (action.getProperty().eContainer() instanceof Thing && !(AnnotatedElementHelper.isDefined(action.getProperty(), "private", "true"))) {
                 builder.append(ctx.getContextAnnotation("thisRef"));
             }
-            builder.append(action.getProperty().qname("_") + "_var");
+            builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
             builder.append(" = ");
             cast(action.getProperty().getType(), action.getProperty().isIsArray(), action.getExpression(), builder, ctx);
             //generateMainAndInit(action.getExpression(), builder, ctx);

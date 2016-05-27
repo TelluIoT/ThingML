@@ -21,6 +21,9 @@
 package org.thingml.compilers.debugGUI;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.debugGUI.plugin.WSjs;
@@ -36,9 +39,9 @@ import java.util.Set;
  */
 public class DebugGUICfgMainGenerator extends CfgMainGenerator {
     public ExternalConnector findExternalConnector(Configuration cfg) {
-        for (ExternalConnector eco : cfg.getExternalConnectors()) {
-            if (eco.hasAnnotation("generate_debugGUI")) {
-                if (eco.annotation("generate_debugGUI").iterator().next().compareToIgnoreCase("true") == 0) {
+        for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
+            if (AnnotatedElementHelper.hasAnnotation(eco, "generate_debugGUI")) {
+                if (AnnotatedElementHelper.annotation(eco, "generate_debugGUI").iterator().next().compareToIgnoreCase("true") == 0) {
                     return eco;
                 }
             }
@@ -52,8 +55,8 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         String htmlTemp = ctx.getHtmlTemplate();
 
         String portName;
-        if (eco.hasAnnotation("port_name")) {
-            portName = eco.annotation("port_name").iterator().next();
+        if (AnnotatedElementHelper.hasAnnotation(eco, "port_name")) {
+            portName = AnnotatedElementHelper.annotation(eco, "port_name").iterator().next();
         } else {
             portName = eco.getProtocol().getName();
         }
@@ -63,8 +66,8 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         StringBuilder sendForm = new StringBuilder();
         for (Message msg : eco.getPort().getReceives()) {
             msgID = msg.getName();
-            /*if (msg.hasAnnotation("code")) {
-                msgID = msg.annotation("code").iterator().next();
+            /*if (AnnotatedElementHelper.hasAnnotation(msg, "code")) {
+                msgID = AnnotatedElementHelper.annotation(msg, "code").iterator().next();
             } else {
                 System.out.println("[Warning] in order to generate working mock-up, messages ID must be specified with @code");
             }*/
@@ -143,7 +146,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
 
         // Datatypes generation
 
-        for (Type t : cfg.findContainingModel().allSimpleTypes()) {
+        for (Type t : ThingMLHelpers.allSimpleTypes(ThingMLHelpers.findContainingModel(cfg))) {
             if (t instanceof ObjectType) {
                 builder.append("object " + t.getName() + "\n");
             } else if (t instanceof PrimitiveType) {
@@ -152,7 +155,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
             } else if (t instanceof Enumeration) {
                 builder.append("enumeration " + t.getName() + "\n");
             }
-            for (PlatformAnnotation pan : t.allAnnotations()) {
+            for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(t)) {
                 builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");
             }
             if (t instanceof Enumeration) {
@@ -160,7 +163,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append("{\n");
                 for (EnumerationLiteral l : et.getLiterals()) {
                     builder.append(l.getName());
-                    for (PlatformAnnotation pan : l.allAnnotations()) {
+                    for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(l)) {
                         builder.append(" @" + pan.getName() + " \"" + pan.getValue() + "\"");
                     }
                     builder.append("\n");
@@ -175,7 +178,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
         builder.append("protocol Websocket\n");
         builder.append("  @serializer \"PosixJSONSerializerPlugin\";");
         builder.append("protocol " + eco.getProtocol().getName());
-        for (PlatformAnnotation pan : eco.getProtocol().allAnnotations()) {
+        for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(eco.getProtocol())) {
             builder.append(" @" + pan.getName() + " \"" + pan.getValue() + "\"");
         }
         builder.append(";\n\n");
@@ -226,7 +229,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 builder.append(p.getName() + " : " + p.getType().getName());
             }
             builder.append(")");
-            for (PlatformAnnotation pan : m.allAnnotations()) {
+            for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(m)) {
                 builder.append("    @" + pan.getName() + " \"" + pan.getValue() + "\"\n");
             }
             builder.append(";\n");

@@ -30,15 +30,5 @@ import java.util.List;
  * @generated
  */
 public interface Expression extends EObject {
-    /**
-     * @generated NOT
-     * @return
-     */
-    List<Expression> getAllExpressions();
 
-    /**
-     * @generated NOT
-     * @return
-     */
-    List<Expression> getAllExpressions(Class clazz);
 } // Expression

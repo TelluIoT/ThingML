@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.resource.thingml.IThingmlTextDiagnostic;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResource;
 import org.sintef.thingml.resource.thingml.mopp.ThingmlResourceFactory;
@@ -154,7 +155,7 @@ public class ThingMLPanel extends JPanel {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
-                                    for (Configuration cfg : thingmlModel.allConfigurations()) {
+                                    for (Configuration cfg : ThingMLHelpers.allConfigurations(thingmlModel)) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                         for(NetworkPlugin np : loadedPlugins) {
                                             if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
@@ -183,7 +184,7 @@ public class ThingMLPanel extends JPanel {
                             try {
                                 ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
                                 if (thingmlModel != null) {
-                                    for (Configuration cfg : thingmlModel.allConfigurations()) {
+                                    for (Configuration cfg : ThingMLHelpers.allConfigurations(thingmlModel)) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                         for(NetworkPlugin np : loadedPlugins) {
                                             if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
@@ -229,7 +230,7 @@ public class ThingMLPanel extends JPanel {
                                     @Override
                                     public void actionPerformed(ActionEvent e) {
                                         ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
-                                        for (Configuration cfg : thingmlModel.allConfigurations()) {
+                                        for (Configuration cfg : ThingMLHelpers.allConfigurations(thingmlModel)) {
                                             final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                             for(NetworkPlugin np : loadedPlugins) {
                                                 if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
@@ -257,7 +258,7 @@ public class ThingMLPanel extends JPanel {
                                 if (targetFile == null) return;
                                 try {
                                     ThingMLModel thingmlModel = ThingMLCompiler.loadModel(targetFile);
-                                    for (Configuration cfg : thingmlModel.allConfigurations()) {
+                                    for (Configuration cfg : ThingMLHelpers.allConfigurations(thingmlModel)) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                         for(NetworkPlugin np : loadedPlugins) {
                                             if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {

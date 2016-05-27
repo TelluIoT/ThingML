@@ -21,6 +21,7 @@
 package org.thingml.networkplugins.c.posix;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
@@ -63,7 +64,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("add_c_libraries");
             pan.setValue("mosquitto");
-            cfg.allAnnotations().add(pan);
+            AnnotatedElementHelper.allAnnotations(cfg).add(pan);
         }
     }
 
@@ -112,8 +113,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
 
                 String platform = "";
                 String ctemplate = "";
-                if (protocol.hasAnnotation("platform")) {
-                    platform = protocol.annotation("platform").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "platform")) {
+                    platform = AnnotatedElementHelper.annotation(protocol, "platform").iterator().next();
                     if (platform.compareToIgnoreCase("x86") == 0) {
                         ctemplate = ctx.getTemplateByID("templates/PosixMQTTPluginX86.c");
                     }
@@ -145,8 +146,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 htemplate = htemplate.replace("/*PORT_NAME*/", portName);
 
                 String hostAddr;
-                if (protocol.hasAnnotation("mqtt_broker_address")) {
-                    hostAddr = protocol.annotation("mqtt_broker_address").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_broker_address")) {
+                    hostAddr = AnnotatedElementHelper.annotation(protocol, "mqtt_broker_address").iterator().next();
                 } else {
                     hostAddr = "localhost";
                 }
@@ -155,8 +156,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
 
 
                 Integer portNumber;
-                if (protocol.hasAnnotation("mqtt_port_number")) {
-                    portNumber = Integer.parseInt(protocol.annotation("mqtt_port_number").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_port_number")) {
+                    portNumber = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "mqtt_port_number").iterator().next());
                 } else {
                     portNumber = 1883;
                 }
@@ -191,7 +192,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 htemplate = htemplate.replace("/*PATH_TO_C*/", protocol.getName() + ".c");
 
                 //if(!eco.getPort().getReceives().isEmpty()) {
-                List<String> topicList = protocol.annotation("mqtt_topic");
+                List<String> topicList = AnnotatedElementHelper.annotation(protocol, "mqtt_topic");
                 if (topicList.isEmpty()) {
                     topicList.add("ThingML");
                 }
@@ -219,8 +220,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
 
                     String publishSelection = null;
                     boolean publishSelect = false;
-                    if (protocol.hasAnnotation("mqtt_multi_topic_publish_selection")) {
-                        publishSelection = protocol.annotation("mqtt_multi_topic_publish_selection").iterator().next();
+                    if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_multi_topic_publish_selection")) {
+                        publishSelection = AnnotatedElementHelper.annotation(protocol, "mqtt_multi_topic_publish_selection").iterator().next();
                     }
                     if (publishSelection != null) {
                         if (publishSelection.compareTo("true") == 0) {
@@ -318,8 +319,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
 
 
                 Integer traceLevel;
-                if (protocol.hasAnnotation("trace_level")) {
-                    traceLevel = Integer.parseInt(protocol.annotation("trace_level").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "trace_level")) {
+                    traceLevel = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "trace_level").iterator().next());
                 } else {
                     traceLevel = 1;
                 }
