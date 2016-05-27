@@ -553,7 +553,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
 
-    protected void generateMessageForwarders(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
+    public void generateMessageForwarders(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
 
         //Thing Port Message Forwarder
         Map<Message, Map<Thing, Map<Port, Set<ExternalConnector>>>> tpm = new HashMap<Message, Map<Thing, Map<Port, Set<ExternalConnector>>>>();

@@ -165,7 +165,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                     "	if(*m != '\"') {return;} // \"\n" +
                     "	m++;\n" +
                     "\n" +
-                    "	char msg_name[" + maxMsgLength + "];\n" +
+                    "	char msg_name[" + (maxMsgLength+1) + "];\n" +
                     "	int msg_name_len = next_char(m, '\"', '\"');\n" +
                     "	if(msg_name_len <= 0) {return;} // empty name\n" +
                     "	strncpy(msg_name, m, msg_name_len); // name\n" +
@@ -354,6 +354,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
         List<String> res = new ArrayList<>();
         res.add("posix");
+        res.add("posixmt");
         return res;
     }
 

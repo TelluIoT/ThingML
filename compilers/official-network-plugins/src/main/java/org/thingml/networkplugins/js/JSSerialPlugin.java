@@ -52,8 +52,10 @@ public class JSSerialPlugin extends NetworkPlugin {
         return res;
     }
 
-    public String getTargetedLanguage() {
-        return "nodejs";
+    public List<String> getTargetedLanguages() {
+        List<String> res = new ArrayList<>();
+        res.add("nodejs");
+        return res;
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {

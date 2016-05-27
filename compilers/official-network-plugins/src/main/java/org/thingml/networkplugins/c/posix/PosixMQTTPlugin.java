@@ -53,8 +53,11 @@ public class PosixMQTTPlugin extends NetworkPlugin {
         return res;
     }
 
-    public String getTargetedLanguage() {
-        return "posix";
+    public List<String> getTargetedLanguages() {
+        List<String> res = new ArrayList<>();
+        res.add("posix");
+        res.add("posixmt");
+        return res;
     }
 
     private void addDependencies() {
@@ -167,27 +170,6 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 //Connector Instanciation
                 StringBuilder eco_instance = new StringBuilder();
                 eco_instance.append("//Connector");
-                /*Port p = eco.getPort();
-                if(!p.getReceives().isEmpty()) {
-                //if(!p.getSends().isEmpty()) {
-                    eco_instance.append("// Pointer to receiver list\n");
-                    eco_instance.append("struct Msg_Handler ** ");
-                    eco_instance.append(p.getName());
-                    eco_instance.append("_receiver_list_head;\n");
-
-                    eco_instance.append("struct Msg_Handler ** ");
-                    eco_instance.append(p.getName());
-                    eco_instance.append("_receiver_list_tail;\n");
-                }
-                if(!p.getSends().isEmpty()) {
-                //if(!p.getReceives().isEmpty()) {
-                    eco_instance.append("// Handler Array\n");
-                    eco_instance.append("struct Msg_Handler * ");
-                    eco_instance.append(p.getName());
-                    eco_instance.append("_handlers;\n");//[");
-                    //builder.append(p.getReceives().size() + "];");
-                }*/
-                //ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
 
                 htemplate = htemplate.replace("/*PATH_TO_C*/", protocol.getName() + ".c");
 

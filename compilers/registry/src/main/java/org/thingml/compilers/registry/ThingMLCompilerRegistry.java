@@ -102,7 +102,7 @@ public class ThingMLCompilerRegistry {
         } else {
             ThingMLCompiler c = compilers.get(id).clone();
             for (NetworkPlugin np : loadedPlugins) {
-                if (np.getTargetedLanguage().compareTo(id) == 0) {
+                if (np.getTargetedLanguages().contains(id)) {
                     c.addNetworkPlugin(np);
                 }
             }
@@ -118,7 +118,17 @@ public class ThingMLCompilerRegistry {
     public void printNetworkPluginList() {
         System.out.println("Network Plugin list: ");
         for (NetworkPlugin np : loadedPlugins) {
-            System.out.println("    | " + np.getPluginID() + " (" + np.getTargetedLanguage() + ") handles:");
+            System.out.print("    | " + np.getPluginID() + " (");
+            boolean first = true;
+            for (String lang : np.getTargetedLanguages()) {
+                if (first) {
+                    first = false;
+                } else {
+                    System.out.print(", ");
+                }
+                System.out.print(lang);
+            }
+            System.out.println(") handles:");
             for (String p : np.getSupportedProtocols()) {
                 System.out.println("        | " + p);
             }

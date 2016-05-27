@@ -101,6 +101,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
 
         List<String> res = new ArrayList<>();
         res.add("posix");
+        res.add("posixmt");
         res.add("arduino");
         return res;
     }
