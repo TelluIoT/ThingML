@@ -50,6 +50,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
@@ -57,7 +58,7 @@ import org.thingml.compilers.configuration.CfgMainGenerator;
  *
  * @author sintef
  */
-public class PosixMTCfgMainGenerator extends CfgMainGenerator {
+public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         PosixMTCompilerContext c = (PosixMTCompilerContext)ctx;
         ctx.generateNetworkLibs(cfg);
@@ -351,8 +352,11 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         generateMessageDispatchEnqueue(cfg, builder, ctx);
         builder.append("\n");
 
+        generateMessageSenders(cfg, builder, ctx);
         builder.append("\n");
-        generateMessageForwarders(cfg, builder, ctx);
+        
+        //generateMessageForwarders(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx)
+        super.generateMessageForwarders(cfg, builder, new StringBuilder(), (CCompilerContext)ctx);
         builder.append("\n");
 
         generateCfgInitializationCode(cfg, builder, ctx);
@@ -439,7 +443,7 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
         }
     }
     
-    public void generateMessageForwarders(Configuration cfg, StringBuilder builder, PosixMTCompilerContext ctx) {
+    public void generateMessageSenders(Configuration cfg, StringBuilder builder, PosixMTCompilerContext ctx) {
         
         for(Thing t : ConfigurationHelper.allThings(cfg)) {
             for(Port port : ThingMLHelpers.allPorts(t)) {
@@ -481,8 +485,6 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
                         ctx.appendActualParametersForDispatcher(t, builder, msg, "_instance->id_" + port.getName());
                         builder.append(";\n}\n");
                     }
-
-
                 }
             }
         }
@@ -534,6 +536,13 @@ public class PosixMTCfgMainGenerator extends CfgMainGenerator {
 
 
                 }
+            }
+        }
+                    
+        for(ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
+            for(Message m : eco.getPort().getSends()) {
+                builder.append("register_external_" + ctx.getSenderName(eco.getInst().getInstance().getType(), eco.getPort(), m) + "_listener(");
+                builder.append("&forward_" + ctx.getSenderName(eco.getInst().getInstance().getType(), eco.getPort(), m) + ");\n");
             }
         }
 
