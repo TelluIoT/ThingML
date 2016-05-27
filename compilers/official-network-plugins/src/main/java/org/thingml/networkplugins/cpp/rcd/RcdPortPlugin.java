@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
 
 /**
@@ -118,7 +119,7 @@ public class RcdPortPlugin extends NetworkPlugin {
                 }
                 port.generateNetworkLibrary(this.ctx);
 
-                String portnum = prot.annotation("rcdport_number").iterator().next();
+                String portnum = AnnotatedElementHelper.annotation(prot, "rcdport_number").iterator().next();
                 String portName = prot.getName();
                 builder.append("// "+portName+" portnum is() " + portnum + "\n");
                 builder.append("case " + portnum + ":\n");
@@ -162,7 +163,7 @@ public class RcdPortPlugin extends NetworkPlugin {
         }
         
         public String getPortNumber() {
-            return protocol.annotation("rcdport_number").iterator().next();
+            return AnnotatedElementHelper.annotation(protocol, "rcdport_number").iterator().next();
         }
 
         public String getPortRole() {
@@ -183,8 +184,8 @@ public class RcdPortPlugin extends NetworkPlugin {
             Thing t = getThings(cfg, protocol).iterator().next();
             ret = t.getName()+":"+p.getName();
             
-            if (protocol.hasAnnotation("rcdport_name")) {
-                ret = protocol.annotation("rcdport_name").iterator().next();
+            if (AnnotatedElementHelper.hasAnnotation(protocol, "rcdport_name")) {
+                ret = AnnotatedElementHelper.annotation(protocol, "rcdport_name").iterator().next();
             }
 
             return ret;
@@ -218,12 +219,12 @@ public class RcdPortPlugin extends NetworkPlugin {
                 ctx.appendFormalParameters(t, builder, m);
                 builder.append("{\n");
 
-                String portnum = prot.annotation("rcdport_number").iterator().next();
+                String portnum = AnnotatedElementHelper.annotation(prot, "rcdport_number").iterator().next();
 
                 List<String> formats = sp.getSupportedFormat();
                 if (formats.get(0).contentEquals("None")) {
                     // No serializing, just map ThingML message to Rcd message
-                    String msgid = m.annotation("rcdport_msgid").iterator().next();
+                    String msgid = AnnotatedElementHelper.annotation(m, "rcdport_msgid").iterator().next();
 
                     builder.append("msgc_t   msg_out;      // Outgoing message\n");
                     builder.append("if( Ports_ptr->IsConnected(" + portnum + ") ) {\n");
@@ -234,7 +235,7 @@ public class RcdPortPlugin extends NetworkPlugin {
                 } else {
                     // Serializing specified, create a rcd tunnel
                     String i = sp.generateSerialization(builder, "forward_buf", m);
-                    String tunnel_msgid = prot.annotation("rcdporttunnel_msgid").iterator().next();
+                    String tunnel_msgid = AnnotatedElementHelper.annotation(prot, "rcdporttunnel_msgid").iterator().next();
                     
                     builder.append("msgc_t   msg_out;      // Outgoing message\n");
                     builder.append("if( Ports_ptr->IsConnected(" + portnum + ") ) {\n");
@@ -266,7 +267,7 @@ public class RcdPortPlugin extends NetworkPlugin {
                     Message m = tpm.m;
 
                     Set<String> ignoreList = new HashSet<String>();
-                    String msgid = m.annotation("rcdport_msgid").iterator().next();
+                    String msgid = AnnotatedElementHelper.annotation(m, "rcdport_msgid").iterator().next();
                     builder.append("//m.annotation(rcdport_msgid) is " +  msgid + "\n");
                     //String decompproto = m.annotation("rcdport_decompproto").iterator().next();
                     //parserBuilder.append("//m.annotation(rcdport_decompproto) is " +  decompproto + "\n");
@@ -289,7 +290,7 @@ public class RcdPortPlugin extends NetworkPlugin {
                     rcvMessages.add(m);
                 }                
                 
-                String tunnel_msgid = prot.annotation("rcdporttunnel_msgid").iterator().next();
+                String tunnel_msgid = AnnotatedElementHelper.annotation(prot, "rcdporttunnel_msgid").iterator().next();
                 builder.append("case " + tunnel_msgid + ":\n");
                 builder.append("{\n");
                 builder.append("uint8_t *rcv_buf_ptr;\n");
