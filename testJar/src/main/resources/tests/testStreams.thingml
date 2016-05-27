@@ -110,7 +110,7 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
 
             internal
             event rcvPort?cep1
-            action do 
+            action do
                 harnessOut!testOut('\'1\'')
             end
 
@@ -123,7 +123,7 @@ thing TestStreams includes CepMsgs,  SampleMsgs, Test
 
             internal
             event rcvPort?cep3
-            action do 
+            action do
                 harnessOut!testOut('\'4\'')
             end
 

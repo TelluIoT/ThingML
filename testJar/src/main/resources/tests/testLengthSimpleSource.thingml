@@ -44,7 +44,7 @@ thing TestLengthSimpleSource includes Test, TestFilterLengthMsgs
     end
     
    stream sumM1
-   from cHR : recvPort?m1::buffer 5 by 5
+   from cHR @Buffer "5" : recvPort?m1::buffer 5 by 5
    select var sum : Char = sum(cHR.x[])
    produce harnessOut!testOut(sum)
       
@@ -63,7 +63,7 @@ thing TestLengthSimpleSource includes Test, TestFilterLengthMsgs
    end
    
    stream avgM1M2 
-   from mge : [ e2 : recvPort?m2 | e3 : recvPort?m3 -> m2m3]::buffer 4 by 4
+   from mge : [ e2 @Buffer "4" : recvPort?m2 | e3 @Buffer "4" : recvPort?m3 -> m2m3]::buffer 4 by 4
    select var avgA : JInt = avgParam(mge.a[]) , 
           var avgB : JInt = avgParam(mge.b[]), 
           var avgC : JInt = avgParam(mge.c[])
@@ -81,7 +81,7 @@ thing TestLengthSimpleSource includes Test, TestFilterLengthMsgs
    end  
    
    stream maxM1M2
-   from jn : [ e1 : recvPort?m2 & e2 : recvPort?m3 -> m2m3(e1.x + e2.v1,e1.y + e2.v2,e1.z + e2.v3)]::buffer 2 by 2
+   from jn : [ e1 @Buffer "2" : recvPort?m2 & e2 @Buffer "2" : recvPort?m3 -> m2m3(e1.x + e2.v1,e1.y + e2.v2,e1.z + e2.v3)]::buffer 2 by 2
    select var maxA : JInt = max(jn.a[]), 
            var maxB : JInt = max(jn.b[]), 
            var maxC : JInt = max(jn.c[])
