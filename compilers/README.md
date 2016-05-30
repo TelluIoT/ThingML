@@ -113,6 +113,7 @@ The best way to execute and test the latest versions of compilers while developi
 
 To use the compiler, just run the jar file on a command line. Java 7 or newer is required. Running the JAR with no arguments should provide a short "help" message similar to what is displayed below:
 
+```
     $ java -jar compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar
  --- ThingML help ---
 Typical usages: 
@@ -153,6 +154,7 @@ Compiler Id must belong to the following list:
 
 Tool Id must belong to the following list:
  |     testconfigurationgen	- Generates test configuration for things annnotated with @test "input # output".
+```
 
 In case you cannot see a message similar to this one, it means that something is not working with your setup. Check your Java version (should be 7 or newer) and try recompiling ThingML by running ``mvn clean install`` in the root ThingML directory.
 
