@@ -210,8 +210,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         //builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
         // Message Sending
-        // TODO: check if the new method is right
-        //for (Port port : thing.allPorts()) {
         for (Port port : thing.getPorts()) {
             for (Message msg : port.getSends()) {
                 builder.append("void " + ctx.getSenderName(thing, port, msg));
@@ -602,7 +600,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                             builder.append(";\n");
                         }
                         for (LocalVariable lv : s.getSelection()) {
-                            lv.setName(source.getName() + "_" + lv.getName());
+                            lv.setName(ThingMLElementHelper.qname(lv, "_"));
                             ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
                         }
 
@@ -616,6 +614,19 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     } else if (source instanceof MergeSources) {
                         Message rMsg = ((MergeSources) source).getResultMessage();
 
+                        // since we don't call the checkTrigger we need to check the source guard as well
+                        List<String> guardsList = new ArrayList<>();
+                        for (ViewSource vs : source.getOperators()) {
+                            if (vs instanceof Filter) {
+                                StringBuilder sourceGuard = new StringBuilder();
+                                ctx.getCompiler().getThingActionCompiler().generate(((Filter) vs).getGuard(), sourceGuard, ctx);
+                                guardsList.add(sourceGuard.toString());
+                            }
+                        }
+
+                        if (guardsList.size() > 0)
+                            builder.append("if (" + String.join(" && ", guardsList) + ") {\n");
+
                         int paramIndex = 0;
                         for (Parameter p : rMsg.getParameters()) {
                             builder.append(ctx.getCType(p.getType()) + " " + p.getName() + " = " + msg.getParameters().get(paramIndex).getName() + ";\n");
@@ -628,6 +639,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         }
 
                         ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
+
+                        if (guardsList.size() > 0)
+                            builder.append("}\n");
                     }
 
                     // Length Window

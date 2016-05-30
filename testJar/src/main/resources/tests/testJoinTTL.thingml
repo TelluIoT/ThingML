@@ -41,7 +41,7 @@ thing TestJoinTTL includes Test, TestMsgs, TimerClient
         sendP!m2()
 
         sendP!m3()
-        timer!timer_start(250)
+        timer!timer_start(251)
       end
 
       internal

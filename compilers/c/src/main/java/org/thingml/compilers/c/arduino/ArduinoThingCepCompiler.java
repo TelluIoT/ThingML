@@ -336,7 +336,22 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 triggerCondition.add("input" + s.getName() + "Trigger == " + ArduinoCepHelper.getStreamTriggerInputNumber(s, ctx));
             }
 
-            triggerImpl += "if (" + String.join(" && ", triggerCondition) + " )\n {\n";
+            List<String> guards = new ArrayList<>();
+            for (ViewSource vs : s.getInput().getOperators()) {
+                if (vs instanceof Filter) {
+                    StringBuilder g = new StringBuilder();
+                    ctx.getCompiler().getThingActionCompiler().generate(((Filter) vs).getGuard(), g, ctx);
+                    guards.add(g.toString());
+                }
+            }
+
+            String guardsString = "";
+            if (guards.size() > 0) {
+                guardsString += " && ";
+                guardsString += String.join(" && ", guards);
+            }
+
+            triggerImpl += "if (" + String.join(" && ", triggerCondition) + guardsString + " )\n {\n";
 
             if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
                 triggerImpl += "input" + s.getName() + "Trigger = 0;\n";
