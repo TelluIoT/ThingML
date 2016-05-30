@@ -63,9 +63,10 @@ The figure above presents the 8 extension points of the ThingML code generation 
 
 (8) Project structure / build script: This variation point is not generating code as such but the required file structure and build scripts in order to make the generated code well packaged and easy to compile and deploy on the target platform. The ThingML code generation framework provides access to all the buffers in which the code has been generated and allows creating the file structure which fits the particular target platform. For example, the Arduino compiler concatenates all the generated code into a single file which can be opened by the Arduino IDE. The Linux C code generator creates separate C modules with header files and generates a Makefile to compile the application. The Java and Scala code generators create Maven project and pom.xml files in order to allow compiling and deploying the generated code. The platform expert can customize the project structure and build scripts in order to fit the best practices of the target platform.
 
-(9) Complex Event Processing: This extention point generates code handeling streams of events.
-
 > See class ``org.thingml.compilers.configuration.CfgBuildCompiler`` and its sub-classes in the different compiler modules. Also note that we have typically implemented in the Context class the routine which actually writes the files on the disk.
+
+(9) Complex Event Processing: This extention point generates code handeling streams of events.
+> See class ``org.thingml.compilers.thing.ThingCepCompiler`` and its sub-classes in the different compiler modules.
 
 ### Registry
 
