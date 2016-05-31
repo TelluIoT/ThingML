@@ -21,7 +21,7 @@ thing TestJoin3messages includes Test, TestMsgs
   }
 
   stream filterStream
-  from m: [e1: recv?m1 & e1: recv?m2 & e3: recv?m3 -> res()]
+  from m: [e1: recv?m1 & e2: recv?m2 & e3: recv?m3 -> res()]
   produce send!res()
 
 

@@ -166,7 +166,6 @@ public class StateHelper {
      * @param handlers Set of all current handler
      * @param rm       Message to add
      * @param t
-     * @generated NOT
      */
     private static void addMessageToHandlers(Map<Port, Map<Message, List<Handler>>> handlers, ReceiveMessage rm, Handler t) {
         Map<Message, List<Handler>> phdlrs = handlers.get(rm.getPort());
