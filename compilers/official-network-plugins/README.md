@@ -6,7 +6,7 @@ java -cp .:your-compiler.jar:you-plugin.jar org.thingml.compilers.commandline.Ma
 ```
 In order to list loaded plugins:
 ```
-java -cp .:your-compiler.jar:you-plugin.jar org.thingml.compilers.commandline.Main --list-plugins
+java -cp .:your-compiler.jar:your-plugin.jar org.thingml.compilers.commandline.Main --list-plugins
 Network Plugin list: 
     | PosixWebSocketPlugin (posix, posixmt) handles:
         | WebSocket

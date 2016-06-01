@@ -70,7 +70,8 @@ public class TestJar {
         tmpDir.delete();
         tmpDir = new File(workingDir, "tmp");
 
-        final File testFolder = new File(TestJar.class.getClassLoader().getResource("tests").getFile());
+        final File testFolder = new File(workingDir.getPath() + "/src/main/resources/tests");
+        //final File testFolder = new File(TestJar.class.getClassLoader().getResource("tests").getFile());
         String testPattern = "test(.+)\\.thingml";
         
         Set<Command> tasks = new HashSet<>();
@@ -129,14 +130,14 @@ public class TestJar {
         Set<File> testFiles;
         if(useBlackList != null) {
             if(useBlackList.compareToIgnoreCase("false") == 0) {
-                testFiles = whiteListFiles(testFolder, tl);
+                testFiles = TestHelper.whiteListFiles(testFolder, tl);
             } else if (useBlackList.compareToIgnoreCase("true") == 0) {
-                testFiles = blackListFiles(testFolder, tl);
+                testFiles = TestHelper.blackListFiles(testFolder, tl);
             } else {
-                testFiles = listTestFiles(testFolder, testPattern);
+                testFiles = TestHelper.listTestFiles(testFolder, testPattern);
             }
         } else {
-            testFiles = listTestFiles(testFolder, testPattern);
+            testFiles = TestHelper.listTestFiles(testFolder, testPattern);
         }
 
 	//Language Selection
@@ -281,122 +282,6 @@ public class TestJar {
         System.out.println("More details in " + tmpDir.getAbsolutePath() + "/results.html");
         System.out.println("");
         
-    }
-	
-
-    public static Set<File> listTestFiles(final File folder, String pattern) {
-        Set<File> res = new HashSet<>();
-        Pattern p = Pattern.compile(pattern);
-        
-        for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                res.addAll(listTestFiles(fileEntry, pattern));
-            } else {
-                Matcher m = p.matcher(fileEntry.getName());
-                
-                if (m.matches()) {
-                    res.add(fileEntry);
-                }
-            }
-        }
-        
-        return res;
-    }
-	
-
-    public static Set<File> whiteListFiles(final File folder, Set<String> whiteList) {
-        String testPattern = "test(.+)\\.thingml";
-        Set<File> res = new HashSet<>();
-        
-        for (final File fileEntry : listTestFiles(folder, testPattern)) {
-            if (fileEntry.isDirectory()) {
-                res.addAll(whiteListFiles(fileEntry, whiteList));
-            } else {
-                String fileName = fileEntry.getName().split("\\.thingml")[0];
-                boolean found = false;
-                for(String s : whiteList) {
-                    if (fileName.compareTo(s) == 0) {
-                        found = true;
-                    }
-                }
-                if(found)
-                    res.add(fileEntry);
-            }
-        }
-        
-        return res;
-    }
-	
-
-    public static Set<File> blackListFiles(final File folder, Set<String> blackList) {
-        String testPattern = "test(.+)\\.thingml";
-        Set<File> res = new HashSet<>();
-        
-        for (final File fileEntry : listTestFiles(folder, testPattern)) {
-            if (fileEntry.isDirectory()) {
-                res.addAll(blackListFiles(fileEntry, blackList));
-            } else {
-                String fileName = fileEntry.getName().split("\\.thingml")[0];
-                boolean found = false;
-                for(String s : blackList) {
-                    if (fileName.compareTo(s) == 0) {
-                        found = true;
-                    }
-                }
-                if(!found)
-                    res.add(fileEntry);
-            }
-        }
-        
-        return res;
-    }
-    
-    public static Set<File> listTestDir(final File folder, String pattern) {
-        Set<File> res = new HashSet<>();
-        Pattern p = Pattern.compile(pattern);
-        
-        for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                //res.addAll(listTestFiles(fileEntry, pattern));
-                Matcher m = p.matcher(fileEntry.getName());
-                
-                if (m.matches()) {
-                    res.add(fileEntry);
-                }
-            }
-        }
-        
-        return res;
-    }
-    
-    public static List<TestCase> listSamples(File srcDir, List<TargetedLanguage> langs, File compilerJar, File genCodeDir, File logDir) {
-        String pattern = "(.+)\\.thingml";
-        Pattern p = Pattern.compile(pattern);
-        List<TestCase> res = new LinkedList<>();
-        System.out.println("List samples:");
-        //Explorer de manière récursive les dossiers
-        for (final File fileEntry : srcDir.listFiles()) {
-            if (!fileEntry.isDirectory()) {
-                //res.addAll(listTestFiles(fileEntry, pattern));
-                Matcher m = p.matcher(fileEntry.getName());
-                
-                if (m.matches()) {
-                    boolean specificLang = false;
-                    for(TargetedLanguage lang : langs) {
-                        if(lang.compilerID.compareToIgnoreCase("_" + fileEntry.getParent()) == 0) {
-                            specificLang = true;
-                            System.out.println("    -" + fileEntry.getName() + "(" + lang.compilerID + ")");
-                            res.add(new TestCase(fileEntry, compilerJar, lang, genCodeDir, fileEntry.getParentFile().getParentFile(), logDir, true));
-                        }
-                    }
-                    
-                    if(!specificLang) {
-                    }
-                }
-            }
-        }
-        
-        return res;
     }
     
     public static void testRun(List<TestCase> tests, ExecutorService executor) {
