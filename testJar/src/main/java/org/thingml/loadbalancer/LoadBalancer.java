@@ -68,6 +68,7 @@ public class LoadBalancer {
         
         tmpDir.delete();
         tmpDir = new File(workingDir, "tmp");
+        tmpDir.mkdir();
 
         final File testFolder = new File(workingDir.getPath() + "/src/main/resources/tests");
         String testPattern = "test(.+)\\.thingml";
