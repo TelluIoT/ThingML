@@ -114,9 +114,9 @@ public class CloudNode {
             res.append("#############################################\n\n");
             
             res.append("#Node Properties\n");
-            res.append("webLink=True");
-            res.append("myIP=" + ip);
-            res.append("myHTTPServerPort=" + httpPort);
+            res.append("webLink=True\n");
+            res.append("myIP=" + ip + "\n");
+            res.append("myHTTPServerPort=" + httpPort + "\n\n");
             
             res.append("#Languages Selection\n");
             res.append("languageList=");
