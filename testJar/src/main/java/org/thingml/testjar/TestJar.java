@@ -339,7 +339,7 @@ public class TestJar {
             if(localLink) {
                 lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
             } else {
-                lineB.append("                <a href=\"" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+                lineB.append("                <a href=\"" + TestHelper.stripFirstDirFromPath(srcDir.getPath(), "/thingml") + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
             }
             lineB.append("            </td>\n");
             for(TargetedLanguage lang : langs) {
@@ -368,8 +368,8 @@ public class TestJar {
                                 cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
                                 cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
                             } else {
-                                cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + tc.genCfg + ">src</a> | \n");
-                                cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + tc.logFile.getPath() + ">log</a>\n");
+                                cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(tc.genCfg.getPath(), "/thingml") + ">src</a> | \n");
+                                cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(tc.logFile.getPath(), "/thingml") + ">log</a>\n");
                             }
                             cellB.append("                  </td>\n" );
                             cellB.append("                  </tr>\n");

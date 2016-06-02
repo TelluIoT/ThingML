@@ -221,4 +221,8 @@ public class TestHelper {
         return res.toString();
     }
     
+    public static String stripFirstDirFromPath(String path, String dir) {
+        return path.replace(dir, "");
+    }
+    
 }
