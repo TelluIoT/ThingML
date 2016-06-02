@@ -325,11 +325,6 @@ public class TestJar {
             res.append(TestHelper.writeHeaderResultsFile(langs));
         }
         
-        for(TargetedLanguage lang : langs) {
-            res.append("                    <th>" + lang.compilerID + "</th>\n");
-        }
-        res.append("                </tr>\n");
-        
         
         for(Map.Entry<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> line : tests.entrySet()) {
             StringBuilder lineB = new StringBuilder();
@@ -339,7 +334,7 @@ public class TestJar {
             if(localLink) {
                 lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
             } else {
-                lineB.append("                <a href=\"" + TestHelper.stripFirstDirFromPath(srcDir.getPath(), "/thingml") + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+                lineB.append("                <a href=\"http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(srcDir.getPath(), "/thingml") + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
             }
             lineB.append("            </td>\n");
             for(TargetedLanguage lang : langs) {
