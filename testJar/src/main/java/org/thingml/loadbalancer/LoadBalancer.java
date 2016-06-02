@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -37,6 +38,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.thingml.testjar.Command;
 import org.thingml.testjar.TestHelper;
+import org.thingml.testjar.lang.TargetedLanguage;
+import org.thingml.testjar.lang.lArduino;
+import org.thingml.testjar.lang.lJava;
+import org.thingml.testjar.lang.lJavaScript;
+import org.thingml.testjar.lang.lPosix;
+import org.thingml.testjar.lang.lPosixMT;
+import org.thingml.testjar.lang.lSintefboard;
 
 /**
  *
@@ -125,6 +133,7 @@ public class LoadBalancer {
                     n.ip = loadBalancerProp.getProperty(nodeName + "_ip");
                     n.weight = Integer.parseInt(loadBalancerProp.getProperty(nodeName + "_weight"));
                     n.port = Integer.parseInt(loadBalancerProp.getProperty(nodeName + "_port"));
+                    n.httpPort = Integer.parseInt(loadBalancerProp.getProperty(nodeName + "_httpPort"));
                     totalWeight += n.weight;
                     System.out.println("nodeList item: <" + n.name + ", " + n.ip + ", " + n.port + ", " + n.weight + ">");
                     nl.put(nodeName, n);
@@ -141,18 +150,54 @@ public class LoadBalancer {
 
             //Test Sources Selection
 
-        Set<File> testFiles;
-        if(useBlackList != null) {
-            if(useBlackList.compareToIgnoreCase("false") == 0) {
-                testFiles = TestHelper.whiteListFiles(testFolder, tl);
-            } else if (useBlackList.compareToIgnoreCase("true") == 0) {
-                testFiles = TestHelper.blackListFiles(testFolder, tl);
+            Set<File> testFiles;
+            if(useBlackList != null) {
+                if(useBlackList.compareToIgnoreCase("false") == 0) {
+                    testFiles = TestHelper.whiteListFiles(testFolder, tl);
+                } else if (useBlackList.compareToIgnoreCase("true") == 0) {
+                    testFiles = TestHelper.blackListFiles(testFolder, tl);
+                } else {
+                    testFiles = TestHelper.listTestFiles(testFolder, testPattern);
+                }
             } else {
                 testFiles = TestHelper.listTestFiles(testFolder, testPattern);
             }
-        } else {
-            testFiles = TestHelper.listTestFiles(testFolder, testPattern);
-        }
+
+            //Language Selection
+
+            List<TargetedLanguage> langs = new LinkedList<>();
+
+            int spareThreads = 0;
+            if(languageList != null) {
+                for(String lstr :languageList.split(",")) {
+                    if(lstr.trim().compareTo("arduino") == 0) {
+                        langs.add(new lArduino());
+                    }
+                    if(lstr.trim().compareTo("posix") == 0) {
+                        langs.add(new lPosix());
+                    }
+                    if(lstr.trim().compareTo("java") == 0) {
+                        langs.add(new lJava());
+                    }
+                    if(lstr.trim().compareTo("nodejs") == 0) {
+                        langs.add(new lJavaScript());
+                    }
+                    if(lstr.trim().compareTo("sintefboard") == 0) {
+                        langs.add(new lSintefboard());
+                    }
+                    if(lstr.trim().compareTo("posixmt") == 0) {
+                        langs.add(new lPosixMT());
+                    }
+                }
+
+            } else {
+                langs.add(new lPosix());
+                langs.add(new lJava());
+                langs.add(new lJavaScript());
+                langs.add(new lArduino());
+                langs.add(new lSintefboard());
+                langs.add(new lPosixMT());
+            }
             
             //Load balancing
             
@@ -178,6 +223,26 @@ public class LoadBalancer {
             generateDispatchScript(workingDir, loadBalancerProp.getProperty("masternode_ip"), 
                     loadBalancerProp.getProperty("masternode_port"), 
                     nl.values());
+            
+            File resultsHeaderFile = new File(tmpDir, "header.html");
+            File resultsFooterFile = new File(tmpDir, "footer.html");
+            try {
+                PrintWriter w = new PrintWriter(resultsFooterFile);
+                w.print(TestHelper.writeFooterResultsFile());
+                w.close();
+            } catch (Exception ex) {
+                System.err.println("Problem writing log");
+                ex.printStackTrace();
+            }
+            try {
+                PrintWriter w = new PrintWriter(resultsHeaderFile);
+                w.print(TestHelper.writeHeaderResultsFile(langs));
+                w.close();
+            } catch (Exception ex) {
+                System.err.println("Problem writing log");
+                ex.printStackTrace();
+            }
+            
 
 	} catch (IOException ex) {
 		ex.printStackTrace();
@@ -186,23 +251,26 @@ public class LoadBalancer {
     
     public static void generateDispatchScript(File workingDir, String masterIP, String masterPort, Collection<CloudNode> nodeList) {
         String dispatchScript = TestHelper.getTemplateByID("loadBalancer/dispachTest.sh");
-        dispatchScript = dispatchScript.replace("#IP_MASTER", masterIP);
-        dispatchScript = dispatchScript.replace("#PORT_MASTER", masterPort);
+        dispatchScript = dispatchScript.replace("#IP_MASTER", "masterIp=\"" + masterIP + "\"");
+        dispatchScript = dispatchScript.replace("#PORT_MASTER", "masterPort=\"" + masterPort + "\"");
         
         String tasks ="";
+        String wait ="";
         for(CloudNode n : nodeList) {
-            tasks += "(work " + n.name + " " + n.ip + " " + n.port + ")&\n";
+            tasks += "(work " + n.name + " " + n.ip + " " + n.port + " > " + n.name + "_testDir/log)&\n";
+            wait += "wait_node " + n.name + "\n";
         }
         
         dispatchScript = dispatchScript.replace("#DISPATCH", tasks);
+        dispatchScript = dispatchScript.replace("#WAIT", wait);
         File dispatchScriptFile = new File(workingDir, "dispatch.sh");
-            try {
-                PrintWriter w = new PrintWriter(dispatchScriptFile);
-                w.print(dispatchScript);
-                w.close();
-            } catch (Exception ex) {
-                System.err.println("Problem writing log");
-                ex.printStackTrace();
-            }
+        try {
+            PrintWriter w = new PrintWriter(dispatchScriptFile);
+            w.print(dispatchScript);
+            w.close();
+        } catch (Exception ex) {
+            System.err.println("Problem writing log");
+            ex.printStackTrace();
+        }
     }
 }

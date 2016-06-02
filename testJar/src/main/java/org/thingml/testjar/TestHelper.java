@@ -169,4 +169,56 @@ public class TestHelper {
         return result;
     }
     
+    public static String writeCSSResultsFile() {
+        String css = "		table\n" +
+        "		{\n" +
+        "			border-collapse: collapse;\n" +
+        "		}\n" +
+        "		td, th \n" +
+        "		{\n" +
+        "			border: 1px solid black;\n" +
+        "		}\n" +
+        "		.green\n" +
+        "		{\n" +
+        "			background: lightgreen\n" +
+        "		}\n" +
+        "		.red\n" +
+        "		{\n" +
+        "			background: red\n" +
+        "		}\n";
+        return css;
+    }
+    
+    public static String writeHeaderResultsFile(List<TargetedLanguage> langs) {
+        StringBuilder res = new StringBuilder();
+        
+        res.append("<!DOCTYPE html>\n" +
+        "<html>\n" +
+        "	<head>\n" +
+        "		<meta charset=\"utf-8\" />\n" +
+        "		<title>ThingML tests results</title>\n" +
+        "		<style>\n" + 
+                writeCSSResultsFile() +
+        "		</style>\n" +
+        "	</head>\n" +
+        "	<body>\n" +
+        "           <table>\n" +
+        "               <tr>\n");
+        res.append("                <th>Test</th>\n");
+        
+        for(TargetedLanguage lang : langs) {
+            res.append("                    <th>" + lang.compilerID + "</th>\n");
+        }
+        res.append("                </tr>\n");
+        return res.toString();
+    }
+    
+    public static String writeFooterResultsFile() {
+        StringBuilder res = new StringBuilder();
+        res.append("        </table>\n"
+                + " </body>\n");
+        res.append("</html>");
+        return res.toString();
+    }
+    
 }

@@ -36,6 +36,7 @@ public class CloudNode {
         public String name;
         public String ip;
         public int port;
+        public int httpPort;
         public int weight;
         public Set<File> tests;
         public Set<String> languages;
@@ -48,6 +49,10 @@ public class CloudNode {
         
         public void makeTestDir(File workingDir, File compiler, File testJar, File testSrc) throws IOException {
             File testDir = new File(workingDir, name + "_testDir");
+            if(testDir.exists()) {
+                testDir.delete();
+            }
+            
             testDir.mkdir();
             File cDir = new File(testDir, "compilers");
             cDir.mkdir();
@@ -100,10 +105,18 @@ public class CloudNode {
         
         public void writeConfigFile(File workingDir) {
             StringBuilder res = new StringBuilder();
+            //    webLink = prop.getProperty("webLink");
+            //    myIP = prop.getProperty("myIP");
+            //    myHTTPServerPort = prop.getProperty("myHTTPServerPort");
             
             res.append("#############################################\n");
             res.append("#          Config for " + name + "\n");
             res.append("#############################################\n\n");
+            
+            res.append("#Node Properties\n");
+            res.append("webLink=True");
+            res.append("myIP=" + ip);
+            res.append("myHTTPServerPort=" + httpPort);
             
             res.append("#Languages Selection\n");
             res.append("languageList=");

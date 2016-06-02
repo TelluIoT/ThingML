@@ -96,7 +96,7 @@ public class TestJar {
         Properties prop = new Properties();
 	InputStream input = null;
         
-        String languageList = null, useBlackList = null, testList = null;
+        String languageList = null, useBlackList = null, testList = null, webLink = null, myIP = null, myHTTPServerPort = null;
         
 	try {
 
@@ -109,6 +109,9 @@ public class TestJar {
                 languageList = prop.getProperty("languageList");
                 useBlackList = prop.getProperty("useBlackList");
                 testList = prop.getProperty("testList");
+                webLink = prop.getProperty("webLink");
+                myIP = prop.getProperty("myIP");
+                myHTTPServerPort = prop.getProperty("myHTTPServerPort");
 		System.out.println("languageList:" + languageList);
 		System.out.println("useBlackList:" + useBlackList);
 		System.out.println("testList:" + testList);
@@ -116,6 +119,11 @@ public class TestJar {
 	} catch (IOException ex) {
 		ex.printStackTrace();
 	}
+        
+        boolean localLink = true;
+        if(webLink != null) {
+            localLink = !(webLink.compareToIgnoreCase("True") == 0);
+        }
         
         Set<String> tl = new HashSet<>();
         if(testList != null) {
@@ -275,7 +283,7 @@ public class TestJar {
         
         System.out.println("");
         
-        writeResultsFile(new File(tmpDir, "results.html"), testBench, langs, testFolder);
+        writeResultsFile(new File(tmpDir, "results.html"), testBench, langs, testFolder, localLink, myIP, myHTTPServerPort);
         
         
         System.out.println("");
@@ -310,37 +318,12 @@ public class TestJar {
         System.out.println("Done.");
     }
     
-    public static void writeResultsFile(File results, Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> tests, List<TargetedLanguage> langs, File srcDir) {
+    public static void writeResultsFile(File results, Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> tests, List<TargetedLanguage> langs, File srcDir, boolean localLink, String myIP, String myHTTPServerPort) {
         StringBuilder res = new StringBuilder();
         
-        res.append("<!DOCTYPE html>\n" +
-        "<html>\n" +
-        "	<head>\n" +
-        "		<meta charset=\"utf-8\" />\n" +
-        "		<title>ThingML tests results</title>\n" +
-        "		<style>\n" +
-        "		table\n" +
-        "		{\n" +
-        "			border-collapse: collapse;\n" +
-        "		}\n" +
-        "		td, th \n" +
-        "		{\n" +
-        "			border: 1px solid black;\n" +
-        "		}\n" +
-        "		.green\n" +
-        "		{\n" +
-        "			background: lightgreen\n" +
-        "		}\n" +
-        "		.red\n" +
-        "		{\n" +
-        "			background: red\n" +
-        "		}\n" +
-        "		</style>\n" +
-        "	</head>\n" +
-        "	<body>\n" +
-        "           <table>\n" +
-        "               <tr>\n");
-        res.append("                <th>Test</th>\n");
+        if(localLink) {
+            res.append(TestHelper.writeHeaderResultsFile(langs));
+        }
         
         for(TargetedLanguage lang : langs) {
             res.append("                    <th>" + lang.compilerID + "</th>\n");
@@ -353,7 +336,11 @@ public class TestJar {
             boolean lineSuccess = true;
             res.append("            <tr>\n");
             res.append("            <td class=\"");
-            lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+            if(localLink) {
+                lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+            } else {
+                lineB.append("                <a href=\"" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+            }
             lineB.append("            </td>\n");
             for(TargetedLanguage lang : langs) {
                 for(Map.Entry<TargetedLanguage,List<TestCase>> cell : line.getValue()) {
@@ -377,14 +364,13 @@ public class TestJar {
                             }
                             cellB.append("\">\n");
 
-                            cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
-                            cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
-                            /*if(tc.oracleExpected != null) {
-                            cellB.append("                      | " + tc.oracleExpected + "\n");
+                            if(localLink || (myIP == null) || (myHTTPServerPort == null)) {
+                                cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
+                                cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
+                            } else {
+                                cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + tc.genCfg + ">src</a> | \n");
+                                cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + tc.logFile.getPath() + ">log</a>\n");
                             }
-                            if((tc.oracleExpected != null) && (tc.oracleActual != null)) {
-                            cellB.append("                      | " + tc.oracleActual + "\n");
-                            }*/
                             cellB.append("                  </td>\n" );
                             cellB.append("                  </tr>\n");
 
@@ -418,9 +404,9 @@ public class TestJar {
             res.append("            </tr>\n");
         }
         
-        res.append("        </table>\n"
-                + " </body>\n");
-        res.append("</html>");
+        if(localLink) {
+            res.append(TestHelper.writeFooterResultsFile());
+        }
         
         for(TargetedLanguage lang : langs) {
             System.out.println("[" + lang.compilerID + "] " + lang.failedTest.size() + " failures out of " + lang.testNb);
