@@ -17,6 +17,9 @@ mvn exec:java
 
 Results are sumed up into tmp/results.html, tmp/log contains detailed log of each test, tmp/thingml contains the test configurations for each test, and tmp/gen contains the generated code in targeted languages.
 
+##Running tests on a cluster
+See Distributed_Tests_README.md
+
 ##Configuration
 In the file config.properties you can find the list of languages to be tested, and select testcases to be run.
 
@@ -80,3 +83,4 @@ testJar/src/main/resources/tests/core/_compilerID
 
 * In order to support compilation and execution, implement the class TargetedLanguage.java, it should only consist into defining command to compile and execute the generated code.
 testJar/src/main/java/org/thingml/testjar/lang/
+
