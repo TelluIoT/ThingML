@@ -47,4 +47,5 @@ Collect results from each node and merge them into one file
 
  * config.properties: The file is read as for regular tests. (The repartition of tests will be executed from the information read here). Individual config files will be generated for each slave nodes.
  * loadbalancer.properties: Contains the cluster description
+ * dispatchTest.sh (script templates /testJar/src/main/resources/loadBalancer/dispatchTest.sh) can be modify to alter paths of the thingml dir on master and nodes.
 
