@@ -276,8 +276,6 @@ public class LoadBalancer {
             
             
             File configFile = new File("config.properties");
-            if (!configFile.getParentFile().exists())
-                configFile.getParentFile().mkdirs();
             try {
                 PrintWriter w = new PrintWriter(configFile);
                 w.print(res.toString());
