@@ -21,6 +21,7 @@
 package org.thingml.testjar;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -149,6 +150,23 @@ public class TestHelper {
         }
         
         return res;
+    }
+
+    public static String getTemplateByID(String template_id) {
+        InputStream input = TestHelper.class.getClassLoader().getResourceAsStream(template_id);
+        String result = null;
+        try {
+            if (input != null) {
+                result = org.apache.commons.io.IOUtils.toString(input, java.nio.charset.Charset.forName("UTF-8"));
+                input.close();
+            } else {
+                System.out.println("[Error] Template not found: " + template_id);
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return null; // the template was not found
+        }
+        return result;
     }
     
 }

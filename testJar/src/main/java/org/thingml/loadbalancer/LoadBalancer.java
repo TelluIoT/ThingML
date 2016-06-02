@@ -18,7 +18,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.testjar;
+package org.thingml.loadbalancer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +35,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import org.thingml.testjar.Command;
+import org.thingml.testjar.TestHelper;
 
 /**
  *
@@ -170,119 +173,36 @@ public class LoadBalancer {
                 n.languages.add(languageList);
                 n.makeTestDir(workingDir, compilerJar, testJar, testFolder);
             }
-            
+            System.out.println("Master Node IP: " + loadBalancerProp.getProperty("masternode_ip"));
+            System.out.println("Master Node Port: " + loadBalancerProp.getProperty("masternode_port"));
+            generateDispatchScript(workingDir, loadBalancerProp.getProperty("masternode_ip"), 
+                    loadBalancerProp.getProperty("masternode_port"), 
+                    nl.values());
 
 	} catch (IOException ex) {
 		ex.printStackTrace();
 	}
     }
     
-}
-    class CloudNode {
-        public String name;
-        public String ip;
-        public int port;
-        public int weight;
-        public Set<File> tests;
-        public Set<String> languages;
+    public static void generateDispatchScript(File workingDir, String masterIP, String masterPort, Collection<CloudNode> nodeList) {
+        String dispatchScript = TestHelper.getTemplateByID("loadBalancer/dispachTest.sh");
+        dispatchScript = dispatchScript.replace("#IP_MASTER", masterIP);
+        dispatchScript = dispatchScript.replace("#PORT_MASTER", masterPort);
         
-        public CloudNode(String name) {
-            this.name = name;
-            this.tests = new HashSet<>();
-            this.languages = new HashSet<>();
+        String tasks ="";
+        for(CloudNode n : nodeList) {
+            tasks += "(work " + n.name + " " + n.ip + " " + n.port + ")&\n";
         }
         
-        public void makeTestDir(File workingDir, File compiler, File testJar, File testSrc) throws IOException {
-            File testDir = new File(workingDir, name + "_testDir");
-            testDir.mkdir();
-            File cDir = new File(testDir, "compilers");
-            cDir.mkdir();
-            File regDir = new File(cDir, "registry");
-            regDir.mkdir();
-            File tarDir = new File(regDir, "target");
-            tarDir.mkdir();
-            File compLink = new File(tarDir, "compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
-            Files.createSymbolicLink(compLink.toPath(), compiler.toPath());
-            
-            File tjDir = new File(testDir, "testJar");
-            tjDir.mkdir();
-            File tjtarDir = new File(tjDir, "target");
-            tjtarDir.mkdir();
-            File tJarLink = new File(tjtarDir, "testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
-            Files.createSymbolicLink(tJarLink.toPath(), testJar.toPath());
-            writeConfigFile(tjDir);
-            
-            File srcDir = new File(tjDir, "src");
-            srcDir.mkdir();
-            File mainDir = new File(srcDir, "main");
-            mainDir.mkdir();
-            File resourcesDir = new File(mainDir, "resources");
-            resourcesDir.mkdir();
-            File testSrcDir = new File(resourcesDir, "tests");
-            testSrcDir.mkdir();
-            
-            for(File t : tests) {
-                File tLink =  new File(testSrcDir, t.getName());
-                Files.createSymbolicLink(tLink.toPath(), t.toPath());
-            }
-            
-            File coreLink =  new File(testSrcDir, "core");
-            File coreDir =  new File(testSrc, "core");
-            Files.createSymbolicLink(coreLink.toPath(), coreDir.toPath());
-            
-            File importLink =  new File(testSrcDir, "import");
-            File importDir =  new File(testSrc, "import");
-            Files.createSymbolicLink(importLink.toPath(), importDir.toPath());
-            
-            File dtLink =  new File(testSrcDir, "datatypes.thingml");
-            File dt =  new File(testSrc, "datatypes.thingml");
-            Files.createSymbolicLink(dtLink.toPath(), dt.toPath());
-            
-            File tmlLink =  new File(testSrcDir, "thingml.thingml");
-            File tml =  new File(testSrc, "thingml.thingml");
-            Files.createSymbolicLink(tmlLink.toPath(), tml.toPath());
-            
-        }
-        
-        public void writeConfigFile(File workingDir) {
-            StringBuilder res = new StringBuilder();
-            
-            res.append("#############################################\n");
-            res.append("#          Config for " + name + "\n");
-            res.append("#############################################\n\n");
-            
-            res.append("#Languages Selection\n");
-            res.append("languageList=");
-            boolean isFirst = true;
-            for(String l : languages) {
-                if(isFirst) isFirst = false;
-                else res.append(", ");
-                res.append(l);
-            }
-            res.append("\n\n");
-            
-            res.append("#Mode Selection\n");
-            res.append("useBlackList=False\n\n");
-            
-            res.append("#Test Selection\n");
-            res.append("testList=");
-            isFirst = true;
-            for(File t : tests) {
-                if(isFirst) isFirst = false;
-                else res.append(", ");
-                res.append(t.getName().split("\\.")[0]);
-            }
-            res.append("\n\n");
-            
-            
-            File configFile = new File("config.properties");
+        dispatchScript = dispatchScript.replace("#DISPATCH", tasks);
+        File dispatchScriptFile = new File(workingDir, "dispatch.sh");
             try {
-                PrintWriter w = new PrintWriter(configFile);
-                w.print(res.toString());
+                PrintWriter w = new PrintWriter(dispatchScriptFile);
+                w.print(dispatchScript);
                 w.close();
             } catch (Exception ex) {
                 System.err.println("Problem writing log");
                 ex.printStackTrace();
             }
-        }
     }
+}
