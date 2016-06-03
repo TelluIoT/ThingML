@@ -42,6 +42,7 @@ function work {
 	
 	#Signal that this slave has terminated
 	echo "1" > $nameDir/done
+	echo "Node: $1 done."
 }
 
 #wait_node "maxcloudnode1"
@@ -53,7 +54,6 @@ function wait_node {
 	do
 	  sleep 1
 	done
-	echo "Node: $1 done."
 }
 
 echo "Dispatching tests to slave nodes"

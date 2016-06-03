@@ -229,7 +229,7 @@ public class LoadBalancer {
             File resultsFooterFile = new File(tmpDir, "footer.html");
             try {
                 PrintWriter w = new PrintWriter(resultsFooterFile);
-                w.print(TestHelper.writeFooterResultsFile());
+                w.print(TestHelper.getTemplateByID("loadBalancer/htmlTemplates/footer.html"));
                 w.close();
             } catch (Exception ex) {
                 System.err.println("Problem writing log");
@@ -237,7 +237,13 @@ public class LoadBalancer {
             }
             try {
                 PrintWriter w = new PrintWriter(resultsHeaderFile);
-                w.print(TestHelper.writeHeaderResultsFile(langs));
+                String header = TestHelper.getTemplateByID("loadBalancer/htmlTemplates/header.html");
+                String htmlLangList = "\n";
+                for(TargetedLanguage lang : langs) {
+                    htmlLangList += "                    <th>" + lang.compilerID + "</th>\n";
+                }
+                header = header.replace("<th>nodejs</th><th>java</th><th>posixmt</th>", htmlLangList);
+                w.print(header);
                 w.close();
             } catch (Exception ex) {
                 System.err.println("Problem writing log");
