@@ -110,7 +110,13 @@ public class JSSerialPlugin extends NetworkPlugin {
 
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonObject deps = json.get("dependencies").asObject();
-            deps.add("serialport2", "^0.0.5");
+            deps.add("serialport", "^3.1.2");
+            deps.add("bytebuffer", "^5.0.1");
+
+            final File f = new File(ctx.getOutputDirectory() + "/package.json");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(json.toString(), output, Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -200,9 +206,10 @@ public class JSSerialPlugin extends NetworkPlugin {
                 final String speed = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "baudrate") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "baudrate").get(0) : "9600";
                 final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";
 
-                //TODO
+                main = main.replace("/*$REQUIRE_PLUGINS$*/", "var Serial = require('./SerialJS');\n/*$REQUIRE_PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "var serial = new Serial(\"serial\", null, false, \"" + port + "\", " + speed + ");\n/*$PLUGINS$*/\n");
 
-                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/main.js");
+                final File f = new File(ctx.getOutputDirectory() + "/main.js");
                 final OutputStream output = new FileOutputStream(f);
                 IOUtils.write(main, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
