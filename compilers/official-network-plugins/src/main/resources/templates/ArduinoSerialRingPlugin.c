@@ -27,8 +27,7 @@ struct /*PORT_NAME*/_instance_type {
     /*INSTANCE_INFORMATION*/
 } /*PORT_NAME*/_instance;
 
-int fifo_byte_available();
-int _fifo_enqueue(byte b);
+void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
 
 void set_max_ttl(uint8_t ttl) {
     /*PORT_NAME*/_max_ttl = ttl;

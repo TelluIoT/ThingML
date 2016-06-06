@@ -62,7 +62,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
 
         for (Parameter pt : m.getParameters()) {
             builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = cctx.getCByteSize(pt.getType(), 0);
+            int i = 0;
             String v = pt.getName();
             if (cctx.isPointer(pt.getType())) {
                 // This should not happen and should be checked before.
@@ -75,9 +75,9 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
                     builder.append("} u_" + v + ";\n");
                     builder.append("u_" + v + ".p = " + v + ";\n");
 
-                    while (i > 0) {
-                        i = i - 1;
+                    while (i < cctx.getCByteSize(pt.getType(), 0)) {
                         builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
+                        i++;
                         j++;
                     }
                 }

@@ -188,10 +188,9 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                         System.out.print("m: " + m.getName());
                     messages.add(m);
                     if (ctx.getMessageSerializationSize(m) > maxMsgSize) {
-                        maxMsgSize = ctx.getMessageSerializationSize(m);
+                        maxMsgSize = ctx.getMessageSerializationSize(m) - 2;
                     }
                 }
-                maxMsgSize = maxMsgSize - 2; //FIXME @nicolas
 
                 ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 

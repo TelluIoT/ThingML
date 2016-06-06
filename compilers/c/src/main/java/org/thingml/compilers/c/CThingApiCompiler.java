@@ -21,8 +21,11 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
+import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +68,9 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
         // Fetch code from the "c_header" annotations
         generateCHeaderAnnotation(thing, builder, ctx);
+
+        if (!ArduinoCepHelper.getStreamWithBuffer(thing).isEmpty())
+            ArduinoThingCepCompiler.generateCEPLibAPI(thing, builder, ctx);
 
         // Define the data structure for instances
         generateInstanceStruct(thing, builder, ctx, debugProfile);
@@ -166,6 +172,9 @@ public class CThingApiCompiler extends ThingApiCompiler {
             builder.append(ctx.getCVarName(p));
             builder.append(";\n");
         }
+        builder.append("// CEP stream pointers\n");
+        for (Stream s : ArduinoCepHelper.getStreamWithBuffer(thing))
+            builder.append("stream_" + s.getName() + "* cep_" + s.getName() + ";\n");
         builder.append("\n};\n");
     }
 
@@ -211,7 +220,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("\n");
     }
 
-    
+
     protected void generateStateIDs(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one

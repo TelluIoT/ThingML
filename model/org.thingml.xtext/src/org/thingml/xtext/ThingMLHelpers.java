@@ -30,7 +30,8 @@ package org.thingml.xtext;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.thingML.*;
+//import org.thingml.xtext.thingML.*;
+import org.sintef.thingml.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;

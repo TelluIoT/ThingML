@@ -23,6 +23,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
 
 import java.util.*;
 
@@ -251,8 +252,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
             }
 
-            builder.append("\n");
-        }
+                builder.append("\n");
+            }
 
 
         generateMessageEnqueue(cfg, builder, headerbuilder, ctx);
@@ -427,7 +428,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                     while (i > 0) {
                         i = i - 1;
-                        //if (i == 0) 
+                        //if (i == 0)
                         //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
                         builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                         j++;
@@ -1020,7 +1021,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                 for (ExternalConnector eco : externalSenders) {
                     String portName = eco.getName();
-                    
+
                     builder.append("if (sender ==");
                     builder.append(" " + portName + "_instance.listener_id) {\n");
 
@@ -1546,6 +1547,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("\n");
 
+        // init cep streams variables
+        for (Stream s : ArduinoCepHelper.getStreamWithBuffer(inst.getType())) {
+            builder.append(ctx.getInstanceVarName(inst) + ".cep_" + s.getName() + " = new stream_" + s.getName() + "();\n");
+        }
+
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
         //if(!(debugProfile==null) && debugProfile.g) {}
         //if(ctx.containsDebug(cfg, inst.getType())) {
@@ -1604,7 +1610,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("\n");
         builder.append("// Network Initilization \n");
-        
+
         builder.append(ctx.getInitCode());
         builder.append("\n\n// End Network Initilization \n\n");
 
@@ -1619,7 +1625,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
-        
+
             //Initialize stdout if needed (for arduino)
             if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 int baudrate = 9600;

@@ -25,9 +25,14 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
+import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
+import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by ffl on 17.06.15.
@@ -128,6 +133,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         generatePrivateMessageSendingOperations(thing, builder, ctx, debugProfile);
         builder.append("\n");
 
+
+        //FIXME: should call getCompiler
+        if (!ArduinoCepHelper.getStreamWithBuffer(thing).isEmpty())
+            ArduinoThingCepCompiler.generateCEPLibImpl(thing, builder, ctx);
+
         // Get the template and replace the values
         String itemplate = ctx.getThingImplTemplate();
         itemplate = itemplate.replace("/*NAME*/", thing.getName());
@@ -162,7 +172,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             for (Parameter p : func.getParameters()) {
                 builder.append(", ");
                 builder.append(ctx.getCType(p.getType()));
-                if (p.getCardinality() != null) builder.append("*");
+                if (p.getCardinality() != null || p.isIsArray()) builder.append("*");
                 builder.append(" " + p.getName());
             }
             builder.append(")");
@@ -359,7 +369,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("switch(state) {\n");
 
-        
+
         for (CompositeState cs : CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm)) {
 
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
@@ -387,7 +397,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
 
-        
+
         for (State s : CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
@@ -419,7 +429,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("void " + getCppNameScope() + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
         builder.append("switch(state) {\n");
-        
+
         for (CompositeState cs : CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
             ArrayList<Region> regions = new ArrayList<Region>();
@@ -500,6 +510,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     // it can only be an internal handler so the last param can be null (in theory)
                     generateMessageHandlers(thing, sm, port, msg, builder, null, sm, ctx, debugProfile);
                 }
+
+                generateStreamDispatch(thing, port, msg, ctx, builder);
+
                 builder.append("}\n");
             }
         }
@@ -533,6 +546,116 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("return 0;\n");
 
             builder.append("}\n");
+        }
+    }
+
+    // FIXME: ugly code
+    // may be specific to Arduino board
+    // maybe Handler should be better than Dispatch in the signature name
+    private void generateStreamDispatch(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {
+        for (Stream s : thing.getStreams()) {
+            Source source = s.getInput();
+
+            // Gather all the sources
+            Map<SimpleSource, String> sourceMap = new HashMap();
+            if (source instanceof SimpleSource)
+                sourceMap.put((SimpleSource) source, ((SimpleSource) source).getMessage().getMessage().getName());
+            else if (source instanceof JoinSources)
+                for (Source sc : ((JoinSources) source).getSources())
+                    sourceMap.put((SimpleSource) sc, ((SimpleSource) sc).getMessage().getMessage().getName());
+            else if (source instanceof MergeSources)
+                for (Source sc : ((MergeSources) source).getSources())
+                    sourceMap.put((SimpleSource) sc, ((SimpleSource) sc).getMessage().getMessage().getName());
+
+
+            for (SimpleSource sc : sourceMap.keySet()) {
+                if (sourceMap.get(sc).equals(msg.getName())) {
+                    builder.append("//begin stream dispatch\n");
+
+                    for (Parameter p : msg.getParameters()) {
+                        ctx.putCepMsgParam(msg.getName(), p.getName(), s.getName());
+                    }
+
+                    int nbCondition = 0;
+                    // guard
+                    for (ViewSource vs : sc.getOperators()) {
+                        if (vs instanceof Filter) {
+                            builder.append("if (");
+                            ctx.getCompiler().getThingActionCompiler().generate(((Filter) vs).getGuard(), builder, ctx);
+                            nbCondition++;
+                            builder.append(") {\n");
+                        }
+                    }
+
+                    boolean hasWindowView = false;
+                    for (ViewSource vs : source.getOperators())
+                        if (vs instanceof LengthWindow || vs instanceof TimeWindow)
+                            hasWindowView = true;
+
+                    // produce the action or propagate the event
+                    if (source instanceof SimpleSource) {
+                        if (hasWindowView) {
+                            builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
+                            ctx.appendActualParameters(thing, builder, msg, "_instance");
+                            builder.append(";\n");
+                        }
+                        for (LocalVariable lv : s.getSelection()) {
+                            lv.setName(ThingMLElementHelper.qname(lv, "_"));
+                            ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
+                        }
+
+                        ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
+
+                    } else if (source instanceof JoinSources || hasWindowView) {
+                        builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
+                        ctx.appendActualParameters(thing, builder, msg, "_instance");
+                        builder.append(";\n");
+
+                    } else if (source instanceof MergeSources) {
+                        Message rMsg = ((MergeSources) source).getResultMessage();
+
+                        // since we don't call the checkTrigger we need to check the source guard as well
+                        List<String> guardsList = new ArrayList<>();
+                        for (ViewSource vs : source.getOperators()) {
+                            if (vs instanceof Filter) {
+                                StringBuilder sourceGuard = new StringBuilder();
+                                ctx.getCompiler().getThingActionCompiler().generate(((Filter) vs).getGuard(), sourceGuard, ctx);
+                                guardsList.add(sourceGuard.toString());
+                            }
+                        }
+
+                        if (guardsList.size() > 0)
+                            builder.append("if (" + String.join(" && ", guardsList) + ") {\n");
+
+                        int paramIndex = 0;
+                        for (Parameter p : rMsg.getParameters()) {
+                            builder.append(ctx.getCType(p.getType()) + " " + p.getName() + " = " + msg.getParameters().get(paramIndex).getName() + ";\n");
+                            paramIndex++;
+                        }
+
+                        for (LocalVariable lv : s.getSelection()) {
+                            lv.setName(source.getName() + "_" + lv.getName());
+                            ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
+                        }
+
+                        ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
+
+                        if (guardsList.size() > 0)
+                            builder.append("}\n");
+                    }
+
+                    // Length Window
+                    if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+                        builder.append("  _instance->cep_" + s.getName() + "->checkTrigger(_instance);\n");
+
+                    // closing braces, see guards
+                    for (int i = 0; i < nbCondition; i++) {
+                        builder.append("}\n");
+                    }
+                    builder.append("//End stream dispatch\n");
+                    ctx.resetCepMsgContext();
+                }
+            }
         }
     }
 
@@ -589,19 +712,19 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
     }
-    
+
     protected void dispatchToSessions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("//Session list: " );
         for (Region r : CompositeStateHelper.allContainedSessions(cs)) {
             builder.append(r.getName() + " ");
         }
         builder.append("\n");
-        
+
         for (Region r : CompositeStateHelper.allContainedSessions(cs)) {
             builder.append("//Session " + r.getName() + "\n");
             builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
             // for all states of the region, if the state can handle the message and that state is active we forward the message
-            
+
             /*if (CompositeStateHelper.allContainedSessions(cs).get(0) == r) {
                 builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
             }*/
@@ -631,13 +754,13 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
-        
+
        /* builder.append("//Region list: " );
         for (Region r : CompositeStateHelper.directSubRegions(cs)) {
             builder.append(r.getName() + " ");
         }
         builder.append("\n");*/
-        
+
         for (Region r : CompositeStateHelper.directSubRegions(cs)) {
             if(!(r instanceof Session)){
                 builder.append("//Region " + r.getName() + "\n");
@@ -664,7 +787,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(ctx.getStateVarName((Region) cs.eContainer()) + "_event_consumed = 0 ");
             for (Region r : CompositeStateHelper.directSubRegions(cs)) {
                 // for all states of the region, if the state can handle the message and that state is active we forward the message
-                builder.append("| " + ctx.getStateVarName(r) + "_event_consumed ");
+                builder.append("| " + ctx.getStateVarName(r)+"_event_consumed ");
             }
             builder.append(";\n");
         }
