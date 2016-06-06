@@ -23,8 +23,7 @@ struct /*PROTOCOL*/_instance_type {
     /*INSTANCE_INFORMATION*/
 } /*PROTOCOL*/_instance;
 
-int fifo_byte_available();
-int _fifo_enqueue(byte b);
+void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
 
 void /*PROTOCOL*/_setup() {
   /*PROTOCOL*/.begin(/*PROTOCOL*/_BAUDRATE);

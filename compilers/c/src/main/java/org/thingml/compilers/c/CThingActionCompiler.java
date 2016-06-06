@@ -22,6 +22,8 @@ import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
+import java.util.Map;
+
 
 public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
@@ -100,6 +102,9 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
         CCompilerContext context = (CCompilerContext) ctx;
 
+        // FIXME may lead to a bug in testArrays for posix
+        //String arr = action.isIsArray() ? "*" : "";
+
         String propertyName = context.getCType(action.getType()) + " " + action.getName();
         builder.append(";");
         builder.append(propertyName);
@@ -147,7 +152,30 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        if (expression.getParameter() instanceof ParamReference) {
+        //FIXME: only support CEP buffers, not real arrays
+        if (expression.getParameter() instanceof ArrayParamRef) {
+            if (ctx instanceof CCompilerContext) {
+                ArrayParamRef apr = (ArrayParamRef) expression.getParameter();
+
+                String paramName = apr.getParameterRef().getName();
+                Map<String, String> mapMsgStream = ((CCompilerContext) ctx).getCepMsgFromParam(paramName);
+                String msgName = "";
+                String streamName = "";
+                if (mapMsgStream != null) {
+                    for (String s : mapMsgStream.keySet()) {
+                        msgName = s;
+                        streamName = mapMsgStream.get(s);
+                    }
+                } else {
+
+
+                }
+
+                builder.append("_instance->cep_" + streamName + "->export_" + msgName + "_" + paramName + "()");
+            } else {
+
+            }
+        } else if (expression.getParameter() instanceof ParamReference) {
             ParamReference paramReference = (ParamReference) expression.getParameter();
             builder.append(paramReference.getParameterRef().getName());
         } else if (expression.getParameter() instanceof PredifinedProperty) {

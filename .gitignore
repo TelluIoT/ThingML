@@ -32,3 +32,4 @@ Benchmarks/Scala-Avg-Bench/out/
 node_modules
 .workspace
 runtime-EclipseApplication
+testJar/config.properties
