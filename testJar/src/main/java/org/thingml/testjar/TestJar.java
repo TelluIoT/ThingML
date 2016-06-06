@@ -70,7 +70,8 @@ public class TestJar {
         tmpDir.delete();
         tmpDir = new File(workingDir, "tmp");
 
-        final File testFolder = new File(TestJar.class.getClassLoader().getResource("tests").getFile());
+        final File testFolder = new File(workingDir.getPath() + "/src/main/resources/tests");
+        //final File testFolder = new File(TestJar.class.getClassLoader().getResource("tests").getFile());
         String testPattern = "test(.+)\\.thingml";
         
         Set<Command> tasks = new HashSet<>();
@@ -95,7 +96,7 @@ public class TestJar {
         Properties prop = new Properties();
 	InputStream input = null;
         
-        String languageList = null, useBlackList = null, testList = null;
+        String languageList = null, useBlackList = null, testList = null, webLink = null, myIP = null, myHTTPServerPort = null;
         
 	try {
 
@@ -108,6 +109,9 @@ public class TestJar {
                 languageList = prop.getProperty("languageList");
                 useBlackList = prop.getProperty("useBlackList");
                 testList = prop.getProperty("testList");
+                webLink = prop.getProperty("webLink");
+                myIP = prop.getProperty("myIP");
+                myHTTPServerPort = prop.getProperty("myHTTPServerPort");
 		System.out.println("languageList:" + languageList);
 		System.out.println("useBlackList:" + useBlackList);
 		System.out.println("testList:" + testList);
@@ -115,6 +119,11 @@ public class TestJar {
 	} catch (IOException ex) {
 		ex.printStackTrace();
 	}
+        
+        boolean localLink = true;
+        if(webLink != null) {
+            localLink = !(webLink.compareToIgnoreCase("True") == 0);
+        }
         
         Set<String> tl = new HashSet<>();
         if(testList != null) {
@@ -129,14 +138,14 @@ public class TestJar {
         Set<File> testFiles;
         if(useBlackList != null) {
             if(useBlackList.compareToIgnoreCase("false") == 0) {
-                testFiles = whiteListFiles(testFolder, tl);
+                testFiles = TestHelper.whiteListFiles(testFolder, tl);
             } else if (useBlackList.compareToIgnoreCase("true") == 0) {
-                testFiles = blackListFiles(testFolder, tl);
+                testFiles = TestHelper.blackListFiles(testFolder, tl);
             } else {
-                testFiles = listTestFiles(testFolder, testPattern);
+                testFiles = TestHelper.listTestFiles(testFolder, testPattern);
             }
         } else {
-            testFiles = listTestFiles(testFolder, testPattern);
+            testFiles = TestHelper.listTestFiles(testFolder, testPattern);
         }
 
 	//Language Selection
@@ -274,129 +283,13 @@ public class TestJar {
         
         System.out.println("");
         
-        writeResultsFile(new File(tmpDir, "results.html"), testBench, langs, testFolder);
+        writeResultsFile(new File(tmpDir, "results.html"), testBench, langs, testFolder, localLink, myIP, myHTTPServerPort);
         
         
         System.out.println("");
         System.out.println("More details in " + tmpDir.getAbsolutePath() + "/results.html");
         System.out.println("");
         
-    }
-	
-
-    public static Set<File> listTestFiles(final File folder, String pattern) {
-        Set<File> res = new HashSet<>();
-        Pattern p = Pattern.compile(pattern);
-        
-        for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                res.addAll(listTestFiles(fileEntry, pattern));
-            } else {
-                Matcher m = p.matcher(fileEntry.getName());
-                
-                if (m.matches()) {
-                    res.add(fileEntry);
-                }
-            }
-        }
-        
-        return res;
-    }
-	
-
-    public static Set<File> whiteListFiles(final File folder, Set<String> whiteList) {
-        String testPattern = "test(.+)\\.thingml";
-        Set<File> res = new HashSet<>();
-        
-        for (final File fileEntry : listTestFiles(folder, testPattern)) {
-            if (fileEntry.isDirectory()) {
-                res.addAll(whiteListFiles(fileEntry, whiteList));
-            } else {
-                String fileName = fileEntry.getName().split("\\.thingml")[0];
-                boolean found = false;
-                for(String s : whiteList) {
-                    if (fileName.compareTo(s) == 0) {
-                        found = true;
-                    }
-                }
-                if(found)
-                    res.add(fileEntry);
-            }
-        }
-        
-        return res;
-    }
-	
-
-    public static Set<File> blackListFiles(final File folder, Set<String> blackList) {
-        String testPattern = "test(.+)\\.thingml";
-        Set<File> res = new HashSet<>();
-        
-        for (final File fileEntry : listTestFiles(folder, testPattern)) {
-            if (fileEntry.isDirectory()) {
-                res.addAll(blackListFiles(fileEntry, blackList));
-            } else {
-                String fileName = fileEntry.getName().split("\\.thingml")[0];
-                boolean found = false;
-                for(String s : blackList) {
-                    if (fileName.compareTo(s) == 0) {
-                        found = true;
-                    }
-                }
-                if(!found)
-                    res.add(fileEntry);
-            }
-        }
-        
-        return res;
-    }
-    
-    public static Set<File> listTestDir(final File folder, String pattern) {
-        Set<File> res = new HashSet<>();
-        Pattern p = Pattern.compile(pattern);
-        
-        for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                //res.addAll(listTestFiles(fileEntry, pattern));
-                Matcher m = p.matcher(fileEntry.getName());
-                
-                if (m.matches()) {
-                    res.add(fileEntry);
-                }
-            }
-        }
-        
-        return res;
-    }
-    
-    public static List<TestCase> listSamples(File srcDir, List<TargetedLanguage> langs, File compilerJar, File genCodeDir, File logDir) {
-        String pattern = "(.+)\\.thingml";
-        Pattern p = Pattern.compile(pattern);
-        List<TestCase> res = new LinkedList<>();
-        System.out.println("List samples:");
-        //Explorer de manière récursive les dossiers
-        for (final File fileEntry : srcDir.listFiles()) {
-            if (!fileEntry.isDirectory()) {
-                //res.addAll(listTestFiles(fileEntry, pattern));
-                Matcher m = p.matcher(fileEntry.getName());
-                
-                if (m.matches()) {
-                    boolean specificLang = false;
-                    for(TargetedLanguage lang : langs) {
-                        if(lang.compilerID.compareToIgnoreCase("_" + fileEntry.getParent()) == 0) {
-                            specificLang = true;
-                            System.out.println("    -" + fileEntry.getName() + "(" + lang.compilerID + ")");
-                            res.add(new TestCase(fileEntry, compilerJar, lang, genCodeDir, fileEntry.getParentFile().getParentFile(), logDir, true));
-                        }
-                    }
-                    
-                    if(!specificLang) {
-                    }
-                }
-            }
-        }
-        
-        return res;
     }
     
     public static void testRun(List<TestCase> tests, ExecutorService executor) {
@@ -425,42 +318,12 @@ public class TestJar {
         System.out.println("Done.");
     }
     
-    public static void writeResultsFile(File results, Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> tests, List<TargetedLanguage> langs, File srcDir) {
+    public static void writeResultsFile(File results, Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> tests, List<TargetedLanguage> langs, File srcDir, boolean localLink, String myIP, String myHTTPServerPort) {
         StringBuilder res = new StringBuilder();
         
-        res.append("<!DOCTYPE html>\n" +
-        "<html>\n" +
-        "	<head>\n" +
-        "		<meta charset=\"utf-8\" />\n" +
-        "		<title>ThingML tests results</title>\n" +
-        "		<style>\n" +
-        "		table\n" +
-        "		{\n" +
-        "			border-collapse: collapse;\n" +
-        "		}\n" +
-        "		td, th \n" +
-        "		{\n" +
-        "			border: 1px solid black;\n" +
-        "		}\n" +
-        "		.green\n" +
-        "		{\n" +
-        "			background: lightgreen\n" +
-        "		}\n" +
-        "		.red\n" +
-        "		{\n" +
-        "			background: red\n" +
-        "		}\n" +
-        "		</style>\n" +
-        "	</head>\n" +
-        "	<body>\n" +
-        "           <table>\n" +
-        "               <tr>\n");
-        res.append("                <th>Test</th>\n");
-        
-        for(TargetedLanguage lang : langs) {
-            res.append("                    <th>" + lang.compilerID + "</th>\n");
+        if(localLink) {
+            res.append(TestHelper.writeHeaderResultsFile(langs));
         }
-        res.append("                </tr>\n");
         
         
         for(Map.Entry<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> line : tests.entrySet()) {
@@ -468,7 +331,11 @@ public class TestJar {
             boolean lineSuccess = true;
             res.append("            <tr>\n");
             res.append("            <td class=\"");
-            lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+            if(localLink) {
+                lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+            } else {
+                lineB.append("                <a href=\"http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(srcDir.getPath(), "/thingml") + "/" + line.getKey() + "\"  target=\"test-case-focus\"> " + line.getKey() + "</a>\n");
+            }
             lineB.append("            </td>\n");
             for(TargetedLanguage lang : langs) {
                 for(Map.Entry<TargetedLanguage,List<TestCase>> cell : line.getValue()) {
@@ -492,14 +359,13 @@ public class TestJar {
                             }
                             cellB.append("\">\n");
 
-                            cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
-                            cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
-                            /*if(tc.oracleExpected != null) {
-                            cellB.append("                      | " + tc.oracleExpected + "\n");
+                            if(localLink || (myIP == null) || (myHTTPServerPort == null)) {
+                                cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
+                                cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
+                            } else {
+                                cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(tc.genCfg.getPath(), "/thingml") + " target=\"test-case-focus\">src</a> | \n");
+                                cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(tc.logFile.getPath(), "/thingml") + " target=\"test-case-focus\">log</a>\n");
                             }
-                            if((tc.oracleExpected != null) && (tc.oracleActual != null)) {
-                            cellB.append("                      | " + tc.oracleActual + "\n");
-                            }*/
                             cellB.append("                  </td>\n" );
                             cellB.append("                  </tr>\n");
 
@@ -533,9 +399,9 @@ public class TestJar {
             res.append("            </tr>\n");
         }
         
-        res.append("        </table>\n"
-                + " </body>\n");
-        res.append("</html>");
+        if(localLink) {
+            res.append(TestHelper.writeFooterResultsFile());
+        }
         
         for(TargetedLanguage lang : langs) {
             System.out.println("[" + lang.compilerID + "] " + lang.failedTest.size() + " failures out of " + lang.testNb);

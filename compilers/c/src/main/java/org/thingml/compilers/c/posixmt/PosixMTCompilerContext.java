@@ -76,7 +76,7 @@ public class PosixMTCompilerContext extends CCompilerContextPosix{
             //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
 
             if(pt.isIsArray()) {
-                builder.append("\n// cardinality: \n");
+               builder.append("\n// cardinality: \n");
                throw new Error("ERROR: Attempting to serialize an array (for type " + t.getName() + "). This is not allowed.");
                 
                 //TODO enqueue dequeue of array

@@ -2,7 +2,43 @@
 
 In order to use plugins with the ThingML compiler:
 ```
-java -cp .:$THINGML_DIR/compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar:$THINGML_DIR/compilers/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar org.thingml.compilers.commandline.Main
+java -cp .:your-compiler.jar:you-plugin.jar org.thingml.compilers.commandline.Main -c <compiler> -s <source> [-o <output-dir>][-d]
+```
+In order to list loaded plugins:
+```
+java -cp .:your-compiler.jar:your-plugin.jar org.thingml.compilers.commandline.Main --list-plugins
+Network Plugin list: 
+    | PosixWebSocketPlugin (posix, posixmt) handles:
+        | WebSocket
+        | Websocket
+    | JavaSerialPlugin (java) handles:
+        | Serial
+    | PosixSerialPlugin (posix, posixmt) handles:
+        | Serial
+    | PosixNoPollWSPlugin (posix, posixmt) handles:
+        | WebSocket
+    | JSSerialPlugin (nodejs) handles:
+        | Serial
+    | ArduinoTimerPlugin (arduino) handles:
+        | Timer
+    | ArduinoSerialPlugin (arduino) handles:
+        | Serial
+        | Serial0
+        | Serial1
+        | Serial2
+        | Serial3
+    | PosixMQTTPlugin (posix, posixmt) handles:
+        | MQTT
+        | mqtt
+
+Serialization Plugin list: 
+    | CByteArraySerializerPlugin (posix, posixmt, arduino)
+    | PosixTextDigitSerializerPlugin (posix)
+    | JSByteArraySerializerPlugin (nodejs)
+    | CMSPSerializerPlugin (posix, arduino)
+    | PosixJSONSerializerPlugin (posix, posixmt)
+    | JavaByteArraySerializerPlugin (java)
+
 ```
 
 ##ThingML
