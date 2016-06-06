@@ -1,0 +1,59 @@
+import "thingml.thingml"
+
+thing TestTellu includes Test
+@test "  # "
+@conf "connector test.dataRcv => test.dataSend"
+{
+
+  message tp(T : UInt8, P : UInt8)
+  message tpcomp(T : UInt8, P : UInt8)
+  message void()
+
+  provided port dataSend {
+    sends tp, tpcomp, void
+  }
+
+  required port dataRcv {
+    receives tp, tpcomp, void
+  }
+
+  function splitter() do
+    var index : UInt8 = 0
+    while (index < 9) do
+      dataSend!tp(1, index)
+      index = index + 1
+    end
+  end
+
+  function compensate(p: UInt8, a : UInt8, b : UInt8, c :UInt8) : UInt8 do
+    // complex usage of polynomials
+    return 2*p
+  end
+
+  stream compBuffer
+  from e @UseOnce "False" @Expose "CompBuffer" : dataRcv?tpcomp::buffer 3 by 1
+  produce dataSend!void()
+
+  stream join
+  from e : [m1 : dataRcv?tp & m2: dataRcv?tpcomp -> tpcomp(m1.T, m1.P)]
+  select var a : UInt8 = 'CompBuffer[0]'
+         var b : UInt8 = 'CompBuffer[1]'
+         var c : UInt8 = 'CompBuffer[2]'
+         var compP : UInt8 = compensate(e.P, a, b, c)
+  produce dataSend!tpcomp(e.T, compP)
+
+
+
+  statechart testTellu init Init {
+
+    state Init {
+      on entry do
+        splitter()
+        //Initialize the compensated values
+        dataSend!tpcomp(0, 0)
+        dataSend!tpcomp(0, 0)
+        dataSend!tpcomp(0, 0)
+      end
+    }
+  }
+}

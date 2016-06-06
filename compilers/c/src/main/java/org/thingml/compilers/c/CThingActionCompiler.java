@@ -102,9 +102,10 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
         CCompilerContext context = (CCompilerContext) ctx;
 
-        String arr = action.isIsArray() ? "*" : "";
+        // FIXME may lead to a bug in testArrays for posix
+        //String arr = action.isIsArray() ? "*" : "";
 
-        String propertyName = context.getCType(action.getType()) + arr + " " + action.getName();
+        String propertyName = context.getCType(action.getType()) + " " + action.getName();
         builder.append(";");
         builder.append(propertyName);
         if (action.getCardinality() != null) {//array declaration

@@ -173,3 +173,14 @@ produce sendP!res(a)
 ### Window and guards
 
 As every other stream simple source stream allow time and length window and also guards.
+
+
+## Sliding windows
+
+Sliding windows can be seen as a particular case of consumption policy.
+
+```ruby
+stream slidingWindow @TTL "0"
+from s @UseOnce "False" @Slide "3" : rcvP?temp::buffer 10 by 10
+select
+```
