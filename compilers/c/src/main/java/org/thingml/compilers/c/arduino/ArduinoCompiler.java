@@ -79,6 +79,9 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {
             ctx.setConcreteThing(thing);
+
+            ((CCompilerContextArduino) ctx).renameParameterUniquely(thing);
+
             // GENERATE HEADER
             ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
 
