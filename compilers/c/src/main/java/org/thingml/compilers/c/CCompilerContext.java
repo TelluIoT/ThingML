@@ -565,6 +565,25 @@ public abstract class CCompilerContext extends Context {
         return result;
     }
 
+    public String getMessageSerializationSizeString(Message m) {
+        int result = 2; // 2 bytes to store the port/message code
+        result += 2; // to store the id of the source instance
+        String res = "";
+        for (Parameter p : m.getParameters()) {
+            if(p.isIsArray()) {
+                StringBuilder cardBuilder = new StringBuilder();
+                getCompiler().getThingActionCompiler().generate(p.getCardinality(), cardBuilder, this);
+                res += "(" + cardBuilder + " * " + getCByteSize(p.getType(), 0) + ")";
+            } else {
+                result += this.getCByteSize(p.getType(), 0);
+            }
+        }
+        if(res.compareTo("") == 0)
+            return "" + result;
+        else
+            return "(" +result + " + " + res +")";
+    }
+
     // FUNCTIONS FOR TYPES
 
     public String getCType(Type t) {
@@ -631,32 +650,46 @@ public abstract class CCompilerContext extends Context {
         return result;
     }
 
-    public void bytesToSerialize(Type t, StringBuilder builder, Context ctx, String variable, Parameter pt) {
+    public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt) {
         int i = getCByteSize(t, 0);
         String v = variable;
         if (isPointer(t)) {
             // This should not happen and should be checked before.
             throw new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
         } else {
-            //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
+            if(pt.isIsArray()) {
+                
+                StringBuilder cardBuilder = new StringBuilder();
+                getCompiler().getThingActionCompiler().generate(pt.getCardinality(), cardBuilder, this);
+                builder.append("union u_" + v + "_t {\n");
+                builder.append("    " + getCType(t) + " p[" + cardBuilder + "];\n");
+                builder.append("    byte bytebuffer[" + getCByteSize(t, 0) + " * (" + cardBuilder + ")];\n");
+                builder.append("} u_" + v + ";\n");
 
-            if (pt.isIsArray()) {
-                builder.append("\n// cardinality: \n");
-                throw new Error("ERROR: Attempting to serialize an array (for type " + t.getName() + "). This is not allowed.");
+                builder.append("uint8_t u_" + variable + "_index_array = 0;\n");
+                builder.append("while (u_" + variable + "_index_array < (" + cardBuilder + ")) {\n");
+                builder.append("     u_" + v + ".p[u_" + variable + "_index_array] = " + v + "[u_" + variable + "_index_array];\n");
+                builder.append("    u_" + variable + "_index_array++;\n");
+                builder.append("}\n");
 
-                //TODO enqueue dequeue of array
+                builder.append("int16_t u_" + variable + "_index = " + getCByteSize(t, 0) + " * (" + cardBuilder + ") - 1;\n");
+                builder.append("while (u_" + variable + "_index >= 0) {\n");
+                builder.append("    _fifo_enqueue(u_" + variable + ".bytebuffer[u_" + variable + "_index] & 0xFF );\n");
+                builder.append("    u_" + variable + "_index--;\n");
+                builder.append("}\n");
             } else {
                 builder.append("union u_" + v + "_t {\n");
                 builder.append(getCType(t) + " p;\n");
                 builder.append("byte bytebuffer[" + getCByteSize(t, 0) + "];\n");
                 builder.append("} u_" + v + ";\n");
                 builder.append("u_" + v + ".p = " + v + ";\n");
-
+            
                 while (i > 0) {
                     i = i - 1;
-                    //if (i == 0)
+                    //if (i == 0) 
                     //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
-                    builder.append("_fifo_enqueue( u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
+                    
+                    builder.append("_fifo_enqueue(u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
                     //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
                 }
             }
