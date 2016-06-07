@@ -97,6 +97,11 @@ function /*$NAME$*/(name, root, debug, port, baudrate) {
         }
     }
 
+    /*$NAME$*/.prototype._stop = function() {
+        this.ready = false;
+        serial.close();
+    };
+
     //TODO: override stop method to close serial properly
 };
 

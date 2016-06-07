@@ -57,7 +57,8 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonObject deps = json.get("dependencies").asObject();
-            deps.add("bytebuffer", "^5.0.1");
+            if (deps.get("bytebuffer") == null) //Could already be there, e.g. added by serial plugin
+                deps.add("bytebuffer", "^5.0.1");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,6 +98,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+        updatePackageJSON();
         builder.append("var ByteBuffer = require(\"bytebuffer\");\n");
         builder.append("function " + bufferName + "(){\n");
 
