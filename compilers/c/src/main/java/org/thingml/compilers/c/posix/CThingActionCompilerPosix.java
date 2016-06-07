@@ -29,8 +29,26 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         final StringBuilder b = new StringBuilder();
+        Checker checker = ctx.getCompiler().checker;
+        Type actual = checker.typeChecker.computeTypeOf(action.getMsg());
         generate(action.getMsg(), b, ctx);
-        builder.append("fprintf(stderr, " + b.toString() + ");\n");
+        if (actual != null) {
+            if (actual.getName().equals("Integer")) {
+                builder.append("fprintf(stderr, \"%i\"," + b.toString() + ");\n");
+            } else if (actual.getName().equals("Character")) {
+                builder.append("fprintf(stderr, \"%c\"," + b.toString() + ");\n");
+            } else if (actual.getName().equals("String")) {
+                builder.append("fprintf(stderr, " + b.toString() + ");\n");
+            } else if (actual.getName().equals("Real")) {
+                builder.append("fprintf(stderr, \"%f\"," + b.toString() + ");\n");
+            } else if (actual.getName().equals("Boolean")) {
+                builder.append("fprintf(stderr, \"%s\", (" + b.toString() + ") ? \"true\" : \"false\");\n");
+            } else {
+                builder.append("//Type " + actual.getName() + " is not handled in print action\n");
+            }
+        } else {
+            builder.append("//Error in type detection\n");
+        }
     }
 
     @Override

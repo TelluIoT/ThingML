@@ -2,6 +2,10 @@
 uint32_t /*PORT_NAME*/_timer[/*PORT_NAME*/_NB_SOFT_TIMER];
 uint32_t  /*PORT_NAME*/_prev_1sec = 0;
 
+
+
+void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
+
 /*INTERRUPT_COUNTER*/
 /*INTERRUPT_VECTOR*/
 
