@@ -20,6 +20,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
 import java.util.Map;
@@ -179,13 +180,21 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
             ParamReference paramReference = (ParamReference) expression.getParameter();
             builder.append(paramReference.getParameterRef().getName());
         } else if (expression.getParameter() instanceof PredifinedProperty) {
-            Parameter parameter = (Parameter) expression.getReference();
-            if (parameter.isIsArray()) {
-                builder.append(parameter.getName() + "[");
-                ctx.getCompiler().getThingActionCompiler().generate(parameter.getCardinality(), builder, ctx);
-                builder.append("]");
-            } else {
-                throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
+            if (expression.getReference() instanceof Parameter) {
+                Parameter parameter = (Parameter) expression.getReference();
+                if (parameter.isIsArray()) {
+                    builder.append(parameter.getName() + "[");
+                    ctx.getCompiler().getThingActionCompiler().generate(parameter.getCardinality(), builder, ctx);
+                    builder.append("]");
+                } else {
+                    throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
+                }
+            } else if (expression.getReference() instanceof SimpleSource){
+                if (expression.getParameter() instanceof LengthArray) {
+                    String s = ArduinoCepHelper.getContainingStream((SimpleSource)expression.getReference(), (CCompilerContext)ctx);
+                    String msg = ((SimpleSource) expression.getReference()).getMessage().getMessage().getName();
+                    builder.append(s + msg + "getLength");
+                }
             }
         } else {
             throw new UnsupportedOperationException("Parameter " + expression.getParameter().getClass().getName() + " not supported");

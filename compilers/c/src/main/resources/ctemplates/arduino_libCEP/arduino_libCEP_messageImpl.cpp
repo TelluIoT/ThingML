@@ -60,6 +60,13 @@ void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_popEvent(unsigned long* /*MESSAGE_
 
 /*POP_IMPL*/
 
+    }
+}
+
+void stream_/*STREAM_NAME*/::/*MESSAGE_NAME*/_removeEvent()
+{
+    if (!/*MESSAGE_NAME*/_isEmpty())
+    {
         /*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;
     }
 }

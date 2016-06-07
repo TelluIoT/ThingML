@@ -146,6 +146,12 @@ public class ArduinoCepHelper {
     public static String getInputMessagesNumber(SimpleSource src, Stream s, CCompilerContext ctx) {
         String ret = "DEFAULT_NUMBER_MSG";
 
+        for (ViewSource vs : s.getInput().getOperators())
+        if (vs instanceof LengthWindow) {
+            StringBuilder b = new StringBuilder();
+            ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getSize(), b, ctx);
+            ret = b.toString();
+        }
 
         if (AnnotatedElementHelper.hasAnnotation(s, "Buffer"))
             ret = AnnotatedElementHelper.annotation(s, "Buffer").iterator().next();
@@ -214,6 +220,13 @@ public class ArduinoCepHelper {
         return outputTTL;
     }
 
+    /**
+     * Return the C macro exposing the current number of element in the buffer
+     *
+     * @param stream Cep stream
+     * @param ctx Compiler context
+     * @return C macro
+     */
     public static String getInputBufferMacros(Stream stream, CCompilerContext ctx) {
         String ret = "";
 
@@ -237,11 +250,34 @@ public class ArduinoCepHelper {
         }
 
         for (SimpleSource src : lss) {
-            for (String s : AnnotatedElementHelper.annotation(src, "BufferSize"))
-                ret = "#define " + s + " _instance->cep_" + stream.getName() + "->" + src.getMessage().getMessage().getName() + "_length() / " + src.getMessage().getMessage().getName().toUpperCase() + "_ELEMENT_SIZE";
+            String msgName = src.getMessage().getMessage().getName();
+            String macroName = stream.getName() +  msgName + "getLength";
+            ret = "#define " + macroName + " _instance->cep_" + stream.getName() + "->" +
+                    msgName + "_length() / " + msgName.toUpperCase() + "_ELEMENT_SIZE";
         }
 
         return ret;
+    }
+
+    public static String getContainingStream(SimpleSource source, CCompilerContext ctx) {
+        String streamName = "";
+        for (Stream s : ctx.getConcreteThing().getStreams()) {
+            if (s.getInput() instanceof SimpleSource) {
+                if (source.equals(s.getInput()))
+                    streamName = s.getName();
+            } else if (s.getInput() instanceof JoinSources) {
+                for (Source sc : ((JoinSources) source).getSources())
+                    if (source.equals(sc))
+                        streamName = s.getName();
+
+            } else if (s.getInput() instanceof MergeSources) {
+                for (Source sc : ((MergeSources) source).getSources())
+                    if (source.equals(sc))
+                        streamName = s.getName();
+
+            }
+        }
+        return streamName;
     }
 
     public static void generateTimerPolling(Configuration cfg, CCompilerContext ctx) {
@@ -258,4 +294,19 @@ public class ArduinoCepHelper {
         }
     }
 
+    public static Map<SimpleSource, String> gatherSourcesOfStream(Source source) {
+        Map<SimpleSource, String> sourceMap = new HashMap();
+
+        if (source instanceof SimpleSource)
+            sourceMap.put((SimpleSource) source, ((SimpleSource) source).getMessage().getMessage().getName());
+        else if (source instanceof JoinSources)
+            for (Source sc : ((JoinSources) source).getSources())
+                sourceMap.put((SimpleSource) sc, ((SimpleSource) sc).getMessage().getMessage().getName());
+        else if (source instanceof MergeSources)
+            for (Source sc : ((MergeSources) source).getSources())
+                sourceMap.put((SimpleSource) sc, ((SimpleSource) sc).getMessage().getMessage().getName());
+
+
+        return sourceMap;
+    }
 }
