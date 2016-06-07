@@ -223,7 +223,7 @@ RULES {
 	
 	ParallelRegion ::= "region" #1 name[] #1 "init" #1 initial[] ("keeps" #1 history[T_HISTORY])? (annotations)* #1 "{"(!1 substate)* !0 "}"  ;
 		
-	Session::= "session" #1 name[] #1 "init" #1 initial[] (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" #1 entry )? (internal | (!1 substate))* (!1 region)* !0 "}"  ;
+	Session::= "session" #1 name[] (annotations)* #1 "init" #1 initial[] (annotations)* #1 "{" ( !1 properties )* ( !1 "on" #1 "entry" #1 entry )? (internal | (!1 substate))* (!1 region)* !0 "}"  ;
 	
 	Transition::= !1 "transition" (#1 name[])? #1 "->" #1 target[] (annotations)* ( !1 "event" #1 event )*  ( !1 "guard" #1 guard)? (!1 "action" #1 action)? ;
 

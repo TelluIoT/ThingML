@@ -197,6 +197,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
 
+        builder.append("//Prototypes: State Machine\n");
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
             StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
             builder.append("void " + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
@@ -210,7 +211,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         //builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
         // Message Sending
-        for (Port port : thing.getPorts()) {
+        builder.append("//Prototypes: Message Sending\n");
+        for (Port port : ThingMLHelpers.allPorts(thing)) {
             for (Message msg : port.getSends()) {
                 builder.append("void " + ctx.getSenderName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
@@ -218,6 +220,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
 
+        builder.append("//Prototypes: Function\n");
         for (Function f : ThingMLHelpers.allFunctions(thing)) {
             if (!AnnotatedElementHelper.isDefined(f, "abstract", "true")) {
                 generatePrototypeforThingDirect(f, builder, ctx, thing, true);
@@ -549,32 +552,28 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    // FIXME: ugly code
-    // may be specific to Arduino board
-    // maybe Handler should be better than Dispatch in the signature name
+    /**
+     * Dispatch message to concerned stream, by enqueing, or do all the needed stuff if there is no need for a buffer.
+     *
+     * @param thing Thing instance
+     * @param port Port receiving the message
+     * @param msg Message concerned
+     * @param ctx Compiler context
+     * @param builder StringBuilder, should come from handle_port_msg
+     */
     private void generateStreamDispatch(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {
         for (Stream s : thing.getStreams()) {
             Source source = s.getInput();
 
             // Gather all the sources
-            Map<SimpleSource, String> sourceMap = new HashMap();
-            if (source instanceof SimpleSource)
-                sourceMap.put((SimpleSource) source, ((SimpleSource) source).getMessage().getMessage().getName());
-            else if (source instanceof JoinSources)
-                for (Source sc : ((JoinSources) source).getSources())
-                    sourceMap.put((SimpleSource) sc, ((SimpleSource) sc).getMessage().getMessage().getName());
-            else if (source instanceof MergeSources)
-                for (Source sc : ((MergeSources) source).getSources())
-                    sourceMap.put((SimpleSource) sc, ((SimpleSource) sc).getMessage().getMessage().getName());
-
+            Map<SimpleSource, String> sourceMap = ArduinoCepHelper.gatherSourcesOfStream(source);
 
             for (SimpleSource sc : sourceMap.keySet()) {
                 if (sourceMap.get(sc).equals(msg.getName())) {
                     builder.append("//begin stream dispatch\n");
 
-                    for (Parameter p : msg.getParameters()) {
+                    for (Parameter p : msg.getParameters())
                         ctx.putCepMsgParam(msg.getName(), p.getName(), s.getName());
-                    }
 
                     int nbCondition = 0;
                     // guard
@@ -604,7 +603,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                             ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
                         }
 
-                        ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
+                        if (!ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+                            ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
 
                     } else if (source instanceof JoinSources || hasWindowView) {
                         builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");

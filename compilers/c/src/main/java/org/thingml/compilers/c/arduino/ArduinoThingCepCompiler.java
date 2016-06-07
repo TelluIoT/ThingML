@@ -29,13 +29,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class ArduinoThingCepCompiler extends ThingCepCompiler {
+
     public ArduinoThingCepCompiler(ThingCepViewCompiler cepViewCompiler, ThingCepSourceDeclaration sourceDeclaration) {
         super(cepViewCompiler, sourceDeclaration);
     }
-
-    public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
-    }
-
 
     public static String getSlidingStep(Stream s, CCompilerContext ctx) {
         String slidingImpl = "";
@@ -55,7 +52,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             if (vs instanceof TimeWindow) {
                 StringBuilder b = new StringBuilder();
                 ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), b, ctx);
-                b.toString();
+                b.toString(); // FIXME: what's this?
             }
 
         }
@@ -152,8 +149,6 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             }
 
             constants += ArduinoCepHelper.getInputBufferMacros(s, ctx);
-
-            //TODO check if need to store output
 
             cepTemplate = cepTemplate.replace("/*STREAM_NAME*/", s.getName());
             cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
@@ -323,7 +318,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
     private static String generateTriggerImpl(Stream s, CCompilerContext ctx) {
         String triggerImpl = "";
 
-        if (s.getInput() instanceof JoinSources) {
+
+        if (s.getInput() instanceof JoinSources || ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx)) {
             Set<Message> msgs = ArduinoCepHelper.getMessageFromStream(s).keySet();
             List<String> triggerCondition = new ArrayList<>();
             for (Message m : msgs) {
@@ -353,15 +349,17 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
             triggerImpl += "if (" + String.join(" && ", triggerCondition) + guardsString + " )\n {\n";
 
+            // reset the trigger counter
             if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
                 triggerImpl += "input" + s.getName() + "Trigger = 0;\n";
 
+
+            // pop messages
             for (Message m : msgs) {
+                triggerImpl += "//poping messages " + m.getName() + "\n";
                 triggerImpl += "unsigned long " + m.getName() + "Time;\n";
-                for (Parameter p : m.getParameters()) {
-                    //p.setName(m.getName() + p.getName()); //TODO fix conflict in parameters naming in trigger scope
+                for (Parameter p : m.getParameters())
                     triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
-                }
 
                 triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time";
 
@@ -369,17 +367,20 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                     triggerImpl += ", &" + p.getName();
 
                 triggerImpl += ");\n";
+                triggerImpl += "//done poping\n";
             }
 
             StringBuilder outAction = new StringBuilder();
 
-            int resultMessageParamaterIndex = 0;
-            for (Expression e : ((JoinSources) s.getInput()).getRules()) {
-                Parameter p = ((JoinSources) s.getInput()).getResultMessage().getParameters().get(resultMessageParamaterIndex);
-                outAction.append(ctx.getCType(p.getType()) + " " + p.getName() + " = ");
-                ctx.getCompiler().getThingActionCompiler().generate(e, outAction, ctx);
-                outAction.append(";\n");
-                resultMessageParamaterIndex++;
+            int resultMessageParameterIndex = 0;
+            if (s.getInput() instanceof JoinSources) {
+                for (Expression e : ((JoinSources) s.getInput()).getRules()) {
+                    Parameter p = ((JoinSources) s.getInput()).getResultMessage().getParameters().get(resultMessageParameterIndex);
+                    outAction.append(ctx.getCType(p.getType()) + " " + p.getName() + " = ");
+                    ctx.getCompiler().getThingActionCompiler().generate(e, outAction, ctx);
+                    outAction.append(";\n");
+                    resultMessageParameterIndex++;
+                }
             }
 
             for (LocalVariable lv : s.getSelection()) {
@@ -387,9 +388,14 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ctx.getCompiler().getThingActionCompiler().generate(lv, outAction, ctx);
             }
 
-            //TODO check the output guard filter
             ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), outAction, ctx);
-            triggerImpl += outAction + "\n}\n";
+            triggerImpl += outAction;
+
+            // effectively remove messages from buffer
+            for (Message m : msgs)
+                triggerImpl += m.getName() + "_removeEvent();\n";
+
+            triggerImpl += "\n}\n";
         }
         return triggerImpl;
     }
@@ -417,13 +423,5 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
-        if (stream.getInput() instanceof SimpleSource) {
-            SimpleSource simpleSource = (SimpleSource) stream.getInput();
-            String paramName = simpleSource.getMessage().getName();
-            generateSubscription(stream, builder, ctx, paramName, simpleSource.getMessage().getMessage());
-        } else if (stream.getInput() instanceof SourceComposition) {
-            Message outPut = ((SourceComposition) stream.getInput()).getResultMessage();
-            generateSubscription(stream, builder, ctx, outPut.getName(), outPut);
-        }
     }
 }
