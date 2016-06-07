@@ -7,10 +7,10 @@ thing TestFunctionArrays includes Test
 	property array : Char[4]
 	
 	function f(Ar : Char[4]) do
-		harnessOut!testOut(array[0])
-		harnessOut!testOut(array[1])
-		harnessOut!testOut(array[2])
-		harnessOut!testOut(array[3])
+		harnessOut!testOut(Ar[0])
+		harnessOut!testOut(Ar[1])
+		harnessOut!testOut(Ar[2])
+		harnessOut!testOut(Ar[3])
 	end
 
 	set array[0] = '\'A\''

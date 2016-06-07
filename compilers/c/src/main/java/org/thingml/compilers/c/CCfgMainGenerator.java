@@ -196,28 +196,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append("//Instance " + inst.getName() + "\n");
 
                 builder.append("// Variables for the properties of the instance\n");
-            /*for (Property p : inst.getType().allPropertiesInDepth()) {
-                if (p.getCardinality() != null) {//array
-                builder.append(ctx.getCType(p.getType()) + " ");
-                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(p));
-                builder.append("[");
-                ctx.setConcreteInstance(inst);
-                ctx.getCompiler().getThingActionCompiler().generate(p.getCardinality(), builder, ctx);
-                ctx.clearConcreteInstance();
-                builder.append("]");
-                builder.append(";\n");
-                }
-            }*/
-            
-        /*
-            for (Property a : ConfigurationHelper.allArrays(cfg, inst)) {
-                builder.append(ctx.getCType(a.getType()) + " ");
-                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
-                builder.append("[");
-                ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
-                builder.append("];\n");
-            }*/
-
 
                 builder.append(ctx.getInstanceVarDecl(inst) + "\n");
 
@@ -375,7 +353,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                     for (Parameter pt : m.getParameters()) {
                         builder.append("\n// parameter " + pt.getName() + "\n");
-                        ctx.bytesToSerialize(pt.getType(), builder, ctx, pt.getName(), pt);
+                        ctx.bytesToSerialize(pt.getType(), builder, pt.getName(), pt);
                     }
                     builder.append("}\n");
 
@@ -1116,7 +1094,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         // Allocate a buffer to store the message bytes.
         // Size of the buffer is "size-2" because we have already read 2 bytes
-        builder.append("byte mbuf[" + (max_msg_size - 2) + "];\n");
         builder.append("uint8_t mbufi = 0;\n\n");
 
         builder.append("// Read the code of the next port/message in the queue\n");
@@ -1153,9 +1130,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             //for (Message m : ConfigurationHelper.allMessages(cfg)) {
 
 
-            builder.append("case " + ctx.getHandlerCode(cfg, m) + ":\n");
+            builder.append("case " + ctx.getHandlerCode(cfg, m) + ":{\n");
+            builder.append("byte mbuf[" + ctx.getMessageSerializationSizeString(m) + " - 2" + "];\n");
 
-            builder.append("while (mbufi < " + (ctx.getMessageSerializationSize(m) - 2) + ") mbuf[mbufi++] = fifo_dequeue();\n");
+            builder.append("while (mbufi < (" + ctx.getMessageSerializationSizeString(m) + " - 2" + ")) mbuf[mbufi++] = fifo_dequeue();\n");
             // Fill the buffer
 
             //DEBUG
@@ -1175,24 +1153,47 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             if (ctx.sync_fifo()) builder.append("fifo_unlock();\n");
 
             // Begin Horrible deserialization trick
-            int idx_bis = 2;
+            builder.append("uint8_t mbufi_" + m.getName() + " = 2;\n");
 
             for (Parameter pt : m.getParameters()) {
-                builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
-                builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
-                builder.append("} u_" + m.getName() + "_" + pt.getName() + ";\n");
+                if(pt.isIsArray()) {
+                    StringBuilder cardBuilder = new StringBuilder();
+                    ctx.getCompiler().getThingActionCompiler().generate(pt.getCardinality(), cardBuilder, ctx);
+                    String v = m.getName() + "_" + pt.getName();
+                    Type t = pt.getType();
+                    builder.append("union u_" + v + "_t {\n");
+                    builder.append("    " + ctx.getCType(t) + " p[" + cardBuilder + "];\n");
+                    builder.append("    byte bytebuffer[" + ctx.getCByteSize(t, 0) + "* (" + cardBuilder + ")];\n");
+                    builder.append("} u_" + v + ";\n");
+
+                    builder.append("uint8_t u_" + v + "_index = 0;\n");
+                    builder.append("while (u_" + v + "_index < (" + ctx.getCByteSize(t, 0) + "* (" + cardBuilder + "))) {\n");
+                    for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+
+                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[u_" + v + "_index - " + i + "]");
+                        builder.append(" = mbuf[mbufi_" + m.getName() + " + " + cardBuilder + " - 1 + " + i + " - u_" + v + "_index];\n");
+
+                    }
+                    builder.append("    u_" + v + "_index++;\n");
+                    builder.append("}\n");
+                    
+                    builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getType(), 0) + " * (" + cardBuilder + ");\n");
+                } else {
+                    builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
+                    builder.append(ctx.getCType(pt.getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append("} u_" + m.getName() + "_" + pt.getName() + ";\n");
 
 
-                for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+                    for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
 
-                    builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
-                    builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
+                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                        builder.append(" = mbuf[mbufi_" + m.getName() + " + " + i + "];\n");
 
+                    }
+
+                    builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getType(), 0) + ";\n");
                 }
-
-
-                idx_bis = idx_bis + ctx.getCByteSize(pt.getType(), 0);
             }
             // End Horrible deserialization trick
 
@@ -1209,7 +1210,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
             builder.append(");\n");
 
-            builder.append("break;\n");
+            builder.append("break;\n}\n");
         }
         ctx.clearConcreteThing();
         builder.append("}\n");
