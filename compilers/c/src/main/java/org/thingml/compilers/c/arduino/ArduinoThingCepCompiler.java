@@ -353,6 +353,23 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
                 triggerImpl += "input" + s.getName() + "Trigger = 0;\n";
 
+
+            // pop messages
+            for (Message m : msgs) {
+                triggerImpl += "//poping messages " + m.getName() + "\n";
+                triggerImpl += "unsigned long " + m.getName() + "Time;\n";
+                for (Parameter p : m.getParameters())
+                    triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
+
+                triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time";
+
+                for (Parameter p : m.getParameters())
+                    triggerImpl += ", &" + p.getName();
+
+                triggerImpl += ");\n";
+                triggerImpl += "//done poping\n";
+            }
+
             StringBuilder outAction = new StringBuilder();
 
             int resultMessageParameterIndex = 0;
@@ -371,26 +388,12 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ctx.getCompiler().getThingActionCompiler().generate(lv, outAction, ctx);
             }
 
-            //TODO check the output guard filter
             ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), outAction, ctx);
-
             triggerImpl += outAction;
 
-            // pop messages
-            for (Message m : msgs) {
-                triggerImpl += "//poping messages " + m.getName() + "\n";
-                triggerImpl += "unsigned long " + m.getName() + "Time;\n";
-                for (Parameter p : m.getParameters())
-                    triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
-
-                triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time";
-
-                for (Parameter p : m.getParameters())
-                    triggerImpl += ", &" + p.getName();
-
-                triggerImpl += ");\n";
-                triggerImpl += "//done poping\n";
-            }
+            // effectively remove messages from buffer
+            for (Message m : msgs)
+                triggerImpl += m.getName() + "_removeEvent();\n";
 
             triggerImpl += "\n}\n";
         }
