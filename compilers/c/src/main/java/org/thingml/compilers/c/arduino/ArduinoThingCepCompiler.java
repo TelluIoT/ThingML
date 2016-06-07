@@ -370,7 +370,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             StringBuilder outAction = new StringBuilder();
 
             int resultMessageParameterIndex = 0;
-            if (s instanceof JoinSources) {
+            if (s.getInput() instanceof JoinSources) {
                 for (Expression e : ((JoinSources) s.getInput()).getRules()) {
                     Parameter p = ((JoinSources) s.getInput()).getResultMessage().getParameters().get(resultMessageParameterIndex);
                     outAction.append(ctx.getCType(p.getType()) + " " + p.getName() + " = ");
