@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
+ * <p>
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
+ * <p>
+ * http://www.gnu.org/licenses/lgpl-3.0.txt
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,13 +29,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class ArduinoThingCepCompiler extends ThingCepCompiler {
+
     public ArduinoThingCepCompiler(ThingCepViewCompiler cepViewCompiler, ThingCepSourceDeclaration sourceDeclaration) {
         super(cepViewCompiler, sourceDeclaration);
     }
-
-    public static void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
-    }
-
 
     public static String getSlidingStep(Stream s, CCompilerContext ctx) {
         String slidingImpl = "";
@@ -55,7 +52,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             if (vs instanceof TimeWindow) {
                 StringBuilder b = new StringBuilder();
                 ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), b, ctx);
-                b.toString();
+                b.toString(); // FIXME: what's this?
             }
 
         }
@@ -152,8 +149,6 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             }
 
             constants += ArduinoCepHelper.getInputBufferMacros(s, ctx);
-
-            //TODO check if need to store output
 
             cepTemplate = cepTemplate.replace("/*STREAM_NAME*/", s.getName());
             cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
@@ -415,13 +410,5 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
     @Override
     public void generateStream(Stream stream, StringBuilder builder, Context ctx) {
         sourceDeclaration.generate(stream, stream.getInput(), builder, ctx);
-        if (stream.getInput() instanceof SimpleSource) {
-            SimpleSource simpleSource = (SimpleSource) stream.getInput();
-            String paramName = simpleSource.getMessage().getName();
-            generateSubscription(stream, builder, ctx, paramName, simpleSource.getMessage().getMessage());
-        } else if (stream.getInput() instanceof SourceComposition) {
-            Message outPut = ((SourceComposition) stream.getInput()).getResultMessage();
-            generateSubscription(stream, builder, ctx, outPut.getName(), outPut);
-        }
     }
 }

@@ -32,7 +32,7 @@ thing TestCepBufferAccess1 includes CepMsgs, Test
 
 
   stream aggregate
-  from e @Buffer "4" @BufferSize "getMsgSize" : rcvPort?m::buffer 1 by 4
+  from e @Buffer "4" @BufferSize "getMsgSize" : rcvPort?m::buffer 4 by 4
   select var sum : Int16 = sum(e.v[], 'getMsgSize')
   produce sendPort!cep(sum)
 
