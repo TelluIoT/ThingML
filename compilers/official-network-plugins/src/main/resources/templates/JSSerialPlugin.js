@@ -2,7 +2,7 @@ var SerialPort = require('serialport').SerialPort;
 var ByteBuffer = require("bytebuffer");
 var Format = require('.//*$FORMAT$*/');
 
-function /*$NAME$*/(name, root, debug, port, baudrate) {
+function /*$NAME$*/(name, root, debug, port, baudrate, instance) {
     this.name = name;
     this.root = root;
     this.debug = debug;
@@ -36,12 +36,12 @@ function /*$NAME$*/(name, root, debug, port, baudrate) {
 
 
     serial.on('data', function(received) {
-        console.log("data: " + received);
         received.forEach(function(data) {
             if (state == RCV_WAIT) { // it should be a start byte or we just ignore it
                 if (data == START_BYTE) {
                     state = RCV_MSG;
                     buffer_idx = 0;
+                    bb = new ByteBuffer(capacity=256, littleEndian=false);
                 }
             } else if (state == RCV_MSG) {
                 if (data == ESCAPE_BYTE) {
@@ -56,7 +56,8 @@ function /*$NAME$*/(name, root, debug, port, baudrate) {
 						i = i + 1
 					}
 					trimBB.flip();
-					console.log(trimBB);
+                    const msg = formatter.parse(trimBB);
+                    /*$DISPATCH$*/
                     state = RCV_WAIT;
                 } else if (data == START_BYTE) {
                     // Should not happen but we reset just in case
@@ -74,7 +75,6 @@ function /*$NAME$*/(name, root, debug, port, baudrate) {
                 state = RCV_MSG;
             }
         });
-        /*$PARSER$*/
     });
 
     serial.on('error', function(err) {
@@ -85,24 +85,12 @@ function /*$NAME$*/(name, root, debug, port, baudrate) {
 
     };
 
-    /*$FORWARD$*/
-
-    /*$NAME$*/.prototype._receive = function() {
-        this.getQueue.push(arguments);
-        if (this.ready) {
-            var msg = this.getQueue().shift();
-            while(msg !== undefined) {
-                /*$SERIALIZER$*/
-            }
-        }
-    }
+    /*$RECEIVERS$*/
 
     /*$NAME$*/.prototype._stop = function() {
         this.ready = false;
         serial.close();
     };
-
-    //TODO: override stop method to close serial properly
 };
 
 module.exports = /*$NAME$*/;

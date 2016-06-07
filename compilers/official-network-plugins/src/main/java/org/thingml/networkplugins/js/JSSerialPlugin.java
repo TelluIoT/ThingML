@@ -25,6 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -159,17 +160,50 @@ public class JSSerialPlugin extends NetworkPlugin {
             String template = ctx.getTemplateByID("templates/JSSerialPlugin.js");
             template = template.replace("/*$FORMAT$*/", prot.getName() + "BinaryProtocol");
             template = template.replace("/*$NAME$*/", prot.getName());
-            /*StringBuilder parseBuilder = new StringBuilder();
-            parseBuilder.append("final Event event = " + prot.getName() + "BinaryProtocol.instantiate(payload);\n");
-            for(Port p : ports) {//FIXME
-                parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
-            };*/
             template = initPort(ctx, template);
             for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {
                 updateMain(ctx, cfg, conn);
             }
-            //template = template.replace("/*$PARSING CODE$*/", parseBuilder.toString());
-
+            for(Port p : ports) {
+                System.out.println("DEBUG: Port " + p.getName());
+                StringBuilder builder = new StringBuilder();
+                builder.append("msg.unshift(\"" + p.getName() + "\");\n");
+                builder.append("instance._receive.apply(instance, msg);\n");
+                builder.append("msg.shift();\n");
+                template = template.replace("/*$DISPATCH$*/", "/*$DISPATCH$*/\n" + builder.toString());
+            }
+            StringBuilder builder = new StringBuilder();
+            for (Port p : ports) {
+                for (Message m : p.getSends()) {
+                    builder.append("Serial.prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
+                    int i = 0;
+                    for (Parameter pa : m.getParameters()) {
+                        if (i > 0)
+                            builder.append(", ");
+                        builder.append(ctx.protectKeyword(pa.getName()));
+                        i++;
+                    }
+                    builder.append(") {\n");
+                    builder.append("const buffer = formatter." + m.getName() + "ToBytes(");
+                    i = 0;
+                    for (Parameter pa : m.getParameters()) {
+                        if (i > 0)
+                            builder.append(", ");
+                        builder.append(ctx.protectKeyword(pa.getName()));
+                        i++;
+                    }
+                    builder.append(");\n");
+                    builder.append("serial.write(START_BYTE);\n");
+                    builder.append("for (var i = 0 ; i < buffer.length ; i++) {\n");
+                    builder.append("if (buffer[i] === START_BYTE || buffer[i] === STOP_BYTE || buffer[i] === ESCAPE_BYTE)\n");
+                    builder.append("serial.write(ESCAPE_BYTE);\n");
+                    builder.append("serial.write(buffer[i]);\n");
+                    builder.append("}");
+                    builder.append("serial.write(STOP_BYTE);\n");
+                    builder.append("};\n\n");
+                }
+            }
+            template = template.replace("/*$RECEIVERS$*/", "/*$RECEIVERS$*/\n" + builder.toString());
             try {
                 final File f = new File(ctx.getOutputDirectory() + "/SerialJS.js");
                 final OutputStream output = new FileOutputStream(f);
@@ -181,7 +215,8 @@ public class JSSerialPlugin extends NetworkPlugin {
         }
 
         private String initPort(Context ctx, String template) {
-            StringBuilder builder = new StringBuilder();
+            //TODO: not required as we have access to the instance
+            /*StringBuilder builder = new StringBuilder();
             builder.append("//callbacks for third-party listeners\n");
             for (Port p : ports) {
                 for (Message m : p.getSends()) {
@@ -191,7 +226,7 @@ public class JSSerialPlugin extends NetworkPlugin {
                     builder.append("};\n");
                 }
             }
-            template = template.replace("/*$PORTS$*/", builder.toString());
+            template = template.replace("/*$PORTS$*//*", builder.toString());*/
             return template;
         }
 
@@ -208,8 +243,16 @@ public class JSSerialPlugin extends NetworkPlugin {
                 final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "var Serial = require('./SerialJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "var serial = new Serial(\"serial\", null, false, \"" + port + "\", " + speed + ");\n/*$PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "var serial = new Serial(\"serial\", null, false, \"" + port + "\", " + speed + ", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "serial.close();\n/*$STOP_PLUGINS$*/\n");
+
+                StringBuilder builder = new StringBuilder();
+                for (Message req : conn.getPort().getSends()) {
+                    builder.append(conn.getInst().getInstance().getName() + ".get" + ctx.firstToUpper(req.getName()) + "on" + conn.getPort().getName() + "Listeners().push(");
+                    builder.append("serial.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(serial)");
+                    builder.append(");\n");
+                }
+                main = main.replace("/*$PLUGINS_CONNECTORS$*/", builder.toString() + "\n/*$PLUGINS_CONNECTORS$*/");
 
                 final File f = new File(ctx.getOutputDirectory() + "/main.js");
                 final OutputStream output = new FileOutputStream(f);

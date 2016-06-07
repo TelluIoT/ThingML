@@ -208,6 +208,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 }
             }
         }
+        builder.append("/*$PLUGINS_CONNECTORS$*/\n");
     }
 
     private static String reference(String ref, boolean useThis) {
@@ -267,7 +268,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             inst = instances.get(0);
             instances.remove(inst);
             builder.append(inst.getName() + "._stop();\n");
-            builder.append("/*STOP_PLUGINS*/\n");
+            builder.append("/*$STOP_PLUGINS$*/\n");
         }
         builder.append("});\n\n");
     }

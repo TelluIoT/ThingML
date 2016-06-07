@@ -102,19 +102,18 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
         builder.append("var ByteBuffer = require(\"bytebuffer\");\n");
         builder.append("function " + bufferName + "(){\n");
 
-        builder.append(bufferName + ".prototype.parse = function(bytes) {\n");
-        builder.append("var bb = ByteBuffer.wrap(bytes, littleEndian=false);\n");
+        builder.append(bufferName + ".prototype.parse = function(bb) {\n");
         builder.append("switch(bb.readShort()) {\n");
         for(Message m : messages) {
             final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
             builder.append("case " + code + ":\n");
-            builder.append("return '{\"" + m.getName() + "\"");
+            builder.append("return [\"" + m.getName() + "\"");
             for(Parameter p : m.getParameters()) {
                 final String type = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type")?AnnotatedElementHelper.annotation(p.getType(),"c_type").get(0).replace("_t", ""):null;
                 //if (type == null) //TODO: we should probably raise an exception here
-                builder.append(", ' + bb.read" + context.firstToUpper(type) + "() + '");
+                builder.append(", bb.read" + context.firstToUpper(type) + "()");
             }
-            builder.append("}';\n");
+            builder.append("];\n");
         }
         builder.append("default: return null;\n");
         builder.append("}\n");
