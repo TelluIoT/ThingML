@@ -349,23 +349,9 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
             triggerImpl += "if (" + String.join(" && ", triggerCondition) + guardsString + " )\n {\n";
 
+            // reset the trigger counter
             if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
                 triggerImpl += "input" + s.getName() + "Trigger = 0;\n";
-
-            for (Message m : msgs) {
-                triggerImpl += "//poping messages " + m.getName() + "\n";
-                triggerImpl += "unsigned long " + m.getName() + "Time;\n";
-                for (Parameter p : m.getParameters())
-                    triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
-
-                triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time";
-
-                for (Parameter p : m.getParameters())
-                    triggerImpl += ", &" + p.getName();
-
-                triggerImpl += ");\n";
-                triggerImpl += "//done poping\n";
-            }
 
             StringBuilder outAction = new StringBuilder();
 
@@ -387,7 +373,26 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
             //TODO check the output guard filter
             ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), outAction, ctx);
-            triggerImpl += outAction + "\n}\n";
+
+            triggerImpl += outAction;
+
+            // pop messages
+            for (Message m : msgs) {
+                triggerImpl += "//poping messages " + m.getName() + "\n";
+                triggerImpl += "unsigned long " + m.getName() + "Time;\n";
+                for (Parameter p : m.getParameters())
+                    triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
+
+                triggerImpl += m.getName() + "_popEvent(&" + m.getName() + "Time";
+
+                for (Parameter p : m.getParameters())
+                    triggerImpl += ", &" + p.getName();
+
+                triggerImpl += ");\n";
+                triggerImpl += "//done poping\n";
+            }
+
+            triggerImpl += "\n}\n";
         }
         return triggerImpl;
     }
