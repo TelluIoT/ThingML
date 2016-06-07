@@ -419,7 +419,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
                     for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
 
                         builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
-                        builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
+                        builder.append(" = msg[" + (idx_bis + i) + "];\n");
 
                     }
                     idx_bis = idx_bis + ctx.getCByteSize(pt.getType(), 0);
