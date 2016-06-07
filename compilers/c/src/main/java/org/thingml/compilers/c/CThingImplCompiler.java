@@ -197,6 +197,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
 
+        builder.append("//Prototypes: State Machine\n");
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
             StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
             builder.append("void " + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
@@ -210,7 +211,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         //builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
 
         // Message Sending
-        for (Port port : thing.getPorts()) {
+        builder.append("//Prototypes: Message Sending\n");
+        for (Port port : ThingMLHelpers.allPorts(thing)) {
             for (Message msg : port.getSends()) {
                 builder.append("void " + ctx.getSenderName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
@@ -218,6 +220,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
 
+        builder.append("//Prototypes: Function\n");
         for (Function f : ThingMLHelpers.allFunctions(thing)) {
             if (!AnnotatedElementHelper.isDefined(f, "abstract", "true")) {
                 generatePrototypeforThingDirect(f, builder, ctx, thing, true);
