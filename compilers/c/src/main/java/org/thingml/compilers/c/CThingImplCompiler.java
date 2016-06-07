@@ -33,6 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnInputNumber;
+import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnTimer;
+
 
 /**
  * Created by ffl on 17.06.15.
@@ -603,7 +606,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                             ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
                         }
 
-                        if (!ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+                        if (!shouldTriggerOnInputNumber(s, ctx) && !shouldTriggerOnTimer(s, ctx))
                             ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
 
                     } else if (source instanceof JoinSources || hasWindowView) {
@@ -645,7 +648,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     }
 
                     // Length Window
-                    if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+                    if (shouldTriggerOnInputNumber(s, ctx))
                         builder.append("  _instance->cep_" + s.getName() + "->checkTrigger(_instance);\n");
 
                     // closing braces, see guards

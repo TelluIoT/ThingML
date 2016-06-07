@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnInputNumber;
+import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnTimer;
+
 public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
     public ArduinoThingCepCompiler(ThingCepViewCompiler cepViewCompiler, ThingCepSourceDeclaration sourceDeclaration) {
@@ -49,11 +52,11 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                 break; // we stop at first match, a stream can have only one window right?
             }
-            if (vs instanceof TimeWindow) {
-                StringBuilder b = new StringBuilder();
-                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), b, ctx);
-                b.toString(); // FIXME: what's this?
-            }
+            //if (vs instanceof TimeWindow) {
+            //    StringBuilder b = new StringBuilder();
+            //    ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), b, ctx);
+            //    b.toString(); // FIXME: what's this?
+            //}
 
         }
 
@@ -133,17 +136,17 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                     attributesSignatures += ctx.getCType(p.getType()) + " " + msg.getName() + p.getName() + " [" + msg.getName().toUpperCase() + "_NUMBER_MSG];\n";
             }
 
-            if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx))
+            if (shouldTriggerOnTimer(s, ctx))
                 attributesSignatures += "    uint32_t last" + s.getName() + "Trigger = millis();\n";
 
-            if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+            if (shouldTriggerOnInputNumber(s, ctx))
                 attributesSignatures += "    uint8_t input" + s.getName() + "Trigger = 0;\n";
 
             /*
              * Trigger timer
              */
             String triggerTimer = "";
-            if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx)) {
+            if (shouldTriggerOnTimer(s, ctx)) {
                 String param = "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName();
                 triggerTimer = "void checkTimer(" + param + ");\n";
             }
@@ -298,7 +301,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             classImpl = classImpl.replace("/*TRIGGER_INST_PARAM*/", "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName());
             classImpl = classImpl.replace("/*TRIGGER_IMPL*/", generateTriggerImpl(s, ctx));
 
-            if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx))
+            if (shouldTriggerOnTimer(s, ctx))
                 classImpl = classImpl.replace("/*TRIGGER_TIMER_IMPL*/", generateTriggerCallBack(s, ctx));
             else
                 classImpl = classImpl.replace("/*TRIGGER_TIMER_IMPL*/", "");
@@ -319,7 +322,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
         String triggerImpl = "";
 
 
-        if (s.getInput() instanceof JoinSources || ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx)) {
+        if (s.getInput() instanceof JoinSources || shouldTriggerOnInputNumber(s, ctx) || shouldTriggerOnTimer(s, ctx)) {
             Set<Message> msgs = ArduinoCepHelper.getMessageFromStream(s).keySet();
             List<String> triggerCondition = new ArrayList<>();
             for (Message m : msgs) {
@@ -327,7 +330,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 triggerCondition.add("!" + m.getName() + "_isEmpty()");
             }
 
-            if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx)) {
+            if (shouldTriggerOnInputNumber(s, ctx)) {
                 triggerImpl += "input" + s.getName() + "Trigger++;\n";
                 triggerCondition.add("input" + s.getName() + "Trigger == " + ArduinoCepHelper.getStreamTriggerInputNumber(s, ctx));
             }
@@ -350,7 +353,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             triggerImpl += "if (" + String.join(" && ", triggerCondition) + guardsString + " )\n {\n";
 
             // reset the trigger counter
-            if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+            if (shouldTriggerOnInputNumber(s, ctx))
                 triggerImpl += "input" + s.getName() + "Trigger = 0;\n";
 
 
@@ -401,8 +404,10 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
     }
 
     /**
-     * @param s
-     * @param ctx
+     * Function checking if the timer has expired and if the checkTrigger should be called
+     *
+     * @param s Stream producing events with a timer
+     * @param ctx Compiler context
      */
     private static String generateTriggerCallBack(Stream s, CCompilerContext ctx) {
         String ret = "";
