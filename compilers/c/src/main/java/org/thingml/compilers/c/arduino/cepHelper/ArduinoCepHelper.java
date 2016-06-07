@@ -258,4 +258,19 @@ public class ArduinoCepHelper {
         }
     }
 
+    public static Map<SimpleSource, String> gatherSourcesOfStream(Source source) {
+        Map<SimpleSource, String> sourceMap = new HashMap();
+
+        if (source instanceof SimpleSource)
+            sourceMap.put((SimpleSource) source, ((SimpleSource) source).getMessage().getMessage().getName());
+        else if (source instanceof JoinSources)
+            for (Source sc : ((JoinSources) source).getSources())
+                sourceMap.put((SimpleSource) sc, ((SimpleSource) sc).getMessage().getMessage().getName());
+        else if (source instanceof MergeSources)
+            for (Source sc : ((MergeSources) source).getSources())
+                sourceMap.put((SimpleSource) sc, ((SimpleSource) sc).getMessage().getMessage().getName());
+
+
+        return sourceMap;
+    }
 }

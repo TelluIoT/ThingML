@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- * <p>
+ *
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
- * http://www.gnu.org/licenses/lgpl-3.0.txt
- * <p>
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -318,7 +318,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
     private static String generateTriggerImpl(Stream s, CCompilerContext ctx) {
         String triggerImpl = "";
 
-        if (s.getInput() instanceof JoinSources) {
+
+        if (s.getInput() instanceof JoinSources || ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx)) {
             Set<Message> msgs = ArduinoCepHelper.getMessageFromStream(s).keySet();
             List<String> triggerCondition = new ArrayList<>();
             for (Message m : msgs) {
@@ -352,6 +353,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 triggerImpl += "input" + s.getName() + "Trigger = 0;\n";
 
             for (Message m : msgs) {
+                triggerImpl += "//poping messages " + m.getName() + "\n";
                 triggerImpl += "unsigned long " + m.getName() + "Time;\n";
                 for (Parameter p : m.getParameters())
                     triggerImpl += ctx.getCType(p.getType()) + " " + p.getName() + ";\n";
@@ -362,17 +364,20 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                     triggerImpl += ", &" + p.getName();
 
                 triggerImpl += ");\n";
+                triggerImpl += "//done poping\n";
             }
 
             StringBuilder outAction = new StringBuilder();
 
-            int resultMessageParamaterIndex = 0;
-            for (Expression e : ((JoinSources) s.getInput()).getRules()) {
-                Parameter p = ((JoinSources) s.getInput()).getResultMessage().getParameters().get(resultMessageParamaterIndex);
-                outAction.append(ctx.getCType(p.getType()) + " " + p.getName() + " = ");
-                ctx.getCompiler().getThingActionCompiler().generate(e, outAction, ctx);
-                outAction.append(";\n");
-                resultMessageParamaterIndex++;
+            int resultMessageParameterIndex = 0;
+            if (s instanceof JoinSources) {
+                for (Expression e : ((JoinSources) s.getInput()).getRules()) {
+                    Parameter p = ((JoinSources) s.getInput()).getResultMessage().getParameters().get(resultMessageParameterIndex);
+                    outAction.append(ctx.getCType(p.getType()) + " " + p.getName() + " = ");
+                    ctx.getCompiler().getThingActionCompiler().generate(e, outAction, ctx);
+                    outAction.append(";\n");
+                    resultMessageParameterIndex++;
+                }
             }
 
             for (LocalVariable lv : s.getSelection()) {
