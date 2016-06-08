@@ -33,8 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.handlerShouldTrigger;
 import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnInputNumber;
-import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnTimer;
 
 
 /**
@@ -589,32 +589,23 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         }
                     }
 
-                    boolean hasWindowView = false;
-                    for (ViewSource vs : source.getOperators())
-                        if (vs instanceof LengthWindow || vs instanceof TimeWindow)
-                            hasWindowView = true;
+                    boolean shouldProduce = handlerShouldTrigger(s, ctx);
+
 
                     // produce the action or propagate the event
                     if (source instanceof SimpleSource) {
-                        if (hasWindowView) {
+                        if (shouldProduce) { // generate local variables
+                            for (LocalVariable lv : s.getSelection()) {
+                                lv.setName(ThingMLElementHelper.qname(lv, "_"));
+                                ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
+                            }
+                            ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
+                        } else { // enqueue event
                             builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
                             ctx.appendActualParameters(thing, builder, msg, "_instance");
                             builder.append(";\n");
                         }
-                        for (LocalVariable lv : s.getSelection()) {
-                            lv.setName(ThingMLElementHelper.qname(lv, "_"));
-                            ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
-                        }
-
-                        if (!shouldTriggerOnInputNumber(s, ctx) && !shouldTriggerOnTimer(s, ctx))
-                            ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
-
-                    } else if (source instanceof JoinSources || hasWindowView) {
-                        builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
-                        ctx.appendActualParameters(thing, builder, msg, "_instance");
-                        builder.append(";\n");
-
-                    } else if (source instanceof MergeSources) {
+                    } else if (source instanceof MergeSources && shouldProduce) {
                         Message rMsg = ((MergeSources) source).getResultMessage();
 
                         // since we don't call the checkTrigger we need to check the source guard as well

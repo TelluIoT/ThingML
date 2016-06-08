@@ -3,21 +3,22 @@ import "thingml.thingml"
 thing fragment CepMsgs
 {
   message m(v : Int16)
+  message m2(t: Int16, v : Int16) // here want the second param
   message cep(v : Int16)
 }
 
 thing TestCepBufferAccess1 includes CepMsgs, Test
 @c_header "#include <Arduino.h>"
-@test " # O"
+@test " # OO"
 @conf "connector test.rcvPort => test.sendPort"
 {
 
   provided port sendPort {
-    sends m, cep
+    sends m, m2, cep
   }
 
   required port rcvPort {
-    receives m, cep
+    receives m, m2, cep
   }
 
   function sum(values: Int16[], size: UInt8) : Int16 do
@@ -31,9 +32,14 @@ thing TestCepBufferAccess1 includes CepMsgs, Test
   end
 
 
-  stream aggregate
-  from e @Buffer "4" @BufferSize "getMsgSize" : rcvPort?m::buffer 4 by 4
-  select var sum : Int16 = sum(e.v[], 'getMsgSize')
+  stream aggregateM
+  from e : rcvPort?m::buffer 4 by 4
+  select var sum : Int16 = sum(e.v[], e.length)
+  produce sendPort!cep(sum)
+
+  stream aggregateM2
+  from e : rcvPort?m2::buffer 4 by 4
+  select var sum : Int16 = sum(e.v[], e.length)
   produce sendPort!cep(sum)
 
   statechart Sample init Init {
@@ -43,6 +49,11 @@ thing TestCepBufferAccess1 includes CepMsgs, Test
         sendPort!m(2)
         sendPort!m(3)
         sendPort!m(4)
+
+        sendPort!m2(0, 1)
+        sendPort!m2(0, 2)
+        sendPort!m2(0, 3)
+        sendPort!m2(0, 4)
       end
 
       internal event e: rcvPort?cep

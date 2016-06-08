@@ -52,12 +52,6 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                 break; // we stop at first match, a stream can have only one window right?
             }
-            //if (vs instanceof TimeWindow) {
-            //    StringBuilder b = new StringBuilder();
-            //    ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), b, ctx);
-            //    b.toString(); // FIXME: what's this?
-            //}
-
         }
 
         /* If no window is specified */
@@ -87,7 +81,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                  */
                 String constantTemplate = ctx.getCEPLibTemplateMessageConstants();
 
-                int messageSize = ctx.getMessageSerializationSize(msg) - 4; //substract the ports size
+                int messageSize = ctx.getMessageSerializationSize(msg) - 4; //subtract the ports size
                 constantTemplate = constantTemplate.replace("/*MESSAGE_TTL*/", ArduinoCepHelper.getInputMessagesStreamTTL(msg, s, ctx));
                 constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
                 constantTemplate = constantTemplate.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
@@ -267,7 +261,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 for (Parameter p : msg.getParameters()) {
                     exportImpl += ctx.getCType(p.getType()) + "* stream_" + s.getName() +
                             " ::export_" + msg.getName() + "_" + p.getName() + "()\n{\n";
-                    exportImpl += "  int size = " + msg.getName() + "_length();\n";
+                    exportImpl += "  int size = " + msg.getName() + "_length() / " + msg.getName().toUpperCase() +
+                            "_ELEMENT_SIZE;\n";
                     exportImpl += "  for (int i=0; i<size; i++) {\n";
 
                     //union de store the extracted value
@@ -280,7 +275,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                         exportImpl += "u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "]";
                         exportImpl += " = " + msg.getName() + "_fifo[(" + msg.getName() + "_fifo_head + " + fifo_buffer_index +
-                                ") % " + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
+                                " + (i * " + msg.getName().toUpperCase() + "_ELEMENT_SIZE)) % " + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
 
                         fifo_buffer_index++;
                     }
@@ -371,6 +366,9 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                 triggerImpl += ");\n";
                 triggerImpl += "//done poping\n";
+
+                for (Parameter p : m.getParameters())
+                    ctx.putCepMsgParam(m.getName(), p.getName(), s.getName());
             }
 
             StringBuilder outAction = new StringBuilder();
@@ -399,6 +397,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 triggerImpl += m.getName() + "_removeEvent();\n";
 
             triggerImpl += "\n}\n";
+            ctx.resetCepMsgContext();
         }
         return triggerImpl;
     }
@@ -406,7 +405,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
     /**
      * Function checking if the timer has expired and if the checkTrigger should be called
      *
-     * @param s Stream producing events with a timer
+     * @param s   Stream producing events with a timer
      * @param ctx Compiler context
      */
     private static String generateTriggerCallBack(Stream s, CCompilerContext ctx) {
