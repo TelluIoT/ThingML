@@ -27,6 +27,12 @@ import java.util.Map;
 
 
 public abstract class CThingActionCompiler extends CommonThingActionCompiler {
+    
+    @Override
+    public void generate(StartSession action, StringBuilder builder, Context ctx) {
+        final StringBuilder b = new StringBuilder();
+        builder.append("fork_" + action.getSession().getName() + "(_instance);\n");
+    }
 
 
     @Override

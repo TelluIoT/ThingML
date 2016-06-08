@@ -112,13 +112,21 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("// Definition of the instance stuct:\n");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
-        builder.append("// Variables for the ID of the ports of the instance\n");
-
         if (debugProfile.isActive()) {
             builder.append("bool debug;\n");
             builder.append("char * name;\n");
         }
+        //Sessions
+        builder.append("\n// Instances of different sessions\n");
+        builder.append("bool active;\n");
+        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+        for(Session s : RegionHelper.allContainedSessions(sm)) {
+            builder.append("struct " + ctx.getInstanceStructName(thing) + " * sessions_" + s.getName() + ";\n");
+            builder.append("uint16_t nb_max_sessions_" + s.getName() + ";\n");
+        }
 
+
+        builder.append("// Variables for the ID of the ports of the instance\n");
         for (Port p : ThingMLHelpers.allPorts(thing)) {
             builder.append("uint16_t id_");
             builder.append(p.getName());
@@ -156,7 +164,6 @@ public class CThingApiCompiler extends ThingApiCompiler {
         }
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
-            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
             for (Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
@@ -171,6 +178,11 @@ public class CThingApiCompiler extends ThingApiCompiler {
             }
             builder.append(ctx.getCVarName(p));
             builder.append(";\n");
+            if(p.getCardinality() != null) {//array
+                builder.append("uint16_t ");
+                builder.append(ctx.getCVarName(p));
+                builder.append("_size;\n");
+            }
         }
         builder.append("// CEP stream pointers\n");
         for (Stream s : ArduinoCepHelper.getStreamWithBuffer(thing))

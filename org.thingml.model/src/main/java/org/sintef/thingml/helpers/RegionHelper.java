@@ -103,7 +103,25 @@ public class RegionHelper {
         }
         return result;
     }
-
+    
+    public static List<Session> allFirstLevelSessions(Region self) {
+        final List<Session> result = new ArrayList<Session>();
+        if (self instanceof Session) {
+            result.add((Session)self);
+            return result;
+        }
+        if (self instanceof CompositeState) {
+            for(Region r : ((CompositeState)self).getRegion()) {
+                result.addAll(RegionHelper.allFirstLevelSessions(r));
+            }
+        }
+        for (State s : self.getSubstate()) {
+            if (s instanceof Session) {
+                result.addAll(RegionHelper.allFirstLevelSessions((Session)s));
+            }
+        }
+        return result;
+    }
 
     public static List<Property> allContainedProperties(Region self) {
         final List<Property> result = new ArrayList<Property>();

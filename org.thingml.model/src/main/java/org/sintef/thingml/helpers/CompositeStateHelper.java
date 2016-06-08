@@ -108,6 +108,25 @@ public class CompositeStateHelper {
     }
 
 
+    public static List<Session> allFirstLevelSessions(CompositeState self) {
+        List<Session> result = new ArrayList<Session>();
+        for (State s :self.getSubstate()) {
+            if (s instanceof Session) {
+                result.add(((Session)s));
+            } else if(s instanceof CompositeState)
+                result.addAll(allFirstLevelSessions((CompositeState)s));
+        }
+        for(Region r: self.getRegion()) {
+            if (r instanceof Session)
+                result.add(((Session)r));
+            else
+                result.addAll(RegionHelper.allFirstLevelSessions(r));
+        }
+        return result;
+    }
+
+
+
     public static List<Property> allContainedProperties(CompositeState self) {
         List<Property> result = new ArrayList<Property>();
         for(State s : allContainedStates(self)) {

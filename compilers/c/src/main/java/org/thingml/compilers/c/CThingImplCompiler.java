@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.sintef.thingml.helpers.RegionHelper;
+import org.sintef.thingml.helpers.ThingHelper;
 
 
 /**
@@ -117,6 +119,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         generateCFunctions(thing, builder, ctx, debugProfile);
 
+        builder.append("// Sessions fork:\n");
+        generateSessionForks(thing, builder, ctx, debugProfile);
+        builder.append("\n");
+        
         builder.append("// On Entry Actions:\n");
         generateEntryActions(thing, builder, ctx, debugProfile);
         builder.append("\n");
@@ -124,7 +130,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("// On Exit Actions:\n");
         generateExitActions(thing, builder, ctx, debugProfile);
         builder.append("\n");
-
+        
         builder.append("// Event Handlers for incoming messages:\n");
         generateEventHandlers(thing, builder, ctx, debugProfile);
         builder.append("\n");
@@ -352,7 +358,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append(template);
 
     }
-
+    
     protected void generateEntryActions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
@@ -372,7 +378,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("switch(state) {\n");
 
-
+        
         for (CompositeState cs : CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm)) {
 
             builder.append("case " + ctx.getStateID(cs) + ":{\n");
@@ -400,7 +406,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
 
-
+        
         for (State s : CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
@@ -409,6 +415,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         + ctx.traceOnEntry(thing, sm, s) + "\\n\");\n");
             }
             if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
+            if(s instanceof FinalState) builder.append("_instance->active = false;\n");
             builder.append("break;\n}\n");
         }
 
@@ -416,7 +423,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n");
         builder.append("}\n");
     }
-
+    
     protected void generateExitActions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
@@ -1010,6 +1017,56 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         builder.append("\n");
+    }
+    
+    private void generateSessionForks(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+        for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+            builder.append("int fork_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
+            builder.append("    struct " + ctx.getInstanceStructName(thing) + " * new_session = NULL;\n");
+            builder.append("    uint16_t index_s = 0;\n");
+            builder.append("    while(index_s < _instance->nb_max_sessions_" + s.getName() + ") {\n");
+            builder.append("        if(!(_instance->sessions_" + s.getName() + "[index_s].active)) {\n");
+            builder.append("            new_session = &(_instance->sessions_" + s.getName() + "[index_s]);\n");
+            builder.append("            break;\n");
+            builder.append("        }\n");
+            builder.append("    }\n\n");
+            builder.append("    if(new_session == NULL)\n");
+            builder.append("        return -1;\n\n");
+
+            builder.append("    new_session->active = true;\n\n");
+
+            builder.append("    //Copy of properties\n");
+            for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+                if (!p.isIsArray()) {//Not an array
+                    builder.append("new_session->" + ctx.getVariableName(p) + " = ");
+                    builder.append("_instance->" + ctx.getVariableName(p));
+                    builder.append(";\n");
+                } else {
+                    builder.append("_instance." + ctx.getVariableName(p) + " = ");
+                    builder.append("memcpy(&(new_session->" + ctx.getVariableName(p) + "), "
+                            + "&(_instance->" + ctx.getVariableName(p) + "), "
+                            + ctx.getVariableName(p) + "_size * sizeof(" + ctx.getCType(p.getType()) + "));\n");
+                }
+            }
+
+            builder.append("    new_session->" + ctx.getStateVarName(ThingMLHelpers.allStateMachines(thing).get(0)) + " = " + ctx.getStateID(s.getInitial()) + ";\n");
+            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+            for(Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
+                if((!RegionHelper.allContainedRegionsAndSessions(s).contains(r)) || ((r instanceof Session) && (r != s))) {
+                    builder.append("    new_session->" + ctx.getStateVarName(r) + " = -1;\n");
+                } else {
+                    builder.append("    new_session->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
+                }
+            }
+
+            if (ThingMLHelpers.allStateMachines(thing).size() > 0) { // there is a state machine
+                builder.append("    " + ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getStateID(s) + ", new_session);\n");
+            }
+
+            builder.append("    return 0;\n");
+            builder.append("}\n");
+            builder.append("\n");
+        }
     }
 
 }

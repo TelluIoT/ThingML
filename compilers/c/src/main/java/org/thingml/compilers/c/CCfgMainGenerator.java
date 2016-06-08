@@ -192,9 +192,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append("//Declaration of instance variables\n");
 
             for (Instance inst : ConfigurationHelper.allInstances(cfg)) {
-
+                
                 builder.append("//Instance " + inst.getName() + "\n");
-
+                
                 builder.append("// Variables for the properties of the instance\n");
 
                 builder.append(ctx.getInstanceVarDecl(inst) + "\n");
@@ -228,10 +228,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append("char * " + ctx.getInstanceVarName(inst) + "_name = \"" + inst.getName() + "\";\n");
                     }
                 }
+                
+
+                builder.append("// Variables for the sessions of the instance\n");
+                StateMachine sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
+                generateSessionInstanceDeclaration(cfg, ctx, builder, inst, sm, "1");
             }
 
-                builder.append("\n");
-            }
+            builder.append("\n");
+        }
 
 
         generateMessageEnqueue(cfg, builder, headerbuilder, ctx);
@@ -1499,6 +1504,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             for (Region r : CompositeStateHelper.allContainedRegions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
+            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(s) + " = -1;\n");
+            }
         }
 
         // Init simple properties
@@ -1520,14 +1528,20 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         for (Property p : ThingHelper.allPropertiesInDepth(inst.getType())) {
             if (p.getCardinality() != null) {//array
-                //builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = &");
-                //TOCHECK
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getVariableName(p));
                 builder.append(";\n");
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + "_size = ");
+                ctx.generateFixedAtInitValue(cfg, inst, p.getCardinality(), builder);
+                builder.append(";\n");
             }
         }
-
+        
+        //Sessions
+        if (ThingMLHelpers.allStateMachines(inst.getType()).size() > 0) { // There is a state machine
+            StateMachine sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
+            generateSessionInstanceInitialization(cfg, ctx, builder, inst, ctx.getInstanceVarName(inst), "0", sm);
+        }
 
         // Init array properties
         Map<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> expressions = ConfigurationHelper.initExpressionsForInstanceArrays(cfg, inst);
@@ -1757,5 +1771,60 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(dynCoLib);
             }
         }
+    }
+
+    private void generateSessionInstanceDeclaration(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, CompositeState cs, String curMaxInstances) {
+        
+        for(Session s : CompositeStateHelper.allFirstLevelSessions(cs)) {
+            StringBuilder maxInstances = new StringBuilder();
+            maxInstances.append(curMaxInstances + " * (");
+            ctx.generateFixedAtInitValue(cfg, i, s.getMaxInstances(), maxInstances);
+            maxInstances.append(")");
+            
+            builder.append("//Instance: " + i.getName() + ", Session: " + s.getName() + "\n");
+            builder.append("struct " + ctx.getInstanceStructName(i.getType()) + " sessions_" + i.getName() + "_" + s.getName() + "[" + maxInstances + "];\n");
+            for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
+                builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append("array_" + i.getName() + "_" + s.getName() + "_" + ctx.getCVarName(a));
+                builder.append("[" + maxInstances + "][");
+                ctx.generateFixedAtInitValue(cfg, i, a.getCardinality(), builder);
+                builder.append("];\n");
+            }
+            
+            builder.append("//Subsessions\n");
+            generateSessionInstanceDeclaration(cfg, ctx, builder, i, s, maxInstances.toString());
+        }
+        
+    }
+
+    private void generateSessionInstanceInitialization(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, String inst_var, String index, CompositeState cs) {
+        
+        for(Session s : CompositeStateHelper.allFirstLevelSessions(cs)) {
+            StringBuilder maxInstances = new StringBuilder();
+            ctx.generateFixedAtInitValue(cfg, i, s.getMaxInstances(), maxInstances);
+            builder.append("//Instance: " + i.getName() + ", Session: " + s.getName() + "\n");
+            builder.append(inst_var + ".nb_max_sessions_" + s.getName() + " = " + maxInstances + ";\n");
+            builder.append(inst_var + ".sessions_" + s.getName() + 
+                    " = &sessions_" + i.getName() + "_" + s.getName() + "[" + index + "];\n");
+            
+            builder.append("uint16_t " + i.getName() + "_" + s.getName() + "_index = 0;\n");
+            builder.append("while (" + i.getName() + "_" + s.getName() + "_index < (" + maxInstances + ")) {\n");
+            builder.append("sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index].active = false;\n");
+            
+            for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
+                builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append(inst_var + "." + ctx.getCVarName(a) + " = &array_" + i.getName() + "_" + s.getName() + "_" + ctx.getCVarName(a));
+                builder.append("[" + index + " + " + i.getName() + "_" + s.getName() + "_index][0];\n");
+            }
+            
+            builder.append("//Subsessions\n");
+            String sessionInstanceVar = "sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index]";
+            String sessionIndex = index + " + " + i.getName() + "_" + s.getName() + "_index";
+            generateSessionInstanceInitialization(cfg, ctx, builder, i, sessionInstanceVar, sessionIndex, s);
+            builder.append("\n");
+            builder.append(i.getName() + "_" + s.getName() + "_index++;\n");
+            builder.append("}\n");
+        }
+        
     }
 }
