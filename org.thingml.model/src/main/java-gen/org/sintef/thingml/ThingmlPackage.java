@@ -1704,13 +1704,22 @@ public interface ThingmlPackage extends EPackage {
 	 */
 	int SESSION__REGION = COMPOSITE_STATE__REGION;
 	/**
+	 * The feature id for the '<em><b>Max Instances</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SESSION__MAX_INSTANCES = COMPOSITE_STATE_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Session</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SESSION_FEATURE_COUNT = COMPOSITE_STATE_FEATURE_COUNT + 0;
+	int SESSION_FEATURE_COUNT = COMPOSITE_STATE_FEATURE_COUNT + 1;
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ActionImpl <em>Action</em>}' class.
 	 * <!-- begin-user-doc -->
@@ -3932,80 +3941,72 @@ public interface ThingmlPackage extends EPackage {
 	 * The meta object id for the '{@link org.sintef.thingml.impl.JoinSourcesImpl <em>Join Sources</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
-	 * @generated
 	 * @see org.sintef.thingml.impl.JoinSourcesImpl
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getJoinSources()
+	 * @generated
 	 */
 	int JOIN_SOURCES = 93;
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.MergeSourcesImpl <em>Merge Sources</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
-	 * @generated
 	 * @see org.sintef.thingml.impl.MergeSourcesImpl
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMergeSources()
+	 * @generated
 	 */
 	int MERGE_SOURCES = 94;
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.SimpleSourceImpl <em>Simple Source</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
-	 * @generated
 	 * @see org.sintef.thingml.impl.SimpleSourceImpl
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getSimpleSource()
+	 * @generated
 	 */
 	int SIMPLE_SOURCE = 95;
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ViewSourceImpl <em>View Source</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
-	 * @generated
 	 * @see org.sintef.thingml.impl.ViewSourceImpl
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getViewSource()
+	 * @generated
 	 */
 	int VIEW_SOURCE = 96;
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.FilterImpl <em>Filter</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
-	 * @generated
 	 * @see org.sintef.thingml.impl.FilterImpl
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getFilter()
+	 * @generated
 	 */
 	int FILTER = 97;
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.MessageParameterImpl <em>Message Parameter</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
-	 * @generated
 	 * @see org.sintef.thingml.impl.MessageParameterImpl
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getMessageParameter()
+	 * @generated
 	 */
 	int MESSAGE_PARAMETER = 98;
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ReferenceImpl <em>Reference</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
-	 * @generated
 	 * @see org.sintef.thingml.impl.ReferenceImpl
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReference()
+	 * @generated
 	 */
 	int REFERENCE = 99;
 	/**
 	 * The meta object id for the '{@link org.sintef.thingml.impl.ReferencedElmtImpl <em>Referenced Elmt</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
-	 * @generated
 	 * @see org.sintef.thingml.impl.ReferencedElmtImpl
 	 * @see org.sintef.thingml.impl.ThingmlPackageImpl#getReferencedElmt()
+	 * @generated
 	 */
 	int REFERENCED_ELMT = 100;
 	/**
@@ -4044,7 +4045,6 @@ public interface ThingmlPackage extends EPackage {
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
 	 * @generated
 	 * @ordered
 	 */
@@ -5355,6 +5355,17 @@ public interface ThingmlPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getSession();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.sintef.thingml.Session#getMaxInstances <em>Max Instances</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Max Instances</em>'.
+	 * @see org.sintef.thingml.Session#getMaxInstances()
+	 * @see #getSession()
+	 * @generated
+	 */
+	EReference getSession_MaxInstances();
 
 	/**
 	 * Returns the meta object for class '{@link org.sintef.thingml.Action <em>Action</em>}'.
@@ -7716,6 +7727,14 @@ public interface ThingmlPackage extends EPackage {
 		 * @generated
 		 */
 		EClass SESSION = eINSTANCE.getSession();
+
+		/**
+		 * The meta object literal for the '<em><b>Max Instances</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SESSION__MAX_INSTANCES = eINSTANCE.getSession_MaxInstances();
 
 		/**
 		 * The meta object literal for the '{@link org.sintef.thingml.impl.ActionImpl <em>Action</em>}' class.
