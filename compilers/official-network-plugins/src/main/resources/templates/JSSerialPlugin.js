@@ -2,9 +2,8 @@ var SerialPort = require('serialport').SerialPort;
 var ByteBuffer = require("bytebuffer");
 var Format = require('.//*$FORMAT$*/');
 
-function /*$NAME$*/(name, root, debug, port, baudrate, instance) {
+function /*$NAME$*/(name, debug, port, baudrate, instance) {
     this.name = name;
-    this.root = root;
     this.debug = debug;
     var _this;
     this.setThis = function(__this) {
@@ -12,14 +11,6 @@ function /*$NAME$*/(name, root, debug, port, baudrate, instance) {
     };
 
     this.ready = false;
-
-    //message queue
-    const queue = [];
-    this.getQueue = function() {
-    return queue;
-    };
-
-    /*$PORTS$*/
 
     const serial = new SerialPort(port, {baudrate: baudrate});
     const formatter = new Format();
@@ -48,7 +39,7 @@ function /*$NAME$*/(name, root, debug, port, baudrate, instance) {
                     state = RCV_ESC;
                 } else if (data == STOP_BYTE) {
                     //TODO: send proper ThingML message after it has been parsed
-					var trimBB = new ByteBuffer(capacity=buffer_idx+1, littleEndian=false);
+					const trimBB = new ByteBuffer(capacity=buffer_idx+1, littleEndian=false);
 					bb.flip();
 					var i = 0;
 					while(i < buffer_idx) {
@@ -89,8 +80,10 @@ function /*$NAME$*/(name, root, debug, port, baudrate, instance) {
 
     /*$NAME$*/.prototype._stop = function() {
         this.ready = false;
-        serial.close();
-    };
+		serial.close(function(error){
+			console.log("Something went wrong when closing serial port " + port + " at " + baudrate + ":\n\t" + error);
+		});
+	};
 };
 
 module.exports = /*$NAME$*/;

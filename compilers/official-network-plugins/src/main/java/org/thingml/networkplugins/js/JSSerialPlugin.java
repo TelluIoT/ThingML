@@ -25,7 +25,6 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -160,7 +159,6 @@ public class JSSerialPlugin extends NetworkPlugin {
             String template = ctx.getTemplateByID("templates/JSSerialPlugin.js");
             template = template.replace("/*$FORMAT$*/", prot.getName() + "BinaryProtocol");
             template = template.replace("/*$NAME$*/", prot.getName());
-            template = initPort(ctx, template);
             for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {
                 updateMain(ctx, cfg, conn);
             }
@@ -193,13 +191,20 @@ public class JSSerialPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(");\n");
-                    builder.append("serial.write(START_BYTE);\n");
+                    builder.append("const packet = [];\n");
+                    builder.append("var idx = 0;");
+                    builder.append("packet[idx] = START_BYTE;\n");
+                    builder.append("idx++;\n");
                     builder.append("for (var i = 0 ; i < buffer.length ; i++) {\n");
-                    builder.append("if (buffer[i] === START_BYTE || buffer[i] === STOP_BYTE || buffer[i] === ESCAPE_BYTE)\n");
-                    builder.append("serial.write(ESCAPE_BYTE);\n");
-                    builder.append("serial.write(buffer[i]);\n");
+                    builder.append("if (buffer[i] === START_BYTE || buffer[i] === STOP_BYTE || buffer[i] === ESCAPE_BYTE) {\n");
+                    builder.append("packet[idx] = ESCAPE_BYTE;\n");
+                    builder.append("idx++;\n");
+                    builder.append("}\n");
+                    builder.append("packet[idx] = buffer[i];\n");
+                    builder.append("idx++;\n");
                     builder.append("}");
-                    builder.append("serial.write(STOP_BYTE);\n");
+                    builder.append("packet[idx] = STOP_BYTE;\n");
+                    builder.append("serial.write(new Buffer(packet));\n");
                     builder.append("};\n\n");
                 }
             }
@@ -212,22 +217,6 @@ public class JSSerialPlugin extends NetworkPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        private String initPort(Context ctx, String template) {
-            //TODO: not required as we have access to the instance
-            /*StringBuilder builder = new StringBuilder();
-            builder.append("//callbacks for third-party listeners\n");
-            for (Port p : ports) {
-                for (Message m : p.getSends()) {
-                    builder.append("const " + m.getName() + "On" + p.getName() + "Listeners = [];\n");
-                    builder.append("this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners = function() {\n");
-                    builder.append("return " + m.getName() + "On" + p.getName() + "Listeners;\n");
-                    builder.append("};\n");
-                }
-            }
-            template = template.replace("/*$PORTS$*//*", builder.toString());*/
-            return template;
         }
 
         private void updateMain(Context ctx, Configuration cfg, ExternalConnector conn) {
@@ -243,8 +232,8 @@ public class JSSerialPlugin extends NetworkPlugin {
                 final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "var Serial = require('./SerialJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "var serial = new Serial(\"serial\", null, false, \"" + port + "\", " + speed + ", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
-                main = main.replace("/*$STOP_PLUGINS$*/", "serial.close();\n/*$STOP_PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "var serial = new Serial(\"serial\", false, \"" + port + "\", " + speed + ", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
+                main = main.replace("/*$STOP_PLUGINS$*/", "serial._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
