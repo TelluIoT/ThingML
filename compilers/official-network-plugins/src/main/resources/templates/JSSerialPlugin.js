@@ -71,10 +71,6 @@ function /*$NAME$*/(name, debug, port, baudrate, instance) {
         console.log("Error during communication: " + err);
     });
 
-    this.write = function(payload) {
-
-    };
-
     /*$RECEIVERS$*/
 
     /*$NAME$*/.prototype._stop = function() {
