@@ -27,7 +27,7 @@ function /*$NAME$*/(name, debug, port, baudrate, instance) {
 
     /*$NAME$*/.prototype._stop = function() {
         this.ready = false;
-        
+
 	};
 };
 
