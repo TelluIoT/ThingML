@@ -403,7 +403,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
 
-
         for (State s : CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm)) {
             builder.append("case " + ctx.getStateID(s) + ":{\n");
             //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, s)) {
@@ -593,18 +592,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
 
                     // produce the action or propagate the event
-                    if (source instanceof SimpleSource) {
-                        if (shouldProduce) { // generate local variables
-                            for (LocalVariable lv : s.getSelection()) {
-                                lv.setName(ThingMLElementHelper.qname(lv, "_"));
-                                ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
-                            }
-                            ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
-                        } else { // enqueue event
-                            builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
-                            ctx.appendActualParameters(thing, builder, msg, "_instance");
-                            builder.append(";\n");
+                    if (source instanceof SimpleSource && shouldProduce) {
+                        for (LocalVariable lv : s.getSelection()) {
+                            lv.setName(ThingMLElementHelper.qname(lv, "_"));
+                            ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
                         }
+                        ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
                     } else if (source instanceof MergeSources && shouldProduce) {
                         Message rMsg = ((MergeSources) source).getResultMessage();
 
@@ -636,7 +629,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
                         if (guardsList.size() > 0)
                             builder.append("}\n");
+                    } else {
+                        builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
+                        ctx.appendActualParameters(thing, builder, msg, "_instance");
+                        builder.append(";\n");
                     }
+
 
                     // Length Window
                     if (shouldTriggerOnInputNumber(s, ctx))
@@ -708,7 +706,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void dispatchToSessions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
-        builder.append("//Session list: " );
+        builder.append("//Session list: ");
         for (Region r : CompositeStateHelper.allContainedSessions(cs)) {
             builder.append(r.getName() + " ");
         }
@@ -756,7 +754,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("\n");*/
 
         for (Region r : CompositeStateHelper.directSubRegions(cs)) {
-            if(!(r instanceof Session)){
+            if (!(r instanceof Session)) {
                 builder.append("//Region " + r.getName() + "\n");
 
                 // for all states of the region, if the state can handle the message and that state is active we forward the message
@@ -781,7 +779,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(ctx.getStateVarName((Region) cs.eContainer()) + "_event_consumed = 0 ");
             for (Region r : CompositeStateHelper.directSubRegions(cs)) {
                 // for all states of the region, if the state can handle the message and that state is active we forward the message
-                builder.append("| " + ctx.getStateVarName(r)+"_event_consumed ");
+                builder.append("| " + ctx.getStateVarName(r) + "_event_consumed ");
             }
             builder.append(";\n");
         }
@@ -858,7 +856,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx, DebugProfile debugProfile) {
-        if(cs instanceof Session) return;
+        if (cs instanceof Session) return;
         for (Region r : CompositeStateHelper.directSubRegions(cs)) {
             builder.append("//Region " + r.getName() + "\n");
 
