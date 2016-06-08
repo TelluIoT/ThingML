@@ -153,7 +153,6 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        //FIXME: only support CEP buffers, not real arrays
         if (expression.getParameter() instanceof ArrayParamRef) {
             if (ctx instanceof CCompilerContext) {
                 ArrayParamRef apr = (ArrayParamRef) expression.getParameter();
@@ -167,9 +166,10 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                         msgName = s;
                         streamName = mapMsgStream.get(s);
                     }
-                } else {
-
-
+                }
+                if (msgName.equals("") || streamName.equals("")) {
+                    throw new UnsupportedOperationException("The buffer of the parameter " + paramName + " is not supposed" +
+                            "to be accessed.");
                 }
 
                 builder.append("_instance->cep_" + streamName + "->export_" + msgName + "_" + paramName + "()");
