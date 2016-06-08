@@ -38,7 +38,6 @@ function /*$NAME$*/(name, debug, port, baudrate, instance) {
                 if (data == ESCAPE_BYTE) {
                     state = RCV_ESC;
                 } else if (data == STOP_BYTE) {
-                    //TODO: send proper ThingML message after it has been parsed
 					const trimBB = new ByteBuffer(capacity=buffer_idx+1, littleEndian=false);
 					bb.flip();
 					var i = 0;
@@ -80,6 +79,8 @@ function /*$NAME$*/(name, debug, port, baudrate, instance) {
 
     /*$NAME$*/.prototype._stop = function() {
         this.ready = false;
+        serial.flush();
+        serial.drain();
 		serial.close(function(error){
 			console.log("Something went wrong when closing serial port " + port + " at " + baudrate + ":\n\t" + error);
 		});

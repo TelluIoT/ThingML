@@ -55,6 +55,8 @@ public class PosixStdInPlugin extends NetworkPlugin {
         res.add("stdin");
         res.add("Stdin");
         res.add("StdIn");
+        res.add("tty");
+        res.add("TTY");
         return res;
     }
 
