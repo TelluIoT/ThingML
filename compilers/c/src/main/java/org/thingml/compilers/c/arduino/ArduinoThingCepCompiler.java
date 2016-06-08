@@ -45,10 +45,10 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getStep(), b, ctx);
                 String step = b.toString();
 
-                slidingImpl += "int step = " + step + " * /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE;\n";
-                slidingImpl += "if (/*MESSAGE_NAME*/_length() < step )\n\tstep = /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;\n";
+                slidingImpl += "int step = " + step + " * /*STREAM_NAME_UPPER*/_/*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE;\n";
+                slidingImpl += "if (/*MESSAGE_NAME*/_length() < step )\n\tstep = /*STREAM_NAME_UPPER*/_/*MESSAGE_NAME_UPPER*/_FIFO_SIZE;\n";
 
-                slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + step) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
+                slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + step) % /*STREAM_NAME_UPPER*/_/*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
 
                 break; // we stop at first match, a stream can have only one window right?
             }
@@ -56,7 +56,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
         /* If no window is specified */
         if (slidingImpl.equals(""))
-            slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
+            slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + /*STREAM_NAME_UPPER*/_/*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*STREAM_NAME_UPPER*/_/*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
 
         return slidingImpl;
     }
@@ -124,10 +124,11 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 String attributesTemplate = ctx.getCEPLibTemplateAttributesSignatures();
                 attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME*/", msg.getName());
                 attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
+                attributesTemplate = attributesTemplate.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
                 attributesSignatures += attributesTemplate;
 
                 for (Parameter p : msg.getParameters())
-                    attributesSignatures += ctx.getCType(p.getType()) + " " + msg.getName() + p.getName() + " [" + msg.getName().toUpperCase() + "_NUMBER_MSG];\n";
+                    attributesSignatures += ctx.getCType(p.getType()) + " " + msg.getName() + p.getName() + " [" +s.getName().toUpperCase() + "_" + msg.getName().toUpperCase() + "_NUMBER_MSG];\n";
             }
 
             if (shouldTriggerOnTimer(s, ctx))
@@ -185,6 +186,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 String slidingImp = getSlidingStep(s, ctx);
                 slidingImp = slidingImp.replace("/*MESSAGE_NAME*/", msg.getName());
                 slidingImp = slidingImp.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
+                slidingImp = slidingImp.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
                 messageImpl = messageImpl.replace("/*SLIDING_IMPL*/", slidingImp);
 
                 /*
@@ -202,7 +204,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                     for (int i = ctx.getCByteSize(p.getType(), 0) - 1; i >= 0; i--) {
 
-                        queueImpl += msg.getName() + "_fifo[(" + msg.getName() + "_fifo_tail + " + fifo_buffer_index + ") % " + msg.getName().toUpperCase() + "_FIFO_SIZE]";
+                        queueImpl += msg.getName() + "_fifo[(" + msg.getName() + "_fifo_tail + " + fifo_buffer_index + ") % " + s.getName().toUpperCase() + "_" + msg.getName().toUpperCase() + "_FIFO_SIZE]";
                         queueImpl += " = u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "];\n";
 
                         fifo_buffer_index++;
@@ -241,7 +243,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                         popImpl += "u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "]";
                         popImpl += " = " + msg.getName() + "_fifo[(" + msg.getName() + "_fifo_head + " + fifo_buffer_index +
-                                ") % " + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
+                                ") % " + s.getName().toUpperCase() + "_" + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
 
                         fifo_buffer_index++;
                     }
@@ -261,8 +263,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 for (Parameter p : msg.getParameters()) {
                     exportImpl += ctx.getCType(p.getType()) + "* stream_" + s.getName() +
                             " ::export_" + msg.getName() + "_" + p.getName() + "()\n{\n";
-                    exportImpl += "  int size = " + msg.getName() + "_length() / " + msg.getName().toUpperCase() +
-                            "_ELEMENT_SIZE;\n";
+                    exportImpl += "  int size = " + msg.getName() + "_length() / " + s.getName().toUpperCase() + "_" +
+                            msg.getName().toUpperCase() + "_ELEMENT_SIZE;\n";
                     exportImpl += "  for (int i=0; i<size; i++) {\n";
 
                     //union de store the extracted value
@@ -275,7 +277,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                         exportImpl += "u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "]";
                         exportImpl += " = " + msg.getName() + "_fifo[(" + msg.getName() + "_fifo_head + " + fifo_buffer_index +
-                                " + (i * " + msg.getName().toUpperCase() + "_ELEMENT_SIZE)) % " + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
+                                " + (i * " + s.getName().toUpperCase() + "_" + msg.getName().toUpperCase() + "_ELEMENT_SIZE)) % "
+                                + s.getName().toUpperCase() + "_" + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
 
                         fifo_buffer_index++;
                     }

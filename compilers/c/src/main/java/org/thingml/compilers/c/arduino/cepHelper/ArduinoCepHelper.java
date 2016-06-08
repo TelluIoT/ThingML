@@ -253,7 +253,7 @@ public class ArduinoCepHelper {
             String msgName = src.getMessage().getMessage().getName();
             String macroName = stream.getName() +  msgName + "getLength";
             ret = "#define " + macroName + " _instance->cep_" + stream.getName() + "->" +
-                    msgName + "_length() / " + msgName.toUpperCase() + "_ELEMENT_SIZE";
+                    msgName + "_length() / " + stream.getName().toUpperCase() + "_" + msgName.toUpperCase() + "_ELEMENT_SIZE";
         }
 
         return ret;
