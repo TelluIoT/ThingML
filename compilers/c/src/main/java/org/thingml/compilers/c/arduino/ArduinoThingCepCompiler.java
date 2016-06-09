@@ -89,6 +89,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 constantTemplate = constantTemplate.replace("/*STRUCT_SIZE*/", Integer.toString(messageSize));
                 constantTemplate = constantTemplate.replace("/*NUMBER_MESSAGE*/", ArduinoCepHelper.getInputMessagesNumber(messagesFromStream.get(msg), s, ctx));
                 constants += constantTemplate;
+                constants += ArduinoCepHelper.getExposeMacros(msg, messagesFromStream.get(msg), s, ctx);
 
                 /*
                  * Methods Signatures
