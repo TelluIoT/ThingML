@@ -129,7 +129,7 @@ simple_joined(23, 1033), simple_joined(23, 1024)
 To obtain `simple_joined(23, 1033), simple_joined(22, 1024)` you have to use both `@UseOnce` and `@Buffer` annotation, such as:
 
 ```ruby
-stream joinStream @UseOnce "True" @Buffer "5"
+stream joinStream @UseOnce "False" @Buffer "5"
 from join: [t: rcvP?temp & p: rcvP?pressure -> simple_joined(t.v, p.v)]
 produce sendP!simple_joined(t.v, p.v)
 ```
@@ -174,13 +174,25 @@ produce sendP!res(a)
 
 As every other stream simple source stream allow time and length window and also guards.
 
+# Buffer Access
 
-## Sliding windows
-
-Sliding windows can be seen as a particular case of consumption policy.
+Buffer can be accessed in a stream by adding brackets `[]` after the parameter and using the `.length` operator, consider the following sum:
 
 ```ruby
-stream slidingWindow @TTL "0"
-from s @UseOnce "False" @Slide "3" : rcvP?temp::buffer 10 by 10
-select
+function sum(values: Int16[], size: UInt8) : Int16 do
+  var tmp: Int16 = 0
+  var index : UInt8 = 0
+  while (index < size) do
+    tmp = tmp + values[index]
+    index = index + 1
+  end
+  return tmp
+end
+
+stream aggregateM
+from e : rcvPort?m::buffer 4 by 4
+select var sum : Int16 = sum(e.v[], e.length)
+produce sendPort!cep(sum)
 ```
+
+This will store 4 `m` message, once 4 are received the sum of their `v` parameter is computed and send as a parameter of a `cep` event.
