@@ -609,6 +609,9 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getVariableName(p));
                 builder.append(";\n");
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + "_size = ");
+                ctx.generateFixedAtInitValue(cfg, inst, p.getCardinality(), builder);
+                builder.append(";\n");
             }
         }
         

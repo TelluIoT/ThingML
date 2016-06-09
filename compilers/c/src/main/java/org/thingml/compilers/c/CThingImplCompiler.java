@@ -1067,8 +1067,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append("new_session->" + ctx.getVariableName(p) + "_size = ");
                     builder.append("_instance->" + ctx.getVariableName(p) + "_size");
                     builder.append(";\n");
-                    builder.append("memcpy(&(new_session->" + ctx.getVariableName(p) + "), "
-                            + "&(_instance->" + ctx.getVariableName(p) + "), _instance->"
+                    builder.append("memcpy(&(new_session->" + ctx.getVariableName(p) + "[0]), "
+                            + "&(_instance->" + ctx.getVariableName(p) + "[0]), _instance->"
                             + ctx.getVariableName(p) + "_size * sizeof(" + ctx.getCType(p.getType()) + "));\n");
                 }
             }
