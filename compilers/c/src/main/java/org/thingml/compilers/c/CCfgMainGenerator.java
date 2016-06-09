@@ -991,7 +991,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         if (ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).size() == 0)
                             continue; // there is no state machine
                         StateMachine sm = ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).get(0);
-                        if (StateHelper.canHandle(sm, myReceiver.getValue(), m)) {
+                        if (StateHelper.canHandleIncludingSessions(sm, myReceiver.getValue(), m)) {
                             builder.append(ctx.getHandlerName(myReceiver.getKey().getType(), myReceiver.getValue(), m));
                             ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(myReceiver.getKey()));
                             //ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + myReceiver.getKey().getName() + "_var");
@@ -1380,6 +1380,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         if (ctx.traceLevelIsAbove(cfg, 1)) {
             builder.append(ctx.getTraceFunctionForString(cfg) + "\"Initialization of " + inst.getName() + "\\n\");\n");
         }
+        builder.append("" + ctx.getInstanceVarName(inst) + ".active = true;\n");
 
 
         // Register the instance and set its ID and its port ID
@@ -1812,9 +1813,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append("sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index].active = false;\n");
             
             for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-                builder.append(ctx.getCType(a.getType()) + " ");
-                builder.append(inst_var + "." + ctx.getCVarName(a) + " = &array_" + i.getName() + "_" + s.getName() + "_" + ctx.getCVarName(a));
-                builder.append("[" + index + " + " + i.getName() + "_" + s.getName() + "_index][0];\n");
+                //builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append(inst_var + "." + ctx.getCVarName(a) + " = &(array_" + i.getName() + "_" + s.getName() + "_" + ctx.getCVarName(a));
+                builder.append("[" + index + " + " + i.getName() + "_" + s.getName() + "_index][0]);\n");
             }
             
             builder.append("//Subsessions\n");

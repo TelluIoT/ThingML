@@ -504,4 +504,10 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             }
         }
     }
+    
+    @Override
+    public void generateSessionHandlerCalls(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {}
+    
+    @Override
+    public void generateKillChildren(Thing thing, StringBuilder builder) {}
 }

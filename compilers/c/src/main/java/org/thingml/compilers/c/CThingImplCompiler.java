@@ -119,8 +119,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         generateCFunctions(thing, builder, ctx, debugProfile);
 
-        builder.append("// Sessions fork:\n");
+        builder.append("// Sessions functionss:\n");
         generateSessionForks(thing, builder, ctx, debugProfile);
+        builder.append("\n");
+        generateSessionTerminate(thing, builder, ctx, debugProfile);
         builder.append("\n");
         
         builder.append("// On Entry Actions:\n");
@@ -415,7 +417,10 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                         + ctx.traceOnEntry(thing, sm, s) + "\\n\");\n");
             }
             if (s.getEntry() != null) ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
-            if(s instanceof FinalState) builder.append("_instance->active = false;\n");
+            if(s instanceof FinalState) {
+                builder.append("_instance->active = false;\n");
+                generateKillChildren(thing, builder);
+            }
             builder.append("break;\n}\n");
         }
 
@@ -495,6 +500,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("void " + getCppNameScope() + ctx.getHandlerName(thing, port, msg));
                 ctx.appendFormalParameters(thing, builder, msg);
                 builder.append(" {\n");
+                generateSessionHandlerCalls(thing, port, msg, ctx, builder);
 
 
                 //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), thing, port, msg)) {
@@ -1019,9 +1025,24 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("\n");
     }
     
+    private void generateSessionTerminate(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+        if(RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).size() > 0) {
+            builder.append("void " + thing.getName() + "_terminate(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
+            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+                builder.append("    _instance->active = false;\n");
+                builder.append("    uint16_t index_" + s.getName() + " = 0;\n");
+                builder.append("    while(index_" + s.getName() + " < _instance->nb_max_sessions_" + s.getName() + ") {\n");
+                builder.append("        " + thing.getName() + "_terminate(&(_instance->sessions_" + s.getName() + "[index_" + s.getName() + "]));\n");
+                builder.append("        index_" + s.getName() + "++;\n");
+                builder.append("    }\n");
+            }
+            builder.append("}\n\n");
+        }
+    }
+    
     private void generateSessionForks(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
         for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
-            builder.append("int fork_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
+            builder.append("int " + thing.getName() + "_fork_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
             builder.append("    struct " + ctx.getInstanceStructName(thing) + " * new_session = NULL;\n");
             builder.append("    uint16_t index_s = 0;\n");
             builder.append("    while(index_s < _instance->nb_max_sessions_" + s.getName() + ") {\n");
@@ -1029,6 +1050,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("            new_session = &(_instance->sessions_" + s.getName() + "[index_s]);\n");
             builder.append("            break;\n");
             builder.append("        }\n");
+            builder.append("        index_s++;\n");
             builder.append("    }\n\n");
             builder.append("    if(new_session == NULL)\n");
             builder.append("        return -1;\n\n");
@@ -1042,11 +1064,21 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append("_instance->" + ctx.getVariableName(p));
                     builder.append(";\n");
                 } else {
-                    builder.append("_instance." + ctx.getVariableName(p) + " = ");
+                    builder.append("new_session->" + ctx.getVariableName(p) + "_size = ");
+                    builder.append("_instance->" + ctx.getVariableName(p) + "_size");
+                    builder.append(";\n");
                     builder.append("memcpy(&(new_session->" + ctx.getVariableName(p) + "), "
-                            + "&(_instance->" + ctx.getVariableName(p) + "), "
+                            + "&(_instance->" + ctx.getVariableName(p) + "), _instance->"
                             + ctx.getVariableName(p) + "_size * sizeof(" + ctx.getCType(p.getType()) + "));\n");
                 }
+            }
+            builder.append("    //Copy of port id\n");
+            for (Port p : ThingMLHelpers.allPorts(thing)) {
+                builder.append("new_session->id_");
+                builder.append(p.getName());
+                builder.append(" = _instance->id_");
+                builder.append(p.getName());
+                builder.append(";\n");
             }
 
             builder.append("    new_session->" + ctx.getStateVarName(ThingMLHelpers.allStateMachines(thing).get(0)) + " = " + ctx.getStateID(s.getInitial()) + ";\n");
@@ -1066,6 +1098,28 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("    return 0;\n");
             builder.append("}\n");
             builder.append("\n");
+        }
+    }
+
+    public void generateSessionHandlerCalls(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {
+        builder.append("if(!(_instance->active)) return;\n");
+        for(Session s: RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+            builder.append("uint16_t index_" + s.getName() + " = 0;\n");
+            builder.append("while(index_" + s.getName() + " < _instance->nb_max_sessions_" + s.getName() + ") {\n");
+            builder.append("    " + ctx.getHandlerName(thing, port, msg) + "(");
+            builder.append("&(_instance->sessions_" + s.getName() + "[index_" + s.getName() + "])");
+            for(Parameter p : msg.getParameters()) {
+                builder.append(", " + p.getName());
+            }
+            builder.append(");\n");
+            builder.append("    index_" + s.getName() + "++;\n");
+            builder.append("}\n");
+        }
+    }
+
+    public void generateKillChildren(Thing thing, StringBuilder builder) {
+        if(RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).size() > 0) {
+            builder.append(thing.getName() + "_terminate(_instance);\n");
         }
     }
 
