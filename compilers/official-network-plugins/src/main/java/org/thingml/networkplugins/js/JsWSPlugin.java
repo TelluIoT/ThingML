@@ -36,19 +36,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class JSSerialPlugin extends NetworkPlugin {
+public class JsWSPlugin extends NetworkPlugin {
 
-    public JSSerialPlugin() {
+    public JsWSPlugin() {
         super();
     }
 
     public String getPluginID() {
-        return "JSSerialPlugin";
+        return "JsWSPlugin";
     }
 
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
-        res.add("Serial");
+        res.add("WS");
+        res.add("websocket");
         return res;
     }
 
@@ -56,46 +57,6 @@ public class JSSerialPlugin extends NetworkPlugin {
         List<String> res = new ArrayList<>();
         res.add("nodejs");
         return res;
-    }
-
-    public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
-        //TODO: to be improved (e.g. to avoid duplicating messages and ports, etc).
-        updatePackageJSON(ctx);
-        StringBuilder builder = new StringBuilder();
-
-
-        for (Protocol prot : protocols) {
-            SerializationPlugin sp = null;
-            try {
-               sp = ctx.getSerializationPlugin(prot);
-            } catch (UnsupportedEncodingException uee) {
-                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
-                uee.printStackTrace();
-                return;
-            }
-
-            String serializers = "";
-            for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                serializers += sp.generateSerialization(builder, prot.getName() + "BinaryProtocol", tpm.m);
-            }
-
-            builder = new StringBuilder();
-            final Set<Message> messages = new HashSet<Message>();
-            for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
-                messages.add(tpm.m);
-            }
-            sp.generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
-            final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);
-            try {
-                final File f = new File(ctx.getOutputDirectory() + "/" + prot.getName() + "BinaryProtocol.js");
-                final OutputStream output = new FileOutputStream(f);
-                IOUtils.write(result, output, Charset.forName("UTF-8"));
-                IOUtils.closeQuietly(output);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            new SerialProtocol(ctx, prot, cfg).generate();
-        }
     }
 
     private void updatePackageJSON(Context ctx) {
@@ -110,9 +71,7 @@ public class JSSerialPlugin extends NetworkPlugin {
 
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonObject deps = json.get("dependencies").asObject();
-            deps.add("serialport", "^3.1.2");
-            if (deps.get("bytebuffer") == null)
-                deps.add("bytebuffer", "^5.0.1");
+            deps.add("ws", "^1.1.0");
 
             final File f = new File(ctx.getOutputDirectory() + "/package.json");
             final OutputStream output = new FileOutputStream(f);
@@ -123,14 +82,51 @@ public class JSSerialPlugin extends NetworkPlugin {
         }
     }
 
-    private class SerialProtocol {
+    public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
+        updatePackageJSON(ctx);
+        StringBuilder builder = new StringBuilder();
+        for (Protocol prot : protocols) {
+            SerializationPlugin sp = null;
+            try {
+               sp = ctx.getSerializationPlugin(prot);
+            } catch (UnsupportedEncodingException uee) {
+                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                uee.printStackTrace();
+                return;
+            }
+
+            String serializers = "";
+            for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
+                serializers += sp.generateSerialization(builder, prot.getName() + "StringProtocol", tpm.m);
+            }
+
+            builder = new StringBuilder();
+            final Set<Message> messages = new HashSet<Message>();
+            for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
+                messages.add(tpm.m);
+            }
+            sp.generateParserBody(builder, prot.getName() + "StringProtocol", null, messages, null);
+            final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);
+            try {
+                final File f = new File(ctx.getOutputDirectory() + "/" + prot.getName() + "StringProtocol.js");
+                final OutputStream output = new FileOutputStream(f);
+                IOUtils.write(result, output, Charset.forName("UTF-8"));
+                IOUtils.closeQuietly(output);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            new WSProtocol(ctx, prot, cfg).generate();
+        }
+    }
+
+    private class WSProtocol {
         Context ctx;
         Protocol prot;
         Configuration cfg;
 
         private List<Port> ports = new ArrayList<Port>();
 
-        public SerialProtocol(Context ctx, Protocol prot, Configuration cfg) {
+        public WSProtocol(Context ctx, Protocol prot, Configuration cfg) {
             this.ctx = ctx;
             this.prot = prot;
             this.cfg = cfg;
@@ -156,8 +152,8 @@ public class JSSerialPlugin extends NetworkPlugin {
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 addPort(tpm.p);
             }
-            String template = ctx.getTemplateByID("templates/JSSerialPlugin.js");
-            template = template.replace("/*$FORMAT$*/", prot.getName() + "BinaryProtocol");
+            String template = ctx.getTemplateByID("templates/JsWSPlugin.js");
+            template = template.replace("/*$FORMAT$*/", prot.getName() + "StringProtocol");
             template = template.replace("/*$NAME$*/", prot.getName());
             for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {
                 updateMain(ctx, cfg, conn);
@@ -172,7 +168,7 @@ public class JSSerialPlugin extends NetworkPlugin {
             StringBuilder builder = new StringBuilder();
             for (Port p : ports) {
                 for (Message m : p.getSends()) {
-                    builder.append("Serial.prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
+                    builder.append("WS.prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
                     int i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -181,7 +177,7 @@ public class JSSerialPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(") {\n");
-                    builder.append("const buffer = formatter." + m.getName() + "ToBytes(");
+                    builder.append("ws.send(formatter." + m.getName() + "ToJSON(");
                     i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -189,27 +185,13 @@ public class JSSerialPlugin extends NetworkPlugin {
                         builder.append(ctx.protectKeyword(pa.getName()));
                         i++;
                     }
-                    builder.append(");\n");
-                    builder.append("const packet = [];\n");
-                    builder.append("var idx = 0;");
-                    builder.append("packet[idx] = START_BYTE;\n");
-                    builder.append("idx++;\n");
-                    builder.append("for (var i = 0 ; i < buffer.length ; i++) {\n");
-                    builder.append("if (buffer[i] === START_BYTE || buffer[i] === STOP_BYTE || buffer[i] === ESCAPE_BYTE) {\n");
-                    builder.append("packet[idx] = ESCAPE_BYTE;\n");
-                    builder.append("idx++;\n");
-                    builder.append("}\n");
-                    builder.append("packet[idx] = buffer[i];\n");
-                    builder.append("idx++;\n");
-                    builder.append("}");
-                    builder.append("packet[idx] = STOP_BYTE;\n");
-                    builder.append("serial.write(new Buffer(packet));\n");
+                    builder.append("));\n");
                     builder.append("};\n\n");
                 }
             }
             template = template.replace("/*$RECEIVERS$*/", "/*$RECEIVERS$*/\n" + builder.toString());
             try {
-                final File f = new File(ctx.getOutputDirectory() + "/SerialJS.js");
+                final File f = new File(ctx.getOutputDirectory() + "/WSJS.js");
                 final OutputStream output = new FileOutputStream(f);
                 IOUtils.write(template, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
@@ -227,20 +209,27 @@ public class JSSerialPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                final String speed = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "baudrate", "9600");
-                final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";//FIXME: Raise an exception if port is not specified
+                final String url = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "url") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "url").get(0) : "localhost";
 
-                main = main.replace("/*$REQUIRE_PLUGINS$*/", "var Serial = require('./SerialJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "var serial = new Serial(\"serial\", false, \"" + port + "\", " + speed + ", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
-                main = main.replace("/*$STOP_PLUGINS$*/", "serial._stop();\n/*$STOP_PLUGINS$*/\n");
+                main = main.replace("/*$REQUIRE_PLUGINS$*/", "var ws = require('./WSJS');\n/*$REQUIRE_PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "var ws = new ws(\"WS\", false, \"" + url + "\", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
+                main = main.replace("/*$STOP_PLUGINS$*/", "ws._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
                     builder.append(conn.getInst().getInstance().getName() + ".get" + ctx.firstToUpper(req.getName()) + "on" + conn.getPort().getName() + "Listeners().push(");
-                    builder.append("serial.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(serial)");
+                    builder.append("ws.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(ws)");
                     builder.append(");\n");
                 }
                 main = main.replace("/*$PLUGINS_CONNECTORS$*/", builder.toString() + "\n/*$PLUGINS_CONNECTORS$*/");
+
+                if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "localserver")) {
+                    String template = ctx.getTemplateByID("templates/JsWSServer.js");
+                    final String port = AnnotatedElementHelper.annotation(conn.getProtocol(), "localserver").get(0);
+                    template = template.replace("/*$PORT$*/", port);
+                    main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\n" + template);
+                    main = main.replace("/*$STOP_PLUGINS$*/", "wss.close();\n/*$STOP_PLUGINS$*/\n");
+                }
 
                 final File f = new File(ctx.getOutputDirectory() + "/main.js");
                 final OutputStream output = new FileOutputStream(f);

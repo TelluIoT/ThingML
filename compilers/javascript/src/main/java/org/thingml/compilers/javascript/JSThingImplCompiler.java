@@ -157,11 +157,11 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("this.eventEmitterForStream = new EventEmitter();\n");
         }
 
-        builder.append("//message queue\n");
+        /*builder.append("//message queue\n");
         builder.append(const_() + "queue = [];\n");
         builder.append("this.getQueue = function() {\n");
         builder.append("return queue;\n");
-        builder.append("};\n\n");
+        builder.append("};\n\n");*/
 
         generateListeners(thing, builder, ctx);
 
