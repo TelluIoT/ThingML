@@ -57,31 +57,31 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + "\");\n");
             builder.append("StateJS.initialise(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + " );\n");
 
-            builder.append("var msg = this.getQueue().shift();\n");
+            /*builder.append("var msg = this.getQueue().shift();\n");
             builder.append("while(msg !== undefined) {\n");
             builder.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);\n");
             builder.append("msg = this.getQueue().shift();\n");
             builder.append("}\n");
-            builder.append("this.ready = true;\n");
+            builder.append("this.ready = true;\n");*/
             ctx.removerMarker("useThis");
             ctx.addContextAnnotation("thisRef", "_this.");
             builder.append("};\n\n");
 
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function() {\n");
-            builder.append("this.getQueue().push(arguments);\n");
+            //builder.append("this.getQueue().push(arguments);\n");
             builder.append("this.cepDispatch(arguments);\n");
-            builder.append("if (this.ready) {\n");
-            builder.append("var msg = this.getQueue().shift();\n");
-            builder.append("while(msg !== undefined) {\n");
-            builder.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);\n");
+            //builder.append("if (this.ready) {\n");
+            //builder.append("var msg = this.getQueue().shift();\n");
+            //builder.append("while(msg !== undefined) {\n");
+            builder.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", arguments);\n");
             builder.append("const forkLength = this.getForks().length;\n");
             builder.append("for (var _i = 0; _i < forkLength; _i++) {\n");
-            builder.append("this.getForks()[_i]._receive.apply(this.getForks()[_i], msg);\n");
+            builder.append("this.getForks()[_i]._receive.apply(this.getForks()[_i], arguments);\n");
             builder.append("}\n");
-            builder.append("msg = this.getQueue().shift();\n");
-            builder.append("}\n");
-            builder.append("}\n");
+            //builder.append("msg = this.getQueue().shift();\n");
+            //builder.append("}\n");
+            //builder.append("}\n");
             builder.append("};\n");
 
             //function to register listeners on attributes

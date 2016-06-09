@@ -31,38 +31,16 @@ import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.PrimitiveType;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.java.JavaHelper;
-import org.thingml.compilers.javascript.JSHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class JSByteArraySerializerPlugin extends SerializationPlugin {
-
-    private void updatePackageJSON() {
-        try {
-            final InputStream input = new FileInputStream(context.getOutputDirectory() + "/package.json");
-            final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
-            String pack = "";
-            for (String line : packLines) {
-                pack += line + "\n";
-            }
-            input.close();
-
-            final JsonObject json = JsonObject.readFrom(pack);
-            final JsonObject deps = json.get("dependencies").asObject();
-            if (deps.get("bytebuffer") == null) //Could already be there, e.g. added by serial plugin
-                deps.add("bytebuffer", "^5.0.1");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+public class JSJSONSerializerPlugin extends SerializationPlugin {
 
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
@@ -74,49 +52,48 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
         }
         //Serialize message into binary
         final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
-        builder.append(bufferName + ".prototype." + m.getName() + "ToBytes = function(");
+        builder.append(bufferName + ".prototype." + m.getName() + "ToJSON = function(");
         for(Parameter p : m.getParameters()) {
             if (m.getParameters().indexOf(p) > 0)
                 builder.append(", ");
             builder.append(p.getName());
         }
         builder.append(") {\n");
-        builder.append("var bb = new ByteBuffer(capacity=" + size + ", littleEndian=false).writeShort(" + code + ")\n");
+        builder.append("return JSON.stringify({" + m.getName() + ": {");
         for(Parameter p : m.getParameters()) {
-            final String ctype = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type") ? AnnotatedElementHelper.annotation(p.getType(), "c_type").get(0).replace("_t", "") : "byte";
-            if (p.getType() instanceof PrimitiveType) {
-                builder.append(".write" + context.firstToUpper(ctype) + "(" + p.getName() + ")\n");
-            } else {
-
-            }
-            builder.append(".flip();\n");
+            if (m.getParameters().indexOf(p) > 0)
+                builder.append(", ");
+            builder.append(p.getName() + " : " + p.getName());
         }
-        builder.append("return bb.buffer;\n");
+        builder.append("}});\n");
         builder.append("};\n\n");
         return builder.toString();
     }
 
     @Override
     public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
-        updatePackageJSON();
-        builder.append("var ByteBuffer = require(\"bytebuffer\");\n");
         builder.append("function " + bufferName + "(){\n");
-
-        builder.append(bufferName + ".prototype.parse = function(bb) {\n");
-        builder.append("switch(bb.readShort()) {\n");
+        builder.append(bufferName + ".prototype.parse = function(json) {\n");
+        builder.append("var msg = [];\n");
+        builder.append("try {\n");
+        builder.append("const parsed = JSON.parse(json);\n");
+        builder.append("JSON.parse(json, function(k, v) {\n");
+        builder.append("switch(k) {\n");
         for(Message m : messages) {
-            final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
-            builder.append("case " + code + ":\n");
-            builder.append("return [\"" + m.getName() + "\"");
+            builder.append("case '" + m.getName() + "':");
+            builder.append("msg = ['" + m.getName() + "'");
             for(Parameter p : m.getParameters()) {
-                final String type = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type")?AnnotatedElementHelper.annotation(p.getType(),"c_type").get(0).replace("_t", ""):null;
-                //if (type == null) //TODO: we should probably raise an exception here
-                builder.append(", bb.read" + context.firstToUpper(type) + "()");
+                builder.append(", parsed." + m.getName() + "." + p.getName());
             }
-            builder.append("];\n");
+            builder.append("]; break;\n");
         }
-        builder.append("default: return null;\n");
+        builder.append("default: break;\n");
         builder.append("}\n");
+        builder.append("});\n");
+        builder.append("} catch (err) {\n");
+        builder.append("console.log(\"Cannot parse \" + json + \" because \" + err);\n");
+        builder.append("};\n");
+        builder.append("return msg;\n");
         builder.append("};\n\n");
         builder.append("/*$SERIALIZERS$*/");
         builder.append("};\n\n");
@@ -125,7 +102,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public String getPluginID() {
-        return "JSByteArraySerializerPlugin";
+        return "JSJSONSerializerPlugin";
     }
 
     @Override
@@ -139,7 +116,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
     public List<String> getSupportedFormat() {
 
         List<String> res = new ArrayList<>();
-        res.add("Binary");
+        res.add("JSON");
         return res;
     }
 

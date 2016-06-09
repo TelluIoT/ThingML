@@ -2,9 +2,8 @@ var SerialPort = require('serialport').SerialPort;
 var ByteBuffer = require("bytebuffer");
 var Format = require('.//*$FORMAT$*/');
 
-function /*$NAME$*/(name, root, debug, port, baudrate) {
+function /*$NAME$*/(name, debug, port, baudrate, instance) {
     this.name = name;
-    this.root = root;
     this.debug = debug;
     var _this;
     this.setThis = function(__this) {
@@ -12,14 +11,6 @@ function /*$NAME$*/(name, root, debug, port, baudrate) {
     };
 
     this.ready = false;
-
-    //message queue
-    const queue = [];
-    this.getQueue = function() {
-    return queue;
-    };
-
-    /*$PORTS$*/
 
     const serial = new SerialPort(port, {baudrate: baudrate});
     const formatter = new Format();
@@ -36,19 +27,18 @@ function /*$NAME$*/(name, root, debug, port, baudrate) {
 
 
     serial.on('data', function(received) {
-        console.log("data: " + received);
         received.forEach(function(data) {
             if (state == RCV_WAIT) { // it should be a start byte or we just ignore it
                 if (data == START_BYTE) {
                     state = RCV_MSG;
                     buffer_idx = 0;
+                    bb = new ByteBuffer(capacity=256, littleEndian=false);
                 }
             } else if (state == RCV_MSG) {
                 if (data == ESCAPE_BYTE) {
                     state = RCV_ESC;
                 } else if (data == STOP_BYTE) {
-                    //TODO: send proper ThingML message after it has been parsed
-					var trimBB = new ByteBuffer(capacity=buffer_idx+1, littleEndian=false);
+					const trimBB = new ByteBuffer(capacity=buffer_idx+1, littleEndian=false);
 					bb.flip();
 					var i = 0;
 					while(i < buffer_idx) {
@@ -56,7 +46,8 @@ function /*$NAME$*/(name, root, debug, port, baudrate) {
 						i = i + 1
 					}
 					trimBB.flip();
-					console.log(trimBB);
+                    const msg = formatter.parse(trimBB);
+                    /*$DISPATCH$*/
                     state = RCV_WAIT;
                 } else if (data == START_BYTE) {
                     // Should not happen but we reset just in case
@@ -74,30 +65,22 @@ function /*$NAME$*/(name, root, debug, port, baudrate) {
                 state = RCV_MSG;
             }
         });
-        /*$PARSER$*/
     });
 
     serial.on('error', function(err) {
         console.log("Error during communication: " + err);
     });
 
-    this.write = function(payload) {
+    /*$RECEIVERS$*/
 
-    };
-
-    /*$FORWARD$*/
-
-    /*$NAME$*/.prototype._receive = function() {
-        this.getQueue.push(arguments);
-        if (this.ready) {
-            var msg = this.getQueue().shift();
-            while(msg !== undefined) {
-                /*$SERIALIZER$*/
-            }
-        }
-    }
-
-    //TODO: override stop method to close serial properly
+    /*$NAME$*/.prototype._stop = function() {
+        this.ready = false;
+        serial.flush();
+        serial.drain();
+		serial.close(function(error){
+			console.log("Something went wrong when closing serial port " + port + " at " + baudrate + ":\n\t" + error);
+		});
+	};
 };
 
 module.exports = /*$NAME$*/;
