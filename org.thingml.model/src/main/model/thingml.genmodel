@@ -97,7 +97,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute thingml.ecore#//Region/history"/>
     </genClasses>
     <genClasses ecoreClass="thingml.ecore#//ParallelRegion"/>
-    <genClasses ecoreClass="thingml.ecore#//Session"/>
+    <genClasses ecoreClass="thingml.ecore#//Session">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//Session/maxInstances"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="thingml.ecore#//Action"/>
     <genClasses ecoreClass="thingml.ecore#//ActionBlock">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference thingml.ecore#//ActionBlock/actions"/>

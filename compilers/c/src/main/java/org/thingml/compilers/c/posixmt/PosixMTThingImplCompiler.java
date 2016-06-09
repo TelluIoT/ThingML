@@ -142,7 +142,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
 
     }
     
-    protected void generateEntryActions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    /*protected void generateEntryActions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
 
@@ -205,7 +205,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("default: break;\n");
         builder.append("}\n");
         builder.append("}\n");
-    }
+    }*/
     
     private void generateSessionForks(Thing thing, Session s, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("void fork_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
@@ -504,4 +504,10 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             }
         }
     }
+    
+    @Override
+    public void generateSessionHandlerCalls(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {}
+    
+    @Override
+    public void generateKillChildren(Thing thing, StringBuilder builder) {}
 }

@@ -20,6 +20,119 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.sintef.thingml.AbstractConnector;
+import org.sintef.thingml.Action;
+import org.sintef.thingml.ActionBlock;
+import org.sintef.thingml.AndExpression;
+import org.sintef.thingml.AnnotatedElement;
+import org.sintef.thingml.ArrayIndex;
+import org.sintef.thingml.ArrayParamRef;
+import org.sintef.thingml.BinaryExpression;
+import org.sintef.thingml.BooleanLiteral;
+import org.sintef.thingml.CharacterLiteral;
+import org.sintef.thingml.CompositeState;
+import org.sintef.thingml.ConditionalAction;
+import org.sintef.thingml.ConfigPropertyAssign;
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Connector;
+import org.sintef.thingml.ControlStructure;
+import org.sintef.thingml.Decrement;
+import org.sintef.thingml.DivExpression;
+import org.sintef.thingml.DoubleLiteral;
+import org.sintef.thingml.ElmtProperty;
+import org.sintef.thingml.EnumLiteralRef;
+import org.sintef.thingml.Enumeration;
+import org.sintef.thingml.EnumerationLiteral;
+import org.sintef.thingml.EqualsExpression;
+import org.sintef.thingml.ErrorAction;
+import org.sintef.thingml.Event;
+import org.sintef.thingml.Expression;
+import org.sintef.thingml.ExpressionGroup;
+import org.sintef.thingml.ExternExpression;
+import org.sintef.thingml.ExternStatement;
+import org.sintef.thingml.ExternalConnector;
+import org.sintef.thingml.Filter;
+import org.sintef.thingml.FinalState;
+import org.sintef.thingml.Function;
+import org.sintef.thingml.FunctionCall;
+import org.sintef.thingml.FunctionCallExpression;
+import org.sintef.thingml.FunctionCallStatement;
+import org.sintef.thingml.GreaterExpression;
+import org.sintef.thingml.GreaterOrEqualExpression;
+import org.sintef.thingml.Handler;
+import org.sintef.thingml.HasParameters;
+import org.sintef.thingml.Increment;
+import org.sintef.thingml.Instance;
+import org.sintef.thingml.InstanceRef;
+import org.sintef.thingml.IntegerLiteral;
+import org.sintef.thingml.InternalPort;
+import org.sintef.thingml.InternalTransition;
+import org.sintef.thingml.JoinSources;
+import org.sintef.thingml.LengthArray;
+import org.sintef.thingml.LengthWindow;
+import org.sintef.thingml.Literal;
+import org.sintef.thingml.LocalVariable;
+import org.sintef.thingml.LoopAction;
+import org.sintef.thingml.LowerExpression;
+import org.sintef.thingml.LowerOrEqualExpression;
+import org.sintef.thingml.MergeSources;
+import org.sintef.thingml.Message;
+import org.sintef.thingml.MessageParameter;
+import org.sintef.thingml.MinusExpression;
+import org.sintef.thingml.ModExpression;
+import org.sintef.thingml.NotEqualsExpression;
+import org.sintef.thingml.NotExpression;
+import org.sintef.thingml.ObjectType;
+import org.sintef.thingml.OrExpression;
+import org.sintef.thingml.ParallelRegion;
+import org.sintef.thingml.ParamReference;
+import org.sintef.thingml.Parameter;
+import org.sintef.thingml.PassesParameters;
+import org.sintef.thingml.PlatformAnnotation;
+import org.sintef.thingml.PlusExpression;
+import org.sintef.thingml.Port;
+import org.sintef.thingml.PredifinedProperty;
+import org.sintef.thingml.PrimitiveType;
+import org.sintef.thingml.PrintAction;
+import org.sintef.thingml.Property;
+import org.sintef.thingml.PropertyAssign;
+import org.sintef.thingml.PropertyReference;
+import org.sintef.thingml.Protocol;
+import org.sintef.thingml.ProvidedPort;
+import org.sintef.thingml.ReceiveMessage;
+import org.sintef.thingml.Reference;
+import org.sintef.thingml.ReferencedElmt;
+import org.sintef.thingml.Region;
+import org.sintef.thingml.RequiredPort;
+import org.sintef.thingml.ReturnAction;
+import org.sintef.thingml.SendAction;
+import org.sintef.thingml.Session;
+import org.sintef.thingml.SimpleParamRef;
+import org.sintef.thingml.SimpleSource;
+import org.sintef.thingml.Source;
+import org.sintef.thingml.SourceComposition;
+import org.sintef.thingml.StartSession;
+import org.sintef.thingml.StartStream;
+import org.sintef.thingml.State;
+import org.sintef.thingml.StateMachine;
+import org.sintef.thingml.StopStream;
+import org.sintef.thingml.Stream;
+import org.sintef.thingml.StringLiteral;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.ThingMLElement;
+import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.ThingmlFactory;
+import org.sintef.thingml.ThingmlPackage;
+import org.sintef.thingml.TimeWindow;
+import org.sintef.thingml.TimesExpression;
+import org.sintef.thingml.Transition;
+import org.sintef.thingml.Type;
+import org.sintef.thingml.TypedElement;
+import org.sintef.thingml.UnaryExpression;
+import org.sintef.thingml.UnaryMinus;
+import org.sintef.thingml.Variable;
+import org.sintef.thingml.VariableAssignment;
+import org.sintef.thingml.ViewSource;
 import org.sintef.thingml.*;
 
 /**
@@ -38,7 +151,6 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	private EClass thingMLModelEClass = null;
@@ -705,14 +817,12 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	private boolean isCreated = false;
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 *
 	 * @generated
 	 */
 	private boolean isInitialized = false;
@@ -738,7 +848,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	 *
+	 * 
 	 * <p>This method is used to initialize {@link ThingmlPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
@@ -765,7 +875,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		// Mark meta-data to indicate it can't be changed
 		theThingmlPackage.freeze();
 
-
+  
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(ThingmlPackage.eNS_URI, theThingmlPackage);
 		return theThingmlPackage;
@@ -1426,6 +1536,15 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 	 */
 	public EClass getSession() {
 		return sessionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getSession_MaxInstances() {
+		return (EReference)sessionEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -3007,6 +3126,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		parallelRegionEClass = createEClass(PARALLEL_REGION);
 
 		sessionEClass = createEClass(SESSION);
+		createEReference(sessionEClass, SESSION__MAX_INSTANCES);
 
 		actionEClass = createEClass(ACTION);
 
@@ -3493,6 +3613,7 @@ public class ThingmlPackageImpl extends EPackageImpl implements ThingmlPackage {
 		initEClass(parallelRegionEClass, ParallelRegion.class, "ParallelRegion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(sessionEClass, Session.class, "Session", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSession_MaxInstances(), this.getExpression(), null, "maxInstances", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(actionEClass, Action.class, "Action", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

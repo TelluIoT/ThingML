@@ -15,7 +15,7 @@ thing TestSession3 includes Test
 			action fork s
     	}
 
-		session s init S1 {
+		session s<5> init S1 {
 			state S1 {
 				on entry fork t
 
@@ -27,7 +27,7 @@ thing TestSession3 includes Test
 			final state S2 {
 			}
 
-			session t init T1 {
+			session t<2> init T1 {
 				state T1 {
 					internal 
 					event e : harnessIn?testIn
