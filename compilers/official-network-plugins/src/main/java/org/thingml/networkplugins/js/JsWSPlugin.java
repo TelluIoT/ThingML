@@ -36,21 +36,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class JsTTYPlugin extends NetworkPlugin {
+public class JsWSPlugin extends NetworkPlugin {
 
-    public JsTTYPlugin() {
+    public JsWSPlugin() {
         super();
     }
 
     public String getPluginID() {
-        return "JsTTYPlugin";
+        return "JsWSPlugin";
     }
 
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
-        res.add("stdio");
-        res.add("tty");
-        res.add("terminal");
+        res.add("WS");
+        res.add("websocket");
         return res;
     }
 
@@ -60,7 +59,31 @@ public class JsTTYPlugin extends NetworkPlugin {
         return res;
     }
 
+    private void updatePackageJSON(Context ctx) {
+        try {
+            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/package.json");
+            final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
+            String pack = "";
+            for (String line : packLines) {
+                pack += line + "\n";
+            }
+            input.close();
+
+            final JsonObject json = JsonObject.readFrom(pack);
+            final JsonObject deps = json.get("dependencies").asObject();
+            deps.add("ws", "^1.1.0");
+
+            final File f = new File(ctx.getOutputDirectory() + "/package.json");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(json.toString(), output, Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
+        updatePackageJSON(ctx);
         StringBuilder builder = new StringBuilder();
         for (Protocol prot : protocols) {
             SerializationPlugin sp = null;
@@ -92,18 +115,18 @@ public class JsTTYPlugin extends NetworkPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            new TTYProtocol(ctx, prot, cfg).generate();
+            new WSProtocol(ctx, prot, cfg).generate();
         }
     }
 
-    private class TTYProtocol {
+    private class WSProtocol {
         Context ctx;
         Protocol prot;
         Configuration cfg;
 
         private List<Port> ports = new ArrayList<Port>();
 
-        public TTYProtocol(Context ctx, Protocol prot, Configuration cfg) {
+        public WSProtocol(Context ctx, Protocol prot, Configuration cfg) {
             this.ctx = ctx;
             this.prot = prot;
             this.cfg = cfg;
@@ -129,7 +152,7 @@ public class JsTTYPlugin extends NetworkPlugin {
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 addPort(tpm.p);
             }
-            String template = ctx.getTemplateByID("templates/JsTTYPlugin.js");
+            String template = ctx.getTemplateByID("templates/JsWSPlugin.js");
             template = template.replace("/*$FORMAT$*/", prot.getName() + "StringProtocol");
             template = template.replace("/*$NAME$*/", prot.getName());
             for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {
@@ -145,7 +168,7 @@ public class JsTTYPlugin extends NetworkPlugin {
             StringBuilder builder = new StringBuilder();
             for (Port p : ports) {
                 for (Message m : p.getSends()) {
-                    builder.append("tty.prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
+                    builder.append("WS.prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
                     int i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -154,7 +177,7 @@ public class JsTTYPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(") {\n");
-                    builder.append("stdout.write(formatter." + m.getName() + "ToJSON(");
+                    builder.append("ws.send(formatter." + m.getName() + "ToJSON(");
                     i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -168,7 +191,7 @@ public class JsTTYPlugin extends NetworkPlugin {
             }
             template = template.replace("/*$RECEIVERS$*/", "/*$RECEIVERS$*/\n" + builder.toString());
             try {
-                final File f = new File(ctx.getOutputDirectory() + "/TTYJS.js");
+                final File f = new File(ctx.getOutputDirectory() + "/WSJS.js");
                 final OutputStream output = new FileOutputStream(f);
                 IOUtils.write(template, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
@@ -186,18 +209,27 @@ public class JsTTYPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
+                final String url = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "url") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "url").get(0) : "localhost";
 
-                main = main.replace("/*$REQUIRE_PLUGINS$*/", "var tty = require('./TTYJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "var tty = new tty(\"tty\", false, " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
-                main = main.replace("/*$STOP_PLUGINS$*/", "tty._stop();\n/*$STOP_PLUGINS$*/\n");
+                main = main.replace("/*$REQUIRE_PLUGINS$*/", "var ws = require('./WSJS');\n/*$REQUIRE_PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "var ws = new ws(\"WS\", false, \"" + url + "\", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
+                main = main.replace("/*$STOP_PLUGINS$*/", "ws._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
                     builder.append(conn.getInst().getInstance().getName() + ".get" + ctx.firstToUpper(req.getName()) + "on" + conn.getPort().getName() + "Listeners().push(");
-                    builder.append("tty.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(tty)");
+                    builder.append("ws.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(ws)");
                     builder.append(");\n");
                 }
                 main = main.replace("/*$PLUGINS_CONNECTORS$*/", builder.toString() + "\n/*$PLUGINS_CONNECTORS$*/");
+
+                if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "localserver")) {
+                    String template = ctx.getTemplateByID("templates/JsWSServer.js");
+                    final String port = AnnotatedElementHelper.annotation(conn.getProtocol(), "localserver").get(0);
+                    template = template.replace("/*$PORT$*/", port);
+                    main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\n" + template);
+                    main = main.replace("/*$STOP_PLUGINS$*/", "wss.close();\n/*$STOP_PLUGINS$*/\n");
+                }
 
                 final File f = new File(ctx.getOutputDirectory() + "/main.js");
                 final OutputStream output = new FileOutputStream(f);

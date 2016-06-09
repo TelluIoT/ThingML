@@ -24,7 +24,7 @@ thing TestSession4 includes Test
 			end
     	}
 
-		session s init S1 {
+		session s<2> init S1 {
 			state S1 {
 				on entry do 
 					harnessOut!testOut(ID)
@@ -33,7 +33,7 @@ thing TestSession4 includes Test
 				end
 			}
 
-			session t init T1 {
+			session t<2> init T1 {
 				final state T1 {
 					on entry harnessOut!testOut(ID)
 				}		

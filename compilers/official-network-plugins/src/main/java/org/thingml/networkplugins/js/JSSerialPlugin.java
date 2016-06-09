@@ -227,8 +227,8 @@ public class JSSerialPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                final String speed = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "baudrate") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "baudrate").get(0) : "9600";
-                final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";
+                final String speed = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "baudrate", "9600");
+                final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";//FIXME: Raise an exception if port is not specified
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "var Serial = require('./SerialJS');\n/*$REQUIRE_PLUGINS$*/\n");
                 main = main.replace("/*$PLUGINS$*/", "var serial = new Serial(\"serial\", false, \"" + port + "\", " + speed + ", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");

@@ -1,6 +1,6 @@
 var Format = require('.//*$FORMAT$*/');
 
-function /*$NAME$*/(name, debug, port, baudrate, instance) {
+function /*$NAME$*/(name, debug, instance) {
     this.name = name;
     this.debug = debug;
     var _this;
