@@ -191,6 +191,50 @@ public class ArduinoCepHelper {
         return ret;
     }
 
+    /**
+     * Check if the message has a UseOnce annotation and return its value
+     *
+     * @param stream cep stream
+     * @param msg input message of a stream
+     * @return Value of the UseOnce annotation
+     */
+    public static boolean isMessageUseOnce(Stream stream, Message msg) {
+        Source source = stream.getInput();
+        boolean ret = true;
+
+        if (source instanceof SimpleSource) {
+            //Message name are unique in a stream so it's safe to compare them
+            if (((SimpleSource) source).getMessage().getMessage().getName().equals(msg.getName())) {
+                ret = getUseOnceValue((SimpleSource)source);
+            }
+        } else if (source instanceof MergeSources) {
+            for (Source s : ((MergeSources) source).getSources()) {
+                if (s instanceof SimpleSource) {
+                    if (((SimpleSource) s).getMessage().getMessage().getName().equals(msg.getName())) {
+                        ret = getUseOnceValue((SimpleSource)s);
+                    }
+                }
+            }
+        } else if (source instanceof JoinSources) {
+            for (Source s : ((JoinSources) source).getSources()) {
+                if (s instanceof SimpleSource) {
+                    if (((SimpleSource) s).getMessage().getMessage().getName().equals(msg.getName())) {
+                        ret = getUseOnceValue((SimpleSource)s);
+                    }
+                }
+            }
+
+        }
+        return ret;
+    }
+
+    private static boolean getUseOnceValue(SimpleSource src) {
+        boolean ret = true;
+        if (AnnotatedElementHelper.hasAnnotation(src, "UseOnce"))
+            ret = Boolean.valueOf(AnnotatedElementHelper.annotation(src, "UseOnce").iterator().next());
+        return ret;
+    }
+
     public static String getInputMessagesStreamTTL(Stream stream, CCompilerContext ctx) {
         String streamTTL = Integer.toString(DEFAULT_MESSAGE_TTL);
         if (AnnotatedElementHelper.hasAnnotation(stream, "TTL"))

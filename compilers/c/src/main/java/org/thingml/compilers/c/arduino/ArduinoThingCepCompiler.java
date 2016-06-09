@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.isMessageUseOnce;
 import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnInputNumber;
 import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnTimer;
 
@@ -397,7 +398,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
             // effectively remove messages from buffer
             for (Message m : msgs)
-                triggerImpl += m.getName() + "_removeEvent();\n";
+                if (isMessageUseOnce(s, m))
+                    triggerImpl += m.getName() + "_removeEvent();\n";
 
             triggerImpl += "\n}\n";
             ctx.resetCepMsgContext();
