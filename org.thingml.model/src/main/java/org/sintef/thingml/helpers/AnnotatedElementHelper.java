@@ -63,6 +63,19 @@ public class AnnotatedElementHelper {
         return result;
     }
 
+    public static String annotationOrElse(AnnotatedElement self, String name, String defaultValue) {
+        List<String> result = new ArrayList<String>();
+        for (PlatformAnnotation a : self.getAnnotations()) {
+            if (a.getName().equals(name)) {
+                result.add(a.getValue());
+            }
+        }
+        if (result.isEmpty())
+            return defaultValue;
+        else
+            return result.get(0);
+    }
+
 
 
 
