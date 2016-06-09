@@ -147,11 +147,11 @@ public class ArduinoCepHelper {
         String ret = "DEFAULT_NUMBER_MSG";
 
         for (ViewSource vs : s.getInput().getOperators())
-        if (vs instanceof LengthWindow) {
-            StringBuilder b = new StringBuilder();
-            ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getSize(), b, ctx);
-            ret = b.toString();
-        }
+            if (vs instanceof LengthWindow) {
+                StringBuilder b = new StringBuilder();
+                ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getSize(), b, ctx);
+                ret = b.toString();
+            }
 
         if (AnnotatedElementHelper.hasAnnotation(s, "Buffer"))
             ret = AnnotatedElementHelper.annotation(s, "Buffer").iterator().next();
@@ -188,6 +188,50 @@ public class ArduinoCepHelper {
             }
 
         }
+        return ret;
+    }
+
+    /**
+     * Check if the message has a UseOnce annotation and return its value
+     *
+     * @param stream cep stream
+     * @param msg input message of a stream
+     * @return Value of the UseOnce annotation
+     */
+    public static boolean isMessageUseOnce(Stream stream, Message msg) {
+        Source source = stream.getInput();
+        boolean ret = true;
+
+        if (source instanceof SimpleSource) {
+            //Message name are unique in a stream so it's safe to compare them
+            if (((SimpleSource) source).getMessage().getMessage().getName().equals(msg.getName())) {
+                ret = getUseOnceValue((SimpleSource) source);
+            }
+        } else if (source instanceof MergeSources) {
+            for (Source s : ((MergeSources) source).getSources()) {
+                if (s instanceof SimpleSource) {
+                    if (((SimpleSource) s).getMessage().getMessage().getName().equals(msg.getName())) {
+                        ret = getUseOnceValue((SimpleSource) s);
+                    }
+                }
+            }
+        } else if (source instanceof JoinSources) {
+            for (Source s : ((JoinSources) source).getSources()) {
+                if (s instanceof SimpleSource) {
+                    if (((SimpleSource) s).getMessage().getMessage().getName().equals(msg.getName())) {
+                        ret = getUseOnceValue((SimpleSource) s);
+                    }
+                }
+            }
+
+        }
+        return ret;
+    }
+
+    private static boolean getUseOnceValue(SimpleSource src) {
+        boolean ret = true;
+        if (AnnotatedElementHelper.hasAnnotation(src, "UseOnce"))
+            ret = Boolean.valueOf(AnnotatedElementHelper.annotation(src, "UseOnce").iterator().next());
         return ret;
     }
 
@@ -251,11 +295,23 @@ public class ArduinoCepHelper {
 
         for (SimpleSource src : lss) {
             String msgName = src.getMessage().getMessage().getName();
-            String macroName = stream.getName() +  msgName + "getLength";
+            String macroName = stream.getName() + msgName + "getLength";
             ret = "#define " + macroName + " _instance->cep_" + stream.getName() + "->" +
-                    msgName + "_length() / " + msgName.toUpperCase() + "_ELEMENT_SIZE";
+                    msgName + "_length() / " + stream.getName().toUpperCase() + "_" + msgName.toUpperCase() + "_ELEMENT_SIZE";
         }
 
+        return ret;
+    }
+
+    public static String getExposeMacros(Message msg, SimpleSource src, Stream s, CCompilerContext ctx) {
+        String ret = "";
+        if (AnnotatedElementHelper.hasAnnotation(src, "Expose")) {
+            String macroName = AnnotatedElementHelper.annotation(src, "Expose").iterator().next();
+            for (Parameter p : msg.getParameters()) {
+                ret += "#define " + macroName + p.getName() + " _instance->cep_" + s.getName() + "->export_" + msg.getName() +
+                "_" + p.getName() + "()\n";
+            }
+        }
         return ret;
     }
 

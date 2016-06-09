@@ -36,9 +36,10 @@ thing TestTellu includes Test
 
   stream join
   from e : [m1 : dataRcv?tp & m2: dataRcv?tpcomp -> tpcomp(m1.T, m1.P)]
-  select var a : UInt8 = 'CompBuffer[0]'
-         var b : UInt8 = 'CompBuffer[1]'
-         var c : UInt8 = 'CompBuffer[2]'
+  select var comp : UInt8[] = 'CompBufferP'
+         var a : UInt8 = comp[0]
+         var b : UInt8 = comp[1]
+         var c : UInt8 = comp[2]
          var compP : UInt8 = compensate(e.P, a, b, c)
   produce dataSend!tpcomp(e.T, compP)
 
