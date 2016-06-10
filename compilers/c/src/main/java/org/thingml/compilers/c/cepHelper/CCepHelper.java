@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c.arduino.cepHelper;
+package org.thingml.compilers.c.cepHelper;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by Alexandre RIO on 3/16/16.
  */
-public class ArduinoCepHelper {
+public class CCepHelper {
 
     public static final int DEFAULT_MESSAGE_TTL = 250;
 
@@ -303,12 +303,23 @@ public class ArduinoCepHelper {
         return ret;
     }
 
+    /**
+     * Generate C macros to access the internal buffer of a stream
+     *
+     * @see org.thingml.compilers.c.arduino.CCompilerContextArduino#renameParameterUniquely(Thing)
+     * @param msg Message of a stream
+     * @param src Source containing the message
+     * @param s Stream containing the source
+     * @param ctx Compiler context
+     * @return C macros for the entire message, all its parameters
+     */
     public static String getExposeMacros(Message msg, SimpleSource src, Stream s, CCompilerContext ctx) {
         String ret = "";
         if (AnnotatedElementHelper.hasAnnotation(src, "Expose")) {
             String macroName = AnnotatedElementHelper.annotation(src, "Expose").iterator().next();
             for (Parameter p : msg.getParameters()) {
-                ret += "#define " + macroName + p.getName() + " _instance->cep_" + s.getName() + "->export_" + msg.getName() +
+                String shortPName = p.getName().substring(msg.getName().length() + s.getName().length());
+                ret += "#define " + macroName + shortPName + " _instance->cep_" + s.getName() + "->export_" + msg.getName() +
                 "_" + p.getName() + "()\n";
             }
         }

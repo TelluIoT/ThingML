@@ -1,7 +1,8 @@
 import "thingml.thingml"
 
 thing TestTellu includes Test
-@test "  # "
+@test " A # O"
+@test " B # K"
 @conf "connector test.dataRcv => test.dataSend"
 {
 
@@ -27,7 +28,7 @@ thing TestTellu includes Test
 
   function compensate(p: UInt8, a : UInt8, b : UInt8, c :UInt8) : UInt8 do
     // complex usage of polynomials
-    return 2*p
+    return p + a + b + c
   end
 
   stream compBuffer
@@ -35,8 +36,8 @@ thing TestTellu includes Test
   produce dataSend!void()
 
   stream join
-  from e : [m1 : dataRcv?tp & m2: dataRcv?tpcomp -> tpcomp(m1.T, m1.P)]
-  select var comp : UInt8[] = 'CompBufferP'
+  from e : dataRcv?tp
+  select var comp : UInt8[]  = 'CompBufferP'
          var a : UInt8 = comp[0]
          var b : UInt8 = comp[1]
          var c : UInt8 = comp[2]
@@ -48,13 +49,36 @@ thing TestTellu includes Test
   statechart testTellu init Init {
 
     state Init {
-      on entry do
-        splitter()
-        //Initialize the compensated values
+      internal
+      event e : harnessIn?testIn
+      guard e.c == '\'A\''
+      action do
         dataSend!tpcomp(0, 0)
-        dataSend!tpcomp(0, 0)
-        dataSend!tpcomp(0, 0)
+        dataSend!tpcomp(0, 1)
+        dataSend!tpcomp(0, 2)
+        dataSend!tp(0, 0)
       end
+
+      internal
+      event e : harnessIn?testIn
+      guard e.c == '\'B\''
+      action do
+        dataSend!tpcomp(0, 0)
+        dataSend!tpcomp(0, 1)
+        dataSend!tpcomp(0, 2)
+        dataSend!tpcomp(0, 2)
+        dataSend!tp(0, 0)
+      end
+
+      internal
+      event e : dataRcv?tpcomp
+      guard e.P == 3
+      action harnessOut!testOut('\'O\'')
+
+      internal
+      event e : dataRcv?tpcomp
+      guard e.P == 5
+      action harnessOut!testOut('\'K\'')
     }
   }
 }

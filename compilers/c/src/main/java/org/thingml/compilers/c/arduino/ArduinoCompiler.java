@@ -23,7 +23,7 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
+import org.thingml.compilers.c.cepHelper.CCepHelper;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
@@ -90,7 +90,7 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
             ctx.clearConcreteThing();
         }
 
-        ArduinoCepHelper.generateTimerPolling(cfg, ctx);
+        CCepHelper.generateTimerPolling(cfg, ctx);
         // GENERATE A MODULE FOR THE CONFIGURATION (+ its dependencies)
         getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 
