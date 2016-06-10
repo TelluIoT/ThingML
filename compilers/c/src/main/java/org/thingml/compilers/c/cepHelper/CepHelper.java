@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.c.arduino.cepHelper;
+package org.thingml.compilers.c.cepHelper;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by Alexandre RIO on 3/16/16.
  */
-public class ArduinoCepHelper {
+public class CepHelper {
 
     public static final int DEFAULT_MESSAGE_TTL = 250;
 

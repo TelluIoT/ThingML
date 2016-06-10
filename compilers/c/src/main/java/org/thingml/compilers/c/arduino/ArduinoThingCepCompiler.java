@@ -18,7 +18,7 @@ package org.thingml.compilers.c.arduino;
 import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
+import org.thingml.compilers.c.cepHelper.CepHelper;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.isMessageUseOnce;
-import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnInputNumber;
-import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnTimer;
+import static org.thingml.compilers.c.cepHelper.CepHelper.isMessageUseOnce;
+import static org.thingml.compilers.c.cepHelper.CepHelper.shouldTriggerOnInputNumber;
+import static org.thingml.compilers.c.cepHelper.CepHelper.shouldTriggerOnTimer;
 
 public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
@@ -64,18 +64,18 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
 
     public static void generateCEPLibAPI(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        for (Stream s : ArduinoCepHelper.getStreamWithBuffer(thing)) {
+        for (Stream s : CepHelper.getStreamWithBuffer(thing)) {
 
             String cepTemplate = ctx.getCEPLibTemplateClass();
 
             String constants = ctx.getCEPLibTemplateStreamConstants();
             constants = constants.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
-            constants = constants.replace("/*OUTPUT_TTL*/", ArduinoCepHelper.getOutputMessageStreamTTL(s, ctx));
-            constants = constants.replace("/*INPUT_TTL*/", ArduinoCepHelper.getInputMessagesStreamTTL(s, ctx));
+            constants = constants.replace("/*OUTPUT_TTL*/", CepHelper.getOutputMessageStreamTTL(s, ctx));
+            constants = constants.replace("/*INPUT_TTL*/", CepHelper.getInputMessagesStreamTTL(s, ctx));
 
             String methodsSignatures = "";
             String attributesSignatures = "";
-            Map<Message, SimpleSource> messagesFromStream = ArduinoCepHelper.getMessageFromStream(s);
+            Map<Message, SimpleSource> messagesFromStream = CepHelper.getMessageFromStream(s);
             for (Message msg : messagesFromStream.keySet()) {
                 /*
                  * Constants
@@ -83,13 +83,13 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 String constantTemplate = ctx.getCEPLibTemplateMessageConstants();
 
                 int messageSize = ctx.getMessageSerializationSize(msg) - 4; //subtract the ports size
-                constantTemplate = constantTemplate.replace("/*MESSAGE_TTL*/", ArduinoCepHelper.getInputMessagesStreamTTL(msg, s, ctx));
+                constantTemplate = constantTemplate.replace("/*MESSAGE_TTL*/", CepHelper.getInputMessagesStreamTTL(msg, s, ctx));
                 constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
                 constantTemplate = constantTemplate.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
                 constantTemplate = constantTemplate.replace("/*STRUCT_SIZE*/", Integer.toString(messageSize));
-                constantTemplate = constantTemplate.replace("/*NUMBER_MESSAGE*/", ArduinoCepHelper.getInputMessagesNumber(messagesFromStream.get(msg), s, ctx));
+                constantTemplate = constantTemplate.replace("/*NUMBER_MESSAGE*/", CepHelper.getInputMessagesNumber(messagesFromStream.get(msg), s, ctx));
                 constants += constantTemplate;
-                constants += ArduinoCepHelper.getExposeMacros(msg, messagesFromStream.get(msg), s, ctx);
+                constants += CepHelper.getExposeMacros(msg, messagesFromStream.get(msg), s, ctx);
 
                 /*
                  * Methods Signatures
@@ -148,7 +148,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 triggerTimer = "void checkTimer(" + param + ");\n";
             }
 
-            constants += ArduinoCepHelper.getInputBufferMacros(s, ctx);
+            constants += CepHelper.getInputBufferMacros(s, ctx);
 
             cepTemplate = cepTemplate.replace("/*STREAM_NAME*/", s.getName());
             cepTemplate = cepTemplate.replace("/*METHOD_SIGNATURES*/", methodsSignatures);
@@ -163,10 +163,10 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
     public static void generateCEPLibImpl(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
-        for (Stream s : ArduinoCepHelper.getStreamWithBuffer(thing)) {
+        for (Stream s : CepHelper.getStreamWithBuffer(thing)) {
 
             String msgsImpl = "";
-            for (Message msg : ArduinoCepHelper.getMessageFromStream(s).keySet()) {
+            for (Message msg : CepHelper.getMessageFromStream(s).keySet()) {
                 String messageImpl = ctx.getCEPLibTemplatesMessageImpl();
                 messageImpl = messageImpl.replace("/*STREAM_NAME*/", s.getName());
                 messageImpl = messageImpl.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
@@ -214,7 +214,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                 }
 
-                if (ArduinoCepHelper.handlerShouldTrigger(s, ctx))
+                if (CepHelper.handlerShouldTrigger(s, ctx))
                     messageImpl = messageImpl.replace("/*TRIGGER*/", "checkTrigger(_instance);\n");
                 else
                     messageImpl = messageImpl.replace("/*TRIGGER*/", "");
@@ -323,7 +323,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
 
         if (s.getInput() instanceof JoinSources || shouldTriggerOnInputNumber(s, ctx) || shouldTriggerOnTimer(s, ctx)) {
-            Set<Message> msgs = ArduinoCepHelper.getMessageFromStream(s).keySet();
+            Set<Message> msgs = CepHelper.getMessageFromStream(s).keySet();
             List<String> triggerCondition = new ArrayList<>();
             for (Message m : msgs) {
                 triggerImpl += "check" + m.getName() + "TTL();\n";
@@ -332,7 +332,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
             if (shouldTriggerOnInputNumber(s, ctx)) {
                 triggerImpl += "input" + s.getName() + "Trigger++;\n";
-                triggerCondition.add("input" + s.getName() + "Trigger == " + ArduinoCepHelper.getStreamTriggerInputNumber(s, ctx));
+                triggerCondition.add("input" + s.getName() + "Trigger == " + CepHelper.getStreamTriggerInputNumber(s, ctx));
             }
 
             List<String> guards = new ArrayList<>();
@@ -421,7 +421,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
         String param = "struct " + ctx.getInstanceStructName(t) + " *" + ctx.getInstanceVarName();
 
         ret += "\nvoid stream_" + s.getName() + "::checkTimer(" + param + ")\n{\n";
-        ret += "  if (millis() - last" + s.getName() + "Trigger > " + ArduinoCepHelper.getStreamTriggerTime(s, ctx) +
+        ret += "  if (millis() - last" + s.getName() + "Trigger > " + CepHelper.getStreamTriggerTime(s, ctx) +
                 ")\n  {\n";
         ret += "    last" + s.getName() + "Trigger = millis();\n";
         ret += "    checkTrigger(_instance);\n";

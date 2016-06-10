@@ -20,7 +20,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
+import org.thingml.compilers.c.cepHelper.CepHelper;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
 import java.util.Map;
@@ -198,7 +198,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                 }
             } else if (expression.getReference() instanceof SimpleSource){
                 if (expression.getParameter() instanceof LengthArray) {
-                    String s = ArduinoCepHelper.getContainingStream((SimpleSource)expression.getReference(), (CCompilerContext)ctx);
+                    String s = CepHelper.getContainingStream((SimpleSource)expression.getReference(), (CCompilerContext)ctx);
                     String msg = ((SimpleSource) expression.getReference()).getMessage().getMessage().getName();
                     builder.append(s + msg + "getLength");
                 }

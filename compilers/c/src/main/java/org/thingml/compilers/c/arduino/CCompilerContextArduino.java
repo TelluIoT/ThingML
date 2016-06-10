@@ -20,7 +20,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
+import org.thingml.compilers.c.cepHelper.CepHelper;
 
 import java.util.ArrayList;
 
@@ -116,7 +116,7 @@ public class CCompilerContextArduino extends CCompilerContext {
 
     public void renameParameterUniquely(Thing thing) {
         for (Stream s : thing.getStreams()) {
-            for (Message m : ArduinoCepHelper.getMessageFromStream(s).keySet())
+            for (Message m : CepHelper.getMessageFromStream(s).keySet())
                 for (Parameter p: m.getParameters())
                     p.setName(s.getName() + m.getName() + p.getName());
         }
