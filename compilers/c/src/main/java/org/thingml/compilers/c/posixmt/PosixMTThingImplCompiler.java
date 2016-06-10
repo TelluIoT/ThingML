@@ -35,6 +35,7 @@ import org.sintef.thingml.Instance;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
+import org.sintef.thingml.Property;
 import org.sintef.thingml.Region;
 import org.sintef.thingml.Session;
 import org.sintef.thingml.State;
@@ -46,6 +47,7 @@ import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.CompositeStateHelper;
 import org.sintef.thingml.helpers.RegionHelper;
 import org.sintef.thingml.helpers.StateHelper;
+import org.sintef.thingml.helpers.ThingHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
@@ -215,6 +217,15 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("memcpy(&(new_session->s), _instance, sizeof(struct session_t));\n");
         builder.append("new_session->s.fifo.fifo = &(new_session->fifo_array);\n");
         builder.append("new_session->s." + ctx.getStateVarName(ThingMLHelpers.allStateMachines(thing).get(0)) + " = " + ctx.getStateID(s.getInitial()) + ";\n");
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+            if (p.getCardinality() != null) {//array
+                builder.append("new_session->s." + ctx.getVariableName(p) + " = ");
+                builder.append("malloc(sizeof(" + ctx.getCType(p.getType()) + ") * new_session->s." + ctx.getVariableName(p) + "_size);");
+                builder.append("memcpy(&(new_session->s." + ctx.getVariableName(p) + "[0]), "
+                        + "&(_instance->" + ctx.getVariableName(p) + "[0]), _instance->"
+                        + ctx.getVariableName(p) + "_size * sizeof(" + ctx.getCType(p.getType()) + "));\n");
+            }
+        }
         builder.append("init_runtime(&(new_session->s.fifo));\n");
 
         builder.append("fifo_lock(&(_instance->fifo));\n");
@@ -269,6 +280,11 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                 builder.append("        pthread_join( head_" + s.getName() + "->thread, NULL);\n");
                 builder.append("        prev_" + s.getName() + " = head_" + s.getName() + ";\n");
                 builder.append("        head_" + s.getName() + " = head_" + s.getName() + "->next;\n");
+                for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+                    if (p.getCardinality() != null) {//array
+                        builder.append("free(prev_" + s.getName() + "->s." + ctx.getVariableName(p) + ");");
+                    }
+                }
                 builder.append("        free(prev_" + s.getName() + ");\n");
                 builder.append("    }\n");
             }
@@ -287,6 +303,11 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                 builder.append("            if (!head_" + s.getName() + "->s.alive) {\n");
                 builder.append("                fifo_lock(&(head_" + s.getName() + "->s.fifo));\n");
                 builder.append("                *prev_" + s.getName() + " = next_" + s.getName() + ";\n");
+                for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+                    if (p.getCardinality() != null) {//array
+                        builder.append("free(head_" + s.getName() + "->s." + ctx.getVariableName(p) + ");");
+                    }
+                }
                 builder.append("                free(head_" + s.getName() + ");\n");
                 builder.append("            } else {\n");
                 builder.append("                prev_" + s.getName() + " = &(head_" + s.getName() + "->next);\n");

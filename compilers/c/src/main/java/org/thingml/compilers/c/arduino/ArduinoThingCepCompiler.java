@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.isMessageUseOnce;
+import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnInputNumber;
+import static org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper.shouldTriggerOnTimer;
+
 public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
     public ArduinoThingCepCompiler(ThingCepViewCompiler cepViewCompiler, ThingCepSourceDeclaration sourceDeclaration) {
@@ -42,24 +46,18 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 ctx.getCompiler().getThingActionCompiler().generate(((LengthWindow) vs).getStep(), b, ctx);
                 String step = b.toString();
 
-                slidingImpl += "int step = " + step + " * /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE;\n";
-                slidingImpl += "if (/*MESSAGE_NAME*/_length() < step )\n\tstep = /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;\n";
+                slidingImpl += "int step = " + step + " * /*STREAM_NAME_UPPER*/_/*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE;\n";
+                slidingImpl += "if (/*MESSAGE_NAME*/_length() < step )\n\tstep = /*STREAM_NAME_UPPER*/_/*MESSAGE_NAME_UPPER*/_FIFO_SIZE;\n";
 
-                slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + step) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
+                slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + step) % /*STREAM_NAME_UPPER*/_/*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
 
                 break; // we stop at first match, a stream can have only one window right?
             }
-            if (vs instanceof TimeWindow) {
-                StringBuilder b = new StringBuilder();
-                ctx.getCompiler().getThingActionCompiler().generate(((TimeWindow) vs).getStep(), b, ctx);
-                b.toString(); // FIXME: what's this?
-            }
-
         }
 
         /* If no window is specified */
         if (slidingImpl.equals(""))
-            slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + /*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
+            slidingImpl += "/*MESSAGE_NAME*/_fifo_head = (/*MESSAGE_NAME*/_fifo_head + /*STREAM_NAME_UPPER*/_/*MESSAGE_NAME_UPPER*/_ELEMENT_SIZE) % /*STREAM_NAME_UPPER*/_/*MESSAGE_NAME_UPPER*/_FIFO_SIZE;";
 
         return slidingImpl;
     }
@@ -84,13 +82,14 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                  */
                 String constantTemplate = ctx.getCEPLibTemplateMessageConstants();
 
-                int messageSize = ctx.getMessageSerializationSize(msg) - 4; //substract the ports size
+                int messageSize = ctx.getMessageSerializationSize(msg) - 4; //subtract the ports size
                 constantTemplate = constantTemplate.replace("/*MESSAGE_TTL*/", ArduinoCepHelper.getInputMessagesStreamTTL(msg, s, ctx));
                 constantTemplate = constantTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
                 constantTemplate = constantTemplate.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
                 constantTemplate = constantTemplate.replace("/*STRUCT_SIZE*/", Integer.toString(messageSize));
                 constantTemplate = constantTemplate.replace("/*NUMBER_MESSAGE*/", ArduinoCepHelper.getInputMessagesNumber(messagesFromStream.get(msg), s, ctx));
                 constants += constantTemplate;
+                constants += ArduinoCepHelper.getExposeMacros(msg, messagesFromStream.get(msg), s, ctx);
 
                 /*
                  * Methods Signatures
@@ -127,23 +126,24 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 String attributesTemplate = ctx.getCEPLibTemplateAttributesSignatures();
                 attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME*/", msg.getName());
                 attributesTemplate = attributesTemplate.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
+                attributesTemplate = attributesTemplate.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
                 attributesSignatures += attributesTemplate;
 
                 for (Parameter p : msg.getParameters())
-                    attributesSignatures += ctx.getCType(p.getType()) + " " + msg.getName() + p.getName() + " [" + msg.getName().toUpperCase() + "_NUMBER_MSG];\n";
+                    attributesSignatures += ctx.getCType(p.getType()) + " " + msg.getName() + p.getName() + " [" +s.getName().toUpperCase() + "_" + msg.getName().toUpperCase() + "_NUMBER_MSG];\n";
             }
 
-            if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx))
+            if (shouldTriggerOnTimer(s, ctx))
                 attributesSignatures += "    uint32_t last" + s.getName() + "Trigger = millis();\n";
 
-            if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+            if (shouldTriggerOnInputNumber(s, ctx))
                 attributesSignatures += "    uint8_t input" + s.getName() + "Trigger = 0;\n";
 
             /*
              * Trigger timer
              */
             String triggerTimer = "";
-            if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx)) {
+            if (shouldTriggerOnTimer(s, ctx)) {
                 String param = "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName();
                 triggerTimer = "void checkTimer(" + param + ");\n";
             }
@@ -188,6 +188,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 String slidingImp = getSlidingStep(s, ctx);
                 slidingImp = slidingImp.replace("/*MESSAGE_NAME*/", msg.getName());
                 slidingImp = slidingImp.replace("/*MESSAGE_NAME_UPPER*/", msg.getName().toUpperCase());
+                slidingImp = slidingImp.replace("/*STREAM_NAME_UPPER*/", s.getName().toUpperCase());
                 messageImpl = messageImpl.replace("/*SLIDING_IMPL*/", slidingImp);
 
                 /*
@@ -205,7 +206,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                     for (int i = ctx.getCByteSize(p.getType(), 0) - 1; i >= 0; i--) {
 
-                        queueImpl += msg.getName() + "_fifo[(" + msg.getName() + "_fifo_tail + " + fifo_buffer_index + ") % " + msg.getName().toUpperCase() + "_FIFO_SIZE]";
+                        queueImpl += msg.getName() + "_fifo[(" + msg.getName() + "_fifo_tail + " + fifo_buffer_index + ") % " + s.getName().toUpperCase() + "_" + msg.getName().toUpperCase() + "_FIFO_SIZE]";
                         queueImpl += " = u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "];\n";
 
                         fifo_buffer_index++;
@@ -244,7 +245,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                         popImpl += "u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "]";
                         popImpl += " = " + msg.getName() + "_fifo[(" + msg.getName() + "_fifo_head + " + fifo_buffer_index +
-                                ") % " + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
+                                ") % " + s.getName().toUpperCase() + "_" + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
 
                         fifo_buffer_index++;
                     }
@@ -264,7 +265,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 for (Parameter p : msg.getParameters()) {
                     exportImpl += ctx.getCType(p.getType()) + "* stream_" + s.getName() +
                             " ::export_" + msg.getName() + "_" + p.getName() + "()\n{\n";
-                    exportImpl += "  int size = " + msg.getName() + "_length();\n";
+                    exportImpl += "  int size = " + msg.getName() + "_length() / " + s.getName().toUpperCase() + "_" +
+                            msg.getName().toUpperCase() + "_ELEMENT_SIZE;\n";
                     exportImpl += "  for (int i=0; i<size; i++) {\n";
 
                     //union de store the extracted value
@@ -277,7 +279,8 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                         exportImpl += "u_" + msg.getName() + "_" + p.getName() + ".bytebuffer[" + i + "]";
                         exportImpl += " = " + msg.getName() + "_fifo[(" + msg.getName() + "_fifo_head + " + fifo_buffer_index +
-                                ") % " + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
+                                " + (i * " + s.getName().toUpperCase() + "_" + msg.getName().toUpperCase() + "_ELEMENT_SIZE)) % "
+                                + s.getName().toUpperCase() + "_" + msg.getName().toUpperCase() + "_FIFO_SIZE];\n";
 
                         fifo_buffer_index++;
                     }
@@ -298,7 +301,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             classImpl = classImpl.replace("/*TRIGGER_INST_PARAM*/", "struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName());
             classImpl = classImpl.replace("/*TRIGGER_IMPL*/", generateTriggerImpl(s, ctx));
 
-            if (ArduinoCepHelper.shouldTriggerOnTimer(s, ctx))
+            if (shouldTriggerOnTimer(s, ctx))
                 classImpl = classImpl.replace("/*TRIGGER_TIMER_IMPL*/", generateTriggerCallBack(s, ctx));
             else
                 classImpl = classImpl.replace("/*TRIGGER_TIMER_IMPL*/", "");
@@ -319,7 +322,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
         String triggerImpl = "";
 
 
-        if (s.getInput() instanceof JoinSources || ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx)) {
+        if (s.getInput() instanceof JoinSources || shouldTriggerOnInputNumber(s, ctx) || shouldTriggerOnTimer(s, ctx)) {
             Set<Message> msgs = ArduinoCepHelper.getMessageFromStream(s).keySet();
             List<String> triggerCondition = new ArrayList<>();
             for (Message m : msgs) {
@@ -327,7 +330,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
                 triggerCondition.add("!" + m.getName() + "_isEmpty()");
             }
 
-            if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx)) {
+            if (shouldTriggerOnInputNumber(s, ctx)) {
                 triggerImpl += "input" + s.getName() + "Trigger++;\n";
                 triggerCondition.add("input" + s.getName() + "Trigger == " + ArduinoCepHelper.getStreamTriggerInputNumber(s, ctx));
             }
@@ -350,7 +353,7 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
             triggerImpl += "if (" + String.join(" && ", triggerCondition) + guardsString + " )\n {\n";
 
             // reset the trigger counter
-            if (ArduinoCepHelper.shouldTriggerOnInputNumber(s, ctx))
+            if (shouldTriggerOnInputNumber(s, ctx))
                 triggerImpl += "input" + s.getName() + "Trigger = 0;\n";
 
 
@@ -368,6 +371,9 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
                 triggerImpl += ");\n";
                 triggerImpl += "//done poping\n";
+
+                for (Parameter p : m.getParameters())
+                    ctx.putCepMsgParam(m.getName(), p.getName(), s.getName());
             }
 
             StringBuilder outAction = new StringBuilder();
@@ -393,16 +399,20 @@ public class ArduinoThingCepCompiler extends ThingCepCompiler {
 
             // effectively remove messages from buffer
             for (Message m : msgs)
-                triggerImpl += m.getName() + "_removeEvent();\n";
+                if (isMessageUseOnce(s, m))
+                    triggerImpl += m.getName() + "_removeEvent();\n";
 
             triggerImpl += "\n}\n";
+            ctx.resetCepMsgContext();
         }
         return triggerImpl;
     }
 
     /**
-     * @param s
-     * @param ctx
+     * Function checking if the timer has expired and if the checkTrigger should be called
+     *
+     * @param s   Stream producing events with a timer
+     * @param ctx Compiler context
      */
     private static String generateTriggerCallBack(Stream s, CCompilerContext ctx) {
         String ret = "";

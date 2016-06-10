@@ -123,6 +123,11 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
             builder.append(ctx.getCVarName(p));
             
             builder.append(";\n");
+            if(p.getCardinality() != null) {//array
+                builder.append("uint16_t ");
+                builder.append(ctx.getCVarName(p));
+                builder.append("_size;\n");
+            }
         }
         builder.append("\n};\n");
         
