@@ -21,7 +21,7 @@ import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
-import org.thingml.compilers.c.cepHelper.CepHelper;
+import org.thingml.compilers.c.cepHelper.CCepHelper;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
 import java.util.List;
@@ -67,7 +67,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         // Fetch code from the "c_header" annotations
         generateCHeaderAnnotation(thing, builder, ctx);
 
-        if (!CepHelper.getStreamWithBuffer(thing).isEmpty())
+        if (!CCepHelper.getStreamWithBuffer(thing).isEmpty())
             ArduinoThingCepCompiler.generateCEPLibAPI(thing, builder, ctx);
 
         // Define the data structure for instances
@@ -183,7 +183,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
             }
         }
         builder.append("// CEP stream pointers\n");
-        for (Stream s : CepHelper.getStreamWithBuffer(thing))
+        for (Stream s : CCepHelper.getStreamWithBuffer(thing))
             builder.append("stream_" + s.getName() + "* cep_" + s.getName() + ";\n");
         builder.append("\n};\n");
     }

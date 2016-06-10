@@ -23,7 +23,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.c.cepHelper.CepHelper;
+import org.thingml.compilers.c.cepHelper.CCepHelper;
 
 import java.util.*;
 
@@ -1564,7 +1564,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("\n");
 
         // init cep streams variables
-        for (Stream s : CepHelper.getStreamWithBuffer(inst.getType())) {
+        for (Stream s : CCepHelper.getStreamWithBuffer(inst.getType())) {
             builder.append(ctx.getInstanceVarName(inst) + ".cep_" + s.getName() + " = new stream_" + s.getName() + "();\n");
         }
 

@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by Alexandre RIO on 3/16/16.
  */
-public class CepHelper {
+public class CCepHelper {
 
     public static final int DEFAULT_MESSAGE_TTL = 250;
 

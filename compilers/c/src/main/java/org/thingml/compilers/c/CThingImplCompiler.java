@@ -26,7 +26,7 @@ import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
-import org.thingml.compilers.c.cepHelper.CepHelper;
+import org.thingml.compilers.c.cepHelper.CCepHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +34,8 @@ import java.util.Map;
 import org.sintef.thingml.helpers.RegionHelper;
 import org.sintef.thingml.helpers.ThingHelper;
 
-import static org.thingml.compilers.c.cepHelper.CepHelper.handlerShouldTrigger;
-import static org.thingml.compilers.c.cepHelper.CepHelper.shouldTriggerOnInputNumber;
+import static org.thingml.compilers.c.cepHelper.CCepHelper.handlerShouldTrigger;
+import static org.thingml.compilers.c.cepHelper.CCepHelper.shouldTriggerOnInputNumber;
 
 
 /**
@@ -145,7 +145,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
 
         //FIXME: should call getCompiler
-        if (!CepHelper.getStreamWithBuffer(thing).isEmpty())
+        if (!CCepHelper.getStreamWithBuffer(thing).isEmpty())
             ArduinoThingCepCompiler.generateCEPLibImpl(thing, builder, ctx);
 
         // Get the template and replace the values
@@ -581,7 +581,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             Source source = s.getInput();
 
             // Gather all the sources
-            Map<SimpleSource, String> sourceMap = CepHelper.gatherSourcesOfStream(source);
+            Map<SimpleSource, String> sourceMap = CCepHelper.gatherSourcesOfStream(source);
 
             for (SimpleSource sc : sourceMap.keySet()) {
                 if (sourceMap.get(sc).equals(msg.getName())) {
