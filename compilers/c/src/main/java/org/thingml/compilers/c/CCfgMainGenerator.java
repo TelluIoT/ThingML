@@ -1814,7 +1814,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             
             for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
                 //builder.append(ctx.getCType(a.getType()) + " ");
-                builder.append(inst_var + "." + ctx.getCVarName(a) + " = &(array_" + i.getName() + "_" + s.getName() + "_" + ctx.getCVarName(a));
+                builder.append("sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index]." + ctx.getCVarName(a) + " = &(array_" + i.getName() + "_" + s.getName() + "_" + ctx.getCVarName(a));
                 builder.append("[" + index + " + " + i.getName() + "_" + s.getName() + "_index][0]);\n");
             }
             
