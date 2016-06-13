@@ -22,6 +22,7 @@ package org.thingml.testjar.lang;
 
 import java.io.File;
 import org.thingml.testjar.Command;
+import org.thingml.testjar.SynchronizedCommand;
 import org.thingml.testjar.TestCase;
 
 /**

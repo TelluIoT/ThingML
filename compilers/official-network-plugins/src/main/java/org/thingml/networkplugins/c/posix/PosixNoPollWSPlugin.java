@@ -41,7 +41,7 @@ public class PosixNoPollWSPlugin extends NetworkPlugin {
 
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
-        res.add("WebSocket");
+        //res.add("WebSocket");
         return res;
     }
 
