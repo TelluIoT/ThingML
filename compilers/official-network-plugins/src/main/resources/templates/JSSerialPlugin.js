@@ -47,7 +47,9 @@ function /*$NAME$*/(name, debug, port, baudrate, instance) {
 					}
 					trimBB.flip();
                     const msg = formatter.parse(trimBB);
-                    /*$DISPATCH$*/
+                    if (msg !== null && msg !== undefined) {
+                        /*$DISPATCH$*/
+                    }
                     state = RCV_WAIT;
                 } else if (data == START_BYTE) {
                     // Should not happen but we reset just in case

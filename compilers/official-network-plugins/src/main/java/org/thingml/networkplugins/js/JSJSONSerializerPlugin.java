@@ -44,14 +44,16 @@ public class JSJSONSerializerPlugin extends SerializationPlugin {
 
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
+        System.out.println("generateSerialization " + bufferName + " : " + m.getName());
         int size = 2; //code encoded by a 2 bytes
         for (Parameter p : m.getParameters()) {
             if (p.getType() instanceof PrimitiveType) {
                 size = size + ((PrimitiveType) p.getType()).getByteSize();
+            } else {
+                throw new UnsupportedOperationException("Cannot serialized non primitive type " + p.getType().getName());
             }
         }
         //Serialize message into binary
-        final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
         builder.append(bufferName + ".prototype." + m.getName() + "ToJSON = function(");
         for(Parameter p : m.getParameters()) {
             if (m.getParameters().indexOf(p) > 0)
