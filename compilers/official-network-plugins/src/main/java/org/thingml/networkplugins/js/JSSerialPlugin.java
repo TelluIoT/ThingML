@@ -58,6 +58,25 @@ public class JSSerialPlugin extends NetworkPlugin {
         return res;
     }
 
+    final Set<Message> messages = new HashSet<Message>();
+
+    private void clearMessages() {
+        messages.clear();
+    }
+
+    private void addMessage(Message m) {
+        boolean contains = false;
+        for(Message msg : messages) {
+            if (EcoreUtil.equals(msg, m)) {
+                contains = true;
+                break;
+            }
+        }
+        if (!contains) {
+            messages.add(m);
+        }
+    }
+
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
         //TODO: to be improved (e.g. to avoid duplicating messages and ports, etc).
         updatePackageJSON(ctx);
@@ -75,12 +94,17 @@ public class JSSerialPlugin extends NetworkPlugin {
             }
 
             String serializers = "";
+            messages.clear();
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                serializers += sp.generateSerialization(builder, prot.getName() + "BinaryProtocol", tpm.m);
+                messages.add(tpm.m);
+            }
+            for(Message m : messages) {
+                StringBuilder temp = new StringBuilder();
+                serializers += sp.generateSerialization(temp, prot.getName() + "BinaryProtocol", m);
             }
 
             builder = new StringBuilder();
-            final Set<Message> messages = new HashSet<Message>();
+            messages.clear();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 messages.add(tpm.m);
             }
