@@ -20,7 +20,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.c.arduino.cepHelper.ArduinoCepHelper;
+import org.thingml.compilers.c.cepHelper.CCepHelper;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 
 import java.util.Map;
@@ -110,10 +110,9 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
         CCompilerContext context = (CCompilerContext) ctx;
 
-        // FIXME may lead to a bug in testArrays for posix
-        //String arr = action.isIsArray() ? "*" : "";
+        String arr = action.isIsArray() && action.getCardinality() == null ? "*" : "";
 
-        String propertyName = context.getCType(action.getType()) + " " + action.getName();
+        String propertyName = context.getCType(action.getType()) +  arr + " " + action.getName();
         builder.append(";");
         builder.append(propertyName);
         if (action.getCardinality() != null) {//array declaration
@@ -198,7 +197,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                 }
             } else if (expression.getReference() instanceof SimpleSource){
                 if (expression.getParameter() instanceof LengthArray) {
-                    String s = ArduinoCepHelper.getContainingStream((SimpleSource)expression.getReference(), (CCompilerContext)ctx);
+                    String s = CCepHelper.getContainingStream((SimpleSource)expression.getReference(), (CCompilerContext)ctx);
                     String msg = ((SimpleSource) expression.getReference()).getMessage().getMessage().getName();
                     builder.append(s + msg + "getLength");
                 }
