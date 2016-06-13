@@ -66,6 +66,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
+        System.out.println("generateSerialization " + m.getName());
         int size = 2; //code encoded by a 2 bytes
         for (Parameter p : m.getParameters()) {
             if (p.getType() instanceof PrimitiveType) {
@@ -89,8 +90,8 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
             } else {
 
             }
-            builder.append(".flip();\n");
         }
+        builder.append(".flip();\n");
         builder.append("return bb.buffer;\n");
         builder.append("};\n\n");
         return builder.toString();
@@ -98,6 +99,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+        System.out.println("generateParserBody " + messages.size());
         updatePackageJSON();
         builder.append("var ByteBuffer = require(\"bytebuffer\");\n");
         builder.append("function " + bufferName + "(){\n");
