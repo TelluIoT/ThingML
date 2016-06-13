@@ -60,76 +60,24 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("return instantiate(");
         for (Parameter p : m.getParameters()) {
             String cast;
-            if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("int"))
-                cast = "Integer";
-            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("char"))
-                cast = "Character";
-            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).contains("."))
-                cast = JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx); //extern datatype with full qualified name
-            else
-                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx));
+            if (p.isIsArray() || p.getCardinality() != null) {
+                cast = JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx);
+            } else {
+                if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("int"))
+                    cast = "Integer";
+                else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("char"))
+                    cast = "Character";
+                else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).contains("."))
+                    cast = JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx); //extern datatype with full qualified name
+                else
+                    cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx));
+            }
             if (m.getParameters().indexOf(p) > 0)
                 builder.append(", ");
             builder.append("(" + cast + ") params.get(\"" + ctx.protectKeyword(p.getName()) + "\")");
         }
         builder.append(");\n");
         builder.append("}\n\n");
-
-
-
-
-        //Instantiate message from String
-        builder.append("/**Instantiates a message from a string representation*/\n");
-        builder.append("@Override\npublic Event instantiate(String payload, String serialization) {\n");
-        builder.append("if (serialization == null || serialization.equals(\"default\")) {\n");
-        builder.append("final String[] msg = payload.trim().replace(\" \", \"\").replace(\"\\t\", \"\").replace(\"\\n\", \"\").replace(\"\\\"\", \"\").replace(\")\", \"\").split(\"[(:,]+\");\n");
-        builder.append("return parse(msg);\n");
-        builder.append("} else if (serialization.equals(\"json-default\")) {\n");
-        builder.append("final String[] msg = payload.trim().replace(\" \", \"\").replace(\"\\t\", \"\").replace(\"\\n\", \"\").replace(\"\\\"\", \"\").replace(\"{\", \"\").replace(\"}\", \"\").split(\"[:,]+\");\n");
-        builder.append("return parse(msg);\n");
-        builder.append("}\n");
-        builder.append("//Do NOT remove following comment. Might be used by a serialization plugin\n");
-        builder.append("/*STRING_LOAD*/\n");
-        builder.append("return null;\n");
-        builder.append("}\n\n");
-
-
-        builder.append("private Event parse(String[] msg) {\n");
-        builder.append("if (msg.length != " + (2 * m.getParameters().size() + 1) + ")\n");
-        builder.append("return null;\n");
-        builder.append("if (\"" + m.getName() + "\".equals(msg[0])) {\n");
-        StringBuilder temp = new StringBuilder();
-        for (Parameter p : m.getParameters()) {
-            String cast;
-            if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("int"))
-                cast = "Integer";
-            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).equals("char"))
-                cast = "Character";
-            else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx).contains("."))
-                throw new UnsupportedOperationException("Custom Java type " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " not supported.");
-            else
-                cast = ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx));
-
-            builder.append("if (\"" + p.getName() + "\".equals(msg[" + (2 * m.getParameters().indexOf(p) + 1) + "])) {\n");
-            if (cast.equals("Character")) {
-                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + "msg[" + (2 * m.getParameters().indexOf(p) + 2) + "].toCharArray()[0];\n");
-            } else {
-                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + " " + p.getName() + " = " + cast + ".parse" + ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx)) + "(msg[" + (2 * m.getParameters().indexOf(p) + 2) + "]);\n");
-            }
-            if (m.getParameters().indexOf(p) > 0)
-                temp.append(", ");
-            temp.append(p.getName());
-            if (m.getParameters().indexOf(p) == m.getParameters().size() - 1) {
-                builder.append("return instantiate(" + temp.toString() + ");\n");
-            }
-        }
-        for (int i = 0; i < m.getParameters().size(); i++) {
-            builder.append("}\n");
-        }
-        builder.append("}\n");
-        builder.append("return null;\n");
-        builder.append("}\n\n");
-
 
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "Message extends Event implements java.io.Serializable {\n\n");
 
@@ -171,25 +119,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append(");\n");
         builder.append("}");
-
-        //Serialize message into String
-        builder.append("/**Serializes a message into a string*/\n");
-        builder.append("@Override\npublic String toString(String serialization) {\n");
-        builder.append("if (serialization == null || serialization.equals(\"default\")) {\n");
-        builder.append("return toString();\n");
-        builder.append("} else if (serialization.equals(\"json-default\")) {");
-        builder.append("return \"{\\\"" + m.getName() + "\\\":{");
-        for (Parameter p : m.getParameters()) {
-            if (m.getParameters().indexOf(p) > 0)
-                builder.append(",");
-            builder.append("\\\"" + p.getName() + "\\\":\" + " + p.getName() + " + \"");
-        }
-        builder.append("}}\";\n");
-        builder.append("}\n");
-        builder.append("//Do NOT remove following comment. Might be used by a serialization plugin\n");
-        builder.append("/*STRING_SAVE*/\n");
-        builder.append("return null;\n");
-        builder.append("}\n\n");
 
         builder.append("}\n\n");
 
