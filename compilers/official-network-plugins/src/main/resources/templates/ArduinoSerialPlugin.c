@@ -36,7 +36,7 @@ void /*PROTOCOL*/_set_listener_id(uint16_t id) {
 void /*PROTOCOL*/_forwardMessage(byte * msg, uint8_t size) {
   /*PROTOCOL*/.write(/*PROTOCOL*/_START_BYTE);
   for(uint8_t i = 0; i < size; i++) {
-	if(msg[i] == /*PROTOCOL*/_ESCAPE_BYTE) {
+	if(msg[i] == /*PROTOCOL*/_ESCAPE_BYTE || msg[i] == /*PROTOCOL*/_START_BYTE || msg[i] == /*PROTOCOL*/_STOP_BYTE) {
     	/*PROTOCOL*/.write(/*PROTOCOL*/_ESCAPE_BYTE);
 	}
     /*PROTOCOL*/.write(msg[i]);
