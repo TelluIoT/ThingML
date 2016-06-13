@@ -50,6 +50,8 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
         List<String> res = new ArrayList<>();
         res.add("WebSocket");
         res.add("Websocket");
+        res.add("websocket");
+        res.add("WS");
         return res;
     }
 
@@ -120,8 +122,8 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
                 String htemplate;
                 if (AnnotatedElementHelper.hasAnnotation(protocol, "websocket_client")) {
                     if (AnnotatedElementHelper.annotation(protocol, "websocket_client").iterator().next().equalsIgnoreCase("true")) {
-                        ctemplate = ctx.getTemplateByID("templates/PosixWebsocketPluginClient.c");
-                        htemplate = ctx.getTemplateByID("templates/PosixWebsocketPluginClient.h");
+                        ctemplate = ctx.getTemplateByID("templates/PosixWebsocketClientPlugin.c");
+                        htemplate = ctx.getTemplateByID("templates/PosixWebsocketClientPlugin.h");
                         String serverAddress;
                         if (AnnotatedElementHelper.hasAnnotation(protocol, "websocket_server_address")) {
                             serverAddress = AnnotatedElementHelper.annotation(protocol, "websocket_server_address").iterator().next();
