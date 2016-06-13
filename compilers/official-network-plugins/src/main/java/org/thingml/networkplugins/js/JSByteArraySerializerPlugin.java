@@ -105,6 +105,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
         builder.append("function " + bufferName + "(){\n");
 
         builder.append(bufferName + ".prototype.parse = function(bb) {\n");
+        builder.append("try {");
         builder.append("switch(bb.readShort()) {\n");
         for(Message m : messages) {
             final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
@@ -118,6 +119,9 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
             builder.append("];\n");
         }
         builder.append("default: return null;\n");
+        builder.append("}\n");
+        builder.append("} catch (err) {\n");
+        builder.append("console.log(\"Cannot parse \" + bb.buffer + \" because \" + err);\n");
         builder.append("}\n");
         builder.append("};\n\n");
         builder.append("/*$SERIALIZERS$*/");

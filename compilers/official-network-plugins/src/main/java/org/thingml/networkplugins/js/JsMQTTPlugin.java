@@ -58,6 +58,25 @@ public class JsMQTTPlugin extends NetworkPlugin {
         return res;
     }
 
+    final Set<Message> messages = new HashSet<Message>();
+
+    private void clearMessages() {
+        messages.clear();
+    }
+
+    private void addMessage(Message m) {
+        boolean contains = false;
+        for(Message msg : messages) {
+            if (EcoreUtil.equals(msg, m)) {
+                contains = true;
+                break;
+            }
+        }
+        if (!contains) {
+            messages.add(m);
+        }
+    }
+
     private void updatePackageJSON(Context ctx, boolean withServer) {
         try {
             final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/package.json");
@@ -102,13 +121,19 @@ public class JsMQTTPlugin extends NetworkPlugin {
                 return;
             }
 
+
             String serializers = "";
+            messages.clear();
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                serializers += sp.generateSerialization(builder, prot.getName() + "StringProtocol", tpm.m);
+                messages.add(tpm.m);
+            }
+            for(Message m : messages) {
+                StringBuilder temp = new StringBuilder();
+                serializers += sp.generateSerialization(temp, prot.getName() + "StringProtocol", m);
             }
 
             builder = new StringBuilder();
-            final Set<Message> messages = new HashSet<Message>();
+            messages.clear();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 messages.add(tpm.m);
             }

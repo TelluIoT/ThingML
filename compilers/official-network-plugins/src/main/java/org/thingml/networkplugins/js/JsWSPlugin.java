@@ -59,6 +59,25 @@ public class JsWSPlugin extends NetworkPlugin {
         return res;
     }
 
+    final Set<Message> messages = new HashSet<Message>();
+
+    private void clearMessages() {
+        messages.clear();
+    }
+
+    private void addMessage(Message m) {
+        boolean contains = false;
+        for(Message msg : messages) {
+            if (EcoreUtil.equals(msg, m)) {
+                contains = true;
+                break;
+            }
+        }
+        if (!contains) {
+            messages.add(m);
+        }
+    }
+
     private void updatePackageJSON(Context ctx) {
         try {
             final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/package.json");
@@ -83,6 +102,7 @@ public class JsWSPlugin extends NetworkPlugin {
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
+        System.out.println("generateNetworkLibrary " + cfg.getName() + ", " + protocols.size());
         updatePackageJSON(ctx);
         StringBuilder builder = new StringBuilder();
         for (Protocol prot : protocols) {
@@ -96,12 +116,17 @@ public class JsWSPlugin extends NetworkPlugin {
             }
 
             String serializers = "";
+            messages.clear();
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                serializers += sp.generateSerialization(builder, prot.getName() + "StringProtocol", tpm.m);
+                messages.add(tpm.m);
+            }
+            for(Message m : messages) {
+                StringBuilder temp = new StringBuilder();
+                serializers += sp.generateSerialization(temp, prot.getName() + "StringProtocol", m);
             }
 
             builder = new StringBuilder();
-            final Set<Message> messages = new HashSet<Message>();
+            messages.clear();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 messages.add(tpm.m);
             }
