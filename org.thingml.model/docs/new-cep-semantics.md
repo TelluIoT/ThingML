@@ -70,3 +70,10 @@ Putting a `@Trigger` on one and only one of the input sources (of any type) coul
 ### Using native grammar
 
 ...
+
+# More generally, documenting
+
+A formal definition of the semantics of each streams should be defined. Using a general algebra for example, this would allow to precisely define the scope of the CEP domain in ThingML.
+This would allow to “easily” compare the CEP features provided by ThingML to those of traditional CEP engines and query languages.
+
+_Demers, A., Gehrke, J., Hong, M., Riedewald, M., & White, W. (2005). A General Algebra and Implementation for Monitoring Event Streams._
