@@ -82,20 +82,9 @@ public class JavaTTYPlugin extends NetworkPlugin {
         StringBuilder builder = new StringBuilder();
         for (Protocol prot : protocols) {
             String serializers = "";
-
-            builder.append("public static byte[] toBytes(Event e){\n");
-            builder.append("switch(e.getType().getCode()){\n");
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
                 addMessage(tpm.m);
             }
-            for(Message m : messages) {
-                final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
-                builder.append("case " + code + ": return " + prot.getName() + "StringProtocol.toBytes((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e);\n");
-            }
-            builder.append("default: return null;\n");
-            builder.append("}\n");
-            builder.append("}\n");
-
             SerializationPlugin sp = null;
             try {
                 sp = ctx.getSerializationPlugin(prot);
