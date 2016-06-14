@@ -15,14 +15,19 @@ public class WSJava extends Component {
 	/*$PORTS$*/
 
 	public WSJava(String serverURL) {
-		ws = factory.createSocket(serverURL);
-		ws.connect();
-		ws.addListener(new WebSocketAdapter() {
-			@Override
-			public void onTextMessage(WebSocket websocket, String message) throws Exception {
-				parse(message);
-			}
-		});
+		try {
+			ws = factory.createSocket(serverURL);
+			ws.connect();
+			ws.addListener(new WebSocketAdapter() {
+				@Override
+				public void onTextMessage(WebSocket websocket, String message) throws Exception {
+					parse(message);
+				}
+			});
+		} catch (Exception e) {
+			System.err.println("Cannot connect to websocket server " + serverURL + " because " + e.getMessage());
+			stop();
+		}
 	}
 
 	private void parse(final String payload) {

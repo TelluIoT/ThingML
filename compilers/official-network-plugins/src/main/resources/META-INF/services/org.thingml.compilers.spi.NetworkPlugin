@@ -7,6 +7,7 @@ org.thingml.networkplugins.c.posix.PosixSerialPlugin
 org.thingml.networkplugins.c.posix.PosixStdInPlugin
 org.thingml.networkplugins.java.JavaSerialPlugin
 org.thingml.networkplugins.java.JavaTTYPlugin
+org.thingml.networkplugins.java.JavaWSPlugin
 org.thingml.networkplugins.js.JSSerialPlugin
 org.thingml.networkplugins.js.JsTTYPlugin
 org.thingml.networkplugins.js.JsWSPlugin
