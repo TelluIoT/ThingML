@@ -1,18 +1,17 @@
+package org.thingml.generated.network;
+
+import org.thingml.generated.messages.*;
+import org.thingml.java.*;
+import org.thingml.java.ext.*;
+
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class StdIOJava extends Component {
 	final Scanner stdin = new Scanner(System.in);
-	final OutputStream stdout = System.out;
+	final PrintStream stdout = System.out;
 
-	public StdIOJava() {
-		new Thread({
-			public void run() {
-				while (stdin.hasNext()) {
-					parse(stdin.next());
-				}
-			}
-		}).start();
-	}
+	/*$PORTS$*/
 
 	private void parse(final String payload) {
         /*$PARSING CODE$*/
@@ -20,6 +19,13 @@ public class StdIOJava extends Component {
 
 	@Override
 	public void run() {
+		new Thread(){
+			public void run() {
+				while (stdin.hasNext()) {
+					parse(stdin.next());
+				}
+			}
+		}.start();
 		while (active) {
 			try {
 				final Event e = queue.take();//should block if queue is empty, waiting for a message
