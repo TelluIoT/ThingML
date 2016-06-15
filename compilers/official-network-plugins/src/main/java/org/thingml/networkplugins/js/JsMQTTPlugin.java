@@ -210,7 +210,7 @@ public class JsMQTTPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(") {\n");
-                    builder.append("client.publish(topic, formatter." + m.getName() + "ToJSON(");
+                    builder.append("client.publish(pubtopic, formatter." + m.getName() + "ToJSON(");
                     i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -243,10 +243,11 @@ public class JsMQTTPlugin extends NetworkPlugin {
                 }
                 input.close();
                 final String url = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "127.0.0.1");
-                final String topic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "topic", "default");
+                final String subtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "subscribe", "default");
+                final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "default");
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "var MQTT = require('./MQTTJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "var mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + topic + "\", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "var mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + subtopic + "\", \"" + pubtopic + "\", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "mqtt._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
