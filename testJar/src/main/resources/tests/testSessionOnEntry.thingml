@@ -1,0 +1,19 @@
+import "thingml.thingml"
+
+thing TestSessionOnEntry includes Test
+@test "A # A"
+{
+	statechart Chart init INIT {
+    
+    	state INIT {
+			internal event e : harnessIn?testIn
+			action fork s
+    	}
+
+		session s<5> init S1 {
+			on entry harnessOut!testOut('\'A\'')
+			final state S1 {
+			}		
+		}
+    }
+}
