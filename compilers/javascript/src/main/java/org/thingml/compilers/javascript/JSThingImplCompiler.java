@@ -157,12 +157,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("this.eventEmitterForStream = new EventEmitter();\n");
         }
 
-        /*builder.append("//message queue\n");
-        builder.append(const_() + "queue = [];\n");
-        builder.append("this.getQueue = function() {\n");
-        builder.append("return queue;\n");
-        builder.append("};\n\n");*/
-
         generateListeners(thing, builder, ctx);
 
         builder.append("//CEP dispatch functions\n");
@@ -256,7 +250,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("this.root = root;\n");
                 builder.append("root.forkID = root.forkID + 1;\n");
                 builder.append("this.forkID = root.forkID;\n");
-                builder.append("this.statemachine = new StateJS.StateMachine(\"" + s.getName() + "\");\n");
+                builder.append("this.statemachine = new StateJS.StateMachine(\"" + s.getName() + "\")");
+                generateActionsForState(s, builder, ctx);
+                builder.append(";\n");
                 ctx.addContextAnnotation("container", "this." + ThingMLElementHelper.qname(ThingMLHelpers.findContainingRegion(s), "_"));
                 builder.append("var " + ThingMLElementHelper.qname(s, "_") + "_session = new StateJS.Region(\"" + s.getName() + "\", _this.statemachine);\n");
                 builder.append("var _initial_" + ThingMLElementHelper.qname(s, "_") + "_session = new StateJS.PseudoState(\"_initial\", " + ThingMLElementHelper.qname(s, "_") + "_session, StateJS.PseudoStateKind.Initial);\n");
@@ -392,12 +388,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         String containerName = ctx.getContextAnnotation("container");
         if (CompositeStateHelper.hasSeveralRegions(c)) {
             builder.append("var " + ThingMLElementHelper.qname(c, "_") + " = new StateJS.State(\"" + c.getName() + "\", " + containerName + ");\n");
-            /*builder.append("var " + ThingMLElementHelper.qname(c, "_") + "_default = new StateJS.Region(\"_default\", " + ThingMLElementHelper.qname(c, "_") + ");\n");
-            if (c.isHistory())
-                builder.append("var _initial_" + ThingMLElementHelper.qname(c, "_") + " = new StateJS.PseudoState(\"_initial\", " + ThingMLElementHelper.qname(c, "_") + "_default, StateJS.PseudoStateKind.ShallowHistory);\n");
-            else
-                builder.append("var _initial_" + ThingMLElementHelper.qname(c, "_") + " = new StateJS.PseudoState(\"_initial\", " + ThingMLElementHelper.qname(c, "_") + "_default, StateJS.PseudoStateKind.Initial);\n");
-            builder.append("_initial_" + ThingMLElementHelper.qname(c, "_") + ".to(" + ThingMLElementHelper.qname(c.getInitial(), "_") + ");\n");*/
+            generateActionsForState(c, builder, ctx);
+            builder.append(";\n");
             for (Region r : c.getRegion()) {
                 ctx.addContextAnnotation("container", ThingMLElementHelper.qname(c, "_"));
                 generateRegion(r, builder, ctx);

@@ -1,17 +1,19 @@
 import "thingml.thingml"
 
 thing TestSessionOnEntry includes Test
-@test "A # A"
+@test "A # AB"
 {
 	statechart Chart init INIT {
-    
+
+        on entry harnessOut!testOut('\'A\'')
+
     	state INIT {
 			internal event e : harnessIn?testIn
 			action fork s
     	}
 
 		session s<5> init S1 {
-			on entry harnessOut!testOut('\'A\'')
+			on entry harnessOut!testOut('\'B\'')
 			final state S1 {
 			}		
 		}
