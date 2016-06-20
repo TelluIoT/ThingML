@@ -1,4 +1,4 @@
-# New ThingML grammar for Complex Event Processing
+# New ThingML semantics for Complex Event Processing
 
 **Disclaimer**: This document describes features that are not and probably will never be implemented into the ThingML framework, for the actual Complex Event Processing features usage please refer to the according [documentation](cep-semantics.md).
 
