@@ -1,0 +1,19 @@
+state /*$NAME$*/ {
+
+    on entry do
+        f1()
+        p!a()
+        f2()
+        p!b()
+    end
+
+    on exit do
+        f2()
+        f1()
+    end
+
+    /*$TRANSITIONS$*/
+
+    transition -> Die
+    event p?kill
+}

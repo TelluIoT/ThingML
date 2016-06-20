@@ -1,0 +1,55 @@
+thing /*$NAME$*/ {
+
+    message a()
+    message b()
+    message kill()
+
+    internal port p {
+        sends a, b, kill
+        receives a, b, kill
+    }
+
+    property counter_t : Int = 0
+    readonly property max_t = /*$MAX_T$*/
+
+    property a : Int = 0
+    property b : Int = 0
+
+    function f1() do
+        b = b + 1
+        a = a + b
+    end
+
+    function f2() do
+        b = b - a
+    end
+
+    statechart behavior init /*$INIT_NAME$*/ {
+
+        internal event p?a
+        guard counter_t >= max_t
+        action p!kill()
+
+        internal event p?b
+        guard counter_t >= max_t
+        action p!kill()
+
+        final state Die {
+            on entry do
+                print "The End.\n"
+                print "a = "
+                print a
+                print "\n"
+                print "b = "
+                print b
+                print "\n"
+                print "counter_t = "
+                print counter_t
+                print "\n"
+            end
+        }
+
+        /*$BEHAVIOR$*/
+    }
+
+}

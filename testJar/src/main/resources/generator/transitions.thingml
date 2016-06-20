@@ -1,0 +1,5 @@
+    transition -> /*$ON_A$*/
+    event p?a
+
+    transition -> /*$ON_B$*/
+    event p?b

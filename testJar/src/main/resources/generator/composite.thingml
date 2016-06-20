@@ -1,0 +1,18 @@
+composite state /*$NAME$*/ init /*$INIT_NAME$*/{
+
+    on entry do
+        f1()
+        f2()
+        p!a()
+        p!b()
+    end
+
+    /*$BEHAVIOR$*/
+
+    final state Die {
+
+    }
+
+    transition -> Die
+    event p?kill
+}
