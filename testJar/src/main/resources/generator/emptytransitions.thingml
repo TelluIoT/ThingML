@@ -1,1 +1,5 @@
     transition -> /*$NEXT$*/
+    action do
+        /*$ACTION1$*/
+        /*$ACTION2$*/
+    end

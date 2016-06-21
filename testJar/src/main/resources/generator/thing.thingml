@@ -67,6 +67,7 @@ thing /*$NAME$*/ includes API {
 
     property a : Int = 0
     property b : Int = 0
+    property c : Int[8]
 
     function f1() do
         b = b + 1
@@ -74,7 +75,8 @@ thing /*$NAME$*/ includes API {
     end
 
     function f2() do
-        b = b - a
+        b = 0
+        a = 0
     end
 
     statechart behavior init /*$INIT_NAME$*/ {

@@ -1,14 +1,12 @@
 state /*$NAME$*/ {
 
     on entry do
-        f1()
-        f2()
+        /*$ACTION1$*/
         /*$SEND$*/
     end
 
     on exit do
-        f2()
-        f1()
+        /*$ACTION2$*/
     end
 
     /*$TRANSITIONS$*/

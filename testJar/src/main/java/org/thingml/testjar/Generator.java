@@ -20,7 +20,11 @@
  */
 package org.thingml.testjar;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Random;
 
@@ -37,8 +41,12 @@ public class Generator {
     private final static String atomicTemplate = loadTemplate("generator/atomic.thingml");
     private final static String compositeTemplate = loadTemplate("generator/composite.thingml");
     private final static String regionTemplate = loadTemplate("generator/region.thingml");
+    private final static String sessionTemplate = loadTemplate("generator/session.thingml");
     private final static String emptyTemplate = loadTemplate("generator/emptytransitions.thingml");
     private final static String transitionTemplate = loadTemplate("generator/transitions.thingml");
+    private final static String[] sendActions = {loadTemplate("generator/actionSend1.thingml"), loadTemplate("generator/actionSend2.thingml")};
+    private final static String[] actions = {loadTemplate("generator/action0.thingml"), loadTemplate("generator/action1.thingml"), loadTemplate("generator/action2.thingml")};
+    private final static String forkAction = loadTemplate("generator/actionFork.thingml");
 
     private final static Random random = new Random();
 
@@ -57,46 +65,56 @@ public class Generator {
         }
     }
 
-    private static String createComposite(final String template, String name, int depth, int nbAtomic, int nbComposite, int nbRegion) {
+    private static String createComposite(final String template, String name, int depth, int nbAtomic, int nbComposite, int nbRegion, int nbSession) {
         StringBuilder builder = new StringBuilder();
         if (depth > 1) {
             for (int i = 0; i < nbComposite; i++) {
-                builder.append(createComposite(compositeTemplate, name + "_" + i, depth - 1, nbAtomic, nbComposite, nbRegion));
+                builder.append(createComposite(compositeTemplate, name + "_" + i, depth - 1, nbAtomic, nbComposite, nbRegion, nbSession));
             }
         }
         for(int i = 0; i < nbAtomic; i++) {
             String state = atomicTemplate.replace("/*$NAME$*/", name + "_" + (nbComposite + i));
             final String next = (i < nbAtomic - 1)? name + "_" + (nbComposite + i + 1) : name + "_" + (nbComposite);
+            String transition = "";
             if (i%2 == 0) {
-                String transition = transitionTemplate.replace("/*$ON_A$*/", next);
+                transition = transitionTemplate.replace("/*$ON_A$*/", next);
                 transition = transition.replace("/*$ON_B$*/", name + "_" + (nbComposite + (Math.abs(random.nextInt()) % nbAtomic)));
-                state = state.replace("/*$TRANSITIONS$*/", transition);
-                if (i%4 == 0) {
-                    state = state.replace("/*$SEND$*/", "p!a()");
-                } else {
-                    state = state.replace("/*$SEND$*/", "p!b()");
-                }
+
             } else {
-                String transition = emptyTemplate.replace("/*$NEXT$*/", next);
-                state = state.replace("/*$TRANSITIONS$*/", transition);
+                transition = emptyTemplate.replace("/*$NEXT$*/", next);
             }
+            state = state.replace("/*$SEND$*/", sendActions[Math.abs(random.nextInt()) % sendActions.length]);
+            state = state.replace("/*$ACTION1$*/", actions[Math.abs(random.nextInt()) % actions.length]);
+            state = state.replace("/*$ACTION2$*/", actions[Math.abs(random.nextInt()) % actions.length]);
+            final int r = Math.abs(random.nextInt());
+            transition = transition.replace("/*$ACTION1$*/", actions[r % actions.length]);
+            transition = transition.replace("/*$ACTION2$*/", actions[(r+1) % actions.length]);
+            state = state.replace("/*$TRANSITIONS$*/", transition);
             builder.append(state);
         }
         if (depth > 1) {
+            for (int i = 0; i < nbSession; i++) {
+                builder.append(createComposite(sessionTemplate, name + "_s_" + i, depth - 1, nbAtomic, nbComposite, nbRegion, nbSession));
+            }
             for (int i = 0; i < nbRegion; i++) {
-                builder.append(createRegion(name + "_r_" + i, depth - 1, nbAtomic, nbComposite, nbRegion));
+                builder.append(createComposite(regionTemplate, name + "_r_" + i, depth - 1, nbAtomic, nbComposite, nbRegion, nbSession));
             }
         }
         return template.replace("/*$NAME$*/", name).replace("/*$INIT_NAME$*/", name + "_" + nbComposite).replace("/*$BEHAVIOR$*/", builder.toString());
     }
 
-    private static String createRegion(String name, int depth, int nbAtomic, int nbComposite, int nbRegion) {
-        return createComposite(regionTemplate, name, depth, nbAtomic, nbComposite, nbRegion);
-    }
-
     public static void main(String[] args) {
-        final String behavior = Generator.createComposite(compositeTemplate, "c", 2, 2, 1, 1);
+        final String behavior = Generator.createComposite(compositeTemplate, "c", 2, 5, 2, 2, 2);
         final String thing = thingTemplate.replace("/*$NAME$*/", "myThing").replace("/*$INIT_NAME$*/", "c").replace("/*$MAX_T$*/", "100000").replace("/*$BEHAVIOR$*/", behavior);
+
+        try {
+            final File f = new File("generated.thingml");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(thing, output, Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+
+        }
         System.out.println(thing);
     }
 }

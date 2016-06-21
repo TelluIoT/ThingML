@@ -1,0 +1,4 @@
+session /*$NAME$*/ init /*$INIT_NAME$*/{
+
+    /*$BEHAVIOR$*/
+}
