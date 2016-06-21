@@ -1,16 +1,69 @@
-thing /*$NAME$*/ {
+datatype Int<4>
+@type_checker "Integer"
+@java_type "int"
+@c_type "int32_t";
 
+datatype Boolean<1>
+@type_checker "Boolean"
+@java_type "boolean"
+@c_type "boolean";
+
+thing fragment API {
     message a()
     message b()
     message kill()
+}
 
-    internal port p {
+thing Controller includes API {
+    required port p {
         sends a, b, kill
-        receives a, b, kill
+        receives a, b
     }
 
     property counter_t : Int = 0
-    readonly property max_t = /*$MAX_T$*/
+    readonly property max_t : Int = 100000
+    property killed : Boolean = false
+
+    statechart behavior init INIT {
+
+        internal event p?a
+        guard counter_t < max_t and not killed
+        action do
+            counter_t = counter_t + 1
+            p!b()
+        end
+
+        internal event p?b
+        guard counter_t < max_t and not killed
+        action do
+            counter_t = counter_t + 1
+            p!a()
+        end
+
+        internal event p?a
+        guard counter_t >= max_t and not killed
+        action do
+            p!kill()
+            killed = true
+        end
+
+        internal event p?b
+        guard counter_t >= max_t and not killed
+        action do
+            p!kill()
+            killed = true
+        end
+
+        state INIT {}
+    }
+}
+
+thing /*$NAME$*/ includes API {
+
+    provided port p {
+        sends a, b
+        receives a, b, kill
+    }
 
     property a : Int = 0
     property b : Int = 0
@@ -26,30 +79,25 @@ thing /*$NAME$*/ {
 
     statechart behavior init /*$INIT_NAME$*/ {
 
-        internal event p?a
-        guard counter_t >= max_t
-        action p!kill()
-
-        internal event p?b
-        guard counter_t >= max_t
-        action p!kill()
-
-        final state Die {
-            on entry do
-                print "The End.\n"
-                print "a = "
-                print a
-                print "\n"
-                print "b = "
-                print b
-                print "\n"
-                print "counter_t = "
-                print counter_t
-                print "\n"
-            end
-        }
+        internal event p?kill
+        action do
+            print "The End.\n"
+            print "a = "
+            print a
+            print "\n"
+            print "b = "
+            print b
+            print "\n"
+        end
 
         /*$BEHAVIOR$*/
     }
 
+}
+
+configuration cfg {
+    instance c : Controller
+    instance t : /*$NAME$*/
+
+    connector c.p => t.p
 }

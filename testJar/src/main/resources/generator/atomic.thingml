@@ -2,9 +2,8 @@ state /*$NAME$*/ {
 
     on entry do
         f1()
-        p!a()
         f2()
-        p!b()
+        /*$SEND$*/
     end
 
     on exit do
@@ -13,7 +12,4 @@ state /*$NAME$*/ {
     end
 
     /*$TRANSITIONS$*/
-
-    transition -> Die
-    event p?kill
 }

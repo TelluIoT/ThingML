@@ -387,7 +387,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generateCompositeState(CompositeState c, StringBuilder builder, Context ctx) {
         String containerName = ctx.getContextAnnotation("container");
         if (CompositeStateHelper.hasSeveralRegions(c)) {
-            builder.append("var " + ThingMLElementHelper.qname(c, "_") + " = new StateJS.State(\"" + c.getName() + "\", " + containerName + ");\n");
+            builder.append("var " + ThingMLElementHelper.qname(c, "_") + " = new StateJS.State(\"" + c.getName() + "\", " + containerName + ")\n");
             generateActionsForState(c, builder, ctx);
             builder.append(";\n");
             for (Region r : c.getRegion()) {
