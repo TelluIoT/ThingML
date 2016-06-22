@@ -47,7 +47,7 @@ public class CloudNode {
             this.languages = new HashSet<>();
         }
         
-        public void makeTestDir(File workingDir, File compiler, File testJar, File testSrc) throws IOException {
+        public void makeTestDir(File workingDir, File ressourcesDir, File compiler, File testJar, File testSrc) throws IOException {
             File testDir = new File(workingDir, name + "_testDir");
             if(testDir.exists()) {
                 testDir.delete();
@@ -89,7 +89,7 @@ public class CloudNode {
             }
             if(found) {
                 File testArduinoLink = new File(resourcesDir, "testArduino.sh");
-                File testArduino = new File(CloudNode.class.getClassLoader().getResource("testArduino.sh").getFile());
+                File testArduino = new File(ressourcesDir, "testArduino.sh");
                 Files.createSymbolicLink(testArduinoLink.toPath(), testArduino.toPath());
             }
             
