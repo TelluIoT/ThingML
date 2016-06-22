@@ -22,8 +22,9 @@ TIMEOUT=5
 echo "TestArduino ($PWD)"
 ano upload -q
 echo "" > output.log
+echo "logfile ./output.log" > screenrc
 serial_port=`ls /dev/ttyACM* | head -1`
-screen -c ../../../../screenrc -d -m -L -S arduino $serial_port 115200 &
+screen -c screenrc -d -m -L -S arduino $serial_port 115200 &
 sleep $TIMEOUT
 screen -X -S arduino quit
 sleep 1
