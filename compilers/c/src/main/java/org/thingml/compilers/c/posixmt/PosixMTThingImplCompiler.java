@@ -255,10 +255,10 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
     }
     
     private void generateSessionFunctions(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
-        for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+        for(Session s : CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
             generateSessionForks(thing, s, builder, ctx, debugProfile);
         }
-        if(!RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
+        if(!CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
             builder.append("void " + thing.getName() + "_terminate(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
             
             builder.append("    fifo_lock(&(_instance->fifo));\n");
