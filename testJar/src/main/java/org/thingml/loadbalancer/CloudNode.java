@@ -80,6 +80,19 @@ public class CloudNode {
             File testSrcDir = new File(resourcesDir, "tests");
             testSrcDir.mkdir();
             
+            boolean found = false;
+            for(String l : languages) {
+                if (l.compareToIgnoreCase("arduino") == 0) {
+                    found = true;
+                    break;
+                }
+            }
+            if(found) {
+                File testArduinoLink = new File(resourcesDir, "testArduino.sh");
+                File testArduino = new File(CloudNode.class.getClassLoader().getResource("testArduino.sh").getFile());
+                Files.createSymbolicLink(testArduinoLink.toPath(), testArduino.toPath());
+            }
+            
             for(File t : tests) {
                 File tLink =  new File(testSrcDir, t.getName());
                 Files.createSymbolicLink(tLink.toPath(), t.toPath());
