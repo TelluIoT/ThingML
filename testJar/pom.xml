@@ -26,6 +26,11 @@
             <artifactId>compilers.registry</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -63,11 +68,21 @@
                         <goals>
                             <goal>java</goal>
                         </goals>
+                        <configuration>
+                            <mainClass>org.thingml.testjar.TestJar</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generator</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.thingml.testjar.Generator</mainClass>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <mainClass>org.thingml.testjar.TestJar</mainClass>
-                </configuration>
+
             </plugin>
 
         </plugins>

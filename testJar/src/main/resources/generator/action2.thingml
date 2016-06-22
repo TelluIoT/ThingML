@@ -1,0 +1,5 @@
+var i : Int = 0
+while(i < 8) do
+    c[i] = a + b
+    i = i + 1
+end

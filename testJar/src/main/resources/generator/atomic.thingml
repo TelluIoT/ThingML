@@ -1,0 +1,13 @@
+state /*$NAME$*/ {
+
+    on entry do
+        /*$ACTION1$*/
+        /*$SEND$*/
+    end
+
+    on exit do
+        /*$ACTION2$*/
+    end
+
+    /*$TRANSITIONS$*/
+}

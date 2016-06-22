@@ -526,7 +526,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("} else {\n");
         for (Port p : ThingMLHelpers.allPorts(thing)) {
-            builder.append(p.getName() + "_port = ((" + thing.getName() + ")root)." + p.getName() + "_port;\n");
+            builder.append(p.getName() + "_port = ((" + ctx.firstToUpper(thing.getName()) + ")root)." + p.getName() + "_port;\n");
         }
         builder.append("}\n");
 

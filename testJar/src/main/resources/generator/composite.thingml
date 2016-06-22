@@ -1,0 +1,9 @@
+composite state /*$NAME$*/ init /*$INIT_NAME$*/{
+
+    on entry do
+        f1()
+        f2()
+    end
+
+    /*$BEHAVIOR$*/
+}

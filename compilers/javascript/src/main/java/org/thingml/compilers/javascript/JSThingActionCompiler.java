@@ -68,7 +68,11 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         Session session = action.getSession();
         builder.append("var " + session.getName() + " = new " + ThingMLHelpers.findContainingThing(session).getName() + "(\"" + session.getName() + "\", _this");
         for (Property p : ThingMLHelpers.allProperties(ThingMLHelpers.findContainingThing(session))) {
-            builder.append(", _this." + ThingMLElementHelper.qname(p, "_") + "_var");
+            if (p.isIsArray() || p.getCardinality() != null) {
+                builder.append(", _this." + ThingMLElementHelper.qname(p, "_") + "_var.slice(0)");
+            } else {
+                builder.append(", _this." + ThingMLElementHelper.qname(p, "_") + "_var");
+            }
         }
         builder.append(", true);\n"); //FIXME: debug true only if needed
         builder.append(session.getName() + ".setThis(" + session.getName() + ");\n");
@@ -160,7 +164,6 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         if (AnnotatedElementHelper.isDefined(expression.getProperty(), "private", "true") || !(expression.getProperty().eContainer() instanceof Thing) || (expression.getProperty() instanceof Parameter) || (expression.getProperty() instanceof LocalVariable)) {
             builder.append(ctx.getVariableName(expression.getProperty()));
         } else {
-            //builder.append("_this." + ctx.getVariableName(expression.getProperty()));
             if (expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
                 builder.append(expression.getProperty().getName());
             } else if (expression.getProperty() instanceof Property) {
@@ -176,16 +179,12 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                                     if (pa.getProperty().getName().compareTo(p.getName()) == 0) {
                                         generate(pa.getInit(), builder, ctx);
                                         found = true;
-                                        //System.out.println("ass: '" + tmp + "'");
-                                        //System.out.println("init: '" + tmp + "'");
-                                        //System.out.println("BuilderA: '" + builder + "'");
                                         break;
                                     }
                                 }
                             }
                             if (!found) {
                                 generate(p.getInit(), builder, ctx);
-                                //System.out.println("BuilderB: '" + builder + "'");
                             }
                         } else {
                             builder.append("_this." + ctx.getVariableName(expression.getProperty()));
