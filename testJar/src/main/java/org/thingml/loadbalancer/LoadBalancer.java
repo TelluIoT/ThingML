@@ -137,7 +137,7 @@ public class LoadBalancer {
                     n.port = Integer.parseInt(loadBalancerProp.getProperty(nodeName + "_port"));
                     n.httpPort = Integer.parseInt(loadBalancerProp.getProperty(nodeName + "_httpPort"));
                     totalWeight += n.weight;
-                    System.out.println("nodeList item: <" + n.name + ", " + n.ip + ", " + n.port + ", " + n.weight + ">");
+                    System.out.println("nodeList item: (" + n.name + ", " + n.ip + ", " + n.port + ", " + n.weight + ")");
                     nl.put(nodeName, n);
                 }
             }
@@ -145,7 +145,7 @@ public class LoadBalancer {
             Set<String> tl = new HashSet<>();
             if(testList != null) {
                 for(String tstr : testList.split(",")) {
-                    System.out.println("testList item: <" + tstr.trim() + ">");
+                    System.out.println("testList item: (" + tstr.trim() + ")");
                     tl.add(tstr.trim());
                 }
             }
