@@ -128,7 +128,7 @@ public class TestJar {
         Set<String> tl = new HashSet<>();
         if(testList != null) {
             for(String tstr : testList.split(",")) {
-                System.out.println("testList item: <" + tstr.trim() + ">");
+                System.out.println("testList item: (" + tstr.trim() + ")");
                 tl.add(tstr.trim());
             }
         }
