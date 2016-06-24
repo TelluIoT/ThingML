@@ -212,8 +212,8 @@ public class TestHelper {
         "               </button>\n" +
         "               <table>\n" +
         "               <tr>\n");
+        res.append("                <th>Category</th>\n");
         res.append("                <th>Test</th>\n");
-        res.append("                    <th>Category</th>\n");
         
         for(TargetedLanguage lang : langs) {
             res.append("                    <th>" + lang.compilerID + "</th>\n");

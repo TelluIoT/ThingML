@@ -53,6 +53,7 @@ public class CloudNode {
                 testDir.delete();
             }
             
+            
             testDir.mkdir();
             File cDir = new File(testDir, "compilers");
             cDir.mkdir();
@@ -80,6 +81,18 @@ public class CloudNode {
             File testSrcDir = new File(resourcesDir, "tests");
             testSrcDir.mkdir();
             
+            
+            for(File f : testSrc.listFiles()) {
+                if(f.isDirectory() && (f.getName().compareTo("core") != 0)) {
+                    File dirCopy = new File(testSrcDir, f.getName());
+                    dirCopy.mkdir();
+                }
+            }
+            
+            File importLink =  new File(testSrcDir, "Import/import");
+            File importDir =  new File(testSrc, "Import/import");
+            Files.createSymbolicLink(importLink.toPath(), importDir.toPath());
+            
             boolean found = false;
             for(String l : languages) {
                 if (l.compareToIgnoreCase("arduino") == 0) {
@@ -94,17 +107,13 @@ public class CloudNode {
             }
             
             for(File t : tests) {
-                File tLink =  new File(testSrcDir, t.getName());
+                File tLink =  new File(testSrcDir, t.getParentFile().getName() + "/" + t.getName());
                 Files.createSymbolicLink(tLink.toPath(), t.toPath());
             }
             
             File coreLink =  new File(testSrcDir, "core");
             File coreDir =  new File(testSrc, "core");
             Files.createSymbolicLink(coreLink.toPath(), coreDir.toPath());
-            
-            File importLink =  new File(testSrcDir, "import");
-            File importDir =  new File(testSrc, "import");
-            Files.createSymbolicLink(importLink.toPath(), importDir.toPath());
             
             File dtLink =  new File(testSrcDir, "datatypes.thingml");
             File dt =  new File(testSrc, "datatypes.thingml");
