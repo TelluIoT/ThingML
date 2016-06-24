@@ -202,21 +202,47 @@ public class TestHelper {
         "		</style>\n" +
         "	</head>\n" +
         "	<body>\n" +
-        "           <table>\n" +
+        "           <div id=\"test-results-tab\">\n" +
+        "               <input class=\"search\" placeholder=\"Search\" />\n" +
+        "               <button class=\"sort\" data-sort=\"category\">\n" +
+        "                   Sort by category\n" +
+        "               </button>\n" +
+        "               <button class=\"sort\" data-sort=\"testcase\">\n" +
+        "                   Sort by test name\n" +
+        "               </button>\n" +
+        "               <table>\n" +
         "               <tr>\n");
         res.append("                <th>Test</th>\n");
+        res.append("                    <th>Category</th>\n");
         
         for(TargetedLanguage lang : langs) {
             res.append("                    <th>" + lang.compilerID + "</th>\n");
         }
         res.append("                </tr>\n");
+        res.append("               <tbody class=\"list\">\n");
         return res.toString();
     }
     
-    public static String writeFooterResultsFile() {
+    public static String writeFooterResultsFile(List<TargetedLanguage> langs) {
         StringBuilder res = new StringBuilder();
-        res.append("        </table>\n"
-                + " </body>\n");
+        res.append("            </tbody>\n");
+        res.append("        </table>\n" +
+        "       </div>\n" +
+        "       <script src=\"http://listjs.com/no-cdn/list.js\"></script>\n" +
+        "       <script>\n" +
+        "           var options = {\n" +
+        "               valueNames: [ 'category', 'testcase'");
+        
+        for(TargetedLanguage l : langs) {
+            res.append(", '" + l.compilerID + "'");
+        }
+        res.append("]\n");
+                
+        res.append("           };\n" +
+        "           \n" +
+        "           var userList = new List('test-results-tab', options);\n" +
+        "       </script>\n" +
+        " </body>\n");
         res.append("</html>");
         return res.toString();
     }

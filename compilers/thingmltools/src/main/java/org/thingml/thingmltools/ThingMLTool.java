@@ -33,6 +33,7 @@ import java.util.Map;
  */
 public abstract class ThingMLTool {
     public File outDir;
+    public File src;
     public Map<String, StringBuilder> generatedCode = new HashMap<>();
     public String options;
 
@@ -49,6 +50,10 @@ public abstract class ThingMLTool {
 
     public File getOutputDirectory() {
         return outDir;
+    }
+    
+    public void setSourceFile(File src) {
+        this.src = src;
     }
 
     public void setOutputDirectory(File outputDirectory) {

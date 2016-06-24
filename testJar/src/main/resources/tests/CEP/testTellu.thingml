@@ -1,0 +1,84 @@
+import "../thingml.thingml"
+
+thing TestTellu includes Test
+@test " A # O"
+@test " B # K"
+@conf "connector test.dataRcv => test.dataSend"
+{
+
+  message tp(T : UInt8, P : UInt8)
+  message tpcomp(T : UInt8, P : UInt8)
+  message void()
+
+  provided port dataSend {
+    sends tp, tpcomp, void
+  }
+
+  required port dataRcv {
+    receives tp, tpcomp, void
+  }
+
+  function splitter() do
+    var index : UInt8 = 0
+    while (index < 9) do
+      dataSend!tp(1, index)
+      index = index + 1
+    end
+  end
+
+  function compensate(p: UInt8, a : UInt8, b : UInt8, c :UInt8) : UInt8 do
+    // complex usage of polynomials
+    return p + a + b + c
+  end
+
+  stream compBuffer
+  from e @UseOnce "False" @Expose "CompBuffer" : dataRcv?tpcomp::buffer 3 by 1
+  produce dataSend!void()
+
+  stream join
+  from e : dataRcv?tp
+  select var comp : UInt8[]  = 'CompBufferP'
+         var a : UInt8 = comp[0]
+         var b : UInt8 = comp[1]
+         var c : UInt8 = comp[2]
+         var compP : UInt8 = compensate(e.P, a, b, c)
+  produce dataSend!tpcomp(e.T, compP)
+
+
+
+  statechart testTellu init Init {
+
+    state Init {
+      internal
+      event e : harnessIn?testIn
+      guard e.c == '\'A\''
+      action do
+        dataSend!tpcomp(0, 0)
+        dataSend!tpcomp(0, 1)
+        dataSend!tpcomp(0, 2)
+        dataSend!tp(0, 0)
+      end
+
+      internal
+      event e : harnessIn?testIn
+      guard e.c == '\'B\''
+      action do
+        dataSend!tpcomp(0, 0)
+        dataSend!tpcomp(0, 1)
+        dataSend!tpcomp(0, 2)
+        dataSend!tpcomp(0, 2)
+        dataSend!tp(0, 0)
+      end
+
+      internal
+      event e : dataRcv?tpcomp
+      guard e.P == 3
+      action harnessOut!testOut('\'O\'')
+
+      internal
+      event e : dataRcv?tpcomp
+      guard e.P == 5
+      action harnessOut!testOut('\'K\'')
+    }
+  }
+}

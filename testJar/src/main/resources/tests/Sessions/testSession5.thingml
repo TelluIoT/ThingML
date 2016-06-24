@@ -1,0 +1,29 @@
+import "../thingml.thingml"
+
+thing TestSession5 includes Test
+@test "ABC # (ABC|ACB|BAC|BCA|CAB|CBA)"
+{
+	property ID : Char = '\'M\''
+
+	statechart Chart init A {
+    	state A {}
+			
+		region R init INIT {
+		  	state INIT {
+					internal 
+					event e : harnessIn?testIn
+					action do
+						ID = e.c
+						fork s
+						ID = '\'M\''
+					end
+		  	}
+
+			session s<5> init S1 {
+				final state S1 {
+					on entry harnessOut!testOut(ID)
+				}		
+			}
+		}
+    }
+}

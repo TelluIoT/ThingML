@@ -1,0 +1,53 @@
+import "../thingml.thingml"
+
+thing fragment ArrayMsg {
+	message mArray(Ar : Char[4])
+}
+
+thing TestMessageArrays includes Test, ArrayMsg
+@test "x # ABCD"
+@conf "instance D : SendArray"
+@conf "connector test.p => D.p"
+{
+	required port p {
+		receives mArray
+	}
+	
+	function f(Ar : Char[4]) do
+		harnessOut!testOut(Ar[0])
+		harnessOut!testOut(Ar[1])
+		harnessOut!testOut(Ar[2])
+		harnessOut!testOut(Ar[3])
+	end
+    
+    statechart TestArrays init S0 {
+    	
+    	state S0 {
+			internal event e : p?mArray
+			action f(e.Ar)
+    	}
+
+    }
+}
+
+thing SendArray includes ArrayMsg {
+
+	property array : Char[4]
+
+	provided port p {
+		sends mArray
+	}
+
+	set array[0] = '\'A\''
+	set array[1] = '\'B\''
+	set array[2] = '\'C\''
+	set array[3] = '\'D\''
+    
+    statechart TestArrays init S0 {
+    	
+    	state S0 {
+			on entry p!mArray(array)
+    	}
+
+    }
+}

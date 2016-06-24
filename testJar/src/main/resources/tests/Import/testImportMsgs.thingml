@@ -1,0 +1,38 @@
+import "../thingml.thingml"
+import "import/B_Msgs.thingml"
+
+thing TestImportMsgs includes Test, B_Msgs 
+@test "x # AB"
+{
+    internal port p {
+		sends msgA, msgB
+		receives msgA, msgB
+	}
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			
+			internal
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+			action do
+				p!msgA()
+			end
+
+			internal
+			event p?msgA
+			action do
+				harnessOut!testOut('\'A\'')
+				p!msgB()
+			end
+
+			internal
+			event p?msgB
+			action do
+				harnessOut!testOut('\'B\'')
+			end
+			    		
+    	}
+    }
+}

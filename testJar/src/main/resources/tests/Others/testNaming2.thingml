@@ -1,0 +1,39 @@
+import "../thingml.thingml"
+
+thing TestNaming2 includes Test 
+@test " # X"
+{
+    
+    message boolean(boolean : Boolean);
+    message int(int : Integer);
+    
+    provided port float {
+        sends boolean, int
+        receives int, boolean    
+    }
+    
+    property boolean : Boolean
+    property int : Integer
+    
+    function boolean(boolean : Boolean) do
+        boolean = false
+        float!boolean(boolean)
+        print "boolean"
+    end
+    
+    function int(int : Integer) do
+        int = 0
+        float!int(int)
+        print "int"
+    end
+    
+	statechart TestNaming2 init A {
+	       state A {
+                on entry do
+                    boolean(true)
+                    int(0)
+                    harnessOut!testOut('\'X\'')
+                end
+           }
+    }             
+}

@@ -1,0 +1,40 @@
+import "../thingml.thingml"
+
+thing TestIncrement includes Test
+@test "x # AB"
+{
+	property I : Integer = 0
+	property J : Integer = 0
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			on entry do
+				var K : Integer = 0
+				if(1<2) do
+					I++
+					K++
+				end
+				if(2<1) do
+					harnessOut!testOut('\'X\'')
+				end
+				else do
+					I++
+					K++
+				end
+				J=0
+				while (J<2) do
+					I++
+					J++
+					K++
+				end
+				if(I == 4) do
+					harnessOut!testOut('\'A\'')
+				end
+				if(K == 4) do
+					harnessOut!testOut('\'B\'')
+				end
+			end
+    	}
+    }
+}

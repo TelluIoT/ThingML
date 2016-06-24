@@ -1,0 +1,28 @@
+import "../thingml.thingml"
+
+thing TestTransition includes Test 
+@test "t # IF"
+@test "tt # IFI"
+@test "tb # IFF"
+@test "ttsdfgtazbberttt # IFIFFFIFI"
+{
+	statechart TestTransition init I {
+	
+		state I {
+			on entry harnessOut!testOut('\'I\'')
+			transition -> F
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+		
+		state F {
+			on entry harnessOut!testOut('\'F\'')
+			transition -> I
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+			transition -> F
+			event m : harnessIn?testIn
+			guard m.c == '\'b\''
+		}
+	}
+}

@@ -1,0 +1,29 @@
+import "../thingml.thingml"
+
+
+thing TestFunctionArrays includes Test 
+@test "x # ABCD"
+{
+	property array : Char[4]
+	
+	function f(Ar : Char[4]) do
+		harnessOut!testOut(Ar[0])
+		harnessOut!testOut(Ar[1])
+		harnessOut!testOut(Ar[2])
+		harnessOut!testOut(Ar[3])
+	end
+
+	set array[0] = '\'A\''
+	set array[1] = '\'B\''
+	set array[2] = '\'C\''
+	set array[3] = '\'D\''
+    
+    statechart TestArrays init S0 {
+    	
+    	state S0 {
+			internal event e : harnessIn?testIn
+			action f(array)
+    	}
+
+    }
+}

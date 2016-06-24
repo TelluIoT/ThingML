@@ -1,0 +1,24 @@
+import "../thingml.thingml"
+
+thing fragment Obj {
+    property frag : Int16 = 0
+    property obj : Int16 = 0
+    property conf : Int16 = 0
+}
+
+thing TestMaskProperty includes Test, Obj 
+@test "ttt # 111"
+@conf "set test.conf = 2"
+{
+	set obj = 1
+	statechart TestMaskProperty init I {
+		state I {
+			internal event m : harnessIn?testIn
+			guard m.c == '\'t\''
+			action do
+				if (frag == 0 and obj == 1 and conf == 2) harnessOut!testOut('\'1\'')
+				if (not (frag == 0) or not (obj == 1) and not(conf == 2)) harnessOut!testFailure()
+				end 		
+		}
+	}
+}

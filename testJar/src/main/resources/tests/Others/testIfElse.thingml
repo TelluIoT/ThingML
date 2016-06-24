@@ -1,0 +1,35 @@
+import "../thingml.thingml"
+
+thing TestIfElse includes Test 
+@test "x # xz"
+{
+  
+    statechart TestPropertyPing init INIT {
+    
+    	state INIT {
+			
+		property x : Integer = 2
+
+    		transition -> STOP
+			event m : harnessIn?testIn
+			guard m.c == '\'x\'' 
+			action do
+				if ((3 + x) * ((6 - 4) * 2) == 20)
+				    harnessOut!testOut('\'x\'')//send x
+				else 
+					harnessOut!testOut('\'z\'')//do not send z
+					
+				if (not((3 + x) * ((6 - 4) * 2) == 20)) do
+				    harnessOut!testOut('\'x\'')//do send x
+				end
+				else do
+					harnessOut!testOut('\'z\'')//send z
+				end
+	        end			  		
+    	}
+
+	state STOP {
+
+	}
+    }
+}

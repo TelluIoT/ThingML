@@ -1,0 +1,30 @@
+import "../thingml.thingml"
+
+thing TestInternalPort includes Test 
+@test "t # EX"
+{
+    message intern();
+    
+    internal port intP {
+        sends intern
+        receives intern
+    }
+    
+    function f() do
+        intP!intern()
+    end
+    
+	statechart TestInternalPort init I {
+	
+		state I {
+			on entry harnessOut!testOut('\'E\'')
+
+            internal event m : harnessIn?testIn
+			guard m.c == '\'t\'' 
+            action f()
+			
+			internal event n : intP?intern
+			action harnessOut!testOut('\'X\'')
+		}
+	}
+}
