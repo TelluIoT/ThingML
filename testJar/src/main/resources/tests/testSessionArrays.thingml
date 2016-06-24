@@ -14,12 +14,11 @@ thing TestSessionArrays includes Test
 		harnessOut!testOut(A[2])
 	end
 	
-	message m()
 	message n()
 
 	internal port p {
-		sends m, n
-		receives m, n
+		sends n
+		receives n
 	}
 
 	statechart Chart init INIT {
@@ -30,7 +29,6 @@ thing TestSessionArrays includes Test
 			action do
 				f(ar)
 				fork s
-				p!m()
 			end
 
 			internal
@@ -39,17 +37,16 @@ thing TestSessionArrays includes Test
     	}
 
 		session s<5> init S1 {
-			on entry do
-				f(ar)
-				ar[0] = '\'4\''
-				ar[1] = '\'5\''
-				ar[2] = '\'6\''
-			end
 			state S1 {
-				on entry f(ar)
+				on entry do
+				    f(ar)
+                	ar[0] = '\'4\''
+                	ar[1] = '\'5\''
+                	ar[2] = '\'6\''
+				    f(ar)
+				end
 
 				transition -> S2
-				event e : p?m
 				action p!n()
 			}		
 			final state S2 {

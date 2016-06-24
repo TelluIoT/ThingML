@@ -1,7 +1,7 @@
 var mqtt = require('mqtt');
 var Format = require('.//*$FORMAT$*/');
 
-function /*$NAME$*/(name, debug, serverURL, topic, instance) {
+function /*$NAME$*/(name, debug, serverURL, subtopic, pubtopic, instance) {
     this.name = name;
     this.debug = debug;
     var _this;
@@ -15,7 +15,7 @@ function /*$NAME$*/(name, debug, serverURL, topic, instance) {
     const client = mqtt.connect(serverURL);
 
     client.on('connect', function open() {
-        client.subscribe(topic);
+        client.subscribe(subtopic);
     });
 
    	client.on('message', function(topic, message) {

@@ -35,19 +35,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class JavaSerialPlugin extends NetworkPlugin {
+public class JavaWSPlugin extends NetworkPlugin {
 
-    public JavaSerialPlugin() {
+    public JavaWSPlugin() {
         super();
     }
 
     public String getPluginID() {
-        return "JavaSerialPlugin";
+        return "JavaWSPlugin";
     }
 
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
-        res.add("Serial");
+        res.add("websocket");
+        res.add("WS");
         return res;
     }
 
@@ -76,8 +77,32 @@ public class JavaSerialPlugin extends NetworkPlugin {
         }
     }
 
+    private void updatePOM(Context ctx) {
+        //Update POM.xml with JSSC Maven dependency
+        try {
+            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/pom.xml");
+            final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
+            String pom = "";
+            for (String line : packLines) {
+                pom += line + "\n";
+            }
+            input.close();
+            pom = pom.replace("<!--DEP-->", "<dependency>\n" +
+                    "    <groupId>com.neovisionaries</groupId>\n" +
+                    "    <artifactId>nv-websocket-client</artifactId>\n" +
+                    "    <version>1.27</version>\n" +
+                    "</dependency>\n<!--DEP-->");
+            final File f = new File(ctx.getOutputDirectory() + "/POM.xml");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(pom, output, java.nio.charset.Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
-        updatePOM(ctx, cfg);
+        updatePOM(ctx);
         StringBuilder builder = new StringBuilder();
         for (Protocol prot : protocols) {
             String serializers = "";
@@ -95,19 +120,19 @@ public class JavaSerialPlugin extends NetworkPlugin {
 
             for (Message m : messages) {
                 StringBuilder temp = new StringBuilder();
-                serializers += sp.generateSerialization(temp, prot.getName() + "BinaryProtocol", m);
+                serializers += sp.generateSerialization(temp, prot.getName() + "StringProtocol", m);
             }
             messages.clear();
             builder = new StringBuilder();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 addMessage(tpm.m);
             }
-            sp.generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
+            sp.generateParserBody(builder, prot.getName() + "StringProtocol", null, messages, null);
             final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);
             try {
                 final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
                 folder.mkdir();
-                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/" + prot.getName() + "BinaryProtocol.java");
+                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/" + prot.getName() + "StringProtocol.java");
                 final OutputStream output = new FileOutputStream(f);
                 IOUtils.write(result, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
@@ -115,26 +140,6 @@ public class JavaSerialPlugin extends NetworkPlugin {
                 e.printStackTrace();
             }
             new SerialProtocol(ctx, prot, cfg).generate();
-        }
-    }
-
-    private void updatePOM(Context ctx, Configuration cfg) {
-        //Update POM.xml with JSSC Maven dependency
-        try {
-            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/pom.xml");
-            final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
-            String pom = "";
-            for (String line : packLines) {
-                pom += line + "\n";
-            }
-            input.close();
-            pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.scream3r</groupId>\n<artifactId>jssc</artifactId>\n<version>2.8.0</version>\n</dependency>\n<!--DEP-->");
-            final File f = new File(ctx.getOutputDirectory() + "/POM.xml");
-            final OutputStream output = new FileOutputStream(f);
-            IOUtils.write(pom, output, java.nio.charset.Charset.forName("UTF-8"));
-            IOUtils.closeQuietly(output);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -171,13 +176,13 @@ public class JavaSerialPlugin extends NetworkPlugin {
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 addPort(tpm.p);
             }
-            String template = ctx.getTemplateByID("templates/JavaSerialPlugin.java");
-            template = template.replace("/*$SERIALIZER$*/", prot.getName() + "BinaryProtocol");
+            String template = ctx.getTemplateByID("templates/JavaWSPlugin.java");
+            template = template.replace("/*$SERIALIZER$*/", prot.getName() + "StringProtocol");
             StringBuilder parseBuilder = new StringBuilder();
-            parseBuilder.append("final Event event = " + prot.getName() + "BinaryProtocol.instantiate(payload);\n");
+            parseBuilder.append("final Event event = " + prot.getName() + "StringProtocol.instantiate(payload);\n");
             for(Port p : ports) {//FIXME
                 parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
-            };
+            }
             template = initPort(ctx, template);
             for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {
                 updateMain(ctx, cfg, conn);
@@ -187,7 +192,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
             try {
                 final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
                 folder.mkdir();
-                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/SerialJava.java");
+                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/WSJava.java");
                 final OutputStream output = new FileOutputStream(f);
                 IOUtils.write(template, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
@@ -217,9 +222,8 @@ public class JavaSerialPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                final String speed = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "baudrate") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "baudrate").get(0) : "9600";
-                final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";
-                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nSerialJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (SerialJava) new SerialJava(\"" + port + "\", " + speed + ").buildBehavior(null, null);\n");
+                final String url = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "ws://127.0.0.1:9000");
+                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nWSJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (WSJava) new WSJava(\"" + url + "\").buildBehavior(null, null);\n");
 
                 StringBuilder connBuilder = new StringBuilder();
                 connBuilder.append(conn.getName() + "_" + conn.getProtocol().getName() + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port().addListener(");

@@ -94,7 +94,7 @@ public class JsTTYPlugin extends NetworkPlugin {
             String serializers = "";
             messages.clear();
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                messages.add(tpm.m);
+                addMessage(tpm.m);
             }
             for(Message m : messages) {
                 StringBuilder temp = new StringBuilder();
@@ -104,7 +104,7 @@ public class JsTTYPlugin extends NetworkPlugin {
             builder = new StringBuilder();
             messages.clear();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
-                messages.add(tpm.m);
+                addMessage(tpm.m);
             }
             sp.generateParserBody(builder, prot.getName() + "StringProtocol", null, messages, null);
             final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);

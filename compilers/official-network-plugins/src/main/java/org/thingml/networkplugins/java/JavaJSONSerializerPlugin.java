@@ -25,54 +25,104 @@
  */
 package org.thingml.networkplugins.java;
 
-import org.sintef.thingml.Message;
-import org.sintef.thingml.ObjectType;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.PrimitiveType;
+import org.apache.commons.io.IOUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
 
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class JavaJSONSerializerPlugin extends SerializationPlugin {
 
+    final Set<Message> messages = new HashSet<Message>();
+
+    private void clearMessages() {
+        messages.clear();
+    }
+
+    private boolean containsMessage(Message m) {
+        for(Message msg : messages) {
+            if (EcoreUtil.equals(msg, m)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void addMessage(Message m) {
+        if (!containsMessage(m)) {
+            messages.add(m);
+        }
+    }
+
+    private void instantiateMessageType(StringBuilder builder, Message m) {
+        if (!containsMessage(m)) {
+            builder.append("private static final " + context.firstToUpper(m.getName()) + "MessageType " + m.getName().toUpperCase() + " = new " + context.firstToUpper(m.getName()) + "MessageType();\n");
+            addMessage(m);
+        }
+    }
+
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
-        builder.append("private static final " + context.firstToUpper(m.getName()) + "MessageType " + m.getName().toUpperCase() + " = new " + context.firstToUpper(m.getName()) + "MessageType();\n");
+        instantiateMessageType(builder, m);
         builder.append("/**Serializes a message into a JSON format*/\n");
-        builder.append("private static String toString(" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
-        builder.append("JSONObject msg = new JSONObject();\n");
-        builder.append("JSONObject params = new JSONObject();\n");
+        builder.append("private static String toString(final " + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
+        builder.append("final JsonObject msg = new JsonObject();\n");
+        builder.append("final JsonObject params = new JsonObject();\n");
         for (Parameter p : m.getParameters()) {
-            builder.append("params.put(\"" + p.getName() + "\", _this." + p.getName() + ");\n");
+            builder.append("params.add(\"" + p.getName() + "\", _this." + p.getName() + ");\n");
         }
-        builder.append("msg.put(\"" + m.getName() + "\",params);\n");
+        builder.append("msg.add(\"" + m.getName() + "\",params);\n");
         builder.append("return msg.toString();\n");
         builder.append("}\n\n");
         
         return builder.toString();
     }
 
+    private void updatePOM(Context ctx) {
+        //Update POM.xml with JSON Maven dependency
+        try {
+            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/pom.xml");
+            final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
+            String pom = "";
+            for (String line : packLines) {
+                pom += line + "\n";
+            }
+            input.close();
+            pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>com.eclipsesource.minimal-json</groupId>\n<artifactId>minimal-json</artifactId>\n<version>0.9.4</version>\n</dependency>\n<!--DEP-->");
+            final File f = new File(ctx.getOutputDirectory() + "/POM.xml");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(pom, output, java.nio.charset.Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+        updatePOM(context);
         builder.append("package org.thingml.generated.network;\n\n");
         builder.append("import org.thingml.generated.messages.*;\n");
         builder.append("import org.thingml.java.ext.Event;\n");
-        builder.append("import org.json.simple.JSONObject;\n");
+        builder.append("import com.eclipsesource.json.JsonObject;\nimport com.eclipsesource.json.JsonValue;\nimport com.eclipsesource.json.Json;\n");
         builder.append("public class " + bufferName + " {\n");
         for(Message m : messages) {
-            builder.append("private static final " + context.firstToUpper(m.getName()) + "MessageType " + m.getName().toUpperCase() + " = new " + context.firstToUpper(m.getName()) + "MessageType();\n");
+            instantiateMessageType(builder, m);
         }
         //Instantiate message from binary
         builder.append("public static Event instantiate(String payload) {\n");
-        builder.append("JSONParser parser = new JSONParser();\n");
         builder.append("try{\n");
-        builder.append("Object obj = parser.parse(payload);\n");
-        builder.append("JSONObject msg = (JSONObject)obj;\n");
-        builder.append("for(msgName : msg.EntrySet()){\n");
+        builder.append("final JsonObject msg = Json.parse(payload).asObject();\n");
+        builder.append("final String msgName = msg.names().get(0);\n");
         boolean isFirst = true;
         for(Message m : messages) {
             if(isFirst) {
@@ -80,21 +130,46 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
             } else {
                 builder.append("else ");
             }
-            builder.append("if( msgName.compareTo(" + m.getName() + ") == 0){\n");
+            builder.append("if(msgName.equals(" + m.getName().toUpperCase() + ".getName())){\n");
             builder.append("return " + m.getName().toUpperCase() + ".instantiate(");
             for (Parameter p : m.getParameters()) {
                 if (m.getParameters().indexOf(p) > 0)
                     builder.append(", ");
                 builder.append("(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + ") ");
-                builder.append("msg.get(msgName).get(" + p.getName() + ")");
+                builder.append("msg.get(msgName).asObject().get(\"" + p.getName() + "\")");
+                String getter = "asString()";
+                switch (AnnotatedElementHelper.annotationOrElse(p.getType(), "java_type", "void")) {
+                    case "int": getter = "asInt()"; break;
+                    case "long": getter = "asInt()"; break;
+                    case "float": getter = "asFloat()"; break;
+                    case "double": getter = "asDouble()"; break;
+                    case "byte": getter = "asInt()"; break;
+                    case "boolean": getter = "asBoolean()"; break;
+                    case "char": getter = "asString().chatAt(0)"; break;
+                    default: break;
+                }
+                builder.append("." + getter);
             }
             builder.append(");\n}\n");
 
         }
-        builder.append("default: return null;\n");
-        builder.append("}catch(ParseException pe){\n");
-        builder.append("default: return null;\n");
+        builder.append("\n}catch(Exception pe){\n");
+        builder.append("System.out.println(\"Cannot parse \" + payload + \" because of \" + pe.getMessage());\n");
         builder.append("}\n");
+        builder.append("return null;\n");
+        builder.append("}\n");
+
+        builder.append("public static String toString(Event e){\n");
+        int i = 0;
+        for(Message m : messages) {
+            if (i > 0)
+                builder.append("else ");
+            builder.append("if (e.getType().equals(" +  m.getName().toUpperCase() + ")) {\n");
+            builder.append("return toString((" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message)e);\n");
+            builder.append("}\n");
+            i++;
+        }
+        builder.append("return null;\n");
         builder.append("}\n");
 
         builder.append("/*$SERIALIZERS$*/\n\n");

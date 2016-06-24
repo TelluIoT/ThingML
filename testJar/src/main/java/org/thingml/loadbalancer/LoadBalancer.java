@@ -57,6 +57,7 @@ public class LoadBalancer {
         final File testCfgDir = new File(tmpDir, "thingml");
         final File codeDir = new File(tmpDir, "genCode");
         final File logDir = new File(tmpDir, "log");
+        File ressourcesDir = new File(workingDir.getPath() + "/src/main/resources");
         File compilerJar;
         if(args.length > 0) {
             compilerJar = new File(workingDir, args[0]);
@@ -136,7 +137,7 @@ public class LoadBalancer {
                     n.port = Integer.parseInt(loadBalancerProp.getProperty(nodeName + "_port"));
                     n.httpPort = Integer.parseInt(loadBalancerProp.getProperty(nodeName + "_httpPort"));
                     totalWeight += n.weight;
-                    System.out.println("nodeList item: <" + n.name + ", " + n.ip + ", " + n.port + ", " + n.weight + ">");
+                    System.out.println("nodeList item: (" + n.name + ", " + n.ip + ", " + n.port + ", " + n.weight + ")");
                     nl.put(nodeName, n);
                 }
             }
@@ -144,7 +145,7 @@ public class LoadBalancer {
             Set<String> tl = new HashSet<>();
             if(testList != null) {
                 for(String tstr : testList.split(",")) {
-                    System.out.println("testList item: <" + tstr.trim() + ">");
+                    System.out.println("testList item: (" + tstr.trim() + ")");
                     tl.add(tstr.trim());
                 }
             }
@@ -217,7 +218,7 @@ public class LoadBalancer {
             }
             for (CloudNode n : nl.values()) {
                 n.languages.add(languageList);
-                n.makeTestDir(workingDir, compilerJar, testJar, testFolder);
+                n.makeTestDir(workingDir, ressourcesDir, compilerJar, testJar, testFolder);
             }
             System.out.println("Master Node IP: " + loadBalancerProp.getProperty("masternode_ip"));
             System.out.println("Master Node Port: " + loadBalancerProp.getProperty("masternode_port"));

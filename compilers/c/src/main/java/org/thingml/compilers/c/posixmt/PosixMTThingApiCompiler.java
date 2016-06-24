@@ -94,7 +94,7 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         
         //Sessions
         builder.append("\n// Instances of different sessions\n");
-        for(Session s : RegionHelper.allContainedSessions(sm)) {
+        for(Session s : CompositeStateHelper.allContainedSessions(sm)) {
             builder.append("struct session_t * sessions_" + s.getName() + ";\n");
         }
         

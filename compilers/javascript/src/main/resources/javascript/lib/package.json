@@ -5,7 +5,7 @@
   "main": "main.js",
   "private": true,
   "dependencies": {
-    "state.js": "^5.6.8"
+    "state.js": "^5.6.10"
   },
   "devDependencies": {
   },

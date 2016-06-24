@@ -160,7 +160,11 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         builder.append("Component " + action.getSession().getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + "(\"" + action.getSession().getName() + "\"");
         for (Property p : ThingHelper.allPropertiesInDepth(ThingMLHelpers.findContainingThing(action.getSession()))) {
             builder.append(", ");
-            builder.append(ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this." + ctx.getVariableName(p));
+            if (p.isIsArray() || p.getCardinality() != null) {
+                builder.append("Arrays.copyOf(" + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this." + ctx.getVariableName(p) + ", " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this." + ctx.getVariableName(p) + ".length)");
+            } else {
+                builder.append(ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this." + ctx.getVariableName(p));
+            }
         }
         builder.append(").buildBehavior(\"" + action.getSession().getName() + "\", " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this);\n");
         builder.append(ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this.forkId = " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this.forkId + 1;\n");
