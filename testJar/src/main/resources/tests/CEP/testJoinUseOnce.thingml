@@ -1,0 +1,43 @@
+import "../thingml.thingml"
+
+thing fragment TestMsgs {
+  message m1();
+  message m2();
+
+  message res();
+}
+
+thing TestJoinUseOnce includes Test, TestMsgs
+@test " # ff"
+@conf "connector test.recv => test.send"
+{
+  provided port send {
+    sends m1, m2, res
+  }
+
+  required port recv {
+    receives m1, m2, res
+  }
+
+  stream filterStream
+  from m: [e1 @UseOnce "False" : recv?m1 & e2: recv?m2 -> res()]
+  produce send!res()
+
+
+  statechart testSimpleFilter init Init {
+      state Init {
+          on entry do
+              send!m1()
+              send!m2()
+              send!m2()
+          end
+
+          internal
+          event recv?res
+          action harnessOut!testOut('\'f\'')
+      }
+  }
+
+
+}
+

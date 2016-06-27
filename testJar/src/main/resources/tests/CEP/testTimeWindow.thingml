@@ -1,0 +1,47 @@
+import "../thingml.thingml"
+
+thing fragment TestMsgs {
+  message m1();
+
+  message cep(val : UInt8);
+}
+
+thing TestTimeWindow includes Test, TestMsgs, TimerClient
+@c_header "#include <Arduino.h>"
+@test " # S"
+@test_duration "1000"
+@test_timer_instance "t"
+@conf "connector test.timer => t.timer"
+@conf "connector test.recP => test.sendP"
+{
+
+  provided port sendP {
+    sends m1, cep
+  }
+
+  required port recP {
+    receives m1, cep
+  }
+
+  stream simpleJoin2 @TTL "600"
+  from m @Buffer "10" : recP?m1::during 500 by 500
+  select var size : UInt8 = m.length
+  produce sendP!cep(size)
+
+  statechart testSimpleJoin init Init {
+    state Init {
+      on entry do
+        sendP!m1()
+        sendP!m1()
+        sendP!m1()
+
+      end
+
+      internal
+      event e : recP?cep
+      guard e.val == 3
+      action harnessOut!testOut('\'S\'')
+    }
+  }
+
+}

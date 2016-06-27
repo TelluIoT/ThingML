@@ -1,0 +1,54 @@
+import "../thingml.thingml"
+
+
+thing TestMessageFunction includes Test 
+@test "hellohello # worldworld"
+@test "hallo # w"
+{
+
+  function output(c : Char) : Char do
+    return c
+  end
+
+	statechart TestHello init H {
+	
+		state H {	
+			transition -> E 
+			event m : harnessIn?testIn
+			guard m.c == '\'h\''
+			action harnessOut!testOut(output('\'w\''))
+			
+			internal event m : harnessIn?testIn
+			guard not (m.c == '\'h\'')
+			action harnessOut!testFailure()
+		}
+		
+		state E {
+			transition -> L1 
+			event m : harnessIn?testIn
+			guard m.c == '\'e\''
+			action harnessOut!testOut(output('\'o\''))
+		}
+		
+		state L1 {
+			transition -> L2 
+			event m : harnessIn?testIn
+			guard m.c == '\'l\''
+			action harnessOut!testOut(output('\'r\''))
+		}
+		
+		state L2 {
+			transition -> O 
+			event m : harnessIn?testIn
+			guard m.c == '\'l\''
+			action harnessOut!testOut(output('\'l\''))
+		}
+		
+		state O {
+			transition -> H 
+			event m : harnessIn?testIn
+			guard m.c == '\'o\''
+			action harnessOut!testOut(output('\'d\''))
+		}
+	}
+}

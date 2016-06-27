@@ -1,0 +1,69 @@
+import "../thingml.thingml"
+
+thing TestHistoryStates includes Test 
+@test "yzyznyniyziyzniyz # I1313412I24I243I23"
+
+{
+	statechart TestHistoryStates init I {
+	
+		state I {
+			on entry harnessOut!testOut('\'I\'')
+			
+			transition -> C1
+			event m : harnessIn?testIn
+			guard m.c == '\'y\''
+			
+			transition -> C2
+			event m : harnessIn?testIn
+			guard m.c == '\'z\''
+		}
+		
+		composite state C1 init C1S1 keeps history {
+		
+		transition -> I
+		event m : harnessIn?testIn
+		guard m.c == '\'i\''
+		transition -> C2
+		event m : harnessIn?testIn
+		guard m.c == '\'z\''
+		
+			state C1S1 {
+				on entry harnessOut!testOut('\'1\'')
+				transition -> C1S2
+				event m : harnessIn?testIn
+				guard m.c == '\'n\''
+			}
+			
+			state C1S2 {
+				on entry harnessOut!testOut('\'2\'')
+				transition -> C1S1
+				event m : harnessIn?testIn
+				guard m.c == '\'n\''
+			}
+		}	
+		
+		composite state C2 init C2S1 keeps history {
+				
+			transition -> I
+			event m : harnessIn?testIn
+			guard m.c == '\'i\''
+			transition -> C1
+			event m : harnessIn?testIn
+			guard m.c == '\'y\''
+				
+			state C2S1 {	
+				on entry harnessOut!testOut('\'3\'')
+				transition -> C2S2
+				event m : harnessIn?testIn
+				guard m.c == '\'n\''
+			}
+				
+			state C2S2 {
+				on entry harnessOut!testOut('\'4\'')
+				transition -> C2S1
+				event m : harnessIn?testIn
+				guard m.c == '\'n\''
+			}
+		}
+	}
+}

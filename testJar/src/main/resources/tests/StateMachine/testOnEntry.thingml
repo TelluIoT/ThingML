@@ -1,0 +1,23 @@
+import "../thingml.thingml"
+
+thing TestOnEntry includes Test 
+@test "t # E"
+@test "tt # EE"
+@test "tdfgt # EE"
+@test "t* # E*"
+{
+	statechart TestOnEntry init I {
+	
+		state I {
+			transition -> J
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+		state J {
+			on entry harnessOut!testOut('\'E\'')
+			transition -> J
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+	}
+}

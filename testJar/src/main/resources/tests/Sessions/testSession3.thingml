@@ -1,0 +1,63 @@
+import "../thingml.thingml"
+
+thing TestSession3 includes Test
+@test "x # STX"
+{
+    
+    message ready();
+    message ping();
+    message pong();
+    
+    internal port sessionPort {
+        sends ready, ping, pong
+        receives ready, ping, pong    
+    }
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			internal 
+			event e : harnessIn?testIn
+			guard e.c == '\'x\''
+			action fork s
+    	}
+
+		session s<5> init S1 {
+			state S1 {
+				on entry do
+                    harnessOut!testOut('\'S\'')
+                    fork t
+                end
+
+				transition -> S2
+				event sessionPort?ready
+			}
+
+			state S2 {
+                on entry do
+                    sessionPort!ping()
+                end
+                
+                transition -> S3
+                event sessionPort?pong
+			}
+
+            final state S3 {
+                on entry harnessOut!testOut('\'X\'')
+            }
+
+			session t<2> init T1 {
+				state T1 {
+                    on entry do
+                        harnessOut!testOut('\'T\'')
+                        sessionPort!ready()
+                    end
+    
+					internal 
+					event sessionPort?ping
+					action sessionPort!pong()
+				}		
+			}
+		}
+    }
+}

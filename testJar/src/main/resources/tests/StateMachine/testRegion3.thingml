@@ -1,0 +1,63 @@
+import "../thingml.thingml"
+
+thing TestRegion3 includes Test 
+@test "tt # (ACE|AEC|CAE|CEA|EAC|ECA)(BDF|BFD|DBF|DFB|FBD|FDB)(ACE|AEC|CAE|CEA|EAC|ECA)"
+
+
+{
+	statechart TestRegion init I {
+	                                  
+		composite state I init A {
+		
+			state A {
+				on entry harnessOut!testOut('\'A\'')
+				transition -> B
+				event m : harnessIn?testIn
+				guard m.c == '\'t\''
+			}
+		
+			state B {
+				on entry harnessOut!testOut('\'B\'')
+				transition -> A
+				event m : harnessIn?testIn
+				guard m.c == '\'t\''
+			}
+
+			region S init C {
+
+				state C {
+					on entry harnessOut!testOut('\'C\'')
+					transition -> D
+					event m : harnessIn?testIn
+					guard m.c == '\'t\''
+				}
+
+				state D {
+					on entry harnessOut!testOut('\'D\'')
+					transition -> C
+					event m : harnessIn?testIn
+					guard m.c == '\'t\''
+				}
+			}
+		}
+		
+		region R init E {
+		
+			state E {
+				on entry harnessOut!testOut('\'E\'')
+				transition -> F
+				event m : harnessIn?testIn
+				guard m.c == '\'t\''
+			}
+		
+			state F {
+				on entry harnessOut!testOut('\'F\'')
+				transition -> E
+				event m : harnessIn?testIn
+				guard m.c == '\'t\''
+			}
+		
+			
+		}	
+	}
+}

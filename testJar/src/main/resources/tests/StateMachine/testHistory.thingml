@@ -1,0 +1,42 @@
+import "../thingml.thingml"
+
+thing TestHistory includes Test 
+@test "t # IC0"
+@test "tntt # IC0123XIC2"
+
+{
+	statechart TestHistory init I {
+	
+		state I {
+			on entry harnessOut!testOut('\'I\'')
+			transition -> C
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+		
+		composite state C init C1 keeps history {
+		
+		on entry harnessOut!testOut('\'C\'')
+		on exit harnessOut!testOut('\'X\'')
+		transition -> I
+		event m : harnessIn?testIn
+		guard m.c == '\'t\''
+		
+			state C1 {
+				on entry harnessOut!testOut('\'0\'')
+				on exit harnessOut!testOut('\'1\'')
+				transition -> C2
+				event m : harnessIn?testIn
+				guard m.c == '\'n\''
+			}
+			
+			state C2 {
+				on entry harnessOut!testOut('\'2\'')
+				on exit harnessOut!testOut('\'3\'')
+				transition -> C1
+				event m : harnessIn?testIn
+				guard m.c == '\'n\''
+			}
+		}			
+	}
+}

@@ -194,7 +194,7 @@ public class TestJar {
 	ExecutorService executor = Executors.newFixedThreadPool(poolSize);
 
         Set<TestCase> testCases = new HashSet<>();
-        Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> testBench = new HashMap<>();
+        Map<String,Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>>> testBench = new HashMap<>();
         
         testCfgDir.mkdir();
         codeDir.mkdir();
@@ -210,12 +210,19 @@ public class TestJar {
         
         System.out.println("Test Files:");
         for(File f : testFiles) {
-            testBench.put(f.getName(), new LinkedList<Map.Entry<TargetedLanguage,List<TestCase>>>());
             System.out.println(f.getName());
             for(TargetedLanguage lang : langs) {
                 TestCase tc = new TestCase(f, compilerJar, lang, codeDir, testCfgDir, logDir);
                 testCases.add(tc);
             }
+            Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> cat;
+            if(testBench.containsKey(f.getParentFile().getName())) {
+                cat = testBench.get(f.getParentFile().getName());
+            } else {
+                cat = new HashMap<>();
+                testBench.put(f.getParentFile().getName(), cat);
+            }
+            cat.put(f.getName(), new LinkedList<Map.Entry<TargetedLanguage,List<TestCase>>>());
         }
 
         System.out.println("");
@@ -247,7 +254,7 @@ public class TestJar {
             testCfg.addAll(children);
             for(TargetedLanguage lang : langs) {
                 if(tc.lang == lang) {
-                    testBench.get(tc.srcTestCase.getName()).add(new HashMap.SimpleEntry<>(tc.lang, children));
+                    testBench.get(tc.category).get(tc.srcTestCase.getName()).add(new HashMap.SimpleEntry<>(tc.lang, children));
                 }
             }
         }
@@ -318,89 +325,92 @@ public class TestJar {
         System.out.println("Done.");
     }
     
-    public static void writeResultsFile(File results, Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> tests, List<TargetedLanguage> langs, File srcDir, boolean localLink, String myIP, String myHTTPServerPort) {
+    public static void writeResultsFile(File results, Map<String,Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>>> tests, List<TargetedLanguage> langs, File srcDir, boolean localLink, String myIP, String myHTTPServerPort) {
         StringBuilder res = new StringBuilder();
         
         if(localLink) {
             res.append(TestHelper.writeHeaderResultsFile(langs));
         }
         
-        
-        for(Map.Entry<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> line : tests.entrySet()) {
-            StringBuilder lineB = new StringBuilder();
-            boolean lineSuccess = true;
-            res.append("            <tr>\n");
-            res.append("            <td class=\"");
-            if(localLink) {
-                lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
-            } else {
-                lineB.append("                <a href=\"http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(srcDir.getPath(), "/thingml") + "/" + line.getKey() + "\"  target=\"test-case-focus\"> " + line.getKey() + "</a>\n");
-            }
-            lineB.append("            </td>\n");
-            for(TargetedLanguage lang : langs) {
-                for(Map.Entry<TargetedLanguage,List<TestCase>> cell : line.getValue()) {
-                    if(cell.getKey() == lang) {
-                        StringBuilder cellB = new StringBuilder();
-                        boolean cellSuccess = !cell.getValue().isEmpty();
+        for(Map.Entry<String, Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>>> category : tests.entrySet()) {
+            
+            for(Map.Entry<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> line : category.getValue().entrySet()) {
+                StringBuilder lineB = new StringBuilder();
+                boolean lineSuccess = true;
+                res.append("            <tr>\n");
+                res.append("                <td class=\"category\">" + category.getKey() + "</td>\n");
+                res.append("                <td class=\"testcase ");
+                if(localLink) {
+                    lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+                } else {
+                    lineB.append("                <a href=\"http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(srcDir.getPath(), "/thingml") + "/" + line.getKey() + "\"  target=\"test-case-focus\"> " + line.getKey() + "</a>\n");
+                }
+                lineB.append("            </td>\n");
+                for(TargetedLanguage lang : langs) {
+                    for(Map.Entry<TargetedLanguage,List<TestCase>> cell : line.getValue()) {
+                        if(cell.getKey() == lang) {
+                            StringBuilder cellB = new StringBuilder();
+                            boolean cellSuccess = !cell.getValue().isEmpty();
 
-                        lineB.append("              <td class=\"");
-                        cellB.append("                  <table>\n");
-                        String cellRes = "";
-                        for(TestCase tc : cell.getValue()) {
-                            cellB.append("                  <tr>\n");
-                            cellB.append("                  <td class=\"" );
-                            if(tc.isLastStepASuccess) {
-                                cellB.append("green");
-                                cellRes = "*";
-                            } else {
-                                cellRes = "!";
-                                cellSuccess = false;
-                                cellB.append("red");
+                            lineB.append("              <td class=\"" + cell.getKey().compilerID + " ");
+                            cellB.append("                  <table>\n");
+                            String cellRes = "";
+                            for(TestCase tc : cell.getValue()) {
+                                cellB.append("                  <tr>\n");
+                                cellB.append("                  <td class=\"" );
+                                if(tc.isLastStepASuccess) {
+                                    cellB.append("green");
+                                    cellRes = "*";
+                                } else {
+                                    cellRes = "!";
+                                    cellSuccess = false;
+                                    cellB.append("red");
+                                }
+                                cellB.append("\">\n");
+
+                                if(localLink || (myIP == null) || (myHTTPServerPort == null)) {
+                                    cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
+                                    cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
+                                } else {
+                                    cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(tc.genCfg.getPath(), "/thingml") + " target=\"test-case-focus\">src</a> | \n");
+                                    cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(tc.logFile.getPath(), "/thingml") + " target=\"test-case-focus\">log</a>\n");
+                                }
+                                cellB.append("                  </td>\n" );
+                                cellB.append("                  </tr>\n");
+
                             }
-                            cellB.append("\">\n");
+                            cellB.append("                  </table>\n");
 
-                            if(localLink || (myIP == null) || (myHTTPServerPort == null)) {
-                                cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
-                                cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
+                            if(cellSuccess) {
+                                lineB.append("green");
                             } else {
-                                cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(tc.genCfg.getPath(), "/thingml") + " target=\"test-case-focus\">src</a> | \n");
-                                cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(tc.logFile.getPath(), "/thingml") + " target=\"test-case-focus\">log</a>\n");
+                                lineB.append("red");
+                                cell.getKey().failedTest.add(line.getKey());
                             }
-                            cellB.append("                  </td>\n" );
-                            cellB.append("                  </tr>\n");
+                            cell.getKey().testNb++;
+                            lineB.append("\">\n");
+                            lineB.append(cellB);
+                            lineB.append("              </td>\n");
 
+                            lineSuccess &= cellSuccess;
                         }
-                        cellB.append("                  </table>\n");
-
-                        if(cellSuccess) {
-                            lineB.append("green");
-                        } else {
-                            lineB.append("red");
-                            cell.getKey().failedTest.add(line.getKey());
-                        }
-                        cell.getKey().testNb++;
-                        lineB.append("\">\n");
-                        lineB.append(cellB);
-                        lineB.append("              </td>\n");
-
-                        lineSuccess &= cellSuccess;
                     }
                 }
+
+
+                if(lineSuccess) {
+                    res.append("green");
+                } else {
+                    res.append("red");
+                }
+                res.append("\">\n");
+                res.append(lineB);
+                res.append("            </tr>\n");
             }
-            
-            
-            if(lineSuccess) {
-                res.append("green");
-            } else {
-                res.append("red");
-            }
-            res.append("\">\n");
-            res.append(lineB);
-            res.append("            </tr>\n");
         }
         
         if(localLink) {
-            res.append(TestHelper.writeFooterResultsFile());
+            res.append(TestHelper.writeFooterResultsFile(langs));
         }
         
         for(TargetedLanguage lang : langs) {

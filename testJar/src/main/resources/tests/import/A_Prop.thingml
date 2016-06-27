@@ -1,5 +1,0 @@
-import "../thingml.thingml"
-
-thing fragment A_Prop {
-	property A : Char = '\'A\''
-}

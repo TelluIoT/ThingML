@@ -1,0 +1,54 @@
+import "../thingml.thingml"
+
+thing TestArrays2 includes Test 
+@test "xxx # helloworldworld"
+{
+
+	property index : UInt16 = 0
+	
+	property hello : Char[5]
+	
+	// First half of the array initialized here
+	set hello[0] = '\'h\''
+	set hello[1] = '\'e\''
+	set hello[2] = '\'l\''
+	set hello[3] = '\'l\''
+	set hello[4] = '\'o\''
+    
+    statechart TestPropertyPing init state1 {
+    
+    	state state1 {
+    		transition -> state2
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+			action do
+				var array : Char[5]
+				var index : Int8 = 0
+				while (index < 5) do 
+					array[index] = hello[index]
+					harnessOut!testOut( array[index] )
+                    index = index + 1
+				end
+				hello[0] = '\'w\''
+				hello[1] = '\'o\''
+				hello[2] = '\'r\''
+                hello[3] = '\'l\''
+				hello[4] = '\'d\''
+			end
+    	}
+    	
+    	state state2 {
+    	transition -> state1
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+			action do
+				var index : Int8 = 0
+				while (index < 5) do 
+					harnessOut!testOut( hello[index] )
+                    index = index + 1
+				end
+			end
+    	}
+
+    }
+}

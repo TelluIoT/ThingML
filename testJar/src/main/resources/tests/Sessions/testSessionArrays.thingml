@@ -1,0 +1,56 @@
+import "../thingml.thingml"
+
+thing TestSessionArrays includes Test
+@test "A # 123123456123"
+{
+	property ar : Char[3]
+	set ar[0] = '\'1\''
+	set ar[1] = '\'2\''
+	set ar[2] = '\'3\''
+
+	function f(A : Char[3]) do
+		harnessOut!testOut(A[0])
+		harnessOut!testOut(A[1])
+		harnessOut!testOut(A[2])
+	end
+	
+	message n()
+
+	internal port p {
+		sends n
+		receives n
+	}
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			internal 
+			event e : harnessIn?testIn
+			action do
+				f(ar)
+				fork s
+			end
+
+			internal
+			event e : p?n
+			action f(ar)
+    	}
+
+		session s<5> init S1 {
+			state S1 {
+				on entry do
+				    f(ar)
+                	ar[0] = '\'4\''
+                	ar[1] = '\'5\''
+                	ar[2] = '\'6\''
+				    f(ar)
+				end
+
+				transition -> S2
+				action p!n()
+			}		
+			final state S2 {
+			}		
+		}
+    }
+}

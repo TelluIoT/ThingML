@@ -1,0 +1,73 @@
+import "../thingml.thingml"
+
+thing TestVariables includes Test 
+@test "xxx # abcdefxxxbxxgabcabcdefxx"
+{
+
+	property pa : Char = '\'a\''
+	
+	readonly property pb : Char = '\'b\''
+    
+    statechart TestPropertyPing init state0 {
+    
+    property pc : Char = '\'c\''
+    	state state0 {
+			transition -> state1 
+			event e : harnessIn?testIn
+			guard e.c == '\'x\''
+		}
+
+    	state state1 {
+    		
+    		property pd : Char = '\'d\''
+    		
+    		on entry do
+    			var pe : Char = '\'e\''
+    			if (pa == '\'a\'') do
+    				var pf : Char = '\'f\''
+    				harnessOut!testOut( pa )
+    				harnessOut!testOut( pb )
+    				harnessOut!testOut( pc )
+    				harnessOut!testOut( pd )
+    				harnessOut!testOut( pe )
+    				harnessOut!testOut( pf )
+    				pe = '\'x\''
+    				pf = '\'x\''
+    				harnessOut!testOut( pe )
+    				harnessOut!testOut( pf )
+    			end
+    			pa = '\'x\''
+    			pc = '\'x\''
+    			pd = '\'x\''
+    		end
+    		
+    		transition -> state2
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+			action do
+				harnessOut!testOut( pa ) pa = '\'a\''
+				harnessOut!testOut( pb )
+				harnessOut!testOut( pc ) pc = '\'c\''
+				harnessOut!testOut( pd ) pd = '\'d\''
+				var pg : Char
+				pg = '\'g\''
+				harnessOut!testOut( pg )
+			end
+    		
+    	}
+    	
+    	state state2 {
+    		
+    		transition -> state1
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+			action do
+				harnessOut!testOut( pa ) 
+				harnessOut!testOut( pb )
+				harnessOut!testOut( pc ) 
+			end
+			
+    	}
+
+    }
+}

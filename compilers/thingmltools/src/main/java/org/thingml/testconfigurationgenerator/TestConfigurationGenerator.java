@@ -142,7 +142,8 @@ public class TestConfigurationGenerator extends ThingMLTool {
         builder.append("import \"../../../src/main/resources/tests/thingml.thingml\"\n\n");
 
         builder.append("import \"../../../src/main/resources/tests/core/_" + lang.longName + "/test.thingml\"\n");
-        builder.append("import \"../../../src/main/resources/tests/" + LowerFirstLetter(t.getName()) + ".thingml\"\n");
+        //builder.append("import \"../../../src/main/resources/tests/" + LowerFirstLetter(t.getName()) + ".thingml\"\n");
+        builder.append("import \"" + src.getAbsolutePath() + "\"\n");
         builder.append("import \"../../../src/main/resources/tests/core/_" + lang.longName + "/timer.thingml\"\n");
 
         builder.append("\n");

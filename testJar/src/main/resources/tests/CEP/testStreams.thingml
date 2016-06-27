@@ -1,0 +1,145 @@
+import "../thingml.thingml"
+
+datatype JInt<2>
+    @c_type "int"
+    @java_type "int";
+
+thing fragment CepMsgs
+{
+    //Cep messages for "simple" streams
+    message cep1();
+    message cep2(val1 : JInt, val2 : JInt);
+
+    //CEP messages for merged streams
+    message cep3();
+    message cep4(a : JInt, b : JInt, c : JInt);
+
+    //CEP messages for joined streams
+    message cep5(a : JInt, b : JInt, c : JInt);
+}
+
+thing fragment SampleMsgs {
+    // Messages receive by "simple" streams
+    message m1();
+    message m2(v1 : JInt, v2 : JInt);
+
+    //Messages receive by merged streams
+    message m3();
+    message m4();
+    message m5(x : JInt, y : JInt, z : JInt);
+    message m6(value1 : JInt, value2 : JInt, value3 : JInt);
+
+    // Messages receive by joined streams
+    message m7(a : JInt, b : JInt, c : JInt);
+    message m8(v1 : JInt, v2 : JInt, v3 : JInt);
+}
+
+thing TestStreams includes CepMsgs,  SampleMsgs, Test
+@c_header "#include <Arduino.h>"
+@test " # 12344567"
+@conf "connector test.rcvPort => test.sendPort"
+{
+    provided port sendPort {
+        sends m1, m2, m3, m4, m5, m6, m7, m8, cep1, cep2, cep3, cep4, cep5
+    }
+
+    required port rcvPort {
+        receives m1, m2, m3, m4, m5, m6, m7, m8, cep1, cep2, cep3, cep4, cep5
+    }
+
+    function complexTransforming(value : JInt) : JInt do
+        return value + 1
+    end
+
+    stream forwardSimpleMessage
+    from e1 : rcvPort?m1
+    produce sendPort!cep1()
+
+
+    stream forwardMessageWithParams
+    from evt : rcvPort?m2
+    select var a : JInt =  evt.v1,
+           var b : JInt = evt.v2
+    produce sendPort!cep2(a,b)
+
+
+    stream transformingMessageValue
+    from evt : rcvPort?m2
+    select var a : JInt = (evt.v1 * 2) + 5,
+           var b : JInt = complexTransforming(evt.v2)
+    produce sendPort!cep2(a,b)
+
+
+    stream mergedSimpleMessages
+    from result : [ e1 : rcvPort?m3 | e2 : rcvPort?m4 -> cep3]
+    produce sendPort!cep3()
+
+
+    stream mergeMessagesWithValues
+    from result : [ e1 : rcvPort?m5 | e2 : rcvPort?m6 -> cep4]
+    select var a : JInt = result.a,
+           var b : JInt = complexTransforming(result.b) - 1,
+           var c : JInt = 0
+    produce sendPort!cep4(a,b,c)
+
+
+    stream joinMessages
+    from result : [ e1 : rcvPort?m7 & e2 : rcvPort?m8 -> cep5(e1.a * e2.v1, e1.b * e2.v2, e1.c * e2.v3)]
+    select var a : JInt = result.a,
+           var b : JInt = result.b,
+           var c : JInt = result.c
+    produce sendPort!cep5(a,b,c)
+
+
+
+    statechart Sample init Init {
+        state Init {
+            on entry do
+                sendPort!m1()
+                sendPort!m2(8,24)
+
+                sendPort!m3()
+                sendPort!m4()
+
+                sendPort!m5(1,2,3)
+                sendPort!m6(4,5,6)
+
+                sendPort!m7(1,2,3)
+                sendPort!m8(10,20,30)
+            end
+
+            internal
+            event rcvPort?cep1
+            action do
+                harnessOut!testOut('\'1\'')
+            end
+
+            internal
+            event e : rcvPort?cep2
+            action do
+                if(e.val1 == 8 and e.val2 == 24) harnessOut!testOut('\'2\'')
+                if(e.val1 == 21 and e.val2 == 25) harnessOut!testOut('\'3\'')
+            end
+
+            internal
+            event rcvPort?cep3
+            action do
+                harnessOut!testOut('\'4\'')
+            end
+
+            internal
+            event e : rcvPort?cep4
+            action do
+                if(e.a == 1 and e.b == 2 and e.c == 0) harnessOut!testOut('\'5\'')
+                if(e.a == 4 and e.b == 5 and e.c == 0) harnessOut!testOut('\'6\'')
+            end
+
+            internal
+            event e : rcvPort?cep5
+            action do
+                if(e.a == 10 and e.b == 40 and e.c == 90) harnessOut!testOut('\'7\'')
+            end
+        }
+    }
+
+}

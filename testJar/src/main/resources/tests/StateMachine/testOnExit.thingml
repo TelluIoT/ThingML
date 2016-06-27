@@ -1,0 +1,18 @@
+import "../thingml.thingml"
+
+thing TestOnExit includes Test 
+@test "t # X"
+@test "tt # XX"
+@test "tdfgt # XX"
+@test "t* # X*"
+{
+	statechart TestOnExit init I {
+	
+		state I {
+			on exit harnessOut!testOut('\'X\'')
+			transition -> I
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+	}
+}

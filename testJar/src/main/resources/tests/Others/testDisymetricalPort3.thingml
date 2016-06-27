@@ -1,0 +1,32 @@
+import "../thingml.thingml"
+
+thing TestDisymetricalPort3 includes Test
+@test "12 # I"
+@conf "connector test.pout => test.pin"
+{
+	message m1();
+	message m2();
+	message m3();
+
+	provided port pin {
+		sends m2
+	}
+	required port pout {
+		sends m1, m2
+	}
+	statechart Chart init Init {
+		state Init {
+			on entry do
+				harnessOut!testOut('\'I\'')
+			end
+
+			internal event e : harnessIn?testIn
+			guard e.c == '\'1\''	
+			action pout!m1()	
+
+			internal event e : harnessIn?testIn
+			guard e.c == '\'2\''		
+			action pout!m2()
+		}
+	}
+}

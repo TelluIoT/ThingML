@@ -1,0 +1,47 @@
+import "../thingml.thingml"
+
+thing fragment TestMsgs {
+    message m1();
+    message m2();
+    message m3();
+    
+    message res();
+}
+
+thing TestMergeFilter includes Test, TestMsgs
+@test " # ff"
+@conf "connector test.recv => test.send"
+{
+    provided port send {
+        sends m1, m2, m3, res
+    }
+
+    required port recv {
+        receives m1, m2, m3, res
+    }
+
+    stream filteredMergeOK
+    from m : [ e1 : recv?m1::keep if false | e2 : recv?m2::keep if true | e3 : recv?m3 -> res]::keep if true
+    produce send!res()
+    
+    stream filteredMergeFail
+    from m : [ e1 : recv?m1::keep if false | e2 : recv?m2::keep if true | e3 : recv?m3 -> res]::keep if false
+    produce send!res()
+    
+
+    statechart testSimpleFilter init Init {
+        state Init {
+            on entry do
+                send!m1()
+                send!m2()
+                send!m3()
+            end
+            
+            internal 
+            event recv?res
+            action harnessOut!testOut('\'f\'')
+        }
+    }
+
+
+}

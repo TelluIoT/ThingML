@@ -1,0 +1,103 @@
+import "../thingml.thingml"
+
+// Three servers on the same port and one client.
+
+thing PingMsg {
+    message ping(num : Int16);
+    message pong(num : Int16);        
+}
+
+thing PingServer includes PingMsg {
+    
+    property num : Int16
+    
+    provided port pp {
+         receives ping
+         sends pong
+    }
+    
+    statechart PingServer init Idle {
+    
+        state Idle {
+            internal event p : pp?ping
+            guard p.num == num
+            action do
+                pp!pong(num)
+            end
+        }    
+    } 
+}
+
+thing TestMultiServerPing includes Test, PingMsg
+@test "12221 # P1P2P2P2P1"
+@test "12221011 # P1P2P2P2P1P"
+@conf "instance pingServ1 : PingServer"
+@conf "	set pingServ1.num = 1"
+@conf "instance pingServ2 : PingServer"
+@conf "	set pingServ2.num = 2"
+@conf "instance pingServ3 : PingServer"
+@conf "	set pingServ3.num = 3"
+@conf "connector test.ppclient => pingServ1.pp"
+@conf "connector test.ppclient => pingServ2.pp"
+@conf "connector test.ppclient => pingServ3.pp"
+{
+    required port ppclient {
+        sends ping
+        receives pong    
+    }
+    
+	statechart TestMultiServerPing init Ping {
+	
+		state Ping {
+            transition -> Pong
+			event m : harnessIn?testIn
+			guard m.c == '\'0\''
+			action do
+                	harnessOut!testOut('\'P\'')
+                	ppclient!ping(0)
+            end
+            
+			transition -> Pong
+			event m : harnessIn?testIn
+			guard m.c == '\'1\''
+			action do
+                	harnessOut!testOut('\'P\'')
+                	ppclient!ping(1)
+            end
+                
+            transition -> Pong
+			event m : harnessIn?testIn
+			guard m.c == '\'2\''
+			action do
+                	harnessOut!testOut('\'P\'')
+                	ppclient!ping(2)
+            end
+            
+            transition -> Pong
+			event m : harnessIn?testIn
+			guard m.c == '\'3\''
+			action do
+                	harnessOut!testOut('\'P\'')
+                	ppclient!ping(3)
+            end
+		}
+
+		state Pong {
+    
+			transition -> Ping
+			event p : ppclient?pong
+			guard p.num == 1
+			action harnessOut!testOut('\'1\'')
+
+			transition -> Ping
+			event p : ppclient?pong
+			guard p.num == 2
+			action harnessOut!testOut('\'2\'')
+
+            transition -> Ping
+			event p : ppclient?pong
+			guard p.num == 3
+			action harnessOut!testOut('\'3\'')
+		}
+	}
+}

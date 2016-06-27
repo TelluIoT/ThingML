@@ -1,0 +1,21 @@
+import "../thingml.thingml"
+import "import/B_Prop.thingml"
+
+thing TestImportProperties includes Test, B_Prop
+@test "x # AB"
+{
+    statechart Chart init INIT {
+    
+    	state INIT {
+			
+			transition -> INIT
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+			action do
+				harnessOut!testOut(A)
+				harnessOut!testOut(B)
+			end
+			    		
+    	}
+    }
+}

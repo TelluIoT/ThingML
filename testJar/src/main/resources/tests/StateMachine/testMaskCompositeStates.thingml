@@ -1,0 +1,84 @@
+import "../thingml.thingml"
+
+thing TestMaskCompositeStates includes Test 
+@test "n # 01"
+@test "nn # 0123"
+@test "nnp # 012321"
+@test "nnn # 012345"
+@test "nnnppp # 012345543210"
+
+{
+	statechart TestMaskCompositeStates init I {
+    
+		state I {
+			transition -> C1
+		event m : harnessIn?testIn
+			guard m.c == '\'n\''
+		}
+		
+		composite state C1 init C1S1 {
+		
+		    on entry do
+              harnessOut!testOut('\'0\'')
+            end
+		    on exit do
+              harnessOut!testOut('\'0\'')
+            end
+        
+		    transition -> I
+		    event m : harnessIn?testIn
+		    guard m.c == '\'p\''
+		
+			state C1S1 {
+				on entry do
+                    harnessOut!testOut('\'1\'')
+                end
+				transition -> C1S2
+				event m : harnessIn?testIn
+				guard m.c == '\'n\''
+			}
+			
+			composite state C1S2 init C2S1 {
+				
+				on entry harnessOut!testOut('\'2\'')
+				on exit harnessOut!testOut('\'2\'')
+				
+                transition -> C1S1
+				event m : harnessIn?testIn
+				guard m.c == '\'p\''
+				
+				state C2S1 {	
+					on entry harnessOut!testOut('\'3\'')
+					transition -> C2S3
+					event m : harnessIn?testIn
+					guard m.c == '\'n\''
+				}
+				
+				state C2S2 {
+					on entry harnessOut!testOut('\'3\'')
+					transition -> C2S3
+					event m : harnessIn?testIn
+					guard m.c == '\'n\''
+				}
+				
+				composite state C2S3 init C3S1 {
+				
+					on entry harnessOut!testOut('\'4\'')
+					on exit harnessOut!testOut('\'4\'')
+					transition -> C2S1
+					event m : harnessIn?testIn
+					guard m.c == '\'p\''
+				
+					composite state C3S1 init C4S1 {
+					
+						on entry harnessOut!testOut('\'5\'')
+						on exit harnessOut!testOut('\'5\'')
+						
+						state C4S1 {
+						}
+					}
+				}
+			}
+		}
+	}
+}
