@@ -6,11 +6,11 @@ datatype Int<4>
 datatype Boolean<1>
 @type_checker "Boolean"
 @java_type "boolean"
-@c_type "boolean";
+@c_type "bool";
 
 thing fragment API {
     message a()
-    message b()
+    message b(x : Int)
     message kill()
 }
 
@@ -21,49 +21,67 @@ thing Controller includes API {
     }
 
     property counter_t : Int = 0
-    readonly property max_t : Int = 100000
-    property killed : Boolean = false
+    readonly property max_t : Int = /*$MAX_T$*/
+
+    function process() do
+        counter_t = counter_t + 1
+        if (counter_t%2 == 0) do
+            p!a()
+        end else do
+            p!b(counter_t)
+        end
+    end
 
     statechart behavior init INIT {
+        composite state INIT init DEFAULT {
 
-        internal event p?a
-        guard counter_t < max_t and not killed
-        action do
-            counter_t = counter_t + 1
-            p!b()
-        end
+            internal event p?a
+            guard counter_t < max_t
+            action process()
 
-        internal event p?b
-        guard counter_t < max_t and not killed
-        action do
-            counter_t = counter_t + 1
-            p!a()
-        end
+            internal event p?b
+            guard counter_t < max_t
+            action process()
 
-        internal event p?a
-        guard counter_t >= max_t and not killed
-        action do
-            p!kill()
-            killed = true
-        end
+            transition -> DIE
+            event p?a
+            guard counter_t >= max_t
 
-        internal event p?b
-        guard counter_t >= max_t and not killed
-        action do
-            p!kill()
-            killed = true
-        end
+            transition -> DIE
+            event p?b
+            guard counter_t >= max_t
 
-        state INIT {}
+            state DEFAULT {}
+        }
+
+        final state DIE {
+            on entry do
+                p!kill()
+                print "The End.\n"
+                print "#t = "
+                print counter_t
+                print "\n"
+            end
+        }
     }
 }
 
 thing /*$NAME$*/ includes API {
 
+    message terminated()
+
     provided port p {
         sends a, b
         receives a, b, kill
     }
+
+    internal port sessionPort {
+        sends terminated
+        receives terminated
+    }
+
+    property nbSessions : Int = 0
+    readonly property maxSessions : Int = 64
 
     property a : Int = 0
     property b : Int = 0
@@ -71,28 +89,46 @@ thing /*$NAME$*/ includes API {
 
     function f1() do
         b = b + 1
-        a = a + b
+        a = a - 1
     end
 
     function f2() do
-        b = 0
-        a = 0
+        b = b - 1
+        a = a + 1
     end
 
-    statechart behavior init /*$INIT_NAME$*/ {
+    statechart behavior init  INIT {
 
-        internal event p?kill
-        action do
-            print "The End.\n"
-            print "a = "
-            print a
-            print "\n"
-            print "b = "
-            print b
-            print "\n"
-        end
+        composite state INIT init /*$INIT_NAME$*/ {
 
-        /*$BEHAVIOR$*/
+            internal event sessionPort?terminated
+            action do
+                nbSessions = nbSessions - 1
+                p!a()
+                p!b(nbSessions)
+            end
+
+            transition -> DIE
+            event p?kill
+            action do
+                print "The End.\n"
+                print "a = "
+                print a
+                print "\n"
+                print "b = "
+                print b
+                print "\n"
+                print "#sessions = "
+                print nbSessions
+                print "\n"
+            end
+
+            /*$BEHAVIOR$*/
+        }
+
+        final state DIE {
+            on entry print "RIP!\n"
+        }
     }
 
 }
