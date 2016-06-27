@@ -39,7 +39,7 @@ thing TimerPosixmt includes Timer, ClockMsgs
 	
 	//To use timer in millisecond, set "millisecond" to true and "period" to the period of the clock
 	readonly property millisecond : Boolean = false
-	readonly property period : Integer = 100
+	readonly property period : Integer = 10
 	
 	statechart ClockTimerImpl init Idle {
 		

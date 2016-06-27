@@ -1,0 +1,71 @@
+import "../thingml.thingml"
+
+thing TestInternalPort2 includes Test, Msg 
+@test "t # EXX"
+@conf "instance s1 : Self"
+@conf "instance s2 : Self"
+@conf "connector s1.p => test.p"
+@conf "connector s2.p => test.p"
+{
+    
+    provided port p {
+        sends m
+        receives m
+    }
+    
+	statechart TestInternalPort init I {
+	
+		state I {
+			on entry harnessOut!testOut('\'E\'')
+
+            internal event m : harnessIn?testIn
+			guard m.c == '\'t\'' 
+            action p!m()
+			
+			internal event n : p?m
+			action harnessOut!testOut('\'X\'')
+		}
+	}
+}
+
+thing fragment Msg {
+	message m();
+}
+
+thing Self includes Msg {
+    message intern();
+    
+    internal port intP {
+        sends intern
+        receives intern
+    }
+    
+    internal port intP2 {
+        sends intern
+        receives intern
+    }
+    
+    required port p {
+        sends m
+        receives m
+    }
+
+	statechart TestInternalPort init I {
+	
+		state I {
+
+            internal event m : p?m
+            action intP!intern()
+			
+			internal event n : intP?intern
+			action do 
+				intP2!intern()
+			end
+			
+			internal event n : intP2?intern
+			action do 
+				p!m()
+			end
+		}
+	}
+}

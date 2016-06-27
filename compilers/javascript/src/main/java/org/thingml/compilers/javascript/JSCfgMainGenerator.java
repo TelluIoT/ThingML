@@ -166,6 +166,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             prefix = "this.";
         }
 
+        builder.append("/*$PLUGINS$*/\n");
+
         builder.append("//Connecting internal ports...\n");
         for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             Instance i = entries.getKey();
@@ -206,6 +208,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 }
             }
         }
+        builder.append("/*$PLUGINS_CONNECTORS$*/\n");
     }
 
     private static String reference(String ref, boolean useThis) {
@@ -244,6 +247,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             builder.append("var " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
         }
+        builder.append("/*$REQUIRE_PLUGINS$*/\n");
         //builder.append("process.stdin.resume();//to keep Node.js alive even when it is nothing more to do...\n");
 
         generateInstances(cfg, builder, ctx, false);
@@ -264,6 +268,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             inst = instances.get(0);
             instances.remove(inst);
             builder.append(inst.getName() + "._stop();\n");
+            builder.append("/*$STOP_PLUGINS$*/\n");
         }
         builder.append("});\n\n");
     }

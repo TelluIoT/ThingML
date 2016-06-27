@@ -108,8 +108,8 @@ public class TestConfigurationGenerator extends ThingMLTool {
             Integer dur = Integer.parseInt(timerDuration);
             testDuration = dur.intValue();
         }
-        builder.append("            on entry timer!timer_start(250)\n");
-        builder.append("            transition -> e" + (i + 1) + "\n");
+        builder.append("            on entry timer!timer_start(" + testDuration + ")\n");
+        builder.append("            transition -> e" + (i+1) + "\n");
         builder.append("            event timer?timer_timeout\n");
         builder.append("        }\n");
         i++;
@@ -142,7 +142,8 @@ public class TestConfigurationGenerator extends ThingMLTool {
         builder.append("import \"../../../src/main/resources/tests/thingml.thingml\"\n\n");
 
         builder.append("import \"../../../src/main/resources/tests/core/_" + lang.longName + "/test.thingml\"\n");
-        builder.append("import \"../../../src/main/resources/tests/" + LowerFirstLetter(t.getName()) + ".thingml\"\n");
+        //builder.append("import \"../../../src/main/resources/tests/" + LowerFirstLetter(t.getName()) + ".thingml\"\n");
+        builder.append("import \"" + src.getAbsolutePath() + "\"\n");
         builder.append("import \"../../../src/main/resources/tests/core/_" + lang.longName + "/timer.thingml\"\n");
 
         builder.append("\n");

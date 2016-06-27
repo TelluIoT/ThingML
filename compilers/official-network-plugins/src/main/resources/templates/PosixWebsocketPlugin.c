@@ -197,7 +197,7 @@ void /*PORT_NAME*/_forwardMessage(char * msg, int length/*PARAM_CLIENT_ID*/) {
                 *q = msg[i];
                 q++;
         }
-        *q = '\0';
+        //*q = '\0';
 
 	/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Trying to send:\n%s \n", p);
 

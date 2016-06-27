@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created by ffl on 01.06.15.
@@ -47,6 +49,7 @@ public abstract class CCompilerContext extends Context {
     StringBuilder includeCode = new StringBuilder();
     StringBuilder cppHeaderCode = new StringBuilder();
     private Set<NetworkLibraryGenerator> NetworkLibraryGenerators;
+    private Map<String, Map<String, String>> mapCepMsgParamAndStream;
 
     public CCompilerContext(ThingMLCompiler c) {
         super(c);
@@ -223,6 +226,55 @@ public abstract class CCompilerContext extends Context {
 
     public String getCommonHeaderTemplate() {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_thingml_typedefs.h");
+    }
+
+    public String getCEPLibTemplateClass() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_class.h");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplateMethodsSignatures() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_methods_signatures.h");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplateAttributesSignatures() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_attributes_signatures.h");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplateMessageConstants() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_message_constants.h");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplateStreamConstants() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_stream_constants.h");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplateClassImpl() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_classImpl.cpp");
+        }
+        return null;
+    }
+
+    public String getCEPLibTemplatesMessageImpl() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/arduino_libCEP/" + getCompiler().getID() + "_libCEP_messageImpl.cpp");
+        }
+        return null;
     }
 
     public boolean hasAnnotationWithValue(Configuration cfg, String annotation, String value) {
@@ -468,7 +520,7 @@ public abstract class CCompilerContext extends Context {
 
     //public List<String> getFormalParameterNamelist(Thing thing, Message m) {
     //    List<String> paramList = new ArrayList<String>();
-    //    
+    //
     //    for (Parameter p : m.getParameters()) {
     //        paramList.add(p.getName());
     //    }
@@ -572,6 +624,27 @@ public abstract class CCompilerContext extends Context {
         return result;
     }
 
+    public String getMessageSerializationSizeString(Message m) {
+        int result = 2; // 2 bytes to store the port/message code
+        result += 2; // to store the id of the source instance
+        String res = "";
+        for (Parameter p : m.getParameters()) {
+            if(p.isIsArray()) {
+                StringBuilder cardBuilder = new StringBuilder();
+                getCompiler().getThingActionCompiler().generate(p.getCardinality(), cardBuilder, this);
+                res += "(" + cardBuilder + " * " + getCByteSize(p.getType(), 0) + ")";
+            } else {
+                result += this.getCByteSize(p.getType(), 0);
+            }
+        }
+        if(res.compareTo("") == 0)
+            return "" + result;
+        else
+            return "(" +result + " + " + res +")";
+    }
+
+    // FUNCTIONS FOR TYPES
+
     public String getCType(Type t) {
         if (AnnotatedElementHelper.hasAnnotation(t, "c_type")) {
             return AnnotatedElementHelper.annotation(t, "c_type").iterator().next();
@@ -589,8 +662,6 @@ public abstract class CCompilerContext extends Context {
             return t.getName();
         }
     }
-
-    // FUNCTIONS TO SERIALIZE AND DESERIALIZE TYPES
 
     public int getCByteSize(Type t, int pointerSize) {
         if (t instanceof ObjectType) {
@@ -638,32 +709,46 @@ public abstract class CCompilerContext extends Context {
         return result;
     }
 
-    public void bytesToSerialize(Type t, StringBuilder builder, Context ctx, String variable, Parameter pt) {
+    public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt) {
         int i = getCByteSize(t, 0);
         String v = variable;
         if (isPointer(t)) {
             // This should not happen and should be checked before.
             throw  new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
         } else {
-            //builder.append("byte * " + variable + "_serializer_pointer = (byte *) &" + v + ";\n");
+            if(pt.isIsArray()) {
+                
+                StringBuilder cardBuilder = new StringBuilder();
+                getCompiler().getThingActionCompiler().generate(pt.getCardinality(), cardBuilder, this);
+                builder.append("union u_" + v + "_t {\n");
+                builder.append("    " + getCType(t) + " p[" + cardBuilder + "];\n");
+                builder.append("    byte bytebuffer[" + getCByteSize(t, 0) + " * (" + cardBuilder + ")];\n");
+                builder.append("} u_" + v + ";\n");
 
-            if (pt.isIsArray()) {
-                builder.append("\n// cardinality: \n");
-               throw new Error("ERROR: Attempting to serialize an array (for type " + t.getName() + "). This is not allowed.");
+                builder.append("uint8_t u_" + variable + "_index_array = 0;\n");
+                builder.append("while (u_" + variable + "_index_array < (" + cardBuilder + ")) {\n");
+                builder.append("     u_" + v + ".p[u_" + variable + "_index_array] = " + v + "[u_" + variable + "_index_array];\n");
+                builder.append("    u_" + variable + "_index_array++;\n");
+                builder.append("}\n");
 
-                //TODO enqueue dequeue of array
+                builder.append("int16_t u_" + variable + "_index = " + getCByteSize(t, 0) + " * (" + cardBuilder + ") - 1;\n");
+                builder.append("while (u_" + variable + "_index >= 0) {\n");
+                builder.append("    _fifo_enqueue(u_" + variable + ".bytebuffer[u_" + variable + "_index] & 0xFF );\n");
+                builder.append("    u_" + variable + "_index--;\n");
+                builder.append("}\n");
             } else {
                 builder.append("union u_" + v + "_t {\n");
                 builder.append(getCType(t) + " p;\n");
                 builder.append("byte bytebuffer[" + getCByteSize(t, 0) + "];\n");
                 builder.append("} u_" + v + ";\n");
                 builder.append("u_" + v + ".p = " + v + ";\n");
-
+            
                 while (i > 0) {
                     i = i - 1;
-                    //if (i == 0)
+                    //if (i == 0) 
                     //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
-                    builder.append("_fifo_enqueue( u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
+                    
+                    builder.append("_fifo_enqueue(u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
                     //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
         }
             }
@@ -744,7 +829,30 @@ public abstract class CCompilerContext extends Context {
     }
 
 
-    public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {
+    public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {}
+
+    public void putCepMsgParam(String msg, String param, String stream) {
+        if (this.mapCepMsgParamAndStream == null)
+            this.mapCepMsgParamAndStream = new HashMap<>();
+
+        Map<String, String> mapMsgStream = new HashMap<>();
+        mapMsgStream.put(msg, stream);
+        this.mapCepMsgParamAndStream.put(param, mapMsgStream);
     }
-    
+
+    /**
+     *
+     * @param param
+     * @return
+     */
+    public Map<String, String> getCepMsgFromParam(String param) {
+        if (this.mapCepMsgParamAndStream == null)
+            return null;
+
+        return this.mapCepMsgParamAndStream.get(param);
+    }
+
+    public void resetCepMsgContext() {
+        this.mapCepMsgParamAndStream = null;
+    }
 }

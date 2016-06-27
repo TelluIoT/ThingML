@@ -1,0 +1,32 @@
+import "../thingml.thingml"
+
+thing TestAutoTransition includes Test 
+@test "ttt # IJJKKK"
+{
+	statechart TestAutoTransition init I {
+		state I {
+			on entry harnessOut!testOut('\'I\'')
+			
+			transition -> J
+			action harnessOut!testOut('\'J\'')
+			
+			transition -> K
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+		state J {
+			on entry harnessOut!testOut('\'J\'')
+			
+			transition -> K
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+		state K {
+			on entry harnessOut!testOut('\'K\'')
+			
+			transition -> K
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+	}
+}

@@ -47,6 +47,7 @@ public class TestCase {
     public File genCfg;
     public File genCodeDir;
     public File logFile;
+    public String category;
     public String log;
     public String result;
     public String name;
@@ -66,6 +67,7 @@ public class TestCase {
         this.result = "";
         this.name = srcTestCase.getName().split("\\.thingml")[0];
         this.ongoingCmd = lang.generateThingML(this);
+        this.category = srcTestCase.getParentFile().getName();
     }
     
     public TestCase(File srcTestCase, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir, boolean notGen) {
@@ -80,6 +82,7 @@ public class TestCase {
         this.result = "";
         this.name = srcTestCase.getName().split("\\.thingml")[0];
         this.ongoingCmd = this.lang.generateTargeted(this);
+        this.category = srcTestCase.getParentFile().getName();
     }
     
     public TestCase(File genCfg, TestCase t) {
@@ -98,6 +101,7 @@ public class TestCase {
                 + " '-> Source: " + t.srcTestCase.getAbsolutePath() + "\n";
         this.result = t.result;
         this.ongoingCmd = lang.generateTargeted(this);
+        this.category = srcTestCase.getParentFile().getName();
     }
     
     public List<TestCase> generateChildren() {

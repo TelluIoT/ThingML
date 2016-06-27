@@ -133,7 +133,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="history" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ParallelRegion" eSuperTypes="#//Region"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Session" eSuperTypes="#//CompositeState"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Session" eSuperTypes="#//CompositeState">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="maxInstances" eType="#//Expression"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Action" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ActionBlock" eSuperTypes="#//Action">
     <eStructuralFeatures xsi:type="ecore:EReference" name="actions" upperBound="-1"
@@ -359,7 +362,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dynamic" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true" eSuperTypes="#//ThingMLElement #//ReferencedElmt">
+  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true" eSuperTypes="#//AnnotatedElement #//ReferencedElmt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
         eType="#//ViewSource" containment="true"/>
   </eClassifiers>

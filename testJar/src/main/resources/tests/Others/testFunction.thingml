@@ -1,0 +1,43 @@
+import "../thingml.thingml"
+
+thing TestFunction includes Test 
+@test "x # xxxxxxxx"
+{
+    //Test function call from a function
+    function foo(a : ULong, b : ULong) : ULong do
+    	return a + bar(b)
+    end
+    
+    //Test recursive function
+    function bar(a : ULong) : ULong do
+        if (a > 0) do
+            return bar(a-1)
+        end
+        if (a < 0) do
+            return bar(a+1)
+        end
+		return 0
+    end
+    
+  
+    statechart TestPropertyPing init INIT {
+    
+    	state INIT {
+			
+			property a : UInt16 = 8
+			
+    		transition -> INIT
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+			action do
+				var result : ULong = foo(a, 5)
+                var index : UInt16 = 0
+                while (index < result) do
+				    harnessOut!testOut('\'x\'')
+                    index = index + 1
+                end
+			end
+			    		
+    	}
+    }
+}

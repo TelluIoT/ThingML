@@ -70,6 +70,8 @@ abstract public class Checker {
         Rules.add(new StatesUsage());
         Rules.add(new VariableUsage());
         Rules.add(new ControlStructures());
+        Rules.add(new StreamNaming());
+        Rules.add(new DuplicatedMessageInPort());
     }
 
     public void do_generic_check(Configuration cfg) {

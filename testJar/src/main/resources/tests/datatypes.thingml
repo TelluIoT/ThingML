@@ -63,6 +63,11 @@ datatype Int32<4>
 	@java_type "int"
 	@java_primitive "true";
 
+datatype UInt32<4>	
+	@c_type "uint32_t"
+	@java_type "long"
+	@java_primitive "true";
+
 datatype Long<4>	
 	@type_checker "Integer"
 	@c_type "long"

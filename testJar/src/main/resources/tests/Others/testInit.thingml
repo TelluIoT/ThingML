@@ -1,0 +1,12 @@
+import "../thingml.thingml"
+
+thing TestInit includes Test 
+@test " # E"
+{
+	statechart TestInit init I {
+	
+		state I {
+			on entry harnessOut!testOut('\'E\'')
+		}
+	}
+}

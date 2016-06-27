@@ -23,8 +23,7 @@ struct /*PROTOCOL*/_instance_type {
     /*INSTANCE_INFORMATION*/
 } /*PROTOCOL*/_instance;
 
-int fifo_byte_available();
-int _fifo_enqueue(byte b);
+void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
 
 void /*PROTOCOL*/_setup() {
   /*PROTOCOL*/.begin(/*PROTOCOL*/_BAUDRATE);
@@ -37,7 +36,7 @@ void /*PROTOCOL*/_set_listener_id(uint16_t id) {
 void /*PROTOCOL*/_forwardMessage(byte * msg, uint8_t size) {
   /*PROTOCOL*/.write(/*PROTOCOL*/_START_BYTE);
   for(uint8_t i = 0; i < size; i++) {
-	if(msg[i] == /*PROTOCOL*/_ESCAPE_BYTE) {
+	if(msg[i] == /*PROTOCOL*/_ESCAPE_BYTE || msg[i] == /*PROTOCOL*/_START_BYTE || msg[i] == /*PROTOCOL*/_STOP_BYTE) {
     	/*PROTOCOL*/.write(/*PROTOCOL*/_ESCAPE_BYTE);
 	}
     /*PROTOCOL*/.write(msg[i]);

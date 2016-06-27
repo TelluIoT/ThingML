@@ -55,7 +55,7 @@ public abstract class NetworkPlugin extends Rule {
 
     public abstract List<String> getSupportedProtocols();
 
-    public abstract String getTargetedLanguage();
+    public abstract List<String> getTargetedLanguages();
 
     public abstract void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols);
 

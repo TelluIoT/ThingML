@@ -1,0 +1,30 @@
+import "../thingml.thingml"
+
+thing TestSelfMessageB includes Test 
+@test "ttt # IJJJ"
+@conf "connector test.in => test.out"
+{
+    message selfMessage(c : Char);
+    
+    required port in {
+        receives selfMessage    
+    }
+    
+    provided port out {
+        sends selfMessage    
+    }
+    
+	statechart TestSelfMessage init I {
+		state I {
+			on entry harnessOut!testOut('\'I\'')
+			
+			internal event m : harnessIn?testIn
+			guard m.c == '\'t\''
+            action out!selfMessage(m.c)
+            
+            internal event m : in?selfMessage
+            guard m.c == '\'t\''
+            action harnessOut!testOut('\'J\'')
+		}
+	}
+}

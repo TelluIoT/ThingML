@@ -4,4 +4,6 @@ org.thingml.networkplugins.c.CByteArraySerializerPlugin
 org.thingml.networkplugins.c.CNoneSerializerPlugin
 org.thingml.networkplugins.c.CMSPSerializerPlugin
 org.thingml.networkplugins.java.JavaByteArraySerializerPlugin
+org.thingml.networkplugins.java.JavaJSONSerializerPlugin
 org.thingml.networkplugins.js.JSByteArraySerializerPlugin
+org.thingml.networkplugins.js.JSJSONSerializerPlugin

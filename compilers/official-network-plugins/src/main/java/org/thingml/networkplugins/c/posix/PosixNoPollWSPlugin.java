@@ -41,12 +41,15 @@ public class PosixNoPollWSPlugin extends NetworkPlugin {
 
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
-        res.add("WebSocket");
+        //res.add("WebSocket");
         return res;
     }
 
-    public String getTargetedLanguage() {
-        return "posix";
+    public List<String> getTargetedLanguages() {
+        List<String> res = new ArrayList<>();
+        res.add("posix");
+        res.add("posixmt");
+        return res;
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {

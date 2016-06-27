@@ -1,0 +1,60 @@
+import "../thingml.thingml"
+
+
+thing TestArrays includes Test 
+//@test "12345678x12345678 # 12345678e87654321"
+@test "x # e1827364554637281e1w2w3w4w5w6w7w8w"
+@conf "set test.array[7] = '\\\'8\\\''"
+@conf "set test.array[4] = '\\\'5\\\''"
+@conf "set test.array[5] = '\\\'6\\\''"
+@conf "set test.array[6] = '\\\'7\\\''"
+{
+
+	property index : UInt16 = 0
+	
+	property array : Char[8]
+	
+	// First half of the array initialized here
+	set array[0] = '\'1\''
+	set array[1] = '\'2\''
+	set array[2] = '\'3\''
+	set array[3] = '\'4\''
+	// Other half of the array is initialized in the 
+	// configuration in order to make sure that it works too
+    
+    statechart TestArrays init sstart {
+    
+    	state sstart {
+    		transition -> initialized
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+    	}
+    	
+    	state initialized {
+    	on entry do
+            harnessOut!testOut('\'e\'')
+    		// Test sequential read in both directions and that index are properly interpreted
+    		index = 0
+    		while (index < 8) do
+                harnessOut!testOut(array[index])
+                harnessOut!testOut(array[7-index])
+                index = index + 1
+    		end
+            harnessOut!testOut('\'e\'')
+            // Test affectation of an array to another one
+            // and affection of a variable from an array entry
+            // and write into an array
+            index = 0
+            var array2 : Char[8] = array
+            while (index < 8) do
+                var v : Char = array2[index]
+                harnessOut!testOut(v)
+                array[index] = '\'w\''
+                harnessOut!testOut(array[index])
+                index = index + 1
+            end
+    	end
+    	}
+
+    }
+}

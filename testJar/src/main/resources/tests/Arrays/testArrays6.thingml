@@ -1,0 +1,90 @@
+import "../thingml.thingml"
+
+thing TestArrays6 includes Msgs, Test
+@conf "instance a : A"
+@conf "set a.c = 5 + 0"
+@conf "instance b : A"
+@conf "set b.c = 5 + 5"
+@conf "instance d : A"
+@conf "connector a.myPort => test.p1"
+@conf "connector b.myPort => test.p2"
+@conf "connector d.myPort => test.p3"
+@test " # (ABC|ACB|BAC|BCA|CAB|CBA)"
+{
+
+	provided port p1 {
+		receives rep
+		sends go
+	}	
+
+	provided port p2 {
+		receives rep
+		sends go
+	}	
+
+	provided port p3 {
+		receives rep
+		sends go
+	}	
+	
+	statechart c init s {
+		state s {
+			on entry do
+				p1!go()
+			end
+			internal event e : p1?rep action do
+				harnessOut!testOut(e.c)
+				p2!go()
+			end
+			internal event e : p2?rep action do
+				harnessOut!testOut(e.c)
+				p3!go()
+			end
+			internal event e : p3?rep action do
+				harnessOut!testOut(e.c)
+			end
+		}
+	}
+}
+
+
+thing fragment Msgs {
+	message go();
+	message rep(c : Char);
+}
+
+thing A includes Msgs {
+	readonly property e : Int32 = 1
+	readonly property d : Int32 = e
+	readonly property c : Int32 = 2+2
+	property ar : Int32[c + 1 + d]
+
+	required port myPort {
+		sends rep
+		receives go
+	}	
+	
+	statechart c init I {
+		state I {
+			transition -> s event myPort?go
+		}
+		state s {
+			on entry do
+				var n : Int32 = 0
+				while(n < (c + 1 + d)) do
+					ar[n] = n
+					n = n + 1
+				end
+				if (ar[c+d] == 6) do
+					myPort!rep('\'A\'')
+				end
+				if (ar[c+d] == 11) do
+ 					  myPort!rep('\'B\'')
+				end
+				if (ar[c+d] == 5) do
+					myPort!rep('\'C\'')
+				end
+			end
+		}
+	}
+}

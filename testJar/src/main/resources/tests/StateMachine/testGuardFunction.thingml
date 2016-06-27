@@ -1,0 +1,30 @@
+import "../thingml.thingml"
+
+thing TestGuardFunction includes Test 
+@test "i # EI"
+@test "t # EXTE"
+@test "titi # EXTEIXTEI"
+{
+    
+    function f() : Boolean do
+	    return true
+	end
+    
+	statechart TestInternalTransition init I {	
+	
+		state I {
+			on entry harnessOut!testOut('\'E\'')
+			on exit  harnessOut!testOut('\'X\'')
+			
+			internal
+			event m : harnessIn?testIn
+			guard m.c == '\'i\'' and f()
+			action harnessOut!testOut('\'I\'')
+			
+			transition -> I
+			event m : harnessIn?testIn
+			guard m.c == '\'t\'' and f()
+			action harnessOut!testOut('\'T\'')	
+		}
+	}
+}

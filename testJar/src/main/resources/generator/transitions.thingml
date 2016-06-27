@@ -1,0 +1,11 @@
+    transition -> /*$ON_A$*/
+    event p?a
+    action do
+        /*$ACTION1$*/
+    end
+
+    transition -> /*$ON_B$*/
+    event p?b
+    action do
+        /*$ACTION2$*/
+    end

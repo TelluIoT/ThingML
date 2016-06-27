@@ -51,30 +51,39 @@ public class JavaSerialPlugin extends NetworkPlugin {
         return res;
     }
 
-    public String getTargetedLanguage() {
-        return "java";
+    public List<String> getTargetedLanguages() {
+        List<String> res = new ArrayList<>();
+        res.add("java");
+        return res;
+    }
+
+    final Set<Message> messages = new HashSet<Message>();
+
+    private void clearMessages() {
+        messages.clear();
+    }
+
+    private void addMessage(Message m) {
+        boolean contains = false;
+        for(Message msg : messages) {
+            if (EcoreUtil.equals(msg, m)) {
+                contains = true;
+                break;
+            }
+        }
+        if (!contains) {
+            messages.add(m);
+        }
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
-        //TODO: to be improved (e.g. to avoid duplicating messages and ports, etc).
         updatePOM(ctx, cfg);
         StringBuilder builder = new StringBuilder();
         for (Protocol prot : protocols) {
             String serializers = "";
-
-            ////////FIXME
-            builder.append("public static byte[] toBytes(Event e){\n");
-            builder.append("switch(e.getType().getCode()){\n");
-            for(ThingPortMessage tmp : getMessagesSent(cfg, prot)) {
-                final Message m = tmp.m;
-                final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
-                builder.append("case " + code + ": return " + prot.getName() + "BinaryProtocol.toBytes((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e);\n");
+            for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
+                addMessage(tpm.m);
             }
-            builder.append("default: return null;\n");
-            builder.append("}\n");
-            builder.append("}\n");
-            ////////FIXME
-
             SerializationPlugin sp = null;
             try {
                 sp = ctx.getSerializationPlugin(prot);
@@ -84,13 +93,14 @@ public class JavaSerialPlugin extends NetworkPlugin {
                 return;
             }
 
-            for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                serializers += sp.generateSerialization(builder, prot.getName() + "BinaryProtocol", tpm.m);
+            for (Message m : messages) {
+                StringBuilder temp = new StringBuilder();
+                serializers += sp.generateSerialization(temp, prot.getName() + "BinaryProtocol", m);
             }
+            messages.clear();
             builder = new StringBuilder();
-            final Set<Message> messages = new HashSet<Message>();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
-                messages.add(tpm.m);
+                addMessage(tpm.m);
             }
             sp.generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
             final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);

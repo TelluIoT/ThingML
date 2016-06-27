@@ -1,0 +1,34 @@
+import "../thingml.thingml"
+
+thing TestEmptyTransition2 includes Test 
+@test "t # IJKLM"
+{
+	statechart TestEmptyTransition init I {
+		state I {
+			on entry harnessOut!testOut('\'I\'')
+
+			transition -> J
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+		state J {
+			on entry harnessOut!testOut('\'J\'')
+			
+			transition -> K
+		}
+		state K {
+			on entry harnessOut!testOut('\'K\'')
+			
+			transition -> L
+		}
+		state L {
+			on entry harnessOut!testOut('\'L\'')
+			
+			transition -> M
+		}
+
+		state M {
+			on entry harnessOut!testOut('\'M\'')
+		}
+	}
+}

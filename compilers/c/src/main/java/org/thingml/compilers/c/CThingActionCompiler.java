@@ -20,10 +20,20 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.c.cepHelper.CCepHelper;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
+
+import java.util.Map;
 
 
 public abstract class CThingActionCompiler extends CommonThingActionCompiler {
+    
+    @Override
+    public void generate(StartSession action, StringBuilder builder, Context ctx) {
+        CCompilerContext context = (CCompilerContext) ctx;
+        final StringBuilder b = new StringBuilder();
+        builder.append(context.getConcreteThing().getName() + "_fork_" + action.getSession().getName() + "(_instance);\n");
+    }
 
 
     @Override
@@ -100,7 +110,9 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
         CCompilerContext context = (CCompilerContext) ctx;
 
-        String propertyName = context.getCType(action.getType()) + " " + action.getName();
+        String arr = action.isIsArray() && action.getCardinality() == null ? "*" : "";
+
+        String propertyName = context.getCType(action.getType()) +  arr + " " + action.getName();
         builder.append(";");
         builder.append(propertyName);
         if (action.getCardinality() != null) {//array declaration
@@ -147,17 +159,48 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        if (expression.getParameter() instanceof ParamReference) {
+        if (expression.getParameter() instanceof ArrayParamRef) {
+            if (ctx instanceof CCompilerContext) {
+                ArrayParamRef apr = (ArrayParamRef) expression.getParameter();
+
+                String paramName = apr.getParameterRef().getName();
+                Map<String, String> mapMsgStream = ((CCompilerContext) ctx).getCepMsgFromParam(paramName);
+                String msgName = "";
+                String streamName = "";
+                if (mapMsgStream != null) {
+                    for (String s : mapMsgStream.keySet()) {
+                        msgName = s;
+                        streamName = mapMsgStream.get(s);
+                    }
+                }
+                if (msgName.equals("") || streamName.equals("")) {
+                    throw new UnsupportedOperationException("The buffer of the parameter " + paramName + " is not supposed" +
+                            "to be accessed.");
+                }
+
+                builder.append("_instance->cep_" + streamName + "->export_" + msgName + "_" + paramName + "()");
+            } else {
+
+            }
+        } else if (expression.getParameter() instanceof ParamReference) {
             ParamReference paramReference = (ParamReference) expression.getParameter();
             builder.append(paramReference.getParameterRef().getName());
         } else if (expression.getParameter() instanceof PredifinedProperty) {
-            Parameter parameter = (Parameter) expression.getReference();
-            if (parameter.isIsArray()) {
-                builder.append(parameter.getName() + "[");
-                ctx.getCompiler().getThingActionCompiler().generate(parameter.getCardinality(), builder, ctx);
-                builder.append("]");
-            } else {
-                throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
+            if (expression.getReference() instanceof Parameter) {
+                Parameter parameter = (Parameter) expression.getReference();
+                if (parameter.isIsArray()) {
+                    builder.append(parameter.getName() + "[");
+                    ctx.getCompiler().getThingActionCompiler().generate(parameter.getCardinality(), builder, ctx);
+                    builder.append("]");
+                } else {
+                    throw new UnsupportedOperationException("The parameter " + parameter.getName() + " must be an array.");
+                }
+            } else if (expression.getReference() instanceof SimpleSource){
+                if (expression.getParameter() instanceof LengthArray) {
+                    String s = CCepHelper.getContainingStream((SimpleSource)expression.getReference(), (CCompilerContext)ctx);
+                    String msg = ((SimpleSource) expression.getReference()).getMessage().getMessage().getName();
+                    builder.append(s + msg + "getLength");
+                }
             }
         } else {
             throw new UnsupportedOperationException("Parameter " + expression.getParameter().getClass().getName() + " not supported");

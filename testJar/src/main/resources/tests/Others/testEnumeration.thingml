@@ -1,0 +1,32 @@
+import "../thingml.thingml"
+
+thing TestEnumeration includes Test 
+@test "tt # aba"
+{
+    
+    property status : DigitalState
+    
+    statechart TestNaming init A {
+	     state A {
+            on entry do
+                harnessOut!testOut('\'a\'')
+                status = DigitalState:LOW
+            end
+            
+            transition -> B
+            event m : harnessIn?testIn
+			guard m.c == '\'t\'' and status == DigitalState:LOW
+         }               
+         
+         state B {
+             on entry do
+                harnessOut!testOut('\'b\'')
+                status = DigitalState:HIGH   
+             end
+             
+            transition -> A
+            event m : harnessIn?testIn
+			guard m.c == '\'t\'' and status == DigitalState:HIGH
+         }
+    }
+}

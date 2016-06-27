@@ -1,0 +1,58 @@
+import "../thingml.thingml"
+
+thing fragment TestMsgs {
+  message m1();
+  message m2();
+
+  message m3();
+  message m4();
+
+  message cep();
+}
+
+thing TestJoinSkippedTTL includes Test, TestMsgs, TimerClient
+@c_header "#include <Arduino.h>"
+@test " # SS"
+@test_duration "1000"
+@test_timer_instance "t"
+@conf "connector test.timer => t.timer"
+@conf "connector test.recP => test.sendP"
+{
+
+  provided port sendP {
+    sends m1, m2, m3, m4, cep
+  }
+
+  required port recP {
+    receives m1, m2, m3, m4, cep
+  }
+
+  stream simpleJoin1 @TTL "500"
+  from m: [e1: recP?m1 & e2: recP?m2 -> cep()]
+  produce sendP!cep()
+
+  stream simpleJoin2 @TTL "500"
+  from m: [e1: recP?m3 & e2: recP?m4 -> cep()]
+  produce sendP!cep()
+
+  statechart testSimpleJoin init Init {
+    state Init {
+      on entry do
+        sendP!m1()
+        sendP!m2()
+
+        sendP!m3()
+        timer!timer_start(200)
+      end
+
+      internal
+      event recP?cep
+      action harnessOut!testOut('\'S\'')
+
+      internal
+      event timer?timer_timeout
+      action sendP!m4()
+    }
+  }
+
+}

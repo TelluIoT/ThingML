@@ -35,16 +35,19 @@ import org.sintef.thingml.Instance;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
+import org.sintef.thingml.Property;
 import org.sintef.thingml.Region;
 import org.sintef.thingml.Session;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.Type;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.CompositeStateHelper;
 import org.sintef.thingml.helpers.RegionHelper;
 import org.sintef.thingml.helpers.StateHelper;
+import org.sintef.thingml.helpers.ThingHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
@@ -141,7 +144,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
 
     }
     
-    protected void generateEntryActions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
+    /*protected void generateEntryActions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
 
@@ -204,7 +207,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("default: break;\n");
         builder.append("}\n");
         builder.append("}\n");
-    }
+    }*/
     
     private void generateSessionForks(Thing thing, Session s, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("void fork_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
@@ -214,6 +217,15 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("memcpy(&(new_session->s), _instance, sizeof(struct session_t));\n");
         builder.append("new_session->s.fifo.fifo = &(new_session->fifo_array);\n");
         builder.append("new_session->s." + ctx.getStateVarName(ThingMLHelpers.allStateMachines(thing).get(0)) + " = " + ctx.getStateID(s.getInitial()) + ";\n");
+        for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+            if (p.getCardinality() != null) {//array
+                builder.append("new_session->s." + ctx.getVariableName(p) + " = ");
+                builder.append("malloc(sizeof(" + ctx.getCType(p.getType()) + ") * new_session->s." + ctx.getVariableName(p) + "_size);");
+                builder.append("memcpy(&(new_session->s." + ctx.getVariableName(p) + "[0]), "
+                        + "&(_instance->" + ctx.getVariableName(p) + "[0]), _instance->"
+                        + ctx.getVariableName(p) + "_size * sizeof(" + ctx.getCType(p.getType()) + "));\n");
+            }
+        }
         builder.append("init_runtime(&(new_session->s.fifo));\n");
 
         builder.append("fifo_lock(&(_instance->fifo));\n");
@@ -243,10 +255,10 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
     }
     
     private void generateSessionFunctions(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
-        for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+        for(Session s : CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
             generateSessionForks(thing, s, builder, ctx, debugProfile);
         }
-        if(!RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
+        if(!CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
             builder.append("void " + thing.getName() + "_terminate(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
             
             builder.append("    fifo_lock(&(_instance->fifo));\n");
@@ -268,6 +280,11 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                 builder.append("        pthread_join( head_" + s.getName() + "->thread, NULL);\n");
                 builder.append("        prev_" + s.getName() + " = head_" + s.getName() + ";\n");
                 builder.append("        head_" + s.getName() + " = head_" + s.getName() + "->next;\n");
+                for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+                    if (p.getCardinality() != null) {//array
+                        builder.append("free(prev_" + s.getName() + "->s." + ctx.getVariableName(p) + ");");
+                    }
+                }
                 builder.append("        free(prev_" + s.getName() + ");\n");
                 builder.append("    }\n");
             }
@@ -286,6 +303,11 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                 builder.append("            if (!head_" + s.getName() + "->s.alive) {\n");
                 builder.append("                fifo_lock(&(head_" + s.getName() + "->s.fifo));\n");
                 builder.append("                *prev_" + s.getName() + " = next_" + s.getName() + ";\n");
+                for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+                    if (p.getCardinality() != null) {//array
+                        builder.append("free(head_" + s.getName() + "->s." + ctx.getVariableName(p) + ");");
+                    }
+                }
                 builder.append("                free(head_" + s.getName() + ");\n");
                 builder.append("            } else {\n");
                 builder.append("                prev_" + s.getName() + " = &(head_" + s.getName() + "->next);\n");
@@ -309,26 +331,16 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("if (fifo_empty(&(_instance->fifo))) fifo_wait(&(_instance->fifo));\n");
         
         Set<Message> messageReceived = new HashSet<>();
-        int max_msg_size = 4; // at least the code and the source instance id (2 bytes + 2 bytes)
         for(Port p : ThingMLHelpers.allPorts(thing)) {
             for (Message m : p.getReceives()) {
                 if(!messageReceived.contains(m)) {
                     messageReceived.add(m);
-                    int s = ctx.getMessageSerializationSize(m);
-                    if(s > max_msg_size) {
-                        max_msg_size = s;
-                    }
                 }
             }
         }
 
-        
-
-        //builder.append("uint8_t param_buf[" + (max_msg_size - 2) + "];\n");
-
         // Allocate a buffer to store the message bytes.
         // Size of the buffer is "size-2" because we have already read 2 bytes
-        builder.append("byte mbuf[" + (max_msg_size - 2) + "];\n");
         builder.append("uint8_t mbufi = 0;\n\n");
 
         builder.append("// Read the code of the next port/message in the queue\n");
@@ -341,32 +353,56 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         
         for (Message m : ThingMLHelpers.allIncomingMessages(thing)) {
             builder.append("case " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + ":{\n");
+            builder.append("byte mbuf[" + ctx.getMessageSerializationSizeString(m) + " - 2" + "];\n");
 
-            builder.append("while (mbufi < " + (ctx.getMessageSerializationSize(m) - 2) + ") mbuf[mbufi++] = fifo_dequeue(&(_instance->fifo));\n");
+            builder.append("while (mbufi < (" + ctx.getMessageSerializationSizeString(m) + " - 2" + ")) mbuf[mbufi++] = fifo_dequeue(&(_instance->fifo));\n");
             // Fill the buffer
 
             builder.append("fifo_unlock(&(_instance->fifo));\n");
             //builder.append("fifo_unlock_and_notify(_instance->fifo);\n");
 
             // Begin Horrible deserialization trick
-            int idx_bis = 2;
+            builder.append("uint8_t mbufi_" + m.getName() + " = 2;\n");
 
             for (Parameter pt : m.getParameters()) {
-                builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
-                builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
-                builder.append("} u_" + m.getName() + "_" + pt.getName() + ";\n");
+                if(pt.isIsArray()) {
+                    StringBuilder cardBuilder = new StringBuilder();
+                    ctx.getCompiler().getThingActionCompiler().generate(pt.getCardinality(), cardBuilder, ctx);
+                    String v = m.getName() + "_" + pt.getName();
+                    Type t = pt.getType();
+                    builder.append("union u_" + v + "_t {\n");
+                    builder.append("    " + ctx.getCType(t) + " p[" + cardBuilder + "];\n");
+                    builder.append("    byte bytebuffer[" + ctx.getCByteSize(t, 0) + "* (" + cardBuilder + ")];\n");
+                    builder.append("} u_" + v + ";\n");
+
+                    builder.append("uint8_t u_" + v + "_index = 0;\n");
+                    builder.append("while (u_" + v + "_index < (" + ctx.getCByteSize(t, 0) + "* (" + cardBuilder + "))) {\n");
+                    for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+
+                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[u_" + v + "_index - " + i + "]");
+                        builder.append(" = mbuf[mbufi_" + m.getName() + " + " + cardBuilder + " - 1 + " + i + " - u_" + v + "_index];\n");
+
+                    }
+                    builder.append("    u_" + v + "_index++;\n");
+                    builder.append("}\n");
+                    
+                    builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getType(), 0) + " * (" + cardBuilder + ");\n");
+                } else {
+                    builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
+                    builder.append(ctx.getCType(pt.getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append("} u_" + m.getName() + "_" + pt.getName() + ";\n");
 
 
-                for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+                    for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
 
-                    builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
-                    builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
+                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                        builder.append(" = mbuf[mbufi_" + m.getName() + " + " + i + "];\n");
 
+                    }
+
+                    builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getType(), 0) + ";\n");
                 }
-
-
-                idx_bis = idx_bis + ctx.getCByteSize(pt.getType(), 0);
             }
             // End Horrible deserialization trick
             
@@ -452,7 +488,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                     builder.append(" {\n");
                     builder.append("    fifo_lock(&(inst->fifo));\n");
 
-                    builder.append("    if ( fifo_byte_available(&(inst->fifo)) > " + ctx.getMessageSerializationSize(m) + " ) {\n\n");
+                    builder.append("    if ( fifo_byte_available(&(inst->fifo)) > " + ctx.getMessageSerializationSizeString(m) + " ) {\n\n");
 
                     builder.append("        _fifo_enqueue(&(inst->fifo), (" + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + " >> 8) & 0xFF );\n");
                     builder.append("        _fifo_enqueue(&(inst->fifo), " + ctx.getHandlerCode(ctx.getCurrentConfiguration(), m) + " & 0xFF );\n\n");
@@ -489,4 +525,10 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             }
         }
     }
+    
+    @Override
+    public void generateSessionHandlerCalls(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {}
+    
+    @Override
+    public void generateKillChildren(Thing thing, StringBuilder builder) {}
 }

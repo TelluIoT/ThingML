@@ -1,0 +1,42 @@
+import "../thingml.thingml"
+
+thing TestOperators2 includes Test
+@test "x # AAAAA"
+{
+    property A : Char = '\'A\''
+    property B : Char = '\'B\''
+	
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			transition -> S1 guard (1<2) action do
+				harnessOut!testOut(A)		// A
+			end
+    	}
+    
+    	state S1 {
+			transition -> S2 guard (2>1) action do
+				harnessOut!testOut(A)		// A
+			end
+    	}
+    
+    	state S2 {
+			transition -> S3 guard (2<=2) action do
+				harnessOut!testOut(A)		// A
+			end
+    	}
+    
+    	state S3 {
+			transition -> S4 guard (2>=2) action do
+				harnessOut!testOut(A)		// A
+			end
+    	}
+    
+    	state S4 {
+			on entry do
+				harnessOut!testOut(A)		// A
+			end
+    	}
+    }
+}

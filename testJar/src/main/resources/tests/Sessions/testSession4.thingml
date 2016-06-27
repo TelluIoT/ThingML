@@ -1,0 +1,43 @@
+import "../thingml.thingml"
+
+thing TestSession4 includes Test
+@test "A # (AT|TA)"
+{
+	message m(u : UInt8)
+
+	internal port p {
+		sends m
+		receives m
+	}
+
+	property ID : Char = '\'M\''
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			internal 
+			event e : harnessIn?testIn
+			action do
+				ID = e.c
+				fork s
+				ID = '\'M\''
+			end
+    	}
+
+		session s<2> init S1 {
+			state S1 {
+				on entry do 
+					harnessOut!testOut(ID)
+					ID = '\'T\''
+					fork t
+				end
+			}
+
+			session t<2> init T1 {
+				final state T1 {
+					on entry harnessOut!testOut(ID)
+				}		
+			}
+		}
+    }
+}

@@ -52,8 +52,29 @@ public class JSSerialPlugin extends NetworkPlugin {
         return res;
     }
 
-    public String getTargetedLanguage() {
-        return "nodejs";
+    public List<String> getTargetedLanguages() {
+        List<String> res = new ArrayList<>();
+        res.add("nodejs");
+        return res;
+    }
+
+    final Set<Message> messages = new HashSet<Message>();
+
+    private void clearMessages() {
+        messages.clear();
+    }
+
+    private void addMessage(Message m) {
+        boolean contains = false;
+        for(Message msg : messages) {
+            if (EcoreUtil.equals(msg, m)) {
+                contains = true;
+                break;
+            }
+        }
+        if (!contains) {
+            messages.add(m);
+        }
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
@@ -73,14 +94,19 @@ public class JSSerialPlugin extends NetworkPlugin {
             }
 
             String serializers = "";
+            messages.clear();
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
-                serializers += sp.generateSerialization(builder, prot.getName() + "BinaryProtocol", tpm.m);
+                addMessage(tpm.m);
+            }
+            for(Message m : messages) {
+                StringBuilder temp = new StringBuilder();
+                serializers += sp.generateSerialization(temp, prot.getName() + "BinaryProtocol", m);
             }
 
             builder = new StringBuilder();
-            final Set<Message> messages = new HashSet<Message>();
+            messages.clear();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
-                messages.add(tpm.m);
+                addMessage(tpm.m);
             }
             sp.generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
             final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);
@@ -108,7 +134,14 @@ public class JSSerialPlugin extends NetworkPlugin {
 
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonObject deps = json.get("dependencies").asObject();
-            deps.add("serialport2", "^0.0.5");
+            deps.add("serialport", "^3.1.2");
+            if (deps.get("bytebuffer") == null)
+                deps.add("bytebuffer", "^5.0.1");
+
+            final File f = new File(ctx.getOutputDirectory() + "/package.json");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(json.toString(), output, Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -150,17 +183,55 @@ public class JSSerialPlugin extends NetworkPlugin {
             String template = ctx.getTemplateByID("templates/JSSerialPlugin.js");
             template = template.replace("/*$FORMAT$*/", prot.getName() + "BinaryProtocol");
             template = template.replace("/*$NAME$*/", prot.getName());
-            /*StringBuilder parseBuilder = new StringBuilder();
-            parseBuilder.append("final Event event = " + prot.getName() + "BinaryProtocol.instantiate(payload);\n");
-            for(Port p : ports) {//FIXME
-                parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
-            };*/
-            template = initPort(ctx, template);
             for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {
                 updateMain(ctx, cfg, conn);
             }
-            //template = template.replace("/*$PARSING CODE$*/", parseBuilder.toString());
-
+            for(Port p : ports) {
+                StringBuilder builder = new StringBuilder();
+                builder.append("msg.unshift(\"" + p.getName() + "\");\n");
+                builder.append("instance._receive.apply(instance, msg);\n");
+                builder.append("msg.shift();\n");
+                template = template.replace("/*$DISPATCH$*/", "/*$DISPATCH$*/\n" + builder.toString());
+            }
+            StringBuilder builder = new StringBuilder();
+            for (Port p : ports) {
+                for (Message m : p.getSends()) {
+                    builder.append("Serial.prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
+                    int i = 0;
+                    for (Parameter pa : m.getParameters()) {
+                        if (i > 0)
+                            builder.append(", ");
+                        builder.append(ctx.protectKeyword(pa.getName()));
+                        i++;
+                    }
+                    builder.append(") {\n");
+                    builder.append("const buffer = formatter." + m.getName() + "ToBytes(");
+                    i = 0;
+                    for (Parameter pa : m.getParameters()) {
+                        if (i > 0)
+                            builder.append(", ");
+                        builder.append(ctx.protectKeyword(pa.getName()));
+                        i++;
+                    }
+                    builder.append(");\n");
+                    builder.append("const packet = [];\n");
+                    builder.append("var idx = 0;");
+                    builder.append("packet[idx] = START_BYTE;\n");
+                    builder.append("idx++;\n");
+                    builder.append("for (var i = 0 ; i < buffer.length ; i++) {\n");
+                    builder.append("if (buffer[i] === START_BYTE || buffer[i] === STOP_BYTE || buffer[i] === ESCAPE_BYTE) {\n");
+                    builder.append("packet[idx] = ESCAPE_BYTE;\n");
+                    builder.append("idx++;\n");
+                    builder.append("}\n");
+                    builder.append("packet[idx] = buffer[i];\n");
+                    builder.append("idx++;\n");
+                    builder.append("}");
+                    builder.append("packet[idx] = STOP_BYTE;\n");
+                    builder.append("serial.write(new Buffer(packet));\n");
+                    builder.append("};\n\n");
+                }
+            }
+            template = template.replace("/*$RECEIVERS$*/", "/*$RECEIVERS$*/\n" + builder.toString());
             try {
                 final File f = new File(ctx.getOutputDirectory() + "/SerialJS.js");
                 final OutputStream output = new FileOutputStream(f);
@@ -169,21 +240,6 @@ public class JSSerialPlugin extends NetworkPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        private String initPort(Context ctx, String template) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("//callbacks for third-party listeners\n");
-            for (Port p : ports) {
-                for (Message m : p.getSends()) {
-                    builder.append("const " + m.getName() + "On" + p.getName() + "Listeners = [];\n");
-                    builder.append("this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners = function() {\n");
-                    builder.append("return " + m.getName() + "On" + p.getName() + "Listeners;\n");
-                    builder.append("};\n");
-                }
-            }
-            template = template.replace("/*$PORTS$*/", builder.toString());
-            return template;
         }
 
         private void updateMain(Context ctx, Configuration cfg, ExternalConnector conn) {
@@ -195,12 +251,22 @@ public class JSSerialPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                final String speed = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "baudrate") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "baudrate").get(0) : "9600";
-                final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";
+                final String speed = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "baudrate", "9600");
+                final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";//FIXME: Raise an exception if port is not specified
 
-                //TODO
+                main = main.replace("/*$REQUIRE_PLUGINS$*/", "var Serial = require('./SerialJS');\n/*$REQUIRE_PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "var serial = new Serial(\"serial\", false, \"" + port + "\", " + speed + ", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
+                main = main.replace("/*$STOP_PLUGINS$*/", "serial._stop();\n/*$STOP_PLUGINS$*/\n");
 
-                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/main.js");
+                StringBuilder builder = new StringBuilder();
+                for (Message req : conn.getPort().getSends()) {
+                    builder.append(conn.getInst().getInstance().getName() + ".get" + ctx.firstToUpper(req.getName()) + "on" + conn.getPort().getName() + "Listeners().push(");
+                    builder.append("serial.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(serial)");
+                    builder.append(");\n");
+                }
+                main = main.replace("/*$PLUGINS_CONNECTORS$*/", builder.toString() + "\n/*$PLUGINS_CONNECTORS$*/");
+
+                final File f = new File(ctx.getOutputDirectory() + "/main.js");
                 final OutputStream output = new FileOutputStream(f);
                 IOUtils.write(main, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);

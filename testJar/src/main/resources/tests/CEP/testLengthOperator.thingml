@@ -1,0 +1,43 @@
+import "../thingml.thingml"
+
+thing fragment TestMsgs {
+  message m1();
+  message res(val : UInt8);
+}
+
+thing TestLengthOperator includes Test, TestMsgs
+@test " # f"
+@conf "connector test.recv => test.send"
+{
+  provided port send {
+    sends m1, res
+  }
+
+  required port recv {
+    receives m1, res
+  }
+
+  stream streamTrigger
+  from m : recv?m1::buffer 5 by 4
+  select var s : UInt8 = m.length
+  produce send!res(s)
+
+  statechart testSimpleFilter init Init {
+    state Init {
+      on entry do
+        send!m1()
+        send!m1()
+        send!m1()
+        send!m1()
+        end
+
+        internal
+        event e : recv?res
+        guard e.val == 4
+        action harnessOut!testOut('\'f\'')
+    }
+  }
+
+}
+
+

@@ -1,0 +1,77 @@
+import "../thingml.thingml"
+
+thing fragment Msgs {
+	message m(c : Char);
+}
+
+thing TestInstanceInitializationOrder2 includes Test, Msgs
+@test "t # (A(B|C|D)(B|C|D)(B|C|D)E)|((C|D)(C|D)ABE)|((C|D)A(B|C|D)(B|C|D)E)"
+@conf "instance A : I"
+@conf "set A.inst = '\\\'A\\\''"
+@conf "instance B : I"
+@conf "set B.inst = '\\\'B\\\''"
+@conf "instance C : I"
+@conf "set C.inst = '\\\'C\\\''"
+@conf "instance D : I"
+@conf "set D.inst = '\\\'D\\\''"
+@conf "instance E : I"
+@conf "set E.inst = '\\\'E\\\''"
+@conf "connector C.r => B.p"
+@conf "connector B.r => A.p"
+@conf "connector B.r => D.p"
+@conf "connector D.r => C.p"
+@conf "connector E.r => C.p"
+
+@conf "connector A.out => test.out"
+@conf "connector B.out => test.out"
+@conf "connector C.out => test.out"
+@conf "connector D.out => test.out"
+@conf "connector E.out => test.out"
+{
+
+	provided port out
+	@sync_send "true"
+	{
+		receives m
+	}
+
+	statechart TestOnEntry init I {
+	
+		state I {
+			internal event e : out?m
+			action harnessOut!testOut(e.c)
+		}
+	}
+}
+
+thing I includes Msgs
+{
+	property inst : Char
+
+	provided port p 
+	{
+		sends m
+		receives m
+	}
+
+	required port r 
+	{
+		sends m
+		receives m
+	}
+
+	required port out 
+	@sync_send "true"
+	{
+		sends m
+	}
+
+	statechart myC init J {
+	
+		state J {
+			on entry do
+				out!m(inst)
+			end
+		}
+	}
+}

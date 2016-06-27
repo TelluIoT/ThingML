@@ -1,0 +1,161 @@
+import "../thingml.thingml"
+
+datatype JInt<2>
+    @c_type "int"
+    @java_type "int"
+    @js_type "int";
+
+thing fragment TestFilterLengthMsgs {
+    //message for stream with a "simple" source
+    message m1(x: JInt);
+
+    //message for merge stream
+    message m2(x: JInt, y: JInt, z: JInt);
+    message m3(v1: JInt, v2: JInt, v3: JInt);
+    message m2m3(a: JInt, b: JInt, c: JInt);
+}
+
+thing TestLengthSimpleSource includes Test, TestFilterLengthMsgs
+@test "s # O"
+@test "m # OO"
+@test "j # OOOO"
+@conf "connector test.recvPort => test.sendPort"
+{
+    provided port sendPort {
+        sends m1, m2, m3, m2m3
+    }
+
+    required port recvPort {
+        receives m1, m2, m3, m2m3
+    }
+
+
+    function sum(values: JInt[]) : Char do
+        var expectedResult : JInt = 5
+        var index : JInt = 0
+        var result : JInt = 0
+        while(index < 5) do
+            result = result + values[index]
+            index = index + 1
+        end
+
+        if(result == expectedResult) return '\'O\''
+        return '\'F\''
+    end
+
+   stream sumM1
+   from cHR : recvPort?m1::buffer 5 by 5
+   select var sum : Char = sum(cHR.x[])
+   produce harnessOut!testOut(sum)
+
+   function avgParam(params : JInt[]) : JInt do
+        var expectedAvg : JInt = 1
+
+        var index : JInt = 0
+        var avg : JInt = 0
+
+        while(index < 4) do
+            avg = avg + params[index]
+            index = index + 1
+        end
+
+        return avg / 4
+   end
+
+   stream avgM1M2
+   from mge : [ e2 : recvPort?m2 | e3 : recvPort?m3 -> m2m3]::buffer 4 by 4
+   select var avgA : JInt = avgParam(mge.a[]) ,
+          var avgB : JInt = avgParam(mge.b[]),
+          var avgC : JInt = avgParam(mge.c[])
+   produce sendPort!m2m3(avgA,avgB,avgC)
+
+
+   function max(params: JInt[]) : JInt do
+        var max : JInt = params[0]
+        var index : JInt = 1
+        while(index < 2) do
+            if(params[index] > max) max = params[index]
+            index = index + 1
+        end
+        return max
+   end
+
+   stream maxM1M2
+   from jn : [ e1 : recvPort?m2 & e2 : recvPort?m3 -> m2m3(e1.x + e2.v1,e1.y + e2.v2,e1.z + e2.v3)]::buffer 2 by 2
+   select var maxA : JInt = max(jn.a[]),
+           var maxB : JInt = max(jn.b[]),
+           var maxC : JInt = max(jn.c[])
+   produce sendPort!m2m3(maxA,maxB,maxC)
+
+   statechart TestLengthSimpleSource init Init {
+       state Init {
+            transition -> SimpleSource
+            event m : harnessIn?testIn
+            guard m.c == '\'s\''
+
+            transition -> MergeSource
+            event m : harnessIn?testIn
+            guard m.c == '\'m\''
+
+            transition -> JoinSource
+            event m : harnessIn?testIn
+            guard m.c == '\'j\''
+
+        }
+
+        state SimpleSource {
+            on entry do
+                sendPort!m1(1)
+                sendPort!m1(1)
+                sendPort!m1(1)
+                sendPort!m1(1)
+                sendPort!m1(1)
+                sendPort!m1(1)
+            end
+        }
+
+        state MergeSource  {
+            on entry do
+                //first window
+                sendPort!m2(1,1,1)
+                sendPort!m2(1,1,1)
+                sendPort!m2(1,1,1)
+                sendPort!m3(1,1,1)
+                //second window
+                sendPort!m3(1,1,1)
+                sendPort!m3(1,1,1)
+                sendPort!m2(1,1,1)
+                sendPort!m2(1,1,1)
+            end
+
+            internal
+            event e : recvPort?m2m3
+            guard e.a == 1 and e.b == 1 and e.c == 1
+            action do
+                harnessOut!testOut('\'O\'')
+            end
+        }
+
+        state JoinSource {
+            on entry do
+                //according to the Rx library, joined m2 and m3 messages
+                //should produce the following result :
+                // (2,1) (3,2) (4,1) (4,3)  (5,2) (5,4) (6,1) (6,3) (6,5)
+                sendPort!m2(1,1,1) //1
+                sendPort!m3(1,1,1) //2
+                sendPort!m2(1,1,1) //3
+                sendPort!m3(1,1,1) //4
+                sendPort!m2(1,1,1) //5
+                sendPort!m3(1,1,1) //6
+            end
+
+            internal
+            event e : recvPort?m2m3
+            guard e.a == 2 and e.b == 2 and e.c == 2
+            action do
+                harnessOut!testOut('\'O\'')
+            end
+        }
+
+    }
+}

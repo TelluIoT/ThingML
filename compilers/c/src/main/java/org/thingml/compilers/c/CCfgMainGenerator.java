@@ -23,6 +23,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.c.cepHelper.CCepHelper;
 
 import java.util.*;
 
@@ -191,32 +192,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append("//Declaration of instance variables\n");
 
             for (Instance inst : ConfigurationHelper.allInstances(cfg)) {
-
+                
             builder.append("//Instance " + inst.getName() + "\n");
-
+                
             builder.append("// Variables for the properties of the instance\n");
-            /*for (Property p : inst.getType().allPropertiesInDepth()) {
-                if (p.getCardinality() != null) {//array
-                builder.append(ctx.getCType(p.getType()) + " ");
-                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(p));
-                builder.append("[");
-                ctx.setConcreteInstance(inst);
-                ctx.getCompiler().getThingActionCompiler().generate(p.getCardinality(), builder, ctx);
-                ctx.clearConcreteInstance();
-                builder.append("]");
-                builder.append(";\n");
-                }
-            }*/
-            
-        /*
-            for (Property a : ConfigurationHelper.allArrays(cfg, inst)) {
-                builder.append(ctx.getCType(a.getType()) + " ");
-                builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
-                builder.append("[");
-                ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
-                builder.append("];\n");
-            }*/
-
 
                 builder.append(ctx.getInstanceVarDecl(inst) + "\n");
 
@@ -249,6 +228,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     builder.append("char * " + ctx.getInstanceVarName(inst) + "_name = \"" + inst.getName() + "\";\n");
                 }
             }
+                
+
+                builder.append("// Variables for the sessions of the instance\n");
+                StateMachine sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
+                generateSessionInstanceDeclaration(cfg, ctx, builder, inst, sm, "1");
         }
 
             builder.append("\n");
@@ -374,7 +358,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                     for (Parameter pt : m.getParameters()) {
                         builder.append("\n// parameter " + pt.getName() + "\n");
-                        ctx.bytesToSerialize(pt.getType(), builder, ctx, pt.getName(), pt);
+                        ctx.bytesToSerialize(pt.getType(), builder, pt.getName(), pt);
                     }
                     builder.append("}\n");
 
@@ -427,7 +411,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                     while (i > 0) {
                         i = i - 1;
-                        //if (i == 0) 
+                        //if (i == 0)
                         //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
                         builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                         j++;
@@ -552,7 +536,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
 
-    protected void generateMessageForwarders(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
+    public void generateMessageForwarders(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
 
         //Thing Port Message Forwarder
         Map<Message, Map<Thing, Map<Port, Set<ExternalConnector>>>> tpm = new HashMap<Message, Map<Thing, Map<Port, Set<ExternalConnector>>>>();
@@ -1007,7 +991,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         if (ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).size() == 0)
                             continue; // there is no state machine
                         StateMachine sm = ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).get(0);
-                        if (StateHelper.canHandle(sm, myReceiver.getValue(), m)) {
+                        if (StateHelper.canHandleIncludingSessions(sm, myReceiver.getValue(), m)) {
                             builder.append(ctx.getHandlerName(myReceiver.getKey().getType(), myReceiver.getValue(), m));
                             ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(myReceiver.getKey()));
                             //ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + myReceiver.getKey().getName() + "_var");
@@ -1020,7 +1004,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                 for (ExternalConnector eco : externalSenders) {
                     String portName = eco.getName();
-                    
+
                     builder.append("if (sender ==");
                     builder.append(" " + portName + "_instance.listener_id) {\n");
 
@@ -1115,7 +1099,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         // Allocate a buffer to store the message bytes.
         // Size of the buffer is "size-2" because we have already read 2 bytes
-        builder.append("byte mbuf[" + (max_msg_size - 2) + "];\n");
         builder.append("uint8_t mbufi = 0;\n\n");
 
         builder.append("// Read the code of the next port/message in the queue\n");
@@ -1152,9 +1135,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             //for (Message m : ConfigurationHelper.allMessages(cfg)) {
 
 
-            builder.append("case " + ctx.getHandlerCode(cfg, m) + ":\n");
+            builder.append("case " + ctx.getHandlerCode(cfg, m) + ":{\n");
+            builder.append("byte mbuf[" + ctx.getMessageSerializationSizeString(m) + " - 2" + "];\n");
 
-            builder.append("while (mbufi < " + (ctx.getMessageSerializationSize(m) - 2) + ") mbuf[mbufi++] = fifo_dequeue();\n");
+            builder.append("while (mbufi < (" + ctx.getMessageSerializationSizeString(m) + " - 2" + ")) mbuf[mbufi++] = fifo_dequeue();\n");
             // Fill the buffer
 
             //DEBUG
@@ -1174,9 +1158,32 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             if (ctx.sync_fifo()) builder.append("fifo_unlock();\n");
 
             // Begin Horrible deserialization trick
-            int idx_bis = 2;
+            builder.append("uint8_t mbufi_" + m.getName() + " = 2;\n");
 
             for (Parameter pt : m.getParameters()) {
+                if(pt.isIsArray()) {
+                    StringBuilder cardBuilder = new StringBuilder();
+                    ctx.getCompiler().getThingActionCompiler().generate(pt.getCardinality(), cardBuilder, ctx);
+                    String v = m.getName() + "_" + pt.getName();
+                    Type t = pt.getType();
+                    builder.append("union u_" + v + "_t {\n");
+                    builder.append("    " + ctx.getCType(t) + " p[" + cardBuilder + "];\n");
+                    builder.append("    byte bytebuffer[" + ctx.getCByteSize(t, 0) + "* (" + cardBuilder + ")];\n");
+                    builder.append("} u_" + v + ";\n");
+
+                    builder.append("uint8_t u_" + v + "_index = 0;\n");
+                    builder.append("while (u_" + v + "_index < (" + ctx.getCByteSize(t, 0) + "* (" + cardBuilder + "))) {\n");
+                    for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+
+                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[u_" + v + "_index - " + i + "]");
+                        builder.append(" = mbuf[mbufi_" + m.getName() + " + " + cardBuilder + " - 1 + " + i + " - u_" + v + "_index];\n");
+
+                    }
+                    builder.append("    u_" + v + "_index++;\n");
+                    builder.append("}\n");
+                    
+                    builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getType(), 0) + " * (" + cardBuilder + ");\n");
+                } else {
                 builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
                 builder.append(ctx.getCType(pt.getType()) + " p;\n");
                 builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
@@ -1186,12 +1193,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
 
                     builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
-                    builder.append(" = mbuf[" + (idx_bis + i) + "];\n");
+                        builder.append(" = mbuf[mbufi_" + m.getName() + " + " + i + "];\n");
 
                 }
 
-
-                idx_bis = idx_bis + ctx.getCByteSize(pt.getType(), 0);
+                    builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getType(), 0) + ";\n");
+            }
             }
             // End Horrible deserialization trick
 
@@ -1208,7 +1215,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
             builder.append(");\n");
 
-            builder.append("break;\n");
+            builder.append("break;\n}\n");
         }
         ctx.clearConcreteThing();
         builder.append("}\n");
@@ -1373,6 +1380,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         if (ctx.traceLevelIsAbove(cfg, 1)) {
             builder.append(ctx.getTraceFunctionForString(cfg) + "\"Initialization of " + inst.getName() + "\\n\");\n");
         }
+        builder.append("" + ctx.getInstanceVarName(inst) + ".active = true;\n");
 
 
         // Register the instance and set its ID and its port ID
@@ -1497,6 +1505,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             for (Region r : CompositeStateHelper.allContainedRegions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
+            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(s) + " = -1;\n");
+        }
         }
 
         // Init simple properties
@@ -1518,14 +1529,20 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         for (Property p : ThingHelper.allPropertiesInDepth(inst.getType())) {
             if (p.getCardinality() != null) {//array
-                //builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = &");
-                //TOCHECK
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getVariableName(p));
                 builder.append(";\n");
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + "_size = ");
+                ctx.generateFixedAtInitValue(cfg, inst, p.getCardinality(), builder);
+                builder.append(";\n");
             }
         }
-
+        
+        //Sessions
+        if (ThingMLHelpers.allStateMachines(inst.getType()).size() > 0) { // There is a state machine
+            StateMachine sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
+            generateSessionInstanceInitialization(cfg, ctx, builder, inst, ctx.getInstanceVarName(inst), "0", sm);
+        }
 
         // Init array properties
         Map<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> expressions = ConfigurationHelper.initExpressionsForInstanceArrays(cfg, inst);
@@ -1545,6 +1562,11 @@ public class CCfgMainGenerator extends CfgMainGenerator {
          }
 
         builder.append("\n");
+
+        // init cep streams variables
+        for (Stream s : CCepHelper.getStreamWithBuffer(inst.getType())) {
+            builder.append(ctx.getInstanceVarName(inst) + ".cep_" + s.getName() + " = new stream_" + s.getName() + "();\n");
+        }
 
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
         //if(!(debugProfile==null) && debugProfile.g) {}
@@ -1604,7 +1626,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("\n");
         builder.append("// Network Initilization \n");
-            
+
         builder.append(ctx.getInitCode());
         builder.append("\n\n// End Network Initilization \n\n");
 
@@ -1619,7 +1641,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
-        
+
         //Initialize stdout if needed (for arduino)
         if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 int baudrate = 9600;
@@ -1754,5 +1776,60 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(dynCoLib);
             }
         }
+    }
+
+    private void generateSessionInstanceDeclaration(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, CompositeState cs, String curMaxInstances) {
+        
+        for(Session s : CompositeStateHelper.allFirstLevelSessions(cs)) {
+            StringBuilder maxInstances = new StringBuilder();
+            maxInstances.append(curMaxInstances + " * (");
+            ctx.generateFixedAtInitValue(cfg, i, s.getMaxInstances(), maxInstances);
+            maxInstances.append(")");
+            
+            builder.append("//Instance: " + i.getName() + ", Session: " + s.getName() + "\n");
+            builder.append("struct " + ctx.getInstanceStructName(i.getType()) + " sessions_" + i.getName() + "_" + s.getName() + "[" + maxInstances + "];\n");
+            for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
+                builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append("array_" + i.getName() + "_" + s.getName() + "_" + ctx.getCVarName(a));
+                builder.append("[" + maxInstances + "][");
+                ctx.generateFixedAtInitValue(cfg, i, a.getCardinality(), builder);
+                builder.append("];\n");
+            }
+            
+            builder.append("//Subsessions\n");
+            generateSessionInstanceDeclaration(cfg, ctx, builder, i, s, maxInstances.toString());
+        }
+        
+    }
+
+    private void generateSessionInstanceInitialization(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, String inst_var, String index, CompositeState cs) {
+        
+        for(Session s : CompositeStateHelper.allFirstLevelSessions(cs)) {
+            StringBuilder maxInstances = new StringBuilder();
+            ctx.generateFixedAtInitValue(cfg, i, s.getMaxInstances(), maxInstances);
+            builder.append("//Instance: " + i.getName() + ", Session: " + s.getName() + "\n");
+            builder.append(inst_var + ".nb_max_sessions_" + s.getName() + " = " + maxInstances + ";\n");
+            builder.append(inst_var + ".sessions_" + s.getName() + 
+                    " = &sessions_" + i.getName() + "_" + s.getName() + "[" + index + "];\n");
+            
+            builder.append("uint16_t " + i.getName() + "_" + s.getName() + "_index = 0;\n");
+            builder.append("while (" + i.getName() + "_" + s.getName() + "_index < (" + maxInstances + ")) {\n");
+            builder.append("sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index].active = false;\n");
+            
+            for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
+                //builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append("sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index]." + ctx.getCVarName(a) + " = &(array_" + i.getName() + "_" + s.getName() + "_" + ctx.getCVarName(a));
+                builder.append("[" + index + " + " + i.getName() + "_" + s.getName() + "_index][0]);\n");
+            }
+            
+            builder.append("//Subsessions\n");
+            String sessionInstanceVar = "sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index]";
+            String sessionIndex = index + " + " + i.getName() + "_" + s.getName() + "_index";
+            generateSessionInstanceInitialization(cfg, ctx, builder, i, sessionInstanceVar, sessionIndex, s);
+            builder.append("\n");
+            builder.append(i.getName() + "_" + s.getName() + "_index++;\n");
+            builder.append("}\n");
+        }
+        
     }
 }

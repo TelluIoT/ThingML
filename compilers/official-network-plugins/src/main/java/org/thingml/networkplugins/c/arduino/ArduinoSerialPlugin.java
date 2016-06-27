@@ -59,8 +59,10 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
         return res;
     }
 
-    public String getTargetedLanguage() {
-        return "arduino";
+    public List<String> getTargetedLanguages() {
+        List<String> res = new ArrayList<>();
+        res.add("arduino");
+        return res;
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
@@ -186,10 +188,9 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
                         System.out.print("m: " + m.getName());
                     messages.add(m);
                     if (ctx.getMessageSerializationSize(m) > maxMsgSize) {
-                        maxMsgSize = ctx.getMessageSerializationSize(m);
+                        maxMsgSize = ctx.getMessageSerializationSize(m) - 2;
                     }
                 }
-                maxMsgSize = maxMsgSize - 2; //FIXME @nicolas
 
                 ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 

@@ -44,7 +44,7 @@ import java.util.Collection;
  *
  * @generated
  */
-public abstract class SourceImpl extends ThingMLElementImpl implements Source {
+public abstract class SourceImpl extends AnnotatedElementImpl implements Source {
 	/**
 	 * The cached value of the '{@link #getOperators() <em>Operators</em>}' containment reference list.
 	 * <!-- begin-user-doc -->

@@ -75,6 +75,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                 builder.append("	len += " + (p.getName().length() + 4) + ";//,\"" + p.getName().length() + "\":\n");
             }
 
+            //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
             if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
                     || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
                     || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
@@ -114,6 +115,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                 builder.append("	index += sprintf(" + bufferName + "+index, \",\");\n");
             }
 
+            //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
             if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
                     || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
                     || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
@@ -165,7 +167,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                     "	if(*m != '\"') {return;} // \"\n" +
                     "	m++;\n" +
                     "\n" +
-                    "	char msg_name[" + maxMsgLength + "];\n" +
+                    "	char msg_name[" + (maxMsgLength+1) + "];\n" +
                     "	int msg_name_len = next_char(m, '\"', '\"');\n" +
                     "	if(msg_name_len <= 0) {return;} // empty name\n" +
                     "	strncpy(msg_name, m, msg_name_len); // name\n" +
@@ -291,7 +293,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
             for (Parameter p : m.getParameters()) {
                 messagesparser.append("		if(strcmp(\"" + p.getName() + "\", param_name) == 0) { //" + p.getName() + "\n");
 
-
+                //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
                 if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
                         || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
                         || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
@@ -354,6 +356,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
         List<String> res = new ArrayList<>();
         res.add("posix");
+        res.add("posixmt");
         return res;
     }
 

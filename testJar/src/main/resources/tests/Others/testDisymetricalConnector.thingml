@@ -1,0 +1,62 @@
+import "../thingml.thingml"
+
+thing fragment Msgs {
+	message m1();
+	message m2();
+}
+
+thing TestDisymetricalConnector includes Test, Msgs
+@test "12 # IIIII"
+@conf "instance t2 : T2"
+@conf "connector t2.p1 => test.p1"
+@conf "connector t2.p2 => test.p1"
+@conf "connector t2.p2 => test.p2"
+{
+
+	provided port p1 {
+		sends m1, m2
+		receives m1, m2
+	}
+	provided port p2 {
+		sends m1, m2
+		receives m1, m2
+	}
+	statechart Chart init Init {
+		state Init {
+			internal event e : harnessIn?testIn
+			guard e.c == '\'1\''	
+			action p1!m1()	
+
+			internal event e : harnessIn?testIn
+			guard e.c == '\'2\''		
+			action p2!m1()
+
+			internal event p1?m2
+			action harnessOut!testOut('\'I\'')
+
+			internal event p2?m2
+			action harnessOut!testOut('\'I\'')
+		}
+	}
+}
+
+thing T2 includes Msgs {
+
+	required port p1 {
+		sends m1, m2
+		receives m1, m2
+	}
+	required port p2 {
+		sends m1, m2
+		receives m1, m2
+	}
+	statechart Chart init Init {
+		state Init {
+			internal event p1?m1
+			action p1!m2()
+
+			internal event p2?m1
+			action p2!m2()
+		}
+	}
+}

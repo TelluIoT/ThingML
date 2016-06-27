@@ -1,0 +1,92 @@
+import "../thingml.thingml"
+
+thing fragment TestMsgs {
+    message cepMsg(aName : Char);    
+}
+
+thing TestHistoryStatesWithStream includes Test, TestMsgs
+@test "yzyznyniyziyzniyz # I1313412I24I243I23"
+@conf "connector test.cepRcv => test.cepSend"
+{
+    provided port cepSend {
+        sends cepMsg   
+    }
+    
+    required port cepRcv {
+        receives cepMsg
+    }
+    
+    stream testStream 
+    from m : harnessIn?testIn
+    select var c : Char = m.c
+    produce cepSend!cepMsg(c)
+    
+	statechart TestHistoryStates init I {
+	
+		state I {
+			on entry harnessOut!testOut('\'I\'')
+			
+			transition -> C1
+			event m : cepRcv?cepMsg
+			guard m.aName == '\'y\''
+			
+			transition -> C2
+			event m : cepRcv?cepMsg
+			guard m.aName == '\'z\''
+		}
+		
+		composite state C1 init C1S1 keeps history {
+		
+		transition -> I
+		event m : cepRcv?cepMsg
+		guard m.aName == '\'i\''
+
+		transition -> C2
+		event m : cepRcv?cepMsg
+		guard m.aName == '\'z\''
+		
+			state C1S1 {
+				on entry harnessOut!testOut('\'1\'')
+
+				transition -> C1S2
+				event m : cepRcv?cepMsg
+				guard m.aName == '\'n\''
+			}
+			
+			state C1S2 {
+				on entry harnessOut!testOut('\'2\'')
+
+				transition -> C1S1
+				event m : cepRcv?cepMsg
+				guard m.aName == '\'m\''
+			}
+		}	
+		
+		composite state C2 init C2S1 keeps history {
+				
+			transition -> I
+			event m : cepRcv?cepMsg
+			guard m.aName == '\'i\''
+    
+			transition -> C1
+			event m : cepRcv?cepMsg
+			guard m.aName == '\'y\''
+				
+			state C2S1 {	
+				on entry harnessOut!testOut('\'3\'')
+    
+				transition -> C2S2
+				event m : cepRcv?cepMsg
+				guard m.aName == '\'n\''
+			}
+				
+			state C2S2 {
+				on entry harnessOut!testOut('\'4\'')
+
+				transition -> C2S1
+				event m : cepRcv?cepMsg
+				guard m.aName == '\'n\''
+			}
+		}
+	}
+}

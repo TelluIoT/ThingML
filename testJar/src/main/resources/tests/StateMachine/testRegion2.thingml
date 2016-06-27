@@ -1,0 +1,61 @@
+import "../thingml.thingml"
+
+thing TestRegion2 includes Test 
+@test "t # (IAC|ICA|ACI|AIC|CAI|CIA)(FBD|FDB|BDF|BFD|DBF|DFB)"
+@test "ttt # (IAC|ICA|ACI|AIC|CAI|CIA)(FBD|FDB|BDF|BFD|DBF|DFB)(IAC|ICA|ACI|AIC|CAI|CIA)(FBD|FDB|BDF|BFD|DBF|DFB)"
+
+
+{
+	statechart TestRegion init I {
+	                                  
+		state I {
+			on entry harnessOut!testOut('\'I\'')
+			transition -> F
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+		
+		state F {
+			on entry harnessOut!testOut('\'F\'')
+			transition -> I
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+		
+		region R init A {
+		
+			state A {
+				on entry harnessOut!testOut('\'A\'')
+				transition -> B
+				event m : harnessIn?testIn
+				guard m.c == '\'t\''
+			}
+		
+			state B {
+				on entry harnessOut!testOut('\'B\'')
+				transition -> A
+				event m : harnessIn?testIn
+				guard m.c == '\'t\''
+			}
+		
+			
+		}	
+
+		region S init C {
+	
+			state C {
+				on entry harnessOut!testOut('\'C\'')
+				transition -> D
+				event m : harnessIn?testIn
+				guard m.c == '\'t\''
+			}
+
+			state D {
+				on entry harnessOut!testOut('\'D\'')
+				transition -> C
+				event m : harnessIn?testIn
+				guard m.c == '\'t\''
+			}
+		}
+	}
+}

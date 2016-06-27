@@ -1,0 +1,61 @@
+import "../thingml.thingml"
+
+thing TestPropertiesInit includes Test
+@test "x # AABBCCDDEEFF"
+@conf "set test.C1 = '\\\'C\\\''"
+@conf "set test.D1 = '\\\'D\\\''"
+@conf "set test.E1 = 5 + 5"
+@conf "set test.F1 = 5 + 5"
+{
+    property A1 : Char = '\'A\''
+    property A2 : Char = A1
+    
+	readonly property B1 : Char = '\'B\''
+    readonly property B2 : Char = B1
+
+    property C1 : Char = '\'Z\''
+    property C2 : Char = C1
+    
+	readonly property D1 : Char = '\'Z\''
+    readonly property D2 : Char = D1
+
+	property E1 : Integer = 5
+	property E2 : Integer = E1
+
+	readonly property F1 : Integer = 5
+	readonly property F2 : Integer = F1
+	
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			on entry do
+				harnessOut!testOut(A1)
+				harnessOut!testOut(A2)
+
+				harnessOut!testOut(B1)
+				harnessOut!testOut(B2)
+
+				harnessOut!testOut(C1)
+				harnessOut!testOut(C2)
+
+				harnessOut!testOut(D1)
+				harnessOut!testOut(D2)
+
+				if(E1 == 10) do
+					harnessOut!testOut('\'E\'')
+				end
+				if(E2 == 10) do
+					harnessOut!testOut('\'E\'')
+				end
+
+				if(F1 == 10) do
+					harnessOut!testOut('\'F\'')
+				end
+				if(F2 == 10) do
+					harnessOut!testOut('\'F\'')
+				end
+			end
+    	}
+    }
+}

@@ -1,0 +1,38 @@
+import "../thingml.thingml"
+
+thing TestGuardAutoTransition includes Test 
+@test "ttt # IJJKKK"
+{
+
+  function f() : Boolean do
+    return true
+  end
+
+	statechart TestGuardAutoTransition init I {
+		state I {
+			on entry harnessOut!testOut('\'I\'')
+			
+			transition -> J
+            		guard f()
+			action harnessOut!testOut('\'J\'')
+						
+			transition -> K
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+		state J {
+			on entry harnessOut!testOut('\'J\'')
+			
+			transition -> K
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+		state K {
+			on entry harnessOut!testOut('\'K\'')
+			
+			transition -> K
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+		}
+	}
+}

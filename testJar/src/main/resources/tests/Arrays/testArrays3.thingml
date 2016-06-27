@@ -1,0 +1,17 @@
+import "../thingml.thingml"
+
+//Test if we can interpret the size of array at construction time
+thing TestArrays3 includes Test	
+@test " # E"
+{
+    readonly property size : UInt16 = 8
+
+	property array : Int16[size]
+	
+	statechart TestArrays3 init I {
+	
+		state I {
+			on entry harnessOut!testOut('\'E\'')
+		}
+	}
+}

@@ -1,0 +1,40 @@
+import "../thingml.thingml"
+
+thing fragment TestMsgs {
+  message m1();
+
+  message res();
+}
+
+thing TestTriggerNumberSimple includes Test, TestMsgs
+@test " # f"
+@conf "connector test.recv => test.send"
+{
+  provided port send {
+    sends m1, res
+  }
+
+  required port recv {
+    receives m1, res
+  }
+
+  stream streamTrigger
+  from m : recv?m1::buffer 5 by 3
+  produce send!res()
+
+  statechart testSimpleFilter init Init {
+    state Init {
+      on entry do
+        send!m1()
+        send!m1()
+        send!m1()
+        end
+
+        internal
+        event recv?res
+        action harnessOut!testOut('\'f\'')
+    }
+  }
+
+}
+

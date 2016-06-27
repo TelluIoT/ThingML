@@ -61,9 +61,12 @@ The figure above presents the 8 extension points of the ThingML code generation 
 
 > See class ``org.thingml.compilers.configuration.CfgMainGenerator`` and its sub-classes in the different compiler modules.
 
-(8) Project structure / build script: The last variation point is not generating code as such but the required file structure and build scripts in order to make the generated code well packaged and easy to compile and deploy on the target platform. The ThingML code generation framework provides access to all the buffers in which the code has been generated and allows creating the file structure which fits the particular target platform. For example, the Arduino compiler concatenates all the generated code into a single file which can be opened by the Arduino IDE. The Linux C code generator creates separate C modules with header files and generates a Makefile to compile the application. The Java and Scala code generators create Maven project and pom.xml files in order to allow compiling and deploying the generated code. The platform expert can customize the project structure and build scripts in order to fit the best practices of the target platform.
+(8) Project structure / build script: This variation point is not generating code as such but the required file structure and build scripts in order to make the generated code well packaged and easy to compile and deploy on the target platform. The ThingML code generation framework provides access to all the buffers in which the code has been generated and allows creating the file structure which fits the particular target platform. For example, the Arduino compiler concatenates all the generated code into a single file which can be opened by the Arduino IDE. The Linux C code generator creates separate C modules with header files and generates a Makefile to compile the application. The Java and Scala code generators create Maven project and pom.xml files in order to allow compiling and deploying the generated code. The platform expert can customize the project structure and build scripts in order to fit the best practices of the target platform.
 
 > See class ``org.thingml.compilers.configuration.CfgBuildCompiler`` and its sub-classes in the different compiler modules. Also note that we have typically implemented in the Context class the routine which actually writes the files on the disk.
+
+(9) Complex Event Processing: This extention point generates code handeling streams of events.
+> See class ``org.thingml.compilers.thing.ThingCepCompiler`` and its sub-classes in the different compiler modules.
 
 ### Registry
 
@@ -110,42 +113,48 @@ The best way to execute and test the latest versions of compilers while developi
 
 To use the compiler, just run the jar file on a command line. Java 7 or newer is required. Running the JAR with no arguments should provide a short "help" message similar to what is displayed below:
 
+```
     $ java -jar compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar
-     --- ThingML help ---
-	Typical usages: 
-		java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>] [-d]
-		java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>]
-	Usage: <main class> [options]
-	  Options:
-		--compiler, -c
-		   Compiler ID (Mandatory unless --tool (-t) is used)
-		--help, -h
-		   Display this message.
-		   Default: false
-		--create-directory, -d
-		   Create a directory named after the configuration in which the generated code will be put.
-		   Default: false
-		--options
-		   additional options for ThingML tools.
-		--output, -o
-		   Optional output directory - by default current directory is used
-		--source, -s
-		   A thingml file to compile (should include at least one configuration)
-		--tool, -t
-		   Tool ID (Mandatory unless --compiler (-c) is used)
+ --- ThingML help ---
+Typical usages: 
+    java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>][-d]
+    java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>]
+Usage: <main class> [options]
+  Options:
+    --compiler, -c
+       Compiler ID (Mandatory unless --tool (-t) is used)
+    --create-dir, -d
+       Create a new directory named after the configuration for the output
+       Default: false
+    --help, -h
+       Display this message.
+       Default: false
+    --list-plugins
+       Display the list of available plugins
+       Default: false
+    --options
+       additional options for ThingML tools.
+    --output, -o
+       Optional output directory - by default current directory is used
+    --source, -s
+       A thingml file to compile (should include at least one configuration)
+    --tool, -t
+       Tool ID (Mandatory unless --compiler (-c) is used)
 
-	Compiler Id must belong to the following list:
-	 |     sintefboard	- Generates C++ based in code for Arduino.
-	 |     java	- Generates plain Java code.
-	 |     arduino	- Generates C/C++ code for Arduino or other AVR microcontrollers (AVR-GCC compiler).
-	 |     UML	- Generates UML diagrams in PlantUML
-	 |     espruino	- Generates Javascript code for the Espruino platform.
-	 |     nodejs	- Generates Javascript code for the NodeJS platform.
-	 |     posix	- Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).
-	 |     debugGUI	- Generates html/js mock-up for other a ThingML external connector
+Compiler Id must belong to the following list:
+ |     sintefboard	- Generates C++ based in code for Arduino.
+ |     posixmt	- Generates C code for Linux or other Posix runtime environments (GCC compiler).
+ |     java	- Generates plain Java code.
+ |     arduino	- Generates C/C++ code for Arduino or other AVR microcontrollers (AVR-GCC compiler).
+ |     UML	- Generates UML diagrams in PlantUML
+ |     espruino	- Generates Javascript code for the Espruino platform.
+ |     nodejs	- Generates Javascript code for the NodeJS platform.
+ |     posix	- Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).
+ |     debugGUI	- Generates html/js mock-up for other a ThingML external connector
 
-	Tool Id must belong to the following list:
-	 |     testconfigurationgen	- Generates test configuration for things annnotated with @test "input # output".
+Tool Id must belong to the following list:
+ |     testconfigurationgen	- Generates test configuration for things annnotated with @test "input # output".
+```
 
 In case you cannot see a message similar to this one, it means that something is not working with your setup. Check your Java version (should be 7 or newer) and try recompiling ThingML by running ``mvn clean install`` in the root ThingML directory.
 
@@ -159,43 +168,6 @@ The options for the compiler are self-explainatory. First is the ID of the compi
 
 ## Testing the compilers
 
-A set of automatic tests can be run under Linux. Make sure you have Python installed as well as all the necessary dependencies to execute the generate code:
-
-- easyprocess, a Python module (`sudo pip install easyprocess`)
-- Java and Maven properly installed and configured to test the generated Java code
-- Node and NPM for JS code
-- gcc for C code
-- Ino for Arduino code: `sudo apt-get install arduino picocom && sudo pip install ino`
-
-In `org.thing.tests` edit `configuration.py` to select which compiler you want to test:
-
-
-```python
-#When set to False, does not remove source code after execution. 
-#May cause secondary inputs to use files from the first input
-deleteTemporaryFiles = True
-
-#Chooses which compilers should be used
-testLanguages=[]
-# testLanguages.append("Linux")
-testLanguages.append("Javascript")
-# testLanguages.append("Java")
-# testLanguages.append("Arduino")
-
-#Functional tests options
-#If useBlacklist is True, runs all tests not present in blacklist
-#If useBlacklist is False, runs all tests present in whitelist
-useBlacklist=True
-blacklist=("tester")
-whitelist=("testDeepCompositeStates")
-```
-
-Just uncomment the compiler you want to test and comment the others. Here we want to test the JavaScript compiler.
-
-To run all tests, simply put `useBlacklist=True`, without changing the content of `blacklist`
-
-To run one specific test, simply put `useBlacklist=False`, and put the name of the test in the `whitelist` e.g. `"testDeepCompositeStates"`
-
-When everything is configured, simply type `mvn clean install` and have a cup of coffee :-)
+A set of automatic tests can be run under Linux. See the `testJar` directory.
 
 

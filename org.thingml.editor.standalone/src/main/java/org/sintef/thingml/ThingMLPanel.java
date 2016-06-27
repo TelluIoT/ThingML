@@ -158,7 +158,7 @@ public class ThingMLPanel extends JPanel {
                                     for (Configuration cfg : ThingMLHelpers.allConfigurations(thingmlModel)) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                         for(NetworkPlugin np : loadedPlugins) {
-                                            if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
+                                            if(np.getTargetedLanguages().contains(compiler.getID())) {
                                                 compiler.addNetworkPlugin(np);
                                             }
                                         }
@@ -187,7 +187,7 @@ public class ThingMLPanel extends JPanel {
                                     for (Configuration cfg : ThingMLHelpers.allConfigurations(thingmlModel)) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                         for(NetworkPlugin np : loadedPlugins) {
-                                            if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
+                                            if(np.getTargetedLanguages().contains(compiler.getID())) {
                                                 compiler.addNetworkPlugin(np);
                                             }
                                         }
@@ -233,7 +233,7 @@ public class ThingMLPanel extends JPanel {
                                         for (Configuration cfg : ThingMLHelpers.allConfigurations(thingmlModel)) {
                                             final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                             for(NetworkPlugin np : loadedPlugins) {
-                                                if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
+                                                if(np.getTargetedLanguages().contains(compiler.getID())) {
                                                     compiler.addNetworkPlugin(np);
                                                 }
                                             }
@@ -261,7 +261,7 @@ public class ThingMLPanel extends JPanel {
                                     for (Configuration cfg : ThingMLHelpers.allConfigurations(thingmlModel)) {
                                         final ThingMLCompiler compiler = registry.createCompilerInstanceByName(id);
                                         for(NetworkPlugin np : loadedPlugins) {
-                                            if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
+                                            if(np.getTargetedLanguages().contains(compiler.getID())) {
                                                 compiler.addNetworkPlugin(np);
                                             }
                                         }

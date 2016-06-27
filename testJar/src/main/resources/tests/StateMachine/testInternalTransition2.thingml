@@ -1,0 +1,26 @@
+import "../thingml.thingml"
+
+thing TestInternalTransition2 includes Test 
+@test "i # EI"
+@test "t # ET"
+@test "titi # ETITI"
+{
+	statechart TestInternalTransition2 init I {
+	
+		on entry harnessOut!testOut('\'E\'')
+			
+		internal
+		event m : harnessIn?testIn
+		guard m.c == '\'i\''
+		action harnessOut!testOut('\'I\'')
+			
+		internal
+		event m : harnessIn?testIn
+		guard m.c == '\'t\''
+		action harnessOut!testOut('\'T\'')	
+	
+		state I {
+			
+		}
+	}
+}

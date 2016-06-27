@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker.CheckerInfo;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
@@ -100,7 +101,8 @@ public class CompileThingFile implements IHandler {
 			
 			ThingMLCompiler compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
 			for(NetworkPlugin np : loadedPlugins) {
-                if(np.getTargetedLanguage().compareTo(compiler.getID()) == 0) {
+				for(String lang : np.getTargetedLanguages())
+                if(lang.compareTo(compiler.getID()) == 0) {
                     compiler.addNetworkPlugin(np);
                 }
             }
@@ -168,7 +170,7 @@ public class CompileThingFile implements IHandler {
 
 			// Look for a Configurations to compile
 			ArrayList<Configuration> toCompile = new ArrayList<Configuration>();
-			for ( Configuration cfg :  model.allConfigurations() ) {
+			for ( Configuration cfg :  ThingMLHelpers.allConfigurations(model)) {
 				toCompile.add(cfg);
 			}
 			
