@@ -137,6 +137,14 @@ public class RcdPortPlugin extends NetworkPlugin {
         
     }
 
+    @Override
+    public List<String> getTargetedLanguages() {
+
+        List<String> res = new ArrayList<>();
+        res.add("sintefboard");
+        return res;
+    }
+    
     private void generatePortInfo() {
         StringBuilder rcdportinfoBbuilder = new StringBuilder();
         
@@ -151,7 +159,7 @@ public class RcdPortPlugin extends NetworkPlugin {
 
         ctx.getBuilder("rcdportinfo").append(rcdportinfoBbuilder.toString());
     }
-    
+
     private class RcdPort {
         Configuration cfg;
         Set<ExternalConnector> ecos;

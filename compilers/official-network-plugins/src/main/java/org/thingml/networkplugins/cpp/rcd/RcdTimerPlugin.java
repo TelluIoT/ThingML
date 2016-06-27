@@ -134,6 +134,14 @@ public class RcdTimerPlugin extends NetworkPlugin {
         }
     }
 
+    @Override
+    public List<String> getTargetedLanguages() {
+
+        List<String> res = new ArrayList<>();
+        res.add("sintefboard");
+        return res;
+    }
+    
     private class RcdTimer {
         Set<ExternalConnector> ecos;
         Protocol protocol;
