@@ -98,7 +98,7 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
             }
             input.close();
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>com.eclipsesource.minimal-json</groupId>\n<artifactId>minimal-json</artifactId>\n<version>0.9.4</version>\n</dependency>\n<!--DEP-->");
-            final File f = new File(ctx.getOutputDirectory() + "/POM.xml");
+            final File f = new File(ctx.getOutputDirectory() + "/pom.xml");
             final OutputStream output = new FileOutputStream(f);
             IOUtils.write(pom, output, java.nio.charset.Charset.forName("UTF-8"));
             IOUtils.closeQuietly(output);

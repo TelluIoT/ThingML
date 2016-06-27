@@ -129,7 +129,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
             }
             input.close();
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.scream3r</groupId>\n<artifactId>jssc</artifactId>\n<version>2.8.0</version>\n</dependency>\n<!--DEP-->");
-            final File f = new File(ctx.getOutputDirectory() + "/POM.xml");
+            final File f = new File(ctx.getOutputDirectory() + "/pom.xml");
             final OutputStream output = new FileOutputStream(f);
             IOUtils.write(pom, output, java.nio.charset.Charset.forName("UTF-8"));
             IOUtils.closeQuietly(output);
