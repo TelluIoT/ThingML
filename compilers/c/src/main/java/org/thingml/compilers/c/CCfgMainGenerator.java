@@ -869,7 +869,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
                 if (found) {
                     break;
-            }
+                }
             }
 
             if (found) {
@@ -1034,29 +1034,25 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     Thing owner = TP.getKey();
                     headerbuilder.append("void " + "sync_dispatch_" + ctx.getSenderName(owner, p, m));
                     ctx.appendFormalParameters(owner, headerbuilder, m);
-                headerbuilder.append(";\n");
+                    headerbuilder.append(";\n");
 
                     builder.append("void " + getCppNameScope() + "sync_dispatch_" + ctx.getSenderName(owner, p, m));
                     ctx.appendFormalParameters(owner, builder, m);
-                builder.append("{\n");
-                builder.append("dispatch_" + m.getName());
-                builder.append("(_instance->id_" + p.getName());
+                    builder.append("{\n");
+                    builder.append("dispatch_" + m.getName());
+                    builder.append("(_instance->id_" + p.getName());
 
-                for (Parameter param : m.getParameters()) {
-                    builder.append(", ");
-                    builder.append(param.getName());
-        }
+                    for (Parameter param : m.getParameters()) {
+                        builder.append(", ");
+                        builder.append(param.getName());
+                    }
                     builder.append(");\n");
                     builder.append("}\n");
+                }
             }
         }
-        }
 
-        //for(Message m : cfg.allMessageDispatch(null, null))
-        //ctx.appendFormalParametersForDispatcher(t, builder, m);
-
-
-                            }
+    }
     
     protected void generateMessageProcessQueue(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
         //builder.append("void processMessageQueue() {\n");
@@ -1184,21 +1180,21 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     
                     builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getType(), 0) + " * (" + cardBuilder + ");\n");
                 } else {
-                builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
-                builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
-                builder.append("} u_" + m.getName() + "_" + pt.getName() + ";\n");
+                    builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
+                    builder.append(ctx.getCType(pt.getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append("} u_" + m.getName() + "_" + pt.getName() + ";\n");
 
 
-                for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+                    for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
 
-                    builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
-                        builder.append(" = mbuf[mbufi_" + m.getName() + " + " + i + "];\n");
+                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                            builder.append(" = mbuf[mbufi_" + m.getName() + " + " + i + "];\n");
 
-                }
+                    }
 
                     builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getType(), 0) + ";\n");
-            }
+                }
             }
             // End Horrible deserialization trick
 
@@ -1641,7 +1637,6 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
-
         //Initialize stdout if needed (for arduino)
         if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
                 int baudrate = 9600;
@@ -1653,10 +1648,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     builder.append(AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout").iterator().next() + ".begin(" + baudrate + ");\n");
             }
         }
-    // Call the initialization function
-    builder.append("initialize_configuration_" + cfg.getName() + "();\n");
+        // Call the initialization function
+        builder.append("initialize_configuration_" + cfg.getName() + "();\n");
 
-        }
+    }
 
 
     protected void generatePollingCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
@@ -1664,16 +1659,15 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         //Arduino Polling generation
         ctx.generatePSPollingCode(cfg, builder);
 
-
         //Network Listener
         builder.append("\n// Network Listener\n");
         builder.append(ctx.getPollCode());
 
         if (ctx.getCompiler().getID().compareTo("arduino") != 0) { //FIXME Nicolas This code is awfull
-        //New Empty Event Handler
-        builder.append("int emptyEventConsumed = 1;\n");
-        builder.append("while (emptyEventConsumed != 0) {\n");
-        builder.append("emptyEventConsumed = 0;\n");
+            //New Empty Event Handler
+            builder.append("int emptyEventConsumed = 1;\n");
+            builder.append("while (emptyEventConsumed != 0) {\n");
+            builder.append("emptyEventConsumed = 0;\n");
         }
 
         // Call empty transition handler (if needed)
@@ -1691,7 +1685,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
 
         if (ctx.getCompiler().getID().compareTo("arduino") != 0) {
-        builder.append("}\n");
+            builder.append("}\n");
         }
         
         for(NetworkLibraryGenerator nlg : ctx.getNetworkLibraryGenerators()) {
@@ -1715,7 +1709,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         traceDynCo += "printf(\"[" + p.getName();
                         traceDynCo += "] %i";
                         traceDynCo += "\\n\", " + ctx.getInstanceVarName(inst) +  ".id_" + p.getName() + ");\n";
-    }
+                    }
                 }
                 for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
                     traceDynCo += "printf(\"[" + eco.getPort().getName();
@@ -1744,7 +1738,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         initDynCo += "/*CONFIGURATION*/_dyn_co_rlist_head[" + ctx.getInstanceVarName(inst);
                         initDynCo += ".id_" + p.getName() + "] = &";
                         initDynCo +=  ctx.getInstanceVarName(inst) + "." + p.getName() + "_receiver_list_head;\n";
-                }
+                    }
                 }
 
                 for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
