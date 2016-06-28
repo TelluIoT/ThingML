@@ -1,0 +1,48 @@
+import "../thingml.thingml"
+
+thing fragment TestMsgs {
+  message m1(value : Integer);
+}
+
+thing multipleWindow includes Test, TestMsgs
+//no @Test annotation for now
+@conf "connector i.recv => i.send"
+{
+
+  provided port send {
+    sends m1
+  }
+
+  required port recv {
+    receives m1
+  }
+
+  stream ok1
+  from m : recv?m1::buffer 10 by 1
+  produce send!m1(0)
+
+  stream ok2
+  from m : recv?m1::during 10 by 1
+  produce send!m1(0)
+
+  stream ko1
+  from m : recv?m1::buffer 10 by 1::buffer 10 by 1
+  produce send!m1(0)
+
+  stream ko2
+  from m : recv?m1::during 10 by 1::during 10 by 10
+  produce send!m1(0)
+
+  stream ok3
+  from m : recv?m1::buffer 10 by 1::keep if m.value > 10
+  produce send!m1(0)
+
+  stream ok3
+  from m : recv?m1::during 10 by 1::keep if m.value > 10
+  produce send!m1(0)
+
+  statechart window init Init {
+    state Init {
+    }
+  }
+}
