@@ -4,6 +4,8 @@
  *  Generated from ThingML (http://www.thingml.org)
  *****************************************************/
 
+/*HASH_DEFINES*/
+
 typedef unsigned char byte; 
 /*TYPEDEFS*/
 
@@ -11,7 +13,7 @@ typedef unsigned char byte;
 
 /*RUNTIME_CLASS*/
 
-class /*NAME*/ : public ThingMlRuntime_class {
+class /*NAME*/ : public /*NAME*/_ThingMlRuntime_class {
 private:
 #ifdef RCDPORT_IN_USE
 port_class *Ports_ptr;
@@ -34,6 +36,13 @@ void setup(void);
 void loop(void);
 #ifdef RCDPORT_IN_USE
 void receive_forward(msgc_t *msg_in_ptr, int16_t from_port);
+#ifdef RCDPORT_IN_USE
+void rcd_port_receive_forward(msgc_t *msg_in_ptr, int16_t from_port);
+#endif
+#endif
+
+#ifdef RCDTIMER_IN_USE
+uint32_t rcd_timer_next(void);
 #endif
 
 };

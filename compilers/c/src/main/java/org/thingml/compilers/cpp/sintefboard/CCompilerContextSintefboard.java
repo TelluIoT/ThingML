@@ -19,6 +19,7 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by ffl on 11.06.15.
@@ -57,6 +58,12 @@ public class CCompilerContextSintefboard extends CCompilerContext {
             } else if (filename.startsWith(configName)) {
                 // These files will be handled later
                 System.out.println("Special handling2 of " + filename);
+            } else if (filename.contentEquals("hashdefines")) {
+                // These files will be handled later
+                System.out.println("Special handling3 of " + filename);
+            } else if (filename.contentEquals("rcdportinfo")) {
+                // These files will be handled later
+                System.out.println("Special handling4 of " + filename);
             } else if (filename.endsWith(".h")) {
                 headers.add(filename);
                 System.out.println("Adding " + filename + " to headers");
@@ -75,7 +82,10 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         StringBuilder builderImpl = new StringBuilder();
         StringBuilder builderInit = new StringBuilder();
 
+        
+        Collections.sort(headers); // Sort the headers to control order of the declarations
         for (String f : headers) {
+            System.out.println("Appending " + f + " to builderHeader");
             builderHeader.append(generatedCode.get(f).toString());
         }
 
@@ -88,6 +98,7 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         }
 
         String stringHeader = generatedCode.get(configName + ".h").toString();
+        stringHeader = stringHeader.replace("/*HASH_DEFINES*/", generatedCode.get("hashdefines").toString());
         stringHeader = stringHeader.replace("/*NAME*/", configName);
         stringHeader = stringHeader.replace("/*RUNTIME_CLASS*/", generatedCode.get("runtime.h").toString());
         stringHeader = stringHeader.replace("/*HEADER_CONTEXT*/", generatedCode.get(configName + ".h_ctx").toString());
@@ -96,6 +107,10 @@ public class CCompilerContextSintefboard extends CCompilerContext {
         writeTextFile(configName + ".hpp", stringHeader);
 
         String stringImpl = generatedCode.get(configName + "_cfg.c").toString();
+        
+        StringBuilder gcSb = generatedCode.get("rcdportinfo");
+        if (gcSb != null) stringImpl = stringImpl.replace("/*RCDPORTINFO*/", gcSb.toString());
+        
         stringImpl = stringImpl.replace("/*NAME*/", configName);
         stringImpl = stringImpl.replace("/*RUNTIME_CLASS*/", generatedCode.get("runtime.c").toString());
         stringImpl = stringImpl.replace("/*CODE*/", builderImpl.toString());
