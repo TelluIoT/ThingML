@@ -9,6 +9,8 @@
 
 /*C_GLOBALS*/
 
+/*RCDPORTINFO*/
+
 // START OF ****** RUNTIME_CLASS
 /*RUNTIME_CLASS*/
 
@@ -19,11 +21,10 @@
 /*CONFIGURATION*/
 
 #ifdef RCDPORT_IN_USE
-void /*poCFG_CPPNAME_SCOPE*/setup(port_class *ports_ptr) {
+void /*CFG_CPPNAME_SCOPE*/setup(port_class *ports_ptr) {
 Ports_ptr = ports_ptr;
 /*THING_INIT_CODE*/
 /*INIT_CODE*/
-setup();
 }
 #else
 void /*CFG_CPPNAME_SCOPE*/setup(void) {

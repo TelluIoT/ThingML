@@ -103,6 +103,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
         res.add("posix");
         res.add("posixmt");
         res.add("arduino");
+        res.add("sintefboard");
         return res;
     }
 
