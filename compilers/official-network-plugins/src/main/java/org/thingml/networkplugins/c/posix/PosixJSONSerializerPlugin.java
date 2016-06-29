@@ -365,6 +365,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
         List<String> res = new ArrayList<>();
         res.add("JSON");
+        res.add("json");
         return res;
     }
 

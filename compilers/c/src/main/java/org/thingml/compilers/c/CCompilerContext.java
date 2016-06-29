@@ -796,4 +796,16 @@ public abstract class CCompilerContext extends Context {
     public void resetCepMsgContext() {
         this.mapCepMsgParamAndStream = null;
     }
+    
+    
+    boolean dynamic_array_usage = false;
+    
+    public void add_dynamic_array_lib() {
+        if(!dynamic_array_usage) {
+            dynamic_array_usage = true;
+            
+            getBuilder("dynamic_array.c").append(getTemplateByID("cutilities/dynamic_array.c"));
+            getBuilder("dynamic_array.h").append(getTemplateByID("cutilities/dynamic_array.h"));
+        }
+    }
 }

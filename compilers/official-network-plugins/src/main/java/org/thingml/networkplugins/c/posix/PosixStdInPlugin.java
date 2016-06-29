@@ -149,7 +149,6 @@ public class PosixStdInPlugin extends NetworkPlugin {
                 }
                 ctemplate = ctemplate.replace("/*ESCAPE_CHAR*/", escapeChar);
 
-                Integer maxMsgSize = 0;
                 for (ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
                     Message m = tpm.m;
                     messages.add(m);

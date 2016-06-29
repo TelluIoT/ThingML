@@ -5,6 +5,7 @@ org.thingml.networkplugins.c.posix.PosixMQTTPlugin
 org.thingml.networkplugins.c.posix.PosixNoPollWSPlugin
 org.thingml.networkplugins.c.posix.PosixSerialPlugin
 org.thingml.networkplugins.c.posix.PosixStdInPlugin
+org.thingml.networkplugins.c.posix.PosixUDPPlugin
 org.thingml.networkplugins.java.JavaSerialPlugin
 org.thingml.networkplugins.java.JavaTTYPlugin
 org.thingml.networkplugins.java.JavaWSPlugin
