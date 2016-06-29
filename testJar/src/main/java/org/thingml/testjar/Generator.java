@@ -50,6 +50,8 @@ public class Generator {
 
     private final static Random random = new Random();
 
+    private enum TYPE{COMPOSITE, REGION, SESSION};
+
     private static String loadTemplate(String resource) {
         try {
             final InputStream input = Generator.class.getClassLoader().getResourceAsStream(resource);
@@ -65,21 +67,34 @@ public class Generator {
         }
     }
 
-    private static String createComposite(final String template, String name, int depth, int nbAtomic, int nbComposite, int nbRegion, int nbSession) {
+    private static String createComposite(TYPE t, String name, int depth, int nbAtomic, int nbComposite, int nbRegion, int nbSession) {
+        String template = null;
+        switch(t) {
+            case COMPOSITE: template = compositeTemplate; break;
+            case REGION: template = regionTemplate; break;
+            case SESSION: template = sessionTemplate; break;
+            default: break;
+        }
+
         StringBuilder builder = new StringBuilder();
         if (depth > 1) {
             for (int i = 0; i < nbComposite; i++) {
-                builder.append(createComposite(compositeTemplate, name + "_" + i, depth - 1, nbAtomic, nbComposite, nbRegion, nbSession));
+                builder.append(createComposite(TYPE.COMPOSITE, name + "_" + i, depth - 1, nbAtomic, nbComposite, nbRegion, nbSession));
             }
         }
         for(int i = 0; i < nbAtomic; i++) {
             String state = atomicTemplate.replace("/*$NAME$*/", name + "_" + (nbComposite + i));
-            final String next = (i < nbAtomic - 1)? name + "_" + (nbComposite + i + 1) : name + "_" + (nbComposite);
-            String transition = "";
-            if (i%2 == 0) {
+            String next = "";
+            if (t == TYPE.SESSION) {
+                //Tries to make session not to live too long (have of the state will lead to the final state)
+                next = (i < nbAtomic - 1) ? name + "_" + (nbComposite + i + 1) : "DIE";
+            } else {
+                next = (i < nbAtomic - 1) ? name + "_" + (nbComposite + i + 1) : name + "_" + (nbComposite);
+            }
+            String transition;
+            if (i%2 == 0 && t != TYPE.SESSION) {
                 transition = transitionTemplate.replace("/*$ON_A$*/", next);
                 transition = transition.replace("/*$ON_B$*/", name + "_" + (nbComposite + (Math.abs(random.nextInt()) % nbAtomic)));
-
             } else {
                 transition = emptyTemplate.replace("/*$NEXT$*/", next);
             }
@@ -87,25 +102,30 @@ public class Generator {
             state = state.replace("/*$ACTION1$*/", actions[Math.abs(random.nextInt()) % actions.length]);
             state = state.replace("/*$ACTION2$*/", actions[Math.abs(random.nextInt()) % actions.length]);
             final int r = Math.abs(random.nextInt());
-            transition = transition.replace("/*$ACTION1$*/", actions[r % actions.length]);
+            if (depth > 1 && nbSession > 0 && i%2 == 0) {
+                final String fork = forkAction.replace("/*$NAME$*/", name + "_s_" + (Math.abs(random.nextInt()) % nbSession));
+                transition = transition.replace("/*$ACTION1$*/", fork);
+            } else {
+                transition = transition.replace("/*$ACTION1$*/", actions[r % actions.length]);
+            }
             transition = transition.replace("/*$ACTION2$*/", actions[(r+1) % actions.length]);
             state = state.replace("/*$TRANSITIONS$*/", transition);
             builder.append(state);
         }
         if (depth > 1) {
             for (int i = 0; i < nbSession; i++) {
-                builder.append(createComposite(sessionTemplate, name + "_s_" + i, depth - 1, nbAtomic, nbComposite, nbRegion, nbSession));
+                builder.append(createComposite(TYPE.SESSION, name + "_s_" + i, depth - 1, nbAtomic, nbComposite, nbRegion, nbSession));
             }
             for (int i = 0; i < nbRegion; i++) {
-                builder.append(createComposite(regionTemplate, name + "_r_" + i, depth - 1, nbAtomic, nbComposite, nbRegion, nbSession));
+                builder.append(createComposite(TYPE.REGION, name + "_r_" + i, depth - 1, nbAtomic, nbComposite, nbRegion, nbSession));
             }
         }
         return template.replace("/*$NAME$*/", name).replace("/*$INIT_NAME$*/", name + "_" + nbComposite).replace("/*$BEHAVIOR$*/", builder.toString());
     }
 
     public static void main(String[] args) {
-        final String behavior = Generator.createComposite(compositeTemplate, "c", 2, 5, 2, 2, 2);
-        final String thing = thingTemplate.replace("/*$NAME$*/", "myThing").replace("/*$INIT_NAME$*/", "c").replace("/*$MAX_T$*/", "100000").replace("/*$BEHAVIOR$*/", behavior);
+        final String behavior = Generator.createComposite(TYPE.COMPOSITE, "c", 2, 5, 2, 2, 2);
+        final String thing = thingTemplate.replace("/*$NAME$*/", "myThing").replace("/*$INIT_NAME$*/", "c").replace("/*$MAX_T$*/", "10000000").replace("/*$BEHAVIOR$*/", behavior);
 
         try {
             final File f = new File("generated.thingml");

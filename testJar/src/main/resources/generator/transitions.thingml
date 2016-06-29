@@ -1,5 +1,6 @@
     transition -> /*$ON_A$*/
     event p?a
+    //guard nbSessions < maxSessions
     action do
         /*$ACTION1$*/
     end

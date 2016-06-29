@@ -30,9 +30,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
-        if (action.getProperty().eContainer() instanceof Thing) {
+        /*if (action.getProperty().eContainer() instanceof Thing) {
             builder.append("debug_" + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var = _this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var;\n");
-        }
+        }*/
     }
 
     @Override
@@ -44,7 +44,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             builder.append("for (var _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
             builder.append("_this.propertyListener['" + action.getProperty().getName() + "'][_i](_this." + ctx.getVariableName(action.getProperty()) + ");\n");
             builder.append("}\n}\n");
-            builder.append("if(this.debug) console.log(_this.name + \"(" + ThingMLHelpers.findContainingThing(action.getProperty()).getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + ThingMLElementHelper.qname( action.getProperty(), "_") + "_var" + " + \" to \" + _this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var);\n");
+            //builder.append("if(this.debug) console.log(_this.name + \"(" + ThingMLHelpers.findContainingThing(action.getProperty()).getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + ThingMLElementHelper.qname( action.getProperty(), "_") + "_var" + " + \" to \" + _this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var);\n");
         }
     }
 
@@ -66,7 +66,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
         Session session = action.getSession();
-        builder.append("var " + session.getName() + " = new " + ThingMLHelpers.findContainingThing(session).getName() + "(\"" + session.getName() + "\", _this");
+        builder.append("var " + session.getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(session).getName()) + "(\"" + session.getName() + "\", _this");
         for (Property p : ThingMLHelpers.allProperties(ThingMLHelpers.findContainingThing(session))) {
             if (p.isIsArray() || p.getCardinality() != null) {
                 builder.append(", _this." + ThingMLElementHelper.qname(p, "_") + "_var.slice(0)");

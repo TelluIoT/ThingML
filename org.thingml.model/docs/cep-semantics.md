@@ -196,3 +196,37 @@ produce sendPort!cep(sum)
 ```
 
 This will store 4 `m` message, once 4 are received the sum of their `v` parameter is computed and send as a parameter of a `cep` event.
+
+# Sharing buffers among streams
+
+Sharing or exposing a stream buffer is not fully supported by the grammar but here is how you can do it.
+
+First, define a stream aggregating your data:
+
+```ruby
+  message tpcomp(T : UInt8, P : UInt8)
+
+  stream compBuffer
+  from e @UseOnce "False" @Expose "CompBuffer" : dataRcv?tpcomp::buffer 3 by 1
+  produce dataSend!void()
+```
+This will create a buffer for the last 3 ``tpcomp`` message received. Messages will be removed after 250ms, because it's the default TTL, see the Event consumption section if you want to change that.
+New messages will “push” the oldest ones as they arrive, making it a sliding window of 3 elements.
+Name your message whatever you want using the `@Expose` annotation.
+
+To access it in another stream just use the name you chose followed by the name of the parameter you want. The type will an array of the datatype of the parameter.
+
+So we can get the buffer in anothen stream using this:  `var param : UInt8[] = 'CompBufferP'`. See this full version:
+
+```ruby
+  stream join
+  from e : dataRcv?tp
+  select var comp : UInt8[]  = 'CompBufferP'
+         var a : UInt8 = comp[0]
+         var b : UInt8 = comp[1]
+         var c : UInt8 = comp[2]
+         var compP : UInt8 = compensate(e.P, a, b, c)
+  produce dataSend!tpcomp(e.T, compP)
+```
+
+For performance issue it's better to store the buffer in a local variable before accessing it, i.e avoid the following syntax `'CompBufferP[0]`, it will work but doing it multiple time will considerably slow down your system.

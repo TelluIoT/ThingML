@@ -112,22 +112,54 @@ public abstract class CCompilerContext extends Context {
         }
     }
 
-    public String getNetworkLibPortTemplate() {
+    public String getNetworkLibRcdPortTemplate() {
         if (getCompiler().getID().compareTo("sintefboard") == 0) {
-            return getTemplateByID("ctemplates/network_lib/sintefboard/Port/SintefboardPortForward.c");
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdPortForward.c");
         } else {
             return "";
         }
     }
 
-    public String getNetworkLibPortHeaderTemplate() {
+    public String getNetworkLibRcdPortHeaderTemplate() {
         if (getCompiler().getID().compareTo("sintefboard") == 0) {
-            return getTemplateByID("ctemplates/network_lib/sintefboard/Port/SintefboardPortForward.h");
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdPortForward.h");
         } else {
             return "";
         }
     }
 
+    public String getNetworkLibRcdTimerInstanceTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdTimerInstance.c");
+        } else {
+            return "";
+        }
+    }
+    
+    public String getNetworkLibRcdTimerInstanceHeaderTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdTimerInstance.h");
+        } else {
+            return "";
+        }
+    }
+    
+    public String getNetworkLibRcdTimerCommonTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdTimerCommon.c");
+        } else {
+            return "";
+        }
+    }
+    
+    public String getNetworkLibRcdTimerCommonHeaderTemplate() {
+        if(getCompiler().getID().compareTo("sintefboard") == 0) {
+            return getTemplateByID("ctemplates/network_lib/sintefboard/SintefboardRcdTimerCommon.h");
+        } else {
+            return "";
+        }
+    }
+    
     public String getNetworkLibWebsocketTemplate() {
         return getTemplateByID("ctemplates/network_lib/posix/PosixWebsocketForward.c");
     }
@@ -248,7 +280,7 @@ public abstract class CCompilerContext extends Context {
     public boolean hasAnnotationWithValue(Configuration cfg, String annotation, String value) {
         for (String st : AnnotatedElementHelper.annotation(cfg, annotation)) {
             if (st.compareToIgnoreCase(value) == 0) {
-                return true;
+               return true;
             }
         }
         return false;
@@ -258,7 +290,7 @@ public abstract class CCompilerContext extends Context {
         for (Parameter e : list) {
             if (EcoreUtil.equals(e, element))
                 return true;
-        }
+    }
         return false;
     }
 
@@ -372,7 +404,7 @@ public abstract class CCompilerContext extends Context {
                 result = Integer.parseInt(AnnotatedElementHelper.annotation(m, "code").iterator().next());
                 if (result == null) {
                     System.err.println("Warning: @code must contain an Integer for message:" + m.getName());
-                }
+        }
             } else {
                 boolean codeIsFree = false;
 
@@ -385,7 +417,7 @@ public abstract class CCompilerContext extends Context {
                                     if (Integer.parseInt(AnnotatedElementHelper.annotation(me, "code").iterator().next()) == handlerCodeCpt) {
                                         codeIsFree = false;
                                         handlerCodeCpt += 1;
-                                    }
+        }
                                 }
                             }
                             for (Message me : po.getSends()) {
@@ -399,11 +431,11 @@ public abstract class CCompilerContext extends Context {
                         }
                     }
                 }
-                result = handlerCodeCpt;
-                handlerCodeCpt += 1;
+            result = handlerCodeCpt;
+            handlerCodeCpt += 1;
                 if (result == null) {
                     System.err.println("Warning: no code could be found for message:" + m.getName());
-                }
+        }
             }
 
             handlerCodes.put(m, result);
@@ -420,7 +452,7 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getCName(Function f, Thing thing) {
-        return "f_" + thing.getName() + "_" + f.getName();
+        return  "f_" + thing.getName() + "_" + f.getName();
     }
 
     public String getStateVarName(Region r) {
@@ -435,6 +467,31 @@ public abstract class CCompilerContext extends Context {
 
     public String getCVarName(Variable v) {
         return ThingMLElementHelper.qname(v, "_") + "_var";
+    }
+
+    public String getConcatenatedParameterTypes(Message m) {
+        String ret = "";
+        for (Parameter p : m.getParameters()) {
+            ret += "_" + getCType(p.getType());
+            if (p.getCardinality() != null) ret+= "_ptr";
+        }
+        return(ret);
+    }
+
+    public String getActualParametersSection(Message m) {
+        String ret = "";
+        for (Parameter p : m.getParameters()) {
+            ret += ", " + p.getName();
+        }
+        return(ret);
+    }
+
+    public String getActualPtrParametersSection(Message m) {
+        String ret = "";
+        for (Parameter p : m.getParameters()) {
+            ret += ", &" + p.getName();
+        }
+        return(ret);
     }
 
     public String getTraceFunctionForString(Configuration cfg) {
@@ -470,6 +527,8 @@ public abstract class CCompilerContext extends Context {
     //    return paramList;
     //}
 
+    
+    
     boolean traceLevelIsAbove(AnnotatedElement E, int level) {
         Integer traceLevel = 0;
         if (AnnotatedElementHelper.hasAnnotation(E, "trace_level")) {
@@ -606,17 +665,17 @@ public abstract class CCompilerContext extends Context {
 
     public int getCByteSize(Type t, int pointerSize) {
         if (t instanceof ObjectType) {
-            return pointerSize;
-        } else {
+                return pointerSize;
+            } else {
             PrimitiveType pt = (PrimitiveType) t;
             return pt.getByteSize();
-        }
-    }
+                }
+            }
 
     public boolean isPointer(Type t) {
         return t instanceof ObjectType;
 
-    }
+        }
 
     public boolean hasByteBuffer(Type t) {
         return AnnotatedElementHelper.hasAnnotation(t, "c_byte_buffer");
@@ -638,7 +697,7 @@ public abstract class CCompilerContext extends Context {
 
         if (isPointer(t)) {
             // This should not happen and should be checked before.
-            throw new Error("ERROR: Attempting to serialize a pointer (for type " + t.getName() + "). This is not allowed.");
+            throw  new Error("ERROR: Attempting to serialize a pointer (for type " + t.getName() + "). This is not allowed.");
         } else {
             while (i > 0) {
                 i = i - 1;
@@ -655,7 +714,7 @@ public abstract class CCompilerContext extends Context {
         String v = variable;
         if (isPointer(t)) {
             // This should not happen and should be checked before.
-            throw new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
+            throw  new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
         } else {
             if(pt.isIsArray()) {
                 
@@ -691,7 +750,7 @@ public abstract class CCompilerContext extends Context {
                     
                     builder.append("_fifo_enqueue(u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
                     //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
-                }
+        }
             }
         }
     }
@@ -723,15 +782,15 @@ public abstract class CCompilerContext extends Context {
                     builder.append("} u_" + v + ";\n");
                     builder.append("u_" + v + ".p = " + v + ";\n");
 
-                    while (i > 0) {
-                        i = i - 1;
+            while (i > 0) {
+                i = i - 1;
                         //if (i == 0)
                         //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
                         builder.append("forward_buf[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                         j++;
-                    }
-                }
             }
+        }
+    }
         }
 
         if (j == 2) {

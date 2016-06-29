@@ -238,8 +238,8 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             inst = instances.get(0);
             instances.remove(inst);
             builder.append(ctx.getInstanceName(inst) + ".stop();\n");
-            builder.append("/*$STOP$*/\n");
         }
+        builder.append("/*$STOP$*/\n");
         builder.append("System.out.println(\"ThingML app terminated. RIP!\");");
         builder.append("}\n");
         builder.append("});\n\n");

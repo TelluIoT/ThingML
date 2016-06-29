@@ -72,6 +72,8 @@ abstract public class Checker {
         Rules.add(new ControlStructures());
         Rules.add(new StreamNaming());
         Rules.add(new DuplicatedMessageInPort());
+        Rules.add(new MultipleWindowStreams());
+        Rules.add(new PropertyInitialization());
     }
 
     public void do_generic_check(Configuration cfg) {

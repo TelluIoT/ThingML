@@ -121,18 +121,18 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
-        if ((action.getProperty().eContainer() instanceof Thing) && action.getProperty().getCardinality() == null) {//FIXME: support debugging of arrays (needs to copy array)
+        /*if ((action.getProperty().eContainer() instanceof Thing) && action.getProperty().getCardinality() == null) {//FIXME: support debugging of arrays (needs to copy array)
             builder.append("debug_" + ctx.getVariableName(action.getProperty()) + " = " + ctx.getVariableName(action.getProperty()) + ";\n");
-        }
+        }*/
     }
 
     @Override
     public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
-        if ((action.getProperty().eContainer() instanceof Thing) && action.getProperty().getCardinality() == null) {//FIXME: see above
+        /*if ((action.getProperty().eContainer() instanceof Thing) && action.getProperty().getCardinality() == null) {//FIXME: see above
             //builder.append("if(isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|magenta \" + getName() + \": property " + action.getProperty().getName() + " changed from \" + debug_" + ctx.getVariableName(action.getProperty()) + " + \" to \" + " + ctx.getVariableName(action.getProperty()) + " + \"|@\"));\n");
             builder.append("if(isDebug()) "
                     + "System.out.println(getName() + \": property " + action.getProperty().getName() + " changed from \" + debug_" + ctx.getVariableName(action.getProperty()) + " + \" to \" + " + ctx.getVariableName(action.getProperty()) + ");\n");
-        }
+        }*/
     }
 
     @Override
@@ -157,7 +157,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
-        builder.append("Component " + action.getSession().getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + "(\"" + action.getSession().getName() + "\"");
+        builder.append("final Component " + action.getSession().getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + "(\"" + action.getSession().getName() + "\"");
         for (Property p : ThingHelper.allPropertiesInDepth(ThingMLHelpers.findContainingThing(action.getSession()))) {
             builder.append(", ");
             if (p.isIsArray() || p.getCardinality() != null) {
@@ -167,12 +167,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             }
         }
         builder.append(").buildBehavior(\"" + action.getSession().getName() + "\", " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this);\n");
-        builder.append(ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this.forkId = " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this.forkId + 1;\n");
-        builder.append(action.getSession().getName() + ".forkId = " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this.forkId;\n");
-        builder.append(action.getSession().getName() + ".root = " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this;\n");
-        builder.append(action.getSession().getName() + ".init();\n");
-        builder.append(action.getSession().getName() + ".root.forks.add(" + action.getSession().getName() + ");\n");
-        builder.append(action.getSession().getName() + ".start();\n");
+        builder.append("final Component root = (" + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this.root == null)? " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this : " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(action.getSession()).getName()) + ".this.root;\n");
+        builder.append("root.addSession(" + action.getSession().getName() + ");\n");
     }
 
     @Override

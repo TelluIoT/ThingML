@@ -43,17 +43,23 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType(short code) {super(\"" + m.getName() + "\", code);\n}\n\n");
         final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {\nsuper(\"" + m.getName() + "\", (short) " + code + ");\n}\n\n");
-        builder.append("public Event instantiate(");
-        for (Parameter p : m.getParameters()) {
-            if (m.getParameters().indexOf(p) > 0)
-                builder.append(", ");
-            builder.append("final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.protectKeyword(p.getName()));
+
+        if (m.getParameters().size() == 0) {
+            builder.append("private static Event instance;\n");
+            builder.append("public Event instantiate(){if (instance == null)\ninstance = new " + ctx.firstToUpper(m.getName()) + "Message(this);\nreturn instance;\n};\n");
+        } else {
+            builder.append("public Event instantiate(");
+            for (Parameter p : m.getParameters()) {
+                if (m.getParameters().indexOf(p) > 0)
+                    builder.append(", ");
+                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.protectKeyword(p.getName()));
+            }
+            builder.append(") { return new " + ctx.firstToUpper(m.getName()) + "Message(this");
+            for (Parameter p : m.getParameters()) {
+                builder.append(", " + ctx.protectKeyword(p.getName()));
+            }
+            builder.append("); }\n");
         }
-        builder.append(") { return new " + ctx.firstToUpper(m.getName()) + "Message(this");
-        for (Parameter p : m.getParameters()) {
-            builder.append(", " + ctx.protectKeyword(p.getName()));
-        }
-        builder.append("); }\n");
 
         builder.append("@Override\n");
         builder.append("public Event instantiate(Map<String, Object> params) {");
@@ -304,36 +310,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
 
-
-        /*if (!debugProfile.getDebugMessages().isEmpty()) {//FIXME: receive is overridden elsewhere, cannot be overridden twice. To be merged.
-            builder.append("@Override\npublic void receive(Event event, final Port p){\n");
-            int i = 0;
-            for (Port p : ThingMLHelpers.allPorts(thing)) {
-                for (Message m : p.getReceives()) {
-                    if (debugProfile.getDebugMessages().containsKey(p) && debugProfile.getDebugMessages().get(p).contains(m)) {
-                        if (i > 0)
-                            builder.append("else ");
-                        builder.append("if(p.getName().equals(\"" + p.getName() + "\") && event.getType().getName().equals(\"" + m.getName() + "\")) {\n");
-                        //builder.append("if(this.isDebug()) System.out.println(org.fusesource.jansi.Ansi.ansi().eraseScreen().render(\"@|green \" + getName() + \": " + p.getName() + "?" + m.getName() + "(");
-                        builder.append("printDebug(\"" + ctx.traceReceiveMessage(thing, p, m) + "(\"");
-                        int j = 0;
-                        for (Parameter pa : m.getParameters()) {
-                            if (j > 0)
-                                builder.append(" + \", \"");
-                            builder.append(" + ((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message) event)."  + ctx.protectKeyword(pa.getName()));
-                            j++;
-                        }
-                        builder.append(" + \")\");\n");
-                        builder.append("}\n");
-                        i++;
-                    }
-                }
-            }
-            builder.append("super.receive(event, p);\n");
-            builder.append("}\n\n");
-        }*/
-
-
         for (Port p : ThingMLHelpers.allPorts(thing)) {
             if (!AnnotatedElementHelper.isDefined(p, "public", "false")) {
                 for (Message m : p.getReceives()) {
@@ -420,6 +396,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         builder.append("//Message types\n");
+        //builder.append("protected final NullEventType net = new NullEventType();\n");
         for (Message m : ThingMLHelpers.allMessages(thing)) {
             builder.append("protected final " + ctx.firstToUpper(m.getName()) + "MessageType " + m.getName() + "Type = new " + ctx.firstToUpper(m.getName()) + "MessageType();\n");
             builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType get" + ctx.firstToUpper(m.getName()) + "Type(){\nreturn " + m.getName() + "Type;\n}\n\n");
@@ -540,7 +517,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("}\n");
         for (StateMachine b : ThingMLHelpers.allStateMachines(thing)) {
-            for (Session s : RegionHelper.allContainedSessions(b)) {
+            for (Session s : CompositeStateHelper.allContainedSessions(b)) {
                 builder.append("else if (\"" + s.getName() + "\".equals(session)) {\n");
                 builder.append("behavior = build" + ThingMLElementHelper.qname(s, "_") + "();\n");
                 builder.append("}\n");
@@ -818,10 +795,10 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 if (i.getGuard() != null) {
                     builder.append("@Override\n");
                     builder.append("public boolean doCheck(final Event e) {\n");
-                    if (e != null) {
+                    if (e != null && r.getMessage().getParameters().size() > 0) {
                         builder.append("final " + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message " + r.getMessage().getName() + " = (" + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message) e;\n");
-                    } else {
-                    }
+                    } /*else {
+                    }*/
                     builder.append("return ");
                     ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
                     builder.append(";\n");
@@ -841,11 +818,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                             builder.append("printDebug(\"" + ctx.traceInternal(ThingMLHelpers.findContainingThing(s), r.getPort(), r.getMessage()) + "\");\n");
                         }
                     }
-                    if (e != null) {
+                    if (e != null && r.getMessage().getParameters().size() > 0) {
                         builder.append("final " + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message " + r.getMessage().getName() + " = (" + ctx.firstToUpper(r.getMessage().getName()) + "MessageType." + ctx.firstToUpper(r.getMessage().getName()) + "Message) e;\n");
-                    } else {
+                    }/* else {
                         builder.append("final NullEvent " + r.getMessage().getName() + " = (NullEvent) e;\n");
-                    }
+                    }*/
                     if (i.getAction() != null)
                         ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
                     builder.append("}\n\n");
@@ -862,7 +839,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append(i.getName());
                 else
                     builder.append(i.hashCode());
-                builder.append("\", new NullEventType(), null, state_" + ThingMLElementHelper.qname(s, "_") + ", state_" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
+                builder.append("\", ne.getType(), null, state_" + ThingMLElementHelper.qname(s, "_") + ", state_" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
             } else {
                 InternalTransition h = (InternalTransition) i;
                 builder.append("transitions_" + ThingMLElementHelper.qname(((ThingMLElement) s.eContainer()), "_") + ".add(new InternalTransition(\"");
@@ -870,14 +847,14 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append(i.getName());
                 else
                     builder.append(i.hashCode());
-                builder.append("\", new NullEventType(), null, state_" + ThingMLElementHelper.qname(s, "_") + ")");
+                builder.append("\", ne.getType(), null, state_" + ThingMLElementHelper.qname(s, "_") + ")");
             }
             if (i.getGuard() != null || i.getAction() != null || debugProfile.isDebugBehavior())
                 builder.append("{\n");
             if (i.getGuard() != null) {
                 builder.append("@Override\n");
                 builder.append("public boolean doCheck(final Event e) {\n");
-                builder.append("final NullEvent ce = (NullEvent) e;\n");
+                //builder.append("final NullEvent ce = (NullEvent) e;\n");
                 builder.append("return ");
                 ctx.getCompiler().getThingActionCompiler().generate(i.getGuard(), builder, ctx);
                 builder.append(";\n");
@@ -897,7 +874,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                         //builder.append("printDebug(\"" + ctx.traceInternal(ThingMLHelpers.findContainingThing(s)) + "\");\n");
                     }
                 }
-                builder.append("final NullEvent ce = (NullEvent) e;\n");
+                //builder.append("final NullEvent ce = (NullEvent) e;\n");
                 if (i.getAction() != null)
                     ctx.getCompiler().getThingActionCompiler().generate(i.getAction(), builder, ctx);
                 builder.append("}\n\n");

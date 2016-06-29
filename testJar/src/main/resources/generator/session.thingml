@@ -1,4 +1,33 @@
-session /*$NAME$*/ init /*$INIT_NAME$*/{
+session /*$NAME$*/ init START {
 
-    /*$BEHAVIOR$*/
+    composite state START init /*$INIT_NAME$*/ {
+        internal event sessionPort?terminated
+        action do
+            nbSessions = nbSessions - 1
+            p!a()
+            p!b(nbSessions)
+        end
+
+        transition -> DIE
+        event p?kill
+
+
+        /*$BEHAVIOR$*/
+
+        final state DIE {
+            on entry do
+                sessionPort!terminated()
+                p!a()
+                p!b(nbSessions)
+            end
+        }
+    }
+
+    final state DIE {
+        on entry do
+            sessionPort!terminated()
+            p!a()
+            p!b(nbSessions)
+        end
+     }
 }
