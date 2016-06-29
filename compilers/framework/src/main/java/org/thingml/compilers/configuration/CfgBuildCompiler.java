@@ -15,7 +15,9 @@
  */
 package org.thingml.compilers.configuration;
 
+import java.util.Iterator;
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 
 /**
@@ -26,6 +28,61 @@ public class CfgBuildCompiler {
 
     public void generateBuildScript(Configuration cfg, Context ctx) {
         throw (new UnsupportedOperationException("Project structure and build scripts are platform-specific."));
+    }
+    
+    public void generateDockerFile(Configuration cfg, Context ctx) {
+        if(AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
+            StringBuilder Dockerfile = ctx.getBuilder("Dockerfile");
+            String dockerfileTemplate = ctx.getTemplateByID("commontemplates/Dockerfile");
+            
+            String baseImage;
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_base_image")) {
+                baseImage = AnnotatedElementHelper.annotation(cfg, "docker_base_image").iterator().next();
+            } else {
+                if(ctx.getCompiler().getDockerBaseImage() != null) {
+                    baseImage = ctx.getCompiler().getDockerBaseImage();
+                } else {
+                    baseImage = "NULL";
+                    System.out.println("[WARNING] No docker base image found for compiler " + ctx.getCompiler().getID());
+                }
+            }
+            dockerfileTemplate = dockerfileTemplate.replace("#BASE_IMAGE", baseImage);
+            
+            String maintainer;
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_maintainer")) {
+                maintainer = "MAINTAINER" + AnnotatedElementHelper.annotation(cfg, "docker_maintainer").iterator().next();
+            } else {
+                maintainer = "";
+            }
+            dockerfileTemplate = dockerfileTemplate.replace("#MAINTAINER", maintainer);
+            
+            String expose;
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_expose")) {
+                expose = "EXPOSE";
+                Iterator<String> exposeIt = AnnotatedElementHelper.annotation(cfg, "docker_expose").iterator();
+                while(exposeIt.hasNext()) {
+                    expose += " " + exposeIt.next();
+                }
+                
+            } else {
+                expose = "";
+            }
+            dockerfileTemplate = dockerfileTemplate.replace("#EXPOSE", expose);
+            
+            String run = "";
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_expose")) {
+                Iterator<String> exposeIt = AnnotatedElementHelper.annotation(cfg, "docker_expose").iterator();
+                while(exposeIt.hasNext()) {
+                    run += "RUN " + exposeIt.next() + "\n";
+                }
+                
+            }
+            dockerfileTemplate = dockerfileTemplate.replace("#RUN", run);
+            
+            Dockerfile.append(dockerfileTemplate);
+            
+            //TODO COPY, CMD, PARAMETERS
+        }
     }
 /*
     protected Set<String> properties = new HashSet<String>();

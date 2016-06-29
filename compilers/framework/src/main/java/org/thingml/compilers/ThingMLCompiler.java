@@ -428,4 +428,8 @@ public abstract class ThingMLCompiler {
     public SerializationPlugin getSerializationPlugin(String id) {
         return serializationPlugins.get(id);
     }
+    
+    public String getDockerBaseImage() {
+        return null;
+    }
 }
