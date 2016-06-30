@@ -51,7 +51,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
-        builder.append("byte " + bufferName + "[" + (cctx.getMessageSerializationSize(m) - 2) + "];\n");
+        builder.append("byte " + bufferName + "[" + (cctx.getMessageSerializationSize(m) - 2 - cctx.getIgnoredParameterSerializationSize(m)) + "];\n");
 
         int HandlerCode = cctx.getHandlerCode(configuration, m);
 
@@ -61,24 +61,26 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
         int j = 2;
 
         for (Parameter pt : m.getParameters()) {
-            builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = 0;
-            String v = pt.getName();
-            if (cctx.isPointer(pt.getType())) {
-                // This should not happen and should be checked before.
-                throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
-            } else {
-                if (!AnnotatedElementHelper.isDefined(pt, "ignore", "true")) {
-                    builder.append("union u_" + v + "_t {\n");
-                    builder.append(cctx.getCType(pt.getType()) + " p;\n");
-                    builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getType(), 0) + "];\n");
-                    builder.append("} u_" + v + ";\n");
-                    builder.append("u_" + v + ".p = " + v + ";\n");
+            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", pt.getName())) {
+                builder.append("\n// parameter " + pt.getName() + "\n");
+                int i = 0;
+                String v = pt.getName();
+                if (cctx.isPointer(pt.getType())) {
+                    // This should not happen and should be checked before.
+                    throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
+                } else {
+                    if (!AnnotatedElementHelper.isDefined(pt, "ignore", "true")) {
+                        builder.append("union u_" + v + "_t {\n");
+                        builder.append(cctx.getCType(pt.getType()) + " p;\n");
+                        builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getType(), 0) + "];\n");
+                        builder.append("} u_" + v + ";\n");
+                        builder.append("u_" + v + ".p = " + v + ";\n");
 
-                    while (i < cctx.getCByteSize(pt.getType(), 0)) {
-                        builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
-                        i++;
-                        j++;
+                        while (i < cctx.getCByteSize(pt.getType(), 0)) {
+                            builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
+                            i++;
+                            j++;
+                        }
                     }
                 }
             }

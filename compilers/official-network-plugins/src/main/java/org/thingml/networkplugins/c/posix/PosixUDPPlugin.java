@@ -89,6 +89,7 @@ public class PosixUDPPlugin extends NetworkPlugin {
         Protocol protocol;
         Set<Message> messages;
         SerializationPlugin sp;
+        String paramPort, paramIP;
 
         UDPPort() {
             ecos = new HashSet<>();
@@ -118,7 +119,11 @@ public class PosixUDPPlugin extends NetworkPlugin {
                 String i = sp.generateSerialization(builder, "forward_buf", m);
 
                 builder.append("\n//Forwarding with specified function \n");
-                builder.append(prot.getName() + "_forwardMessage(forward_buf, " + i + ");\n");
+                if(AnnotatedElementHelper.hasAnnotation(protocol, "udp_target_selection")) {
+                    builder.append(prot.getName() + "_forwardMessage(forward_buf, " + i + ", " + paramIP + ", " + paramPort + ");\n");
+                } else {
+                    builder.append(prot.getName() + "_forwardMessage(forward_buf, " + i + ");\n");
+                }
                 builder.append("}\n\n");
 
             }
@@ -149,6 +154,34 @@ public class PosixUDPPlugin extends NetworkPlugin {
                 initThread.append(", NULL);\n");
                 ctx.addToInitCode(initThread.toString());
                 //Threaded listener --- END
+                
+                if(AnnotatedElementHelper.hasAnnotation(protocol, "udp_target_selection")) {
+                    if (AnnotatedElementHelper.hasAnnotation(protocol, "udp_param_ip")) {
+                        paramIP = AnnotatedElementHelper.annotation(protocol, "udp_param_ip").iterator().next();
+                    }
+                    if (AnnotatedElementHelper.hasAnnotation(protocol, "udp_param_port")) {
+                        paramPort = AnnotatedElementHelper.annotation(protocol, "udp_param_port").iterator().next();
+                    }
+                    String remoteCfgForward = "    memset((char *) &/*PORT_NAME*/_si_remote, 0, sizeof(/*PORT_NAME*/_si_remote));\n" +
+                    "\n" +
+                    "    /*PORT_NAME*/_si_remote.sin_family = AF_INET;\n" +
+                    "    /*PORT_NAME*/_si_remote.sin_port = htons(port);\n" +
+                    "    /*PORT_NAME*/_si_remote.sin_addr = addr_from_uint32(ip);\n";
+                    ctemplate = ctemplate.replace("/*REMOTE_CFG_SETUP*/", "");
+                    ctemplate = ctemplate.replace("/*REMOTE_PARAM*/", ", uint32_t ip, uint16_t port");
+                    ctemplate = ctemplate.replace("/*REMOTE_CFG_FORWARD*/", remoteCfgForward);
+                } else {
+                    String remoteCfgSetup = "    memset((char *) &/*PORT_NAME*/_si_remote, 0, sizeof(/*PORT_NAME*/_si_remote));\n" +
+                    "\n" +
+                    "    /*PORT_NAME*/_si_remote.sin_family = AF_INET;\n" +
+                    "    /*PORT_NAME*/_si_remote.sin_port = htons(/*PORT_NAME*/_REMOTE_PORT);\n" +
+                    "    if (inet_aton(/*PORT_NAME*/_REMOTE_ADDR, &(/*PORT_NAME*/_si_remote.sin_addr)) == 0) {\n" +
+                    "        printf(\"Failed copying src address\\n\");\n" +
+                    "    }";
+                    ctemplate = ctemplate.replace("/*REMOTE_CFG_SETUP*/", remoteCfgSetup);
+                    ctemplate = ctemplate.replace("/*REMOTE_PARAM*/", "");
+                    ctemplate = ctemplate.replace("/*REMOTE_CFG_FORWARD*/", "");
+                }
 
                 ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
                 htemplate = htemplate.replace("/*PORT_NAME*/", portName);
@@ -181,13 +214,22 @@ public class PosixUDPPlugin extends NetworkPlugin {
                     messages.add(m);
                 }
                 StringBuilder ParserImplementation = new StringBuilder();
-                ParserImplementation.append("void " + portName + "_parser(byte * msg, uint16_t size) {\n");
+                ParserImplementation.append("void " + portName + "_parser(byte * msg, uint16_t size");
+                
+                if(AnnotatedElementHelper.hasAnnotation(protocol, "udp_target_selection")) {
+                    ParserImplementation.append(", uint32_t provided_" + paramIP + ", uint16_t provided_" + paramPort);
+                }
+                ParserImplementation.append(") {\n");
                 sp.generateParserBody(ParserImplementation, "msg", "size", messages, portName + "_instance.listener_id");
                 ParserImplementation.append("}\n");
 
                 ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", sp.generateSubFunctions() + ParserImplementation);
 
-                String ParserCall = portName + "_parser(buf, strlen(buf));";
+                String ParserCall = portName + "_parser(buf, strlen(buf)";
+                if(AnnotatedElementHelper.hasAnnotation(protocol, "udp_target_selection")) {
+                    ParserCall += ", " + portName + "_si_rcv.sin_addr.s_addr, ntohs(" + portName + "_si_rcv.sin_port)";
+                }
+                ParserCall += ");";
                 ctemplate = ctemplate.replace("/*PARSER_CALL*/", ParserCall);
 
                 ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", ParserImplementation);

@@ -78,7 +78,9 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
         builder.append("final JsonObject msg = new JsonObject();\n");
         builder.append("final JsonObject params = new JsonObject();\n");
         for (Parameter p : m.getParameters()) {
-            builder.append("params.add(\"" + p.getName() + "\", _this." + p.getName() + ");\n");
+            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                builder.append("params.add(\"" + p.getName() + "\", _this." + p.getName() + ");\n");
+            }
         }
         builder.append("msg.add(\"" + m.getName() + "\",params);\n");
         builder.append("return msg.toString();\n");
@@ -133,22 +135,24 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
             builder.append("if(msgName.equals(" + m.getName().toUpperCase() + ".getName())){\n");
             builder.append("return " + m.getName().toUpperCase() + ".instantiate(");
             for (Parameter p : m.getParameters()) {
-                if (m.getParameters().indexOf(p) > 0)
-                    builder.append(", ");
-                builder.append("(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + ") ");
-                builder.append("msg.get(msgName).asObject().get(\"" + p.getName() + "\")");
-                String getter = "asString()";
-                switch (AnnotatedElementHelper.annotationOrElse(p.getType(), "java_type", "void")) {
-                    case "int": getter = "asInt()"; break;
-                    case "long": getter = "asInt()"; break;
-                    case "float": getter = "asFloat()"; break;
-                    case "double": getter = "asDouble()"; break;
-                    case "byte": getter = "asInt()"; break;
-                    case "boolean": getter = "asBoolean()"; break;
-                    case "char": getter = "asString().chatAt(0)"; break;
-                    default: break;
+                if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                    if (m.getParameters().indexOf(p) > 0)
+                        builder.append(", ");
+                    builder.append("(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + ") ");
+                    builder.append("msg.get(msgName).asObject().get(\"" + p.getName() + "\")");
+                    String getter = "asString()";
+                    switch (AnnotatedElementHelper.annotationOrElse(p.getType(), "java_type", "void")) {
+                        case "int": getter = "asInt()"; break;
+                        case "long": getter = "asInt()"; break;
+                        case "float": getter = "asFloat()"; break;
+                        case "double": getter = "asDouble()"; break;
+                        case "byte": getter = "asInt()"; break;
+                        case "boolean": getter = "asBoolean()"; break;
+                        case "char": getter = "asString().chatAt(0)"; break;
+                        default: break;
+                    }
+                    builder.append("." + getter);
                 }
-                builder.append("." + getter);
             }
             builder.append(");\n}\n");
 

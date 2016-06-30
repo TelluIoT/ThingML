@@ -47,25 +47,31 @@ public class JSJSONSerializerPlugin extends SerializationPlugin {
         System.out.println("generateSerialization " + bufferName + " : " + m.getName());
         int size = 2; //code encoded by a 2 bytes
         for (Parameter p : m.getParameters()) {
-            if (p.getType() instanceof PrimitiveType) {
-                size = size + ((PrimitiveType) p.getType()).getByteSize();
-            } else {
-                throw new UnsupportedOperationException("Cannot serialized non primitive type " + p.getType().getName());
+            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                if (p.getType() instanceof PrimitiveType) {
+                    size = size + ((PrimitiveType) p.getType()).getByteSize();
+                } else {
+                    throw new UnsupportedOperationException("Cannot serialized non primitive type " + p.getType().getName());
+                }
             }
         }
         //Serialize message into binary
         builder.append(bufferName + ".prototype." + m.getName() + "ToJSON = function(");
         for(Parameter p : m.getParameters()) {
-            if (m.getParameters().indexOf(p) > 0)
-                builder.append(", ");
-            builder.append(p.getName());
+            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                if (m.getParameters().indexOf(p) > 0)
+                    builder.append(", ");
+                builder.append(p.getName());
+            }
         }
         builder.append(") {\n");
         builder.append("return JSON.stringify({" + m.getName() + ": {");
         for(Parameter p : m.getParameters()) {
-            if (m.getParameters().indexOf(p) > 0)
-                builder.append(", ");
-            builder.append(p.getName() + " : " + p.getName());
+            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                if (m.getParameters().indexOf(p) > 0)
+                    builder.append(", ");
+                builder.append(p.getName() + " : " + p.getName());
+            }
         }
         builder.append("}});\n");
         builder.append("};\n\n");
@@ -85,7 +91,9 @@ public class JSJSONSerializerPlugin extends SerializationPlugin {
             builder.append("case '" + m.getName() + "':");
             builder.append("msg = ['" + m.getName() + "'");
             for(Parameter p : m.getParameters()) {
-                builder.append(", parsed." + m.getName() + "." + p.getName());
+                if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                    builder.append(", parsed." + m.getName() + "." + p.getName());
+                }
             }
             builder.append("]; break;\n");
         }

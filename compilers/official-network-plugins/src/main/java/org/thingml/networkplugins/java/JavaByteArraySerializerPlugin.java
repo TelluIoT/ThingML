@@ -87,12 +87,14 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
         builder.append("buffer.putShort(" + m.getName().toUpperCase() + ".getCode());\n");
         for (Parameter p : m.getParameters()) {
-            if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context).equals("byte")) {
-                builder.append("buffer.put(_this." + p.getName() + ");\n");
-            } else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context).equals("boolean")) {
-                builder.append("if(" + p.getName() + ") buffer.put((byte)0x01); else buffer.put((byte)0x00); ");
-            } else {
-                builder.append("buffer.put" + context.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context)) + "(_this." + p.getName() + ");\n");
+            if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
+                if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context).equals("byte")) {
+                    builder.append("buffer.put(_this." + p.getName() + ");\n");
+                } else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context).equals("boolean")) {
+                    builder.append("if(" + p.getName() + ") buffer.put((byte)0x01); else buffer.put((byte)0x00); ");
+                } else {
+                    builder.append("buffer.put" + context.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context)) + "(_this." + p.getName() + ");\n");
+                }
             }
         }
         builder.append("return buffer.array();\n");
@@ -124,22 +126,26 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
             final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
             builder.append("case " + code + ":{\n");
             for (Parameter p : m.getParameters()) {
-                final String javaType = JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context);
-                if ("byte".equals(javaType)) {
-                    builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + " " + p.getName() + " = " + "buffer.get();\n");
-                } else if ("boolean".equals(javaType)) {
-                    builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + " " + p.getName() + " = " + "buffer.get() == 0x00 ? false : true;\n");
-                } else if ("String".equals(javaType)) {
-                    //TODO [0: #bytes size, 1:size[#bytes size], 2(-3-5): [UTF-8 bytes]]
-                } else {
-                    builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + " " + p.getName() + " = " + "buffer.get" + context.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context)) + "();\n");
+                if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
+                    final String javaType = JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context);
+                    if ("byte".equals(javaType)) {
+                        builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + " " + p.getName() + " = " + "buffer.get();\n");
+                    } else if ("boolean".equals(javaType)) {
+                        builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + " " + p.getName() + " = " + "buffer.get() == 0x00 ? false : true;\n");
+                    } else if ("String".equals(javaType)) {
+                        //TODO [0: #bytes size, 1:size[#bytes size], 2(-3-5): [UTF-8 bytes]]
+                    } else {
+                        builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + " " + p.getName() + " = " + "buffer.get" + context.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context)) + "();\n");
+                    }
                 }
             }
             builder.append("return " + m.getName().toUpperCase() + ".instantiate(");
             for (Parameter p : m.getParameters()) {
-                if (m.getParameters().indexOf(p) > 0)
-                    builder.append(", ");
-                builder.append(p.getName());
+                if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
+                    if (m.getParameters().indexOf(p) > 0)
+                        builder.append(", ");
+                    builder.append(p.getName());
+                }
             }
             builder.append(");\n}\n");
 

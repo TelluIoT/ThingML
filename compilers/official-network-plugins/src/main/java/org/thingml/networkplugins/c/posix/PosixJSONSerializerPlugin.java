@@ -68,37 +68,39 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
         boolean first = true;
         for (Parameter p : m.getParameters()) {
-            if (first) {
-                first = false;
-                builder.append("	len += " + (p.getName().length() + 3) + ";//\"" + p.getName().length() + "\":\n");
-            } else {
-                builder.append("	len += " + (p.getName().length() + 4) + ";//,\"" + p.getName().length() + "\":\n");
-            }
+            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                if (first) {
+                    first = false;
+                    builder.append("	len += " + (p.getName().length() + 3) + ";//\"" + p.getName().length() + "\":\n");
+                } else {
+                    builder.append("	len += " + (p.getName().length() + 4) + ";//,\"" + p.getName().length() + "\":\n");
+                }
 
-            //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
-            if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
-                builder.append("	len += snprintf(NULL, 0, \"%i\", " + p.getName() + ");\n");
-            } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
-                builder.append("	len += snprintf(NULL, 0, \"%g\", " + p.getName() + ");\n");
-            } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
-                builder.append("	len += snprintf(NULL, 0, " + p.getName() + " ? \"true\" : \"false\");\n");
-            } else {
-                builder.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
-                builder.append("	len += snprintf(NULL, 0, \"%s\", \"null\");\n");
+                //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
+                if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
+                    builder.append("	len += snprintf(NULL, 0, \"%i\", " + p.getName() + ");\n");
+                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
+                    builder.append("	len += snprintf(NULL, 0, \"%g\", " + p.getName() + ");\n");
+                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
+                    builder.append("	len += snprintf(NULL, 0, " + p.getName() + " ? \"true\" : \"false\");\n");
+                } else {
+                    builder.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
+                    builder.append("	len += snprintf(NULL, 0, \"%s\", \"null\");\n");
+                }
             }
         }
         builder.append("	char " + bufferName + "[len];\n" +
@@ -109,36 +111,38 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
         first = true;
         for (Parameter p : m.getParameters()) {
-            if (first) {
-                first = false;
-            } else {
-                builder.append("	index += sprintf(" + bufferName + "+index, \",\");\n");
-            }
+            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                if (first) {
+                    first = false;
+                } else {
+                    builder.append("	index += sprintf(" + bufferName + "+index, \",\");\n");
+                }
 
-            //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
-            if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
-                builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%i\", " + p.getName() + ");\n");
-            } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
-                builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%g\", " + p.getName() + ");\n");
-            } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
-                    || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
-                builder.append("	index += sprintf(" + bufferName + "+index, " + p.getName() + " ? \"true\" : \"false\");\n");
-            } else {
-                builder.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
-                builder.append("	index += sprintf(" + bufferName + "+index, \"null\");\n");
+                //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
+                if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
+                    builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%i\", " + p.getName() + ");\n");
+                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
+                    builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%g\", " + p.getName() + ");\n");
+                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
+                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
+                    builder.append("	index += sprintf(" + bufferName + "+index, " + p.getName() + " ? \"true\" : \"false\");\n");
+                } else {
+                    builder.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
+                    builder.append("	index += sprintf(" + bufferName + "+index, \"null\");\n");
+                }
             }
         }
         builder.append("	index += sprintf(" + bufferName + "+index, \"}}\");");
@@ -194,13 +198,14 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                     builder.append(ctx.getCType(p.getType()) + " p;\n");
                     builder.append("byte bytebuffer[" + ctx.getCByteSize(p.getType(), 0) + "];\n");
                     builder.append("} u_" + p.getName() + ";\n");
-
                 }
                 generateMessageParser(m);
                 builder.append("		int res = parse_" + m.getName() + "(m");
 
                 for (Parameter p : m.getParameters()) {
-                    builder.append(", &u_" + p.getName() + ".p");
+                    if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                        builder.append(", &u_" + p.getName() + ".p");
+                    }
                 }
                 builder.append(");\n" +
                         "\n" +
@@ -216,6 +221,10 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
                 int idx_bis = 2;
                 for (Parameter p : m.getParameters()) {
+                    if(AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                        builder.append("u_" + p.getName() + ".p = provided_" + p.getName() + ";\n");
+                    }
+                        
                     for (int i = 0; i < ctx.getCByteSize(p.getType(), 0); i++) {
 
                         builder.append("true_buf[" + (idx_bis + i) + "] = ");
@@ -251,22 +260,30 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
     void generateMessageParser(Message m) {
         int maxParameterNameSize = 0;
         for (Parameter p : m.getParameters()) {
-            if (maxParameterNameSize < p.getName().length()) {
-                maxParameterNameSize = p.getName().length();
+            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                if (maxParameterNameSize < p.getName().length()) {
+                    maxParameterNameSize = p.getName().length();
+                }
             }
         }
 
         messagesparser.append("int parse_" + m.getName() + "(char * msg");
         CCompilerContext ctx = (CCompilerContext) context;
+        boolean noParam = true;
+        int nbParam = 0;
         for (Parameter p : m.getParameters()) {
-            messagesparser.append(", " + ctx.getCType(p.getType()) + " *" + p.getName());
+            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                messagesparser.append(", " + ctx.getCType(p.getType()) + " *" + p.getName());
+                noParam = false;
+                nbParam++;
+            }
         }
 
         messagesparser.append(") {\n");
-        if (!m.getParameters().isEmpty()) {
+        if (!noParam) {
             messagesparser.append("	char *m = msg;\n" +
                     "	int cp;\n" +
-                    "	for(cp = 0; cp < " + m.getParameters().size() + "; cp++) {\n" +
+                    "	for(cp = 0; cp < " + nbParam + "; cp++) {\n" +
                     "		m = jumpspace(m);\n" +
                     "\n" +
                     "		if(*m != '\"') {return -1;} // \"\n" +
@@ -291,43 +308,45 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                     "		char * mend = &m[param_val_len];\n");
             messagesparser.append("		if(param_val_len <= 0) {return -1;} // empty val\n");
             for (Parameter p : m.getParameters()) {
-                messagesparser.append("		if(strcmp(\"" + p.getName() + "\", param_name) == 0) { //" + p.getName() + "\n");
+                if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                    messagesparser.append("		if(strcmp(\"" + p.getName() + "\", param_name) == 0) { //" + p.getName() + "\n");
 
-                //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
-                if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
-                    messagesparser.append("			*" + p.getName() + " = (" + ctx.getCType(p.getType()) + ") strtol(m, &mend, 10);\n");
-                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
-                    messagesparser.append("			*" + p.getName() + " = (" + ctx.getCType(p.getType()) + ") strtof(m, &mend);\n");
-                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
-                    messagesparser.append("			if(param_val_len < 4) {return -1;} // incorrect val\n" +
-                            "			char param_val_bool[5];\n" +
-                            "			param_val_bool[4] = '\\0';\n" +
-                            "			strncpy(param_val_bool, m, 4);\n" +
-                            "			if(strcmp(\"true\", param_val_bool) == 0) {\n" +
-                            "				*" + p.getName() + " = true;\n" +
-                            "			} else if (strcmp(\"fals\", param_val_bool) == 0) {\n" +
-                            "				*" + p.getName() + " = false;\n" +
-                            "			} else {\n" +
-                            "				return -1;\n" +
-                            "			}\n");
-                } else {
-                    messagesparser.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
+                    //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
+                    if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
+                        messagesparser.append("			*" + p.getName() + " = (" + ctx.getCType(p.getType()) + ") strtol(m, &mend, 10);\n");
+                    } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
+                        messagesparser.append("			*" + p.getName() + " = (" + ctx.getCType(p.getType()) + ") strtof(m, &mend);\n");
+                    } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
+                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
+                        messagesparser.append("			if(param_val_len < 4) {return -1;} // incorrect val\n" +
+                                "			char param_val_bool[5];\n" +
+                                "			param_val_bool[4] = '\\0';\n" +
+                                "			strncpy(param_val_bool, m, 4);\n" +
+                                "			if(strcmp(\"true\", param_val_bool) == 0) {\n" +
+                                "				*" + p.getName() + " = true;\n" +
+                                "			} else if (strcmp(\"fals\", param_val_bool) == 0) {\n" +
+                                "				*" + p.getName() + " = false;\n" +
+                                "			} else {\n" +
+                                "				return -1;\n" +
+                                "			}\n");
+                    } else {
+                        messagesparser.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
+                    }
+                    messagesparser.append("		} else ");
                 }
-                messagesparser.append("		} else ");
             }
             messagesparser.append("{\n" +
                     "			return -1;\n" +

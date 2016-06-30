@@ -69,26 +69,32 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
         System.out.println("generateSerialization " + m.getName());
         int size = 2; //code encoded by a 2 bytes
         for (Parameter p : m.getParameters()) {
-            if (p.getType() instanceof PrimitiveType) {
-                size = size + ((PrimitiveType) p.getType()).getByteSize();
+            if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
+                if (p.getType() instanceof PrimitiveType) {
+                    size = size + ((PrimitiveType) p.getType()).getByteSize();
+                }
             }
         }
         //Serialize message into binary
         final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
         builder.append(bufferName + ".prototype." + m.getName() + "ToBytes = function(");
         for(Parameter p : m.getParameters()) {
-            if (m.getParameters().indexOf(p) > 0)
-                builder.append(", ");
-            builder.append(p.getName());
+            if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
+                if (m.getParameters().indexOf(p) > 0)
+                    builder.append(", ");
+                builder.append(p.getName());
+            }
         }
         builder.append(") {\n");
         builder.append("var bb = new ByteBuffer(capacity=" + size + ", littleEndian=false).writeShort(" + code + ")\n");
         for(Parameter p : m.getParameters()) {
-            final String ctype = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type") ? AnnotatedElementHelper.annotation(p.getType(), "c_type").get(0).replace("_t", "") : "byte";
-            if (p.getType() instanceof PrimitiveType) {
-                builder.append(".write" + context.firstToUpper(ctype) + "(" + p.getName() + ")\n");
-            } else {
+            if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
+                final String ctype = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type") ? AnnotatedElementHelper.annotation(p.getType(), "c_type").get(0).replace("_t", "") : "byte";
+                if (p.getType() instanceof PrimitiveType) {
+                    builder.append(".write" + context.firstToUpper(ctype) + "(" + p.getName() + ")\n");
+                } else {
 
+                }
             }
         }
         builder.append(".flip();\n");
@@ -112,9 +118,11 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
             builder.append("case " + code + ":\n");
             builder.append("return [\"" + m.getName() + "\"");
             for(Parameter p : m.getParameters()) {
-                final String type = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type")?AnnotatedElementHelper.annotation(p.getType(),"c_type").get(0).replace("_t", ""):null;
-                //if (type == null) //TODO: we should probably raise an exception here
-                builder.append(", bb.read" + context.firstToUpper(type) + "()");
+                if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
+                    final String type = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type")?AnnotatedElementHelper.annotation(p.getType(),"c_type").get(0).replace("_t", ""):null;
+                    //if (type == null) //TODO: we should probably raise an exception here
+                    builder.append(", bb.read" + context.firstToUpper(type) + "()");
+                }
             }
             builder.append("];\n");
         }

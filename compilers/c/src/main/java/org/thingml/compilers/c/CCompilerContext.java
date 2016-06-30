@@ -624,6 +624,16 @@ public abstract class CCompilerContext extends Context {
         return result;
     }
 
+    public int getIgnoredParameterSerializationSize(Message m) {
+        int result = 0; 
+        for (Parameter p : m.getParameters()) {
+            if(AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                result += this.getCByteSize(p.getType(), 0);
+            }
+        }
+        return result;
+    }
+
     public String getMessageSerializationSizeString(Message m) {
         int result = 2; // 2 bytes to store the port/message code
         result += 2; // to store the id of the source instance
