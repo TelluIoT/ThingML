@@ -13,7 +13,7 @@ all : /*NAME*/
 	${CC} ${CFLAGS} -c $< /*PREPROC_DIRECTIVES*/
 
 /*NAME*/ : $(OBJS)
-	$(CC) -o $@ $(OBJS) $(LIBS) -lm
+	$(CC) /*STATIC*/-o $@ $(OBJS) $(LIBS) -lm
 
 clean:
 	rm -f *.o *~ /*NAME*/

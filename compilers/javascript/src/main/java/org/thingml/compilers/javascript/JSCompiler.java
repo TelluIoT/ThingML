@@ -92,6 +92,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
         //new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
+        ctx.getCompiler().getCfgBuildCompiler().generateDockerFile(cfg, ctx);
         ctx.getCompiler().getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
         ctx.generateNetworkLibs(cfg);
@@ -121,5 +122,21 @@ public class JSCompiler extends OpaqueThingMLCompiler {
             ctx.getCompiler().getThingImplCompiler().generateImplementation(thing, ctx);
         }
         ctx.getCompiler().getMainCompiler().generateMainAndInit(t, model, ctx);
+    }
+    
+    @Override
+    public String getDockerBaseImage(Configuration cfg, Context ctx) {
+        return "node:latest";
+    }
+    
+    @Override
+    public String getDockerCMD(Configuration cfg, Context ctx) {
+        return "node\", \"main.js"; //Param main.js
+    }
+    
+    @Override
+    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
+        return "COPY ./*.js /work/\n" + 
+                "COPY ./node_modules /work/node_modules\n";
     }
 }

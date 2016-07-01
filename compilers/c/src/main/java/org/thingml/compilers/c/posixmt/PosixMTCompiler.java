@@ -31,6 +31,7 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
 import java.io.File;
+import org.thingml.compilers.Context;
 
 /**
  * Created by ffl on 25.11.14.
@@ -91,11 +92,31 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
         // GENERATE A MODULE FOR THE CONFIGURATION (+ its dependencies)
         getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 
+        //GENERATE A DOCKERFILE IF ASKED
+        ctx.getCompiler().getCfgBuildCompiler().generateDockerFile(cfg, ctx);
+
         // GENERATE A MAKEFILE
         getCfgBuildCompiler().generateBuildScript(cfg, ctx);
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
 
+    }
+    
+    @Override
+    public String getDockerBaseImage(Configuration cfg, Context ctx) {
+        return "alpine:latest";
+    }
+    
+    @Override
+    public String getDockerCMD(Configuration cfg, Context ctx) {
+        return "./" + cfg.getName() + "\", \""; 
+    }
+    
+    @Override
+    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
+        CCompilerContext cctx = (CCompilerContext) ctx;
+        cctx.staticLinking = true;
+        return "COPY ./" + cfg.getName() + " /work/\n";
     }
 }

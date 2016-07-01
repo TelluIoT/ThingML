@@ -107,8 +107,27 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
             ctx.getCompiler().getThingImplCompiler().generateImplementation(th, ctx);
         }
         ctx.getCompiler().getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
+        
+        //GENERATE A DOCKERFILE IF ASKED
+        ctx.getCompiler().getCfgBuildCompiler().generateDockerFile(cfg, ctx);
+        
         ctx.getCompiler().getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
         ctx.generateNetworkLibs(cfg);
+    }
+    
+    @Override
+    public String getDockerBaseImage(Configuration cfg, Context ctx) {
+        return "java:8-jre-alpine";
+    }
+    
+    @Override
+    public String getDockerCMD(Configuration cfg, Context ctx) {
+        return "java\", \"-jar\", \"" + cfg.getName() + "-1.0-SNAPSHOT-jar-with-dependencies.jar"; 
+    }
+    
+    @Override
+    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
+        return "COPY ./target/" + cfg.getName() + "-1.0-SNAPSHOT-jar-with-dependencies.jar /work/\n";
     }
 }

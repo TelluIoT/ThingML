@@ -109,6 +109,7 @@
                     <mainClass><!--PACK-->.Main</mainClass>
                 </configuration>
             </plugin>
+            <!--SelfContained-->
         </plugins>
     </build>
 

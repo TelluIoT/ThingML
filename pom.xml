@@ -206,9 +206,8 @@
         <module>org.thingml.editor.eclipse</module>
         <!-- The standalone app can only be built on the server which has the keystore to sign the jar
         <module>../org.thingml.editor.standaloneApp</module>-->
-        <!--module>org.thingml.tests</module--><!--BUILT SEPARATELY-->
         <module>ArduinoIDEPlugin</module>
-        <!--<module>testJar</module>-->
+        <!--<module>testJar</module>--><!--BUILT SEPARATELY-->
     </modules>
 
     <distributionManagement>

@@ -36,6 +36,8 @@ import java.util.HashMap;
  * Created by ffl on 01.06.15.
  */
 public abstract class CCompilerContext extends Context {
+    
+    public boolean staticLinking = false;
 
     public String instance_var_name = null;
     // Argh!!

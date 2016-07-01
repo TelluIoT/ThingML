@@ -39,8 +39,8 @@ public class CfgBuildCompiler {
             if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_base_image")) {
                 baseImage = AnnotatedElementHelper.annotation(cfg, "docker_base_image").iterator().next();
             } else {
-                if(ctx.getCompiler().getDockerBaseImage() != null) {
-                    baseImage = ctx.getCompiler().getDockerBaseImage();
+                if(ctx.getCompiler().getDockerBaseImage(cfg, ctx) != null) {
+                    baseImage = ctx.getCompiler().getDockerBaseImage(cfg, ctx);
                 } else {
                     baseImage = "NULL";
                     System.out.println("[WARNING] No docker base image found for compiler " + ctx.getCompiler().getID());
@@ -70,18 +70,51 @@ public class CfgBuildCompiler {
             dockerfileTemplate = dockerfileTemplate.replace("#EXPOSE", expose);
             
             String run = "";
-            if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_expose")) {
-                Iterator<String> exposeIt = AnnotatedElementHelper.annotation(cfg, "docker_expose").iterator();
-                while(exposeIt.hasNext()) {
-                    run += "RUN " + exposeIt.next() + "\n";
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_instruction")) {
+                Iterator<String> runIt = AnnotatedElementHelper.annotation(cfg, "docker_instruction").iterator();
+                while(runIt.hasNext()) {
+                    run += runIt.next() + "\n";
                 }
                 
             }
-            dockerfileTemplate = dockerfileTemplate.replace("#RUN", run);
+            dockerfileTemplate = dockerfileTemplate.replace("#DOCKER_INSTRUCTION", run);
+            
+            String cmd;
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_cmd")) {
+                cmd = AnnotatedElementHelper.annotation(cfg, "docker_cmd").iterator().next();
+            } else {
+                if(ctx.getCompiler().getDockerCMD(cfg, ctx) != null) {
+                    cmd = ctx.getCompiler().getDockerCMD(cfg, ctx);
+                } else {
+                    cmd = "NULL";
+                    System.out.println("[WARNING] No docker command found for compiler " + ctx.getCompiler().getID());
+                }
+            }
+            dockerfileTemplate = dockerfileTemplate.replace("#CMD", cmd);
+            
+            String cfgPath;
+            if(ctx.getCompiler().getDockerCMD(cfg, ctx) != null) {
+                cfgPath = ctx.getCompiler().getDockerCfgRunPath(cfg, ctx);
+            } else {
+                cfgPath = "NULL";
+                System.out.println("[WARNING] No docker configuration runnable path found for compiler " + ctx.getCompiler().getID());
+            }
+            dockerfileTemplate = dockerfileTemplate.replace("#COPY", cfgPath);
+            
+            String param = "";
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "docker_parameter")) {
+                Iterator<String> paramIt = AnnotatedElementHelper.annotation(cfg, "docker_parameter").iterator();
+                boolean first = true;
+                while(paramIt.hasNext()) {
+                    param += ", ";
+                    param += "\"" + paramIt.next() + "\"";
+                }
+                
+            }
+            dockerfileTemplate = dockerfileTemplate.replace("#PARAMETERS", param);
             
             Dockerfile.append(dockerfileTemplate);
             
-            //TODO COPY, CMD, PARAMETERS
         }
     }
 /*

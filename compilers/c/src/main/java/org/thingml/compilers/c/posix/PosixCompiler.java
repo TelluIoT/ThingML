@@ -16,9 +16,12 @@
 package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.impl.PlatformAnnotationImpl;
+import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
@@ -88,11 +91,31 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
         // GENERATE A MODULE FOR THE CONFIGURATION (+ its dependencies)
         getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 
+        //GENERATE A DOCKERFILE IF ASKED
+        ctx.getCompiler().getCfgBuildCompiler().generateDockerFile(cfg, ctx);
+        
         // GENERATE A MAKEFILE
         getCfgBuildCompiler().generateBuildScript(cfg, ctx);
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
 
+    }
+    
+    @Override
+    public String getDockerBaseImage(Configuration cfg, Context ctx) {
+        return "alpine:latest";
+    }
+    
+    @Override
+    public String getDockerCMD(Configuration cfg, Context ctx) {
+        return "./" + cfg.getName() + "\", \""; 
+    }
+    
+    @Override
+    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
+        CCompilerContext cctx = (CCompilerContext) ctx;
+        cctx.staticLinking = true;
+        return "COPY ./" + cfg.getName() + " /work/\n";
     }
 }

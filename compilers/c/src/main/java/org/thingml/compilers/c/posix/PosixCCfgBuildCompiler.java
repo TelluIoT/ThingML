@@ -99,6 +99,12 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
             }
         }
         preproc = preproc.trim();
+        
+        if(AnnotatedElementHelper.isDefined(cfg, "c_static_linking", "true") || ctx.staticLinking) {
+            mtemplate = mtemplate.replace("/*STATIC*/", "-static ");
+        } else {
+            mtemplate = mtemplate.replace("/*STATIC*/", "");
+        }
 
         mtemplate = mtemplate.replace("/*SOURCES*/", srcs);
         mtemplate = mtemplate.replace("/*OBJECTS*/", objs);

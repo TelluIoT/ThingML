@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 
 /**
  * Created by bmori on 17.12.2014.
@@ -51,6 +52,34 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
         } else {
             return "";
         }
+    }
+    
+    private String addSelfContainedBuild() {
+        String res = "<plugin>\n" +
+"                <artifactId>maven-assembly-plugin</artifactId>\n" +
+"                <configuration>\n" +
+"                    <archive>\n" +
+"                        <manifest>\n" +
+"                            <mainClass>org.thingml.generated.Main</mainClass>\n" +
+"                        </manifest>\n" +
+"                    </archive>\n" +
+"                    <descriptorRefs>\n" +
+"                        <descriptorRef>jar-with-dependencies</descriptorRef>\n" +
+"                    </descriptorRefs>\n" +
+"                </configuration>\n" +
+"                <executions>\n" +
+"                    <execution>\n" +
+"                        <id>make-assembly</id>\n" +
+"                        <!-- this is used for inheritance merges -->\n" +
+"                        <phase>package</phase>\n" +
+"                        <!-- bind to the packaging phase -->\n" +
+"                        <goals>\n" +
+"                            <goal>single</goal>\n" +
+"                        </goals>\n" +
+"                    </execution>\n" +
+"                </executions>\n" +
+"            </plugin>";
+        return res;
     }
 
     @Override
@@ -82,6 +111,10 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             }
 
             pom = pom.replace("<!--DEP RX-->", addReactiveXDep(cfg));
+            
+            if(AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
+                pom = pom.replace("<!--SelfContained-->", addSelfContainedBuild());
+            }
 
             PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/pom.xml")));
             w.println(pom);
