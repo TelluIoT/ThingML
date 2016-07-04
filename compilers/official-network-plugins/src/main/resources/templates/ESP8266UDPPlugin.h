@@ -1,6 +1,9 @@
 /*****************************************************/
 //                    /*PORT_NAME*/
 /*****************************************************/
+struct /*PORT_NAME*/_instance_type {
+    uint16_t listener_id;
+} /*PORT_NAME*/_instance;
 
 void /*PORT_NAME*/_setup();
 

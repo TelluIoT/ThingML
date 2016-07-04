@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ *
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -28,11 +43,11 @@ import org.thingml.compilers.spi.SerializationPlugin;
  *
  * @author sintef
  */
-public class ESP8862UDPPlugin extends NetworkPlugin {
+public class ESP8266UDPPlugin extends NetworkPlugin {
 
     CCompilerContext ctx;
 
-    public ESP8862UDPPlugin() {
+    public ESP8266UDPPlugin() {
         super();
     }
 
@@ -53,7 +68,7 @@ public class ESP8862UDPPlugin extends NetworkPlugin {
         return res;
     }
     
-    public void generateMessageForwarders(StringBuilder builder, Configuration cfg, Protocol prot) {
+    public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder, Configuration cfg, Protocol prot) {
             try {
                 final SerializationPlugin sp = ctx.getSerializationPlugin(prot);
 
@@ -72,6 +87,11 @@ public class ESP8862UDPPlugin extends NetworkPlugin {
                     builder.append("\n//Forwarding with specified function \n");
                     builder.append(prot.getName() + "_forwardMessage(forward_buf, " + i + ");\n");
                     builder.append("}\n\n");
+
+                headerbuilder.append("// Forwarding of messages " + prot.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                headerbuilder.append("void forward_" + prot.getName() + "_" + ctx.getSenderName(t, p, m));
+                ctx.appendFormalParameters(t, headerbuilder, m);
+                headerbuilder.append(";\n");
 
                 }
                 
@@ -92,8 +112,8 @@ public class ESP8862UDPPlugin extends NetworkPlugin {
                 SerializationPlugin ser = ctx.getSerializationPlugin(protocol);
                 Set<ExternalConnector> ecos = this.getExternalConnectors(cfg, protocol);
                 if(!ecos.isEmpty()) {
-                    String ctemplate = ctx.getTemplateByID("templates/ESP8862UDPPlugin.c");
-                String htemplate = ctx.getTemplateByID("templates/ESP8862UDPPlugin.h");
+                    String ctemplate = ctx.getTemplateByID("templates/ESP8266UDPPlugin.c");
+                String htemplate = ctx.getTemplateByID("templates/ESP8266UDPPlugin.h");
 
 
                 String portName = protocol.getName();
@@ -184,7 +204,7 @@ public class ESP8862UDPPlugin extends NetworkPlugin {
 
                 StringBuilder b = new StringBuilder();
                 StringBuilder h = new StringBuilder();
-                generateMessageForwarders(b, cfg, protocol);
+                generateMessageForwarders(b, h, cfg, protocol);
 
                 ctemplate += b;
                 htemplate += h;
@@ -193,7 +213,7 @@ public class ESP8862UDPPlugin extends NetworkPlugin {
                 ctx.getBuilder(portName + ".h").append(htemplate);
                 }
             } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ESP8862UDPPlugin.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ESP8266UDPPlugin.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
