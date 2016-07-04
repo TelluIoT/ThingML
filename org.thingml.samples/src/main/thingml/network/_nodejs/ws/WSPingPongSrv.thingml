@@ -1,0 +1,48 @@
+import "../../../datatypes.thingml"
+
+thing fragment PingPongMsgs {
+	message ping(u : UInt32) @code "16";
+	message pong(u : UInt32) @code "165";
+}
+
+
+thing PingServer includes PingPongMsgs {
+
+	provided port ping_service {
+		sends pong
+		receives ping
+	}
+
+	statechart PongServerMachine init Active {
+
+        on entry print "Ping Server Started!\n"
+
+		state Active {
+			
+			internal event e : ping_service?ping
+			action do
+				print "ping: "
+				print e.u
+				print "\n"
+				ping_service!pong(e.u)
+			end
+			
+		}
+	}
+}
+
+
+protocol WS
+@serializer "JSON"
+@url "ws://127.0.0.1:9000"
+@localserver "9000"
+;
+
+configuration WSSrv 
+{
+
+	instance server: PingServer
+
+	connector server.ping_service over WS
+
+}

@@ -1,0 +1,68 @@
+import "../../../../datatypes.thingml"
+
+thing fragment PingPongMsgs {
+	message ping(u : UInt8) @code "16";
+	message pong(u : UInt8) @code "165";
+}
+thing PingClient includes PingPongMsgs {
+	property v : UInt8 = 0
+
+	required port ping_service {
+		receives pong
+		sends ping
+	}
+	
+	statechart PingClientMachine init Ping {
+	
+	on entry print "Ping Client Started!\n"
+	
+		state Ping {
+			
+			on entry do
+				print "Send Ping " 
+				print v
+				print "\n"
+				ping_service!ping(v)
+			end
+				
+			transition -> Ping
+			event e : ping_service?pong guard e.u < 250
+			action v = e.u
+			
+			transition -> Pong
+			event e : ping_service?pong guard e.u >= 250
+			
+		}
+		
+		state Pong {
+			on entry print "Got pong!\n"
+			
+			transition -> Stop
+			
+		}
+		
+		state Stop {
+			on entry print "Bye.\n"
+		}
+		
+	}
+	
+}
+
+
+
+protocol UDP
+@udp_local_port "1051"
+@udp_remote_port "1050"
+@udp_address "127.0.0.1"
+@serializer "JSON"
+;
+
+configuration UDPCli 
+{
+
+	instance client: PingClient
+
+	connector client.ping_service over UDP
+
+}

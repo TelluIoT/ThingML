@@ -69,6 +69,34 @@ datatype Int16<2>
     @scala_type "Short"
     @SenML_type "Double";
 
+datatype UInt32<4>	
+    @type_checker "Integer"
+	@c_type "uint32_t"
+	@c_byte_size "4"
+	@java_type "int"
+	@java_primitive "true";
+
+datatype Int32<4>	
+    @type_checker "Integer"
+	@c_type "int32_t"
+	@c_byte_size "4"
+	@java_type "int"
+	@java_primitive "true";
+
+datatype UInt64<8>	
+    @type_checker "Integer"
+	@c_type "uint64_t"
+	@c_byte_size "8"
+	@java_type "long"
+	@java_primitive "true";
+
+datatype Int64<8>	
+    @type_checker "Integer"
+	@c_type "int64_t"
+	@c_byte_size "8"
+	@java_type "long"
+	@java_primitive "true";
+
 
 datatype Long<4>	
     @type_checker "Integer"

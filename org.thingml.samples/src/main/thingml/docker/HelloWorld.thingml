@@ -1,0 +1,15 @@
+thing HelloWorldThing {
+	statechart HelloWorldChart init Init {
+		state Init {
+			on entry do
+				print "Hello World!"
+			end
+		}
+	}
+}
+
+configuration HelloWorldCfg
+@docker "true"
+{
+	instance HelloWorldInstance : HelloWorldThing
+}

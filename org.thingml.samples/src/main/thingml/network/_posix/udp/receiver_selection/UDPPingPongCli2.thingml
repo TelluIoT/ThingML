@@ -1,0 +1,72 @@
+import "../../../../datatypes.thingml"
+
+thing fragment PingPongMsgs {
+	message ping(u : UInt8, ip : UInt32, p : UInt16)
+	@code "16"
+	@do_not_forward "ip"
+	@do_not_forward "p";
+}
+
+thing PingClient includes PingPongMsgs {
+	//127.0.0.1
+	//property ipNext : UInt32 = '(1 << 24) + 127'
+	//10.0.1.127
+	property ipNext : UInt32 = '(127 << 24) + (1 << 16) + 10'
+	property minit : UInt16 = 0
+	property portNext : UInt16 = 1052
+
+	required port ping_service {
+		receives ping
+		sends ping
+	}
+	
+	statechart PingClientMachine init Ping {
+	
+	on entry print "Ping Client Started!\n"
+	
+		state Ping {
+			
+			on entry do
+				print "Start \n"
+				if(minit == 1) do
+					ping_service!ping(0, ipNext, portNext)
+				end
+			end
+				
+			internal
+			event e : ping_service?ping guard e.u < 250
+			action do
+				print "Received ping from "
+				print e.ip
+				print ":"
+				print e.p
+				print "\n"
+				ping_service!ping(e.u + 50, ipNext, portNext)
+			end
+			
+		}
+		
+	}
+	
+}
+
+
+
+protocol UDP
+@udp_local_port "1051"
+@udp_target_selection "true"
+@udp_param_ip "ip"
+@udp_param_port "p"
+@serializer "JSON"
+;
+
+configuration multiUDPCli2
+@docker "true"
+@docker_expose "1050"
+{
+
+	instance client: PingClient
+
+	connector client.ping_service over UDP
+
+}
