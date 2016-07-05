@@ -33,8 +33,11 @@ import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.sintef.thingml.ExternalConnector;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 
 public class CByteArraySerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
@@ -75,12 +78,21 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
                         builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getType(), 0) + "];\n");
                         builder.append("} u_" + v + ";\n");
                         builder.append("u_" + v + ".p = " + v + ";\n");
-                        i = cctx.getCByteSize(pt.getType(), 0);
-                        while (i > 0) {
-                            i = i - 1;
-                            builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
-                            j++;
-                        }
+                        //if(cctx.networkMSBFirst) {
+                            i = 0;
+                            while (i < cctx.getCByteSize(pt.getType(), 0)) {
+                                builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
+                                i++;
+                                j++;
+                            }
+                        /*} else {
+                            i = cctx.getCByteSize(pt.getType(), 0);
+                            while (i > 0) {
+                                i = i - 1;
+                                builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
+                                j++;
+                            }
+                        }*/
                     }
                 }
             }
@@ -90,7 +102,42 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
-        builder.append("externalMessageEnqueue((uint8_t *) " + bufferName + ", " + bufferSizeName + ", " + sender + ");\n");
+        if(!messages.isEmpty()) {
+            builder.append("if ((" + bufferSizeName + " >= 2) && ("+bufferName+" != NULL)) {\n");
+            builder.append("uint8_t new_buf[" + bufferSizeName + "];\n");
+            builder.append("new_buf[0] = "+bufferName+"[0];\n");
+            builder.append("new_buf[1] = "+bufferName+"[1];\n");
+            builder.append("uint8_t msgSizeOK = 0;\n");
+            builder.append("switch("+bufferName+"[0] * 256 + "+bufferName+"[1]) {\n");
+            for (Message m : messages) {
+                builder.append("case ");
+                builder.append(cctx.getHandlerCode(m));
+                builder.append(":\n");
+                builder.append("if(" + bufferSizeName + " == ");
+                builder.append(cctx.getMessageSerializationSize(m) - 2);
+                builder.append(") {\n");
+                
+                int idx_bis = 2;
+
+                for (Parameter pt : m.getParameters()) {
+
+                    for (int i = 0; i < cctx.getCByteSize(pt.getType(), 0); i++) {
+
+                        builder.append("new_buf[" + (idx_bis + cctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                        builder.append(" = "+bufferName+"[" + (idx_bis + i) + "];\n");
+
+                    }
+                    idx_bis = idx_bis + cctx.getCByteSize(pt.getType(), 0);
+                }
+                
+                builder.append("externalMessageEnqueue((uint8_t *) new_buf, " + bufferSizeName + ", " + sender + ");\n");
+                builder.append("}\n");
+                builder.append("break;\n");
+            }
+
+            builder.append("}\n");
+            builder.append("}\n");
+        }
     }
 
     @Override

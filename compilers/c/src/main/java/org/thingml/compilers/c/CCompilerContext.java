@@ -398,6 +398,10 @@ public abstract class CCompilerContext extends Context {
         }
         return result;
     }
+    
+    public int getHandlerCode(Message m) {
+        return getHandlerCode(this.getCurrentConfiguration(), m);
+    }
 
     public int getHandlerCode(Configuration cfg, Message m) {
         Integer result = handlerCodes.get(m);
