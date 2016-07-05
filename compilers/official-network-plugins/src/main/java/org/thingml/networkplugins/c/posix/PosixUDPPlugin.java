@@ -225,7 +225,7 @@ public class PosixUDPPlugin extends NetworkPlugin {
 
                 ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", sp.generateSubFunctions() + ParserImplementation);
 
-                String ParserCall = portName + "_parser(buf, strlen(buf)";
+                String ParserCall = portName + "_parser(buf, recv_len";
                 if(AnnotatedElementHelper.hasAnnotation(protocol, "udp_target_selection")) {
                     ParserCall += ", " + portName + "_si_rcv.sin_addr.s_addr, ntohs(" + portName + "_si_rcv.sin_port)";
                 }
