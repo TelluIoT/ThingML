@@ -69,10 +69,11 @@ void /*PORT_NAME*/_start_receiver_process()
 {
     char buf[/*PORT_NAME*/_BUFLEN];
     int recv_len;
-     
+    size_t si_size = sizeof(/*PORT_NAME*/_si_rcv);
+
     while(1)
     {
-        recv_len = recvfrom(/*PORT_NAME*/_socket, buf, /*PORT_NAME*/_BUFLEN, 0, (struct sockaddr *) &/*PORT_NAME*/_si_rcv, &recv_len);
+        recv_len = recvfrom(/*PORT_NAME*/_socket, buf, /*PORT_NAME*/_BUFLEN, 0, (struct sockaddr *) &/*PORT_NAME*/_si_rcv, &si_size);
         if (recv_len < 0)
         {
             //printf("Error: recvfrom()\n");

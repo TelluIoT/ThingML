@@ -1,0 +1,48 @@
+import "../../../datatypes.thingml"
+
+/*
+ * Try running the generated program and input {"ping":{"u":50}} (or >{"ping":{"u":50}} if generated for posix)
+*/
+
+thing fragment PingPongMsgs {
+	message ping(u : UInt16) @code "16";
+	message pong() @code "165";
+}
+
+
+thing PingServer includes PingPongMsgs {
+
+	provided port ping_service {
+		sends pong
+		receives ping
+	}
+
+	statechart PongServerMachine init Active {
+
+        on entry print "Ping Server Started!\n"
+
+		state Active {
+			
+			internal event e : ping_service?ping
+			action do
+				print "ping: "
+				print e.u
+				print "\n"
+				ping_service!pong()
+			end
+			
+		}
+	}
+}
+
+protocol tty
+@serializer "JSON"
+;
+
+configuration TTYPingPongSrvCfg 
+{
+	instance server: PingServer
+
+	connector server.ping_service over tty
+
+}

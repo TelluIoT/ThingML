@@ -52,7 +52,7 @@ public abstract class CCompilerContext extends Context {
     StringBuilder cppHeaderCode = new StringBuilder();
     private Set<NetworkLibraryGenerator> NetworkLibraryGenerators;
     private Map<String, Map<String, String>> mapCepMsgParamAndStream;
-
+    
     public CCompilerContext(ThingMLCompiler c) {
         super(c);
         NetworkLibraryGenerators = new HashSet<NetworkLibraryGenerator>();
@@ -397,6 +397,10 @@ public abstract class CCompilerContext extends Context {
             result++;
         }
         return result;
+    }
+    
+    public int getHandlerCode(Message m) {
+        return getHandlerCode(this.getCurrentConfiguration(), m);
     }
 
     public int getHandlerCode(Configuration cfg, Message m) {
