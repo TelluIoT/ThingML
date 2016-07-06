@@ -263,7 +263,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         } else { // Use the default function generator
             generateCforThingDirect(func, thing, builder, ctx, debugProfile);
         }
-        }
+    }
 
     protected void generateCforThingDirect(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
 
@@ -315,14 +315,14 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         StringBuilder b_code = new StringBuilder();
 
         if (debugProfile.getDebugFunctions().contains(func)) {
-            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+            b_code.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
                     + ctx.traceFunctionBegin(thing, func) + "\\n\");\n");
         }
 
         ctx.getCompiler().getThingActionCompiler().generate(func.getBody(), b_code, ctx);
 
         if (debugProfile.getDebugFunctions().contains(func)) {
-            builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
+            b_code.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
                     + ctx.traceFunctionDone(thing, func) + "\\n\");\n");
         }
 
