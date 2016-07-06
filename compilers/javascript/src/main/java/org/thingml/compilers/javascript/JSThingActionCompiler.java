@@ -66,7 +66,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
         Session session = action.getSession();
-        builder.append("var " + session.getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(session).getName()) + "(\"" + session.getName() + "\", _this");
+        builder.append("const " + session.getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(session).getName()) + "(\"" + session.getName() + "\", _this");
         for (Property p : ThingMLHelpers.allProperties(ThingMLHelpers.findContainingThing(session))) {
             if (p.isIsArray() || p.getCardinality() != null) {
                 builder.append(", _this." + ThingMLElementHelper.qname(p, "_") + "_var.slice(0)");

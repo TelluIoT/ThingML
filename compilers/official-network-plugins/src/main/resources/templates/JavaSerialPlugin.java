@@ -10,7 +10,7 @@ import org.thingml.java.ext.*;
 
 import java.util.Arrays;
 
-public class SerialJava extends Component {
+public class /*$NAME$*/ extends Component {
 
     private final String port;
     private final int baudrate;
@@ -20,11 +20,14 @@ public class SerialJava extends Component {
     private final byte STOP_BYTE = 0x13;
     private final byte ESCAPE_BYTE = 0x7D;
 
+    private final BinaryJava formatter;
+
     /*$MESSAGE TYPES$*/
 
     /*$PORTS$*/
 
-    public SerialJava(final String port, final int baudrate) {
+    public /*$NAME$*/(final BinaryJava formatter, final String port, final int baudrate) {
+        this.formatter = formatter;
         this.port = port;
         this.baudrate = baudrate;
         serialPort = new SerialPort(port);
@@ -62,7 +65,7 @@ public class SerialJava extends Component {
         while (active) {
             try {
                 final Event e = queue.take();//should block if queue is empty, waiting for a message
-                final byte[] payload = /*$SERIALIZER$*/.toBytes(e);
+                final byte[] payload = formatter.toBytes(e);
                 if (payload != null)
                     send(payload);
             } catch (InterruptedException e) {
@@ -74,6 +77,10 @@ public class SerialJava extends Component {
     @Override
     public Component buildBehavior(String id, Component root) {
         /*$INIT PORTS$*/
+        final java.util.List < AtomicState > states = new java.util.ArrayList < AtomicState > ();
+        final AtomicState init = new AtomicState("Init");
+        states.add(init);
+        behavior = new CompositeState("default", states, init, java.util.Collections.EMPTY_LIST);
         return this;
     }
 

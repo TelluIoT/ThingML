@@ -42,7 +42,7 @@ import java.util.Set;
 
 public class JavaJSONSerializerPlugin extends SerializationPlugin {
 
-    final Set<Message> messages = new HashSet<Message>();
+    private Set<Message> messages = new HashSet<Message>();
 
     private void clearMessages() {
         messages.clear();
@@ -68,6 +68,11 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
             builder.append("private static final " + context.firstToUpper(m.getName()) + "MessageType " + m.getName().toUpperCase() + " = new " + context.firstToUpper(m.getName()) + "MessageType();\n");
             addMessage(m);
         }
+    }
+
+    @Override
+    public SerializationPlugin clone() {
+        return new JavaJSONSerializerPlugin();
     }
 
     @Override

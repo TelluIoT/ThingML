@@ -426,7 +426,14 @@ public abstract class ThingMLCompiler {
     }
 
     public SerializationPlugin getSerializationPlugin(String id) {
-        return serializationPlugins.get(id);
+        final SerializationPlugin prototype = serializationPlugins.get(id);
+        if (prototype != null) {
+            SerializationPlugin instance = serializationPlugins.get(id).clone();
+            instance.setConfiguration(prototype.configuration);
+            instance.setContext(prototype.context);
+            return instance;
+        }
+        return null;
     }
     
     public String getDockerBaseImage(Configuration cfg, Context ctx) {

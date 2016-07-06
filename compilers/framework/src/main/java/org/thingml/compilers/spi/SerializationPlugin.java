@@ -23,6 +23,7 @@ package org.thingml.compilers.spi;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Message;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -40,6 +41,8 @@ public abstract class SerializationPlugin extends Rule {
 
     public SerializationPlugin() {
     }
+
+    abstract public SerializationPlugin clone();
 
     public void setConfiguration(Configuration cfg) {
         this.configuration = cfg;

@@ -65,6 +65,11 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
     }
 
     @Override
+    public SerializationPlugin clone() {
+        return new JSByteArraySerializerPlugin();
+    }
+
+    @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
         System.out.println("generateSerialization " + m.getName());
         int size = 2; //code encoded by a 2 bytes

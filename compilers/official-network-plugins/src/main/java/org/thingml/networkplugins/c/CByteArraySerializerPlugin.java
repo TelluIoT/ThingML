@@ -30,7 +30,9 @@ import org.sintef.thingml.Parameter;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.plugin.CByteArraySerializer;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.networkplugins.java.JavaByteArraySerializerPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,11 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
 
     public CByteArraySerializerPlugin() {
         super();
+    }
+
+    @Override
+    public SerializationPlugin clone() {
+        return new CByteArraySerializerPlugin();
     }
 
     @Override

@@ -38,6 +38,11 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
     StringBuilder messagesparser = new StringBuilder();
 
     @Override
+    public SerializationPlugin clone() {
+        return new PosixJSONSerializerPlugin();
+    }
+
+    @Override
     public String generateSubFunctions() {
         StringBuilder b = new StringBuilder();
         b.append("inline char * jumpspace(char *str)\n" +

@@ -43,6 +43,11 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
+    public SerializationPlugin clone() {
+        return new CMSPSerializerPlugin();
+    }
+
+    @Override
     public void setContext(Context ctx) {
         context = ctx;
         cctx = (CCompilerContext) context;

@@ -48,6 +48,9 @@ public class JavaSerialPlugin extends NetworkPlugin {
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
         res.add("Serial");
+        res.add("Serial2");
+        res.add("Serial3");
+        res.add("Serial4");
         return res;
     }
 
@@ -57,7 +60,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
         return res;
     }
 
-    final Set<Message> messages = new HashSet<Message>();
+    private Set<Message> messages = new HashSet<Message>();
 
     private void clearMessages() {
         messages.clear();
@@ -80,7 +83,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
         updatePOM(ctx, cfg);
         StringBuilder builder = new StringBuilder();
         for (Protocol prot : protocols) {
-            String serializers = "";
+            clearMessages();
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
                 addMessage(tpm.m);
             }
@@ -93,17 +96,27 @@ public class JavaSerialPlugin extends NetworkPlugin {
                 return;
             }
 
-            for (Message m : messages) {
-                StringBuilder temp = new StringBuilder();
-                serializers += sp.generateSerialization(temp, prot.getName() + "BinaryProtocol", m);
+            StringBuilder temp = new StringBuilder();
+            temp.append("@Override\npublic byte[] toBytes(Event e){\n");
+            temp.append("switch(e.getType().getCode()){\n");
+            for(Message m : messages) {
+                final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
+                temp.append("case " + code + ": return toBytes((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e);\n");
             }
-            messages.clear();
+            temp.append("default: return null;\n");
+            temp.append("}\n");
+            temp.append("}\n");
+
+            for (Message m : messages) {
+                sp.generateSerialization(temp, prot.getName() + "BinaryProtocol", m);
+            }
+            clearMessages();
             builder = new StringBuilder();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 addMessage(tpm.m);
             }
             sp.generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
-            final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);
+            final String result = builder.toString().replace("/*$SERIALIZERS$*/", temp.toString());
             try {
                 final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
                 folder.mkdir();
@@ -172,9 +185,10 @@ public class JavaSerialPlugin extends NetworkPlugin {
                 addPort(tpm.p);
             }
             String template = ctx.getTemplateByID("templates/JavaSerialPlugin.java");
+            template = template.replace("/*$NAME$*/", prot.getName());
             template = template.replace("/*$SERIALIZER$*/", prot.getName() + "BinaryProtocol");
             StringBuilder parseBuilder = new StringBuilder();
-            parseBuilder.append("final Event event = " + prot.getName() + "BinaryProtocol.instantiate(payload);\n");
+            parseBuilder.append("final Event event = formatter.instantiate(payload);\n");
             for(Port p : ports) {//FIXME
                 parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
             };
@@ -187,7 +201,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
             try {
                 final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
                 folder.mkdir();
-                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/SerialJava.java");
+                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/" + prot.getName() + ".java");
                 final OutputStream output = new FileOutputStream(f);
                 IOUtils.write(template, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
@@ -219,7 +233,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
                 input.close();
                 final String speed = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "baudrate") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "baudrate").get(0) : "9600";
                 final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";
-                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nSerialJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (SerialJava) new SerialJava(\"" + port + "\", " + speed + ").buildBehavior(null, null);\n");
+                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\n" + prot.getName() + " "  + conn.getName() + "_" + conn.getProtocol().getName() + " = (" + prot.getName() + ") new " + prot.getName() + "(new " + conn.getProtocol().getName() + "BinaryProtocol(), \"" + port + "\", " + speed + ").buildBehavior(null, null);\n");
 
                 StringBuilder connBuilder = new StringBuilder();
                 connBuilder.append(conn.getName() + "_" + conn.getProtocol().getName() + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port().addListener(");

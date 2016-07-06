@@ -58,7 +58,7 @@ public class JavaWSPlugin extends NetworkPlugin {
         return res;
     }
 
-    final Set<Message> messages = new HashSet<Message>();
+    private Set<Message> messages = new HashSet<Message>();
 
     private void clearMessages() {
         messages.clear();
