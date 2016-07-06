@@ -25,6 +25,7 @@
  */
 package org.thingml.networkplugins.java;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.ObjectType;
@@ -35,6 +36,10 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,7 +47,7 @@ import java.util.Set;
 
 public class JavaByteArraySerializerPlugin extends SerializationPlugin {
 
-    final Set<Message> messages = new HashSet<Message>();
+    private Set<Message> messages = new HashSet<Message>();
 
     private void clearMessages() {
         messages.clear();
@@ -68,6 +73,11 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
             builder.append("private static final " + context.firstToUpper(m.getName()) + "MessageType " + m.getName().toUpperCase() + " = new " + context.firstToUpper(m.getName()) + "MessageType((short) " + code + ");\n");
             addMessage(m);
         }
+    }
+
+    @Override
+    public SerializationPlugin clone() {
+        return new JavaByteArraySerializerPlugin();
     }
 
     @Override
@@ -106,18 +116,19 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+        copyInterface();
         builder.append("package org.thingml.generated.network;\n\n");
         builder.append("import org.thingml.generated.messages.*;\n");
         builder.append("import org.thingml.java.ext.Event;\n");
         builder.append("import java.nio.ByteBuffer;\n");
         builder.append("import java.nio.ByteOrder;\n");
-        builder.append("public class " + bufferName + " {\n");
+        builder.append("public class " + bufferName + " implements BinaryJava {\n");
         for(Message m : messages) {
             final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
             instantiateMessageType(builder, m, code);
         }
         //Instantiate message from binary
-        builder.append("public static Event instantiate(byte[] payload) {\n");
+        builder.append("@Override\npublic Event instantiate(byte[] payload) {\n");
         builder.append("ByteBuffer buffer = ByteBuffer.wrap(payload);\n");
         builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
         builder.append("final short code = buffer.getShort();\n");
@@ -152,19 +163,22 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         }
         builder.append("default: return null;\n");
         builder.append("}\n}\n");
-
-        builder.append("public static byte[] toBytes(Event e){\n");
-        builder.append("switch(e.getType().getCode()){\n");
-        for(Message m : messages) {
-            final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
-            builder.append("case " + code + ": return toBytes((" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message)e);\n");
-        }
-        builder.append("default: return null;\n");
-        builder.append("}\n");
-        builder.append("}\n");
-
         builder.append("/*$SERIALIZERS$*/\n\n");
         builder.append("}\n");
+    }
+
+    private void copyInterface() {
+        final String template = context.getTemplateByID("templates/JavaBinaryInterface.java");
+        try {
+            final File folder = new File(context.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
+            folder.mkdir();
+            final File f = new File(context.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/BinaryJava.java");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(template, output, Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

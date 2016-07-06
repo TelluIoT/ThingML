@@ -47,6 +47,9 @@ public abstract class NetworkPlugin extends Rule {
     public NetworkPlugin() {
     }
 
+    //abstract public NetworkPlugin clone();
+
+
     /* In case of overlaping protocol support the
      * choice of plugin will be specified with the
      * annotation @plugin "plugiID"
@@ -97,7 +100,7 @@ public abstract class NetworkPlugin extends Rule {
     public Set<ExternalConnector> getExternalConnectors(Configuration cfg, Protocol prot) {
         Set<ExternalConnector> ecos = new HashSet<>();
         for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
-            if (eco.getProtocol() == prot) {
+            if (EcoreUtil.equals(eco.getProtocol(), prot)) {
                 ecos.add(eco);
             }
         }
@@ -130,7 +133,6 @@ public abstract class NetworkPlugin extends Rule {
                 }
             }
         }
-
         return res;
     }
 
@@ -148,9 +150,9 @@ public abstract class NetworkPlugin extends Rule {
     }
 
     public class ThingPortMessage {
-        public Thing t;
-        public Port p;
-        public Message m;
+        public final Thing t;
+        public final Port p;
+        public final Message m;
 
         public ThingPortMessage(Thing t, Port p, Message m) {
             this.t = t;
@@ -164,7 +166,7 @@ public abstract class NetworkPlugin extends Rule {
                 return false;
             if (obj == this)
                 return true;
-            ThingPortMessage tpm = (ThingPortMessage) obj;
+            final ThingPortMessage tpm = (ThingPortMessage) obj;
             return EcoreUtil.equals(tpm.t, t) && EcoreUtil.equals(tpm.p, p) && EcoreUtil.equals(tpm.m, m);
         }
     }

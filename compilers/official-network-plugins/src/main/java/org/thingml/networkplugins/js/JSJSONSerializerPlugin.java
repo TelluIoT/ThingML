@@ -43,6 +43,11 @@ import java.util.Set;
 public class JSJSONSerializerPlugin extends SerializationPlugin {
 
     @Override
+    public SerializationPlugin clone() {
+        return new JSJSONSerializerPlugin();
+    }
+
+    @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
         System.out.println("generateSerialization " + bufferName + " : " + m.getName());
         int size = 2; //code encoded by a 2 bytes
