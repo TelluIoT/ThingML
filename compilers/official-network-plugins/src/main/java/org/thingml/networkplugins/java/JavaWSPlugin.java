@@ -105,7 +105,7 @@ public class JavaWSPlugin extends NetworkPlugin {
         updatePOM(ctx);
         StringBuilder builder = new StringBuilder();
         for (Protocol prot : protocols) {
-            String serializers = "";
+            clearMessages();
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
                 addMessage(tpm.m);
             }
@@ -118,17 +118,29 @@ public class JavaWSPlugin extends NetworkPlugin {
                 return;
             }
 
-            for (Message m : messages) {
-                StringBuilder temp = new StringBuilder();
-                serializers += sp.generateSerialization(temp, prot.getName() + "StringProtocol", m);
+            StringBuilder temp = new StringBuilder();
+            temp.append("public static String toString(Event e){\n");
+            int i = 0;
+            for(Message m : messages) {
+                if (i > 0)
+                    temp.append("else ");
+                temp.append("if (e.getType().equals(" +  m.getName().toUpperCase() + ")) {\n");
+                temp.append("return toString((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e);\n");
+                temp.append("}\n");
+                i++;
             }
-            messages.clear();
+            temp.append("return null;\n");
+            temp.append("}\n");
+            for (Message m : messages) {
+                sp.generateSerialization(temp, prot.getName() + "StringProtocol", m);
+            }
+            clearMessages();
             builder = new StringBuilder();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 addMessage(tpm.m);
             }
             sp.generateParserBody(builder, prot.getName() + "StringProtocol", null, messages, null);
-            final String result = builder.toString().replace("/*$SERIALIZERS$*/", serializers);
+            final String result = builder.toString().replace("/*$SERIALIZERS$*/", temp.toString());
             try {
                 final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
                 folder.mkdir();
