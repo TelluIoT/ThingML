@@ -152,6 +152,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
             }
         }
+        builder.append("/*$PLUGINS$*/\n");
     }
 
     public static void generateInstances(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
@@ -166,7 +167,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             prefix = "this.";
         }
 
-        builder.append("/*$PLUGINS$*/\n");
 
         builder.append("//Connecting internal ports...\n");
         for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
@@ -234,10 +234,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             }
         }
         //if (debug) {
-        if (ctx.getCompiler().containsDebug()) {
-            builder.append("var colors = require('colors/safe');\n");
-        }
-
         for (Type ty : ThingMLHelpers.allUsedSimpleTypes(model)) {
             if (ty instanceof Enumeration) {
                 builder.append("var Enum = require('./enums');\n");
@@ -248,8 +244,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             builder.append("var " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
         }
         builder.append("/*$REQUIRE_PLUGINS$*/\n");
-        //builder.append("process.stdin.resume();//to keep Node.js alive even when it is nothing more to do...\n");
-
         generateInstances(cfg, builder, ctx, false);
 
         List<Instance> instances = ConfigurationHelper.orderInstanceInit(cfg);
@@ -259,6 +253,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             instances.remove(inst);
             builder.append(inst.getName() + "._init();\n");
         }
+        builder.append("/*$PLUGINS_END$*/\n");
 
         builder.append("//terminate all things on SIGINT (e.g. CTRL+C)\n");
         builder.append("process.on('SIGINT', function() {\n");

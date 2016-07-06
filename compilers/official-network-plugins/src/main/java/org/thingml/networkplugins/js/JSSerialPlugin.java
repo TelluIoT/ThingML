@@ -255,7 +255,8 @@ public class JSSerialPlugin extends NetworkPlugin {
                 final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";//FIXME: Raise an exception if port is not specified
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "var Serial = require('./SerialJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "var serial = new Serial(\"serial\", false, \"" + port + "\", " + speed + ", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nvar serial = new Serial(\"serial\", false, \"" + port + "\", " + speed + ", " + conn.getInst().getInstance().getName() + ", function (started) {if (started) {");
+                main = main.replace("/*$PLUGINS_END$*/", "}else {process.exit(1)}});\n/*$PLUGINS_END$*/\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "serial._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();

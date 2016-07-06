@@ -186,7 +186,7 @@ public class JsTTYPlugin extends NetworkPlugin {
                         builder.append(ctx.protectKeyword(pa.getName()));
                         i++;
                     }
-                    builder.append("));\n");
+                    builder.append(") + '\n');\n");
                     builder.append("};\n\n");
                 }
             }
@@ -212,7 +212,8 @@ public class JsTTYPlugin extends NetworkPlugin {
                 input.close();
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "var tty = require('./TTYJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "var tty = new tty(\"tty\", false, " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nvar tty = new tty(\"tty\", false, " + conn.getInst().getInstance().getName() + ", function (started) {if (started) {");
+                main = main.replace("/*$PLUGINS_END$*/", "}else {process.exit(1)}});\n/*$PLUGINS_END$*/\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "tty._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();

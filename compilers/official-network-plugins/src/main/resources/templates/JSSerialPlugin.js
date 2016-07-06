@@ -2,7 +2,7 @@ var SerialPort = require('serialport').SerialPort;
 var ByteBuffer = require("bytebuffer");
 var Format = require('.//*$FORMAT$*/');
 
-function /*$NAME$*/(name, debug, port, baudrate, instance) {
+function /*$NAME$*/(name, debug, port, baudrate, instance, callback) {
     this.name = name;
     this.debug = debug;
     var _this;
@@ -25,6 +25,16 @@ function /*$NAME$*/(name, debug, port, baudrate, instance) {
     const RCV_ESC = 2;
   	var state = RCV_WAIT;
 
+	 serial.on('open', function() {
+		 this.ready = true;
+		 callback(true)
+	 });
+
+	 serial.on('error', function(err) {
+         console.log("Error during communication: " + err);
+   		 this.ready = false;
+         callback(false);
+     });
 
     serial.on('data', function(received) {
         received.forEach(function(data) {
@@ -67,10 +77,6 @@ function /*$NAME$*/(name, debug, port, baudrate, instance) {
                 state = RCV_MSG;
             }
         });
-    });
-
-    serial.on('error', function(err) {
-        console.log("Error during communication: " + err);
     });
 
     /*$RECEIVERS$*/

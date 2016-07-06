@@ -247,7 +247,8 @@ public class JsMQTTPlugin extends NetworkPlugin {
                 final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "default");
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "var MQTT = require('./MQTTJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "var mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + subtopic + "\", \"" + pubtopic + "\", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nvar mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + subtopic + "\", \"" + pubtopic + "\", " + conn.getInst().getInstance().getName() + ", function (started) {if (started) {");
+                main = main.replace("/*$PLUGINS_END$*/", "}else {process.exit(1)}});\n/*$PLUGINS_END$*/\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "mqtt._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();

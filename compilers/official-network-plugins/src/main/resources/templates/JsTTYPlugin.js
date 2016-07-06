@@ -1,6 +1,6 @@
 var Format = require('.//*$FORMAT$*/');
 
-function /*$NAME$*/(name, debug, instance) {
+function /*$NAME$*/(name, debug, instance, callback) {
     this.name = name;
     this.debug = debug;
     var _this;
@@ -13,6 +13,8 @@ function /*$NAME$*/(name, debug, instance) {
     const stdin = process.stdin;
     const stdout = process.stdout;
     const formatter = new Format();
+
+    callback(true);
 
     stdin.on('data', function(received) {
         const msg = formatter.parse(received);

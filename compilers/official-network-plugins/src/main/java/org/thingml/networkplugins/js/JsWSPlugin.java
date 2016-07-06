@@ -237,7 +237,8 @@ public class JsWSPlugin extends NetworkPlugin {
                 final String url = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "url") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "url").get(0) : "localhost";
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "var ws = require('./WSJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "var ws = new ws(\"WS\", false, \"" + url + "\", " + conn.getInst().getInstance().getName() + ");\n/*$PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nvar ws = new ws(\"WS\", false, \"" + url + "\", " + conn.getInst().getInstance().getName() + ", function (started) {if (started) {");
+                main = main.replace("/*$PLUGINS_END$*/", "}else {process.exit(1)}});\n/*$PLUGINS_END$*/\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "ws._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
