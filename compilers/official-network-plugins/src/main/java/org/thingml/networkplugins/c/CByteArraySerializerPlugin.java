@@ -86,20 +86,20 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
                         builder.append("} u_" + v + ";\n");
                         builder.append("u_" + v + ".p = " + v + ";\n");
                         //if(cctx.networkMSBFirst) {
-                            i = 0;
+                            /*i = 0;
                             while (i < cctx.getCByteSize(pt.getType(), 0)) {
                                 builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                                 i++;
                                 j++;
-                            }
-                        /*} else {
+                            }*/
+                        //} else {
                             i = cctx.getCByteSize(pt.getType(), 0);
                             while (i > 0) {
                                 i = i - 1;
                                 builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                                 j++;
                             }
-                        }*/
+                        //}
                     }
                 }
             }
@@ -110,7 +110,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
     @Override
     public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
         if(!messages.isEmpty()) {
-            builder.append("if ((" + bufferSizeName + " >= 2) && ("+bufferName+" != NULL)) {\n");
+            /*builder.append("if ((" + bufferSizeName + " >= 2) && ("+bufferName+" != NULL)) {\n");
             builder.append("uint8_t new_buf[" + bufferSizeName + "];\n");
             builder.append("new_buf[0] = "+bufferName+"[0];\n");
             builder.append("new_buf[1] = "+bufferName+"[1];\n");
@@ -143,7 +143,8 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
             }
 
             builder.append("}\n");
-            builder.append("}\n");
+            builder.append("}\n");*/
+            builder.append("externalMessageEnqueue((uint8_t *) "+bufferName+", " + bufferSizeName + ", " + sender + ");\n");
         }
     }
 

@@ -33,8 +33,11 @@ public class /*$NAME$*/ extends Component {
         serialPort = new SerialPort(port);
         try {
             serialPort.openPort();
-            serialPort.setParams(baudrate, 8, 1, 0);
-            serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
+            serialPort.setParams(baudrate,
+                                 SerialPort.DATABITS_8,
+                                 SerialPort.STOPBITS_1,
+                                 SerialPort.PARITY_NONE,false,true);
+            serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
             serialPort.addEventListener(new SerialPortReader());
         } catch (SerialPortException ex) {
             System.out.println(ex);

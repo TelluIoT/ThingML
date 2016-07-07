@@ -37,7 +37,7 @@ function /*$NAME$*/(name, debug, port, baudrate, instance, callback) {
      });
 
     serial.on('data', function(received) {
-        received.forEach(function(data) {
+        Array.apply([], received).forEach(function(data) {
             if (state == RCV_WAIT) { // it should be a start byte or we just ignore it
                 if (data == START_BYTE) {
                     state = RCV_MSG;
