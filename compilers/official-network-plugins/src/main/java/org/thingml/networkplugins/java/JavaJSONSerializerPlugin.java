@@ -167,20 +167,6 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
         builder.append("}\n");
         builder.append("return null;\n");
         builder.append("}\n");
-
-        builder.append("public static String toString(Event e){\n");
-        int i = 0;
-        for(Message m : messages) {
-            if (i > 0)
-                builder.append("else ");
-            builder.append("if (e.getType().equals(" +  m.getName().toUpperCase() + ")) {\n");
-            builder.append("return toString((" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message)e);\n");
-            builder.append("}\n");
-            i++;
-        }
-        builder.append("return null;\n");
-        builder.append("}\n");
-
         builder.append("/*$SERIALIZERS$*/\n\n");
         builder.append("}\n");
     }
