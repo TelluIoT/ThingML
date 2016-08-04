@@ -437,9 +437,8 @@ public class ConfigurationHelper {
                 }
                 for(ExternalConnector c : getExternalConnectors(self)) {
                     //System.out.println("External connector " + c.getInst().getInstance().qname("_") + "." + c.getPort().getName() + "? " + i.getName() + "." + p.getName());
-                    if (ThingMLElementHelper.qname(c.getInst().getInstance(), "_").equals(i.getName()) && EcoreUtil.equals(c.getPort(), p)) {//FIXME: this is a hack, c.getInst.getInstance should be equal to i (at least in some cases...)
-                        //if ((EcoreUtil.equals(c.getInst().getInstance(), i) && EcoreUtil.equals(c.getPort(), p))) {
-                        //System.out.println("\tis connected to " + i.getName() + "." + p.getName());
+                    if (EcoreUtil.equals(c.getInst().getInstance(), i) && EcoreUtil.equals(c.getPort(), p)) {
+                        System.out.println("\tis connected to " + i.getName() + "." + p.getName());
                         connected = true;
                         break;
                     }

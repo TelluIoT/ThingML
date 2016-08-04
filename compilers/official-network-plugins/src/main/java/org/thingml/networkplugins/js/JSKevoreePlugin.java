@@ -13,42 +13,78 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.thingml.compilers.javascript;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.thingml.networkplugins.js;
 
 import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.PrimitiveTyperHelper;
 import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
+import org.thingml.compilers.javascript.JSCfgMainGenerator;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.Charset;
+import java.util.*;
 
-/**
- * Created by bmori on 27.01.2015.
- */
-public class JS2Kevoree extends CfgExternalConnectorCompiler {
+public class JSKevoreePlugin extends NetworkPlugin {
+
+    public JSKevoreePlugin() {
+        super();
+    }
+
+    public String getPluginID() {
+        return "JSKevoreePlugin";
+    }
+
+    public List<String> getSupportedProtocols() {
+        List<String> res = new ArrayList<>();
+        res.add("kevoree");
+        res.add("Kevoree");
+        res.add("kev");
+        res.add("Kev");
+        return res;
+    }
+
+    public List<String> getTargetedLanguages() {
+        List<String> res = new ArrayList<>();
+        res.add("nodejs");
+        return res;
+    }
+
+    public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
+        //ctx.getCompiler().processDebug(cfg);
+        updatePackageJSON(ctx, cfg);
+        generateGruntFile(ctx);
+        generateWrapper(ctx, cfg);
+        generateKevScript(ctx, cfg);
+    }
 
     private void generateKevScript(Context ctx, Configuration cfg) {
         if (AnnotatedElementHelper.hasAnnotation(cfg, "kevscript")) {
             try {
                 FileUtils.copyFile(new File(AnnotatedElementHelper.annotation(cfg, "kevscript").get(0)), new File(ctx.getOutputDirectory(), "/kevs/main.kevs"));
+                return;
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Cannot find file " + AnnotatedElementHelper.annotation(cfg, "kevscript").get(0) + ". Will create a new one from scratch instead");
             }
-        } else {
-            StringBuilder kevScript = ctx.getBuilder("/kevs/main.kevs");
-            kevScript.append("//create a default JavaScript node\n");
-            kevScript.append("add node0 : JavascriptNode\n");
+        }
+
+        StringBuilder kevScript = ctx.getBuilder("/kevs/main.kevs");
+        kevScript.append("//create a default JavaScript node\n");
+        kevScript.append("add node0 : JavascriptNode\n");
 
             kevScript.append("//create a default group to manage the node(s)\n");
             kevScript.append("add sync : WSGroup\n");
@@ -80,7 +116,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
             } finally {
                 IOUtils.closeQuietly(w);
             }
-        }
+
     }
 
     private void generateGruntFile(Context ctx) {
@@ -172,12 +208,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         }
 
         final StringBuilder builder = ctx.getBuilder("/lib/" + cfg.getName() + ".js");
-        //builder.append("var Connector = require('./Connector');\n");
         builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
-
-        //if(!ctx.getCompiler().getDebugProfiles().isEmpty()) {//FIXME
-        builder.append("var colors = require('colors/safe');\n");
-        //}
 
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             builder.append("var " + t.getName() + " = require('./" + t.getName() + "');\n");
@@ -232,7 +263,7 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
                 final Instance i = c.getInst().getInstance();
                 for (Message m : c.getPort().getSends()) {
                     final Port p = c.getPort();
-                    builder.append("this." + cfg.getName() + "_" + i.getName() + ".get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
+                    builder.append("this." + i.getName() + ".get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
                 }
             }
         }
@@ -313,14 +344,17 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) { //External kevoree port should be split (to allow easy integration with external non-HEADS services)
             //builder.append("\n//External connector for port " + c.getPort().getName() + " of instance " + c.getInst().getInstance().getName() + "\n");
             if (c.getProtocol().getName().equals("kevoree")) {
+                System.out.println("Kevoree protocol");
                 final Instance i = c.getInst().getInstance();
                 for (Message m : c.getPort().getReceives()) {
+                    System.out.println("--> " + m.getName());
                     builder.append(",\nin_" + shortName(i, c.getPort(), m) + "_in: function (msg) {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\n");
                     //builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
                     builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
                     builder.append("}");
                 }
                 for (Message m : c.getPort().getSends()) {
+                    System.out.println("<-- " + m.getName());
                     builder.append(",\n" + shortName(i, c.getPort(), m) + "_proxy: function() {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\nthis.out_" + shortName(i, c.getPort(), m) + "_out(");
                     int index;
                     for (index = 0; index < m.getParameters().size(); index++) {
@@ -337,6 +371,18 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         }
         builder.append("});\n\n");
         builder.append("module.exports = " + cfg.getName() + ";\n");
+
+        PrintWriter w = null;
+        try {
+            new File(ctx.getOutputDirectory() + "/lib").mkdirs();
+            w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/lib/" + cfg.getName() + ".js")));
+            w.println(builder.toString());
+            w.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(w);
+        }
     }
 
     private void generateKevoreeListener(StringBuilder builder, Context ctx, boolean isNumber, Property p, Instance i, boolean isGlobal, String accessor) {
@@ -407,12 +453,4 @@ public class JS2Kevoree extends CfgExternalConnectorCompiler {
         return result;
     }
 
-    @Override
-    public void generateExternalConnector(Configuration cfg, Context ctx, String... options) {
-        ctx.getCompiler().processDebug(cfg);
-        updatePackageJSON(ctx, cfg);
-        generateGruntFile(ctx);
-        generateWrapper(ctx, cfg);
-        generateKevScript(ctx, cfg);
-    }
 }

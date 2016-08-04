@@ -40,11 +40,10 @@ import java.util.Map;
  */
 public class JSCompiler extends OpaqueThingMLCompiler {
 
-    {
+    /*{
         Map<String, CfgExternalConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgExternalConnectorCompiler>();
-        connectorCompilerMap.put("kevoree-js", new JS2Kevoree());
         addConnectorCompilers(connectorCompilerMap);
-    }
+    }*/
 
     public JSCompiler() {
         super(new JSThingActionCompiler(), new JSThingApiCompiler(), new JSCfgMainGenerator(),
