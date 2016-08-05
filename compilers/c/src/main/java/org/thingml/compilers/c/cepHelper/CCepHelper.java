@@ -153,11 +153,12 @@ public class CCepHelper {
                 ret = b.toString();
             }
 
-        if (AnnotatedElementHelper.hasAnnotation(s, "Buffer"))
+        //FIXME: Annotations on sources broke the whole parser in Eclipse!!! To be uncommented when we can parse annotations there!
+        /*if (AnnotatedElementHelper.hasAnnotation(s, "Buffer"))
             ret = AnnotatedElementHelper.annotation(s, "Buffer").iterator().next();
 
         if (AnnotatedElementHelper.hasAnnotation(src, "Buffer"))
-            ret = AnnotatedElementHelper.annotation(src, "Buffer").iterator().next();
+            ret = AnnotatedElementHelper.annotation(src, "Buffer").iterator().next();*/
 
         return ret;
     }
@@ -230,8 +231,9 @@ public class CCepHelper {
 
     private static boolean getUseOnceValue(SimpleSource src) {
         boolean ret = true;
-        if (AnnotatedElementHelper.hasAnnotation(src, "UseOnce"))
-            ret = Boolean.valueOf(AnnotatedElementHelper.annotation(src, "UseOnce").iterator().next());
+        //FIXME: Annotations on sources broke the whole parser in Eclipse!!! To be uncommented when we can parse annotations there!
+        /*if (AnnotatedElementHelper.hasAnnotation(src, "UseOnce"))
+            ret = Boolean.valueOf(AnnotatedElementHelper.annotation(src, "UseOnce").iterator().next());*/
         return ret;
     }
 
@@ -315,14 +317,15 @@ public class CCepHelper {
      */
     public static String getExposeMacros(Message msg, SimpleSource src, Stream s, CCompilerContext ctx) {
         String ret = "";
-        if (AnnotatedElementHelper.hasAnnotation(src, "Expose")) {
+        //FIXME: Annotations on sources broke the whole parser in Eclipse!!! To be uncommented when we can parse annotations there!
+        /*if (AnnotatedElementHelper.hasAnnotation(src, "Expose")) {
             String macroName = AnnotatedElementHelper.annotation(src, "Expose").iterator().next();
             for (Parameter p : msg.getParameters()) {
                 String shortPName = p.getName().substring(msg.getName().length() + s.getName().length());
                 ret += "#define " + macroName + shortPName + " _instance->cep_" + s.getName() + "->export_" + msg.getName() +
                 "_" + p.getName() + "()\n";
             }
-        }
+        }*/
         return ret;
     }
 
