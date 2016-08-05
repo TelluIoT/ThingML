@@ -362,7 +362,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dynamic" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true" eSuperTypes="#//AnnotatedElement #//ReferencedElmt">
+  <eClassifiers xsi:type="ecore:EClass" name="Source" abstract="true" eSuperTypes="#//ReferencedElmt #//ThingMLElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
         eType="#//ViewSource" containment="true"/>
   </eClassifiers>
