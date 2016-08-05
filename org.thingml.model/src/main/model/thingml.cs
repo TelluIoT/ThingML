@@ -295,8 +295,8 @@ RULES {
 	TimeWindow ::= "during" #1 duration (#1 "by" #1 step)? ;
 		
 	SimpleSource ::= name[] (annotations)* ":" message ("::" operators)*;	
-	JoinSources  ::= name[] (annotations)* ":" #1 "[" #1 sources #1 ("&" #1 sources #1 )+ #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" #1 "]" ("::" operators)* ;
-	MergeSources ::= name[] (annotations)* ":" #1 "[" #1 sources #1 ("|" #1 sources #1 )+ #1 "->" resultMessage[] #1 "]" ("::" operators)* ;
+	JoinSources  ::= name[] ":" #1 "[" #1 sources #1 ("&" #1 sources #1 )+ #1 "->" resultMessage[] "(" (rules ("," rules)*)? ")" #1 "]" ("::" operators)* (annotations)*;
+	MergeSources ::= name[] ":" #1 "[" #1 sources #1 ("|" #1 sources #1 )+ #1 "->" resultMessage[] #1 "]" ("::" operators)* (annotations)*;
 	
 	Stream ::= (dynamic[T_DYNAMIC] #1)? "stream" #1 name[] #1 (annotations)*
 					 !1 "from" #1 input
