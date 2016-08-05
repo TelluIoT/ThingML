@@ -134,7 +134,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
             for (String d : AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "kevoree_import")) {
                 if (i > 0)
                     dep += ", ";
-                dep += "'../" + d + "'";
+                dep += "'" + ctx.getOutputDirectory().getParentFile().getAbsolutePath().replace("\\", "/") + "/" + d + "'";
                 i++;
             }
             pom = pom.replace("mergeLocalLibraries: []", "mergeLocalLibraries: [" + dep + "]");
