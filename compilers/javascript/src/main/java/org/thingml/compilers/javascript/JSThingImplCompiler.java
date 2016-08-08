@@ -39,14 +39,10 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generateListeners(Thing thing, StringBuilder builder, Context ctx) {
         builder.append("//callbacks for attributes\n");
         builder.append("this.propertyListener = {};\n\n");
-
         builder.append("//callbacks for third-party listeners\n");
         for (Port p : ThingMLHelpers.allPorts(thing)) {
             for (Message m : p.getSends()) {
-                builder.append(const_() + m.getName() + "On" + p.getName() + "Listeners = [];\n");
-                builder.append("this.get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners = function() {\n");
-                builder.append("return " + m.getName() + "On" + p.getName() + "Listeners;\n");
-                builder.append("};\n");
+                builder.append("this." + m.getName() + "On" + p.getName() + "Listeners = [];\n");
             }
         }
     }
@@ -63,18 +59,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     j++;
                 }
                 builder.append(") {\n");
-                builder.append("if (this.root === null || this.root === undefined) {\n");
                 ((JSThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(thing, p, m, builder, ctx, debugProfile);
-                builder.append("} else {\n");
-                builder.append("send" + ctx.firstToUpper(m.getName()) + "On" + ctx.firstToUpper(p.getName()) + ".call(this.root");
-                for (Parameter pa : m.getParameters()) {
-                    builder.append(", ");
-                    builder.append(ctx.protectKeyword(pa.getName()));
-                    j++;
-                }
-                builder.append(");\n");
-                builder.append("}\n");
-                builder.append("}\n\n");
+                builder.append("};\n\n");
             }
         }
     }
@@ -85,18 +71,17 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         final StringBuilder builder = ctx.getBuilder(ctx.firstToUpper(thing.getName()) + ".js");
         if (ctx.getContextAnnotation("hasEnum") != null && ctx.getContextAnnotation("hasEnum").equals("true")) {
-            builder.append("var Enum = require('./enums');\n");
+            builder.append("const Enum = require('./enums');\n");
         }
-        builder.append("var StateJS = require('state.js');\n");
+        builder.append("const StateJS = require('state.js');\n");
         builder.append("StateJS.internalTransitionsTriggerCompletion = true;\n");
 
         if (debugProfile.isActive()) {
-            //builder.append("var colors = require('colors/safe');\n");
             generatePrintDebugFunction(thing, builder, ctx);
         }
 
         if (thing.getStreams().size() > 0) {
-            builder.append("var Rx = require('rx'),\n" +
+            builder.append("const Rx = require('rx'),\n" +
                     "\tEventEmitter = require('events').EventEmitter;\n");
         }
 
@@ -116,28 +101,16 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("this.name = name;\n");
         builder.append("this.root = root;\n");
         builder.append("this.debug = debug;\n");
-
-        builder.append("var _this;\n");
-        builder.append("this.setThis = function(__this) {\n");
-        builder.append("_this = __this;\n");
-        builder.append("};\n\n");
-
         builder.append("this.ready = false;\n");
 
         builder.append("//Children\n");
         builder.append("this.forkID = 0;\n");
-        builder.append("const forks = [];\n");
-        builder.append("this.getForks = function() {\n");
-        builder.append("return forks;\n");
-        builder.append("}\n\n");
+        builder.append("this.forks = [];\n");
 
         builder.append("//Attributes\n");
         for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             if (AnnotatedElementHelper.isDefined(p, "private", "true") || !(p.eContainer() instanceof Thing)) {
-                if (p.isChangeable())
-                    builder.append("var ");
-                else
-                    builder.append(const_());
+                builder.append("this.");
                 builder.append(ThingMLElementHelper.qname(p, "_") + "_var");
                 Expression initExp = ThingHelper.initExpression(thing, p);
                 if (initExp != null) {
@@ -146,21 +119,22 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 }
                 //TODO: Init
                 builder.append(";\n");
-
             } else {
                 builder.append("this." + ThingMLElementHelper.qname(p, "_") + "_var" + " = " + ThingMLElementHelper.qname(p, "_") + "_var" + ";\n");
-                builder.append("var debug_" + ThingMLElementHelper.qname(p, "_") + "_var" + " = " + ThingMLElementHelper.qname(p, "_") + "_var" + ";\n");
+                builder.append("this.debug_" + ThingMLElementHelper.qname(p, "_") + "_var" + " = " + ThingMLElementHelper.qname(p, "_") + "_var" + ";\n");
             }
         }//TODO: public/private properties?
 
         if (thing.getStreams().size() > 0) {
             builder.append("this.eventEmitterForStream = new EventEmitter();\n");
         }
-
         generateListeners(thing, builder, ctx);
+        builder.append("build.apply(this);\n");
+        builder.append("};\n");
+
 
         builder.append("//CEP dispatch functions\n");
-        builder.append("this.cepDispatch = function (message) {\n");
+        builder.append("function cepDispatch(message) {\n");
 
         for (Stream s : thing.getStreams()) {
             for (SimpleSource simpleSource : ThingMLHelpers.allSimpleSources(s.getInput())) {
@@ -170,7 +144,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                         .append("}\n");
             }
         }
-        builder.append("}\n");
+        builder.append("};\n");
 
         builder.append("//ThingML-defined functions\n");
         ctx.addContextAnnotation("function", "true");
@@ -181,19 +155,18 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 for (Parameter p : f.getParameters()) {
                     if (j > 0)
                         builder.append(", ");
-                    builder.append(ctx.protectKeyword(ThingMLElementHelper.qname(p, "_") + "_var"));
+                    builder.append(p.getName());
                     j++;
                 }
                 builder.append(") {\n");
                 if (debugProfile.getDebugFunctions().contains(f)) {
-                    //builder.append("if(_this.debug) console.log(colors.blue(_this.name + \"(" + thing.getName() + "): executing function " + f.getName() + "(");
-                    builder.append("" + thing.getName() + "_print_debug(_this, \"" + ctx.traceFunctionBegin(thing, f) + "(");
+                    builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceFunctionBegin(thing, f) + "(");
                     int i = 0;
                     for (Parameter pa : f.getParameters()) {
                         if (i > 0)
                             builder.append(", ");
                         builder.append("\" + ");
-                        builder.append(ctx.protectKeyword(ThingMLElementHelper.qname(pa, "_") + "_var"));
+                        builder.append(pa.getName());
                         builder.append(" + \"");
                         i++;
                     }
@@ -202,30 +175,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
 
                 if (debugProfile.getDebugFunctions().contains(f)) {
-                    //builder.append("if(_this.debug) console.log(colors.blue(_this.name + \"(" + thing.getName() + "): executing function " + f.getName() + "(");
-                    builder.append("" + thing.getName() + "_print_debug(_this, \"" + ctx.traceFunctionDone(thing, f) + "\");\n");
+                    builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceFunctionDone(thing, f) + "\");\n");
                 }
-                builder.append("}\n\n");
-
-
-                builder.append("this." + f.getName() + " = function(");
-                j = 0;
-                for (Parameter p : f.getParameters()) {
-                    if (j > 0)
-                        builder.append(", ");
-                    builder.append(ctx.protectKeyword(ThingMLElementHelper.qname(p, "_") + "_var"));
-                    j++;
-                }
-                builder.append(") {\n");
-                builder.append(f.getName() + "(");
-                j = 0;
-                for (Parameter p : f.getParameters()) {
-                    if (j > 0)
-                        builder.append(", ");
-                    builder.append(ctx.protectKeyword(ThingMLElementHelper.qname(p, "_") + "_var"));
-                    j++;
-                }
-                builder.append(");");
                 builder.append("};\n\n");
             }
         }
@@ -237,7 +188,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         generateSendMethods(thing, builder, ctx);
 
         builder.append("//State machine (states and regions)\n");
-        builder.append("this.build = function(session, root) {//optional session name and root instance to fork a new session\n");
+        builder.append("function build(session, root) {//optional session name and root instance to fork a new session\n");
         builder.append("if (session === null || session == undefined) {\n");
         for (StateMachine b : ThingMLHelpers.allStateMachines(thing)) {
             ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(b, builder, ctx);
@@ -254,7 +205,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 generateActionsForState(s, builder, ctx);
                 builder.append(";\n");
                 ctx.addContextAnnotation("container", "this." + ThingMLElementHelper.qname(ThingMLHelpers.findContainingRegion(s), "_"));
-                builder.append("var " + ThingMLElementHelper.qname(s, "_") + "_session = new StateJS.Region(\"" + s.getName() + "\", _this.statemachine);\n");
+                builder.append("var " + ThingMLElementHelper.qname(s, "_") + "_session = new StateJS.Region(\"" + s.getName() + "\", this.statemachine);\n");
                 builder.append("var _initial_" + ThingMLElementHelper.qname(s, "_") + "_session = new StateJS.PseudoState(\"_initial\", " + ThingMLElementHelper.qname(s, "_") + "_session, StateJS.PseudoStateKind.Initial);\n");
                 for (State st : s.getSubstate()) {
                     ctx.addContextAnnotation("container", ThingMLElementHelper.qname(s, "_") + "_session");
@@ -285,7 +236,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);
         }
 
-        builder.append("}\n");
+        builder.append("};\n");
 
         ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
 
@@ -300,8 +251,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("result += \"\";\n");
         builder.append("return result;\n");
-        builder.append("}\n");
-        builder.append("};\n\n");
+        builder.append("};\n");
+        //builder.append("};\n\n");
 
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
     }
@@ -350,34 +301,32 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         if (s.getEntry() != null || debugProfile.isDebugBehavior() || s instanceof FinalState) {
             builder.append(".entry(function () {\n");
             if (debugProfile.isDebugBehavior()) {
-                //builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"(" + ThingMLHelpers.findContainingThing(s).getName() + "): enters " + s.qualifiedName(":") + "\"));\n");
-                builder.append("" + ThingMLHelpers.findContainingThing(s).getName() + "_print_debug(_this, \"" + ctx.traceOnEntry(ThingMLHelpers.findContainingThing(s), ThingMLHelpers.findContainingRegion(s), s) + "\");\n");
+                builder.append("" + ThingMLHelpers.findContainingThing(s).getName() + "_print_debug(this, \"" + ctx.traceOnEntry(ThingMLHelpers.findContainingThing(s), ThingMLHelpers.findContainingRegion(s), s) + "\");\n");
             }
             if (s.getEntry() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
             if (s instanceof FinalState) {
-                builder.append("_this._stop();\n");
-                builder.append("const forkLength = _this.getForks().length;\n");
+                builder.append("this._stop();\n");
+                builder.append("const forkLength = this.forks.length;\n");
                 builder.append("var idFork = 0;");
                 builder.append("for (var _i = 0; _i < forkLength; _i++) {\n");
-                builder.append("if (_this.getForks()[_i] === _this) {\n");
+                builder.append("if (this.forks[_i] === this) {\n");
                 builder.append("idFork = _i\n");
                 builder.append("}\n");
                 builder.append("}\n");
-                builder.append("_this.getForks().splice(idFork, 1);\n");
-                builder.append("_this = null;\n");
+                builder.append("this.forks.splice(idFork, 1);\n");
+                builder.append("this = null;\n");
             }
-            builder.append("})");
+            builder.append("}.bind(this))");
         }
         if (s.getExit() != null || debugProfile.isDebugBehavior()) {
             builder.append(".exit(function () {\n");
             if (debugProfile.isDebugBehavior()) {
-                //builder.append("if(_this.debug) console.log(colors.yellow(_this.name + \"(" + ThingMLHelpers.findContainingThing(s).getName() + "): exits " + s.qualifiedName(":") + "\"));\n");
-                builder.append("" + ThingMLHelpers.findContainingThing(s).getName() + "_print_debug(_this, \"" + ctx.traceOnExit(ThingMLHelpers.findContainingThing(s), ThingMLHelpers.findContainingRegion(s), s) + "\");\n");
+                builder.append("" + ThingMLHelpers.findContainingThing(s).getName() + "_print_debug(this, \"" + ctx.traceOnExit(ThingMLHelpers.findContainingThing(s), ThingMLHelpers.findContainingRegion(s), s) + "\");\n");
             }
             if (s.getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getExit(), builder, ctx);
-            builder.append("})");
+            builder.append("}.bind(this))");
         }
         if (s.getEntry() != null || s.getExit() != null || debugProfile.isDebugBehavior()) {
             builder.append("\n\n");
@@ -450,12 +399,12 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(".effect(function (message) {\n");
             builder.append(debug);
             ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
-            builder.append("})\n\n");
+            builder.append("}.bind(this))\n\n");
         } else {
             builder.append(".effect(function (" + m.getName() + ") {\n");
             builder.append(debug);
             ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
-            builder.append("})");
+            builder.append("}.bind(this))");
         }
     }
 
@@ -466,7 +415,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(".when(function (message) {");
                 builder.append(" return ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
-                builder.append(";})");
+                builder.append(";}.bind(this))");
             }
 
         } else {
@@ -477,22 +426,21 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(" && ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
             }
-            builder.append(";})");
+            builder.append(";}.bind(this))");
         }
         if (t.getAction() != null) {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
-                //debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + ThingMLHelpers.findContainingThing(t).getName() + "): on " + p.getName() + "?" + msg.getName() + " from " + t.getSource().qualifiedName(":") + " to " + t.getTarget().qualifiedName(":") + "\"));\n";
-                debugString = "" + ThingMLHelpers.findContainingThing(t).getName() + "_print_debug(_this, \"" + ctx.traceTransition(ThingMLHelpers.findContainingThing(t), t, p, msg) + "\");\n";
+                debugString = "" + ThingMLHelpers.findContainingThing(t).getName() + "_print_debug(this, \"" + ctx.traceTransition(ThingMLHelpers.findContainingThing(t), t, p, msg) + "\");\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         } else {
             if (debugProfile.isDebugBehavior()) {
                 builder.append(".effect(function () {\n");
                 builder.append("" + ThingMLHelpers.findContainingThing(t).getName()
-                        + "_print_debug(_this, \""
+                        + "_print_debug(this, \""
                         + ctx.traceTransition(ThingMLHelpers.findContainingThing(t), t, p, msg)
                         + "\");\n");
-                builder.append("});\n");
+                builder.append("}.bind(this));\n");
             }
         }
         builder.append(";\n");
@@ -522,23 +470,22 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(" && ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
             }
-            builder.append(";})");
+            builder.append(";}.bind(this))");
         }
         if (t.getAction() != null) {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
-                //debugString = "if(_this.debug) console.log(colors.yellow(_this.name + \"(" + ThingMLHelpers.findContainingThing(t).getName() + "): on " + p.getName() + "?" + msg.getName() + " in state " + ((State) t.eContainer()).qualifiedName(":") + "\"));\n";
-                debugString = "" + ThingMLHelpers.findContainingThing(t).getName() + "_print_debug(_this, \"" + ctx.traceInternal(ThingMLHelpers.findContainingThing(t), p, msg) + "\");\n";
+                debugString = "" + ThingMLHelpers.findContainingThing(t).getName() + "_print_debug(this, \"" + ctx.traceInternal(ThingMLHelpers.findContainingThing(t), p, msg) + "\");\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         } else {
             if (p != null) {
                 if (debugProfile.isDebugBehavior()) {
                     builder.append(".effect(function () {\n");
                     builder.append("" + ThingMLHelpers.findContainingThing(t).getName()
-                            + "_print_debug(_this, \""
+                            + "_print_debug(this, \""
                             + ctx.traceInternal(ThingMLHelpers.findContainingThing(t), p, msg)
                             + "\");\n");
-                    builder.append("});\n");
+                    builder.append("}.bind(this));\n");
                 }
             }
         }
@@ -553,12 +500,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("console.log(instance.name + msg +\"\");\n");
         }
         builder.append("}\n");
-        builder.append("}\n\n");
-        //A.prototype.A_print_debug = function(instance, msg) {
-        //A_print_debug(instance, msg);};
-        builder.append(thing.getName() + ".prototype." + thing.getName() + "_print_debug =function(instance, msg) {\n");
-        builder.append(thing.getName() + "_print_debug(instance, msg);};");
-
+        builder.append("};\n\n");
     }
 
 }

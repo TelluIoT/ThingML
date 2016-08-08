@@ -31,7 +31,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
         /*if (action.getProperty().eContainer() instanceof Thing) {
-            builder.append("debug_" + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var = _this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var;\n");
+            builder.append("debug_" + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var = this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var;\n");
         }*/
     }
 
@@ -39,46 +39,40 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
         if (action.getProperty().eContainer() instanceof Thing) {//we can only listen to properties of a Thing, not all local variables, etc
             builder.append("//notify listeners of that attribute\n");
-            builder.append("if (_this.propertyListener['" + action.getProperty().getName() + "'] !== undefined) {\n");
-            builder.append(action.getProperty().getName() + "ListenersSize = _this.propertyListener['" + action.getProperty().getName() + "'].length;\n");
+            builder.append("if (this.propertyListener['" + action.getProperty().getName() + "'] !== undefined) {\n");
+            builder.append(action.getProperty().getName() + "ListenersSize = this.propertyListener['" + action.getProperty().getName() + "'].length;\n");
             builder.append("for (var _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
-            builder.append("_this.propertyListener['" + action.getProperty().getName() + "'][_i](_this." + ctx.getVariableName(action.getProperty()) + ");\n");
+            builder.append("this.propertyListener['" + action.getProperty().getName() + "'][_i](this." + ctx.getVariableName(action.getProperty()) + ");\n");
             builder.append("}\n}\n");
-            //builder.append("if(this.debug) console.log(_this.name + \"(" + ThingMLHelpers.findContainingThing(action.getProperty()).getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + ThingMLElementHelper.qname( action.getProperty(), "_") + "_var" + " + \" to \" + _this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var);\n");
+            //builder.append("if(this.debug) console.log(this.name + \"(" + ThingMLHelpers.findContainingThing(action.getProperty()).getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + ThingMLElementHelper.qname( action.getProperty(), "_") + "_var" + " + \" to \" + this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var);\n");
         }
     }
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + ".bind(");
-        if (ctx.getContextAnnotation("session") != null) {
-            builder.append("_this.root)\n");
-        } else {
-            builder.append("_this)\n");
-        }
+        builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + ".bind(this");
         for (Expression p : action.getParameters()) {
             builder.append(", ");
             generate(p, builder, ctx);
         }
-        builder.append(");\n");
+        builder.append("));\n");
     }
 
     @Override
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
         Session session = action.getSession();
-        builder.append("const " + session.getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(session).getName()) + "(\"" + session.getName() + "\", _this");
+        builder.append("const " + session.getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(session).getName()) + "(\"" + session.getName() + "\", this");
         for (Property p : ThingMLHelpers.allProperties(ThingMLHelpers.findContainingThing(session))) {
             if (p.isIsArray() || p.getCardinality() != null) {
-                builder.append(", _this." + ThingMLElementHelper.qname(p, "_") + "_var.slice(0)");
+                builder.append(", this." + ThingMLElementHelper.qname(p, "_") + "_var.slice(0)");
             } else {
-                builder.append(", _this." + ThingMLElementHelper.qname(p, "_") + "_var");
+                builder.append(", this." + ThingMLElementHelper.qname(p, "_") + "_var");
             }
         }
         builder.append(", true);\n"); //FIXME: debug true only if needed
-        builder.append(session.getName() + ".setThis(" + session.getName() + ");\n");
-        builder.append(session.getName() + ".build(\"" + session.getName() + "\", _this);\n");
+        builder.append(session.getName() + ".build(\"" + session.getName() + "\", this);\n");
         builder.append(session.getName() + "._init();\n");
-        builder.append("_this.getForks().push(" + session.getName() + ");\n");
+        builder.append("this.forks.push(" + session.getName() + ");\n");
     }
 
     @Override
@@ -94,17 +88,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        if (ctx.hasContextAnnotation("useThis"))
-            builder.append("this.");
-        builder.append(action.getFunction().getName() + "(");
-
-        boolean firstDone = false;
+        builder.append(action.getFunction().getName() + ".apply(this");
         for (Expression p : action.getParameters()) {
-            if (firstDone) {
-                builder.append(", ");
-            } else {
-                firstDone = true;
-            }
+            builder.append(", ");
             generate(p, builder, ctx);
         }
         builder.append(");\n");
@@ -161,9 +147,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        if (AnnotatedElementHelper.isDefined(expression.getProperty(), "private", "true") || !(expression.getProperty().eContainer() instanceof Thing) || (expression.getProperty() instanceof Parameter) || (expression.getProperty() instanceof LocalVariable)) {
-            builder.append(ctx.getVariableName(expression.getProperty()));
-        } else {
+        /*if (AnnotatedElementHelper.isDefined(expression.getProperty(), "private", "true") || !(expression.getProperty().eContainer() instanceof Thing) || (expression.getProperty() instanceof Parameter) || (expression.getProperty() instanceof LocalVariable)) {
+            builder.append("this." + ctx.getVariableName(expression.getProperty()));
+        } else {*/
             if (expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
                 builder.append(expression.getProperty().getName());
             } else if (expression.getProperty() instanceof Property) {
@@ -187,10 +173,10 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                                 generate(p.getInit(), builder, ctx);
                             }
                         } else {
-                            builder.append("_this." + ctx.getVariableName(expression.getProperty()));
+                            builder.append("this." + ctx.getVariableName(expression.getProperty()));
                         }
                     } else {
-                        builder.append("_this." + ctx.getVariableName(expression.getProperty()));
+                        builder.append("this." + ctx.getVariableName(expression.getProperty()));
                     }
                 } else {
                     Property p = (Property) expression.getProperty();
@@ -198,7 +184,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                     generate(e, builder, ctx);
                 }
             }
-        }
+        //}
     }
 
     @Override

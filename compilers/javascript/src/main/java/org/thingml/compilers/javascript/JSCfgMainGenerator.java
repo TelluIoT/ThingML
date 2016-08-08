@@ -84,7 +84,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: not optimal, to be improved
             for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
                 if (p.getKey().equals(prop) && prop.getCardinality() == null && !AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
-                    //System.out.println("Property " + prop);
                     String result = "";
                     if (prop.getType() instanceof Enumeration) {
                         Enumeration enum_ = (Enumeration) prop.getType();
@@ -100,7 +99,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                         if (p.getValue() != null) {
                             StringBuilder tempbuilder = new StringBuilder();
                             ctx.currentInstance = i;
-                            //ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
                             ctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
                             ctx.currentInstance = null;
 
@@ -115,13 +113,11 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             }
             for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
                 if (prop.equals(a) && !(AnnotatedElementHelper.isDefined(prop, "private", "true")) && prop.eContainer() instanceof Thing) {
-                    //System.out.println("Array " + prop);
                     builder.append(", ");
                     builder.append(i.getName() + "_" + a.getName() + "_array");
                 }
             }
         }
-        //if (debug || i.isDefined("debug", "true")) {
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
         boolean debugInst = false;
         for (Instance inst : debugProfile.getDebugInstances()) {
@@ -136,19 +132,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             builder.append(", false");
         }
         builder.append(");\n");
-        builder.append(reference(i.getName(), useThis) + ".setThis(" + reference(i.getName(), useThis) + ");\n");
         if (useThis) {
-            builder.append("this." + i.getName() + ".build();\n");
-            //if (debug || i.isDefined("debug", "true")) {
             if (debug || debugProfile.getDebugInstances().contains(i)) {
-                //builder.append("console.log(colors.cyan(\"INIT: \" + this." + i.getName() + "));\n");
                 builder.append("this." + i.getName() + "." + i.getType().getName() + "_print_debug(this." + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
             }
         } else {
-            builder.append(i.getName() + ".build();\n");
-            //if (debug || i.isDefined("debug", "true")) {
             if (debug || debugProfile.getDebugInstances().contains(i)) {
-                //builder.append("console.log(colors.cyan(\"INIT: \" + " + i.getName() + "));\n");
                 builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
             }
         }
@@ -211,13 +200,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         builder.append("/*$PLUGINS_CONNECTORS$*/\n");
     }
 
-    private static String reference(String ref, boolean useThis) {
-        if (useThis)
-            return "this." + ref;
-        else
-            return ref;
-    }
-
     @Override
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder("main.js");
@@ -236,12 +218,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         //if (debug) {
         for (Type ty : ThingMLHelpers.allUsedSimpleTypes(model)) {
             if (ty instanceof Enumeration) {
-                builder.append("var Enum = require('./enums');\n");
+                builder.append("const Enum = require('./enums');\n");
                 break;
             }
         }
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            builder.append("var " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
+            builder.append("const " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
         }
         builder.append("/*$REQUIRE_PLUGINS$*/\n");
         generateInstances(cfg, builder, ctx, false);

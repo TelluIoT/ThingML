@@ -208,10 +208,10 @@ public class JSKevoreePlugin extends NetworkPlugin {
         }
 
         final StringBuilder builder = ctx.getBuilder("/lib/" + cfg.getName() + ".js");
-        builder.append("var AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
+        builder.append("const AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
 
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            builder.append("var " + t.getName() + " = require('./" + t.getName() + "');\n");
+            builder.append("const " + t.getName() + " = require('./" + t.getName() + "');\n");
         }
 
         builder.append("/**\n* Kevoree component\n* @type {" + cfg.getName() + "}\n*/\n");
@@ -254,7 +254,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
             final Instance i = (Instance) e.getKey();
             for (Port p : (List<Port>) e.getValue()) {
                 for (Message m : p.getSends()) {
-                    builder.append("this." + i.getName() + ".get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
+                    builder.append("this." + i.getName() + "." + m.getName() + "On" + p.getName() + "Listeners.push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
                 }
             }
         }
@@ -263,7 +263,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
                 final Instance i = c.getInst().getInstance();
                 for (Message m : c.getPort().getSends()) {
                     final Port p = c.getPort();
-                    builder.append("this." + i.getName() + ".get" + ctx.firstToUpper(m.getName()) + "on" + p.getName() + "Listeners().push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
+                    builder.append("this." + i.getName() + "." + m.getName() + "On" + p.getName() + "Listeners.push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
                 }
             }
         }

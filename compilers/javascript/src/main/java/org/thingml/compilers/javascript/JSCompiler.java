@@ -87,7 +87,6 @@ public class JSCompiler extends OpaqueThingMLCompiler {
         this.checker.printWarnings();
         this.checker.printNotices();
 
-        ctx.addContextAnnotation("thisRef", "_this.");
         //new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
