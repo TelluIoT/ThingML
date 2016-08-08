@@ -29,6 +29,34 @@ import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
+    public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
+        traceVariablePre(action, builder, ctx);
+        if (action.getProperty().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
+            for (Expression i : action.getIndex()) {
+                builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
+                StringBuilder tempBuilder = new StringBuilder();
+                generate(i, tempBuilder, ctx);
+                builder.append("[" + tempBuilder.toString() + "]");
+                builder.append(" = ");
+                cast(action.getProperty().getType(), false, action.getExpression(), builder, ctx);
+                //generateMainAndInit(action.getExpression(), builder, ctx);
+                builder.append(";\n");
+
+            }
+        } else {//simple variable or we re-affect the whole array
+            if (action.getProperty().eContainer() instanceof Thing || action.getProperty().eContainer() instanceof State) {
+                builder.append(ctx.getContextAnnotation("thisRef"));
+            }
+            builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
+            builder.append(" = ");
+            cast(action.getProperty().getType(), action.getProperty().isIsArray(), action.getExpression(), builder, ctx);
+            //generateMainAndInit(action.getExpression(), builder, ctx);
+            builder.append(";\n");
+        }
+        traceVariablePost(action, builder, ctx);
+    }
+
+    @Override
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
         /*if (action.getProperty().eContainer() instanceof Thing) {
             builder.append("debug_" + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var = this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var;\n");

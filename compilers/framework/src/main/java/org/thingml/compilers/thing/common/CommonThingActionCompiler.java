@@ -60,7 +60,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
             }
         } else {//simple variable or we re-affect the whole array
-            if (action.getProperty().eContainer() instanceof Thing && !(AnnotatedElementHelper.isDefined(action.getProperty(), "private", "true"))) {
+            if (action.getProperty().eContainer() instanceof Thing) {
                 builder.append(ctx.getContextAnnotation("thisRef"));
             }
             builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
