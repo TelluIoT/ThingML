@@ -129,7 +129,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("this.eventEmitterForStream = new EventEmitter();\n");
         }
         generateListeners(thing, builder, ctx);
-        builder.append("build.apply(this);\n");
+        builder.append("build.call(this, name, root);\n");
         builder.append("};\n");
 
 
@@ -155,7 +155,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 for (Parameter p : f.getParameters()) {
                     if (j > 0)
                         builder.append(", ");
-                    builder.append(p.getName());
+                    builder.append(ctx.getVariableName(p));
                     j++;
                 }
                 builder.append(") {\n");
@@ -189,7 +189,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//State machine (states and regions)\n");
         builder.append("function build(session, root) {//optional session name and root instance to fork a new session\n");
-        builder.append("if (session === null || session == undefined) {\n");
+        builder.append("if (root === null || root == undefined) {//building root component\n");
         for (StateMachine b : ThingMLHelpers.allStateMachines(thing)) {
             ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(b, builder, ctx);
         }
@@ -197,7 +197,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         for (StateMachine b : ThingMLHelpers.allStateMachines(thing)) {
             ctx.addContextAnnotation("session", "true");
             for (Session s : CompositeStateHelper.allContainedSessions(b)) {//FIXME: lots of code duplication here.....
-                builder.append("else if(session === \"" + s.getName() + "\") {\n");
+                builder.append("else if(session === \"" + s.getName() + "\") {//building session " + s.getName() + "\n");
                 builder.append("this.root = root;\n");
                 builder.append("root.forkID = root.forkID + 1;\n");
                 builder.append("this.forkID = root.forkID;\n");
@@ -240,19 +240,14 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
 
-        builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.getName = function() {\n");
-        builder.append("return \"" + thing.getName() + "\";\n");
-        builder.append("};\n\n");
-
         builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.toString = function() {\n");
-        builder.append("var result = \"instance \" + this.getName() + \"\\n\";\n");
+        builder.append("var result = 'instance ' + this.name + ':' + this.constructor.name + '\\n';\n");
         for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-            builder.append("result += \"\\t" + p.getName() + " = \" + this." + ctx.getVariableName(p) + ";\n");
+            builder.append("result += '\\t" + p.getName() + " = ' + this." + ctx.getVariableName(p) + ";\n");
         }
-        builder.append("result += \"\";\n");
+        builder.append("result += '';\n");
         builder.append("return result;\n");
         builder.append("};\n");
-        //builder.append("};\n\n");
 
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
     }
@@ -315,7 +310,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("}\n");
                 builder.append("}\n");
                 builder.append("this.forks.splice(idFork, 1);\n");
-                builder.append("this = null;\n");
             }
             builder.append("}.bind(this))");
         }

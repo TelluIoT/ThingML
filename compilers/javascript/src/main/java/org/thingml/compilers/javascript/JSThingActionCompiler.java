@@ -33,24 +33,25 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         traceVariablePre(action, builder, ctx);
         if (action.getProperty().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
             for (Expression i : action.getIndex()) {
+                if (action.getProperty() instanceof Property) {
+                    builder.append(ctx.getContextAnnotation("thisRef"));
+                }
                 builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
                 StringBuilder tempBuilder = new StringBuilder();
                 generate(i, tempBuilder, ctx);
                 builder.append("[" + tempBuilder.toString() + "]");
                 builder.append(" = ");
                 cast(action.getProperty().getType(), false, action.getExpression(), builder, ctx);
-                //generateMainAndInit(action.getExpression(), builder, ctx);
                 builder.append(";\n");
 
             }
         } else {//simple variable or we re-affect the whole array
-            if (action.getProperty().eContainer() instanceof Thing || action.getProperty().eContainer() instanceof State) {
+            if (action.getProperty() instanceof Property) {
                 builder.append(ctx.getContextAnnotation("thisRef"));
             }
             builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
             builder.append(" = ");
             cast(action.getProperty().getType(), action.getProperty().isIsArray(), action.getExpression(), builder, ctx);
-            //generateMainAndInit(action.getExpression(), builder, ctx);
             builder.append(";\n");
         }
         traceVariablePost(action, builder, ctx);
@@ -98,7 +99,6 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             }
         }
         builder.append(", true);\n"); //FIXME: debug true only if needed
-        builder.append(session.getName() + ".build(\"" + session.getName() + "\", this);\n");
         builder.append(session.getName() + "._init();\n");
         builder.append("this.forks.push(" + session.getName() + ");\n");
     }
@@ -116,7 +116,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        builder.append(action.getFunction().getName() + ".apply(this");
+        builder.append(action.getFunction().getName() + ".call(this");
         for (Expression p : action.getParameters()) {
             builder.append(", ");
             generate(p, builder, ctx);
@@ -147,16 +147,18 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-        builder.append("process.stderr.write(");
+        //builder.append("process.stderr.write(");
+        builder.append("console.log(");
         generate(action.getMsg(), builder, ctx);
         builder.append(");\n");
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        builder.append("process.stdout.write(String(");
+        //builder.append("process.stdout.write(String(");
+        builder.append("console.log(");
         generate(action.getMsg(), builder, ctx);
-        builder.append("));\n");
+        builder.append(");\n");
     }
 
     @Override
@@ -179,7 +181,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             builder.append("this." + ctx.getVariableName(expression.getProperty()));
         } else {*/
             if (expression.getProperty() instanceof Parameter || expression.getProperty() instanceof LocalVariable) {
-                builder.append(expression.getProperty().getName());
+                builder.append(ctx.getVariableName(expression.getProperty()));
             } else if (expression.getProperty() instanceof Property) {
                 if (!ctx.getAtInitTimeLock()) {
                     if (ctx.currentInstance != null) {
@@ -222,15 +224,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
-        builder.append(expression.getFunction().getName() + "(");
-
-        boolean firstDone = false;
-        for (Expression p : expression.getParameters()) {
-            if (firstDone) {
-                builder.append(", ");
-            } else {
-                firstDone = true;
-            }
+        builder.append(expression.getFunction().getName() + ".call(this");
+for (Expression p : expression.getParameters()) {
+            builder.append(", ");
             generate(p, builder, ctx);
         }
         builder.append(")");
