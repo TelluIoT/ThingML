@@ -139,7 +139,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         for (Stream s : thing.getStreams()) {
             for (SimpleSource simpleSource : ThingMLHelpers.allSimpleSources(s.getInput())) {
                 ReceiveMessage rm = simpleSource.getMessage();
-                builder.append("if( message[0] === \"" + rm.getPort().getName() + "\" && message[1] === \"" + rm.getMessage().getName() + "\") {\n")
+                builder.append("if( message._port === \"" + rm.getPort().getName() + "\" && message._msg === \"" + rm.getMessage().getName() + "\") {\n")
                         .append("\tthis.eventEmitterForStream.emit('" + ThingMLElementHelper.qname(simpleSource, "_") + "',message);\n")
                         .append("}\n");
             }
@@ -415,7 +415,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         } else {
             builder.append(ThingMLElementHelper.qname(t.getSource(), "_") + ".to(" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
             builder.append(".when(function (" + msg.getName() + ") {");
-            builder.append("return " + msg.getName() + "[0] === \"" + p.getName() + "\" && " + msg.getName() + "[1] === \"" + msg.getName() + "\"");
+            builder.append("return " + msg.getName() + "._port === \"" + p.getName() + "\" && " + msg.getName() + "._msg === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
@@ -459,7 +459,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(ThingMLElementHelper.qname(((State) t.eContainer()), "_") + ".to(null)");
             }
             builder.append(".when(function (" + msg.getName() + ") {");
-            builder.append("return " + msg.getName() + "[0] === \"" + p.getName() + "\" && " + msg.getName() + "[1] === \"" + msg.getName() + "\"");
+            builder.append("return " + msg.getName() + "._port === \"" + p.getName() + "\" && " + msg.getName() + "._msg === \"" + msg.getName() + "\"");
             if (t.getGuard() != null) {
                 builder.append(" && ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);

@@ -24,9 +24,6 @@ import org.thingml.compilers.thing.ThingCepViewCompiler;
 
 import java.util.List;
 
-/**
- * @author ludovic
- */
 public class JSThingCepCompiler extends ThingCepCompiler {
 
     public JSThingCepCompiler(ThingCepViewCompiler cepViewCompiler, ThingCepSourceDeclaration sourceDeclaration) {
@@ -79,7 +76,7 @@ public class JSThingCepCompiler extends ThingCepCompiler {
         context.getCompiler().getThingActionCompiler().generate(stream.getOutput(), builder, context);
         builder.append("}");
         if (!stream.isDynamic()) {
-            builder.append(");\n");
+            builder.append(".bind(this));\n");
         }
 
         if (stream.isDynamic()) {

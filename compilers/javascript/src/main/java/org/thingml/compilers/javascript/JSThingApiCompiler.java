@@ -55,14 +55,12 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("};\n\n");
 
 
-            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function() {\n");
-            builder.append("cepDispatch.apply(this, arguments);\n");
-            builder.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", arguments);\n");
-            builder.append("const forkLength = this.forks.length;\n");
-            builder.append("for (var _i = 0; _i < forkLength; _i++) {\n");
-            builder.append("const fork = this.forks[_i];\n");
-            builder.append("fork._receive.apply(fork, arguments);\n");
-            builder.append("}\n");
+            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(msg) {//msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}\n");
+            builder.append("cepDispatch.call(this, msg);\n");
+            builder.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);\n");
+            builder.append("this.forks.forEach(function(fork){\n");
+            builder.append("fork._receive(msg);\n");
+            builder.append("});\n");
             builder.append("};\n");
 
             //function to register listeners on attributes
@@ -103,11 +101,11 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                         }
                         builder.append(")\");\n");
                     }
-                    builder.append("this._receive(\"" + p.getName() + "\", \"" + m.getName() + "\"");
+                    builder.append("this._receive({_port:\"" + p.getName() + "\", _msg:\"" + m.getName() + "\"");
                     for (Parameter pa : m.getParameters()) {
-                        builder.append(", " + ctx.protectKeyword(pa.getName()));
+                        builder.append(", " + ctx.protectKeyword(pa.getName()) + ":" + ctx.protectKeyword(pa.getName()));
                     }
-                    builder.append(");\n");
+                    builder.append("});\n");
                     builder.append("};\n\n");
                 }
             }

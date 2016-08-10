@@ -21,9 +21,6 @@ import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 
-/**
- * @author ludovic
- */
 public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
 
     @Override
@@ -53,7 +50,7 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
         for (Parameter p : source.getResultMessage().getParameters()) {
             if (source.getResultMessage().getParameters().indexOf(p) > 0)
                 builder.append(",\n");
-            builder.append("'" + i + "' : x[" + i + "]");
+            builder.append("'" + p.getName() + "' : x[" + i + "]");
             i++;
         }
 
@@ -103,7 +100,7 @@ public class JSGenerateSourceDeclaration extends ThingCepSourceDeclaration {
             if (index > 2) {
                 builder.append(", ");
             }
-            builder.append("'" + index + "' : ");
+            builder.append("'" + stream.getOutput().getMessage().getParameters().get(index-2).getName() + "' : ");
             context.getCompiler().getThingActionCompiler().generate(exp, builder, context);
             index++;
         }

@@ -36,7 +36,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                 if (action.getProperty() instanceof Property) {
                     builder.append(ctx.getContextAnnotation("thisRef"));
                 }
-                builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
+                builder.append(ctx.getVariableName(action.getProperty()));
                 StringBuilder tempBuilder = new StringBuilder();
                 generate(i, tempBuilder, ctx);
                 builder.append("[" + tempBuilder.toString() + "]");
@@ -49,7 +49,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             if (action.getProperty() instanceof Property) {
                 builder.append(ctx.getContextAnnotation("thisRef"));
             }
-            builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
+            builder.append(ctx.getVariableName(action.getProperty()));
             builder.append(" = ");
             cast(action.getProperty().getType(), action.getProperty().isIsArray(), action.getExpression(), builder, ctx);
             builder.append(";\n");
@@ -98,7 +98,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                 builder.append(", this." + ThingMLElementHelper.qname(p, "_") + "_var");
             }
         }
-        builder.append(", true);\n"); //FIXME: debug true only if needed
+        builder.append(", this.debug);\n"); //FIXME: debug true only if needed
         builder.append(session.getName() + "._init();\n");
         builder.append("this.forks.push(" + session.getName() + ");\n");
     }
@@ -165,13 +165,13 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     protected void generateReference(Message message, String messageName, Reference reference, StringBuilder builder, Context ctx) {
         ParamReference paramReference = (ParamReference) reference.getParameter(); //this method is called only when the reference parameter is a ParamReference
         String paramResult;
-        if (reference.getParameter() instanceof SimpleParamRef) {
+        /*if (reference.getParameter() instanceof SimpleParamRef) {
             paramResult = "[" + JSHelper.getCorrectParamIndex(message, paramReference.getParameterRef()) + "]";
-        } else if (reference.getParameter() instanceof ArrayParamRef) {
-            paramResult = paramReference.getParameterRef().getName();
-        } else {
+        } else if (reference.getParameter() instanceof ArrayParamRef) {*/
+            paramResult = "." + paramReference.getParameterRef().getName();
+        /*} else {
             throw new UnsupportedOperationException("Parameter " + reference.getParameter().getClass().getName() + " is not supported.");
-        }
+        }*/
         builder.append(messageName + paramResult);
     }
 
