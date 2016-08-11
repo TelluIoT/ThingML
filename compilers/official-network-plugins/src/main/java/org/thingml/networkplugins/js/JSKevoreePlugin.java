@@ -344,17 +344,14 @@ public class JSKevoreePlugin extends NetworkPlugin {
         for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) { //External kevoree port should be split (to allow easy integration with external non-HEADS services)
             //builder.append("\n//External connector for port " + c.getPort().getName() + " of instance " + c.getInst().getInstance().getName() + "\n");
             if (c.getProtocol().getName().equals("kevoree")) {
-                System.out.println("Kevoree protocol");
                 final Instance i = c.getInst().getInstance();
                 for (Message m : c.getPort().getReceives()) {
-                    System.out.println("--> " + m.getName());
                     builder.append(",\nin_" + shortName(i, c.getPort(), m) + "_in: function (msg) {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\n");
                     //builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
                     builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
                     builder.append("}");
                 }
                 for (Message m : c.getPort().getSends()) {
-                    System.out.println("<-- " + m.getName());
                     builder.append(",\n" + shortName(i, c.getPort(), m) + "_proxy: function() {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\nthis.out_" + shortName(i, c.getPort(), m) + "_out(");
                     int index;
                     for (index = 0; index < m.getParameters().size(); index++) {

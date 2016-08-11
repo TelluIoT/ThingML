@@ -39,14 +39,14 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generateListeners(Thing thing, StringBuilder builder, Context ctx) {
         builder.append("//callbacks for attributes\n");
         builder.append("this.propertyListener = {};\n\n");
-        builder.append("if (root === null || root === undefined) {//only the root can send message");
+        builder.append("//if (root === null || root === undefined) {//only the root can send message");
         builder.append("//callbacks for third-party listeners\n");
         for (Port p : ThingMLHelpers.allPorts(thing)) {
             for (Message m : p.getSends()) {
                 builder.append("this." + m.getName() + "On" + p.getName() + "Listeners = [];\n");
             }
         }
-        builder.append("}\n");
+        builder.append("//}\n");
     }
 
     protected void generateSendMethods(Thing thing, StringBuilder builder, Context ctx) {
@@ -61,12 +61,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     j++;
                 }
                 builder.append(") {\n");
-                builder.append("var self = this;\n");
-                builder.append("var root = self.root;\n");
-                builder.append("while(root !== null && root !== undefined) {\n");
-                builder.append("self = root;\n");
-                builder.append("root = self.root;\n");
-                builder.append("}\n");
+                builder.append("const self = root(this);\n");
                 ((JSThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(thing, p, m, builder, ctx, debugProfile);
                 builder.append("};\n\n");
             }
@@ -153,6 +148,16 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         builder.append("};\n");
+
+        builder.append("function root(component) {\n");
+        builder.append("var self = component;\n");
+        builder.append("var root = self.root;\n");
+        builder.append("while (root !== null && root !== undefined) {\n");
+        builder.append("self = root;\n");
+        builder.append("root = self.root;\n");
+        builder.append("}\n");
+        builder.append("return self;\n");
+        builder.append("}\n");
 
         builder.append("//ThingML-defined functions\n");
         ctx.addContextAnnotation("function", "true");
@@ -310,14 +315,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
             if (s instanceof FinalState) {
                 builder.append("this._stop();\n");
-                builder.append("const forkLength = this.forks.length;\n");
-                builder.append("var idFork = 0;");
-                builder.append("for (var _i = 0; _i < forkLength; _i++) {\n");
-                builder.append("if (this.forks[_i] === this) {\n");
-                builder.append("idFork = _i\n");
-                builder.append("}\n");
-                builder.append("}\n");
-                builder.append("this.forks.splice(idFork, 1);\n");
             }
             builder.append("}.bind(this))");
         }

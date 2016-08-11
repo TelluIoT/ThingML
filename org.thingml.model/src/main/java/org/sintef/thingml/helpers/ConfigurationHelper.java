@@ -443,7 +443,7 @@ public class ConfigurationHelper {
                         break;
                     }
                 }
-                if (!connected) {
+                if (!connected && !(p instanceof InternalPort)) {
                     ports.add(p);
                 }
             }

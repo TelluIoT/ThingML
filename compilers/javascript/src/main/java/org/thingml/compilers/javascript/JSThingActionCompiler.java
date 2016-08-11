@@ -98,9 +98,9 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                 builder.append(", this." + ThingMLElementHelper.qname(p, "_") + "_var");
             }
         }
-        builder.append(", this.debug);\n"); //FIXME: debug true only if needed
-        builder.append(session.getName() + "._init();\n");
+        builder.append(", this.debug);\n");
         builder.append("this.forks.push(" + session.getName() + ");\n");
+        builder.append(session.getName() + "._init();\n");
     }
 
     @Override
@@ -235,7 +235,7 @@ for (Expression p : expression.getParameters()) {
     @Override
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
-        builder.append(" === ");
+        builder.append(" == ");
         generate(expression.getRhs(), builder, ctx);
     }
 }

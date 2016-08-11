@@ -42,9 +42,33 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             //Lifecycle
             builder.append("//Public API for lifecycle management\n");
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._stop = function() {\n");
+            builder.append("this.forks.forEach(function (fork) {\n");
+            builder.append("fork._stop();\n");
+            builder.append("fork._delete();\n");
+            builder.append("});\n");
+
+            builder.append("if (this.root !== null && this.root !== undefined) {\n");
+            builder.append("const forkLength = this.root.forks.length;\n");
+            builder.append("var idFork = 0;");
+            builder.append("for (var _i = 0; _i < forkLength; _i++) {\n");
+            builder.append("if (this.root.forks[_i] === this) {\n");
+            builder.append("idFork = _i\n");
+            builder.append("}\n");
+            builder.append("}\n");
+            builder.append("this.root.forks.splice(idFork, 1);\n");
+            builder.append("}\n");
+
+            builder.append("this.root = null;\n");
+            builder.append("this.forks = [];\n");
             builder.append("this.ready = false;\n");
             if (ThingMLHelpers.allStateMachines(thing).get(0).getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(ThingMLHelpers.allStateMachines(thing).get(0).getExit(), builder, ctx);
+            builder.append("};\n\n");
+
+            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._delete = function() {\n");
+            builder.append("this.statemachine = null;\n");
+            builder.append("this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = null;\n");
+            //TODO: remove listeners
             builder.append("};\n\n");
 
             //Communication
@@ -52,16 +76,18 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._init = function() {\n");
             builder.append("this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + "\");\n");
             builder.append("StateJS.initialise(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + " );\n");
+            builder.append("this.ready = true;\n");
             builder.append("};\n\n");
 
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(msg) {//msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}\n");
+            builder.append("if(this.ready){\n");
             builder.append("cepDispatch.call(this, msg);\n");
             builder.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);\n");
             builder.append("this.forks.forEach(function(fork){\n");
             builder.append("fork._receive(msg);\n");
             builder.append("});\n");
-            builder.append("};\n");
+            builder.append("}};\n");
 
             //function to register listeners on attributes
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.onPropertyChange = function (property, callback) {\n");
