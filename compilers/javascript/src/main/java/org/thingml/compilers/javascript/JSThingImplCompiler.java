@@ -314,7 +314,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             if (s.getEntry() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(s.getEntry(), builder, ctx);
             if (s instanceof FinalState) {
-                builder.append("this._stop();\n");
+                builder.append("setImmediate(this._stop.bind(this));\n");
             }
             builder.append("}.bind(this))");
         }

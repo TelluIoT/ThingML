@@ -147,16 +147,16 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-        //builder.append("process.stderr.write(");
-        builder.append("console.log(");
+        builder.append("process.stderr.write(''+");
+        //builder.append("console.log(");
         generate(action.getMsg(), builder, ctx);
         builder.append(");\n");
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        //builder.append("process.stdout.write(String(");
-        builder.append("console.log(");
+        builder.append("process.stdout.write(''+");
+        //builder.append("console.log(");
         generate(action.getMsg(), builder, ctx);
         builder.append(");\n");
     }
