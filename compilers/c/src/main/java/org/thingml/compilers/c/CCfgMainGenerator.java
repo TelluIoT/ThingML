@@ -1675,7 +1675,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
             if (ThingMLHelpers.allStateMachines(i.getType()).size() > 0) { // There has to be only 1
                 StateMachine sm = ThingMLHelpers.allStateMachines(i.getType()).get(0);
-                if (StateHelper.hasEmptyHandlers(sm)) {
+                if (StateHelper.hasEmptyHandlersIncludingSessions(sm)) {
                     if (ctx.getCompiler().getID().compareTo("arduino") != 0) {
                     builder.append("emptyEventConsumed += ");
                     }
