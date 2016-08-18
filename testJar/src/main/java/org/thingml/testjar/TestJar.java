@@ -341,9 +341,9 @@ public class TestJar {
                 res.append("                <td class=\"category\">" + category.getKey() + "</td>\n");
                 res.append("                <td class=\"testcase ");
                 if(localLink) {
-                    lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+                    lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + category.getKey() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
                 } else {
-                    lineB.append("                <a href=\"http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(srcDir.getPath(), "/thingml") + "/" + line.getKey() + "\"  target=\"test-case-focus\"> " + line.getKey() + "</a>\n");
+                    lineB.append("                <a href=\"http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(srcDir.getPath(), "/thingml") + "/" + category.getKey() + "/" + line.getKey() + "\"  target=\"test-case-focus\"> " + line.getKey() + "</a>\n");
                 }
                 lineB.append("            </td>\n");
                 for(TargetedLanguage lang : langs) {
