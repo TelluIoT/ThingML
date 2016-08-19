@@ -551,7 +551,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             //builder.append("void " + ctx.getEmptyHandlerName(thing));
             ctx.appendFormalParametersEmptyHandler(thing, builder);
             builder.append(" {\n");
-                generateSessionEmptyHandlerCalls(thing, ctx, builder);
+            builder.append(" uint8_t empty_event_consumed = 0;\n");
+            generateSessionEmptyHandlerCalls(thing, ctx, builder);
 
             // dispatch the current message to sub-regions
             dispatchEmptyToSubRegions(thing, builder, sm, ctx, debugProfile);
@@ -564,7 +565,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                 generateEmptyHandlers(thing, sm, builder, null, sm, ctx, debugProfile);
             }
             //New Empty Event Method
-            builder.append("return 0;\n");
+            builder.append("return empty_event_consumed;\n");
 
             builder.append("}\n");
         }
@@ -1117,7 +1118,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         for(Session s: RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
             builder.append("uint16_t index_" + s.getName() + " = 0;\n");
             builder.append("while(index_" + s.getName() + " < _instance->nb_max_sessions_" + s.getName() + ") {\n");
-            builder.append("    " + ctx.getEmptyHandlerName(thing) + "(");
+            builder.append("    empty_event_consumed |= " + ctx.getEmptyHandlerName(thing) + "(");
             builder.append("&(_instance->sessions_" + s.getName() + "[index_" + s.getName() + "])");
             builder.append(");\n");
             builder.append("    index_" + s.getName() + "++;\n");

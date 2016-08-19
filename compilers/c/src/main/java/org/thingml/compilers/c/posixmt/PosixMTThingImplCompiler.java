@@ -245,7 +245,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         }
         
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) { // there is a state machine
-            builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getStateID(s) + ", &(new_session->s));\n");
+            builder.append("new_session->s.initState = " + ctx.getStateID(s) + ";\n");
         }
         
         builder.append("pthread_create( &(new_session->thread), NULL, " + thing.getName() + "_run, (void *) &(new_session->s));\n");
@@ -449,9 +449,9 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
         
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) { // there is a state machine
-            //builder.append(sm.qname("_") + "_OnEntry(" + ctx.getStateID(sm) + ", _instance);\n");
-            //builder.append(sm.qname("_") + "_OnEntry(_instance->" + ctx.getStateVarName(sm) + ", _instance);\n");
-
+            builder.append("if(_instance->initState != -1) {\n");
+            builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(_instance->initState, _instance);\n");
+            builder.append("}\n");
         }
         
         builder.append("    while(1){\n");

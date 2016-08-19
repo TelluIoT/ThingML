@@ -686,6 +686,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
             StateMachine sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
         
             if (ThingMLHelpers.allStateMachines(inst.getType()).size() > 0) { // there is a state machine
+                initb.append(ctx.getInstanceVarName(inst) + ".initState = -1;\n");
                 initb.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getStateID(sm) + ", &" + ctx.getInstanceVarName(inst) + ");\n");
             }
             

@@ -71,7 +71,7 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
         builder.append("bool active;\n");
         builder.append("bool alive;\n");
-
+        
         //builder.append("// Variables for the ID of the instance\n");
         //builder.append("int id;\n");
         
@@ -108,6 +108,7 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         }
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
+            builder.append("int initState;\n");
             for (Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
