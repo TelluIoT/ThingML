@@ -1114,7 +1114,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     public void generateSessionEmptyHandlerCalls(Thing thing, CCompilerContext ctx, StringBuilder builder) {
-        builder.append("if(!(_instance->active)) return;\n");
+        builder.append("if(!(_instance->active)) return 0;\n");
         for(Session s: RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
             builder.append("uint16_t index_" + s.getName() + " = 0;\n");
             builder.append("while(index_" + s.getName() + " < _instance->nb_max_sessions_" + s.getName() + ") {\n");
