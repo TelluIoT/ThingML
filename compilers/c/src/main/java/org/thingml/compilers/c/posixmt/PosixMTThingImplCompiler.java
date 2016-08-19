@@ -455,7 +455,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         }
         
         builder.append("    while(1){\n");
-        if (StateHelper.hasEmptyHandlers(sm)) {
+        if (StateHelper.hasEmptyHandlersIncludingSessions(sm)) {
             builder.append("        int emptyEventConsumed = 1;\n");
             builder.append("        while (emptyEventConsumed != 0) {\n");
             builder.append("            emptyEventConsumed = 0;\n");
