@@ -172,12 +172,13 @@ public class TestCase {
     
     public boolean oracle() {
         String exp = null, actual = null;
-        if(ongoingCmd.stdlog.split("\\[Expected\\] ").length > 1)
-            exp = ongoingCmd.stdlog.split("\\[Expected\\] ")[1].split(" \\[Test\\] ")[0];
+        ongoingCmd.stdlog = ongoingCmd.stdlog.replaceAll("\\s","");
+        if(ongoingCmd.stdlog.split("\\[Expected\\]").length > 1)
+            exp = ongoingCmd.stdlog.split("\\[Expected\\]")[1].split("\\[Test\\]")[0];
         else
             return false;
-        if(ongoingCmd.stdlog.split(" \\[Test\\] ").length > 1)
-            actual = ongoingCmd.stdlog.split(" \\[Test\\] ")[1].split(" \\[Done\\]")[0];
+        if(ongoingCmd.stdlog.split("\\[Test\\]").length > 1)
+            actual = ongoingCmd.stdlog.split("\\[Test\\]")[1].split("\\[Done\\]")[0];
         else
             return false;
         if(exp.charAt(0) == ' ')
