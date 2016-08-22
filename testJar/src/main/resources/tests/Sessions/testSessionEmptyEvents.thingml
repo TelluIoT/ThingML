@@ -1,0 +1,68 @@
+import "../thingml.thingml"
+
+thing TestSessionEmptyEvents includes Test
+@test "A # 12345"
+{
+	message n()
+
+	internal port p {
+		sends n
+		receives n
+	}
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			internal 
+			event e : harnessIn?testIn
+			action do
+				fork s
+			end
+
+			internal
+			event e : p?n
+			action p!n()
+    	}
+
+		session s<5> init S1 {
+			state S1 {
+				on entry do
+					harnessOut!testOut('\'1\'')
+					p!n()
+				end
+
+				transition -> S2
+			}
+	
+			state S2 {
+				on entry do
+					harnessOut!testOut('\'2\'')
+				end
+
+				transition -> S3
+			}	
+	
+			state S3 {
+				on entry do
+					harnessOut!testOut('\'3\'')
+				end
+
+				transition -> S4
+			}
+	
+			state S4 {
+				on entry do
+					harnessOut!testOut('\'4\'')
+				end
+
+				transition -> S5 event p?n
+			}
+	
+			final state S5 {
+				on entry do
+					harnessOut!testOut('\'5\'')
+				end
+			}
+		}
+    }
+}

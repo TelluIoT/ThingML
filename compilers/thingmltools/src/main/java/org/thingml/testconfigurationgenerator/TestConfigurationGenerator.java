@@ -86,9 +86,10 @@ public class TestConfigurationGenerator extends ThingMLTool {
         int i = 0;
         builder.append("    statechart TestChart init e0 {\n");
         builder.append("        on entry do\n");
-        builder.append("            print \"[Expected] \"\n");
-        builder.append("            print \"" + out + "\"\n");
-        builder.append("            print \" [Test] \"\n");
+        //builder.append("            print \"[Expected] \"\n");
+        //builder.append("            print \"" + out + "\"\n");
+        //builder.append("            print \" [Test] \"\n");
+        builder.append("            print \"[Expected] " + out + " [Test] \"\n");
         builder.append("        end\n");
         for (char c : in.toCharArray()) {
             if (c != ' ') {
