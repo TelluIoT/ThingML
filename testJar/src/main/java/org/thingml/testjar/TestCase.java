@@ -180,7 +180,7 @@ public class TestCase {
             return false;
         String[] spl2 = ongoingCmd.stdlog.split("\\[Test\\]");
         if(spl2.length > 1)
-            actual = ongoingCmd.stdlog.split("\\[Test\\]")[spl2.length-1].split("\\[Done\\]")[0];
+            actual = spl2[spl2.length-1].split("\\[Done\\]")[0];
         else
             return false;
         if(exp.charAt(0) == ' ')
