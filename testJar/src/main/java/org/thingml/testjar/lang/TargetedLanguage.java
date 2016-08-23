@@ -60,17 +60,22 @@ public abstract class TargetedLanguage {
     }
     
     public Command generateTargeted(TestCase t) {
-        String[] execCmd = new String[10];
+        String[] execCmd = new String[11];
         execCmd[0] = "java";
-        execCmd[1] = "-jar";
-        execCmd[2] = t.complerJar.getAbsolutePath();
-        execCmd[3] = "-c";
-        execCmd[4] = this.compilerID;
-        execCmd[5] = "-s";
-        execCmd[6] = t.genCfgDir.getAbsolutePath() + "/_" + compilerID + "/" + t.name + ".thingml";
-        execCmd[7] = "-o";
-        execCmd[8] = t.genCodeDir.getAbsolutePath() + "/_" + compilerID;
-        execCmd[9] = "-d";
+        
+        execCmd[1] = "-classpath";
+        execCmd[2] = t.complerJar.getParentFile().getParentFile().getParentFile().getAbsolutePath()
+                + "/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar" +
+                ":" + t.complerJar.getAbsolutePath();
+        execCmd[3] = "org.thingml.compilers.commandline.Main";
+        
+        execCmd[4] = "-c";
+        execCmd[5] = this.compilerID;
+        execCmd[6] = "-s";
+        execCmd[7] = t.genCfgDir.getAbsolutePath() + "/_" + compilerID + "/" + t.name + ".thingml";
+        execCmd[8] = "-o";
+        execCmd[9] = t.genCodeDir.getAbsolutePath() + "/_" + compilerID;
+        execCmd[10] = "-d";
         
         return new Command(execCmd, "(.)*SUCCESS(.)*", "(.)*FATAL ERROR(.)*", "Error at ThingML compilation");
     }

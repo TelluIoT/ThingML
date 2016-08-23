@@ -53,7 +53,7 @@ public class CloudNode {
                 testDir.delete();
             }
             
-            
+            //Compiler
             testDir.mkdir();
             File cDir = new File(testDir, "compilers");
             cDir.mkdir();
@@ -64,6 +64,16 @@ public class CloudNode {
             File compLink = new File(tarDir, "compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
             Files.createSymbolicLink(compLink.toPath(), compiler.toPath());
             
+            //Plugins
+            File pluginDir = new File(cDir, "official-network-plugins");
+            pluginDir.mkdir();
+            File targetDir = new File(pluginDir, "target");
+            targetDir.mkdir();
+            File pluginLink = new File(targetDir, "official-network-plugins-0.7.0-SNAPSHOT.jar");
+            File pluginJar = new File(compiler.getParentFile().getParentFile().getPath() + "/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar");
+            Files.createSymbolicLink(pluginLink.toPath(), pluginJar.toPath());
+            
+            //Test Framework
             File tjDir = new File(testDir, "testJar");
             tjDir.mkdir();
             File tjtarDir = new File(tjDir, "target");

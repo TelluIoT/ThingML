@@ -104,7 +104,7 @@ int /*PORT_NAME*/_setup() {
         /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Serial Port %s open\n", device);
 }
 	
-int send_byte(int device, uint8_t byte) {
+int /*PORT_NAME*/_send_byte(int device, uint8_t byte) {
 	int n;
 	unsigned char data[1];
 	data[0] = byte;
@@ -120,15 +120,15 @@ int send_byte(int device, uint8_t byte) {
 
 void /*PORT_NAME*/_forwardMessage(byte * msg, uint8_t size) {
         /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] forwarding message\n");
-	send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_START_BYTE);
+	/*PORT_NAME*/_send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_START_BYTE);
 	uint8_t i;
 	for(i = 0; i < size; i++) {
 		if((msg[i] == /*PORT_NAME*/_START_BYTE) || (msg[i] == /*PORT_NAME*/_STOP_BYTE) || (msg[i] == /*PORT_NAME*/_ESCAPE_BYTE)) {
-	  		send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_ESCAPE_BYTE);
+	  		/*PORT_NAME*/_send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_ESCAPE_BYTE);
 		}
-		send_byte(/*PORT_NAME*/_device_id, msg[i]);
+		/*PORT_NAME*/_send_byte(/*PORT_NAME*/_device_id, msg[i]);
 	}
-	send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_STOP_BYTE);
+	/*PORT_NAME*/_send_byte(/*PORT_NAME*/_device_id, /*PORT_NAME*/_STOP_BYTE);
 }
 	
 void /*PORT_NAME*/_start_receiver_process()

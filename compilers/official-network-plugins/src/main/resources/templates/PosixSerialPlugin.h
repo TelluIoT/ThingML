@@ -1,6 +1,6 @@
-#ifndef PosixSerialForward_h
+#ifndef /*PORT_NAME*/_lib_h
 
-#define PosixSerialForward_h
+#define /*PORT_NAME*/_lib_h
 
 #include "/*PATH_TO_C*/"
 

@@ -28,6 +28,8 @@ import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.io.UnsupportedEncodingException;
+import static java.lang.Integer.max;
+import static java.lang.Integer.min;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -48,6 +50,8 @@ public class PosixSerialPlugin extends NetworkPlugin {
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
         res.add("Serial");
+        res.add("Serial0");
+        res.add("Serial1");
         return res;
     }
 
@@ -201,7 +205,7 @@ public class PosixSerialPlugin extends NetworkPlugin {
                         maxMsgSize = ctx.getMessageSerializationSize(m);
                     }
                 }
-                maxMsgSize = maxMsgSize - 2;//FIXME @nicolas: get max message size from serialization plugin? if possible?
+                maxMsgSize = max(0, maxMsgSize - 2);//FIXME @nicolas: get max message size from serialization plugin? if possible?
                 ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
 
                 String msgBufferSize;

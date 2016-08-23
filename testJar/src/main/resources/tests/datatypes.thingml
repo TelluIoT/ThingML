@@ -89,6 +89,13 @@ datatype Double<8>
 	@java_type "float"
 	@java_primitive "true";
 
+datatype Float<8>
+	@type_checker "Real"
+	@c_type "float"
+	@c_byte_size "8"
+	@java_type "float"
+	@java_primitive "true";
+
 datatype Char<1>	
 	@type_checker "Character"
 	@c_type "char"

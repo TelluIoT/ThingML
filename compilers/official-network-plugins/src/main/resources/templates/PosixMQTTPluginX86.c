@@ -38,7 +38,7 @@ void /*PORT_NAME*/_publish_callback(struct mosquitto * mosq, void *obj, uint16_t
 
 void /*PORT_NAME*/_message_callback(struct mosquitto * mosq, void *obj, const struct mosquitto_message *message)
 {
-    printf("%s %s\n", message->topic, message->payload);
+    //printf("%s %s\n", message->topic, message->payload);
     int len = strlen(message->payload);
     /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] receveid l:%i\n", len);
     /*PORT_NAME*/_parser(message->payload, len);
@@ -78,11 +78,11 @@ void /*PORT_NAME*/_subscribe_callback(struct mosquitto * mosq, void *obj, uint16
 {
 	int i;
 
-	/*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Subscribed (mid: %d): %d", mid, granted_qos[0]);
+	/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Subscribed (mid: %d): %d", mid, granted_qos[0]);
 	for(i=1; i<qos_count; i++){
-		/*TRACE_LEVEL_1*/printf(", %d", granted_qos[i]);
+		/*TRACE_LEVEL_3*/printf(", %d", granted_qos[i]);
 	}
-	/*TRACE_LEVEL_1*/printf("\n");
+	/*TRACE_LEVEL_3*/printf("\n");
 }
 
 void /*PORT_NAME*/_setup() {

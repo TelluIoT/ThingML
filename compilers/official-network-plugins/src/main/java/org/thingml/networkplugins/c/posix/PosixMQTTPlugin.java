@@ -121,8 +121,11 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                     if (platform.compareToIgnoreCase("x86") == 0) {
                         ctemplate = ctx.getTemplateByID("templates/PosixMQTTPluginX86.c");
                     }
+                    if (platform.compareToIgnoreCase("Yun") == 0) {
+                        ctemplate = ctx.getTemplateByID("templates/PosixMQTTPlugin.c");
+                    }
                 } else {
-                    ctemplate = ctx.getTemplateByID("templates/PosixMQTTPlugin.c");
+                    ctemplate = ctx.getTemplateByID("templates/PosixMQTTPluginX86.c");
                 }
                 String htemplate = ctx.getTemplateByID("templates/PosixMQTTPlugin.h");
 
