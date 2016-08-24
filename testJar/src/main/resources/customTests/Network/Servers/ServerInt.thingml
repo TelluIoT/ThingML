@@ -1,0 +1,26 @@
+import "../Msgs/MsgsInt.thingml"
+
+thing Server includes MsgsInt {
+
+	required port p {
+		sends mInt8, mInt16, mInt32, mHInt
+		reiceives mInt8, mInt16, mInt32, mHInt
+	}
+
+	statechart Chart init Running {
+		state Running {
+			internal event e : p?mInt8
+			action p!mInt8(e.i)
+
+			internal event e : p?mInt16
+			action p!mInt16(e.i)
+
+			internal event e : p?mInt32
+			action p!mInt32(e.i)
+
+			internal event e : p?mHInt
+			action p!mHInt(e.i1, e.i2)
+		}
+	}
+
+}

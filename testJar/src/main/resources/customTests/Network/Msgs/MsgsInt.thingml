@@ -1,0 +1,8 @@
+import "../../datatypes.thingml"
+
+thing fragment MsgsInt {
+	mInt8(i : Int8) @code "110"
+	mInt16(i : Int8) @code "111"
+	mInt32(i : Int8) @code "112"
+	mHInt(i1 : Int32, i2 : Int16) @code "113"
+}

@@ -1,0 +1,119 @@
+import "../Msgs/MsgsUInt.thingml"
+
+thing Client includes MsgsUInt {
+
+	required port p {
+		sends mUInt8, mUInt16, mUInt32, mHUInt
+		reiceives mUInt8, mUInt16, mUInt32, mHUInt
+	}
+
+	stateUIntt UIntt init S1 {
+		state S1 {
+			on entry do
+				prUInt "I "
+				p!mUInt8('255')
+			end
+
+			transition -> S2
+			event e : p?mUInt8
+			guard e.b == '255'
+			action prUInt "mUInt8 "
+		}
+		state S2 {
+			on entry do
+				p!mUInt8('127')
+			end
+
+			transition -> S3
+			event e : p?mUInt8
+			guard e.b == '127'
+			action prUInt "mUInt8 "
+		}
+		state S3 {
+			on entry do
+				p!mUInt8('5')
+			end
+
+			transition -> S4
+			event e : p?mUInt8
+			guard e.b == '5'
+			action prUInt "mUInt8 "
+		}
+		state S4 {
+			on entry do
+				prUInt "I "
+				p!mUInt16('65535')
+			end
+
+			transition -> S5
+			event e : p?mUInt16
+			guard e.b == '65535'
+			action prUInt "mUInt16 "
+		}
+		state S5 {
+			on entry do
+				p!mUInt16('32767')
+			end
+
+			transition -> S6
+			event e : p?mUInt16
+			guard e.b == '32767'
+			action prUInt "mUInt16 "
+		}
+		state S6 {
+			on entry do
+				p!mUInt8('31710')
+			end
+
+			transition -> S7
+			event e : p?mUInt16
+			guard e.b == '31710'
+			action prUInt "mUInt16 "
+		}
+		state S7 {
+			on entry do
+				prUInt "I "
+				p!mUInt32('4294967295')
+			end
+
+			transition -> S8
+			event e : p?mUInt32
+			guard e.b == '4294967295'
+			action prUInt "mUInt32 "
+		}
+		state S8 {
+			on entry do
+				p!mUInt32('337738718')
+			end
+
+			transition -> S9
+			event e : p?mUInt32
+			guard e.b == '337738718'
+			action prUInt "mUInt32 "
+		}
+		state S9 {
+			on entry do
+				p!mUInt8('2147483647')
+			end
+
+			transition -> S10
+			event e : p?mUInt32
+			guard e.b == '2147483647'
+			action prUInt "mUInt32 "
+		}
+		state S10 {
+			on entry do
+				p!mHUInt('4294967295', '32767')
+			end
+
+			transition -> SEnd
+			event e : p?mHUInt
+			guard e.c1 == '4294967295' and e.c2 == '32767'
+			action prUInt "mHUInt "
+		}
+		state SEnd {
+			on entry prUInt "End\n"
+		}
+	}
+
+}

@@ -1,0 +1,7 @@
+import "MQTT.thingml"
+import "../Clients/ClientFloat.thingml"
+
+configuration ClientFloatCfg {
+	instance c : Client
+	connector c.p over MQTT
+}

@@ -1,0 +1,7 @@
+import "Serial1.thingml"
+import "../Servers/ServerInt.thingml"
+
+configuration ServerIntCfg {
+	instance s : Server
+	connector s.p over Serial1
+}

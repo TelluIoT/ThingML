@@ -1,0 +1,7 @@
+import "Serial.thingml"
+import "../Clients/ClientUInt.thingml"
+
+configuration ClientUIntCfg {
+	instance c : Client
+	connector c.p over Serial
+}

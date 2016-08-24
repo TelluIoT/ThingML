@@ -1,0 +1,7 @@
+import "Serial1.thingml"
+import "../Servers/ServerFloat.thingml"
+
+configuration ServerFloatCfg {
+	instance s : Server
+	connector s.p over Serial1
+}

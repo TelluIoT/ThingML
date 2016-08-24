@@ -1,0 +1,37 @@
+import "../Msgs/MsgsFloat.thingml"
+
+thing Client includes MsgsFloat {
+
+	required port p {
+		sends mFloat, mHFloat
+		reiceives mFloat, mHFloat
+	}
+
+	stateFloatt Floatt init S1 {
+		state S1 {
+			on entry do
+				print "I "
+				p!mFloat('-3.14156')
+			end
+
+			transition -> S2
+			event e : p?mFloat
+			guard e.b == '-3.14156'
+			action print "mFloat "
+		}
+		state S2 {
+			on entry do
+				p!mHFloat('0.0', '195.2')
+			end
+
+			transition -> SEnd
+			event e : p?mHFloat
+			guard e.c1 == '0.0' and e.c2 == '195.2'
+			action print "mHFloat "
+		}
+		state SEnd {
+			on entry print "End\n"
+		}
+	}
+
+}

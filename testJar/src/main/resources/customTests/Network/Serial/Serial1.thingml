@@ -1,0 +1,4 @@
+protocol Serial1
+	@serial_path_to_device "/home/sintef/dev/modem1"
+	@serializer "Binary"
+	;
