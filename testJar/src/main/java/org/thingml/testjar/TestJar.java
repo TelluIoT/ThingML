@@ -193,8 +193,8 @@ public class TestJar {
 	}
 	ExecutorService executor = Executors.newFixedThreadPool(poolSize);
 
-        Set<TestCase> testCases = new HashSet<>();
-        Map<String,Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>>> testBench = new HashMap<>();
+        Set<SimpleGeneratedTest> testCases = new HashSet<>();
+        Map<String,Map<String,List<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>>> testBench = new HashMap<>();
         
         testCfgDir.mkdir();
         codeDir.mkdir();
@@ -212,17 +212,17 @@ public class TestJar {
         for(File f : testFiles) {
             System.out.println(f.getName());
             for(TargetedLanguage lang : langs) {
-                TestCase tc = new TestCase(f, compilerJar, lang, codeDir, testCfgDir, logDir);
+                SimpleGeneratedTest tc = new SimpleGeneratedTest(f, compilerJar, lang, codeDir, testCfgDir, logDir);
                 testCases.add(tc);
             }
-            Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> cat;
+            Map<String,List<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>> cat;
             if(testBench.containsKey(f.getParentFile().getName())) {
                 cat = testBench.get(f.getParentFile().getName());
             } else {
                 cat = new HashMap<>();
                 testBench.put(f.getParentFile().getName(), cat);
             }
-            cat.put(f.getName(), new LinkedList<Map.Entry<TargetedLanguage,List<TestCase>>>());
+            cat.put(f.getName(), new LinkedList<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>());
         }
 
         System.out.println("");
@@ -231,7 +231,7 @@ public class TestJar {
         System.out.println("****************************************");
         System.out.println("*           ThingML Generation         *");
         System.out.println("****************************************");
-        for(TestCase tc : testCases) {
+        for(SimpleGeneratedTest tc : testCases) {
             Command cmd = tc.lang.generateThingML(tc);
             cmd.print();
             tasks.add(cmd);
@@ -249,8 +249,8 @@ public class TestJar {
         
         // Concrete test case collection
         List<TestCase> testCfg = new LinkedList<>();
-        for(TestCase tc : testCases) {
-            List<TestCase> children = tc.generateChildren();
+        for(SimpleGeneratedTest tc : testCases) {
+            List<SimpleGeneratedTest> children = tc.generateChildren();
             testCfg.addAll(children);
             for(TargetedLanguage lang : langs) {
                 if(tc.lang == lang) {
@@ -325,16 +325,16 @@ public class TestJar {
         System.out.println("Done.");
     }
     
-    public static void writeResultsFile(File results, Map<String,Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>>> tests, List<TargetedLanguage> langs, File srcDir, boolean localLink, String myIP, String myHTTPServerPort) {
+    public static void writeResultsFile(File results, Map<String,Map<String,List<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>>> tests, List<TargetedLanguage> langs, File srcDir, boolean localLink, String myIP, String myHTTPServerPort) {
         StringBuilder res = new StringBuilder();
         
         if(localLink) {
             res.append(TestHelper.writeHeaderResultsFile(langs));
         }
         
-        for(Map.Entry<String, Map<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>>> category : tests.entrySet()) {
+        for(Map.Entry<String, Map<String,List<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>>> category : tests.entrySet()) {
             
-            for(Map.Entry<String,List<Map.Entry<TargetedLanguage,List<TestCase>>>> line : category.getValue().entrySet()) {
+            for(Map.Entry<String,List<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>> line : category.getValue().entrySet()) {
                 StringBuilder lineB = new StringBuilder();
                 boolean lineSuccess = true;
                 res.append("            <tr>\n");
@@ -347,7 +347,7 @@ public class TestJar {
                 }
                 lineB.append("            </td>\n");
                 for(TargetedLanguage lang : langs) {
-                    for(Map.Entry<TargetedLanguage,List<TestCase>> cell : line.getValue()) {
+                    for(Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>> cell : line.getValue()) {
                         if(cell.getKey() == lang) {
                             StringBuilder cellB = new StringBuilder();
                             boolean cellSuccess = !cell.getValue().isEmpty();
@@ -355,7 +355,7 @@ public class TestJar {
                             lineB.append("              <td class=\"" + cell.getKey().compilerID + " ");
                             cellB.append("                  <table>\n");
                             String cellRes = "";
-                            for(TestCase tc : cell.getValue()) {
+                            for(SimpleGeneratedTest tc : cell.getValue()) {
                                 cellB.append("                  <tr>\n");
                                 cellB.append("                  <td class=\"" );
                                 if(tc.isLastStepASuccess) {

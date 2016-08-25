@@ -22,6 +22,7 @@ package org.thingml.testjar.lang;
 
 import java.io.File;
 import org.thingml.testjar.Command;
+import org.thingml.testjar.SimpleGeneratedTest;
 import org.thingml.testjar.SynchronizedCommand;
 import org.thingml.testjar.TestCase;
 
@@ -39,7 +40,7 @@ public class lJava extends TargetedLanguage {
     }
     
     @Override
-    public Command compileTargeted(TestCase t) {
+    public Command compileTargeted(SimpleGeneratedTest t) {
         String[] execCmd;
         int i = 0;
         if (System.getProperty("os.name").startsWith("Win")) {
@@ -57,7 +58,7 @@ public class lJava extends TargetedLanguage {
     }
 
     @Override
-    public Command execTargeted(TestCase t) {
+    public Command execTargeted(SimpleGeneratedTest t) {
         String[] execCmd;
         int i = 0;
         if (System.getProperty("os.name").startsWith("Win")) {

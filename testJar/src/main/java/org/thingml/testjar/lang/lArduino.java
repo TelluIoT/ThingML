@@ -22,6 +22,7 @@ package org.thingml.testjar.lang;
 
 import java.io.File;
 import org.thingml.testjar.Command;
+import org.thingml.testjar.SimpleGeneratedTest;
 import org.thingml.testjar.SynchronizedCommand;
 import org.thingml.testjar.TestCase;
 
@@ -36,11 +37,11 @@ public class lArduino extends TargetedLanguage {
     }
     
     @Override
-    public Command generateTargeted(TestCase t) {
+    public Command generateTargeted(SimpleGeneratedTest t) {
         String[] execCmd = new String[9];
         execCmd[0] = "java";
         execCmd[1] = "-jar";
-        execCmd[2] = t.complerJar.getAbsolutePath();
+        execCmd[2] = t.compilerJar.getAbsolutePath();
         execCmd[3] = "-c";
         execCmd[4] = this.compilerID;
         execCmd[5] = "-s";
@@ -52,7 +53,7 @@ public class lArduino extends TargetedLanguage {
     }
 
     @Override
-    public Command compileTargeted(TestCase t) {
+    public Command compileTargeted(SimpleGeneratedTest t) {
         String[] execCmd = new String[2];
         execCmd[0] = "ano";
         execCmd[1] = "build";
@@ -61,7 +62,7 @@ public class lArduino extends TargetedLanguage {
     }
 
     @Override
-    public Command execTargeted(TestCase t) {
+    public Command execTargeted(SimpleGeneratedTest t) {
         String prg = t.name + "_Cfg";
         String[] execCmd4 = new String[1];
         execCmd4[0] = "./../../../../src/main/resources/testArduino.sh";

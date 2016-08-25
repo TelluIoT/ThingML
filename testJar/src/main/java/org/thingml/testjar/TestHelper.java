@@ -35,6 +35,14 @@ import org.thingml.testjar.lang.TargetedLanguage;
  * @author sintef
  */
 public class TestHelper {
+    
+    public static TargetedLanguage getLang(List<TargetedLanguage> langs, String lname) {
+        for(TargetedLanguage lang : langs) {
+            if(lang.compilerID.compareToIgnoreCase(lname) == 0)
+                return lang;
+        }
+        return null;
+    }
 	
 
     public static Set<File> listTestFiles(final File folder, String pattern) {
@@ -139,7 +147,7 @@ public class TestHelper {
                         if(lang.compilerID.compareToIgnoreCase("_" + fileEntry.getParent()) == 0) {
                             specificLang = true;
                             System.out.println("    -" + fileEntry.getName() + "(" + lang.compilerID + ")");
-                            res.add(new TestCase(fileEntry, compilerJar, lang, genCodeDir, fileEntry.getParentFile().getParentFile(), logDir, true));
+                            res.add(new SimpleGeneratedTest(fileEntry, compilerJar, lang, genCodeDir, fileEntry.getParentFile().getParentFile(), logDir, true));
                         }
                     }
                     

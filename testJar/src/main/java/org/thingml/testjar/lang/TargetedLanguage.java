@@ -20,9 +20,11 @@
  */
 package org.thingml.testjar.lang;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import org.thingml.testjar.Command;
+import org.thingml.testjar.SimpleGeneratedTest;
 import org.thingml.testjar.TestCase;
 
 /**
@@ -42,11 +44,11 @@ public abstract class TargetedLanguage {
      **/
     public int spareThreads = 0;
     
-    public Command generateThingML(TestCase t) {
+    public Command generateThingML(SimpleGeneratedTest t) {
         String[] execCmd = new String[11];
         execCmd[0] = "java";
         execCmd[1] = "-jar";
-        execCmd[2] = t.complerJar.getAbsolutePath();
+        execCmd[2] = t.compilerJar.getAbsolutePath();
         execCmd[3] = "-t";
         execCmd[4] = "testconfigurationgen";
         execCmd[5] = "-s";
@@ -59,14 +61,14 @@ public abstract class TargetedLanguage {
         return new Command(execCmd, "(.)*SUCCESS(.)*", null, "Error at generation");
     }
     
-    public Command generateTargeted(TestCase t) {
+    public Command generateTargeted(SimpleGeneratedTest t) {
         String[] execCmd = new String[11];
         execCmd[0] = "java";
         
         execCmd[1] = "-classpath";
-        execCmd[2] = t.complerJar.getParentFile().getParentFile().getParentFile().getAbsolutePath()
+        execCmd[2] = t.compilerJar.getParentFile().getParentFile().getParentFile().getAbsolutePath()
                 + "/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar" +
-                ":" + t.complerJar.getAbsolutePath();
+                ":" + t.compilerJar.getAbsolutePath();
         execCmd[3] = "org.thingml.compilers.commandline.Main";
         
         execCmd[4] = "-c";
@@ -80,7 +82,28 @@ public abstract class TargetedLanguage {
         return new Command(execCmd, "(.)*SUCCESS(.)*", "(.)*FATAL ERROR(.)*", "Error at ThingML compilation");
     }
     
-    public abstract Command compileTargeted(TestCase t);
-    public abstract Command execTargeted(TestCase t);
+    public Command generateTargeted(File src, File outputDir, File compiler) {
+        String[] execCmd = new String[11];
+        execCmd[0] = "java";
+        
+        execCmd[1] = "-classpath";
+        execCmd[2] = compiler.getParentFile().getParentFile().getParentFile().getAbsolutePath()
+                + "/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar" +
+                ":" + compiler.getAbsolutePath();
+        execCmd[3] = "org.thingml.compilers.commandline.Main";
+        
+        execCmd[4] = "-c";
+        execCmd[5] = this.compilerID;
+        execCmd[6] = "-s";
+        execCmd[7] = src.getAbsolutePath();
+        execCmd[8] = "-o";
+        execCmd[9] = outputDir.getAbsolutePath();
+        execCmd[10] = "-d";
+        
+        return new Command(execCmd, "(.)*SUCCESS(.)*", "(.)*FATAL ERROR(.)*", "Error at ThingML compilation");
+    }
+    
+    public abstract Command compileTargeted(SimpleGeneratedTest t);
+    public abstract Command execTargeted(SimpleGeneratedTest t);
     
 }

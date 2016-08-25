@@ -22,6 +22,7 @@ package org.thingml.testjar.lang;
 
 import java.io.File;
 import org.thingml.testjar.Command;
+import org.thingml.testjar.SimpleGeneratedTest;
 import org.thingml.testjar.TestCase;
 
 /**
@@ -35,7 +36,7 @@ public class lSintefboard extends TargetedLanguage {
     }
 
     @Override
-    public Command compileTargeted(TestCase t) {
+    public Command compileTargeted(SimpleGeneratedTest t) {
         String[] execCmd = new String[1];
         execCmd[0] = "make";
         
@@ -43,7 +44,7 @@ public class lSintefboard extends TargetedLanguage {
     }
 
     @Override
-    public Command execTargeted(TestCase t) {
+    public Command execTargeted(SimpleGeneratedTest t) {
         String prg = t.name + "_CfgPosix";
         
         String[] execCmd = new String[1];
