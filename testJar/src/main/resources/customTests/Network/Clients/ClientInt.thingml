@@ -4,10 +4,10 @@ thing Client includes MsgsInt {
 
 	required port p {
 		sends mInt8, mInt16, mInt32, mHInt
-		reiceives mInt8, mInt16, mInt32, mHInt
+		receives mInt8, mInt16, mInt32, mHInt
 	}
 
-	stateIntt Intt init S1 {
+	statechart Chart init S1 {
 		state S1 {
 			on entry do
 				print "I "
@@ -16,7 +16,7 @@ thing Client includes MsgsInt {
 
 			transition -> S2
 			event e : p?mInt8
-			guard e.b == '-1'
+			guard e.i == '-1'
 			action print "mInt8 "
 		}
 		state S2 {
@@ -26,7 +26,7 @@ thing Client includes MsgsInt {
 
 			transition -> S3
 			event e : p?mInt8
-			guard e.b == '127'
+			guard e.i == '127'
 			action print "mInt8 "
 		}
 		state S3 {
@@ -36,18 +36,17 @@ thing Client includes MsgsInt {
 
 			transition -> S4
 			event e : p?mInt8
-			guard e.b == '5'
+			guard e.i == '5'
 			action print "mInt8 "
 		}
 		state S4 {
 			on entry do
-				print "I "
 				p!mInt16('-1')
 			end
 
 			transition -> S5
 			event e : p?mInt16
-			guard e.b == '-1'
+			guard e.i == '-1'
 			action print "mInt16 "
 		}
 		state S5 {
@@ -57,7 +56,7 @@ thing Client includes MsgsInt {
 
 			transition -> S6
 			event e : p?mInt16
-			guard e.b == '32767'
+			guard e.i == '32767'
 			action print "mInt16 "
 		}
 		state S6 {
@@ -67,18 +66,17 @@ thing Client includes MsgsInt {
 
 			transition -> S7
 			event e : p?mInt16
-			guard e.b == '31710'
+			guard e.i == '31710'
 			action print "mInt16 "
 		}
 		state S7 {
 			on entry do
-				print "I "
 				p!mInt32('-1')
 			end
 
 			transition -> S8
 			event e : p?mInt32
-			guard e.b == '-1'
+			guard e.i == '-1'
 			action print "mInt32 "
 		}
 		state S8 {
@@ -88,7 +86,7 @@ thing Client includes MsgsInt {
 
 			transition -> S9
 			event e : p?mInt32
-			guard e.b == '337738718'
+			guard e.i == '337738718'
 			action print "mInt32 "
 		}
 		state S9 {
@@ -98,7 +96,7 @@ thing Client includes MsgsInt {
 
 			transition -> S10
 			event e : p?mInt32
-			guard e.b == '2147483647'
+			guard e.i == '2147483647'
 			action print "mInt32 "
 		}
 		state S10 {
@@ -108,7 +106,7 @@ thing Client includes MsgsInt {
 
 			transition -> SEnd
 			event e : p?mHInt
-			guard e.c1 == '-1' and e.c2 == '32767'
+			guard e.i1 == '-1' and e.i2 == '32767'
 			action print "mHInt "
 		}
 		state SEnd {

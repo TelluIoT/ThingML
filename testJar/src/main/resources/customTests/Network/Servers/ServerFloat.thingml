@@ -4,7 +4,7 @@ thing Server includes MsgsFloat {
 
 	required port p {
 		sends mFloat, mHFloat
-		reiceives mFloat, mHFloat
+		receives mFloat, mHFloat
 	}
 
 	statechart Chart init Running {

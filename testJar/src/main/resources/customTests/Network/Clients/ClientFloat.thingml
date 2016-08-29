@@ -4,10 +4,10 @@ thing Client includes MsgsFloat {
 
 	required port p {
 		sends mFloat, mHFloat
-		reiceives mFloat, mHFloat
+		receives mFloat, mHFloat
 	}
 
-	stateFloatt Floatt init S1 {
+	statechart Chart init S1 {
 		state S1 {
 			on entry do
 				print "I "
@@ -16,7 +16,7 @@ thing Client includes MsgsFloat {
 
 			transition -> S2
 			event e : p?mFloat
-			guard e.b == '-3.14156'
+			guard e.f == '-3.14156'
 			action print "mFloat "
 		}
 		state S2 {
@@ -26,7 +26,7 @@ thing Client includes MsgsFloat {
 
 			transition -> SEnd
 			event e : p?mHFloat
-			guard e.c1 == '0.0' and e.c2 == '195.2'
+			guard e.f1 == '0.0' and e.f2 == '195.2'
 			action print "mHFloat "
 		}
 		state SEnd {

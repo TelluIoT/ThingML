@@ -87,7 +87,7 @@ public abstract class TargetedLanguage {
         execCmd[0] = "java";
         
         execCmd[1] = "-classpath";
-        execCmd[2] = compiler.getParentFile().getParentFile().getParentFile().getAbsolutePath()
+        execCmd[2] = compiler.getParentFile().getParentFile().getParentFile().getPath()
                 + "/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar" +
                 ":" + compiler.getAbsolutePath();
         execCmd[3] = "org.thingml.compilers.commandline.Main";
@@ -105,5 +105,7 @@ public abstract class TargetedLanguage {
     
     public abstract Command compileTargeted(SimpleGeneratedTest t);
     public abstract Command execTargeted(SimpleGeneratedTest t);
+    
+    public abstract Command compileTargeted(File src);
     
 }

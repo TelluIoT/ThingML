@@ -22,10 +22,15 @@ package org.thingml.testjar;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.thingml.testjar.lang.TargetedLanguage;
@@ -48,6 +53,7 @@ public class TestHelper {
     public static Set<File> listTestFiles(final File folder, String pattern) {
         Set<File> res = new HashSet<>();
         Pattern p = Pattern.compile(pattern);
+        //System.out.println(" -- " + folder.getName());
         
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {

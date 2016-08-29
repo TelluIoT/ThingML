@@ -52,5 +52,13 @@ public class lSintefboard extends TargetedLanguage {
         
         return new Command(execCmd, ".+", null, "Error at ecpp execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
+
+    @Override
+    public Command compileTargeted(File src) {
+        String[] execCmd = new String[1];
+        execCmd[0] = "make";
+        
+        return new Command(execCmd, null, ".+", "Error at ecpp compilation", src);
+    }
     
 }

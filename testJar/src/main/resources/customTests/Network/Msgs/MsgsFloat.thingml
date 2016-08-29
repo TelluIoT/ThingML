@@ -1,6 +1,6 @@
 import "../../datatypes.thingml"
 
 thing fragment MsgsFloat {
-	mFloat(f : Float) @code "120"
-	mHFloat(f1 : Float, f2 : Float) @code "121"
+	message mFloat(f : Float) @code "120"
+	message mHFloat(f1 : Float, f2 : Float) @code "121"
 }

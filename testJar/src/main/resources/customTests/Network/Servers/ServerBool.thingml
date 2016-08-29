@@ -4,7 +4,7 @@ thing Server includes MsgsBool {
 
 	required port p {
 		sends mBool, mHBool
-		reiceives mBool, mHBool
+		receives mBool, mHBool
 	}
 
 	statechart Chart init Running {

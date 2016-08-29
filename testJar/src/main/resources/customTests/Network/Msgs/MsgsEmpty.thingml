@@ -1,6 +1,6 @@
 import "../../datatypes.thingml"
 
 thing fragment MsgsEmpty {
-	m1() @code "65280"
-	m2() @code "255"
+	message m1() @code "65280";
+	message m2() @code "255";
 }

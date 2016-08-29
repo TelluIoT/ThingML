@@ -69,6 +69,15 @@ public class lArduino extends TargetedLanguage {
         
         return new SynchronizedCommand(execCmd4, ".+", null, "Error at c execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
+
+    @Override
+    public Command compileTargeted(File src) {
+        String[] execCmd = new String[2];
+        execCmd[0] = "ano";
+        execCmd[1] = "build";
+        
+        return new Command(execCmd, null, ".+", "Error at c compilation", src);
+    }
     
     
 }

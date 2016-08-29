@@ -19,6 +19,13 @@ datatype Boolean<2>
 	@java_type "boolean"
 	@java_primitive "true";
 
+datatype Bool<2>	
+	@type_checker "Boolean"
+	@c_type "uint8_t"
+	@c_byte_size "2"
+	@java_type "boolean"
+	@java_primitive "true";
+
 datatype Integer<2>	
 	@type_checker "Integer"
 	@c_type "int"

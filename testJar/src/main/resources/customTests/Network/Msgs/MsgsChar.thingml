@@ -1,6 +1,6 @@
 import "../../datatypes.thingml"
 
 thing fragment MsgsChar {
-	mChar(c : Char) @code "130"
-	mHChar(c1 : Char, c2 : Char) @code "131"
+	message mChar(c : Char) @code "130"
+	message mHChar(c1 : Char, c2 : Char) @code "131"
 }

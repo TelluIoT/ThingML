@@ -4,7 +4,7 @@ thing Client includes MsgsChar {
 
 	required port p {
 		sends mChar, mHChar
-		reiceives mChar, mHChar
+		receives mChar, mHChar
 	}
 
 	statechart Chart init S1 {
@@ -16,7 +16,7 @@ thing Client includes MsgsChar {
 
 			transition -> S2
 			event e : p?mChar
-			guard e.b == '\'z\''
+			guard e.c == '\'z\''
 			action print "mChar "
 		}
 		state S2 {

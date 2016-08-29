@@ -1,6 +1,6 @@
 import "../../datatypes.thingml"
 
 thing fragment MsgsBool {
-	mBool(b : Bool) @code "140"
-	mHBool(b1 : Bool, b2 : Bool) @code "141"
+	message mBool(b : Bool) @code "140"
+	message mHBool(b1 : Bool, b2 : Bool) @code "141"
 }

@@ -73,5 +73,23 @@ public class lJava extends TargetedLanguage {
         execCmd[i+1] = "exec:java";
         return new Command(execCmd, ".+", null, "Error at Java execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
+
+    @Override
+    public Command compileTargeted(File src) {
+        String[] execCmd;
+        int i = 0;
+        if (System.getProperty("os.name").startsWith("Win")) {
+            execCmd = new String[5];
+            execCmd[0] = "cmd.exe";
+            execCmd[1] = "/c";
+            i = 2;
+        } else {
+            execCmd = new String[3];
+        }
+        execCmd[i] = maven;
+        execCmd[i+1] = "clean";
+        execCmd[i+2] = "install";
+        return new Command(execCmd, ".*(BUILD SUCCESS).*", null, "Error at Java compilation", src);
+    }
     
 }
