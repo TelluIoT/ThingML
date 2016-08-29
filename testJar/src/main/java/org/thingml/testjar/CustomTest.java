@@ -42,6 +42,7 @@ public class CustomTest extends TestCase {
     public File testDir;
     public File runExec;
     public int nbSteps = 0;
+    public boolean sync = false;
     
     public CustomTest (File testProperties, File tmpDir, List<TargetedLanguage> langs, File compilerJar) {
         this.status = 0;
@@ -77,6 +78,10 @@ public class CustomTest extends TestCase {
             
             if(prop.getProperty("run") != null) {
                 this.runExec = new File(testProperties.getParentFile(), prop.getProperty("run"));
+                if(prop.getProperty("runMono") != null) {
+                    if(prop.getProperty("runMono").compareToIgnoreCase("true") == 0)
+                        this.sync = true;
+                }
             }
             
 	} catch (IOException ex) {
@@ -128,7 +133,10 @@ public class CustomTest extends TestCase {
                 } else {
                     String[] runCmd = new String[1];
                     runCmd[0] = this.runExec.getAbsolutePath();
-                    this.ongoingCmd = new SynchronizedCommand(runCmd, ".+", null, "Error at c execution", testDir);
+                    if(this.sync)
+                        this.ongoingCmd = new SynchronizedCommand(runCmd, ".+", null, "Error at c execution", testDir);
+                    else
+                        this.ongoingCmd = new Command(runCmd, ".+", null, "Error at c execution", testDir);
                 }
             }
         }
