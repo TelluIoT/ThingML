@@ -17,6 +17,8 @@ package org.thingml.compilers.uml;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.CompositeStateHelper;
+import org.sintef.thingml.helpers.StateHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
@@ -86,7 +88,8 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("[*] --> " + sm.getName() + "\n");
         builder.append("state " + sm.getName() + "{\n");
         for (State s : sm.getSubstate()) {
-            generateState(s, builder, ctx);
+            if (!(s instanceof Session))
+                generateState(s, builder, ctx);
         }
         builder.append("[*] --> " + sm.getInitial().getName() + "\n");
         buildActions(sm, builder, ctx);
@@ -97,6 +100,10 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
             generateRegion(r, builder, ctx);
         }
 
+        for(Session s : CompositeStateHelper.allFirstLevelSessions(sm)) {
+            generateRegion(s, builder, ctx);
+        }
+
         builder.append("}\n");
         builder.append("@enduml\n");
     }
@@ -104,7 +111,8 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generateCompositeState(CompositeState c, StringBuilder builder, Context ctx) {
         builder.append("state " + c.getName() + "{\n");
         for (State s : c.getSubstate()) {
-            generateState(s, builder, ctx);
+            if (!(s instanceof Session))
+                generateState(s, builder, ctx);
         }
         builder.append("[*] --> " + c.getInitial().getName() + "\n");
 
@@ -112,6 +120,10 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
         for (Region r : c.getRegion()) {
             generateRegion(r, builder, ctx);
+        }
+
+        for(Session s : CompositeStateHelper.allFirstLevelSessions(c)) {
+            generateRegion(s, builder, ctx);
         }
 
         buildActions(c, builder, ctx);
@@ -135,6 +147,11 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("[*] --> " + r.getInitial().getName() + "\n");
         for (State s : r.getSubstate()) {
             generateState(s, builder, ctx);
+        }
+        if (r instanceof Session) {
+            builder.append("Note top of " + r.getInitial().getName() + " : Session " + r.getName() + "\n");
+        } else {
+            builder.append("Note top of " + r.getInitial().getName() + " : Region " + r.getName() + "\n");
         }
     }
 

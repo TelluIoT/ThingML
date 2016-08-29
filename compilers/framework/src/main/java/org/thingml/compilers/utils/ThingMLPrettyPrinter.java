@@ -36,6 +36,11 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     }
 
     @Override
+    public void generate(StartSession action, StringBuilder builder, Context ctx) {
+        builder.append("fork " + action.getSession().getName() + "\n");
+    }
+
+    @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
         builder.append(action.getProperty().getName() + " = ");
         generate(action.getExpression(), builder, ctx);
