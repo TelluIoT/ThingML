@@ -60,6 +60,30 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
     }
 
     @Override
+    public String getPluginID() {
+        return "CByteArraySerializerPlugin";
+    }
+
+    @Override
+    public List<String> getTargetedLanguages() {
+
+        List<String> res = new ArrayList<>();
+        res.add("posix");
+        res.add("posixmt");
+        res.add("arduino");
+        res.add("sintefboard");
+        return res;
+    }
+
+    @Override
+    public List<String> getSupportedFormat() {
+
+        List<String> res = new ArrayList<>();
+        res.add("Binary");
+        return res;
+    }
+
+    @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
         builder.append("byte " + bufferName + "[" + (cctx.getMessageSerializationSize(m) - 2 - cctx.getIgnoredParameterSerializationSize(m)) + "];\n");
 
@@ -146,30 +170,6 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
             builder.append("}\n");*/
             builder.append("externalMessageEnqueue((uint8_t *) "+bufferName+", " + bufferSizeName + ", " + sender + ");\n");
         }
-    }
-
-    @Override
-    public String getPluginID() {
-        return "CByteArraySerializerPlugin";
-    }
-
-    @Override
-    public List<String> getTargetedLanguages() {
-
-        List<String> res = new ArrayList<>();
-        res.add("posix");
-        res.add("posixmt");
-        res.add("arduino");
-        res.add("sintefboard");
-        return res;
-    }
-
-    @Override
-    public List<String> getSupportedFormat() {
-
-        List<String> res = new ArrayList<>();
-        res.add("Binary");
-        return res;
     }
 
 }

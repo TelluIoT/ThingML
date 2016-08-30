@@ -22,6 +22,7 @@ package org.thingml.testjar;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.AbstractMap;
@@ -30,8 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.io.IOUtils;
 import org.thingml.testjar.lang.TargetedLanguage;
 
 /**
@@ -43,6 +47,7 @@ public class CustomTest extends TestCase {
     public List<Map.Entry<File, TargetedLanguage>> targetedsrcs = new ArrayList<>();
     public File testDir;
     public File runExec;
+    public File dumpFile;
     public int nbSteps = 0;
     public boolean sync = false;
     public String oracle;
@@ -86,6 +91,9 @@ public class CustomTest extends TestCase {
                         this.sync = true;
                 }
                 this.oracle = prop.getProperty("oracle");
+                if(prop.getProperty("dump") != null) {
+                    this.dumpFile = new File(testDir, prop.getProperty("dump"));
+                }
                 
             }
             
@@ -146,7 +154,7 @@ public class CustomTest extends TestCase {
                     System.out.println("Oracle");
                     if(this.oracle != null) {
                         System.out.println("Oracle: <" + this.oracle +">");
-                        oracle();
+                        runOracle();
                     }
                 }
             }
@@ -154,22 +162,24 @@ public class CustomTest extends TestCase {
         writeLogFile();
     }
     
-    public boolean oracle() {
-        if (this.oracle != null)
+    public boolean runOracle() {
+        if (this.oracle == null) {
             return true;
-        else {
+        } else {
             boolean res;
             Pattern p = Pattern.compile(this.oracle);
+            String actual = this.readDump();
+            if(actual.endsWith("\n"))
+                actual = actual.substring(0, actual.length()-1);
             if(p != null) {
-                System.out.println("Oracle pattern compile");
-                Matcher m = p.matcher(this.ongoingCmd.stdlog);
+                Matcher m = p.matcher(actual);
                 res = m.matches();
                 //res = m.find();
                 String oracleLog = "";
                 oracleLog += "[test] <" + this.srcTestCase.getName().split("\\.")[0] + ">" + "\n";
                 //oracleLog += "[raw output] <\n" + ongoingCmd.stdlog + "\n>" + "\n";
                 oracleLog += "[expected] <" + this.oracle + ">" + "\n";
-                oracleLog += "[ actual ] <" + this.ongoingCmd.stdlog + ">" + "\n";
+                oracleLog += "[ actual ] <" + actual + ">" + "\n";
                 oracleLog += "[ match? ] <" + res + ">" + "\n";
 
                 log += "\n\n[Oracle] \n" + oracleLog;
@@ -182,6 +192,30 @@ public class CustomTest extends TestCase {
                 return false;
             }
         }
+    }
+    
+    public String readDump(){
+        String res = "";
+        if(this.dumpFile != null) {
+            FileInputStream inputStream = null;
+            try {
+                inputStream = new FileInputStream(this.dumpFile);
+                try {
+                    res = IOUtils.toString(inputStream);
+                } catch (IOException ex) {
+                    Logger.getLogger(CustomTest.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(CustomTest.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    inputStream.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(CustomTest.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return res;
     }
     
 }

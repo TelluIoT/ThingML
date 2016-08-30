@@ -13,7 +13,7 @@ cat cliStdo.log
 printf "\nCli stdr:\n\n"
 cat cliStdr.log
 
-printf "\n\nSrv stdo:\n\n"
-cat srvStdo.log
-printf "\nSrv stdr:\n\n"
-cat srvStdr.log
+#printf "\n\nSrv stdo:\n\n"
+>&2 cat srvStdo.log
+#printf "\nSrv stdr:\n\n"
+>&2 cat srvStdr.log
