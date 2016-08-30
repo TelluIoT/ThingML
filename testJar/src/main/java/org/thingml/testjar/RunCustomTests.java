@@ -62,6 +62,9 @@ public class RunCustomTests {
         
         tmpDir.delete();
         tmpDir = new File(workingDir, "tmp");
+        File customDir = new File(tmpDir, "custom");
+        customDir.mkdir();
+        
 
         final File testFolder = new File(workingDir.getPath() + "/src/main/resources/customTests");
         //final File testFolder = new File(TestJar.class.getClassLoader().getResource("tests").getFile());
@@ -108,7 +111,7 @@ public class RunCustomTests {
         System.out.println("Test Files:");
         for(File f : testFiles) {
             System.out.println(f.getName());
-            CustomTest ct = new CustomTest(f, tmpDir, langs, compilerJar);
+            CustomTest ct = new CustomTest(f, customDir, langs, compilerJar);
             testCases.add(ct);
             maxRound = max(maxRound, ct.nbSteps);
         }
@@ -125,6 +128,7 @@ public class RunCustomTests {
             System.out.println("\n");
             round++;
         }
+        
     }
     
     public static void testRun(Set<CustomTest> tests, ExecutorService executor) {

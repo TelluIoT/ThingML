@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.thingml.testjar.lang.TargetedLanguage;
 
 /**
@@ -43,6 +45,7 @@ public class CustomTest extends TestCase {
     public File runExec;
     public int nbSteps = 0;
     public boolean sync = false;
+    public String oracle;
     
     public CustomTest (File testProperties, File tmpDir, List<TargetedLanguage> langs, File compilerJar) {
         this.status = 0;
@@ -82,6 +85,8 @@ public class CustomTest extends TestCase {
                     if(prop.getProperty("runMono").compareToIgnoreCase("true") == 0)
                         this.sync = true;
                 }
+                this.oracle = prop.getProperty("oracle");
+                
             }
             
 	} catch (IOException ex) {
@@ -98,9 +103,9 @@ public class CustomTest extends TestCase {
                                 thingmlsrcs.get(0).getKey().getName().split("\\.")[0]),
                             thingmlsrcs.get(0).getValue()));
         }
-        for(Map.Entry<File, TargetedLanguage> e: this.thingmlsrcs) {
+        /*for(Map.Entry<File, TargetedLanguage> e: this.thingmlsrcs) {
             System.out.println(" -e: " + e.getKey().getName() + " | " + e.getValue().compilerID);
-        }
+        }*/
         
     }
 
@@ -118,7 +123,7 @@ public class CustomTest extends TestCase {
         this.isLastStepASuccess = this.ongoingCmd.isSuccess;
         if(this.ongoingCmd.isSuccess) {
             this.status++;
-            System.out.println("s:" + this.status + " thingmlsrcs:" + this.thingmlsrcs.size() + " targetedsrcs:" + this.targetedsrcs.size());
+            //System.out.println("s:" + this.status + " thingmlsrcs:" + this.thingmlsrcs.size() + " targetedsrcs:" + this.targetedsrcs.size());
             if (this.status < this.thingmlsrcs.size()) {
                 this.ongoingCmd = thingmlsrcs.get(this.status).getValue().generateTargeted(thingmlsrcs.get(this.status).getKey(), this.testDir, this.compilerJar);
                 this.targetedsrcs.add(
@@ -130,17 +135,53 @@ public class CustomTest extends TestCase {
             } else {
                 if ((this.status - this.thingmlsrcs.size()) < this.targetedsrcs.size()) {
                     this.ongoingCmd = targetedsrcs.get(this.status - this.thingmlsrcs.size()).getValue().compileTargeted(targetedsrcs.get(this.status - this.thingmlsrcs.size()).getKey());
-                } else {
+                } else if((this.status - this.thingmlsrcs.size()) == this.targetedsrcs.size()) {
                     String[] runCmd = new String[1];
                     runCmd[0] = this.runExec.getAbsolutePath();
                     if(this.sync)
                         this.ongoingCmd = new SynchronizedCommand(runCmd, ".+", null, "Error at c execution", testDir);
                     else
                         this.ongoingCmd = new Command(runCmd, ".+", null, "Error at c execution", testDir);
+                } else {
+                    System.out.println("Oracle");
+                    if(this.oracle != null) {
+                        System.out.println("Oracle: <" + this.oracle +">");
+                        oracle();
+                    }
                 }
             }
         }
         writeLogFile();
+    }
+    
+    public boolean oracle() {
+        if (this.oracle != null)
+            return true;
+        else {
+            boolean res;
+            Pattern p = Pattern.compile(this.oracle);
+            if(p != null) {
+                System.out.println("Oracle pattern compile");
+                Matcher m = p.matcher(this.ongoingCmd.stdlog);
+                res = m.matches();
+                //res = m.find();
+                String oracleLog = "";
+                oracleLog += "[test] <" + this.srcTestCase.getName().split("\\.")[0] + ">" + "\n";
+                //oracleLog += "[raw output] <\n" + ongoingCmd.stdlog + "\n>" + "\n";
+                oracleLog += "[expected] <" + this.oracle + ">" + "\n";
+                oracleLog += "[ actual ] <" + this.ongoingCmd.stdlog + ">" + "\n";
+                oracleLog += "[ match? ] <" + res + ">" + "\n";
+
+                log += "\n\n[Oracle] \n" + oracleLog;
+
+                System.out.println(oracleLog);
+                isLastStepASuccess = res;
+                return res;
+            } else {
+                log += "\n\n[Oracle] \n" + "Error at Expected pattern compilation";
+                return false;
+            }
+        }
     }
     
 }

@@ -39,49 +39,49 @@ import org.thingml.testjar.lang.TargetedLanguage;
  */
 public class SimpleGeneratedTest extends TestCase {
     public TargetedLanguage lang;
-    public int status;
-    public boolean isLastStepASuccess = true;
-    public File srcSimpleGeneratedTest;
+    //public int status;
+    //public boolean isLastStepASuccess = true;
+    //public File srcTestCase;
     public File genCfgDir;
     public File genCfg;
     public File genCodeDir;
-    public File logFile;
+    //public File logFile;
     public String category;
-    public String log;
+    //public String log;
     public String result;
     public String name;
     public String oracleExpected;
     public String oracleActual;
-    public Command ongoingCmd;
+    //public Command ongoingCmd;
     
-    public SimpleGeneratedTest(File srcSimpleGeneratedTest, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir) {
+    public SimpleGeneratedTest(File srcTestCase, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir) {
         this.lang = lang;
         this.status = 0;
         this.compilerJar = complerJar;
-        this.srcSimpleGeneratedTest = srcSimpleGeneratedTest;
+        this.srcTestCase = srcTestCase;
         this.genCfgDir = genCfgDir;
         this.genCodeDir = genCodeDir;
         this.logFile = logDir;
         this.log = "";
         this.result = "";
-        this.name = srcSimpleGeneratedTest.getName().split("\\.thingml")[0];
+        this.name = srcTestCase.getName().split("\\.thingml")[0];
         this.ongoingCmd = lang.generateThingML(this);
-        this.category = srcSimpleGeneratedTest.getParentFile().getName();
+        this.category = srcTestCase.getParentFile().getName();
     }
     
-    public SimpleGeneratedTest(File srcSimpleGeneratedTest, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir, boolean notGen) {
+    public SimpleGeneratedTest(File srcTestCase, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir, boolean notGen) {
         this.lang = lang;
         this.status = 1;
         this.compilerJar = complerJar;
-        this.srcSimpleGeneratedTest = srcSimpleGeneratedTest;
+        this.srcTestCase = srcTestCase;
         this.genCfgDir = genCfgDir;
         this.genCodeDir = genCodeDir;
         this.logFile = logDir;
         this.log = "";
         this.result = "";
-        this.name = srcSimpleGeneratedTest.getName().split("\\.thingml")[0];
+        this.name = srcTestCase.getName().split("\\.thingml")[0];
         this.ongoingCmd = this.lang.generateTargeted(this);
-        this.category = srcSimpleGeneratedTest.getParentFile().getName();
+        this.category = srcTestCase.getParentFile().getName();
     }
     
     public SimpleGeneratedTest(File genCfg, SimpleGeneratedTest t) {
@@ -90,17 +90,17 @@ public class SimpleGeneratedTest extends TestCase {
         this.lang = t.lang;
         this.status = 1;
         this.compilerJar = t.compilerJar;
-        this.srcSimpleGeneratedTest = t.srcSimpleGeneratedTest;
+        this.srcTestCase = t.srcTestCase;
         this.genCfgDir = t.genCfgDir;
         this.genCodeDir = t.genCodeDir;
         this.logFile = new File(t.logFile, "_" + lang.compilerID + "/" + name);
         this.log = "Test: " + name + "\n"
                 + " '-> Source: " + genCfg.getAbsolutePath() + "\n"
-                + "Generated from: " + t.srcSimpleGeneratedTest.getName() + "\n"
-                + " '-> Source: " + t.srcSimpleGeneratedTest.getAbsolutePath() + "\n";
+                + "Generated from: " + t.srcTestCase.getName() + "\n"
+                + " '-> Source: " + t.srcTestCase.getAbsolutePath() + "\n";
         this.result = t.result;
         this.ongoingCmd = lang.generateTargeted(this);
-        this.category = srcSimpleGeneratedTest.getParentFile().getName();
+        this.category = srcTestCase.getParentFile().getName();
     }
     
     public List<SimpleGeneratedTest> generateChildren() {

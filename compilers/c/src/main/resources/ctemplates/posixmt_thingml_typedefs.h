@@ -17,19 +17,16 @@ extern "C" {
 #include <ctype.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 /*TYPEDEFS*/
 
-typedef unsigned char  uint8;
+/*typedef unsigned char  uint8;
 typedef unsigned short uint16;
 typedef signed short   int16;
 typedef unsigned long  uint32;
-typedef signed char    int8;
+typedef signed char    int8;*/
 
-#ifndef BOOL
-#define BOOL
-typedef enum { false, true } bool;
-#endif
 
 #ifdef __cplusplus
 }
