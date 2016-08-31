@@ -61,11 +61,11 @@ thing Client includes MsgsInt {
 		}
 		state S6 {
 			on entry do
-				p!mInt8('31710')
+				p!mInt32('31710')
 			end
 
 			transition -> S7
-			event e : p?mInt16
+			event e : p?mInt32
 			guard e.i == '31710'
 			action print "mInt16 "
 		}
@@ -91,7 +91,7 @@ thing Client includes MsgsInt {
 		}
 		state S9 {
 			on entry do
-				p!mInt8('2147483647')
+				p!mInt32('2147483647')
 			end
 
 			transition -> S10

@@ -61,7 +61,7 @@ thing Client includes MsgsUInt {
 		}
 		state S6 {
 			on entry do
-				p!mUInt8('31710')
+				p!mUInt16('31710')
 			end
 
 			transition -> S7
@@ -91,7 +91,7 @@ thing Client includes MsgsUInt {
 		}
 		state S9 {
 			on entry do
-				p!mUInt8('2147483647')
+				p!mUInt32('2147483647')
 			end
 
 			transition -> S10

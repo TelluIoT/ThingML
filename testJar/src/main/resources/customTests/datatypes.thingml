@@ -71,6 +71,7 @@ datatype Int32<4>
 	@java_primitive "true";
 
 datatype UInt32<4>	
+	@type_checker "Integer"
 	@c_type "uint32_t"
 	@java_type "long"
 	@java_primitive "true";
@@ -96,10 +97,10 @@ datatype Double<8>
 	@java_type "float"
 	@java_primitive "true";
 
-datatype Float<8>
+datatype Float<4>
 	@type_checker "Real"
 	@c_type "float"
-	@c_byte_size "8"
+	@c_byte_size "4"
 	@java_type "float"
 	@java_primitive "true";
 

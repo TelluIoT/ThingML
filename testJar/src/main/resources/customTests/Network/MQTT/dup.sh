@@ -15,5 +15,6 @@ sub="s/Empty/$1/g"
 
 sed -i $sub $prop
 sed -i $sub $psh
-ref=$1"PosixPosix"
-sed -i '/oracle/c\'"$(grep "oracle" test$ref.properties)" $name.properties
+
+sed -i '/oracle/c\'"$(grep "oracle" test$1""PosixPosix.properties)" 
+$name.properties

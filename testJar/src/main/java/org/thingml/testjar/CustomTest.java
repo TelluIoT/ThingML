@@ -51,12 +51,17 @@ public class CustomTest extends TestCase {
     public int nbSteps = 0;
     public boolean sync = false;
     public String oracle;
+    public String category;
     
     public CustomTest (File testProperties, File tmpDir, List<TargetedLanguage> langs, File compilerJar) {
         this.status = 0;
         this.srcTestCase = testProperties;
         this.isLastStepASuccess = true;
-        this.testDir = new File(tmpDir, testProperties.getName().split("\\.")[0]);
+        File pDir = new File(tmpDir, testProperties.getParentFile().getName());
+        if(!pDir.isDirectory())
+            pDir.mkdir();
+        this.category = pDir.getName();
+        this.testDir = new File(pDir, testProperties.getName().split("\\.")[0]);
         this.testDir.mkdir();
         this.log = "";
         this.compilerJar = compilerJar;
@@ -151,9 +156,7 @@ public class CustomTest extends TestCase {
                     else
                         this.ongoingCmd = new Command(runCmd, ".+", null, "Error at c execution", testDir);
                 } else {
-                    System.out.println("Oracle");
                     if(this.oracle != null) {
-                        System.out.println("Oracle: <" + this.oracle +">");
                         runOracle();
                     }
                 }
@@ -176,7 +179,7 @@ public class CustomTest extends TestCase {
                 res = m.matches();
                 //res = m.find();
                 String oracleLog = "";
-                oracleLog += "[test] <" + this.srcTestCase.getName().split("\\.")[0] + ">" + "\n";
+                oracleLog += "[  test  ] <" + this.category + "/" + this.srcTestCase.getName().split("\\.")[0] + ">" + "\n";
                 //oracleLog += "[raw output] <\n" + ongoingCmd.stdlog + "\n>" + "\n";
                 oracleLog += "[expected] <" + this.oracle + ">" + "\n";
                 oracleLog += "[ actual ] <" + actual + ">" + "\n";

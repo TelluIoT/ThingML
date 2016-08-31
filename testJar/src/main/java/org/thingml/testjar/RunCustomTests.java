@@ -21,6 +21,7 @@
 package org.thingml.testjar;
 
 import java.io.File;
+import java.io.PrintWriter;
 import static java.lang.Integer.max;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,7 +129,7 @@ public class RunCustomTests {
             System.out.println("\n");
             round++;
         }
-        
+        writeResultsFile(new File(tmpDir, "customResults.html"), testCases, true, null, null);
     }
     
     public static void testRun(Set<CustomTest> tests, ExecutorService executor) {
@@ -155,6 +156,63 @@ public class RunCustomTests {
             tc.collectResults();
         }
         System.out.println("Done.");
+    }
+    
+    public static void writeResultsFile(File results, Set<CustomTest> tests, boolean localLink, String myIP, String myHTTPServerPort) {
+        StringBuilder res = new StringBuilder();
+        
+        if(localLink) {
+            res.append(TestHelper.writeHeaderCustomResultsFile());
+        }
+        
+        for(CustomTest t : tests) {
+            res.append("            <tr class=\"");
+            if(t.isLastStepASuccess) {
+                res.append("green");
+            } else {
+                res.append("red");
+            }
+            res.append("\">\n");
+            res.append("                <td class=\"category\">" + t.category + "</td>\n");
+            res.append("                <td class=\"testcase\">\n");
+            if(localLink) {
+                res.append("                <a href=\"file://" + t.srcTestCase.getPath() + "\" >" + t.srcTestCase.getName() + "</a>\n");
+            } else {
+                res.append("                <a href=\"http://" + myIP +":" + myHTTPServerPort +"" + t.srcTestCase.getPath() + "\"  target=\"test-case-focus\"> " + t.srcTestCase.getName() + "</a>\n");
+            }
+            res.append("            </td>\n");
+
+            res.append("<td class=\"results\">\n");
+            if(t.isLastStepASuccess) {
+                res.append(" * ");
+            } else {
+                res.append(" ! ");
+            }
+
+            if(localLink || (myIP == null) || (myHTTPServerPort == null)) {
+                res.append("<a href=file://" + t.logFile.getPath() + ">log</a>\n");
+            } else {
+                res.append("<a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(t.logFile.getPath(), "/thingml") + " target=\"test-case-focus\">log</a>\n");
+            }
+            res.append("</td>");
+            res.append("            </tr>\n");
+        }
+        
+        if(localLink) {
+            res.append(TestHelper.writeFooterCustomResultsFile());
+        }
+        
+        
+        if (!results.getParentFile().exists())
+            results.getParentFile().mkdirs();
+        try {
+            PrintWriter w = new PrintWriter(results);
+            w.print(res.toString());
+            w.close();
+        } catch (Exception ex) {
+            System.err.println("Problem writing log");
+            ex.printStackTrace();
+        }
     }
     
 }

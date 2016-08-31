@@ -1,0 +1,46 @@
+import "../Msgs/MsgsUInt.thingml"
+
+thing Client includes MsgsUInt {
+
+	required port p {
+		sends mUInt32
+		receives mUInt32
+	}
+
+	statechart Chart init S1 {
+		state S1 {
+			on entry do
+				print "I "
+				//print "16909060 ( 1 2 3 4 ) -> "
+				p!mUInt32('16909060')
+			end
+
+			transition -> SEnd
+			event e : p?mUInt32
+			action do
+				print "mUInt32 "
+				print e.u
+				print " < "
+				var tmp : UInt32 = e.u / 16777216
+				var reste : UInt32 = e.u - tmp * 16777216
+				print tmp
+				print " "
+				tmp = (reste / 65536)
+				reste = reste - tmp * 65536
+				print tmp
+				print " "
+				tmp = (reste / 256)
+				print tmp
+				reste = reste - tmp * 256
+				print " "
+				tmp = reste
+				print tmp
+				print " > "
+			end
+		}
+		state SEnd {
+			on entry print "End\n"
+		}
+	}
+
+}

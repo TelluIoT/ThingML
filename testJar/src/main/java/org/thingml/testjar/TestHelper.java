@@ -264,5 +264,59 @@ public class TestHelper {
     public static String stripFirstDirFromPath(String path, String dir) {
         return path.replaceFirst(dir, "");
     }
+
+    public static String writeHeaderCustomResultsFile() {
+        StringBuilder res = new StringBuilder();
+        
+        res.append("<!DOCTYPE html>\n" +
+        "<html>\n" +
+        "	<head>\n" +
+        "		<meta charset=\"utf-8\" />\n" +
+        "		<title>ThingML tests results</title>\n" +
+        "		<style>\n" + 
+                writeCSSResultsFile() +
+        "		</style>\n" +
+        "	</head>\n" +
+        "	<body>\n" +
+        "           <div id=\"test-results-tab\">\n" +
+        "               <input class=\"search\" placeholder=\"Search\" />\n" +
+        "               <button class=\"sort\" data-sort=\"category\">\n" +
+        "                   Sort by category\n" +
+        "               </button>\n" +
+        "               <button class=\"sort\" data-sort=\"testcase\">\n" +
+        "                   Sort by test name\n" +
+        "               </button>\n" +
+        "               <button class=\"sort\" data-sort=\"results\">\n" +
+        "                   Sort by test results\n" +
+        "               </button>\n" +
+        "               <table>\n" +
+        "               <tr>\n");
+        res.append("                <th>Category</th>\n");
+        res.append("                <th>Test</th>\n");
+        res.append("                <th>Results</th>\n");
+        res.append("                </tr>\n");
+        res.append("               <tbody class=\"list\">\n");
+        return res.toString();
+    }
+
+    public static String writeFooterCustomResultsFile() {
+        StringBuilder res = new StringBuilder();
+        res.append("            </tbody>\n");
+        res.append("        </table>\n" +
+        "       </div>\n" +
+        "       <script src=\"http://listjs.com/no-cdn/list.js\"></script>\n" +
+        "       <script>\n" +
+        "           var options = {\n" +
+        "               valueNames: [ 'category', 'testcase', 'results'");
+        res.append("]\n");
+                
+        res.append("           };\n" +
+        "           \n" +
+        "           var userList = new List('test-results-tab', options);\n" +
+        "       </script>\n" +
+        " </body>\n");
+        res.append("</html>");
+        return res.toString();
+    }
     
 }

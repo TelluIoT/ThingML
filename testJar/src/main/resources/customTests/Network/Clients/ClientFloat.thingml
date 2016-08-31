@@ -1,7 +1,9 @@
 import "../Msgs/MsgsFloat.thingml"
 
 thing Client includes MsgsFloat {
-
+	property myf : Float = '-3.141560'
+	property myf1 : Float = '0.0'
+	property myf2 : Float = '195.2'
 	required port p {
 		sends mFloat, mHFloat
 		receives mFloat, mHFloat
@@ -11,22 +13,22 @@ thing Client includes MsgsFloat {
 		state S1 {
 			on entry do
 				print "I "
-				p!mFloat('-3.14156')
+				p!mFloat(myf)
 			end
 
 			transition -> S2
 			event e : p?mFloat
-			guard e.f == '-3.14156'
+			guard e.f == myf
 			action print "mFloat "
 		}
 		state S2 {
 			on entry do
-				p!mHFloat('0.0', '195.2')
+				p!mHFloat(myf1, myf2)
 			end
 
 			transition -> SEnd
 			event e : p?mHFloat
-			guard e.f1 == '0.0' and e.f2 == '195.2'
+			guard e.f1 == myf1 and e.f2 == myf2
 			action print "mHFloat "
 		}
 		state SEnd {

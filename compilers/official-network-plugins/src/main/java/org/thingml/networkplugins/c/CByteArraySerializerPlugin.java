@@ -115,15 +115,15 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
                                 builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                                 i++;
                                 j++;
-                            }*/
-                        //} else {
+                            }
+                        /*} else {*/
                             i = cctx.getCByteSize(pt.getType(), 0);
                             while (i > 0) {
                                 i = i - 1;
                                 builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");
                                 j++;
                             }
-                        //}
+                        //}*/
                     }
                 }
             }

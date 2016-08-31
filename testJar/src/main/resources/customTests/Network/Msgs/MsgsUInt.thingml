@@ -2,7 +2,7 @@ import "../../datatypes.thingml"
 
 thing fragment MsgsUInt {
 	message mUInt8(u : UInt8) @code "100"
-	message mUInt16(u : UInt8) @code "101"
-	message mUInt32(u : UInt8) @code "102"
+	message mUInt16(u : UInt16) @code "101"
+	message mUInt32(u : UInt32) @code "102"
 	message mHUInt(u1 : UInt32, u2 : UInt16) @code "103"
 }

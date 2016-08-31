@@ -2,7 +2,7 @@ import "../../datatypes.thingml"
 
 thing fragment MsgsInt {
 	message mInt8(i : Int8) @code "110"
-	message mInt16(i : Int8) @code "111"
-	message mInt32(i : Int8) @code "112"
+	message mInt16(i : Int16) @code "111"
+	message mInt32(i : Int32) @code "112"
 	message mHInt(i1 : Int32, i2 : Int16) @code "113"
 }
