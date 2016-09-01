@@ -243,8 +243,8 @@ public class JsMQTTPlugin extends NetworkPlugin {
                 }
                 input.close();
                 final String url = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "127.0.0.1");
-                final String subtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "subscribe", "default");
-                final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "default");
+                final String subtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "subscribe", "ThingML");
+                final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "ThingML");
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "var MQTT = require('./MQTTJS');\n/*$REQUIRE_PLUGINS$*/\n");
                 main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nvar mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + subtopic + "\", \"" + pubtopic + "\", " + conn.getInst().getInstance().getName() + ", function (started) {if (started) {");
