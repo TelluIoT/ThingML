@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.thingml.xtext.ide.contentassist.antlr.internal;
 
 import java.io.InputStream;
@@ -39,66 +24,8 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
         "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_STRING_LIT", "RULE_ID", "RULE_INT", "RULE_STRING_EXT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'import'", "'@'", "'datatype'", "'<'", "'>'", "';'", "'object'", "'enumeration'", "'{'", "'}'", "'thing'", "'includes'", "','", "'set'", "'='", "'['", "']'", "'protocol'", "'function'", "'('", "')'", "'is'", "':'", "'property'", "'message'", "'required'", "'port'", "'sends'", "'receives'", "'provided'", "'internal'", "'stream'", "'from'", "'produce'", "'select'", "'join'", "'->'", "'&'", "'::'", "'merge'", "'|'", "'keep'", "'if'", "'buffer'", "'by'", "'during'", "'length'", "'statechart'", "'init'", "'keeps'", "'on'", "'entry'", "'exit'", "'state'", "'final'", "'composite'", "'session'", "'region'", "'transition'", "'event'", "'guard'", "'action'", "'?'", "'do'", "'end'", "'var'", "'!'", "'++'", "'--'", "'while'", "'else'", "'return'", "'print'", "'error'", "'spawn'", "'configuration'", "'instance'", "'.'", "'connector'", "'=>'", "'over'", "'fragment'", "'optional'", "'history'", "'readonly'"
     };
-    public static final int RULE_ID=5;
-    public static final int T__29=29;
-    public static final int T__28=28;
-    public static final int T__27=27;
-    public static final int T__26=26;
-    public static final int T__25=25;
-    public static final int T__24=24;
-    public static final int T__23=23;
-    public static final int T__22=22;
-    public static final int RULE_ANY_OTHER=11;
-    public static final int T__21=21;
-    public static final int T__20=20;
-    public static final int EOF=-1;
-    public static final int T__93=93;
-    public static final int T__19=19;
-    public static final int T__94=94;
-    public static final int T__91=91;
-    public static final int T__92=92;
-    public static final int T__16=16;
-    public static final int T__15=15;
-    public static final int T__90=90;
-    public static final int T__18=18;
-    public static final int T__17=17;
-    public static final int T__12=12;
-    public static final int T__14=14;
-    public static final int T__13=13;
-    public static final int T__96=96;
-    public static final int T__95=95;
-    public static final int T__80=80;
-    public static final int T__81=81;
-    public static final int T__82=82;
-    public static final int T__83=83;
-    public static final int RULE_STRING_EXT=7;
-    public static final int T__85=85;
-    public static final int T__84=84;
-    public static final int T__87=87;
-    public static final int T__86=86;
-    public static final int T__89=89;
-    public static final int T__88=88;
-    public static final int RULE_ML_COMMENT=8;
-    public static final int T__71=71;
-    public static final int T__72=72;
-    public static final int T__70=70;
-    public static final int T__76=76;
-    public static final int T__75=75;
-    public static final int T__74=74;
-    public static final int T__73=73;
-    public static final int T__79=79;
-    public static final int T__78=78;
-    public static final int T__77=77;
-    public static final int T__68=68;
-    public static final int T__69=69;
-    public static final int T__66=66;
-    public static final int T__67=67;
-    public static final int T__64=64;
-    public static final int T__65=65;
-    public static final int T__62=62;
-    public static final int T__63=63;
-    public static final int T__61=61;
-    public static final int T__60=60;
+    public static final int T__50=50;
+    public static final int T__59=59;
     public static final int T__55=55;
     public static final int T__56=56;
     public static final int T__57=57;
@@ -107,32 +34,90 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
     public static final int T__52=52;
     public static final int T__53=53;
     public static final int T__54=54;
-    public static final int T__59=59;
+    public static final int T__60=60;
+    public static final int T__61=61;
+    public static final int RULE_ID=5;
     public static final int RULE_INT=6;
-    public static final int T__50=50;
-    public static final int T__42=42;
-    public static final int T__43=43;
-    public static final int T__40=40;
-    public static final int T__41=41;
-    public static final int T__46=46;
-    public static final int T__47=47;
-    public static final int T__44=44;
-    public static final int T__45=45;
-    public static final int T__48=48;
-    public static final int T__49=49;
-    public static final int RULE_SL_COMMENT=9;
-    public static final int T__30=30;
-    public static final int T__31=31;
-    public static final int T__32=32;
+    public static final int T__66=66;
+    public static final int RULE_ML_COMMENT=8;
+    public static final int T__67=67;
+    public static final int T__68=68;
+    public static final int T__69=69;
+    public static final int T__62=62;
+    public static final int T__63=63;
+    public static final int RULE_STRING_EXT=7;
+    public static final int T__64=64;
+    public static final int T__65=65;
+    public static final int T__37=37;
+    public static final int T__38=38;
+    public static final int T__39=39;
     public static final int T__33=33;
     public static final int T__34=34;
     public static final int T__35=35;
     public static final int T__36=36;
-    public static final int T__37=37;
-    public static final int T__38=38;
-    public static final int T__39=39;
-    public static final int RULE_WS=10;
+    public static final int T__30=30;
+    public static final int T__31=31;
+    public static final int T__32=32;
+    public static final int T__48=48;
+    public static final int T__49=49;
+    public static final int T__44=44;
+    public static final int T__45=45;
+    public static final int T__46=46;
+    public static final int T__47=47;
+    public static final int T__40=40;
+    public static final int T__41=41;
+    public static final int T__42=42;
+    public static final int T__43=43;
+    public static final int T__91=91;
+    public static final int T__92=92;
+    public static final int T__93=93;
+    public static final int T__94=94;
+    public static final int T__90=90;
+    public static final int T__19=19;
+    public static final int T__15=15;
+    public static final int T__16=16;
+    public static final int T__17=17;
+    public static final int T__18=18;
+    public static final int T__12=12;
+    public static final int T__13=13;
+    public static final int T__14=14;
+    public static final int T__95=95;
+    public static final int T__96=96;
     public static final int RULE_STRING_LIT=4;
+    public static final int T__26=26;
+    public static final int T__27=27;
+    public static final int T__28=28;
+    public static final int T__29=29;
+    public static final int T__22=22;
+    public static final int T__23=23;
+    public static final int T__24=24;
+    public static final int T__25=25;
+    public static final int T__20=20;
+    public static final int T__21=21;
+    public static final int T__70=70;
+    public static final int T__71=71;
+    public static final int T__72=72;
+    public static final int RULE_SL_COMMENT=9;
+    public static final int T__77=77;
+    public static final int T__78=78;
+    public static final int T__79=79;
+    public static final int T__73=73;
+    public static final int EOF=-1;
+    public static final int T__74=74;
+    public static final int T__75=75;
+    public static final int T__76=76;
+    public static final int T__80=80;
+    public static final int T__81=81;
+    public static final int T__82=82;
+    public static final int T__83=83;
+    public static final int RULE_WS=10;
+    public static final int RULE_ANY_OTHER=11;
+    public static final int T__88=88;
+    public static final int T__89=89;
+    public static final int T__84=84;
+    public static final int T__85=85;
+    public static final int T__86=86;
+    public static final int T__87=87;
 
     // delegates
     // delegators
@@ -7474,31 +7459,21 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
                 if ( (LA17_1==RULE_ID) ) {
                     int LA17_2 = input.LA(3);
 
-                    if ( (LA17_2==RULE_ID) ) {
+                    if ( (LA17_2==89) ) {
                         int LA17_3 = input.LA(4);
 
-                        if ( (LA17_3==89) ) {
-                            int LA17_4 = input.LA(5);
+                        if ( (LA17_3==RULE_ID) ) {
+                            int LA17_5 = input.LA(5);
 
-                            if ( (LA17_4==RULE_ID) ) {
-                                int LA17_5 = input.LA(6);
-
-                                if ( (LA17_5==91) ) {
-                                    alt17=1;
-                                }
-                                else if ( (LA17_5==92) ) {
-                                    alt17=2;
-                                }
-                                else {
-                                    NoViableAltException nvae =
-                                        new NoViableAltException("", 17, 5, input);
-
-                                    throw nvae;
-                                }
+                            if ( (LA17_5==92) ) {
+                                alt17=2;
+                            }
+                            else if ( (LA17_5==91) ) {
+                                alt17=1;
                             }
                             else {
                                 NoViableAltException nvae =
-                                    new NoViableAltException("", 17, 4, input);
+                                    new NoViableAltException("", 17, 5, input);
 
                                 throw nvae;
                             }
@@ -7510,21 +7485,31 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
                             throw nvae;
                         }
                     }
-                    else if ( (LA17_2==89) ) {
+                    else if ( (LA17_2==RULE_ID) ) {
                         int LA17_4 = input.LA(4);
 
-                        if ( (LA17_4==RULE_ID) ) {
-                            int LA17_5 = input.LA(5);
+                        if ( (LA17_4==89) ) {
+                            int LA17_3 = input.LA(5);
 
-                            if ( (LA17_5==91) ) {
-                                alt17=1;
-                            }
-                            else if ( (LA17_5==92) ) {
-                                alt17=2;
+                            if ( (LA17_3==RULE_ID) ) {
+                                int LA17_5 = input.LA(6);
+
+                                if ( (LA17_5==92) ) {
+                                    alt17=2;
+                                }
+                                else if ( (LA17_5==91) ) {
+                                    alt17=1;
+                                }
+                                else {
+                                    NoViableAltException nvae =
+                                        new NoViableAltException("", 17, 5, input);
+
+                                    throw nvae;
+                                }
                             }
                             else {
                                 NoViableAltException nvae =
-                                    new NoViableAltException("", 17, 5, input);
+                                    new NoViableAltException("", 17, 3, input);
 
                                 throw nvae;
                             }
@@ -53441,13 +53426,13 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
     static final String dfa_1s = "\20\uffff";
     static final String dfa_2s = "\1\5\2\uffff\1\32\14\uffff";
     static final String dfa_3s = "\1\140\2\uffff\1\120\14\uffff";
-    static final String dfa_4s = "\1\uffff\1\1\1\2\1\uffff\1\7\1\10\1\11\1\12\1\13\1\14\1\16\1\6\1\5\1\3\1\15\1\4";
+    static final String dfa_4s = "\1\uffff\1\1\1\2\1\uffff\1\7\1\10\1\11\1\12\1\13\1\14\1\16\1\15\1\4\1\6\1\5\1\3";
     static final String dfa_5s = "\20\uffff}>";
     static final String[] dfa_6s = {
             "\1\3\1\uffff\1\2\56\uffff\1\5\24\uffff\1\1\1\uffff\1\12\3\uffff\1\4\1\uffff\1\6\1\7\1\10\1\11\11\uffff\1\12",
             "",
             "",
-            "\2\17\3\uffff\1\16\56\uffff\1\15\1\14\1\13",
+            "\2\14\3\uffff\1\13\56\uffff\1\17\1\16\1\15",
             "",
             "",
             "",
