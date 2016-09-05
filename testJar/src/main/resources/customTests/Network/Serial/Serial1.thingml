@@ -1,5 +1,6 @@
 protocol Serial1
 	@serial_path_to_device "modem1"
+	@port "modem1"
 	@serializer "Binary"
 	@trace_level "0"
 	;
