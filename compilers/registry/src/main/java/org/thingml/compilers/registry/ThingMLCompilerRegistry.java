@@ -118,7 +118,7 @@ public class ThingMLCompilerRegistry {
     public void printNetworkPluginList() {
         System.out.println("Network Plugin list: ");
         for (NetworkPlugin np : loadedPlugins) {
-            System.out.print("    | " + np.getPluginID() + " (");
+            System.out.print("    └╼ " + np.getPluginID() + " (");
             boolean first = true;
             for (String lang : np.getTargetedLanguages()) {
                 if (first) {
@@ -130,7 +130,7 @@ public class ThingMLCompilerRegistry {
             }
             System.out.println(") handles:");
             for (String p : np.getSupportedProtocols()) {
-                System.out.println("        | " + p);
+                System.out.println("        └╼ " + p);
             }
         }
     }
@@ -138,7 +138,7 @@ public class ThingMLCompilerRegistry {
     public void printSerializationPluginList() {
         System.out.println("Serialization Plugin list: ");
         for (SerializationPlugin sp : loadedSerPlugins) {
-            System.out.print("    | " + sp.getPluginID() + " (");
+            System.out.print("    └╼ " + sp.getPluginID() + " (");
             boolean first = true;
             for (String lang : sp.getTargetedLanguages()) {
                 if (first) {

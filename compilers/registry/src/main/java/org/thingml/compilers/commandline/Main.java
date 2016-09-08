@@ -66,14 +66,14 @@ public class Main {
 
         System.out.println("Compiler Id must belong to the following list:");
         for (ThingMLCompiler c : registry.getCompilerPrototypes()) {
-            System.out.println(" |     " + c.getID() + "\t- " + c.getDescription());
+            System.out.println(" └╼     " + c.getID() + "\t- " + c.getDescription());
         }
 
         System.out.println();
 
         System.out.println("Tool Id must belong to the following list:");
         for (ThingMLTool t : toolregistry.getToolPrototypes()) {
-            System.out.println(" |     " + t.getID() + "\t- " + t.getDescription());
+            System.out.println(" └╼     " + t.getID() + "\t- " + t.getDescription());
         }
     }
 
