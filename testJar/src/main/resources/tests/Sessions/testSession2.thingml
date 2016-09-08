@@ -30,13 +30,14 @@ thing TestSession2 includes Test
 			action harnessOut!testOut(e.id)
     	}
 
-		session s<5> init S1 {
+		session s <5> init S1 {
 			state S1 {
 				transition -> S2
 				event e : p?m
 				guard e.id == ID
 				action p!n(ID)
-			}		
+			}
+			
 			final state S2 {
 			}		
 		}
