@@ -1,3 +1,4 @@
+org.thingml.networkplugins.c.arduino.ArduinoMSPPlugin
 org.thingml.networkplugins.c.arduino.ArduinoSerialPlugin
 org.thingml.networkplugins.c.arduino.ArduinoTimerPlugin
 org.thingml.networkplugins.c.arduino.ESP8266UDPPlugin
