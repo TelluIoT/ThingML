@@ -18,10 +18,15 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.InternalTransition;
 import org.thingml.xtext.thingML.ParallelRegion;
+import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.ThingMLPackage;
+import org.thingml.xtext.thingML.Transition;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,6 +36,13 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getEntry <em>Entry</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getExit <em>Exit</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getProperties <em>Properties</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getInternal <em>Internal</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getOutgoing <em>Outgoing</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#isHistory <em>History</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getSubstate <em>Substate</em>}</li>
@@ -39,8 +51,88 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *
  * @generated
  */
-public class CompositeStateImpl extends StateImpl implements CompositeState
+public class CompositeStateImpl extends RegionImpl implements CompositeState
 {
+  /**
+   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected static final String NAME_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected String name = NAME_EDEFAULT;
+
+  /**
+   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getAnnotations()
+   * @generated
+   * @ordered
+   */
+  protected EList<PlatformAnnotation> annotations;
+
+  /**
+   * The cached value of the '{@link #getEntry() <em>Entry</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getEntry()
+   * @generated
+   * @ordered
+   */
+  protected Action entry;
+
+  /**
+   * The cached value of the '{@link #getExit() <em>Exit</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getExit()
+   * @generated
+   * @ordered
+   */
+  protected Action exit;
+
+  /**
+   * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getProperties()
+   * @generated
+   * @ordered
+   */
+  protected EList<Property> properties;
+
+  /**
+   * The cached value of the '{@link #getInternal() <em>Internal</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getInternal()
+   * @generated
+   * @ordered
+   */
+  protected EList<InternalTransition> internal;
+
+  /**
+   * The cached value of the '{@link #getOutgoing() <em>Outgoing</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getOutgoing()
+   * @generated
+   * @ordered
+   */
+  protected EList<Transition> outgoing;
+
   /**
    * The cached value of the '{@link #getInitial() <em>Initial</em>}' reference.
    * <!-- begin-user-doc -->
@@ -110,6 +202,181 @@ public class CompositeStateImpl extends StateImpl implements CompositeState
   protected EClass eStaticClass()
   {
     return ThingMLPackage.Literals.COMPOSITE_STATE;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String getName()
+  {
+    return name;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setName(String newName)
+  {
+    String oldName = name;
+    name = newName;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.COMPOSITE_STATE__NAME, oldName, name));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<PlatformAnnotation> getAnnotations()
+  {
+    if (annotations == null)
+    {
+      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS);
+    }
+    return annotations;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Action getEntry()
+  {
+    return entry;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetEntry(Action newEntry, NotificationChain msgs)
+  {
+    Action oldEntry = entry;
+    entry = newEntry;
+    if (eNotificationRequired())
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.COMPOSITE_STATE__ENTRY, oldEntry, newEntry);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setEntry(Action newEntry)
+  {
+    if (newEntry != entry)
+    {
+      NotificationChain msgs = null;
+      if (entry != null)
+        msgs = ((InternalEObject)entry).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.COMPOSITE_STATE__ENTRY, null, msgs);
+      if (newEntry != null)
+        msgs = ((InternalEObject)newEntry).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.COMPOSITE_STATE__ENTRY, null, msgs);
+      msgs = basicSetEntry(newEntry, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.COMPOSITE_STATE__ENTRY, newEntry, newEntry));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Action getExit()
+  {
+    return exit;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetExit(Action newExit, NotificationChain msgs)
+  {
+    Action oldExit = exit;
+    exit = newExit;
+    if (eNotificationRequired())
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.COMPOSITE_STATE__EXIT, oldExit, newExit);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setExit(Action newExit)
+  {
+    if (newExit != exit)
+    {
+      NotificationChain msgs = null;
+      if (exit != null)
+        msgs = ((InternalEObject)exit).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.COMPOSITE_STATE__EXIT, null, msgs);
+      if (newExit != null)
+        msgs = ((InternalEObject)newExit).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.COMPOSITE_STATE__EXIT, null, msgs);
+      msgs = basicSetExit(newExit, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.COMPOSITE_STATE__EXIT, newExit, newExit));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<Property> getProperties()
+  {
+    if (properties == null)
+    {
+      properties = new EObjectContainmentEList<Property>(Property.class, this, ThingMLPackage.COMPOSITE_STATE__PROPERTIES);
+    }
+    return properties;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<InternalTransition> getInternal()
+  {
+    if (internal == null)
+    {
+      internal = new EObjectContainmentEList<InternalTransition>(InternalTransition.class, this, ThingMLPackage.COMPOSITE_STATE__INTERNAL);
+    }
+    return internal;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<Transition> getOutgoing()
+  {
+    if (outgoing == null)
+    {
+      outgoing = new EObjectContainmentEList<Transition>(Transition.class, this, ThingMLPackage.COMPOSITE_STATE__OUTGOING);
+    }
+    return outgoing;
   }
 
   /**
@@ -216,6 +483,18 @@ public class CompositeStateImpl extends StateImpl implements CompositeState
   {
     switch (featureID)
     {
+      case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS:
+        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.COMPOSITE_STATE__ENTRY:
+        return basicSetEntry(null, msgs);
+      case ThingMLPackage.COMPOSITE_STATE__EXIT:
+        return basicSetExit(null, msgs);
+      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
+        return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.COMPOSITE_STATE__INTERNAL:
+        return ((InternalEList<?>)getInternal()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
+        return ((InternalEList<?>)getOutgoing()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.COMPOSITE_STATE__SUBSTATE:
         return ((InternalEList<?>)getSubstate()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.COMPOSITE_STATE__REGION:
@@ -234,6 +513,20 @@ public class CompositeStateImpl extends StateImpl implements CompositeState
   {
     switch (featureID)
     {
+      case ThingMLPackage.COMPOSITE_STATE__NAME:
+        return getName();
+      case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS:
+        return getAnnotations();
+      case ThingMLPackage.COMPOSITE_STATE__ENTRY:
+        return getEntry();
+      case ThingMLPackage.COMPOSITE_STATE__EXIT:
+        return getExit();
+      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
+        return getProperties();
+      case ThingMLPackage.COMPOSITE_STATE__INTERNAL:
+        return getInternal();
+      case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
+        return getOutgoing();
       case ThingMLPackage.COMPOSITE_STATE__INITIAL:
         if (resolve) return getInitial();
         return basicGetInitial();
@@ -258,6 +551,31 @@ public class CompositeStateImpl extends StateImpl implements CompositeState
   {
     switch (featureID)
     {
+      case ThingMLPackage.COMPOSITE_STATE__NAME:
+        setName((String)newValue);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS:
+        getAnnotations().clear();
+        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__ENTRY:
+        setEntry((Action)newValue);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__EXIT:
+        setExit((Action)newValue);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
+        getProperties().clear();
+        getProperties().addAll((Collection<? extends Property>)newValue);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__INTERNAL:
+        getInternal().clear();
+        getInternal().addAll((Collection<? extends InternalTransition>)newValue);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
+        getOutgoing().clear();
+        getOutgoing().addAll((Collection<? extends Transition>)newValue);
+        return;
       case ThingMLPackage.COMPOSITE_STATE__INITIAL:
         setInitial((State)newValue);
         return;
@@ -286,6 +604,27 @@ public class CompositeStateImpl extends StateImpl implements CompositeState
   {
     switch (featureID)
     {
+      case ThingMLPackage.COMPOSITE_STATE__NAME:
+        setName(NAME_EDEFAULT);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS:
+        getAnnotations().clear();
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__ENTRY:
+        setEntry((Action)null);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__EXIT:
+        setExit((Action)null);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
+        getProperties().clear();
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__INTERNAL:
+        getInternal().clear();
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
+        getOutgoing().clear();
+        return;
       case ThingMLPackage.COMPOSITE_STATE__INITIAL:
         setInitial((State)null);
         return;
@@ -312,6 +651,20 @@ public class CompositeStateImpl extends StateImpl implements CompositeState
   {
     switch (featureID)
     {
+      case ThingMLPackage.COMPOSITE_STATE__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS:
+        return annotations != null && !annotations.isEmpty();
+      case ThingMLPackage.COMPOSITE_STATE__ENTRY:
+        return entry != null;
+      case ThingMLPackage.COMPOSITE_STATE__EXIT:
+        return exit != null;
+      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
+        return properties != null && !properties.isEmpty();
+      case ThingMLPackage.COMPOSITE_STATE__INTERNAL:
+        return internal != null && !internal.isEmpty();
+      case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
+        return outgoing != null && !outgoing.isEmpty();
       case ThingMLPackage.COMPOSITE_STATE__INITIAL:
         return initial != null;
       case ThingMLPackage.COMPOSITE_STATE__HISTORY:
@@ -330,12 +683,64 @@ public class CompositeStateImpl extends StateImpl implements CompositeState
    * @generated
    */
   @Override
+  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == State.class)
+    {
+      switch (derivedFeatureID)
+      {
+        case ThingMLPackage.COMPOSITE_STATE__NAME: return ThingMLPackage.STATE__NAME;
+        case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS: return ThingMLPackage.STATE__ANNOTATIONS;
+        case ThingMLPackage.COMPOSITE_STATE__ENTRY: return ThingMLPackage.STATE__ENTRY;
+        case ThingMLPackage.COMPOSITE_STATE__EXIT: return ThingMLPackage.STATE__EXIT;
+        case ThingMLPackage.COMPOSITE_STATE__PROPERTIES: return ThingMLPackage.STATE__PROPERTIES;
+        case ThingMLPackage.COMPOSITE_STATE__INTERNAL: return ThingMLPackage.STATE__INTERNAL;
+        case ThingMLPackage.COMPOSITE_STATE__OUTGOING: return ThingMLPackage.STATE__OUTGOING;
+        default: return -1;
+      }
+    }
+    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == State.class)
+    {
+      switch (baseFeatureID)
+      {
+        case ThingMLPackage.STATE__NAME: return ThingMLPackage.COMPOSITE_STATE__NAME;
+        case ThingMLPackage.STATE__ANNOTATIONS: return ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS;
+        case ThingMLPackage.STATE__ENTRY: return ThingMLPackage.COMPOSITE_STATE__ENTRY;
+        case ThingMLPackage.STATE__EXIT: return ThingMLPackage.COMPOSITE_STATE__EXIT;
+        case ThingMLPackage.STATE__PROPERTIES: return ThingMLPackage.COMPOSITE_STATE__PROPERTIES;
+        case ThingMLPackage.STATE__INTERNAL: return ThingMLPackage.COMPOSITE_STATE__INTERNAL;
+        case ThingMLPackage.STATE__OUTGOING: return ThingMLPackage.COMPOSITE_STATE__OUTGOING;
+        default: return -1;
+      }
+    }
+    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public String toString()
   {
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (history: ");
+    result.append(" (name: ");
+    result.append(name);
+    result.append(", history: ");
     result.append(history);
     result.append(')');
     return result.toString();

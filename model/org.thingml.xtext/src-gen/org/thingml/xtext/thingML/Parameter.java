@@ -23,7 +23,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface Parameter extends ReferencedElmt, Variable
+public interface Parameter extends AnnotatedElement, ReferencedElmt, Variable
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.

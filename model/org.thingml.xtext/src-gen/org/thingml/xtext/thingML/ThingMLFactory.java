@@ -33,6 +33,15 @@ public interface ThingMLFactory extends EFactory
   ThingMLModel createThingMLModel();
 
   /**
+   * Returns a new object of class '<em>Import</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Import</em>'.
+   * @generated
+   */
+  Import createImport();
+
+  /**
    * Returns a new object of class '<em>Platform Annotation</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -40,6 +49,24 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   PlatformAnnotation createPlatformAnnotation();
+
+  /**
+   * Returns a new object of class '<em>Annotated Element</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Annotated Element</em>'.
+   * @generated
+   */
+  AnnotatedElement createAnnotatedElement();
+
+  /**
+   * Returns a new object of class '<em>Named Element</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Named Element</em>'.
+   * @generated
+   */
+  NamedElement createNamedElement();
 
   /**
    * Returns a new object of class '<em>Type</em>'.
@@ -330,15 +357,6 @@ public interface ThingMLFactory extends EFactory
   StateMachine createStateMachine();
 
   /**
-   * Returns a new object of class '<em>State</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>State</em>'.
-   * @generated
-   */
-  State createState();
-
-  /**
    * Returns a new object of class '<em>Region</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -382,6 +400,24 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   ParallelRegion createParallelRegion();
+
+  /**
+   * Returns a new object of class '<em>State</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>State</em>'.
+   * @generated
+   */
+  State createState();
+
+  /**
+   * Returns a new object of class '<em>Handler</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Handler</em>'.
+   * @generated
+   */
+  Handler createHandler();
 
   /**
    * Returns a new object of class '<em>Transition</em>'.

@@ -34,7 +34,7 @@
 'error'=85
 'event'=71
 'exit'=64
-'final'=66
+'final'=65
 'fragment'=93
 'from'=44
 'function'=30
@@ -73,7 +73,7 @@
 'session'=68
 'set'=25
 'spawn'=86
-'state'=65
+'state'=66
 'statechart'=59
 'stream'=43
 'thing'=22

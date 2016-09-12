@@ -3,12 +3,22 @@
  */
 package org.thingml.xtext.thingML.impl;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
@@ -20,13 +30,35 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.thingml.xtext.thingML.impl.PrimitiveTypeImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PrimitiveTypeImpl#getByteSize <em>Byte Size</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.PrimitiveTypeImpl#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class PrimitiveTypeImpl extends TypeImpl implements PrimitiveType
+public class PrimitiveTypeImpl extends NamedElementImpl implements PrimitiveType
 {
+  /**
+   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected static final String NAME_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected String name = NAME_EDEFAULT;
+
   /**
    * The default value of the '{@link #getByteSize() <em>Byte Size</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -48,6 +80,16 @@ public class PrimitiveTypeImpl extends TypeImpl implements PrimitiveType
   protected int byteSize = BYTE_SIZE_EDEFAULT;
 
   /**
+   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getAnnotations()
+   * @generated
+   * @ordered
+   */
+  protected EList<PlatformAnnotation> annotations;
+
+  /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -66,6 +108,29 @@ public class PrimitiveTypeImpl extends TypeImpl implements PrimitiveType
   protected EClass eStaticClass()
   {
     return ThingMLPackage.Literals.PRIMITIVE_TYPE;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String getName()
+  {
+    return name;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setName(String newName)
+  {
+    String oldName = name;
+    name = newName;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PRIMITIVE_TYPE__NAME, oldName, name));
   }
 
   /**
@@ -96,13 +161,47 @@ public class PrimitiveTypeImpl extends TypeImpl implements PrimitiveType
    * <!-- end-user-doc -->
    * @generated
    */
+  public EList<PlatformAnnotation> getAnnotations()
+  {
+    if (annotations == null)
+    {
+      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.PRIMITIVE_TYPE__ANNOTATIONS);
+    }
+    return annotations;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  {
+    switch (featureID)
+    {
+      case ThingMLPackage.PRIMITIVE_TYPE__ANNOTATIONS:
+        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+    }
+    return super.eInverseRemove(otherEnd, featureID, msgs);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
     {
+      case ThingMLPackage.PRIMITIVE_TYPE__NAME:
+        return getName();
       case ThingMLPackage.PRIMITIVE_TYPE__BYTE_SIZE:
         return getByteSize();
+      case ThingMLPackage.PRIMITIVE_TYPE__ANNOTATIONS:
+        return getAnnotations();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -112,13 +211,21 @@ public class PrimitiveTypeImpl extends TypeImpl implements PrimitiveType
    * <!-- end-user-doc -->
    * @generated
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
     switch (featureID)
     {
+      case ThingMLPackage.PRIMITIVE_TYPE__NAME:
+        setName((String)newValue);
+        return;
       case ThingMLPackage.PRIMITIVE_TYPE__BYTE_SIZE:
         setByteSize((Integer)newValue);
+        return;
+      case ThingMLPackage.PRIMITIVE_TYPE__ANNOTATIONS:
+        getAnnotations().clear();
+        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -134,8 +241,14 @@ public class PrimitiveTypeImpl extends TypeImpl implements PrimitiveType
   {
     switch (featureID)
     {
+      case ThingMLPackage.PRIMITIVE_TYPE__NAME:
+        setName(NAME_EDEFAULT);
+        return;
       case ThingMLPackage.PRIMITIVE_TYPE__BYTE_SIZE:
         setByteSize(BYTE_SIZE_EDEFAULT);
+        return;
+      case ThingMLPackage.PRIMITIVE_TYPE__ANNOTATIONS:
+        getAnnotations().clear();
         return;
     }
     super.eUnset(featureID);
@@ -151,8 +264,12 @@ public class PrimitiveTypeImpl extends TypeImpl implements PrimitiveType
   {
     switch (featureID)
     {
+      case ThingMLPackage.PRIMITIVE_TYPE__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.PRIMITIVE_TYPE__BYTE_SIZE:
         return byteSize != BYTE_SIZE_EDEFAULT;
+      case ThingMLPackage.PRIMITIVE_TYPE__ANNOTATIONS:
+        return annotations != null && !annotations.isEmpty();
     }
     return super.eIsSet(featureID);
   }
@@ -168,7 +285,9 @@ public class PrimitiveTypeImpl extends TypeImpl implements PrimitiveType
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (ByteSize: ");
+    result.append(" (name: ");
+    result.append(name);
+    result.append(", ByteSize: ");
     result.append(byteSize);
     result.append(')');
     return result.toString();

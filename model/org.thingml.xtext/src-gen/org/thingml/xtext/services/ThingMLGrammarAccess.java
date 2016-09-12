@@ -26,11 +26,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	public class ThingMLModelElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.ThingMLModel");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
-		private final Keyword cImportKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
-		private final Assignment cImportsAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
-		private final CrossReference cImportsThingMLModelCrossReference_0_1_0 = (CrossReference)cImportsAssignment_0_1.eContents().get(0);
-		private final RuleCall cImportsThingMLModelSTRING_LITTerminalRuleCall_0_1_0_1 = (RuleCall)cImportsThingMLModelCrossReference_0_1_0.eContents().get(1);
+		private final Assignment cImportsAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cImportsImportParserRuleCall_0_0 = (RuleCall)cImportsAssignment_0.eContents().get(0);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Assignment cTypesAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
 		private final RuleCall cTypesTypeParserRuleCall_1_0_0 = (RuleCall)cTypesAssignment_1_0.eContents().get(0);
@@ -40,26 +37,17 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cConfigsConfigurationParserRuleCall_1_2_0 = (RuleCall)cConfigsAssignment_1_2.eContents().get(0);
 		
 		//ThingMLModel:
-		//	('import' imports+=[ThingMLModel|STRING_LIT])* (types+=Type | protocols+=Protocol | configs+=Configuration)*;
+		//	imports+=Import* (types+=Type | protocols+=Protocol | configs+=Configuration)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//('import' imports+=[ThingMLModel|STRING_LIT])* (types+=Type | protocols+=Protocol | configs+=Configuration)*
+		//imports+=Import* (types+=Type | protocols+=Protocol | configs+=Configuration)*
 		public Group getGroup() { return cGroup; }
 		
-		//('import' imports+=[ThingMLModel|STRING_LIT])*
-		public Group getGroup_0() { return cGroup_0; }
+		//imports+=Import*
+		public Assignment getImportsAssignment_0() { return cImportsAssignment_0; }
 		
-		//'import'
-		public Keyword getImportKeyword_0_0() { return cImportKeyword_0_0; }
-		
-		//imports+=[ThingMLModel|STRING_LIT]
-		public Assignment getImportsAssignment_0_1() { return cImportsAssignment_0_1; }
-		
-		//[ThingMLModel|STRING_LIT]
-		public CrossReference getImportsThingMLModelCrossReference_0_1_0() { return cImportsThingMLModelCrossReference_0_1_0; }
-		
-		//STRING_LIT
-		public RuleCall getImportsThingMLModelSTRING_LITTerminalRuleCall_0_1_0_1() { return cImportsThingMLModelSTRING_LITTerminalRuleCall_0_1_0_1; }
+		//Import
+		public RuleCall getImportsImportParserRuleCall_0_0() { return cImportsImportParserRuleCall_0_0; }
 		
 		//(types+=Type | protocols+=Protocol | configs+=Configuration)*
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
@@ -81,6 +69,29 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//Configuration
 		public RuleCall getConfigsConfigurationParserRuleCall_1_2_0() { return cConfigsConfigurationParserRuleCall_1_2_0; }
+	}
+	public class ImportElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Import");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cImportKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cImportURIAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cImportURISTRING_LITTerminalRuleCall_1_0 = (RuleCall)cImportURIAssignment_1.eContents().get(0);
+		
+		//Import:
+		//	"import" importURI=STRING_LIT;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//"import" importURI=STRING_LIT
+		public Group getGroup() { return cGroup; }
+		
+		//"import"
+		public Keyword getImportKeyword_0() { return cImportKeyword_0; }
+		
+		//importURI=STRING_LIT
+		public Assignment getImportURIAssignment_1() { return cImportURIAssignment_1; }
+		
+		//STRING_LIT
+		public RuleCall getImportURISTRING_LITTerminalRuleCall_1_0() { return cImportURISTRING_LITTerminalRuleCall_1_0; }
 	}
 	public class PlatformAnnotationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.PlatformAnnotation");
@@ -112,6 +123,106 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//STRING_LIT
 		public RuleCall getValueSTRING_LITTerminalRuleCall_2_0() { return cValueSTRING_LITTerminalRuleCall_2_0; }
+	}
+	public class AnnotatedElementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.AnnotatedElement");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cTypeParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cPropertyAssignParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cProtocolParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cFunctionParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cPropertyParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cMessageParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cParameterParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cPortParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		
+		//AnnotatedElement:
+		//	Type | PropertyAssign | Protocol | Function | Property | Message | Parameter | Port;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//Type | PropertyAssign | Protocol | Function | Property | Message | Parameter | Port
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//Type
+		public RuleCall getTypeParserRuleCall_0() { return cTypeParserRuleCall_0; }
+		
+		//PropertyAssign
+		public RuleCall getPropertyAssignParserRuleCall_1() { return cPropertyAssignParserRuleCall_1; }
+		
+		//Protocol
+		public RuleCall getProtocolParserRuleCall_2() { return cProtocolParserRuleCall_2; }
+		
+		//Function
+		public RuleCall getFunctionParserRuleCall_3() { return cFunctionParserRuleCall_3; }
+		
+		//Property
+		public RuleCall getPropertyParserRuleCall_4() { return cPropertyParserRuleCall_4; }
+		
+		//Message
+		public RuleCall getMessageParserRuleCall_5() { return cMessageParserRuleCall_5; }
+		
+		//Parameter
+		public RuleCall getParameterParserRuleCall_6() { return cParameterParserRuleCall_6; }
+		
+		//Port
+		public RuleCall getPortParserRuleCall_7() { return cPortParserRuleCall_7; }
+	}
+	public class NamedElementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.NamedElement");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cPrimitiveTypeParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cObjectTypeParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cEnumerationParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cEnumerationLiteralParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cThingParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cProtocolParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cFunctionParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cPropertyParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cMessageParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cPortParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cStreamParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
+		
+		//NamedElement:
+		//	PrimitiveType | ObjectType | Enumeration | EnumerationLiteral | Thing | Protocol | Function | Property | Message |
+		//	Port | Stream;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//PrimitiveType | ObjectType | Enumeration | EnumerationLiteral | Thing | Protocol | Function | Property | Message | Port
+		//| Stream
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//PrimitiveType
+		public RuleCall getPrimitiveTypeParserRuleCall_0() { return cPrimitiveTypeParserRuleCall_0; }
+		
+		//ObjectType
+		public RuleCall getObjectTypeParserRuleCall_1() { return cObjectTypeParserRuleCall_1; }
+		
+		//Enumeration
+		public RuleCall getEnumerationParserRuleCall_2() { return cEnumerationParserRuleCall_2; }
+		
+		//EnumerationLiteral
+		public RuleCall getEnumerationLiteralParserRuleCall_3() { return cEnumerationLiteralParserRuleCall_3; }
+		
+		//Thing
+		public RuleCall getThingParserRuleCall_4() { return cThingParserRuleCall_4; }
+		
+		//Protocol
+		public RuleCall getProtocolParserRuleCall_5() { return cProtocolParserRuleCall_5; }
+		
+		//Function
+		public RuleCall getFunctionParserRuleCall_6() { return cFunctionParserRuleCall_6; }
+		
+		//Property
+		public RuleCall getPropertyParserRuleCall_7() { return cPropertyParserRuleCall_7; }
+		
+		//Message
+		public RuleCall getMessageParserRuleCall_8() { return cMessageParserRuleCall_8; }
+		
+		//Port
+		public RuleCall getPortParserRuleCall_9() { return cPortParserRuleCall_9; }
+		
+		//Stream
+		public RuleCall getStreamParserRuleCall_10() { return cStreamParserRuleCall_10; }
 	}
 	public class TypeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Type");
@@ -2106,169 +2217,28 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_11() { return cRightCurlyBracketKeyword_11; }
 	}
-	public class StateElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.State");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cState_ImplParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cStateMachineParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cFinalStateParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cCompositeState_ImplParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cSessionParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		
-		//State:
-		//	State_Impl | StateMachine | FinalState | CompositeState_Impl | Session;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//State_Impl | StateMachine | FinalState | CompositeState_Impl | Session
-		public Alternatives getAlternatives() { return cAlternatives; }
-		
-		//State_Impl
-		public RuleCall getState_ImplParserRuleCall_0() { return cState_ImplParserRuleCall_0; }
-		
-		//StateMachine
-		public RuleCall getStateMachineParserRuleCall_1() { return cStateMachineParserRuleCall_1; }
-		
-		//FinalState
-		public RuleCall getFinalStateParserRuleCall_2() { return cFinalStateParserRuleCall_2; }
-		
-		//CompositeState_Impl
-		public RuleCall getCompositeState_ImplParserRuleCall_3() { return cCompositeState_ImplParserRuleCall_3; }
-		
-		//Session
-		public RuleCall getSessionParserRuleCall_4() { return cSessionParserRuleCall_4; }
-	}
 	public class RegionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Region");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cCompositeState_ImplParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cCompositeStateParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cParallelRegionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cSessionParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		//Region:
-		//	CompositeState_Impl | ParallelRegion | Session;
+		//	CompositeState | ParallelRegion | Session;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//CompositeState_Impl | ParallelRegion | Session
+		//CompositeState | ParallelRegion | Session
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//CompositeState_Impl
-		public RuleCall getCompositeState_ImplParserRuleCall_0() { return cCompositeState_ImplParserRuleCall_0; }
+		//CompositeState
+		public RuleCall getCompositeStateParserRuleCall_0() { return cCompositeStateParserRuleCall_0; }
 		
 		//ParallelRegion
 		public RuleCall getParallelRegionParserRuleCall_1() { return cParallelRegionParserRuleCall_1; }
 		
 		//Session
 		public RuleCall getSessionParserRuleCall_2() { return cSessionParserRuleCall_2; }
-	}
-	public class State_ImplElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.State_Impl");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cStateKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Assignment cAnnotationsAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_2_0 = (RuleCall)cAnnotationsAssignment_2.eContents().get(0);
-		private final Keyword cLeftCurlyBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
-		private final Keyword cOnKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
-		private final Keyword cEntryKeyword_4_1 = (Keyword)cGroup_4.eContents().get(1);
-		private final Assignment cEntryAssignment_4_2 = (Assignment)cGroup_4.eContents().get(2);
-		private final RuleCall cEntryActionParserRuleCall_4_2_0 = (RuleCall)cEntryAssignment_4_2.eContents().get(0);
-		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
-		private final Keyword cOnKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
-		private final Keyword cExitKeyword_5_1 = (Keyword)cGroup_5.eContents().get(1);
-		private final Assignment cExitAssignment_5_2 = (Assignment)cGroup_5.eContents().get(2);
-		private final RuleCall cExitActionParserRuleCall_5_2_0 = (RuleCall)cExitAssignment_5_2.eContents().get(0);
-		private final Alternatives cAlternatives_6 = (Alternatives)cGroup.eContents().get(6);
-		private final Assignment cPropertiesAssignment_6_0 = (Assignment)cAlternatives_6.eContents().get(0);
-		private final RuleCall cPropertiesPropertyParserRuleCall_6_0_0 = (RuleCall)cPropertiesAssignment_6_0.eContents().get(0);
-		private final Assignment cInternalAssignment_6_1 = (Assignment)cAlternatives_6.eContents().get(1);
-		private final RuleCall cInternalInternalTransitionParserRuleCall_6_1_0 = (RuleCall)cInternalAssignment_6_1.eContents().get(0);
-		private final Assignment cOutgoingAssignment_6_2 = (Assignment)cAlternatives_6.eContents().get(2);
-		private final RuleCall cOutgoingTransitionParserRuleCall_6_2_0 = (RuleCall)cOutgoingAssignment_6_2.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_7 = (Keyword)cGroup.eContents().get(7);
-		
-		//State_Impl State:
-		//	'state' name=ID annotations+=PlatformAnnotation* '{' ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)?
-		//	(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
-		//	'}'
-		@Override public ParserRule getRule() { return rule; }
-		
-		//'state' name=ID annotations+=PlatformAnnotation* '{' ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)?
-		//(properties+=Property | internal+=InternalTransition | outgoing+=Transition)* '}'
-		public Group getGroup() { return cGroup; }
-		
-		//'state'
-		public Keyword getStateKeyword_0() { return cStateKeyword_0; }
-		
-		//name=ID
-		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
-		
-		//ID
-		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
-		
-		//annotations+=PlatformAnnotation*
-		public Assignment getAnnotationsAssignment_2() { return cAnnotationsAssignment_2; }
-		
-		//PlatformAnnotation
-		public RuleCall getAnnotationsPlatformAnnotationParserRuleCall_2_0() { return cAnnotationsPlatformAnnotationParserRuleCall_2_0; }
-		
-		//'{'
-		public Keyword getLeftCurlyBracketKeyword_3() { return cLeftCurlyBracketKeyword_3; }
-		
-		//('on' 'entry' entry=Action)?
-		public Group getGroup_4() { return cGroup_4; }
-		
-		//'on'
-		public Keyword getOnKeyword_4_0() { return cOnKeyword_4_0; }
-		
-		//'entry'
-		public Keyword getEntryKeyword_4_1() { return cEntryKeyword_4_1; }
-		
-		//entry=Action
-		public Assignment getEntryAssignment_4_2() { return cEntryAssignment_4_2; }
-		
-		//Action
-		public RuleCall getEntryActionParserRuleCall_4_2_0() { return cEntryActionParserRuleCall_4_2_0; }
-		
-		//('on' 'exit' exit=Action)?
-		public Group getGroup_5() { return cGroup_5; }
-		
-		//'on'
-		public Keyword getOnKeyword_5_0() { return cOnKeyword_5_0; }
-		
-		//'exit'
-		public Keyword getExitKeyword_5_1() { return cExitKeyword_5_1; }
-		
-		//exit=Action
-		public Assignment getExitAssignment_5_2() { return cExitAssignment_5_2; }
-		
-		//Action
-		public RuleCall getExitActionParserRuleCall_5_2_0() { return cExitActionParserRuleCall_5_2_0; }
-		
-		//(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
-		public Alternatives getAlternatives_6() { return cAlternatives_6; }
-		
-		//properties+=Property
-		public Assignment getPropertiesAssignment_6_0() { return cPropertiesAssignment_6_0; }
-		
-		//Property
-		public RuleCall getPropertiesPropertyParserRuleCall_6_0_0() { return cPropertiesPropertyParserRuleCall_6_0_0; }
-		
-		//internal+=InternalTransition
-		public Assignment getInternalAssignment_6_1() { return cInternalAssignment_6_1; }
-		
-		//InternalTransition
-		public RuleCall getInternalInternalTransitionParserRuleCall_6_1_0() { return cInternalInternalTransitionParserRuleCall_6_1_0; }
-		
-		//outgoing+=Transition
-		public Assignment getOutgoingAssignment_6_2() { return cOutgoingAssignment_6_2; }
-		
-		//Transition
-		public RuleCall getOutgoingTransitionParserRuleCall_6_2_0() { return cOutgoingTransitionParserRuleCall_6_2_0; }
-		
-		//'}'
-		public Keyword getRightCurlyBracketKeyword_7() { return cRightCurlyBracketKeyword_7; }
 	}
 	public class FinalStateElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.FinalState");
@@ -2309,8 +2279,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//';'
 		public Keyword getSemicolonKeyword_4() { return cSemicolonKeyword_4; }
 	}
-	public class CompositeState_ImplElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.CompositeState_Impl");
+	public class CompositeStateElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.CompositeState");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cCompositeKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Keyword cStateKeyword_1 = (Keyword)cGroup.eContents().get(1);
@@ -2350,12 +2320,12 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRegionParallelRegionParserRuleCall_11_0 = (RuleCall)cRegionAssignment_11.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_12 = (Keyword)cGroup.eContents().get(12);
 		
-		//CompositeState_Impl CompositeState:
+		//CompositeState:
 		//	'composite' 'state' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 		//	('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (properties+=Property | substate+=State |
 		//	internal+=InternalTransition | outgoing+=Transition)*
 		//	region+=ParallelRegion*
-		//	'}'
+		//	'}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'composite' 'state' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
@@ -2690,6 +2660,158 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_8() { return cRightCurlyBracketKeyword_8; }
+	}
+	public class StateElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.State");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cStateMachineParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cFinalStateParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cCompositeStateParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cSessionParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final Group cGroup_4 = (Group)cAlternatives.eContents().get(4);
+		private final Keyword cStateKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
+		private final Assignment cNameAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
+		private final RuleCall cNameIDTerminalRuleCall_4_1_0 = (RuleCall)cNameAssignment_4_1.eContents().get(0);
+		private final Assignment cAnnotationsAssignment_4_2 = (Assignment)cGroup_4.eContents().get(2);
+		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_4_2_0 = (RuleCall)cAnnotationsAssignment_4_2.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_4_3 = (Keyword)cGroup_4.eContents().get(3);
+		private final Group cGroup_4_4 = (Group)cGroup_4.eContents().get(4);
+		private final Keyword cOnKeyword_4_4_0 = (Keyword)cGroup_4_4.eContents().get(0);
+		private final Keyword cEntryKeyword_4_4_1 = (Keyword)cGroup_4_4.eContents().get(1);
+		private final Assignment cEntryAssignment_4_4_2 = (Assignment)cGroup_4_4.eContents().get(2);
+		private final RuleCall cEntryActionParserRuleCall_4_4_2_0 = (RuleCall)cEntryAssignment_4_4_2.eContents().get(0);
+		private final Group cGroup_4_5 = (Group)cGroup_4.eContents().get(5);
+		private final Keyword cOnKeyword_4_5_0 = (Keyword)cGroup_4_5.eContents().get(0);
+		private final Keyword cExitKeyword_4_5_1 = (Keyword)cGroup_4_5.eContents().get(1);
+		private final Assignment cExitAssignment_4_5_2 = (Assignment)cGroup_4_5.eContents().get(2);
+		private final RuleCall cExitActionParserRuleCall_4_5_2_0 = (RuleCall)cExitAssignment_4_5_2.eContents().get(0);
+		private final Alternatives cAlternatives_4_6 = (Alternatives)cGroup_4.eContents().get(6);
+		private final Assignment cPropertiesAssignment_4_6_0 = (Assignment)cAlternatives_4_6.eContents().get(0);
+		private final RuleCall cPropertiesPropertyParserRuleCall_4_6_0_0 = (RuleCall)cPropertiesAssignment_4_6_0.eContents().get(0);
+		private final Assignment cInternalAssignment_4_6_1 = (Assignment)cAlternatives_4_6.eContents().get(1);
+		private final RuleCall cInternalInternalTransitionParserRuleCall_4_6_1_0 = (RuleCall)cInternalAssignment_4_6_1.eContents().get(0);
+		private final Assignment cOutgoingAssignment_4_6_2 = (Assignment)cAlternatives_4_6.eContents().get(2);
+		private final RuleCall cOutgoingTransitionParserRuleCall_4_6_2_0 = (RuleCall)cOutgoingAssignment_4_6_2.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_4_7 = (Keyword)cGroup_4.eContents().get(7);
+		
+		//State:
+		//	StateMachine | FinalState | CompositeState | Session |
+		//	'state' name=ID annotations+=PlatformAnnotation* '{' ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)?
+		//	(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
+		//	'}';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//StateMachine | FinalState | CompositeState | Session | 'state' name=ID annotations+=PlatformAnnotation* '{' ('on'
+		//'entry' entry=Action)? ('on' 'exit' exit=Action)? (properties+=Property | internal+=InternalTransition |
+		//outgoing+=Transition)* '}'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//StateMachine
+		public RuleCall getStateMachineParserRuleCall_0() { return cStateMachineParserRuleCall_0; }
+		
+		//FinalState
+		public RuleCall getFinalStateParserRuleCall_1() { return cFinalStateParserRuleCall_1; }
+		
+		//CompositeState
+		public RuleCall getCompositeStateParserRuleCall_2() { return cCompositeStateParserRuleCall_2; }
+		
+		//Session
+		public RuleCall getSessionParserRuleCall_3() { return cSessionParserRuleCall_3; }
+		
+		//'state' name=ID annotations+=PlatformAnnotation* '{' ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)?
+		//(properties+=Property | internal+=InternalTransition | outgoing+=Transition)* '}'
+		public Group getGroup_4() { return cGroup_4; }
+		
+		//'state'
+		public Keyword getStateKeyword_4_0() { return cStateKeyword_4_0; }
+		
+		//name=ID
+		public Assignment getNameAssignment_4_1() { return cNameAssignment_4_1; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_4_1_0() { return cNameIDTerminalRuleCall_4_1_0; }
+		
+		//annotations+=PlatformAnnotation*
+		public Assignment getAnnotationsAssignment_4_2() { return cAnnotationsAssignment_4_2; }
+		
+		//PlatformAnnotation
+		public RuleCall getAnnotationsPlatformAnnotationParserRuleCall_4_2_0() { return cAnnotationsPlatformAnnotationParserRuleCall_4_2_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_4_3() { return cLeftCurlyBracketKeyword_4_3; }
+		
+		//('on' 'entry' entry=Action)?
+		public Group getGroup_4_4() { return cGroup_4_4; }
+		
+		//'on'
+		public Keyword getOnKeyword_4_4_0() { return cOnKeyword_4_4_0; }
+		
+		//'entry'
+		public Keyword getEntryKeyword_4_4_1() { return cEntryKeyword_4_4_1; }
+		
+		//entry=Action
+		public Assignment getEntryAssignment_4_4_2() { return cEntryAssignment_4_4_2; }
+		
+		//Action
+		public RuleCall getEntryActionParserRuleCall_4_4_2_0() { return cEntryActionParserRuleCall_4_4_2_0; }
+		
+		//('on' 'exit' exit=Action)?
+		public Group getGroup_4_5() { return cGroup_4_5; }
+		
+		//'on'
+		public Keyword getOnKeyword_4_5_0() { return cOnKeyword_4_5_0; }
+		
+		//'exit'
+		public Keyword getExitKeyword_4_5_1() { return cExitKeyword_4_5_1; }
+		
+		//exit=Action
+		public Assignment getExitAssignment_4_5_2() { return cExitAssignment_4_5_2; }
+		
+		//Action
+		public RuleCall getExitActionParserRuleCall_4_5_2_0() { return cExitActionParserRuleCall_4_5_2_0; }
+		
+		//(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
+		public Alternatives getAlternatives_4_6() { return cAlternatives_4_6; }
+		
+		//properties+=Property
+		public Assignment getPropertiesAssignment_4_6_0() { return cPropertiesAssignment_4_6_0; }
+		
+		//Property
+		public RuleCall getPropertiesPropertyParserRuleCall_4_6_0_0() { return cPropertiesPropertyParserRuleCall_4_6_0_0; }
+		
+		//internal+=InternalTransition
+		public Assignment getInternalAssignment_4_6_1() { return cInternalAssignment_4_6_1; }
+		
+		//InternalTransition
+		public RuleCall getInternalInternalTransitionParserRuleCall_4_6_1_0() { return cInternalInternalTransitionParserRuleCall_4_6_1_0; }
+		
+		//outgoing+=Transition
+		public Assignment getOutgoingAssignment_4_6_2() { return cOutgoingAssignment_4_6_2; }
+		
+		//Transition
+		public RuleCall getOutgoingTransitionParserRuleCall_4_6_2_0() { return cOutgoingTransitionParserRuleCall_4_6_2_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_4_7() { return cRightCurlyBracketKeyword_4_7; }
+	}
+	public class HandlerElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Handler");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cTransitionParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cInternalTransitionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		
+		//Handler:
+		//	Transition | InternalTransition;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//Transition | InternalTransition
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//Transition
+		public RuleCall getTransitionParserRuleCall_0() { return cTransitionParserRuleCall_0; }
+		
+		//InternalTransition
+		public RuleCall getInternalTransitionParserRuleCall_1() { return cInternalTransitionParserRuleCall_1; }
 	}
 	public class TransitionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Transition");
@@ -4046,7 +4168,10 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	
 	private final ThingMLModelElements pThingMLModel;
+	private final ImportElements pImport;
 	private final PlatformAnnotationElements pPlatformAnnotation;
+	private final AnnotatedElementElements pAnnotatedElement;
+	private final NamedElementElements pNamedElement;
 	private final TypeElements pType;
 	private final PrimitiveTypeElements pPrimitiveType;
 	private final ObjectTypeElements pObjectType;
@@ -4079,13 +4204,13 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	private final ArrayParamRefElements pArrayParamRef;
 	private final LengthArrayElements pLengthArray;
 	private final StateMachineElements pStateMachine;
-	private final StateElements pState;
 	private final RegionElements pRegion;
-	private final State_ImplElements pState_Impl;
 	private final FinalStateElements pFinalState;
-	private final CompositeState_ImplElements pCompositeState_Impl;
+	private final CompositeStateElements pCompositeState;
 	private final SessionElements pSession;
 	private final ParallelRegionElements pParallelRegion;
+	private final StateElements pState;
+	private final HandlerElements pHandler;
 	private final TransitionElements pTransition;
 	private final InternalTransitionElements pInternalTransition;
 	private final EventElements pEvent;
@@ -4130,7 +4255,10 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	public ThingMLGrammarAccess(GrammarProvider grammarProvider) {
 		this.grammar = internalFindGrammar(grammarProvider);
 		this.pThingMLModel = new ThingMLModelElements();
+		this.pImport = new ImportElements();
 		this.pPlatformAnnotation = new PlatformAnnotationElements();
+		this.pAnnotatedElement = new AnnotatedElementElements();
+		this.pNamedElement = new NamedElementElements();
 		this.pType = new TypeElements();
 		this.pPrimitiveType = new PrimitiveTypeElements();
 		this.pObjectType = new ObjectTypeElements();
@@ -4163,13 +4291,13 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pArrayParamRef = new ArrayParamRefElements();
 		this.pLengthArray = new LengthArrayElements();
 		this.pStateMachine = new StateMachineElements();
-		this.pState = new StateElements();
 		this.pRegion = new RegionElements();
-		this.pState_Impl = new State_ImplElements();
 		this.pFinalState = new FinalStateElements();
-		this.pCompositeState_Impl = new CompositeState_ImplElements();
+		this.pCompositeState = new CompositeStateElements();
 		this.pSession = new SessionElements();
 		this.pParallelRegion = new ParallelRegionElements();
+		this.pState = new StateElements();
+		this.pHandler = new HandlerElements();
 		this.pTransition = new TransitionElements();
 		this.pInternalTransition = new InternalTransitionElements();
 		this.pEvent = new EventElements();
@@ -4233,13 +4361,23 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//ThingMLModel:
-	//	('import' imports+=[ThingMLModel|STRING_LIT])* (types+=Type | protocols+=Protocol | configs+=Configuration)*;
+	//	imports+=Import* (types+=Type | protocols+=Protocol | configs+=Configuration)*;
 	public ThingMLModelElements getThingMLModelAccess() {
 		return pThingMLModel;
 	}
 	
 	public ParserRule getThingMLModelRule() {
 		return getThingMLModelAccess().getRule();
+	}
+	
+	//Import:
+	//	"import" importURI=STRING_LIT;
+	public ImportElements getImportAccess() {
+		return pImport;
+	}
+	
+	public ParserRule getImportRule() {
+		return getImportAccess().getRule();
 	}
 	
 	//PlatformAnnotation:
@@ -4250,6 +4388,27 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getPlatformAnnotationRule() {
 		return getPlatformAnnotationAccess().getRule();
+	}
+	
+	//AnnotatedElement:
+	//	Type | PropertyAssign | Protocol | Function | Property | Message | Parameter | Port;
+	public AnnotatedElementElements getAnnotatedElementAccess() {
+		return pAnnotatedElement;
+	}
+	
+	public ParserRule getAnnotatedElementRule() {
+		return getAnnotatedElementAccess().getRule();
+	}
+	
+	//NamedElement:
+	//	PrimitiveType | ObjectType | Enumeration | EnumerationLiteral | Thing | Protocol | Function | Property | Message |
+	//	Port | Stream;
+	public NamedElementElements getNamedElementAccess() {
+		return pNamedElement;
+	}
+	
+	public ParserRule getNamedElementRule() {
+		return getNamedElementAccess().getRule();
 	}
 	
 	/// *****************************************************************************
@@ -4612,36 +4771,14 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getStateMachineAccess().getRule();
 	}
 	
-	//State:
-	//	State_Impl | StateMachine | FinalState | CompositeState_Impl | Session;
-	public StateElements getStateAccess() {
-		return pState;
-	}
-	
-	public ParserRule getStateRule() {
-		return getStateAccess().getRule();
-	}
-	
 	//Region:
-	//	CompositeState_Impl | ParallelRegion | Session;
+	//	CompositeState | ParallelRegion | Session;
 	public RegionElements getRegionAccess() {
 		return pRegion;
 	}
 	
 	public ParserRule getRegionRule() {
 		return getRegionAccess().getRule();
-	}
-	
-	//State_Impl State:
-	//	'state' name=ID annotations+=PlatformAnnotation* '{' ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)?
-	//	(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
-	//	'}'
-	public State_ImplElements getState_ImplAccess() {
-		return pState_Impl;
-	}
-	
-	public ParserRule getState_ImplRule() {
-		return getState_ImplAccess().getRule();
 	}
 	
 	//FinalState:
@@ -4654,18 +4791,18 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getFinalStateAccess().getRule();
 	}
 	
-	//CompositeState_Impl CompositeState:
+	//CompositeState:
 	//	'composite' 'state' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 	//	('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (properties+=Property | substate+=State |
 	//	internal+=InternalTransition | outgoing+=Transition)*
 	//	region+=ParallelRegion*
-	//	'}'
-	public CompositeState_ImplElements getCompositeState_ImplAccess() {
-		return pCompositeState_Impl;
+	//	'}';
+	public CompositeStateElements getCompositeStateAccess() {
+		return pCompositeState;
 	}
 	
-	public ParserRule getCompositeState_ImplRule() {
-		return getCompositeState_ImplAccess().getRule();
+	public ParserRule getCompositeStateRule() {
+		return getCompositeStateAccess().getRule();
 	}
 	
 	//Session:
@@ -4691,6 +4828,29 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getParallelRegionRule() {
 		return getParallelRegionAccess().getRule();
+	}
+	
+	//State:
+	//	StateMachine | FinalState | CompositeState | Session |
+	//	'state' name=ID annotations+=PlatformAnnotation* '{' ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)?
+	//	(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
+	//	'}';
+	public StateElements getStateAccess() {
+		return pState;
+	}
+	
+	public ParserRule getStateRule() {
+		return getStateAccess().getRule();
+	}
+	
+	//Handler:
+	//	Transition | InternalTransition;
+	public HandlerElements getHandlerAccess() {
+		return pHandler;
+	}
+	
+	public ParserRule getHandlerRule() {
+		return getHandlerAccess().getRule();
 	}
 	
 	//Transition:

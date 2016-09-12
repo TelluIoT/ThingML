@@ -38,7 +38,7 @@ import org.thingml.xtext.thingML.Type;
  *
  * @generated
  */
-public class ParameterImpl extends ReferencedElmtImpl implements Parameter
+public class ParameterImpl extends AnnotatedElementImpl implements Parameter
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.

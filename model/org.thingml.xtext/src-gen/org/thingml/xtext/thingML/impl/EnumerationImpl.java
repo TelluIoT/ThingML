@@ -5,6 +5,7 @@ package org.thingml.xtext.thingML.impl;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -12,11 +13,14 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
 /**
@@ -27,13 +31,45 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.thingml.xtext.thingML.impl.EnumerationImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.EnumerationImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.EnumerationImpl#getLiterals <em>Literals</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class EnumerationImpl extends TypeImpl implements Enumeration
+public class EnumerationImpl extends NamedElementImpl implements Enumeration
 {
+  /**
+   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected static final String NAME_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected String name = NAME_EDEFAULT;
+
+  /**
+   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getAnnotations()
+   * @generated
+   * @ordered
+   */
+  protected EList<PlatformAnnotation> annotations;
+
   /**
    * The cached value of the '{@link #getLiterals() <em>Literals</em>}' containment reference list.
    * <!-- begin-user-doc -->
@@ -70,6 +106,43 @@ public class EnumerationImpl extends TypeImpl implements Enumeration
    * <!-- end-user-doc -->
    * @generated
    */
+  public String getName()
+  {
+    return name;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setName(String newName)
+  {
+    String oldName = name;
+    name = newName;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.ENUMERATION__NAME, oldName, name));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<PlatformAnnotation> getAnnotations()
+  {
+    if (annotations == null)
+    {
+      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.ENUMERATION__ANNOTATIONS);
+    }
+    return annotations;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EList<EnumerationLiteral> getLiterals()
   {
     if (literals == null)
@@ -89,6 +162,8 @@ public class EnumerationImpl extends TypeImpl implements Enumeration
   {
     switch (featureID)
     {
+      case ThingMLPackage.ENUMERATION__ANNOTATIONS:
+        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.ENUMERATION__LITERALS:
         return ((InternalEList<?>)getLiterals()).basicRemove(otherEnd, msgs);
     }
@@ -105,6 +180,10 @@ public class EnumerationImpl extends TypeImpl implements Enumeration
   {
     switch (featureID)
     {
+      case ThingMLPackage.ENUMERATION__NAME:
+        return getName();
+      case ThingMLPackage.ENUMERATION__ANNOTATIONS:
+        return getAnnotations();
       case ThingMLPackage.ENUMERATION__LITERALS:
         return getLiterals();
     }
@@ -122,6 +201,13 @@ public class EnumerationImpl extends TypeImpl implements Enumeration
   {
     switch (featureID)
     {
+      case ThingMLPackage.ENUMERATION__NAME:
+        setName((String)newValue);
+        return;
+      case ThingMLPackage.ENUMERATION__ANNOTATIONS:
+        getAnnotations().clear();
+        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
+        return;
       case ThingMLPackage.ENUMERATION__LITERALS:
         getLiterals().clear();
         getLiterals().addAll((Collection<? extends EnumerationLiteral>)newValue);
@@ -140,6 +226,12 @@ public class EnumerationImpl extends TypeImpl implements Enumeration
   {
     switch (featureID)
     {
+      case ThingMLPackage.ENUMERATION__NAME:
+        setName(NAME_EDEFAULT);
+        return;
+      case ThingMLPackage.ENUMERATION__ANNOTATIONS:
+        getAnnotations().clear();
+        return;
       case ThingMLPackage.ENUMERATION__LITERALS:
         getLiterals().clear();
         return;
@@ -157,10 +249,31 @@ public class EnumerationImpl extends TypeImpl implements Enumeration
   {
     switch (featureID)
     {
+      case ThingMLPackage.ENUMERATION__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case ThingMLPackage.ENUMERATION__ANNOTATIONS:
+        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.ENUMERATION__LITERALS:
         return literals != null && !literals.isEmpty();
     }
     return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (name: ");
+    result.append(name);
+    result.append(')');
+    return result.toString();
   }
 
 } //EnumerationImpl

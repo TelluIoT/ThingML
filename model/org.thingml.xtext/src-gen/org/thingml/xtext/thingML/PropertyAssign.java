@@ -5,8 +5,6 @@ package org.thingml.xtext.thingML;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Property Assign</b></em>'.
@@ -26,7 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface PropertyAssign extends EObject
+public interface PropertyAssign extends AnnotatedElement
 {
   /**
    * Returns the value of the '<em><b>Property</b></em>' reference.

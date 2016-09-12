@@ -33,6 +33,7 @@ import org.thingml.xtext.thingML.Filter;
 import org.thingml.xtext.thingML.FinalState;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.Import;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.InstanceRef;
@@ -74,7 +75,7 @@ import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.VariableAssignment;
 
 @SuppressWarnings("all")
-public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequencer {
+public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 
 	@Inject
 	private ThingMLGrammarAccess grammarAccess;
@@ -94,7 +95,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				sequence_ArrayParamRef(context, (ArrayParamRef) semanticObject); 
 				return; 
 			case ThingMLPackage.COMPOSITE_STATE:
-				sequence_CompositeState_Impl(context, (CompositeState) semanticObject); 
+				sequence_CompositeState(context, (CompositeState) semanticObject); 
 				return; 
 			case ThingMLPackage.CONDITIONAL_ACTION:
 				sequence_ConditionalAction(context, (ConditionalAction) semanticObject); 
@@ -140,6 +141,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.FUNCTION_CALL_STATEMENT:
 				sequence_FunctionCallStatement(context, (FunctionCallStatement) semanticObject); 
+				return; 
+			case ThingMLPackage.IMPORT:
+				sequence_Import(context, (Import) semanticObject); 
 				return; 
 			case ThingMLPackage.INCREMENT:
 				sequence_Increment(context, (Increment) semanticObject); 
@@ -235,7 +239,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				sequence_StartSession(context, (StartSession) semanticObject); 
 				return; 
 			case ThingMLPackage.STATE:
-				sequence_State_Impl(context, (State) semanticObject); 
+				sequence_State(context, (State) semanticObject); 
 				return; 
 			case ThingMLPackage.STATE_MACHINE:
 				sequence_StateMachine(context, (StateMachine) semanticObject); 
@@ -297,9 +301,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
-	 *     State returns CompositeState
 	 *     Region returns CompositeState
-	 *     CompositeState_Impl returns CompositeState
+	 *     CompositeState returns CompositeState
+	 *     State returns CompositeState
 	 *
 	 * Constraint:
 	 *     (
@@ -313,7 +317,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *         region+=ParallelRegion*
 	 *     )
 	 */
-	protected void sequence_CompositeState_Impl(ISerializationContext context, CompositeState semanticObject) {
+	protected void sequence_CompositeState(ISerializationContext context, CompositeState semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -396,6 +400,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns EnumerationLiteral
 	 *     EnumerationLiteral returns EnumerationLiteral
 	 *
 	 * Constraint:
@@ -408,6 +413,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Enumeration
+	 *     NamedElement returns Enumeration
 	 *     Type returns Enumeration
 	 *     Enumeration returns Enumeration
 	 *
@@ -498,8 +505,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
-	 *     State returns FinalState
 	 *     FinalState returns FinalState
+	 *     State returns FinalState
 	 *
 	 * Constraint:
 	 *     (name=ID annotations+=PlatformAnnotation*)
@@ -524,6 +531,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Function
+	 *     NamedElement returns Function
 	 *     Function returns Function
 	 *
 	 * Constraint:
@@ -538,6 +547,24 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 */
 	protected void sequence_Function(ISerializationContext context, Function semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Import returns Import
+	 *
+	 * Constraint:
+	 *     importURI=STRING_LIT
+	 */
+	protected void sequence_Import(ISerializationContext context, Import semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.IMPORT__IMPORT_URI) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.IMPORT__IMPORT_URI));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getImportAccess().getImportURISTRING_LITTerminalRuleCall_1_0(), semanticObject.getImportURI());
+		feeder.finish();
 	}
 	
 	
@@ -592,6 +619,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns InternalPort
+	 *     NamedElement returns InternalPort
 	 *     Port returns InternalPort
 	 *     InternalPort returns InternalPort
 	 *
@@ -605,6 +634,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     Handler returns InternalTransition
 	 *     InternalTransition returns InternalTransition
 	 *
 	 * Constraint:
@@ -738,6 +768,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Message
+	 *     NamedElement returns Message
 	 *     Message returns Message
 	 *     ReferencedElmt returns Message
 	 *
@@ -751,6 +783,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns ObjectType
+	 *     NamedElement returns ObjectType
 	 *     Type returns ObjectType
 	 *     ObjectType returns ObjectType
 	 *
@@ -777,6 +811,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Parameter
 	 *     Parameter returns Parameter
 	 *     ReferencedElmt returns Parameter
 	 *     Variable returns Parameter
@@ -812,6 +847,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns PrimitiveType
+	 *     NamedElement returns PrimitiveType
 	 *     Type returns PrimitiveType
 	 *     PrimitiveType returns PrimitiveType
 	 *
@@ -844,6 +881,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns PropertyAssign
 	 *     PropertyAssign returns PropertyAssign
 	 *
 	 * Constraint:
@@ -856,6 +894,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Property
+	 *     NamedElement returns Property
 	 *     Property returns Property
 	 *     ReferencedElmt returns Property
 	 *     Variable returns Property
@@ -870,6 +910,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Protocol
+	 *     NamedElement returns Protocol
 	 *     Protocol returns Protocol
 	 *
 	 * Constraint:
@@ -882,6 +924,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns ProvidedPort
+	 *     NamedElement returns ProvidedPort
 	 *     Port returns ProvidedPort
 	 *     ProvidedPort returns ProvidedPort
 	 *
@@ -918,6 +962,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns RequiredPort
+	 *     NamedElement returns RequiredPort
 	 *     Port returns RequiredPort
 	 *     RequiredPort returns RequiredPort
 	 *
@@ -968,9 +1014,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
-	 *     State returns Session
 	 *     Region returns Session
 	 *     Session returns Session
+	 *     State returns Session
 	 *
 	 * Constraint:
 	 *     (
@@ -1059,7 +1105,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     State returns State
-	 *     State_Impl returns State
 	 *
 	 * Constraint:
 	 *     (
@@ -1070,13 +1115,14 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *         (properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
 	 *     )
 	 */
-	protected void sequence_State_Impl(ISerializationContext context, State semanticObject) {
+	protected void sequence_State(ISerializationContext context, State semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Stream
 	 *     Stream returns Stream
 	 *
 	 * Constraint:
@@ -1092,7 +1138,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     ThingMLModel returns ThingMLModel
 	 *
 	 * Constraint:
-	 *     (imports+=[ThingMLModel|STRING_LIT]+ | (imports+=[ThingMLModel|STRING_LIT]+ (types+=Type | protocols+=Protocol | configs+=Configuration)+))?
+	 *     (imports+=Import+ | (imports+=Import+ (types+=Type | protocols+=Protocol | configs+=Configuration)+))?
 	 */
 	protected void sequence_ThingMLModel(ISerializationContext context, ThingMLModel semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1101,6 +1147,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Thing
+	 *     NamedElement returns Thing
 	 *     Type returns Thing
 	 *     Thing returns Thing
 	 *
@@ -1141,6 +1189,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     Handler returns Transition
 	 *     Transition returns Transition
 	 *
 	 * Constraint:

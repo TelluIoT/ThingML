@@ -66,7 +66,10 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
     switch (eClass.getClassifierID())
     {
       case ThingMLPackage.THING_ML_MODEL: return createThingMLModel();
+      case ThingMLPackage.IMPORT: return createImport();
       case ThingMLPackage.PLATFORM_ANNOTATION: return createPlatformAnnotation();
+      case ThingMLPackage.ANNOTATED_ELEMENT: return createAnnotatedElement();
+      case ThingMLPackage.NAMED_ELEMENT: return createNamedElement();
       case ThingMLPackage.TYPE: return createType();
       case ThingMLPackage.PRIMITIVE_TYPE: return createPrimitiveType();
       case ThingMLPackage.OBJECT_TYPE: return createObjectType();
@@ -99,12 +102,13 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.ARRAY_PARAM_REF: return createArrayParamRef();
       case ThingMLPackage.LENGTH_ARRAY: return createLengthArray();
       case ThingMLPackage.STATE_MACHINE: return createStateMachine();
-      case ThingMLPackage.STATE: return createState();
       case ThingMLPackage.REGION: return createRegion();
       case ThingMLPackage.FINAL_STATE: return createFinalState();
       case ThingMLPackage.COMPOSITE_STATE: return createCompositeState();
       case ThingMLPackage.SESSION: return createSession();
       case ThingMLPackage.PARALLEL_REGION: return createParallelRegion();
+      case ThingMLPackage.STATE: return createState();
+      case ThingMLPackage.HANDLER: return createHandler();
       case ThingMLPackage.TRANSITION: return createTransition();
       case ThingMLPackage.INTERNAL_TRANSITION: return createInternalTransition();
       case ThingMLPackage.EVENT: return createEvent();
@@ -155,10 +159,43 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public Import createImport()
+  {
+    ImportImpl import_ = new ImportImpl();
+    return import_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public PlatformAnnotation createPlatformAnnotation()
   {
     PlatformAnnotationImpl platformAnnotation = new PlatformAnnotationImpl();
     return platformAnnotation;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AnnotatedElement createAnnotatedElement()
+  {
+    AnnotatedElementImpl annotatedElement = new AnnotatedElementImpl();
+    return annotatedElement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NamedElement createNamedElement()
+  {
+    NamedElementImpl namedElement = new NamedElementImpl();
+    return namedElement;
   }
 
   /**
@@ -518,17 +555,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public State createState()
-  {
-    StateImpl state = new StateImpl();
-    return state;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public Region createRegion()
   {
     RegionImpl region = new RegionImpl();
@@ -577,6 +603,28 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     ParallelRegionImpl parallelRegion = new ParallelRegionImpl();
     return parallelRegion;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public State createState()
+  {
+    StateImpl state = new StateImpl();
+    return state;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Handler createHandler()
+  {
+    HandlerImpl handler = new HandlerImpl();
+    return handler;
   }
 
   /**

@@ -6,11 +6,25 @@ generate thingML "http://www.thingml.org/xtext/ThingML"
 
 
 ThingMLModel returns ThingMLModel:
-		('import' imports+=[ThingMLModel|STRING_LIT])*
+		imports+=Import*
 		(types+=Type | protocols+=Protocol | configs+=Configuration)*;	
+		
+Import:
+	"import" importURI=STRING_LIT
+;
 
 PlatformAnnotation returns PlatformAnnotation:
 	'@' name=ID value=STRING_LIT ; 
+
+AnnotatedElement:
+	Type | PropertyAssign | Protocol | Function | Property | Message | Parameter | Port
+;
+
+NamedElement:
+	PrimitiveType | ObjectType | Enumeration | EnumerationLiteral | Thing | Protocol | Function | Property | 
+	Message | Port | Stream 
+;
+
 
 /*****************************************************************************
  *       TYPES / ENUMERATIONS                                                *
@@ -158,24 +172,18 @@ StateMachine returns StateMachine:
 		(region+=ParallelRegion)*
 	'}';
 	
-State returns State:
-	State_Impl | StateMachine | FinalState | CompositeState_Impl | Session;
 
-Region returns Region:
-	CompositeState_Impl | ParallelRegion | Session;
+	
 
-State_Impl returns State:
-	'state' name=ID ( annotations+=PlatformAnnotation )* '{'
-		('on' 'entry' entry=Action)?
-		('on' 'exit' exit=Action)?
-		(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
-	'}';
+Region:
+	CompositeState | ParallelRegion | Session;
+
 
 FinalState returns FinalState:
 	'final' 'state' name=ID ( annotations+=PlatformAnnotation )* ';'
 ;
 
-CompositeState_Impl returns CompositeState:
+CompositeState returns CompositeState:
 	'composite' 'state' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
 		('on' 'entry' entry=Action)?
 		('on' 'exit' exit=Action)?
@@ -195,6 +203,18 @@ ParallelRegion returns ParallelRegion:
 	'region' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
 		(substate+=State)*
 	'}';
+	
+State returns State:
+	StateMachine | FinalState | CompositeState | Session |
+	'state' name=ID ( annotations+=PlatformAnnotation )* '{'
+		('on' 'entry' entry=Action)?
+		('on' 'exit' exit=Action)?
+		(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
+	'}';
+
+Handler:
+	Transition | InternalTransition
+;
 
 Transition returns Transition:
 	'transition' (name=ID)? '->' target=[State|ID] 

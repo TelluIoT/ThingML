@@ -3,6 +3,7 @@
  */
 package org.thingml.xtext.thingML;
 
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -13,15 +14,43 @@ package org.thingml.xtext.thingML;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.thingml.xtext.thingML.PrimitiveType#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.PrimitiveType#getByteSize <em>Byte Size</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.PrimitiveType#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getPrimitiveType()
  * @model
  * @generated
  */
-public interface PrimitiveType extends Type
+public interface PrimitiveType extends NamedElement, Type
 {
+  /**
+   * Returns the value of the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Name</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Name</em>' attribute.
+   * @see #setName(String)
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getPrimitiveType_Name()
+   * @model
+   * @generated
+   */
+  String getName();
+
+  /**
+   * Sets the value of the '{@link org.thingml.xtext.thingML.PrimitiveType#getName <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Name</em>' attribute.
+   * @see #getName()
+   * @generated
+   */
+  void setName(String value);
+
   /**
    * Returns the value of the '<em><b>Byte Size</b></em>' attribute.
    * <!-- begin-user-doc -->
@@ -47,5 +76,21 @@ public interface PrimitiveType extends Type
    * @generated
    */
   void setByteSize(int value);
+
+  /**
+   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
+   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Annotations</em>' containment reference list.
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getPrimitiveType_Annotations()
+   * @model containment="true"
+   * @generated
+   */
+  EList<PlatformAnnotation> getAnnotations();
 
 } // PrimitiveType

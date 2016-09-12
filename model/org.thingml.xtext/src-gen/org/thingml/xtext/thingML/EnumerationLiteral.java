@@ -5,8 +5,6 @@ package org.thingml.xtext.thingML;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Enumeration Literal</b></em>'.
@@ -24,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface EnumerationLiteral extends EObject
+public interface EnumerationLiteral extends NamedElement
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.

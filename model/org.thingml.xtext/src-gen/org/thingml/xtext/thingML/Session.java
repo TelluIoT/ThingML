@@ -23,7 +23,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface Session extends State, Region
+public interface Session extends Region, State
 {
   /**
    * Returns the value of the '<em><b>Initial</b></em>' reference.

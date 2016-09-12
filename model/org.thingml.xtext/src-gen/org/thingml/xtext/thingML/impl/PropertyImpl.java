@@ -40,7 +40,7 @@ import org.thingml.xtext.thingML.Type;
  *
  * @generated
  */
-public class PropertyImpl extends ReferencedElmtImpl implements Property
+public class PropertyImpl extends AnnotatedElementImpl implements Property
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.

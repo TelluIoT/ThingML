@@ -80,6 +80,13 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ThingMLPackage.IMPORT:
+      {
+        Import import_ = (Import)theEObject;
+        T result = caseImport(import_);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ThingMLPackage.PLATFORM_ANNOTATION:
       {
         PlatformAnnotation platformAnnotation = (PlatformAnnotation)theEObject;
@@ -87,10 +94,25 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ThingMLPackage.ANNOTATED_ELEMENT:
+      {
+        AnnotatedElement annotatedElement = (AnnotatedElement)theEObject;
+        T result = caseAnnotatedElement(annotatedElement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.NAMED_ELEMENT:
+      {
+        NamedElement namedElement = (NamedElement)theEObject;
+        T result = caseNamedElement(namedElement);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ThingMLPackage.TYPE:
       {
         Type type = (Type)theEObject;
         T result = caseType(type);
+        if (result == null) result = caseAnnotatedElement(type);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -98,7 +120,9 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         PrimitiveType primitiveType = (PrimitiveType)theEObject;
         T result = casePrimitiveType(primitiveType);
+        if (result == null) result = caseNamedElement(primitiveType);
         if (result == null) result = caseType(primitiveType);
+        if (result == null) result = caseAnnotatedElement(primitiveType);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -106,7 +130,9 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         ObjectType objectType = (ObjectType)theEObject;
         T result = caseObjectType(objectType);
+        if (result == null) result = caseNamedElement(objectType);
         if (result == null) result = caseType(objectType);
+        if (result == null) result = caseAnnotatedElement(objectType);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -114,7 +140,9 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Enumeration enumeration = (Enumeration)theEObject;
         T result = caseEnumeration(enumeration);
+        if (result == null) result = caseNamedElement(enumeration);
         if (result == null) result = caseType(enumeration);
+        if (result == null) result = caseAnnotatedElement(enumeration);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -122,6 +150,7 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         EnumerationLiteral enumerationLiteral = (EnumerationLiteral)theEObject;
         T result = caseEnumerationLiteral(enumerationLiteral);
+        if (result == null) result = caseNamedElement(enumerationLiteral);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -129,7 +158,9 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Thing thing = (Thing)theEObject;
         T result = caseThing(thing);
+        if (result == null) result = caseNamedElement(thing);
         if (result == null) result = caseType(thing);
+        if (result == null) result = caseAnnotatedElement(thing);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -137,6 +168,7 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         PropertyAssign propertyAssign = (PropertyAssign)theEObject;
         T result = casePropertyAssign(propertyAssign);
+        if (result == null) result = caseAnnotatedElement(propertyAssign);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -144,6 +176,8 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Protocol protocol = (Protocol)theEObject;
         T result = caseProtocol(protocol);
+        if (result == null) result = caseAnnotatedElement(protocol);
+        if (result == null) result = caseNamedElement(protocol);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -151,6 +185,8 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Function function = (Function)theEObject;
         T result = caseFunction(function);
+        if (result == null) result = caseAnnotatedElement(function);
+        if (result == null) result = caseNamedElement(function);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -158,6 +194,8 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Property property = (Property)theEObject;
         T result = caseProperty(property);
+        if (result == null) result = caseAnnotatedElement(property);
+        if (result == null) result = caseNamedElement(property);
         if (result == null) result = caseReferencedElmt(property);
         if (result == null) result = caseVariable(property);
         if (result == null) result = defaultCase(theEObject);
@@ -167,6 +205,8 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Message message = (Message)theEObject;
         T result = caseMessage(message);
+        if (result == null) result = caseAnnotatedElement(message);
+        if (result == null) result = caseNamedElement(message);
         if (result == null) result = caseReferencedElmt(message);
         if (result == null) result = defaultCase(theEObject);
         return result;
@@ -175,6 +215,7 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Parameter parameter = (Parameter)theEObject;
         T result = caseParameter(parameter);
+        if (result == null) result = caseAnnotatedElement(parameter);
         if (result == null) result = caseReferencedElmt(parameter);
         if (result == null) result = caseVariable(parameter);
         if (result == null) result = defaultCase(theEObject);
@@ -184,6 +225,8 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Port port = (Port)theEObject;
         T result = casePort(port);
+        if (result == null) result = caseAnnotatedElement(port);
+        if (result == null) result = caseNamedElement(port);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -192,6 +235,8 @@ public class ThingMLSwitch<T> extends Switch<T>
         RequiredPort requiredPort = (RequiredPort)theEObject;
         T result = caseRequiredPort(requiredPort);
         if (result == null) result = casePort(requiredPort);
+        if (result == null) result = caseAnnotatedElement(requiredPort);
+        if (result == null) result = caseNamedElement(requiredPort);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -200,6 +245,8 @@ public class ThingMLSwitch<T> extends Switch<T>
         ProvidedPort providedPort = (ProvidedPort)theEObject;
         T result = caseProvidedPort(providedPort);
         if (result == null) result = casePort(providedPort);
+        if (result == null) result = caseAnnotatedElement(providedPort);
+        if (result == null) result = caseNamedElement(providedPort);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -208,6 +255,8 @@ public class ThingMLSwitch<T> extends Switch<T>
         InternalPort internalPort = (InternalPort)theEObject;
         T result = caseInternalPort(internalPort);
         if (result == null) result = casePort(internalPort);
+        if (result == null) result = caseAnnotatedElement(internalPort);
+        if (result == null) result = caseNamedElement(internalPort);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -215,6 +264,7 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Stream stream = (Stream)theEObject;
         T result = caseStream(stream);
+        if (result == null) result = caseNamedElement(stream);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -337,13 +387,6 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ThingMLPackage.STATE:
-      {
-        State state = (State)theEObject;
-        T result = caseState(state);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case ThingMLPackage.REGION:
       {
         Region region = (Region)theEObject;
@@ -363,8 +406,8 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         CompositeState compositeState = (CompositeState)theEObject;
         T result = caseCompositeState(compositeState);
-        if (result == null) result = caseState(compositeState);
         if (result == null) result = caseRegion(compositeState);
+        if (result == null) result = caseState(compositeState);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -372,8 +415,8 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Session session = (Session)theEObject;
         T result = caseSession(session);
-        if (result == null) result = caseState(session);
         if (result == null) result = caseRegion(session);
+        if (result == null) result = caseState(session);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -385,10 +428,25 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ThingMLPackage.STATE:
+      {
+        State state = (State)theEObject;
+        T result = caseState(state);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.HANDLER:
+      {
+        Handler handler = (Handler)theEObject;
+        T result = caseHandler(handler);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ThingMLPackage.TRANSITION:
       {
         Transition transition = (Transition)theEObject;
         T result = caseTransition(transition);
+        if (result == null) result = caseHandler(transition);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -396,6 +454,7 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         InternalTransition internalTransition = (InternalTransition)theEObject;
         T result = caseInternalTransition(internalTransition);
+        if (result == null) result = caseHandler(internalTransition);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -630,6 +689,22 @@ public class ThingMLSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Import</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Import</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseImport(Import object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Platform Annotation</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -641,6 +716,38 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T casePlatformAnnotation(PlatformAnnotation object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Annotated Element</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Annotated Element</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAnnotatedElement(AnnotatedElement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Named Element</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Named Element</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNamedElement(NamedElement object)
   {
     return null;
   }
@@ -1158,22 +1265,6 @@ public class ThingMLSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>State</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>State</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseState(State object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Region</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1249,6 +1340,38 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseParallelRegion(ParallelRegion object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>State</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>State</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseState(State object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Handler</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Handler</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseHandler(Handler object)
   {
     return null;
   }

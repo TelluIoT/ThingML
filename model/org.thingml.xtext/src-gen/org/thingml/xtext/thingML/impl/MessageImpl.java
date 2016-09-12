@@ -38,7 +38,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *
  * @generated
  */
-public class MessageImpl extends ReferencedElmtImpl implements Message
+public class MessageImpl extends AnnotatedElementImpl implements Message
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.

@@ -5,8 +5,6 @@ package org.thingml.xtext.thingML;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Function</b></em>'.
@@ -27,7 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Function extends EObject
+public interface Function extends AnnotatedElement, NamedElement
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.

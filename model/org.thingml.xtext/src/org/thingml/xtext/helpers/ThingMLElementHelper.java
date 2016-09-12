@@ -1,0 +1,92 @@
+/**
+ * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
+ *
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.thingml.xtext.helpers;
+
+import org.thingml.xtext.thingML.*;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
+import org.sintef.thingml.constraints.ThingMLHelpers;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by ffl on 10.05.2016.
+ */
+public class ThingMLElementHelper {
+
+
+    public static ThingMLModel findContainingModel(EObject self) {
+        return ThingMLHelpers.findContainingModel(self);
+    }
+
+
+    public static Thing findContainingThing(EObject self) {
+        return ThingMLHelpers.findContainingThing(self);
+    }
+
+
+    public static Configuration findContainingConfiguration(EObject self) {
+        return ThingMLHelpers.findContainingConfiguration(self);
+    }
+
+    public static State findContainingState(EObject self) {
+        return ThingMLHelpers.findContainingState(self);
+    }
+
+
+    public static Region findContainingRegion(EObject self) {
+        return ThingMLHelpers.findContainingRegion(self);
+    }
+
+
+    public static Handler findContainingHandler(EObject self) {
+        return ThingMLHelpers.findContainingHandler(self);
+    }
+
+
+    public static String qname(EObject self, String separator) {
+        if (separator == null) {
+            separator = "::";
+        }
+        
+        String result = null;
+        EObject elem  = self;
+        String name = null;
+        while(elem != null) {
+            name = getName(elem);
+            if (name == null || name == "") name = elem.getClass().getName();
+            if (result == null) result = name;
+            else result = name + separator + result;
+            if (elem.eContainer() != null && elem.eContainer() instanceof EObject)
+                elem = elem.eContainer();
+            else elem = null;
+        }
+        return result;
+    }
+    
+    public static String getName(EObject self) {
+    	 EAttribute name_attribut = null;
+         for (EAttribute a : self.eClass().getEAllAttributes()) {
+         	if (a.getName().equals("name")) {name_attribut = a; break;}
+         }
+         if (name_attribut != null) {
+         	return self.eGet(name_attribut).toString();
+         }
+         else return null;
+    }
+
+}

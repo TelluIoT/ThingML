@@ -43,12 +43,12 @@ import org.eclipse.xtext.ui.compare.DefaultViewerCreator;
 import org.eclipse.xtext.ui.editor.DocumentBasedDirtyResource;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext;
-import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher;
 import org.eclipse.xtext.ui.editor.contentassist.IContentProposalProvider;
 import org.eclipse.xtext.ui.editor.contentassist.IProposalConflictHelper;
-import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.eclipse.xtext.ui.editor.contentassist.antlr.AntlrProposalConflictHelper;
 import org.eclipse.xtext.ui.editor.contentassist.antlr.DelegatingContentAssistContextFactory;
+import org.eclipse.xtext.ui.editor.formatting.IContentFormatterFactory;
+import org.eclipse.xtext.ui.editor.formatting2.ContentFormatterFactory;
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.IOutlineTreeStructureProvider;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
@@ -132,12 +132,7 @@ public abstract class AbstractThingMLUiModule extends DefaultUiModule {
 		binder.bind(InternalThingMLLexer.class).toProvider(LexerProvider.create(InternalThingMLLexer.class));
 	}
 	
-	// contributed by org.eclipse.xtext.xtext.generator.exporting.QualifiedNamesFragment2
-	public Class<? extends PrefixMatcher> bindPrefixMatcher() {
-		return FQNPrefixMatcher.class;
-	}
-	
-	// contributed by org.eclipse.xtext.xtext.generator.exporting.QualifiedNamesFragment2
+	// contributed by org.eclipse.xtext.xtext.generator.exporting.SimpleNamesFragment2
 	public Class<? extends IDependentElementsCalculator> bindIDependentElementsCalculator() {
 		return DefaultDependentElementsCalculator.class;
 	}
@@ -182,6 +177,11 @@ public abstract class AbstractThingMLUiModule extends DefaultUiModule {
 		binder.bind(IPreferenceStoreInitializer.class)
 			.annotatedWith(Names.named("builderPreferenceInitializer"))
 			.to(BuilderPreferenceAccess.Initializer.class);
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
+	public Class<? extends IContentFormatterFactory> bindIContentFormatterFactory() {
+		return ContentFormatterFactory.class;
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.ui.labeling.LabelProviderFragment2

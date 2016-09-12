@@ -81,9 +81,24 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createThingMLModelAdapter();
       }
       @Override
+      public Adapter caseImport(Import object)
+      {
+        return createImportAdapter();
+      }
+      @Override
       public Adapter casePlatformAnnotation(PlatformAnnotation object)
       {
         return createPlatformAnnotationAdapter();
+      }
+      @Override
+      public Adapter caseAnnotatedElement(AnnotatedElement object)
+      {
+        return createAnnotatedElementAdapter();
+      }
+      @Override
+      public Adapter caseNamedElement(NamedElement object)
+      {
+        return createNamedElementAdapter();
       }
       @Override
       public Adapter caseType(Type object)
@@ -246,11 +261,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createStateMachineAdapter();
       }
       @Override
-      public Adapter caseState(State object)
-      {
-        return createStateAdapter();
-      }
-      @Override
       public Adapter caseRegion(Region object)
       {
         return createRegionAdapter();
@@ -274,6 +284,16 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
       public Adapter caseParallelRegion(ParallelRegion object)
       {
         return createParallelRegionAdapter();
+      }
+      @Override
+      public Adapter caseState(State object)
+      {
+        return createStateAdapter();
+      }
+      @Override
+      public Adapter caseHandler(Handler object)
+      {
+        return createHandlerAdapter();
       }
       @Override
       public Adapter caseTransition(Transition object)
@@ -458,6 +478,21 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Import <em>Import</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.Import
+   * @generated
+   */
+  public Adapter createImportAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.PlatformAnnotation <em>Platform Annotation</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -468,6 +503,36 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createPlatformAnnotationAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.AnnotatedElement <em>Annotated Element</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.AnnotatedElement
+   * @generated
+   */
+  public Adapter createAnnotatedElementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.NamedElement <em>Named Element</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.NamedElement
+   * @generated
+   */
+  public Adapter createNamedElementAdapter()
   {
     return null;
   }
@@ -953,21 +1018,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.State <em>State</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.State
-   * @generated
-   */
-  public Adapter createStateAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Region <em>Region</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1038,6 +1088,36 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createParallelRegionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.State <em>State</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.State
+   * @generated
+   */
+  public Adapter createStateAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Handler <em>Handler</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.Handler
+   * @generated
+   */
+  public Adapter createHandlerAdapter()
   {
     return null;
   }

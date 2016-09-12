@@ -15,7 +15,7 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 import org.thingml.xtext.services.ThingMLGrammarAccess;
 
 @SuppressWarnings("all")
-public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
+public abstract class AbstractThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected ThingMLGrammarAccess grammarAccess;
 	
