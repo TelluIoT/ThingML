@@ -13,17 +13,23 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.thingml.xtext.thingML.AbstractConnector;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.ArrayParamRef;
+import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Decrement;
+import org.thingml.xtext.thingML.DivExpression;
+import org.thingml.xtext.thingML.DoubleLiteral;
 import org.thingml.xtext.thingML.ElmtProperty;
+import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.Event;
 import org.thingml.xtext.thingML.Expression;
@@ -33,12 +39,16 @@ import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Filter;
 import org.thingml.xtext.thingML.FinalState;
 import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.GreaterExpression;
+import org.thingml.xtext.thingML.GreaterOrEqualExpression;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Import;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.InstanceRef;
+import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.InternalPort;
 import org.thingml.xtext.thingML.InternalTransition;
 import org.thingml.xtext.thingML.JoinSources;
@@ -46,22 +56,32 @@ import org.thingml.xtext.thingML.LengthArray;
 import org.thingml.xtext.thingML.LengthWindow;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.LoopAction;
+import org.thingml.xtext.thingML.LowerExpression;
+import org.thingml.xtext.thingML.LowerOrEqualExpression;
 import org.thingml.xtext.thingML.MergeSources;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.MessageParameter;
+import org.thingml.xtext.thingML.MinusExpression;
+import org.thingml.xtext.thingML.ModExpression;
 import org.thingml.xtext.thingML.NamedElement;
+import org.thingml.xtext.thingML.NotEqualsExpression;
+import org.thingml.xtext.thingML.NotExpression;
 import org.thingml.xtext.thingML.ObjectType;
+import org.thingml.xtext.thingML.OrExpression;
 import org.thingml.xtext.thingML.ParallelRegion;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.PlusExpression;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyAssign;
+import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.ReceiveMessage;
+import org.thingml.xtext.thingML.Reference;
 import org.thingml.xtext.thingML.ReferencedElmt;
 import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.RequiredPort;
@@ -73,15 +93,17 @@ import org.thingml.xtext.thingML.SimpleSource;
 import org.thingml.xtext.thingML.Source;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.State;
-import org.thingml.xtext.thingML.StateMachine;
 import org.thingml.xtext.thingML.Stream;
+import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.TimeWindow;
+import org.thingml.xtext.thingML.TimesExpression;
 import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.UnaryMinus;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
 import org.thingml.xtext.thingML.ViewSource;
@@ -351,13 +373,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass stateMachineEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   private EClass regionEClass = null;
 
   /**
@@ -365,14 +380,14 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass finalStateEClass = null;
+  private EClass compositeStateEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass compositeStateEClass = null;
+  private EClass finalStateEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -561,6 +576,62 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass enumLiteralRefEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass integerLiteralEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass booleanLiteralEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass stringLiteralEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass doubleLiteralEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass propertyReferenceEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass referenceEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass functionCallExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass configurationEClass = null;
 
   /**
@@ -604,6 +675,111 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * @generated
    */
   private EClass instanceRefEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass orExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass andExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass equalsExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass notEqualsExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass greaterExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass lowerExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass greaterOrEqualExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass lowerOrEqualExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass plusExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass minusExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass timesExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass divExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass modExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass notExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass unaryMinusEClass = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -1833,69 +2009,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getStateMachine()
-  {
-    return stateMachineEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getStateMachine_Initial()
-  {
-    return (EReference)stateMachineEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getStateMachine_History()
-  {
-    return (EAttribute)stateMachineEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getStateMachine_Substate()
-  {
-    return (EReference)stateMachineEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getStateMachine_Region()
-  {
-    return (EReference)stateMachineEClass.getEStructuralFeatures().get(3);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getRegion()
   {
     return regionEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getFinalState()
-  {
-    return finalStateEClass;
   }
 
   /**
@@ -1946,6 +2062,16 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
   public EReference getCompositeState_Region()
   {
     return (EReference)compositeStateEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getFinalState()
+  {
+    return finalStateEClass;
   }
 
   /**
@@ -2243,9 +2369,19 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EAttribute getReceiveMessage_Name()
+  {
+    return (EAttribute)receiveMessageEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EReference getReceiveMessage_Port()
   {
-    return (EReference)receiveMessageEClass.getEStructuralFeatures().get(0);
+    return (EReference)receiveMessageEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2255,7 +2391,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    */
   public EReference getReceiveMessage_Message()
   {
-    return (EReference)receiveMessageEClass.getEStructuralFeatures().get(1);
+    return (EReference)receiveMessageEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2743,6 +2879,196 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getEnumLiteralRef()
+  {
+    return enumLiteralRefEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEnumLiteralRef_Enum()
+  {
+    return (EReference)enumLiteralRefEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEnumLiteralRef_Literal()
+  {
+    return (EReference)enumLiteralRefEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getIntegerLiteral()
+  {
+    return integerLiteralEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getIntegerLiteral_IntValue()
+  {
+    return (EAttribute)integerLiteralEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getBooleanLiteral()
+  {
+    return booleanLiteralEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getBooleanLiteral_BoolValue()
+  {
+    return (EAttribute)booleanLiteralEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getStringLiteral()
+  {
+    return stringLiteralEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStringLiteral_StringValue()
+  {
+    return (EAttribute)stringLiteralEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getDoubleLiteral()
+  {
+    return doubleLiteralEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getDoubleLiteral_DoubleValue()
+  {
+    return (EAttribute)doubleLiteralEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getPropertyReference()
+  {
+    return propertyReferenceEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPropertyReference_Property()
+  {
+    return (EReference)propertyReferenceEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getReference()
+  {
+    return referenceEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getReference_Reference()
+  {
+    return (EReference)referenceEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getReference_Parameter()
+  {
+    return (EReference)referenceEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getFunctionCallExpression()
+  {
+    return functionCallExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getFunctionCallExpression_Function()
+  {
+    return (EReference)functionCallExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getFunctionCallExpression_Parameters()
+  {
+    return (EReference)functionCallExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getConfiguration()
   {
     return configurationEClass;
@@ -3043,6 +3369,436 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getOrExpression()
+  {
+    return orExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getOrExpression_Lhs()
+  {
+    return (EReference)orExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getOrExpression_Rhs()
+  {
+    return (EReference)orExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAndExpression()
+  {
+    return andExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAndExpression_Lhs()
+  {
+    return (EReference)andExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAndExpression_Rhs()
+  {
+    return (EReference)andExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getEqualsExpression()
+  {
+    return equalsExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEqualsExpression_Lhs()
+  {
+    return (EReference)equalsExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEqualsExpression_Rhs()
+  {
+    return (EReference)equalsExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getNotEqualsExpression()
+  {
+    return notEqualsExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNotEqualsExpression_Lhs()
+  {
+    return (EReference)notEqualsExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNotEqualsExpression_Rhs()
+  {
+    return (EReference)notEqualsExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getGreaterExpression()
+  {
+    return greaterExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getGreaterExpression_Lhs()
+  {
+    return (EReference)greaterExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getGreaterExpression_Rhs()
+  {
+    return (EReference)greaterExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLowerExpression()
+  {
+    return lowerExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLowerExpression_Lhs()
+  {
+    return (EReference)lowerExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLowerExpression_Rhs()
+  {
+    return (EReference)lowerExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getGreaterOrEqualExpression()
+  {
+    return greaterOrEqualExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getGreaterOrEqualExpression_Lhs()
+  {
+    return (EReference)greaterOrEqualExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getGreaterOrEqualExpression_Rhs()
+  {
+    return (EReference)greaterOrEqualExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLowerOrEqualExpression()
+  {
+    return lowerOrEqualExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLowerOrEqualExpression_Lhs()
+  {
+    return (EReference)lowerOrEqualExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLowerOrEqualExpression_Rhs()
+  {
+    return (EReference)lowerOrEqualExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getPlusExpression()
+  {
+    return plusExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPlusExpression_Lhs()
+  {
+    return (EReference)plusExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPlusExpression_Rhs()
+  {
+    return (EReference)plusExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getMinusExpression()
+  {
+    return minusExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getMinusExpression_Lhs()
+  {
+    return (EReference)minusExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getMinusExpression_Rhs()
+  {
+    return (EReference)minusExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTimesExpression()
+  {
+    return timesExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTimesExpression_Lhs()
+  {
+    return (EReference)timesExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTimesExpression_Rhs()
+  {
+    return (EReference)timesExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getDivExpression()
+  {
+    return divExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getDivExpression_Lhs()
+  {
+    return (EReference)divExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getDivExpression_Rhs()
+  {
+    return (EReference)divExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getModExpression()
+  {
+    return modExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getModExpression_Lhs()
+  {
+    return (EReference)modExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getModExpression_Rhs()
+  {
+    return (EReference)modExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getNotExpression()
+  {
+    return notExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNotExpression_Term()
+  {
+    return (EReference)notExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getUnaryMinus()
+  {
+    return unaryMinusEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getUnaryMinus_Term()
+  {
+    return (EReference)unaryMinusEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public ThingMLFactory getThingMLFactory()
   {
     return (ThingMLFactory)getEFactoryInstance();
@@ -3220,21 +3976,15 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     lengthArrayEClass = createEClass(LENGTH_ARRAY);
 
-    stateMachineEClass = createEClass(STATE_MACHINE);
-    createEReference(stateMachineEClass, STATE_MACHINE__INITIAL);
-    createEAttribute(stateMachineEClass, STATE_MACHINE__HISTORY);
-    createEReference(stateMachineEClass, STATE_MACHINE__SUBSTATE);
-    createEReference(stateMachineEClass, STATE_MACHINE__REGION);
-
     regionEClass = createEClass(REGION);
-
-    finalStateEClass = createEClass(FINAL_STATE);
 
     compositeStateEClass = createEClass(COMPOSITE_STATE);
     createEReference(compositeStateEClass, COMPOSITE_STATE__INITIAL);
     createEAttribute(compositeStateEClass, COMPOSITE_STATE__HISTORY);
     createEReference(compositeStateEClass, COMPOSITE_STATE__SUBSTATE);
     createEReference(compositeStateEClass, COMPOSITE_STATE__REGION);
+
+    finalStateEClass = createEClass(FINAL_STATE);
 
     sessionEClass = createEClass(SESSION);
     createEReference(sessionEClass, SESSION__INITIAL);
@@ -3272,6 +4022,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     eventEClass = createEClass(EVENT);
 
     receiveMessageEClass = createEClass(RECEIVE_MESSAGE);
+    createEAttribute(receiveMessageEClass, RECEIVE_MESSAGE__NAME);
     createEReference(receiveMessageEClass, RECEIVE_MESSAGE__PORT);
     createEReference(receiveMessageEClass, RECEIVE_MESSAGE__MESSAGE);
 
@@ -3341,6 +4092,33 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     createEAttribute(externExpressionEClass, EXTERN_EXPRESSION__EXPRESSION);
     createEReference(externExpressionEClass, EXTERN_EXPRESSION__SEGMENTS);
 
+    enumLiteralRefEClass = createEClass(ENUM_LITERAL_REF);
+    createEReference(enumLiteralRefEClass, ENUM_LITERAL_REF__ENUM);
+    createEReference(enumLiteralRefEClass, ENUM_LITERAL_REF__LITERAL);
+
+    integerLiteralEClass = createEClass(INTEGER_LITERAL);
+    createEAttribute(integerLiteralEClass, INTEGER_LITERAL__INT_VALUE);
+
+    booleanLiteralEClass = createEClass(BOOLEAN_LITERAL);
+    createEAttribute(booleanLiteralEClass, BOOLEAN_LITERAL__BOOL_VALUE);
+
+    stringLiteralEClass = createEClass(STRING_LITERAL);
+    createEAttribute(stringLiteralEClass, STRING_LITERAL__STRING_VALUE);
+
+    doubleLiteralEClass = createEClass(DOUBLE_LITERAL);
+    createEAttribute(doubleLiteralEClass, DOUBLE_LITERAL__DOUBLE_VALUE);
+
+    propertyReferenceEClass = createEClass(PROPERTY_REFERENCE);
+    createEReference(propertyReferenceEClass, PROPERTY_REFERENCE__PROPERTY);
+
+    referenceEClass = createEClass(REFERENCE);
+    createEReference(referenceEClass, REFERENCE__REFERENCE);
+    createEReference(referenceEClass, REFERENCE__PARAMETER);
+
+    functionCallExpressionEClass = createEClass(FUNCTION_CALL_EXPRESSION);
+    createEReference(functionCallExpressionEClass, FUNCTION_CALL_EXPRESSION__FUNCTION);
+    createEReference(functionCallExpressionEClass, FUNCTION_CALL_EXPRESSION__PARAMETERS);
+
     configurationEClass = createEClass(CONFIGURATION);
     createEAttribute(configurationEClass, CONFIGURATION__NAME);
     createEReference(configurationEClass, CONFIGURATION__ANNOTATIONS);
@@ -3377,6 +4155,64 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     instanceRefEClass = createEClass(INSTANCE_REF);
     createEReference(instanceRefEClass, INSTANCE_REF__INSTANCE);
+
+    orExpressionEClass = createEClass(OR_EXPRESSION);
+    createEReference(orExpressionEClass, OR_EXPRESSION__LHS);
+    createEReference(orExpressionEClass, OR_EXPRESSION__RHS);
+
+    andExpressionEClass = createEClass(AND_EXPRESSION);
+    createEReference(andExpressionEClass, AND_EXPRESSION__LHS);
+    createEReference(andExpressionEClass, AND_EXPRESSION__RHS);
+
+    equalsExpressionEClass = createEClass(EQUALS_EXPRESSION);
+    createEReference(equalsExpressionEClass, EQUALS_EXPRESSION__LHS);
+    createEReference(equalsExpressionEClass, EQUALS_EXPRESSION__RHS);
+
+    notEqualsExpressionEClass = createEClass(NOT_EQUALS_EXPRESSION);
+    createEReference(notEqualsExpressionEClass, NOT_EQUALS_EXPRESSION__LHS);
+    createEReference(notEqualsExpressionEClass, NOT_EQUALS_EXPRESSION__RHS);
+
+    greaterExpressionEClass = createEClass(GREATER_EXPRESSION);
+    createEReference(greaterExpressionEClass, GREATER_EXPRESSION__LHS);
+    createEReference(greaterExpressionEClass, GREATER_EXPRESSION__RHS);
+
+    lowerExpressionEClass = createEClass(LOWER_EXPRESSION);
+    createEReference(lowerExpressionEClass, LOWER_EXPRESSION__LHS);
+    createEReference(lowerExpressionEClass, LOWER_EXPRESSION__RHS);
+
+    greaterOrEqualExpressionEClass = createEClass(GREATER_OR_EQUAL_EXPRESSION);
+    createEReference(greaterOrEqualExpressionEClass, GREATER_OR_EQUAL_EXPRESSION__LHS);
+    createEReference(greaterOrEqualExpressionEClass, GREATER_OR_EQUAL_EXPRESSION__RHS);
+
+    lowerOrEqualExpressionEClass = createEClass(LOWER_OR_EQUAL_EXPRESSION);
+    createEReference(lowerOrEqualExpressionEClass, LOWER_OR_EQUAL_EXPRESSION__LHS);
+    createEReference(lowerOrEqualExpressionEClass, LOWER_OR_EQUAL_EXPRESSION__RHS);
+
+    plusExpressionEClass = createEClass(PLUS_EXPRESSION);
+    createEReference(plusExpressionEClass, PLUS_EXPRESSION__LHS);
+    createEReference(plusExpressionEClass, PLUS_EXPRESSION__RHS);
+
+    minusExpressionEClass = createEClass(MINUS_EXPRESSION);
+    createEReference(minusExpressionEClass, MINUS_EXPRESSION__LHS);
+    createEReference(minusExpressionEClass, MINUS_EXPRESSION__RHS);
+
+    timesExpressionEClass = createEClass(TIMES_EXPRESSION);
+    createEReference(timesExpressionEClass, TIMES_EXPRESSION__LHS);
+    createEReference(timesExpressionEClass, TIMES_EXPRESSION__RHS);
+
+    divExpressionEClass = createEClass(DIV_EXPRESSION);
+    createEReference(divExpressionEClass, DIV_EXPRESSION__LHS);
+    createEReference(divExpressionEClass, DIV_EXPRESSION__RHS);
+
+    modExpressionEClass = createEClass(MOD_EXPRESSION);
+    createEReference(modExpressionEClass, MOD_EXPRESSION__LHS);
+    createEReference(modExpressionEClass, MOD_EXPRESSION__RHS);
+
+    notExpressionEClass = createEClass(NOT_EXPRESSION);
+    createEReference(notExpressionEClass, NOT_EXPRESSION__TERM);
+
+    unaryMinusEClass = createEClass(UNARY_MINUS);
+    createEReference(unaryMinusEClass, UNARY_MINUS__TERM);
   }
 
   /**
@@ -3449,13 +4285,13 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     lengthWindowEClass.getESuperTypes().add(this.getViewSource());
     timeWindowEClass.getESuperTypes().add(this.getViewSource());
     messageParameterEClass.getESuperTypes().add(this.getReferencedElmt());
+    messageParameterEClass.getESuperTypes().add(this.getExpression());
     simpleParamRefEClass.getESuperTypes().add(this.getElmtProperty());
     arrayParamRefEClass.getESuperTypes().add(this.getElmtProperty());
     lengthArrayEClass.getESuperTypes().add(this.getElmtProperty());
-    stateMachineEClass.getESuperTypes().add(this.getState());
-    finalStateEClass.getESuperTypes().add(this.getState());
     compositeStateEClass.getESuperTypes().add(this.getRegion());
     compositeStateEClass.getESuperTypes().add(this.getState());
+    finalStateEClass.getESuperTypes().add(this.getState());
     sessionEClass.getESuperTypes().add(this.getRegion());
     sessionEClass.getESuperTypes().add(this.getState());
     parallelRegionEClass.getESuperTypes().add(this.getRegion());
@@ -3480,8 +4316,31 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     startSessionEClass.getESuperTypes().add(this.getAction());
     functionCallStatementEClass.getESuperTypes().add(this.getAction());
     externExpressionEClass.getESuperTypes().add(this.getExpression());
+    enumLiteralRefEClass.getESuperTypes().add(this.getExpression());
+    integerLiteralEClass.getESuperTypes().add(this.getExpression());
+    booleanLiteralEClass.getESuperTypes().add(this.getExpression());
+    stringLiteralEClass.getESuperTypes().add(this.getExpression());
+    doubleLiteralEClass.getESuperTypes().add(this.getExpression());
+    propertyReferenceEClass.getESuperTypes().add(this.getExpression());
+    referenceEClass.getESuperTypes().add(this.getExpression());
+    functionCallExpressionEClass.getESuperTypes().add(this.getExpression());
     connectorEClass.getESuperTypes().add(this.getAbstractConnector());
     externalConnectorEClass.getESuperTypes().add(this.getAbstractConnector());
+    orExpressionEClass.getESuperTypes().add(this.getExpression());
+    andExpressionEClass.getESuperTypes().add(this.getExpression());
+    equalsExpressionEClass.getESuperTypes().add(this.getExpression());
+    notEqualsExpressionEClass.getESuperTypes().add(this.getExpression());
+    greaterExpressionEClass.getESuperTypes().add(this.getExpression());
+    lowerExpressionEClass.getESuperTypes().add(this.getExpression());
+    greaterOrEqualExpressionEClass.getESuperTypes().add(this.getExpression());
+    lowerOrEqualExpressionEClass.getESuperTypes().add(this.getExpression());
+    plusExpressionEClass.getESuperTypes().add(this.getExpression());
+    minusExpressionEClass.getESuperTypes().add(this.getExpression());
+    timesExpressionEClass.getESuperTypes().add(this.getExpression());
+    divExpressionEClass.getESuperTypes().add(this.getExpression());
+    modExpressionEClass.getESuperTypes().add(this.getExpression());
+    notExpressionEClass.getESuperTypes().add(this.getExpression());
+    unaryMinusEClass.getESuperTypes().add(this.getExpression());
 
     // Initialize classes and features; add operations and parameters
     initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3531,7 +4390,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEReference(getThing_Properties(), this.getProperty(), null, "properties", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getThing_Functions(), this.getFunction(), null, "functions", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getThing_Assign(), this.getPropertyAssign(), null, "assign", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getThing_Behaviour(), this.getStateMachine(), null, "behaviour", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getThing_Behaviour(), this.getCompositeState(), null, "behaviour", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getThing_Streams(), this.getStream(), null, "streams", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(propertyAssignEClass, PropertyAssign.class, "PropertyAssign", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3636,21 +4495,15 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     initEClass(lengthArrayEClass, LengthArray.class, "LengthArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(stateMachineEClass, StateMachine.class, "StateMachine", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getStateMachine_Initial(), this.getState(), null, "initial", null, 0, 1, StateMachine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getStateMachine_History(), ecorePackage.getEBoolean(), "history", null, 0, 1, StateMachine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getStateMachine_Substate(), this.getState(), null, "substate", null, 0, -1, StateMachine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getStateMachine_Region(), this.getParallelRegion(), null, "region", null, 0, -1, StateMachine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
     initEClass(regionEClass, Region.class, "Region", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(finalStateEClass, FinalState.class, "FinalState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(compositeStateEClass, CompositeState.class, "CompositeState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getCompositeState_Initial(), this.getState(), null, "initial", null, 0, 1, CompositeState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getCompositeState_History(), ecorePackage.getEBoolean(), "history", null, 0, 1, CompositeState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCompositeState_Substate(), this.getState(), null, "substate", null, 0, -1, CompositeState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCompositeState_Region(), this.getParallelRegion(), null, "region", null, 0, -1, CompositeState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(finalStateEClass, FinalState.class, "FinalState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(sessionEClass, Session.class, "Session", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getSession_Initial(), this.getState(), null, "initial", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3688,6 +4541,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(eventEClass, Event.class, "Event", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(receiveMessageEClass, ReceiveMessage.class, "ReceiveMessage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getReceiveMessage_Name(), ecorePackage.getEString(), "name", null, 0, 1, ReceiveMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getReceiveMessage_Port(), this.getPort(), null, "port", null, 0, 1, ReceiveMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getReceiveMessage_Message(), this.getMessage(), null, "message", null, 0, 1, ReceiveMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -3757,6 +4611,33 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEAttribute(getExternExpression_Expression(), ecorePackage.getEString(), "expression", null, 0, 1, ExternExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getExternExpression_Segments(), this.getExpression(), null, "segments", null, 0, -1, ExternExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(enumLiteralRefEClass, EnumLiteralRef.class, "EnumLiteralRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getEnumLiteralRef_Enum(), this.getEnumeration(), null, "enum", null, 0, 1, EnumLiteralRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getEnumLiteralRef_Literal(), this.getEnumerationLiteral(), null, "literal", null, 0, 1, EnumLiteralRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(integerLiteralEClass, IntegerLiteral.class, "IntegerLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getIntegerLiteral_IntValue(), ecorePackage.getEInt(), "intValue", null, 0, 1, IntegerLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(booleanLiteralEClass, BooleanLiteral.class, "BooleanLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getBooleanLiteral_BoolValue(), ecorePackage.getEString(), "boolValue", null, 0, 1, BooleanLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(stringLiteralEClass, StringLiteral.class, "StringLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getStringLiteral_StringValue(), ecorePackage.getEString(), "stringValue", null, 0, 1, StringLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(doubleLiteralEClass, DoubleLiteral.class, "DoubleLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getDoubleLiteral_DoubleValue(), ecorePackage.getEDouble(), "doubleValue", null, 0, 1, DoubleLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(propertyReferenceEClass, PropertyReference.class, "PropertyReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getPropertyReference_Property(), this.getVariable(), null, "property", null, 0, 1, PropertyReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(referenceEClass, Reference.class, "Reference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getReference_Reference(), this.getReferencedElmt(), null, "reference", null, 0, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getReference_Parameter(), this.getElmtProperty(), null, "parameter", null, 0, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(functionCallExpressionEClass, FunctionCallExpression.class, "FunctionCallExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getFunctionCallExpression_Function(), this.getFunction(), null, "function", null, 0, 1, FunctionCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFunctionCallExpression_Parameters(), this.getExpression(), null, "parameters", null, 0, -1, FunctionCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(configurationEClass, Configuration.class, "Configuration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getConfiguration_Name(), ecorePackage.getEString(), "name", null, 0, 1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getConfiguration_Annotations(), this.getPlatformAnnotation(), null, "annotations", null, 0, -1, Configuration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3793,6 +4674,64 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     initEClass(instanceRefEClass, InstanceRef.class, "InstanceRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getInstanceRef_Instance(), this.getInstance(), null, "instance", null, 0, 1, InstanceRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(orExpressionEClass, OrExpression.class, "OrExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getOrExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, OrExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getOrExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, OrExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(andExpressionEClass, AndExpression.class, "AndExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getAndExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, AndExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAndExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, AndExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(equalsExpressionEClass, EqualsExpression.class, "EqualsExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getEqualsExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, EqualsExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getEqualsExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, EqualsExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(notEqualsExpressionEClass, NotEqualsExpression.class, "NotEqualsExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNotEqualsExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, NotEqualsExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getNotEqualsExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, NotEqualsExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(greaterExpressionEClass, GreaterExpression.class, "GreaterExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getGreaterExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, GreaterExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getGreaterExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, GreaterExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(lowerExpressionEClass, LowerExpression.class, "LowerExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getLowerExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, LowerExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLowerExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, LowerExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(greaterOrEqualExpressionEClass, GreaterOrEqualExpression.class, "GreaterOrEqualExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getGreaterOrEqualExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, GreaterOrEqualExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getGreaterOrEqualExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, GreaterOrEqualExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(lowerOrEqualExpressionEClass, LowerOrEqualExpression.class, "LowerOrEqualExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getLowerOrEqualExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, LowerOrEqualExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLowerOrEqualExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, LowerOrEqualExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(plusExpressionEClass, PlusExpression.class, "PlusExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getPlusExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, PlusExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getPlusExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, PlusExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(minusExpressionEClass, MinusExpression.class, "MinusExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getMinusExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, MinusExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getMinusExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, MinusExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(timesExpressionEClass, TimesExpression.class, "TimesExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getTimesExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, TimesExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTimesExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, TimesExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(divExpressionEClass, DivExpression.class, "DivExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getDivExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, DivExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getDivExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, DivExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(modExpressionEClass, ModExpression.class, "ModExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getModExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, ModExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getModExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, ModExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(notExpressionEClass, NotExpression.class, "NotExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getNotExpression_Term(), this.getExpression(), null, "term", null, 0, 1, NotExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(unaryMinusEClass, UnaryMinus.class, "UnaryMinus", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getUnaryMinus_Term(), this.getExpression(), null, "term", null, 0, 1, UnaryMinus.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);

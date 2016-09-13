@@ -199,7 +199,7 @@ public interface Thing extends NamedElement, Type
 
   /**
    * Returns the value of the '<em><b>Behaviour</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.StateMachine}.
+   * The list contents are of type {@link org.thingml.xtext.thingML.CompositeState}.
    * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Behaviour</em>' containment reference list isn't clear,
@@ -211,7 +211,7 @@ public interface Thing extends NamedElement, Type
    * @model containment="true"
    * @generated
    */
-  EList<StateMachine> getBehaviour();
+  EList<CompositeState> getBehaviour();
 
   /**
    * Returns the value of the '<em><b>Streams</b></em>' containment reference list.

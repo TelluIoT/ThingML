@@ -3,6 +3,10 @@
  */
 package org.thingml.xtext.validation
 
+import org.thingml.xtext.thingML.Thing
+import org.eclipse.xtext.validation.Check
+import org.thingml.xtext.thingML.ThingMLPackage
+import java.util.LinkedList
 
 /**
  * This class contains custom validation rules. 
@@ -11,15 +15,31 @@ package org.thingml.xtext.validation
  */
 class ThingMLValidator extends AbstractThingMLValidator {
 	
-//	public static val INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	def checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.name.charAt(0))) {
-//			warning('Name should start with a capital', 
-//					ThingMLPackage.Literals.GREETING__NAME,
-//					INVALID_NAME)
-//		}
-//	}
+
+	/*****************************************************************************
+	 *                 CUSTOM VALIDATION RULES FOR THINGS
+	 *****************************************************************************/
+
+	@Check
+	def checkNoCyclesInThingIncludes(Thing thing) {
+		if(thing.includes.isEmpty) return;
+		
+		val visitedThings = newHashSet(thing);
+		var toCheck = new LinkedList<Thing>();
+		toCheck.addAll(thing.includes);
+		
+		while (!toCheck.empty) {
+			val current = toCheck.pollFirst
+		 	
+			if (visitedThings.contains(current)) {
+				error("Cycle in the hierarchy of Thing '" + current.name + "'", ThingMLPackage.eINSTANCE.thing_Includes);
+				return;
+			}
+			
+			visitedThings.add(current);
+			for (Thing t : current.includes)
+				if (!toCheck.contains(t)) toCheck.add(t);
+		}
+	}
 	
 }

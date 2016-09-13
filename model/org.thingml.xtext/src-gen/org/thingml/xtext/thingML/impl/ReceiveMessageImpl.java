@@ -23,6 +23,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.thingml.xtext.thingML.impl.ReceiveMessageImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ReceiveMessageImpl#getPort <em>Port</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ReceiveMessageImpl#getMessage <em>Message</em>}</li>
  * </ul>
@@ -31,6 +32,26 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  */
 public class ReceiveMessageImpl extends ReferencedElmtImpl implements ReceiveMessage
 {
+  /**
+   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected static final String NAME_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected String name = NAME_EDEFAULT;
+
   /**
    * The cached value of the '{@link #getPort() <em>Port</em>}' reference.
    * <!-- begin-user-doc -->
@@ -70,6 +91,29 @@ public class ReceiveMessageImpl extends ReferencedElmtImpl implements ReceiveMes
   protected EClass eStaticClass()
   {
     return ThingMLPackage.Literals.RECEIVE_MESSAGE;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String getName()
+  {
+    return name;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setName(String newName)
+  {
+    String oldName = name;
+    name = newName;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.RECEIVE_MESSAGE__NAME, oldName, name));
   }
 
   /**
@@ -168,6 +212,8 @@ public class ReceiveMessageImpl extends ReferencedElmtImpl implements ReceiveMes
   {
     switch (featureID)
     {
+      case ThingMLPackage.RECEIVE_MESSAGE__NAME:
+        return getName();
       case ThingMLPackage.RECEIVE_MESSAGE__PORT:
         if (resolve) return getPort();
         return basicGetPort();
@@ -188,6 +234,9 @@ public class ReceiveMessageImpl extends ReferencedElmtImpl implements ReceiveMes
   {
     switch (featureID)
     {
+      case ThingMLPackage.RECEIVE_MESSAGE__NAME:
+        setName((String)newValue);
+        return;
       case ThingMLPackage.RECEIVE_MESSAGE__PORT:
         setPort((Port)newValue);
         return;
@@ -208,6 +257,9 @@ public class ReceiveMessageImpl extends ReferencedElmtImpl implements ReceiveMes
   {
     switch (featureID)
     {
+      case ThingMLPackage.RECEIVE_MESSAGE__NAME:
+        setName(NAME_EDEFAULT);
+        return;
       case ThingMLPackage.RECEIVE_MESSAGE__PORT:
         setPort((Port)null);
         return;
@@ -228,12 +280,31 @@ public class ReceiveMessageImpl extends ReferencedElmtImpl implements ReceiveMes
   {
     switch (featureID)
     {
+      case ThingMLPackage.RECEIVE_MESSAGE__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.RECEIVE_MESSAGE__PORT:
         return port != null;
       case ThingMLPackage.RECEIVE_MESSAGE__MESSAGE:
         return message != null;
     }
     return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (name: ");
+    result.append(name);
+    result.append(')');
+    return result.toString();
   }
 
 } //ReceiveMessageImpl

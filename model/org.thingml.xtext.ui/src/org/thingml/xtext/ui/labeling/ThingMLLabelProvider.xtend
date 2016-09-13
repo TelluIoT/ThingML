@@ -6,6 +6,7 @@ package org.thingml.xtext.ui.labeling
 import com.google.inject.Inject
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
+import org.thingml.xtext.thingML.CompositeState
 
 /**
  * Provides labels for EObjects.
@@ -28,4 +29,13 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 //	def image(Greeting ele) {
 //		'Greeting.gif'
 //	}
+
+	def text(CompositeState sm) {
+		var result = "[SM"
+		if (sm.name != null) {
+			result += " " + sm.name;
+		}
+		result += "]"
+	}
+
 }

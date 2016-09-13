@@ -35,7 +35,7 @@ public class ThingHelper {
     public static List<Transition> allTransitionsWithAction(Thing self) {
         //var result = new ArrayList[Handler]()
         final List<Transition> result = new ArrayList<Transition>();
-        for(StateMachine sm : self.getBehaviour()) {
+        for(CompositeState sm : self.getBehaviour()) {
             for(State s : StateHelper.allStates(sm)) {
                 for(Transition o : s.getOutgoing()) {
                     if (o.getAction() != null) {
@@ -50,7 +50,7 @@ public class ThingHelper {
     public static List<InternalTransition> allInternalTransitionsWithAction(Thing self) {
         //var result = new ArrayList[Handler]()
         final List<InternalTransition> result = new ArrayList<InternalTransition>();
-        for(StateMachine sm : self.getBehaviour()) {
+        for(CompositeState sm : self.getBehaviour()) {
             for(State s : StateHelper.allStates(sm)) {
                 for(InternalTransition o : s.getInternal()) {
                     if (o.getAction() != null) {
@@ -65,7 +65,7 @@ public class ThingHelper {
 
     public static List<Property> allPropertiesInDepth(Thing self) {
         List<Property> result = ThingMLHelpers.allProperties(self);
-        for(StateMachine sm : ThingMLHelpers.allStateMachines(self)) {
+        for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
             result.addAll(CompositeStateHelper.allContainedProperties(sm));
         }
         return result;

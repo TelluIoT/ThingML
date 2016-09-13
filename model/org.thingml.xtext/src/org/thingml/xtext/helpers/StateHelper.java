@@ -129,7 +129,7 @@ public class StateHelper {
         }
 
         //add stream handlers if not present
-        if (self instanceof StateMachine) {
+        if (self instanceof CompositeState) {
             for (Stream s : ThingMLElementHelper.findContainingThing(self).getStreams()) {
                 ReceiveMessage rMsg;
 
@@ -215,7 +215,7 @@ public class StateHelper {
         }
 
         //add stream handlers if not present
-        if (self instanceof StateMachine) {
+        if (self instanceof CompositeState) {
             for (Stream s : ThingMLElementHelper.findContainingThing(self).getStreams()) {
                 ReceiveMessage rMsg;
 

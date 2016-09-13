@@ -1570,206 +1570,6 @@ public interface ThingMLPackage extends EPackage
   int LENGTH_ARRAY_FEATURE_COUNT = ELMT_PROPERTY_FEATURE_COUNT + 0;
 
   /**
-   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.StateImpl <em>State</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.thingml.xtext.thingML.impl.StateImpl
-   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getState()
-   * @generated
-   */
-  int STATE = 42;
-
-  /**
-   * The feature id for the '<em><b>Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE__NAME = 0;
-
-  /**
-   * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE__ANNOTATIONS = 1;
-
-  /**
-   * The feature id for the '<em><b>Entry</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE__ENTRY = 2;
-
-  /**
-   * The feature id for the '<em><b>Exit</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE__EXIT = 3;
-
-  /**
-   * The feature id for the '<em><b>Properties</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE__PROPERTIES = 4;
-
-  /**
-   * The feature id for the '<em><b>Internal</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE__INTERNAL = 5;
-
-  /**
-   * The feature id for the '<em><b>Outgoing</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE__OUTGOING = 6;
-
-  /**
-   * The number of structural features of the '<em>State</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_FEATURE_COUNT = 7;
-
-  /**
-   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.StateMachineImpl <em>State Machine</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.thingml.xtext.thingML.impl.StateMachineImpl
-   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getStateMachine()
-   * @generated
-   */
-  int STATE_MACHINE = 36;
-
-  /**
-   * The feature id for the '<em><b>Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__NAME = STATE__NAME;
-
-  /**
-   * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__ANNOTATIONS = STATE__ANNOTATIONS;
-
-  /**
-   * The feature id for the '<em><b>Entry</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__ENTRY = STATE__ENTRY;
-
-  /**
-   * The feature id for the '<em><b>Exit</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__EXIT = STATE__EXIT;
-
-  /**
-   * The feature id for the '<em><b>Properties</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__PROPERTIES = STATE__PROPERTIES;
-
-  /**
-   * The feature id for the '<em><b>Internal</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__INTERNAL = STATE__INTERNAL;
-
-  /**
-   * The feature id for the '<em><b>Outgoing</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__OUTGOING = STATE__OUTGOING;
-
-  /**
-   * The feature id for the '<em><b>Initial</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__INITIAL = STATE_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>History</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__HISTORY = STATE_FEATURE_COUNT + 1;
-
-  /**
-   * The feature id for the '<em><b>Substate</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__SUBSTATE = STATE_FEATURE_COUNT + 2;
-
-  /**
-   * The feature id for the '<em><b>Region</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE__REGION = STATE_FEATURE_COUNT + 3;
-
-  /**
-   * The number of structural features of the '<em>State Machine</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int STATE_MACHINE_FEATURE_COUNT = STATE_FEATURE_COUNT + 4;
-
-  /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.RegionImpl <em>Region</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1777,7 +1577,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getRegion()
    * @generated
    */
-  int REGION = 37;
+  int REGION = 36;
 
   /**
    * The number of structural features of the '<em>Region</em>' class.
@@ -1789,88 +1589,6 @@ public interface ThingMLPackage extends EPackage
   int REGION_FEATURE_COUNT = 0;
 
   /**
-   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.FinalStateImpl <em>Final State</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.thingml.xtext.thingML.impl.FinalStateImpl
-   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFinalState()
-   * @generated
-   */
-  int FINAL_STATE = 38;
-
-  /**
-   * The feature id for the '<em><b>Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FINAL_STATE__NAME = STATE__NAME;
-
-  /**
-   * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FINAL_STATE__ANNOTATIONS = STATE__ANNOTATIONS;
-
-  /**
-   * The feature id for the '<em><b>Entry</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FINAL_STATE__ENTRY = STATE__ENTRY;
-
-  /**
-   * The feature id for the '<em><b>Exit</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FINAL_STATE__EXIT = STATE__EXIT;
-
-  /**
-   * The feature id for the '<em><b>Properties</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FINAL_STATE__PROPERTIES = STATE__PROPERTIES;
-
-  /**
-   * The feature id for the '<em><b>Internal</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FINAL_STATE__INTERNAL = STATE__INTERNAL;
-
-  /**
-   * The feature id for the '<em><b>Outgoing</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FINAL_STATE__OUTGOING = STATE__OUTGOING;
-
-  /**
-   * The number of structural features of the '<em>Final State</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FINAL_STATE_FEATURE_COUNT = STATE_FEATURE_COUNT + 0;
-
-  /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.CompositeStateImpl <em>Composite State</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1878,7 +1596,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getCompositeState()
    * @generated
    */
-  int COMPOSITE_STATE = 39;
+  int COMPOSITE_STATE = 37;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1989,6 +1707,170 @@ public interface ThingMLPackage extends EPackage
   int COMPOSITE_STATE_FEATURE_COUNT = REGION_FEATURE_COUNT + 11;
 
   /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.StateImpl <em>State</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.StateImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getState()
+   * @generated
+   */
+  int STATE = 41;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE__NAME = 0;
+
+  /**
+   * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE__ANNOTATIONS = 1;
+
+  /**
+   * The feature id for the '<em><b>Entry</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE__ENTRY = 2;
+
+  /**
+   * The feature id for the '<em><b>Exit</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE__EXIT = 3;
+
+  /**
+   * The feature id for the '<em><b>Properties</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE__PROPERTIES = 4;
+
+  /**
+   * The feature id for the '<em><b>Internal</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE__INTERNAL = 5;
+
+  /**
+   * The feature id for the '<em><b>Outgoing</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE__OUTGOING = 6;
+
+  /**
+   * The number of structural features of the '<em>State</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STATE_FEATURE_COUNT = 7;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.FinalStateImpl <em>Final State</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.FinalStateImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFinalState()
+   * @generated
+   */
+  int FINAL_STATE = 38;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FINAL_STATE__NAME = STATE__NAME;
+
+  /**
+   * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FINAL_STATE__ANNOTATIONS = STATE__ANNOTATIONS;
+
+  /**
+   * The feature id for the '<em><b>Entry</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FINAL_STATE__ENTRY = STATE__ENTRY;
+
+  /**
+   * The feature id for the '<em><b>Exit</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FINAL_STATE__EXIT = STATE__EXIT;
+
+  /**
+   * The feature id for the '<em><b>Properties</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FINAL_STATE__PROPERTIES = STATE__PROPERTIES;
+
+  /**
+   * The feature id for the '<em><b>Internal</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FINAL_STATE__INTERNAL = STATE__INTERNAL;
+
+  /**
+   * The feature id for the '<em><b>Outgoing</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FINAL_STATE__OUTGOING = STATE__OUTGOING;
+
+  /**
+   * The number of structural features of the '<em>Final State</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FINAL_STATE_FEATURE_COUNT = STATE_FEATURE_COUNT + 0;
+
+  /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.SessionImpl <em>Session</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1996,7 +1878,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getSession()
    * @generated
    */
-  int SESSION = 40;
+  int SESSION = 39;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2105,7 +1987,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getParallelRegion()
    * @generated
    */
-  int PARALLEL_REGION = 41;
+  int PARALLEL_REGION = 40;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2169,7 +2051,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getHandler()
    * @generated
    */
-  int HANDLER = 43;
+  int HANDLER = 42;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2233,7 +2115,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getTransition()
    * @generated
    */
-  int TRANSITION = 44;
+  int TRANSITION = 43;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2306,7 +2188,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getInternalTransition()
    * @generated
    */
-  int INTERNAL_TRANSITION = 45;
+  int INTERNAL_TRANSITION = 44;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2370,7 +2252,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEvent()
    * @generated
    */
-  int EVENT = 46;
+  int EVENT = 45;
 
   /**
    * The number of structural features of the '<em>Event</em>' class.
@@ -2389,7 +2271,16 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getReceiveMessage()
    * @generated
    */
-  int RECEIVE_MESSAGE = 47;
+  int RECEIVE_MESSAGE = 46;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RECEIVE_MESSAGE__NAME = REFERENCED_ELMT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Port</b></em>' reference.
@@ -2398,7 +2289,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int RECEIVE_MESSAGE__PORT = REFERENCED_ELMT_FEATURE_COUNT + 0;
+  int RECEIVE_MESSAGE__PORT = REFERENCED_ELMT_FEATURE_COUNT + 1;
 
   /**
    * The feature id for the '<em><b>Message</b></em>' reference.
@@ -2407,7 +2298,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int RECEIVE_MESSAGE__MESSAGE = REFERENCED_ELMT_FEATURE_COUNT + 1;
+  int RECEIVE_MESSAGE__MESSAGE = REFERENCED_ELMT_FEATURE_COUNT + 2;
 
   /**
    * The number of structural features of the '<em>Receive Message</em>' class.
@@ -2416,7 +2307,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int RECEIVE_MESSAGE_FEATURE_COUNT = REFERENCED_ELMT_FEATURE_COUNT + 2;
+  int RECEIVE_MESSAGE_FEATURE_COUNT = REFERENCED_ELMT_FEATURE_COUNT + 3;
 
   /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.ActionImpl <em>Action</em>}' class.
@@ -2426,7 +2317,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getAction()
    * @generated
    */
-  int ACTION = 48;
+  int ACTION = 47;
 
   /**
    * The number of structural features of the '<em>Action</em>' class.
@@ -2445,7 +2336,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getVariable()
    * @generated
    */
-  int VARIABLE = 49;
+  int VARIABLE = 48;
 
   /**
    * The number of structural features of the '<em>Variable</em>' class.
@@ -2464,7 +2355,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getActionBlock()
    * @generated
    */
-  int ACTION_BLOCK = 50;
+  int ACTION_BLOCK = 49;
 
   /**
    * The feature id for the '<em><b>Actions</b></em>' containment reference list.
@@ -2492,7 +2383,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getExternStatement()
    * @generated
    */
-  int EXTERN_STATEMENT = 51;
+  int EXTERN_STATEMENT = 50;
 
   /**
    * The feature id for the '<em><b>Statement</b></em>' attribute.
@@ -2529,7 +2420,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLocalVariable()
    * @generated
    */
-  int LOCAL_VARIABLE = 52;
+  int LOCAL_VARIABLE = 51;
 
   /**
    * The feature id for the '<em><b>Changeable</b></em>' attribute.
@@ -2593,7 +2484,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getSendAction()
    * @generated
    */
-  int SEND_ACTION = 53;
+  int SEND_ACTION = 52;
 
   /**
    * The feature id for the '<em><b>Port</b></em>' reference.
@@ -2639,7 +2530,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getVariableAssignment()
    * @generated
    */
-  int VARIABLE_ASSIGNMENT = 54;
+  int VARIABLE_ASSIGNMENT = 53;
 
   /**
    * The feature id for the '<em><b>Property</b></em>' reference.
@@ -2685,7 +2576,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getIncrement()
    * @generated
    */
-  int INCREMENT = 55;
+  int INCREMENT = 54;
 
   /**
    * The feature id for the '<em><b>Var</b></em>' reference.
@@ -2713,7 +2604,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getDecrement()
    * @generated
    */
-  int DECREMENT = 56;
+  int DECREMENT = 55;
 
   /**
    * The feature id for the '<em><b>Var</b></em>' reference.
@@ -2741,7 +2632,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLoopAction()
    * @generated
    */
-  int LOOP_ACTION = 57;
+  int LOOP_ACTION = 56;
 
   /**
    * The feature id for the '<em><b>Condition</b></em>' containment reference.
@@ -2778,7 +2669,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getConditionalAction()
    * @generated
    */
-  int CONDITIONAL_ACTION = 58;
+  int CONDITIONAL_ACTION = 57;
 
   /**
    * The feature id for the '<em><b>Condition</b></em>' containment reference.
@@ -2824,7 +2715,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getReturnAction()
    * @generated
    */
-  int RETURN_ACTION = 59;
+  int RETURN_ACTION = 58;
 
   /**
    * The feature id for the '<em><b>Exp</b></em>' containment reference.
@@ -2852,7 +2743,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPrintAction()
    * @generated
    */
-  int PRINT_ACTION = 60;
+  int PRINT_ACTION = 59;
 
   /**
    * The feature id for the '<em><b>Msg</b></em>' containment reference.
@@ -2880,7 +2771,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getErrorAction()
    * @generated
    */
-  int ERROR_ACTION = 61;
+  int ERROR_ACTION = 60;
 
   /**
    * The feature id for the '<em><b>Msg</b></em>' containment reference.
@@ -2908,7 +2799,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getStartSession()
    * @generated
    */
-  int START_SESSION = 62;
+  int START_SESSION = 61;
 
   /**
    * The feature id for the '<em><b>Session</b></em>' reference.
@@ -2945,7 +2836,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFunctionCallStatement()
    * @generated
    */
-  int FUNCTION_CALL_STATEMENT = 63;
+  int FUNCTION_CALL_STATEMENT = 62;
 
   /**
    * The feature id for the '<em><b>Function</b></em>' reference.
@@ -2982,7 +2873,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getExpression()
    * @generated
    */
-  int EXPRESSION = 64;
+  int EXPRESSION = 63;
 
   /**
    * The number of structural features of the '<em>Expression</em>' class.
@@ -3001,7 +2892,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getExternExpression()
    * @generated
    */
-  int EXTERN_EXPRESSION = 65;
+  int EXTERN_EXPRESSION = 64;
 
   /**
    * The feature id for the '<em><b>Expression</b></em>' attribute.
@@ -3031,6 +2922,257 @@ public interface ThingMLPackage extends EPackage
   int EXTERN_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
 
   /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.EnumLiteralRefImpl <em>Enum Literal Ref</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.EnumLiteralRefImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEnumLiteralRef()
+   * @generated
+   */
+  int ENUM_LITERAL_REF = 65;
+
+  /**
+   * The feature id for the '<em><b>Enum</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENUM_LITERAL_REF__ENUM = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Literal</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENUM_LITERAL_REF__LITERAL = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Enum Literal Ref</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENUM_LITERAL_REF_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.IntegerLiteralImpl <em>Integer Literal</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.IntegerLiteralImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getIntegerLiteral()
+   * @generated
+   */
+  int INTEGER_LITERAL = 66;
+
+  /**
+   * The feature id for the '<em><b>Int Value</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int INTEGER_LITERAL__INT_VALUE = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Integer Literal</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int INTEGER_LITERAL_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.BooleanLiteralImpl <em>Boolean Literal</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.BooleanLiteralImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getBooleanLiteral()
+   * @generated
+   */
+  int BOOLEAN_LITERAL = 67;
+
+  /**
+   * The feature id for the '<em><b>Bool Value</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOLEAN_LITERAL__BOOL_VALUE = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Boolean Literal</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int BOOLEAN_LITERAL_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.StringLiteralImpl <em>String Literal</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.StringLiteralImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getStringLiteral()
+   * @generated
+   */
+  int STRING_LITERAL = 68;
+
+  /**
+   * The feature id for the '<em><b>String Value</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STRING_LITERAL__STRING_VALUE = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>String Literal</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int STRING_LITERAL_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.DoubleLiteralImpl <em>Double Literal</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.DoubleLiteralImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getDoubleLiteral()
+   * @generated
+   */
+  int DOUBLE_LITERAL = 69;
+
+  /**
+   * The feature id for the '<em><b>Double Value</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int DOUBLE_LITERAL__DOUBLE_VALUE = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Double Literal</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int DOUBLE_LITERAL_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.PropertyReferenceImpl <em>Property Reference</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.PropertyReferenceImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPropertyReference()
+   * @generated
+   */
+  int PROPERTY_REFERENCE = 70;
+
+  /**
+   * The feature id for the '<em><b>Property</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PROPERTY_REFERENCE__PROPERTY = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Property Reference</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PROPERTY_REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.ReferenceImpl <em>Reference</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.ReferenceImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getReference()
+   * @generated
+   */
+  int REFERENCE = 71;
+
+  /**
+   * The feature id for the '<em><b>Reference</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REFERENCE__REFERENCE = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Parameter</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REFERENCE__PARAMETER = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Reference</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REFERENCE_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.FunctionCallExpressionImpl <em>Function Call Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.FunctionCallExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFunctionCallExpression()
+   * @generated
+   */
+  int FUNCTION_CALL_EXPRESSION = 72;
+
+  /**
+   * The feature id for the '<em><b>Function</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FUNCTION_CALL_EXPRESSION__FUNCTION = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FUNCTION_CALL_EXPRESSION__PARAMETERS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Function Call Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FUNCTION_CALL_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.ConfigurationImpl <em>Configuration</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3038,7 +3180,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getConfiguration()
    * @generated
    */
-  int CONFIGURATION = 66;
+  int CONFIGURATION = 73;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3102,7 +3244,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getInstance()
    * @generated
    */
-  int INSTANCE = 67;
+  int INSTANCE = 74;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3148,7 +3290,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getConfigPropertyAssign()
    * @generated
    */
-  int CONFIG_PROPERTY_ASSIGN = 68;
+  int CONFIG_PROPERTY_ASSIGN = 75;
 
   /**
    * The feature id for the '<em><b>Instance</b></em>' containment reference.
@@ -3212,7 +3354,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getAbstractConnector()
    * @generated
    */
-  int ABSTRACT_CONNECTOR = 69;
+  int ABSTRACT_CONNECTOR = 76;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3249,7 +3391,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getConnector()
    * @generated
    */
-  int CONNECTOR = 70;
+  int CONNECTOR = 77;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3322,7 +3464,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getExternalConnector()
    * @generated
    */
-  int EXTERNAL_CONNECTOR = 71;
+  int EXTERNAL_CONNECTOR = 78;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3386,7 +3528,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getInstanceRef()
    * @generated
    */
-  int INSTANCE_REF = 72;
+  int INSTANCE_REF = 79;
 
   /**
    * The feature id for the '<em><b>Instance</b></em>' reference.
@@ -3405,6 +3547,543 @@ public interface ThingMLPackage extends EPackage
    * @ordered
    */
   int INSTANCE_REF_FEATURE_COUNT = 1;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.OrExpressionImpl <em>Or Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.OrExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getOrExpression()
+   * @generated
+   */
+  int OR_EXPRESSION = 80;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OR_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OR_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Or Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int OR_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.AndExpressionImpl <em>And Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.AndExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getAndExpression()
+   * @generated
+   */
+  int AND_EXPRESSION = 81;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AND_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AND_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>And Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AND_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.EqualsExpressionImpl <em>Equals Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.EqualsExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEqualsExpression()
+   * @generated
+   */
+  int EQUALS_EXPRESSION = 82;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EQUALS_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EQUALS_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Equals Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EQUALS_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.NotEqualsExpressionImpl <em>Not Equals Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.NotEqualsExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getNotEqualsExpression()
+   * @generated
+   */
+  int NOT_EQUALS_EXPRESSION = 83;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NOT_EQUALS_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NOT_EQUALS_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Not Equals Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NOT_EQUALS_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.GreaterExpressionImpl <em>Greater Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.GreaterExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getGreaterExpression()
+   * @generated
+   */
+  int GREATER_EXPRESSION = 84;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GREATER_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GREATER_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Greater Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GREATER_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.LowerExpressionImpl <em>Lower Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.LowerExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLowerExpression()
+   * @generated
+   */
+  int LOWER_EXPRESSION = 85;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOWER_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOWER_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Lower Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOWER_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.GreaterOrEqualExpressionImpl <em>Greater Or Equal Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.GreaterOrEqualExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getGreaterOrEqualExpression()
+   * @generated
+   */
+  int GREATER_OR_EQUAL_EXPRESSION = 86;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GREATER_OR_EQUAL_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GREATER_OR_EQUAL_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Greater Or Equal Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int GREATER_OR_EQUAL_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.LowerOrEqualExpressionImpl <em>Lower Or Equal Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.LowerOrEqualExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLowerOrEqualExpression()
+   * @generated
+   */
+  int LOWER_OR_EQUAL_EXPRESSION = 87;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOWER_OR_EQUAL_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOWER_OR_EQUAL_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Lower Or Equal Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LOWER_OR_EQUAL_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.PlusExpressionImpl <em>Plus Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.PlusExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPlusExpression()
+   * @generated
+   */
+  int PLUS_EXPRESSION = 88;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PLUS_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PLUS_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Plus Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PLUS_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.MinusExpressionImpl <em>Minus Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.MinusExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getMinusExpression()
+   * @generated
+   */
+  int MINUS_EXPRESSION = 89;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int MINUS_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int MINUS_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Minus Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int MINUS_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.TimesExpressionImpl <em>Times Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.TimesExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getTimesExpression()
+   * @generated
+   */
+  int TIMES_EXPRESSION = 90;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TIMES_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TIMES_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Times Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int TIMES_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.DivExpressionImpl <em>Div Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.DivExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getDivExpression()
+   * @generated
+   */
+  int DIV_EXPRESSION = 91;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int DIV_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int DIV_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Div Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int DIV_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.ModExpressionImpl <em>Mod Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.ModExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getModExpression()
+   * @generated
+   */
+  int MOD_EXPRESSION = 92;
+
+  /**
+   * The feature id for the '<em><b>Lhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int MOD_EXPRESSION__LHS = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Rhs</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int MOD_EXPRESSION__RHS = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Mod Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int MOD_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.NotExpressionImpl <em>Not Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.NotExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getNotExpression()
+   * @generated
+   */
+  int NOT_EXPRESSION = 93;
+
+  /**
+   * The feature id for the '<em><b>Term</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NOT_EXPRESSION__TERM = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Not Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int NOT_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.UnaryMinusImpl <em>Unary Minus</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.UnaryMinusImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getUnaryMinus()
+   * @generated
+   */
+  int UNARY_MINUS = 94;
+
+  /**
+   * The feature id for the '<em><b>Term</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int UNARY_MINUS__TERM = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Unary Minus</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int UNARY_MINUS_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
 
 
   /**
@@ -4648,60 +5327,6 @@ public interface ThingMLPackage extends EPackage
   EClass getLengthArray();
 
   /**
-   * Returns the meta object for class '{@link org.thingml.xtext.thingML.StateMachine <em>State Machine</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>State Machine</em>'.
-   * @see org.thingml.xtext.thingML.StateMachine
-   * @generated
-   */
-  EClass getStateMachine();
-
-  /**
-   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.StateMachine#getInitial <em>Initial</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Initial</em>'.
-   * @see org.thingml.xtext.thingML.StateMachine#getInitial()
-   * @see #getStateMachine()
-   * @generated
-   */
-  EReference getStateMachine_Initial();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.StateMachine#isHistory <em>History</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>History</em>'.
-   * @see org.thingml.xtext.thingML.StateMachine#isHistory()
-   * @see #getStateMachine()
-   * @generated
-   */
-  EAttribute getStateMachine_History();
-
-  /**
-   * Returns the meta object for the containment reference list '{@link org.thingml.xtext.thingML.StateMachine#getSubstate <em>Substate</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Substate</em>'.
-   * @see org.thingml.xtext.thingML.StateMachine#getSubstate()
-   * @see #getStateMachine()
-   * @generated
-   */
-  EReference getStateMachine_Substate();
-
-  /**
-   * Returns the meta object for the containment reference list '{@link org.thingml.xtext.thingML.StateMachine#getRegion <em>Region</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Region</em>'.
-   * @see org.thingml.xtext.thingML.StateMachine#getRegion()
-   * @see #getStateMachine()
-   * @generated
-   */
-  EReference getStateMachine_Region();
-
-  /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.Region <em>Region</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4710,16 +5335,6 @@ public interface ThingMLPackage extends EPackage
    * @generated
    */
   EClass getRegion();
-
-  /**
-   * Returns the meta object for class '{@link org.thingml.xtext.thingML.FinalState <em>Final State</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Final State</em>'.
-   * @see org.thingml.xtext.thingML.FinalState
-   * @generated
-   */
-  EClass getFinalState();
 
   /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.CompositeState <em>Composite State</em>}'.
@@ -4774,6 +5389,16 @@ public interface ThingMLPackage extends EPackage
    * @generated
    */
   EReference getCompositeState_Region();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.FinalState <em>Final State</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Final State</em>'.
+   * @see org.thingml.xtext.thingML.FinalState
+   * @generated
+   */
+  EClass getFinalState();
 
   /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.Session <em>Session</em>}'.
@@ -5085,6 +5710,17 @@ public interface ThingMLPackage extends EPackage
    * @generated
    */
   EClass getReceiveMessage();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.ReceiveMessage#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see org.thingml.xtext.thingML.ReceiveMessage#getName()
+   * @see #getReceiveMessage()
+   * @generated
+   */
+  EAttribute getReceiveMessage_Name();
 
   /**
    * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.ReceiveMessage#getPort <em>Port</em>}'.
@@ -5619,6 +6255,207 @@ public interface ThingMLPackage extends EPackage
   EReference getExternExpression_Segments();
 
   /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.EnumLiteralRef <em>Enum Literal Ref</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Enum Literal Ref</em>'.
+   * @see org.thingml.xtext.thingML.EnumLiteralRef
+   * @generated
+   */
+  EClass getEnumLiteralRef();
+
+  /**
+   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.EnumLiteralRef#getEnum <em>Enum</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Enum</em>'.
+   * @see org.thingml.xtext.thingML.EnumLiteralRef#getEnum()
+   * @see #getEnumLiteralRef()
+   * @generated
+   */
+  EReference getEnumLiteralRef_Enum();
+
+  /**
+   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.EnumLiteralRef#getLiteral <em>Literal</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Literal</em>'.
+   * @see org.thingml.xtext.thingML.EnumLiteralRef#getLiteral()
+   * @see #getEnumLiteralRef()
+   * @generated
+   */
+  EReference getEnumLiteralRef_Literal();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.IntegerLiteral <em>Integer Literal</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Integer Literal</em>'.
+   * @see org.thingml.xtext.thingML.IntegerLiteral
+   * @generated
+   */
+  EClass getIntegerLiteral();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.IntegerLiteral#getIntValue <em>Int Value</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Int Value</em>'.
+   * @see org.thingml.xtext.thingML.IntegerLiteral#getIntValue()
+   * @see #getIntegerLiteral()
+   * @generated
+   */
+  EAttribute getIntegerLiteral_IntValue();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.BooleanLiteral <em>Boolean Literal</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Boolean Literal</em>'.
+   * @see org.thingml.xtext.thingML.BooleanLiteral
+   * @generated
+   */
+  EClass getBooleanLiteral();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.BooleanLiteral#getBoolValue <em>Bool Value</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Bool Value</em>'.
+   * @see org.thingml.xtext.thingML.BooleanLiteral#getBoolValue()
+   * @see #getBooleanLiteral()
+   * @generated
+   */
+  EAttribute getBooleanLiteral_BoolValue();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.StringLiteral <em>String Literal</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>String Literal</em>'.
+   * @see org.thingml.xtext.thingML.StringLiteral
+   * @generated
+   */
+  EClass getStringLiteral();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.StringLiteral#getStringValue <em>String Value</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>String Value</em>'.
+   * @see org.thingml.xtext.thingML.StringLiteral#getStringValue()
+   * @see #getStringLiteral()
+   * @generated
+   */
+  EAttribute getStringLiteral_StringValue();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.DoubleLiteral <em>Double Literal</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Double Literal</em>'.
+   * @see org.thingml.xtext.thingML.DoubleLiteral
+   * @generated
+   */
+  EClass getDoubleLiteral();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.DoubleLiteral#getDoubleValue <em>Double Value</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Double Value</em>'.
+   * @see org.thingml.xtext.thingML.DoubleLiteral#getDoubleValue()
+   * @see #getDoubleLiteral()
+   * @generated
+   */
+  EAttribute getDoubleLiteral_DoubleValue();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.PropertyReference <em>Property Reference</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Property Reference</em>'.
+   * @see org.thingml.xtext.thingML.PropertyReference
+   * @generated
+   */
+  EClass getPropertyReference();
+
+  /**
+   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.PropertyReference#getProperty <em>Property</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Property</em>'.
+   * @see org.thingml.xtext.thingML.PropertyReference#getProperty()
+   * @see #getPropertyReference()
+   * @generated
+   */
+  EReference getPropertyReference_Property();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.Reference <em>Reference</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Reference</em>'.
+   * @see org.thingml.xtext.thingML.Reference
+   * @generated
+   */
+  EClass getReference();
+
+  /**
+   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.Reference#getReference <em>Reference</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Reference</em>'.
+   * @see org.thingml.xtext.thingML.Reference#getReference()
+   * @see #getReference()
+   * @generated
+   */
+  EReference getReference_Reference();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.Reference#getParameter <em>Parameter</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Parameter</em>'.
+   * @see org.thingml.xtext.thingML.Reference#getParameter()
+   * @see #getReference()
+   * @generated
+   */
+  EReference getReference_Parameter();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.FunctionCallExpression <em>Function Call Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Function Call Expression</em>'.
+   * @see org.thingml.xtext.thingML.FunctionCallExpression
+   * @generated
+   */
+  EClass getFunctionCallExpression();
+
+  /**
+   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.FunctionCallExpression#getFunction <em>Function</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Function</em>'.
+   * @see org.thingml.xtext.thingML.FunctionCallExpression#getFunction()
+   * @see #getFunctionCallExpression()
+   * @generated
+   */
+  EReference getFunctionCallExpression_Function();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link org.thingml.xtext.thingML.FunctionCallExpression#getParameters <em>Parameters</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Parameters</em>'.
+   * @see org.thingml.xtext.thingML.FunctionCallExpression#getParameters()
+   * @see #getFunctionCallExpression()
+   * @generated
+   */
+  EReference getFunctionCallExpression_Parameters();
+
+  /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.Configuration <em>Configuration</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -5940,6 +6777,464 @@ public interface ThingMLPackage extends EPackage
    * @generated
    */
   EReference getInstanceRef_Instance();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.OrExpression <em>Or Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Or Expression</em>'.
+   * @see org.thingml.xtext.thingML.OrExpression
+   * @generated
+   */
+  EClass getOrExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.OrExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.OrExpression#getLhs()
+   * @see #getOrExpression()
+   * @generated
+   */
+  EReference getOrExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.OrExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.OrExpression#getRhs()
+   * @see #getOrExpression()
+   * @generated
+   */
+  EReference getOrExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.AndExpression <em>And Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>And Expression</em>'.
+   * @see org.thingml.xtext.thingML.AndExpression
+   * @generated
+   */
+  EClass getAndExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.AndExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.AndExpression#getLhs()
+   * @see #getAndExpression()
+   * @generated
+   */
+  EReference getAndExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.AndExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.AndExpression#getRhs()
+   * @see #getAndExpression()
+   * @generated
+   */
+  EReference getAndExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.EqualsExpression <em>Equals Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Equals Expression</em>'.
+   * @see org.thingml.xtext.thingML.EqualsExpression
+   * @generated
+   */
+  EClass getEqualsExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.EqualsExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.EqualsExpression#getLhs()
+   * @see #getEqualsExpression()
+   * @generated
+   */
+  EReference getEqualsExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.EqualsExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.EqualsExpression#getRhs()
+   * @see #getEqualsExpression()
+   * @generated
+   */
+  EReference getEqualsExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.NotEqualsExpression <em>Not Equals Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Not Equals Expression</em>'.
+   * @see org.thingml.xtext.thingML.NotEqualsExpression
+   * @generated
+   */
+  EClass getNotEqualsExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.NotEqualsExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.NotEqualsExpression#getLhs()
+   * @see #getNotEqualsExpression()
+   * @generated
+   */
+  EReference getNotEqualsExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.NotEqualsExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.NotEqualsExpression#getRhs()
+   * @see #getNotEqualsExpression()
+   * @generated
+   */
+  EReference getNotEqualsExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.GreaterExpression <em>Greater Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Greater Expression</em>'.
+   * @see org.thingml.xtext.thingML.GreaterExpression
+   * @generated
+   */
+  EClass getGreaterExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.GreaterExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.GreaterExpression#getLhs()
+   * @see #getGreaterExpression()
+   * @generated
+   */
+  EReference getGreaterExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.GreaterExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.GreaterExpression#getRhs()
+   * @see #getGreaterExpression()
+   * @generated
+   */
+  EReference getGreaterExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.LowerExpression <em>Lower Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Lower Expression</em>'.
+   * @see org.thingml.xtext.thingML.LowerExpression
+   * @generated
+   */
+  EClass getLowerExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.LowerExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.LowerExpression#getLhs()
+   * @see #getLowerExpression()
+   * @generated
+   */
+  EReference getLowerExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.LowerExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.LowerExpression#getRhs()
+   * @see #getLowerExpression()
+   * @generated
+   */
+  EReference getLowerExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.GreaterOrEqualExpression <em>Greater Or Equal Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Greater Or Equal Expression</em>'.
+   * @see org.thingml.xtext.thingML.GreaterOrEqualExpression
+   * @generated
+   */
+  EClass getGreaterOrEqualExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.GreaterOrEqualExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.GreaterOrEqualExpression#getLhs()
+   * @see #getGreaterOrEqualExpression()
+   * @generated
+   */
+  EReference getGreaterOrEqualExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.GreaterOrEqualExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.GreaterOrEqualExpression#getRhs()
+   * @see #getGreaterOrEqualExpression()
+   * @generated
+   */
+  EReference getGreaterOrEqualExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.LowerOrEqualExpression <em>Lower Or Equal Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Lower Or Equal Expression</em>'.
+   * @see org.thingml.xtext.thingML.LowerOrEqualExpression
+   * @generated
+   */
+  EClass getLowerOrEqualExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.LowerOrEqualExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.LowerOrEqualExpression#getLhs()
+   * @see #getLowerOrEqualExpression()
+   * @generated
+   */
+  EReference getLowerOrEqualExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.LowerOrEqualExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.LowerOrEqualExpression#getRhs()
+   * @see #getLowerOrEqualExpression()
+   * @generated
+   */
+  EReference getLowerOrEqualExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.PlusExpression <em>Plus Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Plus Expression</em>'.
+   * @see org.thingml.xtext.thingML.PlusExpression
+   * @generated
+   */
+  EClass getPlusExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.PlusExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.PlusExpression#getLhs()
+   * @see #getPlusExpression()
+   * @generated
+   */
+  EReference getPlusExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.PlusExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.PlusExpression#getRhs()
+   * @see #getPlusExpression()
+   * @generated
+   */
+  EReference getPlusExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.MinusExpression <em>Minus Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Minus Expression</em>'.
+   * @see org.thingml.xtext.thingML.MinusExpression
+   * @generated
+   */
+  EClass getMinusExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.MinusExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.MinusExpression#getLhs()
+   * @see #getMinusExpression()
+   * @generated
+   */
+  EReference getMinusExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.MinusExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.MinusExpression#getRhs()
+   * @see #getMinusExpression()
+   * @generated
+   */
+  EReference getMinusExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.TimesExpression <em>Times Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Times Expression</em>'.
+   * @see org.thingml.xtext.thingML.TimesExpression
+   * @generated
+   */
+  EClass getTimesExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.TimesExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.TimesExpression#getLhs()
+   * @see #getTimesExpression()
+   * @generated
+   */
+  EReference getTimesExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.TimesExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.TimesExpression#getRhs()
+   * @see #getTimesExpression()
+   * @generated
+   */
+  EReference getTimesExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.DivExpression <em>Div Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Div Expression</em>'.
+   * @see org.thingml.xtext.thingML.DivExpression
+   * @generated
+   */
+  EClass getDivExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.DivExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.DivExpression#getLhs()
+   * @see #getDivExpression()
+   * @generated
+   */
+  EReference getDivExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.DivExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.DivExpression#getRhs()
+   * @see #getDivExpression()
+   * @generated
+   */
+  EReference getDivExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.ModExpression <em>Mod Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Mod Expression</em>'.
+   * @see org.thingml.xtext.thingML.ModExpression
+   * @generated
+   */
+  EClass getModExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.ModExpression#getLhs <em>Lhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Lhs</em>'.
+   * @see org.thingml.xtext.thingML.ModExpression#getLhs()
+   * @see #getModExpression()
+   * @generated
+   */
+  EReference getModExpression_Lhs();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.ModExpression#getRhs <em>Rhs</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Rhs</em>'.
+   * @see org.thingml.xtext.thingML.ModExpression#getRhs()
+   * @see #getModExpression()
+   * @generated
+   */
+  EReference getModExpression_Rhs();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.NotExpression <em>Not Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Not Expression</em>'.
+   * @see org.thingml.xtext.thingML.NotExpression
+   * @generated
+   */
+  EClass getNotExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.NotExpression#getTerm <em>Term</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Term</em>'.
+   * @see org.thingml.xtext.thingML.NotExpression#getTerm()
+   * @see #getNotExpression()
+   * @generated
+   */
+  EReference getNotExpression_Term();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.UnaryMinus <em>Unary Minus</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Unary Minus</em>'.
+   * @see org.thingml.xtext.thingML.UnaryMinus
+   * @generated
+   */
+  EClass getUnaryMinus();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.UnaryMinus#getTerm <em>Term</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Term</em>'.
+   * @see org.thingml.xtext.thingML.UnaryMinus#getTerm()
+   * @see #getUnaryMinus()
+   * @generated
+   */
+  EReference getUnaryMinus_Term();
 
   /**
    * Returns the factory that creates the instances of the model.
@@ -6965,48 +8260,6 @@ public interface ThingMLPackage extends EPackage
     EClass LENGTH_ARRAY = eINSTANCE.getLengthArray();
 
     /**
-     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.StateMachineImpl <em>State Machine</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.thingml.xtext.thingML.impl.StateMachineImpl
-     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getStateMachine()
-     * @generated
-     */
-    EClass STATE_MACHINE = eINSTANCE.getStateMachine();
-
-    /**
-     * The meta object literal for the '<em><b>Initial</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference STATE_MACHINE__INITIAL = eINSTANCE.getStateMachine_Initial();
-
-    /**
-     * The meta object literal for the '<em><b>History</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute STATE_MACHINE__HISTORY = eINSTANCE.getStateMachine_History();
-
-    /**
-     * The meta object literal for the '<em><b>Substate</b></em>' containment reference list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference STATE_MACHINE__SUBSTATE = eINSTANCE.getStateMachine_Substate();
-
-    /**
-     * The meta object literal for the '<em><b>Region</b></em>' containment reference list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference STATE_MACHINE__REGION = eINSTANCE.getStateMachine_Region();
-
-    /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.RegionImpl <em>Region</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -7015,16 +8268,6 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EClass REGION = eINSTANCE.getRegion();
-
-    /**
-     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.FinalStateImpl <em>Final State</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.thingml.xtext.thingML.impl.FinalStateImpl
-     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFinalState()
-     * @generated
-     */
-    EClass FINAL_STATE = eINSTANCE.getFinalState();
 
     /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.CompositeStateImpl <em>Composite State</em>}' class.
@@ -7067,6 +8310,16 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EReference COMPOSITE_STATE__REGION = eINSTANCE.getCompositeState_Region();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.FinalStateImpl <em>Final State</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.FinalStateImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFinalState()
+     * @generated
+     */
+    EClass FINAL_STATE = eINSTANCE.getFinalState();
 
     /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.SessionImpl <em>Session</em>}' class.
@@ -7315,6 +8568,14 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EClass RECEIVE_MESSAGE = eINSTANCE.getReceiveMessage();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute RECEIVE_MESSAGE__NAME = eINSTANCE.getReceiveMessage_Name();
 
     /**
      * The meta object literal for the '<em><b>Port</b></em>' reference feature.
@@ -7753,6 +9014,174 @@ public interface ThingMLPackage extends EPackage
     EReference EXTERN_EXPRESSION__SEGMENTS = eINSTANCE.getExternExpression_Segments();
 
     /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.EnumLiteralRefImpl <em>Enum Literal Ref</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.EnumLiteralRefImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEnumLiteralRef()
+     * @generated
+     */
+    EClass ENUM_LITERAL_REF = eINSTANCE.getEnumLiteralRef();
+
+    /**
+     * The meta object literal for the '<em><b>Enum</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference ENUM_LITERAL_REF__ENUM = eINSTANCE.getEnumLiteralRef_Enum();
+
+    /**
+     * The meta object literal for the '<em><b>Literal</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference ENUM_LITERAL_REF__LITERAL = eINSTANCE.getEnumLiteralRef_Literal();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.IntegerLiteralImpl <em>Integer Literal</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.IntegerLiteralImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getIntegerLiteral()
+     * @generated
+     */
+    EClass INTEGER_LITERAL = eINSTANCE.getIntegerLiteral();
+
+    /**
+     * The meta object literal for the '<em><b>Int Value</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute INTEGER_LITERAL__INT_VALUE = eINSTANCE.getIntegerLiteral_IntValue();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.BooleanLiteralImpl <em>Boolean Literal</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.BooleanLiteralImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getBooleanLiteral()
+     * @generated
+     */
+    EClass BOOLEAN_LITERAL = eINSTANCE.getBooleanLiteral();
+
+    /**
+     * The meta object literal for the '<em><b>Bool Value</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute BOOLEAN_LITERAL__BOOL_VALUE = eINSTANCE.getBooleanLiteral_BoolValue();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.StringLiteralImpl <em>String Literal</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.StringLiteralImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getStringLiteral()
+     * @generated
+     */
+    EClass STRING_LITERAL = eINSTANCE.getStringLiteral();
+
+    /**
+     * The meta object literal for the '<em><b>String Value</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute STRING_LITERAL__STRING_VALUE = eINSTANCE.getStringLiteral_StringValue();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.DoubleLiteralImpl <em>Double Literal</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.DoubleLiteralImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getDoubleLiteral()
+     * @generated
+     */
+    EClass DOUBLE_LITERAL = eINSTANCE.getDoubleLiteral();
+
+    /**
+     * The meta object literal for the '<em><b>Double Value</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute DOUBLE_LITERAL__DOUBLE_VALUE = eINSTANCE.getDoubleLiteral_DoubleValue();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.PropertyReferenceImpl <em>Property Reference</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.PropertyReferenceImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPropertyReference()
+     * @generated
+     */
+    EClass PROPERTY_REFERENCE = eINSTANCE.getPropertyReference();
+
+    /**
+     * The meta object literal for the '<em><b>Property</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference PROPERTY_REFERENCE__PROPERTY = eINSTANCE.getPropertyReference_Property();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.ReferenceImpl <em>Reference</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.ReferenceImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getReference()
+     * @generated
+     */
+    EClass REFERENCE = eINSTANCE.getReference();
+
+    /**
+     * The meta object literal for the '<em><b>Reference</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference REFERENCE__REFERENCE = eINSTANCE.getReference_Reference();
+
+    /**
+     * The meta object literal for the '<em><b>Parameter</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference REFERENCE__PARAMETER = eINSTANCE.getReference_Parameter();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.FunctionCallExpressionImpl <em>Function Call Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.FunctionCallExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFunctionCallExpression()
+     * @generated
+     */
+    EClass FUNCTION_CALL_EXPRESSION = eINSTANCE.getFunctionCallExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Function</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference FUNCTION_CALL_EXPRESSION__FUNCTION = eINSTANCE.getFunctionCallExpression_Function();
+
+    /**
+     * The meta object literal for the '<em><b>Parameters</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference FUNCTION_CALL_EXPRESSION__PARAMETERS = eINSTANCE.getFunctionCallExpression_Parameters();
+
+    /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.ConfigurationImpl <em>Configuration</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -8005,6 +9434,380 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EReference INSTANCE_REF__INSTANCE = eINSTANCE.getInstanceRef_Instance();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.OrExpressionImpl <em>Or Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.OrExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getOrExpression()
+     * @generated
+     */
+    EClass OR_EXPRESSION = eINSTANCE.getOrExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference OR_EXPRESSION__LHS = eINSTANCE.getOrExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference OR_EXPRESSION__RHS = eINSTANCE.getOrExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.AndExpressionImpl <em>And Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.AndExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getAndExpression()
+     * @generated
+     */
+    EClass AND_EXPRESSION = eINSTANCE.getAndExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference AND_EXPRESSION__LHS = eINSTANCE.getAndExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference AND_EXPRESSION__RHS = eINSTANCE.getAndExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.EqualsExpressionImpl <em>Equals Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.EqualsExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEqualsExpression()
+     * @generated
+     */
+    EClass EQUALS_EXPRESSION = eINSTANCE.getEqualsExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference EQUALS_EXPRESSION__LHS = eINSTANCE.getEqualsExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference EQUALS_EXPRESSION__RHS = eINSTANCE.getEqualsExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.NotEqualsExpressionImpl <em>Not Equals Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.NotEqualsExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getNotEqualsExpression()
+     * @generated
+     */
+    EClass NOT_EQUALS_EXPRESSION = eINSTANCE.getNotEqualsExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NOT_EQUALS_EXPRESSION__LHS = eINSTANCE.getNotEqualsExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NOT_EQUALS_EXPRESSION__RHS = eINSTANCE.getNotEqualsExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.GreaterExpressionImpl <em>Greater Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.GreaterExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getGreaterExpression()
+     * @generated
+     */
+    EClass GREATER_EXPRESSION = eINSTANCE.getGreaterExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference GREATER_EXPRESSION__LHS = eINSTANCE.getGreaterExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference GREATER_EXPRESSION__RHS = eINSTANCE.getGreaterExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.LowerExpressionImpl <em>Lower Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.LowerExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLowerExpression()
+     * @generated
+     */
+    EClass LOWER_EXPRESSION = eINSTANCE.getLowerExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LOWER_EXPRESSION__LHS = eINSTANCE.getLowerExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LOWER_EXPRESSION__RHS = eINSTANCE.getLowerExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.GreaterOrEqualExpressionImpl <em>Greater Or Equal Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.GreaterOrEqualExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getGreaterOrEqualExpression()
+     * @generated
+     */
+    EClass GREATER_OR_EQUAL_EXPRESSION = eINSTANCE.getGreaterOrEqualExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference GREATER_OR_EQUAL_EXPRESSION__LHS = eINSTANCE.getGreaterOrEqualExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference GREATER_OR_EQUAL_EXPRESSION__RHS = eINSTANCE.getGreaterOrEqualExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.LowerOrEqualExpressionImpl <em>Lower Or Equal Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.LowerOrEqualExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLowerOrEqualExpression()
+     * @generated
+     */
+    EClass LOWER_OR_EQUAL_EXPRESSION = eINSTANCE.getLowerOrEqualExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LOWER_OR_EQUAL_EXPRESSION__LHS = eINSTANCE.getLowerOrEqualExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference LOWER_OR_EQUAL_EXPRESSION__RHS = eINSTANCE.getLowerOrEqualExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.PlusExpressionImpl <em>Plus Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.PlusExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPlusExpression()
+     * @generated
+     */
+    EClass PLUS_EXPRESSION = eINSTANCE.getPlusExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference PLUS_EXPRESSION__LHS = eINSTANCE.getPlusExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference PLUS_EXPRESSION__RHS = eINSTANCE.getPlusExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.MinusExpressionImpl <em>Minus Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.MinusExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getMinusExpression()
+     * @generated
+     */
+    EClass MINUS_EXPRESSION = eINSTANCE.getMinusExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference MINUS_EXPRESSION__LHS = eINSTANCE.getMinusExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference MINUS_EXPRESSION__RHS = eINSTANCE.getMinusExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.TimesExpressionImpl <em>Times Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.TimesExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getTimesExpression()
+     * @generated
+     */
+    EClass TIMES_EXPRESSION = eINSTANCE.getTimesExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference TIMES_EXPRESSION__LHS = eINSTANCE.getTimesExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference TIMES_EXPRESSION__RHS = eINSTANCE.getTimesExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.DivExpressionImpl <em>Div Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.DivExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getDivExpression()
+     * @generated
+     */
+    EClass DIV_EXPRESSION = eINSTANCE.getDivExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference DIV_EXPRESSION__LHS = eINSTANCE.getDivExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference DIV_EXPRESSION__RHS = eINSTANCE.getDivExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.ModExpressionImpl <em>Mod Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.ModExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getModExpression()
+     * @generated
+     */
+    EClass MOD_EXPRESSION = eINSTANCE.getModExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Lhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference MOD_EXPRESSION__LHS = eINSTANCE.getModExpression_Lhs();
+
+    /**
+     * The meta object literal for the '<em><b>Rhs</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference MOD_EXPRESSION__RHS = eINSTANCE.getModExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.NotExpressionImpl <em>Not Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.NotExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getNotExpression()
+     * @generated
+     */
+    EClass NOT_EXPRESSION = eINSTANCE.getNotExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Term</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference NOT_EXPRESSION__TERM = eINSTANCE.getNotExpression_Term();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.UnaryMinusImpl <em>Unary Minus</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.UnaryMinusImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getUnaryMinus()
+     * @generated
+     */
+    EClass UNARY_MINUS = eINSTANCE.getUnaryMinus();
+
+    /**
+     * The meta object literal for the '<em><b>Term</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference UNARY_MINUS__TERM = eINSTANCE.getUnaryMinus_Term();
 
   }
 

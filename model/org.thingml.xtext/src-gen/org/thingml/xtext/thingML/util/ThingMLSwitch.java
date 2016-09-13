@@ -352,6 +352,7 @@ public class ThingMLSwitch<T> extends Switch<T>
         MessageParameter messageParameter = (MessageParameter)theEObject;
         T result = caseMessageParameter(messageParameter);
         if (result == null) result = caseReferencedElmt(messageParameter);
+        if (result == null) result = caseExpression(messageParameter);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -379,26 +380,10 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ThingMLPackage.STATE_MACHINE:
-      {
-        StateMachine stateMachine = (StateMachine)theEObject;
-        T result = caseStateMachine(stateMachine);
-        if (result == null) result = caseState(stateMachine);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case ThingMLPackage.REGION:
       {
         Region region = (Region)theEObject;
         T result = caseRegion(region);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case ThingMLPackage.FINAL_STATE:
-      {
-        FinalState finalState = (FinalState)theEObject;
-        T result = caseFinalState(finalState);
-        if (result == null) result = caseState(finalState);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -408,6 +393,14 @@ public class ThingMLSwitch<T> extends Switch<T>
         T result = caseCompositeState(compositeState);
         if (result == null) result = caseRegion(compositeState);
         if (result == null) result = caseState(compositeState);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.FINAL_STATE:
+      {
+        FinalState finalState = (FinalState)theEObject;
+        T result = caseFinalState(finalState);
+        if (result == null) result = caseState(finalState);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -617,6 +610,70 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ThingMLPackage.ENUM_LITERAL_REF:
+      {
+        EnumLiteralRef enumLiteralRef = (EnumLiteralRef)theEObject;
+        T result = caseEnumLiteralRef(enumLiteralRef);
+        if (result == null) result = caseExpression(enumLiteralRef);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.INTEGER_LITERAL:
+      {
+        IntegerLiteral integerLiteral = (IntegerLiteral)theEObject;
+        T result = caseIntegerLiteral(integerLiteral);
+        if (result == null) result = caseExpression(integerLiteral);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.BOOLEAN_LITERAL:
+      {
+        BooleanLiteral booleanLiteral = (BooleanLiteral)theEObject;
+        T result = caseBooleanLiteral(booleanLiteral);
+        if (result == null) result = caseExpression(booleanLiteral);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.STRING_LITERAL:
+      {
+        StringLiteral stringLiteral = (StringLiteral)theEObject;
+        T result = caseStringLiteral(stringLiteral);
+        if (result == null) result = caseExpression(stringLiteral);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.DOUBLE_LITERAL:
+      {
+        DoubleLiteral doubleLiteral = (DoubleLiteral)theEObject;
+        T result = caseDoubleLiteral(doubleLiteral);
+        if (result == null) result = caseExpression(doubleLiteral);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.PROPERTY_REFERENCE:
+      {
+        PropertyReference propertyReference = (PropertyReference)theEObject;
+        T result = casePropertyReference(propertyReference);
+        if (result == null) result = caseExpression(propertyReference);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.REFERENCE:
+      {
+        Reference reference = (Reference)theEObject;
+        T result = caseReference(reference);
+        if (result == null) result = caseExpression(reference);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.FUNCTION_CALL_EXPRESSION:
+      {
+        FunctionCallExpression functionCallExpression = (FunctionCallExpression)theEObject;
+        T result = caseFunctionCallExpression(functionCallExpression);
+        if (result == null) result = caseExpression(functionCallExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ThingMLPackage.CONFIGURATION:
       {
         Configuration configuration = (Configuration)theEObject;
@@ -665,6 +722,126 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         InstanceRef instanceRef = (InstanceRef)theEObject;
         T result = caseInstanceRef(instanceRef);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.OR_EXPRESSION:
+      {
+        OrExpression orExpression = (OrExpression)theEObject;
+        T result = caseOrExpression(orExpression);
+        if (result == null) result = caseExpression(orExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.AND_EXPRESSION:
+      {
+        AndExpression andExpression = (AndExpression)theEObject;
+        T result = caseAndExpression(andExpression);
+        if (result == null) result = caseExpression(andExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.EQUALS_EXPRESSION:
+      {
+        EqualsExpression equalsExpression = (EqualsExpression)theEObject;
+        T result = caseEqualsExpression(equalsExpression);
+        if (result == null) result = caseExpression(equalsExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.NOT_EQUALS_EXPRESSION:
+      {
+        NotEqualsExpression notEqualsExpression = (NotEqualsExpression)theEObject;
+        T result = caseNotEqualsExpression(notEqualsExpression);
+        if (result == null) result = caseExpression(notEqualsExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.GREATER_EXPRESSION:
+      {
+        GreaterExpression greaterExpression = (GreaterExpression)theEObject;
+        T result = caseGreaterExpression(greaterExpression);
+        if (result == null) result = caseExpression(greaterExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.LOWER_EXPRESSION:
+      {
+        LowerExpression lowerExpression = (LowerExpression)theEObject;
+        T result = caseLowerExpression(lowerExpression);
+        if (result == null) result = caseExpression(lowerExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.GREATER_OR_EQUAL_EXPRESSION:
+      {
+        GreaterOrEqualExpression greaterOrEqualExpression = (GreaterOrEqualExpression)theEObject;
+        T result = caseGreaterOrEqualExpression(greaterOrEqualExpression);
+        if (result == null) result = caseExpression(greaterOrEqualExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.LOWER_OR_EQUAL_EXPRESSION:
+      {
+        LowerOrEqualExpression lowerOrEqualExpression = (LowerOrEqualExpression)theEObject;
+        T result = caseLowerOrEqualExpression(lowerOrEqualExpression);
+        if (result == null) result = caseExpression(lowerOrEqualExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.PLUS_EXPRESSION:
+      {
+        PlusExpression plusExpression = (PlusExpression)theEObject;
+        T result = casePlusExpression(plusExpression);
+        if (result == null) result = caseExpression(plusExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.MINUS_EXPRESSION:
+      {
+        MinusExpression minusExpression = (MinusExpression)theEObject;
+        T result = caseMinusExpression(minusExpression);
+        if (result == null) result = caseExpression(minusExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.TIMES_EXPRESSION:
+      {
+        TimesExpression timesExpression = (TimesExpression)theEObject;
+        T result = caseTimesExpression(timesExpression);
+        if (result == null) result = caseExpression(timesExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.DIV_EXPRESSION:
+      {
+        DivExpression divExpression = (DivExpression)theEObject;
+        T result = caseDivExpression(divExpression);
+        if (result == null) result = caseExpression(divExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.MOD_EXPRESSION:
+      {
+        ModExpression modExpression = (ModExpression)theEObject;
+        T result = caseModExpression(modExpression);
+        if (result == null) result = caseExpression(modExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.NOT_EXPRESSION:
+      {
+        NotExpression notExpression = (NotExpression)theEObject;
+        T result = caseNotExpression(notExpression);
+        if (result == null) result = caseExpression(notExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.UNARY_MINUS:
+      {
+        UnaryMinus unaryMinus = (UnaryMinus)theEObject;
+        T result = caseUnaryMinus(unaryMinus);
+        if (result == null) result = caseExpression(unaryMinus);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1249,22 +1426,6 @@ public class ThingMLSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>State Machine</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>State Machine</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseStateMachine(StateMachine object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Region</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1281,22 +1442,6 @@ public class ThingMLSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Final State</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Final State</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseFinalState(FinalState object)
-  {
-    return null;
-  }
-
-  /**
    * Returns the result of interpreting the object as an instance of '<em>Composite State</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1308,6 +1453,22 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseCompositeState(CompositeState object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Final State</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Final State</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseFinalState(FinalState object)
   {
     return null;
   }
@@ -1729,6 +1890,134 @@ public class ThingMLSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Enum Literal Ref</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Enum Literal Ref</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEnumLiteralRef(EnumLiteralRef object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Integer Literal</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Integer Literal</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseIntegerLiteral(IntegerLiteral object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Boolean Literal</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Boolean Literal</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseBooleanLiteral(BooleanLiteral object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>String Literal</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>String Literal</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseStringLiteral(StringLiteral object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Double Literal</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Double Literal</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseDoubleLiteral(DoubleLiteral object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Property Reference</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Property Reference</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePropertyReference(PropertyReference object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Reference</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Reference</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseReference(Reference object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Function Call Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Function Call Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseFunctionCallExpression(FunctionCallExpression object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Configuration</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -1836,6 +2125,246 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseInstanceRef(InstanceRef object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Or Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Or Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseOrExpression(OrExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>And Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>And Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAndExpression(AndExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Equals Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Equals Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseEqualsExpression(EqualsExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Not Equals Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Not Equals Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNotEqualsExpression(NotEqualsExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Greater Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Greater Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseGreaterExpression(GreaterExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Lower Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Lower Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLowerExpression(LowerExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Greater Or Equal Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Greater Or Equal Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseGreaterOrEqualExpression(GreaterOrEqualExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Lower Or Equal Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Lower Or Equal Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseLowerOrEqualExpression(LowerOrEqualExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Plus Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Plus Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T casePlusExpression(PlusExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Minus Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Minus Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseMinusExpression(MinusExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Times Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Times Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTimesExpression(TimesExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Div Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Div Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseDivExpression(DivExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Mod Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Mod Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseModExpression(ModExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Not Expression</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Not Expression</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseNotExpression(NotExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Unary Minus</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Unary Minus</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseUnaryMinus(UnaryMinus object)
   {
     return null;
   }

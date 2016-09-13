@@ -62,11 +62,12 @@ Workflow {
 	        	//composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"
 	        }
 	        
-	        fragment = adapter.FragmentAdapter {
-   				fragment = scoping.ImportURIScopingFragment {}
-			}
+	        //fragment = adapter.FragmentAdapter {
+   			//	fragment = scoping.ImportURIScopingFragment {}
+			//}
 	         
 	        fragment = scoping.ImportNamespacesScopingFragment2 {}
+	        
 	        //fragment = exporting.QualifiedNamesFragment2 {}
 	        fragment = exporting.SimpleNamesFragment2 {}
 	        
@@ -81,7 +82,7 @@ Workflow {
 	        fragment = junit.Junit4Fragment2 {}
 	        fragment = ui.refactoring.RefactorElementNameFragment2 {}
 	        
-	        fragment = types.ImportUriValidator {}
+	        fragment = types.TypesGeneratorFragment2 {}
 	        
 	        fragment = xbase.XtypeGeneratorFragment2 {}
 	        fragment = xbase.XbaseGeneratorFragment2 {}

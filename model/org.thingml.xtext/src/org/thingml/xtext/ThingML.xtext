@@ -62,7 +62,7 @@ Protocol returns Protocol:
 	'protocol' name=ID ( annotations+=PlatformAnnotation )* ';';
 
 Function returns Function:
-	'function' name=ID '('parameters+=Parameter ( "," parameters+=Parameter)* ')' (':' type=[Type|ID])? ( annotations+=PlatformAnnotation )* 'is' body=Action
+	'function' name=ID '(' (parameters+=Parameter ( "," parameters+=Parameter)* )? ')' (':' type=[Type|ID])? ( annotations+=PlatformAnnotation )* body=Action
 		//('isArray' isArray=EBoolean)?
 		//('cardinality' cardinality=Expression)?
 ;
@@ -164,7 +164,10 @@ LengthArray returns LengthArray:
  *       STATE MECHINES                                                      *
  *****************************************************************************/
 
-StateMachine returns StateMachine:
+Region:
+	CompositeState | ParallelRegion | Session;
+
+StateMachine returns CompositeState:
 	'statechart' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
 		('on' 'entry' entry=Action)?
 		('on' 'exit' exit=Action)?
@@ -172,13 +175,6 @@ StateMachine returns StateMachine:
 		(region+=ParallelRegion)*
 	'}';
 	
-
-	
-
-Region:
-	CompositeState | ParallelRegion | Session;
-
-
 FinalState returns FinalState:
 	'final' 'state' name=ID ( annotations+=PlatformAnnotation )* ';'
 ;
@@ -235,7 +231,7 @@ Event returns Event:
 	ReceiveMessage;
 
 ReceiveMessage returns ReceiveMessage:
-	port=[Port|ID]'?'message=[Message|ID];
+	(name=ID ":")? port=[Port|ID]'?'message=[Message|ID];
 
 /*****************************************************************************
  *       ACTIONS                                                             *
@@ -261,7 +257,7 @@ LocalVariable returns LocalVariable:
 ;
 
 SendAction returns SendAction:
-	port=[Port|ID] '!' message=[Message|ID] '(' parameters+=Expression ( "," parameters+=Expression)* ')';
+	port=[Port|ID] '!' message=[Message|ID] '(' (parameters+=Expression ( "," parameters+=Expression)*)? ')';
 
 VariableAssignment returns VariableAssignment:
 	property=[Variable|ID] ('[' index+=Expression ']')* '=' expression=Expression;
@@ -293,20 +289,113 @@ StartSession returns StartSession:
 
 
 FunctionCallStatement returns FunctionCallStatement:
-	function=[Function|ID] '(' parameters+=Expression ( "," parameters+=Expression)* ')';
+	function=[Function|ID] '(' (parameters+=Expression ( "," parameters+=Expression)*)? ')';
 
 
 /*****************************************************************************
  *       EXPRESSIONS                                                         *
  *****************************************************************************/
 
-Expression returns Expression:
-	ExternExpression;
-	//ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
+	//ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
+	//PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | 
+	//LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | 
+	//ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
+
+
+Expression: OrExpression;
+
+OrExpression returns Expression:
+	AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*
+;
+
+AndExpression returns Expression:
+	Equality ({AndExpression.lhs=current} "and" rhs=Equality)*
+;
+
+Equality returns Expression:
+	Comparaison (
+	( {EqualsExpression.lhs=current} "==" rhs=Comparaison ) |
+	( {NotEqualsExpression.lhs=current} "!=" rhs=Comparaison )
+	)*	
+;
+
+Comparaison returns Expression:
+	Addition (
+	( {GreaterExpression.lhs=current} ">" rhs=Addition ) |
+	( {LowerExpression.lhs=current} "<" rhs=Addition ) |
+	( {GreaterOrEqualExpression.lhs=current} ">=" rhs=Addition ) |
+	( {LowerOrEqualExpression.lhs=current} "<=" rhs=Addition )
+	)*
+;
+
+Addition returns Expression:
+	Multiplication (
+	( {PlusExpression.lhs=current} "+" rhs=Multiplication ) |
+	( {MinusExpression.lhs=current} "-" rhs=Multiplication )
+	)*	
+;
+
+Multiplication returns Expression:
+	Modulo (
+	( {TimesExpression.lhs=current} "*" rhs=Modulo ) |
+	( {DivExpression.lhs=current} "/" rhs=Modulo )
+	)*	
+;
+
+Modulo returns Expression:
+	Primary ({ModExpression.lhs=current} "%" rhs=Expression)?
+;
+
+
+Primary returns Expression:
+	'(' Expression ')' |
+	{NotExpression} "not" term=Primary |
+	{UnaryMinus} '-' term=Primary |
+	AtomicExpression
+;
+
+AtomicExpression returns Expression:
+	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference | Reference | FunctionCallExpression |
+	MessageParameter /* NOT CONVINCED THAT MessageParameter SHOULD BE AN EXPRESSION */
+;
 
 ExternExpression returns ExternExpression:
 	expression = STRING_EXT ('&' segments+=Expression)*;
 	
+	
+EnumLiteralRef returns EnumLiteralRef:
+	'enum' ^enum=[Enumeration|ID] ':' literal=[EnumerationLiteral|ID];
+
+IntegerLiteral returns IntegerLiteral:
+	intValue=INT;
+
+BooleanLiteral returns BooleanLiteral:
+	boolValue= ('true' | 'false')
+	;
+
+StringLiteral returns StringLiteral:
+	stringValue=STRING_LIT;
+
+DoubleLiteral returns DoubleLiteral:
+	doubleValue = FLOAT;
+
+PropertyReference returns PropertyReference:
+	property=[Variable|ID]
+;
+
+Reference returns Reference:
+	reference=[ReferencedElmt|ID] "." parameter=ElmtProperty
+;
+
+FunctionCallExpression returns FunctionCallExpression:
+	function=[Function|ID]'('
+		( parameters+=Expression ( "," parameters+=Expression )* )?
+	')';
+
+
+// Missing Expressions: ArrayIndex  ;
+
+
 /*****************************************************************************
  *       CONFIGURATIONS                                                      *
  *****************************************************************************/
@@ -344,6 +433,12 @@ InstanceRef returns InstanceRef:
 terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
 terminal INT returns ecore::EInt: ('0'..'9')+;
+
+
+terminal FLOAT returns ecore::EDouble :
+('0'..'9')+ '.' ('0'..'9')* (('e'|'E') ('+' | '-')? ('0'..'9')+)?
+| '.' ('0'..'9')+ (('e'|'E') ('+' | '-')? ('0'..'9')+)?
+| ('0'..'9')+ ('e'|'E') ('+' | '-')? ('0'..'9')+;
 
 terminal STRING_EXT:  
 			"'" ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|"'") )* "'";

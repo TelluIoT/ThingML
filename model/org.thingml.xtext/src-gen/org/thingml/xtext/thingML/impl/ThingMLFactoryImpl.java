@@ -101,10 +101,9 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.SIMPLE_PARAM_REF: return createSimpleParamRef();
       case ThingMLPackage.ARRAY_PARAM_REF: return createArrayParamRef();
       case ThingMLPackage.LENGTH_ARRAY: return createLengthArray();
-      case ThingMLPackage.STATE_MACHINE: return createStateMachine();
       case ThingMLPackage.REGION: return createRegion();
-      case ThingMLPackage.FINAL_STATE: return createFinalState();
       case ThingMLPackage.COMPOSITE_STATE: return createCompositeState();
+      case ThingMLPackage.FINAL_STATE: return createFinalState();
       case ThingMLPackage.SESSION: return createSession();
       case ThingMLPackage.PARALLEL_REGION: return createParallelRegion();
       case ThingMLPackage.STATE: return createState();
@@ -131,6 +130,14 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.FUNCTION_CALL_STATEMENT: return createFunctionCallStatement();
       case ThingMLPackage.EXPRESSION: return createExpression();
       case ThingMLPackage.EXTERN_EXPRESSION: return createExternExpression();
+      case ThingMLPackage.ENUM_LITERAL_REF: return createEnumLiteralRef();
+      case ThingMLPackage.INTEGER_LITERAL: return createIntegerLiteral();
+      case ThingMLPackage.BOOLEAN_LITERAL: return createBooleanLiteral();
+      case ThingMLPackage.STRING_LITERAL: return createStringLiteral();
+      case ThingMLPackage.DOUBLE_LITERAL: return createDoubleLiteral();
+      case ThingMLPackage.PROPERTY_REFERENCE: return createPropertyReference();
+      case ThingMLPackage.REFERENCE: return createReference();
+      case ThingMLPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
       case ThingMLPackage.CONFIGURATION: return createConfiguration();
       case ThingMLPackage.INSTANCE: return createInstance();
       case ThingMLPackage.CONFIG_PROPERTY_ASSIGN: return createConfigPropertyAssign();
@@ -138,6 +145,21 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.CONNECTOR: return createConnector();
       case ThingMLPackage.EXTERNAL_CONNECTOR: return createExternalConnector();
       case ThingMLPackage.INSTANCE_REF: return createInstanceRef();
+      case ThingMLPackage.OR_EXPRESSION: return createOrExpression();
+      case ThingMLPackage.AND_EXPRESSION: return createAndExpression();
+      case ThingMLPackage.EQUALS_EXPRESSION: return createEqualsExpression();
+      case ThingMLPackage.NOT_EQUALS_EXPRESSION: return createNotEqualsExpression();
+      case ThingMLPackage.GREATER_EXPRESSION: return createGreaterExpression();
+      case ThingMLPackage.LOWER_EXPRESSION: return createLowerExpression();
+      case ThingMLPackage.GREATER_OR_EQUAL_EXPRESSION: return createGreaterOrEqualExpression();
+      case ThingMLPackage.LOWER_OR_EQUAL_EXPRESSION: return createLowerOrEqualExpression();
+      case ThingMLPackage.PLUS_EXPRESSION: return createPlusExpression();
+      case ThingMLPackage.MINUS_EXPRESSION: return createMinusExpression();
+      case ThingMLPackage.TIMES_EXPRESSION: return createTimesExpression();
+      case ThingMLPackage.DIV_EXPRESSION: return createDivExpression();
+      case ThingMLPackage.MOD_EXPRESSION: return createModExpression();
+      case ThingMLPackage.NOT_EXPRESSION: return createNotExpression();
+      case ThingMLPackage.UNARY_MINUS: return createUnaryMinus();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -544,17 +566,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public StateMachine createStateMachine()
-  {
-    StateMachineImpl stateMachine = new StateMachineImpl();
-    return stateMachine;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public Region createRegion()
   {
     RegionImpl region = new RegionImpl();
@@ -566,10 +577,10 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public FinalState createFinalState()
+  public CompositeState createCompositeState()
   {
-    FinalStateImpl finalState = new FinalStateImpl();
-    return finalState;
+    CompositeStateImpl compositeState = new CompositeStateImpl();
+    return compositeState;
   }
 
   /**
@@ -577,10 +588,10 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public CompositeState createCompositeState()
+  public FinalState createFinalState()
   {
-    CompositeStateImpl compositeState = new CompositeStateImpl();
-    return compositeState;
+    FinalStateImpl finalState = new FinalStateImpl();
+    return finalState;
   }
 
   /**
@@ -874,6 +885,94 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public EnumLiteralRef createEnumLiteralRef()
+  {
+    EnumLiteralRefImpl enumLiteralRef = new EnumLiteralRefImpl();
+    return enumLiteralRef;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public IntegerLiteral createIntegerLiteral()
+  {
+    IntegerLiteralImpl integerLiteral = new IntegerLiteralImpl();
+    return integerLiteral;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public BooleanLiteral createBooleanLiteral()
+  {
+    BooleanLiteralImpl booleanLiteral = new BooleanLiteralImpl();
+    return booleanLiteral;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StringLiteral createStringLiteral()
+  {
+    StringLiteralImpl stringLiteral = new StringLiteralImpl();
+    return stringLiteral;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public DoubleLiteral createDoubleLiteral()
+  {
+    DoubleLiteralImpl doubleLiteral = new DoubleLiteralImpl();
+    return doubleLiteral;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public PropertyReference createPropertyReference()
+  {
+    PropertyReferenceImpl propertyReference = new PropertyReferenceImpl();
+    return propertyReference;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Reference createReference()
+  {
+    ReferenceImpl reference = new ReferenceImpl();
+    return reference;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public FunctionCallExpression createFunctionCallExpression()
+  {
+    FunctionCallExpressionImpl functionCallExpression = new FunctionCallExpressionImpl();
+    return functionCallExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public Configuration createConfiguration()
   {
     ConfigurationImpl configuration = new ConfigurationImpl();
@@ -944,6 +1043,171 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     InstanceRefImpl instanceRef = new InstanceRefImpl();
     return instanceRef;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OrExpression createOrExpression()
+  {
+    OrExpressionImpl orExpression = new OrExpressionImpl();
+    return orExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AndExpression createAndExpression()
+  {
+    AndExpressionImpl andExpression = new AndExpressionImpl();
+    return andExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EqualsExpression createEqualsExpression()
+  {
+    EqualsExpressionImpl equalsExpression = new EqualsExpressionImpl();
+    return equalsExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotEqualsExpression createNotEqualsExpression()
+  {
+    NotEqualsExpressionImpl notEqualsExpression = new NotEqualsExpressionImpl();
+    return notEqualsExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public GreaterExpression createGreaterExpression()
+  {
+    GreaterExpressionImpl greaterExpression = new GreaterExpressionImpl();
+    return greaterExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LowerExpression createLowerExpression()
+  {
+    LowerExpressionImpl lowerExpression = new LowerExpressionImpl();
+    return lowerExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public GreaterOrEqualExpression createGreaterOrEqualExpression()
+  {
+    GreaterOrEqualExpressionImpl greaterOrEqualExpression = new GreaterOrEqualExpressionImpl();
+    return greaterOrEqualExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LowerOrEqualExpression createLowerOrEqualExpression()
+  {
+    LowerOrEqualExpressionImpl lowerOrEqualExpression = new LowerOrEqualExpressionImpl();
+    return lowerOrEqualExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public PlusExpression createPlusExpression()
+  {
+    PlusExpressionImpl plusExpression = new PlusExpressionImpl();
+    return plusExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public MinusExpression createMinusExpression()
+  {
+    MinusExpressionImpl minusExpression = new MinusExpressionImpl();
+    return minusExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public TimesExpression createTimesExpression()
+  {
+    TimesExpressionImpl timesExpression = new TimesExpressionImpl();
+    return timesExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public DivExpression createDivExpression()
+  {
+    DivExpressionImpl divExpression = new DivExpressionImpl();
+    return divExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ModExpression createModExpression()
+  {
+    ModExpressionImpl modExpression = new ModExpressionImpl();
+    return modExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotExpression createNotExpression()
+  {
+    NotExpressionImpl notExpression = new NotExpressionImpl();
+    return notExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public UnaryMinus createUnaryMinus()
+  {
+    UnaryMinusImpl unaryMinus = new UnaryMinusImpl();
+    return unaryMinus;
   }
 
   /**

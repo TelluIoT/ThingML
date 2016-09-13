@@ -21,7 +21,7 @@ package org.thingml.xtext.thingML;
  * @model
  * @generated
  */
-public interface MessageParameter extends ReferencedElmt
+public interface MessageParameter extends ReferencedElmt, Expression
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.

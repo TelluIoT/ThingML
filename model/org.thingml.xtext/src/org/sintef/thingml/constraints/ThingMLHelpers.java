@@ -377,8 +377,8 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
-	public static ArrayList<StateMachine> allStateMachines(Thing thing) {
-		ArrayList<StateMachine> result = new ArrayList<StateMachine>();
+	public static ArrayList<CompositeState> allStateMachines(Thing thing) {
+		ArrayList<CompositeState> result = new ArrayList<CompositeState>();
 		for (Thing t : allThingFragments(thing)) {
 			result.addAll(t.getBehaviour());
 		}
@@ -451,9 +451,9 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
-	public static ArrayList<StateMachine> findStateMachine(Thing thing, String name, boolean fuzzy) {
-		ArrayList<StateMachine> result = new ArrayList<StateMachine>();
-		for (StateMachine t : allStateMachines(thing)) {
+	public static ArrayList<CompositeState> findStateMachine(Thing thing, String name, boolean fuzzy) {
+		ArrayList<CompositeState> result = new ArrayList<CompositeState>();
+		for (CompositeState t : allStateMachines(thing)) {
 			if (t.getName().startsWith(name)) {
 				if (fuzzy) result.add(t);
 				else if (t.getName().equals(name)) result.add(t);

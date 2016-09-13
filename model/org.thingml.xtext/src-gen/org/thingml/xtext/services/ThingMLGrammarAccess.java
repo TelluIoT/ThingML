@@ -677,34 +677,34 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Assignment cParametersAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cParametersParameterParserRuleCall_3_0 = (RuleCall)cParametersAssignment_3.eContents().get(0);
-		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
-		private final Keyword cCommaKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
-		private final Assignment cParametersAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cParametersParameterParserRuleCall_4_1_0 = (RuleCall)cParametersAssignment_4_1.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_5 = (Keyword)cGroup.eContents().get(5);
-		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
-		private final Keyword cColonKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
-		private final Assignment cTypeAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
-		private final CrossReference cTypeTypeCrossReference_6_1_0 = (CrossReference)cTypeAssignment_6_1.eContents().get(0);
-		private final RuleCall cTypeTypeIDTerminalRuleCall_6_1_0_1 = (RuleCall)cTypeTypeCrossReference_6_1_0.eContents().get(1);
-		private final Assignment cAnnotationsAssignment_7 = (Assignment)cGroup.eContents().get(7);
-		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_7_0 = (RuleCall)cAnnotationsAssignment_7.eContents().get(0);
-		private final Keyword cIsKeyword_8 = (Keyword)cGroup.eContents().get(8);
-		private final Assignment cBodyAssignment_9 = (Assignment)cGroup.eContents().get(9);
-		private final RuleCall cBodyActionParserRuleCall_9_0 = (RuleCall)cBodyAssignment_9.eContents().get(0);
+		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
+		private final Assignment cParametersAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
+		private final RuleCall cParametersParameterParserRuleCall_3_0_0 = (RuleCall)cParametersAssignment_3_0.eContents().get(0);
+		private final Group cGroup_3_1 = (Group)cGroup_3.eContents().get(1);
+		private final Keyword cCommaKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
+		private final Assignment cParametersAssignment_3_1_1 = (Assignment)cGroup_3_1.eContents().get(1);
+		private final RuleCall cParametersParameterParserRuleCall_3_1_1_0 = (RuleCall)cParametersAssignment_3_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
+		private final Keyword cColonKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Assignment cTypeAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
+		private final CrossReference cTypeTypeCrossReference_5_1_0 = (CrossReference)cTypeAssignment_5_1.eContents().get(0);
+		private final RuleCall cTypeTypeIDTerminalRuleCall_5_1_0_1 = (RuleCall)cTypeTypeCrossReference_5_1_0.eContents().get(1);
+		private final Assignment cAnnotationsAssignment_6 = (Assignment)cGroup.eContents().get(6);
+		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_6_0 = (RuleCall)cAnnotationsAssignment_6.eContents().get(0);
+		private final Assignment cBodyAssignment_7 = (Assignment)cGroup.eContents().get(7);
+		private final RuleCall cBodyActionParserRuleCall_7_0 = (RuleCall)cBodyAssignment_7.eContents().get(0);
 		
 		//Function:
-		//	'function' name=ID '(' parameters+=Parameter ("," parameters+=Parameter)* ')' (':' type=[Type])?
-		//	annotations+=PlatformAnnotation* 'is' body=Action
+		//	'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':' type=[Type])?
+		//	annotations+=PlatformAnnotation* body=Action
 		//	//('isArray' isArray=EBoolean)?
 		//	//('cardinality' cardinality=Expression)?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'function' name=ID '(' parameters+=Parameter ("," parameters+=Parameter)* ')' (':' type=[Type])?
-		//annotations+=PlatformAnnotation* 'is' body=Action
+		//'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':' type=[Type])?
+		//annotations+=PlatformAnnotation* body=Action
 		public Group getGroup() { return cGroup; }
 		
 		//'function'
@@ -719,56 +719,56 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//'('
 		public Keyword getLeftParenthesisKeyword_2() { return cLeftParenthesisKeyword_2; }
 		
+		//(parameters+=Parameter ("," parameters+=Parameter)*)?
+		public Group getGroup_3() { return cGroup_3; }
+		
 		//parameters+=Parameter
-		public Assignment getParametersAssignment_3() { return cParametersAssignment_3; }
+		public Assignment getParametersAssignment_3_0() { return cParametersAssignment_3_0; }
 		
 		//Parameter
-		public RuleCall getParametersParameterParserRuleCall_3_0() { return cParametersParameterParserRuleCall_3_0; }
+		public RuleCall getParametersParameterParserRuleCall_3_0_0() { return cParametersParameterParserRuleCall_3_0_0; }
 		
 		//("," parameters+=Parameter)*
-		public Group getGroup_4() { return cGroup_4; }
+		public Group getGroup_3_1() { return cGroup_3_1; }
 		
 		//","
-		public Keyword getCommaKeyword_4_0() { return cCommaKeyword_4_0; }
+		public Keyword getCommaKeyword_3_1_0() { return cCommaKeyword_3_1_0; }
 		
 		//parameters+=Parameter
-		public Assignment getParametersAssignment_4_1() { return cParametersAssignment_4_1; }
+		public Assignment getParametersAssignment_3_1_1() { return cParametersAssignment_3_1_1; }
 		
 		//Parameter
-		public RuleCall getParametersParameterParserRuleCall_4_1_0() { return cParametersParameterParserRuleCall_4_1_0; }
+		public RuleCall getParametersParameterParserRuleCall_3_1_1_0() { return cParametersParameterParserRuleCall_3_1_1_0; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_5() { return cRightParenthesisKeyword_5; }
+		public Keyword getRightParenthesisKeyword_4() { return cRightParenthesisKeyword_4; }
 		
 		//(':' type=[Type])?
-		public Group getGroup_6() { return cGroup_6; }
+		public Group getGroup_5() { return cGroup_5; }
 		
 		//':'
-		public Keyword getColonKeyword_6_0() { return cColonKeyword_6_0; }
+		public Keyword getColonKeyword_5_0() { return cColonKeyword_5_0; }
 		
 		//type=[Type]
-		public Assignment getTypeAssignment_6_1() { return cTypeAssignment_6_1; }
+		public Assignment getTypeAssignment_5_1() { return cTypeAssignment_5_1; }
 		
 		//[Type]
-		public CrossReference getTypeTypeCrossReference_6_1_0() { return cTypeTypeCrossReference_6_1_0; }
+		public CrossReference getTypeTypeCrossReference_5_1_0() { return cTypeTypeCrossReference_5_1_0; }
 		
 		//ID
-		public RuleCall getTypeTypeIDTerminalRuleCall_6_1_0_1() { return cTypeTypeIDTerminalRuleCall_6_1_0_1; }
+		public RuleCall getTypeTypeIDTerminalRuleCall_5_1_0_1() { return cTypeTypeIDTerminalRuleCall_5_1_0_1; }
 		
 		//annotations+=PlatformAnnotation*
-		public Assignment getAnnotationsAssignment_7() { return cAnnotationsAssignment_7; }
+		public Assignment getAnnotationsAssignment_6() { return cAnnotationsAssignment_6; }
 		
 		//PlatformAnnotation
-		public RuleCall getAnnotationsPlatformAnnotationParserRuleCall_7_0() { return cAnnotationsPlatformAnnotationParserRuleCall_7_0; }
-		
-		//'is'
-		public Keyword getIsKeyword_8() { return cIsKeyword_8; }
+		public RuleCall getAnnotationsPlatformAnnotationParserRuleCall_6_0() { return cAnnotationsPlatformAnnotationParserRuleCall_6_0; }
 		
 		//body=Action
-		public Assignment getBodyAssignment_9() { return cBodyAssignment_9; }
+		public Assignment getBodyAssignment_7() { return cBodyAssignment_7; }
 		
 		//Action
-		public RuleCall getBodyActionParserRuleCall_9_0() { return cBodyActionParserRuleCall_9_0; }
+		public RuleCall getBodyActionParserRuleCall_7_0() { return cBodyActionParserRuleCall_7_0; }
 	}
 	public class PropertyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Property");
@@ -2062,6 +2062,31 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//'length'
 		public Keyword getLengthKeyword_1() { return cLengthKeyword_1; }
 	}
+	public class RegionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Region");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cCompositeStateParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cParallelRegionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cSessionParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		
+		/// *****************************************************************************
+		// *       STATE MECHINES                                                      *
+		// ***************************************************************************** / Region:
+		//	CompositeState | ParallelRegion | Session;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//CompositeState | ParallelRegion | Session
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//CompositeState
+		public RuleCall getCompositeStateParserRuleCall_0() { return cCompositeStateParserRuleCall_0; }
+		
+		//ParallelRegion
+		public RuleCall getParallelRegionParserRuleCall_1() { return cParallelRegionParserRuleCall_1; }
+		
+		//Session
+		public RuleCall getSessionParserRuleCall_2() { return cSessionParserRuleCall_2; }
+	}
 	public class StateMachineElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.StateMachine");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -2100,14 +2125,12 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRegionParallelRegionParserRuleCall_10_0 = (RuleCall)cRegionAssignment_10.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_11 = (Keyword)cGroup.eContents().get(11);
 		
-		/// *****************************************************************************
-		// *       STATE MECHINES                                                      *
-		// ***************************************************************************** / StateMachine:
+		//StateMachine CompositeState:
 		//	'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{' ('on'
 		//	'entry' entry=Action)? ('on' 'exit' exit=Action)? (properties+=Property | substate+=State |
 		//	internal+=InternalTransition)*
 		//	region+=ParallelRegion*
-		//	'}';
+		//	'}'
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{' ('on'
@@ -2216,29 +2239,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_11() { return cRightCurlyBracketKeyword_11; }
-	}
-	public class RegionElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Region");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cCompositeStateParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cParallelRegionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cSessionParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		
-		//Region:
-		//	CompositeState | ParallelRegion | Session;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//CompositeState | ParallelRegion | Session
-		public Alternatives getAlternatives() { return cAlternatives; }
-		
-		//CompositeState
-		public RuleCall getCompositeStateParserRuleCall_0() { return cCompositeStateParserRuleCall_0; }
-		
-		//ParallelRegion
-		public RuleCall getParallelRegionParserRuleCall_1() { return cParallelRegionParserRuleCall_1; }
-		
-		//Session
-		public RuleCall getSessionParserRuleCall_2() { return cSessionParserRuleCall_2; }
 	}
 	public class FinalStateElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.FinalState");
@@ -3010,41 +3010,57 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	public class ReceiveMessageElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.ReceiveMessage");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cPortAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final CrossReference cPortPortCrossReference_0_0 = (CrossReference)cPortAssignment_0.eContents().get(0);
-		private final RuleCall cPortPortIDTerminalRuleCall_0_0_1 = (RuleCall)cPortPortCrossReference_0_0.eContents().get(1);
-		private final Keyword cQuestionMarkKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cMessageAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final CrossReference cMessageMessageCrossReference_2_0 = (CrossReference)cMessageAssignment_2.eContents().get(0);
-		private final RuleCall cMessageMessageIDTerminalRuleCall_2_0_1 = (RuleCall)cMessageMessageCrossReference_2_0.eContents().get(1);
+		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
+		private final RuleCall cNameIDTerminalRuleCall_0_0_0 = (RuleCall)cNameAssignment_0_0.eContents().get(0);
+		private final Keyword cColonKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final Assignment cPortAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final CrossReference cPortPortCrossReference_1_0 = (CrossReference)cPortAssignment_1.eContents().get(0);
+		private final RuleCall cPortPortIDTerminalRuleCall_1_0_1 = (RuleCall)cPortPortCrossReference_1_0.eContents().get(1);
+		private final Keyword cQuestionMarkKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cMessageAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final CrossReference cMessageMessageCrossReference_3_0 = (CrossReference)cMessageAssignment_3.eContents().get(0);
+		private final RuleCall cMessageMessageIDTerminalRuleCall_3_0_1 = (RuleCall)cMessageMessageCrossReference_3_0.eContents().get(1);
 		
 		//ReceiveMessage:
-		//	port=[Port] '?' message=[Message];
+		//	(name=ID ":")? port=[Port] '?' message=[Message];
 		@Override public ParserRule getRule() { return rule; }
 		
-		//port=[Port] '?' message=[Message]
+		//(name=ID ":")? port=[Port] '?' message=[Message]
 		public Group getGroup() { return cGroup; }
 		
+		//(name=ID ":")?
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//name=ID
+		public Assignment getNameAssignment_0_0() { return cNameAssignment_0_0; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_0_0_0() { return cNameIDTerminalRuleCall_0_0_0; }
+		
+		//":"
+		public Keyword getColonKeyword_0_1() { return cColonKeyword_0_1; }
+		
 		//port=[Port]
-		public Assignment getPortAssignment_0() { return cPortAssignment_0; }
+		public Assignment getPortAssignment_1() { return cPortAssignment_1; }
 		
 		//[Port]
-		public CrossReference getPortPortCrossReference_0_0() { return cPortPortCrossReference_0_0; }
+		public CrossReference getPortPortCrossReference_1_0() { return cPortPortCrossReference_1_0; }
 		
 		//ID
-		public RuleCall getPortPortIDTerminalRuleCall_0_0_1() { return cPortPortIDTerminalRuleCall_0_0_1; }
+		public RuleCall getPortPortIDTerminalRuleCall_1_0_1() { return cPortPortIDTerminalRuleCall_1_0_1; }
 		
 		//'?'
-		public Keyword getQuestionMarkKeyword_1() { return cQuestionMarkKeyword_1; }
+		public Keyword getQuestionMarkKeyword_2() { return cQuestionMarkKeyword_2; }
 		
 		//message=[Message]
-		public Assignment getMessageAssignment_2() { return cMessageAssignment_2; }
+		public Assignment getMessageAssignment_3() { return cMessageAssignment_3; }
 		
 		//[Message]
-		public CrossReference getMessageMessageCrossReference_2_0() { return cMessageMessageCrossReference_2_0; }
+		public CrossReference getMessageMessageCrossReference_3_0() { return cMessageMessageCrossReference_3_0; }
 		
 		//ID
-		public RuleCall getMessageMessageIDTerminalRuleCall_2_0_1() { return cMessageMessageIDTerminalRuleCall_2_0_1; }
+		public RuleCall getMessageMessageIDTerminalRuleCall_3_0_1() { return cMessageMessageIDTerminalRuleCall_3_0_1; }
 	}
 	public class ActionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Action");
@@ -3292,19 +3308,20 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final CrossReference cMessageMessageCrossReference_2_0 = (CrossReference)cMessageAssignment_2.eContents().get(0);
 		private final RuleCall cMessageMessageIDTerminalRuleCall_2_0_1 = (RuleCall)cMessageMessageCrossReference_2_0.eContents().get(1);
 		private final Keyword cLeftParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final Assignment cParametersAssignment_4 = (Assignment)cGroup.eContents().get(4);
-		private final RuleCall cParametersExpressionParserRuleCall_4_0 = (RuleCall)cParametersAssignment_4.eContents().get(0);
-		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
-		private final Keyword cCommaKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
-		private final Assignment cParametersAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
-		private final RuleCall cParametersExpressionParserRuleCall_5_1_0 = (RuleCall)cParametersAssignment_5_1.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_6 = (Keyword)cGroup.eContents().get(6);
+		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
+		private final Assignment cParametersAssignment_4_0 = (Assignment)cGroup_4.eContents().get(0);
+		private final RuleCall cParametersExpressionParserRuleCall_4_0_0 = (RuleCall)cParametersAssignment_4_0.eContents().get(0);
+		private final Group cGroup_4_1 = (Group)cGroup_4.eContents().get(1);
+		private final Keyword cCommaKeyword_4_1_0 = (Keyword)cGroup_4_1.eContents().get(0);
+		private final Assignment cParametersAssignment_4_1_1 = (Assignment)cGroup_4_1.eContents().get(1);
+		private final RuleCall cParametersExpressionParserRuleCall_4_1_1_0 = (RuleCall)cParametersAssignment_4_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		
 		//SendAction:
-		//	port=[Port] '!' message=[Message] '(' parameters+=Expression ("," parameters+=Expression)* ')';
+		//	port=[Port] '!' message=[Message] '(' (parameters+=Expression ("," parameters+=Expression)*)? ')';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//port=[Port] '!' message=[Message] '(' parameters+=Expression ("," parameters+=Expression)* ')'
+		//port=[Port] '!' message=[Message] '(' (parameters+=Expression ("," parameters+=Expression)*)? ')'
 		public Group getGroup() { return cGroup; }
 		
 		//port=[Port]
@@ -3331,26 +3348,29 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//'('
 		public Keyword getLeftParenthesisKeyword_3() { return cLeftParenthesisKeyword_3; }
 		
+		//(parameters+=Expression ("," parameters+=Expression)*)?
+		public Group getGroup_4() { return cGroup_4; }
+		
 		//parameters+=Expression
-		public Assignment getParametersAssignment_4() { return cParametersAssignment_4; }
+		public Assignment getParametersAssignment_4_0() { return cParametersAssignment_4_0; }
 		
 		//Expression
-		public RuleCall getParametersExpressionParserRuleCall_4_0() { return cParametersExpressionParserRuleCall_4_0; }
+		public RuleCall getParametersExpressionParserRuleCall_4_0_0() { return cParametersExpressionParserRuleCall_4_0_0; }
 		
 		//("," parameters+=Expression)*
-		public Group getGroup_5() { return cGroup_5; }
+		public Group getGroup_4_1() { return cGroup_4_1; }
 		
 		//","
-		public Keyword getCommaKeyword_5_0() { return cCommaKeyword_5_0; }
+		public Keyword getCommaKeyword_4_1_0() { return cCommaKeyword_4_1_0; }
 		
 		//parameters+=Expression
-		public Assignment getParametersAssignment_5_1() { return cParametersAssignment_5_1; }
+		public Assignment getParametersAssignment_4_1_1() { return cParametersAssignment_4_1_1; }
 		
 		//Expression
-		public RuleCall getParametersExpressionParserRuleCall_5_1_0() { return cParametersExpressionParserRuleCall_5_1_0; }
+		public RuleCall getParametersExpressionParserRuleCall_4_1_1_0() { return cParametersExpressionParserRuleCall_4_1_1_0; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_6() { return cRightParenthesisKeyword_6; }
+		public Keyword getRightParenthesisKeyword_5() { return cRightParenthesisKeyword_5; }
 	}
 	public class VariableAssignmentElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.VariableAssignment");
@@ -3674,19 +3694,20 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final CrossReference cFunctionFunctionCrossReference_0_0 = (CrossReference)cFunctionAssignment_0.eContents().get(0);
 		private final RuleCall cFunctionFunctionIDTerminalRuleCall_0_0_1 = (RuleCall)cFunctionFunctionCrossReference_0_0.eContents().get(1);
 		private final Keyword cLeftParenthesisKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cParametersAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cParametersExpressionParserRuleCall_2_0 = (RuleCall)cParametersAssignment_2.eContents().get(0);
-		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Keyword cCommaKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
-		private final Assignment cParametersAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
-		private final RuleCall cParametersExpressionParserRuleCall_3_1_0 = (RuleCall)cParametersAssignment_3_1.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Assignment cParametersAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
+		private final RuleCall cParametersExpressionParserRuleCall_2_0_0 = (RuleCall)cParametersAssignment_2_0.eContents().get(0);
+		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
+		private final Keyword cCommaKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
+		private final Assignment cParametersAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
+		private final RuleCall cParametersExpressionParserRuleCall_2_1_1_0 = (RuleCall)cParametersAssignment_2_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
 		//FunctionCallStatement:
-		//	function=[Function] '(' parameters+=Expression ("," parameters+=Expression)* ')';
+		//	function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)? ')';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//function=[Function] '(' parameters+=Expression ("," parameters+=Expression)* ')'
+		//function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)? ')'
 		public Group getGroup() { return cGroup; }
 		
 		//function=[Function]
@@ -3701,39 +3722,558 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//'('
 		public Keyword getLeftParenthesisKeyword_1() { return cLeftParenthesisKeyword_1; }
 		
+		//(parameters+=Expression ("," parameters+=Expression)*)?
+		public Group getGroup_2() { return cGroup_2; }
+		
 		//parameters+=Expression
-		public Assignment getParametersAssignment_2() { return cParametersAssignment_2; }
+		public Assignment getParametersAssignment_2_0() { return cParametersAssignment_2_0; }
 		
 		//Expression
-		public RuleCall getParametersExpressionParserRuleCall_2_0() { return cParametersExpressionParserRuleCall_2_0; }
+		public RuleCall getParametersExpressionParserRuleCall_2_0_0() { return cParametersExpressionParserRuleCall_2_0_0; }
 		
 		//("," parameters+=Expression)*
-		public Group getGroup_3() { return cGroup_3; }
+		public Group getGroup_2_1() { return cGroup_2_1; }
 		
 		//","
-		public Keyword getCommaKeyword_3_0() { return cCommaKeyword_3_0; }
+		public Keyword getCommaKeyword_2_1_0() { return cCommaKeyword_2_1_0; }
 		
 		//parameters+=Expression
-		public Assignment getParametersAssignment_3_1() { return cParametersAssignment_3_1; }
+		public Assignment getParametersAssignment_2_1_1() { return cParametersAssignment_2_1_1; }
 		
 		//Expression
-		public RuleCall getParametersExpressionParserRuleCall_3_1_0() { return cParametersExpressionParserRuleCall_3_1_0; }
+		public RuleCall getParametersExpressionParserRuleCall_2_1_1_0() { return cParametersExpressionParserRuleCall_2_1_1_0; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_4() { return cRightParenthesisKeyword_4; }
+		public Keyword getRightParenthesisKeyword_3() { return cRightParenthesisKeyword_3; }
 	}
 	public class ExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Expression");
-		private final RuleCall cExternExpressionParserRuleCall = (RuleCall)rule.eContents().get(1);
+		private final RuleCall cOrExpressionParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		/// *****************************************************************************
 		// *       EXPRESSIONS                                                         *
-		// ***************************************************************************** / Expression:
-		//	ExternExpression;
+		// ***************************************************************************** / //ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
+		////PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | 
+		////LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | 
+		////ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
+		//Expression:
+		//	OrExpression;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//OrExpression
+		public RuleCall getOrExpressionParserRuleCall() { return cOrExpressionParserRuleCall; }
+	}
+	public class OrExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.OrExpression");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cAndExpressionParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Action cOrExpressionLhsAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cOrKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cRhsAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cRhsAndExpressionParserRuleCall_1_2_0 = (RuleCall)cRhsAssignment_1_2.eContents().get(0);
+		
+		//OrExpression Expression:
+		//	AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*
+		@Override public ParserRule getRule() { return rule; }
+		
+		//AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*
+		public Group getGroup() { return cGroup; }
+		
+		//AndExpression
+		public RuleCall getAndExpressionParserRuleCall_0() { return cAndExpressionParserRuleCall_0; }
+		
+		//({OrExpression.lhs=current} "or" rhs=AndExpression)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{OrExpression.lhs=current}
+		public Action getOrExpressionLhsAction_1_0() { return cOrExpressionLhsAction_1_0; }
+		
+		//"or"
+		public Keyword getOrKeyword_1_1() { return cOrKeyword_1_1; }
+		
+		//rhs=AndExpression
+		public Assignment getRhsAssignment_1_2() { return cRhsAssignment_1_2; }
+		
+		//AndExpression
+		public RuleCall getRhsAndExpressionParserRuleCall_1_2_0() { return cRhsAndExpressionParserRuleCall_1_2_0; }
+	}
+	public class AndExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.AndExpression");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cEqualityParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Action cAndExpressionLhsAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cAndKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cRhsAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cRhsEqualityParserRuleCall_1_2_0 = (RuleCall)cRhsAssignment_1_2.eContents().get(0);
+		
+		//AndExpression Expression:
+		//	Equality ({AndExpression.lhs=current} "and" rhs=Equality)*
+		@Override public ParserRule getRule() { return rule; }
+		
+		//Equality ({AndExpression.lhs=current} "and" rhs=Equality)*
+		public Group getGroup() { return cGroup; }
+		
+		//Equality
+		public RuleCall getEqualityParserRuleCall_0() { return cEqualityParserRuleCall_0; }
+		
+		//({AndExpression.lhs=current} "and" rhs=Equality)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{AndExpression.lhs=current}
+		public Action getAndExpressionLhsAction_1_0() { return cAndExpressionLhsAction_1_0; }
+		
+		//"and"
+		public Keyword getAndKeyword_1_1() { return cAndKeyword_1_1; }
+		
+		//rhs=Equality
+		public Assignment getRhsAssignment_1_2() { return cRhsAssignment_1_2; }
+		
+		//Equality
+		public RuleCall getRhsEqualityParserRuleCall_1_2_0() { return cRhsEqualityParserRuleCall_1_2_0; }
+	}
+	public class EqualityElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Equality");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cComparaisonParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
+		private final Action cEqualsExpressionLhsAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
+		private final Keyword cEqualsSignEqualsSignKeyword_1_0_1 = (Keyword)cGroup_1_0.eContents().get(1);
+		private final Assignment cRhsAssignment_1_0_2 = (Assignment)cGroup_1_0.eContents().get(2);
+		private final RuleCall cRhsComparaisonParserRuleCall_1_0_2_0 = (RuleCall)cRhsAssignment_1_0_2.eContents().get(0);
+		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
+		private final Action cNotEqualsExpressionLhsAction_1_1_0 = (Action)cGroup_1_1.eContents().get(0);
+		private final Keyword cExclamationMarkEqualsSignKeyword_1_1_1 = (Keyword)cGroup_1_1.eContents().get(1);
+		private final Assignment cRhsAssignment_1_1_2 = (Assignment)cGroup_1_1.eContents().get(2);
+		private final RuleCall cRhsComparaisonParserRuleCall_1_1_2_0 = (RuleCall)cRhsAssignment_1_1_2.eContents().get(0);
+		
+		//Equality Expression:
+		//	Comparaison ({EqualsExpression.lhs=current} "==" rhs=Comparaison | {NotEqualsExpression.lhs=current} "!="
+		//	rhs=Comparaison)*
+		@Override public ParserRule getRule() { return rule; }
+		
+		//Comparaison ({EqualsExpression.lhs=current} "==" rhs=Comparaison | {NotEqualsExpression.lhs=current} "!="
+		//rhs=Comparaison)*
+		public Group getGroup() { return cGroup; }
+		
+		//Comparaison
+		public RuleCall getComparaisonParserRuleCall_0() { return cComparaisonParserRuleCall_0; }
+		
+		//({EqualsExpression.lhs=current} "==" rhs=Comparaison | {NotEqualsExpression.lhs=current} "!=" rhs=Comparaison)*
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//{EqualsExpression.lhs=current} "==" rhs=Comparaison
+		public Group getGroup_1_0() { return cGroup_1_0; }
+		
+		//{EqualsExpression.lhs=current}
+		public Action getEqualsExpressionLhsAction_1_0_0() { return cEqualsExpressionLhsAction_1_0_0; }
+		
+		//"=="
+		public Keyword getEqualsSignEqualsSignKeyword_1_0_1() { return cEqualsSignEqualsSignKeyword_1_0_1; }
+		
+		//rhs=Comparaison
+		public Assignment getRhsAssignment_1_0_2() { return cRhsAssignment_1_0_2; }
+		
+		//Comparaison
+		public RuleCall getRhsComparaisonParserRuleCall_1_0_2_0() { return cRhsComparaisonParserRuleCall_1_0_2_0; }
+		
+		//{NotEqualsExpression.lhs=current} "!=" rhs=Comparaison
+		public Group getGroup_1_1() { return cGroup_1_1; }
+		
+		//{NotEqualsExpression.lhs=current}
+		public Action getNotEqualsExpressionLhsAction_1_1_0() { return cNotEqualsExpressionLhsAction_1_1_0; }
+		
+		//"!="
+		public Keyword getExclamationMarkEqualsSignKeyword_1_1_1() { return cExclamationMarkEqualsSignKeyword_1_1_1; }
+		
+		//rhs=Comparaison
+		public Assignment getRhsAssignment_1_1_2() { return cRhsAssignment_1_1_2; }
+		
+		//Comparaison
+		public RuleCall getRhsComparaisonParserRuleCall_1_1_2_0() { return cRhsComparaisonParserRuleCall_1_1_2_0; }
+	}
+	public class ComparaisonElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Comparaison");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cAdditionParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
+		private final Action cGreaterExpressionLhsAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_1_0_1 = (Keyword)cGroup_1_0.eContents().get(1);
+		private final Assignment cRhsAssignment_1_0_2 = (Assignment)cGroup_1_0.eContents().get(2);
+		private final RuleCall cRhsAdditionParserRuleCall_1_0_2_0 = (RuleCall)cRhsAssignment_1_0_2.eContents().get(0);
+		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
+		private final Action cLowerExpressionLhsAction_1_1_0 = (Action)cGroup_1_1.eContents().get(0);
+		private final Keyword cLessThanSignKeyword_1_1_1 = (Keyword)cGroup_1_1.eContents().get(1);
+		private final Assignment cRhsAssignment_1_1_2 = (Assignment)cGroup_1_1.eContents().get(2);
+		private final RuleCall cRhsAdditionParserRuleCall_1_1_2_0 = (RuleCall)cRhsAssignment_1_1_2.eContents().get(0);
+		private final Group cGroup_1_2 = (Group)cAlternatives_1.eContents().get(2);
+		private final Action cGreaterOrEqualExpressionLhsAction_1_2_0 = (Action)cGroup_1_2.eContents().get(0);
+		private final Keyword cGreaterThanSignEqualsSignKeyword_1_2_1 = (Keyword)cGroup_1_2.eContents().get(1);
+		private final Assignment cRhsAssignment_1_2_2 = (Assignment)cGroup_1_2.eContents().get(2);
+		private final RuleCall cRhsAdditionParserRuleCall_1_2_2_0 = (RuleCall)cRhsAssignment_1_2_2.eContents().get(0);
+		private final Group cGroup_1_3 = (Group)cAlternatives_1.eContents().get(3);
+		private final Action cLowerOrEqualExpressionLhsAction_1_3_0 = (Action)cGroup_1_3.eContents().get(0);
+		private final Keyword cLessThanSignEqualsSignKeyword_1_3_1 = (Keyword)cGroup_1_3.eContents().get(1);
+		private final Assignment cRhsAssignment_1_3_2 = (Assignment)cGroup_1_3.eContents().get(2);
+		private final RuleCall cRhsAdditionParserRuleCall_1_3_2_0 = (RuleCall)cRhsAssignment_1_3_2.eContents().get(0);
+		
+		//Comparaison Expression:
+		//	Addition ({GreaterExpression.lhs=current} ">" rhs=Addition | {LowerExpression.lhs=current} "<" rhs=Addition |
+		//	{GreaterOrEqualExpression.lhs=current} ">=" rhs=Addition | {LowerOrEqualExpression.lhs=current} "<=" rhs=Addition)*
+		@Override public ParserRule getRule() { return rule; }
+		
+		//Addition ({GreaterExpression.lhs=current} ">" rhs=Addition | {LowerExpression.lhs=current} "<" rhs=Addition |
+		//{GreaterOrEqualExpression.lhs=current} ">=" rhs=Addition | {LowerOrEqualExpression.lhs=current} "<=" rhs=Addition)*
+		public Group getGroup() { return cGroup; }
+		
+		//Addition
+		public RuleCall getAdditionParserRuleCall_0() { return cAdditionParserRuleCall_0; }
+		
+		//({GreaterExpression.lhs=current} ">" rhs=Addition | {LowerExpression.lhs=current} "<" rhs=Addition |
+		//{GreaterOrEqualExpression.lhs=current} ">=" rhs=Addition | {LowerOrEqualExpression.lhs=current} "<=" rhs=Addition)*
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//{GreaterExpression.lhs=current} ">" rhs=Addition
+		public Group getGroup_1_0() { return cGroup_1_0; }
+		
+		//{GreaterExpression.lhs=current}
+		public Action getGreaterExpressionLhsAction_1_0_0() { return cGreaterExpressionLhsAction_1_0_0; }
+		
+		//">"
+		public Keyword getGreaterThanSignKeyword_1_0_1() { return cGreaterThanSignKeyword_1_0_1; }
+		
+		//rhs=Addition
+		public Assignment getRhsAssignment_1_0_2() { return cRhsAssignment_1_0_2; }
+		
+		//Addition
+		public RuleCall getRhsAdditionParserRuleCall_1_0_2_0() { return cRhsAdditionParserRuleCall_1_0_2_0; }
+		
+		//{LowerExpression.lhs=current} "<" rhs=Addition
+		public Group getGroup_1_1() { return cGroup_1_1; }
+		
+		//{LowerExpression.lhs=current}
+		public Action getLowerExpressionLhsAction_1_1_0() { return cLowerExpressionLhsAction_1_1_0; }
+		
+		//"<"
+		public Keyword getLessThanSignKeyword_1_1_1() { return cLessThanSignKeyword_1_1_1; }
+		
+		//rhs=Addition
+		public Assignment getRhsAssignment_1_1_2() { return cRhsAssignment_1_1_2; }
+		
+		//Addition
+		public RuleCall getRhsAdditionParserRuleCall_1_1_2_0() { return cRhsAdditionParserRuleCall_1_1_2_0; }
+		
+		//{GreaterOrEqualExpression.lhs=current} ">=" rhs=Addition
+		public Group getGroup_1_2() { return cGroup_1_2; }
+		
+		//{GreaterOrEqualExpression.lhs=current}
+		public Action getGreaterOrEqualExpressionLhsAction_1_2_0() { return cGreaterOrEqualExpressionLhsAction_1_2_0; }
+		
+		//">="
+		public Keyword getGreaterThanSignEqualsSignKeyword_1_2_1() { return cGreaterThanSignEqualsSignKeyword_1_2_1; }
+		
+		//rhs=Addition
+		public Assignment getRhsAssignment_1_2_2() { return cRhsAssignment_1_2_2; }
+		
+		//Addition
+		public RuleCall getRhsAdditionParserRuleCall_1_2_2_0() { return cRhsAdditionParserRuleCall_1_2_2_0; }
+		
+		//{LowerOrEqualExpression.lhs=current} "<=" rhs=Addition
+		public Group getGroup_1_3() { return cGroup_1_3; }
+		
+		//{LowerOrEqualExpression.lhs=current}
+		public Action getLowerOrEqualExpressionLhsAction_1_3_0() { return cLowerOrEqualExpressionLhsAction_1_3_0; }
+		
+		//"<="
+		public Keyword getLessThanSignEqualsSignKeyword_1_3_1() { return cLessThanSignEqualsSignKeyword_1_3_1; }
+		
+		//rhs=Addition
+		public Assignment getRhsAssignment_1_3_2() { return cRhsAssignment_1_3_2; }
+		
+		//Addition
+		public RuleCall getRhsAdditionParserRuleCall_1_3_2_0() { return cRhsAdditionParserRuleCall_1_3_2_0; }
+	}
+	public class AdditionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Addition");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cMultiplicationParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
+		private final Action cPlusExpressionLhsAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
+		private final Keyword cPlusSignKeyword_1_0_1 = (Keyword)cGroup_1_0.eContents().get(1);
+		private final Assignment cRhsAssignment_1_0_2 = (Assignment)cGroup_1_0.eContents().get(2);
+		private final RuleCall cRhsMultiplicationParserRuleCall_1_0_2_0 = (RuleCall)cRhsAssignment_1_0_2.eContents().get(0);
+		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
+		private final Action cMinusExpressionLhsAction_1_1_0 = (Action)cGroup_1_1.eContents().get(0);
+		private final Keyword cHyphenMinusKeyword_1_1_1 = (Keyword)cGroup_1_1.eContents().get(1);
+		private final Assignment cRhsAssignment_1_1_2 = (Assignment)cGroup_1_1.eContents().get(2);
+		private final RuleCall cRhsMultiplicationParserRuleCall_1_1_2_0 = (RuleCall)cRhsAssignment_1_1_2.eContents().get(0);
+		
+		//Addition Expression:
+		//	Multiplication ({PlusExpression.lhs=current} "+" rhs=Multiplication | {MinusExpression.lhs=current} "-"
+		//	rhs=Multiplication)*
+		@Override public ParserRule getRule() { return rule; }
+		
+		//Multiplication ({PlusExpression.lhs=current} "+" rhs=Multiplication | {MinusExpression.lhs=current} "-"
+		//rhs=Multiplication)*
+		public Group getGroup() { return cGroup; }
+		
+		//Multiplication
+		public RuleCall getMultiplicationParserRuleCall_0() { return cMultiplicationParserRuleCall_0; }
+		
+		//({PlusExpression.lhs=current} "+" rhs=Multiplication | {MinusExpression.lhs=current} "-" rhs=Multiplication)*
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//{PlusExpression.lhs=current} "+" rhs=Multiplication
+		public Group getGroup_1_0() { return cGroup_1_0; }
+		
+		//{PlusExpression.lhs=current}
+		public Action getPlusExpressionLhsAction_1_0_0() { return cPlusExpressionLhsAction_1_0_0; }
+		
+		//"+"
+		public Keyword getPlusSignKeyword_1_0_1() { return cPlusSignKeyword_1_0_1; }
+		
+		//rhs=Multiplication
+		public Assignment getRhsAssignment_1_0_2() { return cRhsAssignment_1_0_2; }
+		
+		//Multiplication
+		public RuleCall getRhsMultiplicationParserRuleCall_1_0_2_0() { return cRhsMultiplicationParserRuleCall_1_0_2_0; }
+		
+		//{MinusExpression.lhs=current} "-" rhs=Multiplication
+		public Group getGroup_1_1() { return cGroup_1_1; }
+		
+		//{MinusExpression.lhs=current}
+		public Action getMinusExpressionLhsAction_1_1_0() { return cMinusExpressionLhsAction_1_1_0; }
+		
+		//"-"
+		public Keyword getHyphenMinusKeyword_1_1_1() { return cHyphenMinusKeyword_1_1_1; }
+		
+		//rhs=Multiplication
+		public Assignment getRhsAssignment_1_1_2() { return cRhsAssignment_1_1_2; }
+		
+		//Multiplication
+		public RuleCall getRhsMultiplicationParserRuleCall_1_1_2_0() { return cRhsMultiplicationParserRuleCall_1_1_2_0; }
+	}
+	public class MultiplicationElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Multiplication");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cModuloParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
+		private final Action cTimesExpressionLhsAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
+		private final Keyword cAsteriskKeyword_1_0_1 = (Keyword)cGroup_1_0.eContents().get(1);
+		private final Assignment cRhsAssignment_1_0_2 = (Assignment)cGroup_1_0.eContents().get(2);
+		private final RuleCall cRhsModuloParserRuleCall_1_0_2_0 = (RuleCall)cRhsAssignment_1_0_2.eContents().get(0);
+		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
+		private final Action cDivExpressionLhsAction_1_1_0 = (Action)cGroup_1_1.eContents().get(0);
+		private final Keyword cSolidusKeyword_1_1_1 = (Keyword)cGroup_1_1.eContents().get(1);
+		private final Assignment cRhsAssignment_1_1_2 = (Assignment)cGroup_1_1.eContents().get(2);
+		private final RuleCall cRhsModuloParserRuleCall_1_1_2_0 = (RuleCall)cRhsAssignment_1_1_2.eContents().get(0);
+		
+		//Multiplication Expression:
+		//	Modulo ({TimesExpression.lhs=current} "*" rhs=Modulo | {DivExpression.lhs=current} "/" rhs=Modulo)*
+		@Override public ParserRule getRule() { return rule; }
+		
+		//Modulo ({TimesExpression.lhs=current} "*" rhs=Modulo | {DivExpression.lhs=current} "/" rhs=Modulo)*
+		public Group getGroup() { return cGroup; }
+		
+		//Modulo
+		public RuleCall getModuloParserRuleCall_0() { return cModuloParserRuleCall_0; }
+		
+		//({TimesExpression.lhs=current} "*" rhs=Modulo | {DivExpression.lhs=current} "/" rhs=Modulo)*
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//{TimesExpression.lhs=current} "*" rhs=Modulo
+		public Group getGroup_1_0() { return cGroup_1_0; }
+		
+		//{TimesExpression.lhs=current}
+		public Action getTimesExpressionLhsAction_1_0_0() { return cTimesExpressionLhsAction_1_0_0; }
+		
+		//"*"
+		public Keyword getAsteriskKeyword_1_0_1() { return cAsteriskKeyword_1_0_1; }
+		
+		//rhs=Modulo
+		public Assignment getRhsAssignment_1_0_2() { return cRhsAssignment_1_0_2; }
+		
+		//Modulo
+		public RuleCall getRhsModuloParserRuleCall_1_0_2_0() { return cRhsModuloParserRuleCall_1_0_2_0; }
+		
+		//{DivExpression.lhs=current} "/" rhs=Modulo
+		public Group getGroup_1_1() { return cGroup_1_1; }
+		
+		//{DivExpression.lhs=current}
+		public Action getDivExpressionLhsAction_1_1_0() { return cDivExpressionLhsAction_1_1_0; }
+		
+		//"/"
+		public Keyword getSolidusKeyword_1_1_1() { return cSolidusKeyword_1_1_1; }
+		
+		//rhs=Modulo
+		public Assignment getRhsAssignment_1_1_2() { return cRhsAssignment_1_1_2; }
+		
+		//Modulo
+		public RuleCall getRhsModuloParserRuleCall_1_1_2_0() { return cRhsModuloParserRuleCall_1_1_2_0; }
+	}
+	public class ModuloElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Modulo");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cPrimaryParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Action cModExpressionLhsAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cPercentSignKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cRhsAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cRhsExpressionParserRuleCall_1_2_0 = (RuleCall)cRhsAssignment_1_2.eContents().get(0);
+		
+		//Modulo Expression:
+		//	Primary ({ModExpression.lhs=current} "%" rhs=Expression)?
+		@Override public ParserRule getRule() { return rule; }
+		
+		//Primary ({ModExpression.lhs=current} "%" rhs=Expression)?
+		public Group getGroup() { return cGroup; }
+		
+		//Primary
+		public RuleCall getPrimaryParserRuleCall_0() { return cPrimaryParserRuleCall_0; }
+		
+		//({ModExpression.lhs=current} "%" rhs=Expression)?
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{ModExpression.lhs=current}
+		public Action getModExpressionLhsAction_1_0() { return cModExpressionLhsAction_1_0; }
+		
+		//"%"
+		public Keyword getPercentSignKeyword_1_1() { return cPercentSignKeyword_1_1; }
+		
+		//rhs=Expression
+		public Assignment getRhsAssignment_1_2() { return cRhsAssignment_1_2; }
+		
+		//Expression
+		public RuleCall getRhsExpressionParserRuleCall_1_2_0() { return cRhsExpressionParserRuleCall_1_2_0; }
+	}
+	public class PrimaryElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Primary");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
+		private final RuleCall cExpressionParserRuleCall_0_1 = (RuleCall)cGroup_0.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_0_2 = (Keyword)cGroup_0.eContents().get(2);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Action cNotExpressionAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cNotKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cTermAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final RuleCall cTermPrimaryParserRuleCall_1_2_0 = (RuleCall)cTermAssignment_1_2.eContents().get(0);
+		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
+		private final Action cUnaryMinusAction_2_0 = (Action)cGroup_2.eContents().get(0);
+		private final Keyword cHyphenMinusKeyword_2_1 = (Keyword)cGroup_2.eContents().get(1);
+		private final Assignment cTermAssignment_2_2 = (Assignment)cGroup_2.eContents().get(2);
+		private final RuleCall cTermPrimaryParserRuleCall_2_2_0 = (RuleCall)cTermAssignment_2_2.eContents().get(0);
+		private final RuleCall cAtomicExpressionParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		
+		//Primary Expression:
+		//	'(' Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary | AtomicExpression
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'(' Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary | AtomicExpression
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//'(' Expression ')'
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_0_0() { return cLeftParenthesisKeyword_0_0; }
+		
+		//Expression
+		public RuleCall getExpressionParserRuleCall_0_1() { return cExpressionParserRuleCall_0_1; }
+		
+		//')'
+		public Keyword getRightParenthesisKeyword_0_2() { return cRightParenthesisKeyword_0_2; }
+		
+		//{NotExpression} "not" term=Primary
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{NotExpression}
+		public Action getNotExpressionAction_1_0() { return cNotExpressionAction_1_0; }
+		
+		//"not"
+		public Keyword getNotKeyword_1_1() { return cNotKeyword_1_1; }
+		
+		//term=Primary
+		public Assignment getTermAssignment_1_2() { return cTermAssignment_1_2; }
+		
+		//Primary
+		public RuleCall getTermPrimaryParserRuleCall_1_2_0() { return cTermPrimaryParserRuleCall_1_2_0; }
+		
+		//{UnaryMinus} '-' term=Primary
+		public Group getGroup_2() { return cGroup_2; }
+		
+		//{UnaryMinus}
+		public Action getUnaryMinusAction_2_0() { return cUnaryMinusAction_2_0; }
+		
+		//'-'
+		public Keyword getHyphenMinusKeyword_2_1() { return cHyphenMinusKeyword_2_1; }
+		
+		//term=Primary
+		public Assignment getTermAssignment_2_2() { return cTermAssignment_2_2; }
+		
+		//Primary
+		public RuleCall getTermPrimaryParserRuleCall_2_2_0() { return cTermPrimaryParserRuleCall_2_2_0; }
+		
+		//AtomicExpression
+		public RuleCall getAtomicExpressionParserRuleCall_3() { return cAtomicExpressionParserRuleCall_3; }
+	}
+	public class AtomicExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.AtomicExpression");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cExternExpressionParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cEnumLiteralRefParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cIntegerLiteralParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cBooleanLiteralParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cStringLiteralParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cDoubleLiteralParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cPropertyReferenceParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cReferenceParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cFunctionCallExpressionParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cMessageParameterParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		
+		//AtomicExpression Expression:
+		//	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral |
+		//	PropertyReference | Reference | FunctionCallExpression | MessageParameter
+		@Override public ParserRule getRule() { return rule; }
+		
+		//ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference
+		//| Reference | FunctionCallExpression | MessageParameter
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
 		//ExternExpression
-		public RuleCall getExternExpressionParserRuleCall() { return cExternExpressionParserRuleCall; }
+		public RuleCall getExternExpressionParserRuleCall_0() { return cExternExpressionParserRuleCall_0; }
+		
+		//EnumLiteralRef
+		public RuleCall getEnumLiteralRefParserRuleCall_1() { return cEnumLiteralRefParserRuleCall_1; }
+		
+		//IntegerLiteral
+		public RuleCall getIntegerLiteralParserRuleCall_2() { return cIntegerLiteralParserRuleCall_2; }
+		
+		//BooleanLiteral
+		public RuleCall getBooleanLiteralParserRuleCall_3() { return cBooleanLiteralParserRuleCall_3; }
+		
+		//StringLiteral
+		public RuleCall getStringLiteralParserRuleCall_4() { return cStringLiteralParserRuleCall_4; }
+		
+		//DoubleLiteral
+		public RuleCall getDoubleLiteralParserRuleCall_5() { return cDoubleLiteralParserRuleCall_5; }
+		
+		//PropertyReference
+		public RuleCall getPropertyReferenceParserRuleCall_6() { return cPropertyReferenceParserRuleCall_6; }
+		
+		//Reference
+		public RuleCall getReferenceParserRuleCall_7() { return cReferenceParserRuleCall_7; }
+		
+		//FunctionCallExpression
+		public RuleCall getFunctionCallExpressionParserRuleCall_8() { return cFunctionCallExpressionParserRuleCall_8; }
+		
+		//MessageParameter
+		public RuleCall getMessageParameterParserRuleCall_9() { return cMessageParameterParserRuleCall_9; }
 	}
 	public class ExternExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.ExternExpression");
@@ -3745,7 +4285,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cSegmentsAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cSegmentsExpressionParserRuleCall_1_1_0 = (RuleCall)cSegmentsAssignment_1_1.eContents().get(0);
 		
-		////ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
 		//ExternExpression:
 		//	expression=STRING_EXT ('&' segments+=Expression)*;
 		@Override public ParserRule getRule() { return rule; }
@@ -3771,6 +4310,231 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//Expression
 		public RuleCall getSegmentsExpressionParserRuleCall_1_1_0() { return cSegmentsExpressionParserRuleCall_1_1_0; }
 	}
+	public class EnumLiteralRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.EnumLiteralRef");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cEnumKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cEnumAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final CrossReference cEnumEnumerationCrossReference_1_0 = (CrossReference)cEnumAssignment_1.eContents().get(0);
+		private final RuleCall cEnumEnumerationIDTerminalRuleCall_1_0_1 = (RuleCall)cEnumEnumerationCrossReference_1_0.eContents().get(1);
+		private final Keyword cColonKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cLiteralAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final CrossReference cLiteralEnumerationLiteralCrossReference_3_0 = (CrossReference)cLiteralAssignment_3.eContents().get(0);
+		private final RuleCall cLiteralEnumerationLiteralIDTerminalRuleCall_3_0_1 = (RuleCall)cLiteralEnumerationLiteralCrossReference_3_0.eContents().get(1);
+		
+		//EnumLiteralRef:
+		//	'enum' ^enum=[Enumeration] ':' literal=[EnumerationLiteral];
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'enum' ^enum=[Enumeration] ':' literal=[EnumerationLiteral]
+		public Group getGroup() { return cGroup; }
+		
+		//'enum'
+		public Keyword getEnumKeyword_0() { return cEnumKeyword_0; }
+		
+		//^enum=[Enumeration]
+		public Assignment getEnumAssignment_1() { return cEnumAssignment_1; }
+		
+		//[Enumeration]
+		public CrossReference getEnumEnumerationCrossReference_1_0() { return cEnumEnumerationCrossReference_1_0; }
+		
+		//ID
+		public RuleCall getEnumEnumerationIDTerminalRuleCall_1_0_1() { return cEnumEnumerationIDTerminalRuleCall_1_0_1; }
+		
+		//':'
+		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
+		
+		//literal=[EnumerationLiteral]
+		public Assignment getLiteralAssignment_3() { return cLiteralAssignment_3; }
+		
+		//[EnumerationLiteral]
+		public CrossReference getLiteralEnumerationLiteralCrossReference_3_0() { return cLiteralEnumerationLiteralCrossReference_3_0; }
+		
+		//ID
+		public RuleCall getLiteralEnumerationLiteralIDTerminalRuleCall_3_0_1() { return cLiteralEnumerationLiteralIDTerminalRuleCall_3_0_1; }
+	}
+	public class IntegerLiteralElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.IntegerLiteral");
+		private final Assignment cIntValueAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cIntValueINTTerminalRuleCall_0 = (RuleCall)cIntValueAssignment.eContents().get(0);
+		
+		//IntegerLiteral:
+		//	intValue=INT;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//intValue=INT
+		public Assignment getIntValueAssignment() { return cIntValueAssignment; }
+		
+		//INT
+		public RuleCall getIntValueINTTerminalRuleCall_0() { return cIntValueINTTerminalRuleCall_0; }
+	}
+	public class BooleanLiteralElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.BooleanLiteral");
+		private final Assignment cBoolValueAssignment = (Assignment)rule.eContents().get(1);
+		private final Alternatives cBoolValueAlternatives_0 = (Alternatives)cBoolValueAssignment.eContents().get(0);
+		private final Keyword cBoolValueTrueKeyword_0_0 = (Keyword)cBoolValueAlternatives_0.eContents().get(0);
+		private final Keyword cBoolValueFalseKeyword_0_1 = (Keyword)cBoolValueAlternatives_0.eContents().get(1);
+		
+		//BooleanLiteral:
+		//	boolValue=('true' | 'false');
+		@Override public ParserRule getRule() { return rule; }
+		
+		//boolValue=('true' | 'false')
+		public Assignment getBoolValueAssignment() { return cBoolValueAssignment; }
+		
+		//('true' | 'false')
+		public Alternatives getBoolValueAlternatives_0() { return cBoolValueAlternatives_0; }
+		
+		//'true'
+		public Keyword getBoolValueTrueKeyword_0_0() { return cBoolValueTrueKeyword_0_0; }
+		
+		//'false'
+		public Keyword getBoolValueFalseKeyword_0_1() { return cBoolValueFalseKeyword_0_1; }
+	}
+	public class StringLiteralElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.StringLiteral");
+		private final Assignment cStringValueAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cStringValueSTRING_LITTerminalRuleCall_0 = (RuleCall)cStringValueAssignment.eContents().get(0);
+		
+		//StringLiteral:
+		//	stringValue=STRING_LIT;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//stringValue=STRING_LIT
+		public Assignment getStringValueAssignment() { return cStringValueAssignment; }
+		
+		//STRING_LIT
+		public RuleCall getStringValueSTRING_LITTerminalRuleCall_0() { return cStringValueSTRING_LITTerminalRuleCall_0; }
+	}
+	public class DoubleLiteralElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.DoubleLiteral");
+		private final Assignment cDoubleValueAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cDoubleValueFLOATTerminalRuleCall_0 = (RuleCall)cDoubleValueAssignment.eContents().get(0);
+		
+		//DoubleLiteral:
+		//	doubleValue=FLOAT;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//doubleValue=FLOAT
+		public Assignment getDoubleValueAssignment() { return cDoubleValueAssignment; }
+		
+		//FLOAT
+		public RuleCall getDoubleValueFLOATTerminalRuleCall_0() { return cDoubleValueFLOATTerminalRuleCall_0; }
+	}
+	public class PropertyReferenceElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.PropertyReference");
+		private final Assignment cPropertyAssignment = (Assignment)rule.eContents().get(1);
+		private final CrossReference cPropertyVariableCrossReference_0 = (CrossReference)cPropertyAssignment.eContents().get(0);
+		private final RuleCall cPropertyVariableIDTerminalRuleCall_0_1 = (RuleCall)cPropertyVariableCrossReference_0.eContents().get(1);
+		
+		//PropertyReference:
+		//	property=[Variable];
+		@Override public ParserRule getRule() { return rule; }
+		
+		//property=[Variable]
+		public Assignment getPropertyAssignment() { return cPropertyAssignment; }
+		
+		//[Variable]
+		public CrossReference getPropertyVariableCrossReference_0() { return cPropertyVariableCrossReference_0; }
+		
+		//ID
+		public RuleCall getPropertyVariableIDTerminalRuleCall_0_1() { return cPropertyVariableIDTerminalRuleCall_0_1; }
+	}
+	public class ReferenceElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Reference");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cReferenceAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final CrossReference cReferenceReferencedElmtCrossReference_0_0 = (CrossReference)cReferenceAssignment_0.eContents().get(0);
+		private final RuleCall cReferenceReferencedElmtIDTerminalRuleCall_0_0_1 = (RuleCall)cReferenceReferencedElmtCrossReference_0_0.eContents().get(1);
+		private final Keyword cFullStopKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cParameterAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cParameterElmtPropertyParserRuleCall_2_0 = (RuleCall)cParameterAssignment_2.eContents().get(0);
+		
+		//Reference:
+		//	reference=[ReferencedElmt] "." parameter=ElmtProperty;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//reference=[ReferencedElmt] "." parameter=ElmtProperty
+		public Group getGroup() { return cGroup; }
+		
+		//reference=[ReferencedElmt]
+		public Assignment getReferenceAssignment_0() { return cReferenceAssignment_0; }
+		
+		//[ReferencedElmt]
+		public CrossReference getReferenceReferencedElmtCrossReference_0_0() { return cReferenceReferencedElmtCrossReference_0_0; }
+		
+		//ID
+		public RuleCall getReferenceReferencedElmtIDTerminalRuleCall_0_0_1() { return cReferenceReferencedElmtIDTerminalRuleCall_0_0_1; }
+		
+		//"."
+		public Keyword getFullStopKeyword_1() { return cFullStopKeyword_1; }
+		
+		//parameter=ElmtProperty
+		public Assignment getParameterAssignment_2() { return cParameterAssignment_2; }
+		
+		//ElmtProperty
+		public RuleCall getParameterElmtPropertyParserRuleCall_2_0() { return cParameterElmtPropertyParserRuleCall_2_0; }
+	}
+	public class FunctionCallExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.FunctionCallExpression");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cFunctionAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final CrossReference cFunctionFunctionCrossReference_0_0 = (CrossReference)cFunctionAssignment_0.eContents().get(0);
+		private final RuleCall cFunctionFunctionIDTerminalRuleCall_0_0_1 = (RuleCall)cFunctionFunctionCrossReference_0_0.eContents().get(1);
+		private final Keyword cLeftParenthesisKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Assignment cParametersAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
+		private final RuleCall cParametersExpressionParserRuleCall_2_0_0 = (RuleCall)cParametersAssignment_2_0.eContents().get(0);
+		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
+		private final Keyword cCommaKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
+		private final Assignment cParametersAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
+		private final RuleCall cParametersExpressionParserRuleCall_2_1_1_0 = (RuleCall)cParametersAssignment_2_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		
+		//FunctionCallExpression:
+		//	function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)?
+		//	')';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)? ')'
+		public Group getGroup() { return cGroup; }
+		
+		//function=[Function]
+		public Assignment getFunctionAssignment_0() { return cFunctionAssignment_0; }
+		
+		//[Function]
+		public CrossReference getFunctionFunctionCrossReference_0_0() { return cFunctionFunctionCrossReference_0_0; }
+		
+		//ID
+		public RuleCall getFunctionFunctionIDTerminalRuleCall_0_0_1() { return cFunctionFunctionIDTerminalRuleCall_0_0_1; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_1() { return cLeftParenthesisKeyword_1; }
+		
+		//(parameters+=Expression ("," parameters+=Expression)*)?
+		public Group getGroup_2() { return cGroup_2; }
+		
+		//parameters+=Expression
+		public Assignment getParametersAssignment_2_0() { return cParametersAssignment_2_0; }
+		
+		//Expression
+		public RuleCall getParametersExpressionParserRuleCall_2_0_0() { return cParametersExpressionParserRuleCall_2_0_0; }
+		
+		//("," parameters+=Expression)*
+		public Group getGroup_2_1() { return cGroup_2_1; }
+		
+		//","
+		public Keyword getCommaKeyword_2_1_0() { return cCommaKeyword_2_1_0; }
+		
+		//parameters+=Expression
+		public Assignment getParametersAssignment_2_1_1() { return cParametersAssignment_2_1_1; }
+		
+		//Expression
+		public RuleCall getParametersExpressionParserRuleCall_2_1_1_0() { return cParametersExpressionParserRuleCall_2_1_1_0; }
+		
+		//')'
+		public Keyword getRightParenthesisKeyword_3() { return cRightParenthesisKeyword_3; }
+	}
 	public class ConfigurationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Configuration");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -3789,6 +4553,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cPropassignsConfigPropertyAssignParserRuleCall_4_2_0 = (RuleCall)cPropassignsAssignment_4_2.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		
+		//// Missing Expressions: ArrayIndex  ;
 		/// *****************************************************************************
 		// *       CONFIGURATIONS                                                      *
 		// ***************************************************************************** / Configuration:
@@ -4203,8 +4968,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	private final SimpleParamRefElements pSimpleParamRef;
 	private final ArrayParamRefElements pArrayParamRef;
 	private final LengthArrayElements pLengthArray;
-	private final StateMachineElements pStateMachine;
 	private final RegionElements pRegion;
+	private final StateMachineElements pStateMachine;
 	private final FinalStateElements pFinalState;
 	private final CompositeStateElements pCompositeState;
 	private final SessionElements pSession;
@@ -4232,7 +4997,24 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	private final StartSessionElements pStartSession;
 	private final FunctionCallStatementElements pFunctionCallStatement;
 	private final ExpressionElements pExpression;
+	private final OrExpressionElements pOrExpression;
+	private final AndExpressionElements pAndExpression;
+	private final EqualityElements pEquality;
+	private final ComparaisonElements pComparaison;
+	private final AdditionElements pAddition;
+	private final MultiplicationElements pMultiplication;
+	private final ModuloElements pModulo;
+	private final PrimaryElements pPrimary;
+	private final AtomicExpressionElements pAtomicExpression;
 	private final ExternExpressionElements pExternExpression;
+	private final EnumLiteralRefElements pEnumLiteralRef;
+	private final IntegerLiteralElements pIntegerLiteral;
+	private final BooleanLiteralElements pBooleanLiteral;
+	private final StringLiteralElements pStringLiteral;
+	private final DoubleLiteralElements pDoubleLiteral;
+	private final PropertyReferenceElements pPropertyReference;
+	private final ReferenceElements pReference;
+	private final FunctionCallExpressionElements pFunctionCallExpression;
 	private final ConfigurationElements pConfiguration;
 	private final InstanceElements pInstance;
 	private final ConfigPropertyAssignElements pConfigPropertyAssign;
@@ -4242,6 +5024,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	private final InstanceRefElements pInstanceRef;
 	private final TerminalRule tID;
 	private final TerminalRule tINT;
+	private final TerminalRule tFLOAT;
 	private final TerminalRule tSTRING_EXT;
 	private final TerminalRule tSTRING_LIT;
 	private final TerminalRule tML_COMMENT;
@@ -4290,8 +5073,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pSimpleParamRef = new SimpleParamRefElements();
 		this.pArrayParamRef = new ArrayParamRefElements();
 		this.pLengthArray = new LengthArrayElements();
-		this.pStateMachine = new StateMachineElements();
 		this.pRegion = new RegionElements();
+		this.pStateMachine = new StateMachineElements();
 		this.pFinalState = new FinalStateElements();
 		this.pCompositeState = new CompositeStateElements();
 		this.pSession = new SessionElements();
@@ -4319,7 +5102,24 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pStartSession = new StartSessionElements();
 		this.pFunctionCallStatement = new FunctionCallStatementElements();
 		this.pExpression = new ExpressionElements();
+		this.pOrExpression = new OrExpressionElements();
+		this.pAndExpression = new AndExpressionElements();
+		this.pEquality = new EqualityElements();
+		this.pComparaison = new ComparaisonElements();
+		this.pAddition = new AdditionElements();
+		this.pMultiplication = new MultiplicationElements();
+		this.pModulo = new ModuloElements();
+		this.pPrimary = new PrimaryElements();
+		this.pAtomicExpression = new AtomicExpressionElements();
 		this.pExternExpression = new ExternExpressionElements();
+		this.pEnumLiteralRef = new EnumLiteralRefElements();
+		this.pIntegerLiteral = new IntegerLiteralElements();
+		this.pBooleanLiteral = new BooleanLiteralElements();
+		this.pStringLiteral = new StringLiteralElements();
+		this.pDoubleLiteral = new DoubleLiteralElements();
+		this.pPropertyReference = new PropertyReferenceElements();
+		this.pReference = new ReferenceElements();
+		this.pFunctionCallExpression = new FunctionCallExpressionElements();
 		this.pConfiguration = new ConfigurationElements();
 		this.pInstance = new InstanceElements();
 		this.pConfigPropertyAssign = new ConfigPropertyAssignElements();
@@ -4329,6 +5129,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pInstanceRef = new InstanceRefElements();
 		this.tID = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.ID");
 		this.tINT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.INT");
+		this.tFLOAT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.FLOAT");
 		this.tSTRING_EXT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.STRING_EXT");
 		this.tSTRING_LIT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.STRING_LIT");
 		this.tML_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.ML_COMMENT");
@@ -4499,8 +5300,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Function:
-	//	'function' name=ID '(' parameters+=Parameter ("," parameters+=Parameter)* ')' (':' type=[Type])?
-	//	annotations+=PlatformAnnotation* 'is' body=Action
+	//	'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':' type=[Type])?
+	//	annotations+=PlatformAnnotation* body=Action
 	//	//('isArray' isArray=EBoolean)?
 	//	//('cardinality' cardinality=Expression)?
 	//;
@@ -4757,21 +5558,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	/// *****************************************************************************
 	// *       STATE MECHINES                                                      *
-	// ***************************************************************************** / StateMachine:
-	//	'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{' ('on'
-	//	'entry' entry=Action)? ('on' 'exit' exit=Action)? (properties+=Property | substate+=State |
-	//	internal+=InternalTransition)*
-	//	region+=ParallelRegion*
-	//	'}';
-	public StateMachineElements getStateMachineAccess() {
-		return pStateMachine;
-	}
-	
-	public ParserRule getStateMachineRule() {
-		return getStateMachineAccess().getRule();
-	}
-	
-	//Region:
+	// ***************************************************************************** / Region:
 	//	CompositeState | ParallelRegion | Session;
 	public RegionElements getRegionAccess() {
 		return pRegion;
@@ -4779,6 +5566,20 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getRegionRule() {
 		return getRegionAccess().getRule();
+	}
+	
+	//StateMachine CompositeState:
+	//	'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{' ('on'
+	//	'entry' entry=Action)? ('on' 'exit' exit=Action)? (properties+=Property | substate+=State |
+	//	internal+=InternalTransition)*
+	//	region+=ParallelRegion*
+	//	'}'
+	public StateMachineElements getStateMachineAccess() {
+		return pStateMachine;
+	}
+	
+	public ParserRule getStateMachineRule() {
+		return getStateMachineAccess().getRule();
 	}
 	
 	//FinalState:
@@ -4887,7 +5688,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ReceiveMessage:
-	//	port=[Port] '?' message=[Message];
+	//	(name=ID ":")? port=[Port] '?' message=[Message];
 	public ReceiveMessageElements getReceiveMessageAccess() {
 		return pReceiveMessage;
 	}
@@ -4954,7 +5755,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//SendAction:
-	//	port=[Port] '!' message=[Message] '(' parameters+=Expression ("," parameters+=Expression)* ')';
+	//	port=[Port] '!' message=[Message] '(' (parameters+=Expression ("," parameters+=Expression)*)? ')';
 	public SendActionElements getSendActionAccess() {
 		return pSendAction;
 	}
@@ -5054,7 +5855,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//FunctionCallStatement:
-	//	function=[Function] '(' parameters+=Expression ("," parameters+=Expression)* ')';
+	//	function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)? ')';
 	public FunctionCallStatementElements getFunctionCallStatementAccess() {
 		return pFunctionCallStatement;
 	}
@@ -5065,8 +5866,12 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	/// *****************************************************************************
 	// *       EXPRESSIONS                                                         *
-	// ***************************************************************************** / Expression:
-	//	ExternExpression;
+	// ***************************************************************************** / //ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
+	////PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | 
+	////LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | 
+	////ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
+	//Expression:
+	//	OrExpression;
 	public ExpressionElements getExpressionAccess() {
 		return pExpression;
 	}
@@ -5075,7 +5880,100 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getExpressionAccess().getRule();
 	}
 	
-	////ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
+	//OrExpression Expression:
+	//	AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*
+	public OrExpressionElements getOrExpressionAccess() {
+		return pOrExpression;
+	}
+	
+	public ParserRule getOrExpressionRule() {
+		return getOrExpressionAccess().getRule();
+	}
+	
+	//AndExpression Expression:
+	//	Equality ({AndExpression.lhs=current} "and" rhs=Equality)*
+	public AndExpressionElements getAndExpressionAccess() {
+		return pAndExpression;
+	}
+	
+	public ParserRule getAndExpressionRule() {
+		return getAndExpressionAccess().getRule();
+	}
+	
+	//Equality Expression:
+	//	Comparaison ({EqualsExpression.lhs=current} "==" rhs=Comparaison | {NotEqualsExpression.lhs=current} "!="
+	//	rhs=Comparaison)*
+	public EqualityElements getEqualityAccess() {
+		return pEquality;
+	}
+	
+	public ParserRule getEqualityRule() {
+		return getEqualityAccess().getRule();
+	}
+	
+	//Comparaison Expression:
+	//	Addition ({GreaterExpression.lhs=current} ">" rhs=Addition | {LowerExpression.lhs=current} "<" rhs=Addition |
+	//	{GreaterOrEqualExpression.lhs=current} ">=" rhs=Addition | {LowerOrEqualExpression.lhs=current} "<=" rhs=Addition)*
+	public ComparaisonElements getComparaisonAccess() {
+		return pComparaison;
+	}
+	
+	public ParserRule getComparaisonRule() {
+		return getComparaisonAccess().getRule();
+	}
+	
+	//Addition Expression:
+	//	Multiplication ({PlusExpression.lhs=current} "+" rhs=Multiplication | {MinusExpression.lhs=current} "-"
+	//	rhs=Multiplication)*
+	public AdditionElements getAdditionAccess() {
+		return pAddition;
+	}
+	
+	public ParserRule getAdditionRule() {
+		return getAdditionAccess().getRule();
+	}
+	
+	//Multiplication Expression:
+	//	Modulo ({TimesExpression.lhs=current} "*" rhs=Modulo | {DivExpression.lhs=current} "/" rhs=Modulo)*
+	public MultiplicationElements getMultiplicationAccess() {
+		return pMultiplication;
+	}
+	
+	public ParserRule getMultiplicationRule() {
+		return getMultiplicationAccess().getRule();
+	}
+	
+	//Modulo Expression:
+	//	Primary ({ModExpression.lhs=current} "%" rhs=Expression)?
+	public ModuloElements getModuloAccess() {
+		return pModulo;
+	}
+	
+	public ParserRule getModuloRule() {
+		return getModuloAccess().getRule();
+	}
+	
+	//Primary Expression:
+	//	'(' Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary | AtomicExpression
+	public PrimaryElements getPrimaryAccess() {
+		return pPrimary;
+	}
+	
+	public ParserRule getPrimaryRule() {
+		return getPrimaryAccess().getRule();
+	}
+	
+	//AtomicExpression Expression:
+	//	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral |
+	//	PropertyReference | Reference | FunctionCallExpression | MessageParameter
+	public AtomicExpressionElements getAtomicExpressionAccess() {
+		return pAtomicExpression;
+	}
+	
+	public ParserRule getAtomicExpressionRule() {
+		return getAtomicExpressionAccess().getRule();
+	}
+	
 	//ExternExpression:
 	//	expression=STRING_EXT ('&' segments+=Expression)*;
 	public ExternExpressionElements getExternExpressionAccess() {
@@ -5086,6 +5984,88 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getExternExpressionAccess().getRule();
 	}
 	
+	//EnumLiteralRef:
+	//	'enum' ^enum=[Enumeration] ':' literal=[EnumerationLiteral];
+	public EnumLiteralRefElements getEnumLiteralRefAccess() {
+		return pEnumLiteralRef;
+	}
+	
+	public ParserRule getEnumLiteralRefRule() {
+		return getEnumLiteralRefAccess().getRule();
+	}
+	
+	//IntegerLiteral:
+	//	intValue=INT;
+	public IntegerLiteralElements getIntegerLiteralAccess() {
+		return pIntegerLiteral;
+	}
+	
+	public ParserRule getIntegerLiteralRule() {
+		return getIntegerLiteralAccess().getRule();
+	}
+	
+	//BooleanLiteral:
+	//	boolValue=('true' | 'false');
+	public BooleanLiteralElements getBooleanLiteralAccess() {
+		return pBooleanLiteral;
+	}
+	
+	public ParserRule getBooleanLiteralRule() {
+		return getBooleanLiteralAccess().getRule();
+	}
+	
+	//StringLiteral:
+	//	stringValue=STRING_LIT;
+	public StringLiteralElements getStringLiteralAccess() {
+		return pStringLiteral;
+	}
+	
+	public ParserRule getStringLiteralRule() {
+		return getStringLiteralAccess().getRule();
+	}
+	
+	//DoubleLiteral:
+	//	doubleValue=FLOAT;
+	public DoubleLiteralElements getDoubleLiteralAccess() {
+		return pDoubleLiteral;
+	}
+	
+	public ParserRule getDoubleLiteralRule() {
+		return getDoubleLiteralAccess().getRule();
+	}
+	
+	//PropertyReference:
+	//	property=[Variable];
+	public PropertyReferenceElements getPropertyReferenceAccess() {
+		return pPropertyReference;
+	}
+	
+	public ParserRule getPropertyReferenceRule() {
+		return getPropertyReferenceAccess().getRule();
+	}
+	
+	//Reference:
+	//	reference=[ReferencedElmt] "." parameter=ElmtProperty;
+	public ReferenceElements getReferenceAccess() {
+		return pReference;
+	}
+	
+	public ParserRule getReferenceRule() {
+		return getReferenceAccess().getRule();
+	}
+	
+	//FunctionCallExpression:
+	//	function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)?
+	//	')';
+	public FunctionCallExpressionElements getFunctionCallExpressionAccess() {
+		return pFunctionCallExpression;
+	}
+	
+	public ParserRule getFunctionCallExpressionRule() {
+		return getFunctionCallExpressionAccess().getRule();
+	}
+	
+	//// Missing Expressions: ArrayIndex  ;
 	/// *****************************************************************************
 	// *       CONFIGURATIONS                                                      *
 	// ***************************************************************************** / Configuration:
@@ -5172,6 +6152,14 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	//	'0'..'9'+;
 	public TerminalRule getINTRule() {
 		return tINT;
+	}
+	
+	//terminal FLOAT returns ecore::EDouble:
+	//	'0'..'9'+ '.' '0'..'9'* (('e' | 'E') ('+' | '-')? '0'..'9'+)?
+	//	| '.' '0'..'9'+ (('e' | 'E') ('+' | '-')? '0'..'9'+)?
+	//	| '0'..'9'+ ('e' | 'E') ('+' | '-')? '0'..'9'+;
+	public TerminalRule getFLOATRule() {
+		return tFLOAT;
 	}
 	
 	//terminal STRING_EXT:
