@@ -38,9 +38,9 @@ import org.thingml.xtext.thingML.Transition;
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getEntry <em>Entry</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getExit <em>Exit</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getInternal <em>Internal</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getOutgoing <em>Outgoing</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getInitial <em>Initial</em>}</li>
@@ -84,6 +84,16 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
   protected EList<PlatformAnnotation> annotations;
 
   /**
+   * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getProperties()
+   * @generated
+   * @ordered
+   */
+  protected EList<Property> properties;
+
+  /**
    * The cached value of the '{@link #getEntry() <em>Entry</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -102,16 +112,6 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
    * @ordered
    */
   protected Action exit;
-
-  /**
-   * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getProperties()
-   * @generated
-   * @ordered
-   */
-  protected EList<Property> properties;
 
   /**
    * The cached value of the '{@link #getInternal() <em>Internal</em>}' containment reference list.
@@ -246,6 +246,20 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
    * <!-- end-user-doc -->
    * @generated
    */
+  public EList<Property> getProperties()
+  {
+    if (properties == null)
+    {
+      properties = new EObjectContainmentEList<Property>(Property.class, this, ThingMLPackage.COMPOSITE_STATE__PROPERTIES);
+    }
+    return properties;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public Action getEntry()
   {
     return entry;
@@ -335,20 +349,6 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
     }
     else if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.COMPOSITE_STATE__EXIT, newExit, newExit));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EList<Property> getProperties()
-  {
-    if (properties == null)
-    {
-      properties = new EObjectContainmentEList<Property>(Property.class, this, ThingMLPackage.COMPOSITE_STATE__PROPERTIES);
-    }
-    return properties;
   }
 
   /**
@@ -485,12 +485,12 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
     {
       case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS:
         return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
+        return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.COMPOSITE_STATE__ENTRY:
         return basicSetEntry(null, msgs);
       case ThingMLPackage.COMPOSITE_STATE__EXIT:
         return basicSetExit(null, msgs);
-      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
-        return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.COMPOSITE_STATE__INTERNAL:
         return ((InternalEList<?>)getInternal()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
@@ -517,12 +517,12 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
         return getName();
       case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS:
         return getAnnotations();
+      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
+        return getProperties();
       case ThingMLPackage.COMPOSITE_STATE__ENTRY:
         return getEntry();
       case ThingMLPackage.COMPOSITE_STATE__EXIT:
         return getExit();
-      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
-        return getProperties();
       case ThingMLPackage.COMPOSITE_STATE__INTERNAL:
         return getInternal();
       case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
@@ -558,15 +558,15 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
         getAnnotations().clear();
         getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
+      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
+        getProperties().clear();
+        getProperties().addAll((Collection<? extends Property>)newValue);
+        return;
       case ThingMLPackage.COMPOSITE_STATE__ENTRY:
         setEntry((Action)newValue);
         return;
       case ThingMLPackage.COMPOSITE_STATE__EXIT:
         setExit((Action)newValue);
-        return;
-      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
-        getProperties().clear();
-        getProperties().addAll((Collection<? extends Property>)newValue);
         return;
       case ThingMLPackage.COMPOSITE_STATE__INTERNAL:
         getInternal().clear();
@@ -610,14 +610,14 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
       case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS:
         getAnnotations().clear();
         return;
+      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
+        getProperties().clear();
+        return;
       case ThingMLPackage.COMPOSITE_STATE__ENTRY:
         setEntry((Action)null);
         return;
       case ThingMLPackage.COMPOSITE_STATE__EXIT:
         setExit((Action)null);
-        return;
-      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
-        getProperties().clear();
         return;
       case ThingMLPackage.COMPOSITE_STATE__INTERNAL:
         getInternal().clear();
@@ -655,12 +655,12 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS:
         return annotations != null && !annotations.isEmpty();
+      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
+        return properties != null && !properties.isEmpty();
       case ThingMLPackage.COMPOSITE_STATE__ENTRY:
         return entry != null;
       case ThingMLPackage.COMPOSITE_STATE__EXIT:
         return exit != null;
-      case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
-        return properties != null && !properties.isEmpty();
       case ThingMLPackage.COMPOSITE_STATE__INTERNAL:
         return internal != null && !internal.isEmpty();
       case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
@@ -691,9 +691,9 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
       {
         case ThingMLPackage.COMPOSITE_STATE__NAME: return ThingMLPackage.STATE__NAME;
         case ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS: return ThingMLPackage.STATE__ANNOTATIONS;
+        case ThingMLPackage.COMPOSITE_STATE__PROPERTIES: return ThingMLPackage.STATE__PROPERTIES;
         case ThingMLPackage.COMPOSITE_STATE__ENTRY: return ThingMLPackage.STATE__ENTRY;
         case ThingMLPackage.COMPOSITE_STATE__EXIT: return ThingMLPackage.STATE__EXIT;
-        case ThingMLPackage.COMPOSITE_STATE__PROPERTIES: return ThingMLPackage.STATE__PROPERTIES;
         case ThingMLPackage.COMPOSITE_STATE__INTERNAL: return ThingMLPackage.STATE__INTERNAL;
         case ThingMLPackage.COMPOSITE_STATE__OUTGOING: return ThingMLPackage.STATE__OUTGOING;
         default: return -1;
@@ -716,9 +716,9 @@ public class CompositeStateImpl extends RegionImpl implements CompositeState
       {
         case ThingMLPackage.STATE__NAME: return ThingMLPackage.COMPOSITE_STATE__NAME;
         case ThingMLPackage.STATE__ANNOTATIONS: return ThingMLPackage.COMPOSITE_STATE__ANNOTATIONS;
+        case ThingMLPackage.STATE__PROPERTIES: return ThingMLPackage.COMPOSITE_STATE__PROPERTIES;
         case ThingMLPackage.STATE__ENTRY: return ThingMLPackage.COMPOSITE_STATE__ENTRY;
         case ThingMLPackage.STATE__EXIT: return ThingMLPackage.COMPOSITE_STATE__EXIT;
-        case ThingMLPackage.STATE__PROPERTIES: return ThingMLPackage.COMPOSITE_STATE__PROPERTIES;
         case ThingMLPackage.STATE__INTERNAL: return ThingMLPackage.COMPOSITE_STATE__INTERNAL;
         case ThingMLPackage.STATE__OUTGOING: return ThingMLPackage.COMPOSITE_STATE__OUTGOING;
         default: return -1;

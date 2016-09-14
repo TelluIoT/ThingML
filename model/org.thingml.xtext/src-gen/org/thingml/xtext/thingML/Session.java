@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.thingml.xtext.thingML.Session#getMaxInstances <em>Max Instances</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Session#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Session#getSubstate <em>Substate</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Session#getRegion <em>Region</em>}</li>
@@ -25,6 +26,32 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface Session extends Region, State
 {
+  /**
+   * Returns the value of the '<em><b>Max Instances</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Max Instances</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Max Instances</em>' attribute.
+   * @see #setMaxInstances(int)
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getSession_MaxInstances()
+   * @model
+   * @generated
+   */
+  int getMaxInstances();
+
+  /**
+   * Sets the value of the '{@link org.thingml.xtext.thingML.Session#getMaxInstances <em>Max Instances</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Max Instances</em>' attribute.
+   * @see #getMaxInstances()
+   * @generated
+   */
+  void setMaxInstances(int value);
+
   /**
    * Returns the value of the '<em><b>Initial</b></em>' reference.
    * <!-- begin-user-doc -->

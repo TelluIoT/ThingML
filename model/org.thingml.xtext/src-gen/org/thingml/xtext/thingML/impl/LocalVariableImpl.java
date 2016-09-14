@@ -22,7 +22,7 @@ import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLPackage;
-import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 
 /**
  * <!-- begin-user-doc -->
@@ -84,14 +84,14 @@ public class LocalVariableImpl extends ReferencedElmtImpl implements LocalVariab
   protected String name = NAME_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getType() <em>Type</em>}' reference.
+   * The cached value of the '{@link #getType() <em>Type</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getType()
    * @generated
    * @ordered
    */
-  protected Type type;
+  protected TypeRef type;
 
   /**
    * The cached value of the '{@link #getInit() <em>Init</em>}' containment reference.
@@ -185,27 +185,7 @@ public class LocalVariableImpl extends ReferencedElmtImpl implements LocalVariab
    * <!-- end-user-doc -->
    * @generated
    */
-  public Type getType()
-  {
-    if (type != null && type.eIsProxy())
-    {
-      InternalEObject oldType = (InternalEObject)type;
-      type = (Type)eResolveProxy(oldType);
-      if (type != oldType)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.LOCAL_VARIABLE__TYPE, oldType, type));
-      }
-    }
-    return type;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Type basicGetType()
+  public TypeRef getType()
   {
     return type;
   }
@@ -215,12 +195,37 @@ public class LocalVariableImpl extends ReferencedElmtImpl implements LocalVariab
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setType(Type newType)
+  public NotificationChain basicSetType(TypeRef newType, NotificationChain msgs)
   {
-    Type oldType = type;
+    TypeRef oldType = type;
     type = newType;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.LOCAL_VARIABLE__TYPE, oldType, type));
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.LOCAL_VARIABLE__TYPE, oldType, newType);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setType(TypeRef newType)
+  {
+    if (newType != type)
+    {
+      NotificationChain msgs = null;
+      if (type != null)
+        msgs = ((InternalEObject)type).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.LOCAL_VARIABLE__TYPE, null, msgs);
+      if (newType != null)
+        msgs = ((InternalEObject)newType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.LOCAL_VARIABLE__TYPE, null, msgs);
+      msgs = basicSetType(newType, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.LOCAL_VARIABLE__TYPE, newType, newType));
   }
 
   /**
@@ -295,6 +300,8 @@ public class LocalVariableImpl extends ReferencedElmtImpl implements LocalVariab
   {
     switch (featureID)
     {
+      case ThingMLPackage.LOCAL_VARIABLE__TYPE:
+        return basicSetType(null, msgs);
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         return basicSetInit(null, msgs);
       case ThingMLPackage.LOCAL_VARIABLE__ANNOTATIONS:
@@ -318,8 +325,7 @@ public class LocalVariableImpl extends ReferencedElmtImpl implements LocalVariab
       case ThingMLPackage.LOCAL_VARIABLE__NAME:
         return getName();
       case ThingMLPackage.LOCAL_VARIABLE__TYPE:
-        if (resolve) return getType();
-        return basicGetType();
+        return getType();
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         return getInit();
       case ThingMLPackage.LOCAL_VARIABLE__ANNOTATIONS:
@@ -346,7 +352,7 @@ public class LocalVariableImpl extends ReferencedElmtImpl implements LocalVariab
         setName((String)newValue);
         return;
       case ThingMLPackage.LOCAL_VARIABLE__TYPE:
-        setType((Type)newValue);
+        setType((TypeRef)newValue);
         return;
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         setInit((Expression)newValue);
@@ -376,7 +382,7 @@ public class LocalVariableImpl extends ReferencedElmtImpl implements LocalVariab
         setName(NAME_EDEFAULT);
         return;
       case ThingMLPackage.LOCAL_VARIABLE__TYPE:
-        setType((Type)null);
+        setType((TypeRef)null);
         return;
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         setInit((Expression)null);

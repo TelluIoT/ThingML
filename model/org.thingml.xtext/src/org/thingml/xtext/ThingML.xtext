@@ -30,14 +30,18 @@ NamedElement:
  *       TYPES / ENUMERATIONS                                                *
  *****************************************************************************/
 
+TypeRef returns TypeRef:
+	type=[Type|ID] (^isArray?='[' (cardinality=Expression)? ']')?
+;
+
 Type returns Type:
 	PrimitiveType | ObjectType | Enumeration | Thing ;
 
 PrimitiveType returns PrimitiveType:
-	'datatype' name=ID '<' ByteSize=INT '>'	( annotations+=PlatformAnnotation )* ';';
+	'datatype' name=ID '<' ByteSize=INT '>'	( annotations+=PlatformAnnotation )* (';')?;
 	
 ObjectType returns ObjectType:
-	'object' name=ID ( annotations+=PlatformAnnotation )* ';';
+	'object' name=ID ( annotations+=PlatformAnnotation )* (';')?;
 
 Enumeration returns Enumeration:
 	'enumeration' name=ID ( annotations+=PlatformAnnotation )* '{' (literals+=EnumerationLiteral)* '}';
@@ -62,13 +66,13 @@ Protocol returns Protocol:
 	'protocol' name=ID ( annotations+=PlatformAnnotation )* ';';
 
 Function returns Function:
-	'function' name=ID '(' (parameters+=Parameter ( "," parameters+=Parameter)* )? ')' (':' type=[Type|ID])? ( annotations+=PlatformAnnotation )* body=Action
+	'function' name=ID '(' (parameters+=Parameter ( "," parameters+=Parameter)* )? ')' (':' type=TypeRef)? ( annotations+=PlatformAnnotation )* body=Action
 		//('isArray' isArray=EBoolean)?
 		//('cardinality' cardinality=Expression)?
 ;
 
 Property returns Property:
-	'property' name=ID ':' type=[Type|ID] ( '=' init=Expression)?
+	(^changeable?='readonly')? 'property' name=ID ':' type=TypeRef ( '=' init=Expression)?
 	( annotations+=PlatformAnnotation )*
 		//('isArray' isArray=EBoolean)?
 		//('changeable' changeable=EBoolean)?
@@ -77,10 +81,10 @@ Property returns Property:
 
 Message returns Message:
 	'message' name=ID '(' ( parameters+=Parameter ( "," parameters+=Parameter)* )? ')'
-	( annotations+=PlatformAnnotation )* ';';
+	( annotations+=PlatformAnnotation )* (';')?;
 	
 Parameter returns Parameter:
-	name=ID ':' type=[Type|ID] ( annotations+=PlatformAnnotation )*
+	name=ID ':' type=TypeRef ( annotations+=PlatformAnnotation )*
 //		('isArray' isArray=EBoolean)?
 //		('cardinality' cardinality=Expression)?
 ;
@@ -169,29 +173,32 @@ Region:
 
 StateMachine returns CompositeState:
 	'statechart' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
+		(properties+=Property)*
 		('on' 'entry' entry=Action)?
 		('on' 'exit' exit=Action)?
-		(properties+=Property | substate+=State | internal+=InternalTransition)*
+		(substate+=State | internal+=InternalTransition)*
 		(region+=ParallelRegion)*
 	'}';
 	
 FinalState returns FinalState:
-	'final' 'state' name=ID ( annotations+=PlatformAnnotation )* ';'
+	'final' 'state' name=ID ( annotations+=PlatformAnnotation )* '{' ('on' 'entry' entry=Action)? '}'
 ;
 
 CompositeState returns CompositeState:
-	'composite' 'state' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
+	'composite' 'state' name=ID 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
+		(properties+=Property)*
 		('on' 'entry' entry=Action)?
 		('on' 'exit' exit=Action)?
-		(properties+=Property | substate+=State | internal+=InternalTransition | outgoing+=Transition)*
+		(substate+=State | internal+=InternalTransition | outgoing+=Transition)*
 		(region+=ParallelRegion)*
 	'}';
 
 Session returns Session:
-	'session' (name=ID)? 'init' initial=[State|ID] ( annotations+=PlatformAnnotation )* '{'
+	'session' name=ID ('<' maxInstances=INT '>')? 'init' initial=[State|ID] ( annotations+=PlatformAnnotation )* '{'
+		(properties+=Property)*
 		('on' 'entry' entry=Action)?
 		('on' 'exit' exit=Action)?
-		(properties+=Property | substate+=State | internal+=InternalTransition)*
+		(substate+=State | internal+=InternalTransition)*
 		(region+=ParallelRegion)*
 	'}';
 
@@ -203,9 +210,10 @@ ParallelRegion returns ParallelRegion:
 State returns State:
 	StateMachine | FinalState | CompositeState | Session |
 	'state' name=ID ( annotations+=PlatformAnnotation )* '{'
+		(properties+=Property)*
 		('on' 'entry' entry=Action)?
 		('on' 'exit' exit=Action)?
-		(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
+		(internal+=InternalTransition | outgoing+=Transition)*
 	'}';
 
 Handler:
@@ -238,7 +246,8 @@ ReceiveMessage returns ReceiveMessage:
  *****************************************************************************/
  
 Action returns Action:
-	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction | ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
+	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction |
+	ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
 
 Variable returns Variable:
 	Parameter | Property | LocalVariable;
@@ -251,7 +260,7 @@ ExternStatement returns ExternStatement:
 	statement = STRING_EXT ('&' segments+=Expression)*;
 	
 LocalVariable returns LocalVariable:
-	(^changeable?='readonly')? 'var' name=ID ':'  type=[Type|ID] ( '=' init=Expression)? ( annotations+=PlatformAnnotation )*
+	(^changeable?='readonly')? 'var' name=ID ':'  type=TypeRef ( '=' init=Expression)? ( annotations+=PlatformAnnotation )*
 		//('isArray' isArray=EBoolean)?
 		//('cardinality' cardinality=Expression)?
 ;
@@ -285,7 +294,7 @@ ErrorAction returns ErrorAction:
 	'error' msg=Expression;
 
 StartSession returns StartSession:
-	'spawn' session=[Session|ID] '{' (constructor+=PropertyAssign)* '}';
+	'fork' session=[Session|ID] ;
 
 
 FunctionCallStatement returns FunctionCallStatement:
@@ -351,12 +360,16 @@ Primary returns Expression:
 	'(' Expression ')' |
 	{NotExpression} "not" term=Primary |
 	{UnaryMinus} '-' term=Primary |
-	AtomicExpression
+	ArrayIndexPostfix
+;
+
+ArrayIndexPostfix returns Expression:
+	AtomicExpression ( {ArrayIndex.array=current} '[' index=Expression ']')?
 ;
 
 AtomicExpression returns Expression:
-	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference | Reference | FunctionCallExpression |
-	MessageParameter /* NOT CONVINCED THAT MessageParameter SHOULD BE AN EXPRESSION */
+	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference | Reference | FunctionCallExpression 
+	// | MessageParameter /* NOT CONVINCED THAT MessageParameter SHOULD BE AN EXPRESSION */
 ;
 
 ExternExpression returns ExternExpression:
@@ -364,7 +377,7 @@ ExternExpression returns ExternExpression:
 	
 	
 EnumLiteralRef returns EnumLiteralRef:
-	'enum' ^enum=[Enumeration|ID] ':' literal=[EnumerationLiteral|ID];
+	^enum=[Enumeration|ID] ':' literal=[EnumerationLiteral|ID];
 
 IntegerLiteral returns IntegerLiteral:
 	intValue=INT;
@@ -391,6 +404,8 @@ FunctionCallExpression returns FunctionCallExpression:
 	function=[Function|ID]'('
 		( parameters+=Expression ( "," parameters+=Expression )* )?
 	')';
+
+
 
 
 // Missing Expressions: ArrayIndex  ;

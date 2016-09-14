@@ -3,22 +3,13 @@
  */
 package org.thingml.xtext.thingML.impl;
 
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
-import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -32,7 +23,6 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.StartSessionImpl#getSession <em>Session</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.StartSessionImpl#getConstructor <em>Constructor</em>}</li>
  * </ul>
  *
  * @generated
@@ -48,16 +38,6 @@ public class StartSessionImpl extends ActionImpl implements StartSession
    * @ordered
    */
   protected Session session;
-
-  /**
-   * The cached value of the '{@link #getConstructor() <em>Constructor</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getConstructor()
-   * @generated
-   * @ordered
-   */
-  protected EList<PropertyAssign> constructor;
 
   /**
    * <!-- begin-user-doc -->
@@ -128,36 +108,6 @@ public class StartSessionImpl extends ActionImpl implements StartSession
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<PropertyAssign> getConstructor()
-  {
-    if (constructor == null)
-    {
-      constructor = new EObjectContainmentEList<PropertyAssign>(PropertyAssign.class, this, ThingMLPackage.START_SESSION__CONSTRUCTOR);
-    }
-    return constructor;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case ThingMLPackage.START_SESSION__CONSTRUCTOR:
-        return ((InternalEList<?>)getConstructor()).basicRemove(otherEnd, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
@@ -166,8 +116,6 @@ public class StartSessionImpl extends ActionImpl implements StartSession
       case ThingMLPackage.START_SESSION__SESSION:
         if (resolve) return getSession();
         return basicGetSession();
-      case ThingMLPackage.START_SESSION__CONSTRUCTOR:
-        return getConstructor();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -177,7 +125,6 @@ public class StartSessionImpl extends ActionImpl implements StartSession
    * <!-- end-user-doc -->
    * @generated
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
@@ -185,10 +132,6 @@ public class StartSessionImpl extends ActionImpl implements StartSession
     {
       case ThingMLPackage.START_SESSION__SESSION:
         setSession((Session)newValue);
-        return;
-      case ThingMLPackage.START_SESSION__CONSTRUCTOR:
-        getConstructor().clear();
-        getConstructor().addAll((Collection<? extends PropertyAssign>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -207,9 +150,6 @@ public class StartSessionImpl extends ActionImpl implements StartSession
       case ThingMLPackage.START_SESSION__SESSION:
         setSession((Session)null);
         return;
-      case ThingMLPackage.START_SESSION__CONSTRUCTOR:
-        getConstructor().clear();
-        return;
     }
     super.eUnset(featureID);
   }
@@ -226,8 +166,6 @@ public class StartSessionImpl extends ActionImpl implements StartSession
     {
       case ThingMLPackage.START_SESSION__SESSION:
         return session != null;
-      case ThingMLPackage.START_SESSION__CONSTRUCTOR:
-        return constructor != null && !constructor.isEmpty();
     }
     return super.eIsSet(featureID);
   }

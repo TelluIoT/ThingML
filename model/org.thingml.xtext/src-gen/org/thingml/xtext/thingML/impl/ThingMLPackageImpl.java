@@ -15,6 +15,7 @@ import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.AnnotatedElement;
+import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.ArrayParamRef;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.CompositeState;
@@ -103,6 +104,7 @@ import org.thingml.xtext.thingML.TimeWindow;
 import org.thingml.xtext.thingML.TimesExpression;
 import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.UnaryMinus;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
@@ -150,6 +152,13 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * @generated
    */
   private EClass namedElementEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass typeRefEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -782,6 +791,13 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
   private EClass unaryMinusEClass = null;
 
   /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass arrayIndexEClass = null;
+
+  /**
    * Creates an instance of the model <b>Package</b>, registered with
    * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
    * package URI value.
@@ -962,6 +978,46 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
   public EClass getNamedElement()
   {
     return namedElementEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTypeRef()
+  {
+    return typeRefEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTypeRef_Type()
+  {
+    return (EReference)typeRefEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTypeRef_IsArray()
+  {
+    return (EAttribute)typeRefEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTypeRef_Cardinality()
+  {
+    return (EReference)typeRefEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1389,7 +1445,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getProperty_Name()
+  public EAttribute getProperty_Changeable()
   {
     return (EAttribute)propertyEClass.getEStructuralFeatures().get(0);
   }
@@ -1399,9 +1455,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getProperty_Type()
+  public EAttribute getProperty_Name()
   {
-    return (EReference)propertyEClass.getEStructuralFeatures().get(1);
+    return (EAttribute)propertyEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1409,7 +1465,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getProperty_Init()
+  public EReference getProperty_Type()
   {
     return (EReference)propertyEClass.getEStructuralFeatures().get(2);
   }
@@ -1419,9 +1475,19 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getProperty_Annotations()
+  public EReference getProperty_Init()
   {
     return (EReference)propertyEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getProperty_Annotations()
+  {
+    return (EReference)propertyEClass.getEStructuralFeatures().get(4);
   }
 
   /**
@@ -2089,9 +2155,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getSession_Initial()
+  public EAttribute getSession_MaxInstances()
   {
-    return (EReference)sessionEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)sessionEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2099,7 +2165,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getSession_Substate()
+  public EReference getSession_Initial()
   {
     return (EReference)sessionEClass.getEStructuralFeatures().get(1);
   }
@@ -2109,9 +2175,19 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getSession_Region()
+  public EReference getSession_Substate()
   {
     return (EReference)sessionEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSession_Region()
+  {
+    return (EReference)sessionEClass.getEStructuralFeatures().get(3);
   }
 
   /**
@@ -2209,7 +2285,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getState_Entry()
+  public EReference getState_Properties()
   {
     return (EReference)stateEClass.getEStructuralFeatures().get(2);
   }
@@ -2219,7 +2295,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getState_Exit()
+  public EReference getState_Entry()
   {
     return (EReference)stateEClass.getEStructuralFeatures().get(3);
   }
@@ -2229,7 +2305,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getState_Properties()
+  public EReference getState_Exit()
   {
     return (EReference)stateEClass.getEStructuralFeatures().get(4);
   }
@@ -2792,16 +2868,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
   public EReference getStartSession_Session()
   {
     return (EReference)startSessionEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getStartSession_Constructor()
-  {
-    return (EReference)startSessionEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -3799,6 +3865,36 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getArrayIndex()
+  {
+    return arrayIndexEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getArrayIndex_Array()
+  {
+    return (EReference)arrayIndexEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getArrayIndex_Index()
+  {
+    return (EReference)arrayIndexEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public ThingMLFactory getThingMLFactory()
   {
     return (ThingMLFactory)getEFactoryInstance();
@@ -3840,6 +3936,11 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     annotatedElementEClass = createEClass(ANNOTATED_ELEMENT);
 
     namedElementEClass = createEClass(NAMED_ELEMENT);
+
+    typeRefEClass = createEClass(TYPE_REF);
+    createEReference(typeRefEClass, TYPE_REF__TYPE);
+    createEAttribute(typeRefEClass, TYPE_REF__IS_ARRAY);
+    createEReference(typeRefEClass, TYPE_REF__CARDINALITY);
 
     typeEClass = createEClass(TYPE);
 
@@ -3892,6 +3993,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     createEReference(functionEClass, FUNCTION__BODY);
 
     propertyEClass = createEClass(PROPERTY);
+    createEAttribute(propertyEClass, PROPERTY__CHANGEABLE);
     createEAttribute(propertyEClass, PROPERTY__NAME);
     createEReference(propertyEClass, PROPERTY__TYPE);
     createEReference(propertyEClass, PROPERTY__INIT);
@@ -3987,6 +4089,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     finalStateEClass = createEClass(FINAL_STATE);
 
     sessionEClass = createEClass(SESSION);
+    createEAttribute(sessionEClass, SESSION__MAX_INSTANCES);
     createEReference(sessionEClass, SESSION__INITIAL);
     createEReference(sessionEClass, SESSION__SUBSTATE);
     createEReference(sessionEClass, SESSION__REGION);
@@ -4001,9 +4104,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     stateEClass = createEClass(STATE);
     createEAttribute(stateEClass, STATE__NAME);
     createEReference(stateEClass, STATE__ANNOTATIONS);
+    createEReference(stateEClass, STATE__PROPERTIES);
     createEReference(stateEClass, STATE__ENTRY);
     createEReference(stateEClass, STATE__EXIT);
-    createEReference(stateEClass, STATE__PROPERTIES);
     createEReference(stateEClass, STATE__INTERNAL);
     createEReference(stateEClass, STATE__OUTGOING);
 
@@ -4080,7 +4183,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     startSessionEClass = createEClass(START_SESSION);
     createEReference(startSessionEClass, START_SESSION__SESSION);
-    createEReference(startSessionEClass, START_SESSION__CONSTRUCTOR);
 
     functionCallStatementEClass = createEClass(FUNCTION_CALL_STATEMENT);
     createEReference(functionCallStatementEClass, FUNCTION_CALL_STATEMENT__FUNCTION);
@@ -4213,6 +4315,10 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     unaryMinusEClass = createEClass(UNARY_MINUS);
     createEReference(unaryMinusEClass, UNARY_MINUS__TERM);
+
+    arrayIndexEClass = createEClass(ARRAY_INDEX);
+    createEReference(arrayIndexEClass, ARRAY_INDEX__ARRAY);
+    createEReference(arrayIndexEClass, ARRAY_INDEX__INDEX);
   }
 
   /**
@@ -4285,7 +4391,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     lengthWindowEClass.getESuperTypes().add(this.getViewSource());
     timeWindowEClass.getESuperTypes().add(this.getViewSource());
     messageParameterEClass.getESuperTypes().add(this.getReferencedElmt());
-    messageParameterEClass.getESuperTypes().add(this.getExpression());
     simpleParamRefEClass.getESuperTypes().add(this.getElmtProperty());
     arrayParamRefEClass.getESuperTypes().add(this.getElmtProperty());
     lengthArrayEClass.getESuperTypes().add(this.getElmtProperty());
@@ -4341,6 +4446,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     modExpressionEClass.getESuperTypes().add(this.getExpression());
     notExpressionEClass.getESuperTypes().add(this.getExpression());
     unaryMinusEClass.getESuperTypes().add(this.getExpression());
+    arrayIndexEClass.getESuperTypes().add(this.getExpression());
 
     // Initialize classes and features; add operations and parameters
     initEClass(thingMLModelEClass, ThingMLModel.class, "ThingMLModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -4359,6 +4465,11 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(annotatedElementEClass, AnnotatedElement.class, "AnnotatedElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(namedElementEClass, NamedElement.class, "NamedElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+    initEClass(typeRefEClass, TypeRef.class, "TypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getTypeRef_Type(), this.getType(), null, "type", null, 0, 1, TypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getTypeRef_IsArray(), ecorePackage.getEBoolean(), "isArray", null, 0, 1, TypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTypeRef_Cardinality(), this.getExpression(), null, "cardinality", null, 0, 1, TypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(typeEClass, Type.class, "Type", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -4406,13 +4517,14 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(functionEClass, Function.class, "Function", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getFunction_Name(), ecorePackage.getEString(), "name", null, 0, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFunction_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFunction_Type(), this.getType(), null, "type", null, 0, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getFunction_Type(), this.getTypeRef(), null, "type", null, 0, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFunction_Annotations(), this.getPlatformAnnotation(), null, "annotations", null, 0, -1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFunction_Body(), this.getAction(), null, "body", null, 0, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(propertyEClass, Property.class, "Property", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getProperty_Changeable(), ecorePackage.getEBoolean(), "changeable", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getProperty_Name(), ecorePackage.getEString(), "name", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getProperty_Type(), this.getType(), null, "type", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getProperty_Type(), this.getTypeRef(), null, "type", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getProperty_Init(), this.getExpression(), null, "init", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getProperty_Annotations(), this.getPlatformAnnotation(), null, "annotations", null, 0, -1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -4423,7 +4535,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     initEClass(parameterEClass, Parameter.class, "Parameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getParameter_Name(), ecorePackage.getEString(), "name", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getParameter_Type(), this.getType(), null, "type", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getParameter_Type(), this.getTypeRef(), null, "type", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getParameter_Annotations(), this.getPlatformAnnotation(), null, "annotations", null, 0, -1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(portEClass, Port.class, "Port", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -4506,6 +4618,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(finalStateEClass, FinalState.class, "FinalState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(sessionEClass, Session.class, "Session", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getSession_MaxInstances(), ecorePackage.getEInt(), "maxInstances", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getSession_Initial(), this.getState(), null, "initial", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getSession_Substate(), this.getState(), null, "substate", null, 0, -1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getSession_Region(), this.getParallelRegion(), null, "region", null, 0, -1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4520,9 +4633,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(stateEClass, State.class, "State", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getState_Name(), ecorePackage.getEString(), "name", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getState_Annotations(), this.getPlatformAnnotation(), null, "annotations", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getState_Properties(), this.getProperty(), null, "properties", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getState_Entry(), this.getAction(), null, "entry", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getState_Exit(), this.getAction(), null, "exit", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getState_Properties(), this.getProperty(), null, "properties", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getState_Internal(), this.getInternalTransition(), null, "internal", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getState_Outgoing(), this.getTransition(), null, "outgoing", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -4559,7 +4672,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(localVariableEClass, LocalVariable.class, "LocalVariable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getLocalVariable_Changeable(), ecorePackage.getEBoolean(), "changeable", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getLocalVariable_Name(), ecorePackage.getEString(), "name", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getLocalVariable_Type(), this.getType(), null, "type", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getLocalVariable_Type(), this.getTypeRef(), null, "type", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLocalVariable_Init(), this.getExpression(), null, "init", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLocalVariable_Annotations(), this.getPlatformAnnotation(), null, "annotations", null, 0, -1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -4599,7 +4712,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     initEClass(startSessionEClass, StartSession.class, "StartSession", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getStartSession_Session(), this.getSession(), null, "session", null, 0, 1, StartSession.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getStartSession_Constructor(), this.getPropertyAssign(), null, "constructor", null, 0, -1, StartSession.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(functionCallStatementEClass, FunctionCallStatement.class, "FunctionCallStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFunctionCallStatement_Function(), this.getFunction(), null, "function", null, 0, 1, FunctionCallStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4732,6 +4844,10 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     initEClass(unaryMinusEClass, UnaryMinus.class, "UnaryMinus", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getUnaryMinus_Term(), this.getExpression(), null, "term", null, 0, 1, UnaryMinus.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(arrayIndexEClass, ArrayIndex.class, "ArrayIndex", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getArrayIndex_Array(), this.getExpression(), null, "array", null, 0, 1, ArrayIndex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getArrayIndex_Index(), this.getExpression(), null, "index", null, 0, 1, ArrayIndex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Create resource
     createResource(eNS_URI);

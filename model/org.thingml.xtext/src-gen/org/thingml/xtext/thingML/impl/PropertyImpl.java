@@ -22,7 +22,7 @@ import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.ThingMLPackage;
-import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 
 /**
  * <!-- begin-user-doc -->
@@ -32,6 +32,7 @@ import org.thingml.xtext.thingML.Type;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#isChangeable <em>Changeable</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getType <em>Type</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getInit <em>Init</em>}</li>
@@ -42,6 +43,26 @@ import org.thingml.xtext.thingML.Type;
  */
 public class PropertyImpl extends AnnotatedElementImpl implements Property
 {
+  /**
+   * The default value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isChangeable()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean CHANGEABLE_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isChangeable()
+   * @generated
+   * @ordered
+   */
+  protected boolean changeable = CHANGEABLE_EDEFAULT;
+
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -63,14 +84,14 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   protected String name = NAME_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getType() <em>Type</em>}' reference.
+   * The cached value of the '{@link #getType() <em>Type</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getType()
    * @generated
    * @ordered
    */
-  protected Type type;
+  protected TypeRef type;
 
   /**
    * The cached value of the '{@link #getInit() <em>Init</em>}' containment reference.
@@ -118,6 +139,29 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
    * <!-- end-user-doc -->
    * @generated
    */
+  public boolean isChangeable()
+  {
+    return changeable;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setChangeable(boolean newChangeable)
+  {
+    boolean oldChangeable = changeable;
+    changeable = newChangeable;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__CHANGEABLE, oldChangeable, changeable));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public String getName()
   {
     return name;
@@ -141,27 +185,7 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
    * <!-- end-user-doc -->
    * @generated
    */
-  public Type getType()
-  {
-    if (type != null && type.eIsProxy())
-    {
-      InternalEObject oldType = (InternalEObject)type;
-      type = (Type)eResolveProxy(oldType);
-      if (type != oldType)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.PROPERTY__TYPE, oldType, type));
-      }
-    }
-    return type;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Type basicGetType()
+  public TypeRef getType()
   {
     return type;
   }
@@ -171,12 +195,37 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setType(Type newType)
+  public NotificationChain basicSetType(TypeRef newType, NotificationChain msgs)
   {
-    Type oldType = type;
+    TypeRef oldType = type;
     type = newType;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__TYPE, oldType, type));
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__TYPE, oldType, newType);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setType(TypeRef newType)
+  {
+    if (newType != type)
+    {
+      NotificationChain msgs = null;
+      if (type != null)
+        msgs = ((InternalEObject)type).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PROPERTY__TYPE, null, msgs);
+      if (newType != null)
+        msgs = ((InternalEObject)newType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PROPERTY__TYPE, null, msgs);
+      msgs = basicSetType(newType, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__TYPE, newType, newType));
   }
 
   /**
@@ -251,6 +300,8 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   {
     switch (featureID)
     {
+      case ThingMLPackage.PROPERTY__TYPE:
+        return basicSetType(null, msgs);
       case ThingMLPackage.PROPERTY__INIT:
         return basicSetInit(null, msgs);
       case ThingMLPackage.PROPERTY__ANNOTATIONS:
@@ -269,11 +320,12 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   {
     switch (featureID)
     {
+      case ThingMLPackage.PROPERTY__CHANGEABLE:
+        return isChangeable();
       case ThingMLPackage.PROPERTY__NAME:
         return getName();
       case ThingMLPackage.PROPERTY__TYPE:
-        if (resolve) return getType();
-        return basicGetType();
+        return getType();
       case ThingMLPackage.PROPERTY__INIT:
         return getInit();
       case ThingMLPackage.PROPERTY__ANNOTATIONS:
@@ -293,11 +345,14 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   {
     switch (featureID)
     {
+      case ThingMLPackage.PROPERTY__CHANGEABLE:
+        setChangeable((Boolean)newValue);
+        return;
       case ThingMLPackage.PROPERTY__NAME:
         setName((String)newValue);
         return;
       case ThingMLPackage.PROPERTY__TYPE:
-        setType((Type)newValue);
+        setType((TypeRef)newValue);
         return;
       case ThingMLPackage.PROPERTY__INIT:
         setInit((Expression)newValue);
@@ -320,11 +375,14 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   {
     switch (featureID)
     {
+      case ThingMLPackage.PROPERTY__CHANGEABLE:
+        setChangeable(CHANGEABLE_EDEFAULT);
+        return;
       case ThingMLPackage.PROPERTY__NAME:
         setName(NAME_EDEFAULT);
         return;
       case ThingMLPackage.PROPERTY__TYPE:
-        setType((Type)null);
+        setType((TypeRef)null);
         return;
       case ThingMLPackage.PROPERTY__INIT:
         setInit((Expression)null);
@@ -346,6 +404,8 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   {
     switch (featureID)
     {
+      case ThingMLPackage.PROPERTY__CHANGEABLE:
+        return changeable != CHANGEABLE_EDEFAULT;
       case ThingMLPackage.PROPERTY__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.PROPERTY__TYPE:
@@ -369,7 +429,9 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (name: ");
+    result.append(" (changeable: ");
+    result.append(changeable);
+    result.append(", name: ");
     result.append(name);
     result.append(')');
     return result.toString();

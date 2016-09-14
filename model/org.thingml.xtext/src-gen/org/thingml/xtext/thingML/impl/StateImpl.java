@@ -37,9 +37,9 @@ import org.thingml.xtext.thingML.Transition;
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getEntry <em>Entry</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getExit <em>Exit</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getInternal <em>Internal</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getOutgoing <em>Outgoing</em>}</li>
  * </ul>
@@ -79,6 +79,16 @@ public class StateImpl extends MinimalEObjectImpl.Container implements State
   protected EList<PlatformAnnotation> annotations;
 
   /**
+   * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getProperties()
+   * @generated
+   * @ordered
+   */
+  protected EList<Property> properties;
+
+  /**
    * The cached value of the '{@link #getEntry() <em>Entry</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -97,16 +107,6 @@ public class StateImpl extends MinimalEObjectImpl.Container implements State
    * @ordered
    */
   protected Action exit;
-
-  /**
-   * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getProperties()
-   * @generated
-   * @ordered
-   */
-  protected EList<Property> properties;
 
   /**
    * The cached value of the '{@link #getInternal() <em>Internal</em>}' containment reference list.
@@ -184,6 +184,20 @@ public class StateImpl extends MinimalEObjectImpl.Container implements State
       annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.STATE__ANNOTATIONS);
     }
     return annotations;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<Property> getProperties()
+  {
+    if (properties == null)
+    {
+      properties = new EObjectContainmentEList<Property>(Property.class, this, ThingMLPackage.STATE__PROPERTIES);
+    }
+    return properties;
   }
 
   /**
@@ -287,20 +301,6 @@ public class StateImpl extends MinimalEObjectImpl.Container implements State
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Property> getProperties()
-  {
-    if (properties == null)
-    {
-      properties = new EObjectContainmentEList<Property>(Property.class, this, ThingMLPackage.STATE__PROPERTIES);
-    }
-    return properties;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EList<InternalTransition> getInternal()
   {
     if (internal == null)
@@ -336,12 +336,12 @@ public class StateImpl extends MinimalEObjectImpl.Container implements State
     {
       case ThingMLPackage.STATE__ANNOTATIONS:
         return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.STATE__PROPERTIES:
+        return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.STATE__ENTRY:
         return basicSetEntry(null, msgs);
       case ThingMLPackage.STATE__EXIT:
         return basicSetExit(null, msgs);
-      case ThingMLPackage.STATE__PROPERTIES:
-        return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.STATE__INTERNAL:
         return ((InternalEList<?>)getInternal()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.STATE__OUTGOING:
@@ -364,12 +364,12 @@ public class StateImpl extends MinimalEObjectImpl.Container implements State
         return getName();
       case ThingMLPackage.STATE__ANNOTATIONS:
         return getAnnotations();
+      case ThingMLPackage.STATE__PROPERTIES:
+        return getProperties();
       case ThingMLPackage.STATE__ENTRY:
         return getEntry();
       case ThingMLPackage.STATE__EXIT:
         return getExit();
-      case ThingMLPackage.STATE__PROPERTIES:
-        return getProperties();
       case ThingMLPackage.STATE__INTERNAL:
         return getInternal();
       case ThingMLPackage.STATE__OUTGOING:
@@ -396,15 +396,15 @@ public class StateImpl extends MinimalEObjectImpl.Container implements State
         getAnnotations().clear();
         getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
+      case ThingMLPackage.STATE__PROPERTIES:
+        getProperties().clear();
+        getProperties().addAll((Collection<? extends Property>)newValue);
+        return;
       case ThingMLPackage.STATE__ENTRY:
         setEntry((Action)newValue);
         return;
       case ThingMLPackage.STATE__EXIT:
         setExit((Action)newValue);
-        return;
-      case ThingMLPackage.STATE__PROPERTIES:
-        getProperties().clear();
-        getProperties().addAll((Collection<? extends Property>)newValue);
         return;
       case ThingMLPackage.STATE__INTERNAL:
         getInternal().clear();
@@ -434,14 +434,14 @@ public class StateImpl extends MinimalEObjectImpl.Container implements State
       case ThingMLPackage.STATE__ANNOTATIONS:
         getAnnotations().clear();
         return;
+      case ThingMLPackage.STATE__PROPERTIES:
+        getProperties().clear();
+        return;
       case ThingMLPackage.STATE__ENTRY:
         setEntry((Action)null);
         return;
       case ThingMLPackage.STATE__EXIT:
         setExit((Action)null);
-        return;
-      case ThingMLPackage.STATE__PROPERTIES:
-        getProperties().clear();
         return;
       case ThingMLPackage.STATE__INTERNAL:
         getInternal().clear();
@@ -467,12 +467,12 @@ public class StateImpl extends MinimalEObjectImpl.Container implements State
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.STATE__ANNOTATIONS:
         return annotations != null && !annotations.isEmpty();
+      case ThingMLPackage.STATE__PROPERTIES:
+        return properties != null && !properties.isEmpty();
       case ThingMLPackage.STATE__ENTRY:
         return entry != null;
       case ThingMLPackage.STATE__EXIT:
         return exit != null;
-      case ThingMLPackage.STATE__PROPERTIES:
-        return properties != null && !properties.isEmpty();
       case ThingMLPackage.STATE__INTERNAL:
         return internal != null && !internal.isEmpty();
       case ThingMLPackage.STATE__OUTGOING:

@@ -70,6 +70,7 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.PLATFORM_ANNOTATION: return createPlatformAnnotation();
       case ThingMLPackage.ANNOTATED_ELEMENT: return createAnnotatedElement();
       case ThingMLPackage.NAMED_ELEMENT: return createNamedElement();
+      case ThingMLPackage.TYPE_REF: return createTypeRef();
       case ThingMLPackage.TYPE: return createType();
       case ThingMLPackage.PRIMITIVE_TYPE: return createPrimitiveType();
       case ThingMLPackage.OBJECT_TYPE: return createObjectType();
@@ -160,6 +161,7 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.MOD_EXPRESSION: return createModExpression();
       case ThingMLPackage.NOT_EXPRESSION: return createNotExpression();
       case ThingMLPackage.UNARY_MINUS: return createUnaryMinus();
+      case ThingMLPackage.ARRAY_INDEX: return createArrayIndex();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -218,6 +220,17 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     NamedElementImpl namedElement = new NamedElementImpl();
     return namedElement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public TypeRef createTypeRef()
+  {
+    TypeRefImpl typeRef = new TypeRefImpl();
+    return typeRef;
   }
 
   /**
@@ -1208,6 +1221,17 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     UnaryMinusImpl unaryMinus = new UnaryMinusImpl();
     return unaryMinus;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ArrayIndex createArrayIndex()
+  {
+    ArrayIndexImpl arrayIndex = new ArrayIndexImpl();
+    return arrayIndex;
   }
 
   /**

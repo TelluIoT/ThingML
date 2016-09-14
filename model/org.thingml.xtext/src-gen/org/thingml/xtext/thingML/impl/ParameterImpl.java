@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLPackage;
-import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 
 /**
  * <!-- begin-user-doc -->
@@ -61,14 +61,14 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
   protected String name = NAME_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getType() <em>Type</em>}' reference.
+   * The cached value of the '{@link #getType() <em>Type</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getType()
    * @generated
    * @ordered
    */
-  protected Type type;
+  protected TypeRef type;
 
   /**
    * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
@@ -129,27 +129,7 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
    * <!-- end-user-doc -->
    * @generated
    */
-  public Type getType()
-  {
-    if (type != null && type.eIsProxy())
-    {
-      InternalEObject oldType = (InternalEObject)type;
-      type = (Type)eResolveProxy(oldType);
-      if (type != oldType)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.PARAMETER__TYPE, oldType, type));
-      }
-    }
-    return type;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Type basicGetType()
+  public TypeRef getType()
   {
     return type;
   }
@@ -159,12 +139,37 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setType(Type newType)
+  public NotificationChain basicSetType(TypeRef newType, NotificationChain msgs)
   {
-    Type oldType = type;
+    TypeRef oldType = type;
     type = newType;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PARAMETER__TYPE, oldType, type));
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.PARAMETER__TYPE, oldType, newType);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setType(TypeRef newType)
+  {
+    if (newType != type)
+    {
+      NotificationChain msgs = null;
+      if (type != null)
+        msgs = ((InternalEObject)type).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PARAMETER__TYPE, null, msgs);
+      if (newType != null)
+        msgs = ((InternalEObject)newType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PARAMETER__TYPE, null, msgs);
+      msgs = basicSetType(newType, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PARAMETER__TYPE, newType, newType));
   }
 
   /**
@@ -191,6 +196,8 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
   {
     switch (featureID)
     {
+      case ThingMLPackage.PARAMETER__TYPE:
+        return basicSetType(null, msgs);
       case ThingMLPackage.PARAMETER__ANNOTATIONS:
         return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
     }
@@ -210,8 +217,7 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
       case ThingMLPackage.PARAMETER__NAME:
         return getName();
       case ThingMLPackage.PARAMETER__TYPE:
-        if (resolve) return getType();
-        return basicGetType();
+        return getType();
       case ThingMLPackage.PARAMETER__ANNOTATIONS:
         return getAnnotations();
     }
@@ -233,7 +239,7 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
         setName((String)newValue);
         return;
       case ThingMLPackage.PARAMETER__TYPE:
-        setType((Type)newValue);
+        setType((TypeRef)newValue);
         return;
       case ThingMLPackage.PARAMETER__ANNOTATIONS:
         getAnnotations().clear();
@@ -257,7 +263,7 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
         setName(NAME_EDEFAULT);
         return;
       case ThingMLPackage.PARAMETER__TYPE:
-        setType((Type)null);
+        setType((TypeRef)null);
         return;
       case ThingMLPackage.PARAMETER__ANNOTATIONS:
         getAnnotations().clear();

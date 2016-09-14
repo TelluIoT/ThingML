@@ -108,6 +108,13 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ThingMLPackage.TYPE_REF:
+      {
+        TypeRef typeRef = (TypeRef)theEObject;
+        T result = caseTypeRef(typeRef);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ThingMLPackage.TYPE:
       {
         Type type = (Type)theEObject;
@@ -352,7 +359,6 @@ public class ThingMLSwitch<T> extends Switch<T>
         MessageParameter messageParameter = (MessageParameter)theEObject;
         T result = caseMessageParameter(messageParameter);
         if (result == null) result = caseReferencedElmt(messageParameter);
-        if (result == null) result = caseExpression(messageParameter);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -845,6 +851,14 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ThingMLPackage.ARRAY_INDEX:
+      {
+        ArrayIndex arrayIndex = (ArrayIndex)theEObject;
+        T result = caseArrayIndex(arrayIndex);
+        if (result == null) result = caseExpression(arrayIndex);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       default: return defaultCase(theEObject);
     }
   }
@@ -925,6 +939,22 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseNamedElement(NamedElement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Type Ref</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Type Ref</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseTypeRef(TypeRef object)
   {
     return null;
   }
@@ -2365,6 +2395,22 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseUnaryMinus(UnaryMinus object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Array Index</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Array Index</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseArrayIndex(ArrayIndex object)
   {
     return null;
   }

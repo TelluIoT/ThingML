@@ -3,7 +3,6 @@
  */
 package org.thingml.xtext.thingML;
 
-import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -15,7 +14,6 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.StartSession#getSession <em>Session</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.StartSession#getConstructor <em>Constructor</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getStartSession()
@@ -49,21 +47,5 @@ public interface StartSession extends Action
    * @generated
    */
   void setSession(Session value);
-
-  /**
-   * Returns the value of the '<em><b>Constructor</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PropertyAssign}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Constructor</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Constructor</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getStartSession_Constructor()
-   * @model containment="true"
-   * @generated
-   */
-  EList<PropertyAssign> getConstructor();
 
 } // StartSession

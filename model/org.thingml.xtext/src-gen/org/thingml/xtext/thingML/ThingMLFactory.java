@@ -69,6 +69,15 @@ public interface ThingMLFactory extends EFactory
   NamedElement createNamedElement();
 
   /**
+   * Returns a new object of class '<em>Type Ref</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Type Ref</em>'.
+   * @generated
+   */
+  TypeRef createTypeRef();
+
+  /**
    * Returns a new object of class '<em>Type</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -877,6 +886,15 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   UnaryMinus createUnaryMinus();
+
+  /**
+   * Returns a new object of class '<em>Array Index</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Array Index</em>'.
+   * @generated
+   */
+  ArrayIndex createArrayIndex();
 
   /**
    * Returns the package supported by this factory.

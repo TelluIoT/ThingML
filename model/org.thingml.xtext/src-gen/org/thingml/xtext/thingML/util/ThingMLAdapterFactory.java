@@ -101,6 +101,11 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createNamedElementAdapter();
       }
       @Override
+      public Adapter caseTypeRef(TypeRef object)
+      {
+        return createTypeRefAdapter();
+      }
+      @Override
       public Adapter caseType(Type object)
       {
         return createTypeAdapter();
@@ -551,6 +556,11 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createUnaryMinusAdapter();
       }
       @Override
+      public Adapter caseArrayIndex(ArrayIndex object)
+      {
+        return createArrayIndexAdapter();
+      }
+      @Override
       public Adapter defaultCase(EObject object)
       {
         return createEObjectAdapter();
@@ -643,6 +653,21 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createNamedElementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.TypeRef <em>Type Ref</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.TypeRef
+   * @generated
+   */
+  public Adapter createTypeRefAdapter()
   {
     return null;
   }
@@ -1993,6 +2018,21 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createUnaryMinusAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.ArrayIndex <em>Array Index</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.ArrayIndex
+   * @generated
+   */
+  public Adapter createArrayIndexAdapter()
   {
     return null;
   }

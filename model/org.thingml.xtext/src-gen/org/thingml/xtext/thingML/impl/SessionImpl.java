@@ -38,11 +38,12 @@ import org.thingml.xtext.thingML.Transition;
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getEntry <em>Entry</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getExit <em>Exit</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getInternal <em>Internal</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getOutgoing <em>Outgoing</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getMaxInstances <em>Max Instances</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getSubstate <em>Substate</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getRegion <em>Region</em>}</li>
@@ -83,6 +84,16 @@ public class SessionImpl extends RegionImpl implements Session
   protected EList<PlatformAnnotation> annotations;
 
   /**
+   * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getProperties()
+   * @generated
+   * @ordered
+   */
+  protected EList<Property> properties;
+
+  /**
    * The cached value of the '{@link #getEntry() <em>Entry</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -103,16 +114,6 @@ public class SessionImpl extends RegionImpl implements Session
   protected Action exit;
 
   /**
-   * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getProperties()
-   * @generated
-   * @ordered
-   */
-  protected EList<Property> properties;
-
-  /**
    * The cached value of the '{@link #getInternal() <em>Internal</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -131,6 +132,26 @@ public class SessionImpl extends RegionImpl implements Session
    * @ordered
    */
   protected EList<Transition> outgoing;
+
+  /**
+   * The default value of the '{@link #getMaxInstances() <em>Max Instances</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getMaxInstances()
+   * @generated
+   * @ordered
+   */
+  protected static final int MAX_INSTANCES_EDEFAULT = 0;
+
+  /**
+   * The cached value of the '{@link #getMaxInstances() <em>Max Instances</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getMaxInstances()
+   * @generated
+   * @ordered
+   */
+  protected int maxInstances = MAX_INSTANCES_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getInitial() <em>Initial</em>}' reference.
@@ -218,6 +239,20 @@ public class SessionImpl extends RegionImpl implements Session
       annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.SESSION__ANNOTATIONS);
     }
     return annotations;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<Property> getProperties()
+  {
+    if (properties == null)
+    {
+      properties = new EObjectContainmentEList<Property>(Property.class, this, ThingMLPackage.SESSION__PROPERTIES);
+    }
+    return properties;
   }
 
   /**
@@ -321,20 +356,6 @@ public class SessionImpl extends RegionImpl implements Session
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Property> getProperties()
-  {
-    if (properties == null)
-    {
-      properties = new EObjectContainmentEList<Property>(Property.class, this, ThingMLPackage.SESSION__PROPERTIES);
-    }
-    return properties;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EList<InternalTransition> getInternal()
   {
     if (internal == null)
@@ -356,6 +377,29 @@ public class SessionImpl extends RegionImpl implements Session
       outgoing = new EObjectContainmentEList<Transition>(Transition.class, this, ThingMLPackage.SESSION__OUTGOING);
     }
     return outgoing;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public int getMaxInstances()
+  {
+    return maxInstances;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setMaxInstances(int newMaxInstances)
+  {
+    int oldMaxInstances = maxInstances;
+    maxInstances = newMaxInstances;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__MAX_INSTANCES, oldMaxInstances, maxInstances));
   }
 
   /**
@@ -441,12 +485,12 @@ public class SessionImpl extends RegionImpl implements Session
     {
       case ThingMLPackage.SESSION__ANNOTATIONS:
         return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.SESSION__PROPERTIES:
+        return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.SESSION__ENTRY:
         return basicSetEntry(null, msgs);
       case ThingMLPackage.SESSION__EXIT:
         return basicSetExit(null, msgs);
-      case ThingMLPackage.SESSION__PROPERTIES:
-        return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.SESSION__INTERNAL:
         return ((InternalEList<?>)getInternal()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.SESSION__OUTGOING:
@@ -473,16 +517,18 @@ public class SessionImpl extends RegionImpl implements Session
         return getName();
       case ThingMLPackage.SESSION__ANNOTATIONS:
         return getAnnotations();
+      case ThingMLPackage.SESSION__PROPERTIES:
+        return getProperties();
       case ThingMLPackage.SESSION__ENTRY:
         return getEntry();
       case ThingMLPackage.SESSION__EXIT:
         return getExit();
-      case ThingMLPackage.SESSION__PROPERTIES:
-        return getProperties();
       case ThingMLPackage.SESSION__INTERNAL:
         return getInternal();
       case ThingMLPackage.SESSION__OUTGOING:
         return getOutgoing();
+      case ThingMLPackage.SESSION__MAX_INSTANCES:
+        return getMaxInstances();
       case ThingMLPackage.SESSION__INITIAL:
         if (resolve) return getInitial();
         return basicGetInitial();
@@ -512,15 +558,15 @@ public class SessionImpl extends RegionImpl implements Session
         getAnnotations().clear();
         getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
+      case ThingMLPackage.SESSION__PROPERTIES:
+        getProperties().clear();
+        getProperties().addAll((Collection<? extends Property>)newValue);
+        return;
       case ThingMLPackage.SESSION__ENTRY:
         setEntry((Action)newValue);
         return;
       case ThingMLPackage.SESSION__EXIT:
         setExit((Action)newValue);
-        return;
-      case ThingMLPackage.SESSION__PROPERTIES:
-        getProperties().clear();
-        getProperties().addAll((Collection<? extends Property>)newValue);
         return;
       case ThingMLPackage.SESSION__INTERNAL:
         getInternal().clear();
@@ -529,6 +575,9 @@ public class SessionImpl extends RegionImpl implements Session
       case ThingMLPackage.SESSION__OUTGOING:
         getOutgoing().clear();
         getOutgoing().addAll((Collection<? extends Transition>)newValue);
+        return;
+      case ThingMLPackage.SESSION__MAX_INSTANCES:
+        setMaxInstances((Integer)newValue);
         return;
       case ThingMLPackage.SESSION__INITIAL:
         setInitial((State)newValue);
@@ -561,20 +610,23 @@ public class SessionImpl extends RegionImpl implements Session
       case ThingMLPackage.SESSION__ANNOTATIONS:
         getAnnotations().clear();
         return;
+      case ThingMLPackage.SESSION__PROPERTIES:
+        getProperties().clear();
+        return;
       case ThingMLPackage.SESSION__ENTRY:
         setEntry((Action)null);
         return;
       case ThingMLPackage.SESSION__EXIT:
         setExit((Action)null);
         return;
-      case ThingMLPackage.SESSION__PROPERTIES:
-        getProperties().clear();
-        return;
       case ThingMLPackage.SESSION__INTERNAL:
         getInternal().clear();
         return;
       case ThingMLPackage.SESSION__OUTGOING:
         getOutgoing().clear();
+        return;
+      case ThingMLPackage.SESSION__MAX_INSTANCES:
+        setMaxInstances(MAX_INSTANCES_EDEFAULT);
         return;
       case ThingMLPackage.SESSION__INITIAL:
         setInitial((State)null);
@@ -603,16 +655,18 @@ public class SessionImpl extends RegionImpl implements Session
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.SESSION__ANNOTATIONS:
         return annotations != null && !annotations.isEmpty();
+      case ThingMLPackage.SESSION__PROPERTIES:
+        return properties != null && !properties.isEmpty();
       case ThingMLPackage.SESSION__ENTRY:
         return entry != null;
       case ThingMLPackage.SESSION__EXIT:
         return exit != null;
-      case ThingMLPackage.SESSION__PROPERTIES:
-        return properties != null && !properties.isEmpty();
       case ThingMLPackage.SESSION__INTERNAL:
         return internal != null && !internal.isEmpty();
       case ThingMLPackage.SESSION__OUTGOING:
         return outgoing != null && !outgoing.isEmpty();
+      case ThingMLPackage.SESSION__MAX_INSTANCES:
+        return maxInstances != MAX_INSTANCES_EDEFAULT;
       case ThingMLPackage.SESSION__INITIAL:
         return initial != null;
       case ThingMLPackage.SESSION__SUBSTATE:
@@ -637,9 +691,9 @@ public class SessionImpl extends RegionImpl implements Session
       {
         case ThingMLPackage.SESSION__NAME: return ThingMLPackage.STATE__NAME;
         case ThingMLPackage.SESSION__ANNOTATIONS: return ThingMLPackage.STATE__ANNOTATIONS;
+        case ThingMLPackage.SESSION__PROPERTIES: return ThingMLPackage.STATE__PROPERTIES;
         case ThingMLPackage.SESSION__ENTRY: return ThingMLPackage.STATE__ENTRY;
         case ThingMLPackage.SESSION__EXIT: return ThingMLPackage.STATE__EXIT;
-        case ThingMLPackage.SESSION__PROPERTIES: return ThingMLPackage.STATE__PROPERTIES;
         case ThingMLPackage.SESSION__INTERNAL: return ThingMLPackage.STATE__INTERNAL;
         case ThingMLPackage.SESSION__OUTGOING: return ThingMLPackage.STATE__OUTGOING;
         default: return -1;
@@ -662,9 +716,9 @@ public class SessionImpl extends RegionImpl implements Session
       {
         case ThingMLPackage.STATE__NAME: return ThingMLPackage.SESSION__NAME;
         case ThingMLPackage.STATE__ANNOTATIONS: return ThingMLPackage.SESSION__ANNOTATIONS;
+        case ThingMLPackage.STATE__PROPERTIES: return ThingMLPackage.SESSION__PROPERTIES;
         case ThingMLPackage.STATE__ENTRY: return ThingMLPackage.SESSION__ENTRY;
         case ThingMLPackage.STATE__EXIT: return ThingMLPackage.SESSION__EXIT;
-        case ThingMLPackage.STATE__PROPERTIES: return ThingMLPackage.SESSION__PROPERTIES;
         case ThingMLPackage.STATE__INTERNAL: return ThingMLPackage.SESSION__INTERNAL;
         case ThingMLPackage.STATE__OUTGOING: return ThingMLPackage.SESSION__OUTGOING;
         default: return -1;
@@ -686,6 +740,8 @@ public class SessionImpl extends RegionImpl implements Session
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (name: ");
     result.append(name);
+    result.append(", maxInstances: ");
+    result.append(maxInstances);
     result.append(')');
     return result.toString();
   }
