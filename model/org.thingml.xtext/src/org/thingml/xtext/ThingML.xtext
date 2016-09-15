@@ -17,12 +17,8 @@ PlatformAnnotation returns PlatformAnnotation:
 	'@' name=ID value=STRING_LIT ; 
 
 AnnotatedElement:
-	Type | PropertyAssign | Protocol | Function | Property | Message | Parameter | Port
-;
-
-NamedElement:
-	PrimitiveType | ObjectType | Enumeration | EnumerationLiteral | Thing | Protocol | Function | Property | 
-	Message | Port | Stream 
+	Protocol | Function | Property | Message | Parameter | Port | Configuration | Handler | State | CompositeState | 
+	FinalState | Type | PropertyAssign | Stream | Session | ParallelRegion | LocalVariable | Instance | AbstractConnector
 ;
 
 
@@ -34,7 +30,7 @@ TypeRef returns TypeRef:
 	type=[Type|ID] (^isArray?='[' (cardinality=Expression)? ']')?
 ;
 
-Type returns Type:
+Type:
 	PrimitiveType | ObjectType | Enumeration | Thing ;
 
 PrimitiveType returns PrimitiveType:
@@ -66,13 +62,13 @@ Protocol returns Protocol:
 	'protocol' name=ID ( annotations+=PlatformAnnotation )* ';';
 
 Function returns Function:
-	'function' name=ID '(' (parameters+=Parameter ( "," parameters+=Parameter)* )? ')' (':' type=TypeRef)? ( annotations+=PlatformAnnotation )* body=Action
+	'function' name=ID '(' (parameters+=Parameter ( "," parameters+=Parameter)* )? ')' (':' typeRef=TypeRef)? ( annotations+=PlatformAnnotation )* body=Action
 		//('isArray' isArray=EBoolean)?
 		//('cardinality' cardinality=Expression)?
 ;
 
 Property returns Property:
-	(^changeable?='readonly')? 'property' name=ID ':' type=TypeRef ( '=' init=Expression)?
+	(^changeable?='readonly')? 'property' name=ID ':' typeRef=TypeRef ( '=' init=Expression)?
 	( annotations+=PlatformAnnotation )*
 		//('isArray' isArray=EBoolean)?
 		//('changeable' changeable=EBoolean)?
@@ -84,7 +80,7 @@ Message returns Message:
 	( annotations+=PlatformAnnotation )* (';')?;
 	
 Parameter returns Parameter:
-	name=ID ':' type=TypeRef ( annotations+=PlatformAnnotation )*
+	name=ID ':' typeRef=TypeRef ( annotations+=PlatformAnnotation )*
 //		('isArray' isArray=EBoolean)?
 //		('cardinality' cardinality=Expression)?
 ;
@@ -249,8 +245,8 @@ Action returns Action:
 	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction |
 	ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
 
-Variable returns Variable:
-	Parameter | Property | LocalVariable;
+Variable:
+	LocalVariable | Property | Parameter ;
 
 ActionBlock returns ActionBlock:
 	{ActionBlock}
@@ -260,7 +256,7 @@ ExternStatement returns ExternStatement:
 	statement = STRING_EXT ('&' segments+=Expression)*;
 	
 LocalVariable returns LocalVariable:
-	(^changeable?='readonly')? 'var' name=ID ':'  type=TypeRef ( '=' init=Expression)? ( annotations+=PlatformAnnotation )*
+	(^changeable?='readonly')? 'var' name=ID ':'  typeRef=TypeRef ( '=' init=Expression)? ( annotations+=PlatformAnnotation )*
 		//('isArray' isArray=EBoolean)?
 		//('cardinality' cardinality=Expression)?
 ;
@@ -428,7 +424,7 @@ ConfigPropertyAssign returns ConfigPropertyAssign:
 	'set' instance=InstanceRef '.' property=[Property|ID] ('[' index+=Expression ']')* '=' init=Expression ( annotations+=PlatformAnnotation )*;
 
 
-AbstractConnector returns AbstractConnector:
+AbstractConnector:
 	Connector | ExternalConnector;
 	
 Connector returns Connector:

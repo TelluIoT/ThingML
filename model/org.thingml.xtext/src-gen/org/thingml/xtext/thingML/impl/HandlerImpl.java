@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -23,7 +22,6 @@ import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.Event;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Handler;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
 /**
@@ -35,7 +33,6 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.HandlerImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.HandlerImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.HandlerImpl#getEvent <em>Event</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.HandlerImpl#getGuard <em>Guard</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.HandlerImpl#getAction <em>Action</em>}</li>
@@ -43,7 +40,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *
  * @generated
  */
-public class HandlerImpl extends MinimalEObjectImpl.Container implements Handler
+public class HandlerImpl extends AnnotatedElementImpl implements Handler
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -64,16 +61,6 @@ public class HandlerImpl extends MinimalEObjectImpl.Container implements Handler
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * The cached value of the '{@link #getEvent() <em>Event</em>}' containment reference list.
@@ -147,20 +134,6 @@ public class HandlerImpl extends MinimalEObjectImpl.Container implements Handler
     name = newName;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.HANDLER__NAME, oldName, name));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.HANDLER__ANNOTATIONS);
-    }
-    return annotations;
   }
 
   /**
@@ -283,8 +256,6 @@ public class HandlerImpl extends MinimalEObjectImpl.Container implements Handler
   {
     switch (featureID)
     {
-      case ThingMLPackage.HANDLER__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.HANDLER__EVENT:
         return ((InternalEList<?>)getEvent()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.HANDLER__GUARD:
@@ -307,8 +278,6 @@ public class HandlerImpl extends MinimalEObjectImpl.Container implements Handler
     {
       case ThingMLPackage.HANDLER__NAME:
         return getName();
-      case ThingMLPackage.HANDLER__ANNOTATIONS:
-        return getAnnotations();
       case ThingMLPackage.HANDLER__EVENT:
         return getEvent();
       case ThingMLPackage.HANDLER__GUARD:
@@ -332,10 +301,6 @@ public class HandlerImpl extends MinimalEObjectImpl.Container implements Handler
     {
       case ThingMLPackage.HANDLER__NAME:
         setName((String)newValue);
-        return;
-      case ThingMLPackage.HANDLER__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
       case ThingMLPackage.HANDLER__EVENT:
         getEvent().clear();
@@ -364,9 +329,6 @@ public class HandlerImpl extends MinimalEObjectImpl.Container implements Handler
       case ThingMLPackage.HANDLER__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case ThingMLPackage.HANDLER__ANNOTATIONS:
-        getAnnotations().clear();
-        return;
       case ThingMLPackage.HANDLER__EVENT:
         getEvent().clear();
         return;
@@ -392,8 +354,6 @@ public class HandlerImpl extends MinimalEObjectImpl.Container implements Handler
     {
       case ThingMLPackage.HANDLER__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ThingMLPackage.HANDLER__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.HANDLER__EVENT:
         return event != null && !event.isEmpty();
       case ThingMLPackage.HANDLER__GUARD:

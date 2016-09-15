@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyAssign;
@@ -39,9 +38,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#isFragment <em>Fragment</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#getIncludes <em>Includes</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#getMessages <em>Messages</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#getPorts <em>Ports</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#getProperties <em>Properties</em>}</li>
@@ -53,7 +50,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *
  * @generated
  */
-public class ThingImpl extends NamedElementImpl implements Thing
+public class ThingImpl extends TypeImpl implements Thing
 {
   /**
    * The default value of the '{@link #isFragment() <em>Fragment</em>}' attribute.
@@ -76,26 +73,6 @@ public class ThingImpl extends NamedElementImpl implements Thing
   protected boolean fragment = FRAGMENT_EDEFAULT;
 
   /**
-   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected static final String NAME_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected String name = NAME_EDEFAULT;
-
-  /**
    * The cached value of the '{@link #getIncludes() <em>Includes</em>}' reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -104,16 +81,6 @@ public class ThingImpl extends NamedElementImpl implements Thing
    * @ordered
    */
   protected EList<Thing> includes;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * The cached value of the '{@link #getMessages() <em>Messages</em>}' containment reference list.
@@ -234,29 +201,6 @@ public class ThingImpl extends NamedElementImpl implements Thing
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setName(String newName)
-  {
-    String oldName = name;
-    name = newName;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.THING__NAME, oldName, name));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EList<Thing> getIncludes()
   {
     if (includes == null)
@@ -264,20 +208,6 @@ public class ThingImpl extends NamedElementImpl implements Thing
       includes = new EObjectResolvingEList<Thing>(Thing.class, this, ThingMLPackage.THING__INCLUDES);
     }
     return includes;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.THING__ANNOTATIONS);
-    }
-    return annotations;
   }
 
   /**
@@ -388,8 +318,6 @@ public class ThingImpl extends NamedElementImpl implements Thing
   {
     switch (featureID)
     {
-      case ThingMLPackage.THING__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.THING__MESSAGES:
         return ((InternalEList<?>)getMessages()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.THING__PORTS:
@@ -420,12 +348,8 @@ public class ThingImpl extends NamedElementImpl implements Thing
     {
       case ThingMLPackage.THING__FRAGMENT:
         return isFragment();
-      case ThingMLPackage.THING__NAME:
-        return getName();
       case ThingMLPackage.THING__INCLUDES:
         return getIncludes();
-      case ThingMLPackage.THING__ANNOTATIONS:
-        return getAnnotations();
       case ThingMLPackage.THING__MESSAGES:
         return getMessages();
       case ThingMLPackage.THING__PORTS:
@@ -458,16 +382,9 @@ public class ThingImpl extends NamedElementImpl implements Thing
       case ThingMLPackage.THING__FRAGMENT:
         setFragment((Boolean)newValue);
         return;
-      case ThingMLPackage.THING__NAME:
-        setName((String)newValue);
-        return;
       case ThingMLPackage.THING__INCLUDES:
         getIncludes().clear();
         getIncludes().addAll((Collection<? extends Thing>)newValue);
-        return;
-      case ThingMLPackage.THING__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
       case ThingMLPackage.THING__MESSAGES:
         getMessages().clear();
@@ -514,14 +431,8 @@ public class ThingImpl extends NamedElementImpl implements Thing
       case ThingMLPackage.THING__FRAGMENT:
         setFragment(FRAGMENT_EDEFAULT);
         return;
-      case ThingMLPackage.THING__NAME:
-        setName(NAME_EDEFAULT);
-        return;
       case ThingMLPackage.THING__INCLUDES:
         getIncludes().clear();
-        return;
-      case ThingMLPackage.THING__ANNOTATIONS:
-        getAnnotations().clear();
         return;
       case ThingMLPackage.THING__MESSAGES:
         getMessages().clear();
@@ -560,12 +471,8 @@ public class ThingImpl extends NamedElementImpl implements Thing
     {
       case ThingMLPackage.THING__FRAGMENT:
         return fragment != FRAGMENT_EDEFAULT;
-      case ThingMLPackage.THING__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.THING__INCLUDES:
         return includes != null && !includes.isEmpty();
-      case ThingMLPackage.THING__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.THING__MESSAGES:
         return messages != null && !messages.isEmpty();
       case ThingMLPackage.THING__PORTS:
@@ -597,8 +504,6 @@ public class ThingImpl extends NamedElementImpl implements Thing
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (fragment: ");
     result.append(fragment);
-    result.append(", name: ");
-    result.append(name);
     result.append(')');
     return result.toString();
   }

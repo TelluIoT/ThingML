@@ -133,7 +133,8 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 					sequence_CompositeState(context, (CompositeState) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getStateRule()) {
+				else if (rule == grammarAccess.getAnnotatedElementRule()
+						|| rule == grammarAccess.getStateRule()) {
 					sequence_CompositeState_StateMachine(context, (CompositeState) semanticObject); 
 					return; 
 				}
@@ -806,6 +807,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns CompositeState
 	 *     State returns CompositeState
 	 *
 	 * Constraint:
@@ -866,6 +868,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Configuration
 	 *     Configuration returns Configuration
 	 *
 	 * Constraint:
@@ -878,6 +881,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Connector
 	 *     AbstractConnector returns Connector
 	 *     Connector returns Connector
 	 *
@@ -1006,7 +1010,6 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns EnumerationLiteral
 	 *     EnumerationLiteral returns EnumerationLiteral
 	 *
 	 * Constraint:
@@ -1020,7 +1023,6 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns Enumeration
-	 *     NamedElement returns Enumeration
 	 *     Type returns Enumeration
 	 *     Enumeration returns Enumeration
 	 *
@@ -1187,6 +1189,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns ExternalConnector
 	 *     AbstractConnector returns ExternalConnector
 	 *     ExternalConnector returns ExternalConnector
 	 *
@@ -1219,6 +1222,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns FinalState
 	 *     FinalState returns FinalState
 	 *     State returns FinalState
 	 *
@@ -1283,11 +1287,10 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns Function
-	 *     NamedElement returns Function
 	 *     Function returns Function
 	 *
 	 * Constraint:
-	 *     (name=ID (parameters+=Parameter parameters+=Parameter*)? type=TypeRef? annotations+=PlatformAnnotation* body=Action)
+	 *     (name=ID (parameters+=Parameter parameters+=Parameter*)? typeRef=TypeRef? annotations+=PlatformAnnotation* body=Action)
 	 */
 	protected void sequence_Function(ISerializationContext context, Function semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1351,6 +1354,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Instance
 	 *     Instance returns Instance
 	 *
 	 * Constraint:
@@ -1407,7 +1411,6 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns InternalPort
-	 *     NamedElement returns InternalPort
 	 *     Port returns InternalPort
 	 *     InternalPort returns InternalPort
 	 *
@@ -1421,6 +1424,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns InternalTransition
 	 *     Handler returns InternalTransition
 	 *     InternalTransition returns InternalTransition
 	 *
@@ -1482,13 +1486,14 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns LocalVariable
 	 *     ReferencedElmt returns LocalVariable
 	 *     Action returns LocalVariable
 	 *     Variable returns LocalVariable
 	 *     LocalVariable returns LocalVariable
 	 *
 	 * Constraint:
-	 *     (changeable?='readonly'? name=ID type=TypeRef init=Expression? annotations+=PlatformAnnotation*)
+	 *     (changeable?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
 	 */
 	protected void sequence_LocalVariable(ISerializationContext context, LocalVariable semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1556,7 +1561,6 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns Message
-	 *     NamedElement returns Message
 	 *     Message returns Message
 	 *     ReferencedElmt returns Message
 	 *
@@ -1697,7 +1701,6 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns ObjectType
-	 *     NamedElement returns ObjectType
 	 *     Type returns ObjectType
 	 *     ObjectType returns ObjectType
 	 *
@@ -1753,6 +1756,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns ParallelRegion
 	 *     Region returns ParallelRegion
 	 *     ParallelRegion returns ParallelRegion
 	 *
@@ -1772,7 +1776,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	 *     Variable returns Parameter
 	 *
 	 * Constraint:
-	 *     (name=ID type=TypeRef annotations+=PlatformAnnotation*)
+	 *     (name=ID typeRef=TypeRef annotations+=PlatformAnnotation*)
 	 */
 	protected void sequence_Parameter(ISerializationContext context, org.thingml.xtext.thingML.Parameter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1881,7 +1885,6 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns PrimitiveType
-	 *     NamedElement returns PrimitiveType
 	 *     Type returns PrimitiveType
 	 *     PrimitiveType returns PrimitiveType
 	 *
@@ -1971,13 +1974,12 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns Property
-	 *     NamedElement returns Property
 	 *     Property returns Property
 	 *     ReferencedElmt returns Property
 	 *     Variable returns Property
 	 *
 	 * Constraint:
-	 *     (changeable?='readonly'? name=ID type=TypeRef init=Expression? annotations+=PlatformAnnotation*)
+	 *     (changeable?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
 	 */
 	protected void sequence_Property(ISerializationContext context, Property semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1987,7 +1989,6 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns Protocol
-	 *     NamedElement returns Protocol
 	 *     Protocol returns Protocol
 	 *
 	 * Constraint:
@@ -2001,7 +2002,6 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns ProvidedPort
-	 *     NamedElement returns ProvidedPort
 	 *     Port returns ProvidedPort
 	 *     ProvidedPort returns ProvidedPort
 	 *
@@ -2076,7 +2076,6 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns RequiredPort
-	 *     NamedElement returns RequiredPort
 	 *     Port returns RequiredPort
 	 *     RequiredPort returns RequiredPort
 	 *
@@ -2127,6 +2126,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Session
 	 *     Region returns Session
 	 *     Session returns Session
 	 *     State returns Session
@@ -2225,6 +2225,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns State
 	 *     State returns State
 	 *
 	 * Constraint:
@@ -2244,7 +2245,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
-	 *     NamedElement returns Stream
+	 *     AnnotatedElement returns Stream
 	 *     Stream returns Stream
 	 *
 	 * Constraint:
@@ -2313,7 +2314,6 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns Thing
-	 *     NamedElement returns Thing
 	 *     Type returns Thing
 	 *     Thing returns Thing
 	 *
@@ -2354,6 +2354,7 @@ public abstract class AbstractThingMLSemanticSequencer extends AbstractDelegatin
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns Transition
 	 *     Handler returns Transition
 	 *     Transition returns Transition
 	 *

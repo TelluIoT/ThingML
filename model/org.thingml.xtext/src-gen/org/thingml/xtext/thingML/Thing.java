@@ -15,9 +15,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.Thing#isFragment <em>Fragment</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Thing#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Thing#getIncludes <em>Includes</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Thing#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Thing#getMessages <em>Messages</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Thing#getPorts <em>Ports</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Thing#getProperties <em>Properties</em>}</li>
@@ -31,7 +29,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface Thing extends NamedElement, Type
+public interface Thing extends Type
 {
   /**
    * Returns the value of the '<em><b>Fragment</b></em>' attribute.
@@ -60,32 +58,6 @@ public interface Thing extends NamedElement, Type
   void setFragment(boolean value);
 
   /**
-   * Returns the value of the '<em><b>Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Name</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Name</em>' attribute.
-   * @see #setName(String)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getThing_Name()
-   * @model
-   * @generated
-   */
-  String getName();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Thing#getName <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Name</em>' attribute.
-   * @see #getName()
-   * @generated
-   */
-  void setName(String value);
-
-  /**
    * Returns the value of the '<em><b>Includes</b></em>' reference list.
    * The list contents are of type {@link org.thingml.xtext.thingML.Thing}.
    * <!-- begin-user-doc -->
@@ -100,22 +72,6 @@ public interface Thing extends NamedElement, Type
    * @generated
    */
   EList<Thing> getIncludes();
-
-  /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getThing_Annotations()
-   * @model containment="true"
-   * @generated
-   */
-  EList<PlatformAnnotation> getAnnotations();
 
   /**
    * Returns the value of the '<em><b>Messages</b></em>' containment reference list.

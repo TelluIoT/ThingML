@@ -24,7 +24,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface CompositeState extends Region, State
+public interface CompositeState extends AnnotatedElement, Region, State
 {
   /**
    * Returns the value of the '<em><b>Initial</b></em>' reference.

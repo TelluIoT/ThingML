@@ -3,23 +3,15 @@
  */
 package org.thingml.xtext.thingML.impl;
 
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.TypeRef;
 
@@ -32,8 +24,7 @@ import org.thingml.xtext.thingML.TypeRef;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.ParameterImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ParameterImpl#getType <em>Type</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ParameterImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.ParameterImpl#getTypeRef <em>Type Ref</em>}</li>
  * </ul>
  *
  * @generated
@@ -61,24 +52,14 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
   protected String name = NAME_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getType() <em>Type</em>}' containment reference.
+   * The cached value of the '{@link #getTypeRef() <em>Type Ref</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getType()
+   * @see #getTypeRef()
    * @generated
    * @ordered
    */
-  protected TypeRef type;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
+  protected TypeRef typeRef;
 
   /**
    * <!-- begin-user-doc -->
@@ -129,9 +110,9 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
    * <!-- end-user-doc -->
    * @generated
    */
-  public TypeRef getType()
+  public TypeRef getTypeRef()
   {
-    return type;
+    return typeRef;
   }
 
   /**
@@ -139,13 +120,13 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetType(TypeRef newType, NotificationChain msgs)
+  public NotificationChain basicSetTypeRef(TypeRef newTypeRef, NotificationChain msgs)
   {
-    TypeRef oldType = type;
-    type = newType;
+    TypeRef oldTypeRef = typeRef;
+    typeRef = newTypeRef;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.PARAMETER__TYPE, oldType, newType);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.PARAMETER__TYPE_REF, oldTypeRef, newTypeRef);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -156,34 +137,20 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setType(TypeRef newType)
+  public void setTypeRef(TypeRef newTypeRef)
   {
-    if (newType != type)
+    if (newTypeRef != typeRef)
     {
       NotificationChain msgs = null;
-      if (type != null)
-        msgs = ((InternalEObject)type).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PARAMETER__TYPE, null, msgs);
-      if (newType != null)
-        msgs = ((InternalEObject)newType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PARAMETER__TYPE, null, msgs);
-      msgs = basicSetType(newType, msgs);
+      if (typeRef != null)
+        msgs = ((InternalEObject)typeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PARAMETER__TYPE_REF, null, msgs);
+      if (newTypeRef != null)
+        msgs = ((InternalEObject)newTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PARAMETER__TYPE_REF, null, msgs);
+      msgs = basicSetTypeRef(newTypeRef, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PARAMETER__TYPE, newType, newType));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.PARAMETER__ANNOTATIONS);
-    }
-    return annotations;
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PARAMETER__TYPE_REF, newTypeRef, newTypeRef));
   }
 
   /**
@@ -196,10 +163,8 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
   {
     switch (featureID)
     {
-      case ThingMLPackage.PARAMETER__TYPE:
-        return basicSetType(null, msgs);
-      case ThingMLPackage.PARAMETER__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.PARAMETER__TYPE_REF:
+        return basicSetTypeRef(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -216,10 +181,8 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
     {
       case ThingMLPackage.PARAMETER__NAME:
         return getName();
-      case ThingMLPackage.PARAMETER__TYPE:
-        return getType();
-      case ThingMLPackage.PARAMETER__ANNOTATIONS:
-        return getAnnotations();
+      case ThingMLPackage.PARAMETER__TYPE_REF:
+        return getTypeRef();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -229,7 +192,6 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
    * <!-- end-user-doc -->
    * @generated
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
@@ -238,12 +200,8 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
       case ThingMLPackage.PARAMETER__NAME:
         setName((String)newValue);
         return;
-      case ThingMLPackage.PARAMETER__TYPE:
-        setType((TypeRef)newValue);
-        return;
-      case ThingMLPackage.PARAMETER__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
+      case ThingMLPackage.PARAMETER__TYPE_REF:
+        setTypeRef((TypeRef)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -262,11 +220,8 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
       case ThingMLPackage.PARAMETER__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case ThingMLPackage.PARAMETER__TYPE:
-        setType((TypeRef)null);
-        return;
-      case ThingMLPackage.PARAMETER__ANNOTATIONS:
-        getAnnotations().clear();
+      case ThingMLPackage.PARAMETER__TYPE_REF:
+        setTypeRef((TypeRef)null);
         return;
     }
     super.eUnset(featureID);
@@ -284,10 +239,8 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
     {
       case ThingMLPackage.PARAMETER__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ThingMLPackage.PARAMETER__TYPE:
-        return type != null;
-      case ThingMLPackage.PARAMETER__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
+      case ThingMLPackage.PARAMETER__TYPE_REF:
+        return typeRef != null;
     }
     return super.eIsSet(featureID);
   }

@@ -69,7 +69,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.IMPORT: return createImport();
       case ThingMLPackage.PLATFORM_ANNOTATION: return createPlatformAnnotation();
       case ThingMLPackage.ANNOTATED_ELEMENT: return createAnnotatedElement();
-      case ThingMLPackage.NAMED_ELEMENT: return createNamedElement();
       case ThingMLPackage.TYPE_REF: return createTypeRef();
       case ThingMLPackage.TYPE: return createType();
       case ThingMLPackage.PRIMITIVE_TYPE: return createPrimitiveType();
@@ -209,17 +208,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     AnnotatedElementImpl annotatedElement = new AnnotatedElementImpl();
     return annotatedElement;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public NamedElement createNamedElement()
-  {
-    NamedElementImpl namedElement = new NamedElementImpl();
-    return namedElement;
   }
 
   /**

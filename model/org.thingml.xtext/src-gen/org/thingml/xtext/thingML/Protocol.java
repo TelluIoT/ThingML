@@ -3,7 +3,6 @@
  */
 package org.thingml.xtext.thingML;
 
-import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -15,14 +14,13 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.Protocol#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Protocol#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getProtocol()
  * @model
  * @generated
  */
-public interface Protocol extends AnnotatedElement, NamedElement
+public interface Protocol extends AnnotatedElement
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -49,21 +47,5 @@ public interface Protocol extends AnnotatedElement, NamedElement
    * @generated
    */
   void setName(String value);
-
-  /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getProtocol_Annotations()
-   * @model containment="true"
-   * @generated
-   */
-  EList<PlatformAnnotation> getAnnotations();
 
 } // Protocol

@@ -5,8 +5,6 @@ package org.thingml.xtext.thingML;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Handler</b></em>'.
@@ -17,7 +15,6 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.Handler#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Handler#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Handler#getEvent <em>Event</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Handler#getGuard <em>Guard</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Handler#getAction <em>Action</em>}</li>
@@ -27,7 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Handler extends EObject
+public interface Handler extends AnnotatedElement
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -54,22 +51,6 @@ public interface Handler extends EObject
    * @generated
    */
   void setName(String value);
-
-  /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getHandler_Annotations()
-   * @model containment="true"
-   * @generated
-   */
-  EList<PlatformAnnotation> getAnnotations();
 
   /**
    * Returns the value of the '<em><b>Event</b></em>' containment reference list.

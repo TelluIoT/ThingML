@@ -2174,10 +2174,10 @@ public class InternalThingMLLexer extends Lexer {
         try {
             int _type = RULE_ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalThingML.g:7801:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
-            // InternalThingML.g:7801:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // InternalThingML.g:7837:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
+            // InternalThingML.g:7837:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             {
-            // InternalThingML.g:7801:11: ( '^' )?
+            // InternalThingML.g:7837:11: ( '^' )?
             int alt1=2;
             int LA1_0 = input.LA(1);
 
@@ -2186,7 +2186,7 @@ public class InternalThingMLLexer extends Lexer {
             }
             switch (alt1) {
                 case 1 :
-                    // InternalThingML.g:7801:11: '^'
+                    // InternalThingML.g:7837:11: '^'
                     {
                     match('^'); 
 
@@ -2204,7 +2204,7 @@ public class InternalThingMLLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // InternalThingML.g:7801:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // InternalThingML.g:7837:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             loop2:
             do {
                 int alt2=2;
@@ -2253,10 +2253,10 @@ public class InternalThingMLLexer extends Lexer {
         try {
             int _type = RULE_INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalThingML.g:7803:10: ( ( '0' .. '9' )+ )
-            // InternalThingML.g:7803:12: ( '0' .. '9' )+
+            // InternalThingML.g:7839:10: ( ( '0' .. '9' )+ )
+            // InternalThingML.g:7839:12: ( '0' .. '9' )+
             {
-            // InternalThingML.g:7803:12: ( '0' .. '9' )+
+            // InternalThingML.g:7839:12: ( '0' .. '9' )+
             int cnt3=0;
             loop3:
             do {
@@ -2270,7 +2270,7 @@ public class InternalThingMLLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // InternalThingML.g:7803:13: '0' .. '9'
+            	    // InternalThingML.g:7839:13: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -2302,17 +2302,17 @@ public class InternalThingMLLexer extends Lexer {
         try {
             int _type = RULE_FLOAT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalThingML.g:7805:12: ( ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | ( '0' .. '9' )+ ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ ) )
-            // InternalThingML.g:7805:14: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | ( '0' .. '9' )+ ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )
+            // InternalThingML.g:7841:12: ( ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | ( '0' .. '9' )+ ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ ) )
+            // InternalThingML.g:7841:14: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | ( '0' .. '9' )+ ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )
             {
-            // InternalThingML.g:7805:14: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | ( '0' .. '9' )+ ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )
+            // InternalThingML.g:7841:14: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | ( '0' .. '9' )+ ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )
             int alt16=3;
             alt16 = dfa16.predict(input);
             switch (alt16) {
                 case 1 :
-                    // InternalThingML.g:7805:15: ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )?
+                    // InternalThingML.g:7841:15: ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )?
                     {
-                    // InternalThingML.g:7805:15: ( '0' .. '9' )+
+                    // InternalThingML.g:7841:15: ( '0' .. '9' )+
                     int cnt4=0;
                     loop4:
                     do {
@@ -2326,7 +2326,7 @@ public class InternalThingMLLexer extends Lexer {
 
                         switch (alt4) {
                     	case 1 :
-                    	    // InternalThingML.g:7805:16: '0' .. '9'
+                    	    // InternalThingML.g:7841:16: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -2343,7 +2343,7 @@ public class InternalThingMLLexer extends Lexer {
                     } while (true);
 
                     match('.'); 
-                    // InternalThingML.g:7805:31: ( '0' .. '9' )*
+                    // InternalThingML.g:7841:31: ( '0' .. '9' )*
                     loop5:
                     do {
                         int alt5=2;
@@ -2356,7 +2356,7 @@ public class InternalThingMLLexer extends Lexer {
 
                         switch (alt5) {
                     	case 1 :
-                    	    // InternalThingML.g:7805:32: '0' .. '9'
+                    	    // InternalThingML.g:7841:32: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -2368,7 +2368,7 @@ public class InternalThingMLLexer extends Lexer {
                         }
                     } while (true);
 
-                    // InternalThingML.g:7805:43: ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )?
+                    // InternalThingML.g:7841:43: ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )?
                     int alt8=2;
                     int LA8_0 = input.LA(1);
 
@@ -2377,7 +2377,7 @@ public class InternalThingMLLexer extends Lexer {
                     }
                     switch (alt8) {
                         case 1 :
-                            // InternalThingML.g:7805:44: ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+
+                            // InternalThingML.g:7841:44: ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+
                             {
                             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                                 input.consume();
@@ -2388,7 +2388,7 @@ public class InternalThingMLLexer extends Lexer {
                                 recover(mse);
                                 throw mse;}
 
-                            // InternalThingML.g:7805:54: ( '+' | '-' )?
+                            // InternalThingML.g:7841:54: ( '+' | '-' )?
                             int alt6=2;
                             int LA6_0 = input.LA(1);
 
@@ -2414,7 +2414,7 @@ public class InternalThingMLLexer extends Lexer {
 
                             }
 
-                            // InternalThingML.g:7805:65: ( '0' .. '9' )+
+                            // InternalThingML.g:7841:65: ( '0' .. '9' )+
                             int cnt7=0;
                             loop7:
                             do {
@@ -2428,7 +2428,7 @@ public class InternalThingMLLexer extends Lexer {
 
                                 switch (alt7) {
                             	case 1 :
-                            	    // InternalThingML.g:7805:66: '0' .. '9'
+                            	    // InternalThingML.g:7841:66: '0' .. '9'
                             	    {
                             	    matchRange('0','9'); 
 
@@ -2454,10 +2454,10 @@ public class InternalThingMLLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // InternalThingML.g:7805:79: '.' ( '0' .. '9' )+ ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )?
+                    // InternalThingML.g:7841:79: '.' ( '0' .. '9' )+ ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )?
                     {
                     match('.'); 
-                    // InternalThingML.g:7805:83: ( '0' .. '9' )+
+                    // InternalThingML.g:7841:83: ( '0' .. '9' )+
                     int cnt9=0;
                     loop9:
                     do {
@@ -2471,7 +2471,7 @@ public class InternalThingMLLexer extends Lexer {
 
                         switch (alt9) {
                     	case 1 :
-                    	    // InternalThingML.g:7805:84: '0' .. '9'
+                    	    // InternalThingML.g:7841:84: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -2487,7 +2487,7 @@ public class InternalThingMLLexer extends Lexer {
                         cnt9++;
                     } while (true);
 
-                    // InternalThingML.g:7805:95: ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )?
+                    // InternalThingML.g:7841:95: ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )?
                     int alt12=2;
                     int LA12_0 = input.LA(1);
 
@@ -2496,7 +2496,7 @@ public class InternalThingMLLexer extends Lexer {
                     }
                     switch (alt12) {
                         case 1 :
-                            // InternalThingML.g:7805:96: ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+
+                            // InternalThingML.g:7841:96: ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+
                             {
                             if ( input.LA(1)=='E'||input.LA(1)=='e' ) {
                                 input.consume();
@@ -2507,7 +2507,7 @@ public class InternalThingMLLexer extends Lexer {
                                 recover(mse);
                                 throw mse;}
 
-                            // InternalThingML.g:7805:106: ( '+' | '-' )?
+                            // InternalThingML.g:7841:106: ( '+' | '-' )?
                             int alt10=2;
                             int LA10_0 = input.LA(1);
 
@@ -2533,7 +2533,7 @@ public class InternalThingMLLexer extends Lexer {
 
                             }
 
-                            // InternalThingML.g:7805:117: ( '0' .. '9' )+
+                            // InternalThingML.g:7841:117: ( '0' .. '9' )+
                             int cnt11=0;
                             loop11:
                             do {
@@ -2547,7 +2547,7 @@ public class InternalThingMLLexer extends Lexer {
 
                                 switch (alt11) {
                             	case 1 :
-                            	    // InternalThingML.g:7805:118: '0' .. '9'
+                            	    // InternalThingML.g:7841:118: '0' .. '9'
                             	    {
                             	    matchRange('0','9'); 
 
@@ -2573,9 +2573,9 @@ public class InternalThingMLLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // InternalThingML.g:7805:131: ( '0' .. '9' )+ ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+
+                    // InternalThingML.g:7841:131: ( '0' .. '9' )+ ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+
                     {
-                    // InternalThingML.g:7805:131: ( '0' .. '9' )+
+                    // InternalThingML.g:7841:131: ( '0' .. '9' )+
                     int cnt13=0;
                     loop13:
                     do {
@@ -2589,7 +2589,7 @@ public class InternalThingMLLexer extends Lexer {
 
                         switch (alt13) {
                     	case 1 :
-                    	    // InternalThingML.g:7805:132: '0' .. '9'
+                    	    // InternalThingML.g:7841:132: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -2614,7 +2614,7 @@ public class InternalThingMLLexer extends Lexer {
                         recover(mse);
                         throw mse;}
 
-                    // InternalThingML.g:7805:153: ( '+' | '-' )?
+                    // InternalThingML.g:7841:153: ( '+' | '-' )?
                     int alt14=2;
                     int LA14_0 = input.LA(1);
 
@@ -2640,7 +2640,7 @@ public class InternalThingMLLexer extends Lexer {
 
                     }
 
-                    // InternalThingML.g:7805:164: ( '0' .. '9' )+
+                    // InternalThingML.g:7841:164: ( '0' .. '9' )+
                     int cnt15=0;
                     loop15:
                     do {
@@ -2654,7 +2654,7 @@ public class InternalThingMLLexer extends Lexer {
 
                         switch (alt15) {
                     	case 1 :
-                    	    // InternalThingML.g:7805:165: '0' .. '9'
+                    	    // InternalThingML.g:7841:165: '0' .. '9'
                     	    {
                     	    matchRange('0','9'); 
 
@@ -2692,11 +2692,11 @@ public class InternalThingMLLexer extends Lexer {
         try {
             int _type = RULE_STRING_EXT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalThingML.g:7807:17: ( '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
-            // InternalThingML.g:7807:19: '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+            // InternalThingML.g:7843:17: ( '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // InternalThingML.g:7843:19: '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
             {
             match('\''); 
-            // InternalThingML.g:7807:24: ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )*
+            // InternalThingML.g:7843:24: ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )*
             loop17:
             do {
                 int alt17=3;
@@ -2712,7 +2712,7 @@ public class InternalThingMLLexer extends Lexer {
 
                 switch (alt17) {
             	case 1 :
-            	    // InternalThingML.g:7807:25: '\\\\' .
+            	    // InternalThingML.g:7843:25: '\\\\' .
             	    {
             	    match('\\'); 
             	    matchAny(); 
@@ -2720,7 +2720,7 @@ public class InternalThingMLLexer extends Lexer {
             	    }
             	    break;
             	case 2 :
-            	    // InternalThingML.g:7807:32: ~ ( ( '\\\\' | '\\'' ) )
+            	    // InternalThingML.g:7843:32: ~ ( ( '\\\\' | '\\'' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2757,11 +2757,11 @@ public class InternalThingMLLexer extends Lexer {
         try {
             int _type = RULE_STRING_LIT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalThingML.g:7809:17: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' )
-            // InternalThingML.g:7809:19: '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+            // InternalThingML.g:7845:17: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' )
+            // InternalThingML.g:7845:19: '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
             {
             match('\"'); 
-            // InternalThingML.g:7809:23: ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )*
+            // InternalThingML.g:7845:23: ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )*
             loop18:
             do {
                 int alt18=3;
@@ -2777,7 +2777,7 @@ public class InternalThingMLLexer extends Lexer {
 
                 switch (alt18) {
             	case 1 :
-            	    // InternalThingML.g:7809:24: '\\\\' .
+            	    // InternalThingML.g:7845:24: '\\\\' .
             	    {
             	    match('\\'); 
             	    matchAny(); 
@@ -2785,7 +2785,7 @@ public class InternalThingMLLexer extends Lexer {
             	    }
             	    break;
             	case 2 :
-            	    // InternalThingML.g:7809:31: ~ ( ( '\\\\' | '\"' ) )
+            	    // InternalThingML.g:7845:31: ~ ( ( '\\\\' | '\"' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2822,12 +2822,12 @@ public class InternalThingMLLexer extends Lexer {
         try {
             int _type = RULE_ML_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalThingML.g:7811:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // InternalThingML.g:7811:19: '/*' ( options {greedy=false; } : . )* '*/'
+            // InternalThingML.g:7847:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // InternalThingML.g:7847:19: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // InternalThingML.g:7811:24: ( options {greedy=false; } : . )*
+            // InternalThingML.g:7847:24: ( options {greedy=false; } : . )*
             loop19:
             do {
                 int alt19=2;
@@ -2852,7 +2852,7 @@ public class InternalThingMLLexer extends Lexer {
 
                 switch (alt19) {
             	case 1 :
-            	    // InternalThingML.g:7811:52: .
+            	    // InternalThingML.g:7847:52: .
             	    {
             	    matchAny(); 
 
@@ -2882,12 +2882,12 @@ public class InternalThingMLLexer extends Lexer {
         try {
             int _type = RULE_SL_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalThingML.g:7813:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // InternalThingML.g:7813:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // InternalThingML.g:7849:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // InternalThingML.g:7849:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("//"); 
 
-            // InternalThingML.g:7813:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // InternalThingML.g:7849:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop20:
             do {
                 int alt20=2;
@@ -2900,7 +2900,7 @@ public class InternalThingMLLexer extends Lexer {
 
                 switch (alt20) {
             	case 1 :
-            	    // InternalThingML.g:7813:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // InternalThingML.g:7849:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2920,7 +2920,7 @@ public class InternalThingMLLexer extends Lexer {
                 }
             } while (true);
 
-            // InternalThingML.g:7813:40: ( ( '\\r' )? '\\n' )?
+            // InternalThingML.g:7849:40: ( ( '\\r' )? '\\n' )?
             int alt22=2;
             int LA22_0 = input.LA(1);
 
@@ -2929,9 +2929,9 @@ public class InternalThingMLLexer extends Lexer {
             }
             switch (alt22) {
                 case 1 :
-                    // InternalThingML.g:7813:41: ( '\\r' )? '\\n'
+                    // InternalThingML.g:7849:41: ( '\\r' )? '\\n'
                     {
-                    // InternalThingML.g:7813:41: ( '\\r' )?
+                    // InternalThingML.g:7849:41: ( '\\r' )?
                     int alt21=2;
                     int LA21_0 = input.LA(1);
 
@@ -2940,7 +2940,7 @@ public class InternalThingMLLexer extends Lexer {
                     }
                     switch (alt21) {
                         case 1 :
-                            // InternalThingML.g:7813:41: '\\r'
+                            // InternalThingML.g:7849:41: '\\r'
                             {
                             match('\r'); 
 
@@ -2972,10 +2972,10 @@ public class InternalThingMLLexer extends Lexer {
         try {
             int _type = RULE_WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalThingML.g:7815:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // InternalThingML.g:7815:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // InternalThingML.g:7851:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // InternalThingML.g:7851:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // InternalThingML.g:7815:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // InternalThingML.g:7851:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt23=0;
             loop23:
             do {
@@ -3029,8 +3029,8 @@ public class InternalThingMLLexer extends Lexer {
         try {
             int _type = RULE_ANY_OTHER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalThingML.g:7817:16: ( . )
-            // InternalThingML.g:7817:18: .
+            // InternalThingML.g:7853:16: ( . )
+            // InternalThingML.g:7853:18: .
             {
             matchAny(); 
 
@@ -3856,7 +3856,7 @@ public class InternalThingMLLexer extends Lexer {
             this.transition = DFA16_transition;
         }
         public String getDescription() {
-            return "7805:14: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | ( '0' .. '9' )+ ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )";
+            return "7841:14: ( ( '0' .. '9' )+ '.' ( '0' .. '9' )* ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | '.' ( '0' .. '9' )+ ( ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )? | ( '0' .. '9' )+ ( 'e' | 'E' ) ( '+' | '-' )? ( '0' .. '9' )+ )";
         }
     }
     static final String DFA24_eotS =

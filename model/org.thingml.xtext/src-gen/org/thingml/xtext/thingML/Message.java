@@ -16,14 +16,13 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.Message#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Message#getParameters <em>Parameters</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Message#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getMessage()
  * @model
  * @generated
  */
-public interface Message extends AnnotatedElement, NamedElement, ReferencedElmt
+public interface Message extends AnnotatedElement, ReferencedElmt
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -66,21 +65,5 @@ public interface Message extends AnnotatedElement, NamedElement, ReferencedElmt
    * @generated
    */
   EList<Parameter> getParameters();
-
-  /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getMessage_Annotations()
-   * @model containment="true"
-   * @generated
-   */
-  EList<PlatformAnnotation> getAnnotations();
 
 } // Message

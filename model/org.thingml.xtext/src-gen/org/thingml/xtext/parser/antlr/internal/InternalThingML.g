@@ -1217,17 +1217,17 @@ ruleFunction returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getFunctionAccess().getTypeTypeRefParserRuleCall_5_1_0());
+						newCompositeNode(grammarAccess.getFunctionAccess().getTypeRefTypeRefParserRuleCall_5_1_0());
 					}
-					lv_type_8_0=ruleTypeRef
+					lv_typeRef_8_0=ruleTypeRef
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getFunctionRule());
 						}
 						set(
 							$current,
-							"type",
-							lv_type_8_0,
+							"typeRef",
+							lv_typeRef_8_0,
 							"org.thingml.xtext.ThingML.TypeRef");
 						afterParserOrEnumRuleCall();
 					}
@@ -1334,17 +1334,17 @@ ruleProperty returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getPropertyAccess().getTypeTypeRefParserRuleCall_4_0());
+					newCompositeNode(grammarAccess.getPropertyAccess().getTypeRefTypeRefParserRuleCall_4_0());
 				}
-				lv_type_4_0=ruleTypeRef
+				lv_typeRef_4_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getPropertyRule());
 					}
 					set(
 						$current,
-						"type",
-						lv_type_4_0,
+						"typeRef",
+						lv_typeRef_4_0,
 						"org.thingml.xtext.ThingML.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
@@ -1558,17 +1558,17 @@ ruleParameter returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getParameterAccess().getTypeTypeRefParserRuleCall_2_0());
+					newCompositeNode(grammarAccess.getParameterAccess().getTypeRefTypeRefParserRuleCall_2_0());
 				}
-				lv_type_2_0=ruleTypeRef
+				lv_typeRef_2_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getParameterRule());
 					}
 					set(
 						$current,
-						"type",
-						lv_type_2_0,
+						"typeRef",
+						lv_typeRef_2_0,
 						"org.thingml.xtext.ThingML.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
@@ -4355,6 +4355,42 @@ ruleState returns [EObject current=null]
 	)
 ;
 
+// Entry rule entryRuleHandler
+entryRuleHandler returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getHandlerRule()); }
+	iv_ruleHandler=ruleHandler
+	{ $current=$iv_ruleHandler.current; }
+	EOF;
+
+// Rule Handler
+ruleHandler returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getHandlerAccess().getTransitionParserRuleCall_0());
+		}
+		this_Transition_0=ruleTransition
+		{
+			$current = $this_Transition_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getHandlerAccess().getInternalTransitionParserRuleCall_1());
+		}
+		this_InternalTransition_1=ruleInternalTransition
+		{
+			$current = $this_InternalTransition_1.current;
+			afterParserOrEnumRuleCall();
+		}
+	)
+;
+
 // Entry rule entryRuleTransition
 entryRuleTransition returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getTransitionRule()); }
@@ -5065,17 +5101,17 @@ ruleLocalVariable returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getLocalVariableAccess().getTypeTypeRefParserRuleCall_4_0());
+					newCompositeNode(grammarAccess.getLocalVariableAccess().getTypeRefTypeRefParserRuleCall_4_0());
 				}
-				lv_type_4_0=ruleTypeRef
+				lv_typeRef_4_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getLocalVariableRule());
 					}
 					set(
 						$current,
-						"type",
-						lv_type_4_0,
+						"typeRef",
+						lv_typeRef_4_0,
 						"org.thingml.xtext.ThingML.TypeRef");
 					afterParserOrEnumRuleCall();
 				}

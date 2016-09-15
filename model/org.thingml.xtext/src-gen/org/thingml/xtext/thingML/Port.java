@@ -15,7 +15,6 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.Port#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Port#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Port#getSends <em>Sends</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Port#getReceives <em>Receives</em>}</li>
  * </ul>
@@ -24,7 +23,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface Port extends AnnotatedElement, NamedElement
+public interface Port extends AnnotatedElement
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -51,22 +50,6 @@ public interface Port extends AnnotatedElement, NamedElement
    * @generated
    */
   void setName(String value);
-
-  /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getPort_Annotations()
-   * @model containment="true"
-   * @generated
-   */
-  EList<PlatformAnnotation> getAnnotations();
 
   /**
    * Returns the value of the '<em><b>Sends</b></em>' reference list.

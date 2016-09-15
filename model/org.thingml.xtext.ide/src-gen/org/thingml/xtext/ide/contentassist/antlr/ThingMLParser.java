@@ -37,7 +37,6 @@ public class ThingMLParser extends AbstractContentAssistParser {
 				{
 					put(grammarAccess.getThingMLModelAccess().getAlternatives_1(), "rule__ThingMLModel__Alternatives_1");
 					put(grammarAccess.getAnnotatedElementAccess().getAlternatives(), "rule__AnnotatedElement__Alternatives");
-					put(grammarAccess.getNamedElementAccess().getAlternatives(), "rule__NamedElement__Alternatives");
 					put(grammarAccess.getTypeAccess().getAlternatives(), "rule__Type__Alternatives");
 					put(grammarAccess.getThingAccess().getAlternatives_6(), "rule__Thing__Alternatives_6");
 					put(grammarAccess.getPortAccess().getAlternatives(), "rule__Port__Alternatives");
@@ -256,12 +255,12 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getFunctionAccess().getNameAssignment_1(), "rule__Function__NameAssignment_1");
 					put(grammarAccess.getFunctionAccess().getParametersAssignment_3_0(), "rule__Function__ParametersAssignment_3_0");
 					put(grammarAccess.getFunctionAccess().getParametersAssignment_3_1_1(), "rule__Function__ParametersAssignment_3_1_1");
-					put(grammarAccess.getFunctionAccess().getTypeAssignment_5_1(), "rule__Function__TypeAssignment_5_1");
+					put(grammarAccess.getFunctionAccess().getTypeRefAssignment_5_1(), "rule__Function__TypeRefAssignment_5_1");
 					put(grammarAccess.getFunctionAccess().getAnnotationsAssignment_6(), "rule__Function__AnnotationsAssignment_6");
 					put(grammarAccess.getFunctionAccess().getBodyAssignment_7(), "rule__Function__BodyAssignment_7");
 					put(grammarAccess.getPropertyAccess().getChangeableAssignment_0(), "rule__Property__ChangeableAssignment_0");
 					put(grammarAccess.getPropertyAccess().getNameAssignment_2(), "rule__Property__NameAssignment_2");
-					put(grammarAccess.getPropertyAccess().getTypeAssignment_4(), "rule__Property__TypeAssignment_4");
+					put(grammarAccess.getPropertyAccess().getTypeRefAssignment_4(), "rule__Property__TypeRefAssignment_4");
 					put(grammarAccess.getPropertyAccess().getInitAssignment_5_1(), "rule__Property__InitAssignment_5_1");
 					put(grammarAccess.getPropertyAccess().getAnnotationsAssignment_6(), "rule__Property__AnnotationsAssignment_6");
 					put(grammarAccess.getMessageAccess().getNameAssignment_1(), "rule__Message__NameAssignment_1");
@@ -269,7 +268,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getMessageAccess().getParametersAssignment_3_1_1(), "rule__Message__ParametersAssignment_3_1_1");
 					put(grammarAccess.getMessageAccess().getAnnotationsAssignment_5(), "rule__Message__AnnotationsAssignment_5");
 					put(grammarAccess.getParameterAccess().getNameAssignment_0(), "rule__Parameter__NameAssignment_0");
-					put(grammarAccess.getParameterAccess().getTypeAssignment_2(), "rule__Parameter__TypeAssignment_2");
+					put(grammarAccess.getParameterAccess().getTypeRefAssignment_2(), "rule__Parameter__TypeRefAssignment_2");
 					put(grammarAccess.getParameterAccess().getAnnotationsAssignment_3(), "rule__Parameter__AnnotationsAssignment_3");
 					put(grammarAccess.getRequiredPortAccess().getOptionalAssignment_0(), "rule__RequiredPort__OptionalAssignment_0");
 					put(grammarAccess.getRequiredPortAccess().getNameAssignment_3(), "rule__RequiredPort__NameAssignment_3");
@@ -385,7 +384,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getExternStatementAccess().getSegmentsAssignment_1_1(), "rule__ExternStatement__SegmentsAssignment_1_1");
 					put(grammarAccess.getLocalVariableAccess().getChangeableAssignment_0(), "rule__LocalVariable__ChangeableAssignment_0");
 					put(grammarAccess.getLocalVariableAccess().getNameAssignment_2(), "rule__LocalVariable__NameAssignment_2");
-					put(grammarAccess.getLocalVariableAccess().getTypeAssignment_4(), "rule__LocalVariable__TypeAssignment_4");
+					put(grammarAccess.getLocalVariableAccess().getTypeRefAssignment_4(), "rule__LocalVariable__TypeRefAssignment_4");
 					put(grammarAccess.getLocalVariableAccess().getInitAssignment_5_1(), "rule__LocalVariable__InitAssignment_5_1");
 					put(grammarAccess.getLocalVariableAccess().getAnnotationsAssignment_6(), "rule__LocalVariable__AnnotationsAssignment_6");
 					put(grammarAccess.getSendActionAccess().getPortAssignment_0(), "rule__SendAction__PortAssignment_0");

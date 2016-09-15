@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.Expression;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -35,7 +34,6 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *   <li>{@link org.thingml.xtext.thingML.impl.PropertyAssignImpl#getProperty <em>Property</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PropertyAssignImpl#getIndex <em>Index</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PropertyAssignImpl#getInit <em>Init</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.PropertyAssignImpl#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @generated
@@ -71,16 +69,6 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
    * @ordered
    */
   protected Expression init;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * <!-- begin-user-doc -->
@@ -213,20 +201,6 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.PROPERTY_ASSIGN__ANNOTATIONS);
-    }
-    return annotations;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -236,8 +210,6 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
         return ((InternalEList<?>)getIndex()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.PROPERTY_ASSIGN__INIT:
         return basicSetInit(null, msgs);
-      case ThingMLPackage.PROPERTY_ASSIGN__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -259,8 +231,6 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
         return getIndex();
       case ThingMLPackage.PROPERTY_ASSIGN__INIT:
         return getInit();
-      case ThingMLPackage.PROPERTY_ASSIGN__ANNOTATIONS:
-        return getAnnotations();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -286,10 +256,6 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
       case ThingMLPackage.PROPERTY_ASSIGN__INIT:
         setInit((Expression)newValue);
         return;
-      case ThingMLPackage.PROPERTY_ASSIGN__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
-        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -313,9 +279,6 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
       case ThingMLPackage.PROPERTY_ASSIGN__INIT:
         setInit((Expression)null);
         return;
-      case ThingMLPackage.PROPERTY_ASSIGN__ANNOTATIONS:
-        getAnnotations().clear();
-        return;
     }
     super.eUnset(featureID);
   }
@@ -336,8 +299,6 @@ public class PropertyAssignImpl extends AnnotatedElementImpl implements Property
         return index != null && !index.isEmpty();
       case ThingMLPackage.PROPERTY_ASSIGN__INIT:
         return init != null;
-      case ThingMLPackage.PROPERTY_ASSIGN__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
     }
     return super.eIsSet(featureID);
   }

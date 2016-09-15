@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.LocalVariable;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Source;
 import org.thingml.xtext.thingML.Stream;
@@ -34,7 +33,6 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.StreamImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.StreamImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StreamImpl#getInput <em>Input</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StreamImpl#getSelection <em>Selection</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StreamImpl#getOutput <em>Output</em>}</li>
@@ -42,7 +40,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *
  * @generated
  */
-public class StreamImpl extends NamedElementImpl implements Stream
+public class StreamImpl extends AnnotatedElementImpl implements Stream
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -63,16 +61,6 @@ public class StreamImpl extends NamedElementImpl implements Stream
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * The cached value of the '{@link #getInput() <em>Input</em>}' containment reference.
@@ -146,20 +134,6 @@ public class StreamImpl extends NamedElementImpl implements Stream
     name = newName;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.STREAM__NAME, oldName, name));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.STREAM__ANNOTATIONS);
-    }
-    return annotations;
   }
 
   /**
@@ -282,8 +256,6 @@ public class StreamImpl extends NamedElementImpl implements Stream
   {
     switch (featureID)
     {
-      case ThingMLPackage.STREAM__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.STREAM__INPUT:
         return basicSetInput(null, msgs);
       case ThingMLPackage.STREAM__SELECTION:
@@ -306,8 +278,6 @@ public class StreamImpl extends NamedElementImpl implements Stream
     {
       case ThingMLPackage.STREAM__NAME:
         return getName();
-      case ThingMLPackage.STREAM__ANNOTATIONS:
-        return getAnnotations();
       case ThingMLPackage.STREAM__INPUT:
         return getInput();
       case ThingMLPackage.STREAM__SELECTION:
@@ -331,10 +301,6 @@ public class StreamImpl extends NamedElementImpl implements Stream
     {
       case ThingMLPackage.STREAM__NAME:
         setName((String)newValue);
-        return;
-      case ThingMLPackage.STREAM__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
       case ThingMLPackage.STREAM__INPUT:
         setInput((Source)newValue);
@@ -363,9 +329,6 @@ public class StreamImpl extends NamedElementImpl implements Stream
       case ThingMLPackage.STREAM__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case ThingMLPackage.STREAM__ANNOTATIONS:
-        getAnnotations().clear();
-        return;
       case ThingMLPackage.STREAM__INPUT:
         setInput((Source)null);
         return;
@@ -391,8 +354,6 @@ public class StreamImpl extends NamedElementImpl implements Stream
     {
       case ThingMLPackage.STREAM__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ThingMLPackage.STREAM__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.STREAM__INPUT:
         return input != null;
       case ThingMLPackage.STREAM__SELECTION:

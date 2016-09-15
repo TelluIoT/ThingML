@@ -21,8 +21,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.InternalTransition;
 import org.thingml.xtext.thingML.ParallelRegion;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -37,7 +37,6 @@ import org.thingml.xtext.thingML.Transition;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getEntry <em>Entry</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getExit <em>Exit</em>}</li>
@@ -51,7 +50,7 @@ import org.thingml.xtext.thingML.Transition;
  *
  * @generated
  */
-public class SessionImpl extends RegionImpl implements Session
+public class SessionImpl extends AnnotatedElementImpl implements Session
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -72,16 +71,6 @@ public class SessionImpl extends RegionImpl implements Session
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
@@ -225,20 +214,6 @@ public class SessionImpl extends RegionImpl implements Session
     name = newName;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__NAME, oldName, name));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.SESSION__ANNOTATIONS);
-    }
-    return annotations;
   }
 
   /**
@@ -483,8 +458,6 @@ public class SessionImpl extends RegionImpl implements Session
   {
     switch (featureID)
     {
-      case ThingMLPackage.SESSION__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.SESSION__PROPERTIES:
         return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.SESSION__ENTRY:
@@ -515,8 +488,6 @@ public class SessionImpl extends RegionImpl implements Session
     {
       case ThingMLPackage.SESSION__NAME:
         return getName();
-      case ThingMLPackage.SESSION__ANNOTATIONS:
-        return getAnnotations();
       case ThingMLPackage.SESSION__PROPERTIES:
         return getProperties();
       case ThingMLPackage.SESSION__ENTRY:
@@ -553,10 +524,6 @@ public class SessionImpl extends RegionImpl implements Session
     {
       case ThingMLPackage.SESSION__NAME:
         setName((String)newValue);
-        return;
-      case ThingMLPackage.SESSION__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
       case ThingMLPackage.SESSION__PROPERTIES:
         getProperties().clear();
@@ -607,9 +574,6 @@ public class SessionImpl extends RegionImpl implements Session
       case ThingMLPackage.SESSION__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case ThingMLPackage.SESSION__ANNOTATIONS:
-        getAnnotations().clear();
-        return;
       case ThingMLPackage.SESSION__PROPERTIES:
         getProperties().clear();
         return;
@@ -653,8 +617,6 @@ public class SessionImpl extends RegionImpl implements Session
     {
       case ThingMLPackage.SESSION__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ThingMLPackage.SESSION__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.SESSION__PROPERTIES:
         return properties != null && !properties.isEmpty();
       case ThingMLPackage.SESSION__ENTRY:
@@ -685,12 +647,18 @@ public class SessionImpl extends RegionImpl implements Session
   @Override
   public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
   {
+    if (baseClass == Region.class)
+    {
+      switch (derivedFeatureID)
+      {
+        default: return -1;
+      }
+    }
     if (baseClass == State.class)
     {
       switch (derivedFeatureID)
       {
         case ThingMLPackage.SESSION__NAME: return ThingMLPackage.STATE__NAME;
-        case ThingMLPackage.SESSION__ANNOTATIONS: return ThingMLPackage.STATE__ANNOTATIONS;
         case ThingMLPackage.SESSION__PROPERTIES: return ThingMLPackage.STATE__PROPERTIES;
         case ThingMLPackage.SESSION__ENTRY: return ThingMLPackage.STATE__ENTRY;
         case ThingMLPackage.SESSION__EXIT: return ThingMLPackage.STATE__EXIT;
@@ -710,12 +678,18 @@ public class SessionImpl extends RegionImpl implements Session
   @Override
   public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
   {
+    if (baseClass == Region.class)
+    {
+      switch (baseFeatureID)
+      {
+        default: return -1;
+      }
+    }
     if (baseClass == State.class)
     {
       switch (baseFeatureID)
       {
         case ThingMLPackage.STATE__NAME: return ThingMLPackage.SESSION__NAME;
-        case ThingMLPackage.STATE__ANNOTATIONS: return ThingMLPackage.SESSION__ANNOTATIONS;
         case ThingMLPackage.STATE__PROPERTIES: return ThingMLPackage.SESSION__PROPERTIES;
         case ThingMLPackage.STATE__ENTRY: return ThingMLPackage.SESSION__ENTRY;
         case ThingMLPackage.STATE__EXIT: return ThingMLPackage.SESSION__EXIT;

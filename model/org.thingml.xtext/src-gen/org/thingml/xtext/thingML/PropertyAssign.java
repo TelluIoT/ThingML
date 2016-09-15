@@ -17,7 +17,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.thingml.xtext.thingML.PropertyAssign#getProperty <em>Property</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.PropertyAssign#getIndex <em>Index</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.PropertyAssign#getInit <em>Init</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.PropertyAssign#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getPropertyAssign()
@@ -93,21 +92,5 @@ public interface PropertyAssign extends AnnotatedElement
    * @generated
    */
   void setInit(Expression value);
-
-  /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getPropertyAssign_Annotations()
-   * @model containment="true"
-   * @generated
-   */
-  EList<PlatformAnnotation> getAnnotations();
 
 } // PropertyAssign

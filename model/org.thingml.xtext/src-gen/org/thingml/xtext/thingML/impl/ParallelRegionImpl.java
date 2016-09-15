@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.ParallelRegion;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
@@ -34,13 +33,12 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#isHistory <em>History</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getSubstate <em>Substate</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ParallelRegionImpl extends RegionImpl implements ParallelRegion
+public class ParallelRegionImpl extends AnnotatedElementImpl implements ParallelRegion
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -91,16 +89,6 @@ public class ParallelRegionImpl extends RegionImpl implements ParallelRegion
    * @ordered
    */
   protected boolean history = HISTORY_EDEFAULT;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * The cached value of the '{@link #getSubstate() <em>Substate</em>}' containment reference list.
@@ -227,20 +215,6 @@ public class ParallelRegionImpl extends RegionImpl implements ParallelRegion
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.PARALLEL_REGION__ANNOTATIONS);
-    }
-    return annotations;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EList<State> getSubstate()
   {
     if (substate == null)
@@ -260,8 +234,6 @@ public class ParallelRegionImpl extends RegionImpl implements ParallelRegion
   {
     switch (featureID)
     {
-      case ThingMLPackage.PARALLEL_REGION__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
         return ((InternalEList<?>)getSubstate()).basicRemove(otherEnd, msgs);
     }
@@ -285,8 +257,6 @@ public class ParallelRegionImpl extends RegionImpl implements ParallelRegion
         return basicGetInitial();
       case ThingMLPackage.PARALLEL_REGION__HISTORY:
         return isHistory();
-      case ThingMLPackage.PARALLEL_REGION__ANNOTATIONS:
-        return getAnnotations();
       case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
         return getSubstate();
     }
@@ -312,10 +282,6 @@ public class ParallelRegionImpl extends RegionImpl implements ParallelRegion
         return;
       case ThingMLPackage.PARALLEL_REGION__HISTORY:
         setHistory((Boolean)newValue);
-        return;
-      case ThingMLPackage.PARALLEL_REGION__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
       case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
         getSubstate().clear();
@@ -344,9 +310,6 @@ public class ParallelRegionImpl extends RegionImpl implements ParallelRegion
       case ThingMLPackage.PARALLEL_REGION__HISTORY:
         setHistory(HISTORY_EDEFAULT);
         return;
-      case ThingMLPackage.PARALLEL_REGION__ANNOTATIONS:
-        getAnnotations().clear();
-        return;
       case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
         getSubstate().clear();
         return;
@@ -370,8 +333,6 @@ public class ParallelRegionImpl extends RegionImpl implements ParallelRegion
         return initial != null;
       case ThingMLPackage.PARALLEL_REGION__HISTORY:
         return history != HISTORY_EDEFAULT;
-      case ThingMLPackage.PARALLEL_REGION__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
         return substate != null && !substate.isEmpty();
     }

@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.TypeRef;
 
@@ -35,8 +34,7 @@ import org.thingml.xtext.thingML.TypeRef;
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getParameters <em>Parameters</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getType <em>Type</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getTypeRef <em>Type Ref</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getBody <em>Body</em>}</li>
  * </ul>
  *
@@ -75,24 +73,14 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
   protected EList<Parameter> parameters;
 
   /**
-   * The cached value of the '{@link #getType() <em>Type</em>}' containment reference.
+   * The cached value of the '{@link #getTypeRef() <em>Type Ref</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getType()
+   * @see #getTypeRef()
    * @generated
    * @ordered
    */
-  protected TypeRef type;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
+  protected TypeRef typeRef;
 
   /**
    * The cached value of the '{@link #getBody() <em>Body</em>}' containment reference.
@@ -167,9 +155,9 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
    * <!-- end-user-doc -->
    * @generated
    */
-  public TypeRef getType()
+  public TypeRef getTypeRef()
   {
-    return type;
+    return typeRef;
   }
 
   /**
@@ -177,13 +165,13 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetType(TypeRef newType, NotificationChain msgs)
+  public NotificationChain basicSetTypeRef(TypeRef newTypeRef, NotificationChain msgs)
   {
-    TypeRef oldType = type;
-    type = newType;
+    TypeRef oldTypeRef = typeRef;
+    typeRef = newTypeRef;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.FUNCTION__TYPE, oldType, newType);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.FUNCTION__TYPE_REF, oldTypeRef, newTypeRef);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -194,34 +182,20 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setType(TypeRef newType)
+  public void setTypeRef(TypeRef newTypeRef)
   {
-    if (newType != type)
+    if (newTypeRef != typeRef)
     {
       NotificationChain msgs = null;
-      if (type != null)
-        msgs = ((InternalEObject)type).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.FUNCTION__TYPE, null, msgs);
-      if (newType != null)
-        msgs = ((InternalEObject)newType).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.FUNCTION__TYPE, null, msgs);
-      msgs = basicSetType(newType, msgs);
+      if (typeRef != null)
+        msgs = ((InternalEObject)typeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.FUNCTION__TYPE_REF, null, msgs);
+      if (newTypeRef != null)
+        msgs = ((InternalEObject)newTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.FUNCTION__TYPE_REF, null, msgs);
+      msgs = basicSetTypeRef(newTypeRef, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.FUNCTION__TYPE, newType, newType));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.FUNCTION__ANNOTATIONS);
-    }
-    return annotations;
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.FUNCTION__TYPE_REF, newTypeRef, newTypeRef));
   }
 
   /**
@@ -284,10 +258,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
     {
       case ThingMLPackage.FUNCTION__PARAMETERS:
         return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
-      case ThingMLPackage.FUNCTION__TYPE:
-        return basicSetType(null, msgs);
-      case ThingMLPackage.FUNCTION__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.FUNCTION__TYPE_REF:
+        return basicSetTypeRef(null, msgs);
       case ThingMLPackage.FUNCTION__BODY:
         return basicSetBody(null, msgs);
     }
@@ -308,10 +280,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
         return getName();
       case ThingMLPackage.FUNCTION__PARAMETERS:
         return getParameters();
-      case ThingMLPackage.FUNCTION__TYPE:
-        return getType();
-      case ThingMLPackage.FUNCTION__ANNOTATIONS:
-        return getAnnotations();
+      case ThingMLPackage.FUNCTION__TYPE_REF:
+        return getTypeRef();
       case ThingMLPackage.FUNCTION__BODY:
         return getBody();
     }
@@ -336,12 +306,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
         getParameters().clear();
         getParameters().addAll((Collection<? extends Parameter>)newValue);
         return;
-      case ThingMLPackage.FUNCTION__TYPE:
-        setType((TypeRef)newValue);
-        return;
-      case ThingMLPackage.FUNCTION__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
+      case ThingMLPackage.FUNCTION__TYPE_REF:
+        setTypeRef((TypeRef)newValue);
         return;
       case ThingMLPackage.FUNCTION__BODY:
         setBody((Action)newValue);
@@ -366,11 +332,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
       case ThingMLPackage.FUNCTION__PARAMETERS:
         getParameters().clear();
         return;
-      case ThingMLPackage.FUNCTION__TYPE:
-        setType((TypeRef)null);
-        return;
-      case ThingMLPackage.FUNCTION__ANNOTATIONS:
-        getAnnotations().clear();
+      case ThingMLPackage.FUNCTION__TYPE_REF:
+        setTypeRef((TypeRef)null);
         return;
       case ThingMLPackage.FUNCTION__BODY:
         setBody((Action)null);
@@ -393,10 +356,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.FUNCTION__PARAMETERS:
         return parameters != null && !parameters.isEmpty();
-      case ThingMLPackage.FUNCTION__TYPE:
-        return type != null;
-      case ThingMLPackage.FUNCTION__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
+      case ThingMLPackage.FUNCTION__TYPE_REF:
+        return typeRef != null;
       case ThingMLPackage.FUNCTION__BODY:
         return body != null;
     }

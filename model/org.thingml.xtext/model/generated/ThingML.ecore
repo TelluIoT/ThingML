@@ -18,45 +18,36 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AnnotatedElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AnnotatedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
+        eType="#//PlatformAnnotation" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TypeRef">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isArray" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cardinality" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Type" eSuperTypes="#//AnnotatedElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="PrimitiveType" eSuperTypes="#//NamedElement #//Type">
+  <eClassifiers xsi:type="ecore:EClass" name="Type" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PrimitiveType" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ByteSize" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ObjectType" eSuperTypes="#//NamedElement #//Type">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Enumeration" eSuperTypes="#//NamedElement #//Type">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ObjectType" eSuperTypes="#//Type"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Enumeration" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EReference" name="literals" upperBound="-1"
         eType="#//EnumerationLiteral" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EnumerationLiteral" eSuperTypes="#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="EnumerationLiteral">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
         eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Thing" eSuperTypes="#//NamedElement #//Type">
+  <eClassifiers xsi:type="ecore:EClass" name="Thing" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fragment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="includes" unique="false"
         upperBound="-1" eType="#//Thing"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="messages" upperBound="-1"
         eType="#//Message" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ports" upperBound="-1"
@@ -78,53 +69,39 @@
         eType="#//Expression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Protocol" eSuperTypes="#//AnnotatedElement #//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Protocol" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="#//AnnotatedElement #//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//Parameter" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//TypeRef"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="typeRef" eType="#//TypeRef"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//Action"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Property" eSuperTypes="#//AnnotatedElement #//NamedElement #//ReferencedElmt #//Variable">
+  <eClassifiers xsi:type="ecore:EClass" name="Property" eSuperTypes="#//AnnotatedElement #//ReferencedElmt #//Variable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//TypeRef"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="typeRef" eType="#//TypeRef"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//AnnotatedElement #//NamedElement #//ReferencedElmt">
+  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//AnnotatedElement #//ReferencedElmt">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//Parameter" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//AnnotatedElement #//ReferencedElmt #//Variable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//TypeRef"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="typeRef" eType="#//TypeRef"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Port" eSuperTypes="#//AnnotatedElement #//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Port" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sends" unique="false" upperBound="-1"
         eType="#//Message"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="receives" unique="false"
@@ -135,10 +112,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProvidedPort" eSuperTypes="#//Port"/>
   <eClassifiers xsi:type="ecore:EClass" name="InternalPort" eSuperTypes="#//Port"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Stream" eSuperTypes="#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Stream" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="input" eType="#//Source"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="selection" upperBound="-1"
@@ -203,7 +178,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LengthArray" eSuperTypes="#//ElmtProperty"/>
   <eClassifiers xsi:type="ecore:EClass" name="Region"/>
-  <eClassifiers xsi:type="ecore:EClass" name="CompositeState" eSuperTypes="#//Region #//State">
+  <eClassifiers xsi:type="ecore:EClass" name="CompositeState" eSuperTypes="#//AnnotatedElement #//Region #//State">
     <eStructuralFeatures xsi:type="ecore:EReference" name="initial" eType="#//State"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="history" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="substate" upperBound="-1"
@@ -211,8 +186,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="region" upperBound="-1"
         eType="#//ParallelRegion" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FinalState" eSuperTypes="#//State"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Session" eSuperTypes="#//Region #//State">
+  <eClassifiers xsi:type="ecore:EClass" name="FinalState" eSuperTypes="#//AnnotatedElement #//State"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Session" eSuperTypes="#//AnnotatedElement #//Region #//State">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxInstances" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="initial" eType="#//State"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="substate" upperBound="-1"
@@ -220,19 +195,15 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="region" upperBound="-1"
         eType="#//ParallelRegion" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ParallelRegion" eSuperTypes="#//Region">
+  <eClassifiers xsi:type="ecore:EClass" name="ParallelRegion" eSuperTypes="#//AnnotatedElement #//Region">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="initial" eType="#//State"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="history" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="substate" upperBound="-1"
         eType="#//State" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="State">
+  <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
         eType="#//Property" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entry" eType="#//Action"
@@ -244,10 +215,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="outgoing" upperBound="-1"
         eType="#//Transition" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Handler">
+  <eClassifiers xsi:type="ecore:EClass" name="Handler" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="event" upperBound="-1"
         eType="#//Event" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="guard" eType="#//Expression"
@@ -276,15 +245,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="segments" upperBound="-1"
         eType="#//Expression" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LocalVariable" eSuperTypes="#//ReferencedElmt #//Action #//Variable">
+  <eClassifiers xsi:type="ecore:EClass" name="LocalVariable" eSuperTypes="#//AnnotatedElement #//ReferencedElmt #//Action #//Variable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//TypeRef"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="typeRef" eType="#//TypeRef"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SendAction" eSuperTypes="#//Action">
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" eType="#//Port"/>
@@ -374,10 +341,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//Expression" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Configuration">
+  <eClassifiers xsi:type="ecore:EClass" name="Configuration" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="instances" upperBound="-1"
         eType="#//Instance" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="connectors" upperBound="-1"
@@ -385,11 +350,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="propassigns" upperBound="-1"
         eType="#//ConfigPropertyAssign" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Instance">
+  <eClassifiers xsi:type="ecore:EClass" name="Instance" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Thing"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConfigPropertyAssign">
     <eStructuralFeatures xsi:type="ecore:EReference" name="instance" eType="#//InstanceRef"
@@ -402,10 +365,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
         eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AbstractConnector">
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractConnector" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" upperBound="-1"
-        eType="#//PlatformAnnotation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Connector" eSuperTypes="#//AbstractConnector">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cli" eType="#//InstanceRef"

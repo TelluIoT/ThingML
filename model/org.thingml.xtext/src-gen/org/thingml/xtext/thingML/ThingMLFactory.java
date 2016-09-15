@@ -60,15 +60,6 @@ public interface ThingMLFactory extends EFactory
   AnnotatedElement createAnnotatedElement();
 
   /**
-   * Returns a new object of class '<em>Named Element</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Named Element</em>'.
-   * @generated
-   */
-  NamedElement createNamedElement();
-
-  /**
    * Returns a new object of class '<em>Type Ref</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

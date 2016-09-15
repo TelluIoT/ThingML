@@ -199,7 +199,7 @@ public class CompositeStateHelper {
     public static Set<Type> allUsedTypes(CompositeState self) {
         Set<Type> result = new HashSet<Type>();
         for(Property p : allContainedProperties(self)) {
-            result.add(p.getType());
+            result.add(p.getTypeRef().getType());
         }
         return result;
     }

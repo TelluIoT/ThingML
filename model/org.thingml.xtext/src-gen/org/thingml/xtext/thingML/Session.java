@@ -24,7 +24,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface Session extends Region, State
+public interface Session extends AnnotatedElement, Region, State
 {
   /**
    * Returns the value of the '<em><b>Max Instances</b></em>' attribute.

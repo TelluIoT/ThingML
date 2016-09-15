@@ -234,7 +234,7 @@ public class ConfigurationHelper {
     public static List<Property> allArrays(Configuration self, Instance i) {
         List<Property> result = new ArrayList<Property>();
         for(Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
-            if (p.getCardinality() != null)
+            if (p.getTypeRef().getCardinality() != null)
                 result.add(p);
         }
         return result;

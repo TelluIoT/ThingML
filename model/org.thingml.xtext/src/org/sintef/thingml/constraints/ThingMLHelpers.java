@@ -32,7 +32,9 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.thingML.*;
+import org.thingml.xtext.helpers.RegionHelper;
 import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -115,7 +117,7 @@ public class ThingMLHelpers {
 	public static ArrayList<ThingMLModel> allThingMLModelModels(ThingMLModel model) {
 		ArrayList<ThingMLModel> result = new ArrayList<ThingMLModel>();
 		result.add(model);
-
+/*
         ArrayList<ThingMLModel> temp = new ArrayList<ThingMLModel>();
 
         int prevSize = result.size();
@@ -136,6 +138,7 @@ public class ThingMLHelpers {
             prevSize = newSize;
             newSize = result.size();
         } while (newSize > prevSize);
+        */
 		return result;
 	}
 	
@@ -162,12 +165,12 @@ public class ThingMLHelpers {
         for(Type t : allTypes(model)) {
             for(Thing thing : allThings(model)) {
                 for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                    if (EcoreUtil.equals(p.getType(), t))
+                    if (EcoreUtil.equals(p.getTypeRef().getType(), t))
                         result.add(t);
                 }
                 for(Message m : ThingMLHelpers.allMessages(thing)) {
                     for(Parameter p : m.getParameters()) {
-                        if (EcoreUtil.equals(p.getType(), t)) {
+                        if (EcoreUtil.equals(p.getTypeRef().getType(), t)) {
                             result.add(t);
                         }
                     }
@@ -183,12 +186,12 @@ public class ThingMLHelpers {
         for(Type t : allSimpleTypes(model)) {
             for(Thing thing : allThings(model)) {
                 for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                    if (EcoreUtil.equals(p.getType(), t))
+                    if (EcoreUtil.equals(p.getTypeRef().getType(), t))
                         result.add(t);
                 }
                 for(Message m : ThingMLHelpers.allMessages(thing)) {
                     for(Parameter p : m.getParameters()) {
-                        if (EcoreUtil.equals(p.getType(), t)) {
+                        if (EcoreUtil.equals(p.getTypeRef().getType(), t)) {
                             result.add(t);
                         }
                     }
@@ -570,9 +573,9 @@ public class ThingMLHelpers {
 	public static ArrayList<Variable> findVisibleVariables(EObject container, String name, boolean fuzzy) {
 		ArrayList<Variable> result = new ArrayList<Variable>();
 		for (Variable t : allVisibleVariables(container)) {
-			if (t.getName() != null && t.getName().startsWith(name)) {
+			if (ThingMLElementHelper.getName(t) != null && ThingMLElementHelper.getName(t).startsWith(name)) {
 				if (fuzzy) result.add(t);
-				else if (t.getName().equals(name)) result.add(t);
+				else if (ThingMLElementHelper.getName(t).equals(name)) result.add(t);
 			}
 		}
 		return result;
@@ -591,8 +594,8 @@ public class ThingMLHelpers {
 
 	public static ArrayList<State> allValidTargetStates(State state) {
 		ArrayList<State> result = new ArrayList<State>();
-		if (state instanceof CompositeState) result.addAll(findContainingRegion(state.eContainer()).getSubstate());
-		else result.addAll(findContainingRegion(state).getSubstate());
+		if (state instanceof CompositeState) result.addAll(RegionHelper.getSubstate(findContainingRegion(state.eContainer())));
+		else result.addAll(RegionHelper.getSubstate(findContainingRegion(state)));
 		return result;
 	}
 	
@@ -694,7 +697,7 @@ public class ThingMLHelpers {
 	/* ***********************************************************
 	 * Resolution for Specific Actions / Expressions
 	 * ***********************************************************/
-
+/*
 	public static List<ReceiveMessage> allReceiveMessages(Source input) {
 		List<ReceiveMessage> result = new ArrayList<>();
 		getAllReceiveMessages(input,result);
@@ -711,11 +714,11 @@ public class ThingMLHelpers {
 			}
 		}
 	}
-
+*/
 	public static Stream findContainingStream(EObject eObject) {
 		return findContainer(eObject,Stream.class);
 	}
-
+/*
 	public static List<SimpleSource> allSimpleSources(Source input) {
 		List<SimpleSource> result = new ArrayList<>();
 		if(input instanceof SimpleSource) {
@@ -744,7 +747,7 @@ public class ThingMLHelpers {
 		}
 		return (ThingMLElement) parent;
 	}
-
+*/
 	public static Expression findRootExpressions(Expression expression) {
 		Expression result = expression;
 		EObject parent = expression.eContainer();
@@ -755,15 +758,15 @@ public class ThingMLHelpers {
 		return result;
 	}
 
-	public static TypedElement findContainingFuncOp(EObject eObject) {
+	public static EObject findContainingFuncOp(EObject eObject) {
 		while(eObject != null && !(eObject instanceof Function)) {
 			eObject = eObject.eContainer();
 		}
-		return (TypedElement) eObject;
+		return  eObject;
 	}
 
 
-	public static List<Expression> getAllExpressions(ThingMLElement self, Class clazz) {
+	public static List<Expression> getAllExpressions(EObject self, Class clazz) {
 		List<Expression> result = new ArrayList<Expression>();
 		TreeIterator<EObject> it = self.eAllContents();
 		while(it.hasNext()) {
@@ -776,10 +779,9 @@ public class ThingMLHelpers {
 	}
 
 
-	public static List<Expression> getAllExpressions(ThingMLElement self) {
+	public static List<Expression> getAllExpressions(EObject self) {
 		return getAllExpressions(self, Expression.class);
 	}
-
 
 	public Set<Message> allMessages(ThingMLModel self) {
 		Set<Message> msg = new HashSet<Message>();

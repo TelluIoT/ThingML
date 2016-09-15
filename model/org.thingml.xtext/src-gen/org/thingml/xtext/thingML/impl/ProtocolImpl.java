@@ -3,22 +3,12 @@
  */
 package org.thingml.xtext.thingML.impl;
 
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
@@ -31,7 +21,6 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.ProtocolImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ProtocolImpl#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @generated
@@ -57,16 +46,6 @@ public class ProtocolImpl extends AnnotatedElementImpl implements Protocol
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * <!-- begin-user-doc -->
@@ -117,36 +96,6 @@ public class ProtocolImpl extends AnnotatedElementImpl implements Protocol
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.PROTOCOL__ANNOTATIONS);
-    }
-    return annotations;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case ThingMLPackage.PROTOCOL__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
@@ -154,8 +103,6 @@ public class ProtocolImpl extends AnnotatedElementImpl implements Protocol
     {
       case ThingMLPackage.PROTOCOL__NAME:
         return getName();
-      case ThingMLPackage.PROTOCOL__ANNOTATIONS:
-        return getAnnotations();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -165,7 +112,6 @@ public class ProtocolImpl extends AnnotatedElementImpl implements Protocol
    * <!-- end-user-doc -->
    * @generated
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
@@ -173,10 +119,6 @@ public class ProtocolImpl extends AnnotatedElementImpl implements Protocol
     {
       case ThingMLPackage.PROTOCOL__NAME:
         setName((String)newValue);
-        return;
-      case ThingMLPackage.PROTOCOL__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -195,9 +137,6 @@ public class ProtocolImpl extends AnnotatedElementImpl implements Protocol
       case ThingMLPackage.PROTOCOL__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case ThingMLPackage.PROTOCOL__ANNOTATIONS:
-        getAnnotations().clear();
-        return;
     }
     super.eUnset(featureID);
   }
@@ -214,8 +153,6 @@ public class ProtocolImpl extends AnnotatedElementImpl implements Protocol
     {
       case ThingMLPackage.PROTOCOL__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ThingMLPackage.PROTOCOL__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
     }
     return super.eIsSet(featureID);
   }

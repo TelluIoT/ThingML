@@ -96,11 +96,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createAnnotatedElementAdapter();
       }
       @Override
-      public Adapter caseNamedElement(NamedElement object)
-      {
-        return createNamedElementAdapter();
-      }
-      @Override
       public Adapter caseTypeRef(TypeRef object)
       {
         return createTypeRefAdapter();
@@ -638,21 +633,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createAnnotatedElementAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.NamedElement <em>Named Element</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.NamedElement
-   * @generated
-   */
-  public Adapter createNamedElementAdapter()
   {
     return null;
   }
