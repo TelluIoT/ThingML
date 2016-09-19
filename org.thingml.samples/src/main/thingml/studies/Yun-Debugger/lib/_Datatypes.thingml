@@ -1,0 +1,51 @@
+datatype Char<1>
+	@c_type "char"
+	@type_checker "String";
+    
+datatype Byte<1>
+	@c_type "unsigned char"
+	@type_checker "Integer";
+    
+datatype Boolean<1>
+	@c_type "uint8_t"
+	@type_checker "Boolean";
+
+datatype UInt8<1>
+	@c_type "uint8_t"
+	@type_checker "Integer";
+	
+datatype UInt16<2>
+	@c_type "uint16_t"
+	@type_checker "Integer";
+	
+datatype UInt32<4>
+	@c_type "uint32_t"
+	@type_checker "Integer";
+
+datatype UInt64<8>
+	@c_type "uint64_t"
+	@type_checker "Integer";
+
+datatype Int8<1>
+	@c_type "int8_t"
+	@type_checker "Integer";
+
+datatype Int16<2>
+	@c_type "int16_t"
+	@type_checker "Integer";
+
+datatype Int32<4>
+	@c_type "int32_t"
+	@type_checker "Integer";
+
+datatype Int64<8>
+	@c_type "int64_t"
+	@type_checker "Integer";
+
+datatype Float<4>
+	@c_type "float"
+	@type_checker "Real";
+	
+object String
+	@c_type "char *"
+	@type_checker "String";

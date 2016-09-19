@@ -1,0 +1,8 @@
+import "_Datatypes.thingml"
+
+thing fragment TimerMsgs {
+	message timer_start(id : UInt8, time : UInt32) @timer_start "true";
+	message timer_cancel(id : UInt8) @timer_cancel "true";
+	message timeout(id : UInt8) @timeout "true";
+	message 100ms_tic() @xms_tic "100";
+}

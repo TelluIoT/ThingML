@@ -1,0 +1,532 @@
+import "../lib/_1_8pLCD.thingml"
+import "../lib/TronMsgs.thingml"
+
+configuration TronCfg {
+
+	instance myLCD : Adafruit_1_8pLCDShieldShield
+    instance arduinoScheduler:  ArduinoScheduler
+    instance tron: Tron	
+    
+    connector tron.lcd => myLCD.lcd
+	connector tron.button => myLCD.button
+	connector tron.arduino => arduinoScheduler.arduino
+	connector myLCD.arduino => arduinoScheduler.arduino
+
+	connector tron.TronPort over Serial
+	@trace_level "0"
+	@serial_ring "true"
+	
+}
+
+thing Tron includes Adafruit_1_8pLCDShieldClient, TronMsgs 
+@c_header "
+#define _SNAKE_TAB_SIZE 273 // 2184 / 8 "
+@c_global "volatile uint8_t tab[_SNAKE_TAB_SIZE];"
+{
+	message ringSizeFinder(size : UInt8, footprint : UInt8) @code "255";	
+	provided port TronPort {
+		sends addHead, loose, tronReady, tronGo, hasID, iHaveID, mayIHaveID, ringSizeFinder
+		receives addHead, loose, tronReady, tronGo, hasID, iHaveID, mayIHaveID, ringSizeFinder
+	}
+
+	property r0 : UInt16 = 0
+	
+	property myID : UInt8 = 0
+	property nbID : UInt8 = 1
+	property curID : UInt8 = 0
+
+	property nbReady : UInt8 = 0
+
+	property headX : UInt8 = 10
+	property headY : UInt8 = 10
+	property tailX : UInt8 = 10
+	property tailY : UInt8 = 10
+	property headIndex : UInt16 = 0
+	property headIndexQuarter : UInt8 = 0
+	property lost : Boolean = false
+	property won : Boolean = false
+	property timer : UInt8  = 1
+	property speed : Integer = 500
+	property direction : UInt8
+	property dirBuff : UInt8 = 'B00000001'
+	property color : UInt16[8]
+	property hasLost : Boolean[8]
+	property isReady : Boolean[8]
+	
+	function hasWon() : Boolean do
+		'
+		bool won = true;
+		for(uint8_t i = 0; i < '&nbID&'; i++) {
+			if(i != '&myID&') {won &= '&hasLost['i']&';}
+		}'
+		return 'won'
+	end
+	
+	function addHeadDir(x : UInt8, y : UInt8, dir : UInt8) do
+		
+		TronPort!addHead(x, y, myID)
+		lcd!drawRect('2+3*'&x,'2+3*'&y,2,2,color[myID])
+		'uint8_t move = '&dir&';
+		uint8_t hI = '&headIndex&';
+		uint8_t hIQ = '&headIndexQuarter&';
+		
+		if (hIQ == 0) {
+			tab[hI] = B00000000;
+		}
+		
+		
+		tab[hI] |= (move << (2 * hIQ));
+		
+		hIQ = (hIQ + 1) % 4;
+		if (hIQ == 0) {
+			hI++;
+		}'
+		headX = x
+		headY = y
+		headIndex = 'hI'
+		headIndexQuarter = 'hIQ'
+	end
+	
+	function outOfBound(x : UInt8, y : UInt8) : Boolean do
+		return ((x > 41) or (y > 51))
+	end
+	
+	function isInSnake(x : UInt8, y : UInt8) : Boolean do
+		'bool found = false;
+		uint8_t curx = '&tailX&';
+		uint8_t cury = '&tailY&';
+		uint8_t targetx = '&x&';
+		uint8_t targety = '&y&';
+		uint16_t headIndex = '&headIndex&';
+		uint8_t  headIndexQuarter = '&headIndexQuarter&';
+		uint8_t curtab = 0;
+		
+		for(uint16_t i = 0; i < headIndex; i++) {
+			for(uint8_t q = 0; q < 4; q++) {
+				curtab = tab[i];
+				
+				
+				//delayMicroseconds(1);
+				
+				if ((targetx == curx) && (targety == cury)) {
+					return true;
+				}
+				switch((curtab >> (2 * q)) & B00000011) {
+					case B00000000:
+						cury--;
+					break;
+					case B00000001:
+						curx++;
+					break;
+					case B00000010:
+						cury++;
+					break;
+					case B00000011:
+						curx--;
+					break;
+				}
+				
+				
+			}
+		}
+		
+		for(uint8_t q = 0; q < headIndexQuarter; q++) {
+				
+				
+				//delayMicroseconds(1);
+				
+				if ((targetx == curx) && (targety == cury)) {
+					return true;
+				}
+				curtab = tab[headIndex];
+				
+				switch((curtab >> (2 * q)) & B00000011) {
+					case B00000000:
+						cury--;
+					break;
+					case B00000001:
+						curx++;
+					break;
+					case B00000010:
+						cury++;
+					break;
+					case B00000011:
+						curx--;
+					break;
+				}
+				
+				
+			}'
+		return false
+	end
+	
+	function shallWe() : Boolean do
+		if(not(myID == 0)) do
+			return false
+		end
+		var res : Boolean = true
+		var mytmp : UInt8 = 0
+
+		while(mytmp < nbID) do
+			res = res and isReady[mytmp]
+			mytmp = mytmp + 1
+		end
+		return res
+	end
+
+	statechart TronStateChart init RingDiscovery {
+
+		state RingDiscovery {
+			on entry do
+				'set_max_ttl(1);'
+				r0 = 'random(0, 65535)'
+				arduino!timer_start(2, 1000)
+				TronPort!ringSizeFinder(0, r0)
+			end
+			
+			internal event e : TronPort?ringSizeFinder guard (not(e.footprint == r0)) action do
+				TronPort!ringSizeFinder(e.size + 1, e.footprint)
+				
+                lcd!drawRect(2,2,2,2,'0xFFFF')
+			end
+			
+			internal event arduino?timeout action do
+				arduino!timer_start(2, 1000)
+				TronPort!ringSizeFinder(0, r0)
+                lcd!drawRect(2,2,2,2,'0xF00F')
+			end
+			
+			transition -> Init event e : TronPort?ringSizeFinder guard (e.footprint == r0) action do
+				'set_max_ttl('&e.size&');'
+                lcd!drawRect(2,2,2,2,'0xF000')
+			end
+		}
+		state Init {
+			on entry do
+				color[0] = '0x001F'
+				color[1] = '0xF800'
+				color[2] = '0x3FE0'
+				color[3] = '0x0FFF'
+				color[4] = '0xFF80'
+				color[5] = '0x8008'
+				color[6] = '0xFFFF'
+				color[7] = '0xF00F'
+				
+				hasLost[0] = false
+				hasLost[1] = false
+				hasLost[2] = false
+				hasLost[3] = false
+				hasLost[4] = false
+				hasLost[5] = false
+				hasLost[6] = false
+				hasLost[7] = false
+				
+				isReady[0] = false
+				isReady[1] = false
+				isReady[2] = false
+				isReady[3] = false
+				isReady[4] = false
+				isReady[5] = false
+				isReady[6] = false
+				isReady[7] = false
+			end
+			transition -> Discovery event lcd?LCDready
+		}
+		state Discovery {
+			on entry do
+				lcd!clear()
+                lcd!drawRect(1,1,127,157,'0xFFFF')
+                lcd!set_cursor(16,68)
+                lcd!print_str("Welcome to Tron!")
+                lcd!set_cursor(16,78)
+                lcd!print_str("Discovery phase.")
+				
+				TronPort!hasID(curID)
+				arduino!timer_start(0, 300)
+			end
+
+			internal event e : TronPort?iHaveID guard (e.id == curID) action do
+				arduino!timer_cancel(0)
+				arduino!timer_start(0, 300)
+                lcd!drawRect('2+3*'&curID,2,2,2,color[curID])
+				curID = curID + 1
+			end
+			
+			transition -> IDoption event arduino?timeout action do
+				myID = curID
+			end
+
+		}
+		
+		state IDoption {
+			on entry do
+                TronPort!mayIHaveID(myID)
+				arduino!timer_start(0, 300)
+				lcd!drawRect(1,1,127,157,color[myID])
+			end
+
+			transition -> Discovery event e : TronPort?iHaveID guard (e.id == curID) action do
+				arduino!timer_cancel(0)
+			end
+			transition -> RandomWait event e : TronPort?mayIHaveID guard (e.id == curID) action do
+				arduino!timer_cancel(0)
+			end
+			transition -> RendezVous event arduino?timeout
+		}
+
+		state RandomWait {
+			on entry do
+				arduino!timer_start(0, 'random(0, 1200)')
+			end
+			transition -> Discovery event arduino?timeout
+		}
+		
+		state RendezVous {
+			on entry do
+				lcd!clear()
+                lcd!drawRect(1,1,127,157, color[myID])
+                lcd!set_cursor(12,68)
+                lcd!print_str("Press the joystick")
+                lcd!set_cursor(12,78)
+                lcd!print_str("when you are ready")
+                
+                if(myID == 0) do
+					headX = 10
+					headY = 10
+					tailX = 10
+					tailY = 10
+                end
+                if(myID == 1) do
+					headX = 30
+					headY = 40
+					tailX = 30
+					tailY = 40
+                end
+                if(myID == 2) do
+					headX = 10
+					headY = 40
+					tailX = 10
+					tailY = 40
+                end
+                if(myID == 3) do
+					headX = 30
+					headY = 10
+					tailX = 30
+					tailY = 10
+                end
+                if(myID == 4) do
+					headX = 10
+					headY = 20
+					tailX = 10
+					tailY = 20
+                end
+                if(myID == 5) do
+					headX = 30
+					headY = 20
+					tailX = 30
+					tailY = 20
+                end
+                if(myID == 6) do
+					headX = 10
+					headY = 30
+					tailX = 10
+					tailY = 30
+                end
+                if(myID == 7) do
+					headX = 30
+					headY = 30
+					tailX = 30
+					tailY = 30
+                end
+			end
+
+			internal event e : TronPort?mayIHaveID action do
+				if(e.id == myID) do
+					TronPort!iHaveID(myID)
+				end
+				if(e.id > (nbID-1)) do
+					nbID = e.id+1
+				end
+			end
+
+			internal event e : TronPort?hasID guard (e.id == myID) action do
+				TronPort!iHaveID(myID)
+			end
+
+			internal event e : TronPort?tronReady action do
+				isReady[e.id] = true
+				if (not(nbID > e.id)) do
+					nbID = e.id +1
+				end
+			end
+
+			transition -> Ready event button?button_state_change action do
+			end
+		}
+
+		state Ready {
+			on entry do
+				lcd!clear()
+                lcd!drawRect(1,1,127,157, color[myID])
+                lcd!set_cursor(12,78)
+                lcd!print_str("Waiting for others")
+				isReady[myID] = true
+				TronPort!tronReady(myID)
+			end
+			
+			on exit do
+				lcd!clear()
+                lcd!drawRect(1,1,127,157, color[myID])
+			end
+
+			internal event e : TronPort?mayIHaveID action do
+				if(e.id == myID) do
+					TronPort!iHaveID(myID)
+				end
+				if(e.id > (nbID-1)) do
+					nbID = e.id+1
+				end
+			end
+
+			internal event e : TronPort?hasID guard (e.id == myID) action do
+				TronPort!iHaveID(myID)
+			end
+
+			internal event e : TronPort?tronReady action do
+				isReady[e.id] = true
+				if (not(nbID > e.id)) do
+					nbID = e.id +1
+				end
+			end
+			transition -> Game event arduino?100ms_interrupt guard shallWe() action do
+				TronPort!tronGo(nbID)
+			end
+			transition -> Game event e : TronPort?tronGo action do
+				nbID = e.nbID
+			end
+		}
+		
+		state Game {
+			on entry do
+		
+				
+				nbReady = 0
+				//lcd!clear()
+                //lcd!drawRect(1,1,127,157,color[myID])
+               
+                lcd!drawRect('2+3*'&headX,'2+3*'&headY,2,2,color[myID])
+				TronPort!addHead(headX, headY, myID)
+
+
+
+
+				nbReady = 0
+				arduino!timer_start(timer, speed)
+			end
+				
+			internal event e : button?button_state_change guard ((e.bstate == 1) or (e.bstate == 2) or (e.bstate == 4) or (e.bstate == 5)) action do
+				if (e.bstate == 4) do
+					dirBuff = 'B00000000'
+				end
+				if (e.bstate == 2) do
+					dirBuff = 'B00000001'
+				end
+				if (e.bstate == 1) do
+					dirBuff = 'B00000010'
+				end
+				if (e.bstate == 5) do
+					dirBuff = 'B00000011'
+				end
+			end
+			
+			internal event e : TronPort?addHead action do
+				lcd!drawRect('2+3*'&e.x,'2+3*'&e.y,2,2,color[e.id])
+				if (isInSnake(e.x, e.y)) do
+					TronPort!loose(e.id)
+					hasLost[e.id] = true
+					won = hasWon()
+				end
+			end
+			
+			internal event arduino?timeout guard not(lost or won) action do
+				arduino!timer_start(timer, speed)
+				direction = dirBuff
+				'switch('&direction&') {
+					case B00000000:
+						'
+						if(isInSnake(headX, headY-1)) do
+							lost = true
+							TronPort!loose(myID)
+						end
+						addHeadDir(headX, headY-1, direction)'
+					break;
+					case B00000001:
+						'
+						if(isInSnake(headX+1, headY)) do
+							lost = true
+							TronPort!loose(myID)
+						end
+						addHeadDir(headX+1, headY, direction)'
+					break;
+					case B00000010:
+						'
+						if(isInSnake(headX, headY+1)) do
+							lost = true
+							TronPort!loose(myID)
+						end
+						addHeadDir(headX, headY+1, direction)'
+					break;
+					case B00000011:
+						'
+						if(isInSnake(headX-1, headY)) do
+							lost = true
+							TronPort!loose(myID)
+						end
+						addHeadDir(headX-1, headY, direction)'
+					break;
+				}' 
+				if(outOfBound(headX, headY)) do
+					lost = true
+					TronPort!loose(myID)
+				end
+			end
+			
+			internal event e : TronPort?loose guard (e.id == myID) action do
+				lost = true
+			end
+			
+			internal event e : TronPort?loose guard not(e.id == myID) action do
+				hasLost[e.id] = true
+				won = hasWon()
+			end
+			
+			transition -> Defeat event arduino?timeout guard lost
+			transition -> Victory event arduino?timeout guard won
+		}
+		
+		state Defeat {
+			on entry do
+				lcd!clear()
+                lcd!drawRect(1,1,127,157, color[myID])
+                lcd!set_cursor(45,78)
+                lcd!print_str("Defeat!")
+			end
+			
+			internal event e : TronPort?addHead action do
+				if (isInSnake(e.x, e.y)) do
+					TronPort!loose(e.id)
+				end
+			end
+		}
+		
+		state Victory {
+			on entry do
+				lcd!clear()
+                lcd!drawRect(1,1,127,157, color[myID])
+                lcd!set_cursor(44,78)
+                lcd!print_str("Victory!")
+			end
+		}
+	}
+}
+

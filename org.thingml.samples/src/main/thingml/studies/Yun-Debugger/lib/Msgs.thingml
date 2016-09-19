@@ -1,0 +1,30 @@
+import "_Datatypes.thingml"
+
+thing fragment Msgs {
+	//To MCU
+	message ping(i : Int16) @code "0";
+	message setRefreshRate(r : UInt32) @code "2";
+
+	//Instructions: Pins
+	message pinMode(Pin : UInt8, Mode : Boolean) @code "10";
+	message setPinLevel(Pin : UInt8, Level : Boolean) @code "11";
+	message setPinValue(Pin : UInt8, Value: UInt16) @code "12";
+
+	//Instructions: Serial
+	message serialBegin(Baudrate : UInt32) @code "20";
+	message serialClearSendBuffer() @code "21";
+	message serialAddToSendBuffer(b : Byte) @code "22";
+	message serialSendBuffer() @code "23";
+	message serialDisplaySendBuffer() @code "24";
+
+	//From MCU
+	message pong(i : Int16) @code "1";
+
+	//Response: Pins
+	message pinLevel(Pin : UInt8, Level : Boolean) @code "30";
+	message pinValue(Pin : UInt8, Value: UInt16) @code "31";
+
+	//Response: Serial
+	message serialReceived(b : Byte) @code "40";
+	message serialSendBufferContent(i : UInt8, b : Byte) @code "41";
+}

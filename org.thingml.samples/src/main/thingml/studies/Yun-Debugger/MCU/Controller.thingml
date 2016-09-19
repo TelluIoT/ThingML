@@ -1,0 +1,165 @@
+import "../lib/Msgs.thingml"
+
+protocol Serial1
+@serial_start_byte "18"
+@serial_stop_byte "19"
+@serial_escape_byte "125";
+
+protocol Timer @hardware_timer "0";
+
+configuration ControllerCfg {
+	instance c : Controller
+
+	connector c.clock over Timer  @hardware_timer "0"
+	connector c.Serial1 over Serial1 @generate_debugGUI "true"
+}
+
+thing fragment TimerMsgs {
+	message timer_start(id : UInt8, time : UInt32) @timer_start "true";
+	message timer_cancel(id : UInt8) @timer_cancel "true";
+	message timeout(id : UInt8) @timeout "true";
+}
+
+
+thing Controller includes Msgs, TimerMsgs {
+
+	required port clock {
+		sends timer_start, timer_cancel
+		receives timeout
+	}
+	
+	required port Serial1 {
+		receives ping, setRefreshRate, pinMode, setPinLevel, setPinValue, serialBegin, serialClearSendBuffer, serialAddToSendBuffer, serialSendBuffer, serialDisplaySendBuffer
+	    sends pong, pinLevel, pinValue, serialReceived, serialSendBufferContent
+	}
+	
+	property pinInput : Boolean[20]
+	property Serial : UInt32 = 0
+	property RefreshRate : UInt32 = 200
+
+	readonly property SendBufferSize : UInt8 = 32
+	property SendBuffer : UInt8[SendBufferSize]
+	property SendBufferCurrentSize : UInt8 = 0
+	
+
+	function initialization() do
+		'for(uint8_t i = 0; i < 20 ; i++) {'
+			pinInput['i'] = false
+		'}'
+	end
+
+	function refresh() do
+		'for(uint8_t i = 0; i < 14 ; i++) {'
+			if(pinInput['i']) do
+				Serial1!pinLevel('i', '(uint8_t) digitalRead(i)')
+			end
+		'}'
+		'for(uint8_t i = 0; i < 6 ; i++) {'
+			if(pinInput['i' + 14]) do
+				Serial1!pinValue('i' + 14, '(uint16_t) analogRead(i)')
+			end
+		'}'
+		if (not(Serial == 0)) do
+			'if(Serial.available() > 0) {'
+				Serial1!serialReceived('Serial.read()')
+			'}'
+		end
+	end
+	
+	statechart C init ACTIVE {
+		on entry do
+			initialization()
+			clock!timer_start(0, RefreshRate)
+		end
+		
+		internal event clock?timeout action do
+			clock!timer_start(0, RefreshRate)
+			refresh()
+		end
+		
+		internal event e : Serial1?ping action do
+			Serial1!pong(e.i)
+		end
+
+		internal event e : Serial1?setRefreshRate action do
+			RefreshRate = e.r
+		end
+		
+		internal event e : Serial1?pinMode action do
+			if(e.Mode) do
+				if(e.Pin < 14) do
+					pinInput[e.Pin] = true
+					'pinMode('&e.Pin&',INPUT);'
+				end
+				if((e.Pin > 13) and (e.Pin < 20)) do
+					pinInput[e.Pin] = true
+				end
+			end
+			else do
+				if(e.Pin < 14) do
+					pinInput[e.Pin] = false
+					'pinMode('&e.Pin&',OUTPUT);'
+					'digitalWrite('&e.Pin&', LOW);'
+				end
+				if((e.Pin > 13) and (e.Pin < 20)) do
+					pinInput[e.Pin] = false
+				end
+			end
+		end
+		
+		internal event e : Serial1?setPinLevel action do
+			if(e.Pin < 14) do
+				if(not(pinInput[e.Pin])) do
+					if(e.Level) do
+						'digitalWrite('&e.Pin&', HIGH);'
+					end
+					else do
+						'digitalWrite('&e.Pin&', LOW);'
+					end
+				end
+			end
+		end
+		
+		internal event e : Serial1?setPinValue action do
+			if((e.Pin > 13) and (e.Pin < 20)) do
+				if(not(pinInput[e.Pin])) do
+					'analogWrite('&e.Pin&', LOW);'
+				end
+			end
+		end
+		
+		internal event e : Serial1?serialBegin action do
+			if (not(e.Baudrate == 0)) do
+				Serial = e.Baudrate
+				'Serial.begin('& e.Baudrate &');'
+			end
+		end
+		
+		internal event e : Serial1?serialSendBuffer action do
+			if(not(Serial == 0)) do
+				'for(uint16_t i = 0; i < '&SendBufferCurrentSize&'; i++) {
+					Serial.write('& SendBuffer['i'] &');
+				}'
+				SendBufferCurrentSize = 0
+			end
+		end
+		
+		internal event e : Serial1?serialClearSendBuffer action do
+			SendBufferCurrentSize = 0
+		end
+		
+		internal event e : Serial1?serialAddToSendBuffer action do
+			SendBuffer[SendBufferCurrentSize] = e.b
+			//SendBufferCurrentSize++
+			SendBufferCurrentSize = SendBufferCurrentSize + 1
+		end
+		
+		internal event e : Serial1?serialDisplaySendBuffer action do
+			'for(uint16_t i = 0; i < '&SendBufferCurrentSize&'; i++) {'
+				Serial1!serialSendBufferContent('(uint8_t) i', SendBuffer[SendBufferCurrentSize])
+			'}'
+		end
+
+		state ACTIVE {}
+	}
+}

@@ -1,0 +1,12 @@
+import "_Datatypes.thingml"
+
+thing fragment TronMsgs {
+	message hasID(id : UInt8) @code "50";
+	message iHaveID(id : UInt8) @code "51";
+	message mayIHaveID(id : UInt8) @code "52";
+
+	message tronReady(id : UInt8) @code "53";
+	message tronGo(nbID : UInt8) @code "54";
+	message addHead(x : UInt8, y : UInt8, id : UInt8) @code "55";
+	message loose(id : UInt8) @code "56";
+}

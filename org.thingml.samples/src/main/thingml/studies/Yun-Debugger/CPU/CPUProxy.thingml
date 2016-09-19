@@ -1,0 +1,91 @@
+import "../lib/Msgs.thingml"
+
+protocol Websocket;
+protocol Serial1
+	@serial_path_to_device "/dev/ttyATH0"
+	@serial_baudrate "115200";
+
+configuration CPUProxyCfg
+@c_compiler "/openwrt-yun/staging_dir/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/bin/mips-openwrt-linux-gcc"
+@add_c_libraries "websockets"
+@add_c_libraries "ssl"
+@add_c_libraries "crypto"
+@add_c_libraries "z"
+@add_c_libraries_rep "/openwrt-yun/staging_dir/target-mips_r2_uClibc-0.9.33.2/lib"
+@add_c_libraries_rep "/openwrt-yun/staging_dir/target-mips_r2_uClibc-0.9.33.2/usr/lib"
+@add_c_flags "-I/openwrt-yun/staging_dir/target-mips_r2_uClibc-0.9.33.2/usr/include"
+@add_c_flags "-I/openwrt-yun/staging_dir/target-mips_r2_uClibc-0.9.33.2/include"
+{
+	instance p : proxyType
+
+	connector p.Browser over Websocket @generate_debugGUI "true"
+
+	connector p.Debug over Serial1
+}
+
+thing proxyType includes Msgs {
+
+	provided port Browser {
+       receives ping, setRefreshRate, pinMode, setPinLevel, setPinValue, serialBegin, serialClearSendBuffer, serialAddToSendBuffer, serialSendBuffer, serialDisplaySendBuffer
+       sends pong, pinLevel, pinValue, serialReceived, serialSendBufferContent
+	}
+
+	provided port Debug {
+       sends ping, setRefreshRate, pinMode, setPinLevel, setPinValue, serialBegin, serialClearSendBuffer, serialAddToSendBuffer, serialSendBuffer, serialDisplaySendBuffer
+       receives pong, pinLevel, pinValue, serialReceived, serialSendBufferContent
+	}
+	
+	statechart proxChart init Active {
+		state Active {
+            internal event e : Browser?ping
+            action do
+				Debug!ping(e.i)
+				print "ping "
+				print e.i
+				print "\n"
+			end
+
+            internal event e : Browser?setRefreshRate
+            action Debug!setRefreshRate(e.r)
+            internal event e : Browser?pinMode
+            action Debug!pinMode(e.Pin, e.Mode)
+            internal event e : Browser?setPinLevel
+            action Debug!setPinLevel(e.Pin, e.Level)
+            internal event e : Browser?setPinValue
+            action Debug!setPinValue(e.Pin, e.Value)
+            internal event e : Browser?serialBegin
+            action do
+				Debug!serialBegin(e.Baudrate)
+				print "serialBegin "
+				print e.Baudrate
+				print "\n"
+			end
+
+            internal event e : Browser?serialClearSendBuffer
+            action Debug!serialClearSendBuffer()
+            internal event e : Browser?serialAddToSendBuffer
+            action Debug!serialAddToSendBuffer(e.b)
+            internal event e : Browser?serialSendBuffer
+            action Debug!serialSendBuffer()
+            internal event e : Browser?serialDisplaySendBuffer
+            action Debug!serialDisplaySendBuffer()
+            
+			internal event e : Debug?pong
+            action do
+				Browser!pong(e.i)
+				print "pong "
+				print e.i
+				print "\n"
+			end
+
+            internal event e : Debug?pinLevel
+            action Browser!pinLevel(e.Pin, e.Level)
+            internal event e : Debug?pinValue
+            action Browser!pinValue(e.Pin, e.Value)
+            internal event e : Debug?serialReceived
+            action Browser!serialReceived(e.b)
+            internal event e : Debug?serialSendBufferContent
+            action Browser!serialSendBufferContent(e.i, e.b)
+		}
+	}
+}

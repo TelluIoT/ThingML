@@ -1,0 +1,90 @@
+
+import "../1_8pLCD/_1_8pLCD.thingml"
+
+thing snakeListMsgs {
+	message addHead(x : UInt8, y : UInt8);
+	message dropTail();
+	message flush();
+	message refreshPrintList();
+	message isInSnake(x : UInt8, y : UInt8);
+	message isInSnakeResponse(b : Boolean);
+}
+
+thing fragment snakeListClient includes snakeListMsgs {
+	required port list {
+		sends addHead, dropTail, flush, refreshPrintList, isInSnake
+		receives isInSnakeResponse
+	}
+}
+
+thing snakeList includes simpleLCDClient, snakeListMsgs 
+@c_header "
+#define _SNAKE_TAB_SIZE 256 //Impossible to choose a much larger size because of the limitation of memory availiable for variable in arduino Uno
+"
+@c_global "
+uint8_t tabx[_SNAKE_TAB_SIZE];
+uint8_t taby[_SNAKE_TAB_SIZE];
+"
+{
+	provided port list {
+		receives addHead, dropTail, flush, refreshPrintList, isInSnake
+		sends isInSnakeResponse
+	}
+	
+	property head : UInt16 = 0
+	property tail : UInt16 = 0
+	property size : UInt16 = '_SNAKE_TAB_SIZE'
+	
+	statechart snakeListSateChart init Empty {
+		state Empty {
+			transition -> Init
+		}
+		
+		state Init {
+			transition -> Idle event e : list?addHead action do
+				'tabx['&head&'] = '&e.x&';'
+				'taby['&head&'] = '&e.y&';'
+			end
+		}
+		
+		state Idle {
+			internal event e : list?addHead action do
+				head = (head + 1) % size
+				'tabx['&head&'] = '&e.x&';'
+				'taby['&head&'] = '&e.y&';'
+			end
+			
+			internal event e : list?dropTail action do
+				lcd!drawRect('2+3*tabx['&tail&']','2+3*taby['&tail&']',2,2,'0x0000')//we clear tail
+				tail = (tail + 1) % size
+			end
+			
+			internal event e : list?refreshPrintList action do
+				//lcd!drawRect('2+3*tabx['&tail&']','2+3*taby['&tail&']',2,2,'0x0000')//we clear tail
+				lcd!drawRect('2+3*tabx['&head&']','2+3*taby['&head&']',2,2,'0x07E0')//we print head
+			end
+			
+			internal event e : list?isInSnake action do
+				'uint16_t i = '&tail&';
+				boolean found = false;
+				while (i != '&head&') {
+					
+					if (tabx[i] == '&e.x&') {
+						if(taby[i] == '&e.y&') {
+							found = true;
+							break;
+						}
+					}
+					
+					i = (i + 1) % _SNAKE_TAB_SIZE;
+				}
+				'list!isInSnakeResponse('found')
+			end
+			
+			transition -> Init event e : list?flush action do
+				head = 0
+				tail = 0
+			end
+		}
+	}
+}

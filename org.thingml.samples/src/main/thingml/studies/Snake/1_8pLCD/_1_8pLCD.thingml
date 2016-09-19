@@ -1,0 +1,149 @@
+/*
+	ThingML wrapping of adafruit graphics libraries for 1.8" lcd screen.
+	Original libraries are:
+	https://github.com/adafruit/Adafruit-ST7735-Library 
+	https://github.com/adafruit/Adafruit-GFX-Library
+	
+*/
+
+
+
+import "../_Common/TimerMsgs.thingml"
+
+thing Adafruit_1_8pLCDShieldMsgs {
+	
+	message LCDready();
+	message button_state();
+	message button_state_response(bstate : UInt8);
+	message button_state_change(bstate : UInt8);
+	
+	message set_bgcolor(color : UInt8);
+	message print_str(msg: String);
+	message print_dec(num: Float);
+    message print_num(num: Integer);
+	message clear();
+	message set_cursor(c : UInt8, l : UInt8);
+	message fillRect(x : UInt16, y : UInt16, w : UInt16, l : UInt16, col : UInt16);
+	message drawRect(x : UInt16, y : UInt16, w : UInt16, l : UInt16, col : UInt16);
+	message drawLine(x1 : UInt16, y1 : UInt16, x2 : UInt16, y2 : UInt16, col : UInt16);
+	
+}
+
+thing fragment Adafruit_1_8pLCDShieldClient includes Adafruit_1_8pLCDShieldMsgs {
+
+	required port button 
+	{
+		sends button_state
+		receives button_state_response, button_state_change
+	}
+	
+	required port lcd 
+	@sync_send "true" // Do not queue thos message, send them directly to the LCD. We should not send them from interrupt routines. 
+	{
+		sends print_num, print_dec, print_str, clear, set_cursor, set_bgcolor, fillRect, drawRect, drawLine
+		receives LCDready
+	}
+	
+}
+
+thing fragment simpleLCDClient includes Adafruit_1_8pLCDShieldMsgs {
+	required port lcd 
+	@sync_send "true" // Do not queue thos message, send them directly to the LCD. We should not send them from interrupt routines. 
+	{
+		sends print_num, print_dec, print_str, clear, set_cursor, set_bgcolor, fillRect, drawRect, drawLine
+		receives LCDready
+	}
+}
+
+thing Adafruit_1_8pLCDShieldShield includes Adafruit_1_8pLCDShieldMsgs, TimerMsgs 
+@c_header "
+#include <Adafruit_GFX.h>    // Core graphics library
+#include <Adafruit_ST7735.h> // Hardware-specific library
+#include <SPI.h>
+#define TFT_CS 10
+#define TFT_RST 9
+#define TFT_DC 8
+#define TFT_SCLK 13
+#define TFT_MOSI 11
+"
+
+@c_global "
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
+"
+{
+
+	required port timer 
+	{
+		receives 100ms_tic
+	}
+
+	provided port button
+	{
+		receives button_state
+		sends button_state_response, button_state_change
+	}
+	
+	provided port lcd
+	@sync_send "true" {
+		receives print_num, print_dec, print_str, clear, set_cursor, set_bgcolor, fillRect, drawRect, drawLine
+		sends LCDready
+	}
+
+
+	statechart RGBLCDShieldSM init Empty {
+			property bpin : UInt8 = 3
+
+		state Empty {
+			transition -> Setup
+		}
+		
+		state Setup {
+			on entry do
+				'pinMode('&bpin&', INPUT);
+				tft.initR(INITR_BLACKTAB);
+				tft.fillScreen(0x0000);
+				tft.setTextColor(0xFFFF);'
+			end
+			transition -> Idle action do
+				lcd!LCDready()
+			end
+		}
+		
+		
+		state Idle {
+		
+			property bstate : UInt8 
+			
+			internal event timer?100ms_tic action do
+				'int joystickState = analogRead('&bpin&');
+				int bstatetmp = 0;
+			    if (joystickState < 50) {bstatetmp = 1;}
+			    else if (joystickState < 150) {bstatetmp = 2;}
+			    else if (joystickState < 250) {bstatetmp = 3;}
+			    else if (joystickState < 500) {bstatetmp = 4;}
+			    else if (joystickState < 650) {bstatetmp = 5;}'
+			    if (not(bstate == 'bstatetmp')) do
+			    	bstate = 'bstatetmp'
+			    	button!button_state_change(bstate)
+			    end
+			    
+			    bstate = 'bstatetmp'
+			end
+			
+			internal event button?button_state action do
+				button!button_state_response(bstate)
+			end
+			
+			internal event e : lcd?print_str action 'tft.print('&e.msg&');'
+			internal event e : lcd?print_num action 'tft.print('&e.num&');'
+	        internal event e : lcd?print_dec action 'tft.print('&e.num&');'
+			internal event e : lcd?clear action 'tft.fillScreen(0x0000);'
+			internal event e : lcd?set_cursor action 'tft.setCursor('&e.c&', '&e.l&');'
+			internal event e : lcd?fillRect action 'tft.fillRect('&e.x&','&e.y&','&e.w&','&e.l&','&e.col&');'
+			internal event e : lcd?drawRect action 'tft.drawRect('&e.x&','&e.y&','&e.w&','&e.l&','&e.col&');'
+			internal event e : lcd?drawLine action 'tft.drawLine('&e.x1&','&e.y1&','&e.x2&','&e.y2&','&e.col&');'
+		
+		}
+	}
+
+}
