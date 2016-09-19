@@ -3,24 +3,14 @@
  */
 package org.thingml.xtext.thingML.impl;
 
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.Instance;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
@@ -34,12 +24,11 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.InstanceImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.InstanceImpl#getType <em>Type</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.InstanceImpl#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class InstanceImpl extends MinimalEObjectImpl.Container implements Instance
+public class InstanceImpl extends AnnotatedElementImpl implements Instance
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -70,16 +59,6 @@ public class InstanceImpl extends MinimalEObjectImpl.Container implements Instan
    * @ordered
    */
   protected Thing type;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * <!-- begin-user-doc -->
@@ -173,36 +152,6 @@ public class InstanceImpl extends MinimalEObjectImpl.Container implements Instan
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.INSTANCE__ANNOTATIONS);
-    }
-    return annotations;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case ThingMLPackage.INSTANCE__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
@@ -213,8 +162,6 @@ public class InstanceImpl extends MinimalEObjectImpl.Container implements Instan
       case ThingMLPackage.INSTANCE__TYPE:
         if (resolve) return getType();
         return basicGetType();
-      case ThingMLPackage.INSTANCE__ANNOTATIONS:
-        return getAnnotations();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -224,7 +171,6 @@ public class InstanceImpl extends MinimalEObjectImpl.Container implements Instan
    * <!-- end-user-doc -->
    * @generated
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
@@ -235,10 +181,6 @@ public class InstanceImpl extends MinimalEObjectImpl.Container implements Instan
         return;
       case ThingMLPackage.INSTANCE__TYPE:
         setType((Thing)newValue);
-        return;
-      case ThingMLPackage.INSTANCE__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -260,9 +202,6 @@ public class InstanceImpl extends MinimalEObjectImpl.Container implements Instan
       case ThingMLPackage.INSTANCE__TYPE:
         setType((Thing)null);
         return;
-      case ThingMLPackage.INSTANCE__ANNOTATIONS:
-        getAnnotations().clear();
-        return;
     }
     super.eUnset(featureID);
   }
@@ -281,8 +220,6 @@ public class InstanceImpl extends MinimalEObjectImpl.Container implements Instan
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.INSTANCE__TYPE:
         return type != null;
-      case ThingMLPackage.INSTANCE__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
     }
     return super.eIsSet(featureID);
   }

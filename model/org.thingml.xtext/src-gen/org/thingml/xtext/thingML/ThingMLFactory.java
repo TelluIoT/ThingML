@@ -33,6 +33,15 @@ public interface ThingMLFactory extends EFactory
   ThingMLModel createThingMLModel();
 
   /**
+   * Returns a new object of class '<em>Import</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Import</em>'.
+   * @generated
+   */
+  Import createImport();
+
+  /**
    * Returns a new object of class '<em>Platform Annotation</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -40,6 +49,24 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   PlatformAnnotation createPlatformAnnotation();
+
+  /**
+   * Returns a new object of class '<em>Annotated Element</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Annotated Element</em>'.
+   * @generated
+   */
+  AnnotatedElement createAnnotatedElement();
+
+  /**
+   * Returns a new object of class '<em>Type Ref</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Type Ref</em>'.
+   * @generated
+   */
+  TypeRef createTypeRef();
 
   /**
    * Returns a new object of class '<em>Type</em>'.
@@ -321,24 +348,6 @@ public interface ThingMLFactory extends EFactory
   LengthArray createLengthArray();
 
   /**
-   * Returns a new object of class '<em>State Machine</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>State Machine</em>'.
-   * @generated
-   */
-  StateMachine createStateMachine();
-
-  /**
-   * Returns a new object of class '<em>State</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>State</em>'.
-   * @generated
-   */
-  State createState();
-
-  /**
    * Returns a new object of class '<em>Region</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -348,15 +357,6 @@ public interface ThingMLFactory extends EFactory
   Region createRegion();
 
   /**
-   * Returns a new object of class '<em>Final State</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Final State</em>'.
-   * @generated
-   */
-  FinalState createFinalState();
-
-  /**
    * Returns a new object of class '<em>Composite State</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -364,6 +364,15 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   CompositeState createCompositeState();
+
+  /**
+   * Returns a new object of class '<em>Final State</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Final State</em>'.
+   * @generated
+   */
+  FinalState createFinalState();
 
   /**
    * Returns a new object of class '<em>Session</em>'.
@@ -382,6 +391,24 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   ParallelRegion createParallelRegion();
+
+  /**
+   * Returns a new object of class '<em>State</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>State</em>'.
+   * @generated
+   */
+  State createState();
+
+  /**
+   * Returns a new object of class '<em>Handler</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Handler</em>'.
+   * @generated
+   */
+  Handler createHandler();
 
   /**
    * Returns a new object of class '<em>Transition</em>'.
@@ -582,6 +609,78 @@ public interface ThingMLFactory extends EFactory
   ExternExpression createExternExpression();
 
   /**
+   * Returns a new object of class '<em>Enum Literal Ref</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Enum Literal Ref</em>'.
+   * @generated
+   */
+  EnumLiteralRef createEnumLiteralRef();
+
+  /**
+   * Returns a new object of class '<em>Integer Literal</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Integer Literal</em>'.
+   * @generated
+   */
+  IntegerLiteral createIntegerLiteral();
+
+  /**
+   * Returns a new object of class '<em>Boolean Literal</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Boolean Literal</em>'.
+   * @generated
+   */
+  BooleanLiteral createBooleanLiteral();
+
+  /**
+   * Returns a new object of class '<em>String Literal</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>String Literal</em>'.
+   * @generated
+   */
+  StringLiteral createStringLiteral();
+
+  /**
+   * Returns a new object of class '<em>Double Literal</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Double Literal</em>'.
+   * @generated
+   */
+  DoubleLiteral createDoubleLiteral();
+
+  /**
+   * Returns a new object of class '<em>Property Reference</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Property Reference</em>'.
+   * @generated
+   */
+  PropertyReference createPropertyReference();
+
+  /**
+   * Returns a new object of class '<em>Reference</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Reference</em>'.
+   * @generated
+   */
+  Reference createReference();
+
+  /**
+   * Returns a new object of class '<em>Function Call Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Function Call Expression</em>'.
+   * @generated
+   */
+  FunctionCallExpression createFunctionCallExpression();
+
+  /**
    * Returns a new object of class '<em>Configuration</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -643,6 +742,150 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   InstanceRef createInstanceRef();
+
+  /**
+   * Returns a new object of class '<em>Or Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Or Expression</em>'.
+   * @generated
+   */
+  OrExpression createOrExpression();
+
+  /**
+   * Returns a new object of class '<em>And Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>And Expression</em>'.
+   * @generated
+   */
+  AndExpression createAndExpression();
+
+  /**
+   * Returns a new object of class '<em>Equals Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Equals Expression</em>'.
+   * @generated
+   */
+  EqualsExpression createEqualsExpression();
+
+  /**
+   * Returns a new object of class '<em>Not Equals Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Not Equals Expression</em>'.
+   * @generated
+   */
+  NotEqualsExpression createNotEqualsExpression();
+
+  /**
+   * Returns a new object of class '<em>Greater Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Greater Expression</em>'.
+   * @generated
+   */
+  GreaterExpression createGreaterExpression();
+
+  /**
+   * Returns a new object of class '<em>Lower Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Lower Expression</em>'.
+   * @generated
+   */
+  LowerExpression createLowerExpression();
+
+  /**
+   * Returns a new object of class '<em>Greater Or Equal Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Greater Or Equal Expression</em>'.
+   * @generated
+   */
+  GreaterOrEqualExpression createGreaterOrEqualExpression();
+
+  /**
+   * Returns a new object of class '<em>Lower Or Equal Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Lower Or Equal Expression</em>'.
+   * @generated
+   */
+  LowerOrEqualExpression createLowerOrEqualExpression();
+
+  /**
+   * Returns a new object of class '<em>Plus Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Plus Expression</em>'.
+   * @generated
+   */
+  PlusExpression createPlusExpression();
+
+  /**
+   * Returns a new object of class '<em>Minus Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Minus Expression</em>'.
+   * @generated
+   */
+  MinusExpression createMinusExpression();
+
+  /**
+   * Returns a new object of class '<em>Times Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Times Expression</em>'.
+   * @generated
+   */
+  TimesExpression createTimesExpression();
+
+  /**
+   * Returns a new object of class '<em>Div Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Div Expression</em>'.
+   * @generated
+   */
+  DivExpression createDivExpression();
+
+  /**
+   * Returns a new object of class '<em>Mod Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Mod Expression</em>'.
+   * @generated
+   */
+  ModExpression createModExpression();
+
+  /**
+   * Returns a new object of class '<em>Not Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Not Expression</em>'.
+   * @generated
+   */
+  NotExpression createNotExpression();
+
+  /**
+   * Returns a new object of class '<em>Unary Minus</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Unary Minus</em>'.
+   * @generated
+   */
+  UnaryMinus createUnaryMinus();
+
+  /**
+   * Returns a new object of class '<em>Array Index</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Array Index</em>'.
+   * @generated
+   */
+  ArrayIndex createArrayIndex();
 
   /**
    * Returns the package supported by this factory.

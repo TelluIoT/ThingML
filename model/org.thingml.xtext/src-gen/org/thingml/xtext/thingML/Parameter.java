@@ -3,7 +3,6 @@
  */
 package org.thingml.xtext.thingML;
 
-import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -15,15 +14,14 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.Parameter#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Parameter#getType <em>Type</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Parameter#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.Parameter#getTypeRef <em>Type Ref</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getParameter()
  * @model
  * @generated
  */
-public interface Parameter extends ReferencedElmt, Variable
+public interface Parameter extends AnnotatedElement, ReferencedElmt, Variable
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -52,45 +50,29 @@ public interface Parameter extends ReferencedElmt, Variable
   void setName(String value);
 
   /**
-   * Returns the value of the '<em><b>Type</b></em>' reference.
+   * Returns the value of the '<em><b>Type Ref</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Type</em>' reference isn't clear,
+   * If the meaning of the '<em>Type Ref</em>' containment reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Type</em>' reference.
-   * @see #setType(Type)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getParameter_Type()
-   * @model
-   * @generated
-   */
-  Type getType();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Parameter#getType <em>Type</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Type</em>' reference.
-   * @see #getType()
-   * @generated
-   */
-  void setType(Type value);
-
-  /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getParameter_Annotations()
+   * @return the value of the '<em>Type Ref</em>' containment reference.
+   * @see #setTypeRef(TypeRef)
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getParameter_TypeRef()
    * @model containment="true"
    * @generated
    */
-  EList<PlatformAnnotation> getAnnotations();
+  TypeRef getTypeRef();
+
+  /**
+   * Sets the value of the '{@link org.thingml.xtext.thingML.Parameter#getTypeRef <em>Type Ref</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Type Ref</em>' containment reference.
+   * @see #getTypeRef()
+   * @generated
+   */
+  void setTypeRef(TypeRef value);
 
 } // Parameter

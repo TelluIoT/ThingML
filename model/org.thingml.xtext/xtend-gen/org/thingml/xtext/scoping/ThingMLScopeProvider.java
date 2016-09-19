@@ -3,7 +3,18 @@
  */
 package org.thingml.xtext.scoping;
 
+import com.google.common.base.Objects;
+import java.util.ArrayList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.Scopes;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.xtext.scoping.AbstractThingMLScopeProvider;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLPackage;
 
 /**
  * This class contains custom scoping description.
@@ -13,4 +24,19 @@ import org.thingml.xtext.scoping.AbstractThingMLScopeProvider;
  */
 @SuppressWarnings("all")
 public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
+  private final ThingMLPackage p = ThingMLPackage.eINSTANCE;
+  
+  @Override
+  public IScope getScope(final EObject context, final EReference reference) {
+    if ((Objects.equal(reference, this.p.getPort_Receives()) || Objects.equal(reference, this.p.getPort_Sends()))) {
+      return this.scopeForMessagesInPort(((Port) context));
+    }
+    return super.getScope(context, reference);
+  }
+  
+  protected IScope scopeForMessagesInPort(final Port context) {
+    EObject _eContainer = context.eContainer();
+    ArrayList<Message> _allMessages = ThingMLHelpers.allMessages(((Thing) _eContainer));
+    return Scopes.scopeFor(_allMessages);
+  }
 }

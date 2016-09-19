@@ -3,26 +3,18 @@
  */
 package org.thingml.xtext.thingML.impl;
 
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.thingml.xtext.thingML.Expression;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.ThingMLPackage;
-import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.TypeRef;
 
 /**
  * <!-- begin-user-doc -->
@@ -32,16 +24,36 @@ import org.thingml.xtext.thingML.Type;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#isChangeable <em>Changeable</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getType <em>Type</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getTypeRef <em>Type Ref</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getInit <em>Init</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class PropertyImpl extends ReferencedElmtImpl implements Property
+public class PropertyImpl extends AnnotatedElementImpl implements Property
 {
+  /**
+   * The default value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isChangeable()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean CHANGEABLE_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isChangeable()
+   * @generated
+   * @ordered
+   */
+  protected boolean changeable = CHANGEABLE_EDEFAULT;
+
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -63,14 +75,14 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
   protected String name = NAME_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getType() <em>Type</em>}' reference.
+   * The cached value of the '{@link #getTypeRef() <em>Type Ref</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getType()
+   * @see #getTypeRef()
    * @generated
    * @ordered
    */
-  protected Type type;
+  protected TypeRef typeRef;
 
   /**
    * The cached value of the '{@link #getInit() <em>Init</em>}' containment reference.
@@ -81,16 +93,6 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
    * @ordered
    */
   protected Expression init;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * <!-- begin-user-doc -->
@@ -111,6 +113,29 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
   protected EClass eStaticClass()
   {
     return ThingMLPackage.Literals.PROPERTY;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public boolean isChangeable()
+  {
+    return changeable;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setChangeable(boolean newChangeable)
+  {
+    boolean oldChangeable = changeable;
+    changeable = newChangeable;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__CHANGEABLE, oldChangeable, changeable));
   }
 
   /**
@@ -141,19 +166,9 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
    * <!-- end-user-doc -->
    * @generated
    */
-  public Type getType()
+  public TypeRef getTypeRef()
   {
-    if (type != null && type.eIsProxy())
-    {
-      InternalEObject oldType = (InternalEObject)type;
-      type = (Type)eResolveProxy(oldType);
-      if (type != oldType)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.PROPERTY__TYPE, oldType, type));
-      }
-    }
-    return type;
+    return typeRef;
   }
 
   /**
@@ -161,22 +176,37 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
    * <!-- end-user-doc -->
    * @generated
    */
-  public Type basicGetType()
+  public NotificationChain basicSetTypeRef(TypeRef newTypeRef, NotificationChain msgs)
   {
-    return type;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setType(Type newType)
-  {
-    Type oldType = type;
-    type = newType;
+    TypeRef oldTypeRef = typeRef;
+    typeRef = newTypeRef;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__TYPE, oldType, type));
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__TYPE_REF, oldTypeRef, newTypeRef);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setTypeRef(TypeRef newTypeRef)
+  {
+    if (newTypeRef != typeRef)
+    {
+      NotificationChain msgs = null;
+      if (typeRef != null)
+        msgs = ((InternalEObject)typeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PROPERTY__TYPE_REF, null, msgs);
+      if (newTypeRef != null)
+        msgs = ((InternalEObject)newTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PROPERTY__TYPE_REF, null, msgs);
+      msgs = basicSetTypeRef(newTypeRef, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__TYPE_REF, newTypeRef, newTypeRef));
   }
 
   /**
@@ -232,29 +262,15 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.PROPERTY__ANNOTATIONS);
-    }
-    return annotations;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
     switch (featureID)
     {
+      case ThingMLPackage.PROPERTY__TYPE_REF:
+        return basicSetTypeRef(null, msgs);
       case ThingMLPackage.PROPERTY__INIT:
         return basicSetInit(null, msgs);
-      case ThingMLPackage.PROPERTY__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -269,15 +285,14 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
   {
     switch (featureID)
     {
+      case ThingMLPackage.PROPERTY__CHANGEABLE:
+        return isChangeable();
       case ThingMLPackage.PROPERTY__NAME:
         return getName();
-      case ThingMLPackage.PROPERTY__TYPE:
-        if (resolve) return getType();
-        return basicGetType();
+      case ThingMLPackage.PROPERTY__TYPE_REF:
+        return getTypeRef();
       case ThingMLPackage.PROPERTY__INIT:
         return getInit();
-      case ThingMLPackage.PROPERTY__ANNOTATIONS:
-        return getAnnotations();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -287,24 +302,22 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
    * <!-- end-user-doc -->
    * @generated
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
     switch (featureID)
     {
+      case ThingMLPackage.PROPERTY__CHANGEABLE:
+        setChangeable((Boolean)newValue);
+        return;
       case ThingMLPackage.PROPERTY__NAME:
         setName((String)newValue);
         return;
-      case ThingMLPackage.PROPERTY__TYPE:
-        setType((Type)newValue);
+      case ThingMLPackage.PROPERTY__TYPE_REF:
+        setTypeRef((TypeRef)newValue);
         return;
       case ThingMLPackage.PROPERTY__INIT:
         setInit((Expression)newValue);
-        return;
-      case ThingMLPackage.PROPERTY__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -320,17 +333,17 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
   {
     switch (featureID)
     {
+      case ThingMLPackage.PROPERTY__CHANGEABLE:
+        setChangeable(CHANGEABLE_EDEFAULT);
+        return;
       case ThingMLPackage.PROPERTY__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case ThingMLPackage.PROPERTY__TYPE:
-        setType((Type)null);
+      case ThingMLPackage.PROPERTY__TYPE_REF:
+        setTypeRef((TypeRef)null);
         return;
       case ThingMLPackage.PROPERTY__INIT:
         setInit((Expression)null);
-        return;
-      case ThingMLPackage.PROPERTY__ANNOTATIONS:
-        getAnnotations().clear();
         return;
     }
     super.eUnset(featureID);
@@ -346,14 +359,14 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
   {
     switch (featureID)
     {
+      case ThingMLPackage.PROPERTY__CHANGEABLE:
+        return changeable != CHANGEABLE_EDEFAULT;
       case ThingMLPackage.PROPERTY__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ThingMLPackage.PROPERTY__TYPE:
-        return type != null;
+      case ThingMLPackage.PROPERTY__TYPE_REF:
+        return typeRef != null;
       case ThingMLPackage.PROPERTY__INIT:
         return init != null;
-      case ThingMLPackage.PROPERTY__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
     }
     return super.eIsSet(featureID);
   }
@@ -369,7 +382,9 @@ public class PropertyImpl extends ReferencedElmtImpl implements Property
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (name: ");
+    result.append(" (changeable: ");
+    result.append(changeable);
+    result.append(", name: ");
     result.append(name);
     result.append(')');
     return result.toString();

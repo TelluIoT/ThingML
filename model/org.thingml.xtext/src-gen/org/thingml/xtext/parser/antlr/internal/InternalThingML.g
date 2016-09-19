@@ -77,22 +77,22 @@ ruleThingMLModel returns [EObject current=null]
 }:
 	(
 		(
-			otherlv_0='import'
-			{
-				newLeafNode(otherlv_0, grammarAccess.getThingMLModelAccess().getImportKeyword_0_0());
-			}
 			(
-				(
-					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getThingMLModelRule());
-						}
+				{
+					newCompositeNode(grammarAccess.getThingMLModelAccess().getImportsImportParserRuleCall_0_0());
+				}
+				lv_imports_0_0=ruleImport
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getThingMLModelRule());
 					}
-					otherlv_1=RULE_STRING_LIT
-					{
-						newLeafNode(otherlv_1, grammarAccess.getThingMLModelAccess().getImportsThingMLModelCrossReference_0_1_0());
-					}
-				)
+					add(
+						$current,
+						"imports",
+						lv_imports_0_0,
+						"org.thingml.xtext.ThingML.Import");
+					afterParserOrEnumRuleCall();
+				}
 			)
 		)*
 		(
@@ -101,7 +101,7 @@ ruleThingMLModel returns [EObject current=null]
 					{
 						newCompositeNode(grammarAccess.getThingMLModelAccess().getTypesTypeParserRuleCall_1_0_0());
 					}
-					lv_types_2_0=ruleType
+					lv_types_1_0=ruleType
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getThingMLModelRule());
@@ -109,7 +109,7 @@ ruleThingMLModel returns [EObject current=null]
 						add(
 							$current,
 							"types",
-							lv_types_2_0,
+							lv_types_1_0,
 							"org.thingml.xtext.ThingML.Type");
 						afterParserOrEnumRuleCall();
 					}
@@ -121,7 +121,7 @@ ruleThingMLModel returns [EObject current=null]
 					{
 						newCompositeNode(grammarAccess.getThingMLModelAccess().getProtocolsProtocolParserRuleCall_1_1_0());
 					}
-					lv_protocols_3_0=ruleProtocol
+					lv_protocols_2_0=ruleProtocol
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getThingMLModelRule());
@@ -129,7 +129,7 @@ ruleThingMLModel returns [EObject current=null]
 						add(
 							$current,
 							"protocols",
-							lv_protocols_3_0,
+							lv_protocols_2_0,
 							"org.thingml.xtext.ThingML.Protocol");
 						afterParserOrEnumRuleCall();
 					}
@@ -141,7 +141,7 @@ ruleThingMLModel returns [EObject current=null]
 					{
 						newCompositeNode(grammarAccess.getThingMLModelAccess().getConfigsConfigurationParserRuleCall_1_2_0());
 					}
-					lv_configs_4_0=ruleConfiguration
+					lv_configs_3_0=ruleConfiguration
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getThingMLModelRule());
@@ -149,13 +149,54 @@ ruleThingMLModel returns [EObject current=null]
 						add(
 							$current,
 							"configs",
-							lv_configs_4_0,
+							lv_configs_3_0,
 							"org.thingml.xtext.ThingML.Configuration");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 		)*
+	)
+;
+
+// Entry rule entryRuleImport
+entryRuleImport returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getImportRule()); }
+	iv_ruleImport=ruleImport
+	{ $current=$iv_ruleImport.current; }
+	EOF;
+
+// Rule Import
+ruleImport returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0='import'
+		{
+			newLeafNode(otherlv_0, grammarAccess.getImportAccess().getImportKeyword_0());
+		}
+		(
+			(
+				lv_importURI_1_0=RULE_STRING_LIT
+				{
+					newLeafNode(lv_importURI_1_0, grammarAccess.getImportAccess().getImportURISTRING_LITTerminalRuleCall_1_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getImportRule());
+					}
+					setWithLastConsumed(
+						$current,
+						"importURI",
+						lv_importURI_1_0,
+						"org.thingml.xtext.ThingML.STRING_LIT");
+				}
+			)
+		)
 	)
 ;
 
@@ -215,6 +256,77 @@ rulePlatformAnnotation returns [EObject current=null]
 				}
 			)
 		)
+	)
+;
+
+// Entry rule entryRuleTypeRef
+entryRuleTypeRef returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getTypeRefRule()); }
+	iv_ruleTypeRef=ruleTypeRef
+	{ $current=$iv_ruleTypeRef.current; }
+	EOF;
+
+// Rule TypeRef
+ruleTypeRef returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getTypeRefRule());
+					}
+				}
+				otherlv_0=RULE_ID
+				{
+					newLeafNode(otherlv_0, grammarAccess.getTypeRefAccess().getTypeTypeCrossReference_0_0());
+				}
+			)
+		)
+		(
+			(
+				(
+					lv_isArray_1_0='['
+					{
+						newLeafNode(lv_isArray_1_0, grammarAccess.getTypeRefAccess().getIsArrayLeftSquareBracketKeyword_1_0_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getTypeRefRule());
+						}
+						setWithLastConsumed($current, "isArray", true, "[");
+					}
+				)
+			)
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getTypeRefAccess().getCardinalityExpressionParserRuleCall_1_1_0());
+					}
+					lv_cardinality_2_0=ruleExpression
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getTypeRefRule());
+						}
+						set(
+							$current,
+							"cardinality",
+							lv_cardinality_2_0,
+							"org.thingml.xtext.ThingML.Expression");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)?
+			otherlv_3=']'
+			{
+				newLeafNode(otherlv_3, grammarAccess.getTypeRefAccess().getRightSquareBracketKeyword_1_2());
+			}
+		)?
 	)
 ;
 
@@ -355,10 +467,12 @@ rulePrimitiveType returns [EObject current=null]
 				}
 			)
 		)*
-		otherlv_6=';'
-		{
-			newLeafNode(otherlv_6, grammarAccess.getPrimitiveTypeAccess().getSemicolonKeyword_6());
-		}
+		(
+			otherlv_6=';'
+			{
+				newLeafNode(otherlv_6, grammarAccess.getPrimitiveTypeAccess().getSemicolonKeyword_6());
+			}
+		)?
 	)
 ;
 
@@ -419,10 +533,12 @@ ruleObjectType returns [EObject current=null]
 				}
 			)
 		)*
-		otherlv_3=';'
-		{
-			newLeafNode(otherlv_3, grammarAccess.getObjectTypeAccess().getSemicolonKeyword_3());
-		}
+		(
+			otherlv_3=';'
+			{
+				newLeafNode(otherlv_3, grammarAccess.getObjectTypeAccess().getSemicolonKeyword_3());
+			}
+		)?
 	)
 ;
 
@@ -1045,34 +1161,11 @@ ruleFunction returns [EObject current=null]
 		}
 		(
 			(
-				{
-					newCompositeNode(grammarAccess.getFunctionAccess().getParametersParameterParserRuleCall_3_0());
-				}
-				lv_parameters_3_0=ruleParameter
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getFunctionRule());
-					}
-					add(
-						$current,
-						"parameters",
-						lv_parameters_3_0,
-						"org.thingml.xtext.ThingML.Parameter");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-		(
-			otherlv_4=','
-			{
-				newLeafNode(otherlv_4, grammarAccess.getFunctionAccess().getCommaKeyword_4_0());
-			}
-			(
 				(
 					{
-						newCompositeNode(grammarAccess.getFunctionAccess().getParametersParameterParserRuleCall_4_1_0());
+						newCompositeNode(grammarAccess.getFunctionAccess().getParametersParameterParserRuleCall_3_0_0());
 					}
-					lv_parameters_5_0=ruleParameter
+					lv_parameters_3_0=ruleParameter
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getFunctionRule());
@@ -1080,32 +1173,63 @@ ruleFunction returns [EObject current=null]
 						add(
 							$current,
 							"parameters",
-							lv_parameters_5_0,
+							lv_parameters_3_0,
 							"org.thingml.xtext.ThingML.Parameter");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
-		)*
+			(
+				otherlv_4=','
+				{
+					newLeafNode(otherlv_4, grammarAccess.getFunctionAccess().getCommaKeyword_3_1_0());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getFunctionAccess().getParametersParameterParserRuleCall_3_1_1_0());
+						}
+						lv_parameters_5_0=ruleParameter
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getFunctionRule());
+							}
+							add(
+								$current,
+								"parameters",
+								lv_parameters_5_0,
+								"org.thingml.xtext.ThingML.Parameter");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)*
+		)?
 		otherlv_6=')'
 		{
-			newLeafNode(otherlv_6, grammarAccess.getFunctionAccess().getRightParenthesisKeyword_5());
+			newLeafNode(otherlv_6, grammarAccess.getFunctionAccess().getRightParenthesisKeyword_4());
 		}
 		(
 			otherlv_7=':'
 			{
-				newLeafNode(otherlv_7, grammarAccess.getFunctionAccess().getColonKeyword_6_0());
+				newLeafNode(otherlv_7, grammarAccess.getFunctionAccess().getColonKeyword_5_0());
 			}
 			(
 				(
 					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getFunctionRule());
-						}
+						newCompositeNode(grammarAccess.getFunctionAccess().getTypeRefTypeRefParserRuleCall_5_1_0());
 					}
-					otherlv_8=RULE_ID
+					lv_typeRef_8_0=ruleTypeRef
 					{
-						newLeafNode(otherlv_8, grammarAccess.getFunctionAccess().getTypeTypeCrossReference_6_1_0());
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getFunctionRule());
+						}
+						set(
+							$current,
+							"typeRef",
+							lv_typeRef_8_0,
+							"org.thingml.xtext.ThingML.TypeRef");
+						afterParserOrEnumRuleCall();
 					}
 				)
 			)
@@ -1113,7 +1237,7 @@ ruleFunction returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getFunctionAccess().getAnnotationsPlatformAnnotationParserRuleCall_7_0());
+					newCompositeNode(grammarAccess.getFunctionAccess().getAnnotationsPlatformAnnotationParserRuleCall_6_0());
 				}
 				lv_annotations_9_0=rulePlatformAnnotation
 				{
@@ -1129,16 +1253,12 @@ ruleFunction returns [EObject current=null]
 				}
 			)
 		)*
-		otherlv_10='is'
-		{
-			newLeafNode(otherlv_10, grammarAccess.getFunctionAccess().getIsKeyword_8());
-		}
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getFunctionAccess().getBodyActionParserRuleCall_9_0());
+					newCompositeNode(grammarAccess.getFunctionAccess().getBodyActionParserRuleCall_7_0());
 				}
-				lv_body_11_0=ruleAction
+				lv_body_10_0=ruleAction
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getFunctionRule());
@@ -1146,7 +1266,7 @@ ruleFunction returns [EObject current=null]
 					set(
 						$current,
 						"body",
-						lv_body_11_0,
+						lv_body_10_0,
 						"org.thingml.xtext.ThingML.Action");
 					afterParserOrEnumRuleCall();
 				}
@@ -1171,15 +1291,29 @@ ruleProperty returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		otherlv_0='property'
+		(
+			(
+				lv_changeable_0_0='readonly'
+				{
+					newLeafNode(lv_changeable_0_0, grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPropertyRule());
+					}
+					setWithLastConsumed($current, "changeable", true, "readonly");
+				}
+			)
+		)?
+		otherlv_1='property'
 		{
-			newLeafNode(otherlv_0, grammarAccess.getPropertyAccess().getPropertyKeyword_0());
+			newLeafNode(otherlv_1, grammarAccess.getPropertyAccess().getPropertyKeyword_1());
 		}
 		(
 			(
-				lv_name_1_0=RULE_ID
+				lv_name_2_0=RULE_ID
 				{
-					newLeafNode(lv_name_1_0, grammarAccess.getPropertyAccess().getNameIDTerminalRuleCall_1_0());
+					newLeafNode(lv_name_2_0, grammarAccess.getPropertyAccess().getNameIDTerminalRuleCall_2_0());
 				}
 				{
 					if ($current==null) {
@@ -1188,39 +1322,45 @@ ruleProperty returns [EObject current=null]
 					setWithLastConsumed(
 						$current,
 						"name",
-						lv_name_1_0,
+						lv_name_2_0,
 						"org.thingml.xtext.ThingML.ID");
 				}
 			)
 		)
-		otherlv_2=':'
+		otherlv_3=':'
 		{
-			newLeafNode(otherlv_2, grammarAccess.getPropertyAccess().getColonKeyword_2());
+			newLeafNode(otherlv_3, grammarAccess.getPropertyAccess().getColonKeyword_3());
 		}
 		(
 			(
 				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getPropertyRule());
-					}
+					newCompositeNode(grammarAccess.getPropertyAccess().getTypeRefTypeRefParserRuleCall_4_0());
 				}
-				otherlv_3=RULE_ID
+				lv_typeRef_4_0=ruleTypeRef
 				{
-					newLeafNode(otherlv_3, grammarAccess.getPropertyAccess().getTypeTypeCrossReference_3_0());
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getPropertyRule());
+					}
+					set(
+						$current,
+						"typeRef",
+						lv_typeRef_4_0,
+						"org.thingml.xtext.ThingML.TypeRef");
+					afterParserOrEnumRuleCall();
 				}
 			)
 		)
 		(
-			otherlv_4='='
+			otherlv_5='='
 			{
-				newLeafNode(otherlv_4, grammarAccess.getPropertyAccess().getEqualsSignKeyword_4_0());
+				newLeafNode(otherlv_5, grammarAccess.getPropertyAccess().getEqualsSignKeyword_5_0());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getPropertyAccess().getInitExpressionParserRuleCall_4_1_0());
+						newCompositeNode(grammarAccess.getPropertyAccess().getInitExpressionParserRuleCall_5_1_0());
 					}
-					lv_init_5_0=ruleExpression
+					lv_init_6_0=ruleExpression
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getPropertyRule());
@@ -1228,7 +1368,7 @@ ruleProperty returns [EObject current=null]
 						set(
 							$current,
 							"init",
-							lv_init_5_0,
+							lv_init_6_0,
 							"org.thingml.xtext.ThingML.Expression");
 						afterParserOrEnumRuleCall();
 					}
@@ -1238,9 +1378,9 @@ ruleProperty returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getPropertyAccess().getAnnotationsPlatformAnnotationParserRuleCall_5_0());
+					newCompositeNode(grammarAccess.getPropertyAccess().getAnnotationsPlatformAnnotationParserRuleCall_6_0());
 				}
-				lv_annotations_6_0=rulePlatformAnnotation
+				lv_annotations_7_0=rulePlatformAnnotation
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getPropertyRule());
@@ -1248,7 +1388,7 @@ ruleProperty returns [EObject current=null]
 					add(
 						$current,
 						"annotations",
-						lv_annotations_6_0,
+						lv_annotations_7_0,
 						"org.thingml.xtext.ThingML.PlatformAnnotation");
 					afterParserOrEnumRuleCall();
 				}
@@ -1368,10 +1508,12 @@ ruleMessage returns [EObject current=null]
 				}
 			)
 		)*
-		otherlv_8=';'
-		{
-			newLeafNode(otherlv_8, grammarAccess.getMessageAccess().getSemicolonKeyword_6());
-		}
+		(
+			otherlv_8=';'
+			{
+				newLeafNode(otherlv_8, grammarAccess.getMessageAccess().getSemicolonKeyword_6());
+			}
+		)?
 	)
 ;
 
@@ -1416,13 +1558,19 @@ ruleParameter returns [EObject current=null]
 		(
 			(
 				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getParameterRule());
-					}
+					newCompositeNode(grammarAccess.getParameterAccess().getTypeRefTypeRefParserRuleCall_2_0());
 				}
-				otherlv_2=RULE_ID
+				lv_typeRef_2_0=ruleTypeRef
 				{
-					newLeafNode(otherlv_2, grammarAccess.getParameterAccess().getTypeTypeCrossReference_2_0());
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getParameterRule());
+					}
+					set(
+						$current,
+						"typeRef",
+						lv_typeRef_2_0,
+						"org.thingml.xtext.ThingML.TypeRef");
+					afterParserOrEnumRuleCall();
 				}
 			)
 		)
@@ -2201,6 +2349,51 @@ ruleViewSource returns [EObject current=null]
 		this_TimeWindow_2=ruleTimeWindow
 		{
 			$current = $this_TimeWindow_2.current;
+			afterParserOrEnumRuleCall();
+		}
+	)
+;
+
+// Entry rule entryRuleElmtProperty
+entryRuleElmtProperty returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getElmtPropertyRule()); }
+	iv_ruleElmtProperty=ruleElmtProperty
+	{ $current=$iv_ruleElmtProperty.current; }
+	EOF;
+
+// Rule ElmtProperty
+ruleElmtProperty returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getElmtPropertyAccess().getSimpleParamRefParserRuleCall_0());
+		}
+		this_SimpleParamRef_0=ruleSimpleParamRef
+		{
+			$current = $this_SimpleParamRef_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getElmtPropertyAccess().getArrayParamRefParserRuleCall_1());
+		}
+		this_ArrayParamRef_1=ruleArrayParamRef
+		{
+			$current = $this_ArrayParamRef_1.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getElmtPropertyAccess().getLengthArrayParserRuleCall_2());
+		}
+		this_LengthArray_2=ruleLengthArray
+		{
+			$current = $this_LengthArray_2.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -3054,20 +3247,39 @@ ruleStateMachine returns [EObject current=null]
 			newLeafNode(otherlv_7, grammarAccess.getStateMachineAccess().getLeftCurlyBracketKeyword_6());
 		}
 		(
-			otherlv_8='on'
+			(
+				{
+					newCompositeNode(grammarAccess.getStateMachineAccess().getPropertiesPropertyParserRuleCall_7_0());
+				}
+				lv_properties_8_0=ruleProperty
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getStateMachineRule());
+					}
+					add(
+						$current,
+						"properties",
+						lv_properties_8_0,
+						"org.thingml.xtext.ThingML.Property");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)*
+		(
+			otherlv_9='on'
 			{
-				newLeafNode(otherlv_8, grammarAccess.getStateMachineAccess().getOnKeyword_7_0());
+				newLeafNode(otherlv_9, grammarAccess.getStateMachineAccess().getOnKeyword_8_0());
 			}
-			otherlv_9='entry'
+			otherlv_10='entry'
 			{
-				newLeafNode(otherlv_9, grammarAccess.getStateMachineAccess().getEntryKeyword_7_1());
+				newLeafNode(otherlv_10, grammarAccess.getStateMachineAccess().getEntryKeyword_8_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getStateMachineAccess().getEntryActionParserRuleCall_7_2_0());
+						newCompositeNode(grammarAccess.getStateMachineAccess().getEntryActionParserRuleCall_8_2_0());
 					}
-					lv_entry_10_0=ruleAction
+					lv_entry_11_0=ruleAction
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getStateMachineRule());
@@ -3075,7 +3287,7 @@ ruleStateMachine returns [EObject current=null]
 						set(
 							$current,
 							"entry",
-							lv_entry_10_0,
+							lv_entry_11_0,
 							"org.thingml.xtext.ThingML.Action");
 						afterParserOrEnumRuleCall();
 					}
@@ -3083,20 +3295,20 @@ ruleStateMachine returns [EObject current=null]
 			)
 		)?
 		(
-			otherlv_11='on'
+			otherlv_12='on'
 			{
-				newLeafNode(otherlv_11, grammarAccess.getStateMachineAccess().getOnKeyword_8_0());
+				newLeafNode(otherlv_12, grammarAccess.getStateMachineAccess().getOnKeyword_9_0());
 			}
-			otherlv_12='exit'
+			otherlv_13='exit'
 			{
-				newLeafNode(otherlv_12, grammarAccess.getStateMachineAccess().getExitKeyword_8_1());
+				newLeafNode(otherlv_13, grammarAccess.getStateMachineAccess().getExitKeyword_9_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getStateMachineAccess().getExitActionParserRuleCall_8_2_0());
+						newCompositeNode(grammarAccess.getStateMachineAccess().getExitActionParserRuleCall_9_2_0());
 					}
-					lv_exit_13_0=ruleAction
+					lv_exit_14_0=ruleAction
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getStateMachineRule());
@@ -3104,7 +3316,7 @@ ruleStateMachine returns [EObject current=null]
 						set(
 							$current,
 							"exit",
-							lv_exit_13_0,
+							lv_exit_14_0,
 							"org.thingml.xtext.ThingML.Action");
 						afterParserOrEnumRuleCall();
 					}
@@ -3115,27 +3327,7 @@ ruleStateMachine returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getStateMachineAccess().getPropertiesPropertyParserRuleCall_9_0_0());
-					}
-					lv_properties_14_0=ruleProperty
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getStateMachineRule());
-						}
-						add(
-							$current,
-							"properties",
-							lv_properties_14_0,
-							"org.thingml.xtext.ThingML.Property");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getStateMachineAccess().getSubstateStateParserRuleCall_9_1_0());
+						newCompositeNode(grammarAccess.getStateMachineAccess().getSubstateStateParserRuleCall_10_0_0());
 					}
 					lv_substate_15_0=ruleState
 					{
@@ -3155,7 +3347,7 @@ ruleStateMachine returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getStateMachineAccess().getInternalInternalTransitionParserRuleCall_9_2_0());
+						newCompositeNode(grammarAccess.getStateMachineAccess().getInternalInternalTransitionParserRuleCall_10_1_0());
 					}
 					lv_internal_16_0=ruleInternalTransition
 					{
@@ -3175,7 +3367,7 @@ ruleStateMachine returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getStateMachineAccess().getRegionParallelRegionParserRuleCall_10_0());
+					newCompositeNode(grammarAccess.getStateMachineAccess().getRegionParallelRegionParserRuleCall_11_0());
 				}
 				lv_region_17_0=ruleParallelRegion
 				{
@@ -3193,257 +3385,7 @@ ruleStateMachine returns [EObject current=null]
 		)*
 		otherlv_18='}'
 		{
-			newLeafNode(otherlv_18, grammarAccess.getStateMachineAccess().getRightCurlyBracketKeyword_11());
-		}
-	)
-;
-
-// Entry rule entryRuleState
-entryRuleState returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getStateRule()); }
-	iv_ruleState=ruleState
-	{ $current=$iv_ruleState.current; }
-	EOF;
-
-// Rule State
-ruleState returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		{
-			newCompositeNode(grammarAccess.getStateAccess().getState_ImplParserRuleCall_0());
-		}
-		this_State_Impl_0=ruleState_Impl
-		{
-			$current = $this_State_Impl_0.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getStateAccess().getStateMachineParserRuleCall_1());
-		}
-		this_StateMachine_1=ruleStateMachine
-		{
-			$current = $this_StateMachine_1.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getStateAccess().getFinalStateParserRuleCall_2());
-		}
-		this_FinalState_2=ruleFinalState
-		{
-			$current = $this_FinalState_2.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getStateAccess().getCompositeState_ImplParserRuleCall_3());
-		}
-		this_CompositeState_Impl_3=ruleCompositeState_Impl
-		{
-			$current = $this_CompositeState_Impl_3.current;
-			afterParserOrEnumRuleCall();
-		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getStateAccess().getSessionParserRuleCall_4());
-		}
-		this_Session_4=ruleSession
-		{
-			$current = $this_Session_4.current;
-			afterParserOrEnumRuleCall();
-		}
-	)
-;
-
-// Entry rule entryRuleState_Impl
-entryRuleState_Impl returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getState_ImplRule()); }
-	iv_ruleState_Impl=ruleState_Impl
-	{ $current=$iv_ruleState_Impl.current; }
-	EOF;
-
-// Rule State_Impl
-ruleState_Impl returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		otherlv_0='state'
-		{
-			newLeafNode(otherlv_0, grammarAccess.getState_ImplAccess().getStateKeyword_0());
-		}
-		(
-			(
-				lv_name_1_0=RULE_ID
-				{
-					newLeafNode(lv_name_1_0, grammarAccess.getState_ImplAccess().getNameIDTerminalRuleCall_1_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getState_ImplRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"name",
-						lv_name_1_0,
-						"org.thingml.xtext.ThingML.ID");
-				}
-			)
-		)
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getState_ImplAccess().getAnnotationsPlatformAnnotationParserRuleCall_2_0());
-				}
-				lv_annotations_2_0=rulePlatformAnnotation
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getState_ImplRule());
-					}
-					add(
-						$current,
-						"annotations",
-						lv_annotations_2_0,
-						"org.thingml.xtext.ThingML.PlatformAnnotation");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)*
-		otherlv_3='{'
-		{
-			newLeafNode(otherlv_3, grammarAccess.getState_ImplAccess().getLeftCurlyBracketKeyword_3());
-		}
-		(
-			otherlv_4='on'
-			{
-				newLeafNode(otherlv_4, grammarAccess.getState_ImplAccess().getOnKeyword_4_0());
-			}
-			otherlv_5='entry'
-			{
-				newLeafNode(otherlv_5, grammarAccess.getState_ImplAccess().getEntryKeyword_4_1());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getState_ImplAccess().getEntryActionParserRuleCall_4_2_0());
-					}
-					lv_entry_6_0=ruleAction
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getState_ImplRule());
-						}
-						set(
-							$current,
-							"entry",
-							lv_entry_6_0,
-							"org.thingml.xtext.ThingML.Action");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
-		(
-			otherlv_7='on'
-			{
-				newLeafNode(otherlv_7, grammarAccess.getState_ImplAccess().getOnKeyword_5_0());
-			}
-			otherlv_8='exit'
-			{
-				newLeafNode(otherlv_8, grammarAccess.getState_ImplAccess().getExitKeyword_5_1());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getState_ImplAccess().getExitActionParserRuleCall_5_2_0());
-					}
-					lv_exit_9_0=ruleAction
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getState_ImplRule());
-						}
-						set(
-							$current,
-							"exit",
-							lv_exit_9_0,
-							"org.thingml.xtext.ThingML.Action");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
-		(
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getState_ImplAccess().getPropertiesPropertyParserRuleCall_6_0_0());
-					}
-					lv_properties_10_0=ruleProperty
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getState_ImplRule());
-						}
-						add(
-							$current,
-							"properties",
-							lv_properties_10_0,
-							"org.thingml.xtext.ThingML.Property");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getState_ImplAccess().getInternalInternalTransitionParserRuleCall_6_1_0());
-					}
-					lv_internal_11_0=ruleInternalTransition
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getState_ImplRule());
-						}
-						add(
-							$current,
-							"internal",
-							lv_internal_11_0,
-							"org.thingml.xtext.ThingML.InternalTransition");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getState_ImplAccess().getOutgoingTransitionParserRuleCall_6_2_0());
-					}
-					lv_outgoing_12_0=ruleTransition
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getState_ImplRule());
-						}
-						add(
-							$current,
-							"outgoing",
-							lv_outgoing_12_0,
-							"org.thingml.xtext.ThingML.Transition");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)*
-		otherlv_13='}'
-		{
-			newLeafNode(otherlv_13, grammarAccess.getState_ImplAccess().getRightCurlyBracketKeyword_7());
+			newLeafNode(otherlv_18, grammarAccess.getStateMachineAccess().getRightCurlyBracketKeyword_12());
 		}
 	)
 ;
@@ -3509,22 +3451,55 @@ ruleFinalState returns [EObject current=null]
 				}
 			)
 		)*
-		otherlv_4=';'
+		otherlv_4='{'
 		{
-			newLeafNode(otherlv_4, grammarAccess.getFinalStateAccess().getSemicolonKeyword_4());
+			newLeafNode(otherlv_4, grammarAccess.getFinalStateAccess().getLeftCurlyBracketKeyword_4());
+		}
+		(
+			otherlv_5='on'
+			{
+				newLeafNode(otherlv_5, grammarAccess.getFinalStateAccess().getOnKeyword_5_0());
+			}
+			otherlv_6='entry'
+			{
+				newLeafNode(otherlv_6, grammarAccess.getFinalStateAccess().getEntryKeyword_5_1());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getFinalStateAccess().getEntryActionParserRuleCall_5_2_0());
+					}
+					lv_entry_7_0=ruleAction
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getFinalStateRule());
+						}
+						set(
+							$current,
+							"entry",
+							lv_entry_7_0,
+							"org.thingml.xtext.ThingML.Action");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)?
+		otherlv_8='}'
+		{
+			newLeafNode(otherlv_8, grammarAccess.getFinalStateAccess().getRightCurlyBracketKeyword_6());
 		}
 	)
 ;
 
-// Entry rule entryRuleCompositeState_Impl
-entryRuleCompositeState_Impl returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getCompositeState_ImplRule()); }
-	iv_ruleCompositeState_Impl=ruleCompositeState_Impl
-	{ $current=$iv_ruleCompositeState_Impl.current; }
+// Entry rule entryRuleCompositeState
+entryRuleCompositeState returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getCompositeStateRule()); }
+	iv_ruleCompositeState=ruleCompositeState
+	{ $current=$iv_ruleCompositeState.current; }
 	EOF;
 
-// Rule CompositeState_Impl
-ruleCompositeState_Impl returns [EObject current=null]
+// Rule CompositeState
+ruleCompositeState returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -3534,21 +3509,21 @@ ruleCompositeState_Impl returns [EObject current=null]
 	(
 		otherlv_0='composite'
 		{
-			newLeafNode(otherlv_0, grammarAccess.getCompositeState_ImplAccess().getCompositeKeyword_0());
+			newLeafNode(otherlv_0, grammarAccess.getCompositeStateAccess().getCompositeKeyword_0());
 		}
 		otherlv_1='state'
 		{
-			newLeafNode(otherlv_1, grammarAccess.getCompositeState_ImplAccess().getStateKeyword_1());
+			newLeafNode(otherlv_1, grammarAccess.getCompositeStateAccess().getStateKeyword_1());
 		}
 		(
 			(
 				lv_name_2_0=RULE_ID
 				{
-					newLeafNode(lv_name_2_0, grammarAccess.getCompositeState_ImplAccess().getNameIDTerminalRuleCall_2_0());
+					newLeafNode(lv_name_2_0, grammarAccess.getCompositeStateAccess().getNameIDTerminalRuleCall_2_0());
 				}
 				{
 					if ($current==null) {
-						$current = createModelElement(grammarAccess.getCompositeState_ImplRule());
+						$current = createModelElement(grammarAccess.getCompositeStateRule());
 					}
 					setWithLastConsumed(
 						$current,
@@ -3557,38 +3532,38 @@ ruleCompositeState_Impl returns [EObject current=null]
 						"org.thingml.xtext.ThingML.ID");
 				}
 			)
-		)?
+		)
 		otherlv_3='init'
 		{
-			newLeafNode(otherlv_3, grammarAccess.getCompositeState_ImplAccess().getInitKeyword_3());
+			newLeafNode(otherlv_3, grammarAccess.getCompositeStateAccess().getInitKeyword_3());
 		}
 		(
 			(
 				{
 					if ($current==null) {
-						$current = createModelElement(grammarAccess.getCompositeState_ImplRule());
+						$current = createModelElement(grammarAccess.getCompositeStateRule());
 					}
 				}
 				otherlv_4=RULE_ID
 				{
-					newLeafNode(otherlv_4, grammarAccess.getCompositeState_ImplAccess().getInitialStateCrossReference_4_0());
+					newLeafNode(otherlv_4, grammarAccess.getCompositeStateAccess().getInitialStateCrossReference_4_0());
 				}
 			)
 		)
 		(
 			otherlv_5='keeps'
 			{
-				newLeafNode(otherlv_5, grammarAccess.getCompositeState_ImplAccess().getKeepsKeyword_5_0());
+				newLeafNode(otherlv_5, grammarAccess.getCompositeStateAccess().getKeepsKeyword_5_0());
 			}
 			(
 				(
 					lv_history_6_0='history'
 					{
-						newLeafNode(lv_history_6_0, grammarAccess.getCompositeState_ImplAccess().getHistoryHistoryKeyword_5_1_0());
+						newLeafNode(lv_history_6_0, grammarAccess.getCompositeStateAccess().getHistoryHistoryKeyword_5_1_0());
 					}
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getCompositeState_ImplRule());
+							$current = createModelElement(grammarAccess.getCompositeStateRule());
 						}
 						setWithLastConsumed($current, "history", true, "history");
 					}
@@ -3598,12 +3573,12 @@ ruleCompositeState_Impl returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getCompositeState_ImplAccess().getAnnotationsPlatformAnnotationParserRuleCall_6_0());
+					newCompositeNode(grammarAccess.getCompositeStateAccess().getAnnotationsPlatformAnnotationParserRuleCall_6_0());
 				}
 				lv_annotations_7_0=rulePlatformAnnotation
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getCompositeState_ImplRule());
+						$current = createModelElementForParent(grammarAccess.getCompositeStateRule());
 					}
 					add(
 						$current,
@@ -3616,31 +3591,50 @@ ruleCompositeState_Impl returns [EObject current=null]
 		)*
 		otherlv_8='{'
 		{
-			newLeafNode(otherlv_8, grammarAccess.getCompositeState_ImplAccess().getLeftCurlyBracketKeyword_7());
+			newLeafNode(otherlv_8, grammarAccess.getCompositeStateAccess().getLeftCurlyBracketKeyword_7());
 		}
 		(
-			otherlv_9='on'
+			(
+				{
+					newCompositeNode(grammarAccess.getCompositeStateAccess().getPropertiesPropertyParserRuleCall_8_0());
+				}
+				lv_properties_9_0=ruleProperty
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getCompositeStateRule());
+					}
+					add(
+						$current,
+						"properties",
+						lv_properties_9_0,
+						"org.thingml.xtext.ThingML.Property");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)*
+		(
+			otherlv_10='on'
 			{
-				newLeafNode(otherlv_9, grammarAccess.getCompositeState_ImplAccess().getOnKeyword_8_0());
+				newLeafNode(otherlv_10, grammarAccess.getCompositeStateAccess().getOnKeyword_9_0());
 			}
-			otherlv_10='entry'
+			otherlv_11='entry'
 			{
-				newLeafNode(otherlv_10, grammarAccess.getCompositeState_ImplAccess().getEntryKeyword_8_1());
+				newLeafNode(otherlv_11, grammarAccess.getCompositeStateAccess().getEntryKeyword_9_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getCompositeState_ImplAccess().getEntryActionParserRuleCall_8_2_0());
+						newCompositeNode(grammarAccess.getCompositeStateAccess().getEntryActionParserRuleCall_9_2_0());
 					}
-					lv_entry_11_0=ruleAction
+					lv_entry_12_0=ruleAction
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getCompositeState_ImplRule());
+							$current = createModelElementForParent(grammarAccess.getCompositeStateRule());
 						}
 						set(
 							$current,
 							"entry",
-							lv_entry_11_0,
+							lv_entry_12_0,
 							"org.thingml.xtext.ThingML.Action");
 						afterParserOrEnumRuleCall();
 					}
@@ -3648,28 +3642,28 @@ ruleCompositeState_Impl returns [EObject current=null]
 			)
 		)?
 		(
-			otherlv_12='on'
+			otherlv_13='on'
 			{
-				newLeafNode(otherlv_12, grammarAccess.getCompositeState_ImplAccess().getOnKeyword_9_0());
+				newLeafNode(otherlv_13, grammarAccess.getCompositeStateAccess().getOnKeyword_10_0());
 			}
-			otherlv_13='exit'
+			otherlv_14='exit'
 			{
-				newLeafNode(otherlv_13, grammarAccess.getCompositeState_ImplAccess().getExitKeyword_9_1());
+				newLeafNode(otherlv_14, grammarAccess.getCompositeStateAccess().getExitKeyword_10_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getCompositeState_ImplAccess().getExitActionParserRuleCall_9_2_0());
+						newCompositeNode(grammarAccess.getCompositeStateAccess().getExitActionParserRuleCall_10_2_0());
 					}
-					lv_exit_14_0=ruleAction
+					lv_exit_15_0=ruleAction
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getCompositeState_ImplRule());
+							$current = createModelElementForParent(grammarAccess.getCompositeStateRule());
 						}
 						set(
 							$current,
 							"exit",
-							lv_exit_14_0,
+							lv_exit_15_0,
 							"org.thingml.xtext.ThingML.Action");
 						afterParserOrEnumRuleCall();
 					}
@@ -3680,32 +3674,12 @@ ruleCompositeState_Impl returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getCompositeState_ImplAccess().getPropertiesPropertyParserRuleCall_10_0_0());
-					}
-					lv_properties_15_0=ruleProperty
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getCompositeState_ImplRule());
-						}
-						add(
-							$current,
-							"properties",
-							lv_properties_15_0,
-							"org.thingml.xtext.ThingML.Property");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getCompositeState_ImplAccess().getSubstateStateParserRuleCall_10_1_0());
+						newCompositeNode(grammarAccess.getCompositeStateAccess().getSubstateStateParserRuleCall_11_0_0());
 					}
 					lv_substate_16_0=ruleState
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getCompositeState_ImplRule());
+							$current = createModelElementForParent(grammarAccess.getCompositeStateRule());
 						}
 						add(
 							$current,
@@ -3720,12 +3694,12 @@ ruleCompositeState_Impl returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getCompositeState_ImplAccess().getInternalInternalTransitionParserRuleCall_10_2_0());
+						newCompositeNode(grammarAccess.getCompositeStateAccess().getInternalInternalTransitionParserRuleCall_11_1_0());
 					}
 					lv_internal_17_0=ruleInternalTransition
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getCompositeState_ImplRule());
+							$current = createModelElementForParent(grammarAccess.getCompositeStateRule());
 						}
 						add(
 							$current,
@@ -3740,12 +3714,12 @@ ruleCompositeState_Impl returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getCompositeState_ImplAccess().getOutgoingTransitionParserRuleCall_10_3_0());
+						newCompositeNode(grammarAccess.getCompositeStateAccess().getOutgoingTransitionParserRuleCall_11_2_0());
 					}
 					lv_outgoing_18_0=ruleTransition
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getCompositeState_ImplRule());
+							$current = createModelElementForParent(grammarAccess.getCompositeStateRule());
 						}
 						add(
 							$current,
@@ -3760,12 +3734,12 @@ ruleCompositeState_Impl returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getCompositeState_ImplAccess().getRegionParallelRegionParserRuleCall_11_0());
+					newCompositeNode(grammarAccess.getCompositeStateAccess().getRegionParallelRegionParserRuleCall_12_0());
 				}
 				lv_region_19_0=ruleParallelRegion
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getCompositeState_ImplRule());
+						$current = createModelElementForParent(grammarAccess.getCompositeStateRule());
 					}
 					add(
 						$current,
@@ -3778,7 +3752,7 @@ ruleCompositeState_Impl returns [EObject current=null]
 		)*
 		otherlv_20='}'
 		{
-			newLeafNode(otherlv_20, grammarAccess.getCompositeState_ImplAccess().getRightCurlyBracketKeyword_12());
+			newLeafNode(otherlv_20, grammarAccess.getCompositeStateAccess().getRightCurlyBracketKeyword_13());
 		}
 	)
 ;
@@ -3820,10 +3794,38 @@ ruleSession returns [EObject current=null]
 						"org.thingml.xtext.ThingML.ID");
 				}
 			)
+		)
+		(
+			otherlv_2='<'
+			{
+				newLeafNode(otherlv_2, grammarAccess.getSessionAccess().getLessThanSignKeyword_2_0());
+			}
+			(
+				(
+					lv_maxInstances_3_0=RULE_INT
+					{
+						newLeafNode(lv_maxInstances_3_0, grammarAccess.getSessionAccess().getMaxInstancesINTTerminalRuleCall_2_1_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getSessionRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"maxInstances",
+							lv_maxInstances_3_0,
+							"org.thingml.xtext.ThingML.INT");
+					}
+				)
+			)
+			otherlv_4='>'
+			{
+				newLeafNode(otherlv_4, grammarAccess.getSessionAccess().getGreaterThanSignKeyword_2_2());
+			}
 		)?
-		otherlv_2='init'
+		otherlv_5='init'
 		{
-			newLeafNode(otherlv_2, grammarAccess.getSessionAccess().getInitKeyword_2());
+			newLeafNode(otherlv_5, grammarAccess.getSessionAccess().getInitKeyword_3());
 		}
 		(
 			(
@@ -3832,18 +3834,18 @@ ruleSession returns [EObject current=null]
 						$current = createModelElement(grammarAccess.getSessionRule());
 					}
 				}
-				otherlv_3=RULE_ID
+				otherlv_6=RULE_ID
 				{
-					newLeafNode(otherlv_3, grammarAccess.getSessionAccess().getInitialStateCrossReference_3_0());
+					newLeafNode(otherlv_6, grammarAccess.getSessionAccess().getInitialStateCrossReference_4_0());
 				}
 			)
 		)
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getSessionAccess().getAnnotationsPlatformAnnotationParserRuleCall_4_0());
+					newCompositeNode(grammarAccess.getSessionAccess().getAnnotationsPlatformAnnotationParserRuleCall_5_0());
 				}
-				lv_annotations_4_0=rulePlatformAnnotation
+				lv_annotations_7_0=rulePlatformAnnotation
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getSessionRule());
@@ -3851,31 +3853,50 @@ ruleSession returns [EObject current=null]
 					add(
 						$current,
 						"annotations",
-						lv_annotations_4_0,
+						lv_annotations_7_0,
 						"org.thingml.xtext.ThingML.PlatformAnnotation");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)*
-		otherlv_5='{'
+		otherlv_8='{'
 		{
-			newLeafNode(otherlv_5, grammarAccess.getSessionAccess().getLeftCurlyBracketKeyword_5());
+			newLeafNode(otherlv_8, grammarAccess.getSessionAccess().getLeftCurlyBracketKeyword_6());
 		}
 		(
-			otherlv_6='on'
+			(
+				{
+					newCompositeNode(grammarAccess.getSessionAccess().getPropertiesPropertyParserRuleCall_7_0());
+				}
+				lv_properties_9_0=ruleProperty
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getSessionRule());
+					}
+					add(
+						$current,
+						"properties",
+						lv_properties_9_0,
+						"org.thingml.xtext.ThingML.Property");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)*
+		(
+			otherlv_10='on'
 			{
-				newLeafNode(otherlv_6, grammarAccess.getSessionAccess().getOnKeyword_6_0());
+				newLeafNode(otherlv_10, grammarAccess.getSessionAccess().getOnKeyword_8_0());
 			}
-			otherlv_7='entry'
+			otherlv_11='entry'
 			{
-				newLeafNode(otherlv_7, grammarAccess.getSessionAccess().getEntryKeyword_6_1());
+				newLeafNode(otherlv_11, grammarAccess.getSessionAccess().getEntryKeyword_8_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getSessionAccess().getEntryActionParserRuleCall_6_2_0());
+						newCompositeNode(grammarAccess.getSessionAccess().getEntryActionParserRuleCall_8_2_0());
 					}
-					lv_entry_8_0=ruleAction
+					lv_entry_12_0=ruleAction
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getSessionRule());
@@ -3883,7 +3904,7 @@ ruleSession returns [EObject current=null]
 						set(
 							$current,
 							"entry",
-							lv_entry_8_0,
+							lv_entry_12_0,
 							"org.thingml.xtext.ThingML.Action");
 						afterParserOrEnumRuleCall();
 					}
@@ -3891,20 +3912,20 @@ ruleSession returns [EObject current=null]
 			)
 		)?
 		(
-			otherlv_9='on'
+			otherlv_13='on'
 			{
-				newLeafNode(otherlv_9, grammarAccess.getSessionAccess().getOnKeyword_7_0());
+				newLeafNode(otherlv_13, grammarAccess.getSessionAccess().getOnKeyword_9_0());
 			}
-			otherlv_10='exit'
+			otherlv_14='exit'
 			{
-				newLeafNode(otherlv_10, grammarAccess.getSessionAccess().getExitKeyword_7_1());
+				newLeafNode(otherlv_14, grammarAccess.getSessionAccess().getExitKeyword_9_1());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getSessionAccess().getExitActionParserRuleCall_7_2_0());
+						newCompositeNode(grammarAccess.getSessionAccess().getExitActionParserRuleCall_9_2_0());
 					}
-					lv_exit_11_0=ruleAction
+					lv_exit_15_0=ruleAction
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getSessionRule());
@@ -3912,7 +3933,7 @@ ruleSession returns [EObject current=null]
 						set(
 							$current,
 							"exit",
-							lv_exit_11_0,
+							lv_exit_15_0,
 							"org.thingml.xtext.ThingML.Action");
 						afterParserOrEnumRuleCall();
 					}
@@ -3923,29 +3944,9 @@ ruleSession returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getSessionAccess().getPropertiesPropertyParserRuleCall_8_0_0());
+						newCompositeNode(grammarAccess.getSessionAccess().getSubstateStateParserRuleCall_10_0_0());
 					}
-					lv_properties_12_0=ruleProperty
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSessionRule());
-						}
-						add(
-							$current,
-							"properties",
-							lv_properties_12_0,
-							"org.thingml.xtext.ThingML.Property");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			    |
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getSessionAccess().getSubstateStateParserRuleCall_8_1_0());
-					}
-					lv_substate_13_0=ruleState
+					lv_substate_16_0=ruleState
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getSessionRule());
@@ -3953,7 +3954,7 @@ ruleSession returns [EObject current=null]
 						add(
 							$current,
 							"substate",
-							lv_substate_13_0,
+							lv_substate_16_0,
 							"org.thingml.xtext.ThingML.State");
 						afterParserOrEnumRuleCall();
 					}
@@ -3963,9 +3964,9 @@ ruleSession returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getSessionAccess().getInternalInternalTransitionParserRuleCall_8_2_0());
+						newCompositeNode(grammarAccess.getSessionAccess().getInternalInternalTransitionParserRuleCall_10_1_0());
 					}
-					lv_internal_14_0=ruleInternalTransition
+					lv_internal_17_0=ruleInternalTransition
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getSessionRule());
@@ -3973,7 +3974,7 @@ ruleSession returns [EObject current=null]
 						add(
 							$current,
 							"internal",
-							lv_internal_14_0,
+							lv_internal_17_0,
 							"org.thingml.xtext.ThingML.InternalTransition");
 						afterParserOrEnumRuleCall();
 					}
@@ -3983,9 +3984,9 @@ ruleSession returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getSessionAccess().getRegionParallelRegionParserRuleCall_9_0());
+					newCompositeNode(grammarAccess.getSessionAccess().getRegionParallelRegionParserRuleCall_11_0());
 				}
-				lv_region_15_0=ruleParallelRegion
+				lv_region_18_0=ruleParallelRegion
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getSessionRule());
@@ -3993,15 +3994,15 @@ ruleSession returns [EObject current=null]
 					add(
 						$current,
 						"region",
-						lv_region_15_0,
+						lv_region_18_0,
 						"org.thingml.xtext.ThingML.ParallelRegion");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)*
-		otherlv_16='}'
+		otherlv_19='}'
 		{
-			newLeafNode(otherlv_16, grammarAccess.getSessionAccess().getRightCurlyBracketKeyword_10());
+			newLeafNode(otherlv_19, grammarAccess.getSessionAccess().getRightCurlyBracketKeyword_12());
 		}
 	)
 ;
@@ -4126,6 +4127,266 @@ ruleParallelRegion returns [EObject current=null]
 		otherlv_9='}'
 		{
 			newLeafNode(otherlv_9, grammarAccess.getParallelRegionAccess().getRightCurlyBracketKeyword_8());
+		}
+	)
+;
+
+// Entry rule entryRuleState
+entryRuleState returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getStateRule()); }
+	iv_ruleState=ruleState
+	{ $current=$iv_ruleState.current; }
+	EOF;
+
+// Rule State
+ruleState returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getStateAccess().getStateMachineParserRuleCall_0());
+		}
+		this_StateMachine_0=ruleStateMachine
+		{
+			$current = $this_StateMachine_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getStateAccess().getFinalStateParserRuleCall_1());
+		}
+		this_FinalState_1=ruleFinalState
+		{
+			$current = $this_FinalState_1.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getStateAccess().getCompositeStateParserRuleCall_2());
+		}
+		this_CompositeState_2=ruleCompositeState
+		{
+			$current = $this_CompositeState_2.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getStateAccess().getSessionParserRuleCall_3());
+		}
+		this_Session_3=ruleSession
+		{
+			$current = $this_Session_3.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		(
+			otherlv_4='state'
+			{
+				newLeafNode(otherlv_4, grammarAccess.getStateAccess().getStateKeyword_4_0());
+			}
+			(
+				(
+					lv_name_5_0=RULE_ID
+					{
+						newLeafNode(lv_name_5_0, grammarAccess.getStateAccess().getNameIDTerminalRuleCall_4_1_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getStateRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"name",
+							lv_name_5_0,
+							"org.thingml.xtext.ThingML.ID");
+					}
+				)
+			)
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getStateAccess().getAnnotationsPlatformAnnotationParserRuleCall_4_2_0());
+					}
+					lv_annotations_6_0=rulePlatformAnnotation
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getStateRule());
+						}
+						add(
+							$current,
+							"annotations",
+							lv_annotations_6_0,
+							"org.thingml.xtext.ThingML.PlatformAnnotation");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)*
+			otherlv_7='{'
+			{
+				newLeafNode(otherlv_7, grammarAccess.getStateAccess().getLeftCurlyBracketKeyword_4_3());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getStateAccess().getPropertiesPropertyParserRuleCall_4_4_0());
+					}
+					lv_properties_8_0=ruleProperty
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getStateRule());
+						}
+						add(
+							$current,
+							"properties",
+							lv_properties_8_0,
+							"org.thingml.xtext.ThingML.Property");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)*
+			(
+				otherlv_9='on'
+				{
+					newLeafNode(otherlv_9, grammarAccess.getStateAccess().getOnKeyword_4_5_0());
+				}
+				otherlv_10='entry'
+				{
+					newLeafNode(otherlv_10, grammarAccess.getStateAccess().getEntryKeyword_4_5_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getStateAccess().getEntryActionParserRuleCall_4_5_2_0());
+						}
+						lv_entry_11_0=ruleAction
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getStateRule());
+							}
+							set(
+								$current,
+								"entry",
+								lv_entry_11_0,
+								"org.thingml.xtext.ThingML.Action");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)?
+			(
+				otherlv_12='on'
+				{
+					newLeafNode(otherlv_12, grammarAccess.getStateAccess().getOnKeyword_4_6_0());
+				}
+				otherlv_13='exit'
+				{
+					newLeafNode(otherlv_13, grammarAccess.getStateAccess().getExitKeyword_4_6_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getStateAccess().getExitActionParserRuleCall_4_6_2_0());
+						}
+						lv_exit_14_0=ruleAction
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getStateRule());
+							}
+							set(
+								$current,
+								"exit",
+								lv_exit_14_0,
+								"org.thingml.xtext.ThingML.Action");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)?
+			(
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getStateAccess().getInternalInternalTransitionParserRuleCall_4_7_0_0());
+						}
+						lv_internal_15_0=ruleInternalTransition
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getStateRule());
+							}
+							add(
+								$current,
+								"internal",
+								lv_internal_15_0,
+								"org.thingml.xtext.ThingML.InternalTransition");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				    |
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getStateAccess().getOutgoingTransitionParserRuleCall_4_7_1_0());
+						}
+						lv_outgoing_16_0=ruleTransition
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getStateRule());
+							}
+							add(
+								$current,
+								"outgoing",
+								lv_outgoing_16_0,
+								"org.thingml.xtext.ThingML.Transition");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)*
+			otherlv_17='}'
+			{
+				newLeafNode(otherlv_17, grammarAccess.getStateAccess().getRightCurlyBracketKeyword_4_8());
+			}
+		)
+	)
+;
+
+// Entry rule entryRuleHandler
+entryRuleHandler returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getHandlerRule()); }
+	iv_ruleHandler=ruleHandler
+	{ $current=$iv_ruleHandler.current; }
+	EOF;
+
+// Rule Handler
+ruleHandler returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getHandlerAccess().getTransitionParserRuleCall_0());
+		}
+		this_Transition_0=ruleTransition
+		{
+			$current = $this_Transition_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getHandlerAccess().getInternalTransitionParserRuleCall_1());
+		}
+		this_InternalTransition_1=ruleInternalTransition
+		{
+			$current = $this_InternalTransition_1.current;
+			afterParserOrEnumRuleCall();
 		}
 	)
 ;
@@ -4467,21 +4728,28 @@ ruleReceiveMessage returns [EObject current=null]
 	(
 		(
 			(
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getReceiveMessageRule());
+				(
+					lv_name_0_0=RULE_ID
+					{
+						newLeafNode(lv_name_0_0, grammarAccess.getReceiveMessageAccess().getNameIDTerminalRuleCall_0_0_0());
 					}
-				}
-				otherlv_0=RULE_ID
-				{
-					newLeafNode(otherlv_0, grammarAccess.getReceiveMessageAccess().getPortPortCrossReference_0_0());
-				}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getReceiveMessageRule());
+						}
+						setWithLastConsumed(
+							$current,
+							"name",
+							lv_name_0_0,
+							"org.thingml.xtext.ThingML.ID");
+					}
+				)
 			)
-		)
-		otherlv_1='?'
-		{
-			newLeafNode(otherlv_1, grammarAccess.getReceiveMessageAccess().getQuestionMarkKeyword_1());
-		}
+			otherlv_1=':'
+			{
+				newLeafNode(otherlv_1, grammarAccess.getReceiveMessageAccess().getColonKeyword_0_1());
+			}
+		)?
 		(
 			(
 				{
@@ -4491,7 +4759,24 @@ ruleReceiveMessage returns [EObject current=null]
 				}
 				otherlv_2=RULE_ID
 				{
-					newLeafNode(otherlv_2, grammarAccess.getReceiveMessageAccess().getMessageMessageCrossReference_2_0());
+					newLeafNode(otherlv_2, grammarAccess.getReceiveMessageAccess().getPortPortCrossReference_1_0());
+				}
+			)
+		)
+		otherlv_3='?'
+		{
+			newLeafNode(otherlv_3, grammarAccess.getReceiveMessageAccess().getQuestionMarkKeyword_2());
+		}
+		(
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getReceiveMessageRule());
+					}
+				}
+				otherlv_4=RULE_ID
+				{
+					newLeafNode(otherlv_4, grammarAccess.getReceiveMessageAccess().getMessageMessageCrossReference_3_0());
 				}
 			)
 		)
@@ -4816,13 +5101,19 @@ ruleLocalVariable returns [EObject current=null]
 		(
 			(
 				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getLocalVariableRule());
-					}
+					newCompositeNode(grammarAccess.getLocalVariableAccess().getTypeRefTypeRefParserRuleCall_4_0());
 				}
-				otherlv_4=RULE_ID
+				lv_typeRef_4_0=ruleTypeRef
 				{
-					newLeafNode(otherlv_4, grammarAccess.getLocalVariableAccess().getTypeTypeCrossReference_4_0());
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getLocalVariableRule());
+					}
+					set(
+						$current,
+						"typeRef",
+						lv_typeRef_4_0,
+						"org.thingml.xtext.ThingML.TypeRef");
+					afterParserOrEnumRuleCall();
 				}
 			)
 		)
@@ -4925,34 +5216,11 @@ ruleSendAction returns [EObject current=null]
 		}
 		(
 			(
-				{
-					newCompositeNode(grammarAccess.getSendActionAccess().getParametersExpressionParserRuleCall_4_0());
-				}
-				lv_parameters_4_0=ruleExpression
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getSendActionRule());
-					}
-					add(
-						$current,
-						"parameters",
-						lv_parameters_4_0,
-						"org.thingml.xtext.ThingML.Expression");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-		(
-			otherlv_5=','
-			{
-				newLeafNode(otherlv_5, grammarAccess.getSendActionAccess().getCommaKeyword_5_0());
-			}
-			(
 				(
 					{
-						newCompositeNode(grammarAccess.getSendActionAccess().getParametersExpressionParserRuleCall_5_1_0());
+						newCompositeNode(grammarAccess.getSendActionAccess().getParametersExpressionParserRuleCall_4_0_0());
 					}
-					lv_parameters_6_0=ruleExpression
+					lv_parameters_4_0=ruleExpression
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getSendActionRule());
@@ -4960,16 +5228,41 @@ ruleSendAction returns [EObject current=null]
 						add(
 							$current,
 							"parameters",
-							lv_parameters_6_0,
+							lv_parameters_4_0,
 							"org.thingml.xtext.ThingML.Expression");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
-		)*
+			(
+				otherlv_5=','
+				{
+					newLeafNode(otherlv_5, grammarAccess.getSendActionAccess().getCommaKeyword_4_1_0());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getSendActionAccess().getParametersExpressionParserRuleCall_4_1_1_0());
+						}
+						lv_parameters_6_0=ruleExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getSendActionRule());
+							}
+							add(
+								$current,
+								"parameters",
+								lv_parameters_6_0,
+								"org.thingml.xtext.ThingML.Expression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)*
+		)?
 		otherlv_7=')'
 		{
-			newLeafNode(otherlv_7, grammarAccess.getSendActionAccess().getRightParenthesisKeyword_6());
+			newLeafNode(otherlv_7, grammarAccess.getSendActionAccess().getRightParenthesisKeyword_5());
 		}
 	)
 ;
@@ -5435,9 +5728,9 @@ ruleStartSession returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		otherlv_0='spawn'
+		otherlv_0='fork'
 		{
-			newLeafNode(otherlv_0, grammarAccess.getStartSessionAccess().getSpawnKeyword_0());
+			newLeafNode(otherlv_0, grammarAccess.getStartSessionAccess().getForkKeyword_0());
 		}
 		(
 			(
@@ -5452,33 +5745,6 @@ ruleStartSession returns [EObject current=null]
 				}
 			)
 		)
-		otherlv_2='{'
-		{
-			newLeafNode(otherlv_2, grammarAccess.getStartSessionAccess().getLeftCurlyBracketKeyword_2());
-		}
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getStartSessionAccess().getConstructorPropertyAssignParserRuleCall_3_0());
-				}
-				lv_constructor_3_0=rulePropertyAssign
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getStartSessionRule());
-					}
-					add(
-						$current,
-						"constructor",
-						lv_constructor_3_0,
-						"org.thingml.xtext.ThingML.PropertyAssign");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)*
-		otherlv_4='}'
-		{
-			newLeafNode(otherlv_4, grammarAccess.getStartSessionAccess().getRightCurlyBracketKeyword_4());
-		}
 	)
 ;
 
@@ -5517,34 +5783,11 @@ ruleFunctionCallStatement returns [EObject current=null]
 		}
 		(
 			(
-				{
-					newCompositeNode(grammarAccess.getFunctionCallStatementAccess().getParametersExpressionParserRuleCall_2_0());
-				}
-				lv_parameters_2_0=ruleExpression
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getFunctionCallStatementRule());
-					}
-					add(
-						$current,
-						"parameters",
-						lv_parameters_2_0,
-						"org.thingml.xtext.ThingML.Expression");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-		(
-			otherlv_3=','
-			{
-				newLeafNode(otherlv_3, grammarAccess.getFunctionCallStatementAccess().getCommaKeyword_3_0());
-			}
-			(
 				(
 					{
-						newCompositeNode(grammarAccess.getFunctionCallStatementAccess().getParametersExpressionParserRuleCall_3_1_0());
+						newCompositeNode(grammarAccess.getFunctionCallStatementAccess().getParametersExpressionParserRuleCall_2_0_0());
 					}
-					lv_parameters_4_0=ruleExpression
+					lv_parameters_2_0=ruleExpression
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getFunctionCallStatementRule());
@@ -5552,16 +5795,41 @@ ruleFunctionCallStatement returns [EObject current=null]
 						add(
 							$current,
 							"parameters",
-							lv_parameters_4_0,
+							lv_parameters_2_0,
 							"org.thingml.xtext.ThingML.Expression");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
-		)*
+			(
+				otherlv_3=','
+				{
+					newLeafNode(otherlv_3, grammarAccess.getFunctionCallStatementAccess().getCommaKeyword_2_1_0());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getFunctionCallStatementAccess().getParametersExpressionParserRuleCall_2_1_1_0());
+						}
+						lv_parameters_4_0=ruleExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getFunctionCallStatementRule());
+							}
+							add(
+								$current,
+								"parameters",
+								lv_parameters_4_0,
+								"org.thingml.xtext.ThingML.Expression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)*
+		)?
 		otherlv_5=')'
 		{
-			newLeafNode(otherlv_5, grammarAccess.getFunctionCallStatementAccess().getRightParenthesisKeyword_4());
+			newLeafNode(otherlv_5, grammarAccess.getFunctionCallStatementAccess().getRightParenthesisKeyword_3());
 		}
 	)
 ;
@@ -5582,13 +5850,906 @@ ruleExpression returns [EObject current=null]
 	leaveRule();
 }:
 	{
-		newCompositeNode(grammarAccess.getExpressionAccess().getExternExpressionParserRuleCall());
+		newCompositeNode(grammarAccess.getExpressionAccess().getOrExpressionParserRuleCall());
 	}
-	this_ExternExpression_0=ruleExternExpression
+	this_OrExpression_0=ruleOrExpression
 	{
-		$current = $this_ExternExpression_0.current;
+		$current = $this_OrExpression_0.current;
 		afterParserOrEnumRuleCall();
 	}
+;
+
+// Entry rule entryRuleOrExpression
+entryRuleOrExpression returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getOrExpressionRule()); }
+	iv_ruleOrExpression=ruleOrExpression
+	{ $current=$iv_ruleOrExpression.current; }
+	EOF;
+
+// Rule OrExpression
+ruleOrExpression returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getOrExpressionAccess().getAndExpressionParserRuleCall_0());
+		}
+		this_AndExpression_0=ruleAndExpression
+		{
+			$current = $this_AndExpression_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				{
+					$current = forceCreateModelElementAndSet(
+						grammarAccess.getOrExpressionAccess().getOrExpressionLhsAction_1_0(),
+						$current);
+				}
+			)
+			otherlv_2='or'
+			{
+				newLeafNode(otherlv_2, grammarAccess.getOrExpressionAccess().getOrKeyword_1_1());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getOrExpressionAccess().getRhsAndExpressionParserRuleCall_1_2_0());
+					}
+					lv_rhs_3_0=ruleAndExpression
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getOrExpressionRule());
+						}
+						set(
+							$current,
+							"rhs",
+							lv_rhs_3_0,
+							"org.thingml.xtext.ThingML.AndExpression");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)*
+	)
+;
+
+// Entry rule entryRuleAndExpression
+entryRuleAndExpression returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getAndExpressionRule()); }
+	iv_ruleAndExpression=ruleAndExpression
+	{ $current=$iv_ruleAndExpression.current; }
+	EOF;
+
+// Rule AndExpression
+ruleAndExpression returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getAndExpressionAccess().getEqualityParserRuleCall_0());
+		}
+		this_Equality_0=ruleEquality
+		{
+			$current = $this_Equality_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				{
+					$current = forceCreateModelElementAndSet(
+						grammarAccess.getAndExpressionAccess().getAndExpressionLhsAction_1_0(),
+						$current);
+				}
+			)
+			otherlv_2='and'
+			{
+				newLeafNode(otherlv_2, grammarAccess.getAndExpressionAccess().getAndKeyword_1_1());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getAndExpressionAccess().getRhsEqualityParserRuleCall_1_2_0());
+					}
+					lv_rhs_3_0=ruleEquality
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getAndExpressionRule());
+						}
+						set(
+							$current,
+							"rhs",
+							lv_rhs_3_0,
+							"org.thingml.xtext.ThingML.Equality");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)*
+	)
+;
+
+// Entry rule entryRuleEquality
+entryRuleEquality returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getEqualityRule()); }
+	iv_ruleEquality=ruleEquality
+	{ $current=$iv_ruleEquality.current; }
+	EOF;
+
+// Rule Equality
+ruleEquality returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getEqualityAccess().getComparaisonParserRuleCall_0());
+		}
+		this_Comparaison_0=ruleComparaison
+		{
+			$current = $this_Comparaison_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getEqualityAccess().getEqualsExpressionLhsAction_1_0_0(),
+							$current);
+					}
+				)
+				otherlv_2='=='
+				{
+					newLeafNode(otherlv_2, grammarAccess.getEqualityAccess().getEqualsSignEqualsSignKeyword_1_0_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getEqualityAccess().getRhsComparaisonParserRuleCall_1_0_2_0());
+						}
+						lv_rhs_3_0=ruleComparaison
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getEqualityRule());
+							}
+							set(
+								$current,
+								"rhs",
+								lv_rhs_3_0,
+								"org.thingml.xtext.ThingML.Comparaison");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getEqualityAccess().getNotEqualsExpressionLhsAction_1_1_0(),
+							$current);
+					}
+				)
+				otherlv_5='!='
+				{
+					newLeafNode(otherlv_5, grammarAccess.getEqualityAccess().getExclamationMarkEqualsSignKeyword_1_1_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getEqualityAccess().getRhsComparaisonParserRuleCall_1_1_2_0());
+						}
+						lv_rhs_6_0=ruleComparaison
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getEqualityRule());
+							}
+							set(
+								$current,
+								"rhs",
+								lv_rhs_6_0,
+								"org.thingml.xtext.ThingML.Comparaison");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+		)*
+	)
+;
+
+// Entry rule entryRuleComparaison
+entryRuleComparaison returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getComparaisonRule()); }
+	iv_ruleComparaison=ruleComparaison
+	{ $current=$iv_ruleComparaison.current; }
+	EOF;
+
+// Rule Comparaison
+ruleComparaison returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getComparaisonAccess().getAdditionParserRuleCall_0());
+		}
+		this_Addition_0=ruleAddition
+		{
+			$current = $this_Addition_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getComparaisonAccess().getGreaterExpressionLhsAction_1_0_0(),
+							$current);
+					}
+				)
+				otherlv_2='>'
+				{
+					newLeafNode(otherlv_2, grammarAccess.getComparaisonAccess().getGreaterThanSignKeyword_1_0_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_0_2_0());
+						}
+						lv_rhs_3_0=ruleAddition
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getComparaisonRule());
+							}
+							set(
+								$current,
+								"rhs",
+								lv_rhs_3_0,
+								"org.thingml.xtext.ThingML.Addition");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getComparaisonAccess().getLowerExpressionLhsAction_1_1_0(),
+							$current);
+					}
+				)
+				otherlv_5='<'
+				{
+					newLeafNode(otherlv_5, grammarAccess.getComparaisonAccess().getLessThanSignKeyword_1_1_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_1_2_0());
+						}
+						lv_rhs_6_0=ruleAddition
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getComparaisonRule());
+							}
+							set(
+								$current,
+								"rhs",
+								lv_rhs_6_0,
+								"org.thingml.xtext.ThingML.Addition");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getComparaisonAccess().getGreaterOrEqualExpressionLhsAction_1_2_0(),
+							$current);
+					}
+				)
+				otherlv_8='>='
+				{
+					newLeafNode(otherlv_8, grammarAccess.getComparaisonAccess().getGreaterThanSignEqualsSignKeyword_1_2_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_2_2_0());
+						}
+						lv_rhs_9_0=ruleAddition
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getComparaisonRule());
+							}
+							set(
+								$current,
+								"rhs",
+								lv_rhs_9_0,
+								"org.thingml.xtext.ThingML.Addition");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getComparaisonAccess().getLowerOrEqualExpressionLhsAction_1_3_0(),
+							$current);
+					}
+				)
+				otherlv_11='<='
+				{
+					newLeafNode(otherlv_11, grammarAccess.getComparaisonAccess().getLessThanSignEqualsSignKeyword_1_3_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_3_2_0());
+						}
+						lv_rhs_12_0=ruleAddition
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getComparaisonRule());
+							}
+							set(
+								$current,
+								"rhs",
+								lv_rhs_12_0,
+								"org.thingml.xtext.ThingML.Addition");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+		)*
+	)
+;
+
+// Entry rule entryRuleAddition
+entryRuleAddition returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getAdditionRule()); }
+	iv_ruleAddition=ruleAddition
+	{ $current=$iv_ruleAddition.current; }
+	EOF;
+
+// Rule Addition
+ruleAddition returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getAdditionAccess().getMultiplicationParserRuleCall_0());
+		}
+		this_Multiplication_0=ruleMultiplication
+		{
+			$current = $this_Multiplication_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getAdditionAccess().getPlusExpressionLhsAction_1_0_0(),
+							$current);
+					}
+				)
+				otherlv_2='+'
+				{
+					newLeafNode(otherlv_2, grammarAccess.getAdditionAccess().getPlusSignKeyword_1_0_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getAdditionAccess().getRhsMultiplicationParserRuleCall_1_0_2_0());
+						}
+						lv_rhs_3_0=ruleMultiplication
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getAdditionRule());
+							}
+							set(
+								$current,
+								"rhs",
+								lv_rhs_3_0,
+								"org.thingml.xtext.ThingML.Multiplication");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getAdditionAccess().getMinusExpressionLhsAction_1_1_0(),
+							$current);
+					}
+				)
+				otherlv_5='-'
+				{
+					newLeafNode(otherlv_5, grammarAccess.getAdditionAccess().getHyphenMinusKeyword_1_1_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getAdditionAccess().getRhsMultiplicationParserRuleCall_1_1_2_0());
+						}
+						lv_rhs_6_0=ruleMultiplication
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getAdditionRule());
+							}
+							set(
+								$current,
+								"rhs",
+								lv_rhs_6_0,
+								"org.thingml.xtext.ThingML.Multiplication");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+		)*
+	)
+;
+
+// Entry rule entryRuleMultiplication
+entryRuleMultiplication returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getMultiplicationRule()); }
+	iv_ruleMultiplication=ruleMultiplication
+	{ $current=$iv_ruleMultiplication.current; }
+	EOF;
+
+// Rule Multiplication
+ruleMultiplication returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getMultiplicationAccess().getModuloParserRuleCall_0());
+		}
+		this_Modulo_0=ruleModulo
+		{
+			$current = $this_Modulo_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getMultiplicationAccess().getTimesExpressionLhsAction_1_0_0(),
+							$current);
+					}
+				)
+				otherlv_2='*'
+				{
+					newLeafNode(otherlv_2, grammarAccess.getMultiplicationAccess().getAsteriskKeyword_1_0_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getMultiplicationAccess().getRhsModuloParserRuleCall_1_0_2_0());
+						}
+						lv_rhs_3_0=ruleModulo
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getMultiplicationRule());
+							}
+							set(
+								$current,
+								"rhs",
+								lv_rhs_3_0,
+								"org.thingml.xtext.ThingML.Modulo");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElementAndSet(
+							grammarAccess.getMultiplicationAccess().getDivExpressionLhsAction_1_1_0(),
+							$current);
+					}
+				)
+				otherlv_5='/'
+				{
+					newLeafNode(otherlv_5, grammarAccess.getMultiplicationAccess().getSolidusKeyword_1_1_1());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getMultiplicationAccess().getRhsModuloParserRuleCall_1_1_2_0());
+						}
+						lv_rhs_6_0=ruleModulo
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getMultiplicationRule());
+							}
+							set(
+								$current,
+								"rhs",
+								lv_rhs_6_0,
+								"org.thingml.xtext.ThingML.Modulo");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+		)*
+	)
+;
+
+// Entry rule entryRuleModulo
+entryRuleModulo returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getModuloRule()); }
+	iv_ruleModulo=ruleModulo
+	{ $current=$iv_ruleModulo.current; }
+	EOF;
+
+// Rule Modulo
+ruleModulo returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getModuloAccess().getPrimaryParserRuleCall_0());
+		}
+		this_Primary_0=rulePrimary
+		{
+			$current = $this_Primary_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				{
+					$current = forceCreateModelElementAndSet(
+						grammarAccess.getModuloAccess().getModExpressionLhsAction_1_0(),
+						$current);
+				}
+			)
+			otherlv_2='%'
+			{
+				newLeafNode(otherlv_2, grammarAccess.getModuloAccess().getPercentSignKeyword_1_1());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getModuloAccess().getRhsExpressionParserRuleCall_1_2_0());
+					}
+					lv_rhs_3_0=ruleExpression
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getModuloRule());
+						}
+						set(
+							$current,
+							"rhs",
+							lv_rhs_3_0,
+							"org.thingml.xtext.ThingML.Expression");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)?
+	)
+;
+
+// Entry rule entryRulePrimary
+entryRulePrimary returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getPrimaryRule()); }
+	iv_rulePrimary=rulePrimary
+	{ $current=$iv_rulePrimary.current; }
+	EOF;
+
+// Rule Primary
+rulePrimary returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			otherlv_0='('
+			{
+				newLeafNode(otherlv_0, grammarAccess.getPrimaryAccess().getLeftParenthesisKeyword_0_0());
+			}
+			{
+				newCompositeNode(grammarAccess.getPrimaryAccess().getExpressionParserRuleCall_0_1());
+			}
+			this_Expression_1=ruleExpression
+			{
+				$current = $this_Expression_1.current;
+				afterParserOrEnumRuleCall();
+			}
+			otherlv_2=')'
+			{
+				newLeafNode(otherlv_2, grammarAccess.getPrimaryAccess().getRightParenthesisKeyword_0_2());
+			}
+		)
+		    |
+		(
+			(
+				{
+					$current = forceCreateModelElement(
+						grammarAccess.getPrimaryAccess().getNotExpressionAction_1_0(),
+						$current);
+				}
+			)
+			otherlv_4='not'
+			{
+				newLeafNode(otherlv_4, grammarAccess.getPrimaryAccess().getNotKeyword_1_1());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getPrimaryAccess().getTermPrimaryParserRuleCall_1_2_0());
+					}
+					lv_term_5_0=rulePrimary
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getPrimaryRule());
+						}
+						set(
+							$current,
+							"term",
+							lv_term_5_0,
+							"org.thingml.xtext.ThingML.Primary");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)
+		    |
+		(
+			(
+				{
+					$current = forceCreateModelElement(
+						grammarAccess.getPrimaryAccess().getUnaryMinusAction_2_0(),
+						$current);
+				}
+			)
+			otherlv_7='-'
+			{
+				newLeafNode(otherlv_7, grammarAccess.getPrimaryAccess().getHyphenMinusKeyword_2_1());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getPrimaryAccess().getTermPrimaryParserRuleCall_2_2_0());
+					}
+					lv_term_8_0=rulePrimary
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getPrimaryRule());
+						}
+						set(
+							$current,
+							"term",
+							lv_term_8_0,
+							"org.thingml.xtext.ThingML.Primary");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)
+		    |
+		{
+			newCompositeNode(grammarAccess.getPrimaryAccess().getArrayIndexPostfixParserRuleCall_3());
+		}
+		this_ArrayIndexPostfix_9=ruleArrayIndexPostfix
+		{
+			$current = $this_ArrayIndexPostfix_9.current;
+			afterParserOrEnumRuleCall();
+		}
+	)
+;
+
+// Entry rule entryRuleArrayIndexPostfix
+entryRuleArrayIndexPostfix returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getArrayIndexPostfixRule()); }
+	iv_ruleArrayIndexPostfix=ruleArrayIndexPostfix
+	{ $current=$iv_ruleArrayIndexPostfix.current; }
+	EOF;
+
+// Rule ArrayIndexPostfix
+ruleArrayIndexPostfix returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getArrayIndexPostfixAccess().getAtomicExpressionParserRuleCall_0());
+		}
+		this_AtomicExpression_0=ruleAtomicExpression
+		{
+			$current = $this_AtomicExpression_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				{
+					$current = forceCreateModelElementAndSet(
+						grammarAccess.getArrayIndexPostfixAccess().getArrayIndexArrayAction_1_0(),
+						$current);
+				}
+			)
+			otherlv_2='['
+			{
+				newLeafNode(otherlv_2, grammarAccess.getArrayIndexPostfixAccess().getLeftSquareBracketKeyword_1_1());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getArrayIndexPostfixAccess().getIndexExpressionParserRuleCall_1_2_0());
+					}
+					lv_index_3_0=ruleExpression
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getArrayIndexPostfixRule());
+						}
+						set(
+							$current,
+							"index",
+							lv_index_3_0,
+							"org.thingml.xtext.ThingML.Expression");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+			otherlv_4=']'
+			{
+				newLeafNode(otherlv_4, grammarAccess.getArrayIndexPostfixAccess().getRightSquareBracketKeyword_1_3());
+			}
+		)?
+	)
+;
+
+// Entry rule entryRuleAtomicExpression
+entryRuleAtomicExpression returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getAtomicExpressionRule()); }
+	iv_ruleAtomicExpression=ruleAtomicExpression
+	{ $current=$iv_ruleAtomicExpression.current; }
+	EOF;
+
+// Rule AtomicExpression
+ruleAtomicExpression returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getExternExpressionParserRuleCall_0());
+		}
+		this_ExternExpression_0=ruleExternExpression
+		{
+			$current = $this_ExternExpression_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getEnumLiteralRefParserRuleCall_1());
+		}
+		this_EnumLiteralRef_1=ruleEnumLiteralRef
+		{
+			$current = $this_EnumLiteralRef_1.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getIntegerLiteralParserRuleCall_2());
+		}
+		this_IntegerLiteral_2=ruleIntegerLiteral
+		{
+			$current = $this_IntegerLiteral_2.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getBooleanLiteralParserRuleCall_3());
+		}
+		this_BooleanLiteral_3=ruleBooleanLiteral
+		{
+			$current = $this_BooleanLiteral_3.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getStringLiteralParserRuleCall_4());
+		}
+		this_StringLiteral_4=ruleStringLiteral
+		{
+			$current = $this_StringLiteral_4.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getDoubleLiteralParserRuleCall_5());
+		}
+		this_DoubleLiteral_5=ruleDoubleLiteral
+		{
+			$current = $this_DoubleLiteral_5.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getPropertyReferenceParserRuleCall_6());
+		}
+		this_PropertyReference_6=rulePropertyReference
+		{
+			$current = $this_PropertyReference_6.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getReferenceParserRuleCall_7());
+		}
+		this_Reference_7=ruleReference
+		{
+			$current = $this_Reference_7.current;
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getFunctionCallExpressionParserRuleCall_8());
+		}
+		this_FunctionCallExpression_8=ruleFunctionCallExpression
+		{
+			$current = $this_FunctionCallExpression_8.current;
+			afterParserOrEnumRuleCall();
+		}
+	)
 ;
 
 // Entry rule entryRuleExternExpression
@@ -5650,6 +6811,375 @@ ruleExternExpression returns [EObject current=null]
 				)
 			)
 		)*
+	)
+;
+
+// Entry rule entryRuleEnumLiteralRef
+entryRuleEnumLiteralRef returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getEnumLiteralRefRule()); }
+	iv_ruleEnumLiteralRef=ruleEnumLiteralRef
+	{ $current=$iv_ruleEnumLiteralRef.current; }
+	EOF;
+
+// Rule EnumLiteralRef
+ruleEnumLiteralRef returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getEnumLiteralRefRule());
+					}
+				}
+				otherlv_0=RULE_ID
+				{
+					newLeafNode(otherlv_0, grammarAccess.getEnumLiteralRefAccess().getEnumEnumerationCrossReference_0_0());
+				}
+			)
+		)
+		otherlv_1=':'
+		{
+			newLeafNode(otherlv_1, grammarAccess.getEnumLiteralRefAccess().getColonKeyword_1());
+		}
+		(
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getEnumLiteralRefRule());
+					}
+				}
+				otherlv_2=RULE_ID
+				{
+					newLeafNode(otherlv_2, grammarAccess.getEnumLiteralRefAccess().getLiteralEnumerationLiteralCrossReference_2_0());
+				}
+			)
+		)
+	)
+;
+
+// Entry rule entryRuleIntegerLiteral
+entryRuleIntegerLiteral returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getIntegerLiteralRule()); }
+	iv_ruleIntegerLiteral=ruleIntegerLiteral
+	{ $current=$iv_ruleIntegerLiteral.current; }
+	EOF;
+
+// Rule IntegerLiteral
+ruleIntegerLiteral returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			lv_intValue_0_0=RULE_INT
+			{
+				newLeafNode(lv_intValue_0_0, grammarAccess.getIntegerLiteralAccess().getIntValueINTTerminalRuleCall_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getIntegerLiteralRule());
+				}
+				setWithLastConsumed(
+					$current,
+					"intValue",
+					lv_intValue_0_0,
+					"org.thingml.xtext.ThingML.INT");
+			}
+		)
+	)
+;
+
+// Entry rule entryRuleBooleanLiteral
+entryRuleBooleanLiteral returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getBooleanLiteralRule()); }
+	iv_ruleBooleanLiteral=ruleBooleanLiteral
+	{ $current=$iv_ruleBooleanLiteral.current; }
+	EOF;
+
+// Rule BooleanLiteral
+ruleBooleanLiteral returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				lv_boolValue_0_1='true'
+				{
+					newLeafNode(lv_boolValue_0_1, grammarAccess.getBooleanLiteralAccess().getBoolValueTrueKeyword_0_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getBooleanLiteralRule());
+					}
+					setWithLastConsumed($current, "boolValue", lv_boolValue_0_1, null);
+				}
+				    |
+				lv_boolValue_0_2='false'
+				{
+					newLeafNode(lv_boolValue_0_2, grammarAccess.getBooleanLiteralAccess().getBoolValueFalseKeyword_0_1());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getBooleanLiteralRule());
+					}
+					setWithLastConsumed($current, "boolValue", lv_boolValue_0_2, null);
+				}
+			)
+		)
+	)
+;
+
+// Entry rule entryRuleStringLiteral
+entryRuleStringLiteral returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getStringLiteralRule()); }
+	iv_ruleStringLiteral=ruleStringLiteral
+	{ $current=$iv_ruleStringLiteral.current; }
+	EOF;
+
+// Rule StringLiteral
+ruleStringLiteral returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			lv_stringValue_0_0=RULE_STRING_LIT
+			{
+				newLeafNode(lv_stringValue_0_0, grammarAccess.getStringLiteralAccess().getStringValueSTRING_LITTerminalRuleCall_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getStringLiteralRule());
+				}
+				setWithLastConsumed(
+					$current,
+					"stringValue",
+					lv_stringValue_0_0,
+					"org.thingml.xtext.ThingML.STRING_LIT");
+			}
+		)
+	)
+;
+
+// Entry rule entryRuleDoubleLiteral
+entryRuleDoubleLiteral returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getDoubleLiteralRule()); }
+	iv_ruleDoubleLiteral=ruleDoubleLiteral
+	{ $current=$iv_ruleDoubleLiteral.current; }
+	EOF;
+
+// Rule DoubleLiteral
+ruleDoubleLiteral returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			lv_doubleValue_0_0=RULE_FLOAT
+			{
+				newLeafNode(lv_doubleValue_0_0, grammarAccess.getDoubleLiteralAccess().getDoubleValueFLOATTerminalRuleCall_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getDoubleLiteralRule());
+				}
+				setWithLastConsumed(
+					$current,
+					"doubleValue",
+					lv_doubleValue_0_0,
+					"org.thingml.xtext.ThingML.FLOAT");
+			}
+		)
+	)
+;
+
+// Entry rule entryRulePropertyReference
+entryRulePropertyReference returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getPropertyReferenceRule()); }
+	iv_rulePropertyReference=rulePropertyReference
+	{ $current=$iv_rulePropertyReference.current; }
+	EOF;
+
+// Rule PropertyReference
+rulePropertyReference returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getPropertyReferenceRule());
+				}
+			}
+			otherlv_0=RULE_ID
+			{
+				newLeafNode(otherlv_0, grammarAccess.getPropertyReferenceAccess().getPropertyVariableCrossReference_0());
+			}
+		)
+	)
+;
+
+// Entry rule entryRuleReference
+entryRuleReference returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getReferenceRule()); }
+	iv_ruleReference=ruleReference
+	{ $current=$iv_ruleReference.current; }
+	EOF;
+
+// Rule Reference
+ruleReference returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getReferenceRule());
+					}
+				}
+				otherlv_0=RULE_ID
+				{
+					newLeafNode(otherlv_0, grammarAccess.getReferenceAccess().getReferenceReferencedElmtCrossReference_0_0());
+				}
+			)
+		)
+		otherlv_1='.'
+		{
+			newLeafNode(otherlv_1, grammarAccess.getReferenceAccess().getFullStopKeyword_1());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getReferenceAccess().getParameterElmtPropertyParserRuleCall_2_0());
+				}
+				lv_parameter_2_0=ruleElmtProperty
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getReferenceRule());
+					}
+					set(
+						$current,
+						"parameter",
+						lv_parameter_2_0,
+						"org.thingml.xtext.ThingML.ElmtProperty");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+	)
+;
+
+// Entry rule entryRuleFunctionCallExpression
+entryRuleFunctionCallExpression returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getFunctionCallExpressionRule()); }
+	iv_ruleFunctionCallExpression=ruleFunctionCallExpression
+	{ $current=$iv_ruleFunctionCallExpression.current; }
+	EOF;
+
+// Rule FunctionCallExpression
+ruleFunctionCallExpression returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getFunctionCallExpressionRule());
+					}
+				}
+				otherlv_0=RULE_ID
+				{
+					newLeafNode(otherlv_0, grammarAccess.getFunctionCallExpressionAccess().getFunctionFunctionCrossReference_0_0());
+				}
+			)
+		)
+		otherlv_1='('
+		{
+			newLeafNode(otherlv_1, grammarAccess.getFunctionCallExpressionAccess().getLeftParenthesisKeyword_1());
+		}
+		(
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getFunctionCallExpressionAccess().getParametersExpressionParserRuleCall_2_0_0());
+					}
+					lv_parameters_2_0=ruleExpression
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getFunctionCallExpressionRule());
+						}
+						add(
+							$current,
+							"parameters",
+							lv_parameters_2_0,
+							"org.thingml.xtext.ThingML.Expression");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+			(
+				otherlv_3=','
+				{
+					newLeafNode(otherlv_3, grammarAccess.getFunctionCallExpressionAccess().getCommaKeyword_2_1_0());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getFunctionCallExpressionAccess().getParametersExpressionParserRuleCall_2_1_1_0());
+						}
+						lv_parameters_4_0=ruleExpression
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getFunctionCallExpressionRule());
+							}
+							add(
+								$current,
+								"parameters",
+								lv_parameters_4_0,
+								"org.thingml.xtext.ThingML.Expression");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)*
+		)?
+		otherlv_5=')'
+		{
+			newLeafNode(otherlv_5, grammarAccess.getFunctionCallExpressionAccess().getRightParenthesisKeyword_3());
+		}
 	)
 ;
 
@@ -6307,6 +7837,8 @@ ruleInstanceRef returns [EObject current=null]
 RULE_ID : '^'? ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
 RULE_INT : ('0'..'9')+;
+
+RULE_FLOAT : (('0'..'9')+ '.' ('0'..'9')* (('e'|'E') ('+'|'-')? ('0'..'9')+)?|'.' ('0'..'9')+ (('e'|'E') ('+'|'-')? ('0'..'9')+)?|('0'..'9')+ ('e'|'E') ('+'|'-')? ('0'..'9')+);
 
 RULE_STRING_EXT : '\'' ('\\' .|~(('\\'|'\'')))* '\'';
 

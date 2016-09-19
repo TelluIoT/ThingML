@@ -14,6 +14,6 @@ package org.thingml.xtext.thingML;
  * @model
  * @generated
  */
-public interface FinalState extends State
+public interface FinalState extends AnnotatedElement, State
 {
 } // FinalState

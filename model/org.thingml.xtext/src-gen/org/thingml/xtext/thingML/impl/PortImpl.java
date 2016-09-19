@@ -6,22 +6,16 @@ package org.thingml.xtext.thingML.impl;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
@@ -34,14 +28,13 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.PortImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.PortImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PortImpl#getSends <em>Sends</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PortImpl#getReceives <em>Receives</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class PortImpl extends MinimalEObjectImpl.Container implements Port
+public class PortImpl extends AnnotatedElementImpl implements Port
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -62,16 +55,6 @@ public class PortImpl extends MinimalEObjectImpl.Container implements Port
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * The cached value of the '{@link #getSends() <em>Sends</em>}' reference list.
@@ -142,20 +125,6 @@ public class PortImpl extends MinimalEObjectImpl.Container implements Port
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.PORT__ANNOTATIONS);
-    }
-    return annotations;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EList<Message> getSends()
   {
     if (sends == null)
@@ -185,30 +154,12 @@ public class PortImpl extends MinimalEObjectImpl.Container implements Port
    * @generated
    */
   @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case ThingMLPackage.PORT__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
     {
       case ThingMLPackage.PORT__NAME:
         return getName();
-      case ThingMLPackage.PORT__ANNOTATIONS:
-        return getAnnotations();
       case ThingMLPackage.PORT__SENDS:
         return getSends();
       case ThingMLPackage.PORT__RECEIVES:
@@ -230,10 +181,6 @@ public class PortImpl extends MinimalEObjectImpl.Container implements Port
     {
       case ThingMLPackage.PORT__NAME:
         setName((String)newValue);
-        return;
-      case ThingMLPackage.PORT__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
       case ThingMLPackage.PORT__SENDS:
         getSends().clear();
@@ -260,9 +207,6 @@ public class PortImpl extends MinimalEObjectImpl.Container implements Port
       case ThingMLPackage.PORT__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case ThingMLPackage.PORT__ANNOTATIONS:
-        getAnnotations().clear();
-        return;
       case ThingMLPackage.PORT__SENDS:
         getSends().clear();
         return;
@@ -285,8 +229,6 @@ public class PortImpl extends MinimalEObjectImpl.Container implements Port
     {
       case ThingMLPackage.PORT__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ThingMLPackage.PORT__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.PORT__SENDS:
         return sends != null && !sends.isEmpty();
       case ThingMLPackage.PORT__RECEIVES:

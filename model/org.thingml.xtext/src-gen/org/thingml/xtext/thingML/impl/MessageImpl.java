@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
 /**
@@ -33,12 +32,11 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.MessageImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.MessageImpl#getParameters <em>Parameters</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.MessageImpl#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class MessageImpl extends ReferencedElmtImpl implements Message
+public class MessageImpl extends AnnotatedElementImpl implements Message
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -69,16 +67,6 @@ public class MessageImpl extends ReferencedElmtImpl implements Message
    * @ordered
    */
   protected EList<Parameter> parameters;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * <!-- begin-user-doc -->
@@ -143,20 +131,6 @@ public class MessageImpl extends ReferencedElmtImpl implements Message
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.MESSAGE__ANNOTATIONS);
-    }
-    return annotations;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -164,8 +138,6 @@ public class MessageImpl extends ReferencedElmtImpl implements Message
     {
       case ThingMLPackage.MESSAGE__PARAMETERS:
         return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
-      case ThingMLPackage.MESSAGE__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -184,8 +156,6 @@ public class MessageImpl extends ReferencedElmtImpl implements Message
         return getName();
       case ThingMLPackage.MESSAGE__PARAMETERS:
         return getParameters();
-      case ThingMLPackage.MESSAGE__ANNOTATIONS:
-        return getAnnotations();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -208,10 +178,6 @@ public class MessageImpl extends ReferencedElmtImpl implements Message
         getParameters().clear();
         getParameters().addAll((Collection<? extends Parameter>)newValue);
         return;
-      case ThingMLPackage.MESSAGE__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
-        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -232,9 +198,6 @@ public class MessageImpl extends ReferencedElmtImpl implements Message
       case ThingMLPackage.MESSAGE__PARAMETERS:
         getParameters().clear();
         return;
-      case ThingMLPackage.MESSAGE__ANNOTATIONS:
-        getAnnotations().clear();
-        return;
     }
     super.eUnset(featureID);
   }
@@ -253,8 +216,6 @@ public class MessageImpl extends ReferencedElmtImpl implements Message
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.MESSAGE__PARAMETERS:
         return parameters != null && !parameters.isEmpty();
-      case ThingMLPackage.MESSAGE__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
     }
     return super.eIsSet(featureID);
   }

@@ -18,10 +18,15 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.InternalTransition;
 import org.thingml.xtext.thingML.ParallelRegion;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.ThingMLPackage;
+import org.thingml.xtext.thingML.Transition;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,6 +36,13 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getProperties <em>Properties</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getEntry <em>Entry</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getExit <em>Exit</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getInternal <em>Internal</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getOutgoing <em>Outgoing</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getMaxInstances <em>Max Instances</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getSubstate <em>Substate</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.SessionImpl#getRegion <em>Region</em>}</li>
@@ -38,8 +50,98 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *
  * @generated
  */
-public class SessionImpl extends StateImpl implements Session
+public class SessionImpl extends AnnotatedElementImpl implements Session
 {
+  /**
+   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected static final String NAME_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected String name = NAME_EDEFAULT;
+
+  /**
+   * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getProperties()
+   * @generated
+   * @ordered
+   */
+  protected EList<Property> properties;
+
+  /**
+   * The cached value of the '{@link #getEntry() <em>Entry</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getEntry()
+   * @generated
+   * @ordered
+   */
+  protected Action entry;
+
+  /**
+   * The cached value of the '{@link #getExit() <em>Exit</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getExit()
+   * @generated
+   * @ordered
+   */
+  protected Action exit;
+
+  /**
+   * The cached value of the '{@link #getInternal() <em>Internal</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getInternal()
+   * @generated
+   * @ordered
+   */
+  protected EList<InternalTransition> internal;
+
+  /**
+   * The cached value of the '{@link #getOutgoing() <em>Outgoing</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getOutgoing()
+   * @generated
+   * @ordered
+   */
+  protected EList<Transition> outgoing;
+
+  /**
+   * The default value of the '{@link #getMaxInstances() <em>Max Instances</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getMaxInstances()
+   * @generated
+   * @ordered
+   */
+  protected static final int MAX_INSTANCES_EDEFAULT = 0;
+
+  /**
+   * The cached value of the '{@link #getMaxInstances() <em>Max Instances</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getMaxInstances()
+   * @generated
+   * @ordered
+   */
+  protected int maxInstances = MAX_INSTANCES_EDEFAULT;
+
   /**
    * The cached value of the '{@link #getInitial() <em>Initial</em>}' reference.
    * <!-- begin-user-doc -->
@@ -89,6 +191,190 @@ public class SessionImpl extends StateImpl implements Session
   protected EClass eStaticClass()
   {
     return ThingMLPackage.Literals.SESSION;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String getName()
+  {
+    return name;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setName(String newName)
+  {
+    String oldName = name;
+    name = newName;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__NAME, oldName, name));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<Property> getProperties()
+  {
+    if (properties == null)
+    {
+      properties = new EObjectContainmentEList<Property>(Property.class, this, ThingMLPackage.SESSION__PROPERTIES);
+    }
+    return properties;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Action getEntry()
+  {
+    return entry;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetEntry(Action newEntry, NotificationChain msgs)
+  {
+    Action oldEntry = entry;
+    entry = newEntry;
+    if (eNotificationRequired())
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__ENTRY, oldEntry, newEntry);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setEntry(Action newEntry)
+  {
+    if (newEntry != entry)
+    {
+      NotificationChain msgs = null;
+      if (entry != null)
+        msgs = ((InternalEObject)entry).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.SESSION__ENTRY, null, msgs);
+      if (newEntry != null)
+        msgs = ((InternalEObject)newEntry).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.SESSION__ENTRY, null, msgs);
+      msgs = basicSetEntry(newEntry, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__ENTRY, newEntry, newEntry));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Action getExit()
+  {
+    return exit;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetExit(Action newExit, NotificationChain msgs)
+  {
+    Action oldExit = exit;
+    exit = newExit;
+    if (eNotificationRequired())
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__EXIT, oldExit, newExit);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setExit(Action newExit)
+  {
+    if (newExit != exit)
+    {
+      NotificationChain msgs = null;
+      if (exit != null)
+        msgs = ((InternalEObject)exit).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.SESSION__EXIT, null, msgs);
+      if (newExit != null)
+        msgs = ((InternalEObject)newExit).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.SESSION__EXIT, null, msgs);
+      msgs = basicSetExit(newExit, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__EXIT, newExit, newExit));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<InternalTransition> getInternal()
+  {
+    if (internal == null)
+    {
+      internal = new EObjectContainmentEList<InternalTransition>(InternalTransition.class, this, ThingMLPackage.SESSION__INTERNAL);
+    }
+    return internal;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<Transition> getOutgoing()
+  {
+    if (outgoing == null)
+    {
+      outgoing = new EObjectContainmentEList<Transition>(Transition.class, this, ThingMLPackage.SESSION__OUTGOING);
+    }
+    return outgoing;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public int getMaxInstances()
+  {
+    return maxInstances;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setMaxInstances(int newMaxInstances)
+  {
+    int oldMaxInstances = maxInstances;
+    maxInstances = newMaxInstances;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__MAX_INSTANCES, oldMaxInstances, maxInstances));
   }
 
   /**
@@ -172,6 +458,16 @@ public class SessionImpl extends StateImpl implements Session
   {
     switch (featureID)
     {
+      case ThingMLPackage.SESSION__PROPERTIES:
+        return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.SESSION__ENTRY:
+        return basicSetEntry(null, msgs);
+      case ThingMLPackage.SESSION__EXIT:
+        return basicSetExit(null, msgs);
+      case ThingMLPackage.SESSION__INTERNAL:
+        return ((InternalEList<?>)getInternal()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.SESSION__OUTGOING:
+        return ((InternalEList<?>)getOutgoing()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.SESSION__SUBSTATE:
         return ((InternalEList<?>)getSubstate()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.SESSION__REGION:
@@ -190,6 +486,20 @@ public class SessionImpl extends StateImpl implements Session
   {
     switch (featureID)
     {
+      case ThingMLPackage.SESSION__NAME:
+        return getName();
+      case ThingMLPackage.SESSION__PROPERTIES:
+        return getProperties();
+      case ThingMLPackage.SESSION__ENTRY:
+        return getEntry();
+      case ThingMLPackage.SESSION__EXIT:
+        return getExit();
+      case ThingMLPackage.SESSION__INTERNAL:
+        return getInternal();
+      case ThingMLPackage.SESSION__OUTGOING:
+        return getOutgoing();
+      case ThingMLPackage.SESSION__MAX_INSTANCES:
+        return getMaxInstances();
       case ThingMLPackage.SESSION__INITIAL:
         if (resolve) return getInitial();
         return basicGetInitial();
@@ -212,6 +522,30 @@ public class SessionImpl extends StateImpl implements Session
   {
     switch (featureID)
     {
+      case ThingMLPackage.SESSION__NAME:
+        setName((String)newValue);
+        return;
+      case ThingMLPackage.SESSION__PROPERTIES:
+        getProperties().clear();
+        getProperties().addAll((Collection<? extends Property>)newValue);
+        return;
+      case ThingMLPackage.SESSION__ENTRY:
+        setEntry((Action)newValue);
+        return;
+      case ThingMLPackage.SESSION__EXIT:
+        setExit((Action)newValue);
+        return;
+      case ThingMLPackage.SESSION__INTERNAL:
+        getInternal().clear();
+        getInternal().addAll((Collection<? extends InternalTransition>)newValue);
+        return;
+      case ThingMLPackage.SESSION__OUTGOING:
+        getOutgoing().clear();
+        getOutgoing().addAll((Collection<? extends Transition>)newValue);
+        return;
+      case ThingMLPackage.SESSION__MAX_INSTANCES:
+        setMaxInstances((Integer)newValue);
+        return;
       case ThingMLPackage.SESSION__INITIAL:
         setInitial((State)newValue);
         return;
@@ -237,6 +571,27 @@ public class SessionImpl extends StateImpl implements Session
   {
     switch (featureID)
     {
+      case ThingMLPackage.SESSION__NAME:
+        setName(NAME_EDEFAULT);
+        return;
+      case ThingMLPackage.SESSION__PROPERTIES:
+        getProperties().clear();
+        return;
+      case ThingMLPackage.SESSION__ENTRY:
+        setEntry((Action)null);
+        return;
+      case ThingMLPackage.SESSION__EXIT:
+        setExit((Action)null);
+        return;
+      case ThingMLPackage.SESSION__INTERNAL:
+        getInternal().clear();
+        return;
+      case ThingMLPackage.SESSION__OUTGOING:
+        getOutgoing().clear();
+        return;
+      case ThingMLPackage.SESSION__MAX_INSTANCES:
+        setMaxInstances(MAX_INSTANCES_EDEFAULT);
+        return;
       case ThingMLPackage.SESSION__INITIAL:
         setInitial((State)null);
         return;
@@ -260,6 +615,20 @@ public class SessionImpl extends StateImpl implements Session
   {
     switch (featureID)
     {
+      case ThingMLPackage.SESSION__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case ThingMLPackage.SESSION__PROPERTIES:
+        return properties != null && !properties.isEmpty();
+      case ThingMLPackage.SESSION__ENTRY:
+        return entry != null;
+      case ThingMLPackage.SESSION__EXIT:
+        return exit != null;
+      case ThingMLPackage.SESSION__INTERNAL:
+        return internal != null && !internal.isEmpty();
+      case ThingMLPackage.SESSION__OUTGOING:
+        return outgoing != null && !outgoing.isEmpty();
+      case ThingMLPackage.SESSION__MAX_INSTANCES:
+        return maxInstances != MAX_INSTANCES_EDEFAULT;
       case ThingMLPackage.SESSION__INITIAL:
         return initial != null;
       case ThingMLPackage.SESSION__SUBSTATE:
@@ -268,6 +637,87 @@ public class SessionImpl extends StateImpl implements Session
         return region != null && !region.isEmpty();
     }
     return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == Region.class)
+    {
+      switch (derivedFeatureID)
+      {
+        default: return -1;
+      }
+    }
+    if (baseClass == State.class)
+    {
+      switch (derivedFeatureID)
+      {
+        case ThingMLPackage.SESSION__NAME: return ThingMLPackage.STATE__NAME;
+        case ThingMLPackage.SESSION__PROPERTIES: return ThingMLPackage.STATE__PROPERTIES;
+        case ThingMLPackage.SESSION__ENTRY: return ThingMLPackage.STATE__ENTRY;
+        case ThingMLPackage.SESSION__EXIT: return ThingMLPackage.STATE__EXIT;
+        case ThingMLPackage.SESSION__INTERNAL: return ThingMLPackage.STATE__INTERNAL;
+        case ThingMLPackage.SESSION__OUTGOING: return ThingMLPackage.STATE__OUTGOING;
+        default: return -1;
+      }
+    }
+    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == Region.class)
+    {
+      switch (baseFeatureID)
+      {
+        default: return -1;
+      }
+    }
+    if (baseClass == State.class)
+    {
+      switch (baseFeatureID)
+      {
+        case ThingMLPackage.STATE__NAME: return ThingMLPackage.SESSION__NAME;
+        case ThingMLPackage.STATE__PROPERTIES: return ThingMLPackage.SESSION__PROPERTIES;
+        case ThingMLPackage.STATE__ENTRY: return ThingMLPackage.SESSION__ENTRY;
+        case ThingMLPackage.STATE__EXIT: return ThingMLPackage.SESSION__EXIT;
+        case ThingMLPackage.STATE__INTERNAL: return ThingMLPackage.SESSION__INTERNAL;
+        case ThingMLPackage.STATE__OUTGOING: return ThingMLPackage.SESSION__OUTGOING;
+        default: return -1;
+      }
+    }
+    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (name: ");
+    result.append(name);
+    result.append(", maxInstances: ");
+    result.append(maxInstances);
+    result.append(')');
+    return result.toString();
   }
 
 } //SessionImpl

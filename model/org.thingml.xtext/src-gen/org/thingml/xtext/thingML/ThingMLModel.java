@@ -29,20 +29,20 @@ import org.eclipse.emf.ecore.EObject;
 public interface ThingMLModel extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Imports</b></em>' reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.ThingMLModel}.
+   * Returns the value of the '<em><b>Imports</b></em>' containment reference list.
+   * The list contents are of type {@link org.thingml.xtext.thingML.Import}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Imports</em>' reference list isn't clear,
+   * If the meaning of the '<em>Imports</em>' containment reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Imports</em>' reference list.
+   * @return the value of the '<em>Imports</em>' containment reference list.
    * @see org.thingml.xtext.thingML.ThingMLPackage#getThingMLModel_Imports()
-   * @model
+   * @model containment="true"
    * @generated
    */
-  EList<ThingMLModel> getImports();
+  EList<Import> getImports();
 
   /**
    * Returns the value of the '<em><b>Types</b></em>' containment reference list.

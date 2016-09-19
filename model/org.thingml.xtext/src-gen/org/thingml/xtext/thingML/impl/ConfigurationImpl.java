@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -23,7 +22,6 @@ import org.thingml.xtext.thingML.AbstractConnector;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Instance;
-import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
 /**
@@ -35,7 +33,6 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.impl.ConfigurationImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ConfigurationImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ConfigurationImpl#getInstances <em>Instances</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ConfigurationImpl#getConnectors <em>Connectors</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ConfigurationImpl#getPropassigns <em>Propassigns</em>}</li>
@@ -43,7 +40,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *
  * @generated
  */
-public class ConfigurationImpl extends MinimalEObjectImpl.Container implements Configuration
+public class ConfigurationImpl extends AnnotatedElementImpl implements Configuration
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
@@ -64,16 +61,6 @@ public class ConfigurationImpl extends MinimalEObjectImpl.Container implements C
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
-
-  /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAnnotations()
-   * @generated
-   * @ordered
-   */
-  protected EList<PlatformAnnotation> annotations;
 
   /**
    * The cached value of the '{@link #getInstances() <em>Instances</em>}' containment reference list.
@@ -154,20 +141,6 @@ public class ConfigurationImpl extends MinimalEObjectImpl.Container implements C
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<PlatformAnnotation> getAnnotations()
-  {
-    if (annotations == null)
-    {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.CONFIGURATION__ANNOTATIONS);
-    }
-    return annotations;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EList<Instance> getInstances()
   {
     if (instances == null)
@@ -215,8 +188,6 @@ public class ConfigurationImpl extends MinimalEObjectImpl.Container implements C
   {
     switch (featureID)
     {
-      case ThingMLPackage.CONFIGURATION__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.CONFIGURATION__INSTANCES:
         return ((InternalEList<?>)getInstances()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.CONFIGURATION__CONNECTORS:
@@ -239,8 +210,6 @@ public class ConfigurationImpl extends MinimalEObjectImpl.Container implements C
     {
       case ThingMLPackage.CONFIGURATION__NAME:
         return getName();
-      case ThingMLPackage.CONFIGURATION__ANNOTATIONS:
-        return getAnnotations();
       case ThingMLPackage.CONFIGURATION__INSTANCES:
         return getInstances();
       case ThingMLPackage.CONFIGURATION__CONNECTORS:
@@ -264,10 +233,6 @@ public class ConfigurationImpl extends MinimalEObjectImpl.Container implements C
     {
       case ThingMLPackage.CONFIGURATION__NAME:
         setName((String)newValue);
-        return;
-      case ThingMLPackage.CONFIGURATION__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
       case ThingMLPackage.CONFIGURATION__INSTANCES:
         getInstances().clear();
@@ -298,9 +263,6 @@ public class ConfigurationImpl extends MinimalEObjectImpl.Container implements C
       case ThingMLPackage.CONFIGURATION__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case ThingMLPackage.CONFIGURATION__ANNOTATIONS:
-        getAnnotations().clear();
-        return;
       case ThingMLPackage.CONFIGURATION__INSTANCES:
         getInstances().clear();
         return;
@@ -326,8 +288,6 @@ public class ConfigurationImpl extends MinimalEObjectImpl.Container implements C
     {
       case ThingMLPackage.CONFIGURATION__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ThingMLPackage.CONFIGURATION__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.CONFIGURATION__INSTANCES:
         return instances != null && !instances.isEmpty();
       case ThingMLPackage.CONFIGURATION__CONNECTORS:

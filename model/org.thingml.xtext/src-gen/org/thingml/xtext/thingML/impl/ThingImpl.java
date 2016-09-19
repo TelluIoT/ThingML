@@ -19,12 +19,12 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyAssign;
-import org.thingml.xtext.thingML.StateMachine;
 import org.thingml.xtext.thingML.Stream;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -140,7 +140,7 @@ public class ThingImpl extends TypeImpl implements Thing
    * @generated
    * @ordered
    */
-  protected EList<StateMachine> behaviour;
+  protected EList<CompositeState> behaviour;
 
   /**
    * The cached value of the '{@link #getStreams() <em>Streams</em>}' containment reference list.
@@ -285,11 +285,11 @@ public class ThingImpl extends TypeImpl implements Thing
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<StateMachine> getBehaviour()
+  public EList<CompositeState> getBehaviour()
   {
     if (behaviour == null)
     {
-      behaviour = new EObjectContainmentEList<StateMachine>(StateMachine.class, this, ThingMLPackage.THING__BEHAVIOUR);
+      behaviour = new EObjectContainmentEList<CompositeState>(CompositeState.class, this, ThingMLPackage.THING__BEHAVIOUR);
     }
     return behaviour;
   }
@@ -408,7 +408,7 @@ public class ThingImpl extends TypeImpl implements Thing
         return;
       case ThingMLPackage.THING__BEHAVIOUR:
         getBehaviour().clear();
-        getBehaviour().addAll((Collection<? extends StateMachine>)newValue);
+        getBehaviour().addAll((Collection<? extends CompositeState>)newValue);
         return;
       case ThingMLPackage.THING__STREAMS:
         getStreams().clear();

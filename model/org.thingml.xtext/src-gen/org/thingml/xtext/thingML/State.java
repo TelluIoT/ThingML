@@ -5,8 +5,6 @@ package org.thingml.xtext.thingML;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>State</b></em>'.
@@ -17,10 +15,9 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.State#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.State#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.State#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.State#getEntry <em>Entry</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.State#getExit <em>Exit</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.State#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.State#getInternal <em>Internal</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.State#getOutgoing <em>Outgoing</em>}</li>
  * </ul>
@@ -29,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface State extends EObject
+public interface State extends AnnotatedElement
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -58,20 +55,20 @@ public interface State extends EObject
   void setName(String value);
 
   /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
+   * Returns the value of the '<em><b>Properties</b></em>' containment reference list.
+   * The list contents are of type {@link org.thingml.xtext.thingML.Property}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
+   * If the meaning of the '<em>Properties</em>' containment reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getState_Annotations()
+   * @return the value of the '<em>Properties</em>' containment reference list.
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getState_Properties()
    * @model containment="true"
    * @generated
    */
-  EList<PlatformAnnotation> getAnnotations();
+  EList<Property> getProperties();
 
   /**
    * Returns the value of the '<em><b>Entry</b></em>' containment reference.
@@ -124,22 +121,6 @@ public interface State extends EObject
    * @generated
    */
   void setExit(Action value);
-
-  /**
-   * Returns the value of the '<em><b>Properties</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.Property}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Properties</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Properties</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getState_Properties()
-   * @model containment="true"
-   * @generated
-   */
-  EList<Property> getProperties();
 
   /**
    * Returns the value of the '<em><b>Internal</b></em>' containment reference list.

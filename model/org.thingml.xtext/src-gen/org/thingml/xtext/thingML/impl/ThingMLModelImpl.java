@@ -15,10 +15,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Import;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -43,14 +43,14 @@ import org.thingml.xtext.thingML.Type;
 public class ThingMLModelImpl extends MinimalEObjectImpl.Container implements ThingMLModel
 {
   /**
-   * The cached value of the '{@link #getImports() <em>Imports</em>}' reference list.
+   * The cached value of the '{@link #getImports() <em>Imports</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getImports()
    * @generated
    * @ordered
    */
-  protected EList<ThingMLModel> imports;
+  protected EList<Import> imports;
 
   /**
    * The cached value of the '{@link #getTypes() <em>Types</em>}' containment reference list.
@@ -108,11 +108,11 @@ public class ThingMLModelImpl extends MinimalEObjectImpl.Container implements Th
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<ThingMLModel> getImports()
+  public EList<Import> getImports()
   {
     if (imports == null)
     {
-      imports = new EObjectResolvingEList<ThingMLModel>(ThingMLModel.class, this, ThingMLPackage.THING_ML_MODEL__IMPORTS);
+      imports = new EObjectContainmentEList<Import>(Import.class, this, ThingMLPackage.THING_ML_MODEL__IMPORTS);
     }
     return imports;
   }
@@ -169,6 +169,8 @@ public class ThingMLModelImpl extends MinimalEObjectImpl.Container implements Th
   {
     switch (featureID)
     {
+      case ThingMLPackage.THING_ML_MODEL__IMPORTS:
+        return ((InternalEList<?>)getImports()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.THING_ML_MODEL__TYPES:
         return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.THING_ML_MODEL__PROTOCOLS:
@@ -214,7 +216,7 @@ public class ThingMLModelImpl extends MinimalEObjectImpl.Container implements Th
     {
       case ThingMLPackage.THING_ML_MODEL__IMPORTS:
         getImports().clear();
-        getImports().addAll((Collection<? extends ThingMLModel>)newValue);
+        getImports().addAll((Collection<? extends Import>)newValue);
         return;
       case ThingMLPackage.THING_ML_MODEL__TYPES:
         getTypes().clear();

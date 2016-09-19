@@ -17,7 +17,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#isHistory <em>History</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getSubstate <em>Substate</em>}</li>
  * </ul>
  *
@@ -25,7 +24,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface ParallelRegion extends Region
+public interface ParallelRegion extends AnnotatedElement, Region
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -104,22 +103,6 @@ public interface ParallelRegion extends Region
    * @generated
    */
   void setHistory(boolean value);
-
-  /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getParallelRegion_Annotations()
-   * @model containment="true"
-   * @generated
-   */
-  EList<PlatformAnnotation> getAnnotations();
 
   /**
    * Returns the value of the '<em><b>Substate</b></em>' containment reference list.

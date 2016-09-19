@@ -3,9 +3,6 @@
  */
 package org.thingml.xtext.thingML;
 
-import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -16,46 +13,15 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.Transition#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Transition#getTarget <em>Target</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Transition#getAnnotations <em>Annotations</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Transition#getEvent <em>Event</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Transition#getGuard <em>Guard</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Transition#getAction <em>Action</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getTransition()
  * @model
  * @generated
  */
-public interface Transition extends EObject
+public interface Transition extends Handler
 {
-  /**
-   * Returns the value of the '<em><b>Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Name</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Name</em>' attribute.
-   * @see #setName(String)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getTransition_Name()
-   * @model
-   * @generated
-   */
-  String getName();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Transition#getName <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Name</em>' attribute.
-   * @see #getName()
-   * @generated
-   */
-  void setName(String value);
-
   /**
    * Returns the value of the '<em><b>Target</b></em>' reference.
    * <!-- begin-user-doc -->
@@ -81,89 +47,5 @@ public interface Transition extends EObject
    * @generated
    */
   void setTarget(State value);
-
-  /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getTransition_Annotations()
-   * @model containment="true"
-   * @generated
-   */
-  EList<PlatformAnnotation> getAnnotations();
-
-  /**
-   * Returns the value of the '<em><b>Event</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.Event}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Event</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Event</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getTransition_Event()
-   * @model containment="true"
-   * @generated
-   */
-  EList<Event> getEvent();
-
-  /**
-   * Returns the value of the '<em><b>Guard</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Guard</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Guard</em>' containment reference.
-   * @see #setGuard(Expression)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getTransition_Guard()
-   * @model containment="true"
-   * @generated
-   */
-  Expression getGuard();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Transition#getGuard <em>Guard</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Guard</em>' containment reference.
-   * @see #getGuard()
-   * @generated
-   */
-  void setGuard(Expression value);
-
-  /**
-   * Returns the value of the '<em><b>Action</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Action</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Action</em>' containment reference.
-   * @see #setAction(Action)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getTransition_Action()
-   * @model containment="true"
-   * @generated
-   */
-  Action getAction();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Transition#getAction <em>Action</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Action</em>' containment reference.
-   * @see #getAction()
-   * @generated
-   */
-  void setAction(Action value);
 
 } // Transition
