@@ -44,22 +44,24 @@ import org.thingml.compilers.spi.SerializationPlugin;
  *
  * @author sintef
  */
-public class ESP8266MQTTPlugin extends NetworkPlugin {
+public class ESP8266WebsocketPlugin extends NetworkPlugin {
 
     CCompilerContext ctx;
 
-    public ESP8266MQTTPlugin() {
+    public ESP8266WebsocketPlugin() {
         super();
     }
 
     public String getPluginID() {
-        return "ESP8266MQTTPlugin";
+        return "ESP8266WebsocketPlugin";
     }
 
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
-        res.add("MQTT");
-        res.add("mqtt");
+        res.add("ws");
+        res.add("WS");
+        res.add("WebSocket");
+        res.add("Websocket");
         return res;
     }
 
@@ -113,8 +115,8 @@ public class ESP8266MQTTPlugin extends NetworkPlugin {
                 SerializationPlugin ser = ctx.getSerializationPlugin(protocol);
                 Set<ExternalConnector> ecos = this.getExternalConnectors(cfg, protocol);
                 if(!ecos.isEmpty()) {
-                    String ctemplate = ctx.getTemplateByID("templates/ESP8266MQTTPlugin.c");
-                String htemplate = ctx.getTemplateByID("templates/ESP8266MQTTPlugin.h");
+                    String ctemplate = ctx.getTemplateByID("templates/ESP8266WebsocketServerPlugin.c");
+                String htemplate = ctx.getTemplateByID("templates/ESP8266WebsocketServerPlugin.h");
 
 
                 String portName = protocol.getName();
@@ -128,20 +130,12 @@ public class ESP8266MQTTPlugin extends NetworkPlugin {
 
 
                 Integer remotePort;
-                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_broker_port")) {
-                    remotePort = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "mqtt_broker_port").iterator().next());
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "ws_port")) {
+                    remotePort = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "ws_port").iterator().next());
                 } else {
                     remotePort = 1883;
                 }
-                ctemplate = ctemplate.replace("/*BROKER_PORT*/", remotePort.toString());
-
-                String remoteAddress;
-                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_broker_address")) {
-                    remoteAddress = AnnotatedElementHelper.annotation(protocol, "mqtt_broker_address").iterator().next();
-                } else {
-                    remoteAddress = "192.168.0.255";
-                }
-                ctemplate = ctemplate.replace("/*BROKER_ADDRESS*/", remoteAddress);
+                ctemplate = ctemplate.replace("/*WS_PORT*/", remotePort.toString());
 
                 String ssid;
                 if (AnnotatedElementHelper.hasAnnotation(protocol, "wifi_ssid")) {
@@ -171,38 +165,18 @@ public class ESP8266MQTTPlugin extends NetworkPlugin {
                     }
                 }
 
-                ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());String sendTopic, receiveTopic;
-                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_send_topic")) {
-                    sendTopic = AnnotatedElementHelper.annotation(protocol, "mqtt_send_topic").iterator().next();
-                } else if(AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_topic")) {
-                    sendTopic = AnnotatedElementHelper.annotation(protocol, "mqtt_topic").iterator().next();
-                }
-                else {
-                    sendTopic = "ThingML";
-                }
-                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_receive_topic")) {
-                    receiveTopic = AnnotatedElementHelper.annotation(protocol, "mqtt_receive_topic").iterator().next();
-                } else if(AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_topic")) {
-                    receiveTopic = AnnotatedElementHelper.annotation(protocol, "mqtt_topic").iterator().next();
-                }
-                else {
-                    receiveTopic = "ThingML";
-                }
+                ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
                 
-                if(!getMessagesReceived(cfg, protocol).isEmpty())
-                    ctemplate = ctemplate.replace("/*SUB_TOPIC*/", receiveTopic);
-                if(!getMessagesSent(cfg, protocol).isEmpty())
-                    ctemplate = ctemplate.replace("/*PUB_TOPIC*/", sendTopic);
 
                 String forward, parserCall;
-                if(AnnotatedElementHelper.isDefined(protocol, "mqtt_escape_null", "true")) {
+                if(AnnotatedElementHelper.isDefined(protocol, "ws_escape_null", "true")) {
                     forward = CPluginHelper.generateNullCharEscaperSend("msg", "size", "buf", "length", portName + "_ESCAPE_CHAR");
-                    forward += "     " + portName + "_client.publish(\"" + sendTopic + "\", buf, length);";
+                    forward += "     " + portName + "_server.broadcastTXT(buf, length);";
                     
                     parserCall = CPluginHelper.generateNullCharEscaperReceive("payload", "length", "buf", "size", portName + "_ESCAPE_CHAR");
                     parserCall += "     " + portName + "_parser(buf, size);";
                 } else {
-                    forward =  "     " + portName + "_client.publish(\"" + sendTopic + "\", msg, size);";
+                    forward =  "     " + portName + "_server.broadcastTXT(msg, size);";
                     parserCall = "     " + portName + "_parser(payload, length);";
                 }
                 
@@ -210,8 +184,8 @@ public class ESP8266MQTTPlugin extends NetworkPlugin {
                 ctemplate = ctemplate.replace("/*PARSER_CALL*/", parserCall);
                 
                 String escapeByte;
-                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_escape_byte")) {
-                    escapeByte = AnnotatedElementHelper.annotation(protocol, "mqtt_escape_byte").iterator().next();
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "ws_escape_byte")) {
+                    escapeByte = AnnotatedElementHelper.annotation(protocol, "ws_escape_byte").iterator().next();
                 } else {
                     escapeByte = "125";
                 }

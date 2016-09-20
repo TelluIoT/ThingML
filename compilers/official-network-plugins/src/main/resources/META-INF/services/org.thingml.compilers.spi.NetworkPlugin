@@ -3,6 +3,7 @@ org.thingml.networkplugins.c.arduino.ArduinoSerialPlugin
 org.thingml.networkplugins.c.arduino.ArduinoTimerPlugin
 org.thingml.networkplugins.c.arduino.ESP8266UDPPlugin
 org.thingml.networkplugins.c.arduino.ESP8266MQTTPlugin
+org.thingml.networkplugins.c.arduino.ESP8266WebsocketPlugin
 org.thingml.networkplugins.c.posix.PosixWebSocketPlugin
 org.thingml.networkplugins.c.posix.PosixMQTTPlugin
 org.thingml.networkplugins.c.posix.PosixNoPollWSPlugin
