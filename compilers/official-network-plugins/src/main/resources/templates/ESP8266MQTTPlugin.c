@@ -5,6 +5,7 @@
 #define /*PORT_NAME*/_password "/*PASSWORD*/"
 #define /*PORT_NAME*/_broker_port /*BROKER_PORT*/
 #define /*PORT_NAME*/_broker_address "/*BROKER_ADDRESS*/"
+#define /*PORT_NAME*/_ESCAPE_CHAR /*ESCAPE_CHAR*/
 
 WiFiClient /*PORT_NAME*/_espClient;
 PubSubClient /*PORT_NAME*/_client(/*PORT_NAME*/_espClient);
@@ -53,7 +54,7 @@ void /*PORT_NAME*/_setup() {
 }
 
 void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size) {
-      /*PORT_NAME*/_client.publish("/*PUB_TOPIC*/", msg, size);
+     /*FORWARD*/
 }
 
 

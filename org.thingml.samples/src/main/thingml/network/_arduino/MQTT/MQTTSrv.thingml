@@ -1,0 +1,62 @@
+datatype UInt8<1>
+	@c_type "uint8_t"
+
+thing fragment LedMsgs {
+	message cmdLed(u : UInt8) @code "24929";
+	message statusLed(u : UInt8) @code "24930";
+}
+
+
+thing LedServer includes LedMsgs {
+
+	provided port led_service {
+		sends statusLed
+		receives cmdLed
+	}
+
+	statechart PongServerMachine init Active {
+
+        on entry do
+			'pinMode(BUILTIN_LED, OUTPUT);'
+			print "Led Server Started!\n"
+		end
+
+		state Active {
+			
+			internal event e : led_service?cmdLed
+			action do
+				print "cmdLed: "
+				print e.u
+				print "\n"
+				if(''&e.u&' == 97') do
+					'digitalWrite(BUILTIN_LED, LOW);'
+				end
+				if(''&e.u&' == 98') do
+					'digitalWrite(BUILTIN_LED, HIGH);'
+				end
+				led_service!statusLed(e.u)
+			end
+			
+		}
+	}
+}
+
+
+protocol MQTT
+@wifi_ssid "SSID"
+@wifi_password "PASSWORD"
+@mqtt_broker_port "1883"
+@mqtt_broker_address "10.0.1.127"
+@mqtt_escape_null "true"
+@serializer "Binary"
+;
+
+configuration LEDSrv
+@arduino_stdout "Serial"
+{
+
+	instance server: LedServer
+
+	connector server.led_service over MQTT
+
+}

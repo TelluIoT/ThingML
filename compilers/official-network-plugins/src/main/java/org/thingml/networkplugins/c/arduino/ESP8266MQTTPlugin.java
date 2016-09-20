@@ -36,6 +36,7 @@ import org.sintef.thingml.Thing;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CPluginHelper;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
@@ -193,6 +194,29 @@ public class ESP8266MQTTPlugin extends NetworkPlugin {
                 if(!getMessagesSent(cfg, protocol).isEmpty())
                     ctemplate = ctemplate.replace("/*PUB_TOPIC*/", sendTopic);
 
+                String forward, parserCall;
+                if(AnnotatedElementHelper.isDefined(protocol, "mqtt_escape_null", "true")) {
+                    forward = CPluginHelper.generateNullCharEscaperSend("msg", "size", "buf", "length", portName + "_ESCAPE_CHAR");
+                    forward += "     " + portName + "_client.publish(\"" + sendTopic + "\", buf, length);";
+                    
+                    parserCall = CPluginHelper.generateNullCharEscaperReceive("payload", "length", "buf", "size", portName + "_ESCAPE_CHAR");
+                    parserCall += "     " + portName + "_parser(buf, size);";
+                } else {
+                    forward =  "     " + portName + "_client.publish(\"" + sendTopic + "\", msg, size);";
+                    parserCall = "     " + portName + "_parser(payload, length);";
+                }
+                
+                ctemplate = ctemplate.replace("/*FORWARD*/", forward);
+                ctemplate = ctemplate.replace("/*PARSER_CALL*/", parserCall);
+                
+                String escapeByte;
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "serial_escape_byte")) {
+                    escapeByte = AnnotatedElementHelper.annotation(protocol, "serial_escape_byte").iterator().next();
+                } else {
+                    escapeByte = "125";
+                }
+                ctemplate = ctemplate.replace("/*ESCAPE_CHAR*/", escapeByte);
+                
                 //Connector Instanciation
                 StringBuilder eco_instance = new StringBuilder();
                 eco_instance.append("//Connector");
@@ -205,8 +229,6 @@ public class ESP8266MQTTPlugin extends NetworkPlugin {
 
                 ctemplate = ctemplate.replace("/*PARSER*/", ser.generateSubFunctions() + ParserImplementation);
 
-                String ParserCall = portName + "_parser(payload, length);";
-                ctemplate = ctemplate.replace("/*PARSER_CALL*/", ParserCall);
                 //End De Serializer
 
 
