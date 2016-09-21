@@ -15,6 +15,9 @@
  */
 package org.thingml.compilers.c;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import org.sintef.thingml.*;
 import org.sintef.thingml.Enumeration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
@@ -169,13 +172,13 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
 
         int nbMaxConnexion = ConfigurationHelper.allConnectors(cfg).size() * 2 + ConfigurationHelper.getExternalConnectors(cfg).size() + nbInternalPort;
-        if (AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors")) {
-            if (AnnotatedElementHelper.annotation(cfg, "c_dyn_connectors").iterator().next().compareToIgnoreCase("*") != 0) {
-                nbMaxConnexion = Integer.parseInt(AnnotatedElementHelper.annotation(cfg, "c_dyn_connectors").iterator().next());
-        }
-        builder.append("//Declaration of connexion array\n");
-        builder.append("#define NB_MAX_CONNEXION " + nbMaxConnexion + "\n");
-        builder.append("struct Msg_Handler * " + cfg.getName() + "_receivers[NB_MAX_CONNEXION];\n\n");
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors")) {
+                if (AnnotatedElementHelper.annotation(cfg, "c_dyn_connectors").iterator().next().compareToIgnoreCase("*") != 0) {
+                    nbMaxConnexion = Integer.parseInt(AnnotatedElementHelper.annotation(cfg, "c_dyn_connectors").iterator().next());
+            }
+            builder.append("//Declaration of connexion array\n");
+            builder.append("#define NB_MAX_CONNEXION " + nbMaxConnexion + "\n");
+            builder.append("struct Msg_Handler * " + cfg.getName() + "_receivers[NB_MAX_CONNEXION];\n\n");
         }
 
         for (Instance inst : ConfigurationHelper.allInstances(cfg)) {
@@ -187,6 +190,31 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append("];\n");
             }
         }
+        for(Thing t : ConfigurationHelper.allThings(cfg)) {
+            for (Property p : ThingHelper.allPropertiesInDepth(t)) {
+                if(AnnotatedElementHelper.hasAnnotation(p, "initialize_from_file")) {
+                    String init = null;
+                    File inFile = new File (AnnotatedElementHelper.annotation(p, "initialize_from_file").iterator().next());
+                    try {
+                        final InputStream input = new FileInputStream(inFile);
+                        if (input != null) {
+                            init = org.apache.commons.io.IOUtils.toString(input, java.nio.charset.Charset.forName("UTF-8"));
+                            input.close();
+                        } else {
+                            System.out.println("[Error] File not found: " + AnnotatedElementHelper.annotation(p, "initialize_from_file").iterator().next());
+                        }
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                    }
+        
+                    if(init != null)
+                        builder.append("const char* " + t.getName() + "_" + p.getName() + " = \"" + init.replace("\"", "\\\"").replace("\n", "\\n") + "\";\n");
+                    else
+                        System.out.println("[Error] File not found: " + AnnotatedElementHelper.annotation(p, "initialize_from_file").iterator().next());
+                }
+            }
+        }
+        
         if (!isGeneratingCpp()) { // Declarations are made in header file for C++ - sdalgard
 
             builder.append("//Declaration of instance variables\n");
@@ -1518,7 +1546,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(init.getKey()) + " = ");
                 //ctx.getCompiler().getThingActionCompiler().generate(init.getValue(), builder, ctx);
                 ctx.generateFixedAtInitValue(cfg, inst, init.getValue(), builder);
-                        builder.append(";\n");
+                builder.append(";\n");
             }
         }
 
@@ -1531,6 +1559,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + "_size = ");
                 ctx.generateFixedAtInitValue(cfg, inst, p.getCardinality(), builder);
                 builder.append(";\n");
+            }
+            if(AnnotatedElementHelper.hasAnnotation(p, "initialize_from_file")) {
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = ");
+                builder.append(inst.getType().getName() + "_" + p.getName() + ";\n");
             }
         }
         

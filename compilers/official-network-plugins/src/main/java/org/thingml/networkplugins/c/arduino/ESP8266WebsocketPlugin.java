@@ -116,111 +116,111 @@ public class ESP8266WebsocketPlugin extends NetworkPlugin {
                 Set<ExternalConnector> ecos = this.getExternalConnectors(cfg, protocol);
                 if(!ecos.isEmpty()) {
                     String ctemplate = ctx.getTemplateByID("templates/ESP8266WebsocketServerPlugin.c");
-                String htemplate = ctx.getTemplateByID("templates/ESP8266WebsocketServerPlugin.h");
+                    String htemplate = ctx.getTemplateByID("templates/ESP8266WebsocketServerPlugin.h");
 
 
-                String portName = protocol.getName();
+                    String portName = protocol.getName();
 
-                for (ExternalConnector eco : ecos) {
-                    eco.setName(portName);
-                }
-
-                ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
-                htemplate = htemplate.replace("/*PORT_NAME*/", portName);
-
-
-                Integer remotePort;
-                if (AnnotatedElementHelper.hasAnnotation(protocol, "ws_port")) {
-                    remotePort = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "ws_port").iterator().next());
-                } else {
-                    remotePort = 1883;
-                }
-                ctemplate = ctemplate.replace("/*WS_PORT*/", remotePort.toString());
-
-                String ssid;
-                if (AnnotatedElementHelper.hasAnnotation(protocol, "wifi_ssid")) {
-                    ssid = AnnotatedElementHelper.annotation(protocol, "wifi_ssid").iterator().next();
-                } else {
-                    ssid = "WIFI_SSID";
-                }
-                ctemplate = ctemplate.replace("/*SSID*/", ssid);
-
-                String wifiPassword;
-                if (AnnotatedElementHelper.hasAnnotation(protocol, "wifi_password")) {
-                    wifiPassword = AnnotatedElementHelper.annotation(protocol, "wifi_password").iterator().next();
-                } else {
-                    wifiPassword = "WIFI_PASSWORD";
-                }
-                ctemplate = ctemplate.replace("/*PASSWORD*/", wifiPassword);
-
-                Set<Message> messages = new HashSet<>();
-                Integer maxMsgSize = 0;
-                for (NetworkPlugin.ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
-                    Message m = tpm.m;
-                    if (m != null)
-                        System.out.print("m: " + m.getName());
-                    messages.add(m);
-                    if (this.ctx.getMessageSerializationSize(m) > maxMsgSize) {
-                        maxMsgSize = this.ctx.getMessageSerializationSize(m) - 2;
+                    for (ExternalConnector eco : ecos) {
+                        eco.setName(portName);
                     }
-                }
 
-                ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
-                
-
-                String forward, parserCall;
-                if(AnnotatedElementHelper.isDefined(protocol, "ws_escape_null", "true")) {
-                    forward = CPluginHelper.generateNullCharEscaperSend("msg", "size", "buf", "length", portName + "_ESCAPE_CHAR");
-                    forward += "     " + portName + "_server.broadcastTXT(buf, length);";
-                    
-                    parserCall = CPluginHelper.generateNullCharEscaperReceive("payload", "length", "buf", "size", portName + "_ESCAPE_CHAR");
-                    parserCall += "     " + portName + "_parser(buf, size);";
-                } else {
-                    forward =  "     " + portName + "_server.broadcastTXT(msg, size);";
-                    parserCall = "     " + portName + "_parser(payload, length);";
-                }
-                
-                ctemplate = ctemplate.replace("/*FORWARD*/", forward);
-                ctemplate = ctemplate.replace("/*PARSER_CALL*/", parserCall);
-                
-                String escapeByte;
-                if (AnnotatedElementHelper.hasAnnotation(protocol, "ws_escape_byte")) {
-                    escapeByte = AnnotatedElementHelper.annotation(protocol, "ws_escape_byte").iterator().next();
-                } else {
-                    escapeByte = "125";
-                }
-                ctemplate = ctemplate.replace("/*ESCAPE_CHAR*/", escapeByte);
-                
-                //Connector Instanciation
-                StringBuilder eco_instance = new StringBuilder();
-                eco_instance.append("//Connector");
-
-                //De Serializer 
-                StringBuilder ParserImplementation = new StringBuilder();
-                ParserImplementation.append("void " + portName + "_parser(byte * msg, uint16_t size) {\n");
-                ser.generateParserBody(ParserImplementation, "msg", "size", messages, portName + "_instance.listener_id");
-                ParserImplementation.append("}\n");
-
-                ctemplate = ctemplate.replace("/*PARSER*/", ser.generateSubFunctions() + ParserImplementation);
-
-                //End De Serializer
+                    ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
+                    htemplate = htemplate.replace("/*PORT_NAME*/", portName);
 
 
-                ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
+                    Integer remotePort;
+                    if (AnnotatedElementHelper.hasAnnotation(protocol, "ws_port")) {
+                        remotePort = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "ws_port").iterator().next());
+                    } else {
+                        remotePort = 1883;
+                    }
+                    ctemplate = ctemplate.replace("/*WS_PORT*/", remotePort.toString());
 
-                this.ctx.addToInitCode("\n" + portName + "_instance.listener_id = add_instance(&" + portName + "_instance);\n");
-                this.ctx.addToInitCode(portName + "_setup();\n");
-                this.ctx.addToPollCode(portName + "_read();\n");
+                    String ssid;
+                    if (AnnotatedElementHelper.hasAnnotation(protocol, "wifi_ssid")) {
+                        ssid = AnnotatedElementHelper.annotation(protocol, "wifi_ssid").iterator().next();
+                    } else {
+                        ssid = "WIFI_SSID";
+                    }
+                    ctemplate = ctemplate.replace("/*SSID*/", ssid);
 
-                StringBuilder b = new StringBuilder();
-                StringBuilder h = new StringBuilder();
-                generateMessageForwarders(b, h, cfg, protocol);
+                    String wifiPassword;
+                    if (AnnotatedElementHelper.hasAnnotation(protocol, "wifi_password")) {
+                        wifiPassword = AnnotatedElementHelper.annotation(protocol, "wifi_password").iterator().next();
+                    } else {
+                        wifiPassword = "WIFI_PASSWORD";
+                    }
+                    ctemplate = ctemplate.replace("/*PASSWORD*/", wifiPassword);
 
-                ctemplate += b;
-                htemplate += h;
+                    Set<Message> messages = new HashSet<>();
+                    Integer maxMsgSize = 0;
+                    for (NetworkPlugin.ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
+                        Message m = tpm.m;
+                        if (m != null)
+                            System.out.print("m: " + m.getName());
+                        messages.add(m);
+                        if (this.ctx.getMessageSerializationSize(m) > maxMsgSize) {
+                            maxMsgSize = this.ctx.getMessageSerializationSize(m) - 2;
+                        }
+                    }
 
-                ctx.getBuilder(portName + ".c").append(ctemplate);
-                ctx.getBuilder(portName + ".h").append(htemplate);
+                    ctemplate = ctemplate.replace("/*MAX_MSG_SIZE*/", maxMsgSize.toString());
+
+
+                    String forward, parserCall;
+                    if(AnnotatedElementHelper.isDefined(protocol, "ws_escape_null", "true")) {
+                        forward = CPluginHelper.generateNullCharEscaperSend("msg", "size", "buf", "length", portName + "_ESCAPE_CHAR");
+                        forward += "     " + portName + "_server.broadcastTXT(buf, length);";
+
+                        parserCall = CPluginHelper.generateNullCharEscaperReceive("payload", "length", "buf", "size", portName + "_ESCAPE_CHAR");
+                        parserCall += "     " + portName + "_parser(buf, size);";
+                    } else {
+                        forward =  "     " + portName + "_server.broadcastTXT(msg, size);";
+                        parserCall = "     " + portName + "_parser(payload, length);";
+                    }
+
+                    ctemplate = ctemplate.replace("/*FORWARD*/", forward);
+                    ctemplate = ctemplate.replace("/*PARSER_CALL*/", parserCall);
+
+                    String escapeByte;
+                    if (AnnotatedElementHelper.hasAnnotation(protocol, "ws_escape_byte")) {
+                        escapeByte = AnnotatedElementHelper.annotation(protocol, "ws_escape_byte").iterator().next();
+                    } else {
+                        escapeByte = "125";
+                    }
+                    ctemplate = ctemplate.replace("/*ESCAPE_CHAR*/", escapeByte);
+
+                    //Connector Instanciation
+                    StringBuilder eco_instance = new StringBuilder();
+                    eco_instance.append("//Connector");
+
+                    //De Serializer 
+                    StringBuilder ParserImplementation = new StringBuilder();
+                    ParserImplementation.append("void " + portName + "_parser(byte * msg, uint16_t size) {\n");
+                    ser.generateParserBody(ParserImplementation, "msg", "size", messages, portName + "_instance.listener_id");
+                    ParserImplementation.append("}\n");
+
+                    ctemplate = ctemplate.replace("/*PARSER*/", ser.generateSubFunctions() + ParserImplementation);
+
+                    //End De Serializer
+
+
+                    ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
+
+                    this.ctx.addToInitCode("\n" + portName + "_instance.listener_id = add_instance(&" + portName + "_instance);\n");
+                    this.ctx.addToInitCode(portName + "_setup();\n");
+                    this.ctx.addToPollCode(portName + "_read();\n");
+
+                    StringBuilder b = new StringBuilder();
+                    StringBuilder h = new StringBuilder();
+                    generateMessageForwarders(b, h, cfg, protocol);
+
+                    ctemplate += b;
+                    htemplate += h;
+
+                    ctx.getBuilder(portName + ".c").append(ctemplate);
+                    ctx.getBuilder(portName + ".h").append(htemplate);
                 }
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(ESP8266MQTTPlugin.class.getName()).log(Level.SEVERE, null, ex);

@@ -20,6 +20,9 @@
  */
 package org.thingml.compilers.c.posixmt;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -306,6 +309,30 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
                 builder.append("[");
                 ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
                 builder.append("];\n");
+            }
+        }
+        for(Thing t : ConfigurationHelper.allThings(cfg)) {
+            for (Property p : ThingHelper.allPropertiesInDepth(t)) {
+                if(AnnotatedElementHelper.hasAnnotation(p, "initialize_from_file")) {
+                    String init = null;
+                    File inFile = new File (AnnotatedElementHelper.annotation(p, "initialize_from_file").iterator().next());
+                    try {
+                        final InputStream input = new FileInputStream(inFile);
+                        if (input != null) {
+                            init = org.apache.commons.io.IOUtils.toString(input, java.nio.charset.Charset.forName("UTF-8"));
+                            input.close();
+                        } else {
+                            System.out.println("[Error] File not found: " + AnnotatedElementHelper.annotation(p, "initialize_from_file").iterator().next());
+                        }
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                    }
+        
+                    if(init != null)
+                        builder.append("const char* " + t.getName() + "_" + p.getName() + " = \"" + init.replace("\"", "\\\"") + "\";\n");
+                    else
+                        System.out.println("[Error] File not found: " + AnnotatedElementHelper.annotation(p, "initialize_from_file").iterator().next());
+                }
             }
         }
 
@@ -612,6 +639,10 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + "_size = ");
                 ctx.generateFixedAtInitValue(cfg, inst, p.getCardinality(), builder);
                 builder.append(";\n");
+            }
+            if(AnnotatedElementHelper.hasAnnotation(p, "initialize_from_file")) {
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = ");
+                builder.append(inst.getType().getName() + "_" + p.getName() + ";\n");
             }
         }
         
