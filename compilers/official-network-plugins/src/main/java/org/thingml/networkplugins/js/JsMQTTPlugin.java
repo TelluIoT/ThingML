@@ -78,6 +78,7 @@ public class JsMQTTPlugin extends NetworkPlugin {
     }
 
     private void updatePackageJSON(Context ctx, boolean withServer) {
+        System.out.println("update package.json");
         try {
             final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/package.json");
             final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
@@ -101,6 +102,7 @@ public class JsMQTTPlugin extends NetworkPlugin {
             IOUtils.write(json.toString(), output, Charset.forName("UTF-8"));
             IOUtils.closeQuietly(output);
         } catch (Exception e) {
+            System.out.println("\t\t\tERROR");
             e.printStackTrace();
         }
     }
@@ -193,9 +195,8 @@ public class JsMQTTPlugin extends NetworkPlugin {
             }
             for(Port p : ports) {
                 StringBuilder builder = new StringBuilder();
-                builder.append("msg.unshift(\"" + p.getName() + "\");\n");
-                builder.append("instance._receive.apply(instance, msg);\n");
-                builder.append("msg.shift();\n");
+                builder.append("msg._port = '" + p.getName() + "';\n");
+                builder.append("instance._receive(msg);\n");
                 template = template.replace("/*$DISPATCH$*/", "/*$DISPATCH$*/\n" + builder.toString());
             }
             StringBuilder builder = new StringBuilder();
@@ -242,7 +243,7 @@ public class JsMQTTPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                final String url = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "127.0.0.1");
+                final String url = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "mqtt://127.0.0.1:1883");
                 final String subtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "subscribe", "ThingML");
                 final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "ThingML");
 
@@ -253,7 +254,7 @@ public class JsMQTTPlugin extends NetworkPlugin {
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getInstance().getName() + ".get" + ctx.firstToUpper(req.getName()) + "on" + conn.getPort().getName() + "Listeners().push(");
+                    builder.append(conn.getInst().getInstance().getName() + "." + req.getName() + "On" + conn.getPort().getName() + "Listeners.push(");
                     builder.append("mqtt.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(mqtt)");
                     builder.append(");\n");
                 }
@@ -261,7 +262,13 @@ public class JsMQTTPlugin extends NetworkPlugin {
 
                 if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "localserver")) {
                     String template = ctx.getTemplateByID("templates/JsMQTTServer.js");
-                    final String port = AnnotatedElementHelper.annotation(conn.getProtocol(), "localserver").get(0);
+                    String port = AnnotatedElementHelper.annotation(conn.getProtocol(), "localserver").get(0);
+                    try {
+                        Integer.parseInt(port);
+                    } catch (NumberFormatException e) {
+                        System.err.println("port " + port + " is not valid. Using 1883 instead");
+                        port = "1883";
+                    }
                     template = template.replace("/*$PORT$*/", port);
                     main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\n" + template);
                     main = main.replace("/*$STOP_PLUGINS$*/", "server.close();\n/*$STOP_PLUGINS$*/\n");

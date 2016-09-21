@@ -87,20 +87,20 @@ public class JSJSONSerializerPlugin extends SerializationPlugin {
     public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
         builder.append("function " + bufferName + "(){\n");
         builder.append(bufferName + ".prototype.parse = function(json) {\n");
-        builder.append("var msg = [];\n");
+        builder.append("const msg = {};\n");
         builder.append("try {\n");
         builder.append("const parsed = JSON.parse(json);\n");
         builder.append("JSON.parse(json, function(k, v) {\n");
         builder.append("switch(k) {\n");
         for(Message m : messages) {
-            builder.append("case '" + m.getName() + "':");
-            builder.append("msg = ['" + m.getName() + "'");
+            builder.append("case '" + m.getName() + "':\n");
+            builder.append("msg._msg = '" + m.getName() + "';\n");
             for(Parameter p : m.getParameters()) {
                 if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                    builder.append(", parsed." + m.getName() + "." + p.getName());
+                    builder.append("msg." + p.getName() + " = parsed." + m.getName() +  "." + p.getName() + ";\n");
                 }
             }
-            builder.append("]; break;\n");
+            builder.append("break;\n");
         }
         builder.append("default: break;\n");
         builder.append("}\n");
