@@ -102,6 +102,8 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                 } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
                         || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
                     builder.append("	len += snprintf(NULL, 0, " + p.getName() + " ? \"true\" : \"false\");\n");
+                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "char")) {
+                    builder.append("	len += snprintf(NULL, 0, \"\\\"%c\\\"\", " + p.getName() + ");\n");
                 } else {
                     builder.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
                     builder.append("	len += snprintf(NULL, 0, \"%s\", \"null\");\n");
@@ -144,6 +146,8 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                 } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
                         || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
                     builder.append("	index += sprintf(" + bufferName + "+index, " + p.getName() + " ? \"true\" : \"false\");\n");
+                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "char")) {
+                    builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":\\\"%c\\\"\", " + p.getName() + ");\n");
                 } else {
                     builder.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
                     builder.append("	index += sprintf(" + bufferName + "+index, \"null\");\n");
@@ -347,6 +351,9 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                                 "			} else {\n" +
                                 "				return -1;\n" +
                                 "			}\n");
+                    } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "char")) {
+                        messagesparser.append("			if(param_val_len != 3) {return -1;} // incorrect val\n" +
+                                "				*" + p.getName() + " = m[1];\n");
                     } else {
                         messagesparser.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
                     }
