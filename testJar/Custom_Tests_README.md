@@ -1,6 +1,6 @@
 #Custom Tests
 
-A custom test is describe by a `test*.properties` file similar to the following:
+A custom test is described by a `test*.properties` file similar to the following:
 
 ```
 #Depandancies List
