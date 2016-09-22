@@ -148,7 +148,7 @@ public class PosixTextDigitSerializerPlugin extends SerializationPlugin {
     public List<String> getSupportedFormat() {
 
         List<String> res = new ArrayList<>();
-        res.add("Binary");
+        res.add("PlainTextDigit");
         return res;
     }
 

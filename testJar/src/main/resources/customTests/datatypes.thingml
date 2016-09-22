@@ -12,17 +12,17 @@ datatype Byte<1>
 	@java_type "byte"
 	@java_primitive "true";
 
-datatype Boolean<2>	
+datatype Boolean<1>	
 	@type_checker "Boolean"
 	@c_type "uint8_t"
-	@c_byte_size "2"
+	@c_byte_size "1"
 	@java_type "boolean"
 	@java_primitive "true";
 
-datatype Bool<2>	
+datatype Bool<1>	
 	@type_checker "Boolean"
 	@c_type "uint8_t"
-	@c_byte_size "2"
+	@c_byte_size "1"
 	@java_type "boolean"
 	@java_primitive "true";
 
