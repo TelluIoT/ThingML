@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sleep 1
-timeout -s SIGINT 6 ./ServerBoolCfg/ServerBoolCfg > srvStdo.log 2> srvStdr.log&
+timeout -s SIGINT 6 node ServerBoolCfg/main.js > srvStdo.log 2> srvStdr.log&
 sleep 1
 timeout -s SIGINT 5 ./ClientBoolCfg/ClientBoolCfg > cliStdo.log 2> cliStdr.log&
 

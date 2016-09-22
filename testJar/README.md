@@ -17,6 +17,9 @@ mvn exec:java
 
 Results are sumed up into tmp/results.html, tmp/log contains detailed log of each test, tmp/thingml contains the test configurations for each test, and tmp/gen contains the generated code in targeted languages.
 
+##Running custom tests
+See Custom_Tests_README.md
+
 ##Running tests on a cluster
 See Distributed_Tests_README.md
 

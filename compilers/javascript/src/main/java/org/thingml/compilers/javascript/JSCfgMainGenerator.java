@@ -239,7 +239,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("//terminate all things on SIGINT (e.g. CTRL+C)\n");
         builder.append("process.on('SIGINT', function() {\n");
-        builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
+        if(!AnnotatedElementHelper.isDefined(cfg, "nodejs_silent_shutdown", "true"))
+            builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
         instances = ConfigurationHelper.orderInstanceInit(cfg);
         while (!instances.isEmpty()) {
             inst = instances.get(0);

@@ -20,7 +20,7 @@ function /*$NAME$*/(name, debug, serverURL, subtopic, pubtopic, instance, callba
     });
 
    	client.on('message', function(topic, message) {
-   	    console.log("topic: " + topic + ", message: " + message);
+   	    //console.log("topic: " + topic + ", message: " + message);
         const msg = formatter.parse(message);
         /*$DISPATCH$*/
    	});
