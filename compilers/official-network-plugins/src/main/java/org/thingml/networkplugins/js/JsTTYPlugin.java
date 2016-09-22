@@ -161,9 +161,8 @@ public class JsTTYPlugin extends NetworkPlugin {
             }
             for(Port p : ports) {
                 StringBuilder builder = new StringBuilder();
-                builder.append("msg.unshift(\"" + p.getName() + "\");\n");
+                builder.append("msg._port = '" + p.getName() + "';\n");
                 builder.append("instance._receive.apply(instance, msg);\n");
-                builder.append("msg.shift();\n");
                 template = template.replace("/*$DISPATCH$*/", "/*$DISPATCH$*/\n" + builder.toString());
             }
             StringBuilder builder = new StringBuilder();
