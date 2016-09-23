@@ -5,7 +5,7 @@
 
 #ifndef BOOL
 #define BOOL
-typedef enum { false, true } bool;
+//typedef enum { false, true } bool;
 #endif
 
 //externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);

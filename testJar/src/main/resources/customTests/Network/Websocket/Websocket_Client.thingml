@@ -1,0 +1,8 @@
+//Client
+protocol Websocket
+	@websocket_port_number "9000"
+	@websocket_server_address "127.0.0.1"
+	@websocket_client "true"
+	@serializer "JSON"
+	@trace_level "0"
+	;

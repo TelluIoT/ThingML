@@ -50,7 +50,7 @@ public class TestHelper {
     }
 	
 
-    public static Set<File> listTestFiles(final File folder, String pattern) {
+    /*public static Set<File> listTestFiles(final File folder, String pattern) {
         Set<File> res = new HashSet<>();
         Pattern p = Pattern.compile(pattern);
         //System.out.println(" -- " + folder.getName());
@@ -68,10 +68,51 @@ public class TestHelper {
         }
         
         return res;
+    }*/
+	
+
+    public static Set<File> listTestFiles(final File folder, String pattern, Set<String> dirList, boolean blackDir, Set<String> testList, boolean blackTest) {
+        //System.out.println("search " + folder.getName() + " dirList null:" + (dirList == null));
+        Set<File> res = new HashSet<>();
+        Pattern p = Pattern.compile(pattern);
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                //System.out.println("    search? " + fileEntry.getName());
+                if(dirList == null) {
+                    res.addAll(listTestFiles(fileEntry, pattern, null, false, testList, blackTest));
+                } else if (blackDir) {
+                    if(!containsString(dirList, fileEntry.getName())) {
+                        res.addAll(listTestFiles(fileEntry, pattern, dirList, true, testList, blackTest));
+                    }
+                } else {
+                    if(containsString(dirList, fileEntry.getName())) {
+                        res.addAll(listTestFiles(fileEntry, pattern, null, false, testList, blackTest));
+                    } else {
+                        res.addAll(listTestFiles(fileEntry, pattern, dirList, false, testList, blackTest));
+                    }
+                }
+            } else {
+                //System.out.print("    f? " + fileEntry.getName() + ":");
+                boolean go = true;
+                if((dirList != null) && !blackDir) go = false; //White dir list: not yet in a white dir 
+                //System.out.print(go + ":");
+                //Test filter
+                if(testList != null) {
+                    //System.out.print("(blackTest:" + blackTest + ")");
+                    if(blackTest && containsString(testList, fileEntry.getName().split("\\.thingml")[0])) go = false;
+                    else if (!blackTest && !containsString(testList, fileEntry.getName().split("\\.thingml")[0])) go = false;
+                }
+                //System.out.println(go);
+                
+                Matcher m = p.matcher(fileEntry.getName());
+                if (go && m.matches()) res.add(fileEntry);
+            }
+        }
+        return res;
     }
 	
 
-    public static Set<File> whiteListFiles(final File folder, Set<String> whiteList) {
+    /*public static Set<File> whiteListFiles(final File folder, Set<String> whiteList) {
         String testPattern = "test(.+)\\.thingml";
         Set<File> res = new HashSet<>();
         
@@ -116,7 +157,7 @@ public class TestHelper {
         }
         
         return res;
-    }
+    }*/
     
     public static Set<File> listTestDir(final File folder, String pattern) {
         Set<File> res = new HashSet<>();
@@ -319,4 +360,10 @@ public class TestHelper {
         return res.toString();
     }
     
+    public static boolean containsString(Set<String> set, String s) {
+        for(String ss : set) {
+            if(ss.compareTo(s) == 0) return true;
+        }
+        return false;
+    }
 }

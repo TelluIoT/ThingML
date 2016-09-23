@@ -1,0 +1,7 @@
+import "Websocket_Server.thingml"
+import "../Servers/ServerInt.thingml"
+
+configuration ServerIntCfg @nodejs_silent_shutdown "true" {
+	instance s : Server
+	connector s.p over Websocket
+}

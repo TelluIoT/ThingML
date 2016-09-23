@@ -61,8 +61,8 @@ public class TestJar {
         final File codeDir = new File(tmpDir, "genCode");
         final File logDir = new File(tmpDir, "log");
         File compilerJar;
-        if(args.length > 0) {
-            compilerJar = new File(workingDir, args[0]);
+        if(args.length > 1) {
+            compilerJar = new File(workingDir, args[1]);
         } else {
             compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
         }
@@ -96,7 +96,7 @@ public class TestJar {
         Properties prop = new Properties();
 	InputStream input = null;
         
-        String languageList = null, useBlackList = null, testList = null, webLink = null, myIP = null, myHTTPServerPort = null;
+        String languageList = null, useBlackList = null, testList = null, categoryUseBlackList = null, categoryList = null, webLink = null, myIP = null, myHTTPServerPort = null;
         
 	try {
 
@@ -109,6 +109,8 @@ public class TestJar {
                 languageList = prop.getProperty("languageList");
                 useBlackList = prop.getProperty("useBlackList");
                 testList = prop.getProperty("testList");
+                categoryUseBlackList = prop.getProperty("categoryUseBlackList");
+                categoryList = prop.getProperty("categoryList");
                 webLink = prop.getProperty("webLink");
                 myIP = prop.getProperty("myIP");
                 myHTTPServerPort = prop.getProperty("myHTTPServerPort");
@@ -128,14 +130,39 @@ public class TestJar {
         Set<String> tl = new HashSet<>();
         if(testList != null) {
             for(String tstr : testList.split(",")) {
-                System.out.println("testList item: (" + tstr.trim() + ")");
                 tl.add(tstr.trim());
             }
         }
+        
+        Set<String> dl = new HashSet<>();
+        if(categoryList != null) {
+            for(String tstr : categoryList.split(",")) {
+                dl.add(tstr.trim());
+            }
+        }
+        
+        boolean cbl = false, tbl = false;
+        if(categoryUseBlackList != null) {
+            if (categoryUseBlackList.compareToIgnoreCase("true") == 0) cbl = true;
+            else if (categoryUseBlackList.compareToIgnoreCase("false") != 0) dl = null;
+            
+        } else {
+           dl = null;
+        }
+        
+        if(useBlackList != null) {
+            if (useBlackList.compareToIgnoreCase("true") == 0) tbl = true;
+            else if (useBlackList.compareToIgnoreCase("false") != 0) tl = null;
+            
+        } else {
+           tl = null;
+        }
+
 	
 	//Test Sources Selection
-
         Set<File> testFiles;
+        testFiles = TestHelper.listTestFiles(testFolder, testPattern, dl, cbl, tl, tbl);
+        /*
         if(useBlackList != null) {
             if(useBlackList.compareToIgnoreCase("false") == 0) {
                 testFiles = TestHelper.whiteListFiles(testFolder, tl);
@@ -146,7 +173,7 @@ public class TestJar {
             }
         } else {
             testFiles = TestHelper.listTestFiles(testFolder, testPattern);
-        }
+        }*/
 
 	//Language Selection
         
@@ -228,6 +255,7 @@ public class TestJar {
         System.out.println("");
         
         
+        
         System.out.println("****************************************");
         System.out.println("*           ThingML Generation         *");
         System.out.println("****************************************");
@@ -259,7 +287,6 @@ public class TestJar {
             }
         }
         System.out.println("");
-        
         
         System.out.println("****************************************");
         System.out.println("*          ThingML Compilation         *");

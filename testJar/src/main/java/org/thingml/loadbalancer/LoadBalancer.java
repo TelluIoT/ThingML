@@ -96,7 +96,7 @@ public class LoadBalancer {
         Properties prop = new Properties();
 	InputStream input = null;
         
-        String languageList = null, useBlackList = null, testList = null;
+        String languageList = null, useBlackList = null, categoryUseBlackList = null, categoryList = null, testList = null;
         
 	try {
 
@@ -108,6 +108,8 @@ public class LoadBalancer {
             // get the property value and print it out
             languageList = prop.getProperty("languageList");
             useBlackList = prop.getProperty("useBlackList");
+            categoryUseBlackList = prop.getProperty("categoryUseBlackList");
+            categoryList = prop.getProperty("categoryList");
             testList = prop.getProperty("testList");
             System.out.println("languageList:" + languageList);
             System.out.println("useBlackList:" + useBlackList);
@@ -150,9 +152,37 @@ public class LoadBalancer {
                 }
             }
 
-            //Test Sources Selection
 
+            Set<String> dl = new HashSet<>();
+            if(categoryList != null) {
+                for(String tstr : categoryList.split(",")) {
+                    dl.add(tstr.trim());
+                }
+            }
+
+            boolean cbl = false, tbl = false;
+            if(categoryUseBlackList != null) {
+                if (categoryUseBlackList.compareToIgnoreCase("true") == 0) cbl = true;
+                else if (categoryUseBlackList.compareToIgnoreCase("false") != 0) dl = null;
+
+            } else {
+               dl = null;
+            }
+
+            if(useBlackList != null) {
+                if (useBlackList.compareToIgnoreCase("true") == 0) tbl = true;
+                else if (useBlackList.compareToIgnoreCase("false") != 0) tl = null;
+
+            } else {
+               tl = null;
+            }
+
+
+            //Test Sources Selection
             Set<File> testFiles;
+            testFiles = TestHelper.listTestFiles(testFolder, testPattern, dl, cbl, tl, tbl);
+            
+            /*Set<File> testFiles;
             if(useBlackList != null) {
                 if(useBlackList.compareToIgnoreCase("false") == 0) {
                     testFiles = TestHelper.whiteListFiles(testFolder, tl);
@@ -163,7 +193,7 @@ public class LoadBalancer {
                 }
             } else {
                 testFiles = TestHelper.listTestFiles(testFolder, testPattern);
-            }
+            }*/
 
             //Language Selection
 

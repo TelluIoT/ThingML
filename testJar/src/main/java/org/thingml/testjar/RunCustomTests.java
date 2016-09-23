@@ -21,6 +21,9 @@
 package org.thingml.testjar;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import static java.lang.Integer.max;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -55,8 +59,8 @@ public class RunCustomTests {
         final File workingDir = new File(System.getProperty("user.dir"));
         File tmpDir = new File(workingDir, "tmp");
         File compilerJar;
-        if(args.length > 0) {
-            compilerJar = new File(workingDir, args[0]);
+        if(args.length > 1) {
+            compilerJar = new File(workingDir, args[1]);
         } else {
             compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
         }
@@ -65,6 +69,31 @@ public class RunCustomTests {
         tmpDir = new File(workingDir, "tmp");
         File customDir = new File(tmpDir, "custom");
         customDir.mkdir();
+        
+        System.out.println("****************************************");
+        System.out.println("*         Properties Reading           *");
+        System.out.println("****************************************");
+        
+        System.out.println("");
+        Properties prop = new Properties();
+	InputStream input = null;
+        String categoryUseBlackList = null, categoryList = null, testUseBlackList = null, testList = null;
+        try {
+
+		input = new FileInputStream(new File(workingDir, "customConfig.properties"));
+
+		// load a properties file
+		prop.load(input);
+
+		// get the property value and print it out
+                categoryUseBlackList = prop.getProperty("categoryUseBlackList");
+                categoryList = prop.getProperty("categoryList");
+                testUseBlackList = prop.getProperty("testUseBlackList");
+                testList = prop.getProperty("testList");
+
+	} catch (IOException ex) {
+		ex.printStackTrace();
+	}
         
 
         final File testFolder = new File(workingDir.getPath() + "/src/main/resources/customTests");
@@ -83,8 +112,43 @@ public class RunCustomTests {
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
         System.out.println("Tmp Directory = " + tmpDir);
         System.out.println("Compiler = " + compilerJar);
-        System.out.println("");Set<File> testFiles;
-        testFiles = TestHelper.listTestFiles(testFolder, testPattern);
+        System.out.println("");
+        
+        Set<String> tl = new HashSet<>();
+        if(testList != null) {
+            for(String tstr : testList.split(",")) {
+                System.out.println("testList item: (" + tstr.trim() + ")");
+                tl.add(tstr.trim());
+            }
+        }
+        
+        Set<String> dl = new HashSet<>();
+        if(categoryList != null) {
+            for(String tstr : categoryList.split(",")) {
+                dl.add(tstr.trim());
+            }
+        }
+        
+        boolean cbl = false, tbl = false;
+        if(categoryUseBlackList != null) {
+            if (categoryUseBlackList.compareToIgnoreCase("true") == 0) cbl = true;
+            else if (categoryUseBlackList.compareToIgnoreCase("false") != 0) dl = null;
+            
+        } else {
+           dl = null;
+        }
+        if(testUseBlackList != null) {
+            if (testUseBlackList.compareToIgnoreCase("true") == 0) tbl = true;
+            else if (testUseBlackList.compareToIgnoreCase("false") != 0) tl = null;
+            
+        } else {
+           tl = null;
+        }
+
+	
+	//Test Sources Selection
+        Set<File> testFiles;
+        testFiles = TestHelper.listTestFiles(testFolder, testPattern, dl, cbl, tl, tbl);
 
 	//Language Selection
         

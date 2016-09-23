@@ -50,6 +50,7 @@ public class JsWSPlugin extends NetworkPlugin {
         List<String> res = new ArrayList<>();
         res.add("WS");
         res.add("websocket");
+        res.add("Websocket");
         return res;
     }
 

@@ -48,6 +48,7 @@ public class JavaWSPlugin extends NetworkPlugin {
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
         res.add("websocket");
+        res.add("Websocket");
         res.add("WS");
         return res;
     }
