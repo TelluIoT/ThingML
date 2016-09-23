@@ -32,3 +32,7 @@ The log file (`log`) will contain the output of the two first steps (but the scr
 
 When set to true, the property `runMono` will ensure that the test will be run alone without other simultanous other tests.
 
+##Configuration
+In the file customConfig.properties you can use and combine two filters:
+ * `categoryList` and `categoryUseBlackList`: If `categoryUseBlackList` is set to true, directories listed in `categoryList` and their children will be ignored. If  `categoryUseBlackList` is set to false, only directories listed in `categoryList` and their children will used. If not specified, all directories will be used. (Default: All)
+ * `useBlackList` ans `testList`: If `useBlackList` is set to true, tests listed in `testList` will be ignored, if set to false, only tests listed in `testList` will be used, and if not specified all tests will be used. (Default: All)
