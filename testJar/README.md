@@ -12,7 +12,7 @@ A test case is a simple ThingML file (A) including one thing to be tested. Aroun
 mvn clean install
 
 //To launch tests
-mvn exec:java
+java -cp target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.TestJar
 ```
 
 Results are sumed up into tmp/results.html, tmp/log contains detailed log of each test, tmp/thingml contains the test configurations for each test, and tmp/gen contains the generated code in targeted languages.
@@ -24,7 +24,10 @@ See Custom_Tests_README.md
 See Distributed_Tests_README.md
 
 ##Configuration
-In the file config.properties you can find the list of languages to be tested, and select testcases to be run.
+In the file config.properties you can use and combine three filters:
+ * `languageList`: contains the list of compilerId you wan to use. (Default: All)
+ * `categoryList` and `categoryUseBlackList`: If `categoryUseBlackList` is set to true, directories listed in `categoryList` and their children will be ignored. If  `categoryUseBlackList` is set to false, only directories listed in `categoryList` and their children will used. If not specified, all directories will be used. (Default: All)
+ * `useBlackList` ans `testList`: If `useBlackList` is set to true, tests listed in `testList` will be ignored, if set to false, only tests listed in `testList` will be used, and if not specified all tests will be used. (Default: All)
 
 ## Adding a test case
 In order to add a test case, one must add a ThingML file to the directory testJar/src/main/resources/tests/ containing the test. 
