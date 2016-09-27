@@ -208,6 +208,7 @@
         <module>../org.thingml.editor.standaloneApp</module>-->
         <!--<module>ArduinoIDEPlugin</module>-->
         <!--<module>testJar</module>--><!--BUILT SEPARATELY-->
+        <module>Documentrospection</module>
     </modules>
 
     <distributionManagement>

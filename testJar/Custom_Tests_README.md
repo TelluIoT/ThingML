@@ -31,6 +31,14 @@ The test environement will look at the depandancies (`depList`) list, and
 The log file (`log`) will contain the output of the two first steps (but the script can add its own output or whatever log to it).
 
 When set to true, the property `runMono` will ensure that the test will be run alone without other simultanous other tests.
+##Running tests
+```
+//To build it
+mvn clean install
+
+//To launch tests
+java -cp target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.RunCustomTests
+```
 
 ##Configuration
 In the file customConfig.properties you can use and combine two filters:

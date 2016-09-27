@@ -1,0 +1,22 @@
+Some blabla
+
+// comment
+//#begin tag1
+void myFunction(int16_t i) {
+	printf("i: %i\n", i);
+}
+//#end tag1
+
+# comment
+
+##begin tag2
+void myFunction2(int16_t i) {
+	printf("i: %i\n", i);
+}
+##end tag2
+
+#begin tag3
+void myFunction3(int16_t i) {
+	printf("i: %i\n", i);
+}
+#end tag3
