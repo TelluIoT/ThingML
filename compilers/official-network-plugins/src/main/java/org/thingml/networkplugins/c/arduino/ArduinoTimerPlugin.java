@@ -323,6 +323,25 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             }
             return res;
         }
+        
+        public String getBitMask(int i, int size, boolean one) {
+            String res = "B";
+            size--;
+            while(size > i) {
+                size--;
+                if(one) res += "0";
+                else res += "1";
+            }
+            size--;
+                if(one) res += "1";
+                else res += "0";
+            while(size >= 0) {
+                size--;
+                if(one) res += "0";
+                else res += "1";
+            }
+            return res;
+        }
 
         public String generateTimerLibrary(CCompilerContext ctx) {
             String ctemplate = "";
@@ -333,17 +352,49 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
 
                 StringBuilder interruptVector = new StringBuilder();
                 StringBuilder initTimer = new StringBuilder();
+                StringBuilder ticFlags = new StringBuilder();
+                StringBuilder ticFlagsHandling = new StringBuilder();
+                int ticFlagSize = 0;
+                
+                if(tics.size() > 0) {
+                    if(tics.size() <= 8) {
+                        ticFlagSize = 8;
+                        ticFlags.append("uint8_t " + timerName + "_tic_flags = 0;");
+                    } else if (tics.size() <= 16) {
+                        ticFlagSize = 16;
+                        ticFlags.append("uint16_t " + timerName + "_tic_flags = 0;");
+                    } else if (tics.size() <= 32) {
+                        ticFlagSize = 32;
+                        ticFlags.append("uint32_t " + timerName + "_tic_flags = 0;");
+                    } else if (tics.size() <= 64) {
+                        ticFlagSize = 64;
+                        ticFlags.append("uint64_t " + timerName + "_tic_flags = 0;");
+                    } else {
+                        System.out.println("[ERROR] Too many different tics for timer " + this.timerName);
+                    }
+                }
+                ctemplate = ctemplate.replace("/*FLAGS*/", ticFlags);
 
                 initTimer.append(timer_init());
 
                 interruptVector.append(timer_interrupt());
                 interruptVector.append(timerName + "_interrupt_counter++;\n");
-
+                
+                int i = 0;
                 for (BigInteger bi : tics) {
                     interruptVector.append("if((" + timerName + "_interrupt_counter % " + bi.longValue() + ") == 0) {\n");
-                    interruptVector.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
+                    interruptVector.append(timerName + "_tic_flags |= " + getBitMask(i, ticFlagSize, false) + ";\n");
+                    
+                    ticFlagsHandling.append("if((" + timerName + "_tic_flags & " + getBitMask(i, ticFlagSize, true) + ") >> " + i + ") {\n");
+                    ticFlagsHandling.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
+                    ticFlagsHandling.append(timerName + "_tic_flags |= " + getBitMask(i, ticFlagSize, false) + ";\n");
+                    ticFlagsHandling.append("}\n");
+                    //interruptVector.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
                     interruptVector.append("}\n");
+                    i++;
                 }
+                ctemplate = ctemplate.replace("/*FLAGS_HANDLING*/", ticFlagsHandling);
+                
                 interruptVector.append("if(" + timerName + "_interrupt_counter >= " + scm.longValue() + ") {\n");
                 interruptVector.append(timerName + "_interrupt_counter = 0;\n");
                 interruptVector.append("}\n");
@@ -400,6 +451,7 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
 
                     instructions.append("}\n\n");
                 }
+                
                 if (xmsTic) {
                     for (BigInteger bi : tics) {
                         instructions.append("void " + timerName + "_" + bi.longValue() + "ms_tic() {\n");

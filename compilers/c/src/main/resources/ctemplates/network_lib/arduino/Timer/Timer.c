@@ -2,7 +2,7 @@
 uint32_t /*PORT_NAME*/_timer[/*PORT_NAME*/_NB_SOFT_TIMER];
 uint32_t  /*PORT_NAME*/_prev_1sec = 0;
 
-
+/*FLAGS*/
 
 void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
 
@@ -29,9 +29,10 @@ void /*PORT_NAME*/_set_listener_id(uint16_t id) {
 
 
 void /*PORT_NAME*/_read() {
-	uint32_t tms = millis();
-	/*POLL*/
-	if (/*PORT_NAME*/_prev_1sec < tms) {
-		/*PORT_NAME*/_prev_1sec += 1000;
-	}
+    uint32_t tms = millis();
+    /*POLL*/
+    if (/*PORT_NAME*/_prev_1sec < tms) {
+        /*PORT_NAME*/_prev_1sec += 1000;
+    }
+    /*FLAGS_HANDLING*/
 }
