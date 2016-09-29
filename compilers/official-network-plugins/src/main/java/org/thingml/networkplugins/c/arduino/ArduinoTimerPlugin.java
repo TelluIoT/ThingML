@@ -325,7 +325,7 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
         }
         
         public String getBitMask(int i, int size, boolean one) {
-            String res = "B";
+            String res = "0b";
             size--;
             while(size > i) {
                 size--;
@@ -383,11 +383,11 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
                 int i = 0;
                 for (BigInteger bi : tics) {
                     interruptVector.append("if((" + timerName + "_interrupt_counter % " + bi.longValue() + ") == 0) {\n");
-                    interruptVector.append(timerName + "_tic_flags |= " + getBitMask(i, ticFlagSize, false) + ";\n");
+                    interruptVector.append(timerName + "_tic_flags |= " + getBitMask(i, ticFlagSize, true) + ";\n");
                     
                     ticFlagsHandling.append("if((" + timerName + "_tic_flags & " + getBitMask(i, ticFlagSize, true) + ") >> " + i + ") {\n");
                     ticFlagsHandling.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
-                    ticFlagsHandling.append(timerName + "_tic_flags |= " + getBitMask(i, ticFlagSize, false) + ";\n");
+                    ticFlagsHandling.append(timerName + "_tic_flags &= " + getBitMask(i, ticFlagSize, false) + ";\n");
                     ticFlagsHandling.append("}\n");
                     //interruptVector.append(timerName + "_" + bi.longValue() + "ms_tic();\n");
                     interruptVector.append("}\n");
