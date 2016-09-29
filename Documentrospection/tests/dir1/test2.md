@@ -2,14 +2,22 @@
 
 blabla
 
-<!-- TagMD tag1 ../ref.txt  !-->
+<!-- TagMD tag1 ../ref.txt -->
 ```
-A modifier
+void myNewFunction(int16_t i) {
+	printf("i: %in", i);
+}
+
 ```
 
 blabla
 
-<!-- TagMD tag3 ../ref.txt  !-->
+<!-- TagMD tag3 ../ref.txt -->
 ```
-A modifier 3
+void myNewFunction3(int16_t i) {
+	printf("i: %in", i);
+}
+
 ```
+
+blabla

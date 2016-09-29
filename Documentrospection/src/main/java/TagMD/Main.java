@@ -36,31 +36,78 @@ import java.util.regex.Pattern;
 public class Main {
     public static void main(String[] args) {
         File rootDir = new File(System.getProperty("user.dir"));
-        
-        for(File f: findMDFiles(rootDir)) {
-            processMD(f);
+        processMDs(rootDir, true);
+    }
+    
+    public static void processMDs(File dir) {
+        processMDs(dir, false);
+    }
+    
+    public static void processMDs(File dir, boolean verbose) {
+        for(File f: findMDFiles(dir)) {
+            processMD(f, verbose);
         }
     }
     
     public static void processMD(File f) {
-        System.out.println("[process md] " + f.getPath());
+        processMD(f, false);
+    }
+    
+    public static void processMD(File f, boolean verbose) {
+        if(verbose) System.out.println("[TagMD] Process md: " + f.getPath());
         boolean modif = false;
         String tagPattern = "[a-zA-Z0-9\\-_]+";
-        String pathPattern = "\\S+";
-        String pattern = "<!\\-\\-(\\s)TagMD\\s" + tagPattern + "\\s" + pathPattern + "(\\s)!\\-\\->(\\\\n)```*```";
-        System.out.println("[process md] [pattern] " + pattern);
-        String buf = getFileAsString(f);
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(buf);
+        String pathPattern = "(\\S)+";
+        String pattern = "<!\\-\\-(\\s)TagMD\\s" + tagPattern + "\\s" + pathPattern + "(\\s)\\-\\->[^`]+```[^`]+```";
+        StringBuffer buf = new StringBuffer();
+        Pattern p = Pattern.compile(pattern, Pattern.DOTALL);
+        Matcher m = p.matcher(getFileAsString(f));
+        
         while(m.find()) {
-            System.out.println("[process md] [tag] " + m.group());
-            String tag = m.group().split("<!\\-\\-(\\s)TagMD\\s")[1].split("\\s" + pathPattern + "(\\s)!\\-\\->")[0];
-            String path = m.group().split("<!\\-\\-(\\s)TagMD\\s" + tagPattern + "\\s")[1].split("(\\s)!\\-\\->")[0];
+            String tag = m.group().split("<!\\-\\-(\\s)TagMD\\s")[1].split("\\s" + pathPattern + "(\\s)\\-\\->")[0];
+            String path = m.group().split("<!\\-\\-(\\s)TagMD\\s" + tagPattern + "\\s")[1].split("(\\s)\\-\\->")[0];
             File ref = new File(f.getParentFile(), path);
-            m.replaceAll("<!-- TagMD " + tag + " " + path + " --!>\n```" + getTagContent(ref, tag) + "\n```");
+            if(verbose) System.out.println("[TagMD] found tag: " + tag + " ref: " + path);
+            m.appendReplacement(buf, "<!-- TagMD " + tag + " " + path + " -->\n```" + getTagContent(ref, tag, verbose) + "\n```");
             modif = true;
         }
-        if(modif) writeTextFile(f, buf);
+        m.appendTail(buf);
+        if(modif) writeTextFile(f, buf.toString());
+    }
+    
+    public static String getTagContent(File src, String tag) {
+        return getTagContent(src, tag, false);
+    }
+    
+    public static String getTagContent(File src, String tag, boolean verbose) {
+        String pattern = "¤begin " + tag + "[^¤]+¤end " + tag;
+        String buf = getFileAsString(src);
+        Pattern p = Pattern.compile(pattern, Pattern.DOTALL);
+        Matcher m = p.matcher(buf);
+        if(m.find()) {
+            if(verbose) System.out.println("[TagMD] hit");
+            return m.group().split("¤begin " + tag)[1].split("[/#]{0,2}¤end " + tag)[0];
+        }
+        System.out.println("[ERROR] Tag " + tag + " in " + src.getPath() + " not found.");
+        return "";
+    }
+
+    public static String getFileAsString(File f) {
+        String template_id = f.getPath();
+        String result = null;
+        try {
+            InputStream input = new FileInputStream(f);
+            if (input != null) {
+                result = org.apache.commons.io.IOUtils.toString(input, java.nio.charset.Charset.forName("UTF-8"));
+                input.close();
+            } else {
+                System.out.println("[ERROR] File not found: " + template_id);
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return null; // the template was not found
+        }
+        return result;
     }
     
     public static Set<File> findMDFiles(File srcDir) {
@@ -114,37 +161,6 @@ public class Main {
             if(ss.compareTo(s) == 0) return true;
         }
         return false;
-    }
-    
-    public static String getTagContent(File src, String tag) {
-        System.out.println("[tag] " + tag + " from " + src.getPath());
-        String pattern = "#begin " + tag + "*#end " + tag;
-        String buf = getFileAsString(src);
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(buf);
-        if(m.find()) {
-            return m.group().split("#begin " + tag)[1].split("#end " + tag)[0];
-        }
-        System.out.println("[ERROR] File " + src.getPath() + " not found.");
-        return "";
-    }
-
-    public static String getFileAsString(File f) {
-        String template_id = f.getPath();
-        String result = null;
-        try {
-            InputStream input = new FileInputStream(f);
-            if (input != null) {
-                result = org.apache.commons.io.IOUtils.toString(input, java.nio.charset.Charset.forName("UTF-8"));
-                input.close();
-            } else {
-                System.out.println("[ERROR] File not found: " + template_id);
-            }
-        } catch (Exception e) {
-            //e.printStackTrace();
-            return null; // the template was not found
-        }
-        return result;
     }
     
     public static void writeTextFile(File file, String content) {
