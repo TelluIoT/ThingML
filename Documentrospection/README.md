@@ -13,7 +13,7 @@ java -jar target/Documentrospection-0.7.0-SNAPSHOT-jar-with-dependencies.jar
 
 TagMD is a tool to reference code snipet from external files in a markdown file. To do so the markdown file must contains something like:
 <pre>
-<!-- TagMD tag1 ../ref.txt -->
+<&#33;-- TagMD tag1 ../ref.txt -->
 ```
 void myNewFunction(int16_t i) {
 	printf("i: %in", i);
