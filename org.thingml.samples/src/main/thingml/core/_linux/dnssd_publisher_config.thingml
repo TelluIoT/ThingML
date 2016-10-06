@@ -12,7 +12,7 @@ thing DNSController includes DNSSDCtrlMsgs, Clock {
 		receives published_service
 	}
 	
-	required port signal {
+	required port tick_signal {
         receives clock_tick
     }
     
@@ -28,7 +28,7 @@ thing DNSController includes DNSSDCtrlMsgs, Clock {
     	state Unpublish {
     	
     		transition->Publish
-    		event signal?clock_tick
+    		event tick_signal?clock_tick
     		action do
     			ctrlport!unpublish_service()
     		end
@@ -37,7 +37,7 @@ thing DNSController includes DNSSDCtrlMsgs, Clock {
     	state Publish {
     	
     		transition->Init
-    		event signal?clock_tick
+    		event tick_signal?clock_tick
     		action do
     			ctrlport!publish_service()
     		end
@@ -66,5 +66,5 @@ configuration DNSSDPublishExample {
 	
 	connector publisher.dnssdport over DNSSD
 	connector dnsctrl.ctrlport => publisher.ctrlport
-	connector dnsctrl.signal => clock.signal
+	connector dnsctrl.tick_signal => clock.signal
 }
