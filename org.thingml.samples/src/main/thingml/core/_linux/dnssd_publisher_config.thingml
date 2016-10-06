@@ -1,0 +1,68 @@
+import "../../datatypes.thingml"
+import "../../thingml.thingml"
+import "../dnssd_publisher.thingml"
+import "clock.thingml"
+
+
+
+thing DNSController includes DNSSDCtrlMsgs, Clock {
+
+	required port ctrlport {
+		sends publish_service, unpublish_service
+		receives published_service
+	}
+	
+	required port signal {
+        receives clock_tick
+    }
+    
+    statechart Behavior init Init {
+    	
+    	state Init {
+    	
+    		transition->Unpublish
+    		event ctrlport?published_service
+    		
+    	}
+    	
+    	state Unpublish {
+    	
+    		transition->Publish
+    		event signal?clock_tick
+    		action do
+    			ctrlport!unpublish_service()
+    		end
+    	}
+    	
+    	state Publish {
+    	
+    		transition->Init
+    		event signal?clock_tick
+    		action do
+    			ctrlport!publish_service()
+    		end
+    	}
+    }
+}
+
+protocol DNSSD
+	@dnssd_service_name  "MegaPrinter"
+	@dnssd_service_type  "_ipp._tcp"
+	@dnssd_service_port  "651"
+	@dnssd_service_txt  "test=blah"
+	//@dnssd_service_domain  ""
+	//@dnssd_service_host  ""
+;
+
+
+configuration DNSSDPublishExample {
+	instance clock : ClockLinux
+		set clock.period = 5000
+		
+	instance publisher : DNSSDServicePublisher
+	instance dnsctrl : DNSController 
+	
+	connector publisher.dnssdport over DNSSD
+	connector dnsctrl.ctrlport => publisher.ctrlport
+	connector dnsctrl.signal => clock.signal
+}
