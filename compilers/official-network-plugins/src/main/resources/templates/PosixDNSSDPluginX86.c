@@ -103,7 +103,7 @@ void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED vo
             fprintf(stderr, "Client failure: %s\n", avahi_strerror(avahi_client_errno(c)));
 
             if(client_data->fn_client_failure_callback)
-            	client_data->fn_client_failure_callback(client_data->thing_instance, client_data, DNSSD_ERROR_UNEXPECTED);
+            	client_data->fn_client_failure_callback(client_data->thing_instance, client_data, DNSSD_SRV_ERROR_UNEXPECTED);
 
         }; break;
 
@@ -116,7 +116,7 @@ void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED vo
         	fprintf(stderr, "Client failure due to name collision: %s\n", avahi_strerror(avahi_client_errno(c)));
 
         	if(client_data->fn_client_failure_callback)
-        		client_data->fn_client_failure_callback(client_data->thing_instance, client_data, DNSSD_ERROR_COLLISION);
+        		client_data->fn_client_failure_callback(client_data->thing_instance, client_data, DNSSD_SRV_ERROR_COLLISION);
 
         }; break;
 

@@ -5,8 +5,8 @@
  *      Author: vassik
  */
 
-#ifndef SRC_DNSSD_AVAHI_H_
-#define SRC_DNSSD_AVAHI_H_
+#ifndef SRC_/*PORT_NAME*/_DNSSD_AVAHI_H_
+#define SRC_/*PORT_NAME*/_DNSSD_AVAHI_H_
 
 
 #ifdef __cplusplus
@@ -15,6 +15,14 @@ extern "C" {
 
 #include <avahi-common/thread-watch.h>
 #include <avahi-client/publish.h>
+
+
+struct /*PORT_NAME*/_instance_type {
+    uint16_t listener_id;
+    /*INSTANCE_INFORMATION*/
+};
+
+extern struct /*PORT_NAME*/_instance_type /*PORT_NAME*/_instance;
 
 
 typedef void (*pDNSSDAvahiCallback)(void* _instance, ...);
@@ -26,9 +34,11 @@ typedef enum {
 } DNSSDAvahiServiceState;
 
 typedef enum {
-	DNSSD_ERROR_UNEXPECTED = 404,
-	DNSSD_ERROR_COLLISION = 405,
-	DNSSD_ERROR_UNCOMMITED = 406
+	DNSSD_ERROR_UNEXPECTED = 204,
+	DNSSD_ERROR_COLLISION = 205,
+	DNSSD_ERROR_UNCOMMITED = 206,
+	DNSSD_SRV_ERROR_UNEXPECTED = 104,
+	DNSSD_SRV_ERROR_COLLISION = 105
 } DNSSD_ERROR_CODE;
 
 
@@ -77,6 +87,11 @@ void distructThingMLAvahiService(DNSSDAvahiAvahiService** service_data);
 DNSSDAvahiThreadedAhvaiClient* constructThingMLThreadedAhvaiClient();
 
 void distructThingMLThreadedAhvaiClient(DNSSDAvahiThreadedAhvaiClient** client_data);
+
+
+void /*PORT_NAME*/_setup();
+
+void /*PORT_NAME*/_start_publish_process();
 
 
 #ifdef __cplusplus
