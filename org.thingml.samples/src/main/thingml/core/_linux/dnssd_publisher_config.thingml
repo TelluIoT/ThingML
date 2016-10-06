@@ -52,6 +52,8 @@ protocol DNSSD
 	@dnssd_service_txt  "test=blah"
 	//@dnssd_service_domain  ""
 	//@dnssd_service_host  ""
+	@serializer ""
+	@trace_level "0"
 ;
 
 
