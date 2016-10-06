@@ -55,12 +55,12 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
 
     private void addDependencies() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
-        if (!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "avahi-client")) {
+        if (!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "avahi-client avahi-common")) {
             ThingmlFactory factory;
             factory = ThingmlFactoryImpl.init();
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("add_c_libraries");
-            pan.setValue("avahi-client");
+            pan.setValue("avahi-client avahi-common");
             AnnotatedElementHelper.allAnnotations(cfg).add(pan);
         }
     }
@@ -73,7 +73,7 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
             addDependencies();
         }
         for (Protocol prot : protocols) {
-            PosixWebSocketPlugin.WSPort port = new PosixWebSocketPlugin.WSPort();
+            PosixDNSSDPlugin.DNSSDPort port = new PosixDNSSDPlugin.DNSSDPort();
             port.protocol = prot;
             try {
                 port.sp = ctx.getSerializationPlugin(prot);
@@ -103,7 +103,33 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
         }
 
         public void generateNetworkLibrary() {
+            if (!ecos.isEmpty()) {
+                for (ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
+                    Message m = tpm.m;
+                    messages.add(m);
+                }
 
+
+                String ctemplate = ctx.getTemplateByID("templates/PosixDNSSDPluginX86.c");
+                String htemplate = ctx.getTemplateByID("templates/PosixDNSSDPlugin.h");
+
+                String portName = protocol.getName();
+
+                ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
+                htemplate = htemplate.replace("/*PORT_NAME*/", portName);
+                ctemplate = ctemplate.replace("/*PATH_TO_H*/", protocol.getName() + ".h");
+
+
+                StringBuilder b = new StringBuilder();
+                StringBuilder h = new StringBuilder();
+
+                ctemplate += "\n" + b;
+                htemplate += "\n" + h;
+
+                ctx.getBuilder(protocol.getName() + ".c").append(ctemplate);
+                ctx.getBuilder(protocol.getName() + ".h").append(htemplate);
+                ctx.addToIncludes("#include \"" + protocol.getName() + ".h\"");
+            }
         }
 
     }

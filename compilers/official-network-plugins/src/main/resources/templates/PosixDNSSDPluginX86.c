@@ -23,7 +23,7 @@
 #include <avahi-common/thread-watch.h>
 
 
-#include "/*PATH_TO_DNSSD_H*/"
+#include "/*PATH_TO_H*/"
 
 
 void entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupState state, AVAHI_GCC_UNUSED void *userdata) {
