@@ -24,7 +24,8 @@ thing fragment DNSSDCtrlMsgs {
 }
 
 
-thing DNSSDServicePublisher includes DNSSDMsgs, DNSSDCtrlMsgs {
+thing DNSSDServicePublisher includes DNSSDMsgs, DNSSDCtrlMsgs 
+{
 
 	required port dnssdport {
 		sends dnssd_publish_service, dnssd_unpublish_service

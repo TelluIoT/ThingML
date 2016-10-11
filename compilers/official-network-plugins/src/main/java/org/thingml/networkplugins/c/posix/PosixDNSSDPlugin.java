@@ -117,10 +117,7 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
                 if (AnnotatedElementHelper.hasAnnotation(protocol, "trace_level")) {
                     traceLevel = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "trace_level").iterator().next());
                 } else {
-                    traceLevel = 1;
-                }
-                if (traceLevel == null) {
-                    traceLevel = 1;
+                    traceLevel = 0;
                 }
 
                 if (traceLevel.intValue() >= 3) {

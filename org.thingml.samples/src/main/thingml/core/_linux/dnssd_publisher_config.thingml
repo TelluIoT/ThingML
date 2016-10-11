@@ -46,25 +46,24 @@ thing DNSController includes DNSSDCtrlMsgs, Clock {
 }
 
 protocol DNSSD
-	@dnssd_service_name  "MegaPrinter"
-	@dnssd_service_type  "_ipp._tcp"
-	@dnssd_service_port  "651"
-	@dnssd_service_txt  "test=blah"
-	//@dnssd_service_domain  ""
-	//@dnssd_service_host  ""
 	@serializer ""
 	@trace_level "0"
 ;
-
 
 configuration DNSSDPublishExample {
 	instance clock : ClockLinux
 		set clock.period = 5000
 		
 	instance publisher : DNSSDServicePublisher
-	instance dnsctrl : DNSController 
-	
-	connector publisher.dnssdport over DNSSD
+        @dnssd_service_name  "MegaPrinter"
+        @dnssd_service_type  "_ipp._tcp"
+        @dnssd_service_port  "651"
+        @dnssd_service_txt  "test=blah"
+        //@dnssd_service_domain  ""
+        //@dnssd_service_host  ""
+    connector publisher.dnssdport over DNSSD 
+       
+	instance dnsctrl : DNSController     
 	connector dnsctrl.ctrlport => publisher.ctrlport
 	connector dnsctrl.tick_signal => clock.signal
 }

@@ -273,3 +273,38 @@ void distructThingMLThreadedAhvaiClient(DNSSDAvahiThreadedAhvaiClient** client_d
 	free(*client_data);
 	*client_data = NULL;
 }
+
+void fn_srv_publish_success_callback(void * _instance, ...) {
+	printf("callback success is called\n");
+}
+
+void fn_srv_publish_failure_callback(void* _instance, ...) {
+	printf("callback failuer is called\n");
+}
+
+void fn_client_running_callback(void * _instance, ...) {
+	printf("fn_client_running_callback success is called\n");
+}
+
+void fn_client_failure_callback(void* _instance, ...) {
+	printf("fn_client_failure_callback failuer is called\n");
+}
+
+void /*PORT_NAME*/_setup() {
+    avahi_client = constructThingMLThreadedAhvaiClient();
+	avahi_client->fn_client_running_callback = fn_client_running_callback;
+	avahi_client->fn_client_failure_callback = fn_client_failure_callback;
+
+    service_data = constructThingMLAvahiService();
+    service_data->avahi_client = avahi_client;
+    service_data->fn_srv_esteb_callback = fn_srv_publish_success_callback;
+    service_data->fn_srv_failure_callback = fn_srv_publish_failure_callback;
+
+    service_data->name = "/*DNSSD_SERVICE_NAME*/";
+    service_data->type = "/*DNSSD_SERVICE_TYPE*/";
+    /*IS_DNSSD_SERVICE_PORT*/service_data->port = /*DNSSD_SERVICE_PORT*/;
+    /*IS_DNSSD_SERVICE_TXT*/service_data->txt = "/*DNSSD_SERVICE_TXT*/";
+    /*IS_DNSSD_SERVICE_HOST*/service_data->host = "/*DNSSD_SERVICE_HOST*/"
+    /*IS_DNSSD_SERVICE_DOMAIN*/service_data->domain = "/*DNSSD_SERVICE_DOMAIN*/"
+
+}
