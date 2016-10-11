@@ -5,7 +5,7 @@ import "clock.thingml"
 
 
 
-thing DNSController includes DNSSDCtrlMsgs, Clock {
+thing DNSController includes DNSSDCtrlMsgs, ClockMsgs {
 
 	required port ctrlport {
 		sends publish_service, unpublish_service
