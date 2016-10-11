@@ -39,7 +39,7 @@ void entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupState state, AVAHI_
     switch (state) {
         case AVAHI_ENTRY_GROUP_ESTABLISHED : {
             /* The entry group has been established successfully */
-            fprintf(stderr, "Service '%s' successfully established.\n", context->name);
+            /*TRACE_LEVEL_1*/fprintf(stderr, "Service '%s' successfully established.\n", context->name);
             context->state = DNSSD_AVAHI_SERVICE_PUBLISH;
 
             if(context->fn_srv_success_callback != NULL)
@@ -50,7 +50,7 @@ void entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupState state, AVAHI_
         case AVAHI_ENTRY_GROUP_COLLISION : {
             /* A service name collision with a remote service
              * happened. */
-            fprintf(stderr, "Service name collision, renaming service to '%s'\n", context->name);
+            /*TRACE_LEVEL_1*/fprintf(stderr, "Service name collision, renaming service to '%s'\n", context->name);
             if(context->fn_srv_failure_callback != NULL)
             	context->fn_srv_failure_callback(context->thing_instance, context, DNSSD_ERROR_COLLISION);
 
@@ -58,7 +58,7 @@ void entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupState state, AVAHI_
 
         case AVAHI_ENTRY_GROUP_FAILURE : {
 
-            fprintf(stderr, "Entry group failure: %s\n", avahi_strerror(avahi_client_errno(avahi_entry_group_get_client(g))));
+            /*TRACE_LEVEL_1*/fprintf(stderr, "Entry group failure: %s\n", avahi_strerror(avahi_client_errno(avahi_entry_group_get_client(g))));
 
             if(context->fn_srv_failure_callback != NULL)
             	context->fn_srv_failure_callback(context->thing_instance, context, DNSSD_ERROR_UNEXPECTED);
@@ -66,7 +66,7 @@ void entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupState state, AVAHI_
         }; break;
 
         case AVAHI_ENTRY_GROUP_UNCOMMITED: {
-        	 fprintf(stderr, "Entry group is not committed: %s\n", avahi_strerror(avahi_client_errno(avahi_entry_group_get_client(g))));
+        	 /*TRACE_LEVEL_1*/fprintf(stderr, "Entry group is not committed: %s\n", avahi_strerror(avahi_client_errno(avahi_entry_group_get_client(g))));
 
         	 if(context->fn_srv_failure_callback != NULL)
         		 context->fn_srv_failure_callback(context->thing_instance, context, DNSSD_ERROR_UNCOMMITED);
@@ -100,7 +100,7 @@ void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED vo
 
         case AVAHI_CLIENT_FAILURE: {
 
-            fprintf(stderr, "Client failure: %s\n", avahi_strerror(avahi_client_errno(c)));
+            /*TRACE_LEVEL_1*/fprintf(stderr, "Client failure: %s\n", avahi_strerror(avahi_client_errno(c)));
 
             if(client_data->fn_client_failure_callback)
             	client_data->fn_client_failure_callback(client_data->thing_instance, client_data, DNSSD_SRV_ERROR_UNEXPECTED);
@@ -113,7 +113,7 @@ void client_callback(AvahiClient *c, AvahiClientState state, AVAHI_GCC_UNUSED vo
              * in AVAHI_SERVER_RUNNING state we will register them
              * again with the new host name. */
 
-        	fprintf(stderr, "Client failure due to name collision: %s\n", avahi_strerror(avahi_client_errno(c)));
+        	/*TRACE_LEVEL_1*/fprintf(stderr, "Client failure due to name collision: %s\n", avahi_strerror(avahi_client_errno(c)));
 
         	if(client_data->fn_client_failure_callback)
         		client_data->fn_client_failure_callback(client_data->thing_instance, client_data, DNSSD_SRV_ERROR_COLLISION);
@@ -141,7 +141,7 @@ void start_avahi_client(DNSSDAvahiThreadedAhvaiClient* client_data) {
 
     /* Allocate main loop object */
     if (!(client_data->threaded_poll = avahi_threaded_poll_new())) {
-        fprintf(stderr, "Failed to create simple poll object.\n");
+        /*TRACE_LEVEL_1*/fprintf(stderr, "Failed to create simple poll object.\n");
         return;
     }
 
@@ -151,7 +151,7 @@ void start_avahi_client(DNSSDAvahiThreadedAhvaiClient* client_data) {
 
     /* Check weather creating the client object succeeded */
     if (!client_data->client) {
-        fprintf(stderr, "Failed to create client: %s\n", avahi_strerror(error));
+        /*TRACE_LEVEL_1*/fprintf(stderr, "Failed to create client: %s\n", avahi_strerror(error));
         return;
     }
 
@@ -177,7 +177,7 @@ void add_dnssd_service(DNSSDAvahiAvahiService *service) {
     int ret;
 
     if(service->state == DNSSD_AVAHI_SERVICE_PUBLISH) {
-    	fprintf(stderr, "add_dnssd_service() service is already published\n");
+    	/*TRACE_LEVEL_1*/fprintf(stderr, "add_dnssd_service() service is already published\n");
     	return;
     }
 
@@ -188,7 +188,7 @@ void add_dnssd_service(DNSSDAvahiAvahiService *service) {
     int state = avahi_client_get_state(service->avahi_client->client);
 
     if(state != AVAHI_CLIENT_S_RUNNING) {
-    	fprintf(stderr, "add_dnssd_service() failed due to client is in wrong state: %s\n", avahi_strerror(avahi_client_errno(service->avahi_client->client)));
+    	/*TRACE_LEVEL_1*/fprintf(stderr, "add_dnssd_service() failed due to client is in wrong state: %s\n", avahi_strerror(avahi_client_errno(service->avahi_client->client)));
     	avahi_threaded_poll_unlock(service->avahi_client->threaded_poll);
     	avahi_free(name);
     	return;
@@ -198,7 +198,7 @@ void add_dnssd_service(DNSSDAvahiAvahiService *service) {
 
     if (!service->group) {
         if (!(service->group = avahi_entry_group_new(service->avahi_client->client, entry_group_callback, service)))
-            fprintf(stderr, "avahi_entry_group_new() failed: %s\n", avahi_strerror(avahi_client_errno(service->avahi_client->client)));
+            /*TRACE_LEVEL_1*/fprintf(stderr, "avahi_entry_group_new() failed: %s\n", avahi_strerror(avahi_client_errno(service->avahi_client->client)));
     }
 
     avahi_threaded_poll_unlock(service->avahi_client->threaded_poll);
@@ -206,15 +206,17 @@ void add_dnssd_service(DNSSDAvahiAvahiService *service) {
     /* Add the service */
     if ((ret = avahi_entry_group_add_service(service->group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, service->name, service->type, service->domain, service->host, service->port, service->txt, r, NULL)) < 0) {
 
-        if (ret == AVAHI_ERR_COLLISION)
-        	fprintf(stderr, "Failed to add  service AVAHI_ERR_COLLISION: %s\n", avahi_strerror(ret));
+        if (ret == AVAHI_ERR_COLLISION) {
+        	/*TRACE_LEVEL_1*/fprintf(stderr, "Failed to add  service AVAHI_ERR_COLLISION: %s\n", avahi_strerror(ret));
+        }
 
-        fprintf(stderr, "Failed to add  service: %s\n", avahi_strerror(ret));
+        /*TRACE_LEVEL_1*/fprintf(stderr, "Failed to add  service: %s\n", avahi_strerror(ret));
     }
 
     /* Tell the server to register the service */
-    if ((ret = avahi_entry_group_commit(service->group)) < 0)
-        fprintf(stderr, "Failed to commit entry group: %s\n", avahi_strerror(ret));
+    if ((ret = avahi_entry_group_commit(service->group)) < 0) {
+        /*TRACE_LEVEL_1*/fprintf(stderr, "Failed to commit entry group: %s\n", avahi_strerror(ret));
+    }
 }
 
 void remove_dnssd_service(DNSSDAvahiAvahiService *service) {

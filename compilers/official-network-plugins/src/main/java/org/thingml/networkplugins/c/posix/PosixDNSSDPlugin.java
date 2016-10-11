@@ -113,6 +113,32 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
                 String ctemplate = ctx.getTemplateByID("templates/PosixDNSSDPluginX86.c");
                 String htemplate = ctx.getTemplateByID("templates/PosixDNSSDPlugin.h");
 
+                Integer traceLevel;
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "trace_level")) {
+                    traceLevel = Integer.parseInt(AnnotatedElementHelper.annotation(protocol, "trace_level").iterator().next());
+                } else {
+                    traceLevel = 1;
+                }
+                if (traceLevel == null) {
+                    traceLevel = 1;
+                }
+
+                if (traceLevel.intValue() >= 3) {
+                    ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "");
+                } else {
+                    ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "//");
+                }
+                if (traceLevel.intValue() >= 2) {
+                    ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "");
+                } else {
+                    ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "//");
+                }
+                if (traceLevel.intValue() >= 1) {
+                    ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "");
+                } else {
+                    ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "//");
+                }
+
                 String portName = protocol.getName();
 
                 ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
