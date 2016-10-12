@@ -1,6 +1,7 @@
 import "../../datatypes.thingml"
 import "../../thingml.thingml"
 import "../dnssd_publisher.thingml"
+import "../dnssd_messages.thingml"
 import "clock.thingml"
 
 

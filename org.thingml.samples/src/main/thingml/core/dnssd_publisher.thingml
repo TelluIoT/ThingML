@@ -1,21 +1,6 @@
 import "../datatypes.thingml"
 import "../thingml.thingml"
-
-
-
-thing fragment DNSSDMsgs {
-	message dnssd_srv_publish_success()
-		@dnssd_success_callback "dnssd_srv_publish_success"
-
-	message dnssd_srv_publish_failure(code : UInt8)
-		@dnssd_failure_callback "dnssd_srv_publish_failure"
-
-	message dnssd_publish_service()
-		@dnssd_publish_service "dnssd_publish_service"
-		
-	message dnssd_unpublish_service()
-		@dnssd_unpublish_service "dnssd_unpublish_service"
-}
+import "dnssd_messages.thingml"
 
 thing fragment DNSSDCtrlMsgs {
 	message publish_service()
