@@ -55,13 +55,14 @@ configuration DNSSDPublishExample {
 		set clock.period = 5000
 		
 	instance publisher : DNSSDServicePublisher
-        @dnssd_service_name  "MegaPrinter"
+
+    connector publisher.dnssdport over DNSSD
+    	@dnssd_service_name  "MegaPrinter"
         @dnssd_service_type  "_ipp._tcp"
         @dnssd_service_port  "651"
         @dnssd_service_txt  "test=blah"
         //@dnssd_service_domain  ""
-        //@dnssd_service_host  ""
-    connector publisher.dnssdport over DNSSD 
+        //@dnssd_service_host  "" 
        
 	instance dnsctrl : DNSController     
 	connector dnsctrl.ctrlport => publisher.ctrlport
