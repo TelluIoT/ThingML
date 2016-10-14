@@ -3,34 +3,32 @@ var Format = require('.//*$FORMAT$*/');
 function /*$NAME$*/(name, debug, instance, callback) {
     this.name = name;
     this.debug = debug;
-    var _this;
-    this.setThis = function(__this) {
-        _this = __this;
-    };
-
     this.ready = false;
 
-    const stdin = process.stdin;
-    const stdout = process.stdout;
-    const formatter = new Format();
+    if (process.stdin.isTTY && process.stdout.isTTY) {
+        this.stdin = process.stdin;
+        this.stdout = process.stdout;
+        this.formatter = new Format();
 
-    callback(true);
+        this.stdin.on('data', function(received) {
+            const msg = this.formatter.parse(received);
+            /*$DISPATCH$*/
+        }.bind(this));
 
-    stdin.on('data', function(received) {
-        const msg = formatter.parse(received);
-        /*$DISPATCH$*/
-    });
+        this.stdin.on('error', function(err) {
+            console.log("Error during communication: " + err);
+        });
+        callback(true);
+    } else {
+        callback(false);
+    }
+};
 
-    stdin.on('error', function(err) {
-        console.log("Error during communication: " + err);
-    });
+/*$RECEIVERS$*/
 
-    /*$RECEIVERS$*/
-
-    /*$NAME$*/.prototype._stop = function() {
-        this.ready = false;
-
-	};
+/*$NAME$*/.prototype._stop = function() {
+	this.stdin.pause();
+    this.ready = false;
 };
 
 module.exports = /*$NAME$*/;

@@ -105,9 +105,9 @@ public class JsWSPlugin extends NetworkPlugin {
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
         System.out.println("generateNetworkLibrary " + cfg.getName() + ", " + protocols.size());
         updatePackageJSON(ctx);
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder;
         for (Protocol prot : protocols) {
-            SerializationPlugin sp = null;
+            SerializationPlugin sp;
             try {
                sp = ctx.getSerializationPlugin(prot);
             } catch (UnsupportedEncodingException uee) {
@@ -187,13 +187,13 @@ public class JsWSPlugin extends NetworkPlugin {
             for(Port p : ports) {
                 StringBuilder builder = new StringBuilder();
                 builder.append("msg._port = '" + p.getName() + "';\n");
-                builder.append("instance._receive.apply(instance, msg);\n");
+                builder.append("instance._receive(msg);\n");
                 template = template.replace("/*$DISPATCH$*/", "/*$DISPATCH$*/\n" + builder.toString());
             }
             StringBuilder builder = new StringBuilder();
             for (Port p : ports) {
                 for (Message m : p.getSends()) {
-                    builder.append("WS.prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
+                    builder.append(prot.getName() + ".prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
                     int i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -202,7 +202,7 @@ public class JsWSPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(") {\n");
-                    builder.append("ws.send(formatter." + m.getName() + "ToJSON(");
+                    builder.append("this.ws.send(this.formatter." + m.getName() + "ToJSON(");
                     i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -234,24 +234,23 @@ public class JsWSPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                final String url = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "url") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "url").get(0) : "localhost";
+                final String url = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "ws://127.0.0.1");
 
-                main = main.replace("/*$REQUIRE_PLUGINS$*/", "var ws = require('./WSJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nvar ws = new ws(\"WS\", false, \"" + url + "\", " + conn.getInst().getInstance().getName() + ", function (started) {if (started) {");
-                main = main.replace("/*$PLUGINS_END$*/", "}else {process.exit(1)}});\n/*$PLUGINS_END$*/\n");
+                main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\nconst websocket = require('./WSJS');");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst ws = new websocket(\"WS\", false, \"" + url + "\", " + conn.getInst().getInstance().getName() + ", function (started) {if (!started) {console.log(\"Cannot start websocket!\"); process.exit(1);}});\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "ws._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getInstance().getName() + ".get" + ctx.firstToUpper(req.getName()) + "on" + conn.getPort().getName() + "Listeners().push(");
+                    builder.append(conn.getInst().getInstance().getName() + "." + req.getName() + "On" + conn.getPort().getName() + "Listeners.push(");
                     builder.append("ws.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(ws)");
                     builder.append(");\n");
                 }
                 main = main.replace("/*$PLUGINS_CONNECTORS$*/", builder.toString() + "\n/*$PLUGINS_CONNECTORS$*/");
 
-                if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "localserver")) {
+                if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "server") || AnnotatedElementHelper.hasAnnotation(conn, "server")) {
                     String template = ctx.getTemplateByID("templates/JsWSServer.js");
-                    final String port = AnnotatedElementHelper.annotation(conn.getProtocol(), "localserver").get(0);
+                    final String port = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "server", AnnotatedElementHelper.annotationOrElse(conn, "server", "9000"));
                     template = template.replace("/*$PORT$*/", port);
                     main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\n" + template);
                     main = main.replace("/*$STOP_PLUGINS$*/", "wss.close();\n/*$STOP_PLUGINS$*/\n");
