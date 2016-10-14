@@ -176,7 +176,7 @@ public class JsTTYPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(") {\n");
-                    builder.append("this.stdout.write(this.formatter." + m.getName() + "ToJSON(");
+                    builder.append("this.stdout.write(this.formatter." + m.getName() + "ToFormat(");
                     i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)

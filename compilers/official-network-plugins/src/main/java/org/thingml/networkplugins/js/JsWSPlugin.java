@@ -202,7 +202,7 @@ public class JsWSPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(") {\n");
-                    builder.append("this.ws.send(this.formatter." + m.getName() + "ToJSON(");
+                    builder.append("this.ws.send(this.formatter." + m.getName() + "ToFormat(");
                     i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -250,7 +250,7 @@ public class JsWSPlugin extends NetworkPlugin {
 
                 if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "server") || AnnotatedElementHelper.hasAnnotation(conn, "server")) {
                     String template = ctx.getTemplateByID("templates/JsWSServer.js");
-                    final String port = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "server", AnnotatedElementHelper.annotationOrElse(conn, "server", "9000"));
+                    final String port = AnnotatedElementHelper.annotationOrElse(conn, "server", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "server", "9000"));
                     template = template.replace("/*$PORT$*/", port);
                     main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\n" + template);
                     main = main.replace("/*$STOP_PLUGINS$*/", "wss.close();\n/*$STOP_PLUGINS$*/\n");

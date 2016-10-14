@@ -49,6 +49,7 @@ public class JsMQTTPlugin extends NetworkPlugin {
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
         res.add("MQTT");
+        res.add("mqtt");
         return res;
     }
 
@@ -110,6 +111,12 @@ public class JsMQTTPlugin extends NetworkPlugin {
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
         StringBuilder builder = new StringBuilder();
         boolean deployMQTTServer = false;
+        for(AbstractConnector c : cfg.getConnectors()) {
+            if (AnnotatedElementHelper.hasAnnotation(c, "server")) {
+                deployMQTTServer = true;
+                break;
+            }
+        }
         for (Protocol prot : protocols) {
             if (AnnotatedElementHelper.hasAnnotation(prot, "localserver")) {
                 deployMQTTServer = true;
@@ -211,7 +218,7 @@ public class JsMQTTPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(") {\n");
-                    builder.append("this.client.publish(pubtopic, this.formatter." + m.getName() + "ToJSON(");
+                    builder.append("this.client.publish(this.pubtopic, this.formatter." + m.getName() + "ToFormat(");
                     i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -259,9 +266,9 @@ public class JsMQTTPlugin extends NetworkPlugin {
                 }
                 main = main.replace("/*$PLUGINS_CONNECTORS$*/", builder.toString() + "\n/*$PLUGINS_CONNECTORS$*/");
 
-                if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "localserver")) {
+                if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "server") || AnnotatedElementHelper.hasAnnotation(conn, "server")) {
                     String template = ctx.getTemplateByID("templates/JsMQTTServer.js");
-                    String port = AnnotatedElementHelper.annotation(conn.getProtocol(), "localserver").get(0);
+                    String port = AnnotatedElementHelper.annotationOrElse(conn, "server",  AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "server", "1883"));
                     try {
                         Integer.parseInt(port);
                     } catch (NumberFormatException e) {

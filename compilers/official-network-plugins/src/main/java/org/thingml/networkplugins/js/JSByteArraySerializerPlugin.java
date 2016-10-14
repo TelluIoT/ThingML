@@ -35,9 +35,7 @@ import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.javascript.JSHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +57,10 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
             final JsonObject deps = json.get("dependencies").asObject();
             if (deps.get("bytebuffer") == null) //Could already be there, e.g. added by serial plugin
                 deps.add("bytebuffer", "^5.0.1");
+            final File f = new File(context.getOutputDirectory() + "/package.json");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(json.toString(), output, Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,7 +84,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
         }
         //Serialize message into binary
         final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
-        builder.append(bufferName + ".prototype." + m.getName() + "ToBytes = function(");
+        builder.append(bufferName + ".prototype." + m.getName() + "ToFormat = function(");
         for(Parameter p : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
                 if (m.getParameters().indexOf(p) > 0)
@@ -110,32 +112,44 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
-        System.out.println("generateParserBody " + messages.size());
         updatePackageJSON();
         builder.append("var ByteBuffer = require(\"bytebuffer\");\n");
         builder.append("function " + bufferName + "(){\n");
 
         builder.append(bufferName + ".prototype.parse = function(bb) {\n");
+        builder.append("if (!ByteBuffer.isByteBuffer(bb) && bb.buffer !== undefined) {\n");
+        builder.append("const realBB = new ByteBuffer(capacity=bb.length, littleEndian=false);\n");
+        builder.append("var i = 0;\n");
+        builder.append("while(i < bb.length) {\n");
+        builder.append("realBB.writeByte(bb[i]);\n");
+        builder.append("i = i + 1;\n");
+        builder.append("}\n");
+        builder.append("realBB.flip();\n");
+        builder.append("bb = realBB;\n");
+        builder.append("}\n\n");
+
+        builder.append("const msg = {};\n");
         builder.append("try {");
         builder.append("switch(bb.readShort()) {\n");
         for(Message m : messages) {
-            final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
+            final String code = AnnotatedElementHelper.annotationOrElse(m, "code", "0");
             builder.append("case " + code + ":\n");
-            builder.append("return [\"" + m.getName() + "\"");
+            builder.append("msg._msg = '" + m.getName() + "';\n");
             for(Parameter p : m.getParameters()) {
                 if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
                     final String type = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type")?AnnotatedElementHelper.annotation(p.getType(),"c_type").get(0).replace("_t", ""):null;
                     //if (type == null) //TODO: we should probably raise an exception here
-                    builder.append(", bb.read" + context.firstToUpper(type) + "()");
+                    builder.append("msg." + p.getName() + " = bb.read" + context.firstToUpper(type) +  "();\n");
                 }
             }
-            builder.append("];\n");
+            builder.append("break;\n");
         }
-        builder.append("default: return null;\n");
+        builder.append("default: break;\n");
         builder.append("}\n");
         builder.append("} catch (err) {\n");
         builder.append("console.log(\"Cannot parse \" + bb.buffer + \" because \" + err);\n");
         builder.append("}\n");
+        builder.append("return msg;\n");
         builder.append("};\n\n");
         builder.append("/*$SERIALIZERS$*/");
         builder.append("};\n\n");

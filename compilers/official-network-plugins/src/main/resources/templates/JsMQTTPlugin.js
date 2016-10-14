@@ -1,16 +1,17 @@
-var mqtt = require('mqtt');
+var mqtt_lib = require('mqtt');
 var Format = require('.//*$FORMAT$*/');
 
 function /*$NAME$*/(name, debug, serverURL, subtopic, pubtopic, instance, callback) {
     this.name = name;
     this.debug = debug;
     this.ready = false;
-
+    this.subtopic = subtopic;
+    this.pubtopic = pubtopic;
     this.formatter = new Format();
-    this.client = mqtt.connect(serverURL);
+    this.client = mqtt_lib.connect(serverURL);
 
     this.client.on('connect', function open() {
-        this.client.subscribe(subtopic);
+        this.client.subscribe(this.subtopic);
         callback(true);
     }.bind(this));
 

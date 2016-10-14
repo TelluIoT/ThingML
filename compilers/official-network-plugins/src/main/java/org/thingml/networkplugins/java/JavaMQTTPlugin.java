@@ -35,21 +35,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class JavaWSPlugin extends NetworkPlugin {
+public class JavaMQTTPlugin extends NetworkPlugin {
 
-    public JavaWSPlugin() {
+    public JavaMQTTPlugin() {
         super();
     }
 
     public String getPluginID() {
-        return "JavaWSPlugin";
+        return "JavaMQTTPlugin";
     }
 
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
-        res.add("websocket");
-        res.add("Websocket");
-        res.add("WS");
+        res.add("MQTT");
+        res.add("mqtt");
         return res;
     }
 
@@ -89,13 +88,13 @@ public class JavaWSPlugin extends NetworkPlugin {
             }
             input.close();
             pom = pom.replace("<!--DEP-->", "<dependency>\n" +
-                    "    <groupId>com.neovisionaries</groupId>\n" +
-                    "    <artifactId>nv-websocket-client</artifactId>\n" +
-                    "    <version>1.30</version>\n" +
+                    "    <groupId>org.fusesource.mqtt-client</groupId>\n" +
+                    "    <artifactId>mqtt-client</artifactId>\n" +
+                    "    <version>1.12</version>\n" +
                     "</dependency>\n<!--DEP-->");
             final File f = new File(ctx.getOutputDirectory() + "/pom.xml");
             final OutputStream output = new FileOutputStream(f);
-            IOUtils.write(pom, output, java.nio.charset.Charset.forName("UTF-8"));
+            IOUtils.write(pom, output, Charset.forName("UTF-8"));
             IOUtils.closeQuietly(output);
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,19 +132,19 @@ public class JavaWSPlugin extends NetworkPlugin {
             temp.append("return null;\n");
             temp.append("}\n");
             for (Message m : messages) {
-                sp.generateSerialization(temp, prot.getName() + "StringProtocol", m);
+                sp.generateSerialization(temp, prot.getName() + "BinaryProtocol", m);
             }
             clearMessages();
             builder = new StringBuilder();
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 addMessage(tpm.m);
             }
-            sp.generateParserBody(builder, prot.getName() + "StringProtocol", null, messages, null);
+            sp.generateParserBody(builder, prot.getName() + "BinaryProtocol", null, messages, null);
             final String result = builder.toString().replace("/*$SERIALIZERS$*/", temp.toString());
             try {
                 final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
                 folder.mkdir();
-                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/" + prot.getName() + "StringProtocol.java");
+                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/" + prot.getName() + "BinaryProtocol.java");
                 final OutputStream output = new FileOutputStream(f);
                 IOUtils.write(result, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
@@ -189,10 +188,10 @@ public class JavaWSPlugin extends NetworkPlugin {
             for (ThingPortMessage tpm : getMessagesReceived(cfg, prot)) {
                 addPort(tpm.p);
             }
-            String template = ctx.getTemplateByID("templates/JavaWSPlugin.java");
-            template = template.replace("/*$SERIALIZER$*/", prot.getName() + "StringProtocol");
+            String template = ctx.getTemplateByID("templates/JavaMQTTPlugin.java");
+            template = template.replace("/*$SERIALIZER$*/", prot.getName() + "BinaryProtocol");
             StringBuilder parseBuilder = new StringBuilder();
-            parseBuilder.append("final Event event = " + prot.getName() + "StringProtocol.instantiate(payload);\n");
+            parseBuilder.append("final Event event = " + prot.getName() + "BinaryProtocol.instantiate(payload);\n");
             for(Port p : ports) {//FIXME
                 parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
             }
@@ -205,7 +204,7 @@ public class JavaWSPlugin extends NetworkPlugin {
             try {
                 final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
                 folder.mkdir();
-                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/WSJava.java");
+                final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/MQTTJava.java");
                 final OutputStream output = new FileOutputStream(f);
                 IOUtils.write(template, output, Charset.forName("UTF-8"));
                 IOUtils.closeQuietly(output);
@@ -235,7 +234,7 @@ public class JavaWSPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                final String url = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "ws://127.0.0.1:9000");
+                final String url = AnnotatedElementHelper.annotationOrElse(conn, "url", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "mqtt://127.0.0.1:1883"));
                 main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nWSJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (WSJava) new WSJava(\"" + url + "\").buildBehavior(null, null);\n");
 
                 StringBuilder connBuilder = new StringBuilder();
