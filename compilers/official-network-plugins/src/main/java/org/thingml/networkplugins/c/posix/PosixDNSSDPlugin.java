@@ -84,7 +84,11 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
             }
             for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
                 port.ecos.add(eco);
-                eco.setName(eco.getProtocol().getName());
+                //we need a unique name per connector, meaning we create an instance of thing per external connector
+                //connector some.dnssdport over DNSSD would be equivalent to
+                //instance DNSSDunique :  DNSSD
+                // connector some.dnssdport => DNSSDunique.dnssdport
+                eco.setName(eco.getProtocol().getName() + eco.hashCode());
             }
             port.generateNetworkLibrary();
         }
@@ -102,6 +106,16 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
             messages = new HashSet<Message>();
         }
 
+        //this function should return only these connectors which are not unique,
+        // meaning their annotation is different from each other
+        private Set<ExternalConnector> getUniqueExternalConnectors() {
+            return ecos;
+        }
+
+        private String getExternalConnectorAnnotation(ExternalConnector connector, String annotation) {
+            return AnnotatedElementHelper.annotation(connector, annotation).iterator().next();
+        }
+
         public void generateNetworkLibrary() {
             if (!ecos.isEmpty()) {
                 for (ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
@@ -112,6 +126,62 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
 
                 String ctemplate = ctx.getTemplateByID("templates/PosixDNSSDPluginX86.c");
                 String htemplate = ctx.getTemplateByID("templates/PosixDNSSDPlugin.h");
+
+                String ctmpl_inst_decl = ctx.getTemplateByID("templates/dnssdparts/declaration_external_thing_instance.c");
+                String htmpl_inst_decl = ctx.getTemplateByID("templates/dnssdparts/declaration_external_thing_instance.h");
+                String ctmpl_inst_init = ctx.getTemplateByID("templates/dnssdparts/setup_instances.c");
+                String ctmpl_inst_start = ctx.getTemplateByID("templates/dnssdparts/start_instance.c");
+                String ctmpl_inst_stop = ctx.getTemplateByID("templates/dnssdparts/stop_cleanup_instance.c");
+
+                StringBuilder all_c_inst_decl = new StringBuilder();
+                StringBuilder all_h_inst_decl = new StringBuilder();
+                StringBuilder all_inst_init = new StringBuilder();
+                StringBuilder all_inst_start = new StringBuilder();
+                StringBuilder all_inst_stop = new StringBuilder();
+                for(ExternalConnector eco : getUniqueExternalConnectors()) {
+                    String instance_name = eco.getName();
+
+                    //declaration
+                    String inst_h_decl = htmpl_inst_decl.replace("/*PROTOCOL_INSTANCE_NAME*/", instance_name);
+                    all_h_inst_decl.append(inst_h_decl + "\n");
+
+                    String inst_c_decl = ctmpl_inst_decl.replace("/*PROTOCOL_INSTANCE_NAME*/", instance_name);
+                    all_c_inst_decl.append(inst_c_decl + "\n");
+
+                    //initialization
+                    String inst_c_init = ctmpl_inst_init.replace("/*PROTOCOL_INSTANCE_NAME*/", instance_name);
+                    String service_name = getExternalConnectorAnnotation(eco, "dnssd_service_name");
+                    inst_c_init = inst_c_init.replace("DNSSD_SERVICE_NAME", service_name);
+                    String service_type = getExternalConnectorAnnotation(eco, "dnssd_service_type");
+                    inst_c_init = inst_c_init.replace("DNSSD_SERVICE_TYPE", service_type);
+                    String service_port = getExternalConnectorAnnotation(eco, "dnssd_service_port");
+                    inst_c_init = inst_c_init.replace("DNSSD_SERVICE_PORT", service_port);
+                    String service_txt = getExternalConnectorAnnotation(eco, "dnssd_service_txt");
+                    inst_c_init.replace("IS_DNSSD_SERVICE_TXT", (service_txt == null)? "//" : "");
+                    inst_c_init.replace("DNSSD_SERVICE_TXT", service_txt);
+                    String service_host = getExternalConnectorAnnotation(eco, "dnssd_service_host");
+                    inst_c_init.replace("IS_DNSSD_SERVICE_HOST", (service_host == null)? "//" : "");
+                    inst_c_init.replace("DNSSD_SERVICE_HOST", service_host);
+                    String service_domain = getExternalConnectorAnnotation(eco, "dnssd_service_domain");
+                    inst_c_init.replace("IS_DNSSD_SERVICE_DOMAIN", (service_domain == null)? "//" : "");
+                    inst_c_init.replace("DNSSD_SERVICE_DOMAIN", service_domain);
+                    all_inst_init.append(inst_c_init + "\n");
+
+                    //start dnssd processes
+                    String inst_c_start = ctmpl_inst_start.replace("/*PROTOCOL_INSTANCE_NAME*/", instance_name);
+                    all_inst_start.append(inst_c_start + "\n");
+
+                    //stop dnssd processes
+                    String inst_c_stop = ctmpl_inst_stop.replace("/*PROTOCOL_INSTANCE_NAME*/", instance_name);
+                    all_inst_stop.append(inst_c_stop + "\n");
+                }
+
+                ctemplate = ctemplate.replace("/*INSTANCE_DECLARATIONS*/", all_c_inst_decl);
+                htemplate = htemplate.replace("/*EXTERNAL_INSTANCE_DECLARATIONS*/", all_h_inst_decl);
+                ctemplate = ctemplate.replace("/*INSTANCE_INITIALIZATION*/", all_inst_init);
+                ctemplate = ctemplate.replace("/*INSTANCE_START*/", all_inst_start);
+                ctemplate = ctemplate.replace("/*INSTANCE_STOP*/", all_inst_stop);
+
 
                 Integer traceLevel;
                 if (AnnotatedElementHelper.hasAnnotation(protocol, "trace_level")) {
@@ -136,10 +206,10 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
                     ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "//");
                 }
 
-                String portName = protocol.getName();
+                String protocolName = protocol.getName();
 
-                ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
-                htemplate = htemplate.replace("/*PORT_NAME*/", portName);
+                ctemplate = ctemplate.replace("/*PROTOCOL_NAME*/", protocolName);
+                htemplate = htemplate.replace("/*PROTOCOL_NAME*/", protocolName);
                 ctemplate = ctemplate.replace("/*PATH_TO_H*/", protocol.getName() + ".h");
 
 
