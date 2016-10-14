@@ -2,9 +2,12 @@
 
 blabla
 
-<!-- TagMD tag2 ../../ref.txt  !-->
+<!-- TagMD tag2 ../../ref.txt -->
 ```
-A modifier 2
+void myNewFunction2(int16_t i) {
+	printf("i: %in", i);
+}
+
 ```
 
 blabla

@@ -4,30 +4,25 @@ var Format = require('.//*$FORMAT$*/');
 function /*$NAME$*/(name, debug, serverURL, instance, callback) {
     this.name = name;
     this.debug = debug;
-    var _this;
-    this.setThis = function(__this) {
-        _this = __this;
-    };
-
     this.ready = false;
 
-    const formatter = new Format();
-    const ws = new WebSocket(serverURL);
+    this.formatter = new Format();
+    this.ws = new WebSocket(serverURL);
 
-    ws.on('open', function open() {
+    this.ws.on('open', function open() {
         callback(true);
     });
 
-   	ws.on('message', function(data, flags) {
-        const msg = formatter.parse(data);
+   	this.ws.on('message', function(data, flags) {
+        const msg = this.formatter.parse(data);
         /*$DISPATCH$*/
-   	});
+   	}.bind(this));
+};
 
-    /*$RECEIVERS$*/
+/*$RECEIVERS$*/
 
-   	/*$NAME$*/.prototype._stop = function() {
-   		ws.close();
-   	};
+/*$NAME$*/.prototype._stop = function() {
+	this.ws.close();
 };
 
 module.exports = /*$NAME$*/;

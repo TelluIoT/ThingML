@@ -57,7 +57,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
     public static void generateInstance(Instance i, Configuration cfg, StringBuilder builder, Context ctx, boolean useThis, boolean debug) {
         for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-            builder.append("var " + i.getName() + "_" + a.getName() + "_array = [];\n");
+            builder.append("const " + i.getName() + "_" + a.getName() + "_array = [];\n");
         }
 
         for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : ConfigurationHelper.initExpressionsForInstanceArrays(cfg, i).entrySet()) {
@@ -76,9 +76,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
 
         if (useThis) {
-            builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
-        } else {
             builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
+        } else {
+            builder.append("const " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
         }
 
         for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: not optimal, to be improved

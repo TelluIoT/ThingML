@@ -200,7 +200,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         final boolean debug = AnnotatedElementHelper.isDefined(cfg, "debug", "true");
         builder.append("//Init instances (queues, etc)\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            //if (debug || i.isDefined("debug", "true")) {
+            //if (debug || AnnotatedElementHelper.isDefined(i, "debug", "true")) {
             DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
             boolean debugInst = false;
             for (Instance inst : debugProfile.getDebugInstances()) {

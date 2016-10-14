@@ -1,0 +1,1 @@
+Specifies the base image for the generated dockerfile. (Default depends on the targeted language. Usually some alpine image with basic dependancies for the compilation/execution of the generated project.) (See compilers/framework/src/main/resources/commontemplates/Dockerfile)
