@@ -102,8 +102,8 @@ public class ArduinoMSPPlugin extends NetworkPlugin {
             for (Parameter pt : m.getParameters()) {
                 int bytes = cctx.getCByteSize(pt.getType(), 0);
                 String v = pt.getName();
-                for (int i = bytes; i > 0; i--)
-                    builder.append("    msg[i++] = ("+v+" >> "+((i-1)*8)+") & 0xFF;\n");
+                for (int i = 0; i < bytes; i++)
+                    builder.append("    msg[i++] = ("+v+" >> "+(i*8)+") & 0xFF;\n");
             }
             
             builder.append("    MSP_"+port+"_forwardMessage(msg,"+size+","+AnnotatedElementHelper.annotation(m, "MSP_id").iterator().next()+");\n");
