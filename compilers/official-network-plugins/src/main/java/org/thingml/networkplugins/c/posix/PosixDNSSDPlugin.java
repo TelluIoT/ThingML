@@ -116,6 +116,15 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
             return AnnotatedElementHelper.annotation(connector, annotation).iterator().next();
         }
 
+        private Message getDNSSDMessageAnnotation(Set<Message> received_messages, String annotation) {
+            for(Message message : received_messages) {
+                String value = AnnotatedElementHelper.annotation(message, annotation).iterator().next();
+                if(value != null)
+                    return message;
+            }
+            return null;
+        }
+
         public void generateNetworkLibrary() {
             if (!ecos.isEmpty()) {
                 Set<ThingPortMessage> received_messages = getMessagesReceived(cfg, protocol);
@@ -182,6 +191,31 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
                 ctemplate = ctemplate.replace("/*INSTANCE_INITIALIZATION*/", all_inst_init);
                 ctemplate = ctemplate.replace("/*INSTANCE_START*/", all_inst_start);
                 ctemplate = ctemplate.replace("/*INSTANCE_STOP*/", all_inst_stop);
+
+                //put message in the queue when callback is called
+                String dnssd_srv_pub_suc_annot = "dnssd_srv_publish_success";
+                Message message_success = getDNSSDMessageAnnotation(messages, dnssd_srv_pub_suc_annot);
+                String cmt_s_clbck = "/*DNSSD_SERVICE_SUCCESS_CALLBACK_COMMENT*/";
+                String s_clck_debug = "/*DNSSD_SERVICE_SUCCESS_CALLBACK_NOT*/";
+                String s_clck_txt = "NOT(annotate the protocol to enable: @" + dnssd_srv_pub_suc_annot + " '<received message name>')";
+                ctemplate = message_success == null ? ctemplate.replace(s_clck_debug, s_clck_txt) : ctemplate.replace(s_clck_debug, "");
+                ctemplate = message_success == null ? ctemplate.replace(cmt_s_clbck, "//") : ctemplate.replace(cmt_s_clbck, "");
+                if(message_success != null) {
+                    int code = ctx.getHandlerCode(cfg, message_success);
+                    ctemplate = ctemplate.replace("/*DNSSD_SERVICE_SUCCESS_MESSAGE_ID*/", code);
+                }
+
+                String dnssd_srv_pub_fail_annot = "dnssd_srv_publish_failure";
+                Message message_failure = getDNSSDMessageAnnotation(messages, dnssd_srv_pub_fail_annot);
+                String cmt_f_clbck = "/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/";
+                String f_clck_debug = "/*DNSSD_SERVICE_FAILURE_CALLBACK_NOT*/";
+                String f_clck_txt = "NOT(annotate the protocol to enable: @" + dnssd_srv_pub_fail_annot + " '<received message name>')";
+                ctemplate = message_failure == null ? ctemplate.replace(f_clck_debug, f_clck_txt) : ctemplate.replace(f_clck_debug, "");
+                ctemplate = message_failure == null ? ctemplate.replace(cmt_f_clbck, "//") : ctemplate.replace(cmt_f_clbck, "");
+                if(message_failure != null) {
+                    int code = ctx.getHandlerCode(cfg, message_failure);
+                    ctemplate = ctemplate.replace("/*DNSSD_SERVICE_FAILURE_MESSAGE_ID*/", code);
+                }
 
 
                 Integer traceLevel;

@@ -6,6 +6,10 @@ import "../dnssd_publisher_trivial.thingml"
 protocol DNSSD
 	@serializer ""
 	@trace_level "0"
+	@dnssd_success_callback "dnssd_srv_publish_success"
+	@dnssd_failure_callback "dnssd_srv_publish_failure"
+	@dnssd_publish_service "dnssd_publish_service"
+	@dnssd_unpublish_service "dnssd_unpublish_service"
 ;
 
 configuration DNSSDPublishFewPortsExample {
