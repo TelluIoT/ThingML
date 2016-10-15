@@ -118,7 +118,8 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
 
         public void generateNetworkLibrary() {
             if (!ecos.isEmpty()) {
-                for (ThingPortMessage tpm : getMessagesReceived(cfg, protocol)) {
+                Set<ThingPortMessage> received_messages = getMessagesReceived(cfg, protocol);
+                for (ThingPortMessage tpm : received_messages) {
                     Message m = tpm.m;
                     messages.add(m);
                 }
