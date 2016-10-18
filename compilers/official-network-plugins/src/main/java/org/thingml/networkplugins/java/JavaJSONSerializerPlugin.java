@@ -79,7 +79,7 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
         instantiateMessageType(builder, m);
         builder.append("/**Serializes a message into a JSON format*/\n");
-        builder.append("private static String toString(final " + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
+        builder.append("private String format(final " + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
         builder.append("final JsonObject msg = new JsonObject();\n");
         builder.append("final JsonObject params = new JsonObject();\n");
         for (Parameter p : m.getParameters()) {
@@ -114,19 +114,45 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
         }
     }
 
+    private void copyInterface() {
+        final String template = context.getTemplateByID("templates/JavaStringInterface.java");
+        try {
+            final File folder = new File(context.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
+            folder.mkdir();
+            final File f = new File(context.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/StringJava.java");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(template, output, Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        final String template2 = context.getTemplateByID("templates/JavaFormat.java");
+        try {
+            final File folder = new File(context.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
+            folder.mkdir();
+            final File f = new File(context.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/Format.java");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(template2, output, Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
         updatePOM(context);
+        copyInterface();
         builder.append("package org.thingml.generated.network;\n\n");
         builder.append("import org.thingml.generated.messages.*;\n");
         builder.append("import org.thingml.java.ext.Event;\n");
         builder.append("import com.eclipsesource.json.JsonObject;\nimport com.eclipsesource.json.JsonValue;\nimport com.eclipsesource.json.Json;\n");
-        builder.append("public class " + bufferName + " {\n");
+        builder.append("public class " + bufferName + " implements StringJava {\n");
         for(Message m : messages) {
             instantiateMessageType(builder, m);
         }
         //Instantiate message from binary
-        builder.append("public static Event instantiate(String payload) {\n");
+        builder.append("public Event instantiate(String payload) {\n");
         builder.append("try{\n");
         builder.append("final JsonObject msg = Json.parse(payload).asObject();\n");
         builder.append("final String msgName = msg.names().get(0);\n");

@@ -9,6 +9,8 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 
 public class WSJava extends Component {
+	private final /*$SERIALIZER$*/ formatter = new /*$SERIALIZER$*/();
+
 	private final WebSocketFactory factory = new WebSocketFactory();
 	private WebSocket ws;
 
@@ -39,7 +41,7 @@ public class WSJava extends Component {
 		while (active) {
 			try {
 				final Event e = queue.take();//should block if queue is empty, waiting for a message
-				final String payload = /*$SERIALIZER$*/.toString(e);
+				final String payload = formatter.format(e);
 				if (payload != null)
 					ws.sendText(payload);
 			} catch (InterruptedException e) {

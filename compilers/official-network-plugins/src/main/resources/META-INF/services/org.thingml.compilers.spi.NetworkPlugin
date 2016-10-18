@@ -15,6 +15,7 @@ org.thingml.networkplugins.cpp.rcd.RcdTimerPlugin
 org.thingml.networkplugins.java.JavaSerialPlugin
 org.thingml.networkplugins.java.JavaTTYPlugin
 org.thingml.networkplugins.java.JavaWSPlugin
+org.thingml.networkplugins.java.JavaMQTTPlugin
 org.thingml.networkplugins.js.JSSerialPlugin
 org.thingml.networkplugins.js.JsTTYPlugin
 org.thingml.networkplugins.js.JsWSPlugin

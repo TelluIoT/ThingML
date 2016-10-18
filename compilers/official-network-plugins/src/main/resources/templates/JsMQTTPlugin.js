@@ -16,8 +16,10 @@ function /*$NAME$*/(name, debug, serverURL, subtopic, pubtopic, instance, callba
     }.bind(this));
 
    	this.client.on('message', function(topic, message) {
-        const msg = this.formatter.parse(message);
-        /*$DISPATCH$*/
+   	    if (topic === this.subtopic) {
+            const msg = this.formatter.parse(message);
+            /*$DISPATCH$*/
+        }
    	}.bind(this));
 };
 

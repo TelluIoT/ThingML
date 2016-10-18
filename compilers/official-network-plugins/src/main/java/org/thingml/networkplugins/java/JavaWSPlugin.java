@@ -120,13 +120,13 @@ public class JavaWSPlugin extends NetworkPlugin {
             }
 
             StringBuilder temp = new StringBuilder();
-            temp.append("public static String toString(Event e){\n");
+            temp.append("public String format(Event e){\n");
             int i = 0;
             for(Message m : messages) {
                 if (i > 0)
                     temp.append("else ");
                 temp.append("if (e.getType().equals(" +  m.getName().toUpperCase() + ")) {\n");
-                temp.append("return toString((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e);\n");
+                temp.append("return format((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e);\n");
                 temp.append("}\n");
                 i++;
             }
@@ -192,7 +192,7 @@ public class JavaWSPlugin extends NetworkPlugin {
             String template = ctx.getTemplateByID("templates/JavaWSPlugin.java");
             template = template.replace("/*$SERIALIZER$*/", prot.getName() + "StringProtocol");
             StringBuilder parseBuilder = new StringBuilder();
-            parseBuilder.append("final Event event = " + prot.getName() + "StringProtocol.instantiate(payload);\n");
+            parseBuilder.append("final Event event = formatter.instantiate(payload);\n");
             for(Port p : ports) {//FIXME
                 parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
             }

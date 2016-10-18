@@ -73,7 +73,6 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
-        System.out.println("generateSerialization " + m.getName());
         int size = 2; //code encoded by a 2 bytes
         for (Parameter p : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {

@@ -233,7 +233,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
                 input.close();
                 final String speed = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "baudrate") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "baudrate").get(0) : "9600";
                 final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";
-                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\n" + prot.getName() + " "  + conn.getName() + "_" + conn.getProtocol().getName() + " = (" + prot.getName() + ") new " + prot.getName() + "(new " + conn.getProtocol().getName() + "BinaryProtocol(), \"" + port + "\", " + speed + ").buildBehavior(null, null);\n");
+                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\n" + prot.getName() + " "  + conn.getName() + "_" + conn.getProtocol().getName() + " = (" + prot.getName() + ") new " + prot.getName() + "(\"" + port + "\", " + speed + ").buildBehavior(null, null);\n");
 
                 StringBuilder connBuilder = new StringBuilder();
                 connBuilder.append(conn.getName() + "_" + conn.getProtocol().getName() + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port().addListener(");

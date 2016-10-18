@@ -117,15 +117,26 @@ public class JavaMQTTPlugin extends NetworkPlugin {
                 uee.printStackTrace();
                 return;
             }
-
             StringBuilder temp = new StringBuilder();
-            temp.append("public static String toString(Event e){\n");
+            if (sp.getSupportedFormat().contains("Binary")) {
+                temp.append("public Byte[] format(Event e){\n");
+            } else {
+                temp.append("public String format(Event e){\n");
+            }
             int i = 0;
             for(Message m : messages) {
                 if (i > 0)
                     temp.append("else ");
                 temp.append("if (e.getType().equals(" +  m.getName().toUpperCase() + ")) {\n");
-                temp.append("return toString((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e);\n");
+                temp.append("return ");
+                if (sp.getSupportedFormat().contains("Binary")) {
+                    temp.append("JavaBinaryHelper.toObject(");
+                }
+                temp.append("format((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e)\n");
+                if (sp.getSupportedFormat().contains("Binary")) {
+                    temp.append(")");
+                }
+                temp.append(";");
                 temp.append("}\n");
                 i++;
             }
@@ -191,7 +202,7 @@ public class JavaMQTTPlugin extends NetworkPlugin {
             String template = ctx.getTemplateByID("templates/JavaMQTTPlugin.java");
             template = template.replace("/*$SERIALIZER$*/", prot.getName() + "BinaryProtocol");
             StringBuilder parseBuilder = new StringBuilder();
-            parseBuilder.append("final Event event = " + prot.getName() + "BinaryProtocol.instantiate(payload);\n");
+            parseBuilder.append("final Event event = formatter.instantiate(JavaBinaryHelper.toObject(payload.toByteArray()));\n");
             for(Port p : ports) {//FIXME
                 parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
             }
@@ -235,7 +246,10 @@ public class JavaMQTTPlugin extends NetworkPlugin {
                 }
                 input.close();
                 final String url = AnnotatedElementHelper.annotationOrElse(conn, "url", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "mqtt://127.0.0.1:1883"));
-                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nWSJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (WSJava) new WSJava(\"" + url + "\").buildBehavior(null, null);\n");
+                final String subtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "subscribe", "ThingML");
+                final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "ThingML");
+
+                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nMQTTJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (MQTTJava) new MQTTJava(\"" + url + "\", \"" + pubtopic + "\", \"" + subtopic + "\").buildBehavior(null, null);\n");
 
                 StringBuilder connBuilder = new StringBuilder();
                 connBuilder.append(conn.getName() + "_" + conn.getProtocol().getName() + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port().addListener(");

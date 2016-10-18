@@ -12,6 +12,8 @@ import java.util.Arrays;
 
 public class /*$NAME$*/ extends Component {
 
+    private final /*$SERIALIZER$*/ formatter = new /*$SERIALIZER$*/();
+
     private final String port;
     private final int baudrate;
 
@@ -20,14 +22,11 @@ public class /*$NAME$*/ extends Component {
     private final byte STOP_BYTE = 0x13;
     private final byte ESCAPE_BYTE = 0x7D;
 
-    private final BinaryJava formatter;
-
     /*$MESSAGE TYPES$*/
 
     /*$PORTS$*/
 
-    public /*$NAME$*/(final BinaryJava formatter, final String port, final int baudrate) {
-        this.formatter = formatter;
+    public /*$NAME$*/(final String port, final int baudrate) {
         this.port = port;
         this.baudrate = baudrate;
         serialPort = new SerialPort(port);
@@ -68,7 +67,7 @@ public class /*$NAME$*/ extends Component {
         while (active) {
             try {
                 final Event e = queue.take();//should block if queue is empty, waiting for a message
-                final byte[] payload = formatter.toBytes(e);
+                final byte[] payload = JavaBinaryHelper.toPrimitive((Byte[])formatter.format(e));
                 if (payload != null)
                     send(payload);
             } catch (InterruptedException e) {
