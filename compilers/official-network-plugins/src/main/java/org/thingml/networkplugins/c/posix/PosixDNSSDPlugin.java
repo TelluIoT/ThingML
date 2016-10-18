@@ -212,7 +212,7 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
                 }
 
                 ctemplate = ctemplate.replace("/*INSTANCE_DECLARATIONS*/", all_c_inst_decl);
-                htemplate = htemplate.replace("/*EXTERNAL_INSTANCE_DECLARATIONS*/", all_h_inst_decl);
+                htemplate = htemplate.replace("/*EXTERN_INSTANCE_DECLARATIONS*/", all_h_inst_decl);
                 ctemplate = ctemplate.replace("/*INSTANCE_INITIALIZATION*/", all_inst_init);
                 ctemplate = ctemplate.replace("/*INSTANCE_START*/", all_inst_start);
                 ctemplate = ctemplate.replace("/*INSTANCE_STOP*/", all_inst_stop);
