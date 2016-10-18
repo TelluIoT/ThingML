@@ -101,6 +101,13 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
         Set<Message> messages;
         SerializationPlugin sp;
 
+        String default_service_name = "default";
+        String default_service_type = "_http._tcp";
+        String default_service_port = "80";
+        String default_service_txt = "";
+        String default_service_host = "localhost";
+        String default_service_domain = "localhost";
+
         DNSSDPort() {
             ecos = new HashSet<ExternalConnector>();
             messages = new HashSet<Message>();
@@ -113,14 +120,21 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
         }
 
         private String getExternalConnectorAnnotation(ExternalConnector connector, String annotation) {
-            return AnnotatedElementHelper.annotation(connector, annotation).iterator().next();
+            List<String> annotations = AnnotatedElementHelper.annotation(connector, annotation);
+            if(annotations.size() != 0)
+                return annotations.iterator().next();
+
+            return null;
         }
 
         private Message getDNSSDMessageAnnotation(Set<Message> received_messages, String annotation) {
             for(Message message : received_messages) {
-                String value = AnnotatedElementHelper.annotation(message, annotation).iterator().next();
-                if(value != null)
-                    return message;
+                List<String> annotations = AnnotatedElementHelper.annotation(message, annotation);
+                if(annotations.size() != 0) {
+                    String value = annotations.iterator().next();
+                    if (value != null)
+                        return message;
+                }
             }
             return null;
         }
@@ -148,6 +162,7 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
                 StringBuilder all_inst_init = new StringBuilder();
                 StringBuilder all_inst_start = new StringBuilder();
                 StringBuilder all_inst_stop = new StringBuilder();
+
                 for(ExternalConnector eco : getUniqueExternalConnectors()) {
                     String instance_name = eco.getName();
 
@@ -160,21 +175,31 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
 
                     //initialization
                     String inst_c_init = ctmpl_inst_init.replace("/*PROTOCOL_INSTANCE_NAME*/", instance_name);
+
                     String service_name = getExternalConnectorAnnotation(eco, "dnssd_service_name");
-                    inst_c_init = inst_c_init.replace("DNSSD_SERVICE_NAME", service_name);
+                    service_name = (service_name != null) ? service_name : default_service_name;
+                    inst_c_init = inst_c_init.replace("/*DNSSD_SERVICE_NAME*/", service_name);
+
                     String service_type = getExternalConnectorAnnotation(eco, "dnssd_service_type");
-                    inst_c_init = inst_c_init.replace("DNSSD_SERVICE_TYPE", service_type);
+                    service_type = (service_type != null) ? service_type : default_service_type;
+                    inst_c_init = inst_c_init.replace("/*DNSSD_SERVICE_TYPE*/", service_type);
+
                     String service_port = getExternalConnectorAnnotation(eco, "dnssd_service_port");
-                    inst_c_init = inst_c_init.replace("DNSSD_SERVICE_PORT", service_port);
+                    service_port = (service_port != null) ? service_port : default_service_port;
+                    inst_c_init = inst_c_init.replace("/*DNSSD_SERVICE_PORT*/", service_port);
+
                     String service_txt = getExternalConnectorAnnotation(eco, "dnssd_service_txt");
-                    inst_c_init.replace("IS_DNSSD_SERVICE_TXT", (service_txt == null)? "//" : "");
-                    inst_c_init.replace("DNSSD_SERVICE_TXT", service_txt);
+                    inst_c_init = inst_c_init.replace("/*IS_DNSSD_SERVICE_TXT*/", service_txt == null ? "//" : default_service_txt);
+                    inst_c_init = inst_c_init.replace("/*DNSSD_SERVICE_TXT*/", service_txt != null ? service_txt : default_service_txt);
+
                     String service_host = getExternalConnectorAnnotation(eco, "dnssd_service_host");
-                    inst_c_init.replace("IS_DNSSD_SERVICE_HOST", (service_host == null)? "//" : "");
-                    inst_c_init.replace("DNSSD_SERVICE_HOST", service_host);
+                    inst_c_init = inst_c_init.replace("/*IS_DNSSD_SERVICE_HOST*/", service_host == null ? "//" : default_service_host);
+                    inst_c_init = inst_c_init.replace("/*DNSSD_SERVICE_HOST*/", service_host != null ? service_host : default_service_host);
+
                     String service_domain = getExternalConnectorAnnotation(eco, "dnssd_service_domain");
-                    inst_c_init.replace("IS_DNSSD_SERVICE_DOMAIN", (service_domain == null)? "//" : "");
-                    inst_c_init.replace("DNSSD_SERVICE_DOMAIN", service_domain);
+                    inst_c_init = inst_c_init.replace("/*IS_DNSSD_SERVICE_DOMAIN*/", service_domain == null ? "//" : default_service_domain);
+                    inst_c_init = inst_c_init.replace("/*DNSSD_SERVICE_DOMAIN*/", service_domain != null ? service_domain : default_service_domain);
+
                     all_inst_init.append(inst_c_init + "\n");
 
                     //start dnssd processes
@@ -202,7 +227,7 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
                 ctemplate = message_success == null ? ctemplate.replace(cmt_s_clbck, "//") : ctemplate.replace(cmt_s_clbck, "");
                 if(message_success != null) {
                     int code = ctx.getHandlerCode(cfg, message_success);
-                    ctemplate = ctemplate.replace("/*DNSSD_SERVICE_SUCCESS_MESSAGE_ID*/", code);
+                    ctemplate = ctemplate.replace("/*DNSSD_SERVICE_SUCCESS_MESSAGE_ID*/", Integer.toString(code));
                 }
 
                 String dnssd_srv_pub_fail_annot = "dnssd_srv_publish_failure";
@@ -214,7 +239,7 @@ public class PosixDNSSDPlugin extends NetworkPlugin {
                 ctemplate = message_failure == null ? ctemplate.replace(cmt_f_clbck, "//") : ctemplate.replace(cmt_f_clbck, "");
                 if(message_failure != null) {
                     int code = ctx.getHandlerCode(cfg, message_failure);
-                    ctemplate = ctemplate.replace("/*DNSSD_SERVICE_FAILURE_MESSAGE_ID*/", code);
+                    ctemplate = ctemplate.replace("/*DNSSD_SERVICE_FAILURE_MESSAGE_ID*/", Integer.toString(code));
                 }
 
 
