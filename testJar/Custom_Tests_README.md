@@ -38,7 +38,10 @@ When set to true, the property `runMono` will ensure that the test will be run a
 //To build it
 mvn clean install
 
-//To launch tests
+//To launch tests with mvn 3
+mvn exec:java@custom
+
+//or without mvn
 java -cp target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.RunCustomTests
 ```
 
