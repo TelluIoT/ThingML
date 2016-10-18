@@ -127,7 +127,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
         if (action.isChangeable())
-            builder.append("var ");
+            builder.append("let ");
         else
             builder.append("const ");
         builder.append(ctx.getVariableName(action));

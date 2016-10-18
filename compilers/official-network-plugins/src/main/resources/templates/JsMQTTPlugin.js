@@ -1,35 +1,30 @@
-var mqtt = require('mqtt');
+var mqtt_lib = require('mqtt');
 var Format = require('.//*$FORMAT$*/');
 
 function /*$NAME$*/(name, debug, serverURL, subtopic, pubtopic, instance, callback) {
     this.name = name;
     this.debug = debug;
-    var _this;
-    this.setThis = function(__this) {
-        _this = __this;
-    };
-
     this.ready = false;
+    this.subtopic = subtopic;
+    this.pubtopic = pubtopic;
+    this.formatter = new Format();
+    this.client = mqtt_lib.connect(serverURL);
 
-    const formatter = new Format();
-    const client = mqtt.connect(serverURL);
-
-    client.on('connect', function open() {
+    this.client.on('connect', function open() {
+        this.client.subscribe(this.subtopic);
         callback(true);
-        client.subscribe(subtopic);
-    });
+    }.bind(this));
 
-   	client.on('message', function(topic, message) {
-   	    //console.log("topic: " + topic + ", message: " + message);
-        const msg = formatter.parse(message);
+   	this.client.on('message', function(topic, message) {
+        const msg = this.formatter.parse(message);
         /*$DISPATCH$*/
-   	});
+   	}.bind(this));
+};
 
-    /*$RECEIVERS$*/
+/*$RECEIVERS$*/
 
-   	/*$NAME$*/.prototype._stop = function() {
-   		client.end();
-   	};
+/*$NAME$*/.prototype._stop = function() {
+	this.client.end();
 };
 
 module.exports = /*$NAME$*/;

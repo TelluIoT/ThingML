@@ -20,7 +20,6 @@
  */
 package org.thingml.networkplugins.js;
 
-import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
@@ -80,9 +79,9 @@ public class JsTTYPlugin extends NetworkPlugin {
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder;
         for (Protocol prot : protocols) {
-            SerializationPlugin sp = null;
+            SerializationPlugin sp;
             try {
                sp = ctx.getSerializationPlugin(prot);
             } catch (UnsupportedEncodingException uee) {
@@ -162,13 +161,13 @@ public class JsTTYPlugin extends NetworkPlugin {
             for(Port p : ports) {
                 StringBuilder builder = new StringBuilder();
                 builder.append("msg._port = '" + p.getName() + "';\n");
-                builder.append("instance._receive.apply(instance, msg);\n");
+                builder.append("instance._receive(msg);\n");
                 template = template.replace("/*$DISPATCH$*/", "/*$DISPATCH$*/\n" + builder.toString());
             }
             StringBuilder builder = new StringBuilder();
             for (Port p : ports) {
                 for (Message m : p.getSends()) {
-                    builder.append("tty.prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
+                    builder.append(prot.getName() + ".prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
                     int i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -177,7 +176,7 @@ public class JsTTYPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(") {\n");
-                    builder.append("stdout.write(formatter." + m.getName() + "ToJSON(");
+                    builder.append("this.stdout.write(this.formatter." + m.getName() + "ToFormat(");
                     i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -185,7 +184,7 @@ public class JsTTYPlugin extends NetworkPlugin {
                         builder.append(ctx.protectKeyword(pa.getName()));
                         i++;
                     }
-                    builder.append(") + '\n');\n");
+                    builder.append(") + '\\n');\n");
                     builder.append("};\n\n");
                 }
             }
@@ -210,14 +209,13 @@ public class JsTTYPlugin extends NetworkPlugin {
                 }
                 input.close();
 
-                main = main.replace("/*$REQUIRE_PLUGINS$*/", "var tty = require('./TTYJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nvar tty = new tty(\"tty\", false, " + conn.getInst().getInstance().getName() + ", function (started) {if (started) {");
-                main = main.replace("/*$PLUGINS_END$*/", "}else {process.exit(1)}});\n/*$PLUGINS_END$*/\n");
+                main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\nconst TTY = require('./TTYJS');");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst tty = new TTY(\"tty\", false, " + conn.getInst().getInstance().getName() + ", function (started) {if (!started) {console.log(\"Cannot start TTY!\"); process.exit(1);}});\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "tty._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getInstance().getName() + ".get" + ctx.firstToUpper(req.getName()) + "on" + conn.getPort().getName() + "Listeners().push(");
+                    builder.append(conn.getInst().getInstance().getName() + "." + req.getName() + "On" + conn.getPort().getName() + "Listeners.push(");
                     builder.append("tty.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(tty)");
                     builder.append(");\n");
                 }

@@ -61,7 +61,7 @@ public class JSJSONSerializerPlugin extends SerializationPlugin {
             }
         }
         //Serialize message into binary
-        builder.append(bufferName + ".prototype." + m.getName() + "ToJSON = function(");
+        builder.append(bufferName + ".prototype." + m.getName() + "ToFormat = function(");
         for(Parameter p : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
                 if (m.getParameters().indexOf(p) > 0)

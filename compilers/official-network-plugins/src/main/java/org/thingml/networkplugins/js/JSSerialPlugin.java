@@ -204,7 +204,7 @@ public class JSSerialPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(") {\n");
-                    builder.append("const buffer = formatter." + m.getName() + "ToBytes(");
+                    builder.append("const buffer = formatter." + m.getName() + "ToFormat(");
                     i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)

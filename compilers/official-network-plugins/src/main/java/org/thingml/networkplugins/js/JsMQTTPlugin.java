@@ -49,6 +49,7 @@ public class JsMQTTPlugin extends NetworkPlugin {
     public List<String> getSupportedProtocols() {
         List<String> res = new ArrayList<>();
         res.add("MQTT");
+        res.add("mqtt");
         return res;
     }
 
@@ -110,6 +111,12 @@ public class JsMQTTPlugin extends NetworkPlugin {
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
         StringBuilder builder = new StringBuilder();
         boolean deployMQTTServer = false;
+        for(AbstractConnector c : cfg.getConnectors()) {
+            if (AnnotatedElementHelper.hasAnnotation(c, "server")) {
+                deployMQTTServer = true;
+                break;
+            }
+        }
         for (Protocol prot : protocols) {
             if (AnnotatedElementHelper.hasAnnotation(prot, "localserver")) {
                 deployMQTTServer = true;
@@ -202,7 +209,7 @@ public class JsMQTTPlugin extends NetworkPlugin {
             StringBuilder builder = new StringBuilder();
             for (Port p : ports) {
                 for (Message m : p.getSends()) {
-                    builder.append("MQTT.prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
+                    builder.append(prot.getName() + ".prototype.receive" + m.getName() + "On" + p.getName() + " = function(");
                     int i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -211,7 +218,7 @@ public class JsMQTTPlugin extends NetworkPlugin {
                         i++;
                     }
                     builder.append(") {\n");
-                    builder.append("client.publish(pubtopic, formatter." + m.getName() + "ToJSON(");
+                    builder.append("this.client.publish(this.pubtopic, this.formatter." + m.getName() + "ToFormat(");
                     i = 0;
                     for (Parameter pa : m.getParameters()) {
                         if (i > 0)
@@ -247,9 +254,8 @@ public class JsMQTTPlugin extends NetworkPlugin {
                 final String subtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "subscribe", "ThingML");
                 final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "ThingML");
 
-                main = main.replace("/*$REQUIRE_PLUGINS$*/", "var MQTT = require('./MQTTJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nvar mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + subtopic + "\", \"" + pubtopic + "\", " + conn.getInst().getInstance().getName() + ", function (started) {if (started) {");
-                main = main.replace("/*$PLUGINS_END$*/", "}else {process.exit(1)}});\n/*$PLUGINS_END$*/\n");
+                main = main.replace("/*$REQUIRE_PLUGINS$*/", "const MQTT = require('./MQTTJS');\n/*$REQUIRE_PLUGINS$*/\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + subtopic + "\", \"" + pubtopic + "\", " + conn.getInst().getInstance().getName() + ", function (started) {if (!started) {console.log(\"Cannot start mqtt!\"); process.exit(1);}});\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "mqtt._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
@@ -260,9 +266,9 @@ public class JsMQTTPlugin extends NetworkPlugin {
                 }
                 main = main.replace("/*$PLUGINS_CONNECTORS$*/", builder.toString() + "\n/*$PLUGINS_CONNECTORS$*/");
 
-                if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "localserver")) {
+                if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "server") || AnnotatedElementHelper.hasAnnotation(conn, "server")) {
                     String template = ctx.getTemplateByID("templates/JsMQTTServer.js");
-                    String port = AnnotatedElementHelper.annotation(conn.getProtocol(), "localserver").get(0);
+                    String port = AnnotatedElementHelper.annotationOrElse(conn, "server",  AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "server", "1883"));
                     try {
                         Integer.parseInt(port);
                     } catch (NumberFormatException e) {

@@ -147,6 +147,7 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
                     builder.append("msg.get(msgName).asObject().get(\"" + p.getName() + "\")");
                     String getter = "asString()";
                     switch (AnnotatedElementHelper.annotationOrElse(p.getType(), "java_type", "void")) {
+                        case "short": getter = "asInt()"; break;
                         case "int": getter = "asInt()"; break;
                         case "long": getter = "asInt()"; break;
                         case "float": getter = "asFloat()"; break;
