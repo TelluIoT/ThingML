@@ -1,5 +1,5 @@
-var WebSocket = require('ws');
-var Format = require('.//*$FORMAT$*/');
+const WebSocket = require('ws');
+const Format = require('.//*$FORMAT$*/');
 
 function /*$NAME$*/(name, debug, serverURL, instance, callback) {
     this.name = name;

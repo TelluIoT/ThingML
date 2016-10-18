@@ -1,5 +1,5 @@
-var mqtt_lib = require('mqtt');
-var Format = require('.//*$FORMAT$*/');
+const mqtt_lib = require('mqtt');
+const Format = require('.//*$FORMAT$*/');
 
 function /*$NAME$*/(name, debug, serverURL, subtopic, pubtopic, instance, callback) {
     this.name = name;

@@ -3,8 +3,8 @@
 //For Linux (Ubuntu-based): sudo apt-get -y install redis-server
 
 //Redis back-end
-var RedisServer = require('redis-server');
-var redisServerInstance = new RedisServer(6379);
+const RedisServer = require('redis-server');
+const redisServerInstance = new RedisServer(6379);
 redisServerInstance.open(function (error) {
   if (error) {
     console.log("Cannot start the Redis backend");
@@ -12,9 +12,9 @@ redisServerInstance.open(function (error) {
   }
 });
 
-var mosca = require('mosca')
+const mosca = require('mosca')
 
-var ascoltatore = {
+const ascoltatore = {
   type: 'redis',
   redis: require('redis'),
   db: 12,
@@ -23,7 +23,7 @@ var ascoltatore = {
   host: "localhost"
 };
 
-var moscaSettings = {
+const moscaSettings = {
   port: /*$PORT$*/,
   backend: ascoltatore,
   persistence: {
@@ -31,7 +31,7 @@ var moscaSettings = {
   }
 };
 
-var server = new mosca.Server(moscaSettings);
+const server = new mosca.Server(moscaSettings);
 server.on('ready', setup);
 
 server.on('clientConnected', function(client) {

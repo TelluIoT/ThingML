@@ -19,5 +19,6 @@ org.thingml.networkplugins.java.JavaMQTTPlugin
 org.thingml.networkplugins.js.JSSerialPlugin
 org.thingml.networkplugins.js.JsTTYPlugin
 org.thingml.networkplugins.js.JsWSPlugin
+org.thingml.networkplugins.js.JsUDPPlugin
 org.thingml.networkplugins.js.JsMQTTPlugin
 org.thingml.networkplugins.js.JSKevoreePlugin
