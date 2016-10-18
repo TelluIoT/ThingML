@@ -1,5 +1,5 @@
 import "Websocket_Client.thingml"
-import "../Clients/ClientFloat.thingml"
+import "../Clients_SP/ClientFloat.thingml"
 
 configuration ClientFloatCfg @nodejs_silent_shutdown "true" {
 	instance c : Client

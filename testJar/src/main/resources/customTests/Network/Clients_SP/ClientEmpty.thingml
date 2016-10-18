@@ -1,0 +1,41 @@
+import "../Msgs/MsgsEmpty.thingml"
+
+thing Client includes MsgsEmpty {
+
+	message go()@websocket_connector_ready "true"
+
+	required port p {
+		sends m1, m2
+		receives go, m1, m2
+	}
+
+	statechart Chart init S0 {
+		state S0 {
+			transition -> S1 event p?go
+	}
+
+		state S1 {
+			on entry do
+				print "I "
+				p!m1()
+			end
+
+			transition -> S2
+			event e : p?m1
+			action print "m1 "
+		}
+		state S2 {
+			on entry do
+				p!m2()
+			end
+
+			transition -> SEnd
+			event e : p?m2
+			action print "m2 "
+		}
+		state SEnd {
+			on entry print "End\n"
+		}
+	}
+
+}

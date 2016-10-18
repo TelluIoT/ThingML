@@ -11,7 +11,10 @@ A test case is a simple ThingML file (A) including one thing to be tested. Aroun
 //To build it
 mvn clean install
 
-//To launch tests
+//To launch tests with mvn 3
+mvn exec:java@test
+
+//Or without mvn
 java -cp target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.TestJar
 ```
 
