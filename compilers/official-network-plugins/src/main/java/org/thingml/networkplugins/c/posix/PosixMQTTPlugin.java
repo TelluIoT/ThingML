@@ -241,7 +241,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                                     + "mosquitto_publish(" + portName + "_mosq, "
                                     + "&" + portName + "_mid_sent, "
                                     + portName + "_topics[topicID], "
-                                    + "length, "
+                                    + "length, "//@Whoever to check
                                     + "p, "
                                     + portName + "_qos, "
                                     + portName + "_retain);\n"
@@ -261,7 +261,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                                     + "mosquitto_publish(" + portName + "_mosq, "
                                     + "&" + portName + "_mid_sent, "
                                     + portName + "_topics[j], "
-                                    + "length, "
+                                    + "length, "//@Whoever to check
                                     + "p, "
                                     + portName + "_qos, "
                                     + portName + "_retain);\n"
@@ -287,7 +287,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                                 + "mosquitto_publish(" + portName + "_mosq, "
                                 + "&" + portName + "_mid_sent, "
                                 + portName + "_topic, "
-                                + "length, "
+                                + "length, "//@Whoever to check
                                 + "p, "
                                 + portName + "_qos, "
                                 + portName + "_retain);\n");

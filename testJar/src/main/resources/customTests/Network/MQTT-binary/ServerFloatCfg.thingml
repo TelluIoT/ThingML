@@ -1,0 +1,7 @@
+import "MQTT.thingml"
+import "../Servers/ServerFloat.thingml"
+
+configuration ServerFloatCfg @nodejs_silent_shutdown "true" {
+	instance s : Server
+	connector s.p over MQTT
+}

@@ -68,7 +68,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
-        builder.append("	int len = 8;//{\"\":{}}\\0\n" +
+        builder.append("	int len = 7;//{\"\":{}}\n" +
                 "	len += " + m.getName().length() + ";//" + m.getName() + "\n");
 
         boolean first = true;
@@ -145,7 +145,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                     builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%g\", " + p.getName() + ");\n");
                 } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
                         || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
-                    builder.append("	index += sprintf(" + bufferName + "+index, " + p.getName() + " ? \"true\" : \"false\");\n");
+                    builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%s\", " + p.getName() + " ? \"true\" : \"false\");\n");
                 } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "char")) {
                     builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":\\\"%c\\\"\", " + p.getName() + ");\n");
                 } else {

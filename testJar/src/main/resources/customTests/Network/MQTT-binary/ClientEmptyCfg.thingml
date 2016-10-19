@@ -1,0 +1,7 @@
+import "MQTT.thingml"
+import "../Clients/ClientEmpty.thingml"
+
+configuration ClientEmptyCfg @nodejs_silent_shutdown "true" {
+	instance c : Client
+	connector c.p over MQTT
+}
