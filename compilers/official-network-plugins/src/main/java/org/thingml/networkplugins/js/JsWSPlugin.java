@@ -215,7 +215,7 @@ public class JsWSPlugin extends NetworkPlugin {
                         builder.append(ctx.protectKeyword(pa.getName()));
                         i++;
                     }
-                    builder.append(", function ack(error) {if(error) console.log(\"error: \" + error);}));\n");
+                    builder.append("), function ack(error) {if(error) console.log(\"error: \" + error);});\n");
                     builder.append("};\n\n");
                 }
             }
