@@ -32,7 +32,6 @@ public class WSJava extends Component {
 					/*$CALLBACK$*/
 				}
 			});
-			ws.connect();
 		} catch (Exception e) {
 			System.err.println("Cannot connect to websocket server " + serverURL + " because " + e.getMessage());
 			stop();
@@ -41,6 +40,17 @@ public class WSJava extends Component {
 
 	private void parse(final String payload) {
         /*$PARSING CODE$*/
+	}
+
+	@Override
+	public Component init() {
+		super.init();
+		try {
+			ws.connect();
+		} catch (Exception e) {
+			System.err.println("Cannot connect to websocket server because " + e.getMessage());
+		}
+		return this;
 	}
 
 	@Override
