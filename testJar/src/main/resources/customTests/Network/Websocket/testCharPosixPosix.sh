@@ -3,7 +3,7 @@
 sleep 1
 timeout -s SIGINT 6 ./ServerCharCfg/ServerCharCfg > srvStdo.log 2> srvStdr.log&
 sleep 1
-timeout -s SIGINT 5 ./ClientCharCfg/ClientCharCfg > cliStdo.log 2> cliStdr.log&
+timeout -s SIGINT 5 ./ClientCharSPCfg/ClientCharSPCfg > cliStdo.log 2> cliStdr.log&
 
 sleep 6
 
