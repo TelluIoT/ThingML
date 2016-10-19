@@ -195,6 +195,12 @@ public class JavaWSPlugin extends NetworkPlugin {
             parseBuilder.append("final Event event = formatter.instantiate(payload);\n");
             for(Port p : ports) {//FIXME
                 parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
+                for(Message m : p.getReceives()) {
+                    if (AnnotatedElementHelper.hasAnnotation(m, "websocket_connector_ready")) {
+                        final String code = AnnotatedElementHelper.annotationOrElse(m, "code", "0");
+                        template = template.replace("/*$CALLBACK$*/", "/*$CALLBACK$*/\n" + p.getName() + "_port.send(new " + ctx.firstToUpper(m.getName()) + "MessageType((short)" + code + ").instantiate());\n");
+                    }
+                }
             }
             template = initPort(ctx, template);
             for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {

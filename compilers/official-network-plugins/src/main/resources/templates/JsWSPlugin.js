@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const Format = require('.//*$FORMAT$*/');
 
-function /*$NAME$*/(name, debug, serverURL, instance, callback) {
+function /*$NAME$*/(name, debug, serverURL, instance) {
     this.name = name;
     this.debug = debug;
     this.ready = false;
@@ -10,7 +10,7 @@ function /*$NAME$*/(name, debug, serverURL, instance, callback) {
     this.ws = new WebSocket(serverURL);
 
     this.ws.on('open', function open() {
-        callback(true);
+        /*$CALLBACK$*/
     });
 
    	this.ws.on('message', function(data, flags) {

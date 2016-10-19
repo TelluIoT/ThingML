@@ -106,9 +106,6 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-        builder.append("//Network components for external connectors\n");
-        builder.append("/*$NETWORK$*/\n");
-
         builder.append("//Connecting internal ports...\n");
         for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             Instance i = entries.getKey();
@@ -136,10 +133,6 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                 builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port());\n");
             }
         }
-
-        builder.append("//External Connectors\n");
-        builder.append("/*$EXT CONNECTORS$*/\n");
-
     }
 
     @Override
@@ -220,7 +213,16 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
+
+
+        builder.append("//Network components for external connectors\n");
+        builder.append("/*$NETWORK$*/\n");
+
+        builder.append("//External Connectors\n");
+        builder.append("/*$EXT CONNECTORS$*/\n");
+
         builder.append("/*$START$*/\n");
+
         List<Instance> instances = ConfigurationHelper.orderInstanceInit(cfg);
         Instance inst;
         while (!instances.isEmpty()) {

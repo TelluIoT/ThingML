@@ -8,6 +8,9 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 
+import java.util.List;
+import java.util.Map;
+
 public class WSJava extends Component {
 	private final /*$SERIALIZER$*/ formatter = new /*$SERIALIZER$*/();
 
@@ -19,13 +22,17 @@ public class WSJava extends Component {
 	public WSJava(String serverURL) {
 		try {
 			ws = factory.createSocket(serverURL);
-			ws.connect();
 			ws.addListener(new WebSocketAdapter() {
 				@Override
 				public void onTextMessage(WebSocket websocket, String message) throws Exception {
 					parse(message);
 				}
+				@Override
+				public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
+					/*$CALLBACK$*/
+				}
 			});
+			ws.connect();
 		} catch (Exception e) {
 			System.err.println("Cannot connect to websocket server " + serverURL + " because " + e.getMessage());
 			stop();
@@ -38,7 +45,7 @@ public class WSJava extends Component {
 
 	@Override
 	public void run() {
-		while (active) {
+		while (active.get()) {
 			try {
 				final Event e = queue.take();//should block if queue is empty, waiting for a message
 				final String payload = formatter.format(e);
