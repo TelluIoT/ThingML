@@ -105,7 +105,7 @@ public class UDPJava extends Component {
 
     @Override
     public void run() {
-        while (active) {
+        while (active.get()) {
             try {
                 final Event e = queue.take();//should block if queue is empty, waiting for a message
                 final byte[] payload = JavaBinaryHelper.toPrimitive(formatter.format(e));
