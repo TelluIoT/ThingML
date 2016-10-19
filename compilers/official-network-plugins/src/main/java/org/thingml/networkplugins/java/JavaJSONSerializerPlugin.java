@@ -180,7 +180,7 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
                         case "double": getter = "asDouble()"; break;
                         case "byte": getter = "asInt()"; break;
                         case "boolean": getter = "asBoolean()"; break;
-                        case "char": getter = "asString().chatAt(0)"; break;
+                        case "char": getter = "asString().charAt(0)"; break;
                         default: break;
                     }
                     builder.append("." + getter);
