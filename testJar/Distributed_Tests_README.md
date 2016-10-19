@@ -21,6 +21,10 @@ On the master node, once the compiler jar to be tested, and the test jar are bui
 
  * To generate a distribution of tests between the nodes and a script to launch them:
 ```
+//To launch tests with mvn 3
+mvn exec:java@loadBalancer
+
+//or without mvn
 java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer
 ```
 

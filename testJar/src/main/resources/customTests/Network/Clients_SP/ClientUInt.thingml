@@ -1,0 +1,124 @@
+import "../Msgs/MsgsUInt.thingml"
+
+thing Client includes MsgsUInt {
+
+	message go()@websocket_connector_ready "true"
+
+	required port p {
+		sends mUInt8, mUInt16, mUInt32, mHUInt
+		receives go, mUInt8, mUInt16, mUInt32, mHUInt
+	}
+
+	statechart Chart init S0 {
+		state S0 {
+			transition -> S1 event p?go
+	}
+
+		state S1 {
+			on entry do
+				print "I "
+				p!mUInt8('255')
+			end
+
+			transition -> S2
+			event e : p?mUInt8
+			guard e.u == '255'
+			action print "mUInt8 "
+		}
+		state S2 {
+			on entry do
+				p!mUInt8('127')
+			end
+
+			transition -> S3
+			event e : p?mUInt8
+			guard e.u == '127'
+			action print "mUInt8 "
+		}
+		state S3 {
+			on entry do
+				p!mUInt8('5')
+			end
+
+			transition -> S4
+			event e : p?mUInt8
+			guard e.u == '5'
+			action print "mUInt8 "
+		}
+		state S4 {
+			on entry do
+				p!mUInt16('65535')
+			end
+
+			transition -> S5
+			event e : p?mUInt16
+			guard e.u == '65535'
+			action print "mUInt16 "
+		}
+		state S5 {
+			on entry do
+				p!mUInt16('32767')
+			end
+
+			transition -> S6
+			event e : p?mUInt16
+			guard e.u == '32767'
+			action print "mUInt16 "
+		}
+		state S6 {
+			on entry do
+				p!mUInt16('31710')
+			end
+
+			transition -> S7
+			event e : p?mUInt16
+			guard e.u == '31710'
+			action print "mUInt16 "
+		}
+		state S7 {
+			on entry do
+				p!mUInt32('4294967295')
+			end
+
+			transition -> S8
+			event e : p?mUInt32
+			guard e.u == '4294967295'
+			action print "mUInt32 "
+		}
+		state S8 {
+			on entry do
+				p!mUInt32('337738718')
+			end
+
+			transition -> S9
+			event e : p?mUInt32
+			guard e.u == '337738718'
+			action print "mUInt32 "
+		}
+		state S9 {
+			on entry do
+				p!mUInt32('2147483647')
+			end
+
+			transition -> S10
+			event e : p?mUInt32
+			guard e.u == '2147483647'
+			action print "mUInt32 "
+		}
+
+		state S10 {
+			on entry do
+				p!mHUInt('4294967295', '32767')
+			end
+
+			transition -> SEnd
+			event e : p?mHUInt
+			guard e.u1 == '4294967295' and e.u2 == '32767'
+			action print "mHUInt "
+		}
+		state SEnd {
+			on entry print "End\n"
+		}
+	}
+
+}

@@ -1,0 +1,124 @@
+import "../Msgs/MsgsInt.thingml"
+
+thing Client includes MsgsInt {
+
+	message go()@websocket_connector_ready "true"
+
+	required port p {
+		sends mInt8, mInt16, mInt32, mHInt
+		receives go, mInt8, mInt16, mInt32, mHInt
+	}
+
+	statechart Chart init S0 {
+		state S0 {
+			transition -> S1 event p?go
+	}
+
+		state S1 {
+			on entry do
+				print "I "
+				p!mInt8('-1')
+			end
+
+			transition -> S2
+			event e : p?mInt8
+			guard e.i == '-1'
+			action print "mInt8 "
+		}
+		state S2 {
+			on entry do
+				p!mInt8('127')
+			end
+
+			transition -> S3
+			event e : p?mInt8
+			guard e.i == '127'
+			action print "mInt8 "
+		}
+		state S3 {
+			on entry do
+				p!mInt8('5')
+			end
+
+			transition -> S4
+			event e : p?mInt8
+			guard e.i == '5'
+			action print "mInt8 "
+		}
+		state S4 {
+			on entry do
+				p!mInt16('-1')
+			end
+
+			transition -> S5
+			event e : p?mInt16
+			guard e.i == '-1'
+			action print "mInt16 "
+		}
+		state S5 {
+			on entry do
+				p!mInt16('32767')
+			end
+
+			transition -> S6
+			event e : p?mInt16
+			guard e.i == '32767'
+			action print "mInt16 "
+		}
+		state S6 {
+			on entry do
+				p!mInt32('31710')
+			end
+
+			transition -> S7
+			event e : p?mInt32
+			guard e.i == '31710'
+			action print "mInt16 "
+		}
+		state S7 {
+			on entry do
+				p!mInt32('-1')
+			end
+
+			transition -> S8
+			event e : p?mInt32
+			guard e.i == '-1'
+			action print "mInt32 "
+		}
+		state S8 {
+			on entry do
+				p!mInt32('337738718')
+			end
+
+			transition -> S9
+			event e : p?mInt32
+			guard e.i == '337738718'
+			action print "mInt32 "
+		}
+		state S9 {
+			on entry do
+				p!mInt32('2147483647')
+			end
+
+			transition -> S10
+			event e : p?mInt32
+			guard e.i == '2147483647'
+			action print "mInt32 "
+		}
+
+		state S10 {
+			on entry do
+				p!mHInt('-1', '32767')
+			end
+
+			transition -> SEnd
+			event e : p?mHInt
+			guard e.i1 == '-1' and e.i2 == '32767'
+			action print "mHInt "
+		}
+		state SEnd {
+			on entry print "End\n"
+		}
+	}
+
+}

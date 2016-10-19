@@ -31,12 +31,17 @@ The test environement will look at the depandancies (`depList`) list, and
 The log file (`log`) will contain the output of the two first steps (but the script can add its own output or whatever log to it).
 
 When set to true, the property `runMono` will ensure that the test will be run alone without other simultanous other tests.
+<p align="center"><img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/testJar/docs/Custom-Test-chain.png" alt="Test Chain" width="800"></p>
+
 ##Running tests
 ```
 //To build it
 mvn clean install
 
-//To launch tests
+//To launch tests with mvn 3
+mvn exec:java@custom
+
+//or without mvn
 java -cp target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.RunCustomTests
 ```
 
