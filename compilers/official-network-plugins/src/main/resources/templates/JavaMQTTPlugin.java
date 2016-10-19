@@ -103,11 +103,7 @@ public class MQTTJava extends Component {
 				final Event e = queue.take();//should block if queue is empty, waiting for a message
 				final Object payload = formatter.format(e);
 				if (payload != null) {
-					if (payload instanceof String) {
-						connection.publish(new UTF8Buffer(this.pubtopic), new Buffer(((String)payload).getBytes()), QoS.AT_LEAST_ONCE, false, disconnectOnFailure);
-					} else {//binary payload
-						connection.publish(this.pubtopic, JavaBinaryHelper.toPrimitive((Byte[]) payload), QoS.AT_LEAST_ONCE, false, disconnectOnFailure);
-					}
+					/*$PUBLISH$*/
 				}
 			} catch (InterruptedException e) {
 				//e.printStackTrace();

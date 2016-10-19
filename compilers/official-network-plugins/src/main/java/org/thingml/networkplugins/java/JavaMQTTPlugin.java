@@ -210,10 +210,13 @@ public class JavaMQTTPlugin extends NetworkPlugin {
                 uee.printStackTrace();
                 return;
             }
+
             if (sp.getSupportedFormat().contains("Binary")) {//FIXME
                 parseBuilder.append("final Event event = formatter.instantiate(JavaBinaryHelper.toObject(payload.toByteArray()));\n");
+                template = template.replace("/*$PUBLISH$*/", "connection.publish(this.pubtopic, JavaBinaryHelper.toPrimitive((Byte[]) payload), QoS.AT_LEAST_ONCE, false, disconnectOnFailure);\n");
             } else {
-                parseBuilder.append("final Event event = formatter.instantiate(payload);\n");
+                parseBuilder.append("final Event event = formatter.instantiate(new String(payload.toByteArray(), java.nio.charset.StandardCharsets.UTF_8));\n");
+                template = template.replace("/*$PUBLISH$*/", "connection.publish(new UTF8Buffer(this.pubtopic), new Buffer(((String)payload).getBytes()), QoS.AT_LEAST_ONCE, false, disconnectOnFailure);\n");
             }
             for(Port p : ports) {//FIXME
                 parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");

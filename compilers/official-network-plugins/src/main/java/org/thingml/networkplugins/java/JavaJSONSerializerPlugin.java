@@ -84,7 +84,12 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
         builder.append("final JsonObject params = new JsonObject();\n");
         for (Parameter p : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                builder.append("params.add(\"" + p.getName() + "\", _this." + p.getName() + ");\n");
+                String t = AnnotatedElementHelper.annotationOrElse(p.getType(), "java_type", "void");
+                if (t.equals("char")) {
+                    builder.append("params.add(\"" + p.getName() + "\", \"\" + _this." + p.getName() + ");\n");
+                } else {
+                    builder.append("params.add(\"" + p.getName() + "\", _this." + p.getName() + ");\n");
+                }
             }
         }
         builder.append("msg.add(\"" + m.getName() + "\",params);\n");
