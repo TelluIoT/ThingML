@@ -3,7 +3,7 @@
 sleep 1
 timeout -s SIGINT 6 node ServerEmptyCfg/main.js > srvStdo.log 2> srvStdr.log&
 sleep 1
-timeout -s SIGINT 5 node ClientEmptyCfg/main.js > cliStdo.log 2> cliStdr.log&
+timeout -s SIGINT 5 node ClientEmptySPCfg/main.js > cliStdo.log 2> cliStdr.log&
 
 sleep 6
 
