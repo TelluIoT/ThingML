@@ -234,7 +234,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         builder.append("//Hook to stop instances following client/server dependencies (clients firsts)\n");
         builder.append("Runtime.getRuntime().addShutdownHook(new Thread() {\n");
         builder.append("public void run() {\n");
-        builder.append("System.out.println(\"Terminating ThingML app...\");\n");
+        //builder.append("System.out.println(\"Terminating ThingML app...\");\n");
         instances = ConfigurationHelper.orderInstanceInit(cfg);
         while (!instances.isEmpty()) {
             inst = instances.get(0);
@@ -242,7 +242,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             builder.append(ctx.getInstanceName(inst) + ".stop();\n");
         }
         builder.append("/*$STOP$*/\n");
-        builder.append("System.out.println(\"ThingML app terminated. RIP!\");");
+        //builder.append("System.out.println(\"ThingML app terminated. RIP!\");");
         builder.append("}\n");
         builder.append("});\n\n");
 

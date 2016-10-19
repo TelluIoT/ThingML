@@ -129,11 +129,11 @@ public class JavaMQTTPlugin extends NetworkPlugin {
                     temp.append("else ");
                 temp.append("if (e.getType().equals(" +  m.getName().toUpperCase() + ")) {\n");
                 temp.append("return ");
-                if (sp.getSupportedFormat().contains("Binary")) {
+                if (sp.getSupportedFormat().contains("Binary")) {//FIXME
                     temp.append("JavaBinaryHelper.toObject(");
                 }
                 temp.append("format((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e)\n");
-                if (sp.getSupportedFormat().contains("Binary")) {
+                if (sp.getSupportedFormat().contains("Binary")) {//FIXME
                     temp.append(")");
                 }
                 temp.append(";");
@@ -202,7 +202,19 @@ public class JavaMQTTPlugin extends NetworkPlugin {
             String template = ctx.getTemplateByID("templates/JavaMQTTPlugin.java");
             template = template.replace("/*$SERIALIZER$*/", prot.getName() + "BinaryProtocol");
             StringBuilder parseBuilder = new StringBuilder();
-            parseBuilder.append("final Event event = formatter.instantiate(JavaBinaryHelper.toObject(payload.toByteArray()));\n");
+            SerializationPlugin sp = null;
+            try {
+                sp = ctx.getSerializationPlugin(prot);
+            } catch (UnsupportedEncodingException uee) {
+                System.err.println("Could not get serialization plugin... Expect some errors in the generated code");
+                uee.printStackTrace();
+                return;
+            }
+            if (sp.getSupportedFormat().contains("Binary")) {//FIXME
+                parseBuilder.append("final Event event = formatter.instantiate(JavaBinaryHelper.toObject(payload.toByteArray()));\n");
+            } else {
+                parseBuilder.append("final Event event = formatter.instantiate(payload);\n");
+            }
             for(Port p : ports) {//FIXME
                 parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
             }
