@@ -78,6 +78,60 @@ public class JavaWSPlugin extends NetworkPlugin {
         }
     }
 
+    private void updatePOM4Server(Context ctx) {
+        //Update POM.xml with JSSC Maven dependency
+        try {
+            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/pom.xml");
+            final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
+            String pom = "";
+            for (String line : packLines) {
+                pom += line + "\n";
+            }
+            input.close();
+            pom = pom.replace("<!--DEP-->", "<dependency>\n" +
+                    "    <groupId>org.eclipse.jetty</groupId>\n" +
+                    "    <artifactId>jetty-websocket</artifactId>\n" +
+                    "    <version>8.1.22.v20160922</version>\n" +
+                    "</dependency>\n<!--DEP-->");
+            pom = pom.replace("<!--DEP-->", "<dependency>\n" +
+                    "    <groupId>org.eclipse.jetty.websocket</groupId>\n" +
+                    "    <artifactId>websocket-api</artifactId>\n" +
+                    "    <version>9.3.12.v20160915</version>\n" +
+                    "</dependency>\n<!--DEP-->");
+            pom = pom.replace("<!--DEP-->", "<dependency>\n" +
+                    "    <groupId>org.eclipse.jetty</groupId>\n" +
+                    "    <artifactId>jetty-server</artifactId>\n" +
+                    "    <version>9.3.12.v20160915</version>\n" +
+                    "</dependency>\n<!--DEP-->");
+            pom = pom.replace("<!--DEP-->", "<dependency>\n" +
+                    "    <groupId>org.eclipse.jetty.websocket</groupId>\n" +
+                    "    <artifactId>websocket-server</artifactId>\n" +
+                    "    <version>9.3.12.v20160915</version>\n" +
+                    "</dependency>\n<!--DEP-->");
+            pom = pom.replace("<!--DEP-->", "<dependency>\n" +
+                    "    <groupId>org.eclipse.jetty</groupId>\n" +
+                    "    <artifactId>jetty-util</artifactId>\n" +
+                    "    <version>9.3.12.v20160915</version>\n" +
+                    "</dependency>\n<!--DEP-->");
+            pom = pom.replace("<!--DEP-->", "<dependency>\n" +
+                    "    <groupId>org.eclipse.jetty</groupId>\n" +
+                    "    <artifactId>jetty-http</artifactId>\n" +
+                    "    <version>9.3.12.v20160915</version>\n" +
+                    "</dependency>\n<!--DEP-->");
+            pom = pom.replace("<!--DEP-->", "<dependency>\n" +
+                    "    <groupId>org.eclipse.jetty</groupId>\n" +
+                    "    <artifactId>jetty-io</artifactId>\n" +
+                    "    <version>9.3.12.v20160915</version>\n" +
+                    "</dependency>\n<!--DEP-->");
+            final File f = new File(ctx.getOutputDirectory() + "/pom.xml");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(pom, output, java.nio.charset.Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void updatePOM(Context ctx) {
         //Update POM.xml with JSSC Maven dependency
         try {
@@ -253,6 +307,30 @@ public class JavaWSPlugin extends NetworkPlugin {
 
                 main = main.replace("/*$START$*/", "/*$START$*/\n" + conn.getName() + "_" + conn.getProtocol().getName() + ".init().start();\n");
                 main = main.replace("/*$STOP$*/", "/*$STOP$*/\n" + conn.getName() + "_" + conn.getProtocol().getName() + ".stop();\n");
+
+                if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "server") || AnnotatedElementHelper.hasAnnotation(conn, "server")) {
+                    updatePOM4Server(ctx);
+                    String template = ctx.getTemplateByID("templates/JavaWSServer.java");
+                    String template2 = ctx.getTemplateByID("templates/JavaWSHandler.java");
+                    final String port = AnnotatedElementHelper.annotationOrElse(conn, "server", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "server", "9000"));
+                    main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nJavaWSServer wsServer = new JavaWSServer();\nwsServer.port = " + port + ";\nwsServer.start();\n");
+
+                    try {
+                        final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
+                        folder.mkdir();
+                        final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/JavaWSServer.java");
+                        final OutputStream output = new FileOutputStream(f);
+                        IOUtils.write(template, output, Charset.forName("UTF-8"));
+                        IOUtils.closeQuietly(output);
+
+                        final File f2 = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/JavaWSHandler.java");
+                        final OutputStream output2 = new FileOutputStream(f2);
+                        IOUtils.write(template2, output2, Charset.forName("UTF-8"));
+                        IOUtils.closeQuietly(output2);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 final File f = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/Main.java");
                 final OutputStream output = new FileOutputStream(f);
