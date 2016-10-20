@@ -1,16 +1,15 @@
 #!/bin/bash
 
-sleep 1
 timeout -s SIGINT 6 ./ServerBoolCfg/ServerBoolCfg > srvStdo.log 2> srvStdr.log&
-sleep 1
+sleep 2
 timeout -s SIGINT 5 ./ClientBoolCfg/ClientBoolCfg > cliStdo.log 2> cliStdr.log&
 
 sleep 6
 
-printf "Cli stdo:\n\n"
+#printf "Cli stdo:\n\n"
 cat cliStdo.log
-printf "\nCli stdr:\n\n"
-cat cliStdr.log
+#printf "\nCli stdr:\n\n"
+>&2 cat cliStdr.log
 
 #printf "\n\nSrv stdo:\n\n"
 >&2 cat srvStdo.log
