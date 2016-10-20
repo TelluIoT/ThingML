@@ -21,10 +21,23 @@ public class JavaWSServer extends WebSocketServlet {
 
     public void start() {
         try {
-            if (!server.isStarted())
+            if (!server.isStarted()) {
                 server.start();
+            }
         } catch (Exception e) {
             System.err.println("Cannot start Jetty Server because " + e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void stop() {
+        try {
+            if (server.isStarted()) {
+                server.stop();
+                server.join();
+            }
+        } catch (Exception e) {
+            System.err.println("Cannot stop Jetty Server because " + e.getLocalizedMessage());
             e.printStackTrace();
         }
     }
@@ -35,7 +48,6 @@ public class JavaWSServer extends WebSocketServlet {
         context.setContextPath("/");
         context.setResourceBase(System.getProperty("java.io.tmpdir"));
         server.setHandler(context);
-        // Add dump servlet
         context.addServlet(JavaWSServer.class, "/");
     }
 }

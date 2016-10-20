@@ -314,7 +314,7 @@ public class JavaWSPlugin extends NetworkPlugin {
                     String template2 = ctx.getTemplateByID("templates/JavaWSHandler.java");
                     final String port = AnnotatedElementHelper.annotationOrElse(conn, "server", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "server", "9000"));
                     main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nJavaWSServer wsServer = new JavaWSServer();\nwsServer.port = " + port + ";\nwsServer.start();\n");
-
+                    main = main.replace("/*$STOP$*/", "/*$STOP$*/wsServer.stop();\n");
                     try {
                         final File folder = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
                         folder.mkdir();
