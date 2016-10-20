@@ -88,6 +88,9 @@ void /*PROTOCOL_NAME*/_setup();
 
 void /*PROTOCOL_NAME*/_start_publish_process();
 
+//in fact this should not be here, things which want to send to an external thing a message should go through the process queue
+/*INCLUDES_SENDERS_H*/
+/*FORWARDS_FUNCTION_PROTOTYPES*/
 
 #ifdef __cplusplus
 }

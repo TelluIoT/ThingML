@@ -338,3 +338,5 @@ void /*PROTOCOL_NAME*/_start_process() {
 void /*PROTOCOL_NAME*/_stop_process() {
 	/*INSTANCE_STOP*/
 }
+
+/*FORWARDS_FUNCTION_PROTOTYPES_IMPL*/
