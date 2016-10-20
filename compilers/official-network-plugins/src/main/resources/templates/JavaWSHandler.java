@@ -3,36 +3,20 @@ package org.thingml.generated.network;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
 
 @WebSocket
 public class JavaWSHandler {
 
-    private List<Session> sessions = Collections.synchronizedList(new ArrayList()); //keep all active sessions to broadcast messages to all except the sender
-    private AtomicBoolean active = new AtomicBoolean(true);
+    private static Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>()); //keep all active sessions to broadcast messages to all except the sender
 
     public JavaWSHandler(){}
 
     @OnWebSocketClose
-    public void onClose(int statusCode, String reason) {
-        active.set(false);
+    public void onClose(Session session, int statusCode, String reason) {
         synchronized (sessions) {
-            for (Session s : sessions) {
-                try {
-                    s.getRemote().flush();
-                    s.suspend();
-                    s.close(1, "Jetty WS Server stopping");
-                    s.disconnect();
-                } catch (Exception e) {
-
-                }
-            }
-            sessions.clear();
+            sessions.remove(session);
         }
     }
 
@@ -42,32 +26,22 @@ public class JavaWSHandler {
         synchronized (sessions) {
             sessions.remove(s);
         }
-        s.suspend();
         s.close(1, "Faulty session");
-        try {
-            s.disconnect();
-        } catch (IOException e) {}
     }
 
     @OnWebSocketConnect
     public void onConnect(Session session) {
-        if (active.get()) {
-            synchronized (sessions) {
-                if (!sessions.contains(session)) {
-                    sessions.add(session);
-                }
-            }
+        synchronized (sessions) {
+            sessions.add(session);
         }
     }
 
     @OnWebSocketMessage
     public void onMessage(final Session session, final String message) {
-        if (active.get()) {
-            synchronized (sessions) {
-                for (Session s : sessions) {
-                    if (!s.equals(session) && s.isOpen()) {
-                        s.getRemote().sendString(message, null);
-                    }
+        synchronized (sessions) {
+            for (Session s : sessions) {
+                if (!s.equals(session) && s.isOpen()) {
+                    s.getRemote().sendString(message, null);
                 }
             }
         }
@@ -75,12 +49,10 @@ public class JavaWSHandler {
 
     @OnWebSocketMessage
     public void onMessage(final Session session, final byte[] message, final int offset, final int length) {
-        if (active.get()) {
-            synchronized (sessions) {
-                for (Session s : sessions) {
-                    if (!s.equals(session) && s.isOpen()) {
-                        s.getRemote().sendBytes(ByteBuffer.wrap(message), null);
-                    }
+        synchronized (sessions) {
+            for (Session s : sessions) {
+                if (!s.equals(session) && s.isOpen()) {
+                    s.getRemote().sendBytes(ByteBuffer.wrap(message), null);
                 }
             }
         }
