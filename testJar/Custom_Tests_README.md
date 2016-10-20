@@ -63,3 +63,10 @@ java -cp target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.cus
 
 Note: scripts might no have the permission needed to be executed.
 
+##Network test execution
+
+Require:
+ * Serial: require socat (Can be changed by local loop in `src/main/resources/customTests/Network/Serial/Serial(0, 1).thingml)
+ * MQTT: require a brocker 192.168.1.6:44490 (Can be changed by local loop in `src/main/resources/customTests/Network/MQTT/MQTT.thingml)
+ * Websocket: require an availiable port 9000 (Can be changed by local loop in `src/main/resources/customTests/Network/Websocket/Websocket_(Server, Client).thingml)
+

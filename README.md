@@ -1,7 +1,8 @@
 ThingML
 =======
 
-ThingML is a modelling language for embedded and distributed systems (Internet of Things).
+The ThingML approach is composed of i) a modelling language, ii) a set of tools and iii) a methodology. The modelling language combines well-proven software modelling constructs aligned with the UML (statecharts, components), an imperative platform-independent action language and specific constructs targeted at IoT applications. The ThingML language is supported by a set of tools, which include editors, transformations (e.g. export to UML) and an advanced multi-platform code generation framework, which support multiple target programming languages (C, Java, Javascript). The methodology documents the development processes and tools used by both the IoT service developers and the platform experts. 
+
 It is developed by the Networked Systems and Services department of SINTEF in Oslo, Norway.
 It is distributed under the LGPL licence.
 

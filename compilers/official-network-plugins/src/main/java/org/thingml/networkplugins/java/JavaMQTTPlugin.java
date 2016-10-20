@@ -260,7 +260,7 @@ public class JavaMQTTPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                final String url = AnnotatedElementHelper.annotationOrElse(conn, "url", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "mqtt://127.0.0.1:1883"));
+                final String url = "tcp://" + AnnotatedElementHelper.annotationOrElse(conn, "url", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "127.0.0.1:1883"));
                 final String subtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "subscribe", "ThingML");
                 final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "ThingML");
 

@@ -20,11 +20,11 @@ java -cp target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.tes
 
 Results are sumed up into tmp/results.html, tmp/log contains detailed log of each test, tmp/thingml contains the test configurations for each test, and tmp/gen contains the generated code in targeted languages.
 
-##Running custom tests
-See Custom_Tests_README.md
+##Running custom tests (Includes Network Plugin Tests)
+[See Custom_Tests_README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/Custom_Tests_README.md)
 
 ##Running tests on a cluster
-See Distributed_Tests_README.md
+[See Distributed_Tests_README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/Distributed_Tests_README.md)
 
 ##Configuration
 In the file config.properties you can use and combine three filters:

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 timeout -s SIGINT 6 ./ServerUIntSPCfg/ServerUIntSPCfg > srvStdo.log 2> srvStdr.log&
-sleep 1
+sleep 2
 timeout -s SIGINT 5 ./ClientUIntSPCfg/ClientUIntSPCfg > cliStdo.log 2> cliStdr.log&
 
 sleep 6
