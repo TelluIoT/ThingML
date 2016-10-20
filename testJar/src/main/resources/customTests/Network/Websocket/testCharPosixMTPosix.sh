@@ -1,6 +1,6 @@
 #!/bin/bash
 
-timeout -s SIGINT 6 ./ServerCharSPCfg/ServerCharSPCfg > srvStdo.log 2> srvStdr.log&
+timeout -s SIGINT 6 ./ServerCharCfg/ServerCharCfg > srvStdo.log 2> srvStdr.log&
 sleep 2
 timeout -s SIGINT 5 ./ClientCharSPCfg/ClientCharSPCfg > cliStdo.log 2> cliStdr.log&
 

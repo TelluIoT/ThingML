@@ -35,6 +35,7 @@ public class Populate {
         final File workingDir = new File(System.getProperty("user.dir"));
         final File testFolder = new File(workingDir.getPath() + "/src/main/resources/customTests/Network");
         
+        //Targeted languages
         Lang posix = new Lang("Posix", "posix", "./#TARGET##TYPE##SP#Cfg/#TARGET##TYPE##SP#Cfg");
         Lang posixmt = new Lang("PosixMT", "posixmt", "./#TARGET##TYPE##SP#Cfg/#TARGET##TYPE##SP#Cfg");
         Lang nodejs = new Lang("NodeJS", "nodejs", "node #TARGET##TYPE##SP#Cfg/main.js");
@@ -46,6 +47,7 @@ public class Populate {
         langs.add(nodejs);
         langs.add(java);
         
+        //Protocol to be tested
         Protocol serial = new Protocol("Serial", false, false, "timeout 8 socat -x -v PTY,link=modem0 PTY,link=modem1&\nsleep 1\n");
         Protocol mQTT = new Protocol("MQTT", false, true);
         Protocol websocket = new Protocol("Websocket", true, true);
@@ -57,6 +59,7 @@ public class Populate {
         prots.add(mQTTbin);
         prots.add(websocket);
         
+        //Type to be tested.
         Type tEmpty = new Type("Empty", "I m1 m2 End");
         Type tBool = new Type("Bool", "I mBool mHBool End");
         Type tChar = new Type("Char", "I mChar mHChar End");
@@ -134,7 +137,7 @@ public class Populate {
         String scriptTemplate = "#!/bin/bash\n" +
         "\n" +
         p.preExec +
-        "timeout -s SIGINT 6 " + langSrv.getExec("Server", t.type, (p.sp ? "SP" : "")) + " > srvStdo.log 2> srvStdr.log&\n" +
+        "timeout -s SIGINT 6 " + langSrv.getExec("Server", t.type, "") + " > srvStdo.log 2> srvStdr.log&\n" +
         "sleep 2\n" +
         "timeout -s SIGINT 5 " + langCli.getExec("Client", t.type, (p.sp ? "SP" : "")) + " > cliStdo.log 2> cliStdr.log&\n" +
         "\n" +

@@ -181,6 +181,9 @@ public class JsWSPlugin extends NetworkPlugin {
             String template = ctx.getTemplateByID("templates/JsWSPlugin.js");
             template = template.replace("/*$FORMAT$*/", prot.getName() + "StringProtocol");
             template = template.replace("/*$NAME$*/", prot.getName());
+            String wsProtocolName = AnnotatedElementHelper.annotationOrElse(prot, "ws_protocol", "");
+            if(wsProtocolName.compareTo("") != 0)
+                template = template.replace("/*$PROTOCOL$*/", ", \"" + wsProtocolName + "\"");
             for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {
                 updateMain(ctx, cfg, conn);
             }

@@ -5,4 +5,5 @@ protocol Websocket
 	@server "9000"
 	@serializer "JSON"
 	@trace_level "0"
+	@ws_protocol "ThingML-protocol"
 	;

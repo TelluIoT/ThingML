@@ -1,6 +1,6 @@
 #!/bin/bash
 
-timeout -s SIGINT 6 mvn -q -f ServerBoolSPCfg/pom.xml exec:java > srvStdo.log 2> srvStdr.log&
+timeout -s SIGINT 6 mvn -q -f ServerBoolCfg/pom.xml exec:java > srvStdo.log 2> srvStdr.log&
 sleep 2
 timeout -s SIGINT 5 node ClientBoolSPCfg/main.js > cliStdo.log 2> cliStdr.log&
 

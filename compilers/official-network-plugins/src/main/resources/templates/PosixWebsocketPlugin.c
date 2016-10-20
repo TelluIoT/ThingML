@@ -122,7 +122,7 @@ static struct libwebsocket_protocols protocols[] = {
         0              // per_session_data_size
     },
     {
-        "ThingML-protocol", // protocol name - very important!
+        "/*WS_PROTOCOL*/", // protocol name - very important!
         /*PORT_NAME*/_callback_ThingML_protocol,   // callback
         0                          // we don't use any per session data
     },

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-timeout -s SIGINT 6 mvn -q -f ServerFloatSPCfg/pom.xml exec:java > srvStdo.log 2> srvStdr.log&
+timeout -s SIGINT 6 mvn -q -f ServerFloatCfg/pom.xml exec:java > srvStdo.log 2> srvStdr.log&
 sleep 2
 timeout -s SIGINT 5 node ClientFloatSPCfg/main.js > cliStdo.log 2> cliStdr.log&
 

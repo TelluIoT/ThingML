@@ -198,7 +198,9 @@ void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size/*PUBLISH_MULTI_OR_MONO
         q++;
         n++;
     }
-    
+
+    /*ZERO_ESCAPING*/
+
     /*PUBLISH_MULTI_OR_MONO_CORE*/
     
 }

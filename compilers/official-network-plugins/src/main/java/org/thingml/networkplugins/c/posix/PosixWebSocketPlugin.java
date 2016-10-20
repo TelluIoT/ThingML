@@ -173,7 +173,8 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
                 }
                 ctemplate = ctemplate.replace("/*PORT_NUMBER*/", portNumber.toString());
 
-
+                String wsProtocol = AnnotatedElementHelper.annotationOrElse(protocol, "ws_protocol", "ThingML-protocol");
+                ctemplate = ctemplate.replace("/*WS_PROTOCOL*/", wsProtocol);
                 //Connector ready
 
                 StringBuilder connectorReady = new StringBuilder();

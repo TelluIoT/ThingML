@@ -63,10 +63,18 @@ java -cp target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.cus
 
 Note: scripts might no have the permission needed to be executed.
 
+In order to extend these tests to another language, one must add in `src/main/resources/customTests/Network/`:
+ * a directory named after the protocol
+ * Protocol(s) ThingML definition(s) inside. (See `src/main/resources/customTests/Network/MQTT/MQTT.thingml` for example)
+ * ThingML configuration for client and server for each type.
+ * edit `org.thingml.custompopulator.Populate` to add the language targeted.
+
 ##Network test execution
 
 Require:
- * Serial: require socat (Can be changed by local loop in `src/main/resources/customTests/Network/Serial/Serial(0, 1).thingml)
- * MQTT: require a brocker 192.168.1.6:44490 (Can be changed by local loop in `src/main/resources/customTests/Network/MQTT/MQTT.thingml)
- * Websocket: require an availiable port 9000 (Can be changed by local loop in `src/main/resources/customTests/Network/Websocket/Websocket_(Server, Client).thingml)
+ * Serial: require socat (Can be changed by local loop in `src/main/resources/customTests/Network/Serial/Serial(0, 1).thingml`)
+ * MQTT: require a brocker 192.168.1.6:44490 (Can be changed by local loop in `src/main/resources/customTests/Network/MQTT/MQTT.thingml`)
+ * Websocket: require an availiable port 9000 (Can be changed by local loop in `src/main/resources/customTests/Network/Websocket/Websocket_(Server, Client).thingml`)
+
+Generated scripts include pauses, which duration might be sensible.
 

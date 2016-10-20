@@ -7,7 +7,7 @@ function /*$NAME$*/(name, debug, serverURL, instance) {
     this.ready = false;
 
     this.formatter = new Format();
-    this.ws = new WebSocket(serverURL);
+    this.ws = new WebSocket(serverURL/*$PROTOCOL$*/);
 
     this.ws.on('open', function open() {
         /*$CALLBACK$*/

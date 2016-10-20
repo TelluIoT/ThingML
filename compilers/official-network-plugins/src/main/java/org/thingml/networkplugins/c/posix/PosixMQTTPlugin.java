@@ -301,7 +301,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 ParserImplementation.append("}\n");
 
                 ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", sp.generateSubFunctions() + ParserImplementation);
-
+                
 
                 Integer traceLevel;
                 if (AnnotatedElementHelper.hasAnnotation(protocol, "trace_level")) {

@@ -6,4 +6,5 @@ protocol Websocket
 	@url "ws://127.0.0.1:9000"
 	@serializer "JSON"
 	@trace_level "0"
+	@ws_protocol "ThingML-protocol"
 	;

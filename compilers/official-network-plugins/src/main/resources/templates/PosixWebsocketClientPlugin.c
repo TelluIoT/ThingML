@@ -69,7 +69,7 @@ static int /*PORT_NAME*/_callback_ThingML_protocol(struct libwebsocket_context *
 
 static struct libwebsocket_protocols /*PORT_NAME*/_protocols[] = {
     {
-        "ThingML-protocol", // protocol name - very important!
+        "/*WS_PROTOCOL*/", // protocol name - very important!
         /*PORT_NAME*/_callback_ThingML_protocol,   // callback
         0                          // we don't use any per session data
     },
