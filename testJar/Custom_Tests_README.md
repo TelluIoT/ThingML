@@ -49,3 +49,17 @@ java -cp target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.tes
 In the file customConfig.properties you can use and combine two filters:
  * `categoryList` and `categoryUseBlackList`: If `categoryUseBlackList` is set to true, directories listed in `categoryList` and their children will be ignored. If  `categoryUseBlackList` is set to false, only directories listed in `categoryList` and their children will used. If not specified, all directories will be used. (Default: All)
  * `useBlackList` ans `testList`: If `useBlackList` is set to true, tests listed in `testList` will be ignored, if set to false, only tests listed in `testList` will be used, and if not specified all tests will be used. (Default: All)
+
+##Network test population
+
+Property files and scripts can be generated with
+```
+//with mvn 3
+mvn exec:java@populate
+
+//or without mvn
+java -cp target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.custompopulator.Populate
+```
+
+Note: scripts might no have the permission needed to be executed.
+

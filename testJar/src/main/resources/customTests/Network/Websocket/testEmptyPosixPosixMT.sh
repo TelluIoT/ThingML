@@ -1,7 +1,6 @@
 #!/bin/bash
 
-sleep 1
-timeout -s SIGINT 6 ./ServerEmptyCfg/ServerEmptyCfg > srvStdo.log 2> srvStdr.log&
+timeout -s SIGINT 6 ./ServerEmptySPCfg/ServerEmptySPCfg > srvStdo.log 2> srvStdr.log&
 sleep 1
 timeout -s SIGINT 5 ./ClientEmptySPCfg/ClientEmptySPCfg > cliStdo.log 2> cliStdr.log&
 

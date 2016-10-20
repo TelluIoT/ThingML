@@ -1,6 +1,5 @@
 #!/bin/bash
 
-sleep 1
 timeout -s SIGINT 6 ./ServerFloatCfg/ServerFloatCfg > srvStdo.log 2> srvStdr.log&
 sleep 1
 timeout -s SIGINT 5 ./ClientFloatCfg/ClientFloatCfg > cliStdo.log 2> cliStdr.log&

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-sleep 1
 timeout -s SIGINT 6 node ServerFloatCfg/main.js > srvStdo.log 2> srvStdr.log&
 sleep 1
 timeout -s SIGINT 5 node ClientFloatCfg/main.js > cliStdo.log 2> cliStdr.log&

@@ -1,7 +1,6 @@
 #!/bin/bash
 
-sleep 1
-timeout -s SIGINT 6 node ServerUIntCfg/main.js > srvStdo.log 2> srvStdr.log&
+timeout -s SIGINT 6 node ServerUIntSPCfg/main.js > srvStdo.log 2> srvStdr.log&
 sleep 1
 timeout -s SIGINT 5 mvn -q -f ClientUIntSPCfg/pom.xml exec:java > cliStdo.log 2> cliStdr.log&
 

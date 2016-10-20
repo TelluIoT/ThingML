@@ -117,6 +117,15 @@
                             <mainClass>org.thingml.loadbalancer.LoadBalancer</mainClass>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>populate</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.thingml.custompopulator.Populate</mainClass>
+                        </configuration>
+                    </execution>
                 </executions>
 
             </plugin>

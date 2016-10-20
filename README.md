@@ -11,4 +11,6 @@ It is distributed under the LGPL licence.
 
 ### [ThingML Code Generation Framework](https://github.com/SINTEF-9012/ThingML/blob/master/compilers/README.md)
 
+### [ThingML Test Framework](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/README.md)
+
 > Visit [thingml.org](http://www.thingml.org) to find out more about ThingML !

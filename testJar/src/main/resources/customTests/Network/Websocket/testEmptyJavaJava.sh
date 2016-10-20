@@ -1,7 +1,6 @@
 #!/bin/bash
 
-sleep 1
-timeout -s SIGINT 6 mvn -q -f ServerEmptyCfg/pom.xml exec:java > srvStdo.log 2> srvStdr.log&
+timeout -s SIGINT 6 mvn -q -f ServerEmptySPCfg/pom.xml exec:java > srvStdo.log 2> srvStdr.log&
 sleep 1
 timeout -s SIGINT 5 mvn -q -f ClientEmptySPCfg/pom.xml exec:java > cliStdo.log 2> cliStdr.log&
 
