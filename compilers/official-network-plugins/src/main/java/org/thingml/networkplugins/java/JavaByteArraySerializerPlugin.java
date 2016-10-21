@@ -102,7 +102,12 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
                     builder.append("buffer.put(_this." + p.getName() + ");\n");
                 } else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context).equals("boolean")) {
                     builder.append("if(" + p.getName() + ") buffer.put((byte)0x01); else buffer.put((byte)0x00); ");
-                } else {
+                } else  if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context).equals("char")) {
+                    builder.append("try {\n");
+                    builder.append("buffer.put(new Character(_this." + p.getName() + ").toString().getBytes(\"UTF-8\")[0]);\n");
+                    builder.append("} catch(Exception e){return null;}\n");
+                }
+                else {
                     builder.append("buffer.put" + context.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context)) + "(_this." + p.getName() + ");\n");
                 }
             }
