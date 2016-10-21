@@ -263,7 +263,7 @@ public class JsWSPlugin extends NetworkPlugin {
                     if (wsProtocolName == null) {
                         template = template.replace("/*$PROTOCOL$*/", "");
                     } else {
-                        template = template.replace("/*$PROTOCOL$*/", ", handleProtocols: function(ps, cb){cb(true, 'prot3');}");
+                        template = template.replace("/*$PROTOCOL$*/", ", handleProtocols: function(ps, cb){cb(true, '" + wsProtocolName + "');}");
                     }
                     template = template.replace("/*$PORT$*/", port);
                     main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\n" + template);
