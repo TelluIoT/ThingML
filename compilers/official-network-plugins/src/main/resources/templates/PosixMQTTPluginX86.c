@@ -7,6 +7,8 @@
 
 #include <mosquitto.h>
 
+#define /*PORT_NAME*/_ESCAPE_CHAR /*ESCAPE_CHAR*/
+
 /*TOPIC_VAR*/
 static int /*PORT_NAME*/_topic_qos = 0;
 static char */*PORT_NAME*/_username = NULL;
@@ -41,7 +43,8 @@ void /*PORT_NAME*/_message_callback(struct mosquitto * mosq, void *obj, const st
     //printf("%s %s\n", message->topic, message->payload);
     int len = strlen(message->payload);
     /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] receveid l:%i\n", len);
-    /*PORT_NAME*/_parser(message->payload, len);
+    /*PARSER_CALL*/
+    
 }
 
 void /*PORT_NAME*/_connect_callback(struct mosquitto * mosq, void *obj, int result)
@@ -187,19 +190,19 @@ void /*PORT_NAME*/_start_receiver_process() {
 }
 
 void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size/*PUBLISH_MULTI_OR_MONO_DECLARATION*/) {
-    int n, m, i;
+    int n, m, i2;
     int length = size;
     unsigned char buf[length];
     unsigned char *p = &buf[0];	
     unsigned char *q = p;
     n = 0;
-    for(i = 0; i < length; i++) {
-        *q = msg[i];
+    for(i2 = 0; i2 < length; i2++) {
+        *q = msg[i2];
         q++;
         n++;
     }
 
-    /*ZERO_ESCAPING*/
+    /*ZERO_ESCAPING_SEND*/
 
     /*PUBLISH_MULTI_OR_MONO_CORE*/
     
