@@ -93,3 +93,6 @@ testJar/src/main/resources/tests/core/_compilerID
 * In order to support compilation and execution, implement the class TargetedLanguage.java, it should only consist into defining command to compile and execute the generated code.
 testJar/src/main/java/org/thingml/testjar/lang/
 
+##ThingML test configuration Generator
+See `org.thingml.compiler.testconfigurationgen` in the compiler module.
+

@@ -79,11 +79,14 @@ public class Populate {
             for(Type t : types) {
                 for(int i = 0; i < langs.size(); i++) {
                     generateFiles(testFolder, t, langs.get(i), langs.get(i), p);
+                    for(int j = 0; j < langs.size(); j++) {
+                        if(i != j) generateFiles(testFolder, t, langs.get(i), langs.get(j), p);
+                    }
                     
-                    if(i != 0) {
+                    /*if(i != 0) {
                         generateFiles(testFolder, t, langs.get(i), langs.get(i-1), p);
                         generateFiles(testFolder, t, langs.get(i-1), langs.get(i), p);
-                    }
+                    }*/
                 }
             }
         }
@@ -135,6 +138,8 @@ public class Populate {
     
     public static String getScript(Type t, Lang langCli, Lang langSrv, Protocol p) {
         String scriptTemplate = "#!/bin/bash\n" +
+        "\n" +
+        "rm cliStdo.log &> /dev/null\n" +
         "\n" +
         p.preExec +
         "timeout -s SIGINT 6 " + langSrv.getExec("Server", t.type, "") + " > srvStdo.log 2> srvStdr.log&\n" +
