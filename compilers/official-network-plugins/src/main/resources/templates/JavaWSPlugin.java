@@ -19,9 +19,10 @@ public class WSJava extends Component {
 
 	/*$PORTS$*/
 
-	public WSJava(String serverURL) {
+	public WSJava(String serverURL, String protocol) {
 		try {
 			ws = factory.createSocket(serverURL);
+			ws.addProtocol(protocol);
 			ws.addListener(new WebSocketAdapter() {
 				@Override
 				public void onTextMessage(WebSocket websocket, String message) throws Exception {

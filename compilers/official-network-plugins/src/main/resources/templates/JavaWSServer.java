@@ -16,7 +16,8 @@ public class JavaWSServer extends WebSocketServlet {
 
     @Override
     public void configure(WebSocketServletFactory factory) {
-        factory.register(JavaWSHandler.class);
+        /*$PROTOCOL$*/factory.setCreator(new JavaWSProtocol());
+        /*$NO PROTOCOL$*/factory.register(JavaWSHandler.class);
     }
 
     public void start() {

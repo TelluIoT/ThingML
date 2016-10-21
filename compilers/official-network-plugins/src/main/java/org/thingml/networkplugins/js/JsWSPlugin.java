@@ -259,6 +259,12 @@ public class JsWSPlugin extends NetworkPlugin {
                 if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "server") || AnnotatedElementHelper.hasAnnotation(conn, "server")) {
                     String template = ctx.getTemplateByID("templates/JsWSServer.js");
                     final String port = AnnotatedElementHelper.annotationOrElse(conn, "server", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "server", "9000"));
+                    final String wsProtocolName = AnnotatedElementHelper.annotationOrElse(prot, "ws_protocol", null);
+                    if (wsProtocolName == null) {
+                        template = template.replace("/*$PROTOCOL$*/", "");
+                    } else {
+                        template = template.replace("/*$PROTOCOL$*/", ", handleProtocols: function(ps, cb){cb(true, 'prot3');}");
+                    }
                     template = template.replace("/*$PORT$*/", port);
                     main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\n" + template);
                     main = main.replace("/*$STOP_PLUGINS$*/", "wss.close();\n/*$STOP_PLUGINS$*/\n");

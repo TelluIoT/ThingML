@@ -296,7 +296,8 @@ public class JavaWSPlugin extends NetworkPlugin {
                 }
                 input.close();
                 final String url = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "ws://127.0.0.1:9000");
-                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nWSJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (WSJava) new WSJava(\"" + url + "\").buildBehavior(null, null);\n");
+                final String wsProtocolName = AnnotatedElementHelper.annotationOrElse(prot, "ws_protocol", "");
+                main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nWSJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (WSJava) new WSJava(\"" + url + "\", \"" + wsProtocolName + "\").buildBehavior(null, null);\n");
 
                 StringBuilder connBuilder = new StringBuilder();
                 connBuilder.append(conn.getName() + "_" + conn.getProtocol().getName() + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port().addListener(");
@@ -313,6 +314,19 @@ public class JavaWSPlugin extends NetworkPlugin {
                     String template = ctx.getTemplateByID("templates/JavaWSServer.java");
                     String template2 = ctx.getTemplateByID("templates/JavaWSHandler.java");
                     final String port = AnnotatedElementHelper.annotationOrElse(conn, "server", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "server", "9000"));
+                    if ("".equals(wsProtocolName)) {
+                        template = template.replace("/*$PROTOCOL$*/", "//");
+                    } else {
+                        template = template.replace("/*$NO PROTOCOL$*/", "//");
+                        String template3 = ctx.getTemplateByID("templates/JavaWSProtocol.java");
+                        template3 = template3.replace("/*$PROTOCOL$*/", wsProtocolName);
+                        final File folder3 = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
+                        folder3.mkdir();
+                        final File f3 = new File(ctx.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/JavaWSProtocol.java");
+                        final OutputStream output3 = new FileOutputStream(f3);
+                        IOUtils.write(template3, output3, Charset.forName("UTF-8"));
+                        IOUtils.closeQuietly(output3);
+                    }
                     main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nJavaWSServer wsServer = new JavaWSServer();\nwsServer.port = " + port + ";\nwsServer.start();\n");
                     main = main.replace("/*$STOP$*/", "/*$STOP$*/wsServer.stop();\n");
                     try {
