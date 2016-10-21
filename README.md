@@ -15,4 +15,14 @@ It is distributed under the LGPL licence.
 
 ### [ThingML Test Framework](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/README.md)
 
+###Tools
+
+####[Eclipse Plugin]
+
+####[Standalone Editor](https://github.com/SINTEF-9012/ThingML/blob/master/org.thingml.editor.standalone/README)
+
+####[CLI Compiler](https://github.com/SINTEF-9012/ThingML/blob/master/compilers/README.md)
+
+####[Arduino IDE plugin](https://github.com/SINTEF-9012/ThingML/blob/master/ArduinoIDEPlugin/ReadMe.md)
+
 > Visit [thingml.org](http://www.thingml.org) to find out more about ThingML !
