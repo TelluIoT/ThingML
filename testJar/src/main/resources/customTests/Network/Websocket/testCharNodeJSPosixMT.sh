@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm cliStdo.log &> /dev/null
+
 timeout -s SIGINT 6 ./ServerCharCfg/ServerCharCfg > srvStdo.log 2> srvStdr.log&
 sleep 2
 timeout -s SIGINT 5 node ClientCharSPCfg/main.js > cliStdo.log 2> cliStdr.log&

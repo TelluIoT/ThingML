@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm cliStdo.log &> /dev/null
+
 timeout -s SIGINT 6 mvn -q -f ServerIntCfg/pom.xml exec:java > srvStdo.log 2> srvStdr.log&
 sleep 2
 timeout -s SIGINT 5 node ClientIntSPCfg/main.js > cliStdo.log 2> cliStdr.log&
