@@ -70,7 +70,7 @@ public abstract class NetworkPlugin extends Rule {
         return assignedProtocols;
     }
 
-    public void generateNetworkLibrary(Configuration cfg, Context ctx) {
+    public void generateNetworkLibrary(l) {
         generateNetworkLibrary(cfg, ctx, assignedProtocols);
     }
     

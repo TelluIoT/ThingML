@@ -1,0 +1,70 @@
+package org.thingml.compilers.spi;
+
+import org.sintef.thingml.Configuration;
+import org.sintef.thingml.Thing;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.Rule;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.ThingImplCompiler;
+
+import java.util.List;
+
+
+/**
+ * Created by vassik on 21.10.16.
+ */
+public abstract class ExternalThingPlugin extends Rule {
+
+    public abstract String getSupportedExternalThingTypeID();
+
+    public abstract List<String> getTargetedLanguages();
+
+    public abstract String getPluginID();
+
+    public Checker.InfoType getHighestLevel() {
+        return Checker.InfoType.NOTICE;
+    }
+
+
+    public String getName() {
+        return this.getPluginID() + " plugin's rules";
+    }
+
+
+    public String getDescription() {
+        return "Check that " + this.getPluginID() + " plugin can be used.";
+    }
+
+    /*  START
+        Should be overridden if the plugin needs to perform
+     * some specific checking.
+    */
+
+    public void check(Configuration cfg, Checker checker) {
+
+    }
+
+    public abstract ThingApiCompiler getThingApiCompiler();
+
+    public abstract ThingImplCompiler getThingImplCompiler();
+
+    public abstract void generateExternalLibrary(Configuration cfg, Context ctx);
+
+    public static String calculateExternalThingTypeID(Thing thing) {
+        //this should be adjusted when we decide how we distinguish normal things from the external
+        //for now it is the annotation @external 'protocal name', e.g. @external 'DNSSD'
+        List<String> values = AnnotatedElementHelper.annotation(thing, "external");
+        return (values.size() != 0) ? values.iterator().next() : null;
+    }
+
+    public static Boolean isExternalThing(Thing thing) {
+        //this should be adjusted when we decide how we distinguish normal things from the external
+        //for now it is the annotation @external 'protocal name', e.g. @external 'DNSSD'
+        List<String> values = AnnotatedElementHelper.annotation(thing, "external");
+        return (values.size() != 0) ? true : false;
+    }
+
+
+}
