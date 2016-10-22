@@ -21,6 +21,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
+import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
@@ -465,6 +466,16 @@ public class Context {
                 np.generateNetworkLibrary(cfg, this);
             }
         }
+
+        List<Thing> things = ExternalThingPlugin.getAllExternalThings(ConfigurationHelper.allThings(cfg));
+        Set<ExternalThingPlugin> externalPluginLibs = new HashSet<ExternalThingPlugin>();
+        for(Thing thing : things) {
+            ExternalThingPlugin etp = this.getCompiler().getExternalThingPluging(thing);
+            if(etp != null)
+                externalPluginLibs.add(etp);
+        }
+        for(ExternalThingPlugin etp : externalPluginLibs)
+            etp.generateExternalLibrary(cfg, this);
     }
 
     public SerializationPlugin getSerializationPlugin(Protocol p) throws UnsupportedEncodingException {

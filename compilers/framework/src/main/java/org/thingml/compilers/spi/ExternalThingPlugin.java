@@ -24,6 +24,7 @@ import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,7 +37,7 @@ public abstract class ExternalThingPlugin extends Rule {
 
     public abstract List<String> getTargetedLanguages();
 
-    public abstract String getPluginID();
+    public String getPluginID() { return this.getClass().getSimpleName(); }
 
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
@@ -80,6 +81,16 @@ public abstract class ExternalThingPlugin extends Rule {
         List<String> values = AnnotatedElementHelper.annotation(thing, "external");
         return (values.size() != 0) ? true : false;
     }
+
+    public static List<Thing> getAllExternalThings(List<Thing> things) {
+        List<Thing> ext_things = new ArrayList<Thing>();
+        for(Thing thing: things)
+            if(isExternalThing(thing))
+                ext_things.add(thing);
+
+        return ext_things;
+    }
+
 
 
 }
