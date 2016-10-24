@@ -3,10 +3,10 @@
 rm cliStdo.log &> /dev/null
 
 timeout -s SIGINT 6 ./ServerFloatCfg/ServerFloatCfg > srvStdo.log 2> srvStdr.log&
-sleep 2
-timeout -s SIGINT 5 node ClientFloatCfg/main.js > cliStdo.log 2> cliStdr.log&
+sleep 3
+timeout -s SIGINT 4 node ClientFloatCfg/main.js > cliStdo.log 2> cliStdr.log&
 
-sleep 6
+sleep 5
 
 #printf "Cli stdo:\n\n"
 cat cliStdo.log

@@ -5,10 +5,10 @@ rm cliStdo.log &> /dev/null
 timeout 8 socat -x -v PTY,link=modem0 PTY,link=modem1&
 sleep 1
 timeout -s SIGINT 6 node ServerUIntCfg/main.js > srvStdo.log 2> srvStdr.log&
-sleep 2
-timeout -s SIGINT 5 ./ClientUIntCfg/ClientUIntCfg > cliStdo.log 2> cliStdr.log&
+sleep 3
+timeout -s SIGINT 4 ./ClientUIntCfg/ClientUIntCfg > cliStdo.log 2> cliStdr.log&
 
-sleep 6
+sleep 5
 
 #printf "Cli stdo:\n\n"
 cat cliStdo.log
