@@ -240,7 +240,13 @@ public class TestHelper {
         "		.red\n" +
         "		{\n" +
         "			background: red\n" +
-        "		}\n";
+/*        "		}\n" + 
+        "               table.sortable thead {\n" +
+        "                   background-color:#eee;\n" +
+        "                   color:#666666;\n" +
+        "                   font-weight: bold;\n" +
+        "                   cursor: default;\n" +*/
+        "               }\n";
         return css;
     }
     
@@ -255,6 +261,7 @@ public class TestHelper {
         "		<style>\n" + 
                 writeCSSResultsFile() +
         "		</style>\n" +
+//        "               <script src=\"../src/main/resources/sorttable.js\"></script>\n" +
         "	</head>\n" +
         "	<body>\n" +
         "           <div id=\"test-results-tab\">\n" +
@@ -265,7 +272,7 @@ public class TestHelper {
         "               <button class=\"sort\" data-sort=\"testcase\">\n" +
         "                   Sort by test name\n" +
         "               </button>\n" +
-        "               <table>\n" +
+        "               <table class=\"sortable\"><thead>\n" +
         "               <tr>\n");
         res.append("                <th>Category</th>\n");
         res.append("                <th>Test</th>\n");
@@ -273,7 +280,7 @@ public class TestHelper {
         for(TargetedLanguage lang : langs) {
             res.append("                    <th>" + lang.compilerID + "</th>\n");
         }
-        res.append("                </tr>\n");
+        res.append("                </tr></thead>\n");
         res.append("               <tbody class=\"list\">\n");
         return res.toString();
     }
@@ -283,7 +290,7 @@ public class TestHelper {
         res.append("            </tbody>\n");
         res.append("        </table>\n" +
         "       </div>\n" +
-        "       <script src=\"http://listjs.com/no-cdn/list.js\"></script>\n" +
+        "       <script src=\"../src/main/resources/listjs.js\"></script>\n" +
         "       <script>\n" +
         "           var options = {\n" +
         "               valueNames: [ 'category', 'testcase'");
@@ -317,6 +324,7 @@ public class TestHelper {
         "		<style>\n" + 
                 writeCSSResultsFile() +
         "		</style>\n" +
+//        "               <script src=\"../src/main/resources/sorttable.js\"></script>\n" +
         "	</head>\n" +
         "	<body>\n" +
         "           <div id=\"test-results-tab\">\n" +
@@ -330,12 +338,12 @@ public class TestHelper {
         "               <button class=\"sort\" data-sort=\"results\">\n" +
         "                   Sort by test results\n" +
         "               </button>\n" +
-        "               <table>\n" +
-        "               <tr>\n");
-        res.append("                <th>Category</th>\n");
-        res.append("                <th>Test</th>\n");
-        res.append("                <th>Results</th>\n");
-        res.append("                </tr>\n");
+        "               <table class=\"sortable\"><thead>\n" +
+        "                   <tr>\n");
+        res.append("                    <th>Category</th>\n");
+        res.append("                    <th>Test</th>\n");
+        res.append("                    <th>Results</th>\n");
+        res.append("                    </tr></thead>\n");
         res.append("               <tbody class=\"list\">\n");
         return res.toString();
     }
@@ -345,7 +353,8 @@ public class TestHelper {
         res.append("            </tbody>\n");
         res.append("        </table>\n" +
         "       </div>\n" +
-        "       <script src=\"http://listjs.com/no-cdn/list.js\"></script>\n" +
+//        "       <script src=\"http://listjs.com/no-cdn/list.js\"></script>\n" +
+        "       <script src=\"../src/main/resources/listjs.js\"></script>\n" +
         "       <script>\n" +
         "           var options = {\n" +
         "               valueNames: [ 'category', 'testcase', 'results'");
