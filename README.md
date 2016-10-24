@@ -17,7 +17,7 @@ It is distributed under the LGPL licence.
 
 ###Tools
 
-####[Eclipse Plugin]
+####Eclipse Plugin
 
 ####[Standalone Editor](https://github.com/SINTEF-9012/ThingML/blob/master/org.thingml.editor.standalone/README)
 
