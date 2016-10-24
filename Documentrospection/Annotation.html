@@ -46,7 +46,8 @@
 <tr>
 <td class="annotation">ws_port</td><td class="category">ws</td><td></td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/arduino/ESP8266WebsocketPlugin.java">ESP8266WebsocketPlugin.java</a> </td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../org.thingml.samples/src/main/thingml/network/_arduino/Websocket/WSSrv.thingml">WSSrv.thingml</a> </td><td class="isValueUsed">*</td></tr>
 <tr>
-<td class="annotation">ws_escape_null</td><td class="category">ws</td><td></td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/arduino/ESP8266WebsocketPlugin.java">ESP8266WebsocketPlugin.java</a> </td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../org.thingml.samples/src/main/thingml/network/_arduino/Websocket/WSSrv.thingml">WSSrv.thingml</a> </td><td class="isValueUsed">*</td></tr>
+<td class="annotation">ws_escape_null</td><td class="category">ws</td><td>When a protocol is annotated by escape_null, the character `\0` (NUL) will be replace by `replacement_char` `0` (48), and `replacement_char` will be replace by `replacement_char``replacement_char`. By default `replacement_char` is `}` (125).
+</td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/arduino/ESP8266WebsocketPlugin.java">ESP8266WebsocketPlugin.java</a> </td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../org.thingml.samples/src/main/thingml/network/_arduino/Websocket/WSSrv.thingml">WSSrv.thingml</a> </td><td class="isValueUsed">*</td></tr>
 <tr>
 <td class="annotation">ws_escape_byte</td><td class="category">ws</td><td></td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/arduino/ESP8266WebsocketPlugin.java">ESP8266WebsocketPlugin.java</a> </td><td></td><td class="isValueUsed">*</td></tr>
 <tr>
@@ -186,7 +187,8 @@
 <tr>
 <td class="annotation">mqtt_multi_topic_publish_selection</td><td class="category">mqtt</td><td></td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/posix/PosixMQTTPlugin.java">PosixMQTTPlugin.java</a> </td><td></td><td class="isValueUsed">*</td></tr>
 <tr>
-<td class="annotation">mqtt_escape_null</td><td class="category">mqtt</td><td></td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/arduino/ESP8266MQTTPlugin.java">ESP8266MQTTPlugin.java</a> <a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/posix/PosixMQTTPlugin.java">PosixMQTTPlugin.java</a> </td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../org.thingml.samples/src/main/thingml/network/_arduino/MQTT/MQTTSrv.thingml">MQTTSrv.thingml</a> </td><td class="isValueUsed">*</td></tr>
+<td class="annotation">mqtt_escape_null</td><td class="category">mqtt</td><td>When a protocol is annotated by escape_null, the character `\0` (NUL) will be replace by `replacement_char` `0` (48), and `replacement_char` will be replace by `replacement_char``replacement_char`. By default `replacement_char` is `}` (125).
+</td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/arduino/ESP8266MQTTPlugin.java">ESP8266MQTTPlugin.java</a> <a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/posix/PosixMQTTPlugin.java">PosixMQTTPlugin.java</a> </td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../org.thingml.samples/src/main/thingml/network/_arduino/MQTT/MQTTSrv.thingml">MQTTSrv.thingml</a> </td><td class="isValueUsed">*</td></tr>
 <tr>
 <td class="annotation">mqtt_escape_byte</td><td class="category">mqtt</td><td></td><td><a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/arduino/ESP8266MQTTPlugin.java">ESP8266MQTTPlugin.java</a> <a href="/home/sintef/Documents/ThingML/Documentrospection/../compilers/official-network-plugins/src/main/java/org/thingml/networkplugins/c/posix/PosixMQTTPlugin.java">PosixMQTTPlugin.java</a> </td><td></td><td class="isValueUsed">*</td></tr>
 <tr>
@@ -366,7 +368,7 @@ enumeration DigitalState
             </tbody>
         </table>
        </div>
-       <script src="http://listjs.com/no-cdn/list.js"></script>
+       <script src="src/main/resources/listjs.js"></script>
        <script>
            var options = {
                valueNames: [ 'category', 'annotation', 'isValueUsed']
