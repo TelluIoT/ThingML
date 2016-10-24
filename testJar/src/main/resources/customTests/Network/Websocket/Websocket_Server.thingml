@@ -1,7 +1,9 @@
 //Server
 protocol Websocket
 	@websocket_port_number "9000"
-	@localserver "9000"
+	@url "ws://127.0.0.1:9000"
+	@server "9000"
 	@serializer "JSON"
 	@trace_level "0"
+	@ws_protocol "ThingML-protocol"
 	;

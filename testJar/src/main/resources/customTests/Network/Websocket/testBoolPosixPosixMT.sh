@@ -1,9 +1,10 @@
 #!/bin/bash
 
-sleep 1
+rm cliStdo.log &> /dev/null
+
 timeout -s SIGINT 6 ./ServerBoolCfg/ServerBoolCfg > srvStdo.log 2> srvStdr.log&
-sleep 1
-timeout -s SIGINT 5 ./ClientBoolCfg/ClientBoolCfg > cliStdo.log 2> cliStdr.log&
+sleep 2
+timeout -s SIGINT 5 ./ClientBoolSPCfg/ClientBoolSPCfg > cliStdo.log 2> cliStdr.log&
 
 sleep 6
 

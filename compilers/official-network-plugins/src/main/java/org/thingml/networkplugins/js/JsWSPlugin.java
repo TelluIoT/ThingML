@@ -181,6 +181,9 @@ public class JsWSPlugin extends NetworkPlugin {
             String template = ctx.getTemplateByID("templates/JsWSPlugin.js");
             template = template.replace("/*$FORMAT$*/", prot.getName() + "StringProtocol");
             template = template.replace("/*$NAME$*/", prot.getName());
+            String wsProtocolName = AnnotatedElementHelper.annotationOrElse(prot, "ws_protocol", "");
+            if(wsProtocolName.compareTo("") != 0)
+                template = template.replace("/*$PROTOCOL$*/", ", \"" + wsProtocolName + "\"");
             for (ExternalConnector conn : getExternalConnectors(cfg, prot)) {
                 updateMain(ctx, cfg, conn);
             }
@@ -189,6 +192,11 @@ public class JsWSPlugin extends NetworkPlugin {
                 builder.append("msg._port = '" + p.getName() + "';\n");
                 builder.append("instance._receive(msg);\n");
                 template = template.replace("/*$DISPATCH$*/", "/*$DISPATCH$*/\n" + builder.toString());
+                for(Message m : p.getReceives()) {
+                    if (AnnotatedElementHelper.hasAnnotation(m, "websocket_connector_ready")) {
+                        template = template.replace("/*$CALLBACK$*/", "/*$CALLBACK$*/\ninstance.receive" + m.getName() + "On" + p.getName() + "();\n");
+                    }
+                }
             }
             StringBuilder builder = new StringBuilder();
             for (Port p : ports) {
@@ -210,7 +218,7 @@ public class JsWSPlugin extends NetworkPlugin {
                         builder.append(ctx.protectKeyword(pa.getName()));
                         i++;
                     }
-                    builder.append("));\n");
+                    builder.append("), function ack(error) {if(error) console.log(\"error: \" + error);});\n");
                     builder.append("};\n\n");
                 }
             }
@@ -237,7 +245,7 @@ public class JsWSPlugin extends NetworkPlugin {
                 final String url = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "ws://127.0.0.1");
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\nconst websocket = require('./WSJS');");
-                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst ws = new websocket(\"WS\", false, \"" + url + "\", " + conn.getInst().getInstance().getName() + ", function (started) {if (!started) {console.log(\"Cannot start websocket!\"); process.exit(1);}});\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst ws = new websocket(\"WS\", false, \"" + url + "\", " + conn.getInst().getInstance().getName() + ");\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "ws._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
@@ -251,6 +259,12 @@ public class JsWSPlugin extends NetworkPlugin {
                 if (AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "server") || AnnotatedElementHelper.hasAnnotation(conn, "server")) {
                     String template = ctx.getTemplateByID("templates/JsWSServer.js");
                     final String port = AnnotatedElementHelper.annotationOrElse(conn, "server", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "server", "9000"));
+                    final String wsProtocolName = AnnotatedElementHelper.annotationOrElse(prot, "ws_protocol", null);
+                    if (wsProtocolName == null) {
+                        template = template.replace("/*$PROTOCOL$*/", "");
+                    } else {
+                        template = template.replace("/*$PROTOCOL$*/", ", handleProtocols: function(ps, cb){cb(true, '" + wsProtocolName + "');}");
+                    }
                     template = template.replace("/*$PORT$*/", port);
                     main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\n" + template);
                     main = main.replace("/*$STOP_PLUGINS$*/", "wss.close();\n/*$STOP_PLUGINS$*/\n");

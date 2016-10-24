@@ -1,16 +1,16 @@
-var WebSocket = require('ws');
-var Format = require('.//*$FORMAT$*/');
+const WebSocket = require('ws');
+const Format = require('.//*$FORMAT$*/');
 
-function /*$NAME$*/(name, debug, serverURL, instance, callback) {
+function /*$NAME$*/(name, debug, serverURL, instance) {
     this.name = name;
     this.debug = debug;
     this.ready = false;
 
     this.formatter = new Format();
-    this.ws = new WebSocket(serverURL);
+    this.ws = new WebSocket(serverURL/*$PROTOCOL$*/);
 
     this.ws.on('open', function open() {
-        callback(true);
+        /*$CALLBACK$*/
     });
 
    	this.ws.on('message', function(data, flags) {

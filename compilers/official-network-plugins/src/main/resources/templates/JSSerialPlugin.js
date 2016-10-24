@@ -1,6 +1,6 @@
-var SerialPort = require('serialport').SerialPort;
-var ByteBuffer = require("bytebuffer");
-var Format = require('.//*$FORMAT$*/');
+const SerialPort = require('serialport').SerialPort;
+const ByteBuffer = require("bytebuffer");
+const Format = require('.//*$FORMAT$*/');
 
 function /*$NAME$*/(name, debug, port, baudrate, instance, callback) {
     this.name = name;

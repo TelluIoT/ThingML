@@ -92,7 +92,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
         instantiateMessageType(builder, m, code);
         builder.append("/**Serializes a message into a binary format*/\n");
-        builder.append("private static byte[] toBytes(" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
+        builder.append("private byte[] format(" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
         builder.append("ByteBuffer buffer = ByteBuffer.allocate(" + size + ");\n");
         builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
         builder.append("buffer.putShort(" + m.getName().toUpperCase() + ".getCode());\n");
@@ -102,7 +102,12 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
                     builder.append("buffer.put(_this." + p.getName() + ");\n");
                 } else if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context).equals("boolean")) {
                     builder.append("if(" + p.getName() + ") buffer.put((byte)0x01); else buffer.put((byte)0x00); ");
-                } else {
+                } else  if (JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context).equals("char")) {
+                    builder.append("try {\n");
+                    builder.append("buffer.put(new Character(_this." + p.getName() + ").toString().getBytes(\"UTF-8\")[0]);\n");
+                    builder.append("} catch(Exception e){return null;}\n");
+                }
+                else {
                     builder.append("buffer.put" + context.firstToUpper(JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context)) + "(_this." + p.getName() + ");\n");
                 }
             }
@@ -128,8 +133,8 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
             instantiateMessageType(builder, m, code);
         }
         //Instantiate message from binary
-        builder.append("@Override\npublic Event instantiate(byte[] payload) {\n");
-        builder.append("ByteBuffer buffer = ByteBuffer.wrap(payload);\n");
+        builder.append("@Override\npublic Event instantiate(Byte[] payload) {\n");
+        builder.append("ByteBuffer buffer = ByteBuffer.wrap(JavaBinaryHelper.toPrimitive(payload));\n");
         builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
         builder.append("final short code = buffer.getShort();\n");
         builder.append("switch(code) {\n");
@@ -179,6 +184,28 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        final String template2 = context.getTemplateByID("templates/JavaFormat.java");
+        try {
+            final File folder = new File(context.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
+            folder.mkdir();
+            final File f = new File(context.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/Format.java");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(template2, output, Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        final String template3 = context.getTemplateByID("templates/JavaBinaryHelper.java");
+        try {
+            final File folder = new File(context.getOutputDirectory() + "/src/main/java/org/thingml/generated/network");
+            folder.mkdir();
+            final File f = new File(context.getOutputDirectory() + "/src/main/java/org/thingml/generated/network/JavaBinaryHelper.java");
+            final OutputStream output = new FileOutputStream(f);
+            IOUtils.write(template3, output, Charset.forName("UTF-8"));
+            IOUtils.closeQuietly(output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -198,6 +225,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
 
         List<String> res = new ArrayList<>();
         res.add("Binary");
+        res.add("binary");
         return res;
     }
 

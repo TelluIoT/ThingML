@@ -80,6 +80,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
 
         List<String> res = new ArrayList<>();
         res.add("Binary");
+        res.add("binary");
         return res;
     }
 

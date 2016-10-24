@@ -1,0 +1,45 @@
+import "../Msgs/MsgsFloat.thingml"
+
+thing Client includes MsgsFloat {
+	property myf : Float = '-3.141560'
+	property myf1 : Float = '0.0'
+	property myf2 : Float = '195.2'
+	message go()@websocket_connector_ready "true"
+
+	required port p {
+		sends mFloat, mHFloat
+		receives go, mFloat, mHFloat
+	}
+
+	statechart Chart init S0 {
+		state S0 {
+			transition -> S1 event p?go
+	}
+
+		state S1 {
+			on entry do
+				print "I "
+				p!mFloat(myf)
+			end
+
+			transition -> S2
+			event e : p?mFloat
+			guard e.f == myf
+			action print "mFloat "
+		}
+		state S2 {
+			on entry do
+				p!mHFloat(myf1, myf2)
+			end
+
+			transition -> SEnd
+			event e : p?mHFloat
+			guard e.f1 == myf1 and e.f2 == myf2
+			action print "mHFloat "
+		}
+		state SEnd {
+			on entry print "End\n"
+		}
+	}
+
+}

@@ -1,0 +1,43 @@
+import "../Msgs/MsgsBool.thingml"
+
+thing Client includes MsgsBool {
+
+	message go()@websocket_connector_ready "true"
+
+	required port p {
+		sends mBool, mHBool
+		receives go, mBool, mHBool
+	}
+
+	statechart Chart init S0 {
+		state S0 {
+			transition -> S1 event p?go
+	}
+
+		state S1 {
+			on entry do
+				print "I "
+				p!mBool('true')
+			end
+
+			transition -> S2
+			event e : p?mBool
+			guard e.b == 'true'
+			action print "mBool "
+		}
+		state S2 {
+			on entry do
+				p!mHBool('false', 'true')
+			end
+
+			transition -> SEnd
+			event e : p?mHBool
+			guard e.b1 == 'false' and e.b2 == 'true'
+			action print "mHBool "
+		}
+		state SEnd {
+			on entry print "End\n"
+		}
+	}
+
+}

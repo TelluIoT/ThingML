@@ -69,7 +69,7 @@ static int /*PORT_NAME*/_callback_ThingML_protocol(struct libwebsocket_context *
 
 static struct libwebsocket_protocols /*PORT_NAME*/_protocols[] = {
     {
-        "ThingML-protocol", // protocol name - very important!
+        "/*WS_PROTOCOL*/", // protocol name - very important!
         /*PORT_NAME*/_callback_ThingML_protocol,   // callback
         0                          // we don't use any per session data
     },
@@ -154,7 +154,7 @@ void /*PORT_NAME*/_forwardMessage(char * msg, int length/*PARAM_CLIENT_ID*/) {
 
 		/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Trying to send:\n%s \n", p);
 
-		m = libwebsocket_write(/*PORT_NAME*/_socket, p, length + 1, LWS_WRITE_TEXT);
+		m = libwebsocket_write(/*PORT_NAME*/_socket, p, length, LWS_WRITE_TEXT);
 	} else {
 		/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Error: Attempting to write on a closed socket\n");
 	}

@@ -1,0 +1,43 @@
+import "../Msgs/MsgsChar.thingml"
+
+thing Client includes MsgsChar {
+
+	message go()@websocket_connector_ready "true"
+
+	required port p {
+		sends mChar, mHChar
+		receives go, mChar, mHChar
+	}
+
+	statechart Chart init S0 {
+		state S0 {
+			transition -> S1 event p?go
+	}
+
+		state S1 {
+			on entry do
+				print "I "
+				p!mChar('\'z\'')
+			end
+
+			transition -> S2
+			event e : p?mChar
+			guard e.c == '\'z\''
+			action print "mChar "
+		}
+		state S2 {
+			on entry do
+				p!mHChar('\'A\'', '\'9\'')
+			end
+
+			transition -> SEnd
+			event e : p?mHChar
+			guard e.c1 == '\'A\'' and e.c2 == '\'9\''
+			action print "mHChar "
+		}
+		state SEnd {
+			on entry print "End\n"
+		}
+	}
+
+}

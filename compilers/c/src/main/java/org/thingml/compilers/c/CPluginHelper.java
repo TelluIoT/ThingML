@@ -36,11 +36,11 @@ public class CPluginHelper extends PluginHelper {
                     "    }\n" +
                     "    uint8_t " + bufOut + "[" + sizeOut + "];\n" +
                     "    for(i = 0; i < " + sizeOut + "; i++) {\n" +
-                    "        if(" + bufIn + "[i] == " + escapeChar + ") {\n" +
+                    "        if(" + bufIn + "[j] == " + escapeChar + ") {\n" +
                     "           " + bufOut + "[i] = " + escapeChar + ";\n" +
                     "           i++;\n" +
                     "           " + bufOut + "[i] = " + bufIn + "[j];\n" +
-                    "        } else if(" + bufIn + "[i] == 0) {\n" +
+                    "        } else if(" + bufIn + "[j] == 0) {\n" +
                     "           " + bufOut + "[i] = " + escapeChar + ";\n" +
                     "           i++;\n" +
                     "           " + bufOut + "[i] = 48;\n" +
@@ -67,7 +67,7 @@ public class CPluginHelper extends PluginHelper {
                     "        if(" + bufIn + "[i] == " + escapeChar + ") {\n" +
                     "           i++;\n" +
                     "           if(" + bufIn + "[i] == 48) " + bufOut + "[j] = 0;\n" +
-                    "           else buf[j] = payload[i];\n" +
+                    "           else buf[j] = " + bufIn + "[i];\n" +
                     "        } else {\n" +
                     "           " + bufOut + "[j] = " + bufIn + "[i];\n" +
                     "        }\n" +

@@ -1,9 +1,10 @@
 #!/bin/bash
 
-sleep 1
+rm cliStdo.log &> /dev/null
+
 timeout -s SIGINT 6 node ServerUIntCfg/main.js > srvStdo.log 2> srvStdr.log&
-sleep 1
-timeout -s SIGINT 5 node ClientUIntCfg/main.js > cliStdo.log 2> cliStdr.log&
+sleep 2
+timeout -s SIGINT 5 node ClientUIntSPCfg/main.js > cliStdo.log 2> cliStdr.log&
 
 sleep 6
 

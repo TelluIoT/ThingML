@@ -8,6 +8,8 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 public class StdIOJava extends Component {
+	private final /*$SERIALIZER$*/ formatter = new /*$SERIALIZER$*/();
+
 	final Scanner stdin = new Scanner(System.in);
 	final PrintStream stdout = System.out;
 
@@ -26,10 +28,10 @@ public class StdIOJava extends Component {
 				}
 			}
 		}.start();
-		while (active) {
+		while (active.get()) {
 			try {
 				final Event e = queue.take();//should block if queue is empty, waiting for a message
-				final String payload = /*$SERIALIZER$*/.toString(e);
+				final String payload = formatter.format(e);
 				if (payload != null)
 					stdout.println(payload);
 			} catch (InterruptedException e) {

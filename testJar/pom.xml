@@ -79,7 +79,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.4.0</version>
+                <version>1.5.0</version>
                 <executions>
                     <execution>
                         <id>test</id>
@@ -97,6 +97,33 @@
                         </goals>
                         <configuration>
                             <mainClass>org.thingml.testjar.Generator</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>custom</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.thingml.testjar.RunCustomTests</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>loadBalancer</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.thingml.loadbalancer.LoadBalancer</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>populate</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.thingml.custompopulator.Populate</mainClass>
                         </configuration>
                     </execution>
                 </executions>

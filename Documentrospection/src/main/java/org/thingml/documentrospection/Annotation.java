@@ -33,12 +33,14 @@ public class Annotation implements Comparable{
     String name;
     String category;
     Set<String> placeFound;
+    Set<File> placeFoundFile;
     Set<String> samples;
     public boolean isValueUsed;
     
     public Annotation(String name) {
         this.name = name;
         this.placeFound = new HashSet<>();
+        this.placeFoundFile = new HashSet<>();
         this.samples = new HashSet<>();
         this.isValueUsed = false;
         if(name.contains("_")) {
@@ -59,6 +61,7 @@ public class Annotation implements Comparable{
             if(s.compareTo(f.getPath()) == 0) return;
         }
         placeFound.add(f.getPath());
+        placeFoundFile.add(f);
     }
     
     public void addSample(File f) {

@@ -191,18 +191,20 @@ void /*PORT_NAME*/_start_receiver_process() {
 }
 
 void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size/*PUBLISH_MULTI_OR_MONO_DECLARATION*/) {
-    int n, m, i;
+    int n, m, i2;
     int length = size;
     unsigned char buf[length];
     unsigned char *p = &buf[0];	
     unsigned char *q = p;
     n = 0;
-    for(i = 0; i < length; i++) {
-        *q = msg[i];
+    for(i2 = 0; i2 < length; i2++) {
+        *q = msg[i2];
         q++;
         n++;
     }
     
+    /*ZERO_ESCAPING*/
+
     /*PUBLISH_MULTI_OR_MONO_CORE*/
     
 }

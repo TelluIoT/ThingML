@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.thingml.compilers.c.CPluginHelper;
 
 /**
  *
@@ -293,6 +294,34 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                                 + portName + "_retain);\n");
                     }
                 }
+                
+                String escapeByte;
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_escape_byte")) {
+                    escapeByte = AnnotatedElementHelper.annotation(protocol, "mqtt_escape_byte").iterator().next();
+                } else {
+                    escapeByte = "125";
+                }
+                ctemplate = ctemplate.replace("/*ESCAPE_CHAR*/", escapeByte);
+                
+                String zEscapeS = "";
+                String parserCall = "";
+                
+                if(AnnotatedElementHelper.isDefined(protocol, "mqtt_escape_null", "true")) {
+                    zEscapeS += CPluginHelper.generateNullCharEscaperSend("buf", "length", "zbuf", "zlength", portName + "_ESCAPE_CHAR");
+                    zEscapeS += "length = zlength;\n";
+                    zEscapeS += "p = &zbuf[0];\n";
+                    parserCall += "uint8_t * p = message->payload;\n";
+                    parserCall += CPluginHelper.generateNullCharEscaperReceive("p", "len", "buf", "size", portName + "_ESCAPE_CHAR");
+                    parserCall += portName + "_parser(buf, size);\n";
+                    
+                } else {
+                    parserCall += portName + "_parser(message->payload, len);\n";
+                }
+                ctemplate = ctemplate.replace("/*ZERO_ESCAPING_SEND*/", zEscapeS);
+                ctemplate = ctemplate.replace("/*PARSER_CALL*/", parserCall);
+                
+                
+                
 
                 //De Serializer 
                 StringBuilder ParserImplementation = new StringBuilder();
@@ -301,7 +330,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 ParserImplementation.append("}\n");
 
                 ctemplate = ctemplate.replace("/*PARSER_IMPLEMENTATION*/", sp.generateSubFunctions() + ParserImplementation);
-
+                
 
                 Integer traceLevel;
                 if (AnnotatedElementHelper.hasAnnotation(protocol, "trace_level")) {

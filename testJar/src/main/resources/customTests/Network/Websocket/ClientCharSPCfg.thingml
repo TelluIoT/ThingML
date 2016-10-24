@@ -1,0 +1,7 @@
+import "Websocket_Client.thingml"
+import "../Clients_SP/ClientChar.thingml"
+
+configuration ClientCharSPCfg @nodejs_silent_shutdown "true" {
+	instance c : Client
+	connector c.p over Websocket
+}

@@ -131,6 +131,21 @@ public class Main {
             a.isValueUsed = true;
         }
         
+        String mAnnotationOrElse = "annotationOrElse\\([^,]*,(\\s)\"" + annotation + "\"";
+        p = Pattern.compile(mAnnotationOrElse);
+        m = p.matcher(fileContent);
+        
+        while(m.find()) {
+            String an = m.group().split(",(\\s)\"")[1].split("\"")[0];
+            Annotation a = Annotation.getAnnotationByName(dico, an);
+            if(a == null) {
+                a = new Annotation(an);
+                dico.add(a);
+            }
+            a.addPlaceFound(f);
+            a.isValueUsed = true;
+        }
+        
         String mIsDefined = "isDefined\\([^,]*,(\\s)\"" + annotation + "\"";
         p = Pattern.compile(mIsDefined);
         m = p.matcher(fileContent);

@@ -1,4 +1,4 @@
-var Format = require('.//*$FORMAT$*/');
+const Format = require('.//*$FORMAT$*/');
 
 function /*$NAME$*/(name, debug, instance, callback) {
     this.name = name;
