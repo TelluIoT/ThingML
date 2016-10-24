@@ -16,7 +16,9 @@
  */
 package org.thingml.generated.network;
 
-//This Class is extracted from Apache ArrayUtils, distributed under Apache License 2.0
+import java.util.Arrays;
+
+//This Class is extracted (and enhanced) from Apache ArrayUtils, distributed under Apache License 2.0
 public class JavaBinaryHelper {
     public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
     public static final Byte[] EMPTY_BYTE_OBJECT_ARRAY = new Byte[0];
@@ -45,5 +47,53 @@ public class JavaBinaryHelper {
             result[i] = Byte.valueOf(array[i]);
         }
         return result;
+    }
+
+    public static byte[] escape(final byte[] array, java.util.List<Byte> escapes, byte esc) {
+        int newSize = array.length;
+        for (byte b : array) {
+            if (escapes.contains(b))
+                newSize++;
+        }
+        final byte[] result = new byte[newSize];
+        int i = 0;
+        for (byte b : array) {
+            if (escapes.contains(b)) {
+                result[i] = esc;
+                i++;
+            }
+            result[i] = b;
+            i++;
+        }
+        return result;
+    }
+
+    public static byte[] unescape(final byte[] array, java.util.List<Byte> escapes, byte esc) {
+        int newSize = array.length;
+        for (byte b : array) {
+            if (escapes.contains(b))
+                newSize--;
+        }
+        final byte[] buffer = new byte[newSize];
+        final int RCV_MSG = 1;
+        final int RCV_ESC = 2;
+        int buffer_idx = 0;
+        int state = RCV_MSG;
+        for(byte data : array) {
+            if (state == RCV_MSG) {
+                if (data == esc) {
+                    state = RCV_ESC;
+                } else { // it is just a byte to store
+                    buffer[buffer_idx] = data;
+                    buffer_idx++;
+                }
+            } else if (state == RCV_ESC) {
+                // Store the byte without looking at it
+                buffer[buffer_idx] = data;
+                buffer_idx++;
+                state = RCV_MSG;
+            }
+        }
+        return buffer;
     }
 }//see https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/commons/lang3/ArrayUtils.java
