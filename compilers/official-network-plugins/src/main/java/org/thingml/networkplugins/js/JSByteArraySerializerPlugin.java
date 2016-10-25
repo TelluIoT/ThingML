@@ -97,9 +97,13 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
             if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
                 final String ctype = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type") ? AnnotatedElementHelper.annotation(p.getType(), "c_type").get(0).replace("_t", "") : "byte";
                 if (p.getType() instanceof PrimitiveType) {
-                    builder.append(".write" + context.firstToUpper(ctype) + "(" + p.getName() + ")\n");
+                    if ("char".equals(ctype)) {
+                        builder.append(".writeByte(" + p.getName() + ".charCodeAt(0))\n");
+                    } else {
+                        builder.append(".write" + context.firstToUpper(ctype) + "(" + p.getName() + ")\n");
+                    }
                 } else {
-
+                    throw new UnsupportedOperationException("Cannot serialize objects (non-primitive type) " + p.getType().getName());
                 }
             }
         }
@@ -138,7 +142,11 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
                 if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
                     final String type = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type")?AnnotatedElementHelper.annotation(p.getType(),"c_type").get(0).replace("_t", ""):null;
                     //if (type == null) //TODO: we should probably raise an exception here
-                    builder.append("msg." + p.getName() + " = bb.read" + context.firstToUpper(type) +  "();\n");
+                    if ("char".equals(type)) {
+                        builder.append("msg." + p.getName() + " = String.fromCharCode(bb.readByte());\n");
+                    } else {
+                        builder.append("msg." + p.getName() + " = bb.read" + context.firstToUpper(type) + "();\n");
+                    }
                 }
             }
             builder.append("break;\n");

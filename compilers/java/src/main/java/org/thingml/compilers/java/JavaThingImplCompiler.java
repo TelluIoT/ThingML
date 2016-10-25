@@ -422,7 +422,9 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             Expression e = ThingHelper.initExpression(thing, p);
             if (e != null) {
-                builder.append(ctx.getVariableName(p) + " = ");
+                builder.append(ctx.getVariableName(p) + " = (");
+                builder.append(JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx));
+                builder.append(") ");
                 ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
                 builder.append(";\n");
             }

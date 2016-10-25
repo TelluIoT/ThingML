@@ -148,6 +148,12 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
                         builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + " " + p.getName() + " = " + "buffer.get();\n");
                     } else if ("boolean".equals(javaType)) {
                         builder.append("final " + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + " " + p.getName() + " = " + "buffer.get() == 0x00 ? false : true;\n");
+                    } else if ("char".equals(javaType)) {
+                        builder.append("char " + p.getName() + " = '\0';\n");
+                        builder.append("try{\n");
+                        builder.append(p.getName() + " = new String(new byte[]{buffer.get()}, \"UTF-8\").charAt(0);\n");
+                        builder.append("} catch (Exception e){System.err.println(\"Error while parsing char \" + e.getMessage());}\n");
+
                     } else if ("String".equals(javaType)) {
                         //TODO [0: #bytes size, 1:size[#bytes size], 2(-3-5): [UTF-8 bytes]]
                     } else {

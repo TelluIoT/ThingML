@@ -143,10 +143,10 @@ public class Populate {
         "\n" +
         p.preExec +
         "timeout -s SIGINT 6 " + langSrv.getExec("Server", t.type, "") + " > srvStdo.log 2> srvStdr.log&\n" +
-        "sleep 2\n" +
-        "timeout -s SIGINT 5 " + langCli.getExec("Client", t.type, (p.sp ? "SP" : "")) + " > cliStdo.log 2> cliStdr.log&\n" +
+        "sleep 3\n" +
+        "timeout -s SIGINT 4 " + langCli.getExec("Client", t.type, (p.sp ? "SP" : "")) + " > cliStdo.log 2> cliStdr.log&\n" +
         "\n" +
-        "sleep 6\n" +
+        "sleep 5\n" +
         "\n" +
         "#printf \"Cli stdo:\\n\\n\"\n" +
         "cat cliStdo.log\n" +

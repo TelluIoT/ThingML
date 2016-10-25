@@ -5,10 +5,10 @@ rm cliStdo.log &> /dev/null
 timeout 8 socat -x -v PTY,link=modem0 PTY,link=modem1&
 sleep 1
 timeout -s SIGINT 6 mvn -q -f ServerFloatCfg/pom.xml exec:java > srvStdo.log 2> srvStdr.log&
-sleep 2
-timeout -s SIGINT 5 ./ClientFloatCfg/ClientFloatCfg > cliStdo.log 2> cliStdr.log&
+sleep 3
+timeout -s SIGINT 4 ./ClientFloatCfg/ClientFloatCfg > cliStdo.log 2> cliStdr.log&
 
-sleep 6
+sleep 5
 
 #printf "Cli stdo:\n\n"
 cat cliStdo.log

@@ -1,0 +1,37 @@
+import "../thingml.thingml"
+
+
+thing TestUInt16 includes Test 
+@test "1234 # 1234"
+{
+
+	property min : UInt16 = 0
+	property max : UInt16 = 65535
+	property zero : UInt16 = 0
+	property order : UInt16 = 1
+    
+    statechart TestType init S0 {
+    
+    	state S0 {
+    		internal
+			event m : harnessIn?testIn
+			guard m.c == '\'1\'' and (min == 0)
+			action harnessOut!testOut('\'1\'')
+
+    		internal
+			event m : harnessIn?testIn
+			guard m.c == '\'2\'' and (max == 65535)
+			action harnessOut!testOut('\'2\'')
+
+    		internal
+			event m : harnessIn?testIn
+			guard m.c == '\'3\'' and (zero == 0)
+			action harnessOut!testOut('\'3\'')
+
+    		internal
+			event m : harnessIn?testIn
+			guard m.c == '\'4\'' and (order == 1)
+			action harnessOut!testOut('\'4\'')
+    	}
+    }
+}
