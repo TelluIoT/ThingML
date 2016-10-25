@@ -102,6 +102,8 @@ public class JavaMQTTPlugin extends NetworkPlugin {
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
+        boolean escape = false; //FIXME true/false depending on annotation
+
         updatePOM(ctx);
         StringBuilder builder = new StringBuilder();
         for (Protocol prot : protocols) {
@@ -131,10 +133,16 @@ public class JavaMQTTPlugin extends NetworkPlugin {
                 temp.append("return ");
                 if (sp.getSupportedFormat().contains("Binary")) {//FIXME
                     temp.append("JavaBinaryHelper.toObject(");
+                    if (escape) {
+                        temp.append("JavaBinaryHelper.unescape(");
+                    }
                 }
                 temp.append("format((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e)\n");
                 if (sp.getSupportedFormat().contains("Binary")) {//FIXME
                     temp.append(")");
+                    if (escape) {
+                        temp.append(")");
+                    }
                 }
                 temp.append(";");
                 temp.append("}\n");
@@ -162,7 +170,7 @@ public class JavaMQTTPlugin extends NetworkPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            new SerialProtocol(ctx, prot, cfg).generate();
+            new SerialProtocol(ctx, prot, cfg).generate(escape);
         }
     }
 
@@ -192,7 +200,7 @@ public class JavaMQTTPlugin extends NetworkPlugin {
             }
         }
 
-        public void generate() {
+        public void generate(boolean escape) {
             for (ThingPortMessage tpm : getMessagesSent(cfg, prot)) {
                 addPort(tpm.p);
             }
@@ -213,7 +221,11 @@ public class JavaMQTTPlugin extends NetworkPlugin {
 
             if (sp.getSupportedFormat().contains("Binary")) {//FIXME
                 parseBuilder.append("final Event event = formatter.instantiate(JavaBinaryHelper.toObject(payload.toByteArray()));\n");
-                template = template.replace("/*$PUBLISH$*/", "connection.publish(this.pubtopic, JavaBinaryHelper.toPrimitive((Byte[]) payload), QoS.AT_LEAST_ONCE, false, disconnectOnFailure);\n");
+                if (escape) {
+                    template = template.replace("/*$PUBLISH$*/", "connection.publish(this.pubtopic, JavaBinaryHelper.escape(JavaBinaryHelper.toPrimitive((Byte[]) payload)), QoS.AT_LEAST_ONCE, false, disconnectOnFailure);\n");
+                } else {
+                    template = template.replace("/*$PUBLISH$*/", "connection.publish(this.pubtopic, JavaBinaryHelper.toPrimitive((Byte[]) payload), QoS.AT_LEAST_ONCE, false, disconnectOnFailure);\n");
+                }
             } else {
                 parseBuilder.append("final Event event = formatter.instantiate(new String(payload.toByteArray(), java.nio.charset.StandardCharsets.UTF_8));\n");
                 template = template.replace("/*$PUBLISH$*/", "connection.publish(new UTF8Buffer(this.pubtopic), new Buffer(((String)payload).getBytes()), QoS.AT_LEAST_ONCE, false, disconnectOnFailure);\n");

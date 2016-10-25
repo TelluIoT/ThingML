@@ -16,12 +16,24 @@
  */
 package org.thingml.generated.network;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 //This Class is extracted (and enhanced) from Apache ArrayUtils, distributed under Apache License 2.0
 public class JavaBinaryHelper {
     public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
     public static final Byte[] EMPTY_BYTE_OBJECT_ARRAY = new Byte[0];
+
+    public static final byte ESC = 0x7D;
+    public static final byte NULL = 0x00;
+    public static final byte ESC_NULL = 0x48;
+
+    public static final java.util.List<Byte> toEscape = new java.util.ArrayList<>();
+
+    static {
+        toEscape.add(ESC);
+        toEscape.add(NULL);
+    }
 
     public static byte[] toPrimitive(final Byte[] array) {
         if (array == null) {
@@ -49,17 +61,17 @@ public class JavaBinaryHelper {
         return result;
     }
 
-    public static byte[] escape(final byte[] array, java.util.List<Byte> escapes, byte esc) {
+    public static byte[] escape(final byte[] array) {
         int newSize = array.length;
         for (byte b : array) {
-            if (escapes.contains(b))
+            if (toEscape.contains(b))
                 newSize++;
         }
         final byte[] result = new byte[newSize];
         int i = 0;
         for (byte b : array) {
-            if (escapes.contains(b)) {
-                result[i] = esc;
+            if (toEscape.contains(b)) {
+                result[i] = ESC;
                 i++;
             }
             result[i] = b;
@@ -68,20 +80,15 @@ public class JavaBinaryHelper {
         return result;
     }
 
-    public static byte[] unescape(final byte[] array, java.util.List<Byte> escapes, byte esc) {
-        int newSize = array.length;
-        for (byte b : array) {
-            if (escapes.contains(b))
-                newSize--;
-        }
-        final byte[] buffer = new byte[newSize];
+    public static byte[] unescape(final byte[] array) {
+        final byte[] buffer = new byte[array.length];
         final int RCV_MSG = 1;
         final int RCV_ESC = 2;
         int buffer_idx = 0;
         int state = RCV_MSG;
         for(byte data : array) {
             if (state == RCV_MSG) {
-                if (data == esc) {
+                if (data == ESC) {
                     state = RCV_ESC;
                 } else { // it is just a byte to store
                     buffer[buffer_idx] = data;
@@ -94,6 +101,6 @@ public class JavaBinaryHelper {
                 state = RCV_MSG;
             }
         }
-        return buffer;
+        return java.util.Arrays.copyOf(buffer, buffer_idx);
     }
 }//see https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/commons/lang3/ArrayUtils.java
