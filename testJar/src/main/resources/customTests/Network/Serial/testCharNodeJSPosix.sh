@@ -6,7 +6,7 @@ timeout 8 socat -x -v PTY,link=modem0 PTY,link=modem1&
 sleep 1
 timeout -s SIGINT 6 ./ServerCharCfg/ServerCharCfg > srvStdo.log 2> srvStdr.log&
 sleep 3
-timeout -s SIGINT 4 node ClientCharCfg/main.js > cliStdo.log 2> cliStdr.log&
+timeout -s SIGINT 4 nodejs ClientCharCfg/main.js > cliStdo.log 2> cliStdr.log&
 
 sleep 5
 

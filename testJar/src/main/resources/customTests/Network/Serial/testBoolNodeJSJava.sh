@@ -6,7 +6,7 @@ timeout 8 socat -x -v PTY,link=modem0 PTY,link=modem1&
 sleep 1
 timeout -s SIGINT 6 mvn -q -f ServerBoolCfg/pom.xml exec:java > srvStdo.log 2> srvStdr.log&
 sleep 3
-timeout -s SIGINT 4 node ClientBoolCfg/main.js > cliStdo.log 2> cliStdr.log&
+timeout -s SIGINT 4 nodejs ClientBoolCfg/main.js > cliStdo.log 2> cliStdr.log&
 
 sleep 5
 

@@ -4,7 +4,7 @@ rm cliStdo.log &> /dev/null
 
 timeout -s SIGINT 6 ./ServerEmptyCfg/ServerEmptyCfg > srvStdo.log 2> srvStdr.log&
 sleep 3
-timeout -s SIGINT 4 node ClientEmptySPCfg/main.js > cliStdo.log 2> cliStdr.log&
+timeout -s SIGINT 4 nodejs ClientEmptySPCfg/main.js > cliStdo.log 2> cliStdr.log&
 
 sleep 5
 

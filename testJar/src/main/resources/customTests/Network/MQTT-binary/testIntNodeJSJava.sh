@@ -4,7 +4,7 @@ rm cliStdo.log &> /dev/null
 
 timeout -s SIGINT 6 mvn -q -f ServerIntCfg/pom.xml exec:java > srvStdo.log 2> srvStdr.log&
 sleep 3
-timeout -s SIGINT 4 node ClientIntCfg/main.js > cliStdo.log 2> cliStdr.log&
+timeout -s SIGINT 4 nodejs ClientIntCfg/main.js > cliStdo.log 2> cliStdr.log&
 
 sleep 5
 
