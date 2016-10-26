@@ -16,6 +16,7 @@
 ##Network plugins
  * SSL should be used as much as possible for MQTT, Websocket, etc
  * Automatic reconection, and/or connection loss notification should be used by network plugins.
+ * C plugins Websocket and MQTT rely on library which API migh have changed.
 
 ###MQTT
  * C plugin lacks separated send/receive topics.
