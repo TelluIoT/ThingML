@@ -35,10 +35,10 @@ public class DynamicCompilerMenu extends  CompoundContributionItem implements IW
 			
 		int index = 0;
 		for (ThingMLCompiler c : ThingMLCompilerRegistry.getInstance().getCompilerPrototypes()) {
-			index = index + c.getConnectorCompilers().entrySet().size();
+			index = index + c.getConnectorCompilers().entrySet().size() + 1;
 		}
 		
-		//System.out.println("size = " + index);
+		//System.out.println("\t\tindex = " + index);
 
 		IContributionItem[] list = new IContributionItem[index];
 		int i=0;
