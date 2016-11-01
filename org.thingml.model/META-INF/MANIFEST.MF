@@ -6,7 +6,7 @@ Bundle-Version: 0.7.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: SINTEF
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.sintef.thingml,
  org.sintef.thingml.constraints,
  org.sintef.thingml.impl,

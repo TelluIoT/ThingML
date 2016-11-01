@@ -38,7 +38,7 @@ public class Populate {
         //Targeted languages
         Lang posix = new Lang("Posix", "posix", "./#TARGET##TYPE##SP#Cfg/#TARGET##TYPE##SP#Cfg");
         Lang posixmt = new Lang("PosixMT", "posixmt", "./#TARGET##TYPE##SP#Cfg/#TARGET##TYPE##SP#Cfg");
-        Lang nodejs = new Lang("NodeJS", "nodejs", "node #TARGET##TYPE##SP#Cfg/main.js");
+        Lang nodejs = new Lang("NodeJS", "nodejs", "nodejs #TARGET##TYPE##SP#Cfg/main.js");
         Lang java = new Lang("Java", "java", "mvn -q -f #TARGET##TYPE##SP#Cfg/pom.xml exec:java");
         
         List<Lang> langs = new ArrayList<>();

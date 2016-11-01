@@ -2,7 +2,7 @@
 
 rm cliStdo.log &> /dev/null
 
-timeout -s SIGINT 6 node ServerFloatCfg/main.js > srvStdo.log 2> srvStdr.log&
+timeout -s SIGINT 6 nodejs ServerFloatCfg/main.js > srvStdo.log 2> srvStdr.log&
 sleep 3
 timeout -s SIGINT 4 mvn -q -f ClientFloatCfg/pom.xml exec:java > cliStdo.log 2> cliStdr.log&
 

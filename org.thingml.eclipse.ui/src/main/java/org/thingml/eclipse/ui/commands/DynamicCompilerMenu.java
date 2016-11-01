@@ -16,11 +16,7 @@
 package org.thingml.eclipse.ui.commands;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.Set;
 
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.ui.actions.CompoundContributionItem;
@@ -29,11 +25,8 @@ import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
-import org.thingml.eclipse.ui.ThingMLConsole;
-import org.thingml.compilers.configuration.*;
 
 public class DynamicCompilerMenu extends  CompoundContributionItem implements IWorkbenchContribution {
 	    
@@ -42,13 +35,10 @@ public class DynamicCompilerMenu extends  CompoundContributionItem implements IW
 			
 		int index = 0;
 		for (ThingMLCompiler c : ThingMLCompilerRegistry.getInstance().getCompilerPrototypes()) {
-			index++;			
-			for (final Map.Entry<String, CfgExternalConnectorCompiler> connectorCompiler : c.getConnectorCompilers().entrySet()) {
-				index++;
-			}
+			index = index + c.getConnectorCompilers().entrySet().size() + 1;
 		}
 		
-		//System.out.println("size = " + index);
+		//System.out.println("\t\tindex = " + index);
 
 		IContributionItem[] list = new IContributionItem[index];
 		int i=0;
