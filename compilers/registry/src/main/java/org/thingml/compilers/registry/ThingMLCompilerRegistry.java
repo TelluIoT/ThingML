@@ -49,7 +49,7 @@ public class ThingMLCompilerRegistry {
     private static Set<SerializationPlugin> loadedSerPlugins;
     private HashMap<String, ThingMLCompiler> compilers = new HashMap<String, ThingMLCompiler>();
 
-    private static ServiceLoader<ExternalThingPlugin> externalThingPlugings = ServiceLoader.load(ExternalThingPlugin.class);
+    private static ServiceLoader<ExternalThingPlugin> externalThingPlugins = ServiceLoader.load(ExternalThingPlugin.class);
     private static Set<ExternalThingPlugin> loadedExternalThingPlugins;
 
 
@@ -84,8 +84,8 @@ public class ThingMLCompilerRegistry {
         }
 
         loadedExternalThingPlugins = new HashSet<>();
-        externalThingPlugings.reload();
-        Iterator<ExternalThingPlugin> exthingit =  externalThingPlugings.iterator();
+        externalThingPlugins.reload();
+        Iterator<ExternalThingPlugin> exthingit =  externalThingPlugins.iterator();
         while (exthingit.hasNext()) {
             ExternalThingPlugin etp = exthingit.next();
             loadedExternalThingPlugins.add(etp);
