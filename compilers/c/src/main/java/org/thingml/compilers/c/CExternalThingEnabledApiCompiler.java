@@ -34,7 +34,7 @@ public class CExternalThingEnabledApiCompiler extends ThingApiCompiler {
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
         if(ctx.getCompiler().isExternalThing(thing)) {
-            ExternalThingPlugin plugin = ctx.getCompiler().getExternalThingPluging(thing);
+            ExternalThingPlugin plugin = ctx.getCompiler().getExternalThingPlugin(thing);
             if(plugin != null) {
                 ThingApiCompiler api_thing_compiler = plugin.getThingApiCompiler();
                 api_thing_compiler.generatePublicAPI(thing, ctx);

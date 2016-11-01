@@ -17,7 +17,6 @@ package org.thingml.compilers;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
@@ -470,7 +469,7 @@ public class Context {
         List<Thing> things = ExternalThingPlugin.getAllExternalThings(ConfigurationHelper.allThings(cfg));
         Set<ExternalThingPlugin> externalPluginLibs = new HashSet<ExternalThingPlugin>();
         for(Thing thing : things) {
-            ExternalThingPlugin etp = this.getCompiler().getExternalThingPluging(thing);
+            ExternalThingPlugin etp = this.getCompiler().getExternalThingPlugin(thing);
             if(etp != null)
                 externalPluginLibs.add(etp);
         }

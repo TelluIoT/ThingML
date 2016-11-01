@@ -18,7 +18,6 @@ package org.thingml.compilers.c;
 import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.ExternalThingPlugin;
-import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 
 /**
@@ -37,7 +36,7 @@ public class CExternalThingEnabledImplCompiler extends ThingImplCompiler {
     @Override
     public void generateImplementation(Thing thing, Context ctx) {
         if(ctx.getCompiler().isExternalThing(thing)) {
-            ExternalThingPlugin plugin = ctx.getCompiler().getExternalThingPluging(thing);
+            ExternalThingPlugin plugin = ctx.getCompiler().getExternalThingPlugin(thing);
             if(plugin != null) {
                 ThingImplCompiler impl_thing_compiler = plugin.getThingImplCompiler();
                 impl_thing_compiler.generateImplementation(thing, ctx);

@@ -415,14 +415,14 @@ public abstract class ThingMLCompiler {
     public void addExternalThingPlugin(ExternalThingPlugin etp) {
         String externalThingTypeId = etp.getSupportedExternalThingTypeID();
         ExternalThingPlugin externalPlugin = externalThingPlugingPerExternalThing.get(externalThingTypeId);
-        if(!externalPlugin.equals(etp)) {
+        if(externalPlugin != null && !externalPlugin.equals(etp)) {
             System.out.println("[ERROR] Two different plugins ("+ etp.getPluginID() +", "+ externalPlugin.getPluginID() +") to generate the same type of external thing: " +externalThingTypeId);
             return;
         }
         externalThingPlugingPerExternalThing.put(externalThingTypeId, etp);
     }
 
-    public ExternalThingPlugin getExternalThingPluging(Thing thing) {
+    public ExternalThingPlugin getExternalThingPlugin(Thing thing) {
         String externalThingTypeId = ExternalThingPlugin.calculateExternalThingTypeID(thing);
         ExternalThingPlugin plugin = externalThingPlugingPerExternalThing.get(externalThingTypeId);
         if(plugin == null) {
