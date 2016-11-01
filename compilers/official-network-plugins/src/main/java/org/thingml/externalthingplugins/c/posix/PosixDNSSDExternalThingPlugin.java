@@ -17,9 +17,12 @@ package org.thingml.externalthingplugins.c.posix;
 
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.c.posix.PosixThingImplCompiler;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingApiCompiler;
+import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingImplCompiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,8 @@ import java.util.List;
 public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
 
     final String supportedTypeId = "DNSSD";
+    final ThingApiCompiler api = new PosixDNSSDThingApiCompiler();
+    final ThingImplCompiler impl = new PosixThingImplCompiler();
 
     @Override
     public String getSupportedExternalThingTypeID() {
@@ -45,12 +50,12 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
 
     @Override
     public ThingApiCompiler getThingApiCompiler() {
-        return null;
+        return api;
     }
 
     @Override
     public ThingImplCompiler getThingImplCompiler() {
-        return null;
+        return impl;
     }
 
     @Override
