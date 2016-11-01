@@ -258,7 +258,7 @@ public class TypeChecker extends ThingmlSwitch<Type> {
     public Type caseArrayIndex(ArrayIndex object) {
         Type t = computeTypeOf(object.getIndex());
         if (t.equals(Types.INTEGER_TYPE) || t.equals(Types.ANY_TYPE))
-            return t;
+            return computeTypeOf(object.getArray());
         return Types.ERROR_TYPE;
     }
 }
