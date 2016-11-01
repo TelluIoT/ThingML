@@ -69,7 +69,7 @@ public class VariableUsage extends Rule {
             }
             final Type expected = TyperHelper.getBroadType(va.getType());
             final Type actual = checker.typeChecker.computeTypeOf(e);
-            
+
             if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
                 if (actual.equals(Types.ERROR_TYPE)) {
                     checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);

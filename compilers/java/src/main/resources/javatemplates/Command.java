@@ -18,7 +18,7 @@ public class Command {
     }
 
     public void execute() {
-        port.send(event.instantiate(port, params));
+        port.send(event.instantiate(params));
     }
 
     @Override
