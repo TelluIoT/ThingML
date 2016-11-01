@@ -40,7 +40,6 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
     public List<String> getTargetedLanguages() {
         List<String> languages = new ArrayList<String>();
         languages.add("posix");
-        languages.add("posixmt");
         return languages;
     }
 

@@ -20,25 +20,16 @@
  */
 package org.thingml.compilers.c.posixmt;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+
 import java.util.Set;
-import org.sintef.thingml.CompositeState;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.FinalState;
-import org.sintef.thingml.Instance;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.Port;
 import org.sintef.thingml.Property;
 import org.sintef.thingml.Region;
 import org.sintef.thingml.Session;
-import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.Type;
