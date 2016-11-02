@@ -16,6 +16,7 @@
 package org.thingml.compilers.spi;
 
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
@@ -25,13 +26,21 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
  * Created by vassik on 21.10.16.
  */
 public abstract class ExternalThingPlugin extends Rule {
+
+    public Set<PlatformAnnotation> annotationSet;
+
+    public ExternalThingPlugin() {
+        annotationSet = new HashSet<PlatformAnnotation>();
+    }
 
     public abstract String getSupportedExternalThingTypeID();
 
@@ -41,6 +50,14 @@ public abstract class ExternalThingPlugin extends Rule {
 
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
+    }
+
+    public String getExternalThingAnnotation(String name) {
+            return null;
+    }
+
+    public void addExternalThingAnnotations(Set<PlatformAnnotation> annotations) {
+        annotationSet.addAll(annotations);
     }
 
 

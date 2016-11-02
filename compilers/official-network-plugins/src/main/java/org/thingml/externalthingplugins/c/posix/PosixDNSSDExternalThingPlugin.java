@@ -16,7 +16,9 @@
 package org.thingml.externalthingplugins.c.posix;
 
 import org.sintef.thingml.Configuration;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.posix.PosixThingImplCompiler;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
@@ -61,5 +63,43 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
     @Override
     public void generateExternalLibrary(Configuration cfg, Context ctx) {
 
+        String protocolName = supportedTypeId;
+        String ctemplate = ctx.getTemplateByID("templates/PosixDNSSDPluginX86.c");
+        String htemplate = ctx.getTemplateByID("templates/PosixDNSSDPlugin.h");
+
+        String value = getExternalThingAnnotation("trace_level");
+        Integer traceLevel = (value != null) ? Integer.parseInt(value) : 0;
+
+
+        if (traceLevel.intValue() >= 3) {
+            ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "");
+        } else {
+            ctemplate = ctemplate.replace("/*TRACE_LEVEL_3*/", "//");
+        }
+        if (traceLevel.intValue() >= 2) {
+            ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "");
+        } else {
+            ctemplate = ctemplate.replace("/*TRACE_LEVEL_2*/", "//");
+        }
+        if (traceLevel.intValue() >= 1) {
+            ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "");
+        } else {
+            ctemplate = ctemplate.replace("/*TRACE_LEVEL_1*/", "//");
+        }
+
+        ctemplate = ctemplate.replace("/*PROTOCOL_NAME*/", protocolName);
+        htemplate = htemplate.replace("/*PROTOCOL_NAME*/", protocolName);
+        ctemplate = ctemplate.replace("/*PATH_TO_H*/", protocolName + ".h");
+
+
+        StringBuilder b = new StringBuilder();
+        StringBuilder h = new StringBuilder();
+
+        ctemplate += "\n" + b;
+        htemplate += "\n" + h;
+
+        ctx.getBuilder(protocolName + ".c").append(ctemplate);
+        ctx.getBuilder(protocolName + ".h").append(htemplate);
+        ((CCompilerContext) ctx).addToIncludes("#include \"" + protocolName + ".h\"");
     }
 }

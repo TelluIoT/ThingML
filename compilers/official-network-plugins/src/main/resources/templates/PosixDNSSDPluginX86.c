@@ -1,5 +1,4 @@
 /*
- * dnssd-avahi.c
  *
  *  Created on: Okt 5, 2016
  *      Author: vassik
@@ -11,8 +10,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/#include <stdarg.h>
-/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/#include <stdint.h>
+#include <stdarg.h>
+#include <stdint.h>
 
 
 #include <avahi-client/client.h>
@@ -28,12 +27,10 @@
 #include "/*PATH_TO_H*/"
 
 
-/*INSTANCE_DECLARATIONS*/
-
 void /*PROTOCOL_NAME*/_entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupState state, AVAHI_GCC_UNUSED void *userdata) {
 	assert(userdata);
 
-	/*PROTOCOL_NAME*/_DNSSDAvahiService* context = (/*PROTOCOL_NAME*/_DNSSDAvahiService*) userdata;
+	/*PROTOCOL_NAME*/AvahiService* context = (/*PROTOCOL_NAME*/AvahiService*) userdata;
 
     assert(g == context->group || context->group == NULL);
     context->group = g;
@@ -43,29 +40,29 @@ void /*PROTOCOL_NAME*/_entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupS
     switch (state) {
         case AVAHI_ENTRY_GROUP_ESTABLISHED : {
             /* The entry group has been established successfully */
-        	/*TRACE_LEVEL_2*/fprintf(stdout, "Service '%s' successfully established.\n", context->name);
-            context->state = DNSSD_AVAHI_SERVICE_PUBLISH;
+            /*TRACE_LEVEL_2*/fprintf(stdout, "Service '%s' successfully established.\n", context->name);
+            context->state = /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH;
 
-            if(context->fn_srv_success_callback != NULL)
-            	context->fn_srv_success_callback(context->avahi_client->thing_instance);
+            if(context->fn_srv_publish_success_callback != NULL)
+            	context->fn_srv_publish_success_callback(context->avahi_client->thing_instance);
 
         }; break;
 
         case AVAHI_ENTRY_GROUP_COLLISION : {
             /* A service name collision with a remote service
              * happened. */
-        	/*TRACE_LEVEL_1*/fprintf(stderr, "Service name collision, renaming service to '%s'\n", context->name);
+            /*TRACE_LEVEL_1*/fprintf(stderr, "Service name collision, renaming service to '%s'\n", context->name);
             if(context->fn_srv_failure_callback != NULL)
-            	context->fn_srv_failure_callback(context->avahi_client->thing_instance, DNSSD_ERROR_COLLISION);
+            	context->fn_srv_failure_callback(context->avahi_client->thing_instance, /*PROTOCOL_NAME*/_ERROR_COLLISION);
 
         }; break;
 
         case AVAHI_ENTRY_GROUP_FAILURE : {
 
-        	/*TRACE_LEVEL_1*/fprintf(stderr, "Entry group failure: %s\n", avahi_strerror(avahi_client_errno(avahi_entry_group_get_client(g))));
+            /*TRACE_LEVEL_1*/fprintf(stderr, "Entry group failure: %s\n", avahi_strerror(avahi_client_errno(avahi_entry_group_get_client(g))));
 
             if(context->fn_srv_failure_callback != NULL)
-            	context->fn_srv_failure_callback(context->avahi_client->thing_instance, DNSSD_ERROR_UNEXPECTED);
+            	context->fn_srv_failure_callback(context->avahi_client->thing_instance, /*PROTOCOL_NAME*/_ERROR_UNEXPECTED);
 
         }; break;
 
@@ -81,7 +78,7 @@ void /*PROTOCOL_NAME*/_client_callback(AvahiClient *c, AvahiClientState state, A
     assert(c);
     assert(userdata);
 
-    /*PROTOCOL_NAME*/_DNSSDThreadedAhvaiClient* client_data = (/*PROTOCOL_NAME*/_DNSSDThreadedAhvaiClient*) userdata;
+    /*PROTOCOL_NAME*/ThreadedAhvaiClient* client_data = (/*PROTOCOL_NAME*/ThreadedAhvaiClient*) userdata;
 
     client_data->client = c;
 
@@ -92,7 +89,6 @@ void /*PROTOCOL_NAME*/_client_callback(AvahiClient *c, AvahiClientState state, A
 
             /* The server has startup successfully and registered its host
              * name on the network, so it's time to create our services */
-        	/*TRACE_LEVEL_2*/fprintf(stdout, "Client is running, ready to publish services\n");
         	if(client_data->fn_client_running_callback)
         		client_data->fn_client_running_callback(client_data->thing_instance);
 
@@ -100,10 +96,10 @@ void /*PROTOCOL_NAME*/_client_callback(AvahiClient *c, AvahiClientState state, A
 
         case AVAHI_CLIENT_FAILURE: {
 
-        	/*TRACE_LEVEL_1*/fprintf(stderr, "Client failure: %s\n", avahi_strerror(avahi_client_errno(c)));
+            /*TRACE_LEVEL_1*/fprintf(stderr, "Client failure: %s\n", avahi_strerror(avahi_client_errno(c)));
 
             if(client_data->fn_client_failure_callback)
-            	client_data->fn_client_failure_callback(client_data->thing_instance, DNSSD_SRV_ERROR_UNEXPECTED);
+            	client_data->fn_client_failure_callback(client_data->thing_instance, /*PROTOCOL_NAME*/_SRV_ERROR_UNEXPECTED);
 
         }; break;
 
@@ -116,7 +112,7 @@ void /*PROTOCOL_NAME*/_client_callback(AvahiClient *c, AvahiClientState state, A
         	/*TRACE_LEVEL_1*/fprintf(stderr, "Client failure due to name collision: %s\n", avahi_strerror(avahi_client_errno(c)));
 
         	if(client_data->fn_client_failure_callback)
-        		client_data->fn_client_failure_callback(client_data->thing_instance, DNSSD_SRV_ERROR_COLLISION);
+        		client_data->fn_client_failure_callback(client_data->thing_instance, /*PROTOCOL_NAME*/_SRV_ERROR_COLLISION);
 
         }; break;
 
@@ -133,7 +129,7 @@ void /*PROTOCOL_NAME*/_client_callback(AvahiClient *c, AvahiClientState state, A
     }
 }
 
-void /*PROTOCOL_NAME*/_start_avahi_client(/*PROTOCOL_NAME*/_DNSSDThreadedAhvaiClient* client_data) {
+void /*PROTOCOL_NAME*/_start_avahi_client(/*PROTOCOL_NAME*/ThreadedAhvaiClient* client_data) {
 	if(client_data == NULL)
 		return;
 
@@ -141,7 +137,7 @@ void /*PROTOCOL_NAME*/_start_avahi_client(/*PROTOCOL_NAME*/_DNSSDThreadedAhvaiCl
 
     /* Allocate main loop object */
     if (!(client_data->threaded_poll = avahi_threaded_poll_new())) {
-    	/*TRACE_LEVEL_1*/fprintf(stderr, "Failed to create simple poll object.\n");
+        /*TRACE_LEVEL_1*/fprintf(stderr, "Failed to create simple poll object.\n");
         return;
     }
 
@@ -151,14 +147,14 @@ void /*PROTOCOL_NAME*/_start_avahi_client(/*PROTOCOL_NAME*/_DNSSDThreadedAhvaiCl
 
     /* Check weather creating the client object succeeded */
     if (!client_data->client) {
-    	/*TRACE_LEVEL_1*/fprintf(stderr, "Failed to create client: %s\n", avahi_strerror(error));
+        /*TRACE_LEVEL_1*/fprintf(stderr, "Failed to create client: %s\n", avahi_strerror(error));
         return;
     }
 
     avahi_threaded_poll_start(client_data->threaded_poll);
 }
 
-void /*PROTOCOL_NAME*/_stop_avahi_client(/*PROTOCOL_NAME*/_DNSSDThreadedAhvaiClient* client_data) {
+void /*PROTOCOL_NAME*/_stop_avahi_client(/*PROTOCOL_NAME*/ThreadedAhvaiClient* client_data) {
 	if(client_data == NULL)
 		return;
 
@@ -172,11 +168,10 @@ void /*PROTOCOL_NAME*/_stop_avahi_client(/*PROTOCOL_NAME*/_DNSSDThreadedAhvaiCli
         avahi_threaded_poll_free(client_data->threaded_poll);
 }
 
-void /*PROTOCOL_NAME*/_add_dnssd_service(/*PROTOCOL_NAME*/_DNSSDAvahiService *service) {
-	char r[128];
+void /*PROTOCOL_NAME*/_add_dnssd_service(/*PROTOCOL_NAME*/AvahiService *service) {
     int ret;
 
-    if(service->state == DNSSD_AVAHI_SERVICE_PUBLISH) {
+    if(service->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH) {
     	/*TRACE_LEVEL_1*/fprintf(stderr, "add_dnssd_service() service is already published\n");
     	return;
     }
@@ -198,14 +193,14 @@ void /*PROTOCOL_NAME*/_add_dnssd_service(/*PROTOCOL_NAME*/_DNSSDAvahiService *se
 
     if (!service->group) {
         if (!(service->group = avahi_entry_group_new(service->avahi_client->client, /*PROTOCOL_NAME*/_entry_group_callback, service))) {
-        	/*TRACE_LEVEL_1*/fprintf(stderr, "avahi_entry_group_new() failed: %s\n", avahi_strerror(avahi_client_errno(service->avahi_client->client)));
+            /*TRACE_LEVEL_1*/fprintf(stderr, "avahi_entry_group_new() failed: %s\n", avahi_strerror(avahi_client_errno(service->avahi_client->client)));
         }
     }
 
     avahi_threaded_poll_unlock(service->avahi_client->threaded_poll);
 
     /* Add the service */
-    if ((ret = avahi_entry_group_add_service(service->group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, service->name, service->type, service->domain, service->host, service->port, service->txt, r, NULL)) < 0) {
+    if ((ret = avahi_entry_group_add_service(service->group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, service->name, service->type, service->domain, service->host, service->port, service->txt, NULL)) < 0) {
 
         if (ret == AVAHI_ERR_COLLISION) {
         	/*TRACE_LEVEL_1*/fprintf(stderr, "Failed to add  service AVAHI_ERR_COLLISION: %s\n", avahi_strerror(ret));
@@ -216,39 +211,47 @@ void /*PROTOCOL_NAME*/_add_dnssd_service(/*PROTOCOL_NAME*/_DNSSDAvahiService *se
 
     /* Tell the server to register the service */
     if ((ret = avahi_entry_group_commit(service->group)) < 0) {
-    	/*TRACE_LEVEL_1*/fprintf(stderr, "Failed to commit entry group: %s\n", avahi_strerror(ret));
+        /*TRACE_LEVEL_1*/fprintf(stderr, "Failed to commit entry group: %s\n", avahi_strerror(ret));
     }
 }
 
-void /*PROTOCOL_NAME*/_remove_dnssd_service(/*PROTOCOL_NAME*/_DNSSDAvahiService *service) {
+void /*PROTOCOL_NAME*/_remove_dnssd_service(/*PROTOCOL_NAME*/AvahiService *service) {
 	if(service == NULL)
 		return;
 
-	if(service->state == DNSSD_AVAHI_SERVICE_PUBLISH) {
+	if(service->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH) {
+		if(service->fn_srv_failure_callback != NULL)
+			service->fn_srv_failure_callback(service->avahi_client->thing_instance, /*PROTOCOL_NAME*/_SRV_ERROR_ALREADY_UNPUBLISHED);
+	}
+
+	if(service->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH) {
 		avahi_entry_group_reset(service->group);
 		avahi_free(service->name);
-		service->state = DNSSD_AVAHI_SERVICE_UNPUBLISH;
+		service->state = /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH;
+		if(service->fn_srv_unpublish_success_callback != NULL)
+			service->fn_srv_unpublish_success_callback(service->avahi_client->thing_instance);
 	}
 }
 
-/*PROTOCOL_NAME*/_DNSSDAvahiService* /*PROTOCOL_NAME*/_constructDNSSDAvahiService() {
-	/*PROTOCOL_NAME*/_DNSSDAvahiService* service = malloc(sizeof(/*PROTOCOL_NAME*/_DNSSDAvahiService));
+/*PROTOCOL_NAME*/AvahiService* /*PROTOCOL_NAME*/_constructDNSSDAvahiService() {
+	/*PROTOCOL_NAME*/AvahiService* service = malloc(sizeof(/*PROTOCOL_NAME*/AvahiService));
 
 	service->domain = NULL;
-	service->fn_srv_success_callback = NULL;
+	service->fn_srv_publish_success_callback = NULL;
 	service->fn_srv_failure_callback = NULL;
+	service->fn_srv_unpublish_success_callback = NULL;
 	service->group = NULL;
 	service->host = NULL;
 	service->name = NULL;
 	service->port = 0;
-	service->state = DNSSD_AVAHI_SERVICE_NOT_INIT;
+	service->state = /*PROTOCOL_NAME*/_AVAHI_SERVICE_NOT_INIT;
 	service->txt = NULL;
 	service->type = NULL;
 	service->avahi_client = NULL;
 	return service;
 }
 
-void /*PROTOCOL_NAME*/_distructThingMLAvahiService(/*PROTOCOL_NAME*/_DNSSDAvahiService** service_data) {
+void /*PROTOCOL_NAME*/_distructDNSSDAvahiService(/*PROTOCOL_NAME*/AvahiService** service_data) {
 	if(*service_data == NULL)
 		return;
 
@@ -256,8 +259,8 @@ void /*PROTOCOL_NAME*/_distructThingMLAvahiService(/*PROTOCOL_NAME*/_DNSSDAvahiS
 	*service_data = NULL;
 }
 
-/*PROTOCOL_NAME*/_DNSSDThreadedAhvaiClient* /*PROTOCOL_NAME*/_constructDNSSDThreadedAhvaiClient() {
-	/*PROTOCOL_NAME*/_DNSSDThreadedAhvaiClient* client = malloc(sizeof(/*PROTOCOL_NAME*/_DNSSDThreadedAhvaiClient));
+/*PROTOCOL_NAME*/ThreadedAhvaiClient* /*PROTOCOL_NAME*/_constructDNSSDThreadedAhvaiClient() {
+	/*PROTOCOL_NAME*/ThreadedAhvaiClient* client = malloc(sizeof(/*PROTOCOL_NAME*/ThreadedAhvaiClient));
 	client->client = NULL;
 	client->threaded_poll = NULL;
 	client->thing_instance = NULL;
@@ -266,77 +269,10 @@ void /*PROTOCOL_NAME*/_distructThingMLAvahiService(/*PROTOCOL_NAME*/_DNSSDAvahiS
 	return client;
 }
 
-void /*PROTOCOL_NAME*/_distructThingMLThreadedAhvaiClient(/*PROTOCOL_NAME*/_DNSSDThreadedAhvaiClient** client_data) {
+void /*PROTOCOL_NAME*/_distructDNSSDThreadedAhvaiClient(/*PROTOCOL_NAME*/ThreadedAhvaiClient** client_data) {
 	if(*client_data == NULL)
 		return;
 
 	free(*client_data);
 	*client_data = NULL;
 }
-
-void /*PROTOCOL_NAME*/_fn_srv_publish_success_callback(void * _instance, ...) {
-	/*TRACE_LEVEL_2*/fprintf(stdout, "fn_srv_publish_success_callback is /*DNSSD_SERVICE_SUCCESS_CALLBACK_NOT*/ handled\n");
-	/*DNSSD_SERVICE_SUCCESS_CALLBACK_COMMENT*/struct /*PROTOCOL_NAME*/_instance_type* dnssd_instance = (struct /*PROTOCOL_NAME*/_instance_type*) _instance;
-
-	/*DNSSD_SERVICE_SUCCESS_CALLBACK_COMMENT*/int msg_buf_size = 2;
-	/*DNSSD_SERVICE_SUCCESS_CALLBACK_COMMENT*/uint8_t true_buf[msg_buf_size];
-	/*DNSSD_SERVICE_SUCCESS_CALLBACK_COMMENT*/true_buf[0] = (/*DNSSD_SERVICE_SUCCESS_MESSAGE_ID*/ >> 8);
-	/*DNSSD_SERVICE_SUCCESS_CALLBACK_COMMENT*/true_buf[1] = (/*DNSSD_SERVICE_SUCCESS_MESSAGE_ID*/ & 0xFF);
-	/*DNSSD_SERVICE_SUCCESS_CALLBACK_COMMENT*/externalMessageEnqueue(true_buf, msg_buf_size, dnssd_instance->listener_id);
-}
-
-void /*PROTOCOL_NAME*/_fn_srv_publish_failure_callback(void* _instance, ...) {
-	/*TRACE_LEVEL_2*/fprintf(stdout, "fn_srv_publish_failure_callback is /*DNSSD_SERVICE_FAILURE_CALLBACK_NOT*/ handled\n");
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/struct /*PROTOCOL_NAME*/_instance_type* dnssd_instance = (struct /*PROTOCOL_NAME*/_instance_type*) _instance;
-
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/int error_code;
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/va_list valist;
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/va_start(valist, _instance);
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/error_code = va_arg(valist, int);
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/va_end(valist);
-
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/int msg_buf_size = 3;
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/uint8_t true_buf[msg_buf_size];
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/true_buf[0] = (/*DNSSD_SERVICE_FAILURE_MESSAGE_ID*/ >> 8);
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/true_buf[1] = (/*DNSSD_SERVICE_FAILURE_MESSAGE_ID*/ & 0xFF);
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/true_buf[2] = error_code;
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/externalMessageEnqueue(true_buf, msg_buf_size, dnssd_instance->listener_id);
-}
-
-void /*PROTOCOL_NAME*/_fn_client_running_callback(void * _instance, ...) {
-	/*TRACE_LEVEL_2*/fprintf(stdout, "fn_client_running_callback success is called\n");
-	struct /*PROTOCOL_NAME*/_instance_type* dnssd_instance = (struct /*PROTOCOL_NAME*/_instance_type*) _instance;
-	/*PROTOCOL_NAME*/_add_dnssd_service(dnssd_instance->service_data);
-}
-
-void /*PROTOCOL_NAME*/_fn_client_failure_callback(void* _instance, ...) {
-	/*TRACE_LEVEL_2*/fprintf(stdout, "fn_client_failure_callback is /*DNSSD_SERVICE_FAILURE_CALLBACK_NOT*/ handled\n");
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/struct /*PROTOCOL_NAME*/_instance_type* dnssd_instance = (struct /*PROTOCOL_NAME*/_instance_type*) _instance;
-
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/int error_code;
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/va_list valist;
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/va_start(valist, _instance);
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/error_code = va_arg(valist, int);
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/va_end(valist);
-
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/int msg_buf_size = 3;
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/uint8_t true_buf[msg_buf_size];
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/true_buf[0] = (/*DNSSD_SERVICE_FAILURE_MESSAGE_ID*/ >> 8);
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/true_buf[1] = (/*DNSSD_SERVICE_FAILURE_MESSAGE_ID*/ & 0xFF);
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/true_buf[2] = error_code;
-	/*DNSSD_SERVICE_FAILURE_CALLBACK_COMMENT*/externalMessageEnqueue(true_buf, msg_buf_size, dnssd_instance->listener_id);
-}
-
-void /*PROTOCOL_NAME*/_setup() {
-	/*INSTANCE_INITIALIZATION*/
-}
-
-void /*PROTOCOL_NAME*/_start_process() {
-	/*INSTANCE_START*/
-}
-
-void /*PROTOCOL_NAME*/_stop_process() {
-	/*INSTANCE_STOP*/
-}
-
-/*FORWARDS_FUNCTION_PROTOTYPES_IMPL*/
