@@ -19,12 +19,14 @@ import org.sintef.thingml.Configuration;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.compilers.c.posix.PosixThingImplCompiler;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingApiCompiler;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingImplCompiler;
+import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiStructDNSSDStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,10 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
     final String supportedTypeId = "DNSSD";
     final ThingApiCompiler api = new PosixDNSSDThingApiCompiler();
     final ThingImplCompiler impl = new PosixThingImplCompiler();
+
+    public PosixDNSSDExternalThingPlugin() {
+        ((CThingApiCompiler) api).addStructStrategy(new PosixThingApiStructDNSSDStrategy());
+    }
 
     @Override
     public String getSupportedExternalThingTypeID() {

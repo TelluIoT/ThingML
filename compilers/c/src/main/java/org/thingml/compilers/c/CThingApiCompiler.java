@@ -23,14 +23,27 @@ import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
 import org.thingml.compilers.c.cepHelper.CCepHelper;
+import org.thingml.compilers.interfaces.c.ICThingApiStructStrategy;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class CThingApiCompiler extends ThingApiCompiler {
+
+    protected Set<ICThingApiStructStrategy> structStrategies;
+
+    public CThingApiCompiler() {
+        structStrategies = new HashSet<ICThingApiStructStrategy>();
+    }
+
+    public void addStructStrategy(ICThingApiStructStrategy strategy) {
+        structStrategies.add(strategy);
+    }
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
@@ -109,7 +122,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
     }
 
     protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
-        builder.append("// Definition of the instance stuct:\n");
+        builder.append("// Definition of the instance struct:\n");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " {\n");
 
         if (debugProfile.isActive()) {
@@ -187,6 +200,11 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("// CEP stream pointers\n");
         for (Stream s : CCepHelper.getStreamWithBuffer(thing))
             builder.append("stream_" + s.getName() + "* cep_" + s.getName() + ";\n");
+
+        //TBD: the code above should be packed into strategies which we should iterate
+        for(ICThingApiStructStrategy strategy : structStrategies)
+            strategy.generateInstanceStruct(thing, builder, ctx, debugProfile);
+
         builder.append("\n};\n");
     }
 
