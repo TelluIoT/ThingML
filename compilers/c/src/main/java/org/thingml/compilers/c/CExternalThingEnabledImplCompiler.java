@@ -25,12 +25,10 @@ import org.thingml.compilers.thing.ThingImplCompiler;
  */
 public class CExternalThingEnabledImplCompiler extends ThingImplCompiler {
 
-    private CThingImplCompiler default_str;
+    private CThingImplCompiler impl_compiler;
 
-    public CExternalThingEnabledImplCompiler() { default_str = new CThingImplCompiler(); }
-
-    public CExternalThingEnabledImplCompiler(CThingImplCompiler _default) {
-        default_str = _default;
+    public CExternalThingEnabledImplCompiler(CThingImplCompiler _impl_compiler) {
+        impl_compiler = _impl_compiler;
     }
 
     @Override
@@ -44,6 +42,6 @@ public class CExternalThingEnabledImplCompiler extends ThingImplCompiler {
             }
         }
 
-        default_str.generateImplementation(thing, ctx);
+        impl_compiler.generateImplementation(thing, ctx);
     }
 }

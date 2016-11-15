@@ -25,11 +25,9 @@ import org.thingml.compilers.thing.ThingApiCompiler;
  */
 public class CExternalThingEnabledApiCompiler extends ThingApiCompiler {
 
-    private ThingApiCompiler default_str;
+    private ThingApiCompiler api_compiler;
 
-    public CExternalThingEnabledApiCompiler() { default_str = new CThingApiCompiler(); }
-
-    public CExternalThingEnabledApiCompiler(ThingApiCompiler _default) { default_str = _default; }
+    public CExternalThingEnabledApiCompiler(ThingApiCompiler _api_compiler) { api_compiler = _api_compiler; }
 
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
@@ -42,6 +40,6 @@ public class CExternalThingEnabledApiCompiler extends ThingApiCompiler {
             }
         }
 
-        default_str.generatePublicAPI(thing, ctx);
+        api_compiler.generatePublicAPI(thing, ctx);
     }
 }
