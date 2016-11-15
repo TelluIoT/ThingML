@@ -16,9 +16,16 @@
 package org.thingml.externalthingplugins.c.posix.dnssd;
 
 import org.thingml.compilers.c.CThingImplCompiler;
+import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
 
 /**
  * Created by vassik on 01.11.16.
  */
 public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
+
+    private PosixDNSSDExternalThingPlugin plugin;
+
+    public PosixDNSSDThingImplCompiler(PosixDNSSDExternalThingPlugin _plugin) {
+        plugin = _plugin;
+    }
 }

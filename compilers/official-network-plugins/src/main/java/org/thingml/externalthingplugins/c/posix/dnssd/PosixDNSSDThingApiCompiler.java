@@ -15,10 +15,24 @@
  */
 package org.thingml.externalthingplugins.c.posix.dnssd;
 
+import org.sintef.thingml.Thing;
+import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CThingApiCompiler;
+import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
 
 /**
  * Created by vassik on 01.11.16.
  */
 public class PosixDNSSDThingApiCompiler extends CThingApiCompiler {
+
+    private PosixDNSSDExternalThingPlugin plugin;
+
+    public PosixDNSSDThingApiCompiler(PosixDNSSDExternalThingPlugin _plugin) {
+        plugin = _plugin;
+    }
+
+    @Override
+    public void generatePublicAPI(Thing thing, Context ctx) {
+        super.generatePublicAPI(thing, ctx);
+    }
 }

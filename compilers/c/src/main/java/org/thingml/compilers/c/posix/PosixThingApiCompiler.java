@@ -15,10 +15,10 @@
  */
 package org.thingml.compilers.c.posix;
 
+
 import org.thingml.compilers.c.CThingApiCompiler;
 
 
 public class PosixThingApiCompiler extends CThingApiCompiler {
-
 
 }

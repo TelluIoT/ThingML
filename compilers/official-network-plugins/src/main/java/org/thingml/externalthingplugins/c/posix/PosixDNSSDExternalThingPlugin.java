@@ -16,11 +16,9 @@
 package org.thingml.externalthingplugins.c.posix;
 
 import org.sintef.thingml.Configuration;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
-import org.thingml.compilers.c.posix.PosixThingImplCompiler;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
@@ -37,11 +35,11 @@ import java.util.List;
 public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
 
     final String supportedTypeId = "DNSSD";
-    final ThingApiCompiler api = new PosixDNSSDThingApiCompiler();
-    final ThingImplCompiler impl = new PosixThingImplCompiler();
+    final ThingApiCompiler api = new PosixDNSSDThingApiCompiler(this);
+    final ThingImplCompiler impl = new PosixDNSSDThingImplCompiler(this);
 
     public PosixDNSSDExternalThingPlugin() {
-        ((CThingApiCompiler) api).addStructStrategy(new PosixThingApiStructDNSSDStrategy());
+        ((CThingApiCompiler) api).addStructStrategy(new PosixThingApiStructDNSSDStrategy(this));
     }
 
     @Override
@@ -69,7 +67,7 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
     @Override
     public void generateExternalLibrary(Configuration cfg, Context ctx) {
 
-        String protocolName = supportedTypeId;
+        String protocolName = getProtocolName();
         String ctemplate = ctx.getTemplateByID("templates/PosixDNSSDPluginX86.c");
         String htemplate = ctx.getTemplateByID("templates/PosixDNSSDPlugin.h");
 
@@ -108,4 +106,9 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
         ctx.getBuilder(protocolName + ".h").append(htemplate);
         ((CCompilerContext) ctx).addToIncludes("#include \"" + protocolName + ".h\"");
     }
+
+    public String getProtocolName() {
+        return supportedTypeId;
+    }
+
 }

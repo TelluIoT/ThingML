@@ -201,7 +201,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         for (Stream s : CCepHelper.getStreamWithBuffer(thing))
             builder.append("stream_" + s.getName() + "* cep_" + s.getName() + ";\n");
 
-        //TBD: the code above should be packed into strategies which we should iterate
+        //TBD: the code above should be packed into strategies which we should iterate over and execute
         for(ICThingApiStructStrategy strategy : structStrategies)
             strategy.generateInstanceStruct(thing, builder, ctx, debugProfile);
 
