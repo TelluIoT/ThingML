@@ -24,34 +24,96 @@ import org.thingml.compilers.thing.ThingActionCompiler;
  */
 public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
+    public final static boolean USE_ELLIPSIS_FOR_PARAMS = true;
+    public final static int MAX_BLOCK_SIZE = 8;
+    public final static boolean HIDE_BLOCKS = false;
+
+    public final static String NEW_LINE = "\n";
+    public final static String INDENT = "  "; //two blank spaces for indentation
+    public static int indent_level = 0;
+
     //ThingML pretty printer (useful for documentation, etc)
+
+    private String protectString(String s) {
+        return s.replace("\\n", "\\\\n").replace("\n", "\\n").replace(System.getProperty("line.separator"), "\\n").replace("\t", "").replace("\r", "").replace("\"", "\'\'");
+    }
+
+    /**
+     * PlantUML tending to center text, this methods pads (or cuts) strings with blanks
+     * so that they look left-aligned when centered
+     * @param input
+     * @return
+     */
+    private String format(final String input) {
+        String result = input;
+        for (int i = 0; i <= indent_level; i++) {
+            result = INDENT + result;
+        }
+        return result;
+    }
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
         builder.append(action.getPort().getName() + "!" + action.getMessage().getName() + "(");
-        for (Expression p : action.getParameters()) {
-            generate(p, builder, ctx);
+        if (USE_ELLIPSIS_FOR_PARAMS && action.getParameters().size() > 1) {
+            builder.append("...");
+        } else {
+            for (Expression p : action.getParameters()) {
+                generate(p, builder, ctx);
+            }
         }
-        builder.append(")\n");
+        builder.append(")" + NEW_LINE);
     }
 
     @Override
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
-        builder.append("fork " + action.getSession().getName() + "\n");
+        builder.append("fork " + action.getSession().getName() + NEW_LINE);
     }
 
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
         builder.append(action.getProperty().getName() + " = ");
         generate(action.getExpression(), builder, ctx);
-        builder.append("\n");
+        builder.append(NEW_LINE);
     }
 
     @Override
     public void generate(ActionBlock action, StringBuilder builder, Context ctx) {
-        for (Action a : action.getActions()) {
-            generate(a, builder, ctx);
+        StringBuilder temp = new StringBuilder();
+        if (action.getActions().size() > 1)
+            temp.append("do ");
+        indent_level++;
+        if (HIDE_BLOCKS && action.getActions().size() > 1) {
+            temp.append("..." + NEW_LINE);
+        } else {
+            if (action.getActions().size() > MAX_BLOCK_SIZE) {
+                int i = 0;
+                for (Action a : action.getActions()) {
+                    if (i < MAX_BLOCK_SIZE/2) {
+                        generate(a, temp, ctx);
+                        i++;
+                    } else {
+                        break;
+                    }
+                }
+                temp.append("..." + NEW_LINE);
+                i = 0;
+                for (Action a : action.getActions()) {
+                    if (i > MAX_BLOCK_SIZE/2 + 1) {
+                        generate(a, temp, ctx);
+                    }
+                    i++;
+                }
+            } else {
+                for (Action a : action.getActions()) {
+                    generate(a, temp, ctx);
+                }
+            }
         }
+        indent_level--;
+        if (action.getActions().size() > 1)
+            temp.append("end" + NEW_LINE);
+        builder.append(protectString(temp.toString()));
     }
 
     @Override
@@ -61,52 +123,58 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
             builder.append(" & ");
             generate(e, builder, ctx);
         }
-        builder.append("\n");
+        builder.append(NEW_LINE);
     }
 
     @Override
     public void generate(ConditionalAction action, StringBuilder builder, Context ctx) {
         builder.append("if(");
         generate(action.getCondition(), builder, ctx);
-        builder.append(") {\n");
+        builder.append(") {" + NEW_LINE);
+        indent_level++;
         generate(action.getAction(), builder, ctx);
-        builder.append("\n}");
+        indent_level--;
+        builder.append(NEW_LINE + "}");
         if (action.getElseAction() != null) {
-            builder.append(" else {\n");
+            builder.append(" else {" + NEW_LINE);
+            indent_level++;
             generate(action.getElseAction(), builder, ctx);
-            builder.append("\n}");
+            indent_level--;
+            builder.append(NEW_LINE + "}");
         }
-        builder.append("\n");
+        builder.append(NEW_LINE);
     }
 
     @Override
     public void generate(LoopAction action, StringBuilder builder, Context ctx) {
         builder.append("while(");
         generate(action.getCondition(), builder, ctx);
-        builder.append(") {\n");
+        builder.append(") {" + NEW_LINE);
+        indent_level++;
         generate(action.getAction(), builder, ctx);
-        builder.append("\n}\n");
+        indent_level--;
+        builder.append(NEW_LINE + "}" + NEW_LINE);
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         builder.append("print ");
         generate(action.getMsg(), builder, ctx);
-        builder.append("\n");
+        builder.append(NEW_LINE);
     }
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         builder.append("error ");
         generate(action.getMsg(), builder, ctx);
-        builder.append("\n");
+        builder.append(NEW_LINE);
     }
 
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
         generate(action.getExp(), builder, ctx);
-        builder.append("\n");
+        builder.append(NEW_LINE);
     }
 
     @Override
@@ -118,16 +186,20 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         if (action.getInit() != null) {
             generate(action.getInit(), builder, ctx);
         }
-        builder.append("\n");
+        builder.append(NEW_LINE);
     }
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        builder.append(action.getFunction().getName() + "(");
-        for (Expression p : action.getParameters()) {
-            generate(p, builder, ctx);
+        if (USE_ELLIPSIS_FOR_PARAMS  && action.getParameters().size() > 1) {
+            builder.append(action.getFunction().getName() + "(...)" + NEW_LINE);
+        } else {
+            builder.append(action.getFunction().getName() + "(");
+            for (Expression p : action.getParameters()) {
+                generate(p, builder, ctx);
+            }
+            builder.append(")" + NEW_LINE);
         }
-        builder.append(")\n");
     }
 
 
@@ -233,9 +305,8 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(NotExpression expression, StringBuilder builder, Context ctx) {
-        builder.append(" not(");
+        builder.append("not ");
         generate(expression.getTerm(), builder, ctx);
-        builder.append(")");
     }
 
     @Override
@@ -301,23 +372,27 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     }
 
     @Override
-    public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {//TODO: this should actually be factorizable
-        builder.append(expression.getFunction().getName() + "(");
-        for (Expression p : expression.getParameters()) {
-            generate(p, builder, ctx);
+    public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
+        if (USE_ELLIPSIS_FOR_PARAMS  && expression.getParameters().size() > 1) {
+            builder.append(expression.getFunction().getName() + "(...)");
+        } else {
+            builder.append(expression.getFunction().getName() + "(");
+            for (Expression p : expression.getParameters()) {
+                generate(p, builder, ctx);
+            }
+            builder.append(")");
         }
-        builder.append(")");
     }
 
     @Override
     public void generate(Increment action, StringBuilder builder, Context ctx) {
         generate(action.getVar(), builder, ctx);
-        builder.append("++;\n");
+        builder.append("++" + NEW_LINE);
     }
 
     @Override
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
         generate(action.getVar(), builder, ctx);
-        builder.append("--;\n");
+        builder.append("--" + NEW_LINE);
     }
 }

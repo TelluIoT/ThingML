@@ -28,42 +28,21 @@ import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
     private void doBuildAction(Action a, StringBuilder builder, Context ctx) {
-        if (a instanceof ActionBlock) {
-            ActionBlock block = (ActionBlock) a;
-            StringBuilder temp = new StringBuilder();
-            builder.append("do\\n");
-            if (block.getActions().size() < 6) {//TODO: decide when to collapse blocks or not
-                for (Action a1 : block.getActions()) {
-                    ctx.getCompiler().getThingActionCompiler().generate(a1, temp, ctx);
-                }
-            } else {
-                ctx.getCompiler().getThingActionCompiler().generate(block.getActions().get(0), temp, ctx);
-                temp.append("...//long block has been collapsed\n");
-                ctx.getCompiler().getThingActionCompiler().generate(block.getActions().get(block.getActions().size() - 1), temp, ctx);
-            }
-            builder.append(protectString(temp.toString()));
-            builder.append("end");
-        } else {
             ctx.getCompiler().getThingActionCompiler().generate(a, builder, ctx);
-        }
-        builder.append("\n");
     }
-
 
     private void buildActions(State s, StringBuilder builder, Context ctx) {
         if (s.getEntry() != null) {//TODO: pretty-print ThingML actions and expressions
             builder.append("\t" + s.getName() + " : entry / ");
-            Action a = s.getEntry();
-            doBuildAction(a, builder, ctx);
+            doBuildAction(s.getEntry(), builder, ctx);
         }
         if (s.getExit() != null) {
-            builder.append("\t" + s.getName() + " : Exit / ExitActions() = ");
-            Action a = s.getExit();
-            doBuildAction(a, builder, ctx);
+            builder.append("\t" + s.getName() + " : exit / ");
+            doBuildAction(s.getExit(), builder, ctx);
         }
     }
 
-    private void doGenerateHanderls(Handler h, StringBuilder builder, Context ctx) {
+    private void doGenerateHandlers(Handler h, StringBuilder builder, Context ctx) {
         if (h.getEvent().size() == 0) {
             generateHandler(h, null, null, builder, ctx);
         } else {
@@ -76,15 +55,17 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
     private void generateHandlers(State c, StringBuilder builder, Context ctx) {
         for (Handler h : c.getOutgoing()) {
-            doGenerateHanderls(h, builder, ctx);
+            doGenerateHandlers(h, builder, ctx);
         }
         for (Handler h : c.getInternal()) {
-            doGenerateHanderls(h, builder, ctx);
+            doGenerateHandlers(h, builder, ctx);
         }
     }
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
         builder.append("@startuml\n");
+        //builder.append("!pragma svek_trace on\n");
+        builder.append("skinparam defaultTextAlignment left\n");
         builder.append("[*] --> " + sm.getName() + "\n");
         builder.append("state " + sm.getName() + "{\n");
         for (State s : sm.getSubstate()) {
@@ -156,24 +137,22 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     private void generateGuardAndActions(Handler t, StringBuilder builder, Context ctx) {
-        StringBuilder temp = new StringBuilder();
         if (t.getGuard() != null) {
-            temp.append("\nif ");
-            ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), temp, ctx);
+            builder.append("\\nif ");
+            ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
         }
         if (t.getAction() != null) {
-            temp.append("\ndo ");
-            ctx.getCompiler().getThingActionCompiler().generate(t.getAction(), temp, ctx);
+            builder.append("\\naction ");
+            ctx.getCompiler().getThingActionCompiler().generate(t.getAction(), builder, ctx);
         }
-        builder.append(protectString(temp.toString()));
     }
 
-    private String protectString(String s) {
+    /*private String protectString(String s) {
         return s.replace("\\n", "\\\\n").replace("\n", "\\n").replace(System.getProperty("line.separator"), "\\n").replace("\t", "").replace("\r", "").replace("\"", "\'\'");
-    }
+    }*/
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        builder.append(t.getSource().getName() + " --> " + t.getTarget().getName());
+        builder.append("\n" + t.getSource().getName() + " --> " + t.getTarget().getName());
         if ((msg != null && p != null) || t.getAction() != null || t.getGuard() != null) {
             builder.append(" : ");
         }
@@ -185,7 +164,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        builder.append("\t" + ThingMLHelpers.findContainingState(t).getName() + " : internal " + msg.getName() + "?" + p.getName());
+        builder.append("\t" + ThingMLHelpers.findContainingState(t).getName() + " : " + msg.getName() + "?" + p.getName() + " / ");
         generateGuardAndActions(t, builder, ctx);
         builder.append("\n");
     }
