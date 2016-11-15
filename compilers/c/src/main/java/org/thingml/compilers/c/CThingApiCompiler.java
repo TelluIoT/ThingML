@@ -23,6 +23,8 @@ import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
 import org.thingml.compilers.c.cepHelper.CCepHelper;
+import org.thingml.compilers.interfaces.c.ICThingApiPublicPrototypeStrategy;
+import org.thingml.compilers.interfaces.c.ICThingApiStateIDStrategy;
 import org.thingml.compilers.interfaces.c.ICThingApiStructStrategy;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
@@ -36,13 +38,25 @@ import java.util.Set;
 public class CThingApiCompiler extends ThingApiCompiler {
 
     protected Set<ICThingApiStructStrategy> structStrategies;
+    protected  Set<ICThingApiPublicPrototypeStrategy> publicPrototypeStrategies;
+    protected Set<ICThingApiStateIDStrategy> stateIDStrategies;
 
     public CThingApiCompiler() {
         structStrategies = new HashSet<ICThingApiStructStrategy>();
+        publicPrototypeStrategies = new HashSet<ICThingApiPublicPrototypeStrategy>();
+        stateIDStrategies = new HashSet<ICThingApiStateIDStrategy>();
     }
 
     public void addStructStrategy(ICThingApiStructStrategy strategy) {
         structStrategies.add(strategy);
+    }
+
+    public void addPublicPrototypStrategy(ICThingApiPublicPrototypeStrategy strategy) {
+        publicPrototypeStrategies.add(strategy);
+    }
+
+    public void addStateIDStrategy(ICThingApiStateIDStrategy strategy) {
+        stateIDStrategies.add(strategy);
     }
 
     @Override
@@ -227,6 +241,10 @@ public class CThingApiCompiler extends ThingApiCompiler {
                 }
             }
         }
+
+        //TBD: the code above should be packed into strategies which we should iterate over and execute
+        for(ICThingApiPublicPrototypeStrategy strategy : publicPrototypeStrategies)
+            strategy.generatePublicPrototypes(thing, builder, ctx);
     }
 
     protected void generatePublicMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx) {
@@ -263,6 +281,10 @@ public class CThingApiCompiler extends ThingApiCompiler {
             }
             builder.append("\n");
         }
+
+        //TBD: the code above should be packed into strategies which we should iterate over and execute
+        for(ICThingApiStateIDStrategy strategy : stateIDStrategies)
+            strategy.generateStateIDs(thing, builder, ctx);
     }
 
 }

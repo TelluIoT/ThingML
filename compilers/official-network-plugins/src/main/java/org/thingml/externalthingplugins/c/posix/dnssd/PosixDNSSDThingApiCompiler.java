@@ -16,7 +16,8 @@
 package org.thingml.externalthingplugins.c.posix.dnssd;
 
 import org.sintef.thingml.Thing;
-import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
 
@@ -32,7 +33,34 @@ public class PosixDNSSDThingApiCompiler extends CThingApiCompiler {
     }
 
     @Override
-    public void generatePublicAPI(Thing thing, Context ctx) {
-        super.generatePublicAPI(thing, ctx);
+    protected void generateCHeaderCode(Thing thing, CCompilerContext ctx, StringBuilder builder, DebugProfile debugProfile) {
+        super.generateCHeaderCode(thing, ctx, builder, debugProfile);
+
+        builder.append("//Declaration of prototypes to integrate with DNSSD\n");
+
+        builder.append("void ");
+        builder.append(plugin.getProtocolName() + "External_setup");
+        ctx.appendFormalParametersEmptyHandler(thing, builder);
+        builder.append(";\n");
+
+        builder.append("void ");
+        builder.append(plugin.getProtocolName() + "External_startup");
+        ctx.appendFormalParametersEmptyHandler(thing, builder);
+        builder.append(";\n");
+
+        builder.append("void ");
+        builder.append(plugin.getProtocolName() + "External_shutdown");
+        ctx.appendFormalParametersEmptyHandler(thing, builder);
+        builder.append(";\n");
+
+        builder.append("void ");
+        builder.append(plugin.getProtocolName() + "External_add_dnssd_service");
+        ctx.appendFormalParametersEmptyHandler(thing, builder);
+        builder.append(";\n");
+
+        builder.append("void ");
+        builder.append(plugin.getProtocolName() + "External_remove_dnssd_service");
+        ctx.appendFormalParametersEmptyHandler(thing, builder);
+        builder.append(";\n");
     }
 }
