@@ -50,6 +50,6 @@ public class PosixThingApiStateIDStrategy implements ICThingApiStateIDStrategy {
     }
 
     private String getTerminateStateName(Thing thing) {
-        return (plugin.getProtocolName() +"_"+ thing.getName() + "_terminate_state").toUpperCase();
+        return (thing.getName() + "_" + plugin.getProtocolName() + "_terminate_state").toUpperCase();
     }
 }
