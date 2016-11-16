@@ -27,11 +27,11 @@ import org.thingml.externalthingplugins.c.posix.dnssd.utils.DNSSDUtils;
 /**
  * Created by vassik on 15.11.16.
  */
-public class PosixThingApiPublicPrototypeStrategy implements ICThingApiPublicPrototypeStrategy{
+public class PosixThingApiHandleMsgPubPrototypeStrategy implements ICThingApiPublicPrototypeStrategy{
 
     private PosixDNSSDExternalThingPlugin plugin;
 
-    public PosixThingApiPublicPrototypeStrategy(PosixDNSSDExternalThingPlugin _pulgin) {
+    public PosixThingApiHandleMsgPubPrototypeStrategy(PosixDNSSDExternalThingPlugin _pulgin) {
         plugin = _pulgin;
     }
 

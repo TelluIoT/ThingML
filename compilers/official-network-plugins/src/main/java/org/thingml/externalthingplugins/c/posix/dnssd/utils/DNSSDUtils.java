@@ -19,10 +19,12 @@ import org.eclipse.emf.common.util.EList;
 
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Port;
+import org.sintef.thingml.Property;
 import org.sintef.thingml.Thing;
+import org.thingml.compilers.c.CCompilerContext;
 
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.*;
 
 /**
  * Created by vassik on 15.11.16.
@@ -34,6 +36,14 @@ public class DNSSDUtils {
     static final public String dnssd_srv_publish_success_send = "dnssd_srv_publish_success";
     static final public String dnssd_srv_unpublish_success_send = "dnssd_srv_unpublish_success";
     static final public String dnssd_srv_publish_failure_send = "dnssd_srv_publish_failure";
+
+    static final public String service_name = "service_name";
+    static final public String service_type = "service_type";
+    static final public String service_port = "service_port";
+    static final public String service_txt = "service_txt";
+    static final public String service_host = "service_host";
+    static final public String service_domain = "service_domain";
+
 
     static public Port getDNSSDPort(Thing thing) {
         if(thing.getPorts().size() != 1)
@@ -97,5 +107,103 @@ public class DNSSDUtils {
             if (message.getName().equals(dnssd_srv_publish_failure_send))
                 return message;
         return null;
+    }
+
+    static public Map<String, String> generateDNSSDClientRunningCallback(Thing thing, CCompilerContext ctx) {
+        Map<String, String> callback = new HashMap<>();
+        String callback_name = thing.getName() + "_fn_client_running_callback";
+        String callback_body = "void ";
+        callback_body+=callback_name + "(void * " + ctx.getInstanceVarName() + ", ...)";
+        callback_body+="{\n";
+        callback_body+= thing.getName() + "_add_dnssd_service" +
+                "(" + "(struct " + ctx.getInstanceStructName(thing) + " *)" + ctx.getInstanceVarName() + ");\n";
+        callback_body+="}\n";
+
+        callback.put(callback_name, callback_body);
+        return callback;
+    }
+
+    static public Map<String, String> generateDNSSDClientFailureCallback(Thing thing, Port port, Message message, CCompilerContext ctx) {
+        Map<String, String> callback = new HashMap<>();
+        String callback_name = thing.getName() + "_fn_client_failure_callback";
+        String callback_body = "void ";
+        callback_body+=callback_name + "(void * " + ctx.getInstanceVarName() + ", ...)";
+        callback_body+="{\n";
+        callback_body+= "uint8_t error_code;\n";
+        callback_body+= "va_list valist;\n";
+        callback_body+= "va_start(valist, " + ctx.getInstanceVarName() + ");\n";
+        callback_body+= "error_code = va_arg(valist, int);\n";
+        callback_body+= "va_end(valist);\n";
+        callback_body+= ctx.getSenderName(thing, port, message) + "("+ctx.getInstanceVarName()+", error_code);\n";
+        callback_body+="}\n";
+        callback.put(callback_name, callback_body);
+        return callback;
+    }
+
+    static public Map<String, String> generateDNSSDSrvPublishCallback(Thing thing, Port port, Message message, CCompilerContext ctx) {
+        Map<String, String> callback = new HashMap<>();
+        String callback_name = thing.getName() + "_fn_srv_publish_success_callback";
+        String callback_body = "void ";
+        callback_body+=callback_name + "(void * " + ctx.getInstanceVarName() + ", ...)";
+        callback_body+="{\n";
+        callback_body+= ctx.getSenderName(thing, port, message) + "("+ctx.getInstanceVarName()+");\n";
+        callback_body+="}\n";
+        callback.put(callback_name, callback_body);
+        return callback;
+    }
+
+    static public Map<String, String> generateDNSSDSrvUnpublishCallback(Thing thing, Port port, Message message, CCompilerContext ctx) {
+        Map<String, String> callback = new HashMap<>();
+        String callback_name = thing.getName() + "_fn_srv_unpublish_success_callback";
+        String callback_body = "void ";
+        callback_body+=callback_name + "(void * " + ctx.getInstanceVarName() + ", ...)";
+        callback_body+="{\n";
+        callback_body+= ctx.getSenderName(thing, port, message) + "("+ctx.getInstanceVarName()+");\n";
+        callback_body+="}\n";
+        callback.put(callback_name, callback_body);
+        return callback;
+    }
+
+    static public Map<String, String> generateDNSSDSrvFailureCallback(Thing thing, Port port, Message message, CCompilerContext ctx) {
+        Map<String, String> callback = new HashMap<>();
+        String callback_name = thing.getName() + "_fn_srv_publish_failure_callback";
+        String callback_body = "void ";
+        callback_body+=callback_name + "(void * " + ctx.getInstanceVarName() + ", ...)";
+        callback_body+="{\n";
+        callback_body+= "uint8_t error_code;\n";
+        callback_body+= "va_list valist;\n";
+        callback_body+= "va_start(valist, " + ctx.getInstanceVarName() + ");\n";
+        callback_body+= "error_code = va_arg(valist, int);\n";
+        callback_body+= "va_end(valist);\n";
+        callback_body+= ctx.getSenderName(thing, port, message) + "("+ctx.getInstanceVarName()+", error_code);\n";
+        callback_body+="}\n";
+        callback.put(callback_name, callback_body);
+        return callback;
+    }
+
+    static public Map<String, Property> getDNSSDProperties(Thing thing) {
+        String [] dnssd_prop_array= {
+                service_name,
+                service_type,
+                service_txt,
+                service_port,
+                service_host,
+                service_domain
+        };
+        List<String> dnssd_prop_list = Arrays.asList(dnssd_prop_array);
+        Map<String, Property> map = new HashMap<>();
+        EList<Property> properties = thing.getProperties();
+        for(Property property : properties) {
+            if(dnssd_prop_list.contains(property.getName()))
+                map.put(property.getName(), property);
+        }
+
+        Collections.sort(dnssd_prop_list);
+        List<String> dnssd_prop_list_actual = new ArrayList<>(map.keySet());
+        Collections.sort(dnssd_prop_list_actual);
+        if(!dnssd_prop_list.equals(dnssd_prop_list_actual))
+            return null;
+
+        return map;
     }
 }

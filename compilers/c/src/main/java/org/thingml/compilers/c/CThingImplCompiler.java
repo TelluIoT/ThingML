@@ -23,14 +23,17 @@ import org.sintef.thingml.helpers.StateHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.interfaces.c.ICThingImpEventHandlerStrategy;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
 import org.thingml.compilers.c.cepHelper.CCepHelper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.sintef.thingml.helpers.RegionHelper;
 import org.sintef.thingml.helpers.ThingHelper;
 
@@ -42,6 +45,16 @@ import static org.thingml.compilers.c.cepHelper.CCepHelper.shouldTriggerOnInputN
  * Created by ffl on 17.06.15.
  */
 public class CThingImplCompiler extends FSMBasedThingImplCompiler {
+
+    protected Set<ICThingImpEventHandlerStrategy> eventHandlerStrategies;
+
+    public CThingImplCompiler() {
+        eventHandlerStrategies = new HashSet<ICThingImpEventHandlerStrategy>();
+    }
+
+    public void addEventHandlerStrategy(ICThingImpEventHandlerStrategy strategy) {
+        eventHandlerStrategies.add(strategy);
+    }
 
     @Override
     public void generateImplementation(Thing thing, Context ctx) {
@@ -569,6 +582,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
             builder.append("}\n");
         }
+
+        for(ICThingImpEventHandlerStrategy strategy : eventHandlerStrategies)
+            strategy.generateEventHandlers(thing, builder, ctx, debugProfile);
     }
 
     /**

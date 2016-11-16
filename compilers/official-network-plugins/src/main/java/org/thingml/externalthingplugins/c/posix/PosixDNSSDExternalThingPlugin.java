@@ -19,14 +19,16 @@ import org.sintef.thingml.Configuration;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
+import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingApiCompiler;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingImplCompiler;
-import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiPublicPrototypeStrategy;
+import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiHandleMsgPubPrototypeStrategy;
 import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiStateIDStrategy;
 import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiStructDNSSDStrategy;
+import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingImplHandleMsgStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +44,10 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
 
     public PosixDNSSDExternalThingPlugin() {
         ((CThingApiCompiler) api).addStructStrategy(new PosixThingApiStructDNSSDStrategy(this));
-        ((CThingApiCompiler) api).addPublicPrototypStrategy(new PosixThingApiPublicPrototypeStrategy(this));
+        ((CThingApiCompiler) api).addPublicPrototypStrategy(new PosixThingApiHandleMsgPubPrototypeStrategy(this));
         ((CThingApiCompiler) api).addStateIDStrategy(new PosixThingApiStateIDStrategy(this));
+
+        ((CThingImplCompiler) impl).addEventHandlerStrategy(new PosixThingImplHandleMsgStrategy(this));
     }
 
     @Override
