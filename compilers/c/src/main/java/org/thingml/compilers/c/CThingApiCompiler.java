@@ -23,6 +23,7 @@ import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
 import org.thingml.compilers.c.cepHelper.CCepHelper;
+import org.thingml.compilers.interfaces.c.ICThingApiIncludesStrategy;
 import org.thingml.compilers.interfaces.c.ICThingApiPublicPrototypeStrategy;
 import org.thingml.compilers.interfaces.c.ICThingApiStateIDStrategy;
 import org.thingml.compilers.interfaces.c.ICThingApiStructStrategy;
@@ -38,13 +39,15 @@ import java.util.Set;
 public class CThingApiCompiler extends ThingApiCompiler {
 
     protected Set<ICThingApiStructStrategy> structStrategies;
-    protected  Set<ICThingApiPublicPrototypeStrategy> publicPrototypeStrategies;
+    protected Set<ICThingApiPublicPrototypeStrategy> publicPrototypeStrategies;
     protected Set<ICThingApiStateIDStrategy> stateIDStrategies;
+    protected Set<ICThingApiIncludesStrategy> includesStrategies;
 
     public CThingApiCompiler() {
         structStrategies = new HashSet<ICThingApiStructStrategy>();
         publicPrototypeStrategies = new HashSet<ICThingApiPublicPrototypeStrategy>();
         stateIDStrategies = new HashSet<ICThingApiStateIDStrategy>();
+        includesStrategies = new HashSet<ICThingApiIncludesStrategy>();
     }
 
     public void addStructStrategy(ICThingApiStructStrategy strategy) {
@@ -57,6 +60,10 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
     public void addStateIDStrategy(ICThingApiStateIDStrategy strategy) {
         stateIDStrategies.add(strategy);
+    }
+
+    public void addIncludesStrategies(ICThingApiIncludesStrategy strategy) {
+        includesStrategies.add(strategy);
     }
 
     @Override
@@ -92,6 +99,9 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("/*****************************************************************************\n");
         builder.append(" * Headers for type : " + thing.getName() + "\n");
         builder.append(" *****************************************************************************/\n\n");
+
+        for(ICThingApiIncludesStrategy strategy : includesStrategies)
+            strategy.generateIncludes(thing, builder, ctx);
 
         // Fetch code from the "c_header" annotations
         generateCHeaderAnnotation(thing, builder, ctx);
