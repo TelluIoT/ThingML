@@ -24,6 +24,7 @@ import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.compilers.configuration.CfgMainGenerator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -82,6 +83,8 @@ public abstract class ExternalThingPlugin extends Rule {
     public abstract ThingApiCompiler getThingApiCompiler();
 
     public abstract ThingImplCompiler getThingImplCompiler();
+
+    public abstract CfgMainGenerator getCfgMainGenerator();
 
     public abstract void generateExternalLibrary(Configuration cfg, Context ctx);
 

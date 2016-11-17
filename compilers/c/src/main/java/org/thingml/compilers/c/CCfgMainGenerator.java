@@ -27,6 +27,7 @@ import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.c.cepHelper.CCepHelper;
+import org.thingml.compilers.spi.ExternalThingPlugin;
 
 import java.util.*;
 
@@ -918,6 +919,19 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
 
+    protected void generateMessageHandleCallToDispatcherMessage(Map.Entry<Instance, Port> receiver, Message m,
+                                                                StringBuilder builder, CCompilerContext ctx) {
+        if (ThingMLHelpers.allStateMachines(receiver.getKey().getType()).size() == 0)
+            return; // there is no state machine
+
+        StateMachine sm = ThingMLHelpers.allStateMachines(receiver.getKey().getType()).get(0);
+        if (StateHelper.canHandleIncludingSessions(sm, receiver.getValue(), m)) {
+            builder.append(ctx.getHandlerName(receiver.getKey().getType(), receiver.getValue(), m));
+            ctx.appendActualParametersForDispatcher(receiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(receiver.getKey()));
+            builder.append(";\n");
+        }
+    }
+
     protected void generateMessageDispatchers(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
 
         for (Message m : ConfigurationHelper.allMessages(cfg)) {
@@ -1016,16 +1030,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     builder.append(".id_" + mySender.getValue().getName() + ") {\n");
 
                     for (Map.Entry<Instance, Port> myReceiver : SenderList.get(mySender)) {
-                        if (ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).size() == 0)
-                            continue; // there is no state machine
-                        StateMachine sm = ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).get(0);
-                        if (StateHelper.canHandleIncludingSessions(sm, myReceiver.getValue(), m)) {
-                            builder.append(ctx.getHandlerName(myReceiver.getKey().getType(), myReceiver.getValue(), m));
-                            ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(myReceiver.getKey()));
-                            //ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + myReceiver.getKey().getName() + "_var");
-                            builder.append(";\n");
-                            //builder.append("//TODEBUG " + myReceiver.getKey().getName() + "\n");
-                        }
+                        //generate handle call to dispatch the message send to a receiver
+                        CCfgMainGenerator cfggen = (CCfgMainGenerator) getPlugableCfgGenerator(myReceiver.getKey().getType(), ctx);
+                        cfggen.generateMessageHandleCallToDispatcherMessage(myReceiver, m, builder, ctx);
                     }
                     builder.append("\n}\n");
                 }

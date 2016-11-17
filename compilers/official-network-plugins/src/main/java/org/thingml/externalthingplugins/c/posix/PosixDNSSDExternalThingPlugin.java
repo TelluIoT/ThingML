@@ -20,11 +20,13 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.compilers.c.CThingImplCompiler;
+import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingApiCompiler;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingImplCompiler;
+import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDCfgMainGenerator;
 import org.thingml.externalthingplugins.c.posix.dnssd.strategies.*;
 
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
     final String supportedTypeId = "DNSSD";
     final ThingApiCompiler api = new PosixDNSSDThingApiCompiler(this);
     final ThingImplCompiler impl = new PosixDNSSDThingImplCompiler(this);
+    final CfgMainGenerator cfg = new PosixDNSSDCfgMainGenerator(this);
 
     public PosixDNSSDExternalThingPlugin() {
         ((CThingApiCompiler) api).addStructStrategy(new PosixThingApiStructDNSSDStrategy(this));
@@ -69,6 +72,9 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
     public ThingImplCompiler getThingImplCompiler() {
         return impl;
     }
+
+    @Override
+    public CfgMainGenerator getCfgMainGenerator() { return cfg; }
 
     @Override
     public void generateExternalLibrary(Configuration cfg, Context ctx) {
