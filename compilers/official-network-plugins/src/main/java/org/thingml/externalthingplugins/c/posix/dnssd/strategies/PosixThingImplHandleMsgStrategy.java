@@ -57,7 +57,7 @@ public class PosixThingImplHandleMsgStrategy implements ICThingImpEventHandlerSt
         builder.append("}\n");
 
         Message dnssd_unpublish_message = DNSSDUtils.getDNSSDUnpublishService(port.getReceives());
-        builder.append("void " + ctx.getHandlerName(thing, port, dnssd_publish_message));
+        builder.append("void " + ctx.getHandlerName(thing, port, dnssd_unpublish_message));
         ctx.appendFormalParameters(thing, builder, dnssd_publish_message);
         builder.append("{\n");
         builder.append(thing.getName() + "_remove_dnssd_service");
