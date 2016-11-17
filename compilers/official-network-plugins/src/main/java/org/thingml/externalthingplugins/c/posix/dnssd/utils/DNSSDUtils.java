@@ -206,4 +206,8 @@ public class DNSSDUtils {
 
         return map;
     }
+
+    static public String getTerminateStateName(Thing thing) {
+        return (thing.getName() + "_" + "dnssd_terminate_state").toUpperCase();
+    }
 }

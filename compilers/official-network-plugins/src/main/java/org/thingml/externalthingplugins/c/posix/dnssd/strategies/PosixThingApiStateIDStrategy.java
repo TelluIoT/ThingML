@@ -23,6 +23,7 @@ import org.sintef.thingml.helpers.CompositeStateHelper;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.interfaces.c.ICThingApiStateIDStrategy;
 import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
+import org.thingml.externalthingplugins.c.posix.dnssd.utils.DNSSDUtils;
 
 import java.util.List;
 
@@ -50,6 +51,6 @@ public class PosixThingApiStateIDStrategy implements ICThingApiStateIDStrategy {
     }
 
     private String getTerminateStateName(Thing thing) {
-        return (thing.getName() + "_" + plugin.getProtocolName() + "_terminate_state").toUpperCase();
+        return DNSSDUtils.getTerminateStateName(thing);
     }
 }

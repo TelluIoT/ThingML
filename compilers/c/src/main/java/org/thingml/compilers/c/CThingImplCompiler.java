@@ -214,13 +214,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    protected void generatePrivateCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        // NB sdalgard - ** Reference to be removed ** This function is duplicated in generatePrivateCppPrototypes in class CThingApiCompiler
-        // Exit actions 
-
-        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
-
-        builder.append("//Prototypes: State Machine\n");
+    protected void generateStateMachineOnExitCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
             StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
             builder.append("void " + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
@@ -228,7 +222,16 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             //fix for empty statechart
             builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n"); // sdalgard moved inside if-statement
         }
+    }
 
+    protected void generatePrivateCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+        // NB sdalgard - ** Reference to be removed ** This function is duplicated in generatePrivateCppPrototypes in class CThingApiCompiler
+        // Exit actions 
+
+        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
+
+        builder.append("//Prototypes: State Machine\n");
+        generateStateMachineOnExitCPrototypes(thing, builder, ctx);
 
         //fix for empty statechart
         //builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
