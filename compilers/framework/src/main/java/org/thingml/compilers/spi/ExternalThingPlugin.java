@@ -55,7 +55,11 @@ public abstract class ExternalThingPlugin extends Rule {
     }
 
     public String getExternalThingAnnotation(String name) {
-            return null;
+        for(PlatformAnnotation annotation : annotationSet)
+            if(annotation.getName().equals(name))
+                return annotation.getValue();
+
+        return null;
     }
 
     public void addExternalThingAnnotations(Set<PlatformAnnotation> annotations) {

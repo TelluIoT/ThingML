@@ -41,7 +41,7 @@ void /*PROTOCOL_NAME*/_entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupS
         case AVAHI_ENTRY_GROUP_ESTABLISHED : {
             /* The entry group has been established successfully */
             /*TRACE_LEVEL_2*/fprintf(stdout, "Service '%s' successfully established.\n", context->name);
-            context->state = /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH;
+            context->state = /*PROTOCOL_NAME*/_AVAHI_SERVICE_PUBLISH;
 
             if(context->fn_srv_publish_success_callback != NULL)
             	context->fn_srv_publish_success_callback(context->avahi_client->thing_instance);
@@ -171,7 +171,7 @@ void /*PROTOCOL_NAME*/_stop_avahi_client(/*PROTOCOL_NAME*/ThreadedAhvaiClient* c
 void /*PROTOCOL_NAME*/_add_dnssd_service(/*PROTOCOL_NAME*/AvahiService *service) {
     int ret;
 
-    if(service->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH) {
+    if(service->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_PUBLISH) {
     	/*TRACE_LEVEL_1*/fprintf(stderr, "add_dnssd_service() service is already published\n");
     	return;
     }
@@ -224,7 +224,7 @@ void /*PROTOCOL_NAME*/_remove_dnssd_service(/*PROTOCOL_NAME*/AvahiService *servi
 			service->fn_srv_failure_callback(service->avahi_client->thing_instance, /*PROTOCOL_NAME*/_SRV_ERROR_ALREADY_UNPUBLISHED);
 	}
 
-	if(service->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH) {
+	if(service->state != /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH) {
 		avahi_entry_group_reset(service->group);
 		avahi_free(service->name);
 		service->state = /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH;
