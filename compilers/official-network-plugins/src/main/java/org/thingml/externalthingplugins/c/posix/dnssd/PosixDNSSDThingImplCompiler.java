@@ -200,7 +200,7 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
         }
 
         State s = CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm).get(0);
-
+        builder.append("break;\n}\n");
 
         builder.append("case " + ctx.getStateID(s) + ":{\n");
 
@@ -232,8 +232,7 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
         builder.append("default: break;\n");
         builder.append("}\n");
         builder.append("}\n");
-
-        builder.append("}\n");
+        
     }
 
     @Override
