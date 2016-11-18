@@ -232,7 +232,7 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
         builder.append("default: break;\n");
         builder.append("}\n");
         builder.append("}\n");
-        
+
     }
 
     @Override

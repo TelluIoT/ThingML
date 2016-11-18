@@ -34,6 +34,16 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         generateLinuxMakefile(cfg, (CCompilerContext) ctx);
     }
 
+    protected String getSourceFileName(Thing thing) {
+        return thing.getName() + ".c ";
+    }
+
+    protected String getObjectFileName(Thing thing) {
+        return thing.getName() + ".o ";
+    }
+
+    protected String getThirdPartyLibraries(Thing thing) { return ""; }
+
     protected void generateLinuxMakefile(Configuration cfg, CCompilerContext ctx) {
 
         //GENERATE THE MAKEFILE
@@ -57,8 +67,9 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
 
         // Add the modules for the Things
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            srcs += t.getName() + ".c ";
-            objs += t.getName() + ".o ";
+            PosixCCfgBuildCompiler plugable = (PosixCCfgBuildCompiler) getPlugableCfgBuildCompiler(t, ctx);
+            srcs += plugable.getSourceFileName(t);
+            objs += plugable.getObjectFileName(t);
         }
 
         // Add the module for the Configuration
@@ -77,6 +88,11 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         objs = objs.trim();
 
         String libs = "";
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
+            PosixCCfgBuildCompiler plugable = (PosixCCfgBuildCompiler) getPlugableCfgBuildCompiler(t, ctx);
+            libs += plugable.getThirdPartyLibraries(t);
+        }
+
         for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_libraries")) {
             String[] strs = s.split(" ");
             for (int i = 0; i < strs.length; i++) {

@@ -22,6 +22,7 @@ import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -85,6 +86,8 @@ public abstract class ExternalThingPlugin extends Rule {
     public abstract ThingImplCompiler getThingImplCompiler();
 
     public abstract CfgMainGenerator getCfgMainGenerator();
+
+    public abstract CfgBuildCompiler getCfgBuildCompiler();
 
     public abstract void generateExternalLibrary(Configuration cfg, Context ctx);
 

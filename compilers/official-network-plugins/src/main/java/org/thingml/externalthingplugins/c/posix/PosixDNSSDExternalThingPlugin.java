@@ -17,13 +17,15 @@ package org.thingml.externalthingplugins.c.posix;
 
 import org.sintef.thingml.Configuration;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.compilers.c.CThingImplCompiler;
+
+import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDCCfgBuildGenerator;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingApiCompiler;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingImplCompiler;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDCfgMainGenerator;
@@ -41,6 +43,7 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
     final ThingApiCompiler api = new PosixDNSSDThingApiCompiler(this);
     final ThingImplCompiler impl = new PosixDNSSDThingImplCompiler(this);
     final CfgMainGenerator cfg = new PosixDNSSDCfgMainGenerator(this);
+    final CfgBuildCompiler cfgb = new PosixDNSSDCCfgBuildGenerator(this);
 
     public PosixDNSSDExternalThingPlugin() {
         ((CThingApiCompiler) api).addStructStrategy(new PosixThingApiStructDNSSDStrategy(this));
@@ -75,6 +78,9 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
 
     @Override
     public CfgMainGenerator getCfgMainGenerator() { return cfg; }
+
+    @Override
+    public CfgBuildCompiler getCfgBuildCompiler() { return cfgb; }
 
     @Override
     public void generateExternalLibrary(Configuration cfg, Context ctx) {
@@ -116,7 +122,19 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
 
         ctx.getBuilder(protocolName + ".c").append(ctemplate);
         ctx.getBuilder(protocolName + ".h").append(htemplate);
-        ((CCompilerContext) ctx).addToIncludes("#include \"" + protocolName + ".h\"");
+        //((CCompilerContext) ctx).addToIncludes("#include \"" + protocolName + ".h\"");
+    }
+
+    public String getPlugingSources() {
+        return getProtocolName() + ".c ";
+    }
+
+    public String getPluginObjects() {
+        return getProtocolName() + ".o ";
+    }
+
+    public String getPluginLibraries() {
+        return "-l avahi-client -l avahi-common ";
     }
 
     public String getProtocolName() {
