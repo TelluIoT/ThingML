@@ -37,12 +37,19 @@ public class DNSSDUtils {
     static final public String dnssd_srv_unpublish_success_send = "dnssd_srv_unpublish_success";
     static final public String dnssd_srv_publish_failure_send = "dnssd_srv_publish_failure";
 
-    static final public String service_name = "service_name";
-    static final public String service_type = "service_type";
-    static final public String service_port = "service_port";
-    static final public String service_txt = "service_txt";
-    static final public String service_host = "service_host";
-    static final public String service_domain = "service_domain";
+    static final public String srv_name = "service_name";
+    static final public String srv_type = "service_type";
+    static final public String srv_port = "service_port";
+    static final public String srv_txt = "service_txt";
+    static final public String srv_host = "service_host";
+    static final public String srv_domain = "service_domain";
+
+    static final public String dflt_srv_name_val = "localhost";
+    static final public String dflt_srv_type_val = "_http._tcp";
+    static final public Integer dflt_srv_port_val = 8080;
+    static final public String dflt_srv_txt_val = null;
+    static final public String dflt_srv_host_val = null;
+    static final public String dflt_srv_domain_val = null;
 
 
     static public Port getDNSSDPort(Thing thing) {
@@ -183,12 +190,12 @@ public class DNSSDUtils {
 
     static public Map<String, Property> getDNSSDProperties(Thing thing) {
         String [] dnssd_prop_array= {
-                service_name,
-                service_type,
-                service_txt,
-                service_port,
-                service_host,
-                service_domain
+                srv_name,
+                srv_type,
+                srv_txt,
+                srv_port,
+                srv_host,
+                srv_domain
         };
         List<String> dnssd_prop_list = Arrays.asList(dnssd_prop_array);
         Map<String, Property> map = new HashMap<>();
@@ -204,6 +211,17 @@ public class DNSSDUtils {
         if(!dnssd_prop_list.equals(dnssd_prop_list_actual))
             return null;
 
+        return map;
+    }
+
+    static public Map<String, Object> getDNSSDDefaultPropValue() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(srv_name, dflt_srv_name_val);
+        map.put(srv_type, dflt_srv_type_val);
+        map.put(srv_port, dflt_srv_port_val);
+        map.put(srv_txt, dflt_srv_txt_val);
+        map.put(srv_host, dflt_srv_host_val);
+        map.put(srv_domain, dflt_srv_domain_val);
         return map;
     }
 

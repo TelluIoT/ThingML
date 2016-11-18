@@ -126,17 +126,17 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
                 publish_failure_callback.keySet().iterator().next() + ";\n");
 
         builder.append(ctx.getInstanceVarName() + "->service_data->name = " +
-                ctx.getInstanceVarName() + "->" +ctx.getCVarName(propertyMap.get(DNSSDUtils.service_name)) + ";\n");
+                ctx.getInstanceVarName() + "->" +ctx.getCVarName(propertyMap.get(DNSSDUtils.srv_name)) + ";\n");
         builder.append(ctx.getInstanceVarName() + "->service_data->type = " +
-                ctx.getInstanceVarName() + "->" +ctx.getCVarName(propertyMap.get(DNSSDUtils.service_type)) + ";\n");
+                ctx.getInstanceVarName() + "->" +ctx.getCVarName(propertyMap.get(DNSSDUtils.srv_type)) + ";\n");
         builder.append(ctx.getInstanceVarName() + "->service_data->port = " +
-                ctx.getInstanceVarName() + "->" +ctx.getCVarName(propertyMap.get(DNSSDUtils.service_port)) + ";\n");
+                ctx.getInstanceVarName() + "->" +ctx.getCVarName(propertyMap.get(DNSSDUtils.srv_port)) + ";\n");
         builder.append(ctx.getInstanceVarName() + "->service_data->txt = " +
-                ctx.getInstanceVarName() + "->" +ctx.getCVarName(propertyMap.get(DNSSDUtils.service_txt)) + ";\n");
+                ctx.getInstanceVarName() + "->" +ctx.getCVarName(propertyMap.get(DNSSDUtils.srv_txt)) + ";\n");
         builder.append(ctx.getInstanceVarName() + "->service_data->host = " +
-                ctx.getInstanceVarName() + "->" +ctx.getCVarName(propertyMap.get(DNSSDUtils.service_host)) + ";\n");
+                ctx.getInstanceVarName() + "->" +ctx.getCVarName(propertyMap.get(DNSSDUtils.srv_host)) + ";\n");
         builder.append(ctx.getInstanceVarName() + "->service_data->domain = " +
-                ctx.getInstanceVarName() + "->" + ctx.getCVarName(propertyMap.get(DNSSDUtils.service_domain)) + ";\n");
+                ctx.getInstanceVarName() + "->" + ctx.getCVarName(propertyMap.get(DNSSDUtils.srv_domain)) + ";\n");
         builder.append(ctx.getInstanceVarName() + "->service_data->avahi_client = " +
                 ctx.getInstanceVarName() + "->avahi_client;\n");
 
