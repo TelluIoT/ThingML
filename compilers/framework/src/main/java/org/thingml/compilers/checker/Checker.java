@@ -74,6 +74,7 @@ abstract public class Checker {
         Rules.add(new DuplicatedMessageInPort());
         Rules.add(new MultipleWindowStreams());
         Rules.add(new PropertyInitialization());
+        Rules.add(new LostMessages());
     }
 
     public void do_generic_check(Configuration cfg) {
