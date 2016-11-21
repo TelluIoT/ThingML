@@ -27,10 +27,7 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -38,10 +35,10 @@ import java.util.Set;
  */
 public abstract class ExternalThingPlugin extends Rule {
 
-    public Set<PlatformAnnotation> annotationSet;
+    protected Map<String, PlatformAnnotation> annotationMap;
 
     public ExternalThingPlugin() {
-        annotationSet = new HashSet<PlatformAnnotation>();
+        annotationMap = new HashMap<>();
     }
 
     public abstract String getSupportedExternalThingTypeID();
@@ -55,15 +52,13 @@ public abstract class ExternalThingPlugin extends Rule {
     }
 
     public String getExternalThingAnnotation(String name) {
-        for(PlatformAnnotation annotation : annotationSet)
-            if(annotation.getName().equals(name))
-                return annotation.getValue();
-
-        return null;
+        PlatformAnnotation annotation = annotationMap.get(name);
+        return (annotation != null) ? annotation.getValue() : null;
     }
 
     public void addExternalThingAnnotations(Set<PlatformAnnotation> annotations) {
-        annotationSet.addAll(annotations);
+        for(PlatformAnnotation annotation : annotations)
+            annotationMap.put(annotation.getName(), annotation);
     }
 
 
