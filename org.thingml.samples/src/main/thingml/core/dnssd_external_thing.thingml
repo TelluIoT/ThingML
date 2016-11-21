@@ -11,7 +11,7 @@ thing fragment DNSSDMsgs {
 }
 
 thing DNSSDExternal includes DNSSDMsgs
-@trace_level "4"
+@trace_level "0"
 @external "DNSSD" //this is temp. annotation to identify external things
 {
 	property service_name : String

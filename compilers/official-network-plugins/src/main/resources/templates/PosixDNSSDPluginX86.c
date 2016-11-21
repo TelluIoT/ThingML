@@ -66,8 +66,14 @@ void /*PROTOCOL_NAME*/_entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupS
 
         }; break;
 
-        case AVAHI_ENTRY_GROUP_UNCOMMITED:
-        	;break;
+        case AVAHI_ENTRY_GROUP_UNCOMMITED: {
+        	if(context->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_PUBLISH) {
+        	    /*TRACE_LEVEL_2*/fprintf(stdout, "Services successfully unestablished.\n");
+        		context->state = /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH;
+        		if(context->fn_srv_unpublish_success_callback != NULL)
+        			context->fn_srv_unpublish_success_callback(context->avahi_client->thing_instance);
+        	}
+        }; break;
 
         case AVAHI_ENTRY_GROUP_REGISTERING:
             ;break;
@@ -225,28 +231,28 @@ void /*PROTOCOL_NAME*/_add_dnssd_service(/*PROTOCOL_NAME*/AvahiService *service)
 }
 
 void /*PROTOCOL_NAME*/_remove_dnssd_service(/*PROTOCOL_NAME*/AvahiService *service) {
-	if(service == NULL) {
-	    /*TRACE_LEVEL_1*/fprintf(stderr, "remove_dnssd_service() nothing to remove, avahi-client is not created\n");
+	if(service == NULL)
 	    return;
-	}
 
 	if(!service->avahi_client->client) {
 	     /*TRACE_LEVEL_1*/fprintf(stderr, "remove_dnssd_service() nothing to remove, avahi-client is not created\n");
 	    return;
 	}
 
+	if(service->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_NOT_INIT) {
+    	 /*TRACE_LEVEL_1*/fprintf(stderr, "remove_dnssd_service() not yet initialized to remove a service\n");
+    	return;
+    }
+
 	if(service->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH) {
 		if(service->fn_srv_failure_callback != NULL)
 			service->fn_srv_failure_callback(service->avahi_client->thing_instance, /*PROTOCOL_NAME*/_SRV_ERROR_ALREADY_UNPUBLISHED);
+		return;
 	}
 
-	if(service->state != /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH) {
-		avahi_entry_group_reset(service->group);
-		avahi_free(service->name);
-		service->state = /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH;
-		if(service->fn_srv_unpublish_success_callback != NULL)
-			service->fn_srv_unpublish_success_callback(service->avahi_client->thing_instance);
-	}
+	// resetting the group which should remove the service
+	avahi_entry_group_reset(service->group);
+	avahi_free(service->name);
 }
 
 /*PROTOCOL_NAME*/AvahiService* /*PROTOCOL_NAME*/_constructDNSSDAvahiService() {
