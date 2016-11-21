@@ -138,6 +138,8 @@ void /*PROTOCOL_NAME*/_start_avahi_client(/*PROTOCOL_NAME*/ThreadedAhvaiClient* 
     /* Allocate main loop object */
     if (!(client_data->threaded_poll = avahi_threaded_poll_new())) {
         /*TRACE_LEVEL_1*/fprintf(stderr, "Failed to create simple poll object.\n");
+        if(client_data->fn_client_failure_callback != NULL)
+            client_data->fn_client_failure_callback(client_data->thing_instance, /*PROTOCOL_NAME*/_ERROR_SERVER_POLL);
         return;
     }
 
@@ -148,6 +150,8 @@ void /*PROTOCOL_NAME*/_start_avahi_client(/*PROTOCOL_NAME*/ThreadedAhvaiClient* 
     /* Check weather creating the client object succeeded */
     if (!client_data->client) {
         /*TRACE_LEVEL_1*/fprintf(stderr, "Failed to create client: %s\n", avahi_strerror(error));
+        if(client_data->fn_client_failure_callback != NULL)
+            client_data->fn_client_failure_callback(client_data->thing_instance, /*PROTOCOL_NAME*/_ERROR_SERVER_CLIENT);
         return;
     }
 
@@ -170,6 +174,11 @@ void /*PROTOCOL_NAME*/_stop_avahi_client(/*PROTOCOL_NAME*/ThreadedAhvaiClient* c
 
 void /*PROTOCOL_NAME*/_add_dnssd_service(/*PROTOCOL_NAME*/AvahiService *service) {
     int ret;
+
+    if(!service->avahi_client->client) {
+    	/*TRACE_LEVEL_1*/fprintf(stderr, "add_dnssd_service() cannot add service, avahi-client is not created\n");
+    	return;
+    }
 
     if(service->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_PUBLISH) {
     	/*TRACE_LEVEL_1*/fprintf(stderr, "add_dnssd_service() service is already published\n");
@@ -216,8 +225,15 @@ void /*PROTOCOL_NAME*/_add_dnssd_service(/*PROTOCOL_NAME*/AvahiService *service)
 }
 
 void /*PROTOCOL_NAME*/_remove_dnssd_service(/*PROTOCOL_NAME*/AvahiService *service) {
-	if(service == NULL)
-		return;
+	if(service == NULL) {
+	    /*TRACE_LEVEL_1*/fprintf(stderr, "remove_dnssd_service() nothing to remove, avahi-client is not created\n");
+	    return;
+	}
+
+	if(!service->avahi_client->client) {
+	     /*TRACE_LEVEL_1*/fprintf(stderr, "remove_dnssd_service() nothing to remove, avahi-client is not created\n");
+	    return;
+	}
 
 	if(service->state == /*PROTOCOL_NAME*/_AVAHI_SERVICE_UNPUBLISH) {
 		if(service->fn_srv_failure_callback != NULL)

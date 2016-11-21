@@ -470,8 +470,11 @@ public class Context {
         Set<ExternalThingPlugin> externalPluginLibs = new HashSet<ExternalThingPlugin>();
         for(Thing thing : things) {
             ExternalThingPlugin etp = this.getCompiler().getExternalThingPlugin(thing);
-            if(etp != null)
+            if(etp != null) {
+                List<PlatformAnnotation> annotations = AnnotatedElementHelper.allAnnotations(thing);
+                etp.addExternalThingAnnotations(new HashSet<PlatformAnnotation>(annotations));
                 externalPluginLibs.add(etp);
+            }
         }
         for(ExternalThingPlugin etp : externalPluginLibs)
             etp.generateExternalLibrary(cfg, this);
