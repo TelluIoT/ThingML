@@ -13,6 +13,7 @@ thing DNSSDController includes DNSSDMsgs {
     statechart Behavior init Init {
 
     	state Init {
+    	    on entry print "Init "
 
             transition -> Unpublish
     		event dnssdport?dnssd_srv_publish_success

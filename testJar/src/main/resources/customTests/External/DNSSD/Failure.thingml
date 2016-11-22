@@ -12,6 +12,8 @@ thing DNSSDController includes DNSSDMsgs {
     statechart Behavior init Init {
 
     	state Init {
+    	    on entry print "Init "
+
             transition -> End
     		event dnssdport?dnssd_srv_publish_failure
     		action print "PublishFailure "
