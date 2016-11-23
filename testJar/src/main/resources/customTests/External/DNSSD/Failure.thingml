@@ -26,7 +26,7 @@ thing DNSSDController includes DNSSDMsgs {
 }
 
 
-configuration DNSSDFailure {
+configuration Failure {
 
 	instance dnssd_ext : DNSSDExternal
 		set dnssd_ext.service_name = "MegaPrinter"

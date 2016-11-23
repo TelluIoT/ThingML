@@ -14,7 +14,7 @@ thing DNSSDController includes DNSSDMsgs {
     	state Init {
     	    on entry print "Init "
 
-            transition -> Unpublish
+            transition -> End
     		event dnssdport?dnssd_srv_publish_success
     		action print "Published "
 
@@ -27,7 +27,7 @@ thing DNSSDController includes DNSSDMsgs {
 }
 
 
-configuration DNSSDPub {
+configuration Publish {
 
 	instance dnssd_ext : DNSSDExternal
 		set dnssd_ext.service_name = "MegaPrinter"

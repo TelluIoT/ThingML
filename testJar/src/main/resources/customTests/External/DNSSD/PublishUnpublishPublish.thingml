@@ -48,7 +48,7 @@ thing DNSSDController includes DNSSDMsgs {
 }
 
 
-configuration DNSSDPubUnpubPub {
+configuration PublishUnpublishPublish {
 
 	instance dnssd_ext : DNSSDExternal
 		set dnssd_ext.service_name = "MegaPrinter"

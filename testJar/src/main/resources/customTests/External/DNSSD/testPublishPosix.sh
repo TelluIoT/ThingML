@@ -2,7 +2,7 @@
 
 rm cliStdo.log &> /dev/null
 
-timeout -s SIGINT 5 ./PublishUnpublishPublish/PublishUnpublishPublish > cliStdo.log 2> cliStdr.log&
+timeout -s SIGINT 5 ./Publish/Publish > cliStdo.log 2> cliStdr.log&
 
 sleep 5
 
