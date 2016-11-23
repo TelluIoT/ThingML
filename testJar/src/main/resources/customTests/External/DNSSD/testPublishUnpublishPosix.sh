@@ -2,9 +2,11 @@
 
 rm cliStdo.log &> /dev/null
 
-timeout -s SIGINT 5 ./PublishUnpublish/PublishUnpublish > cliStdo.log 2> cliStdr.log&
+#TODO: timeouts are terrible, takes to much time to execute and does not guarantee that is been done before time is up
 
-sleep 5
+timeout -s SIGINT 30 ./PublishUnpublish/PublishUnpublish > cliStdo.log 2> cliStdr.log&
+
+sleep 32
 
 #printf "Cli stdo:\n\n"
 cat cliStdo.log
