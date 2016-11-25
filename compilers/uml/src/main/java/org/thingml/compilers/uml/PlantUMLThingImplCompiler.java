@@ -27,6 +27,8 @@ import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
  */
 public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
+    public static final boolean FACTORIZE_TRANSITIONS = true;
+
     private void doBuildAction(Action a, StringBuilder builder, Context ctx) {
             ctx.getCompiler().getThingActionCompiler().generate(a, builder, ctx);
     }
@@ -54,6 +56,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     private void generateHandlers(State c, StringBuilder builder, Context ctx) {
+
         for (Handler h : c.getOutgoing()) {
             doGenerateHandlers(h, builder, ctx);
         }
@@ -152,15 +155,32 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
     }*/
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-        builder.append("\n" + t.getSource().getName() + " --> " + t.getTarget().getName());
+        String content = builder.toString();
+        String transition = t.getSource().getName() + " --> " + t.getTarget().getName();
         if ((msg != null && p != null) || t.getAction() != null || t.getGuard() != null) {
-            builder.append(" : ");
+            transition = transition + " : ";
         }
-        if (msg != null && p != null) {
-            builder.append(msg.getName() + "?" + p.getName());
+        if (FACTORIZE_TRANSITIONS && content.contains(transition)) {//FIXME: not the most elegant way to manage this factorization...
+            StringBuilder temp = new StringBuilder();
+            temp.append(transition);
+            if (msg != null && p != null) {
+                temp.append(msg.getName() + "?" + p.getName());
+            }
+            generateGuardAndActions(t, temp, ctx);
+            content = content.replace(transition, temp.toString() + "||");
+            builder.delete(0, builder.length());
+            builder.append(content);
+        } else {
+            builder.append(t.getSource().getName() + " --> " + t.getTarget().getName());
+            if ((msg != null && p != null) || t.getAction() != null || t.getGuard() != null) {
+                builder.append(" : ");
+            }
+            if (msg != null && p != null) {
+                builder.append(msg.getName() + "?" + p.getName());
+            }
+            generateGuardAndActions(t, builder, ctx);
+            builder.append("\n");
         }
-        generateGuardAndActions(t, builder, ctx);
-        builder.append("\n");
     }
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {

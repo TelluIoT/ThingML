@@ -100,7 +100,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
             kevScript.append("attach node0 sync\n\n");
 
             kevScript.append("//instantiate Kevoree/ThingML components\n");
-            kevScript.append("add node0." + cfg.getName() + " : " + pack + ".kevoree.K" + ctx.firstToUpper(cfg.getName()) + "/1.0-SNAPSHOT\n");
+            kevScript.append("add node0." + cfg.getName() + " : " + pack + ".kevoree.K" + ctx.firstToUpper(cfg.getName()) + "/1.0.0\n");
 
         /*
           no need to generateMainAndInit channels and bindings. Connectors defined in ThingML are managed internally.
@@ -139,7 +139,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
             final String kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>node0</nodename><model>src/main/kevs/main.kevs</model><mergeLocalLibraries></mergeLocalLibraries>\n</configuration>\n</plugin>\n</plugins>\n";
             pom = pom.replace("</plugins>", kevoreePlugin);
 
-            pom = pom.replace("<!--PROP-->", "<kevoree.version>5.3.0</kevoree.version>\n<!--PROP-->");
+            pom = pom.replace("<!--PROP-->", "<kevoree.version>5.3.2</kevoree.version>\n<!--PROP-->");
 
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
@@ -259,11 +259,13 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                         if (id > 0)
                             builder.append("else ");
                         builder.append("if (string.split(\"@:@\")[0].equals(\"" + m.getName() + "\")) {\n");
-                        builder.append("final Event msg = " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(m.getName()) + "Type().instantiate(" + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port()");
+                        builder.append("final Event msg = " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(m.getName()) + "Type().instantiate(");
+                        int j = 0;
                         for (Parameter pa : m.getParameters()) {
-                            builder.append(", ");
+                            if (j > 0)
+                                builder.append(", ");
                             String t = AnnotatedElementHelper.annotation(pa.getType(), "java_type").toArray()[0].toString();
-                            if (t.equals("int")) builder.append("Integer.parseInteger(");
+                            if (t.equals("int")) builder.append("Integer.parseInt(");
                             else if (t.equals("short")) builder.append("Short.parseShort(");
                             else if (t.equals("long")) builder.append("Long.parseLong(");
                             else if (t.equals("double")) builder.append("Double.parseDouble(");
@@ -273,6 +275,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                             builder.append("string.split(\"@:@\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
                             if (t.equals("char")) builder.append(".charAt(0)");
                             else if (!t.equals("String")) builder.append(")");
+                            j++;
                         }
                         builder.append(");\n");
                         builder.append(ctx.getInstanceName(i) + ".receive(msg, " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
