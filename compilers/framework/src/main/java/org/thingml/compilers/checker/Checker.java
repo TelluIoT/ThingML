@@ -24,6 +24,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLElement;
 import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.genericRules.*;
 
@@ -78,9 +80,11 @@ abstract public class Checker {
     }
 
     public void do_generic_check(Configuration cfg) {
+        List<String> notChecked = AnnotatedElementHelper.annotation(cfg, "SuppressWarnings");
         long start = System.currentTimeMillis();
         for (Rule r : Rules) {
-            r.check(cfg, this);
+            if (!notChecked.contains(r.getName()))
+                r.check(cfg, this);
         }
         System.out.println("checker took " + (System.currentTimeMillis() - start) + " ms");
     }

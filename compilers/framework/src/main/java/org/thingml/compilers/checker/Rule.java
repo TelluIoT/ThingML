@@ -24,7 +24,10 @@ package org.thingml.compilers.checker;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.checker.Checker.InfoType;
+
+import java.util.List;
 
 /**
  *
@@ -45,7 +48,7 @@ public abstract class Rule {
 
     public void check(ThingMLModel model, Checker checker) {
         for (Configuration c : ThingMLHelpers.allConfigurations(model)) {
-            check(c, checker);
+            checker.do_check(c);
         }
     }
 

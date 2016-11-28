@@ -50,16 +50,10 @@ thing TimerJS includes Timer
 * To debug a given instance, put the annotation on the instance, and not on the configuration. 
 * Alternatively, keep the annotation on the configuration and put @debug "false" on the instances you do not want to debug
 */
-configuration KClient 
-{
-    instance client : SimpleTimerClient
-    connector client.timer over kevoree    
-}
-
-configuration KTimer 
-@kevscript "C:/Users/bmori/Downloads/main.kevs"
-@kevoree_import "KClient"
+configuration TimerJS 
+@SuppressWarnings "Function Usage"
 {
     instance timer : TimerJS 
-    connector timer.timer over kevoree
+    instance client : SimpleTimerClient
+    connector client.timer => timer.timer    
 }
