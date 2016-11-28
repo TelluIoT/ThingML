@@ -113,3 +113,20 @@ It can transmit to the main compiler:
 * Initialization instructions
 * Main loop instructions
 * Dependancies
+
+##External Thing Feature (Experimental)
+###External Thing
+External thing is a thing in ThingML, which conforms syntactically to the definition of a usual thing in ThingML. However, the External Thing Plugin generates a behavior of the external thing. We use external things to integrate third-party technologies into ThingML.
+
+To define an external thing, one has to annotate the thing with the @external annotation, see below (complete definition and usage is located in org.thingml.samples/src/main/thingml/core/dnssd_external_thing.thingml, org.thingml.samples/src/main/thingml/core/_linux/dnssd_external_config.thingml):
+```
+thing DNSSDExternal includes DNSSDMsgs
+@trace_level "0"
+@external "DNSSD" //this is temp. annotation to identify external things
+{
+....
+}
+```
+###External Thing Plugin
+
+<p align="center"><img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/official-network-plugins/docs/external_thing_concept.png" alt="External Thing Plugin" width="600"></p>
