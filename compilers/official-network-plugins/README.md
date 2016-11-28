@@ -128,5 +128,13 @@ thing DNSSDExternal includes DNSSDMsgs
 }
 ```
 ###External Thing Plugin
-
+To generate a behavior of the external thing, one has to implement the corresponding external plugin. The figure below outlines the general idea of the External Plugin Thing feature. The main idea is that whenever the compiler identifies that there is an external thing to generate, it delegates generation of certain parts to the external plugin. The external plugin defines its own ThingApiCompiler, ThingImplCompiler, CfgMainGenerator, CfgBuidGenerator etc.
 <p align="center"><img src="https://raw.githubusercontent.com/SINTEF-9012/ThingML/master/compilers/official-network-plugins/docs/external_thing_concept.png" alt="External Thing Plugin" width="600"></p>
+
+###External Thing Plugin Implementation
+In order to add a new external plugin, the main class of the external plugin must implement:
+compilers/framework/src/main/java/org/thingml/compilers/spi/ExternalThingPlugin.java
+
+A name of the main class (that implements compilers/framework/src/main/java/org/thingml/compilers/spi/ExternalThingPlugin.java ) should be added to org.thingml.compilers.spi.ExternalThingPlugin (in a dir META-INF/services/):
+
+An example can be found in compilers/official-network-plugins/src/main/java/org/thingml/externalthingplugins/c/posix/PosixDNSSDExternalThingPlugin.java
