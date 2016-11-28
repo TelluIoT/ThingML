@@ -20,10 +20,7 @@
  */
 package org.thingml.testjar;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -96,94 +93,113 @@ public class Command implements Callable<String> {
         Runtime runtime = Runtime.getRuntime();
         ExecutorService executor = Executors.newFixedThreadPool(2);
         Set<Callable<String>>  todo = new HashSet<>();
-        final Process process;
-        //System.out.print("[pre process] ");
-        if(dir == null) {
-            process = runtime.exec(cmd, null);
-        } else {
-            process = runtime.exec(cmd, null, dir);
-        }
-        // Consommation de la sortie standard de l'application externe dans un Thread separe
-        //System.out.println("[screen stdout] ");
-        String r1 = (new Callable<String>() {
-        //todo.add(new Callable<String>() {
-            public String call() {
-                String r = null;
-                try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line = "";
+        String r0 = null;
+        String r1 = null;
+        try {
+            final Process process;
+            //System.out.print("[pre process] ");
+            if (dir == null) {
+                process = runtime.exec(cmd, null);
+            } else {
+                process = runtime.exec(cmd, null, dir);
+            }
+            // Consommation de la sortie standard de l'application externe dans un Thread separe
+            //System.out.println("[screen stdout] ");
+            r1 = (new Callable<String>() {
+                //todo.add(new Callable<String>() {
+                public String call() {
+                    String r = null;
                     try {
-                        stdlog += "\n";
-                        while((line = reader.readLine()) != null) {
-                            if(success != null) {
-                                Matcher m = success.matcher(line);
-                                if(m.find()) {
-                                    if(r == null) {
-                                        r = "[SUCCESS] " + line;
-                                        //System.out.println("[SUCCESS] !!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        String line = "";
+                        try {
+                            stdlog += "\n";
+                            while ((line = reader.readLine()) != null) {
+                                if (success != null) {
+                                    Matcher m = success.matcher(line);
+                                    if (m.find()) {
+                                        if (r == null) {
+                                            r = "[SUCCESS] " + line;
+                                        }
                                     }
                                 }
+                                stdlog += "[stdout] " + line + "\n";
                             }
-                            //System.out.println("[Output] "+ line);
-                            stdlog += "[stdout] " + line + "\n";
+                        } finally {
+                            reader.close();
                         }
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                        StringWriter errors = new StringWriter();
+                        ioe.printStackTrace(new PrintWriter(errors));
+                        errlog += "[ProcessInputStream IOException] " + errors.toString() + "\n";
                     } finally {
-                        reader.close();
+                        return r;
                     }
-                } catch(IOException ioe) {
-                    ioe.printStackTrace();
                 }
-                return r;
-            }
-        }).call();
+            }).call();
 
-        // Consommation de la sortie d'erreur de l'application externe dans un Thread separe
-        //todo.add(new Callable<String>() {
-        //System.out.println("[screen stderr] ");
-        String r0 = (new Callable<String>() {
-            public String call() {
-                String r = null;
-                try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                    String line = "";
+            // Consommation de la sortie d'erreur de l'application externe dans un Thread separe
+            //todo.add(new Callable<String>() {
+            //System.out.println("[screen stderr] ");
+            r0 = (new Callable<String>() {
+                public String call() {
+                    String r = null;
                     try {
-                        errlog += "\n";
-                        while((line = reader.readLine()) != null) {
-                            if(failure != null) {
-                                Matcher m = failure.matcher(line);
-                                if(m.find()) {
-                                    r = errorMsg;
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                        String line = "";
+                        try {
+                            errlog += "\n";
+                            while ((line = reader.readLine()) != null) {
+                                if (failure != null) {
+                                    Matcher m = failure.matcher(line);
+                                    if (m.find()) {
+                                        r = errorMsg;
+                                    }
                                 }
+                                errlog += "[stderr] " + line + "\n";
                             }
-                            System.out.println("[Error] "+ line);
-                            errlog += "[stderr] " + line + "\n";
+                        } finally {
+                            reader.close();
                         }
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                        StringWriter errors = new StringWriter();
+                        ioe.printStackTrace(new PrintWriter(errors));
+                        errlog += "[ProcessErrorStream IOException] " + errors.toString() + "\n";
                     } finally {
-                        reader.close();
+                        return r;
                     }
-                } catch(IOException ioe) {
-                    ioe.printStackTrace();
                 }
-                return r;
-            }
-        }).call();
-        //System.out.println("[screen done] ");
-            
-        if((success != null) && (failure != null)) {
+            }).call();
+            //System.out.println("[screen done] ");
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            this.isSuccess = false;
+            StringWriter errors = new StringWriter();
+            ex.printStackTrace(new PrintWriter(errors));
+            String excep_str = "[CommandError] Commands: '"+ Arrays.toString(cmd) +"';\n Exception:" + errors.toString() + "\n";
+            errlog = (errlog == null) ? excep_str :
+            errlog + excep_str;
+            return errors.toString();
+        }
+
+        if ((success != null) && (failure != null)) {
             this.isSuccess = (r1 != null) && (r0 == null);
-        } else if(success != null) {
+        } else if (success != null) {
             this.isSuccess = (r1 != null);
-        } else if(failure != null) {
+        } else if (failure != null) {
             this.isSuccess = (r0 == null);
         } else {
             this.isSuccess = true;
         }
-        
-            //System.out.println("[res done] ");
-        
-        if(r1 != null) {
+
+        //System.out.println("[res done] ");
+
+        if (r1 != null) {
             return r1;
-        } else if (r0 != null){
+        } else if (r0 != null) {
             return r0;
         } else {
             return "[SUCCESS]";

@@ -18,6 +18,8 @@ package org.thingml.compilers.c;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+
+import org.eclipse.emf.common.util.EList;
 import org.sintef.thingml.*;
 import org.sintef.thingml.Enumeration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
@@ -27,6 +29,7 @@ import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.c.cepHelper.CCepHelper;
+import org.thingml.compilers.spi.ExternalThingPlugin;
 
 import java.util.*;
 
@@ -97,13 +100,27 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         StringBuilder pollb = new StringBuilder();
         generatePollingCode(cfg, pollb, ctx);
 
+        StringBuilder cleanup = new StringBuilder();
+        generateCleanupOnTerminate(cfg, cleanup, ctx);
+
         ctemplate = ctemplate.replace("/*INIT_CODE*/", initb.toString());
         ctemplate = ctemplate.replace("/*POLL_CODE*/", pollb.toString());
+        ctemplate = ctemplate.replace("/*CLEAN_UP_ON_TERMINATE*/", cleanup.toString());
         ctx.getBuilder(cfg.getName() + "_cfg.c").append(ctemplate);
 
 
     }
 
+    protected void generateCleanupOnTerminateInstance(Instance inst, Configuration cfg,
+                                                      StringBuilder builder, CCompilerContext ctx){}
+
+    protected  void generateCleanupOnTerminate(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        EList<Instance> instances = cfg.getInstances();
+        for(Instance instance : instances) {
+            CCfgMainGenerator cfgconfig = (CCfgMainGenerator) getPlugableCfgGenerator(instance.getType(), ctx);
+            cfgconfig.generateCleanupOnTerminateInstance(instance, cfg, builder, ctx);
+        }
+    }
 
     protected void generateCommonHeader(Configuration cfg, CCompilerContext ctx) {
 
@@ -918,6 +935,19 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
 
+    protected void generateMessageHandleCallToDispatcherMessage(Map.Entry<Instance, Port> receiver, Message m,
+                                                                StringBuilder builder, CCompilerContext ctx) {
+        if (ThingMLHelpers.allStateMachines(receiver.getKey().getType()).size() == 0)
+            return; // there is no state machine
+
+        StateMachine sm = ThingMLHelpers.allStateMachines(receiver.getKey().getType()).get(0);
+        if (StateHelper.canHandleIncludingSessions(sm, receiver.getValue(), m)) {
+            builder.append(ctx.getHandlerName(receiver.getKey().getType(), receiver.getValue(), m));
+            ctx.appendActualParametersForDispatcher(receiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(receiver.getKey()));
+            builder.append(";\n");
+        }
+    }
+
     protected void generateMessageDispatchers(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
 
         for (Message m : ConfigurationHelper.allMessages(cfg)) {
@@ -1016,16 +1046,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                     builder.append(".id_" + mySender.getValue().getName() + ") {\n");
 
                     for (Map.Entry<Instance, Port> myReceiver : SenderList.get(mySender)) {
-                        if (ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).size() == 0)
-                            continue; // there is no state machine
-                        StateMachine sm = ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).get(0);
-                        if (StateHelper.canHandleIncludingSessions(sm, myReceiver.getValue(), m)) {
-                            builder.append(ctx.getHandlerName(myReceiver.getKey().getType(), myReceiver.getValue(), m));
-                            ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + ctx.getInstanceVarName(myReceiver.getKey()));
-                            //ctx.appendActualParametersForDispatcher(myReceiver.getKey().getType(), builder, m, "&" + myReceiver.getKey().getName() + "_var");
-                            builder.append(";\n");
-                            //builder.append("//TODEBUG " + myReceiver.getKey().getName() + "\n");
-                        }
+                        //generate handle call to dispatch the message send to a receiver
+                        CCfgMainGenerator cfggen = (CCfgMainGenerator) getPlugableCfgGenerator(myReceiver.getKey().getType(), ctx);
+                        cfggen.generateMessageHandleCallToDispatcherMessage(myReceiver, m, builder, ctx);
                     }
                     builder.append("\n}\n");
                 }
@@ -1398,6 +1421,25 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append("void " + "initialize_configuration_" + cfg.getName() + "();\n");
     }*/
 
+
+    public void generateInitializationSimpleProperties(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        // Init simple properties
+        for (Map.Entry<Property, Expression> init : ConfigurationHelper.initExpressionsForInstance(cfg, inst)) {
+            if (init.getValue() != null && init.getKey().getCardinality() == null) {
+                if (ctx.traceLevelIsAbove(cfg, 3)) {
+                    builder.append(ctx.getTraceFunctionForString(cfg) + "\"" + inst.getName()
+                            + "." + ctx.getVariableName(init.getKey()) + "<-\");\n");
+                    builder.append(ctx.getTraceFunctionForString(cfg) + "\"TODO\\n\");\n");
+                }
+
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(init.getKey()) + " = ");
+                //ctx.getCompiler().getThingActionCompiler().generate(init.getValue(), builder, ctx);
+                ctx.generateFixedAtInitValue(cfg, inst, init.getValue(), builder);
+                builder.append(";\n");
+            }
+        }
+    }
+
     public int generateInstanceInitCode(Instance inst, Configuration cfg, StringBuilder builder, CCompilerContext ctx, int nbConnectorSoFar) {
         builder.append("// Init the ID, state variables and properties for instance " + inst.getName() + "\n");
 
@@ -1535,20 +1577,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
 
         // Init simple properties
-        for (Map.Entry<Property, Expression> init : ConfigurationHelper.initExpressionsForInstance(cfg, inst)) {
-            if (init.getValue() != null && init.getKey().getCardinality() == null) {
-                if (ctx.traceLevelIsAbove(cfg, 3)) {
-                    builder.append(ctx.getTraceFunctionForString(cfg) + "\"" + inst.getName()
-                            + "." + ctx.getVariableName(init.getKey()) + "<-\");\n");
-                    builder.append(ctx.getTraceFunctionForString(cfg) + "\"TODO\\n\");\n");
-                }
-
-                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(init.getKey()) + " = ");
-                //ctx.getCompiler().getThingActionCompiler().generate(init.getValue(), builder, ctx);
-                ctx.generateFixedAtInitValue(cfg, inst, init.getValue(), builder);
-                builder.append(";\n");
-            }
-        }
+        CCfgMainGenerator cfggen = (CCfgMainGenerator) getPlugableCfgGenerator(inst.getType(), ctx);
+        cfggen.generateInitializationSimpleProperties(inst, cfg, builder, ctx);
 
 
         for (Property p : ThingHelper.allPropertiesInDepth(inst.getType())) {

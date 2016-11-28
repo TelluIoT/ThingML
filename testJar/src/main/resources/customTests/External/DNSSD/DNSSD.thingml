@@ -1,0 +1,28 @@
+import "../../datatypes.thingml"
+
+thing fragment DNSSDMsgs {
+	message dnssd_srv_publish_success()
+	message dnssd_srv_unpublish_success()
+	message dnssd_srv_publish_failure(code : UInt8)
+	message dnssd_publish_service()
+	message dnssd_unpublish_service()
+}
+
+thing DNSSDExternal includes DNSSDMsgs
+@trace_level "0"
+@external "DNSSD" //this is temp. annotation to identify external things
+{
+	property service_name : String
+	property service_type : String
+	property service_port : Integer
+	property service_txt : String
+	property service_host : String
+	property service_domain : String
+
+	provided port dnssdport {
+		sends dnssd_srv_publish_success, dnssd_srv_unpublish_success, dnssd_srv_publish_failure
+		receives dnssd_publish_service, dnssd_unpublish_service
+	}
+
+	statechart Behavior init Start { state Start {} }
+}

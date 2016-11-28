@@ -1,0 +1,40 @@
+import "../../datatypes.thingml"
+
+import "DNSSD.thingml"
+
+
+thing DNSSDController includes DNSSDMsgs {
+
+	required port dnssdport {
+		receives dnssd_srv_publish_failure
+	}
+
+    statechart Behavior init Init {
+
+    	state Init {
+    	    on entry print "Init "
+
+            transition -> End
+    		event dnssdport?dnssd_srv_publish_failure
+    		action print "PublishFailure "
+    	}
+
+    	state End {
+    	    on entry print "End\n"
+    	}
+    }
+}
+
+
+configuration Failure {
+
+	instance dnssd_ext : DNSSDExternal
+		set dnssd_ext.service_name = "MegaPrinter"
+		set dnssd_ext.service_type = "_ipp._tcp"
+		set dnssd_ext.service_port = 98
+		set dnssd_ext.service_port = "path=print"
+
+	instance ctrl : DNSSDController
+
+	connector ctrl.dnssdport => dnssd_ext.dnssdport
+}

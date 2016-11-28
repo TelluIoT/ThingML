@@ -24,6 +24,8 @@
 
 void term(int signum)
 {
+    /*CLEAN_UP_ON_TERMINATE*/
+
     fflush(stdout);
     fflush(stderr);
     exit(signum);

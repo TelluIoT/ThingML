@@ -16,9 +16,11 @@
 package org.thingml.compilers.configuration;
 
 import java.util.Iterator;
+import org.sintef.thingml.Thing;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.spi.ExternalThingPlugin;
 
 /**
  * Created by bmori on 17.12.2014.
@@ -28,6 +30,15 @@ public class CfgBuildCompiler {
 
     public void generateBuildScript(Configuration cfg, Context ctx) {
         throw (new UnsupportedOperationException("Project structure and build scripts are platform-specific."));
+    }
+
+    public CfgBuildCompiler getPlugableCfgBuildCompiler(Thing thing, Context ctx) {
+        if(ExternalThingPlugin.isExternalThing(thing)) {
+            ExternalThingPlugin plugin = ctx.getCompiler().getExternalThingPlugin(thing);
+            if(plugin != null)
+                return plugin.getCfgBuildCompiler();
+        }
+        return this;
     }
     
     public void generateDockerFile(Configuration cfg, Context ctx) {

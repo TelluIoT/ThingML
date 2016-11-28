@@ -31,6 +31,7 @@ import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.compilers.thing.*;
@@ -53,6 +54,7 @@ public abstract class ThingMLCompiler {
     protected Context ctx = new Context(this);
     Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
     Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
+    Map<String, ExternalThingPlugin> externalThingPlugingPerExternalThing = new HashMap<>();
     private ThingActionCompiler thingActionCompiler;
     private ThingApiCompiler thingApiCompiler;
     private CfgMainGenerator mainCompiler;
@@ -410,6 +412,34 @@ public abstract class ThingMLCompiler {
         }
     }
 
+    public void addExternalThingPlugin(ExternalThingPlugin etp) {
+        String externalThingTypeId = etp.getSupportedExternalThingTypeID();
+        ExternalThingPlugin externalPlugin = externalThingPlugingPerExternalThing.get(externalThingTypeId);
+        if(externalPlugin != null && !externalPlugin.equals(etp)) {
+            System.out.println("[ERROR] Two different plugins ("+ etp.getPluginID() +", "+ externalPlugin.getPluginID() +") to generate the same type of external thing: " +externalThingTypeId);
+            return;
+        }
+        externalThingPlugingPerExternalThing.put(externalThingTypeId, etp);
+    }
+
+    public ExternalThingPlugin getExternalThingPlugin(Thing thing) {
+        String externalThingTypeId = ExternalThingPlugin.calculateExternalThingTypeID(thing);
+        ExternalThingPlugin plugin = externalThingPlugingPerExternalThing.get(externalThingTypeId);
+        if(plugin == null) {
+            System.out.println("[ERROR] No plugin found for external thing: " + thing.getName() + " of type \"" + externalThingTypeId + "\"");
+            return null;
+        }
+        return plugin;
+    }
+
+    public Boolean isExternalThing(Thing thing) {
+        return ExternalThingPlugin.isExternalThing(thing);
+    }
+
+    public Set<ExternalThingPlugin> getExternalThingPlugins() {
+        return new HashSet<ExternalThingPlugin>(externalThingPlugingPerExternalThing.values());
+    }
+
     public void addSerializationPlugin(SerializationPlugin sp) {
         if (!serializationPlugins.containsKey(sp.getPluginID())) {
             serializationPlugins.put(sp.getPluginID(), sp);
@@ -420,6 +450,7 @@ public abstract class ThingMLCompiler {
             }
         }
     }
+
 
     public Set<SerializationPlugin> getSerializationPlugins() {
         return new HashSet<SerializationPlugin>(serializationPlugins.values());
@@ -446,4 +477,6 @@ public abstract class ThingMLCompiler {
     public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
         return null;
     }
+
+
 }

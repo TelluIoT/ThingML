@@ -1,0 +1,52 @@
+import "../../datatypes.thingml"
+
+import "DNSSD.thingml"
+
+
+thing DNSSDController includes DNSSDMsgs {
+
+	required port dnssdport {
+		sends dnssd_unpublish_service
+		receives dnssd_srv_publish_success, dnssd_srv_unpublish_success
+	}
+
+    statechart Behavior init Init {
+
+    	state Init {
+    	    on entry print "Init "
+
+            transition -> Unpublish
+    		event dnssdport?dnssd_srv_publish_success
+    		action do
+    			print "Published "
+    			dnssdport!dnssd_unpublish_service()
+    		end
+
+    	}
+
+    	state Unpublish {
+    	    transition -> End
+    	    event dnssdport?dnssd_srv_unpublish_success
+            action print "Unpublished "
+    	}
+
+    	state End {
+    	    on entry print "End\n"
+    	}
+
+    }
+}
+
+
+configuration PublishUnpublish {
+
+	instance dnssd_ext : DNSSDExternal
+		set dnssd_ext.service_name = "MegaPrinter"
+		set dnssd_ext.service_type = "_ipp._tcp"
+		set dnssd_ext.service_port = 98
+		set dnssd_ext.service_port = "path=print"
+
+	instance ctrl : DNSSDController
+
+	connector ctrl.dnssdport => dnssd_ext.dnssdport
+}

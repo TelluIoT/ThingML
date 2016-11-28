@@ -23,14 +23,17 @@ import org.sintef.thingml.helpers.StateHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.interfaces.c.ICThingImpEventHandlerStrategy;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
 import org.thingml.compilers.c.cepHelper.CCepHelper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.sintef.thingml.helpers.RegionHelper;
 import org.sintef.thingml.helpers.ThingHelper;
 
@@ -42,6 +45,16 @@ import static org.thingml.compilers.c.cepHelper.CCepHelper.shouldTriggerOnInputN
  * Created by ffl on 17.06.15.
  */
 public class CThingImplCompiler extends FSMBasedThingImplCompiler {
+
+    protected Set<ICThingImpEventHandlerStrategy> eventHandlerStrategies;
+
+    public CThingImplCompiler() {
+        eventHandlerStrategies = new HashSet<ICThingImpEventHandlerStrategy>();
+    }
+
+    public void addEventHandlerStrategy(ICThingImpEventHandlerStrategy strategy) {
+        eventHandlerStrategies.add(strategy);
+    }
 
     @Override
     public void generateImplementation(Thing thing, Context ctx) {
@@ -201,13 +214,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    protected void generatePrivateCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        // NB sdalgard - ** Reference to be removed ** This function is duplicated in generatePrivateCppPrototypes in class CThingApiCompiler
-        // Exit actions 
-
-        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
-
-        builder.append("//Prototypes: State Machine\n");
+    protected void generateStateMachineOnExitCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
             StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
             builder.append("void " + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
@@ -215,7 +222,16 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             //fix for empty statechart
             builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n"); // sdalgard moved inside if-statement
         }
+    }
 
+    protected void generatePrivateCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+        // NB sdalgard - ** Reference to be removed ** This function is duplicated in generatePrivateCppPrototypes in class CThingApiCompiler
+        // Exit actions 
+
+        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
+
+        builder.append("//Prototypes: State Machine\n");
+        generateStateMachineOnExitCPrototypes(thing, builder, ctx);
 
         //fix for empty statechart
         //builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
@@ -569,6 +585,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
             builder.append("}\n");
         }
+
+        for(ICThingImpEventHandlerStrategy strategy : eventHandlerStrategies)
+            strategy.generateEventHandlers(thing, builder, ctx, debugProfile);
     }
 
     /**

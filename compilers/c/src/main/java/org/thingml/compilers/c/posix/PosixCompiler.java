@@ -16,17 +16,12 @@
 package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.Configuration;
-import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.impl.PlatformAnnotationImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.CCfgMainGenerator;
-import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CThingApiCompiler;
-import org.thingml.compilers.c.CThingImplCompiler;
+import org.thingml.compilers.c.*;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
@@ -38,8 +33,9 @@ import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 public class PosixCompiler extends OpaqueThingMLCompiler {
 
     public PosixCompiler() {
-        super(new CThingActionCompilerPosix(), new CThingApiCompiler(), new CCfgMainGenerator(),
-                new PosixCCfgBuildCompiler(), new CThingImplCompiler(),
+        super(new CThingActionCompilerPosix(), new CExternalThingEnabledApiCompiler(new PosixThingApiCompiler()),
+                new CCfgMainGenerator(), new PosixCCfgBuildCompiler(),
+                new CExternalThingEnabledImplCompiler(new PosixThingImplCompiler()),
                 new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
         this.checker = new PosixChecker(this.getID());
     }

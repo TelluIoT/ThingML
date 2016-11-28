@@ -17,7 +17,9 @@ package org.thingml.compilers.configuration;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLModel;
+import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.spi.ExternalThingPlugin;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -26,5 +28,14 @@ public class CfgMainGenerator {
 
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         throw (new UnsupportedOperationException("Configuration are platform-specific."));
+    }
+
+    public CfgMainGenerator getPlugableCfgGenerator(Thing thing, Context ctx) {
+        if(ExternalThingPlugin.isExternalThing(thing)) {
+            ExternalThingPlugin plugin = ctx.getCompiler().getExternalThingPlugin(thing);
+            if(plugin != null)
+                return plugin.getCfgMainGenerator();
+        }
+        return this;
     }
 }
