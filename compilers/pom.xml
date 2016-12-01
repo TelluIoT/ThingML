@@ -18,7 +18,6 @@
         <module>java</module>
         <module>javascript</module>
         <module>c</module>
-        <module>uml</module>
         <module>debugGUI</module>
         <module>thingmltools</module>
         <module>registry</module>
