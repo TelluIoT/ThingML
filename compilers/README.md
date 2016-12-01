@@ -146,7 +146,7 @@ Compiler Id must belong to the following list:
  |     posixmt	- Generates C code for Linux or other Posix runtime environments (GCC compiler).
  |     java	- Generates plain Java code.
  |     arduino	- Generates C/C++ code for Arduino or other AVR microcontrollers (AVR-GCC compiler).
- |     UML	- Generates UML diagrams in PlantUML
+ |     UML	- Generates UML text specifications which can be exploited by PlantUML
  |     espruino	- Generates Javascript code for the Espruino platform.
  |     nodejs	- Generates Javascript code for the NodeJS platform.
  |     posix	- Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).
