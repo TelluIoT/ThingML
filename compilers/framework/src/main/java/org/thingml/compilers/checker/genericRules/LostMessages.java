@@ -23,7 +23,6 @@ package org.thingml.compilers.checker.genericRules;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.constraints.Types;
 import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;

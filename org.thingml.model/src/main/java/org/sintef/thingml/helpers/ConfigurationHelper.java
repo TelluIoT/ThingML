@@ -144,23 +144,6 @@ public class ConfigurationHelper {
 
     }
 
-
-    public static Map<Instance, String[]> allRemoteInstances(Configuration self) {
-        Map<Instance, String[]> result = new HashMap<Instance, String[]>();
-        for (PlatformAnnotation a : self.getAnnotations()) {
-            if (a.getName().equals("remote")) {
-                final String[] regex = a.getValue().split("::");
-                for(Instance i : allInstances(self)) {
-                    if (i.getName().matches(self.getName()+"_"+regex[0]) && i.getType().getName().matches(regex[1]) ) {
-                        result.put(i, regex);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-
     public static Set<Instance> allInstances(Configuration self) {
         MergedConfigurationCache.clearCache();
         Set<Instance> result = new HashSet<Instance>();
@@ -183,34 +166,6 @@ public class ConfigurationHelper {
         result.addAll(merge(self).getPropassigns());
         return result;
     }
-
-
-    public static Map<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>> allRemoteMessages(Configuration self) {
-        Map<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>> result = new HashMap<Port, AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>>();
-        for(Map.Entry<Instance, String[]> entry : allRemoteInstances(self).entrySet()) {
-            for(Port p : entry.getKey().getType().getPorts()) {
-                if (p.getName().matches(entry.getValue()[2])) {
-                    List<Message> send = new ArrayList<Message>();
-                    for(Message m : p.getSends()) {
-                        if (m.getName().matches(entry.getValue()[3])) {
-                            send.add(m);
-                        }
-                    }
-
-                    List<Message> rec = new ArrayList<Message>();
-                    for(Message m : p.getReceives()) {
-                        if (m.getName().matches(entry.getValue()[3])) {
-                            rec.add(m);
-                        }
-                    }
-
-                    result.put(p, new AbstractMap.SimpleImmutableEntry<List<Message>, List<Message>>(send, rec));
-                }
-            }
-        }
-        return result;
-    }
-
 
     public static List<Thing> allThings(Configuration self) {
         List<Thing> result = new ArrayList<Thing>();
@@ -399,7 +354,6 @@ public class ConfigurationHelper {
 
         return result;
     }
-
 
     public static List<Instance> getClients(Configuration self, Instance i) {
         List<Instance> result = new ArrayList<Instance>();

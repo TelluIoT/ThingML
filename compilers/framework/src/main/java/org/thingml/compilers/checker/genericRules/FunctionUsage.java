@@ -26,6 +26,7 @@ import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
 import org.sintef.thingml.helpers.ActionHelper;
+import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.TyperHelper;
 import org.thingml.compilers.checker.Checker;
@@ -61,28 +62,30 @@ public class FunctionUsage extends Rule {
     private boolean check(Checker checker, Thing t, Function call, List<Expression> params, Function f, EObject o) {
         boolean found = false;
         if (EcoreUtil.equals(call, f)) {
-            found = true;
-            if (f.getParameters().size() != params.size()) {
-                checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + f.getParameters().size() + ", called with " + params.size(), o);
-            } else {
-                for (Parameter p : f.getParameters()) {
-                    Expression e = params.get(f.getParameters().indexOf(p));
-                    Type expected = TyperHelper.getBroadType(p.getType());
-                    Type actual = checker.typeChecker.computeTypeOf(e);
-                    if (actual != null) {
-                        if (actual.equals(Types.ERROR_TYPE)) {
-                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
-                        } else if (actual.equals(Types.ANY_TYPE)) {
-                            checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
-                        } else if (!TyperHelper.isA(actual, expected)) {
-                            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
+            if (!AnnotatedElementHelper.isDefined(f, "SuppressWarnings", "Parameters")) {
+                found = true;
+                if (f.getParameters().size() != params.size()) {
+                    checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + f.getParameters().size() + ", called with " + params.size(), o);
+                } else {
+                    for (Parameter p : f.getParameters()) {
+                        Expression e = params.get(f.getParameters().indexOf(p));
+                        Type expected = TyperHelper.getBroadType(p.getType());
+                        Type actual = checker.typeChecker.computeTypeOf(e);
+                        if (actual != null) {
+                            if (actual.equals(Types.ERROR_TYPE)) {
+                                checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
+                            } else if (actual.equals(Types.ANY_TYPE)) {
+                                checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
+                            } else if (!TyperHelper.isA(actual, expected)) {
+                                checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
+                            }
                         }
-                    }
-                    for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {//TODO: implement allActions on Function directly
-                        if (a instanceof VariableAssignment) {
-                            VariableAssignment va = (VariableAssignment) a;
-                            if (va.getProperty().equals(p)) {
-                                checker.addWarning("Re-assigning parameter " + p.getName() + " can have side effects", va);
+                        for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {//TODO: implement allActions on Function directly
+                            if (a instanceof VariableAssignment) {
+                                VariableAssignment va = (VariableAssignment) a;
+                                if (va.getProperty().equals(p)) {
+                                    checker.addWarning("Re-assigning parameter " + p.getName() + " can have side effects", va);
+                                }
                             }
                         }
                     }
@@ -169,7 +172,7 @@ public class FunctionUsage extends Rule {
                     }
                 }
             }
-            if (!found)
+            if (!found && !AnnotatedElementHelper.isDefined(f, "SuppressWarnings", "Call"))
                 checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is never called.", f);
         }
     }
