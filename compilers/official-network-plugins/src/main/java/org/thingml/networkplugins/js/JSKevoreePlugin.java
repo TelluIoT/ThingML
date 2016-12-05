@@ -160,17 +160,17 @@ public class JSKevoreePlugin extends NetworkPlugin {
             final JsonObject json = JsonObject.readFrom(pack);
             json.set("main", "lib/" + cfg.getName() + ".js");
             final JsonObject deps = json.get("dependencies").asObject();
-            deps.add("kevoree-entities", "^8.0.0");
+            deps.add("kevoree-entities", "^9.0.0");
             final JsonObject devDeps = json.get("devDependencies").asObject();
-            devDeps.add("grunt", "^0.4.1");
-            devDeps.add("grunt-kevoree", "^5.0.0");
-            devDeps.add("grunt-kevoree-genmodel", "^2.0.0");
-            devDeps.add("grunt-kevoree-registry", "^2.0.0");
+            devDeps.add("grunt", "^1.0.1");
+            devDeps.add("grunt-kevoree", "^5.9.1");
+            devDeps.add("grunt-kevoree-genmodel", "^3.0.1");
+            devDeps.add("grunt-kevoree-registry", "^3.0.3");
             final JsonObject scripts = json.get("scripts").asObject();
             scripts.add("prepublish", "grunt");
             scripts.add("postpublish", "grunt publish");
 
-            final JsonObject kevProp = JsonObject.readFrom("{\"package\":\"my.package\"}");
+            final JsonObject kevProp = JsonObject.readFrom("{\"namespace\":\"kevoree\",\"package\":\"my.package\"}");
             json.add("kevoree", kevProp);
 
             final File f = new File(ctx.getOutputDirectory() + "/package.json");
@@ -217,6 +217,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         builder.append("/**\n* Kevoree component\n* @type {" + cfg.getName() + "}\n*/\n");
         builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
         builder.append("toString: '" + cfg.getName() + "',\n");
+        builder.append("tdef_version: " + AnnotatedElementHelper.annotationOrElse(cfg, "tdef_version", "1") + ",\n");
 
 
         List<String> attributes = new ArrayList<String>();
