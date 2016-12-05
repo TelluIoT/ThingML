@@ -27,6 +27,9 @@ import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author sintef
@@ -55,73 +58,61 @@ public class LostMessages extends Rule {
     @Override
     public void check(ThingMLModel model, Checker checker) {
         for (Configuration t : ThingMLHelpers.allConfigurations(model)) {
-            for(Connector c : ConfigurationHelper.allConnectors(t)) {
-                check(c, checker);
-            }
+            check(t, checker);
         }
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for(Connector c : ConfigurationHelper.allConnectors(cfg)) {
-            check(c, checker);
+        for(Instance i : ConfigurationHelper.allInstances(cfg)) {
+            check(cfg, i, checker);
         }
     }
 
-    private void check(Connector c, Checker checker) {
-        for(Message sent : c.getProvided().getSends()) {
-            boolean isReceived = false;
-            for(Message received : c.getRequired().getReceives()) {
-                if (EcoreUtil.equals(sent, received)) {
-                    isReceived = true;
-                    break;
-                }
-            }
-            if (!isReceived) {
-                checker.addGenericWarning("Message " + sent.getName() + " of instance " + c.getSrv().getInstance().getName() + " is sent but not received by instance " + c.getCli().getInstance().getName(), c);
-            }
-        }
-
-        for(Message sent : c.getRequired().getSends()) {
-            boolean isReceived = false;
-            for(Message received : c.getProvided().getReceives()) {
-                if (EcoreUtil.equals(sent, received)) {
-                    isReceived = true;
-                    break;
-                }
-            }
-            if (!isReceived) {
-                checker.addGenericWarning("Message " + sent.getName() + " of instance " + c.getCli().getInstance().getName() + " is sent but not received by instance " + c.getSrv().getInstance().getName(), c);
+    private void check(Configuration cfg, Instance i, Checker checker) {
+        Map<Instance, List<Message>> sources = ConfigurationHelper.allMessagesReceivedBy(cfg, i);
+        for(Instance j : sources.keySet()) {
+            System.out.println("Instance " + j.getName());
+            for (Message m : sources.get(j)) {
+                System.out.println("\t Message " + m.getName());
             }
         }
 
 
-
-        for(Message received : c.getProvided().getReceives()) {
-            boolean isSent = false;
-            for(Message sent : c.getRequired().getSends()) {
-                if (EcoreUtil.equals(sent, received)) {
-                    isSent = true;
-                    break;
+        for(Instance j : sources.keySet()) {
+            for (Message m : sources.get(j)) {
+                boolean found = false;
+                for (Port p : i.getType().getPorts()) {
+                    for (Message m2 : p.getReceives()) {
+                        if (EcoreUtil.equals(m, m2)) {
+                            found = true;
+                            break;
+                        }
+                    }
                 }
-            }
-            if (!isSent) {
-                checker.addGenericWarning("Message " + received.getName() + " is expected by instance " + c.getSrv().getInstance().getName() + " but never sent by instance " + c.getCli().getInstance().getName(), c);
-            }
-        }
-
-        for(Message received : c.getRequired().getReceives()) {
-            boolean isSent = false;
-            for(Message sent : c.getProvided().getSends()) {
-                if (EcoreUtil.equals(sent, received)) {
-                    isSent = true;
-                    break;
+                if (!found) {//See if another instance can receive the message
+                    for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
+                        if (EcoreUtil.equals(c.getSrv().getInstance(), j)) {
+                            for(Message m2 : c.getRequired().getReceives()) {
+                                if(EcoreUtil.equals(m, m2)) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        } else if (EcoreUtil.equals(c.getCli().getInstance(), j)) {
+                            for(Message m2 : c.getProvided().getReceives()) {
+                                if(EcoreUtil.equals(m, m2)) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!found) {
+                        checker.addGenericWarning("Message " + m.getName() + " cannot be received by instance " + i.getName(), i);
+                    }
                 }
-            }
-            if (!isSent) {
-                checker.addGenericWarning("Message " + received.getName() + " is expected by instance " + c.getCli().getInstance().getName() + " but never sent by instance " + c.getSrv().getInstance().getName(), c);
             }
         }
     }
-
 }

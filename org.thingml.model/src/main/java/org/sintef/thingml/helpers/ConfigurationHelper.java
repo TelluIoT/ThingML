@@ -355,6 +355,37 @@ public class ConfigurationHelper {
         return result;
     }
 
+    /**
+     *
+     * @param self
+     * @param i
+     * @return instance sending the list of messages to i
+     */
+    public static Map<Instance, List<Message>> allMessagesReceivedBy(Configuration self, Instance i) {
+        System.out.println("allMessagesReceivedBy(" + i.getName() + ")");
+        Map<Instance, List<Message>> result = new HashMap<>();
+        for(Connector c : allConnectors(self)) {
+            if (EcoreUtil.equals(c.getCli().getInstance(), i)) {
+                System.out.println("\tclient");
+                List messages = result.get(c.getSrv().getInstance());
+                if (messages == null) {
+                    messages = new ArrayList();
+                }
+                messages.addAll(c.getProvided().getSends());
+                result.put(c.getSrv().getInstance(), messages);
+            } else if (EcoreUtil.equals(c.getSrv().getInstance(), i)) {
+                System.out.println("\tserver");
+                List messages = result.get(c.getCli().getInstance());
+                if (messages == null) {
+                    messages = new ArrayList();
+                }
+                messages.addAll(c.getRequired().getSends());
+                result.put(c.getCli().getInstance(), messages);
+            }
+        }
+        return result;
+    }
+
     public static List<Instance> getClients(Configuration self, Instance i) {
         List<Instance> result = new ArrayList<Instance>();
         for(Connector c : allConnectors(self)) {
@@ -364,7 +395,6 @@ public class ConfigurationHelper {
         }
         return result;
     }
-
 
     public static List<Instance> getServers(Configuration self, Instance i) {
         List<Instance> result = new ArrayList<Instance>();
