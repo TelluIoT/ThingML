@@ -71,15 +71,7 @@ public class LostMessages extends Rule {
 
     private void check(Configuration cfg, Instance i, Checker checker) {
         Map<Instance, List<Message>> sources = ConfigurationHelper.allMessagesReceivedBy(cfg, i);
-        for(Instance j : sources.keySet()) {
-            System.out.println("Instance " + j.getName());
-            for (Message m : sources.get(j)) {
-                System.out.println("\t Message " + m.getName());
-            }
-        }
-
-
-        for(Instance j : sources.keySet()) {
+       for(Instance j : sources.keySet()) {
             for (Message m : sources.get(j)) {
                 boolean found = false;
                 for (Port p : i.getType().getPorts()) {

@@ -362,11 +362,9 @@ public class ConfigurationHelper {
      * @return instance sending the list of messages to i
      */
     public static Map<Instance, List<Message>> allMessagesReceivedBy(Configuration self, Instance i) {
-        System.out.println("allMessagesReceivedBy(" + i.getName() + ")");
         Map<Instance, List<Message>> result = new HashMap<>();
         for(Connector c : allConnectors(self)) {
             if (EcoreUtil.equals(c.getCli().getInstance(), i)) {
-                System.out.println("\tclient");
                 List messages = result.get(c.getSrv().getInstance());
                 if (messages == null) {
                     messages = new ArrayList();
@@ -374,7 +372,6 @@ public class ConfigurationHelper {
                 messages.addAll(c.getProvided().getSends());
                 result.put(c.getSrv().getInstance(), messages);
             } else if (EcoreUtil.equals(c.getSrv().getInstance(), i)) {
-                System.out.println("\tserver");
                 List messages = result.get(c.getCli().getInstance());
                 if (messages == null) {
                     messages = new ArrayList();
