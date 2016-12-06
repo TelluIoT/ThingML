@@ -44,22 +44,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType() {\nsuper(\"" + m.getName() + "\", (short) " + code + ");\n}\n\n");
 
-        if (m.getParameters().size() == 0) {
-            builder.append("private static Event instance;\n");
-            builder.append("public Event instantiate(){if (instance == null)\ninstance = new " + ctx.firstToUpper(m.getName()) + "Message(this);\nreturn instance;\n};\n");
-        } else {
-            builder.append("public Event instantiate(");
-            for (Parameter p : m.getParameters()) {
-                if (m.getParameters().indexOf(p) > 0)
-                    builder.append(", ");
-                builder.append("final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.protectKeyword(p.getName()));
-            }
-            builder.append(") { return new " + ctx.firstToUpper(m.getName()) + "Message(this");
-            for (Parameter p : m.getParameters()) {
-                builder.append(", " + ctx.protectKeyword(p.getName()));
-            }
-            builder.append("); }\n");
+
+        builder.append("public Event instantiate(");
+        for (Parameter p : m.getParameters()) {
+            if (m.getParameters().indexOf(p) > 0)
+                builder.append(", ");
+            builder.append("final " + JavaHelper.getJavaType(p.getType(), p.isIsArray(), ctx) + " " + ctx.protectKeyword(p.getName()));
         }
+        builder.append(") { return new " + ctx.firstToUpper(m.getName()) + "Message(this");
+        for (Parameter p : m.getParameters()) {
+            builder.append(", " + ctx.protectKeyword(p.getName()));
+        }
+        builder.append("); }\n");
 
         builder.append("@Override\n");
         builder.append("public Event instantiate(Map<String, Object> params) {");
@@ -239,7 +235,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         if (overrideReceive) {
-            builder.append("@Override\npublic void receive(Event event, final Port p){\n");
+            builder.append("@Override\npublic void receive(Event event){\n");
             builder.append("if (root == null) {\n");
             builder.append("boolean consumed = false;\n");
             for (StateMachine sm : thing.getBehaviour()) {
@@ -280,18 +276,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     }
                 }
             }
-            builder.append("if (!consumed){\nsuper.receive(event, p);\n}\n");
+            builder.append("if (!consumed){\nsuper.receive(event);\n}\n");
             builder.append("else {");
             builder.append("for (Component child : forks) {\n");
             builder.append("Event child_e = event.clone();\n");
-            builder.append("child.receive(child_e, p);\n");
+            builder.append("child.receive(child_e);\n");
             builder.append("}\n");
             builder.append("for(int i = 0; i < behavior.regions.length; i++) {\n");
             builder.append("behavior.regions[i].handle(event, p);");
             builder.append("}\n");
             builder.append("}\n");
             builder.append("} else {\n");
-            builder.append("super.receive(event, p);\n");
+            builder.append("super.receive(event);\n");
             builder.append("}\n");
             builder.append("}\n\n");
         }
@@ -323,7 +319,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                             builder.append(", ");
                         builder.append(ctx.protectKeyword(ctx.getVariableName(pa)));
                     }
-                    builder.append("), " + p.getName() + "_port);\n");
+                    builder.append("));\n");
                     builder.append("}\n\n");
                 }
             }

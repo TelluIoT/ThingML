@@ -49,7 +49,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("//}\n");
     }
 
-    protected void generateSendMethods(Thing thing, StringBuilder builder, Context ctx) {
+    protected void generateSendMethods(Thing thing, StringBuilder builder, Context ctx) {//TODO: generate only for message that actually can be sent
         for (Port p : ThingMLHelpers.allPorts(thing)) {
             for (Message m : p.getSends()) {
                 builder.append("function send" + ctx.firstToUpper(m.getName()) + "On" + ctx.firstToUpper(p.getName()) + "(");
