@@ -55,14 +55,24 @@ import org.thingml.testjar.lang.lSintefboard;
  */
 public class TestJar {
     public static void main(String[] args) throws ExecutionException {
+        //possible command lines to start the proccess
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.TestJar
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.TestJar <compiler_path>
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.TestJar <compiler_path> <config_file>
+
         final File workingDir = new File(System.getProperty("user.dir"));
+        File configFile = new File(workingDir, "config.properties");
         File tmpDir = new File(workingDir, "tmp");
+
+        if(args.length == 2)
+            configFile = new File(args[1]);
+
         final File testCfgDir = new File(tmpDir, "thingml");
         final File codeDir = new File(tmpDir, "genCode");
         final File logDir = new File(tmpDir, "log");
         File compilerJar;
-        if(args.length > 1) {
-            compilerJar = new File(workingDir, args[1]);
+        if(args.length == 1) {
+            compilerJar = new File(workingDir, args[0]);
         } else {
             compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
         }
@@ -81,11 +91,10 @@ public class TestJar {
         System.out.println("*              Test Begin              *");
         System.out.println("****************************************");
         
-        System.out.println("");
-        
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
         System.out.println("Tmp Directory = " + tmpDir);
         System.out.println("Compiler = " + compilerJar);
+        System.out.println("Config = " + configFile);
         System.out.println("");
         
         System.out.println("****************************************");
@@ -94,13 +103,13 @@ public class TestJar {
         
         System.out.println("");
         Properties prop = new Properties();
-	InputStream input = null;
+        InputStream input = null;
         
         String languageList = null, useBlackList = null, testList = null, categoryUseBlackList = null, categoryList = null, webLink = null, myIP = null, myHTTPServerPort = null;
         
 	try {
 
-		input = new FileInputStream(new File(workingDir, "config.properties"));
+		input = new FileInputStream(configFile);
 
 		// load a properties file
 		prop.load(input);
