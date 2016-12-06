@@ -89,12 +89,10 @@ public class JSKevoreePlugin extends NetworkPlugin {
 
             kevScript.append("//create a default group to manage the node(s)\n");
             kevScript.append("add sync : WSGroup\n");
-            kevScript.append("set sync.port/node0 = \"9000\"\n");
-
             kevScript.append("attach node0 sync\n\n");
-
-            kevScript.append("//instantiate Kevoree/ThingML components\n");
-            kevScript.append("add node0." + cfg.getName() + "_0 : my.package." + cfg.getName() + "\n");
+            kevScript.append("set sync.port/node0 = \"9000\"\n");
+        kevScript.append("//instantiate Kevoree/ThingML components\n");
+            kevScript.append("add node0." + cfg.getName() + "_0 : thingml." + cfg.getName() + "/1/LATEST\n");//TODO: allow customizing version number and namespace
 
             for (String k : AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "kevscript_import")) {
                 kevScript.append(k);
@@ -102,8 +100,6 @@ public class JSKevoreePlugin extends NetworkPlugin {
             if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "kevscript_import"))
                 kevScript.append("\n");
 
-            kevScript.append("start sync\n");
-            kevScript.append("//start node0\n\n");
             kevScript.append("\n");
 
             PrintWriter w = null;
