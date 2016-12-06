@@ -21,6 +21,7 @@
 package org.thingml.networkplugins.js;
 
 import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.WriterConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -162,20 +163,26 @@ public class JSKevoreePlugin extends NetworkPlugin {
             final JsonObject deps = json.get("dependencies").asObject();
             deps.add("kevoree-entities", "^9.0.0");
             final JsonObject devDeps = json.get("devDependencies").asObject();
-            devDeps.add("grunt", "^1.0.1");
-            devDeps.add("grunt-kevoree", "^5.9.1");
-            devDeps.add("grunt-kevoree-genmodel", "^3.0.1");
-            devDeps.add("grunt-kevoree-registry", "^3.0.3");
+            devDeps.add("grunt", "^1");
+            devDeps.add("grunt-kevoree", "^5");
+            devDeps.add("grunt-kevoree-genmodel", "^3");
+            devDeps.add("grunt-kevoree-registry", "^3");
+            devDeps.add("grunt-kevoree-registry", "^3");
+            devDeps.add("eslint", "^3.11.1");
+            devDeps.add("load-grunt-tasks", "^3");
             final JsonObject scripts = json.get("scripts").asObject();
-            scripts.add("prepublish", "grunt");
+            scripts.add("prepublish", "npm run lint && grunt");
             scripts.add("postpublish", "grunt publish");
+            scripts.add("lint", "eslint lib");
 
-            final JsonObject kevProp = JsonObject.readFrom("{\"namespace\":\"kevoree\",\"package\":\"my.package\"}");
+            //TODO: read description from annotation
+
+            final JsonObject kevProp = JsonObject.readFrom("{\"namespace\":\"thingml\"}");//TODO: read namespace from annotation
             json.add("kevoree", kevProp);
 
             final File f = new File(ctx.getOutputDirectory() + "/package.json");
             final OutputStream output = new FileOutputStream(f);
-            IOUtils.write(json.toString(), output);
+            IOUtils.write(json.toString(WriterConfig.PRETTY_PRINT), output);
             IOUtils.closeQuietly(output);
         } catch (Exception e) {
             e.printStackTrace();
@@ -208,7 +215,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         }
 
         final StringBuilder builder = ctx.getBuilder("/lib/" + cfg.getName() + ".js");
-        builder.append("const AbstractComponent = require('kevoree-entities').AbstractComponent;\n");
+        builder.append("const AbstractComponent = require('kevoree-entities/lib/AbstractComponent');\n");
 
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             builder.append("const " + t.getName() + " = require('./" + t.getName() + "');\n");
@@ -337,7 +344,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
                         }
                         builder.append(");}");
                     }
-                    builder.append(",\nout_" + shortName(i, p, null) + "_out: function(msg) {/* Kevoree required port (out) for dangling ThingML port " + p.getName() + "\nThis will be overwritten @runtime by Kevoree JS */}");
+                    builder.append(",\nout_" + shortName(i, p, null) + "_out: function() {/* Kevoree required port (out) for dangling ThingML port " + p.getName() + "\nThis will be overwritten @runtime by Kevoree JS */}");
                 }
             }
         }

@@ -63,7 +63,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(") {\n");
                 builder.append("const self = root(this);\n");
                 ((JSThingApiCompiler) ctx.getCompiler().getThingApiCompiler()).callListeners(thing, p, m, builder, ctx, debugProfile);
-                builder.append("};\n\n");
+                builder.append("}\n\n");
             }
         }
     }
@@ -133,7 +133,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         generateListeners(thing, builder, ctx);
         builder.append("build.call(this, name, root);\n");
-        builder.append("};\n");
+        builder.append("}\n");
 
 
         builder.append("//CEP dispatch functions\n");
@@ -147,7 +147,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                         .append("}\n");
             }
         }
-        builder.append("};\n");
+        builder.append("}\n");
 
         builder.append("function root(component) {\n");
         builder.append("var self = component;\n");
@@ -190,7 +190,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 if (debugProfile.getDebugFunctions().contains(f)) {
                     builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceFunctionDone(thing, f) + "\");\n");
                 }
-                builder.append("};\n\n");
+                builder.append("}\n\n");
             }
         }
         ctx.removeContextAnnotation("function");
@@ -249,7 +249,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);
         }
 
-        builder.append("};\n");
+        builder.append("}\n");
 
         ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
 
@@ -260,7 +260,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("result += '';\n");
         builder.append("return result;\n");
-        builder.append("};\n");
+        builder.append("}\n");
 
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
     }
@@ -499,7 +499,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("console.log(instance.name + msg +\"\");\n");
         }
         builder.append("}\n");
-        builder.append("};\n\n");
+        builder.append("}\n\n");
     }
 
 }

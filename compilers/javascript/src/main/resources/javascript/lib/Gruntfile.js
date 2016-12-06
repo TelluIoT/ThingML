@@ -1,36 +1,34 @@
 module.exports = function (grunt) {
+  require('load-grunt-tasks')(grunt);
 
-    grunt.initConfig({
-        // retrieve your project package.json
-        pkg: grunt.file.readJSON('package.json'),
-
-        // creates kevlib.json which represents your project Kevoree model
-        // by parsing your pkg.main entry point
-        kevoree_genmodel: {
-            main: {
-                options: {
-                    quiet: false,
-                    verbose: true
-                }
-            }
-        },
-
-        // pushes your model on http://registry.kevoree.org
-        kevoree_registry: { src: 'kevlib.json' },
-        kevoree: {
-            options: {
-        	    mergeLocalLibraries: []
-        	}
+  grunt.initConfig({
+    kevoree: {
+      main: {
+        options: {
+          localModel: 'kevlib.json'
         }
-    });
+      }
+    },
 
-    grunt.loadNpmTasks('grunt-kevoree');
-    grunt.loadNpmTasks('grunt-kevoree-genmodel');
-    grunt.loadNpmTasks('grunt-kevoree-registry');
+    kevoree_genmodel: {
+      main: {
+        options: {
+            mergeLocalLibraries: []
+        }
+      }
+    },
 
-    grunt.registerTask('default', 'build');
-    grunt.registerTask('build', ['kevoree_genmodel']);
-    grunt.registerTask('publish', 'kevoree_registry');
-    grunt.registerTask('kev', ['kevoree']);
+    kevoree_registry: {
+      main: {
+        src: 'kevlib.json',
+        options: {}
+      }
+    }
+  });
 
+  grunt.registerTask('default', 'model');
+  grunt.registerTask('model', 'kevoree_genmodel');
+  grunt.registerTask('publish', ['kevoree_genmodel', 'kevoree_registry']);
+  grunt.registerTask('kev:run', ['model', 'kevoree']);
+  grunt.registerTask('kev', 'kev:run');
 };

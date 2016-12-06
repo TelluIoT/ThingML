@@ -76,7 +76,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
 
         if (useThis) {
-            builder.append("var " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
+            builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
         } else {
             builder.append("const " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
         }

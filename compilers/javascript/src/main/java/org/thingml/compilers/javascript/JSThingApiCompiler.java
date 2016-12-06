@@ -63,13 +63,13 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("this.ready = false;\n");
             if (ThingMLHelpers.allStateMachines(thing).get(0).getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(ThingMLHelpers.allStateMachines(thing).get(0).getExit(), builder, ctx);
-            builder.append("};\n\n");
+            builder.append("}\n\n");
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._delete = function() {\n");
             builder.append("this.statemachine = null;\n");
             builder.append("this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = null;\n");
             //TODO: remove listeners
-            builder.append("};\n\n");
+            builder.append("}\n\n");
 
             //Communication
             builder.append("//Public API for third parties\n");
@@ -77,7 +77,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + "\");\n");
             builder.append("StateJS.initialise(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + " );\n");
             builder.append("this.ready = true;\n");
-            builder.append("};\n\n");
+            builder.append("}\n\n");
 
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(msg) {//msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}\n");
@@ -87,7 +87,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("this.forks.forEach(function(fork){\n");
             builder.append("fork._receive(msg);\n");
             builder.append("});\n");
-            builder.append("}};\n");
+            builder.append("}}\n");
 
             //function to register listeners on attributes
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.onPropertyChange = function (property, callback) {\n");
@@ -95,7 +95,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("this.propertyListener[property] = [];");
             builder.append("}\n");
             builder.append("this.propertyListener[property].push(callback);\n");
-            builder.append("};\n\n");
+            builder.append("}\n\n");
 
             generatePublicPort(thing, builder, ctx);
         }
@@ -132,7 +132,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                         builder.append(", " + ctx.protectKeyword(pa.getName()) + ":" + ctx.protectKeyword(pa.getName()));
                     }
                     builder.append("});\n");
-                    builder.append("};\n\n");
+                    builder.append("}\n\n");
                 }
             }
         }
