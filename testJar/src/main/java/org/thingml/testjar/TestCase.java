@@ -45,6 +45,7 @@ public abstract class TestCase {
     public File logFile;
     public Command ongoingCmd;
     public File compilerJar;
+    public File pluginJar;
     
     public abstract void collectResults();
     

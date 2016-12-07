@@ -54,7 +54,7 @@ public class SimpleGeneratedTest extends TestCase {
     public String oracleActual;
     //public Command ongoingCmd;
     
-    public SimpleGeneratedTest(File srcTestCase, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir) {
+    public SimpleGeneratedTest(File srcTestCase, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir, File pluginJar) {
         this.lang = lang;
         this.status = 0;
         this.compilerJar = complerJar;
@@ -67,9 +67,10 @@ public class SimpleGeneratedTest extends TestCase {
         this.name = srcTestCase.getName().split("\\.thingml")[0];
         this.ongoingCmd = lang.generateThingML(this);
         this.category = srcTestCase.getParentFile().getName();
+        this.pluginJar = pluginJar;
     }
     
-    public SimpleGeneratedTest(File srcTestCase, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir, boolean notGen) {
+    public SimpleGeneratedTest(File srcTestCase, File complerJar, TargetedLanguage lang, File genCodeDir, File genCfgDir, File logDir, boolean notGen, File pluginJar) {
         this.lang = lang;
         this.status = 1;
         this.compilerJar = complerJar;
@@ -82,6 +83,7 @@ public class SimpleGeneratedTest extends TestCase {
         this.name = srcTestCase.getName().split("\\.thingml")[0];
         this.ongoingCmd = this.lang.generateTargeted(this);
         this.category = srcTestCase.getParentFile().getName();
+        this.pluginJar = pluginJar;
     }
     
     public SimpleGeneratedTest(File genCfg, SimpleGeneratedTest t) {
@@ -90,6 +92,7 @@ public class SimpleGeneratedTest extends TestCase {
         this.lang = t.lang;
         this.status = 1;
         this.compilerJar = t.compilerJar;
+        this.pluginJar = t.pluginJar;
         this.srcTestCase = t.srcTestCase;
         this.genCfgDir = t.genCfgDir;
         this.genCodeDir = t.genCodeDir;

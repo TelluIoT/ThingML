@@ -27,11 +27,9 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import static java.lang.Integer.max;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -40,7 +38,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.thingml.testjar.TestJar.testRun;
 import org.thingml.testjar.lang.TargetedLanguage;
 import org.thingml.testjar.lang.lArduino;
 import org.thingml.testjar.lang.lJava;
@@ -55,14 +52,20 @@ import org.thingml.testjar.lang.lSintefboard;
  */
 public class RunCustomTests {
     public static void main(String[] args) throws ExecutionException {
-        
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.RunCustomTests
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.RunCustomTests <compiler_jar_path> <plugin_jar_path> <config_file>
+
         final File workingDir = new File(System.getProperty("user.dir"));
+        File configFile = new File(workingDir, "customConfig.properties");
         File tmpDir = new File(workingDir, "tmp");
-        File compilerJar;
-        if(args.length > 1) {
-            compilerJar = new File(workingDir, args[1]);
-        } else {
-            compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
+
+        File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
+        File pluginFile = new File(workingDir, "../compilers/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar");
+
+        if(args.length == 3) {
+            compilerJar = new File(args[0]);
+            pluginFile = new File(args[1]);
+            configFile = new File(args[2]);
         }
         
         tmpDir.delete();
@@ -80,7 +83,7 @@ public class RunCustomTests {
         String categoryUseBlackList = null, categoryList = null, testUseBlackList = null, testList = null;
         try {
 
-		input = new FileInputStream(new File(workingDir, "customConfig.properties"));
+		input = new FileInputStream(configFile);
 
 		// load a properties file
 		prop.load(input);
@@ -108,10 +111,13 @@ public class RunCustomTests {
         System.out.println("****************************************");
         
         System.out.println("");
-        
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+
+        System.out.println("Working Directory = " + workingDir);
         System.out.println("Tmp Directory = " + tmpDir);
         System.out.println("Compiler = " + compilerJar);
+        System.out.println("Plugin = " + pluginFile);
+        System.out.println("Config = " + configFile);
+
         System.out.println("");
         
         Set<String> tl = new HashSet<>();
@@ -176,7 +182,7 @@ public class RunCustomTests {
         System.out.println("Test Files:");
         for(File f : testFiles) {
             System.out.println(f.getName());
-            CustomTest ct = new CustomTest(f, customDir, langs, compilerJar);
+            CustomTest ct = new CustomTest(f, customDir, langs, compilerJar, pluginFile);
             testCases.add(ct);
             maxRound = max(maxRound, ct.nbSteps);
         }

@@ -53,7 +53,7 @@ public class CustomTest extends TestCase {
     public String oracle;
     public String category;
     
-    public CustomTest (File testProperties, File tmpDir, List<TargetedLanguage> langs, File compilerJar) {
+    public CustomTest (File testProperties, File tmpDir, List<TargetedLanguage> langs, File compilerJar, File pluginJar) {
         this.status = 0;
         this.srcTestCase = testProperties;
         this.isLastStepASuccess = true;
@@ -65,6 +65,7 @@ public class CustomTest extends TestCase {
         this.testDir.mkdir();
         this.log = "";
         this.compilerJar = compilerJar;
+        this.pluginJar = pluginJar;
         
         Properties prop = new Properties();
 	InputStream input = null;
@@ -107,7 +108,7 @@ public class CustomTest extends TestCase {
 	}
         
         if(!thingmlsrcs.isEmpty()) {
-            this.ongoingCmd = thingmlsrcs.get(0).getValue().generateTargeted(thingmlsrcs.get(0).getKey(), this.testDir, this.compilerJar);
+            this.ongoingCmd = thingmlsrcs.get(0).getValue().generateTargeted(thingmlsrcs.get(0).getKey(), this.testDir, this.compilerJar, this.pluginJar);
             this.nbSteps = thingmlsrcs.size() * 2 + 1;
             this.targetedsrcs.add(
                         new HashMap.SimpleEntry<File, TargetedLanguage>(
@@ -138,7 +139,7 @@ public class CustomTest extends TestCase {
             this.status++;
             //System.out.println("s:" + this.status + " thingmlsrcs:" + this.thingmlsrcs.size() + " targetedsrcs:" + this.targetedsrcs.size());
             if (this.status < this.thingmlsrcs.size()) {
-                this.ongoingCmd = thingmlsrcs.get(this.status).getValue().generateTargeted(thingmlsrcs.get(this.status).getKey(), this.testDir, this.compilerJar);
+                this.ongoingCmd = thingmlsrcs.get(this.status).getValue().generateTargeted(thingmlsrcs.get(this.status).getKey(), this.testDir, this.compilerJar, this.pluginJar);
                 this.targetedsrcs.add(
                         new HashMap.SimpleEntry<File, TargetedLanguage>(
                             new File(

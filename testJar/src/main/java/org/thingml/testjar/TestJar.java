@@ -55,27 +55,26 @@ import org.thingml.testjar.lang.lSintefboard;
  */
 public class TestJar {
     public static void main(String[] args) throws ExecutionException {
-        //possible command lines to start the proccess
+        //possible command lines to start the process
         //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.TestJar
-        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.TestJar <compiler_path>
-        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.TestJar <compiler_path> <config_file>
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.testjar.TestJar <compiler_jar_path> <plugin_jar_path> <config_file>
 
         final File workingDir = new File(System.getProperty("user.dir"));
         File configFile = new File(workingDir, "config.properties");
         File tmpDir = new File(workingDir, "tmp");
 
-        if(args.length == 2)
-            configFile = new File(args[1]);
+        File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
+        File pluginFile = new File(workingDir, "../compilers/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar");
+
+        if(args.length == 3) {
+            compilerJar = new File(args[0]);
+            pluginFile = new File(args[1]);
+            configFile = new File(args[2]);
+        }
 
         final File testCfgDir = new File(tmpDir, "thingml");
         final File codeDir = new File(tmpDir, "genCode");
         final File logDir = new File(tmpDir, "log");
-        File compilerJar;
-        if(args.length > 1) {
-            compilerJar = new File(workingDir, args[0]);
-        } else {
-            compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
-        }
         
         tmpDir.delete();
         tmpDir = new File(workingDir, "tmp");
@@ -91,9 +90,10 @@ public class TestJar {
         System.out.println("*              Test Begin              *");
         System.out.println("****************************************");
         
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
+        System.out.println("Working Directory = " + workingDir);
         System.out.println("Tmp Directory = " + tmpDir);
         System.out.println("Compiler = " + compilerJar);
+        System.out.println("Plugin = " + pluginFile);
         System.out.println("Config = " + configFile);
         System.out.println("");
         
@@ -248,7 +248,7 @@ public class TestJar {
         for(File f : testFiles) {
             System.out.println(f.getName());
             for(TargetedLanguage lang : langs) {
-                SimpleGeneratedTest tc = new SimpleGeneratedTest(f, compilerJar, lang, codeDir, testCfgDir, logDir);
+                SimpleGeneratedTest tc = new SimpleGeneratedTest(f, compilerJar, lang, codeDir, testCfgDir, logDir, pluginFile);
                 testCases.add(tc);
             }
             Map<String,List<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>> cat;

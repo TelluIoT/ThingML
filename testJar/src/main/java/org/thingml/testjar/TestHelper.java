@@ -177,7 +177,7 @@ public class TestHelper {
         return res;
     }
     
-    public static List<TestCase> listSamples(File srcDir, List<TargetedLanguage> langs, File compilerJar, File genCodeDir, File logDir) {
+    public static List<TestCase> listSamples(File srcDir, List<TargetedLanguage> langs, File compilerJar, File pluginJar, File genCodeDir, File logDir) {
         String pattern = "(.+)\\.thingml";
         Pattern p = Pattern.compile(pattern);
         List<TestCase> res = new LinkedList<>();
@@ -194,7 +194,7 @@ public class TestHelper {
                         if(lang.compilerID.compareToIgnoreCase("_" + fileEntry.getParent()) == 0) {
                             specificLang = true;
                             System.out.println("    -" + fileEntry.getName() + "(" + lang.compilerID + ")");
-                            res.add(new SimpleGeneratedTest(fileEntry, compilerJar, lang, genCodeDir, fileEntry.getParentFile().getParentFile(), logDir, true));
+                            res.add(new SimpleGeneratedTest(fileEntry, compilerJar, lang, genCodeDir, fileEntry.getParentFile().getParentFile(), logDir, true, pluginJar));
                         }
                     }
                     
