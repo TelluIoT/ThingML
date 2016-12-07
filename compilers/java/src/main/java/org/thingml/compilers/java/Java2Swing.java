@@ -21,6 +21,7 @@ import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 
 import java.io.InputStream;
@@ -79,6 +80,8 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
     }
 
     protected void compileType(Thing t, Context ctx, String pack) {
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(t);
+
         if (!AnnotatedElementHelper.hasAnnotation(t, "mock"))
             return;
         final Map<Port, List<Message>> messageToSend = new HashMap<>();
@@ -122,6 +125,17 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         builder.append("private boolean debug = false;\n");
         builder.append("public boolean isDebug() {return debug;}\n");
         builder.append("public void setDebug(boolean debug) {this.debug = debug;}\n");
+
+        //if (debugProfile.isActive()) {
+            builder.append("public String instanceName;");
+            builder.append("public void printDebug(");
+            builder.append("String trace");//if debugWithString
+            builder.append(") {\n");
+            builder.append("if(this.isDebug()) {\n");
+            builder.append("System.out.println(this.instanceName + trace);\n");
+            builder.append("}\n");
+            builder.append("}\n\n");
+        //}
 
         for (Type ty : ThingMLHelpers.allUsedSimpleTypes(ThingMLHelpers.findContainingModel(t))) {
             if (ty instanceof Enumeration) {
