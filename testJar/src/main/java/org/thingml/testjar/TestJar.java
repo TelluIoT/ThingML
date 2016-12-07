@@ -71,7 +71,7 @@ public class TestJar {
         final File codeDir = new File(tmpDir, "genCode");
         final File logDir = new File(tmpDir, "log");
         File compilerJar;
-        if(args.length == 1) {
+        if(args.length > 1) {
             compilerJar = new File(workingDir, args[0]);
         } else {
             compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
