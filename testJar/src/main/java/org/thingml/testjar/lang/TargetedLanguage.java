@@ -66,9 +66,12 @@ public abstract class TargetedLanguage {
         execCmd[0] = "java";
         
         execCmd[1] = "-classpath";
-        execCmd[2] = t.compilerJar.getParentFile().getParentFile().getParentFile().getAbsolutePath()
+        /*execCmd[2] = t.compilerJar.getParentFile().getParentFile().getParentFile().getAbsolutePath()
                 + "/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar" +
-                ":" + t.compilerJar.getAbsolutePath();
+                ":" + t.compilerJar.getAbsolutePath();*/
+
+        execCmd[2] = t.pluginJar.getAbsolutePath() + ":" + t.compilerJar.getAbsolutePath();
+
         execCmd[3] = "org.thingml.compilers.commandline.Main";
         
         execCmd[4] = "-c";
@@ -82,14 +85,17 @@ public abstract class TargetedLanguage {
         return new Command(execCmd, "(.)*SUCCESS(.)*", "(.)*FATAL ERROR(.)*", "Error at ThingML compilation");
     }
     
-    public Command generateTargeted(File src, File outputDir, File compiler) {
+    public Command generateTargeted(File src, File outputDir, File compiler, File pluginJar) {
         String[] execCmd = new String[11];
         execCmd[0] = "java";
         
         execCmd[1] = "-classpath";
-        execCmd[2] = compiler.getParentFile().getParentFile().getParentFile().getPath()
+        /*execCmd[2] = compiler.getParentFile().getParentFile().getParentFile().getPath()
                 + "/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar" +
-                ":" + compiler.getAbsolutePath();
+                ":" + compiler.getAbsolutePath();*/
+
+        execCmd[2] = pluginJar.getAbsolutePath() + ":" + compiler.getAbsolutePath();
+
         execCmd[3] = "org.thingml.compilers.commandline.Main";
         
         execCmd[4] = "-c";
