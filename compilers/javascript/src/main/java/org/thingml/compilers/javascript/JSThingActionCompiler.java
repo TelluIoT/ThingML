@@ -70,7 +70,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             builder.append("//notify listeners of that attribute\n");
             builder.append("if (this.propertyListener['" + action.getProperty().getName() + "'] !== undefined) {\n");
             builder.append("let " + action.getProperty().getName() + "ListenersSize = this.propertyListener['" + action.getProperty().getName() + "'].length;\n");
-            builder.append("for (var _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
+            builder.append("for (let _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
             builder.append("this.propertyListener['" + action.getProperty().getName() + "'][_i](this." + ctx.getVariableName(action.getProperty()) + ");\n");
             builder.append("}\n}\n");
             //builder.append("if(this.debug) console.log(this.name + \"(" + ThingMLHelpers.findContainingThing(action.getProperty()).getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + ThingMLElementHelper.qname( action.getProperty(), "_") + "_var" + " + \" to \" + this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var);\n");

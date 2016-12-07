@@ -164,7 +164,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                 builder.append("}\n");
             }
 
-            builder.append("for (var _i = 0; _i < arrayLength; _i++) {\n");
+            builder.append("for (let _i = 0; _i < arrayLength; _i++) {\n");
             builder.append("self." + m.getName() + "On" + p.getName() + "Listeners[_i](");
             int i = 0;
             for (Parameter pa : m.getParameters()) {

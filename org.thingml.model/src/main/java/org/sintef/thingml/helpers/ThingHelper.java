@@ -148,17 +148,23 @@ public class ThingHelper {
     public static Map<Port, List<Message>> allSentMessages(Thing self) {
         Map<Port, List<Message>> result = new HashMap<>();
         for(Port p : ThingMLHelpers.allPorts(self)) {
-            for(Message m : p.getSends()) {
-                for (Action b : ActionHelper.getAllActions(self, SendAction.class)) {
-                    SendAction sa = (SendAction)b;
-                    if(EcoreUtil.equals(sa.getPort(), p) && EcoreUtil.equals(sa.getMessage(), m)) {
-                        List<Message> msgs = result.get(p);
-                        if (msgs == null) {
-                            msgs = new ArrayList<>();
+            if (p instanceof InternalPort) {
+                List<Message> msgs = new ArrayList<>();
+                msgs.addAll(p.getSends());
+                result.put(p, msgs);
+            } else {
+                for (Message m : p.getSends()) {
+                    for (Action b : ActionHelper.getAllActions(self, SendAction.class)) {
+                        SendAction sa = (SendAction) b;
+                        if (EcoreUtil.equals(sa.getPort(), p) && EcoreUtil.equals(sa.getMessage(), m)) {
+                            List<Message> msgs = result.get(p);
+                            if (msgs == null) {
+                                msgs = new ArrayList<>();
+                            }
+                            msgs.add(m);
+                            result.put(p, msgs);
+                            break;
                         }
-                        msgs.add(m);
-                        result.put(p, msgs);
-                        break;
                     }
                 }
             }
