@@ -235,7 +235,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         if (overrideReceive) {
-            builder.append("@Override\npublic void receive(Event event){\n");
+            builder.append("@Override\npublic void receive(final Event event, final Port p){\n");
             builder.append("if (root == null) {\n");
             builder.append("boolean consumed = false;\n");
             for (StateMachine sm : thing.getBehaviour()) {
@@ -276,18 +276,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     }
                 }
             }
-            builder.append("if (!consumed){\nsuper.receive(event);\n}\n");
+            builder.append("if (!consumed){\nsuper.receive(event, p);\n}\n");
             builder.append("else {");
             builder.append("for (Component child : forks) {\n");
             builder.append("Event child_e = event.clone();\n");
-            builder.append("child.receive(child_e);\n");
+            builder.append("child.receive(child_e, p);\n");
             builder.append("}\n");
             builder.append("for(int i = 0; i < behavior.regions.length; i++) {\n");
             builder.append("behavior.regions[i].handle(event, p);");
             builder.append("}\n");
             builder.append("}\n");
             builder.append("} else {\n");
-            builder.append("super.receive(event);\n");
+            builder.append("super.receive(event, p);\n");
             builder.append("}\n");
             builder.append("}\n\n");
         }
@@ -319,7 +319,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                             builder.append(", ");
                         builder.append(ctx.protectKeyword(ctx.getVariableName(pa)));
                     }
-                    builder.append("));\n");
+                    builder.append("), " + p.getName() + "_port);\n");
                     builder.append("}\n\n");
                 }
             }

@@ -45,9 +45,9 @@ public void start(){
 public Component buildBehavior(String session,Component root){
         behavior=new CompositeState("$NAME$",Collections.EMPTY_LIST,new AtomicState("dummy"),Collections.EMPTY_LIST){
 @Override
-public boolean dispatch(Event event){
+public boolean dispatch(final Event event, final Port p){
         if(event.getPort()!=null){
-        print(event.getType().getName() + "_via_" + event.getPort().getName(),dateFormat.format(new Date())+": " + event.getPort().getName() + "?"+event.toString());
+        print(event.getType().getName() + "_via_" + p.getName(),dateFormat.format(new Date())+": " + p.getName() + "?"+event.toString());
         }
         return false;
         }
