@@ -204,6 +204,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder("main.js");
 
+        builder.append("'use strict';\n\n");
+
         boolean debug = false;
         if (AnnotatedElementHelper.isDefined(cfg, "debug", "true")) ;
         debug = true;

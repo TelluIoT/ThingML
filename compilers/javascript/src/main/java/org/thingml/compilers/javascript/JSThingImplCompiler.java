@@ -74,6 +74,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
 
         final StringBuilder builder = ctx.getBuilder(ctx.firstToUpper(thing.getName()) + ".js");
+        builder.append("'use strict';\n\n");
         if (ctx.getContextAnnotation("hasEnum") != null && ctx.getContextAnnotation("hasEnum").equals("true")) {
             builder.append("const Enum = require('./enums');\n");
         }

@@ -211,6 +211,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         }
 
         final StringBuilder builder = ctx.getBuilder("/lib/" + cfg.getName() + ".js");
+        builder.append("'use strict';\n\n");
         builder.append("const AbstractComponent = require('kevoree-entities/lib/AbstractComponent');\n");
 
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
