@@ -30,9 +30,10 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/docs/" + cfg.getName() + ".plantuml");
         builder.append("@startuml\n");
-        builder.append("node \"" + cfg.getName() + "\"{\n");
+        //builder.append("node \"" + cfg.getName() + "\"{\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            boolean hasPort = false;
+            builder.append("artifact " + i.getName() + "\n");
+            /*boolean hasPort = false;
             for (Port p : ThingMLHelpers.allPorts(i.getType())) {
                 if (p instanceof ProvidedPort) {
                     builder.append(p.getName() + "_" + i.getName() + " - [" + i.getName() + "]\n");
@@ -41,15 +42,15 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             }
             if (!hasPort) {
                 builder.append("[" + i.getName() + "]\n");
-            }
+            }*/
         }
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-            builder.append("[" + c.getCli().getInstance().getName() + "] -> " + c.getProvided().getName() + "_" + c.getSrv().getInstance().getName() + " : " + c.getRequired().getName() + "\n");
+            builder.append(c.getCli().getInstance().getName() + " --(0 " + c.getSrv().getInstance().getName() + "\n");
         }
-        for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
+        /*for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
             builder.append("[" + cfg.getName() + "_" + eco.getInst().getInstance().getName() + "] ..> " + eco.getProtocol().getName() + "\n");
-        }
-        builder.append("}\n");
+        }*/
+        //builder.append("}\n");
         builder.append("@enduml");
     }
 }
