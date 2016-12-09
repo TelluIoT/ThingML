@@ -167,7 +167,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
                 temp.append(msg.getName() + "?" + p.getName());
             }
             generateGuardAndActions(t, temp, ctx);
-            content = content.replace(transition, temp.toString() + "||");
+            content = content.replace(transition, "\n" + temp.toString() + "\\t||");
             builder.delete(0, builder.length());
             builder.append(content);
         } else {

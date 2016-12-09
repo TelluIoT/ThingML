@@ -30,27 +30,16 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
     public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/docs/" + cfg.getName() + ".plantuml");
         builder.append("@startuml\n");
-        //builder.append("node \"" + cfg.getName() + "\"{\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             builder.append("artifact " + i.getName() + "\n");
-            /*boolean hasPort = false;
-            for (Port p : ThingMLHelpers.allPorts(i.getType())) {
-                if (p instanceof ProvidedPort) {
-                    builder.append(p.getName() + "_" + i.getName() + " - [" + i.getName() + "]\n");
-                    hasPort = true;
-                }
-            }
-            if (!hasPort) {
-                builder.append("[" + i.getName() + "]\n");
-            }*/
         }
+        //TODO: create an artifact for each protocol used in the configuration
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
             builder.append(c.getCli().getInstance().getName() + " --(0 " + c.getSrv().getInstance().getName() + "\n");
         }
-        /*for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
+        /*for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) { //TODO
             builder.append("[" + cfg.getName() + "_" + eco.getInst().getInstance().getName() + "] ..> " + eco.getProtocol().getName() + "\n");
         }*/
-        //builder.append("}\n");
         builder.append("@enduml");
     }
 }
