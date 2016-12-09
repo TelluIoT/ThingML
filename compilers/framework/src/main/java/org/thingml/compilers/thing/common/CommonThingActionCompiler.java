@@ -130,7 +130,12 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
         TypedElement parent = ThingMLHelpers.findContainingFuncOp(action);
-        cast(parent.getType(), false, action.getExp(), builder, ctx);
+        boolean isArray = false;
+        if (action.getExp() instanceof PropertyReference) {
+            PropertyReference pr = (PropertyReference) action.getExp();
+            isArray = pr.getProperty().isIsArray() || pr.getProperty().getCardinality() != null;
+        }
+        cast(parent.getType(), isArray, action.getExp(), builder, ctx);
         builder.append(";\n");
     }
 

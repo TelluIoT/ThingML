@@ -332,7 +332,6 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void cast(Type type, boolean isArray, Expression exp, StringBuilder builder, Context ctx) {
-
         if (!(type instanceof Enumeration)) {
             if (AnnotatedElementHelper.hasAnnotation(type, "java_type")) {
                 if (!isArray)
