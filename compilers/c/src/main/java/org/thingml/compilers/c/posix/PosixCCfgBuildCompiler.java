@@ -17,6 +17,7 @@ package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.AnnotatedElement;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
@@ -45,6 +46,28 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
     }
 
     protected String getThirdPartyLibraries(Thing thing) { return ""; }
+  
+    protected void includeExternalModules(AnnotatedElement element, StringBuilder sources, StringBuilder objects, CCompilerContext ctx) {
+        for (String s : AnnotatedElementHelper.annotation(element, "add_c_modules")) {
+            String[] mods = s.split(" ");
+            for (int i = 0; i < mods.length; i++) {
+                sources.append(mods[i].trim() + ".c ");
+                objects.append(mods[i].trim() + ".o ");
+              
+                // If .c (and .h) files exist in the current input directory, copy them to the output
+                // TODO: Jakob, paths within the output??
+                File indir = ctx.getInputDirectory();
+                File cfile = new File(indir, mods[i].trim() + ".c");              
+                if (cfile.exists()) {
+                    ctx.addFileToCopy(mods[i].trim() + ".c", cfile);
+                    File hfile = new File(indir, mods[i].trim() + ".h");
+                    if (hfile.exists()) {
+                        ctx.addFileToCopy(mods[i].trim() + ".h", hfile);
+                    }
+                }
+            }
+        }
+    }
 
     protected void generateLinuxMakefile(Configuration cfg, CCompilerContext ctx) {
 
@@ -63,43 +86,26 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
             flags += " " + s;
         }
         mtemplate = mtemplate.replace("/*CFLAGS*/", flags);
-
-        String srcs = "";
-        String objs = "";
+      
+        StringBuilder srcs = new StringBuilder();
+        StringBuilder objs = new StringBuilder();
 
         // Add the modules for the Things
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             PosixCCfgBuildCompiler plugable = (PosixCCfgBuildCompiler) getPlugableCfgBuildCompiler(t, ctx);
-            srcs += plugable.getSourceFileName(t);
-            objs += plugable.getObjectFileName(t);
+            srcs.append(plugable.getSourceFileName(t));
+            objs.append(plugable.getObjectFileName(t));
+            // Add any additional modules from the annotations
+            includeExternalModules(t, srcs, objs, ctx);
         }
 
         // Add the module for the Configuration
-        srcs += cfg.getName() + "_cfg.c ";
-        objs += cfg.getName() + "_cfg.o ";
+        srcs.append(cfg.getName() + "_cfg.c ");
+        objs.append(cfg.getName() + "_cfg.o ");
 
         // Add any additional modules from the annotations
-        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_modules")) {
-            String[] mods = s.split(" ");
-            for (int i = 0; i < mods.length; i++) {
-                srcs += mods[i].trim() + ".c ";
-                objs += mods[i].trim() + ".o ";
-              
-                // If .c (and .h) files exist in the current input directory, copy them to the output
-                // TODO: Jakob, paths within the output??
-                File indir = ctx.getInputDirectory();
-                File cfile = new File(indir, mods[i].trim() + ".c");              
-                if (cfile.exists()) {
-                    ctx.addFileToCopy(mods[i].trim() + ".c", cfile);
-                    File hfile = new File(indir, mods[i].trim() + ".h");
-                    if (hfile.exists()) {
-                        ctx.addFileToCopy(mods[i].trim() + ".h", hfile);
-                    }
-                }
-            }
-        }
-        srcs = srcs.trim();
-        objs = objs.trim();
+        includeExternalModules(cfg, srcs, objs, ctx);
+      
 
         String libs = "";
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
@@ -136,12 +142,11 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
             mtemplate = mtemplate.replace("/*STATIC*/", "");
         }
 
-        mtemplate = mtemplate.replace("/*SOURCES*/", srcs);
-        mtemplate = mtemplate.replace("/*OBJECTS*/", objs);
+        mtemplate = mtemplate.replace("/*SOURCES*/", srcs.toString().trim());
+        mtemplate = mtemplate.replace("/*OBJECTS*/", objs.toString().trim());
         mtemplate = mtemplate.replace("/*LIBS*/", libs);
         mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc);
 
         ctx.getBuilder("Makefile").append(mtemplate);
     }
-
 }
