@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by ffl on 10.05.2016.
@@ -171,6 +173,49 @@ public class ThingHelper {
         }
         return result;
     }
+  
+    /**
+    * Returns a list of all the types that is used in a thing
+    * @param self
+    * @return
+    */
+    public static Set<Type> allUsedTypes(Thing self) { //TODO: Optimise for only Types that are actually used
+        List<Type> list = new ArrayList<Type>();
+        // Types for all properties (things or state machines)
+        for(Property p : ThingHelper.allPropertiesInDepth(self)) {
+            list.add(p.getType());
+        }
+        // Types for all messages
+        for(Message m : ThingMLHelpers.allMessages(self)) {
+            for(Parameter p : m.getParameters()) {
+                list.add(p.getType());
+            }
+        }
+        // Types for all variables
+        for (Variable v : ThingMLHelpers.allVariables(self)) {
+            list.add(v.getType());
+        }
+        // Types for all functions
+        for (Function f : ThingMLHelpers.allFunctions(self)) {
+            for (Parameter p : f.getParameters()) {
+                list.add(p.getType());
+            }
+        }
 
-
+        // Make sure we only have one of each type in the resulting set
+        Set<Type> result = new HashSet<Type>();
+        for (Type tl : list) {
+            boolean found = false;
+            for (Type ts : result) {
+                if (EcoreUtil.equals(tl,ts)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                result.add(tl);
+            }
+        }
+        return result;
+    }
 }
