@@ -147,6 +147,14 @@ public class Main {
         } else {
             outdir = new File(System.getProperty("user.dir"));
         }
+      
+      
+        //INPUT Handling
+        File indir = input.getAbsoluteFile().getParentFile();
+        if (indir == null || !indir.exists() || !indir.isDirectory() || !indir.canRead()) {
+            System.out.println("ERROR: Cannot find or read in input dir " + ((indir != null) ? indir.getAbsolutePath() : "") + ".");
+            return;
+        }
 
         //RECAP
         System.out.print("Running ThingML");
@@ -180,6 +188,7 @@ public class Main {
                     return;
                 }
                 thingmlTool.setOutputDirectory(outdir);
+                //thingmlTool.setInputDirectory(indir); // TODO: Jakob
                 thingmlTool.options = main.tooloptions;
                 System.out.println("Generating code for input model. ");
                 thingmlTool.setSourceFile(input);
@@ -200,6 +209,7 @@ public class Main {
                     if (main.createDir)
                         outdir = new File(outdir, cfg.getName());
                     thingmlCompiler.setOutputDirectory(outdir);
+                    thingmlCompiler.setInputDirectory(indir);
                     System.out.println("Generating code for configuration: " + cfg.getName());
                     thingmlCompiler.compile(cfg);
                 }

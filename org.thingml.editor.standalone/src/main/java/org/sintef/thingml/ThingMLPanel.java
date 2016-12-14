@@ -168,6 +168,7 @@ public class ThingMLPanel extends JPanel {
                                             }
                                         }
                                         compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
+                                        compiler.setInputDirectory(targetFile.getAbsoluteFile().getParentFile());
                                         compiler.compileConnector(connectorCompiler.getKey(), cfg);
                                     }
                                 }
@@ -197,6 +198,7 @@ public class ThingMLPanel extends JPanel {
                                             }
                                         }
                                         compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
+                                        compiler.setInputDirectory(targetFile.getAbsoluteFile().getParentFile());
                                         compiler.compile(cfg);
                                     }
                                 }
@@ -243,6 +245,7 @@ public class ThingMLPanel extends JPanel {
                                                 }
                                             }
                                             compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
+                                            compiler.setInputDirectory(targetFile.getAbsoluteFile().getParentFile());
                                             compiler.compileConnector(connectorCompiler.getKey(), cfg);
                                         }
                                     }
@@ -273,6 +276,7 @@ public class ThingMLPanel extends JPanel {
                                         
                                         File myFileBuf = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName());
                                         compiler.setOutputDirectory(myFileBuf);
+                                        compiler.setInputDirectory(targetFile.getAbsoluteFile().getParentFile());
                                         compiler.compile(cfg);
                                         
                                         final InputStream input = new FileInputStream(myFileBuf.getAbsolutePath() + "/" + cfg.getName() + "/" + cfg.getName() + ".pde");

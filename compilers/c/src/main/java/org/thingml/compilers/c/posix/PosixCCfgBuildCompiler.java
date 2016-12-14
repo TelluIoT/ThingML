@@ -23,6 +23,8 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 
+import java.io.File;
+
 /**
  * Created by ffl on 17.06.15.
  */
@@ -82,6 +84,18 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
             for (int i = 0; i < mods.length; i++) {
                 srcs += mods[i].trim() + ".c ";
                 objs += mods[i].trim() + ".o ";
+              
+                // If .c (and .h) files exist in the current input directory, copy them to the output
+                // TODO: Jakob, paths within the output??
+                File indir = ctx.getInputDirectory();
+                File cfile = new File(indir, mods[i].trim() + ".c");              
+                if (cfile.exists()) {
+                    ctx.addFileToCopy(mods[i].trim() + ".c", cfile);
+                    File hfile = new File(indir, mods[i].trim() + ".h");
+                    if (hfile.exists()) {
+                        ctx.addFileToCopy(mods[i].trim() + ".h", hfile);
+                    }
+                }
             }
         }
         srcs = srcs.trim();

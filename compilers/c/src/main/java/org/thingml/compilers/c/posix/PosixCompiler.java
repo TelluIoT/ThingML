@@ -95,6 +95,9 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
+      
+        // COPY OUTPUT FILES
+        ctx.copyFilesToOutput();
 
     }
     

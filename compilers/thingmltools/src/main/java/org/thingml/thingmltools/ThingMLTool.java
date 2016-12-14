@@ -33,6 +33,7 @@ import java.util.Map;
  */
 public abstract class ThingMLTool {
     public File outDir;
+    public File inDir;
     public File src;
     public Map<String, StringBuilder> generatedCode = new HashMap<>();
     public String options;
@@ -64,7 +65,21 @@ public abstract class ThingMLTool {
             throw new Error("ERROR: The output directory has to be a directory (" + outputDirectory.getAbsolutePath() + ").");
         if (!outputDirectory.canWrite())
             throw new Error("ERROR: The output directory is not writable (" + outputDirectory.getAbsolutePath() + ").");
-        outDir = outputDirectory;
+        outDir = outputDirectory.getAbsoluteFile();
+    }
+  
+    public File getInputDirectory() {
+        return inDir;
+    }
+
+    public void setInputDirectory(File inputDirectory) {
+        if (!inputDirectory.exists())
+            throw new Error("ERROR: The input directory does not exist (" + inDir.getAbsolutePath() + ").");
+        if (!inputDirectory.isDirectory())
+            throw new Error("ERROR: The input directory has to be a directory (" + inDir.getAbsolutePath() + ").");
+        if (!inputDirectory.canRead())
+            throw new Error("ERROR: The input directory is not readable (" + inDir.getAbsolutePath() + ").");
+        inDir = inputDirectory.getAbsoluteFile();
     }
 
     public abstract void generateThingMLFrom(ThingMLModel model);

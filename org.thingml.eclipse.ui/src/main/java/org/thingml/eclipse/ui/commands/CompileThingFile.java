@@ -228,6 +228,7 @@ public class CompileThingFile implements IHandler {
 			// Compile all the configuration
 			for ( Configuration cfg :  toCompile ) {
 				java.io.File cfg_folder = new java.io.File(platform_folder, cfg.getName());
+        java.io.File in_folder = f.getAbsoluteFile().getParentFile();
 				if (cfg_folder.exists()) {
 					ThingMLConsole.getInstance().printDebug("Cleaning folder " + cfg_folder.getAbsolutePath() + "\n");
 					ThingMLConsole.getInstance().emptyFolder(cfg_folder);
@@ -237,6 +238,7 @@ public class CompileThingFile implements IHandler {
 				}
 				compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
 				compiler.setOutputDirectory(cfg_folder);
+        compiler.setInputDirectory(in_folder);
 				compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
 				compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
 

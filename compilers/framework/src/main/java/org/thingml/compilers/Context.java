@@ -29,12 +29,14 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
+import org.apache.commons.io.FileUtils;
 
 public class Context {
 
     public Instance currentInstance;
     // Store the output of the compilers. The key is typically a file name but finer grained generatedCode may also be used by the compilers.
     protected Map<String, StringBuilder> generatedCode = new HashMap<String, StringBuilder>();
+    protected Map<String, File> filesToCopy = new HashMap<String, File>();
     boolean debugTraceWithID = false;
     Map<Integer, String> debugStrings;
     private ThingMLCompiler compiler;
@@ -155,10 +157,65 @@ public class Context {
             writeTextFile(e.getKey(), e.getValue().toString());
         }
     }
+  
+    /**
+     * @param path (relative to outputDir) where the file should be copied
+     * @param source The source file co vopy
+     */
+    public void addFileToCopy(String path, File source) {
+        if (filesToCopy.containsKey(path)) {
+            File original = filesToCopy.get(path);          
+            if (!source.getAbsoluteFile().equals(original.getAbsoluteFile()))
+              throw new Error("The output file to copy to (" + path + ") is already added but with a different source (" + original.getAbsolutePath() + ").");
+        } else {
+          filesToCopy.put(path, source.getAbsoluteFile());
+        }
+    }
+  
+    /**
+     * Copies files in the filesystem to the output directory
+     */
+    public void copyFilesToOutput() {
+        for (Map.Entry<String, File> e : filesToCopy.entrySet()) {
+            File source = e.getValue();
+            File destination = openOutputFile(e.getKey());
+            if (destination.exists()) {
+                System.err.println("[WARNING] The output file to copy to already exists, overwriting. (" + destination.getAbsolutePath() + ").");
+            } else if (!source.exists()) {
+                System.err.println("[WARNING] The output file to copy from doesn't exists, skipping. (" + source.getAbsolutePath() + ").");
+            } else {
+                try {
+                    FileUtils.copyFile(source, destination);
+                } catch (Exception ex) {
+                    System.err.println("Problem while copying file");
+                    ex.printStackTrace();
+                }
+                
+            }
+        }
+    }
 
     /********************************************************************************************
      * Helper functions reused by different compilers
      ********************************************************************************************/
+  
+    /**
+     * Allows to create files in the output directory either for writing or copying
+     *
+     * @param path
+     */
+    public File openOutputFile(String path) {
+        try {
+            File file = new File(getOutputDirectory(), path);
+            if (!file.getParentFile().exists())
+                file.getParentFile().mkdirs();
+            return file;
+        } catch (Exception ex) {
+            System.err.println("Problem while creating output file (" + getOutputDirectory() + "/" + path + ").");
+            ex.printStackTrace();
+            return null;
+        }
+    }
 
     /**
      * Allows to writeTextFile additional files (not generated in the normal generatedCode)
@@ -168,9 +225,7 @@ public class Context {
      */
     public void writeTextFile(String path, String content) {
         try {
-            File file = new File(getOutputDirectory(), path);
-            if (!file.getParentFile().exists())
-                file.getParentFile().mkdirs();
+            File file = openOutputFile(path);
             PrintWriter w = new PrintWriter(file);
             w.print(content);
             w.close();
@@ -305,7 +360,11 @@ public class Context {
             throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
         if (!outDir.canWrite())
             throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
-        outputDirectory = outDir;
+        outputDirectory = outDir.getAbsoluteFile();
+    }
+  
+    public File getInputDirectory() {
+        return compiler.getInputDirectory();
     }
 
     public boolean getDebugWithID() {
