@@ -39,6 +39,14 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
                 "org.thingml.generated");
         store.setDefault(PreferenceConstants.PRINT_NOTICE_STRING,
                 false);
+		store.setDefault(PreferenceConstants.UML_BLOCK_SIZE,
+				8);
+		store.setDefault(PreferenceConstants.UML_ELLIPSIS,
+				false);
+        store.setDefault(PreferenceConstants.UML_FACTORIZE,
+                false);
+        store.setDefault(PreferenceConstants.UML_HIDE_BLOCK,
+                false);
 	}
 
 }

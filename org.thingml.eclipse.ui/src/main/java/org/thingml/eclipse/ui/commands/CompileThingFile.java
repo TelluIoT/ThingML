@@ -41,6 +41,9 @@ import org.thingml.compilers.checker.Checker.CheckerInfo;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.compilers.uml.PlantUMLCompiler;
+import org.thingml.compilers.uml.PlantUMLThingImplCompiler;
+import org.thingml.compilers.utils.ThingMLPrettyPrinter;
 import org.thingml.eclipse.preferences.PreferenceConstants;
 import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
@@ -51,6 +54,8 @@ public class CompileThingFile implements IHandler {
     private static Set<NetworkPlugin> loadedPlugins;
     private static ServiceLoader<SerializationPlugin> serPlugins = ServiceLoader.load(SerializationPlugin.class);
     private static Set<SerializationPlugin> loadedSerPlugins;
+    
+    IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
     static {
     	loadedPlugins = new HashSet<>();
@@ -111,6 +116,14 @@ public class CompileThingFile implements IHandler {
                     compiler.addSerializationPlugin(sp);
                 }
             }
+            
+            if (compiler instanceof PlantUMLCompiler) {
+            	PlantUMLThingImplCompiler.FACTORIZE_TRANSITIONS = store.getBoolean(PreferenceConstants.UML_FACTORIZE);
+            	ThingMLPrettyPrinter.HIDE_BLOCKS = store.getBoolean(PreferenceConstants.UML_HIDE_BLOCK);
+            	ThingMLPrettyPrinter.MAX_BLOCK_SIZE = store.getInt(PreferenceConstants.UML_BLOCK_SIZE);
+            	ThingMLPrettyPrinter.USE_ELLIPSIS_FOR_PARAMS = store.getBoolean(PreferenceConstants.UML_ELLIPSIS);
+            }
+            
 			ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\" (Platform: " + compiler.getID() + ")\n");
 
 			// Fetch the input model to be used
@@ -220,7 +233,7 @@ public class CompileThingFile implements IHandler {
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);*/
 
 
-			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+			
 			String pack = store.getString(PreferenceConstants.PACK_STRING);
 			String[] options = new String[1];
 			options[0] = pack;

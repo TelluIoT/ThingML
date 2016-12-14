@@ -52,13 +52,21 @@ public class ThingMLPreferencePage
 	 */
 	public void createFieldEditors() {
 		addField(
-			new StringFieldEditor(PreferenceConstants.P_STRING, "ArduinoIDE Folder:", getFieldEditorParent()));
+			new DirectoryFieldEditor(PreferenceConstants.P_STRING, "Arduino: IDE Folder", getFieldEditorParent()));
 		addField(
-				new StringFieldEditor(PreferenceConstants.T_STRING, "Arduino Library Folder:", getFieldEditorParent()));
+				new DirectoryFieldEditor(PreferenceConstants.T_STRING, "Arduino: Library Folder", getFieldEditorParent()));
         addField(
-                new StringFieldEditor(PreferenceConstants.PACK_STRING, "Default package:", getFieldEditorParent()));
+                new StringFieldEditor(PreferenceConstants.PACK_STRING, "Java: Default package", getFieldEditorParent()));
         addField(
-                new BooleanFieldEditor(PreferenceConstants.PRINT_NOTICE_STRING, "Print Notices?", getFieldEditorParent()));
+                new BooleanFieldEditor(PreferenceConstants.PRINT_NOTICE_STRING, "Checker: Print Notices?", getFieldEditorParent()));
+        addField(
+                new BooleanFieldEditor(PreferenceConstants.UML_ELLIPSIS, "UML: Use Ellipsis for params?", getFieldEditorParent()));
+        addField(
+                new IntegerFieldEditor(PreferenceConstants.UML_BLOCK_SIZE, "UML: Max block size", getFieldEditorParent()));
+        addField(
+                new BooleanFieldEditor(PreferenceConstants.UML_HIDE_BLOCK, "UML: Hide blocks?", getFieldEditorParent()));
+        addField(
+                new BooleanFieldEditor(PreferenceConstants.UML_FACTORIZE, "UML: Factorize transitions?", getFieldEditorParent()));
 	}
 
 	/* (non-Javadoc)

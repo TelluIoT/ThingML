@@ -27,7 +27,7 @@ import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
  */
 public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
-    public static final boolean FACTORIZE_TRANSITIONS = true;
+    public static boolean FACTORIZE_TRANSITIONS = true;
 
     private void doBuildAction(Action a, StringBuilder builder, Context ctx) {
             ctx.getCompiler().getThingActionCompiler().generate(a, builder, ctx);

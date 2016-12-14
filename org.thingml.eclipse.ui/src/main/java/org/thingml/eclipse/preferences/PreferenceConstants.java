@@ -24,5 +24,9 @@ public class PreferenceConstants {
 	public static final String T_STRING = "LIBRARYFOLDER";
     public static final String PACK_STRING = "JAVAPACKAGE";
     public static final String PRINT_NOTICE_STRING = "PRINTNOTICE";
+	public static final String UML_ELLIPSIS = "UMLELLIPSIS";
+	public static final String UML_BLOCK_SIZE = "UMLBLOCKSIZE";
+	public static final String UML_HIDE_BLOCK = "UMLHIDEBLOCK";
+	public static final String UML_FACTORIZE = "UMLFACTORIZE";
 	
 }

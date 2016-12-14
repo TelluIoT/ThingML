@@ -24,9 +24,9 @@ import org.thingml.compilers.thing.ThingActionCompiler;
  */
 public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
-    public final static boolean USE_ELLIPSIS_FOR_PARAMS = true;
-    public final static int MAX_BLOCK_SIZE = 8;
-    public final static boolean HIDE_BLOCKS = false;
+    public static boolean USE_ELLIPSIS_FOR_PARAMS = true;
+    public static int MAX_BLOCK_SIZE = 8;
+    public static boolean HIDE_BLOCKS = false;
 
     public final static String NEW_LINE = "\n";
     public final static String INDENT = "  "; //two blank spaces for indentation
