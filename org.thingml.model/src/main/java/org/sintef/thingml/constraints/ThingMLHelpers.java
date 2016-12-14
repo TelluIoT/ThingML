@@ -32,6 +32,7 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.helpers.ActionHelper;
 import org.sintef.thingml.helpers.ThingHelper;
 
 import java.util.ArrayList;
@@ -159,21 +160,15 @@ public class ThingMLHelpers {
      */
     public static Set<Type> allUsedTypes(ThingMLModel model) {
         Set<Type> result = new HashSet<Type>();
-        for(Type t : allTypes(model)) {
-            for(Thing thing : allThings(model)) {
-                for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                    if (EcoreUtil.equals(p.getType(), t))
-                        result.add(t);
-                }
-                for(Message m : ThingMLHelpers.allMessages(thing)) {
-                    for(Parameter p : m.getParameters()) {
-                        if (EcoreUtil.equals(p.getType(), t)) {
-                            result.add(t);
-                        }
-                    }
-                }
-            }
-        }
+		for(Type t : allTypes(model)) {
+			for(Thing thing : allThings(model)) {
+			    for(Type tt : ThingHelper.allUsedTypes(thing)) {
+			    	if (EcoreUtil.equals(tt, t)) {
+			    		result.add(t);
+					}
+				}
+			}
+		}
         return result;
     }
 
@@ -182,17 +177,11 @@ public class ThingMLHelpers {
         Set<Type> result = new HashSet<Type>();
         for(Type t : allSimpleTypes(model)) {
             for(Thing thing : allThings(model)) {
-                for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                    if (EcoreUtil.equals(p.getType(), t))
-                        result.add(t);
-                }
-                for(Message m : ThingMLHelpers.allMessages(thing)) {
-                    for(Parameter p : m.getParameters()) {
-                        if (EcoreUtil.equals(p.getType(), t)) {
-                            result.add(t);
-                        }
-                    }
-                }
+				for(Type tt : ThingHelper.allUsedTypes(thing)) {
+					if (EcoreUtil.equals(tt, t)) {
+						result.add(t);
+					}
+				}
             }
         }
         return result;
@@ -384,7 +373,18 @@ public class ThingMLHelpers {
 		}
 		return result;
 	}
-	
+
+	public static ArrayList<Variable> allVariables(Thing thing) { //TODO: Does this get absolutely all variables?
+		ArrayList<Variable> result = new ArrayList<Variable>();
+		for (Thing t : allThingFragments(thing)) {
+			for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {
+			    VariableAssignment assignment = (VariableAssignment)a;
+			    result.add(assignment.getProperty());
+			}
+		}
+		return result;
+	}
+
 	public static ArrayList<Property> findProperty(Thing thing, String name, boolean fuzzy) {
 		ArrayList<Property> result = new ArrayList<Property>();
 		for (Property t : allProperties(thing)) {
