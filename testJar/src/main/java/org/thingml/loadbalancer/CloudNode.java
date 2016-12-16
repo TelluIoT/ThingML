@@ -20,6 +20,8 @@
  */
 package org.thingml.loadbalancer;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,15 +42,27 @@ public class CloudNode {
         public int weight;
         public Set<File> tests;
         public Set<String> languages;
+        public String testDirPostfix;
+
+        static public String defaultDirPostfix = "_testDir";
         
-        public CloudNode(String name) {
+        public CloudNode(String name, String posfix) {
             this.name = name;
             this.tests = new HashSet<>();
             this.languages = new HashSet<>();
+            testDirPostfix = posfix;
         }
-        
+
+        public void createBalancedConfig(File targetDir) throws IOException {
+            File testDir = new File(targetDir, name + testDirPostfix);
+            if(!testDir.exists())
+                testDir.mkdir();
+
+            writeConfigFile(testDir);
+        }
+
         public void makeTestDir(File workingDir, File ressourcesDir, File compiler, File testJar, File testSrc) throws IOException {
-            File testDir = new File(workingDir, name + "_testDir");
+            File testDir = new File(workingDir, name + testDirPostfix);
             if(testDir.exists()) {
                 testDir.delete();
             }

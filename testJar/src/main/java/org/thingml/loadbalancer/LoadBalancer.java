@@ -52,6 +52,11 @@ import org.thingml.testjar.lang.lSintefboard;
  */
 public class LoadBalancer {
     public static void main(String[] args) throws ExecutionException {
+        //call this by
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer compilers.jar
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer config.properties loadBalancer.properties
+
         final File workingDir = new File(System.getProperty("user.dir"));
         File tmpDir = new File(workingDir, "tmp");
         final File testCfgDir = new File(tmpDir, "thingml");
@@ -59,12 +64,13 @@ public class LoadBalancer {
         final File logDir = new File(tmpDir, "log");
         File ressourcesDir = new File(workingDir.getPath() + "/src/main/resources");
         File compilerJar;
-        if(args.length > 0) {
+        System.out.println(args.length);
+        if(args.length == 1) {
             compilerJar = new File(workingDir, args[0]);
         } else {
             compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
         }
-        
+
         File testJar = new File(workingDir, "target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
         
         tmpDir.delete();
@@ -94,13 +100,20 @@ public class LoadBalancer {
         
         System.out.println("");
         Properties prop = new Properties();
-	InputStream input = null;
+	    InputStream input = null;
+        InputStream lbInput = null;
         
         String languageList = null, useBlackList = null, categoryUseBlackList = null, categoryList = null, testList = null;
         
 	try {
 
-            input = new FileInputStream(new File(workingDir, "config.properties"));
+            if(args.length == 2) {
+                input = new FileInputStream(new File(args[0]));
+                lbInput = new FileInputStream(new File(args[1]));
+            }else {
+                input = new FileInputStream(new File(workingDir, "config.properties"));
+                lbInput = new FileInputStream(new File(workingDir, "loadBalancer.properties"));
+            }
 
             // load a properties file
             prop.load(input);
@@ -116,12 +129,10 @@ public class LoadBalancer {
             System.out.println("testList:" + testList);
         
             Properties loadBalancerProp = new Properties();
-            InputStream lbInput = null;
 
             String nodeList = null;
             int totalWeight = 0;
 
-            lbInput = new FileInputStream(new File(workingDir, "loadBalancer.properties"));
 
             // load a properties file
             loadBalancerProp.load(lbInput);
@@ -129,11 +140,16 @@ public class LoadBalancer {
             // get the property value and print it out
             nodeList = loadBalancerProp.getProperty("nodeList");
 
+            String destTestRootDir =  loadBalancerProp.getProperty("test_root_dir");
+            destTestRootDir = (destTestRootDir != null) ? destTestRootDir.trim() : null;
+
             HashMap<String, CloudNode> nl = new HashMap<>();
             if(testList != null) {
                 for(String nstr : nodeList.split(",")) {
                     String nodeName = nstr.trim();
-                    CloudNode n = new CloudNode(nodeName);
+                    String testDirPostfix = loadBalancerProp.getProperty("test_dir_postfix");
+                    testDirPostfix = (testDirPostfix != null) ? testDirPostfix.trim() : CloudNode.defaultDirPostfix;
+                    CloudNode n = new CloudNode(nodeName, testDirPostfix);
                     n.ip = loadBalancerProp.getProperty(nodeName + "_ip");
                     n.weight = Integer.parseInt(loadBalancerProp.getProperty(nodeName + "_weight"));
                     n.port = Integer.parseInt(loadBalancerProp.getProperty(nodeName + "_port"));
@@ -248,7 +264,11 @@ public class LoadBalancer {
             }
             for (CloudNode n : nl.values()) {
                 n.languages.add(languageList);
-                n.makeTestDir(workingDir, ressourcesDir, compilerJar, testJar, testFolder);
+                if(destTestRootDir == null) {
+                    n.makeTestDir(workingDir, ressourcesDir, compilerJar, testJar, testFolder);
+                } else {
+                    n.createBalancedConfig(new File(destTestRootDir));
+                }
             }
             System.out.println("Master Node IP: " + loadBalancerProp.getProperty("masternode_ip"));
             System.out.println("Master Node Port: " + loadBalancerProp.getProperty("masternode_port"));
