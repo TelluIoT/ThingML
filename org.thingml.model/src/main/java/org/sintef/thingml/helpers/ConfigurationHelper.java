@@ -355,6 +355,23 @@ public class ConfigurationHelper {
         return result;
     }
 
+    public static List<Protocol> getUsedProtocols(Configuration self) {
+        List<Protocol> result = new ArrayList<>();
+        for(ExternalConnector c : getExternalConnectors(self)) {
+            boolean present = false;
+            for(Protocol p : result) {
+                if(EcoreUtil.equals(c.getProtocol(), p)) {
+                    present = true;
+                    break;
+                }
+            }
+            if (!present) {
+                result.add(c.getProtocol());
+            }
+        }
+        return result;
+    }
+
     /**
      *
      * @param self

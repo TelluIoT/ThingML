@@ -16,6 +16,7 @@
 package org.thingml.compilers;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.fusesource.jansi.Ansi;
 import org.sintef.thingml.*;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
@@ -55,6 +56,8 @@ public class Context {
     private String postKeywordEscape = "`";
     private File outputDirectory = null;
     private Boolean atInitTimeLock = false;
+
+    public Ansi ansi = new Ansi();
 
     public Context(ThingMLCompiler compiler) {
         this.debugStrings = new HashMap<Integer, String>();

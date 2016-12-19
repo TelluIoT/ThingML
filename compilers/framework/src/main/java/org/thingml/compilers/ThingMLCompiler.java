@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.fusesource.jansi.AnsiConsole;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
@@ -76,6 +77,7 @@ public abstract class ThingMLCompiler {
      **************************************************************/
 
     public ThingMLCompiler() {
+        AnsiConsole.systemInstall();
         this.thingActionCompiler = new ThingActionCompiler();
         this.thingApiCompiler = new ThingApiCompiler();
         this.mainCompiler = new CfgMainGenerator();
@@ -86,6 +88,7 @@ public abstract class ThingMLCompiler {
     }
 
     public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
+        AnsiConsole.systemInstall();
         this.thingActionCompiler = thingActionCompiler;
         this.thingApiCompiler = thingApiCompiler;
         this.mainCompiler = mainCompiler;

@@ -31,15 +31,17 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
         final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/docs/" + cfg.getName() + ".plantuml");
         builder.append("@startuml\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            builder.append("artifact " + i.getName() + "\n");
+            builder.append("component " + i.getName() + "\n");
         }
-        //TODO: create an artifact for each protocol used in the configuration
+        for(Protocol p : ConfigurationHelper.getUsedProtocols(cfg)) {
+            builder.append("boundary " + p.getName() + "\n");
+        }
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-            builder.append(c.getCli().getInstance().getName() + " --(0 " + c.getSrv().getInstance().getName() + "\n");
+            builder.append(c.getCli().getInstance().getName() + " -(0- " + c.getSrv().getInstance().getName() + " : " + c.getProvided().getName() + " > " + c.getRequired().getName() + "\n");
         }
-        /*for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) { //TODO
-            builder.append("[" + cfg.getName() + "_" + eco.getInst().getInstance().getName() + "] ..> " + eco.getProtocol().getName() + "\n");
-        }*/
+        for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
+            builder.append(c.getInst().getInstance().getName() + " .. " + c.getProtocol().getName() + " : " + c.getPort().getName() + "\n");
+        }
         builder.append("@enduml");
     }
 }

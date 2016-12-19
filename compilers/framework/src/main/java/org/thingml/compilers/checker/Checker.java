@@ -21,6 +21,7 @@
 package org.thingml.compilers.checker;
 
 import org.eclipse.emf.ecore.EObject;
+import org.fusesource.jansi.Ansi;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLElement;
 import org.sintef.thingml.ThingMLModel;
@@ -171,19 +172,19 @@ abstract public class Checker {
 
     public void printErrors() {
         for (final CheckerInfo i : Errors) {
-            System.out.print(i.toString());
+            System.out.print(ctx.ansi.fg(Ansi.Color.RED).a(i.toString()).reset());
         }
     }
 
     public void printWarnings() {
         for (final CheckerInfo i : Warnings) {
-            System.out.print(i.toString());
+            System.out.print(ctx.ansi.fg(Ansi.Color.MAGENTA).a(i.toString()).reset());
         }
     }
 
     public void printNotices() {
         for (CheckerInfo i : Notices) {
-            System.out.print(i.toString());
+            System.out.print(ctx.ansi.fg(Ansi.Color.BLUE).a(i.toString()).reset());
         }
     }
 
