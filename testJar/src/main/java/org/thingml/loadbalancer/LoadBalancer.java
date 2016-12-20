@@ -55,7 +55,7 @@ public class LoadBalancer {
         //call this by
         //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer
         //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer compilers.jar
-        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer config.properties loadBalancer.properties
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer config.properties loadBalancer.properties <load_balance_dest_dir> <job_postfix>
 
         final File workingDir = new File(System.getProperty("user.dir"));
         File tmpDir = new File(workingDir, "tmp");
@@ -107,9 +107,13 @@ public class LoadBalancer {
         
 	try {
 
-            if(args.length == 2) {
+	        String destTestRootDir = null;
+	        String testDirPostfix = null;
+            if(args.length == 4) {
                 input = new FileInputStream(new File(args[0]));
                 lbInput = new FileInputStream(new File(args[1]));
+                destTestRootDir = args[2];
+                testDirPostfix = args[3];
             }else {
                 input = new FileInputStream(new File(workingDir, "config.properties"));
                 lbInput = new FileInputStream(new File(workingDir, "loadBalancer.properties"));
@@ -140,14 +144,12 @@ public class LoadBalancer {
             // get the property value and print it out
             nodeList = loadBalancerProp.getProperty("nodeList");
 
-            String destTestRootDir =  loadBalancerProp.getProperty("test_root_dir");
             destTestRootDir = (destTestRootDir != null) ? destTestRootDir.trim() : null;
 
             HashMap<String, CloudNode> nl = new HashMap<>();
             if(testList != null) {
                 for(String nstr : nodeList.split(",")) {
                     String nodeName = nstr.trim();
-                    String testDirPostfix = loadBalancerProp.getProperty("test_dir_postfix");
                     testDirPostfix = (testDirPostfix != null) ? testDirPostfix.trim() : CloudNode.defaultDirPostfix;
                     CloudNode n = new CloudNode(nodeName, testDirPostfix);
                     n.ip = loadBalancerProp.getProperty(nodeName + "_ip");
