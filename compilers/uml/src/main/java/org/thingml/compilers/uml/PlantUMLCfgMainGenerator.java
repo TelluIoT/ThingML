@@ -37,7 +37,8 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             builder.append("boundary " + p.getName() + "\n");
         }
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-            builder.append(c.getCli().getInstance().getName() + " -(0- " + c.getSrv().getInstance().getName() + " : " + c.getProvided().getName() + " > " + c.getRequired().getName() + "\n");
+            builder.append(c.getCli().getInstance().getName() + " -(0- " + c.getSrv().getInstance().getName() + " : " +
+                    c.getRequired().getName() + " => " + c.getProvided().getName() + "\n");
         }
         for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
             builder.append(c.getInst().getInstance().getName() + " .. " + c.getProtocol().getName() + " : " + c.getPort().getName() + "\n");
