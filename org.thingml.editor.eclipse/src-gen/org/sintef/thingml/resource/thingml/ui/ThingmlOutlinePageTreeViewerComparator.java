@@ -73,7 +73,7 @@ public class ThingmlOutlinePageTreeViewerComparator extends org.eclipse.jface.vi
 		return packageID;
 	}
 	
-	public java.util.Comparator<?> getComparator() {
+	public java.util.Comparator<? super String> getComparator() {
 		return this.comparator;
 	}
 	

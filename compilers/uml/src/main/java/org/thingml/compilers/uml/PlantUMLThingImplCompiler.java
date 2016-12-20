@@ -37,10 +37,12 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
         if (s.getEntry() != null) {//TODO: pretty-print ThingML actions and expressions
             builder.append("\t" + s.getName() + " : entry / ");
             doBuildAction(s.getEntry(), builder, ctx);
+            builder.append("\n");
         }
         if (s.getExit() != null) {
             builder.append("\t" + s.getName() + " : exit / ");
             doBuildAction(s.getExit(), builder, ctx);
+            builder.append("\n");
         }
     }
 
@@ -67,7 +69,6 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
         builder.append("@startuml\n");
-        //builder.append("!pragma svek_trace on\n");
         builder.append("skinparam defaultTextAlignment left\n");
         builder.append("[*] --> " + sm.getName() + "\n");
         builder.append("state " + sm.getName() + "{\n");
