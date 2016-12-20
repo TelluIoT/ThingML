@@ -83,9 +83,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
         this.checker.do_check(cfg);
-        this.checker.printErrors();
-        this.checker.printWarnings();
-        this.checker.printNotices();
+        this.checker.printReport();
 
         ctx.addContextAnnotation("thisRef", "this.");
         //new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();

@@ -77,7 +77,6 @@ public abstract class ThingMLCompiler {
      **************************************************************/
 
     public ThingMLCompiler() {
-        AnsiConsole.systemInstall();
         this.thingActionCompiler = new ThingActionCompiler();
         this.thingApiCompiler = new ThingApiCompiler();
         this.mainCompiler = new CfgMainGenerator();
@@ -88,7 +87,6 @@ public abstract class ThingMLCompiler {
     }
 
     public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
-        AnsiConsole.systemInstall();
         this.thingActionCompiler = thingActionCompiler;
         this.thingApiCompiler = thingApiCompiler;
         this.mainCompiler = mainCompiler;

@@ -81,9 +81,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     @Override
     public void do_call_compiler(final Configuration cfg, String... options) {
         this.checker.do_check(cfg);
-        this.checker.printErrors();
-        this.checker.printWarnings();
-        this.checker.printNotices();
+        this.checker.printReport();
 
         new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);

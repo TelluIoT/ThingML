@@ -415,8 +415,7 @@ public class ThingMLPanel extends JPanel {
 
                 ThingMLModel model = (ThingMLModel) resource.getContents().get(0);
                 checker.do_generic_check(model);
-                checker.printErrors();
-                checker.printWarnings();
+                checker.printReport();
                 /*for (Configuration cfg : model.allConfigurations()) {
                     System.out.println("Checking configuration " + cfg.getName());
                     checker.do_generic_check(cfg);

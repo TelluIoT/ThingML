@@ -77,9 +77,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
         this.checker.do_check(cfg);
-        this.checker.printErrors();
-        this.checker.printWarnings();
-        this.checker.printNotices();
+        this.checker.printReport();
 
         Context ctx = new Context(this, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@");
         ctx.addContextAnnotation("thisRef", "");

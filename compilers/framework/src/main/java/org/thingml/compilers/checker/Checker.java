@@ -22,6 +22,7 @@ package org.thingml.compilers.checker;
 
 import org.eclipse.emf.ecore.EObject;
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.ThingMLElement;
 import org.sintef.thingml.ThingMLModel;
@@ -170,21 +171,57 @@ abstract public class Checker {
         return Notices.isEmpty();
     }
 
+    public void printReport() {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                AnsiConsole.systemInstall();
+                ctx.ansi.fg(Ansi.Color.BLUE);
+                printNotices();
+                ctx.ansi.fg(Ansi.Color.MAGENTA);
+                printWarnings();
+                ctx.ansi.fg(Ansi.Color.RED);
+                printErrors();
+                ctx.ansi.reset();
+                AnsiConsole.systemUninstall();
+            }
+        }.start();
+    }
+
     public void printErrors() {
-        for (final CheckerInfo i : Errors) {
-            System.out.print(ctx.ansi.fg(Ansi.Color.RED).a(i.toString()).reset());
+        if(ctx.ansi.isEnabled()) {
+            for (final CheckerInfo i : Errors) {
+                System.out.print(ctx.ansi.a(i.toString()));
+            }
+        } else {
+            for (final CheckerInfo i : Errors) {
+                System.out.print(i.toString());
+            }
         }
     }
 
     public void printWarnings() {
-        for (final CheckerInfo i : Warnings) {
-            System.out.print(ctx.ansi.fg(Ansi.Color.MAGENTA).a(i.toString()).reset());
+        if(ctx.ansi.isEnabled()) {
+            for (final CheckerInfo i : Warnings) {
+                System.out.print(ctx.ansi.a(i.toString()));
+            }
+        } else {
+            for (final CheckerInfo i : Warnings) {
+                System.out.print(i.toString());
+            }
         }
     }
 
     public void printNotices() {
-        for (CheckerInfo i : Notices) {
-            System.out.print(ctx.ansi.fg(Ansi.Color.BLUE).a(i.toString()).reset());
+        if(ctx.ansi.isEnabled()) {
+            for (CheckerInfo i : Notices) {
+                System.out.print(ctx.ansi.a(i.toString()));
+            }
+        } else {
+            for (CheckerInfo i : Notices) {
+                System.out.print(i.toString());
+            }
         }
     }
 

@@ -74,9 +74,7 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
         
         //Checker
         this.checker.do_check(cfg);
-        this.checker.printErrors();
-        this.checker.printWarnings();
-        this.checker.printNotices();
+        this.checker.printReport();
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {
