@@ -55,7 +55,7 @@ public class LoadBalancer {
         //call this by
         //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer
         //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer compilers.jar
-        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer config.properties loadBalancer.properties <load_balance_dest_dir> <job_postfix>
+        //java -cp .:target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer config.properties loadBalancer.properties <load_balance_dest_dir> <job_postfix> <test_case_folder>
 
         final File workingDir = new File(System.getProperty("user.dir"));
         File tmpDir = new File(workingDir, "tmp");
@@ -77,9 +77,8 @@ public class LoadBalancer {
         tmpDir = new File(workingDir, "tmp");
         tmpDir.mkdir();
 
-        final File testFolder = new File(workingDir.getPath() + "/src/main/resources/tests");
         String testPattern = "test(.+)\\.thingml";
-        
+
         Set<Command> tasks = new HashSet<>();
         List<Future<String>> results = new ArrayList<Future<String>>();
         
@@ -107,16 +106,19 @@ public class LoadBalancer {
         
 	try {
 
+            File testFolder;
 	        String destTestRootDir = null;
 	        String testDirPostfix = null;
-            if(args.length == 4) {
+            if(args.length == 5) {
                 input = new FileInputStream(new File(args[0]));
                 lbInput = new FileInputStream(new File(args[1]));
                 destTestRootDir = args[2];
                 testDirPostfix = args[3];
+                testFolder = new File(args[4]);
             }else {
                 input = new FileInputStream(new File(workingDir, "config.properties"));
                 lbInput = new FileInputStream(new File(workingDir, "loadBalancer.properties"));
+                testFolder = new File(workingDir.getPath() + "/src/main/resources/tests");
             }
 
             // load a properties file
