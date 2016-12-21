@@ -132,10 +132,9 @@ public class TestJar {
 	}
         
         boolean localLink = true;
-        if(webLink != null) {
-            localLink = !(webLink.compareToIgnoreCase("True") == 0);
-        }
-        
+        if(webLink != null)
+            localLink = (webLink.compareToIgnoreCase("True") == 0) ? true : false;
+
         Set<String> tl = new HashSet<>();
         if(testList != null) {
             for(String tstr : testList.split(",")) {
@@ -363,7 +362,8 @@ public class TestJar {
     
     public static void writeResultsFile(File results, Map<String,Map<String,List<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>>> tests, List<TargetedLanguage> langs, File srcDir, boolean localLink, String myIP, String myHTTPServerPort) {
         StringBuilder res = new StringBuilder();
-        
+
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111 " + localLink);
         if(localLink) {
             res.append(TestHelper.writeHeaderResultsFile(langs));
         }

@@ -81,18 +81,7 @@ public class LoadBalancer {
 
         Set<Command> tasks = new HashSet<>();
         List<Future<String>> results = new ArrayList<Future<String>>();
-        
-        System.out.println("****************************************");
-        System.out.println("*              Test Begin              *");
-        System.out.println("****************************************");
-        
-        System.out.println("");
-        
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
-        System.out.println("Tmp Directory = " + tmpDir);
-        System.out.println("Compiler = " + compilerJar);
-        System.out.println("");
-        
+
         System.out.println("****************************************");
         System.out.println("*         Properties Reading           *");
         System.out.println("****************************************");
@@ -120,6 +109,17 @@ public class LoadBalancer {
                 lbInput = new FileInputStream(new File(workingDir, "loadBalancer.properties"));
                 testFolder = new File(workingDir.getPath() + "/src/main/resources/tests");
             }
+
+            System.out.println("****************************************");
+            System.out.println("*         Load Balancing Begins        *");
+            System.out.println("****************************************");
+
+            System.out.println("");
+
+            System.out.println("Working Directory = " + System.getProperty("user.dir"));
+            System.out.println("Tmp Directory = " + tmpDir);
+            System.out.println("Compiler = " + compilerJar);
+            System.out.println("");
 
             // load a properties file
             prop.load(input);
