@@ -5,7 +5,7 @@ The ThingML approach is composed of i) a modelling language, ii) a set of tools 
 
 It is developed by the Networked Systems and Services department of SINTEF in Oslo, Norway.
 
-It is distributed under the LGPL licence.
+It is distributed under the Apache 2.0 licence.
 
 ## Documentation
 
