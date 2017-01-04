@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ThingML :: Model
 Bundle-SymbolicName: org.sintef.thingml.model;singleton:=true
-Bundle-Version: 0.7.0
+Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: SINTEF
 Bundle-Localization: plugin

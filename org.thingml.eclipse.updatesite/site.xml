@@ -21,7 +21,7 @@
    <description name="ThingML Update Site" url="http://thingml.org/dist/update/">
       The ThingML Update Site
    </description>
-   <feature url="features/org.thingml.eclipse.feature_0.7.0.jar" id="org.thingml.eclipse.feature" version="0.7.0">
+   <feature url="features/org.thingml.eclipse.feature_1.0.0.qualifier.jar" id="org.thingml.eclipse.feature" version="1.0.0.qualifier">
       <category name="org.thingml"/>
    </feature>
    <category-def name="org.thingml" label="ThingML"/>

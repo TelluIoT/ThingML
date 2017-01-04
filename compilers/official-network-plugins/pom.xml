@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.thingml</groupId>
         <artifactId>compilers</artifactId>
-        <version>0.7.0</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <groupId>org.thingml</groupId>
     <artifactId>official-network-plugins</artifactId>
