@@ -1,17 +1,18 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
  */
 package org.thingml.compilers.java;
 
@@ -235,7 +236,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         if (overrideReceive) {
-            builder.append("@Override\npublic void receive(Event event){\n");
+            builder.append("@Override\npublic void receive(final Event event, final Port p){\n");
             builder.append("if (root == null) {\n");
             builder.append("boolean consumed = false;\n");
             for (StateMachine sm : thing.getBehaviour()) {
@@ -276,18 +277,18 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     }
                 }
             }
-            builder.append("if (!consumed){\nsuper.receive(event);\n}\n");
+            builder.append("if (!consumed){\nsuper.receive(event, p);\n}\n");
             builder.append("else {");
             builder.append("for (Component child : forks) {\n");
             builder.append("Event child_e = event.clone();\n");
-            builder.append("child.receive(child_e);\n");
+            builder.append("child.receive(child_e, p);\n");
             builder.append("}\n");
             builder.append("for(int i = 0; i < behavior.regions.length; i++) {\n");
             builder.append("behavior.regions[i].handle(event, p);");
             builder.append("}\n");
             builder.append("}\n");
             builder.append("} else {\n");
-            builder.append("super.receive(event);\n");
+            builder.append("super.receive(event, p);\n");
             builder.append("}\n");
             builder.append("}\n\n");
         }
@@ -319,7 +320,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                             builder.append(", ");
                         builder.append(ctx.protectKeyword(ctx.getVariableName(pa)));
                     }
-                    builder.append("));\n");
+                    builder.append("), " + p.getName() + "_port);\n");
                     builder.append("}\n\n");
                 }
             }

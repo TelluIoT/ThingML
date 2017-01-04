@@ -1,49 +1,30 @@
 import "../timer.thingml"
 
-object JThread
-@java_type "Thread";
+object JTimerTask
+@java_type "java.util.TimerTask";
+
+object JTimer
+@java_type "java.util.Timer";
 
 // Manage a set of software timers.
 thing TimerJava includes Timer
-@pim "Timer"
-@platform "java"
+@debug "true"
 {
-    property timer : JThread
-    
+    readonly property timer : JTimer = 'new java.util.Timer()'
+    property timer_task : JTimerTask
+
     function startTimer(delay : Integer) do
-              /*if (not(timer == 'null')) do
-                '' & timer & '.interrupt();'
-             end*/
-             'Thread t = new Thread(){
-                public void run() {
-				try {
-					sleep(' & delay & ');'
-					timer!timer_timeout()
-				'} catch (InterruptedException ex) {
-                    System.err.println("WARNING: " + ex.getMessage() + ". If you did not explicitly cancelled the timer, then it is a bug.");                   
-				}  catch (Exception ex) {
-                    ex.printStackTrace();
-				} finally {
-                    yield();
-                    interrupt();
-                }
-				    
-			    }
-              };'
-             timer = 't' 
-              '' & timer & '.start();'                
+        cancel()
+        'java.util.TimerTask temp_task = new java.util.TimerTask(){public void run(){' timer!timer_timeout() '}};'
+        timer_task = 'temp_task'
+        '' & timer & '.schedule(' & timer_task & ', ' & delay & ');'
     end
-            
+
     function cancel() do
-              if (not(timer == 'null')) do
-                'try {'
-                '' & timer & '.interrupt();'
-                '} catch (SecurityException ex) {
-                    System.err.println("WARNING: " + ex.getMessage());                   
-				}  catch (Exception ex) {
-                    ex.printStackTrace();
-				}'
-              end
+        if (not (timer_task == 'null')) do
+            '' & timer_task & '.cancel();'
+            '' & timer & '.purge();'
+        end
     end
 
     statechart SoftTimer init default {
@@ -52,13 +33,15 @@ thing TimerJava includes Timer
           internal event m : timer?timer_start
             guard m.delay > 0
             action startTimer(m.delay)
-            
+
           internal cancel
             event m : timer?timer_cancel
             action cancel()
         }
     }
 }
+
+
 
 configuration TestTimerJava @debug "true" {
     instance timer : TimerJava

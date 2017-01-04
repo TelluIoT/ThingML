@@ -1,17 +1,18 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
  */
 package org.sintef.thingml;
 
@@ -168,6 +169,7 @@ public class ThingMLPanel extends JPanel {
                                             }
                                         }
                                         compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
+                                        compiler.setInputDirectory(targetFile.getAbsoluteFile().getParentFile());
                                         compiler.compileConnector(connectorCompiler.getKey(), cfg);
                                     }
                                 }
@@ -197,6 +199,7 @@ public class ThingMLPanel extends JPanel {
                                             }
                                         }
                                         compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
+                                        compiler.setInputDirectory(targetFile.getAbsoluteFile().getParentFile());
                                         compiler.compile(cfg);
                                     }
                                 }
@@ -243,6 +246,7 @@ public class ThingMLPanel extends JPanel {
                                                 }
                                             }
                                             compiler.setOutputDirectory(new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName()));
+                                            compiler.setInputDirectory(targetFile.getAbsoluteFile().getParentFile());
                                             compiler.compileConnector(connectorCompiler.getKey(), cfg);
                                         }
                                     }
@@ -273,6 +277,7 @@ public class ThingMLPanel extends JPanel {
                                         
                                         File myFileBuf = new File(System.getProperty("java.io.tmpdir") + "/ThingML_temp/" + cfg.getName());
                                         compiler.setOutputDirectory(myFileBuf);
+                                        compiler.setInputDirectory(targetFile.getAbsoluteFile().getParentFile());
                                         compiler.compile(cfg);
                                         
                                         final InputStream input = new FileInputStream(myFileBuf.getAbsolutePath() + "/" + cfg.getName() + "/" + cfg.getName() + ".pde");
@@ -411,8 +416,7 @@ public class ThingMLPanel extends JPanel {
 
                 ThingMLModel model = (ThingMLModel) resource.getContents().get(0);
                 checker.do_generic_check(model);
-                checker.printErrors();
-                checker.printWarnings();
+                checker.printReport();
                 /*for (Configuration cfg : model.allConfigurations()) {
                     System.out.println("Checking configuration " + cfg.getName());
                     checker.do_generic_check(cfg);

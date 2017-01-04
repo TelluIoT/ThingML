@@ -1,27 +1,31 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
  */
 package org.thingml.compilers.c.posix;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
+import org.sintef.thingml.AnnotatedElement;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+
+import java.io.File;
 
 /**
  * Created by ffl on 17.06.15.
@@ -43,6 +47,28 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
     }
 
     protected String getThirdPartyLibraries(Thing thing) { return ""; }
+  
+    protected void includeExternalModules(AnnotatedElement element, StringBuilder sources, StringBuilder objects, CCompilerContext ctx) {
+        for (String s : AnnotatedElementHelper.annotation(element, "add_c_modules")) {
+            String[] mods = s.split(" ");
+            for (int i = 0; i < mods.length; i++) {
+                sources.append(mods[i].trim() + ".c ");
+                objects.append(mods[i].trim() + ".o ");
+              
+                // If .c (and .h) files exist in the current input directory, copy them to the output
+                // TODO: Jakob, paths within the output??
+                File indir = ctx.getInputDirectory();
+                File cfile = new File(indir, mods[i].trim() + ".c");              
+                if (cfile.exists()) {
+                    ctx.addFileToCopy(mods[i].trim() + ".c", cfile);
+                    File hfile = new File(indir, mods[i].trim() + ".h");
+                    if (hfile.exists()) {
+                        ctx.addFileToCopy(mods[i].trim() + ".h", hfile);
+                    }
+                }
+            }
+        }
+    }
 
     protected void generateLinuxMakefile(Configuration cfg, CCompilerContext ctx) {
 
@@ -61,31 +87,26 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
             flags += " " + s;
         }
         mtemplate = mtemplate.replace("/*CFLAGS*/", flags);
-
-        String srcs = "";
-        String objs = "";
+      
+        StringBuilder srcs = new StringBuilder();
+        StringBuilder objs = new StringBuilder();
 
         // Add the modules for the Things
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             PosixCCfgBuildCompiler plugable = (PosixCCfgBuildCompiler) getPlugableCfgBuildCompiler(t, ctx);
-            srcs += plugable.getSourceFileName(t);
-            objs += plugable.getObjectFileName(t);
+            srcs.append(plugable.getSourceFileName(t));
+            objs.append(plugable.getObjectFileName(t));
+            // Add any additional modules from the annotations
+            includeExternalModules(t, srcs, objs, ctx);
         }
 
         // Add the module for the Configuration
-        srcs += cfg.getName() + "_cfg.c ";
-        objs += cfg.getName() + "_cfg.o ";
+        srcs.append(cfg.getName() + "_cfg.c ");
+        objs.append(cfg.getName() + "_cfg.o ");
 
         // Add any additional modules from the annotations
-        for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_modules")) {
-            String[] mods = s.split(" ");
-            for (int i = 0; i < mods.length; i++) {
-                srcs += mods[i].trim() + ".c ";
-                objs += mods[i].trim() + ".o ";
-            }
-        }
-        srcs = srcs.trim();
-        objs = objs.trim();
+        includeExternalModules(cfg, srcs, objs, ctx);
+      
 
         String libs = "";
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
@@ -122,12 +143,11 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
             mtemplate = mtemplate.replace("/*STATIC*/", "");
         }
 
-        mtemplate = mtemplate.replace("/*SOURCES*/", srcs);
-        mtemplate = mtemplate.replace("/*OBJECTS*/", objs);
+        mtemplate = mtemplate.replace("/*SOURCES*/", srcs.toString().trim());
+        mtemplate = mtemplate.replace("/*OBJECTS*/", objs.toString().trim());
         mtemplate = mtemplate.replace("/*LIBS*/", libs);
         mtemplate = mtemplate.replace("/*PREPROC_DIRECTIVES*/", preproc);
 
         ctx.getBuilder("Makefile").append(mtemplate);
     }
-
 }

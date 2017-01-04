@@ -1,17 +1,18 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
  */
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -25,7 +26,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,8 +37,6 @@ import java.util.Set;
 import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.thingml.testjar.lang.TargetedLanguage;
 import org.thingml.testjar.lang.lArduino;
 import org.thingml.testjar.lang.lJava;
@@ -106,36 +104,41 @@ public class TestJar {
         InputStream input = null;
         
         String languageList = null, useBlackList = null, testList = null, categoryUseBlackList = null, categoryList = null, webLink = null, myIP = null, myHTTPServerPort = null;
+        String headerFooter = null;
         
-	try {
+        try {
 
-		input = new FileInputStream(configFile);
+            input = new FileInputStream(configFile);
 
-		// load a properties file
-		prop.load(input);
+            // load a properties file
+            prop.load(input);
 
-		// get the property value and print it out
-                languageList = prop.getProperty("languageList");
-                useBlackList = prop.getProperty("useBlackList");
-                testList = prop.getProperty("testList");
-                categoryUseBlackList = prop.getProperty("categoryUseBlackList");
-                categoryList = prop.getProperty("categoryList");
-                webLink = prop.getProperty("webLink");
-                myIP = prop.getProperty("myIP");
-                myHTTPServerPort = prop.getProperty("myHTTPServerPort");
-		System.out.println("languageList:" + languageList);
-		System.out.println("useBlackList:" + useBlackList);
-		System.out.println("testList:" + testList);
+            // get the property value and print it out
+            languageList = prop.getProperty("languageList");
+            useBlackList = prop.getProperty("useBlackList");
+            testList = prop.getProperty("testList");
+            categoryUseBlackList = prop.getProperty("categoryUseBlackList");
+            categoryList = prop.getProperty("categoryList");
+            webLink = prop.getProperty("webLink");
+            myIP = prop.getProperty("myIP");
+            myHTTPServerPort = prop.getProperty("myHTTPServerPort");
+            headerFooter = prop.getProperty("headerFooter");
+            System.out.println("languageList:" + languageList);
+            System.out.println("useBlackList:" + useBlackList);
+            System.out.println("testList:" + testList);
 
-	} catch (IOException ex) {
-		ex.printStackTrace();
-	}
-        
-        boolean localLink = true;
-        if(webLink != null) {
-            localLink = !(webLink.compareToIgnoreCase("True") == 0);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        
+
+        boolean header_footer = true;
+	    if (headerFooter != null)
+            header_footer = (headerFooter.compareToIgnoreCase("True") == 0) ? true : false;
+
+        boolean localLink = true;
+        if(webLink != null)
+            localLink = !((webLink.compareToIgnoreCase("True") == 0) ? true : false);
+
         Set<String> tl = new HashSet<>();
         if(testList != null) {
             for(String tstr : testList.split(",")) {
@@ -326,7 +329,9 @@ public class TestJar {
         
         System.out.println("");
         
-        writeResultsFile(new File(tmpDir, "results.html"), testBench, langs, testFolder, localLink, myIP, myHTTPServerPort);
+        writeResultsFile(workingDir, tmpDir, new File(tmpDir, "results.html"), testBench, langs, testFolder, localLink, myIP, myHTTPServerPort, header_footer);
+        if(!header_footer)
+            writeFooterHeader(new File(tmpDir, "header.html"), new File(tmpDir, "footer.html"), langs);
         
         
         System.out.println("");
@@ -360,13 +365,41 @@ public class TestJar {
         }
         System.out.println("Done.");
     }
-    
-    public static void writeResultsFile(File results, Map<String,Map<String,List<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>>> tests, List<TargetedLanguage> langs, File srcDir, boolean localLink, String myIP, String myHTTPServerPort) {
-        StringBuilder res = new StringBuilder();
-        
-        if(localLink) {
-            res.append(TestHelper.writeHeaderResultsFile(langs));
+
+    public static void writeFooterHeader(File header, File footer, List<TargetedLanguage> langs) {
+        StringBuilder headerres = new StringBuilder();
+        headerres.append(TestHelper.writeHeaderResultsFile(langs));
+
+        StringBuilder footerres = new StringBuilder();
+        footerres.append(TestHelper.writeFooterResultsFile(langs));
+
+        if(header.exists())
+            header.delete();
+
+        if(footer.exists())
+            footer.delete();
+
+        try {
+            PrintWriter h = new PrintWriter(header);
+            h.print(headerres.toString());
+            h.close();
+
+            PrintWriter f = new PrintWriter(footer);
+            f.print(footerres.toString());
+            f.close();
+        } catch (Exception ex) {
+            System.err.println("Problem writing log");
+            ex.printStackTrace();
         }
+
+    }
+
+    public static void writeResultsFile(File workingDir, File tmpDir, File results, Map<String,Map<String,List<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>>> tests,
+                                        List<TargetedLanguage> langs, File srcDir, boolean localLink, String myIP, String myHTTPServerPort, boolean header_footer) {
+        StringBuilder res = new StringBuilder();
+
+        if(header_footer)
+            res.append(TestHelper.writeHeaderResultsFile(langs));
         
         for(Map.Entry<String, Map<String,List<Map.Entry<TargetedLanguage,List<SimpleGeneratedTest>>>>> category : tests.entrySet()) {
             
@@ -377,7 +410,8 @@ public class TestJar {
                 res.append("                <td class=\"category\">" + category.getKey() + "</td>\n");
                 res.append("                <td class=\"testcase ");
                 if(localLink) {
-                    lineB.append("                <a href=\"file://" + srcDir.getPath() + "/" + category.getKey() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
+                    String local_path = TestHelper.stripFirstDirFromPath(srcDir.getPath(), workingDir.getPath()).replace("^/+", "");
+                    lineB.append("                <a href=\"" + local_path + "/" + category.getKey() + "/" + line.getKey() + "\" >" + line.getKey() + "</a>\n");
                 } else {
                     lineB.append("                <a href=\"http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(srcDir.getPath(), "/thingml") + "/" + category.getKey() + "/" + line.getKey() + "\"  target=\"test-case-focus\"> " + line.getKey() + "</a>\n");
                 }
@@ -405,8 +439,8 @@ public class TestJar {
                                 cellB.append("\">\n");
 
                                 if(localLink || (myIP == null) || (myHTTPServerPort == null)) {
-                                    cellB.append("                      <a href=file://" + tc.genCfg + ">src</a> | \n");
-                                    cellB.append("                      <a href=file://" + tc.logFile.getPath() + ">log</a>\n");
+                                    cellB.append("                      <a href=\"" + TestHelper.stripFirstDirFromPath(tc.genCfg.getPath(), tmpDir.getPath()).replace("^/+", "") + "\">src</a> | \n");
+                                    cellB.append("                      <a href=\"" + TestHelper.stripFirstDirFromPath(tc.logFile.getPath(), tmpDir.getPath()).replace("^/+", "") + "\">log</a>\n");
                                 } else {
                                     cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(tc.genCfg.getPath(), "/thingml") + " target=\"test-case-focus\">src</a> | \n");
                                     cellB.append("                      <a href=http://" + myIP +":" + myHTTPServerPort +"" + TestHelper.stripFirstDirFromPath(tc.logFile.getPath(), "/thingml") + " target=\"test-case-focus\">log</a>\n");
@@ -445,9 +479,8 @@ public class TestJar {
             }
         }
         
-        if(localLink) {
+        if(header_footer)
             res.append(TestHelper.writeFooterResultsFile(langs));
-        }
         
         for(TargetedLanguage lang : langs) {
             System.out.println("[" + lang.compilerID + "] " + lang.failedTest.size() + " failures out of " + lang.testNb);

@@ -1,17 +1,18 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
  */
 package org.thingml.compilers;
 
@@ -19,6 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.fusesource.jansi.AnsiConsole;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
@@ -69,6 +71,7 @@ public abstract class ThingMLCompiler {
     private OutputStream messageStream = System.out;
     private OutputStream errorStream = System.err;
     private File outputDirectory = null;
+    private File inputDirectory = null;
 
     /**************************************************************
      * Parameters common to all compilers
@@ -360,7 +363,21 @@ public abstract class ThingMLCompiler {
             throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
         if (!outDir.canWrite())
             throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
-        outputDirectory = outDir;
+        outputDirectory = outDir.getAbsoluteFile();
+    }
+  
+    public File getInputDirectory() {
+        return inputDirectory;
+    }
+
+    public void setInputDirectory(File inDir) {
+        if (!inDir.exists())
+            throw new Error("ERROR: The input directory does not exist (" + inDir.getAbsolutePath() + ").");
+        if (!inDir.isDirectory())
+            throw new Error("ERROR: The input directory has to be a directory (" + inDir.getAbsolutePath() + ").");
+        if (!inDir.canRead())
+            throw new Error("ERROR: The input directory is not readable (" + inDir.getAbsolutePath() + ").");
+        inputDirectory = inDir.getAbsoluteFile();
     }
 
     public void addNetworkPlugin(NetworkPlugin np) {

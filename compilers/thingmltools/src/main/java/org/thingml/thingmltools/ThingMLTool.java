@@ -1,17 +1,18 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
  */
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -33,6 +34,7 @@ import java.util.Map;
  */
 public abstract class ThingMLTool {
     public File outDir;
+    public File inDir;
     public File src;
     public Map<String, StringBuilder> generatedCode = new HashMap<>();
     public String options;
@@ -64,7 +66,21 @@ public abstract class ThingMLTool {
             throw new Error("ERROR: The output directory has to be a directory (" + outputDirectory.getAbsolutePath() + ").");
         if (!outputDirectory.canWrite())
             throw new Error("ERROR: The output directory is not writable (" + outputDirectory.getAbsolutePath() + ").");
-        outDir = outputDirectory;
+        outDir = outputDirectory.getAbsoluteFile();
+    }
+  
+    public File getInputDirectory() {
+        return inDir;
+    }
+
+    public void setInputDirectory(File inputDirectory) {
+        if (!inputDirectory.exists())
+            throw new Error("ERROR: The input directory does not exist (" + inDir.getAbsolutePath() + ").");
+        if (!inputDirectory.isDirectory())
+            throw new Error("ERROR: The input directory has to be a directory (" + inDir.getAbsolutePath() + ").");
+        if (!inputDirectory.canRead())
+            throw new Error("ERROR: The input directory is not readable (" + inDir.getAbsolutePath() + ").");
+        inDir = inputDirectory.getAbsoluteFile();
     }
 
     public abstract void generateThingMLFrom(ThingMLModel model);

@@ -1,17 +1,18 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
  */
 package org.thingml.eclipse.ui.commands;
 
@@ -41,6 +42,9 @@ import org.thingml.compilers.checker.Checker.CheckerInfo;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.compilers.uml.PlantUMLCompiler;
+import org.thingml.compilers.uml.PlantUMLThingImplCompiler;
+import org.thingml.compilers.utils.ThingMLPrettyPrinter;
 import org.thingml.eclipse.preferences.PreferenceConstants;
 import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
@@ -51,6 +55,8 @@ public class CompileThingFile implements IHandler {
     private static Set<NetworkPlugin> loadedPlugins;
     private static ServiceLoader<SerializationPlugin> serPlugins = ServiceLoader.load(SerializationPlugin.class);
     private static Set<SerializationPlugin> loadedSerPlugins;
+    
+    IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
     static {
     	loadedPlugins = new HashSet<>();
@@ -111,6 +117,14 @@ public class CompileThingFile implements IHandler {
                     compiler.addSerializationPlugin(sp);
                 }
             }
+            
+            if (compiler instanceof PlantUMLCompiler) {
+            	PlantUMLThingImplCompiler.FACTORIZE_TRANSITIONS = store.getBoolean(PreferenceConstants.UML_FACTORIZE);
+            	ThingMLPrettyPrinter.HIDE_BLOCKS = store.getBoolean(PreferenceConstants.UML_HIDE_BLOCK);
+            	ThingMLPrettyPrinter.MAX_BLOCK_SIZE = store.getInt(PreferenceConstants.UML_BLOCK_SIZE);
+            	ThingMLPrettyPrinter.USE_ELLIPSIS_FOR_PARAMS = store.getBoolean(PreferenceConstants.UML_ELLIPSIS);
+            }
+            
 			ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\" (Platform: " + compiler.getID() + ")\n");
 
 			// Fetch the input model to be used
@@ -220,7 +234,7 @@ public class CompileThingFile implements IHandler {
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);*/
 
 
-			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+			
 			String pack = store.getString(PreferenceConstants.PACK_STRING);
 			String[] options = new String[1];
 			options[0] = pack;
@@ -228,6 +242,7 @@ public class CompileThingFile implements IHandler {
 			// Compile all the configuration
 			for ( Configuration cfg :  toCompile ) {
 				java.io.File cfg_folder = new java.io.File(platform_folder, cfg.getName());
+        java.io.File in_folder = f.getAbsoluteFile().getParentFile();
 				if (cfg_folder.exists()) {
 					ThingMLConsole.getInstance().printDebug("Cleaning folder " + cfg_folder.getAbsolutePath() + "\n");
 					ThingMLConsole.getInstance().emptyFolder(cfg_folder);
@@ -237,6 +252,7 @@ public class CompileThingFile implements IHandler {
 				}
 				compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
 				compiler.setOutputDirectory(cfg_folder);
+        compiler.setInputDirectory(in_folder);
 				compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
 				compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
 

@@ -1,17 +1,18 @@
 /**
- * Copyright (C) 2014 SINTEF <franck.fleurey@sintef.no>
- *
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE, Version 3, 29 June 2007;
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * 	http://www.gnu.org/licenses/lgpl-3.0.txt
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
  */
 package org.thingml.compilers.utils;
 
@@ -24,11 +25,11 @@ import org.thingml.compilers.thing.ThingActionCompiler;
  */
 public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
-    public final static boolean USE_ELLIPSIS_FOR_PARAMS = true;
-    public final static int MAX_BLOCK_SIZE = 8;
-    public final static boolean HIDE_BLOCKS = false;
+    public static boolean USE_ELLIPSIS_FOR_PARAMS = true;
+    public static int MAX_BLOCK_SIZE = 8;
+    public static boolean HIDE_BLOCKS = false;
 
-    public final static String NEW_LINE = "\n";
+    public final static String NEW_LINE = "\\n";
     public final static String INDENT = "  "; //two blank spaces for indentation
     public static int indent_level = 0;
 
@@ -36,20 +37,6 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     private String protectString(String s) {
         return s.replace("\\n", "\\\\n").replace("\n", "\\n").replace(System.getProperty("line.separator"), "\\n").replace("\t", "").replace("\r", "").replace("\"", "\'\'");
-    }
-
-    /**
-     * PlantUML tending to center text, this methods pads (or cuts) strings with blanks
-     * so that they look left-aligned when centered
-     * @param input
-     * @return
-     */
-    private String format(final String input) {
-        String result = input;
-        for (int i = 0; i <= indent_level; i++) {
-            result = INDENT + result;
-        }
-        return result;
     }
 
     @Override
@@ -81,7 +68,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     public void generate(ActionBlock action, StringBuilder builder, Context ctx) {
         StringBuilder temp = new StringBuilder();
         if (action.getActions().size() > 1)
-            temp.append("do ");
+            temp.append("do " + NEW_LINE);
         indent_level++;
         if (HIDE_BLOCKS && action.getActions().size() > 1) {
             temp.append("..." + NEW_LINE);
@@ -113,7 +100,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         indent_level--;
         if (action.getActions().size() > 1)
             temp.append("end" + NEW_LINE);
-        builder.append(protectString(temp.toString()));
+        builder.append(temp.toString());
     }
 
     @Override
@@ -130,17 +117,16 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     public void generate(ConditionalAction action, StringBuilder builder, Context ctx) {
         builder.append("if(");
         generate(action.getCondition(), builder, ctx);
-        builder.append(") {" + NEW_LINE);
+        builder.append(") do" + NEW_LINE);
         indent_level++;
         generate(action.getAction(), builder, ctx);
         indent_level--;
-        builder.append(NEW_LINE + "}");
+        builder.append("end");
         if (action.getElseAction() != null) {
-            builder.append(" else {" + NEW_LINE);
+            builder.append(" else do" + NEW_LINE);
             indent_level++;
             generate(action.getElseAction(), builder, ctx);
             indent_level--;
-            builder.append(NEW_LINE + "}");
         }
         builder.append(NEW_LINE);
     }
@@ -149,11 +135,11 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     public void generate(LoopAction action, StringBuilder builder, Context ctx) {
         builder.append("while(");
         generate(action.getCondition(), builder, ctx);
-        builder.append(") {" + NEW_LINE);
+        builder.append(") do" + NEW_LINE);
         indent_level++;
         generate(action.getAction(), builder, ctx);
         indent_level--;
-        builder.append(NEW_LINE + "}" + NEW_LINE);
+        builder.append("end" + NEW_LINE);
     }
 
     @Override
@@ -182,8 +168,9 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         if (!action.isChangeable()) {
             builder.append("readonly ");
         }
-        builder.append("property " + action.getName() + " : " + action.getType().getName());
+        builder.append("var " + action.getName() + " : " + action.getType().getName());
         if (action.getInit() != null) {
+            builder.append(" = ");
             generate(action.getInit(), builder, ctx);
         }
         builder.append(NEW_LINE);
@@ -346,7 +333,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
-        builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()).replace("\\n", "\\\\n") + "\"");
+        builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()).replace("\n", "\\n").replace("\\n","\\\\n") + "\"");
     }
 
     @Override
