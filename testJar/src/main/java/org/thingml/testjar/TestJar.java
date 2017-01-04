@@ -61,8 +61,8 @@ public class TestJar {
         File configFile = new File(workingDir, "config.properties");
         File tmpDir = new File(workingDir, "tmp");
 
-        File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-0.7.0-SNAPSHOT-jar-with-dependencies.jar");
-        File pluginFile = new File(workingDir, "../compilers/official-network-plugins/target/official-network-plugins-0.7.0-SNAPSHOT.jar");
+        File compilerJar = new File(workingDir, "../compilers/registry/target/compilers.registry-1.0.0-SNAPSHOT-jar-with-dependencies.jar");
+        File pluginFile = new File(workingDir, "../compilers/official-network-plugins/target/official-network-plugins-1.0.0-SNAPSHOT.jar");
 
         if(args.length == 3) {
             compilerJar = new File(args[0]);
