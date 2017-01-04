@@ -1,3 +1,21 @@
+<!--
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+    See the NOTICE file distributed with this work for additional
+    information regarding copyright ownership.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -25,9 +43,9 @@
     <licenses>
         <license>
             <name>
-                GNU Library or Lesser General Public License (LGPL), Version 3
+                Apache License, Version 2.0
             </name>
-            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
 
@@ -58,33 +76,19 @@
                 <role>developer</role>
             </roles>
             <timezone>+1</timezone>
-        </developer>
-        <developer>
-            <name>Nicolas Harrand</name>
-            <id>nharrand</id>
-            <email>first.last@sintef.no</email>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
+        </developer>        
     </developers>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.mycila.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <version>1.9.0</version>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>3.0</version>
                 <configuration>
                     <basedir>${basedir}</basedir>
                     <header>HEADER</header>
                     <strictCheck>true</strictCheck>
-                    <properties>
-                        <owner>SINTEF</owner>
-                        <year>2014</year>
-                        <email>franck.fleurey@sintef.no</email>
-                    </properties>
                     <excludes>
                         <exclude>
                             **/*.cs
@@ -99,6 +103,9 @@
                             **/resources/**/**.*
                         </exclude>
                     </excludes>
+					<mapping>
+						<thingml>JAVA_STYLE</thingml>
+					</mapping>
                 </configuration>
                 <executions>
                     <execution>
@@ -114,7 +121,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.6.0</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -125,7 +132,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
+                <version>3.0.2</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
@@ -134,7 +141,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.2.0</version>
                 <extensions>true</extensions>
             </plugin>
         </plugins>
@@ -151,13 +158,13 @@
         						<pluginExecution>
         							<pluginExecutionFilter>
         								<groupId>
-        									com.mycila.maven-license-plugin
+        									com.mycila
         								</groupId>
         								<artifactId>
-        									maven-license-plugin
+        									license-maven-plugin
         								</artifactId>
         								<versionRange>
-        									[1.9.0,)
+        									[3.0,)
         								</versionRange>
         								<goals>
         									<goal>format</goal>
@@ -206,7 +213,6 @@
         <module>org.thingml.editor.eclipse</module>
         <!-- The standalone app can only be built on the server which has the keystore to sign the jar
         <module>../org.thingml.editor.standaloneApp</module>-->
-        <!--<module>ArduinoIDEPlugin</module>-->
         <!--<module>testJar</module>--><!--BUILT SEPARATELY-->
         <module>Documentrospection</module>
     </modules>
