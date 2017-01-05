@@ -173,7 +173,7 @@ abstract public class Checker {
     }
 
     public void printReport() {
-        new Thread() {
+       new Thread() {
             @Override
             public void run() {
                 super.run();

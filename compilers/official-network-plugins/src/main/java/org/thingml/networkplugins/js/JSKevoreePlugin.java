@@ -38,6 +38,8 @@ import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -76,8 +78,16 @@ public class JSKevoreePlugin extends NetworkPlugin {
 
     private void generateKevScript(Context ctx, Configuration cfg) {
         if (AnnotatedElementHelper.hasAnnotation(cfg, "kevscript")) {
+            final String path = AnnotatedElementHelper.annotation(cfg, "kevscript").get(0);
+            final URI uri = URI.create(path);
+            File toCopy = null;
+            if(uri.isAbsolute()) {
+                toCopy = new File(uri);
+            } else {
+                toCopy = new File(ctx.getCompiler().currentFile.toURI().resolve(path));
+            }
             try {
-                FileUtils.copyFile(new File(AnnotatedElementHelper.annotation(cfg, "kevscript").get(0)), new File(ctx.getOutputDirectory(), "/kevs/main.kevs"));
+                FileUtils.copyFile(toCopy, new File(ctx.getOutputDirectory(), "/kevs/main.kevs"));
                 return;
             } catch (IOException e) {
                 System.err.println("Cannot find file " + AnnotatedElementHelper.annotation(cfg, "kevscript").get(0) + ". Will create a new one from scratch instead");
@@ -89,10 +99,11 @@ public class JSKevoreePlugin extends NetworkPlugin {
         kevScript.append("add node0 : JavascriptNode\n");
 
             kevScript.append("//create a default group to manage the node(s)\n");
-            kevScript.append("add sync : WSGroup\n");
+            kevScript.append("add sync : CentralizedWSGroup\n");
             kevScript.append("attach node0 sync\n\n");
-            kevScript.append("set sync.port/node0 = \"9000\"\n");
-        kevScript.append("//instantiate Kevoree/ThingML components\n");
+            //kevScript.append("set sync.port/node0 = \"9000\"\n");
+            kevScript.append("set sync.isMaster/master = 'true'\n");
+            kevScript.append("//instantiate Kevoree/ThingML components\n");
             kevScript.append("add node0." + cfg.getName() + "_0 : thingml." + cfg.getName() + "/1/LATEST\n");//TODO: allow customizing version number and namespace
 
             for (String k : AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "kevscript_import")) {

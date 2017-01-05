@@ -53,6 +53,7 @@ public abstract class ThingMLCompiler {
     public static List<String> errors;
     public static List<String> warnings;
     public static ThingmlResource resource;
+    public static File currentFile;
     protected Context ctx = new Context(this);
     Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
     Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
@@ -96,7 +97,8 @@ public abstract class ThingMLCompiler {
         this.cepCompiler = cepCompiler;
     }
 
-    public static ThingMLModel loadModel(File file) {
+    public static ThingMLModel loadModel(final File file) {
+        currentFile = file;
         errors = new ArrayList<String>();
         warnings = new ArrayList<String>();
 
