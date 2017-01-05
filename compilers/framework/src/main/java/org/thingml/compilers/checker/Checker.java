@@ -185,6 +185,7 @@ abstract public class Checker {
                 ctx.ansi.fg(Ansi.Color.RED);
                 printErrors();
                 ctx.ansi.reset();
+                if (ctx.ansi.isEnabled()) System.out.print(ctx.ansi);
                 AnsiConsole.systemUninstall();
             }
         }.start();
@@ -193,7 +194,7 @@ abstract public class Checker {
     public void printErrors() {
         if(ctx.ansi.isEnabled()) {
             for (final CheckerInfo i : Errors) {
-                System.out.print(ctx.ansi.a(i.toString()));
+                ctx.ansi.a(i.toString());
             }
         } else {
             for (final CheckerInfo i : Errors) {
@@ -205,7 +206,7 @@ abstract public class Checker {
     public void printWarnings() {
         if(ctx.ansi.isEnabled()) {
             for (final CheckerInfo i : Warnings) {
-                System.out.print(ctx.ansi.a(i.toString()));
+                ctx.ansi.a(i.toString());
             }
         } else {
             for (final CheckerInfo i : Warnings) {
@@ -217,7 +218,7 @@ abstract public class Checker {
     public void printNotices() {
         if(ctx.ansi.isEnabled()) {
             for (CheckerInfo i : Notices) {
-                System.out.print(ctx.ansi.a(i.toString()));
+                ctx.ansi.a(i.toString());
             }
         } else {
             for (CheckerInfo i : Notices) {
