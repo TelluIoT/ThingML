@@ -682,12 +682,19 @@ public abstract class CCompilerContext extends Context {
 
     public int getCByteSize(Type t, int pointerSize) {
         if (t instanceof ObjectType) {
-                return pointerSize;
-            } else {
+            return pointerSize;
+        } else if (t instanceof PrimitiveType) {
             PrimitiveType pt = (PrimitiveType) t;
             return pt.getByteSize();
-                }
-            }
+        } else if (t instanceof Enumeration) {
+            if (AnnotatedElementHelper.hasAnnotation(t, "c_byte_size"))
+                return Integer.parseInt(AnnotatedElementHelper.annotationOrElse(t, "c_byte_size", "0"));
+            else
+                throw new Error("ERROR: Enumeration type " + t.getName() + " has no 'c_byte_size' annotation.");
+        } else {
+            throw new Error("ERROR: Type " + t.getName() + " does not have a well defined byte size.");
+        }
+    }
 
     public boolean isPointer(Type t) {
         return t instanceof ObjectType;
