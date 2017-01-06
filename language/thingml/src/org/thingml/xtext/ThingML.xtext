@@ -1,0 +1,9 @@
+grammar org.thingml.xtext.ThingML with org.eclipse.xtext.common.Terminals
+
+generate thingML "http://www.thingml.org/xtext/ThingML"
+
+Model:
+	greetings+=Thing*;
+	
+Thing:
+	'thing' name=ID ';';
