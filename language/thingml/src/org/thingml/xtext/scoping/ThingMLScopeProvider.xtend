@@ -3,6 +3,14 @@
  */
 package org.thingml.xtext.scoping
 
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
+import org.thingml.xtext.thingML.ThingMLPackage
+import org.eclipse.xtext.scoping.IScope
+import org.thingml.xtext.thingML.Port
+import org.sintef.thingml.constraints.ThingMLHelpers
+import org.thingml.xtext.thingML.Thing
+import org.eclipse.xtext.scoping.Scopes
 
 /**
  * This class contains custom scoping description.
@@ -12,4 +20,22 @@ package org.thingml.xtext.scoping
  */
 class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 
+	private val p = ThingMLPackage.eINSTANCE;
+
+	override getScope(EObject context, EReference reference) {
+		
+		if (reference == p.port_Receives || reference == p.port_Sends) {
+			return scopeForMessagesInPort(context as Port);
+		}		
+		
+		return super.getScope(context, reference)
+
+	}
+	
+	
+	def protected IScope scopeForMessagesInPort(Port context) {
+		Scopes.scopeFor(ThingMLHelpers.allMessages(context.eContainer as Thing));
+	}
+
 }
+ 

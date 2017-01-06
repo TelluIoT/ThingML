@@ -27,7 +27,7 @@ public class ThingMLParser extends AbstractAntlrParser {
 
 	@Override 
 	protected String getDefaultRuleName() {
-		return "Model";
+		return "ThingMLModel";
 	}
 
 	public ThingMLGrammarAccess getGrammarAccess() {
