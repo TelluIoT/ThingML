@@ -91,6 +91,33 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     "\tEventEmitter = require('events').EventEmitter;\n");
         }
 
+        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            builder.append("var instance = undefined;\n");
+            builder.append("process.on('message', (m) => {\n");
+            builder.append("switch (m.lc) {\n");
+            builder.append("case 'new':\n");
+            builder.append("instance = new " + ctx.firstToUpper(thing.getName()) + "(m.name, null");
+            for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+                builder.append(", m." + p.getName());
+            }
+            builder.append(", false);\n");
+            builder.append("break;\n");
+            builder.append("case 'init':\n");
+            builder.append("instance._init();\n");
+            builder.append("break;\n");
+            builder.append("case 'stop':\n");
+            builder.append("instance._stop();\n");
+            builder.append("break;\n");
+            builder.append("case 'delete':\n");
+            builder.append("instance._delete();\n");
+            builder.append("break;\n");
+            builder.append("default:\n");
+            builder.append("instance._receive(m);\n");
+            builder.append("break;\n");
+            builder.append("}");
+            builder.append("});\n");
+        }
+
         builder.append("\n/**\n");
         builder.append(" * Definition for type : " + thing.getName() + "\n");
         builder.append(" **/\n");
@@ -103,6 +130,13 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }//TODO: changeable properties?
         builder.append(", debug) {\n\n");
+
+        //MT
+        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            builder.append("process.on('message', (m) => {\n");
+            builder.append("this._receive(m);\n");
+            builder.append("});\n");
+        }
 
         builder.append("this.name = name;\n");
         builder.append("this.root = root;\n");
@@ -200,8 +234,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//Internal functions\n");
 
-
-        generateSendMethods(thing, builder, ctx);
+        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            generateSendMethods(thing, builder, ctx);
+        }
 
         builder.append("//State machine (states and regions)\n");
         builder.append("function build(session, root) {//optional session name and root instance to fork a new session\n");

@@ -41,10 +41,7 @@ import java.util.Map;
  */
 public class JSCompiler extends OpaqueThingMLCompiler {
 
-    /*{
-        Map<String, CfgExternalConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgExternalConnectorCompiler>();
-        addConnectorCompilers(connectorCompilerMap);
-    }*/
+    public boolean multiThreaded = true;
 
     public JSCompiler() {
         super(new JSThingActionCompiler(), new JSThingApiCompiler(), new JSCfgMainGenerator(),
