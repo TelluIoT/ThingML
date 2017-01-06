@@ -15,9 +15,88 @@ import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
 import org.eclipse.xtext.serializer.sequencer.AbstractDelegatingSemanticSequencer;
 import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
 import org.thingml.xtext.services.ThingMLGrammarAccess;
-import org.thingml.xtext.thingML.Model;
+import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.AndExpression;
+import org.thingml.xtext.thingML.ArrayIndex;
+import org.thingml.xtext.thingML.ArrayParamRef;
+import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.ConditionalAction;
+import org.thingml.xtext.thingML.ConfigPropertyAssign;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Connector;
+import org.thingml.xtext.thingML.Decrement;
+import org.thingml.xtext.thingML.DivExpression;
+import org.thingml.xtext.thingML.DoubleLiteral;
+import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.EqualsExpression;
+import org.thingml.xtext.thingML.ErrorAction;
+import org.thingml.xtext.thingML.ExternExpression;
+import org.thingml.xtext.thingML.ExternStatement;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Filter;
+import org.thingml.xtext.thingML.FinalState;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.FunctionCallExpression;
+import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.GreaterExpression;
+import org.thingml.xtext.thingML.GreaterOrEqualExpression;
+import org.thingml.xtext.thingML.Import;
+import org.thingml.xtext.thingML.Increment;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.InstanceRef;
+import org.thingml.xtext.thingML.IntegerLiteral;
+import org.thingml.xtext.thingML.InternalPort;
+import org.thingml.xtext.thingML.InternalTransition;
+import org.thingml.xtext.thingML.JoinSources;
+import org.thingml.xtext.thingML.LengthArray;
+import org.thingml.xtext.thingML.LengthWindow;
+import org.thingml.xtext.thingML.LocalVariable;
+import org.thingml.xtext.thingML.LoopAction;
+import org.thingml.xtext.thingML.LowerExpression;
+import org.thingml.xtext.thingML.LowerOrEqualExpression;
+import org.thingml.xtext.thingML.MergeSources;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.MessageParameter;
+import org.thingml.xtext.thingML.MinusExpression;
+import org.thingml.xtext.thingML.ModExpression;
+import org.thingml.xtext.thingML.NotEqualsExpression;
+import org.thingml.xtext.thingML.NotExpression;
+import org.thingml.xtext.thingML.ObjectType;
+import org.thingml.xtext.thingML.OrExpression;
+import org.thingml.xtext.thingML.ParallelRegion;
+import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.PlusExpression;
+import org.thingml.xtext.thingML.PrimitiveType;
+import org.thingml.xtext.thingML.PrintAction;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.PropertyAssign;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.ProvidedPort;
+import org.thingml.xtext.thingML.ReceiveMessage;
+import org.thingml.xtext.thingML.Reference;
+import org.thingml.xtext.thingML.RequiredPort;
+import org.thingml.xtext.thingML.ReturnAction;
+import org.thingml.xtext.thingML.SendAction;
+import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.SimpleParamRef;
+import org.thingml.xtext.thingML.SimpleSource;
+import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.Stream;
+import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.ThingMLPackage;
+import org.thingml.xtext.thingML.TimeWindow;
+import org.thingml.xtext.thingML.TimesExpression;
+import org.thingml.xtext.thingML.Transition;
+import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.UnaryMinus;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 @SuppressWarnings("all")
 public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequencer {
@@ -33,11 +112,264 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 		Set<Parameter> parameters = context.getEnabledBooleanParameters();
 		if (epackage == ThingMLPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
-			case ThingMLPackage.MODEL:
-				sequence_Model(context, (Model) semanticObject); 
+			case ThingMLPackage.ACTION_BLOCK:
+				sequence_ActionBlock(context, (ActionBlock) semanticObject); 
+				return; 
+			case ThingMLPackage.AND_EXPRESSION:
+				sequence_AndExpression(context, (AndExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.ARRAY_INDEX:
+				sequence_ArrayIndexPostfix(context, (ArrayIndex) semanticObject); 
+				return; 
+			case ThingMLPackage.ARRAY_PARAM_REF:
+				sequence_ArrayParamRef(context, (ArrayParamRef) semanticObject); 
+				return; 
+			case ThingMLPackage.BOOLEAN_LITERAL:
+				sequence_BooleanLiteral(context, (BooleanLiteral) semanticObject); 
+				return; 
+			case ThingMLPackage.COMPOSITE_STATE:
+				if (rule == grammarAccess.getRegionRule()
+						|| rule == grammarAccess.getCompositeStateRule()) {
+					sequence_CompositeState(context, (CompositeState) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getAnnotatedElementRule()
+						|| rule == grammarAccess.getStateRule()) {
+					sequence_CompositeState_StateMachine(context, (CompositeState) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getStateMachineRule()) {
+					sequence_StateMachine(context, (CompositeState) semanticObject); 
+					return; 
+				}
+				else break;
+			case ThingMLPackage.CONDITIONAL_ACTION:
+				sequence_ConditionalAction(context, (ConditionalAction) semanticObject); 
+				return; 
+			case ThingMLPackage.CONFIG_PROPERTY_ASSIGN:
+				sequence_ConfigPropertyAssign(context, (ConfigPropertyAssign) semanticObject); 
+				return; 
+			case ThingMLPackage.CONFIGURATION:
+				sequence_Configuration(context, (Configuration) semanticObject); 
+				return; 
+			case ThingMLPackage.CONNECTOR:
+				sequence_Connector(context, (Connector) semanticObject); 
+				return; 
+			case ThingMLPackage.DECREMENT:
+				sequence_Decrement(context, (Decrement) semanticObject); 
+				return; 
+			case ThingMLPackage.DIV_EXPRESSION:
+				sequence_Multiplication(context, (DivExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.DOUBLE_LITERAL:
+				sequence_DoubleLiteral(context, (DoubleLiteral) semanticObject); 
+				return; 
+			case ThingMLPackage.ENUM_LITERAL_REF:
+				sequence_EnumLiteralRef(context, (EnumLiteralRef) semanticObject); 
+				return; 
+			case ThingMLPackage.ENUMERATION:
+				sequence_Enumeration(context, (Enumeration) semanticObject); 
+				return; 
+			case ThingMLPackage.ENUMERATION_LITERAL:
+				sequence_EnumerationLiteral(context, (EnumerationLiteral) semanticObject); 
+				return; 
+			case ThingMLPackage.EQUALS_EXPRESSION:
+				sequence_Equality(context, (EqualsExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.ERROR_ACTION:
+				sequence_ErrorAction(context, (ErrorAction) semanticObject); 
+				return; 
+			case ThingMLPackage.EXTERN_EXPRESSION:
+				sequence_ExternExpression(context, (ExternExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.EXTERN_STATEMENT:
+				sequence_ExternStatement(context, (ExternStatement) semanticObject); 
+				return; 
+			case ThingMLPackage.EXTERNAL_CONNECTOR:
+				sequence_ExternalConnector(context, (ExternalConnector) semanticObject); 
+				return; 
+			case ThingMLPackage.FILTER:
+				sequence_Filter(context, (Filter) semanticObject); 
+				return; 
+			case ThingMLPackage.FINAL_STATE:
+				sequence_FinalState(context, (FinalState) semanticObject); 
+				return; 
+			case ThingMLPackage.FUNCTION:
+				sequence_Function(context, (Function) semanticObject); 
+				return; 
+			case ThingMLPackage.FUNCTION_CALL_EXPRESSION:
+				sequence_FunctionCallExpression(context, (FunctionCallExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.FUNCTION_CALL_STATEMENT:
+				sequence_FunctionCallStatement(context, (FunctionCallStatement) semanticObject); 
+				return; 
+			case ThingMLPackage.GREATER_EXPRESSION:
+				sequence_Comparaison(context, (GreaterExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.GREATER_OR_EQUAL_EXPRESSION:
+				sequence_Comparaison(context, (GreaterOrEqualExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.IMPORT:
+				sequence_Import(context, (Import) semanticObject); 
+				return; 
+			case ThingMLPackage.INCREMENT:
+				sequence_Increment(context, (Increment) semanticObject); 
+				return; 
+			case ThingMLPackage.INSTANCE:
+				sequence_Instance(context, (Instance) semanticObject); 
+				return; 
+			case ThingMLPackage.INSTANCE_REF:
+				sequence_InstanceRef(context, (InstanceRef) semanticObject); 
+				return; 
+			case ThingMLPackage.INTEGER_LITERAL:
+				sequence_IntegerLiteral(context, (IntegerLiteral) semanticObject); 
+				return; 
+			case ThingMLPackage.INTERNAL_PORT:
+				sequence_InternalPort(context, (InternalPort) semanticObject); 
+				return; 
+			case ThingMLPackage.INTERNAL_TRANSITION:
+				sequence_InternalTransition(context, (InternalTransition) semanticObject); 
+				return; 
+			case ThingMLPackage.JOIN_SOURCES:
+				sequence_JoinSources(context, (JoinSources) semanticObject); 
+				return; 
+			case ThingMLPackage.LENGTH_ARRAY:
+				sequence_LengthArray(context, (LengthArray) semanticObject); 
+				return; 
+			case ThingMLPackage.LENGTH_WINDOW:
+				sequence_LengthWindow(context, (LengthWindow) semanticObject); 
+				return; 
+			case ThingMLPackage.LOCAL_VARIABLE:
+				sequence_LocalVariable(context, (LocalVariable) semanticObject); 
+				return; 
+			case ThingMLPackage.LOOP_ACTION:
+				sequence_LoopAction(context, (LoopAction) semanticObject); 
+				return; 
+			case ThingMLPackage.LOWER_EXPRESSION:
+				sequence_Comparaison(context, (LowerExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.LOWER_OR_EQUAL_EXPRESSION:
+				sequence_Comparaison(context, (LowerOrEqualExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.MERGE_SOURCES:
+				sequence_MergeSources(context, (MergeSources) semanticObject); 
+				return; 
+			case ThingMLPackage.MESSAGE:
+				sequence_Message(context, (Message) semanticObject); 
+				return; 
+			case ThingMLPackage.MESSAGE_PARAMETER:
+				sequence_MessageParameter(context, (MessageParameter) semanticObject); 
+				return; 
+			case ThingMLPackage.MINUS_EXPRESSION:
+				sequence_Addition(context, (MinusExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.MOD_EXPRESSION:
+				sequence_Modulo(context, (ModExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.NOT_EQUALS_EXPRESSION:
+				sequence_Equality(context, (NotEqualsExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.NOT_EXPRESSION:
+				sequence_Primary(context, (NotExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.OBJECT_TYPE:
+				sequence_ObjectType(context, (ObjectType) semanticObject); 
+				return; 
+			case ThingMLPackage.OR_EXPRESSION:
+				sequence_OrExpression(context, (OrExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.PARALLEL_REGION:
+				sequence_ParallelRegion(context, (ParallelRegion) semanticObject); 
+				return; 
+			case ThingMLPackage.PARAMETER:
+				sequence_Parameter(context, (org.thingml.xtext.thingML.Parameter) semanticObject); 
+				return; 
+			case ThingMLPackage.PLATFORM_ANNOTATION:
+				sequence_PlatformAnnotation(context, (PlatformAnnotation) semanticObject); 
+				return; 
+			case ThingMLPackage.PLUS_EXPRESSION:
+				sequence_Addition(context, (PlusExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.PRIMITIVE_TYPE:
+				sequence_PrimitiveType(context, (PrimitiveType) semanticObject); 
+				return; 
+			case ThingMLPackage.PRINT_ACTION:
+				sequence_PrintAction(context, (PrintAction) semanticObject); 
+				return; 
+			case ThingMLPackage.PROPERTY:
+				sequence_Property(context, (Property) semanticObject); 
+				return; 
+			case ThingMLPackage.PROPERTY_ASSIGN:
+				sequence_PropertyAssign(context, (PropertyAssign) semanticObject); 
+				return; 
+			case ThingMLPackage.PROPERTY_REFERENCE:
+				sequence_PropertyReference(context, (PropertyReference) semanticObject); 
+				return; 
+			case ThingMLPackage.PROTOCOL:
+				sequence_Protocol(context, (Protocol) semanticObject); 
+				return; 
+			case ThingMLPackage.PROVIDED_PORT:
+				sequence_ProvidedPort(context, (ProvidedPort) semanticObject); 
+				return; 
+			case ThingMLPackage.RECEIVE_MESSAGE:
+				sequence_ReceiveMessage(context, (ReceiveMessage) semanticObject); 
+				return; 
+			case ThingMLPackage.REFERENCE:
+				sequence_Reference(context, (Reference) semanticObject); 
+				return; 
+			case ThingMLPackage.REQUIRED_PORT:
+				sequence_RequiredPort(context, (RequiredPort) semanticObject); 
+				return; 
+			case ThingMLPackage.RETURN_ACTION:
+				sequence_ReturnAction(context, (ReturnAction) semanticObject); 
+				return; 
+			case ThingMLPackage.SEND_ACTION:
+				sequence_SendAction(context, (SendAction) semanticObject); 
+				return; 
+			case ThingMLPackage.SESSION:
+				sequence_Session(context, (Session) semanticObject); 
+				return; 
+			case ThingMLPackage.SIMPLE_PARAM_REF:
+				sequence_SimpleParamRef(context, (SimpleParamRef) semanticObject); 
+				return; 
+			case ThingMLPackage.SIMPLE_SOURCE:
+				sequence_SimpleSource(context, (SimpleSource) semanticObject); 
+				return; 
+			case ThingMLPackage.START_SESSION:
+				sequence_StartSession(context, (StartSession) semanticObject); 
+				return; 
+			case ThingMLPackage.STATE:
+				sequence_State(context, (State) semanticObject); 
+				return; 
+			case ThingMLPackage.STREAM:
+				sequence_Stream(context, (Stream) semanticObject); 
+				return; 
+			case ThingMLPackage.STRING_LITERAL:
+				sequence_StringLiteral(context, (StringLiteral) semanticObject); 
 				return; 
 			case ThingMLPackage.THING:
 				sequence_Thing(context, (Thing) semanticObject); 
+				return; 
+			case ThingMLPackage.THING_ML_MODEL:
+				sequence_ThingMLModel(context, (ThingMLModel) semanticObject); 
+				return; 
+			case ThingMLPackage.TIME_WINDOW:
+				sequence_TimeWindow(context, (TimeWindow) semanticObject); 
+				return; 
+			case ThingMLPackage.TIMES_EXPRESSION:
+				sequence_Multiplication(context, (TimesExpression) semanticObject); 
+				return; 
+			case ThingMLPackage.TRANSITION:
+				sequence_Transition(context, (Transition) semanticObject); 
+				return; 
+			case ThingMLPackage.TYPE_REF:
+				sequence_TypeRef(context, (TypeRef) semanticObject); 
+				return; 
+			case ThingMLPackage.UNARY_MINUS:
+				sequence_Primary(context, (UnaryMinus) semanticObject); 
+				return; 
+			case ThingMLPackage.VARIABLE_ASSIGNMENT:
+				sequence_VariableAssignment(context, (VariableAssignment) semanticObject); 
 				return; 
 			}
 		if (errorAcceptor != null)
@@ -46,31 +378,2023 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
-	 *     Model returns Model
+	 *     Action returns ActionBlock
+	 *     ActionBlock returns ActionBlock
 	 *
 	 * Constraint:
-	 *     greetings+=Thing+
+	 *     actions+=Action*
 	 */
-	protected void sequence_Model(ISerializationContext context, Model semanticObject) {
+	protected void sequence_ActionBlock(ISerializationContext context, ActionBlock semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     Expression returns MinusExpression
+	 *     OrExpression returns MinusExpression
+	 *     OrExpression.OrExpression_1_0 returns MinusExpression
+	 *     AndExpression returns MinusExpression
+	 *     AndExpression.AndExpression_1_0 returns MinusExpression
+	 *     Equality returns MinusExpression
+	 *     Equality.EqualsExpression_1_0_0 returns MinusExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns MinusExpression
+	 *     Comparaison returns MinusExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns MinusExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns MinusExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns MinusExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns MinusExpression
+	 *     Addition returns MinusExpression
+	 *     Addition.PlusExpression_1_0_0 returns MinusExpression
+	 *     Addition.MinusExpression_1_1_0 returns MinusExpression
+	 *     Multiplication returns MinusExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns MinusExpression
+	 *     Multiplication.DivExpression_1_1_0 returns MinusExpression
+	 *     Modulo returns MinusExpression
+	 *     Modulo.ModExpression_1_0 returns MinusExpression
+	 *     Primary returns MinusExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Addition_MinusExpression_1_1_0 rhs=Multiplication)
+	 */
+	protected void sequence_Addition(ISerializationContext context, MinusExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.MINUS_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.MINUS_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.MINUS_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.MINUS_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getAdditionAccess().getMinusExpressionLhsAction_1_1_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getAdditionAccess().getRhsMultiplicationParserRuleCall_1_1_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns PlusExpression
+	 *     OrExpression returns PlusExpression
+	 *     OrExpression.OrExpression_1_0 returns PlusExpression
+	 *     AndExpression returns PlusExpression
+	 *     AndExpression.AndExpression_1_0 returns PlusExpression
+	 *     Equality returns PlusExpression
+	 *     Equality.EqualsExpression_1_0_0 returns PlusExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns PlusExpression
+	 *     Comparaison returns PlusExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns PlusExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns PlusExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns PlusExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns PlusExpression
+	 *     Addition returns PlusExpression
+	 *     Addition.PlusExpression_1_0_0 returns PlusExpression
+	 *     Addition.MinusExpression_1_1_0 returns PlusExpression
+	 *     Multiplication returns PlusExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns PlusExpression
+	 *     Multiplication.DivExpression_1_1_0 returns PlusExpression
+	 *     Modulo returns PlusExpression
+	 *     Modulo.ModExpression_1_0 returns PlusExpression
+	 *     Primary returns PlusExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Addition_PlusExpression_1_0_0 rhs=Multiplication)
+	 */
+	protected void sequence_Addition(ISerializationContext context, PlusExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.PLUS_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.PLUS_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.PLUS_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.PLUS_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getAdditionAccess().getPlusExpressionLhsAction_1_0_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getAdditionAccess().getRhsMultiplicationParserRuleCall_1_0_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns AndExpression
+	 *     OrExpression returns AndExpression
+	 *     OrExpression.OrExpression_1_0 returns AndExpression
+	 *     AndExpression returns AndExpression
+	 *     AndExpression.AndExpression_1_0 returns AndExpression
+	 *     Equality returns AndExpression
+	 *     Equality.EqualsExpression_1_0_0 returns AndExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns AndExpression
+	 *     Comparaison returns AndExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns AndExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns AndExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns AndExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns AndExpression
+	 *     Addition returns AndExpression
+	 *     Addition.PlusExpression_1_0_0 returns AndExpression
+	 *     Addition.MinusExpression_1_1_0 returns AndExpression
+	 *     Multiplication returns AndExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns AndExpression
+	 *     Multiplication.DivExpression_1_1_0 returns AndExpression
+	 *     Modulo returns AndExpression
+	 *     Modulo.ModExpression_1_0 returns AndExpression
+	 *     Primary returns AndExpression
+	 *
+	 * Constraint:
+	 *     (lhs=AndExpression_AndExpression_1_0 rhs=Equality)
+	 */
+	protected void sequence_AndExpression(ISerializationContext context, AndExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.AND_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.AND_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.AND_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.AND_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getAndExpressionAccess().getAndExpressionLhsAction_1_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getAndExpressionAccess().getRhsEqualityParserRuleCall_1_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns ArrayIndex
+	 *     OrExpression returns ArrayIndex
+	 *     OrExpression.OrExpression_1_0 returns ArrayIndex
+	 *     AndExpression returns ArrayIndex
+	 *     AndExpression.AndExpression_1_0 returns ArrayIndex
+	 *     Equality returns ArrayIndex
+	 *     Equality.EqualsExpression_1_0_0 returns ArrayIndex
+	 *     Equality.NotEqualsExpression_1_1_0 returns ArrayIndex
+	 *     Comparaison returns ArrayIndex
+	 *     Comparaison.GreaterExpression_1_0_0 returns ArrayIndex
+	 *     Comparaison.LowerExpression_1_1_0 returns ArrayIndex
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns ArrayIndex
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns ArrayIndex
+	 *     Addition returns ArrayIndex
+	 *     Addition.PlusExpression_1_0_0 returns ArrayIndex
+	 *     Addition.MinusExpression_1_1_0 returns ArrayIndex
+	 *     Multiplication returns ArrayIndex
+	 *     Multiplication.TimesExpression_1_0_0 returns ArrayIndex
+	 *     Multiplication.DivExpression_1_1_0 returns ArrayIndex
+	 *     Modulo returns ArrayIndex
+	 *     Modulo.ModExpression_1_0 returns ArrayIndex
+	 *     Primary returns ArrayIndex
+	 *     ArrayIndexPostfix returns ArrayIndex
+	 *
+	 * Constraint:
+	 *     (array=ArrayIndexPostfix_ArrayIndex_1_0 index=Expression)
+	 */
+	protected void sequence_ArrayIndexPostfix(ISerializationContext context, ArrayIndex semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.ARRAY_INDEX__ARRAY) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.ARRAY_INDEX__ARRAY));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.ARRAY_INDEX__INDEX) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.ARRAY_INDEX__INDEX));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getArrayIndexPostfixAccess().getArrayIndexArrayAction_1_0(), semanticObject.getArray());
+		feeder.accept(grammarAccess.getArrayIndexPostfixAccess().getIndexExpressionParserRuleCall_1_2_0(), semanticObject.getIndex());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ElmtProperty returns ArrayParamRef
+	 *     ArrayParamRef returns ArrayParamRef
+	 *
+	 * Constraint:
+	 *     parameterRef=[Parameter|ID]
+	 */
+	protected void sequence_ArrayParamRef(ISerializationContext context, ArrayParamRef semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.ARRAY_PARAM_REF__PARAMETER_REF) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.ARRAY_PARAM_REF__PARAMETER_REF));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getArrayParamRefAccess().getParameterRefParameterIDTerminalRuleCall_0_0_1(), semanticObject.getParameterRef());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns BooleanLiteral
+	 *     OrExpression returns BooleanLiteral
+	 *     OrExpression.OrExpression_1_0 returns BooleanLiteral
+	 *     AndExpression returns BooleanLiteral
+	 *     AndExpression.AndExpression_1_0 returns BooleanLiteral
+	 *     Equality returns BooleanLiteral
+	 *     Equality.EqualsExpression_1_0_0 returns BooleanLiteral
+	 *     Equality.NotEqualsExpression_1_1_0 returns BooleanLiteral
+	 *     Comparaison returns BooleanLiteral
+	 *     Comparaison.GreaterExpression_1_0_0 returns BooleanLiteral
+	 *     Comparaison.LowerExpression_1_1_0 returns BooleanLiteral
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns BooleanLiteral
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns BooleanLiteral
+	 *     Addition returns BooleanLiteral
+	 *     Addition.PlusExpression_1_0_0 returns BooleanLiteral
+	 *     Addition.MinusExpression_1_1_0 returns BooleanLiteral
+	 *     Multiplication returns BooleanLiteral
+	 *     Multiplication.TimesExpression_1_0_0 returns BooleanLiteral
+	 *     Multiplication.DivExpression_1_1_0 returns BooleanLiteral
+	 *     Modulo returns BooleanLiteral
+	 *     Modulo.ModExpression_1_0 returns BooleanLiteral
+	 *     Primary returns BooleanLiteral
+	 *     ArrayIndexPostfix returns BooleanLiteral
+	 *     ArrayIndexPostfix.ArrayIndex_1_0 returns BooleanLiteral
+	 *     AtomicExpression returns BooleanLiteral
+	 *     BooleanLiteral returns BooleanLiteral
+	 *
+	 * Constraint:
+	 *     (boolValue='true' | boolValue='false')
+	 */
+	protected void sequence_BooleanLiteral(ISerializationContext context, BooleanLiteral semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns GreaterExpression
+	 *     OrExpression returns GreaterExpression
+	 *     OrExpression.OrExpression_1_0 returns GreaterExpression
+	 *     AndExpression returns GreaterExpression
+	 *     AndExpression.AndExpression_1_0 returns GreaterExpression
+	 *     Equality returns GreaterExpression
+	 *     Equality.EqualsExpression_1_0_0 returns GreaterExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns GreaterExpression
+	 *     Comparaison returns GreaterExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns GreaterExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns GreaterExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns GreaterExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns GreaterExpression
+	 *     Addition returns GreaterExpression
+	 *     Addition.PlusExpression_1_0_0 returns GreaterExpression
+	 *     Addition.MinusExpression_1_1_0 returns GreaterExpression
+	 *     Multiplication returns GreaterExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns GreaterExpression
+	 *     Multiplication.DivExpression_1_1_0 returns GreaterExpression
+	 *     Modulo returns GreaterExpression
+	 *     Modulo.ModExpression_1_0 returns GreaterExpression
+	 *     Primary returns GreaterExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Comparaison_GreaterExpression_1_0_0 rhs=Addition)
+	 */
+	protected void sequence_Comparaison(ISerializationContext context, GreaterExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.GREATER_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.GREATER_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.GREATER_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.GREATER_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getComparaisonAccess().getGreaterExpressionLhsAction_1_0_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_0_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns GreaterOrEqualExpression
+	 *     OrExpression returns GreaterOrEqualExpression
+	 *     OrExpression.OrExpression_1_0 returns GreaterOrEqualExpression
+	 *     AndExpression returns GreaterOrEqualExpression
+	 *     AndExpression.AndExpression_1_0 returns GreaterOrEqualExpression
+	 *     Equality returns GreaterOrEqualExpression
+	 *     Equality.EqualsExpression_1_0_0 returns GreaterOrEqualExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns GreaterOrEqualExpression
+	 *     Comparaison returns GreaterOrEqualExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns GreaterOrEqualExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns GreaterOrEqualExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns GreaterOrEqualExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns GreaterOrEqualExpression
+	 *     Addition returns GreaterOrEqualExpression
+	 *     Addition.PlusExpression_1_0_0 returns GreaterOrEqualExpression
+	 *     Addition.MinusExpression_1_1_0 returns GreaterOrEqualExpression
+	 *     Multiplication returns GreaterOrEqualExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns GreaterOrEqualExpression
+	 *     Multiplication.DivExpression_1_1_0 returns GreaterOrEqualExpression
+	 *     Modulo returns GreaterOrEqualExpression
+	 *     Modulo.ModExpression_1_0 returns GreaterOrEqualExpression
+	 *     Primary returns GreaterOrEqualExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Comparaison_GreaterOrEqualExpression_1_2_0 rhs=Addition)
+	 */
+	protected void sequence_Comparaison(ISerializationContext context, GreaterOrEqualExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.GREATER_OR_EQUAL_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.GREATER_OR_EQUAL_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.GREATER_OR_EQUAL_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.GREATER_OR_EQUAL_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getComparaisonAccess().getGreaterOrEqualExpressionLhsAction_1_2_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_2_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns LowerExpression
+	 *     OrExpression returns LowerExpression
+	 *     OrExpression.OrExpression_1_0 returns LowerExpression
+	 *     AndExpression returns LowerExpression
+	 *     AndExpression.AndExpression_1_0 returns LowerExpression
+	 *     Equality returns LowerExpression
+	 *     Equality.EqualsExpression_1_0_0 returns LowerExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns LowerExpression
+	 *     Comparaison returns LowerExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns LowerExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns LowerExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns LowerExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns LowerExpression
+	 *     Addition returns LowerExpression
+	 *     Addition.PlusExpression_1_0_0 returns LowerExpression
+	 *     Addition.MinusExpression_1_1_0 returns LowerExpression
+	 *     Multiplication returns LowerExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns LowerExpression
+	 *     Multiplication.DivExpression_1_1_0 returns LowerExpression
+	 *     Modulo returns LowerExpression
+	 *     Modulo.ModExpression_1_0 returns LowerExpression
+	 *     Primary returns LowerExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Comparaison_LowerExpression_1_1_0 rhs=Addition)
+	 */
+	protected void sequence_Comparaison(ISerializationContext context, LowerExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.LOWER_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.LOWER_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.LOWER_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.LOWER_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getComparaisonAccess().getLowerExpressionLhsAction_1_1_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_1_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns LowerOrEqualExpression
+	 *     OrExpression returns LowerOrEqualExpression
+	 *     OrExpression.OrExpression_1_0 returns LowerOrEqualExpression
+	 *     AndExpression returns LowerOrEqualExpression
+	 *     AndExpression.AndExpression_1_0 returns LowerOrEqualExpression
+	 *     Equality returns LowerOrEqualExpression
+	 *     Equality.EqualsExpression_1_0_0 returns LowerOrEqualExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns LowerOrEqualExpression
+	 *     Comparaison returns LowerOrEqualExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns LowerOrEqualExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns LowerOrEqualExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns LowerOrEqualExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns LowerOrEqualExpression
+	 *     Addition returns LowerOrEqualExpression
+	 *     Addition.PlusExpression_1_0_0 returns LowerOrEqualExpression
+	 *     Addition.MinusExpression_1_1_0 returns LowerOrEqualExpression
+	 *     Multiplication returns LowerOrEqualExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns LowerOrEqualExpression
+	 *     Multiplication.DivExpression_1_1_0 returns LowerOrEqualExpression
+	 *     Modulo returns LowerOrEqualExpression
+	 *     Modulo.ModExpression_1_0 returns LowerOrEqualExpression
+	 *     Primary returns LowerOrEqualExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Comparaison_LowerOrEqualExpression_1_3_0 rhs=Addition)
+	 */
+	protected void sequence_Comparaison(ISerializationContext context, LowerOrEqualExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.LOWER_OR_EQUAL_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.LOWER_OR_EQUAL_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.LOWER_OR_EQUAL_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.LOWER_OR_EQUAL_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getComparaisonAccess().getLowerOrEqualExpressionLhsAction_1_3_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_3_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Region returns CompositeState
+	 *     CompositeState returns CompositeState
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=ID 
+	 *         initial=[State|ID] 
+	 *         history?='history'? 
+	 *         annotations+=PlatformAnnotation* 
+	 *         properties+=Property* 
+	 *         entry=Action? 
+	 *         exit=Action? 
+	 *         (substate+=State | internal+=InternalTransition | outgoing+=Transition)* 
+	 *         region+=ParallelRegion*
+	 *     )
+	 */
+	protected void sequence_CompositeState(ISerializationContext context, CompositeState semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns CompositeState
+	 *     State returns CompositeState
+	 *
+	 * Constraint:
+	 *     (
+	 *         (
+	 *             name=ID? 
+	 *             initial=[State|ID] 
+	 *             history?='history'? 
+	 *             annotations+=PlatformAnnotation* 
+	 *             properties+=Property* 
+	 *             entry=Action? 
+	 *             exit=Action? 
+	 *             (substate+=State | internal+=InternalTransition)* 
+	 *             region+=ParallelRegion*
+	 *         ) | 
+	 *         (
+	 *             name=ID 
+	 *             initial=[State|ID] 
+	 *             history?='history'? 
+	 *             annotations+=PlatformAnnotation* 
+	 *             properties+=Property* 
+	 *             entry=Action? 
+	 *             exit=Action? 
+	 *             (substate+=State | internal+=InternalTransition | outgoing+=Transition)* 
+	 *             region+=ParallelRegion*
+	 *         )
+	 *     )
+	 */
+	protected void sequence_CompositeState_StateMachine(ISerializationContext context, CompositeState semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns ConditionalAction
+	 *     ConditionalAction returns ConditionalAction
+	 *
+	 * Constraint:
+	 *     (condition=Expression action=Action elseAction=Action?)
+	 */
+	protected void sequence_ConditionalAction(ISerializationContext context, ConditionalAction semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ConfigPropertyAssign returns ConfigPropertyAssign
+	 *
+	 * Constraint:
+	 *     (instance=InstanceRef property=[Property|ID] index+=Expression* init=Expression annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_ConfigPropertyAssign(ISerializationContext context, ConfigPropertyAssign semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Configuration
+	 *     Configuration returns Configuration
+	 *
+	 * Constraint:
+	 *     (name=ID annotations+=PlatformAnnotation* (instances+=Instance | connectors+=AbstractConnector | propassigns+=ConfigPropertyAssign)*)
+	 */
+	protected void sequence_Configuration(ISerializationContext context, Configuration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Connector
+	 *     AbstractConnector returns Connector
+	 *     Connector returns Connector
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=ID? 
+	 *         cli=InstanceRef 
+	 *         required=[RequiredPort|ID] 
+	 *         srv=InstanceRef 
+	 *         provided=[ProvidedPort|ID] 
+	 *         annotations+=PlatformAnnotation*
+	 *     )
+	 */
+	protected void sequence_Connector(ISerializationContext context, Connector semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns Decrement
+	 *     Decrement returns Decrement
+	 *
+	 * Constraint:
+	 *     var=[Variable|ID]
+	 */
+	protected void sequence_Decrement(ISerializationContext context, Decrement semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.DECREMENT__VAR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.DECREMENT__VAR));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getDecrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.getVar());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns DoubleLiteral
+	 *     OrExpression returns DoubleLiteral
+	 *     OrExpression.OrExpression_1_0 returns DoubleLiteral
+	 *     AndExpression returns DoubleLiteral
+	 *     AndExpression.AndExpression_1_0 returns DoubleLiteral
+	 *     Equality returns DoubleLiteral
+	 *     Equality.EqualsExpression_1_0_0 returns DoubleLiteral
+	 *     Equality.NotEqualsExpression_1_1_0 returns DoubleLiteral
+	 *     Comparaison returns DoubleLiteral
+	 *     Comparaison.GreaterExpression_1_0_0 returns DoubleLiteral
+	 *     Comparaison.LowerExpression_1_1_0 returns DoubleLiteral
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns DoubleLiteral
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns DoubleLiteral
+	 *     Addition returns DoubleLiteral
+	 *     Addition.PlusExpression_1_0_0 returns DoubleLiteral
+	 *     Addition.MinusExpression_1_1_0 returns DoubleLiteral
+	 *     Multiplication returns DoubleLiteral
+	 *     Multiplication.TimesExpression_1_0_0 returns DoubleLiteral
+	 *     Multiplication.DivExpression_1_1_0 returns DoubleLiteral
+	 *     Modulo returns DoubleLiteral
+	 *     Modulo.ModExpression_1_0 returns DoubleLiteral
+	 *     Primary returns DoubleLiteral
+	 *     ArrayIndexPostfix returns DoubleLiteral
+	 *     ArrayIndexPostfix.ArrayIndex_1_0 returns DoubleLiteral
+	 *     AtomicExpression returns DoubleLiteral
+	 *     DoubleLiteral returns DoubleLiteral
+	 *
+	 * Constraint:
+	 *     doubleValue=FLOAT
+	 */
+	protected void sequence_DoubleLiteral(ISerializationContext context, DoubleLiteral semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.DOUBLE_LITERAL__DOUBLE_VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.DOUBLE_LITERAL__DOUBLE_VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getDoubleLiteralAccess().getDoubleValueFLOATTerminalRuleCall_0(), semanticObject.getDoubleValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns EnumLiteralRef
+	 *     OrExpression returns EnumLiteralRef
+	 *     OrExpression.OrExpression_1_0 returns EnumLiteralRef
+	 *     AndExpression returns EnumLiteralRef
+	 *     AndExpression.AndExpression_1_0 returns EnumLiteralRef
+	 *     Equality returns EnumLiteralRef
+	 *     Equality.EqualsExpression_1_0_0 returns EnumLiteralRef
+	 *     Equality.NotEqualsExpression_1_1_0 returns EnumLiteralRef
+	 *     Comparaison returns EnumLiteralRef
+	 *     Comparaison.GreaterExpression_1_0_0 returns EnumLiteralRef
+	 *     Comparaison.LowerExpression_1_1_0 returns EnumLiteralRef
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns EnumLiteralRef
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns EnumLiteralRef
+	 *     Addition returns EnumLiteralRef
+	 *     Addition.PlusExpression_1_0_0 returns EnumLiteralRef
+	 *     Addition.MinusExpression_1_1_0 returns EnumLiteralRef
+	 *     Multiplication returns EnumLiteralRef
+	 *     Multiplication.TimesExpression_1_0_0 returns EnumLiteralRef
+	 *     Multiplication.DivExpression_1_1_0 returns EnumLiteralRef
+	 *     Modulo returns EnumLiteralRef
+	 *     Modulo.ModExpression_1_0 returns EnumLiteralRef
+	 *     Primary returns EnumLiteralRef
+	 *     ArrayIndexPostfix returns EnumLiteralRef
+	 *     ArrayIndexPostfix.ArrayIndex_1_0 returns EnumLiteralRef
+	 *     AtomicExpression returns EnumLiteralRef
+	 *     EnumLiteralRef returns EnumLiteralRef
+	 *
+	 * Constraint:
+	 *     (enum=[Enumeration|ID] literal=[EnumerationLiteral|ID])
+	 */
+	protected void sequence_EnumLiteralRef(ISerializationContext context, EnumLiteralRef semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.ENUM_LITERAL_REF__ENUM) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.ENUM_LITERAL_REF__ENUM));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.ENUM_LITERAL_REF__LITERAL) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.ENUM_LITERAL_REF__LITERAL));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getEnumLiteralRefAccess().getEnumEnumerationIDTerminalRuleCall_0_0_1(), semanticObject.getEnum());
+		feeder.accept(grammarAccess.getEnumLiteralRefAccess().getLiteralEnumerationLiteralIDTerminalRuleCall_2_0_1(), semanticObject.getLiteral());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     EnumerationLiteral returns EnumerationLiteral
+	 *
+	 * Constraint:
+	 *     (name=ID annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_EnumerationLiteral(ISerializationContext context, EnumerationLiteral semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Enumeration
+	 *     Type returns Enumeration
+	 *     Enumeration returns Enumeration
+	 *
+	 * Constraint:
+	 *     (name=ID annotations+=PlatformAnnotation* literals+=EnumerationLiteral*)
+	 */
+	protected void sequence_Enumeration(ISerializationContext context, Enumeration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns EqualsExpression
+	 *     OrExpression returns EqualsExpression
+	 *     OrExpression.OrExpression_1_0 returns EqualsExpression
+	 *     AndExpression returns EqualsExpression
+	 *     AndExpression.AndExpression_1_0 returns EqualsExpression
+	 *     Equality returns EqualsExpression
+	 *     Equality.EqualsExpression_1_0_0 returns EqualsExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns EqualsExpression
+	 *     Comparaison returns EqualsExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns EqualsExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns EqualsExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns EqualsExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns EqualsExpression
+	 *     Addition returns EqualsExpression
+	 *     Addition.PlusExpression_1_0_0 returns EqualsExpression
+	 *     Addition.MinusExpression_1_1_0 returns EqualsExpression
+	 *     Multiplication returns EqualsExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns EqualsExpression
+	 *     Multiplication.DivExpression_1_1_0 returns EqualsExpression
+	 *     Modulo returns EqualsExpression
+	 *     Modulo.ModExpression_1_0 returns EqualsExpression
+	 *     Primary returns EqualsExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Equality_EqualsExpression_1_0_0 rhs=Comparaison)
+	 */
+	protected void sequence_Equality(ISerializationContext context, EqualsExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.EQUALS_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.EQUALS_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.EQUALS_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.EQUALS_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getEqualityAccess().getEqualsExpressionLhsAction_1_0_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getEqualityAccess().getRhsComparaisonParserRuleCall_1_0_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns NotEqualsExpression
+	 *     OrExpression returns NotEqualsExpression
+	 *     OrExpression.OrExpression_1_0 returns NotEqualsExpression
+	 *     AndExpression returns NotEqualsExpression
+	 *     AndExpression.AndExpression_1_0 returns NotEqualsExpression
+	 *     Equality returns NotEqualsExpression
+	 *     Equality.EqualsExpression_1_0_0 returns NotEqualsExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns NotEqualsExpression
+	 *     Comparaison returns NotEqualsExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns NotEqualsExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns NotEqualsExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns NotEqualsExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns NotEqualsExpression
+	 *     Addition returns NotEqualsExpression
+	 *     Addition.PlusExpression_1_0_0 returns NotEqualsExpression
+	 *     Addition.MinusExpression_1_1_0 returns NotEqualsExpression
+	 *     Multiplication returns NotEqualsExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns NotEqualsExpression
+	 *     Multiplication.DivExpression_1_1_0 returns NotEqualsExpression
+	 *     Modulo returns NotEqualsExpression
+	 *     Modulo.ModExpression_1_0 returns NotEqualsExpression
+	 *     Primary returns NotEqualsExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Equality_NotEqualsExpression_1_1_0 rhs=Comparaison)
+	 */
+	protected void sequence_Equality(ISerializationContext context, NotEqualsExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.NOT_EQUALS_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.NOT_EQUALS_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.NOT_EQUALS_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.NOT_EQUALS_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getEqualityAccess().getNotEqualsExpressionLhsAction_1_1_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getEqualityAccess().getRhsComparaisonParserRuleCall_1_1_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns ErrorAction
+	 *     ErrorAction returns ErrorAction
+	 *
+	 * Constraint:
+	 *     msg=Expression
+	 */
+	protected void sequence_ErrorAction(ISerializationContext context, ErrorAction semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.ERROR_ACTION__MSG) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.ERROR_ACTION__MSG));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getErrorActionAccess().getMsgExpressionParserRuleCall_1_0(), semanticObject.getMsg());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns ExternExpression
+	 *     OrExpression returns ExternExpression
+	 *     OrExpression.OrExpression_1_0 returns ExternExpression
+	 *     AndExpression returns ExternExpression
+	 *     AndExpression.AndExpression_1_0 returns ExternExpression
+	 *     Equality returns ExternExpression
+	 *     Equality.EqualsExpression_1_0_0 returns ExternExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns ExternExpression
+	 *     Comparaison returns ExternExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns ExternExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns ExternExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns ExternExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns ExternExpression
+	 *     Addition returns ExternExpression
+	 *     Addition.PlusExpression_1_0_0 returns ExternExpression
+	 *     Addition.MinusExpression_1_1_0 returns ExternExpression
+	 *     Multiplication returns ExternExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns ExternExpression
+	 *     Multiplication.DivExpression_1_1_0 returns ExternExpression
+	 *     Modulo returns ExternExpression
+	 *     Modulo.ModExpression_1_0 returns ExternExpression
+	 *     Primary returns ExternExpression
+	 *     ArrayIndexPostfix returns ExternExpression
+	 *     ArrayIndexPostfix.ArrayIndex_1_0 returns ExternExpression
+	 *     AtomicExpression returns ExternExpression
+	 *     ExternExpression returns ExternExpression
+	 *
+	 * Constraint:
+	 *     (expression=STRING_EXT segments+=Expression*)
+	 */
+	protected void sequence_ExternExpression(ISerializationContext context, ExternExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns ExternStatement
+	 *     ExternStatement returns ExternStatement
+	 *
+	 * Constraint:
+	 *     (statement=STRING_EXT segments+=Expression*)
+	 */
+	protected void sequence_ExternStatement(ISerializationContext context, ExternStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns ExternalConnector
+	 *     AbstractConnector returns ExternalConnector
+	 *     ExternalConnector returns ExternalConnector
+	 *
+	 * Constraint:
+	 *     (name=ID? inst=InstanceRef port=[Port|ID] protocol=[Protocol|ID] annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_ExternalConnector(ISerializationContext context, ExternalConnector semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ViewSource returns Filter
+	 *     Filter returns Filter
+	 *
+	 * Constraint:
+	 *     guard=Expression
+	 */
+	protected void sequence_Filter(ISerializationContext context, Filter semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.FILTER__GUARD) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.FILTER__GUARD));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getFilterAccess().getGuardExpressionParserRuleCall_2_0(), semanticObject.getGuard());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns FinalState
+	 *     FinalState returns FinalState
+	 *     State returns FinalState
+	 *
+	 * Constraint:
+	 *     (name=ID annotations+=PlatformAnnotation* entry=Action?)
+	 */
+	protected void sequence_FinalState(ISerializationContext context, FinalState semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns FunctionCallExpression
+	 *     OrExpression returns FunctionCallExpression
+	 *     OrExpression.OrExpression_1_0 returns FunctionCallExpression
+	 *     AndExpression returns FunctionCallExpression
+	 *     AndExpression.AndExpression_1_0 returns FunctionCallExpression
+	 *     Equality returns FunctionCallExpression
+	 *     Equality.EqualsExpression_1_0_0 returns FunctionCallExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns FunctionCallExpression
+	 *     Comparaison returns FunctionCallExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns FunctionCallExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns FunctionCallExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns FunctionCallExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns FunctionCallExpression
+	 *     Addition returns FunctionCallExpression
+	 *     Addition.PlusExpression_1_0_0 returns FunctionCallExpression
+	 *     Addition.MinusExpression_1_1_0 returns FunctionCallExpression
+	 *     Multiplication returns FunctionCallExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns FunctionCallExpression
+	 *     Multiplication.DivExpression_1_1_0 returns FunctionCallExpression
+	 *     Modulo returns FunctionCallExpression
+	 *     Modulo.ModExpression_1_0 returns FunctionCallExpression
+	 *     Primary returns FunctionCallExpression
+	 *     ArrayIndexPostfix returns FunctionCallExpression
+	 *     ArrayIndexPostfix.ArrayIndex_1_0 returns FunctionCallExpression
+	 *     AtomicExpression returns FunctionCallExpression
+	 *     FunctionCallExpression returns FunctionCallExpression
+	 *
+	 * Constraint:
+	 *     (function=[Function|ID] (parameters+=Expression parameters+=Expression*)?)
+	 */
+	protected void sequence_FunctionCallExpression(ISerializationContext context, FunctionCallExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns FunctionCallStatement
+	 *     FunctionCallStatement returns FunctionCallStatement
+	 *
+	 * Constraint:
+	 *     (function=[Function|ID] (parameters+=Expression parameters+=Expression*)?)
+	 */
+	protected void sequence_FunctionCallStatement(ISerializationContext context, FunctionCallStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Function
+	 *     Function returns Function
+	 *
+	 * Constraint:
+	 *     (name=ID (parameters+=Parameter parameters+=Parameter*)? typeRef=TypeRef? annotations+=PlatformAnnotation* body=Action)
+	 */
+	protected void sequence_Function(ISerializationContext context, Function semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Import returns Import
+	 *
+	 * Constraint:
+	 *     importURI=STRING_LIT
+	 */
+	protected void sequence_Import(ISerializationContext context, Import semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.IMPORT__IMPORT_URI) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.IMPORT__IMPORT_URI));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getImportAccess().getImportURISTRING_LITTerminalRuleCall_1_0(), semanticObject.getImportURI());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns Increment
+	 *     Increment returns Increment
+	 *
+	 * Constraint:
+	 *     var=[Variable|ID]
+	 */
+	protected void sequence_Increment(ISerializationContext context, Increment semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.INCREMENT__VAR) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.INCREMENT__VAR));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getIncrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.getVar());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     InstanceRef returns InstanceRef
+	 *
+	 * Constraint:
+	 *     instance=[Instance|ID]
+	 */
+	protected void sequence_InstanceRef(ISerializationContext context, InstanceRef semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.INSTANCE_REF__INSTANCE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.INSTANCE_REF__INSTANCE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getInstanceRefAccess().getInstanceInstanceIDTerminalRuleCall_0_1(), semanticObject.getInstance());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Instance
+	 *     Instance returns Instance
+	 *
+	 * Constraint:
+	 *     (name=ID type=[Thing|ID] annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_Instance(ISerializationContext context, Instance semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns IntegerLiteral
+	 *     OrExpression returns IntegerLiteral
+	 *     OrExpression.OrExpression_1_0 returns IntegerLiteral
+	 *     AndExpression returns IntegerLiteral
+	 *     AndExpression.AndExpression_1_0 returns IntegerLiteral
+	 *     Equality returns IntegerLiteral
+	 *     Equality.EqualsExpression_1_0_0 returns IntegerLiteral
+	 *     Equality.NotEqualsExpression_1_1_0 returns IntegerLiteral
+	 *     Comparaison returns IntegerLiteral
+	 *     Comparaison.GreaterExpression_1_0_0 returns IntegerLiteral
+	 *     Comparaison.LowerExpression_1_1_0 returns IntegerLiteral
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns IntegerLiteral
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns IntegerLiteral
+	 *     Addition returns IntegerLiteral
+	 *     Addition.PlusExpression_1_0_0 returns IntegerLiteral
+	 *     Addition.MinusExpression_1_1_0 returns IntegerLiteral
+	 *     Multiplication returns IntegerLiteral
+	 *     Multiplication.TimesExpression_1_0_0 returns IntegerLiteral
+	 *     Multiplication.DivExpression_1_1_0 returns IntegerLiteral
+	 *     Modulo returns IntegerLiteral
+	 *     Modulo.ModExpression_1_0 returns IntegerLiteral
+	 *     Primary returns IntegerLiteral
+	 *     ArrayIndexPostfix returns IntegerLiteral
+	 *     ArrayIndexPostfix.ArrayIndex_1_0 returns IntegerLiteral
+	 *     AtomicExpression returns IntegerLiteral
+	 *     IntegerLiteral returns IntegerLiteral
+	 *
+	 * Constraint:
+	 *     intValue=INT
+	 */
+	protected void sequence_IntegerLiteral(ISerializationContext context, IntegerLiteral semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.INTEGER_LITERAL__INT_VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.INTEGER_LITERAL__INT_VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getIntegerLiteralAccess().getIntValueINTTerminalRuleCall_0(), semanticObject.getIntValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns InternalPort
+	 *     Port returns InternalPort
+	 *     InternalPort returns InternalPort
+	 *
+	 * Constraint:
+	 *     (name=ID annotations+=PlatformAnnotation* ((sends+=[Message|ID] sends+=[Message|ID]*) | (receives+=[Message|ID] receives+=[Message|ID]*))*)
+	 */
+	protected void sequence_InternalPort(ISerializationContext context, InternalPort semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns InternalTransition
+	 *     Handler returns InternalTransition
+	 *     InternalTransition returns InternalTransition
+	 *
+	 * Constraint:
+	 *     (name=ID? annotations+=PlatformAnnotation* event+=Event* guard=Expression? action=Action?)
+	 */
+	protected void sequence_InternalTransition(ISerializationContext context, InternalTransition semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Source returns JoinSources
+	 *     ReferencedElmt returns JoinSources
+	 *     JoinSources returns JoinSources
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=ID 
+	 *         sources+=Source 
+	 *         sources+=Source* 
+	 *         resultMessage=[Message|ID] 
+	 *         rules+=Expression 
+	 *         rules+=Expression* 
+	 *         operators+=ViewSource*
+	 *     )
+	 */
+	protected void sequence_JoinSources(ISerializationContext context, JoinSources semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ElmtProperty returns LengthArray
+	 *     LengthArray returns LengthArray
+	 *
+	 * Constraint:
+	 *     {LengthArray}
+	 */
+	protected void sequence_LengthArray(ISerializationContext context, LengthArray semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ViewSource returns LengthWindow
+	 *     LengthWindow returns LengthWindow
+	 *
+	 * Constraint:
+	 *     (size=Expression step=Expression?)
+	 */
+	protected void sequence_LengthWindow(ISerializationContext context, LengthWindow semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns LocalVariable
+	 *     ReferencedElmt returns LocalVariable
+	 *     Action returns LocalVariable
+	 *     Variable returns LocalVariable
+	 *     LocalVariable returns LocalVariable
+	 *
+	 * Constraint:
+	 *     (changeable?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_LocalVariable(ISerializationContext context, LocalVariable semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns LoopAction
+	 *     LoopAction returns LoopAction
+	 *
+	 * Constraint:
+	 *     (condition=Expression action=Action)
+	 */
+	protected void sequence_LoopAction(ISerializationContext context, LoopAction semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.LOOP_ACTION__CONDITION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.LOOP_ACTION__CONDITION));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.LOOP_ACTION__ACTION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.LOOP_ACTION__ACTION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getLoopActionAccess().getConditionExpressionParserRuleCall_2_0(), semanticObject.getCondition());
+		feeder.accept(grammarAccess.getLoopActionAccess().getActionActionParserRuleCall_4_0(), semanticObject.getAction());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Source returns MergeSources
+	 *     ReferencedElmt returns MergeSources
+	 *     MergeSources returns MergeSources
+	 *
+	 * Constraint:
+	 *     (name=ID sources+=Source sources+=Source* resultMessage=[Message|ID] operators+=ViewSource*)
+	 */
+	protected void sequence_MergeSources(ISerializationContext context, MergeSources semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ReferencedElmt returns MessageParameter
+	 *     MessageParameter returns MessageParameter
+	 *
+	 * Constraint:
+	 *     (name=ID msgRef=[Message|ID])
+	 */
+	protected void sequence_MessageParameter(ISerializationContext context, MessageParameter semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.MESSAGE_PARAMETER__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.MESSAGE_PARAMETER__NAME));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.MESSAGE_PARAMETER__MSG_REF) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.MESSAGE_PARAMETER__MSG_REF));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getMessageParameterAccess().getNameIDTerminalRuleCall_0_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getMessageParameterAccess().getMsgRefMessageIDTerminalRuleCall_2_0_1(), semanticObject.getMsgRef());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Message
+	 *     Message returns Message
+	 *     ReferencedElmt returns Message
+	 *
+	 * Constraint:
+	 *     (name=ID (parameters+=Parameter parameters+=Parameter*)? annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_Message(ISerializationContext context, Message semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns ModExpression
+	 *     OrExpression returns ModExpression
+	 *     OrExpression.OrExpression_1_0 returns ModExpression
+	 *     AndExpression returns ModExpression
+	 *     AndExpression.AndExpression_1_0 returns ModExpression
+	 *     Equality returns ModExpression
+	 *     Equality.EqualsExpression_1_0_0 returns ModExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns ModExpression
+	 *     Comparaison returns ModExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns ModExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns ModExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns ModExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns ModExpression
+	 *     Addition returns ModExpression
+	 *     Addition.PlusExpression_1_0_0 returns ModExpression
+	 *     Addition.MinusExpression_1_1_0 returns ModExpression
+	 *     Multiplication returns ModExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns ModExpression
+	 *     Multiplication.DivExpression_1_1_0 returns ModExpression
+	 *     Modulo returns ModExpression
+	 *     Modulo.ModExpression_1_0 returns ModExpression
+	 *     Primary returns ModExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Modulo_ModExpression_1_0 rhs=Expression)
+	 */
+	protected void sequence_Modulo(ISerializationContext context, ModExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.MOD_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.MOD_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.MOD_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.MOD_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getModuloAccess().getModExpressionLhsAction_1_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getModuloAccess().getRhsExpressionParserRuleCall_1_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns DivExpression
+	 *     OrExpression returns DivExpression
+	 *     OrExpression.OrExpression_1_0 returns DivExpression
+	 *     AndExpression returns DivExpression
+	 *     AndExpression.AndExpression_1_0 returns DivExpression
+	 *     Equality returns DivExpression
+	 *     Equality.EqualsExpression_1_0_0 returns DivExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns DivExpression
+	 *     Comparaison returns DivExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns DivExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns DivExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns DivExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns DivExpression
+	 *     Addition returns DivExpression
+	 *     Addition.PlusExpression_1_0_0 returns DivExpression
+	 *     Addition.MinusExpression_1_1_0 returns DivExpression
+	 *     Multiplication returns DivExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns DivExpression
+	 *     Multiplication.DivExpression_1_1_0 returns DivExpression
+	 *     Modulo returns DivExpression
+	 *     Modulo.ModExpression_1_0 returns DivExpression
+	 *     Primary returns DivExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Multiplication_DivExpression_1_1_0 rhs=Modulo)
+	 */
+	protected void sequence_Multiplication(ISerializationContext context, DivExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.DIV_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.DIV_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.DIV_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.DIV_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getMultiplicationAccess().getDivExpressionLhsAction_1_1_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getMultiplicationAccess().getRhsModuloParserRuleCall_1_1_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns TimesExpression
+	 *     OrExpression returns TimesExpression
+	 *     OrExpression.OrExpression_1_0 returns TimesExpression
+	 *     AndExpression returns TimesExpression
+	 *     AndExpression.AndExpression_1_0 returns TimesExpression
+	 *     Equality returns TimesExpression
+	 *     Equality.EqualsExpression_1_0_0 returns TimesExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns TimesExpression
+	 *     Comparaison returns TimesExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns TimesExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns TimesExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns TimesExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns TimesExpression
+	 *     Addition returns TimesExpression
+	 *     Addition.PlusExpression_1_0_0 returns TimesExpression
+	 *     Addition.MinusExpression_1_1_0 returns TimesExpression
+	 *     Multiplication returns TimesExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns TimesExpression
+	 *     Multiplication.DivExpression_1_1_0 returns TimesExpression
+	 *     Modulo returns TimesExpression
+	 *     Modulo.ModExpression_1_0 returns TimesExpression
+	 *     Primary returns TimesExpression
+	 *
+	 * Constraint:
+	 *     (lhs=Multiplication_TimesExpression_1_0_0 rhs=Modulo)
+	 */
+	protected void sequence_Multiplication(ISerializationContext context, TimesExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.TIMES_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.TIMES_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.TIMES_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.TIMES_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getMultiplicationAccess().getTimesExpressionLhsAction_1_0_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getMultiplicationAccess().getRhsModuloParserRuleCall_1_0_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns ObjectType
+	 *     Type returns ObjectType
+	 *     ObjectType returns ObjectType
+	 *
+	 * Constraint:
+	 *     (name=ID annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_ObjectType(ISerializationContext context, ObjectType semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns OrExpression
+	 *     OrExpression returns OrExpression
+	 *     OrExpression.OrExpression_1_0 returns OrExpression
+	 *     AndExpression returns OrExpression
+	 *     AndExpression.AndExpression_1_0 returns OrExpression
+	 *     Equality returns OrExpression
+	 *     Equality.EqualsExpression_1_0_0 returns OrExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns OrExpression
+	 *     Comparaison returns OrExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns OrExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns OrExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns OrExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns OrExpression
+	 *     Addition returns OrExpression
+	 *     Addition.PlusExpression_1_0_0 returns OrExpression
+	 *     Addition.MinusExpression_1_1_0 returns OrExpression
+	 *     Multiplication returns OrExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns OrExpression
+	 *     Multiplication.DivExpression_1_1_0 returns OrExpression
+	 *     Modulo returns OrExpression
+	 *     Modulo.ModExpression_1_0 returns OrExpression
+	 *     Primary returns OrExpression
+	 *
+	 * Constraint:
+	 *     (lhs=OrExpression_OrExpression_1_0 rhs=AndExpression)
+	 */
+	protected void sequence_OrExpression(ISerializationContext context, OrExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.OR_EXPRESSION__LHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.OR_EXPRESSION__LHS));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.OR_EXPRESSION__RHS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.OR_EXPRESSION__RHS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getOrExpressionAccess().getOrExpressionLhsAction_1_0(), semanticObject.getLhs());
+		feeder.accept(grammarAccess.getOrExpressionAccess().getRhsAndExpressionParserRuleCall_1_2_0(), semanticObject.getRhs());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns ParallelRegion
+	 *     Region returns ParallelRegion
+	 *     ParallelRegion returns ParallelRegion
+	 *
+	 * Constraint:
+	 *     (name=ID? initial=[State|ID] history?='history'? annotations+=PlatformAnnotation* substate+=State*)
+	 */
+	protected void sequence_ParallelRegion(ISerializationContext context, ParallelRegion semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Parameter
+	 *     Parameter returns Parameter
+	 *     ReferencedElmt returns Parameter
+	 *     Variable returns Parameter
+	 *
+	 * Constraint:
+	 *     (name=ID typeRef=TypeRef annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_Parameter(ISerializationContext context, org.thingml.xtext.thingML.Parameter semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     PlatformAnnotation returns PlatformAnnotation
+	 *
+	 * Constraint:
+	 *     (name=ID value=STRING_LIT)
+	 */
+	protected void sequence_PlatformAnnotation(ISerializationContext context, PlatformAnnotation semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.PLATFORM_ANNOTATION__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.PLATFORM_ANNOTATION__NAME));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.PLATFORM_ANNOTATION__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.PLATFORM_ANNOTATION__VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPlatformAnnotationAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getPlatformAnnotationAccess().getValueSTRING_LITTerminalRuleCall_2_0(), semanticObject.getValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns NotExpression
+	 *     OrExpression returns NotExpression
+	 *     OrExpression.OrExpression_1_0 returns NotExpression
+	 *     AndExpression returns NotExpression
+	 *     AndExpression.AndExpression_1_0 returns NotExpression
+	 *     Equality returns NotExpression
+	 *     Equality.EqualsExpression_1_0_0 returns NotExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns NotExpression
+	 *     Comparaison returns NotExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns NotExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns NotExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns NotExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns NotExpression
+	 *     Addition returns NotExpression
+	 *     Addition.PlusExpression_1_0_0 returns NotExpression
+	 *     Addition.MinusExpression_1_1_0 returns NotExpression
+	 *     Multiplication returns NotExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns NotExpression
+	 *     Multiplication.DivExpression_1_1_0 returns NotExpression
+	 *     Modulo returns NotExpression
+	 *     Modulo.ModExpression_1_0 returns NotExpression
+	 *     Primary returns NotExpression
+	 *
+	 * Constraint:
+	 *     term=Primary
+	 */
+	protected void sequence_Primary(ISerializationContext context, NotExpression semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.NOT_EXPRESSION__TERM) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.NOT_EXPRESSION__TERM));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPrimaryAccess().getTermPrimaryParserRuleCall_1_2_0(), semanticObject.getTerm());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns UnaryMinus
+	 *     OrExpression returns UnaryMinus
+	 *     OrExpression.OrExpression_1_0 returns UnaryMinus
+	 *     AndExpression returns UnaryMinus
+	 *     AndExpression.AndExpression_1_0 returns UnaryMinus
+	 *     Equality returns UnaryMinus
+	 *     Equality.EqualsExpression_1_0_0 returns UnaryMinus
+	 *     Equality.NotEqualsExpression_1_1_0 returns UnaryMinus
+	 *     Comparaison returns UnaryMinus
+	 *     Comparaison.GreaterExpression_1_0_0 returns UnaryMinus
+	 *     Comparaison.LowerExpression_1_1_0 returns UnaryMinus
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns UnaryMinus
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns UnaryMinus
+	 *     Addition returns UnaryMinus
+	 *     Addition.PlusExpression_1_0_0 returns UnaryMinus
+	 *     Addition.MinusExpression_1_1_0 returns UnaryMinus
+	 *     Multiplication returns UnaryMinus
+	 *     Multiplication.TimesExpression_1_0_0 returns UnaryMinus
+	 *     Multiplication.DivExpression_1_1_0 returns UnaryMinus
+	 *     Modulo returns UnaryMinus
+	 *     Modulo.ModExpression_1_0 returns UnaryMinus
+	 *     Primary returns UnaryMinus
+	 *
+	 * Constraint:
+	 *     term=Primary
+	 */
+	protected void sequence_Primary(ISerializationContext context, UnaryMinus semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.UNARY_MINUS__TERM) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.UNARY_MINUS__TERM));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPrimaryAccess().getTermPrimaryParserRuleCall_2_2_0(), semanticObject.getTerm());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns PrimitiveType
+	 *     Type returns PrimitiveType
+	 *     PrimitiveType returns PrimitiveType
+	 *
+	 * Constraint:
+	 *     (name=ID ByteSize=INT annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_PrimitiveType(ISerializationContext context, PrimitiveType semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns PrintAction
+	 *     PrintAction returns PrintAction
+	 *
+	 * Constraint:
+	 *     msg=Expression
+	 */
+	protected void sequence_PrintAction(ISerializationContext context, PrintAction semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.PRINT_ACTION__MSG) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.PRINT_ACTION__MSG));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPrintActionAccess().getMsgExpressionParserRuleCall_1_0(), semanticObject.getMsg());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns PropertyAssign
+	 *     PropertyAssign returns PropertyAssign
+	 *
+	 * Constraint:
+	 *     (property=[Property|ID] index+=Expression* init=Expression annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_PropertyAssign(ISerializationContext context, PropertyAssign semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns PropertyReference
+	 *     OrExpression returns PropertyReference
+	 *     OrExpression.OrExpression_1_0 returns PropertyReference
+	 *     AndExpression returns PropertyReference
+	 *     AndExpression.AndExpression_1_0 returns PropertyReference
+	 *     Equality returns PropertyReference
+	 *     Equality.EqualsExpression_1_0_0 returns PropertyReference
+	 *     Equality.NotEqualsExpression_1_1_0 returns PropertyReference
+	 *     Comparaison returns PropertyReference
+	 *     Comparaison.GreaterExpression_1_0_0 returns PropertyReference
+	 *     Comparaison.LowerExpression_1_1_0 returns PropertyReference
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns PropertyReference
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns PropertyReference
+	 *     Addition returns PropertyReference
+	 *     Addition.PlusExpression_1_0_0 returns PropertyReference
+	 *     Addition.MinusExpression_1_1_0 returns PropertyReference
+	 *     Multiplication returns PropertyReference
+	 *     Multiplication.TimesExpression_1_0_0 returns PropertyReference
+	 *     Multiplication.DivExpression_1_1_0 returns PropertyReference
+	 *     Modulo returns PropertyReference
+	 *     Modulo.ModExpression_1_0 returns PropertyReference
+	 *     Primary returns PropertyReference
+	 *     ArrayIndexPostfix returns PropertyReference
+	 *     ArrayIndexPostfix.ArrayIndex_1_0 returns PropertyReference
+	 *     AtomicExpression returns PropertyReference
+	 *     PropertyReference returns PropertyReference
+	 *
+	 * Constraint:
+	 *     property=[Variable|ID]
+	 */
+	protected void sequence_PropertyReference(ISerializationContext context, PropertyReference semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.PROPERTY_REFERENCE__PROPERTY) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.PROPERTY_REFERENCE__PROPERTY));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPropertyReferenceAccess().getPropertyVariableIDTerminalRuleCall_0_1(), semanticObject.getProperty());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Property
+	 *     Property returns Property
+	 *     ReferencedElmt returns Property
+	 *     Variable returns Property
+	 *
+	 * Constraint:
+	 *     (changeable?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_Property(ISerializationContext context, Property semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Protocol
+	 *     Protocol returns Protocol
+	 *
+	 * Constraint:
+	 *     (name=ID annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_Protocol(ISerializationContext context, Protocol semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns ProvidedPort
+	 *     Port returns ProvidedPort
+	 *     ProvidedPort returns ProvidedPort
+	 *
+	 * Constraint:
+	 *     (name=ID annotations+=PlatformAnnotation* ((sends+=[Message|ID] sends+=[Message|ID]*) | (receives+=[Message|ID] receives+=[Message|ID]*))*)
+	 */
+	protected void sequence_ProvidedPort(ISerializationContext context, ProvidedPort semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ReferencedElmt returns ReceiveMessage
+	 *     Event returns ReceiveMessage
+	 *     ReceiveMessage returns ReceiveMessage
+	 *
+	 * Constraint:
+	 *     (name=ID? port=[Port|ID] message=[Message|ID])
+	 */
+	protected void sequence_ReceiveMessage(ISerializationContext context, ReceiveMessage semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns Reference
+	 *     OrExpression returns Reference
+	 *     OrExpression.OrExpression_1_0 returns Reference
+	 *     AndExpression returns Reference
+	 *     AndExpression.AndExpression_1_0 returns Reference
+	 *     Equality returns Reference
+	 *     Equality.EqualsExpression_1_0_0 returns Reference
+	 *     Equality.NotEqualsExpression_1_1_0 returns Reference
+	 *     Comparaison returns Reference
+	 *     Comparaison.GreaterExpression_1_0_0 returns Reference
+	 *     Comparaison.LowerExpression_1_1_0 returns Reference
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns Reference
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns Reference
+	 *     Addition returns Reference
+	 *     Addition.PlusExpression_1_0_0 returns Reference
+	 *     Addition.MinusExpression_1_1_0 returns Reference
+	 *     Multiplication returns Reference
+	 *     Multiplication.TimesExpression_1_0_0 returns Reference
+	 *     Multiplication.DivExpression_1_1_0 returns Reference
+	 *     Modulo returns Reference
+	 *     Modulo.ModExpression_1_0 returns Reference
+	 *     Primary returns Reference
+	 *     ArrayIndexPostfix returns Reference
+	 *     ArrayIndexPostfix.ArrayIndex_1_0 returns Reference
+	 *     AtomicExpression returns Reference
+	 *     Reference returns Reference
+	 *
+	 * Constraint:
+	 *     (reference=[ReferencedElmt|ID] parameter=ElmtProperty)
+	 */
+	protected void sequence_Reference(ISerializationContext context, Reference semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.REFERENCE__REFERENCE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.REFERENCE__REFERENCE));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.REFERENCE__PARAMETER) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.REFERENCE__PARAMETER));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getReferenceAccess().getReferenceReferencedElmtIDTerminalRuleCall_0_0_1(), semanticObject.getReference());
+		feeder.accept(grammarAccess.getReferenceAccess().getParameterElmtPropertyParserRuleCall_2_0(), semanticObject.getParameter());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns RequiredPort
+	 *     Port returns RequiredPort
+	 *     RequiredPort returns RequiredPort
+	 *
+	 * Constraint:
+	 *     (
+	 *         optional?='optional'? 
+	 *         name=ID 
+	 *         annotations+=PlatformAnnotation* 
+	 *         ((sends+=[Message|ID] sends+=[Message|ID]*) | (receives+=[Message|ID] receives+=[Message|ID]*))*
+	 *     )
+	 */
+	protected void sequence_RequiredPort(ISerializationContext context, RequiredPort semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns ReturnAction
+	 *     ReturnAction returns ReturnAction
+	 *
+	 * Constraint:
+	 *     exp=Expression
+	 */
+	protected void sequence_ReturnAction(ISerializationContext context, ReturnAction semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.RETURN_ACTION__EXP) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.RETURN_ACTION__EXP));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getReturnActionAccess().getExpExpressionParserRuleCall_1_0(), semanticObject.getExp());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns SendAction
+	 *     SendAction returns SendAction
+	 *
+	 * Constraint:
+	 *     (port=[Port|ID] message=[Message|ID] (parameters+=Expression parameters+=Expression*)?)
+	 */
+	protected void sequence_SendAction(ISerializationContext context, SendAction semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Session
+	 *     Region returns Session
+	 *     Session returns Session
+	 *     State returns Session
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=ID 
+	 *         maxInstances=INT? 
+	 *         initial=[State|ID] 
+	 *         annotations+=PlatformAnnotation* 
+	 *         properties+=Property* 
+	 *         entry=Action? 
+	 *         exit=Action? 
+	 *         (substate+=State | internal+=InternalTransition)* 
+	 *         region+=ParallelRegion*
+	 *     )
+	 */
+	protected void sequence_Session(ISerializationContext context, Session semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ElmtProperty returns SimpleParamRef
+	 *     SimpleParamRef returns SimpleParamRef
+	 *
+	 * Constraint:
+	 *     parameterRef=[Parameter|ID]
+	 */
+	protected void sequence_SimpleParamRef(ISerializationContext context, SimpleParamRef semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.SIMPLE_PARAM_REF__PARAMETER_REF) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.SIMPLE_PARAM_REF__PARAMETER_REF));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getSimpleParamRefAccess().getParameterRefParameterIDTerminalRuleCall_0_1(), semanticObject.getParameterRef());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Source returns SimpleSource
+	 *     ReferencedElmt returns SimpleSource
+	 *     SimpleSource returns SimpleSource
+	 *
+	 * Constraint:
+	 *     (name=ID message=ReceiveMessage operators+=ViewSource*)
+	 */
+	protected void sequence_SimpleSource(ISerializationContext context, SimpleSource semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns StartSession
+	 *     StartSession returns StartSession
+	 *
+	 * Constraint:
+	 *     session=[Session|ID]
+	 */
+	protected void sequence_StartSession(ISerializationContext context, StartSession semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.START_SESSION__SESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.START_SESSION__SESSION));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getStartSessionAccess().getSessionSessionIDTerminalRuleCall_1_0_1(), semanticObject.getSession());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     StateMachine returns CompositeState
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=ID? 
+	 *         initial=[State|ID] 
+	 *         history?='history'? 
+	 *         annotations+=PlatformAnnotation* 
+	 *         properties+=Property* 
+	 *         entry=Action? 
+	 *         exit=Action? 
+	 *         (substate+=State | internal+=InternalTransition)* 
+	 *         region+=ParallelRegion*
+	 *     )
+	 */
+	protected void sequence_StateMachine(ISerializationContext context, CompositeState semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns State
+	 *     State returns State
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=ID 
+	 *         annotations+=PlatformAnnotation* 
+	 *         properties+=Property* 
+	 *         entry=Action? 
+	 *         exit=Action? 
+	 *         (internal+=InternalTransition | outgoing+=Transition)*
+	 *     )
+	 */
+	protected void sequence_State(ISerializationContext context, State semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Stream
+	 *     Stream returns Stream
+	 *
+	 * Constraint:
+	 *     (name=ID annotations+=PlatformAnnotation* input=Source (selection+=LocalVariable selection+=LocalVariable*)? output=SendAction)
+	 */
+	protected void sequence_Stream(ISerializationContext context, Stream semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns StringLiteral
+	 *     OrExpression returns StringLiteral
+	 *     OrExpression.OrExpression_1_0 returns StringLiteral
+	 *     AndExpression returns StringLiteral
+	 *     AndExpression.AndExpression_1_0 returns StringLiteral
+	 *     Equality returns StringLiteral
+	 *     Equality.EqualsExpression_1_0_0 returns StringLiteral
+	 *     Equality.NotEqualsExpression_1_1_0 returns StringLiteral
+	 *     Comparaison returns StringLiteral
+	 *     Comparaison.GreaterExpression_1_0_0 returns StringLiteral
+	 *     Comparaison.LowerExpression_1_1_0 returns StringLiteral
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns StringLiteral
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns StringLiteral
+	 *     Addition returns StringLiteral
+	 *     Addition.PlusExpression_1_0_0 returns StringLiteral
+	 *     Addition.MinusExpression_1_1_0 returns StringLiteral
+	 *     Multiplication returns StringLiteral
+	 *     Multiplication.TimesExpression_1_0_0 returns StringLiteral
+	 *     Multiplication.DivExpression_1_1_0 returns StringLiteral
+	 *     Modulo returns StringLiteral
+	 *     Modulo.ModExpression_1_0 returns StringLiteral
+	 *     Primary returns StringLiteral
+	 *     ArrayIndexPostfix returns StringLiteral
+	 *     ArrayIndexPostfix.ArrayIndex_1_0 returns StringLiteral
+	 *     AtomicExpression returns StringLiteral
+	 *     StringLiteral returns StringLiteral
+	 *
+	 * Constraint:
+	 *     stringValue=STRING_LIT
+	 */
+	protected void sequence_StringLiteral(ISerializationContext context, StringLiteral semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.STRING_LITERAL__STRING_VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.STRING_LITERAL__STRING_VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getStringLiteralAccess().getStringValueSTRING_LITTerminalRuleCall_0(), semanticObject.getStringValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ThingMLModel returns ThingMLModel
+	 *
+	 * Constraint:
+	 *     (imports+=Import+ | (imports+=Import+ (types+=Type | protocols+=Protocol | configs+=Configuration)+))?
+	 */
+	protected void sequence_ThingMLModel(ISerializationContext context, ThingMLModel semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Thing
+	 *     Type returns Thing
 	 *     Thing returns Thing
 	 *
 	 * Constraint:
-	 *     name=ID
+	 *     (
+	 *         fragment?='fragment'? 
+	 *         name=ID 
+	 *         (includes+=[Thing|ID] includes+=[Thing|ID]*)? 
+	 *         annotations+=PlatformAnnotation* 
+	 *         (
+	 *             messages+=Message | 
+	 *             ports+=Port | 
+	 *             properties+=Property | 
+	 *             functions+=Function | 
+	 *             assign+=PropertyAssign | 
+	 *             behaviour+=StateMachine | 
+	 *             streams+=Stream
+	 *         )*
+	 *     )
 	 */
 	protected void sequence_Thing(ISerializationContext context, Thing semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.THING__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.THING__NAME));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getThingAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ViewSource returns TimeWindow
+	 *     TimeWindow returns TimeWindow
+	 *
+	 * Constraint:
+	 *     (duration=Expression step=Expression?)
+	 */
+	protected void sequence_TimeWindow(ISerializationContext context, TimeWindow semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns Transition
+	 *     Handler returns Transition
+	 *     Transition returns Transition
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=ID? 
+	 *         target=[State|ID] 
+	 *         annotations+=PlatformAnnotation* 
+	 *         event+=Event* 
+	 *         guard=Expression? 
+	 *         action=Action?
+	 *     )
+	 */
+	protected void sequence_Transition(ISerializationContext context, Transition semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     TypeRef returns TypeRef
+	 *
+	 * Constraint:
+	 *     (type=[Type|ID] (isArray?='[' cardinality=Expression?)?)
+	 */
+	protected void sequence_TypeRef(ISerializationContext context, TypeRef semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Action returns VariableAssignment
+	 *     VariableAssignment returns VariableAssignment
+	 *
+	 * Constraint:
+	 *     (property=[Variable|ID] index+=Expression* expression=Expression)
+	 */
+	protected void sequence_VariableAssignment(ISerializationContext context, VariableAssignment semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

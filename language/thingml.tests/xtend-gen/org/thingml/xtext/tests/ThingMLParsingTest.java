@@ -13,22 +13,22 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.thingml.xtext.tests.ThingMLInjectorProvider;
-import org.thingml.xtext.thingML.Model;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 @RunWith(XtextRunner.class)
 @InjectWith(ThingMLInjectorProvider.class)
 @SuppressWarnings("all")
 public class ThingMLParsingTest {
   @Inject
-  private ParseHelper<Model> parseHelper;
+  private ParseHelper<ThingMLModel> parseHelper;
   
   @Test
   public void loadModel() {
     try {
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append("thing Xtext;");
+      _builder.append("thing Xtext{}");
       _builder.newLine();
-      final Model result = this.parseHelper.parse(_builder);
+      final ThingMLModel result = this.parseHelper.parse(_builder);
       Assert.assertNotNull(result);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

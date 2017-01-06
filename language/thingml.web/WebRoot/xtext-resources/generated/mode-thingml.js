@@ -1,18 +1,11 @@
 define(["ace/lib/oop", "ace/mode/text", "ace/mode/text_highlight_rules"], function(oop, mText, mTextHighlightRules) {
 	var HighlightRules = function() {
-		var keywords = "thing";
+		var keywords = "action|and|buffer|by|composite|configuration|connector|datatype|do|during|else|end|entry|enumeration|error|event|exit|false|final|fork|fragment|from|function|guard|history|if|import|includes|init|instance|internal|join|keep|keeps|length|merge|message|not|object|on|optional|or|over|port|print|produce|property|protocol|provided|readonly|receives|region|required|return|select|sends|session|set|state|statechart|stream|thing|transition|true|var|while";
 		this.$rules = {
 			"start": [
-				{token: "comment", regex: "\\/\\/.*$"},
-				{token: "comment", regex: "\\/\\*", next : "comment"},
-				{token: "string", regex: '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'},
-				{token: "string", regex: "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"},
-				{token: "constant.numeric", regex: "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"},
+				{token: "lparen", regex: "[\\[({]"},
+				{token: "rparen", regex: "[\\])}]"},
 				{token: "keyword", regex: "\\b(?:" + keywords + ")\\b"}
-			],
-			"comment": [
-				{token: "comment", regex: ".*?\\*\\/", next : "start"},
-				{token: "comment", regex: ".+"}
 			]
 		};
 	};

@@ -3,55 +3,48 @@
  */
 package org.thingml.xtext.thingML.impl;
 
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
-import org.thingml.xtext.thingML.Model;
-import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.ThingMLPackage;
+import org.thingml.xtext.thingML.Variable;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Model</b></em>'.
+ * An implementation of the model object '<em><b>Increment</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.ModelImpl#getGreetings <em>Greetings</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.IncrementImpl#getVar <em>Var</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ModelImpl extends MinimalEObjectImpl.Container implements Model
+public class IncrementImpl extends ActionImpl implements Increment
 {
   /**
-   * The cached value of the '{@link #getGreetings() <em>Greetings</em>}' containment reference list.
+   * The cached value of the '{@link #getVar() <em>Var</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getGreetings()
+   * @see #getVar()
    * @generated
    * @ordered
    */
-  protected EList<Thing> greetings;
+  protected Variable var;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected ModelImpl()
+  protected IncrementImpl()
   {
     super();
   }
@@ -64,7 +57,7 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   @Override
   protected EClass eStaticClass()
   {
-    return ThingMLPackage.Literals.MODEL;
+    return ThingMLPackage.Literals.INCREMENT;
   }
 
   /**
@@ -72,13 +65,19 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Thing> getGreetings()
+  public Variable getVar()
   {
-    if (greetings == null)
+    if (var != null && var.eIsProxy())
     {
-      greetings = new EObjectContainmentEList<Thing>(Thing.class, this, ThingMLPackage.MODEL__GREETINGS);
+      InternalEObject oldVar = (InternalEObject)var;
+      var = (Variable)eResolveProxy(oldVar);
+      if (var != oldVar)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.INCREMENT__VAR, oldVar, var));
+      }
     }
-    return greetings;
+    return var;
   }
 
   /**
@@ -86,15 +85,22 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
    * <!-- end-user-doc -->
    * @generated
    */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  public Variable basicGetVar()
   {
-    switch (featureID)
-    {
-      case ThingMLPackage.MODEL__GREETINGS:
-        return ((InternalEList<?>)getGreetings()).basicRemove(otherEnd, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
+    return var;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setVar(Variable newVar)
+  {
+    Variable oldVar = var;
+    var = newVar;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.INCREMENT__VAR, oldVar, var));
   }
 
   /**
@@ -107,8 +113,9 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   {
     switch (featureID)
     {
-      case ThingMLPackage.MODEL__GREETINGS:
-        return getGreetings();
+      case ThingMLPackage.INCREMENT__VAR:
+        if (resolve) return getVar();
+        return basicGetVar();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -118,15 +125,13 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
    * <!-- end-user-doc -->
    * @generated
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
     switch (featureID)
     {
-      case ThingMLPackage.MODEL__GREETINGS:
-        getGreetings().clear();
-        getGreetings().addAll((Collection<? extends Thing>)newValue);
+      case ThingMLPackage.INCREMENT__VAR:
+        setVar((Variable)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -142,8 +147,8 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   {
     switch (featureID)
     {
-      case ThingMLPackage.MODEL__GREETINGS:
-        getGreetings().clear();
+      case ThingMLPackage.INCREMENT__VAR:
+        setVar((Variable)null);
         return;
     }
     super.eUnset(featureID);
@@ -159,10 +164,10 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
   {
     switch (featureID)
     {
-      case ThingMLPackage.MODEL__GREETINGS:
-        return greetings != null && !greetings.isEmpty();
+      case ThingMLPackage.INCREMENT__VAR:
+        return var != null;
     }
     return super.eIsSet(featureID);
   }
 
-} //ModelImpl
+} //IncrementImpl
