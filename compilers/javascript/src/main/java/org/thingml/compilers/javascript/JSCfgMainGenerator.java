@@ -83,7 +83,11 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             } else {
                 builder.append("const ");
             }
-            builder.append(i.getName() + " = fork('" + ctx.firstToUpper(i.getType().getName()) + ".js', [\"" + i.getName() + "\", null");
+            String folder = "";
+            if (ctx.hasContextAnnotation("folder")) {
+                folder = ctx.getContextAnnotation("folder") + "/";
+            }
+            builder.append(i.getName() + " = fork('" + folder + ctx.firstToUpper(i.getType().getName()) + ".js', [\"" + i.getName() + "\", null");//FIXME: For Kevoree lib/xxx.js
         } else {
             if (useThis) {
                 builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
@@ -156,6 +160,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         builder.append(");\n");
 
         if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            if (useThis) {
+                builder.append("this.");
+            }
             builder.append(i.getName() + ".send({lc: 'new'" + mt.toString() + "});\n");
         }
 
@@ -178,13 +185,13 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             generateInstance(i, cfg, builder, ctx, useThis, debug);
         }
+    }
 
+    public static void generateConnectors(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
         String prefix = "";
         if (useThis) {
             prefix = "this.";
         }
-
-
         builder.append("//Connecting internal ports...\n");
         for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             Instance i = entries.getKey();
@@ -283,6 +290,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
         builder.append("/*$REQUIRE_PLUGINS$*/\n");
         generateInstances(cfg, builder, ctx, false);
+        generateConnectors(cfg, builder, ctx, false);
+
 
         List<Instance> instances = ConfigurationHelper.orderInstanceInit(cfg);
         Instance inst;
