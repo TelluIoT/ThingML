@@ -39,15 +39,17 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateListeners(Thing thing, StringBuilder builder, Context ctx) {
         builder.append("//callbacks for attributes\n");
-        builder.append("this.propertyListener = {};\n\n");
-        builder.append("//if (root === null || root === undefined) {//only the root can send message");
-        builder.append("//callbacks for third-party listeners\n");
-        for (Port p : ThingMLHelpers.allPorts(thing)) {
-            for (Message m : p.getSends()) {
-                builder.append("this." + m.getName() + "On" + p.getName() + "Listeners = [];\n");
+        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            builder.append("this.propertyListener = {};\n\n");
+            //builder.append("//if (root === null || root === undefined) {//only the root can send message");
+            builder.append("//callbacks for third-party listeners\n");
+            for (Port p : ThingMLHelpers.allPorts(thing)) {
+                for (Message m : p.getSends()) {
+                    builder.append("this." + m.getName() + "On" + p.getName() + "Listeners = [];\n");
+                }
             }
+            //builder.append("//}\n");
         }
-        builder.append("//}\n");
     }
 
     protected void generateSendMethods(Thing thing, StringBuilder builder, Context ctx) {//TODO: generate only for message that actually can be sent
@@ -107,6 +109,16 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("break;\n");
             builder.append("case 'stop':\n");
             builder.append("instance._stop();\n");
+            builder.append("break;\n");
+            builder.append("case 'set':\n");
+            builder.append("switch (m.property) {\n");
+            for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+                builder.append("case '" + p.getName() + "': ");
+                builder.append("instance." + ThingMLElementHelper.qname(p, "_") + "_var = m.value;\n");
+                builder.append("break;\n");
+            }
+            builder.append("default: break;\n");
+            builder.append("}\n");
             builder.append("break;\n");
             builder.append("case 'delete':\n");
             builder.append("instance._delete();\n");

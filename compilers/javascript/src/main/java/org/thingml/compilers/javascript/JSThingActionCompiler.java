@@ -70,12 +70,16 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
         if (action.getProperty().eContainer() instanceof Thing) {//we can only listen to properties of a Thing, not all local variables, etc
             builder.append("//notify listeners of that attribute\n");
-            builder.append("if (this.propertyListener['" + action.getProperty().getName() + "'] !== undefined) {\n");
-            builder.append("let " + action.getProperty().getName() + "ListenersSize = this.propertyListener['" + action.getProperty().getName() + "'].length;\n");
-            builder.append("for (let _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
-            builder.append("this.propertyListener['" + action.getProperty().getName() + "'][_i](this." + ctx.getVariableName(action.getProperty()) + ");\n");
-            builder.append("}\n}\n");
-            //builder.append("if(this.debug) console.log(this.name + \"(" + ThingMLHelpers.findContainingThing(action.getProperty()).getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + ThingMLElementHelper.qname( action.getProperty(), "_") + "_var" + " + \" to \" + this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var);\n");
+            if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+                builder.append("process.send({lc:'updated', property:'" + action.getProperty().getName() + "', value: this." + ctx.getVariableName(action.getProperty()) + "});\n");
+            } else {
+                builder.append("if (this.propertyListener['" + action.getProperty().getName() + "'] !== undefined) {\n");
+                builder.append("let " + action.getProperty().getName() + "ListenersSize = this.propertyListener['" + action.getProperty().getName() + "'].length;\n");
+                builder.append("for (let _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
+                builder.append("this.propertyListener['" + action.getProperty().getName() + "'][_i](this." + ctx.getVariableName(action.getProperty()) + ");\n");
+                builder.append("}\n}\n");
+                //builder.append("if(this.debug) console.log(this.name + \"(" + ThingMLHelpers.findContainingThing(action.getProperty()).getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + ThingMLElementHelper.qname( action.getProperty(), "_") + "_var" + " + \" to \" + this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var);\n");
+            }
         }
     }
 

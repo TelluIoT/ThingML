@@ -36,11 +36,9 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSCfgMainGenerator;
 import org.thingml.compilers.javascript.JSCompiler;
 import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.io.*;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -333,38 +331,58 @@ public class JSKevoreePlugin extends NetworkPlugin {
                         }
                     }
                 }
-                builder.append("default:\nbreak;\n");
+                builder.append("default:\n");
+                builder.append("switch(m.lc) {\n");
+                builder.append("case 'updated':\n");
+                builder.append("switch(m.property){\n");
+                for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
+                    if (p.isChangeable() && p.getCardinality() == null && p.getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
+                        String accessor = "getValue";
+                        if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getType()))) {
+                            accessor = "getNumber";
+                        }
+                        if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
+                            generateThingMLListener(builder, ctx, p, i, accessor, false);
+                        } else if (AnnotatedElementHelper.isDefined(p, "kevoree", "merge")) {
+                            generateThingMLListener(builder, ctx, p, i, accessor, true);
+                        }
+                    }
+                }
+                builder.append("default: break;\n");
+                builder.append("}");
+                builder.append("break;\n");
+                builder.append("default: break;\n");
+                builder.append("}\n");
+                builder.append("break;\n");
                 builder.append("}\n");
                 builder.append("});\n\n");
             }
         }
 
-        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
-            builder.append("/*");//TODO
-        }
 
-            for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
-                if (p.isChangeable() && p.getCardinality() == null && AnnotatedElementHelper.isDefined(p.getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
+                if (p.isChangeable() && p.getCardinality() == null && p.getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
                     String accessor = "getValue";
                     boolean isNumber = false;
-                    if (p.getType() instanceof PrimitiveType && PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getType()))) {
+                    if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getType()))) {
                         accessor = "getNumber";
                         isNumber = true;
                     }
                     if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
                         generateKevoreeListener(builder, ctx, isNumber, p, i, false, accessor);
-                        generateThingMLListener(builder, ctx, p, i, accessor, false);
+                        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+                            generateThingMLListener(builder, ctx, p, i, accessor, false);
+                        }
+
                     } else if (AnnotatedElementHelper.isDefined(p, "kevoree", "merge")) {
                         generateKevoreeListener(builder, ctx, isNumber, p, i, true, accessor);//FIXME: should generate one listener that update all thingml attribute, rather than n listeners on the same attribute that update one thingml attribute...
-                        generateThingMLListener(builder, ctx, p, i, accessor, true);
+                        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+                            generateThingMLListener(builder, ctx, p, i, accessor, true);
+                        }
                     }
                 }
             }
-        }
-
-        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
-            builder.append("*/");
         }
 
         for (Instance i : ConfigurationHelper.danglingPorts(cfg).keySet()) {
@@ -484,38 +502,63 @@ public class JSKevoreePlugin extends NetworkPlugin {
         if (isNumber) {
             builder.append("newValue = Number(newValue);\n");
         }
-        if (!isGlobal) {//per instance mapping
+        /*if (!isGlobal) {//per instance mapping
             builder.append("console.log(\"Kevoree attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
         } else {
             builder.append("console.log(\"Kevoree attribute " + ctx.getVariableName(p) + " updated...\");\n");
+        }*/
+        //builder.append("if(this." + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) { ");
+        //builder.append("console.log(\"updating ThingML attribute...\");\n");
+
+        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
+        } else {
+            builder.append("this." + i.getName() + ".send({lc: 'set', property: '" + p.getName() + "', value: newValue});");
         }
-        builder.append("if(this." + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) { ");
-        builder.append("console.log(\"updating ThingML attribute...\");\n");
-        builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
-        builder.append("}});\n");
+        //builder.append("}");
+        builder.append("});\n");
 
         //Force update on startup, as listeners might be registered too late the first time
+        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = ");
+        } else {
+            builder.append("this." + i.getName() + ".send({lc: 'set', property: '" + p.getName() + "', value: ");
+        }
         if (!isGlobal) //per instance mapping
-            builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "');");
+            builder.append("this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "')");
         else
-            builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "');");
+            builder.append("this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "')");
+        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            builder.append("})");
+        }
+        builder.append(";\n");
     }
 
     private void generateThingMLListener(StringBuilder builder, Context ctx, Property p, Instance i, String accessor, boolean isGlobal) {
-        //TODO: update so that it can also work for nodejsMT
         //Update Kevoree properties when ThingML properties are updated
-        builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {");
+        String newValue = "newValue";
+        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {");
+        } else {
+            builder.append("case '" + p.getName() + "':\n");
+            newValue = "m.value";
+        }
         //builder.append("console.log(\"ThingML attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
         if (!isGlobal)
-            builder.append("if(this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== newValue) {\n");
+            builder.append("if(this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== " + newValue + ") {\n");
         else
-            builder.append("if(this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "') !== newValue) {\n");
+            builder.append("if(this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "') !== " + newValue + ") {\n");
         //builder.append("console.log(\"updating Kevoree attribute...\");\n");
         if (!isGlobal)
-            builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + i.getName() + "_" + ctx.getVariableName(p) + " = \"'+newValue+'\"');\n");
+            builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + i.getName() + "_" + ctx.getVariableName(p) + " = \"'+" + newValue + "+'\"');\n");
         else
-            builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + ctx.getVariableName(p) + " = \"'+newValue+'\"');\n");
-        builder.append("}}.bind(this));\n");
+            builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + ctx.getVariableName(p) + " = \"'+" + newValue + "+'\"');\n");
+        builder.append("}");
+        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            builder.append("}.bind(this));\n");
+        } else {
+            builder.append("break;\n");
+        }
     }
 
     private String shortName(Instance i, Port p, Message m) {
