@@ -25,6 +25,7 @@ import org.thingml.compilers.debugGUI.DebugGUICompiler;
 import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.compilers.javascript.EspruinoCompiler;
 import org.thingml.compilers.javascript.JSCompiler;
+import org.thingml.compilers.javascript.JSMTCompiler;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.uml.PlantUMLCompiler;
 
@@ -65,6 +66,7 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new JavaCompiler());
             instance.addCompiler(new EspruinoCompiler());
             instance.addCompiler(new JSCompiler());
+            instance.addCompiler(new JSMTCompiler());
             instance.addCompiler(new PlantUMLCompiler());
             instance.addCompiler(new DebugGUICompiler());
 

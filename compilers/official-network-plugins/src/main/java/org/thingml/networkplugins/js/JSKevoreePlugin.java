@@ -65,6 +65,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
     public List<String> getTargetedLanguages() {
         List<String> res = new ArrayList<>();
         res.add("nodejs");
+        res.add("nodejsMT");
         return res;
     }
 

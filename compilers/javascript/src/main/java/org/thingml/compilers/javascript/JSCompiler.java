@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class JSCompiler extends OpaqueThingMLCompiler {
 
-    public boolean multiThreaded = true;
+    public boolean multiThreaded = false;
 
     public JSCompiler() {
         super(new JSThingActionCompiler(), new JSThingApiCompiler(), new JSCfgMainGenerator(),

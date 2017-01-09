@@ -311,8 +311,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 builder.append(inst.getName() + "._stop();\n");
                 builder.append(inst.getName() + "._delete();\n");
             }
-            builder.append("/*$STOP_PLUGINS$*/\n");
         }
+        builder.append("/*$STOP_PLUGINS$*/\n");
         builder.append("});\n\n");
     }
 }

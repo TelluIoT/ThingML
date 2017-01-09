@@ -130,14 +130,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }//TODO: changeable properties?
         builder.append(", debug) {\n\n");
-
-        //MT
-        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
-            builder.append("process.on('message', (m) => {\n");
-            builder.append("this._receive(m);\n");
-            builder.append("});\n");
-        }
-
         builder.append("this.name = name;\n");
         builder.append("this.root = root;\n");
         builder.append("this.debug = debug;\n");
