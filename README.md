@@ -170,7 +170,7 @@ In *CBSE’16: 19th International ACM Sigsoft Symposium on Component-Based Softw
 
 ### &#x1F539; How to embed ThingML in my toolchain?
 
-Embed the command-line inteface JAR [described previously in this readme](##Compile-ThingML-from-the-sources) in your classpath.
+Embed the command-line inteface JAR [described previously in this readme](#Compile-ThingML-from-the-sources) in your classpath.
 
 You can also include ThingML as a Maven dependency in your project:
 
@@ -215,7 +215,7 @@ ThingMLCompiler.saveAsThingML(myModel, "target.thingml");
 ThingMLCompiler.saveAsXMI(myModel, "target.xmi");
 ```
 
->Protip1: Make sure you have a good understanding of the [ThingML metamodel](###How-is-ThingML-formalized?)
+>Protip1: Make sure you have a good understanding of the [ThingML metamodel](#How-is-ThingML-formalized?)
 
 >Protip2: Have a look at the [helper functions](https://github.com/SINTEF-9012/ThingML/tree/master/org.thingml.model/src/main/java/org/sintef/thingml/helpers) which simplify some typical treatments
 
