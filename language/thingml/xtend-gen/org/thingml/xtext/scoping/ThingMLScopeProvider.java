@@ -19,9 +19,11 @@ import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.FunctionCallExpression;
-import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.InstanceRef;
@@ -36,12 +38,14 @@ import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.Reference;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.SendAction;
+import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
@@ -112,88 +116,80 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
                           if (_equals_9) {
                             return this.scopeForExternalConnector_Protocol(((ExternalConnector) context));
                           } else {
-                            EReference _functionCallExpression_Function = this.p.getFunctionCallExpression_Function();
-                            boolean _equals_10 = Objects.equal(reference, _functionCallExpression_Function);
-                            if (_equals_10) {
-                              return this.scopeForFunctionCallExpression_Function(((FunctionCallExpression) context));
+                            if ((Objects.equal(reference, this.p.getFunctionCallExpression_Function()) || Objects.equal(reference, this.p.getFunctionCallStatement_Function()))) {
+                              return this.scopeForFunctionCallExpressionFunctionCallStatement_Function(((FunctionCallExpression) context));
                             } else {
-                              EReference _functionCallStatement_Function = this.p.getFunctionCallStatement_Function();
-                              boolean _equals_11 = Objects.equal(reference, _functionCallStatement_Function);
-                              if (_equals_11) {
-                                return this.scopeForFunctionCallStatement_Function(((FunctionCallStatement) context));
+                              EReference _increment_Var = this.p.getIncrement_Var();
+                              boolean _equals_10 = Objects.equal(reference, _increment_Var);
+                              if (_equals_10) {
+                                return this.scopeForIncrement_Var(((Increment) context));
                               } else {
-                                EReference _increment_Var = this.p.getIncrement_Var();
-                                boolean _equals_12 = Objects.equal(reference, _increment_Var);
-                                if (_equals_12) {
-                                  return this.scopeForIncrement_Var(((Increment) context));
+                                EReference _instance_Type = this.p.getInstance_Type();
+                                boolean _equals_11 = Objects.equal(reference, _instance_Type);
+                                if (_equals_11) {
+                                  return this.scopeForInstance_Type(((Instance) context));
                                 } else {
-                                  EReference _instance_Type = this.p.getInstance_Type();
-                                  boolean _equals_13 = Objects.equal(reference, _instance_Type);
-                                  if (_equals_13) {
-                                    return this.scopeForInstance_Type(((Instance) context));
+                                  EReference _messageParameter_MsgRef = this.p.getMessageParameter_MsgRef();
+                                  boolean _equals_12 = Objects.equal(reference, _messageParameter_MsgRef);
+                                  if (_equals_12) {
+                                    return this.scopeForMessageParameter_MsgRef(((MessageParameter) context));
                                   } else {
-                                    EReference _messageParameter_MsgRef = this.p.getMessageParameter_MsgRef();
-                                    boolean _equals_14 = Objects.equal(reference, _messageParameter_MsgRef);
-                                    if (_equals_14) {
-                                      return this.scopeForMessageParameter_MsgRef(((MessageParameter) context));
+                                    EReference _propertyAssign_Property = this.p.getPropertyAssign_Property();
+                                    boolean _equals_13 = Objects.equal(reference, _propertyAssign_Property);
+                                    if (_equals_13) {
+                                      return this.scopeForPropertyAssign_Property(((PropertyAssign) context));
                                     } else {
-                                      EReference _propertyAssign_Property = this.p.getPropertyAssign_Property();
-                                      boolean _equals_15 = Objects.equal(reference, _propertyAssign_Property);
-                                      if (_equals_15) {
-                                        return this.scopeForPropertyAssign_Property(((PropertyAssign) context));
+                                      EReference _propertyReference_Property = this.p.getPropertyReference_Property();
+                                      boolean _equals_14 = Objects.equal(reference, _propertyReference_Property);
+                                      if (_equals_14) {
+                                        return this.scopeForPropertyReference_Property(((PropertyReference) context));
                                       } else {
-                                        EReference _propertyReference_Property = this.p.getPropertyReference_Property();
-                                        boolean _equals_16 = Objects.equal(reference, _propertyReference_Property);
-                                        if (_equals_16) {
-                                          return this.scopeForPropertyReference_Property(((PropertyReference) context));
+                                        EReference _receiveMessage_Port = this.p.getReceiveMessage_Port();
+                                        boolean _equals_15 = Objects.equal(reference, _receiveMessage_Port);
+                                        if (_equals_15) {
+                                          return this.scopeForReceiveMessage_Port(((ReceiveMessage) context));
                                         } else {
-                                          EReference _receiveMessage_Port = this.p.getReceiveMessage_Port();
-                                          boolean _equals_17 = Objects.equal(reference, _receiveMessage_Port);
-                                          if (_equals_17) {
-                                            return this.scopeForReceiveMessage_Port(((ReceiveMessage) context));
+                                          EReference _receiveMessage_Message = this.p.getReceiveMessage_Message();
+                                          boolean _equals_16 = Objects.equal(reference, _receiveMessage_Message);
+                                          if (_equals_16) {
+                                            return this.scopeForReceiveMessage_Message(((ReceiveMessage) context));
                                           } else {
-                                            EReference _receiveMessage_Message = this.p.getReceiveMessage_Message();
-                                            boolean _equals_18 = Objects.equal(reference, _receiveMessage_Message);
-                                            if (_equals_18) {
-                                              return this.scopeForReceiveMessage_Message(((ReceiveMessage) context));
+                                            EReference _reference_Reference = this.p.getReference_Reference();
+                                            boolean _equals_17 = Objects.equal(reference, _reference_Reference);
+                                            if (_equals_17) {
+                                              return this.scopeForReference_Reference(((Reference) context));
                                             } else {
-                                              EReference _reference_Reference = this.p.getReference_Reference();
-                                              boolean _equals_19 = Objects.equal(reference, _reference_Reference);
-                                              if (_equals_19) {
-                                                return this.scopeForReference_Reference(((Reference) context));
+                                              EReference _startSession_Session = this.p.getStartSession_Session();
+                                              boolean _equals_18 = Objects.equal(reference, _startSession_Session);
+                                              if (_equals_18) {
+                                                return this.scopeForStartSession_Session(((StartSession) context));
                                               } else {
-                                                EReference _startSession_Session = this.p.getStartSession_Session();
-                                                boolean _equals_20 = Objects.equal(reference, _startSession_Session);
-                                                if (_equals_20) {
-                                                  return this.scopeForStartSession_Session(((StartSession) context));
+                                                EReference _thing_Includes = this.p.getThing_Includes();
+                                                boolean _equals_19 = Objects.equal(reference, _thing_Includes);
+                                                if (_equals_19) {
+                                                  return this.scopeForThing_Includes(((Thing) context));
                                                 } else {
-                                                  EReference _thing_Includes = this.p.getThing_Includes();
-                                                  boolean _equals_21 = Objects.equal(reference, _thing_Includes);
-                                                  if (_equals_21) {
-                                                    return this.scopeForThing_Includes(((Thing) context));
+                                                  EReference _thingMLModel_Imports = this.p.getThingMLModel_Imports();
+                                                  boolean _equals_20 = Objects.equal(reference, _thingMLModel_Imports);
+                                                  if (_equals_20) {
+                                                    return this.scopeForThingMLModel_Imports(((ThingMLModel) context));
                                                   } else {
-                                                    EReference _thingMLModel_Imports = this.p.getThingMLModel_Imports();
-                                                    boolean _equals_22 = Objects.equal(reference, _thingMLModel_Imports);
-                                                    if (_equals_22) {
-                                                      return this.scopeForThingMLModel_Imports(((ThingMLModel) context));
+                                                    EReference _transition_Target = this.p.getTransition_Target();
+                                                    boolean _equals_21 = Objects.equal(reference, _transition_Target);
+                                                    if (_equals_21) {
+                                                      return this.scopeForTransition_Target(((Transition) context));
                                                     } else {
-                                                      EReference _transition_Target = this.p.getTransition_Target();
-                                                      boolean _equals_23 = Objects.equal(reference, _transition_Target);
-                                                      if (_equals_23) {
-                                                        return this.scopeForTransition_Target(((Transition) context));
+                                                      EReference _typeRef_Type = this.p.getTypeRef_Type();
+                                                      boolean _equals_22 = Objects.equal(reference, _typeRef_Type);
+                                                      if (_equals_22) {
+                                                        return this.scopeForTypeRef_Type(((TypeRef) context));
                                                       } else {
-                                                        EReference _typeRef_Type = this.p.getTypeRef_Type();
-                                                        boolean _equals_24 = Objects.equal(reference, _typeRef_Type);
-                                                        if (_equals_24) {
-                                                          return this.scopeForTypeRef_Type(((TypeRef) context));
+                                                        EReference _variableAssignment_Property = this.p.getVariableAssignment_Property();
+                                                        boolean _equals_23 = Objects.equal(reference, _variableAssignment_Property);
+                                                        if (_equals_23) {
+                                                          return this.scopeForVariableAssignment_Property(((VariableAssignment) context));
                                                         } else {
-                                                          EReference _variableAssignment_Property = this.p.getVariableAssignment_Property();
-                                                          boolean _equals_25 = Objects.equal(reference, _variableAssignment_Property);
-                                                          if (_equals_25) {
-                                                            return this.scopeForVariableAssignment_Property(((VariableAssignment) context));
-                                                          } else {
-                                                            System.out.println(("INFO: Resolving reference : " + reference));
-                                                          }
+                                                          System.out.println(("INFO: Resolving reference : " + reference));
                                                         }
                                                       }
                                                     }
@@ -275,15 +271,20 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
   }
   
   protected IScope scopeForDecrement_Var(final Decrement context) {
-    return Scopes.scopeFor(this.EMPTY);
+    ArrayList<Variable> _allVisibleVariables = ThingMLHelpers.allVisibleVariables(context);
+    return Scopes.scopeFor(_allVisibleVariables);
   }
   
   protected IScope scopeForEnumLiteralRef_Enum(final EnumLiteralRef context) {
-    return Scopes.scopeFor(this.EMPTY);
+    ThingMLModel _findContainingModel = ThingMLHelpers.findContainingModel(context);
+    ArrayList<Enumeration> _allEnnumerations = ThingMLHelpers.allEnnumerations(_findContainingModel);
+    return Scopes.scopeFor(_allEnnumerations);
   }
   
   protected IScope scopeForEnumLiteralRef_Literal(final EnumLiteralRef context) {
-    return Scopes.scopeFor(this.EMPTY);
+    Enumeration _enum = context.getEnum();
+    EList<EnumerationLiteral> _literals = _enum.getLiterals();
+    return Scopes.scopeFor(_literals);
   }
   
   protected IScope scopeForExternalConnector_Port(final ExternalConnector context) {
@@ -294,20 +295,21 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
     return Scopes.scopeFor(this.EMPTY);
   }
   
-  protected IScope scopeForFunctionCallExpression_Function(final FunctionCallExpression context) {
-    return Scopes.scopeFor(this.EMPTY);
-  }
-  
-  protected IScope scopeForFunctionCallStatement_Function(final FunctionCallStatement context) {
-    return Scopes.scopeFor(this.EMPTY);
+  protected IScope scopeForFunctionCallExpressionFunctionCallStatement_Function(final FunctionCallExpression context) {
+    Thing _findContainingThing = ThingMLHelpers.findContainingThing(context);
+    ArrayList<Function> _allFunctions = ThingMLHelpers.allFunctions(_findContainingThing);
+    return Scopes.scopeFor(_allFunctions);
   }
   
   protected IScope scopeForIncrement_Var(final Increment context) {
-    return Scopes.scopeFor(this.EMPTY);
+    ArrayList<Variable> _allVisibleVariables = ThingMLHelpers.allVisibleVariables(context);
+    return Scopes.scopeFor(_allVisibleVariables);
   }
   
   protected IScope scopeForInstance_Type(final Instance context) {
-    return Scopes.scopeFor(this.EMPTY);
+    ThingMLModel _findContainingModel = ThingMLHelpers.findContainingModel(context);
+    ArrayList<Thing> _allThings = ThingMLHelpers.allThings(_findContainingModel);
+    return Scopes.scopeFor(_allThings);
   }
   
   protected IScope scopeForMessageParameter_MsgRef(final MessageParameter context) {
@@ -315,19 +317,48 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
   }
   
   protected IScope scopeForPropertyAssign_Property(final PropertyAssign context) {
-    return Scopes.scopeFor(this.EMPTY);
+    IScope _xblockexpression = null;
+    {
+      final StartSession ss = ThingMLHelpers.findContainingStartSession(context);
+      boolean _notEquals = (!Objects.equal(ss, null));
+      if (_notEquals) {
+        Session _session = ss.getSession();
+        EList<Property> _properties = _session.getProperties();
+        return Scopes.scopeFor(_properties);
+      }
+      final Thing t = ThingMLHelpers.findContainingThing(context);
+      boolean _notEquals_1 = (!Objects.equal(t, null));
+      if (_notEquals_1) {
+        ArrayList<Property> _allProperties = ThingMLHelpers.allProperties(t);
+        return Scopes.scopeFor(_allProperties);
+      }
+      final Instance i = ThingMLHelpers.findContainingInstance(context);
+      boolean _notEquals_2 = (!Objects.equal(i, null));
+      if (_notEquals_2) {
+        Thing _type = i.getType();
+        ArrayList<Property> _allProperties_1 = ThingMLHelpers.allProperties(_type);
+        return Scopes.scopeFor(_allProperties_1);
+      }
+      _xblockexpression = Scopes.scopeFor(this.EMPTY);
+    }
+    return _xblockexpression;
   }
   
   protected IScope scopeForPropertyReference_Property(final PropertyReference context) {
-    return Scopes.scopeFor(this.EMPTY);
+    ArrayList<Variable> _allVisibleVariables = ThingMLHelpers.allVisibleVariables(context);
+    return Scopes.scopeFor(_allVisibleVariables);
   }
   
   protected IScope scopeForReceiveMessage_Port(final ReceiveMessage context) {
-    return Scopes.scopeFor(this.EMPTY);
+    Thing _findContainingThing = ThingMLHelpers.findContainingThing(context);
+    ArrayList<Port> _allPorts = ThingMLHelpers.allPorts(_findContainingThing);
+    return Scopes.scopeFor(_allPorts);
   }
   
   protected IScope scopeForReceiveMessage_Message(final ReceiveMessage context) {
-    return Scopes.scopeFor(this.EMPTY);
+    Port _port = context.getPort();
+    EList<Message> _receives = _port.getReceives();
+    return Scopes.scopeFor(_receives);
   }
   
   protected IScope scopeForReference_Reference(final Reference context) {

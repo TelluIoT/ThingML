@@ -34,6 +34,7 @@ import java.util.ArrayList
 import org.thingml.xtext.thingML.EnumLiteralRef
 import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.helpers.ConfigurationHelper
+import org.thingml.xtext.helpers.ThingHelper
 
 /**
  * This class contains custom scoping description.
@@ -83,11 +84,8 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.externalConnector_Protocol) {
 			return scopeForExternalConnector_Protocol(context as ExternalConnector);
 		}
-		else if (reference == p.functionCallExpression_Function) {
-			return scopeForFunctionCallExpression_Function(context as FunctionCallExpression);
-		}
-		else if (reference == p.functionCallStatement_Function) {
-			return scopeForFunctionCallStatement_Function(context as FunctionCallStatement);
+		else if (reference == p.functionCallExpression_Function || reference == p.functionCallStatement_Function ) {
+			return scopeForFunctionCallExpressionFunctionCallStatement_Function(context as FunctionCallExpression);
 		}
 		else if (reference == p.increment_Var) {
 			return scopeForIncrement_Var(context as Increment);
@@ -171,63 +169,70 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	def protected IScope scopeForDecrement_Var(Decrement context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		
+		Scopes.scopeFor( ThingMLHelpers.allVisibleVariables(context) ); 
 	}
 	
 	def protected IScope scopeForEnumLiteralRef_Enum(EnumLiteralRef context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( ThingMLHelpers.allEnnumerations(ThingMLHelpers.findContainingModel(context)) ); 
 	}
 	
 	def protected IScope scopeForEnumLiteralRef_Literal(EnumLiteralRef context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( context.enum.literals ); 
 	}
 	
 	def protected IScope scopeForExternalConnector_Port(ExternalConnector context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( EMPTY ); // TODO ???
 	}
 	
 	def protected IScope scopeForExternalConnector_Protocol(ExternalConnector context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( EMPTY ); // TODO ???
 	}
 	
-	def protected IScope scopeForFunctionCallExpression_Function(FunctionCallExpression context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+	def protected IScope scopeForFunctionCallExpressionFunctionCallStatement_Function(FunctionCallExpression context) {
+		Scopes.scopeFor( ThingMLHelpers.allFunctions(ThingMLHelpers.findContainingThing(context)) ); 
 	}
 	
-	def protected IScope scopeForFunctionCallStatement_Function(FunctionCallStatement context) {
-		Scopes.scopeFor( EMPTY ); // TODO
-	}
 	
 	def protected IScope scopeForIncrement_Var(Increment context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( ThingMLHelpers.allVisibleVariables(context) ); 
 	}
 	
 	def protected IScope scopeForInstance_Type(Instance context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( ThingMLHelpers.allThings(ThingMLHelpers.findContainingModel(context)) ); 
 	}
 	
 	def protected IScope scopeForMessageParameter_MsgRef(MessageParameter context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( EMPTY ); // TODO ???
 	}
 	
 	def protected IScope scopeForPropertyAssign_Property(PropertyAssign context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		val ss = ThingMLHelpers.findContainingStartSession(context)
+		if (ss != null) return Scopes.scopeFor( ss.session.properties );
+		
+		val t = ThingMLHelpers.findContainingThing(context)
+		if (t != null) return Scopes.scopeFor( ThingMLHelpers.allProperties(t) );
+		
+		val i = ThingMLHelpers.findContainingInstance(context)
+		if (i != null) return Scopes.scopeFor( ThingMLHelpers.allProperties(i.type) );
+		
+		Scopes.scopeFor( EMPTY ); // Will not happen as long as there are no new usages of PropertyAssign
 	}
 	
 	def protected IScope scopeForPropertyReference_Property(PropertyReference context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( ThingMLHelpers.allVisibleVariables(context) ); 
 	}
 	
 	def protected IScope scopeForReceiveMessage_Port(ReceiveMessage context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( ThingMLHelpers.allPorts(ThingMLHelpers.findContainingThing(context)) );
 	}
 	
 	def protected IScope scopeForReceiveMessage_Message(ReceiveMessage context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( context.port.receives );
 	}
 	
 	def protected IScope scopeForReference_Reference(Reference context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( EMPTY ); // TODO What is this ???
 	}
 	
 	def protected IScope scopeForStartSession_Session(StartSession context) {
@@ -239,6 +244,7 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	def protected IScope scopeForThingMLModel_Imports(ThingMLModel context) {
+		// Load model into resource set and put the reference to it.
 		Scopes.scopeFor( EMPTY ); // TODO
 	}
 	
