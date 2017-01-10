@@ -16,10 +16,14 @@
  */
 package org.thingml.compilers;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.fusesource.jansi.AnsiConsole;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
@@ -40,6 +44,7 @@ import org.thingml.compilers.thing.*;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
@@ -102,8 +107,7 @@ public abstract class ThingMLCompiler {
         errors = new ArrayList<String>();
         warnings = new ArrayList<String>();
 
-        Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-        reg.getExtensionToFactoryMap().put("thingml", new ThingmlResourceFactory());
+        ThingMLCompiler.registerThingMLFactory();
 
         ResourceSet rs = new ResourceSetImpl();
         URI xmiuri = URI.createFileURI(file.getAbsolutePath());
@@ -129,6 +133,45 @@ public abstract class ThingMLCompiler {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static void registerXMIFactory() {
+        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap(
+        ).put(Resource.Factory.Registry.DEFAULT_EXTENSION,
+                new XMIResourceFactoryImpl());
+    }
+
+    private static void registerThingMLFactory() {
+        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap(
+        ).put("thingml", new ThingmlResourceFactory());
+    }
+
+    private static void save(ThingMLModel model, String location){
+        // Then you can load and save resources in the different
+        // formats using a resource set:
+        ResourceSet rs = new ResourceSetImpl();
+        //create empty xmi resource and populate it
+        Resource res = rs.createResource(URI.createFileURI(location));
+        for(ThingMLModel m : ThingMLHelpers.allThingMLModelModels(model)) {
+            EcoreUtil.resolveAll(m);
+            res.getContents().add(EcoreUtil.getRootContainer(m));
+            //res.getContents().addAll(EcoreUtil.getRootContainer(m).eContents());
+        }
+        try {
+            res.save(null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveAsXMI(final ThingMLModel model, String location) {
+        ThingMLCompiler.registerXMIFactory();
+        ThingMLCompiler.save(model, location);
+    }
+
+    public static void saveAsThingML(final ThingMLModel model, String location) {
+        ThingMLCompiler.registerThingMLFactory();
+        ThingMLCompiler.save(model, location);
     }
 
     private static boolean checkEMFErrorsAndWarnings(Resource model) {
