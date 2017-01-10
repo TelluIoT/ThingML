@@ -215,7 +215,7 @@ ThingMLCompiler.saveAsThingML(myModel, "target.thingml");
 ThingMLCompiler.saveAsXMI(myModel, "target.xmi");
 ```
 
->Protip1: Make sure you have a good understanding of the [ThingML metamodel](#-how-is-thingml-formalized?)
+>Protip1: Make sure you have a good understanding of the [ThingML metamodel](#-how-is-thingml-formalized)
 
 >Protip2: Have a look at the [helper functions](https://github.com/SINTEF-9012/ThingML/tree/master/org.thingml.model/src/main/java/org/sintef/thingml/helpers) which simplify some typical treatments
 
