@@ -11,6 +11,29 @@ import org.thingml.xtext.thingML.Port
 import org.sintef.thingml.constraints.ThingMLHelpers
 import org.thingml.xtext.thingML.Thing
 import org.eclipse.xtext.scoping.Scopes
+import org.thingml.xtext.thingML.SendAction
+import org.thingml.xtext.thingML.ConfigPropertyAssign
+import org.thingml.xtext.thingML.Connector
+import org.thingml.xtext.thingML.Decrement
+import org.thingml.xtext.thingML.ExternalConnector
+import org.thingml.xtext.thingML.FunctionCallExpression
+import org.thingml.xtext.thingML.FunctionCallStatement
+import org.thingml.xtext.thingML.Increment
+import org.thingml.xtext.thingML.Instance
+import org.thingml.xtext.thingML.MessageParameter
+import org.thingml.xtext.thingML.PropertyAssign
+import org.thingml.xtext.thingML.PropertyReference
+import org.thingml.xtext.thingML.ReceiveMessage
+import org.thingml.xtext.thingML.Reference
+import org.thingml.xtext.thingML.StartSession
+import org.thingml.xtext.thingML.ThingMLModel
+import org.thingml.xtext.thingML.Transition
+import org.thingml.xtext.thingML.TypeRef
+import org.thingml.xtext.thingML.VariableAssignment
+import java.util.ArrayList
+import org.thingml.xtext.thingML.EnumLiteralRef
+import org.thingml.xtext.thingML.Configuration
+import org.thingml.xtext.helpers.ConfigurationHelper
 
 /**
  * This class contains custom scoping description.
@@ -25,16 +48,210 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	override getScope(EObject context, EReference reference) {
 		
 		if (reference == p.port_Receives || reference == p.port_Sends) {
-			return scopeForMessagesInPort(context as Port);
-		}		
-		
-		return super.getScope(context, reference)
+			return scopeForPort_SendsReceives(context as Port);
+		}
+		else if (reference == p.sendAction_Port) {
+			return scopeForSendAction_Port(context as SendAction);
+		}
+		else if (reference == p.sendAction_Message) {
+			return scopeForSendAction_Message(context as SendAction);
+		}
+		else if (reference == p.configPropertyAssign_Property) {
+			return scopeForConfigPropertyAssign_Property(context as ConfigPropertyAssign);
+		}
+		else if (reference == p.connector_Cli || reference == p.connector_Srv) {
+			return scopeForConnector_CliSrV(context as Connector);
+		}
+		else if (reference == p.connector_Provided) {
+			return scopeForConnector_Provided(context as Connector);
+		}
+		else if (reference == p.connector_Required) {
+			return scopeForConnector_Required(context as Connector);
+		}
+		else if (reference == p.decrement_Var) {
+			return scopeForDecrement_Var(context as Decrement);
+		}
+		else if (reference == p.enumLiteralRef_Enum) {
+			return scopeForEnumLiteralRef_Enum(context as EnumLiteralRef);
+		}
+		else if (reference == p.enumLiteralRef_Literal) {
+			return scopeForEnumLiteralRef_Literal(context as EnumLiteralRef);
+		}
+		else if (reference == p.externalConnector_Port) {
+			return scopeForExternalConnector_Port(context as ExternalConnector);
+		}
+		else if (reference == p.externalConnector_Protocol) {
+			return scopeForExternalConnector_Protocol(context as ExternalConnector);
+		}
+		else if (reference == p.functionCallExpression_Function) {
+			return scopeForFunctionCallExpression_Function(context as FunctionCallExpression);
+		}
+		else if (reference == p.functionCallStatement_Function) {
+			return scopeForFunctionCallStatement_Function(context as FunctionCallStatement);
+		}
+		else if (reference == p.increment_Var) {
+			return scopeForIncrement_Var(context as Increment);
+		}
+		else if (reference == p.instance_Type) {
+			return scopeForInstance_Type(context as Instance);
+		}
+		else if (reference == p.messageParameter_MsgRef) {
+			return scopeForMessageParameter_MsgRef(context as MessageParameter);
+		}
+		else if (reference == p.propertyAssign_Property) {
+			return scopeForPropertyAssign_Property(context as PropertyAssign);
+		}
+		else if (reference == p.propertyReference_Property) {
+			return scopeForPropertyReference_Property(context as PropertyReference);
+		}
+		else if (reference == p.receiveMessage_Port) {
+			return scopeForReceiveMessage_Port(context as ReceiveMessage);
+		}
+		else if (reference == p.receiveMessage_Message) {
+			return scopeForReceiveMessage_Message(context as ReceiveMessage);
+		}
+		else if (reference == p.reference_Reference) {
+			return scopeForReference_Reference(context as Reference);
+		}
+		else if (reference == p.startSession_Session) {
+			return scopeForStartSession_Session(context as StartSession);
+		}
+		else if (reference == p.thing_Includes) {
+			return scopeForThing_Includes(context as Thing);
+		}
+		else if (reference == p.thingMLModel_Imports) {
+			return scopeForThingMLModel_Imports(context as ThingMLModel);
+		}
+		else if (reference == p.transition_Target) {
+			return scopeForTransition_Target(context as Transition);
+		}
+		else if (reference == p.typeRef_Type) {
+			return scopeForTypeRef_Type(context as TypeRef);
+		}
+		else if (reference == p.variableAssignment_Property) {
+			return scopeForVariableAssignment_Property(context as VariableAssignment);
+		}
+		else {
+			System.out.println("INFO: Resolving reference : " + reference);
+		}
+
+		// return super.getScope(context, reference)
+		return Scopes.scopeFor( EMPTY ); // USING that to make sure nothing is resoved randomly
 
 	}
 	
+	protected ArrayList EMPTY = new ArrayList();
 	
-	def protected IScope scopeForMessagesInPort(Port context) {
-		Scopes.scopeFor(ThingMLHelpers.allMessages(context.eContainer as Thing));
+	def protected IScope scopeForPort_SendsReceives(Port context) {
+		Scopes.scopeFor( ThingMLHelpers.allMessages(context.eContainer as Thing) );
+	}
+	
+	def protected IScope scopeForSendAction_Port(SendAction context) {
+		Scopes.scopeFor( ThingMLHelpers.allPorts(ThingMLHelpers.findContainingThing(context)) );
+	}
+	
+	def protected IScope scopeForSendAction_Message(SendAction context) {
+		Scopes.scopeFor( context.port.sends );
+	}
+	
+	def protected IScope scopeForConfigPropertyAssign_Property(ConfigPropertyAssign context) {
+		Scopes.scopeFor( ThingMLHelpers.allProperties(context.instance.instance.type) );
+	}
+	
+	def protected IScope scopeForConnector_CliSrV(Connector context) {
+		Scopes.scopeFor( ConfigurationHelper.allInstances(context.eContainer as Configuration) );
+	}
+	
+	def protected IScope scopeForConnector_Provided(Connector context) {
+		Scopes.scopeFor( ThingMLHelpers.allProvidedPorts(context.srv.instance.type) ); 
+	}
+	
+	def protected IScope scopeForConnector_Required(Connector context) {
+		Scopes.scopeFor( ThingMLHelpers.allRequiredPorts(context.cli.instance.type) ); 
+	}
+	
+	def protected IScope scopeForDecrement_Var(Decrement context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForEnumLiteralRef_Enum(EnumLiteralRef context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForEnumLiteralRef_Literal(EnumLiteralRef context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForExternalConnector_Port(ExternalConnector context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForExternalConnector_Protocol(ExternalConnector context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForFunctionCallExpression_Function(FunctionCallExpression context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForFunctionCallStatement_Function(FunctionCallStatement context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForIncrement_Var(Increment context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForInstance_Type(Instance context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForMessageParameter_MsgRef(MessageParameter context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForPropertyAssign_Property(PropertyAssign context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForPropertyReference_Property(PropertyReference context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForReceiveMessage_Port(ReceiveMessage context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForReceiveMessage_Message(ReceiveMessage context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForReference_Reference(Reference context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForStartSession_Session(StartSession context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForThing_Includes(Thing context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForThingMLModel_Imports(ThingMLModel context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForTransition_Target(Transition context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForTypeRef_Type(TypeRef context) {
+		Scopes.scopeFor( EMPTY ); // TODO
+	}
+	
+	def protected IScope scopeForVariableAssignment_Property(VariableAssignment context) {
+		Scopes.scopeFor( EMPTY ); // TODO
 	}
 
 }

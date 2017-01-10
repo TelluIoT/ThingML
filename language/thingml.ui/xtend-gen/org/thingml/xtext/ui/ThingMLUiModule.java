@@ -13,7 +13,7 @@ import org.thingml.xtext.ui.AbstractThingMLUiModule;
 @FinalFieldsConstructor
 @SuppressWarnings("all")
 public class ThingMLUiModule extends AbstractThingMLUiModule {
-  public ThingMLUiModule(final AbstractUIPlugin arg0) {
-    super(arg0);
+  public ThingMLUiModule(final AbstractUIPlugin plugin) {
+    super(plugin);
   }
 }

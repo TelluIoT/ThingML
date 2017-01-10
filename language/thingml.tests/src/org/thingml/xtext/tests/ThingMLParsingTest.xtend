@@ -26,5 +26,4 @@ class ThingMLParsingTest{
 		''')
 		Assert.assertNotNull(result)
 	}
-
 }
