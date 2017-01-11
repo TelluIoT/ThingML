@@ -28,6 +28,11 @@ If you are going to compile Java code from ThingML, please:
 
 - Install [Node.JS](https://nodejs.org/en/)
 
+In Eclipse, from this update site: `Node.JS - http://www.nodeclipse.org/updates/enide-2015/`, install
+
+- Features included in Enide Studio .Features Set
+- Nodeclipse Node.js .Features Set	1.0.2.201509250223
+
 ### &#x1F539; UML
 If you are going to compile UML Diagrams from ThingML, please:
 
@@ -46,6 +51,8 @@ If you are going to compile C code from ThingML, please:
 
 ## &#x1F537; Getting Started
 
+### &#x1F539; Installation
+
 The easiest way to get started with ThingML is to use the ThingML plugins in the Eclipse IDE.
 
 1. [Download Eclipse for Java Developers](https://eclipse.org/downloads/)
@@ -59,6 +66,42 @@ The easiest way to get started with ThingML is to use the ThingML plugins in the
 > Another update site is also available for ThingML at `http://thingml.org/dist/update/`. This update site contains all the latest features but might be less stable.
 
 You are now ready to use ThingML. &#x270C;
+
+### &#x1F539; Compiling ThingML code
+
+Once you have created (or imported) ThingML files in your workspace, simply right click on a ThingML file in order to compile it. A `HEADS / ThingML` should be present in the menu and you can then select which compiler to use: Java, JavaScript, C, etc.
+
+> The ThingML file you want to compile should contain a `configuration`
+
+> The generated code will be located in a `thingml-gen` folder in your current project
+
+#### How to compile and run generated Java code
+
+- Right click on `pom.xml` (in `thingml-gen/java/your-configuration`)
+- `Run as -> Maven build... `
+- In `Goals` type: `clean install exec:java`
+
+#### How to compile and run generated JavaScript (Node.JS) code
+
+- Right click on `package.json` (in `thingml-gen/nodejs/your-configuration`)
+- `Run as -> npm install `
+- Right click on `main.js`
+- `Run as -> Node Application`
+
+#### C code
+
+- Open a terminal at `...thingml-gen/nodejs/your-configuration`
+- `make`
+- `./your-configuration`
+
+#### Arduino code
+
+- Open the generated file in the Arduino IDE
+- Compile
+- Upload to your board
+
+> For information, have a look at [the Arduino documentation](https://www.arduino.cc/en/Guide/Environment)
+
 
 ## &#x1F537; Compile ThingML from the sources
 
