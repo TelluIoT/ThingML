@@ -81,6 +81,8 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 - `Run as -> Maven build... `
 - In `Goals` type: `clean install exec:java`
 
+> If Maven claims it cannot find a `pom.xml` file, change the base directory in the `Run as -> Maven build...` window using the `Workspace...` button, so that it points to `thingml-gen/java/your-configuration`.
+
 #### How to compile and run generated JavaScript (Node.JS) code
 
 - Right click on `package.json` (in `thingml-gen/nodejs/your-configuration`)
