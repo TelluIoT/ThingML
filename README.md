@@ -92,7 +92,7 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 
 #### How to visualize generated UML (PlantUML) diagrams
 
-- `Windows -> Show View -> Other... -> PlantUML`
+- `Window -> Show View -> Other... -> PlantUML`
 
 ####  How to compile and run generated C code
 
