@@ -16,8 +16,6 @@ import org.thingml.xtext.thingML.ConfigPropertyAssign
 import org.thingml.xtext.thingML.Connector
 import org.thingml.xtext.thingML.Decrement
 import org.thingml.xtext.thingML.ExternalConnector
-import org.thingml.xtext.thingML.FunctionCallExpression
-import org.thingml.xtext.thingML.FunctionCallStatement
 import org.thingml.xtext.thingML.Increment
 import org.thingml.xtext.thingML.Instance
 import org.thingml.xtext.thingML.MessageParameter
@@ -34,7 +32,7 @@ import java.util.ArrayList
 import org.thingml.xtext.thingML.EnumLiteralRef
 import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.helpers.ConfigurationHelper
-import org.thingml.xtext.helpers.ThingHelper
+import org.thingml.xtext.thingML.State
 
 /**
  * This class contains custom scoping description.
@@ -85,7 +83,7 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 			return scopeForExternalConnector_Protocol(context as ExternalConnector);
 		}
 		else if (reference == p.functionCallExpression_Function || reference == p.functionCallStatement_Function ) {
-			return scopeForFunctionCallExpressionFunctionCallStatement_Function(context as FunctionCallExpression);
+			return scopeForFunctionCallExpressionFunctionCallStatement_Function(context);
 		}
 		else if (reference == p.increment_Var) {
 			return scopeForIncrement_Var(context as Increment);
@@ -109,7 +107,7 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 			return scopeForReceiveMessage_Message(context as ReceiveMessage);
 		}
 		else if (reference == p.reference_Reference) {
-			return scopeForReference_Reference(context as Reference);
+			return scopeForReference_Reference(context);
 		}
 		else if (reference == p.startSession_Session) {
 			return scopeForStartSession_Session(context as StartSession);
@@ -117,14 +115,12 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.thing_Includes) {
 			return scopeForThing_Includes(context as Thing);
 		}
-		else if (reference == p.thingMLModel_Imports) {
-			return scopeForThingMLModel_Imports(context as ThingMLModel);
-		}
+		
 		else if (reference == p.transition_Target) {
 			return scopeForTransition_Target(context as Transition);
 		}
 		else if (reference == p.typeRef_Type) {
-			return scopeForTypeRef_Type(context as TypeRef);
+			return scopeForTypeRef_Type(context);
 		}
 		else if (reference == p.variableAssignment_Property) {
 			return scopeForVariableAssignment_Property(context as VariableAssignment);
@@ -189,7 +185,7 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		Scopes.scopeFor( EMPTY ); // TODO ???
 	}
 	
-	def protected IScope scopeForFunctionCallExpressionFunctionCallStatement_Function(FunctionCallExpression context) {
+	def protected IScope scopeForFunctionCallExpressionFunctionCallStatement_Function(EObject context) {
 		Scopes.scopeFor( ThingMLHelpers.allFunctions(ThingMLHelpers.findContainingThing(context)) ); 
 	}
 	
@@ -231,7 +227,7 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		Scopes.scopeFor( context.port.receives );
 	}
 	
-	def protected IScope scopeForReference_Reference(Reference context) {
+	def protected IScope scopeForReference_Reference(EObject context) {
 		Scopes.scopeFor( EMPTY ); // TODO What is this ???
 	}
 	
@@ -240,24 +236,20 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	def protected IScope scopeForThing_Includes(Thing context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( ThingMLHelpers.allThings(ThingMLHelpers.findContainingModel(context)) ); 
 	}
 	
-	def protected IScope scopeForThingMLModel_Imports(ThingMLModel context) {
-		// Load model into resource set and put the reference to it.
-		Scopes.scopeFor( EMPTY ); // TODO
-	}
-	
+
 	def protected IScope scopeForTransition_Target(Transition context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( ThingMLHelpers.allValidTargetStates(context.eContainer as State) ); 
 	}
 	
-	def protected IScope scopeForTypeRef_Type(TypeRef context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+	def protected IScope scopeForTypeRef_Type(EObject context) {
+		Scopes.scopeFor( ThingMLHelpers.allTypes(ThingMLHelpers.findContainingModel(context)) ); 
 	}
 	
 	def protected IScope scopeForVariableAssignment_Property(VariableAssignment context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( ThingMLHelpers.allVisibleVariables(context) );
 	}
 
 }

@@ -66,7 +66,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
     switch (eClass.getClassifierID())
     {
       case ThingMLPackage.THING_ML_MODEL: return createThingMLModel();
-      case ThingMLPackage.IMPORT: return createImport();
       case ThingMLPackage.PLATFORM_ANNOTATION: return createPlatformAnnotation();
       case ThingMLPackage.ANNOTATED_ELEMENT: return createAnnotatedElement();
       case ThingMLPackage.TYPE_REF: return createTypeRef();
@@ -175,17 +174,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     ThingMLModelImpl thingMLModel = new ThingMLModelImpl();
     return thingMLModel;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Import createImport()
-  {
-    ImportImpl import_ = new ImportImpl();
-    return import_;
   }
 
   /**

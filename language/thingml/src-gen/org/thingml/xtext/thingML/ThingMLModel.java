@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.ThingMLModel#getImports <em>Imports</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.ThingMLModel#getImportURI <em>Import URI</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.ThingMLModel#getTypes <em>Types</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.ThingMLModel#getProtocols <em>Protocols</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.ThingMLModel#getConfigs <em>Configs</em>}</li>
@@ -29,20 +29,20 @@ import org.eclipse.emf.ecore.EObject;
 public interface ThingMLModel extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Imports</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.Import}.
+   * Returns the value of the '<em><b>Import URI</b></em>' attribute list.
+   * The list contents are of type {@link java.lang.String}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Imports</em>' containment reference list isn't clear,
+   * If the meaning of the '<em>Import URI</em>' attribute list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Imports</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getThingMLModel_Imports()
-   * @model containment="true"
+   * @return the value of the '<em>Import URI</em>' attribute list.
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getThingMLModel_ImportURI()
+   * @model unique="false"
    * @generated
    */
-  EList<Import> getImports();
+  EList<String> getImportURI();
 
   /**
    * Returns the value of the '<em><b>Types</b></em>' containment reference list.

@@ -66,7 +66,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getConfigurationAccess().getAlternatives_4(), "rule__Configuration__Alternatives_4");
 					put(grammarAccess.getAbstractConnectorAccess().getAlternatives(), "rule__AbstractConnector__Alternatives");
 					put(grammarAccess.getThingMLModelAccess().getGroup(), "rule__ThingMLModel__Group__0");
-					put(grammarAccess.getImportAccess().getGroup(), "rule__Import__Group__0");
+					put(grammarAccess.getThingMLModelAccess().getGroup_0(), "rule__ThingMLModel__Group_0__0");
 					put(grammarAccess.getPlatformAnnotationAccess().getGroup(), "rule__PlatformAnnotation__Group__0");
 					put(grammarAccess.getTypeRefAccess().getGroup(), "rule__TypeRef__Group__0");
 					put(grammarAccess.getTypeRefAccess().getGroup_1(), "rule__TypeRef__Group_1__0");
@@ -214,11 +214,10 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getConfigPropertyAssignAccess().getGroup_4(), "rule__ConfigPropertyAssign__Group_4__0");
 					put(grammarAccess.getConnectorAccess().getGroup(), "rule__Connector__Group__0");
 					put(grammarAccess.getExternalConnectorAccess().getGroup(), "rule__ExternalConnector__Group__0");
-					put(grammarAccess.getThingMLModelAccess().getImportsAssignment_0(), "rule__ThingMLModel__ImportsAssignment_0");
+					put(grammarAccess.getThingMLModelAccess().getImportURIAssignment_0_1(), "rule__ThingMLModel__ImportURIAssignment_0_1");
 					put(grammarAccess.getThingMLModelAccess().getTypesAssignment_1_0(), "rule__ThingMLModel__TypesAssignment_1_0");
 					put(grammarAccess.getThingMLModelAccess().getProtocolsAssignment_1_1(), "rule__ThingMLModel__ProtocolsAssignment_1_1");
 					put(grammarAccess.getThingMLModelAccess().getConfigsAssignment_1_2(), "rule__ThingMLModel__ConfigsAssignment_1_2");
-					put(grammarAccess.getImportAccess().getImportURIAssignment_1(), "rule__Import__ImportURIAssignment_1");
 					put(grammarAccess.getPlatformAnnotationAccess().getNameAssignment_1(), "rule__PlatformAnnotation__NameAssignment_1");
 					put(grammarAccess.getPlatformAnnotationAccess().getValueAssignment_2(), "rule__PlatformAnnotation__ValueAssignment_2");
 					put(grammarAccess.getTypeRefAccess().getTypeAssignment_0(), "rule__TypeRef__TypeAssignment_0");

@@ -74,31 +74,6 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleImport
-entryRuleImport
-:
-{ before(grammarAccess.getImportRule()); }
-	 ruleImport
-{ after(grammarAccess.getImportRule()); } 
-	 EOF 
-;
-
-// Rule Import
-ruleImport 
-	@init {
-		int stackSize = keepStackSize();
-	}
-	:
-	(
-		{ before(grammarAccess.getImportAccess().getGroup()); }
-		(rule__Import__Group__0)
-		{ after(grammarAccess.getImportAccess().getGroup()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
 // Entry rule entryRulePlatformAnnotation
 entryRulePlatformAnnotation
 :
@@ -3028,9 +3003,9 @@ rule__ThingMLModel__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getThingMLModelAccess().getImportsAssignment_0()); }
-	(rule__ThingMLModel__ImportsAssignment_0)*
-	{ after(grammarAccess.getThingMLModelAccess().getImportsAssignment_0()); }
+	{ before(grammarAccess.getThingMLModelAccess().getGroup_0()); }
+	(rule__ThingMLModel__Group_0__0)*
+	{ after(grammarAccess.getThingMLModelAccess().getGroup_0()); }
 )
 ;
 finally {
@@ -3064,53 +3039,53 @@ finally {
 }
 
 
-rule__Import__Group__0
+rule__ThingMLModel__Group_0__0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__Import__Group__0__Impl
-	rule__Import__Group__1
+	rule__ThingMLModel__Group_0__0__Impl
+	rule__ThingMLModel__Group_0__1
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__Import__Group__0__Impl
+rule__ThingMLModel__Group_0__0__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getImportAccess().getImportKeyword_0()); }
+	{ before(grammarAccess.getThingMLModelAccess().getImportKeyword_0_0()); }
 	'import'
-	{ after(grammarAccess.getImportAccess().getImportKeyword_0()); }
+	{ after(grammarAccess.getThingMLModelAccess().getImportKeyword_0_0()); }
 )
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__Import__Group__1
+rule__ThingMLModel__Group_0__1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
-	rule__Import__Group__1__Impl
+	rule__ThingMLModel__Group_0__1__Impl
 ;
 finally {
 	restoreStackSize(stackSize);
 }
 
-rule__Import__Group__1__Impl
+rule__ThingMLModel__Group_0__1__Impl
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 (
-	{ before(grammarAccess.getImportAccess().getImportURIAssignment_1()); }
-	(rule__Import__ImportURIAssignment_1)
-	{ after(grammarAccess.getImportAccess().getImportURIAssignment_1()); }
+	{ before(grammarAccess.getThingMLModelAccess().getImportURIAssignment_0_1()); }
+	(rule__ThingMLModel__ImportURIAssignment_0_1)
+	{ after(grammarAccess.getThingMLModelAccess().getImportURIAssignment_0_1()); }
 )
 ;
 finally {
@@ -17806,15 +17781,15 @@ finally {
 }
 
 
-rule__ThingMLModel__ImportsAssignment_0
+rule__ThingMLModel__ImportURIAssignment_0_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getThingMLModelAccess().getImportsImportParserRuleCall_0_0()); }
-		ruleImport
-		{ after(grammarAccess.getThingMLModelAccess().getImportsImportParserRuleCall_0_0()); }
+		{ before(grammarAccess.getThingMLModelAccess().getImportURISTRING_LITTerminalRuleCall_0_1_0()); }
+		RULE_STRING_LIT
+		{ after(grammarAccess.getThingMLModelAccess().getImportURISTRING_LITTerminalRuleCall_0_1_0()); }
 	)
 ;
 finally {
@@ -17860,21 +17835,6 @@ rule__ThingMLModel__ConfigsAssignment_1_2
 		{ before(grammarAccess.getThingMLModelAccess().getConfigsConfigurationParserRuleCall_1_2_0()); }
 		ruleConfiguration
 		{ after(grammarAccess.getThingMLModelAccess().getConfigsConfigurationParserRuleCall_1_2_0()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__Import__ImportURIAssignment_1
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getImportAccess().getImportURISTRING_LITTerminalRuleCall_1_0()); }
-		RULE_STRING_LIT
-		{ after(grammarAccess.getImportAccess().getImportURISTRING_LITTerminalRuleCall_1_0()); }
 	)
 ;
 finally {

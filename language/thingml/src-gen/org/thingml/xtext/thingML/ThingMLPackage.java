@@ -68,13 +68,13 @@ public interface ThingMLPackage extends EPackage
   int THING_ML_MODEL = 0;
 
   /**
-   * The feature id for the '<em><b>Imports</b></em>' containment reference list.
+   * The feature id for the '<em><b>Import URI</b></em>' attribute list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int THING_ML_MODEL__IMPORTS = 0;
+  int THING_ML_MODEL__IMPORT_URI = 0;
 
   /**
    * The feature id for the '<em><b>Types</b></em>' containment reference list.
@@ -113,34 +113,6 @@ public interface ThingMLPackage extends EPackage
   int THING_ML_MODEL_FEATURE_COUNT = 4;
 
   /**
-   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.ImportImpl <em>Import</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.thingml.xtext.thingML.impl.ImportImpl
-   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getImport()
-   * @generated
-   */
-  int IMPORT = 1;
-
-  /**
-   * The feature id for the '<em><b>Import URI</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int IMPORT__IMPORT_URI = 0;
-
-  /**
-   * The number of structural features of the '<em>Import</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int IMPORT_FEATURE_COUNT = 1;
-
-  /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.PlatformAnnotationImpl <em>Platform Annotation</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -148,7 +120,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPlatformAnnotation()
    * @generated
    */
-  int PLATFORM_ANNOTATION = 2;
+  int PLATFORM_ANNOTATION = 1;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -185,7 +157,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getAnnotatedElement()
    * @generated
    */
-  int ANNOTATED_ELEMENT = 3;
+  int ANNOTATED_ELEMENT = 2;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -213,7 +185,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getTypeRef()
    * @generated
    */
-  int TYPE_REF = 4;
+  int TYPE_REF = 3;
 
   /**
    * The feature id for the '<em><b>Type</b></em>' reference.
@@ -259,7 +231,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getType()
    * @generated
    */
-  int TYPE = 5;
+  int TYPE = 4;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -296,7 +268,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPrimitiveType()
    * @generated
    */
-  int PRIMITIVE_TYPE = 6;
+  int PRIMITIVE_TYPE = 5;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -342,7 +314,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getObjectType()
    * @generated
    */
-  int OBJECT_TYPE = 7;
+  int OBJECT_TYPE = 6;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -379,7 +351,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEnumeration()
    * @generated
    */
-  int ENUMERATION = 8;
+  int ENUMERATION = 7;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -425,7 +397,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEnumerationLiteral()
    * @generated
    */
-  int ENUMERATION_LITERAL = 9;
+  int ENUMERATION_LITERAL = 8;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -462,7 +434,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getThing()
    * @generated
    */
-  int THING = 10;
+  int THING = 9;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -580,7 +552,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPropertyAssign()
    * @generated
    */
-  int PROPERTY_ASSIGN = 11;
+  int PROPERTY_ASSIGN = 10;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -635,7 +607,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getProtocol()
    * @generated
    */
-  int PROTOCOL = 12;
+  int PROTOCOL = 11;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -672,7 +644,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFunction()
    * @generated
    */
-  int FUNCTION = 13;
+  int FUNCTION = 12;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -736,7 +708,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getProperty()
    * @generated
    */
-  int PROPERTY = 14;
+  int PROPERTY = 13;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -800,7 +772,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getMessage()
    * @generated
    */
-  int MESSAGE = 15;
+  int MESSAGE = 14;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -846,7 +818,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getParameter()
    * @generated
    */
-  int PARAMETER = 16;
+  int PARAMETER = 15;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -892,7 +864,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPort()
    * @generated
    */
-  int PORT = 17;
+  int PORT = 16;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -947,7 +919,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getRequiredPort()
    * @generated
    */
-  int REQUIRED_PORT = 18;
+  int REQUIRED_PORT = 17;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1011,7 +983,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getProvidedPort()
    * @generated
    */
-  int PROVIDED_PORT = 19;
+  int PROVIDED_PORT = 18;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1066,7 +1038,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getInternalPort()
    * @generated
    */
-  int INTERNAL_PORT = 20;
+  int INTERNAL_PORT = 19;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1121,7 +1093,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getStream()
    * @generated
    */
-  int STREAM = 21;
+  int STREAM = 20;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1185,7 +1157,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getSource()
    * @generated
    */
-  int SOURCE = 22;
+  int SOURCE = 21;
 
   /**
    * The number of structural features of the '<em>Source</em>' class.
@@ -1204,7 +1176,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getViewSource()
    * @generated
    */
-  int VIEW_SOURCE = 23;
+  int VIEW_SOURCE = 22;
 
   /**
    * The number of structural features of the '<em>View Source</em>' class.
@@ -1223,7 +1195,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getReferencedElmt()
    * @generated
    */
-  int REFERENCED_ELMT = 24;
+  int REFERENCED_ELMT = 23;
 
   /**
    * The number of structural features of the '<em>Referenced Elmt</em>' class.
@@ -1242,7 +1214,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getElmtProperty()
    * @generated
    */
-  int ELMT_PROPERTY = 25;
+  int ELMT_PROPERTY = 24;
 
   /**
    * The number of structural features of the '<em>Elmt Property</em>' class.
@@ -1261,7 +1233,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getJoinSources()
    * @generated
    */
-  int JOIN_SOURCES = 26;
+  int JOIN_SOURCES = 25;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1325,7 +1297,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getMergeSources()
    * @generated
    */
-  int MERGE_SOURCES = 27;
+  int MERGE_SOURCES = 26;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1380,7 +1352,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getSimpleSource()
    * @generated
    */
-  int SIMPLE_SOURCE = 28;
+  int SIMPLE_SOURCE = 27;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1426,7 +1398,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFilter()
    * @generated
    */
-  int FILTER = 29;
+  int FILTER = 28;
 
   /**
    * The feature id for the '<em><b>Guard</b></em>' containment reference.
@@ -1454,7 +1426,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLengthWindow()
    * @generated
    */
-  int LENGTH_WINDOW = 30;
+  int LENGTH_WINDOW = 29;
 
   /**
    * The feature id for the '<em><b>Size</b></em>' containment reference.
@@ -1491,7 +1463,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getTimeWindow()
    * @generated
    */
-  int TIME_WINDOW = 31;
+  int TIME_WINDOW = 30;
 
   /**
    * The feature id for the '<em><b>Duration</b></em>' containment reference.
@@ -1528,7 +1500,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getMessageParameter()
    * @generated
    */
-  int MESSAGE_PARAMETER = 32;
+  int MESSAGE_PARAMETER = 31;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1565,7 +1537,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getSimpleParamRef()
    * @generated
    */
-  int SIMPLE_PARAM_REF = 33;
+  int SIMPLE_PARAM_REF = 32;
 
   /**
    * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -1593,7 +1565,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getArrayParamRef()
    * @generated
    */
-  int ARRAY_PARAM_REF = 34;
+  int ARRAY_PARAM_REF = 33;
 
   /**
    * The feature id for the '<em><b>Parameter Ref</b></em>' reference.
@@ -1621,7 +1593,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLengthArray()
    * @generated
    */
-  int LENGTH_ARRAY = 35;
+  int LENGTH_ARRAY = 34;
 
   /**
    * The number of structural features of the '<em>Length Array</em>' class.
@@ -1640,7 +1612,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getRegion()
    * @generated
    */
-  int REGION = 36;
+  int REGION = 35;
 
   /**
    * The number of structural features of the '<em>Region</em>' class.
@@ -1659,7 +1631,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getCompositeState()
    * @generated
    */
-  int COMPOSITE_STATE = 37;
+  int COMPOSITE_STATE = 36;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1777,7 +1749,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFinalState()
    * @generated
    */
-  int FINAL_STATE = 38;
+  int FINAL_STATE = 37;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1859,7 +1831,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getSession()
    * @generated
    */
-  int SESSION = 39;
+  int SESSION = 38;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1977,7 +1949,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getParallelRegion()
    * @generated
    */
-  int PARALLEL_REGION = 40;
+  int PARALLEL_REGION = 39;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2041,7 +2013,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getState()
    * @generated
    */
-  int STATE = 41;
+  int STATE = 40;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2123,7 +2095,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getHandler()
    * @generated
    */
-  int HANDLER = 42;
+  int HANDLER = 41;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2187,7 +2159,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getTransition()
    * @generated
    */
-  int TRANSITION = 43;
+  int TRANSITION = 42;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2260,7 +2232,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getInternalTransition()
    * @generated
    */
-  int INTERNAL_TRANSITION = 44;
+  int INTERNAL_TRANSITION = 43;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2324,7 +2296,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEvent()
    * @generated
    */
-  int EVENT = 45;
+  int EVENT = 44;
 
   /**
    * The number of structural features of the '<em>Event</em>' class.
@@ -2343,7 +2315,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getReceiveMessage()
    * @generated
    */
-  int RECEIVE_MESSAGE = 46;
+  int RECEIVE_MESSAGE = 45;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2389,7 +2361,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getAction()
    * @generated
    */
-  int ACTION = 47;
+  int ACTION = 46;
 
   /**
    * The number of structural features of the '<em>Action</em>' class.
@@ -2408,7 +2380,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getVariable()
    * @generated
    */
-  int VARIABLE = 48;
+  int VARIABLE = 47;
 
   /**
    * The number of structural features of the '<em>Variable</em>' class.
@@ -2427,7 +2399,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getActionBlock()
    * @generated
    */
-  int ACTION_BLOCK = 49;
+  int ACTION_BLOCK = 48;
 
   /**
    * The feature id for the '<em><b>Actions</b></em>' containment reference list.
@@ -2455,7 +2427,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getExternStatement()
    * @generated
    */
-  int EXTERN_STATEMENT = 50;
+  int EXTERN_STATEMENT = 49;
 
   /**
    * The feature id for the '<em><b>Statement</b></em>' attribute.
@@ -2492,7 +2464,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLocalVariable()
    * @generated
    */
-  int LOCAL_VARIABLE = 51;
+  int LOCAL_VARIABLE = 50;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2556,7 +2528,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getSendAction()
    * @generated
    */
-  int SEND_ACTION = 52;
+  int SEND_ACTION = 51;
 
   /**
    * The feature id for the '<em><b>Port</b></em>' reference.
@@ -2602,7 +2574,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getVariableAssignment()
    * @generated
    */
-  int VARIABLE_ASSIGNMENT = 53;
+  int VARIABLE_ASSIGNMENT = 52;
 
   /**
    * The feature id for the '<em><b>Property</b></em>' reference.
@@ -2648,7 +2620,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getIncrement()
    * @generated
    */
-  int INCREMENT = 54;
+  int INCREMENT = 53;
 
   /**
    * The feature id for the '<em><b>Var</b></em>' reference.
@@ -2676,7 +2648,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getDecrement()
    * @generated
    */
-  int DECREMENT = 55;
+  int DECREMENT = 54;
 
   /**
    * The feature id for the '<em><b>Var</b></em>' reference.
@@ -2704,7 +2676,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLoopAction()
    * @generated
    */
-  int LOOP_ACTION = 56;
+  int LOOP_ACTION = 55;
 
   /**
    * The feature id for the '<em><b>Condition</b></em>' containment reference.
@@ -2741,7 +2713,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getConditionalAction()
    * @generated
    */
-  int CONDITIONAL_ACTION = 57;
+  int CONDITIONAL_ACTION = 56;
 
   /**
    * The feature id for the '<em><b>Condition</b></em>' containment reference.
@@ -2787,7 +2759,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getReturnAction()
    * @generated
    */
-  int RETURN_ACTION = 58;
+  int RETURN_ACTION = 57;
 
   /**
    * The feature id for the '<em><b>Exp</b></em>' containment reference.
@@ -2815,7 +2787,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPrintAction()
    * @generated
    */
-  int PRINT_ACTION = 59;
+  int PRINT_ACTION = 58;
 
   /**
    * The feature id for the '<em><b>Msg</b></em>' containment reference.
@@ -2843,7 +2815,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getErrorAction()
    * @generated
    */
-  int ERROR_ACTION = 60;
+  int ERROR_ACTION = 59;
 
   /**
    * The feature id for the '<em><b>Msg</b></em>' containment reference.
@@ -2871,7 +2843,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getStartSession()
    * @generated
    */
-  int START_SESSION = 61;
+  int START_SESSION = 60;
 
   /**
    * The feature id for the '<em><b>Session</b></em>' reference.
@@ -2899,7 +2871,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFunctionCallStatement()
    * @generated
    */
-  int FUNCTION_CALL_STATEMENT = 62;
+  int FUNCTION_CALL_STATEMENT = 61;
 
   /**
    * The feature id for the '<em><b>Function</b></em>' reference.
@@ -2936,7 +2908,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getExpression()
    * @generated
    */
-  int EXPRESSION = 63;
+  int EXPRESSION = 62;
 
   /**
    * The number of structural features of the '<em>Expression</em>' class.
@@ -2955,7 +2927,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getExternExpression()
    * @generated
    */
-  int EXTERN_EXPRESSION = 64;
+  int EXTERN_EXPRESSION = 63;
 
   /**
    * The feature id for the '<em><b>Expression</b></em>' attribute.
@@ -2992,7 +2964,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEnumLiteralRef()
    * @generated
    */
-  int ENUM_LITERAL_REF = 65;
+  int ENUM_LITERAL_REF = 64;
 
   /**
    * The feature id for the '<em><b>Enum</b></em>' reference.
@@ -3029,7 +3001,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getIntegerLiteral()
    * @generated
    */
-  int INTEGER_LITERAL = 66;
+  int INTEGER_LITERAL = 65;
 
   /**
    * The feature id for the '<em><b>Int Value</b></em>' attribute.
@@ -3057,7 +3029,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getBooleanLiteral()
    * @generated
    */
-  int BOOLEAN_LITERAL = 67;
+  int BOOLEAN_LITERAL = 66;
 
   /**
    * The feature id for the '<em><b>Bool Value</b></em>' attribute.
@@ -3085,7 +3057,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getStringLiteral()
    * @generated
    */
-  int STRING_LITERAL = 68;
+  int STRING_LITERAL = 67;
 
   /**
    * The feature id for the '<em><b>String Value</b></em>' attribute.
@@ -3113,7 +3085,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getDoubleLiteral()
    * @generated
    */
-  int DOUBLE_LITERAL = 69;
+  int DOUBLE_LITERAL = 68;
 
   /**
    * The feature id for the '<em><b>Double Value</b></em>' attribute.
@@ -3141,7 +3113,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPropertyReference()
    * @generated
    */
-  int PROPERTY_REFERENCE = 70;
+  int PROPERTY_REFERENCE = 69;
 
   /**
    * The feature id for the '<em><b>Property</b></em>' reference.
@@ -3169,7 +3141,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getReference()
    * @generated
    */
-  int REFERENCE = 71;
+  int REFERENCE = 70;
 
   /**
    * The feature id for the '<em><b>Reference</b></em>' reference.
@@ -3206,7 +3178,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getFunctionCallExpression()
    * @generated
    */
-  int FUNCTION_CALL_EXPRESSION = 72;
+  int FUNCTION_CALL_EXPRESSION = 71;
 
   /**
    * The feature id for the '<em><b>Function</b></em>' reference.
@@ -3243,7 +3215,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getConfiguration()
    * @generated
    */
-  int CONFIGURATION = 73;
+  int CONFIGURATION = 72;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3307,7 +3279,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getInstance()
    * @generated
    */
-  int INSTANCE = 74;
+  int INSTANCE = 73;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3353,7 +3325,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getConfigPropertyAssign()
    * @generated
    */
-  int CONFIG_PROPERTY_ASSIGN = 75;
+  int CONFIG_PROPERTY_ASSIGN = 74;
 
   /**
    * The feature id for the '<em><b>Instance</b></em>' containment reference.
@@ -3417,7 +3389,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getAbstractConnector()
    * @generated
    */
-  int ABSTRACT_CONNECTOR = 76;
+  int ABSTRACT_CONNECTOR = 75;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3454,7 +3426,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getConnector()
    * @generated
    */
-  int CONNECTOR = 77;
+  int CONNECTOR = 76;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3527,7 +3499,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getExternalConnector()
    * @generated
    */
-  int EXTERNAL_CONNECTOR = 78;
+  int EXTERNAL_CONNECTOR = 77;
 
   /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3591,7 +3563,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getInstanceRef()
    * @generated
    */
-  int INSTANCE_REF = 79;
+  int INSTANCE_REF = 78;
 
   /**
    * The feature id for the '<em><b>Instance</b></em>' reference.
@@ -3619,7 +3591,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getOrExpression()
    * @generated
    */
-  int OR_EXPRESSION = 80;
+  int OR_EXPRESSION = 79;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3656,7 +3628,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getAndExpression()
    * @generated
    */
-  int AND_EXPRESSION = 81;
+  int AND_EXPRESSION = 80;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3693,7 +3665,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEqualsExpression()
    * @generated
    */
-  int EQUALS_EXPRESSION = 82;
+  int EQUALS_EXPRESSION = 81;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3730,7 +3702,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getNotEqualsExpression()
    * @generated
    */
-  int NOT_EQUALS_EXPRESSION = 83;
+  int NOT_EQUALS_EXPRESSION = 82;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3767,7 +3739,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getGreaterExpression()
    * @generated
    */
-  int GREATER_EXPRESSION = 84;
+  int GREATER_EXPRESSION = 83;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3804,7 +3776,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLowerExpression()
    * @generated
    */
-  int LOWER_EXPRESSION = 85;
+  int LOWER_EXPRESSION = 84;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3841,7 +3813,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getGreaterOrEqualExpression()
    * @generated
    */
-  int GREATER_OR_EQUAL_EXPRESSION = 86;
+  int GREATER_OR_EQUAL_EXPRESSION = 85;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3878,7 +3850,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLowerOrEqualExpression()
    * @generated
    */
-  int LOWER_OR_EQUAL_EXPRESSION = 87;
+  int LOWER_OR_EQUAL_EXPRESSION = 86;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3915,7 +3887,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPlusExpression()
    * @generated
    */
-  int PLUS_EXPRESSION = 88;
+  int PLUS_EXPRESSION = 87;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3952,7 +3924,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getMinusExpression()
    * @generated
    */
-  int MINUS_EXPRESSION = 89;
+  int MINUS_EXPRESSION = 88;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3989,7 +3961,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getTimesExpression()
    * @generated
    */
-  int TIMES_EXPRESSION = 90;
+  int TIMES_EXPRESSION = 89;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -4026,7 +3998,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getDivExpression()
    * @generated
    */
-  int DIV_EXPRESSION = 91;
+  int DIV_EXPRESSION = 90;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -4063,7 +4035,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getModExpression()
    * @generated
    */
-  int MOD_EXPRESSION = 92;
+  int MOD_EXPRESSION = 91;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -4100,7 +4072,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getNotExpression()
    * @generated
    */
-  int NOT_EXPRESSION = 93;
+  int NOT_EXPRESSION = 92;
 
   /**
    * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -4128,7 +4100,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getUnaryMinus()
    * @generated
    */
-  int UNARY_MINUS = 94;
+  int UNARY_MINUS = 93;
 
   /**
    * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -4156,7 +4128,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getArrayIndex()
    * @generated
    */
-  int ARRAY_INDEX = 95;
+  int ARRAY_INDEX = 94;
 
   /**
    * The feature id for the '<em><b>Array</b></em>' containment reference.
@@ -4197,15 +4169,15 @@ public interface ThingMLPackage extends EPackage
   EClass getThingMLModel();
 
   /**
-   * Returns the meta object for the containment reference list '{@link org.thingml.xtext.thingML.ThingMLModel#getImports <em>Imports</em>}'.
+   * Returns the meta object for the attribute list '{@link org.thingml.xtext.thingML.ThingMLModel#getImportURI <em>Import URI</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Imports</em>'.
-   * @see org.thingml.xtext.thingML.ThingMLModel#getImports()
+   * @return the meta object for the attribute list '<em>Import URI</em>'.
+   * @see org.thingml.xtext.thingML.ThingMLModel#getImportURI()
    * @see #getThingMLModel()
    * @generated
    */
-  EReference getThingMLModel_Imports();
+  EAttribute getThingMLModel_ImportURI();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.thingml.xtext.thingML.ThingMLModel#getTypes <em>Types</em>}'.
@@ -4239,27 +4211,6 @@ public interface ThingMLPackage extends EPackage
    * @generated
    */
   EReference getThingMLModel_Configs();
-
-  /**
-   * Returns the meta object for class '{@link org.thingml.xtext.thingML.Import <em>Import</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Import</em>'.
-   * @see org.thingml.xtext.thingML.Import
-   * @generated
-   */
-  EClass getImport();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.Import#getImportURI <em>Import URI</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Import URI</em>'.
-   * @see org.thingml.xtext.thingML.Import#getImportURI()
-   * @see #getImport()
-   * @generated
-   */
-  EAttribute getImport_ImportURI();
 
   /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.PlatformAnnotation <em>Platform Annotation</em>}'.
@@ -7215,12 +7166,12 @@ public interface ThingMLPackage extends EPackage
     EClass THING_ML_MODEL = eINSTANCE.getThingMLModel();
 
     /**
-     * The meta object literal for the '<em><b>Imports</b></em>' containment reference list feature.
+     * The meta object literal for the '<em><b>Import URI</b></em>' attribute list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference THING_ML_MODEL__IMPORTS = eINSTANCE.getThingMLModel_Imports();
+    EAttribute THING_ML_MODEL__IMPORT_URI = eINSTANCE.getThingMLModel_ImportURI();
 
     /**
      * The meta object literal for the '<em><b>Types</b></em>' containment reference list feature.
@@ -7245,24 +7196,6 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EReference THING_ML_MODEL__CONFIGS = eINSTANCE.getThingMLModel_Configs();
-
-    /**
-     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.ImportImpl <em>Import</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.thingml.xtext.thingML.impl.ImportImpl
-     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getImport()
-     * @generated
-     */
-    EClass IMPORT = eINSTANCE.getImport();
-
-    /**
-     * The meta object literal for the '<em><b>Import URI</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute IMPORT__IMPORT_URI = eINSTANCE.getImport_ImportURI();
 
     /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.PlatformAnnotationImpl <em>Platform Annotation</em>}' class.

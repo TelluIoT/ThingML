@@ -43,7 +43,6 @@ import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.GreaterExpression;
 import org.thingml.xtext.thingML.GreaterOrEqualExpression;
-import org.thingml.xtext.thingML.Import;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.InstanceRef;
@@ -208,9 +207,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.GREATER_OR_EQUAL_EXPRESSION:
 				sequence_Comparaison(context, (GreaterOrEqualExpression) semanticObject); 
-				return; 
-			case ThingMLPackage.IMPORT:
-				sequence_Import(context, (Import) semanticObject); 
 				return; 
 			case ThingMLPackage.INCREMENT:
 				sequence_Increment(context, (Increment) semanticObject); 
@@ -1299,24 +1295,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
-	 *     Import returns Import
-	 *
-	 * Constraint:
-	 *     importURI=STRING_LIT
-	 */
-	protected void sequence_Import(ISerializationContext context, Import semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.IMPORT__IMPORT_URI) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.IMPORT__IMPORT_URI));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getImportAccess().getImportURISTRING_LITTerminalRuleCall_1_0(), semanticObject.getImportURI());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     Action returns Increment
 	 *     Increment returns Increment
 	 *
@@ -2304,7 +2282,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     ThingMLModel returns ThingMLModel
 	 *
 	 * Constraint:
-	 *     (imports+=Import+ | (imports+=Import+ (types+=Type | protocols+=Protocol | configs+=Configuration)+))?
+	 *     (importURI+=STRING_LIT+ | (importURI+=STRING_LIT+ (types+=Type | protocols+=Protocol | configs+=Configuration)+))?
 	 */
 	protected void sequence_ThingMLModel(ISerializationContext context, ThingMLModel semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

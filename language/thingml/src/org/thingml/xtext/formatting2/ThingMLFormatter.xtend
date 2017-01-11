@@ -8,7 +8,6 @@ import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.thingml.xtext.services.ThingMLGrammarAccess
 import org.thingml.xtext.thingML.Configuration
-import org.thingml.xtext.thingML.Import
 import org.thingml.xtext.thingML.PlatformAnnotation
 import org.thingml.xtext.thingML.PrimitiveType
 import org.thingml.xtext.thingML.Protocol
@@ -21,9 +20,8 @@ class ThingMLFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(ThingMLModel thingMLModel, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		for (Import imports : thingMLModel.getImports()) {
-			imports.format;
-		}
+		
+		
 		for (Type types : thingMLModel.getTypes()) {
 			types.format;
 		}

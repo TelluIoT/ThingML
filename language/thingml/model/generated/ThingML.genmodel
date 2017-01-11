@@ -7,13 +7,10 @@
   <genPackages prefix="ThingML" basePackage="org.thingml.xtext" disposableProviderFactory="true"
       fileExtensions="thingml" ecorePackage="ThingML.ecore#/">
     <genClasses ecoreClass="ThingML.ecore#//ThingMLModel">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ThingMLModel/imports"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//ThingMLModel/importURI"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ThingMLModel/types"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ThingMLModel/protocols"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ThingMLModel/configs"/>
-    </genClasses>
-    <genClasses ecoreClass="ThingML.ecore#//Import">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Import/importURI"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//PlatformAnnotation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//PlatformAnnotation/name"/>

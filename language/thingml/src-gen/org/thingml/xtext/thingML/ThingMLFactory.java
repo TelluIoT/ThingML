@@ -33,15 +33,6 @@ public interface ThingMLFactory extends EFactory
   ThingMLModel createThingMLModel();
 
   /**
-   * Returns a new object of class '<em>Import</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Import</em>'.
-   * @generated
-   */
-  Import createImport();
-
-  /**
    * Returns a new object of class '<em>Platform Annotation</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

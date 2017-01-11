@@ -77,22 +77,27 @@ ruleThingMLModel returns [EObject current=null]
 }:
 	(
 		(
+			otherlv_0='import'
+			{
+				newLeafNode(otherlv_0, grammarAccess.getThingMLModelAccess().getImportKeyword_0_0());
+			}
 			(
-				{
-					newCompositeNode(grammarAccess.getThingMLModelAccess().getImportsImportParserRuleCall_0_0());
-				}
-				lv_imports_0_0=ruleImport
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getThingMLModelRule());
+				(
+					lv_importURI_1_0=RULE_STRING_LIT
+					{
+						newLeafNode(lv_importURI_1_0, grammarAccess.getThingMLModelAccess().getImportURISTRING_LITTerminalRuleCall_0_1_0());
 					}
-					add(
-						$current,
-						"imports",
-						lv_imports_0_0,
-						"org.thingml.xtext.ThingML.Import");
-					afterParserOrEnumRuleCall();
-				}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getThingMLModelRule());
+						}
+						addWithLastConsumed(
+							$current,
+							"importURI",
+							lv_importURI_1_0,
+							"org.thingml.xtext.ThingML.STRING_LIT");
+					}
+				)
 			)
 		)*
 		(
@@ -101,7 +106,7 @@ ruleThingMLModel returns [EObject current=null]
 					{
 						newCompositeNode(grammarAccess.getThingMLModelAccess().getTypesTypeParserRuleCall_1_0_0());
 					}
-					lv_types_1_0=ruleType
+					lv_types_2_0=ruleType
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getThingMLModelRule());
@@ -109,7 +114,7 @@ ruleThingMLModel returns [EObject current=null]
 						add(
 							$current,
 							"types",
-							lv_types_1_0,
+							lv_types_2_0,
 							"org.thingml.xtext.ThingML.Type");
 						afterParserOrEnumRuleCall();
 					}
@@ -121,7 +126,7 @@ ruleThingMLModel returns [EObject current=null]
 					{
 						newCompositeNode(grammarAccess.getThingMLModelAccess().getProtocolsProtocolParserRuleCall_1_1_0());
 					}
-					lv_protocols_2_0=ruleProtocol
+					lv_protocols_3_0=ruleProtocol
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getThingMLModelRule());
@@ -129,7 +134,7 @@ ruleThingMLModel returns [EObject current=null]
 						add(
 							$current,
 							"protocols",
-							lv_protocols_2_0,
+							lv_protocols_3_0,
 							"org.thingml.xtext.ThingML.Protocol");
 						afterParserOrEnumRuleCall();
 					}
@@ -141,7 +146,7 @@ ruleThingMLModel returns [EObject current=null]
 					{
 						newCompositeNode(grammarAccess.getThingMLModelAccess().getConfigsConfigurationParserRuleCall_1_2_0());
 					}
-					lv_configs_3_0=ruleConfiguration
+					lv_configs_4_0=ruleConfiguration
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getThingMLModelRule());
@@ -149,54 +154,13 @@ ruleThingMLModel returns [EObject current=null]
 						add(
 							$current,
 							"configs",
-							lv_configs_3_0,
+							lv_configs_4_0,
 							"org.thingml.xtext.ThingML.Configuration");
 						afterParserOrEnumRuleCall();
 					}
 				)
 			)
 		)*
-	)
-;
-
-// Entry rule entryRuleImport
-entryRuleImport returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getImportRule()); }
-	iv_ruleImport=ruleImport
-	{ $current=$iv_ruleImport.current; }
-	EOF;
-
-// Rule Import
-ruleImport returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		otherlv_0='import'
-		{
-			newLeafNode(otherlv_0, grammarAccess.getImportAccess().getImportKeyword_0());
-		}
-		(
-			(
-				lv_importURI_1_0=RULE_STRING_LIT
-				{
-					newLeafNode(lv_importURI_1_0, grammarAccess.getImportAccess().getImportURISTRING_LITTerminalRuleCall_1_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getImportRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"importURI",
-						lv_importURI_1_0,
-						"org.thingml.xtext.ThingML.STRING_LIT");
-				}
-			)
-		)
 	)
 ;
 

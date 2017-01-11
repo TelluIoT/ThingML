@@ -8,7 +8,7 @@ thing TestChar includes Test
 	property min : Char = '\'\\0\''
 	property max : Char = '\'~\''
 	property zero : Char = '\'0\''
-	property order : Char = '\'A\''
+	property order : Char = '\'A\'' 
     
     statechart TestType init S0 {
     

@@ -23,7 +23,6 @@ import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Function;
-import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.InstanceRef;
@@ -35,16 +34,16 @@ import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.ReceiveMessage;
-import org.thingml.xtext.thingML.Reference;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.Transition;
-import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
 
@@ -117,7 +116,7 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
                             return this.scopeForExternalConnector_Protocol(((ExternalConnector) context));
                           } else {
                             if ((Objects.equal(reference, this.p.getFunctionCallExpression_Function()) || Objects.equal(reference, this.p.getFunctionCallStatement_Function()))) {
-                              return this.scopeForFunctionCallExpressionFunctionCallStatement_Function(((FunctionCallExpression) context));
+                              return this.scopeForFunctionCallExpressionFunctionCallStatement_Function(context);
                             } else {
                               EReference _increment_Var = this.p.getIncrement_Var();
                               boolean _equals_10 = Objects.equal(reference, _increment_Var);
@@ -157,7 +156,7 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
                                             EReference _reference_Reference = this.p.getReference_Reference();
                                             boolean _equals_17 = Objects.equal(reference, _reference_Reference);
                                             if (_equals_17) {
-                                              return this.scopeForReference_Reference(((Reference) context));
+                                              return this.scopeForReference_Reference(context);
                                             } else {
                                               EReference _startSession_Session = this.p.getStartSession_Session();
                                               boolean _equals_18 = Objects.equal(reference, _startSession_Session);
@@ -169,28 +168,22 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
                                                 if (_equals_19) {
                                                   return this.scopeForThing_Includes(((Thing) context));
                                                 } else {
-                                                  EReference _thingMLModel_Imports = this.p.getThingMLModel_Imports();
-                                                  boolean _equals_20 = Objects.equal(reference, _thingMLModel_Imports);
+                                                  EReference _transition_Target = this.p.getTransition_Target();
+                                                  boolean _equals_20 = Objects.equal(reference, _transition_Target);
                                                   if (_equals_20) {
-                                                    return this.scopeForThingMLModel_Imports(((ThingMLModel) context));
+                                                    return this.scopeForTransition_Target(((Transition) context));
                                                   } else {
-                                                    EReference _transition_Target = this.p.getTransition_Target();
-                                                    boolean _equals_21 = Objects.equal(reference, _transition_Target);
+                                                    EReference _typeRef_Type = this.p.getTypeRef_Type();
+                                                    boolean _equals_21 = Objects.equal(reference, _typeRef_Type);
                                                     if (_equals_21) {
-                                                      return this.scopeForTransition_Target(((Transition) context));
+                                                      return this.scopeForTypeRef_Type(context);
                                                     } else {
-                                                      EReference _typeRef_Type = this.p.getTypeRef_Type();
-                                                      boolean _equals_22 = Objects.equal(reference, _typeRef_Type);
+                                                      EReference _variableAssignment_Property = this.p.getVariableAssignment_Property();
+                                                      boolean _equals_22 = Objects.equal(reference, _variableAssignment_Property);
                                                       if (_equals_22) {
-                                                        return this.scopeForTypeRef_Type(((TypeRef) context));
+                                                        return this.scopeForVariableAssignment_Property(((VariableAssignment) context));
                                                       } else {
-                                                        EReference _variableAssignment_Property = this.p.getVariableAssignment_Property();
-                                                        boolean _equals_23 = Objects.equal(reference, _variableAssignment_Property);
-                                                        if (_equals_23) {
-                                                          return this.scopeForVariableAssignment_Property(((VariableAssignment) context));
-                                                        } else {
-                                                          System.out.println(("INFO: Resolving reference : " + reference));
-                                                        }
+                                                        System.out.println(("INFO: Resolving reference : " + reference));
                                                       }
                                                     }
                                                   }
@@ -295,7 +288,7 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
     return Scopes.scopeFor(this.EMPTY);
   }
   
-  protected IScope scopeForFunctionCallExpressionFunctionCallStatement_Function(final FunctionCallExpression context) {
+  protected IScope scopeForFunctionCallExpressionFunctionCallStatement_Function(final EObject context) {
     Thing _findContainingThing = ThingMLHelpers.findContainingThing(context);
     ArrayList<Function> _allFunctions = ThingMLHelpers.allFunctions(_findContainingThing);
     return Scopes.scopeFor(_allFunctions);
@@ -361,7 +354,7 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
     return Scopes.scopeFor(_receives);
   }
   
-  protected IScope scopeForReference_Reference(final Reference context) {
+  protected IScope scopeForReference_Reference(final EObject context) {
     return Scopes.scopeFor(this.EMPTY);
   }
   
@@ -370,22 +363,25 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
   }
   
   protected IScope scopeForThing_Includes(final Thing context) {
-    return Scopes.scopeFor(this.EMPTY);
-  }
-  
-  protected IScope scopeForThingMLModel_Imports(final ThingMLModel context) {
-    return Scopes.scopeFor(this.EMPTY);
+    ThingMLModel _findContainingModel = ThingMLHelpers.findContainingModel(context);
+    ArrayList<Thing> _allThings = ThingMLHelpers.allThings(_findContainingModel);
+    return Scopes.scopeFor(_allThings);
   }
   
   protected IScope scopeForTransition_Target(final Transition context) {
-    return Scopes.scopeFor(this.EMPTY);
+    EObject _eContainer = context.eContainer();
+    ArrayList<State> _allValidTargetStates = ThingMLHelpers.allValidTargetStates(((State) _eContainer));
+    return Scopes.scopeFor(_allValidTargetStates);
   }
   
-  protected IScope scopeForTypeRef_Type(final TypeRef context) {
-    return Scopes.scopeFor(this.EMPTY);
+  protected IScope scopeForTypeRef_Type(final EObject context) {
+    ThingMLModel _findContainingModel = ThingMLHelpers.findContainingModel(context);
+    ArrayList<Type> _allTypes = ThingMLHelpers.allTypes(_findContainingModel);
+    return Scopes.scopeFor(_allTypes);
   }
   
   protected IScope scopeForVariableAssignment_Property(final VariableAssignment context) {
-    return Scopes.scopeFor(this.EMPTY);
+    ArrayList<Variable> _allVisibleVariables = ThingMLHelpers.allVisibleVariables(context);
+    return Scopes.scopeFor(_allVisibleVariables);
   }
 }

@@ -5,7 +5,7 @@ thing TestBool includes Test
 @test "12 # 12"
 {
 
-	property min : Boolean = false
+	property min : Boolean = false 
 	property max : Boolean = true
     
     statechart TestType init S0 {

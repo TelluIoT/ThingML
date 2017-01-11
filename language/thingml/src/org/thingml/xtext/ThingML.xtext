@@ -6,13 +6,15 @@ generate thingML "http://www.thingml.org/xtext/ThingML"
 
 
 ThingMLModel returns ThingMLModel:
-		imports+=Import*
+		//imports+=Import* 
+		( "import" importURI+=STRING_LIT )*
 		(types+=Type | protocols+=Protocol | configs+=Configuration)*;	
-		
-Import:
+
+/*
+Import returns ThingMLModel:
 	"import" importURI=STRING_LIT
 ;
-
+*/
 PlatformAnnotation returns PlatformAnnotation:
 	'@' name=ID value=STRING_LIT ; 
 

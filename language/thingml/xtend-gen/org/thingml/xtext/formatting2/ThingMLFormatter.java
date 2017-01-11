@@ -13,7 +13,6 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.thingml.xtext.services.ThingMLGrammarAccess;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Import;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.PrimitiveType;
 import org.thingml.xtext.thingML.Protocol;
@@ -27,10 +26,6 @@ public class ThingMLFormatter extends AbstractFormatter2 {
   private ThingMLGrammarAccess _thingMLGrammarAccess;
   
   protected void _format(final ThingMLModel thingMLModel, @Extension final IFormattableDocument document) {
-    EList<Import> _imports = thingMLModel.getImports();
-    for (final Import imports : _imports) {
-      document.<Import>format(imports);
-    }
     EList<Type> _types = thingMLModel.getTypes();
     for (final Type types : _types) {
       document.<Type>format(types);

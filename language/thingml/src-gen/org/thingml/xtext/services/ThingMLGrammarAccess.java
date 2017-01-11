@@ -26,8 +26,10 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	public class ThingMLModelElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.ThingMLModel");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cImportsAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cImportsImportParserRuleCall_0_0 = (RuleCall)cImportsAssignment_0.eContents().get(0);
+		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
+		private final Keyword cImportKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
+		private final Assignment cImportURIAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final RuleCall cImportURISTRING_LITTerminalRuleCall_0_1_0 = (RuleCall)cImportURIAssignment_0_1.eContents().get(0);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Assignment cTypesAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
 		private final RuleCall cTypesTypeParserRuleCall_1_0_0 = (RuleCall)cTypesAssignment_1_0.eContents().get(0);
@@ -37,17 +39,23 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cConfigsConfigurationParserRuleCall_1_2_0 = (RuleCall)cConfigsAssignment_1_2.eContents().get(0);
 		
 		//ThingMLModel:
-		//	imports+=Import* (types+=Type | protocols+=Protocol | configs+=Configuration)*;
+		//	("import" importURI+=STRING_LIT)* (types+=Type | protocols+=Protocol | configs+=Configuration)*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//imports+=Import* (types+=Type | protocols+=Protocol | configs+=Configuration)*
+		//("import" importURI+=STRING_LIT)* (types+=Type | protocols+=Protocol | configs+=Configuration)*
 		public Group getGroup() { return cGroup; }
 		
-		//imports+=Import*
-		public Assignment getImportsAssignment_0() { return cImportsAssignment_0; }
+		//("import" importURI+=STRING_LIT)*
+		public Group getGroup_0() { return cGroup_0; }
 		
-		//Import
-		public RuleCall getImportsImportParserRuleCall_0_0() { return cImportsImportParserRuleCall_0_0; }
+		//"import"
+		public Keyword getImportKeyword_0_0() { return cImportKeyword_0_0; }
+		
+		//importURI+=STRING_LIT
+		public Assignment getImportURIAssignment_0_1() { return cImportURIAssignment_0_1; }
+		
+		//STRING_LIT
+		public RuleCall getImportURISTRING_LITTerminalRuleCall_0_1_0() { return cImportURISTRING_LITTerminalRuleCall_0_1_0; }
 		
 		//(types+=Type | protocols+=Protocol | configs+=Configuration)*
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
@@ -70,29 +78,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//Configuration
 		public RuleCall getConfigsConfigurationParserRuleCall_1_2_0() { return cConfigsConfigurationParserRuleCall_1_2_0; }
 	}
-	public class ImportElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Import");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cImportKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cImportURIAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cImportURISTRING_LITTerminalRuleCall_1_0 = (RuleCall)cImportURIAssignment_1.eContents().get(0);
-		
-		//Import:
-		//	"import" importURI=STRING_LIT;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//"import" importURI=STRING_LIT
-		public Group getGroup() { return cGroup; }
-		
-		//"import"
-		public Keyword getImportKeyword_0() { return cImportKeyword_0; }
-		
-		//importURI=STRING_LIT
-		public Assignment getImportURIAssignment_1() { return cImportURIAssignment_1; }
-		
-		//STRING_LIT
-		public RuleCall getImportURISTRING_LITTerminalRuleCall_1_0() { return cImportURISTRING_LITTerminalRuleCall_1_0; }
-	}
 	public class PlatformAnnotationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.PlatformAnnotation");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -102,7 +87,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cValueAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cValueSTRING_LITTerminalRuleCall_2_0 = (RuleCall)cValueAssignment_2.eContents().get(0);
 		
-		//PlatformAnnotation:
+		/// *
+		//Import returns ThingMLModel:
+		//	"import" importURI=STRING_LIT
+		//;
+		// * / PlatformAnnotation:
 		//	'@' name=ID value=STRING_LIT;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -5024,7 +5013,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	
 	private final ThingMLModelElements pThingMLModel;
-	private final ImportElements pImport;
 	private final PlatformAnnotationElements pPlatformAnnotation;
 	private final AnnotatedElementElements pAnnotatedElement;
 	private final TypeRefElements pTypeRef;
@@ -5130,7 +5118,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	public ThingMLGrammarAccess(GrammarProvider grammarProvider) {
 		this.grammar = internalFindGrammar(grammarProvider);
 		this.pThingMLModel = new ThingMLModelElements();
-		this.pImport = new ImportElements();
 		this.pPlatformAnnotation = new PlatformAnnotationElements();
 		this.pAnnotatedElement = new AnnotatedElementElements();
 		this.pTypeRef = new TypeRefElements();
@@ -5255,7 +5242,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//ThingMLModel:
-	//	imports+=Import* (types+=Type | protocols+=Protocol | configs+=Configuration)*;
+	//	("import" importURI+=STRING_LIT)* (types+=Type | protocols+=Protocol | configs+=Configuration)*;
 	public ThingMLModelElements getThingMLModelAccess() {
 		return pThingMLModel;
 	}
@@ -5264,17 +5251,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getThingMLModelAccess().getRule();
 	}
 	
-	//Import:
-	//	"import" importURI=STRING_LIT;
-	public ImportElements getImportAccess() {
-		return pImport;
-	}
-	
-	public ParserRule getImportRule() {
-		return getImportAccess().getRule();
-	}
-	
-	//PlatformAnnotation:
+	/// *
+	//Import returns ThingMLModel:
+	//	"import" importURI=STRING_LIT
+	//;
+	// * / PlatformAnnotation:
 	//	'@' name=ID value=STRING_LIT;
 	public PlatformAnnotationElements getPlatformAnnotationAccess() {
 		return pPlatformAnnotation;
