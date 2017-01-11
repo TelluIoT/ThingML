@@ -88,13 +88,13 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 - Right click on `main.js`
 - `Run as -> Node Application`
 
-#### C code
+####  How to compile and run generated C code
 
 - Open a terminal at `...thingml-gen/nodejs/your-configuration`
 - `make`
 - `./your-configuration`
 
-#### Arduino code
+####  How to compile and run generated Arduino code
 
 - Open the generated file in the Arduino IDE
 - Compile
