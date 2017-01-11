@@ -90,6 +90,10 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 - Right click on `main.js`
 - `Run as -> Node Application`
 
+#### How to visualize generated UML (PlantUML) diagrams
+
+- `Windows -> Show View -> Other... -> PlantUML`
+
 ####  How to compile and run generated C code
 
 - Open a terminal at `...thingml-gen/nodejs/your-configuration`
