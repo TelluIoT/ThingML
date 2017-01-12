@@ -96,7 +96,7 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 
 ####  How to compile and run generated C code
 
-- Open a terminal at `...thingml-gen/nodejs/your-configuration`
+- Open a terminal at `...thingml-gen/posix/your-configuration`
 - `make`
 - `./your-configuration`
 
@@ -106,7 +106,7 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 - Compile
 - Upload to your board
 
-> For information, have a look at [the Arduino documentation](https://www.arduino.cc/en/Guide/Environment)
+> For more information about how to use the Arduino IDE and Arduino boards, have a look at [the Arduino documentation](https://www.arduino.cc/en/Guide/Environment).
 
 
 ## &#x1F537; Compile ThingML from the sources
