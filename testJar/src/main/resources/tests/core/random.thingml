@@ -2,7 +2,7 @@ import "../datatypes.thingml"
 
 thing fragment RandomMsg{
 	message request();
-	message answer(v: Integer);
+	message answer(v: Integer); 
 }
 
 thing fragment Random includes RandomMsg{

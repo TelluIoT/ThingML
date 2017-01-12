@@ -7,6 +7,7 @@ import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.Set;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
@@ -14,6 +15,7 @@ import org.eclipse.xtext.scoping.Scopes;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.scoping.AbstractThingMLScopeProvider;
+import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
@@ -37,6 +39,7 @@ import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.SimpleParamRef;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
@@ -183,7 +186,19 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
                                                       if (_equals_22) {
                                                         return this.scopeForVariableAssignment_Property(((VariableAssignment) context));
                                                       } else {
-                                                        System.out.println(("INFO: Resolving reference : " + reference));
+                                                        EReference _compositeState_Initial = this.p.getCompositeState_Initial();
+                                                        boolean _equals_23 = Objects.equal(reference, _compositeState_Initial);
+                                                        if (_equals_23) {
+                                                          return this.scopeForCompositeState_Initial(((CompositeState) context));
+                                                        } else {
+                                                          String _name = reference.getName();
+                                                          String _plus = ("INFO: Resolving reference : " + _name);
+                                                          String _plus_1 = (_plus + " in Class ");
+                                                          EObject _eContainer = reference.eContainer();
+                                                          String _name_1 = ((ENamedElement) _eContainer).getName();
+                                                          String _plus_2 = (_plus_1 + _name_1);
+                                                          System.out.println(_plus_2);
+                                                        }
                                                       }
                                                     }
                                                   }
@@ -214,6 +229,15 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
   }
   
   protected ArrayList EMPTY = new ArrayList<Object>();
+  
+  protected IScope simpleParamRef_ParameterRef(final SimpleParamRef context) {
+    return null;
+  }
+  
+  protected IScope scopeForCompositeState_Initial(final CompositeState context) {
+    EList<State> _substate = context.getSubstate();
+    return Scopes.scopeFor(_substate);
+  }
   
   protected IScope scopeForPort_SendsReceives(final Port context) {
     EObject _eContainer = context.eContainer();

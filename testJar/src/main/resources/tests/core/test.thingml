@@ -4,12 +4,12 @@ import "../datatypes.thingml"
  * Definition of the ThingML test framework
  *****************************************************************************/
 thing fragment TestMsg {
-	message testIn(c : Char);
+	message testIn(c : Char);  
 	message testOut(c : Char);
 	message perfTestIn(i : Integer);
 	message perfTestOut();
 	message testFailure();
-	message perfTestEnd();
+	message perfTestEnd(); 
 	message testEnd();
 	message perfTestSize(time : LongLong);
 }

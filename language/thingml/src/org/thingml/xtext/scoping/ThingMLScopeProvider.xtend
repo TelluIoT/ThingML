@@ -33,6 +33,10 @@ import org.thingml.xtext.thingML.EnumLiteralRef
 import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.helpers.ConfigurationHelper
 import org.thingml.xtext.thingML.State
+import org.thingml.xtext.thingML.CompositeState
+import org.thingml.xtext.helpers.CompositeStateHelper
+import org.thingml.xtext.thingML.SimpleParamRef
+import org.eclipse.emf.ecore.ENamedElement
 
 /**
  * This class contains custom scoping description.
@@ -125,8 +129,15 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.variableAssignment_Property) {
 			return scopeForVariableAssignment_Property(context as VariableAssignment);
 		}
+		else if (reference == p.compositeState_Initial) {
+			return scopeForCompositeState_Initial(context as CompositeState);
+		}
+	//	else if (reference == p.simpleParamRef_ParameterRef) {
+	//		return simpleParamRef_ParameterRef(context as SimpleParamRef);
+	//	}
+	
 		else {
-			System.out.println("INFO: Resolving reference : " + reference);
+			System.out.println("INFO: Resolving reference : " + reference.name + " in Class " + (reference.eContainer as ENamedElement).getName);
 		}
 
 		// return super.getScope(context, reference)
@@ -135,6 +146,16 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	protected ArrayList EMPTY = new ArrayList();
+	
+	
+	def protected IScope simpleParamRef_ParameterRef(SimpleParamRef context) {
+		//ThingMLHelpers.findContainingHandler(context).event
+		//Scopes.scopeFor( context. );
+	}
+	
+	def protected IScope scopeForCompositeState_Initial(CompositeState context) {
+		Scopes.scopeFor( context.substate );
+	}
 	
 	def protected IScope scopeForPort_SendsReceives(Port context) {
 		Scopes.scopeFor( ThingMLHelpers.allMessages(context.eContainer as Thing) );

@@ -1,7 +1,7 @@
 import "../test.thingml"
 
 object fs;
-
+ 
 thing TestDumpNodejs includes TestDump
 @javascript "node"
 {
