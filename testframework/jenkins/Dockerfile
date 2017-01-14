@@ -1,4 +1,4 @@
-FROM jenkins:latest
+FROM jenkins:2.32.1
 MAINTAINER Anatoly Vasilevskiy <Anatoly.Vasilevskiy@sintef.no>
 
 USER root
@@ -6,18 +6,17 @@ USER root
 RUN apt-get update && apt-get install -y openssl \
 						sshpass \
 						openssh-server \
-						sudo \
+						git \
 						vim
 
 RUN echo 'jenkins:jenkins' | chpasswd \
-	#&& echo "jenkins  ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers \
 	&& mkdir /var/run/sshd	
 
 #starup scritp, runs sshd and than jenkins.sh from jenkins:latest
 COPY startup.sh /usr/local/bin/startup.sh
 RUN chmod a+x /usr/local/bin/startup.sh
 
-#installing docker
+#installing docker START
 ENV DOCKER_BUCKET get.docker.com
 #ENV DOCKER_VERSION 1.12.3
 #ENV DOCKER_SHA256 626601deb41d9706ac98da23f673af6c0d4631c4d194a677a9a1a07d7219fa0f
@@ -33,17 +32,25 @@ RUN set -x \
 	&& rm docker.tgz \
 	&& docker -v
 
-#this test code
-#RUN mkdir /var/jenkins_home/master
-#WORKDIR /var/jenkins_home/master
+#installing docker END
 
-#COPY compilers ./compilers
-#COPY testJar ./testJar
-#COPY testframework ./testframework
+#installing maven START
+ARG MAVEN_VERSION=3.3.9
+ARG USER_HOME_DIR="$JENKINS_HOME"
 
-#RUN chown -R jenkins:jenkins /var/jenkins_home/master
-#test code end
+RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
+  && curl -fsSL http://apache.osuosl.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
+    | tar -xzC /usr/share/maven --strip-components=1 \
+  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
-#USER jenkins
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+ENV PATH "$PATH:/usr/share/maven/bin"
+
+#COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
+COPY settings-docker.xml /usr/share/maven/ref/
+
+#VOLUME "$USER_HOME_DIR/.m2"
+#installing mavne END
 
 CMD ["/usr/local/bin/startup.sh"]

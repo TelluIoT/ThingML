@@ -11,8 +11,7 @@ RUN mkdir workingdir \
 	npm \
 	openssh-server \
 	gcc \
-	make \
-	vim
+	make
 
 COPY dojob.py workingdir/dojob.py
 RUN chmod a+x workingdir/dojob.py

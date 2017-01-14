@@ -1,34 +1,53 @@
-#!/bin/bash
+#!/bin/bash -e
 
 echo "Starting ssh daemon"
-#sudo /usr/sbin/sshd -D &
 /usr/sbin/sshd -D &
 
 #checking if ssh server is running
-#SSDPID=$(sudo /bin/pidof sshd)
 SSDPID=$(pidof sshd)
 [ $? -eq 0 ] && echo "SUCCESS: ssh daemon" || echo "FAILURE: ssh daemon"
 
 #setting up permissions for docker.sock
 if [[ -e "/var/run/docker.sock" ]] && [[ -n "$DOCKER_GID" ]]; then
 	echo "Setting permissions for docker.sock"
-	#sudo groupadd -g "$DOCKER_GID" docker
-	#sudo usermod -aG docker jenkins
 	groupadd -g "$DOCKER_GID" docker
 	usermod -aG docker jenkins
 	echo "Added jenkins to the docker group"
 fi
 
-#this for testing START
-#sudo chown -R jenkins:jenkins /var/jenkins_home/master
-#this for testing END
+#setting up maven START
+set -o pipefail
 
-#su - jenkins
+# Copy files from /usr/share/maven/ref into ${MAVEN_CONFIG}
+# So the initial ~/.m2 is set with expected content.
+# Don't override, as this is just a reference setup
+copy_reference_file() {
+  local root="${1}"
+  local f="${2%/}"
+  local logfile="${3}"
+  local rel="${f/${root}/}" # path relative to /usr/share/maven/ref/
+  echo "$f" >> "$logfile"
+  echo " $f -> $rel" >> "$logfile"
+  if [[ ! -e ${MAVEN_CONFIG}/${rel} || $f = *.override ]]
+  then
+    echo "copy $rel to ${MAVEN_CONFIG}" >> "$logfile"
+    mkdir -p "${MAVEN_CONFIG}/$(dirname "${rel}")"
+    cp -r "${f}" "${MAVEN_CONFIG}/${rel}";
+  fi;
+}
+
+copy_reference_files() {
+  local log="$MAVEN_CONFIG/copy_reference_file.log"
+  touch "${log}" || (echo "Can not write to ${log}. Wrong volume permissions?" && exit 1)
+  echo "--- Copying files at $(date)" >> "$log"
+  find /usr/share/maven/ref/ -type f -exec bash -eu -c 'copy_reference_file /usr/share/maven/ref/ "$1" "$2"' _ {} "$log" \;
+}
+
+export -f copy_reference_file
+copy_reference_files
+#setting up maven END
+
 
 #running jenkins
 echo "Starting jenkins: /usr/local/bin/jenkins.sh $@"
-#sudo -u jenkins COPY_REFERENCE_FILE_LOG="${COPY_REFERENCE_FILE_LOG}" \
-#	JENKINS_HOME="${JENKINS_HOME}" JAVA_OPTS="${JAVA_OPTS}" JENKINS_OPTS="${JENKINS_OPTS}" \
-#	MASTER_SLAVE_USER="${MASTER_SLAVE_USER}" MASTER_SLAVE_PWD="${MASTER_SLAVE_PWD}" /usr/local/bin/jenkins.sh "$@"
-#source /usr/local/bin/jenkins.sh "$@"
 su -c "/usr/local/bin/jenkins.sh $@" jenkins
