@@ -1,12 +1,34 @@
 #!/usr/bin/python
 
+import os
 import sys
 import subprocess
 import StringIO
+import ConfigParser
+
+
+CONFIG_NAME = 'config.ini'
+SCRIPT_ABSOLUTE_PATH = os.path.dirname(os.path.realpath(__file__))
+CONFIG_SECTION = 'runConfiguration'
+SETTING_TEST_JAR = 'test_jar'
+SETTING_TEST_SRC_FOLDER = 'test_src_folder'
+SETTING_LB_TEST_CONFIG = 'loadbalancer_test_config'
+SETTING_LB_BALANCER_CONFIG = 'loadbalancer_lb_config'
+
+config = ConfigParser.ConfigParser()
+config.read(os.path.join(SCRIPT_ABSOLUTE_PATH, CONFIG_NAME))
+tesJar = config.get(CONFIG_SECTION, SETTING_TEST_JAR)
+testSrcRootFolder = config.get(CONFIG_SECTION, SETTING_TEST_SRC_FOLDER)
+lb_testConfgig = config.get(CONFIG_SECTION, SETTING_LB_TEST_CONFIG)
+lb_balancerConfig = config.get(CONFIG_SECTION, SETTING_LB_BALANCER_CONFIG)
 
 #java -cp .:../../testJar/target/testJar-0.7.0-SNAPSHOT-jar-with-dependencies.jar org.thingml.loadbalancer.LoadBalancer <test_config> <load_balance_config> <load_balance_dest_dir> <job_prefix> <test_case_location>
-command = ["java", "-cp", ".:../../testJar/target/testJar-1.0.0-SNAPSHOT-jar-with-dependencies.jar", "org.thingml.loadbalancer.LoadBalancer",
-	"testConfig.properties", "loadBalanceTestConfig.properties", sys.argv[1], "", '../../testJar/src/main/resources/tests']
+#command = ["java", "-cp", ".:../../testJar/target/testJar-1.0.0-SNAPSHOT-jar-with-dependencies.jar",
+#	"org.thingml.loadbalancer.LoadBalancer", "testConfig.properties", 
+#	"loadBalanceTestConfig.properties", sys.argv[1], "", '../../testJar/src/main/resources/tests']
+
+command = ["java", "-cp", ".:" + tesJar, "org.thingml.loadbalancer.LoadBalancer", lb_testConfgig,
+	lb_balancerConfig, sys.argv[1], "", os.path.join(testSrcRootFolder, 'main/resources/tests')]
 
 print "[LOAD BALANCE] Executing: " + " ".join(command)
 

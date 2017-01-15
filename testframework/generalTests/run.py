@@ -20,6 +20,7 @@ SETTING_TEST_JAR = 'test_jar'
 SETTING_COMPILER_JAR = 'compiler_jar'
 SETTING_NETWORK_JAR = 'network_plugin_jar'
 SETTING_TEST_SRC_FOLDER = 'test_src_folder'
+SETTING_LB_BALANCER_CONFIG = 'loadbalancer_lb_config'
 
 
 def copy_dir_contents(src, dst, symlinks=False, ignore=None):
@@ -228,8 +229,9 @@ def run_routine(category_name, working_folder, report_folder, master_slave_user,
 	compiler_jar = config.get(CONFIG_SECTION, SETTING_COMPILER_JAR)
 	network_plugin_jar = config.get(CONFIG_SECTION, SETTING_NETWORK_JAR)
 	test_src_folder = config.get(CONFIG_SECTION, SETTING_TEST_SRC_FOLDER)
+	lb_balancerConfig = config.get(CONFIG_SECTION, SETTING_LB_BALANCER_CONFIG)
 
-	load_balance_config = os.path.join(SCRIPT_ABSOLUTE_PATH, 'loadBalanceTestConfig.properties')
+	load_balance_config = os.path.join(SCRIPT_ABSOLUTE_PATH, lb_balancerConfig)
 	config_load_balance = ConfigParser.ConfigParser()
 	config_load_balance.read(load_balance_config)
 	value = config_load_balance.get('general', 'nodeList')
