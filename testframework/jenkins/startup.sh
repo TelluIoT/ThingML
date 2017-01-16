@@ -16,38 +16,23 @@ if [[ -e "/var/run/docker.sock" ]] && [[ -n "$DOCKER_GID" ]]; then
 fi
 
 #setting up maven START
-set -o pipefail
+echo "Setting up MAVEN"
+if ! [[ -d "${JENKINS_HOME}/.m2" ]]; then
+  echo "Creating .m2 directory"
+  mkdir "${JENKINS_HOME}/.m2"
+  chown -R jenkins:jenkins "${JENKINS_HOME}/.m2"
+fi
 
-# Copy files from /usr/share/maven/ref into ${MAVEN_CONFIG}
-# So the initial ~/.m2 is set with expected content.
-# Don't override, as this is just a reference setup
-copy_reference_file() {
-  local root="${1}"
-  local f="${2%/}"
-  local logfile="${3}"
-  local rel="${f/${root}/}" # path relative to /usr/share/maven/ref/
-  echo "$f" >> "$logfile"
-  echo " $f -> $rel" >> "$logfile"
-  if [[ ! -e ${MAVEN_CONFIG}/${rel} || $f = *.override ]]
-  then
-    echo "copy $rel to ${MAVEN_CONFIG}" >> "$logfile"
-    mkdir -p "${MAVEN_CONFIG}/$(dirname "${rel}")"
-    cp -r "${f}" "${MAVEN_CONFIG}/${rel}";
-  fi;
-}
+if ! [[ -e "${JENKINS_HOME}/.m2/settings.xml" ]]; then
+  echo "Copying settings.xml to ${JENKINS_HOME}"
+  cp "${M2_REPO_ROOT}/settings.xml" "${JENKINS_HOME}/.m2/settings.xml"
+  chown jenkins:jenkins "${JENKINS_HOME}/.m2/settings.xml"
+fi
 
-copy_reference_files() {
-  local log="$MAVEN_CONFIG/copy_reference_file.log"
-  touch "${log}" || (echo "Can not write to ${log}. Wrong volume permissions?" && exit 1)
-  echo "--- Copying files at $(date)" >> "$log"
-  find /usr/share/maven/ref/ -type f -exec bash -eu -c 'copy_reference_file /usr/share/maven/ref/ "$1" "$2"' _ {} "$log" \;
-}
-
-export -f copy_reference_file
-copy_reference_files
+chown -R jenkins:jenkins "$M2_REPO_ROOT"
 #setting up maven END
-
 
 #running jenkins
 echo "Starting jenkins: /usr/local/bin/jenkins.sh $@"
+chown -R jenkins:jenkins "$JENKINS_HOME"
 su -c "/usr/local/bin/jenkins.sh $@" jenkins

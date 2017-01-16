@@ -36,21 +36,26 @@ RUN set -x \
 
 #installing maven START
 ARG MAVEN_VERSION=3.3.9
-ARG USER_HOME_DIR="$JENKINS_HOME"
+ARG MAVEN_REPO_ROOT="/var/jenkins_mvn"
+ARG MAVEN_M2_REPO="$MAVEN_REPO_ROOT/repo"
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && curl -fsSL http://apache.osuosl.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
     | tar -xzC /usr/share/maven --strip-components=1 \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
-ENV MAVEN_HOME /usr/share/maven
-ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+ENV M2_REPO_ROOT "$MAVEN_REPO_ROOT"
+ENV MAVEN_HOME "/usr/share/maven"
+ENV M2_REPO "$MAVEN_M2_REPO"
 ENV PATH "$PATH:/usr/share/maven/bin"
 
-#COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
-COPY settings-docker.xml /usr/share/maven/ref/
+RUN mkdir -p "$MAVEN_REPO_ROOT" \
+	&& chown -R jenkins:jenkins "$MAVEN_REPO_ROOT"
 
-#VOLUME "$USER_HOME_DIR/.m2"
+COPY settings-docker.xml "$MAVEN_REPO_ROOT/settings.xml"
+
+VOLUME "$MAVEN_M2_REPO"
+
 #installing mavne END
 
 CMD ["/usr/local/bin/startup.sh"]
