@@ -264,10 +264,14 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
-
         CCompilerContext context = (CCompilerContext) ctx;
+        //FIXME: @ffleurey, @Lyadis this is a dirty hack... I get we should set the concreteThing in the context somewhere before...
+        Thing concreteThing = context.getConcreteThing();
+        if (concreteThing == null) {
+            concreteThing = (Thing) expression.getFunction().eContainer();
+        }
 
-        builder.append(context.getCName(expression.getFunction(), context.getConcreteThing()));
+        builder.append(context.getCName(expression.getFunction(), concreteThing));
 
         builder.append("(_instance");
         for (Expression p : expression.getParameters()) {
