@@ -155,7 +155,7 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
                 cfile = cfile+".c";
             }
             srcs.append(cfile+" ");
-            objs.append(ofile+" ")
+            objs.append(ofile+" ");
         }
 
         mtemplate = mtemplate.replace("/*SOURCES*/", srcs.toString().trim());
