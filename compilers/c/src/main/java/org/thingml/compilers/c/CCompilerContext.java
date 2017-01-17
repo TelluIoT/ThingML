@@ -338,6 +338,13 @@ public abstract class CCompilerContext extends Context {
         return false;
     }
 
+    @Override
+    public void generateFixedAtInitValue(Configuration cfg, Instance inst, Expression a, StringBuilder builder) {
+        setConcreteThing(inst.getType());
+        super.generateFixedAtInitValue(cfg,inst,a,builder);
+        clearConcreteThing();
+    }
+
     /**************************************************************************
      * HELPER FUNCTIONS shared by different parts of the compiler
      **************************************************************************/
