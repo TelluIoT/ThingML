@@ -51,6 +51,7 @@ public abstract class CCompilerContext extends Context {
     StringBuilder initCode = new StringBuilder();
     StringBuilder includeCode = new StringBuilder();
     StringBuilder cppHeaderCode = new StringBuilder();
+    Set<String> networkPluginFiles = new HashSet<String>();
     private Set<NetworkLibraryGenerator> NetworkLibraryGenerators;
     private Map<String, Map<String, String>> mapCepMsgParamAndStream;
     
@@ -859,6 +860,8 @@ public abstract class CCompilerContext extends Context {
         return cppHeaderCode;
     }
 
+    public void addNetworkPluginFile(String cfile) { networkPluginFiles.add(cfile); }
+    public Set<String> getNetworkPluginFiles() { return networkPluginFiles; }
 
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {}
 

@@ -176,8 +176,6 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 StringBuilder eco_instance = new StringBuilder();
                 eco_instance.append("//Connector");
 
-                htemplate = htemplate.replace("/*PATH_TO_C*/", protocol.getName() + ".c");
-
                 //if(!eco.getPort().getReceives().isEmpty()) {
                 List<String> topicList = AnnotatedElementHelper.annotation(protocol, "mqtt_topic");
                 if (topicList.isEmpty()) {
@@ -367,12 +365,14 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 StringBuilder h = new StringBuilder();
                 generateMessageForwarders(b, h, cfg, protocol);
 
-                ctemplate += "\n" + b;
-                htemplate += "\n" + h;
+                ctemplate = ctemplate.replace("/*FORWARDERS*/", b);
+                htemplate = htemplate.replace("/*FORWARDERS*/", h);
 
                 ctx.getBuilder(protocol.getName() + ".c").append(ctemplate);
                 ctx.getBuilder(protocol.getName() + ".h").append(htemplate);
+
                 ctx.addToIncludes("#include \"" + protocol.getName() + ".h\"");
+                ctx.addNetworkPluginFile(protocol.getName() + ".c");
             }
         }
 

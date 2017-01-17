@@ -1,5 +1,3 @@
-
-
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,11 +32,11 @@ void /*PORT_NAME*/_set_listener_id(uint16_t id) {
 /*PARSER_IMPLEMENTATION*/
 
 
-void /*PORT_NAME*/_publish_callback(void *obj, uint16_t mid)
+void /*PORT_NAME*/_publish_callback(struct mosquitto *mosq, void *obj, uint16_t mid)
 {
 }
 
-void /*PORT_NAME*/_message_callback(void *obj, const struct mosquitto_message *message)
+void /*PORT_NAME*/_message_callback(struct mosquitto *mosq, void *obj, const struct mosquitto_message *message)
 {
     //printf("%s %s\n", message->topic, message->payload);
     int len = strlen(message->payload);
@@ -47,7 +45,7 @@ void /*PORT_NAME*/_message_callback(void *obj, const struct mosquitto_message *m
     
 }
 
-void /*PORT_NAME*/_connect_callback(void *obj, int result)
+void /*PORT_NAME*/_connect_callback(struct mosquitto *mosq, void *obj, int result)
 {
 
     int i;
@@ -77,7 +75,7 @@ void /*PORT_NAME*/_connect_callback(void *obj, int result)
     }
 }
 
-void /*PORT_NAME*/_subscribe_callback(void *obj, uint16_t mid, int qos_count, const uint8_t *granted_qos)
+void /*PORT_NAME*/_subscribe_callback(struct mosquitto *mosq, void *obj, uint16_t mid, int qos_count, const uint8_t *granted_qos)
 {
 	int i;
 
@@ -146,7 +144,7 @@ void /*PORT_NAME*/_setup() {
 		/*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] Warning: Not using password since username not set.\n");
 	}
 	//mosquitto_threaded_set(MQTT_mosq, true);
-	/*PORT_NAME*/_mosq = mosquitto_new(id, NULL);
+	/*PORT_NAME*/_mosq = mosquitto_new(id, clean_session, NULL);
 	if(!/*PORT_NAME*/_mosq){
 		/*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] Error: Out of memory.\n");
 		return 1;
@@ -160,7 +158,7 @@ void /*PORT_NAME*/_setup() {
 	
 	/*TRACE_LEVEL_1*/mosquitto_subscribe_callback_set(/*PORT_NAME*/_mosq, /*PORT_NAME*/_subscribe_callback);
 
-	rc = mosquitto_connect(/*PORT_NAME*/_mosq, host, port, keepalive, clean_session);
+	rc = mosquitto_connect(/*PORT_NAME*/_mosq, host, port, keepalive);
 	if(rc){
 		/*TRACE_LEVEL_1*/if(rc == MOSQ_ERR_ERRNO){
 			/*TRACE_LEVEL_1*/strerror_r(errno, err, 1024);
@@ -177,7 +175,7 @@ void /*PORT_NAME*/_start_receiver_process() {
         int rc;	
 
 	do{
-		rc = mosquitto_loop(/*PORT_NAME*/_mosq, -1);
+		rc = mosquitto_loop(/*PORT_NAME*/_mosq, -1, 1);
 	}while(rc == MOSQ_ERR_SUCCESS);
 
         /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error :%i\n", rc);
@@ -205,3 +203,4 @@ void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size/*PUBLISH_MULTI_OR_MONO
     
 }
 
+/*FORWARDERS*/
