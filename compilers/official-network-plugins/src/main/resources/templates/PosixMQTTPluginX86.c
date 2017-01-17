@@ -1,9 +1,4 @@
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-#include <mosquitto.h>
+#include "/*PORT_NAME*/.h"
 
 #define /*PORT_NAME*/_ESCAPE_CHAR /*ESCAPE_CHAR*/
 
@@ -16,12 +11,6 @@ static int /*PORT_NAME*/_retain = 0;
 static uint16_t /*PORT_NAME*/_mid_sent = 0;
 struct mosquitto */*PORT_NAME*/_mosq = NULL;
 static int /*PORT_NAME*/_connected = 0;
-
-
-struct /*PORT_NAME*/_instance_type {
-    uint16_t listener_id;
-    /*INSTANCE_INFORMATION*/
-};
 
 extern struct /*PORT_NAME*/_instance_type /*PORT_NAME*/_instance;
 

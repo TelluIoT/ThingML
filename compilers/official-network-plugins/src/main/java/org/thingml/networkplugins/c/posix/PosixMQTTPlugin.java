@@ -22,7 +22,9 @@
 package org.thingml.networkplugins.c.posix;
 
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
@@ -132,6 +134,17 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 String htemplate = ctx.getTemplateByID("templates/PosixMQTTPlugin.h");
 
                 String portName = protocol.getName();
+
+                // TODO Jakob, this is kind of hack-ish
+                // Section copied from CCfgMainGenerator.java - generateIncludes
+                StringBuilder includes = new StringBuilder();
+                ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
+                for (Thing t : ConfigurationHelper.allThings(cfg)) {
+                  includes.append("#include \"" + t.getName() + ".h\"\n");
+                }
+                includes.append(ctx.getIncludeCode());
+                htemplate = htemplate.replace("/*INCLUDES*/",includes);
+                // End hack-ish section
 
                 //Threaded listener --- BEGIN
                 ctx.addToInitCode("\n" + portName + "_instance.listener_id = add_instance(&" + portName + "_instance);\n");
