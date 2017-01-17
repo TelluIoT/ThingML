@@ -18,13 +18,13 @@ fi
 #setting up maven START
 echo "Setting up MAVEN"
 if ! [[ -d "${JENKINS_HOME}/.m2" ]]; then
-  echo "Creating .m2 directory"
+  echo "Creating .m2 directory in ${JENKINS_HOME}"
   mkdir "${JENKINS_HOME}/.m2"
   chown -R jenkins:jenkins "${JENKINS_HOME}/.m2"
 fi
 
 if ! [[ -e "${JENKINS_HOME}/.m2/settings.xml" ]]; then
-  echo "Copying settings.xml to ${JENKINS_HOME}"
+  echo "Copying ${M2_REPO_ROOT}/settings.xml to ${JENKINS_HOME}/.m2"
   cp "${M2_REPO_ROOT}/settings.xml" "${JENKINS_HOME}/.m2/settings.xml"
   chown jenkins:jenkins "${JENKINS_HOME}/.m2/settings.xml"
 fi

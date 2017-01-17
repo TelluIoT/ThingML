@@ -1,6 +1,14 @@
 FROM jenkins:2.32.1
 MAINTAINER Anatoly Vasilevskiy <Anatoly.Vasilevskiy@sintef.no>
 
+#installing jenkins plugins
+#this seems to be a depricated method
+#COPY plugins.txt /usr/share/jenkins/plugins.txt
+#RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
+COPY plugins.txt /usr/share/jenkins/plugins.txt
+COPY install_jenkins_plugins.sh /usr/local/bin/install_jenkins_plugins.sh
+RUN /usr/local/bin/install_jenkins_plugins.sh /usr/share/jenkins/plugins.txt
+
 USER root
 
 RUN apt-get update && apt-get install -y openssl \
@@ -49,13 +57,12 @@ ENV MAVEN_HOME "/usr/share/maven"
 ENV M2_REPO "$MAVEN_M2_REPO"
 ENV PATH "$PATH:/usr/share/maven/bin"
 
-RUN mkdir -p "$MAVEN_REPO_ROOT" \
-	&& chown -R jenkins:jenkins "$MAVEN_REPO_ROOT"
+RUN mkdir "$MAVEN_REPO_ROOT"
+	#&& chown -R jenkins:jenkins "$MAVEN_REPO_ROOT"
 
 COPY settings-docker.xml "$MAVEN_REPO_ROOT/settings.xml"
 
 VOLUME "$MAVEN_M2_REPO"
-
 #installing mavne END
 
 CMD ["/usr/local/bin/startup.sh"]

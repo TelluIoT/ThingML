@@ -1,0 +1,16 @@
+htmlpublisher:1.12
+cloudbees-folder:5.16
+timestamper:1.8.7
+workflow-aggregator:2.4
+ldap:1.13
+ws-cleanup:0.32
+github-organization-folder:1.5
+ssh-slaves:1.12
+email-ext:2.53
+build-timeout:1.18
+pipeline-stage-view:2.4
+matrix-auth:1.4
+mailer:1.18
+credentials-binding:1.10
+git:3.0.1
+pam-auth:1.3
