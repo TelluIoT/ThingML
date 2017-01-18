@@ -2,20 +2,16 @@ FROM jenkins:2.32.1
 MAINTAINER Anatoly Vasilevskiy <Anatoly.Vasilevskiy@sintef.no>
 
 #installing jenkins plugins
-#this seems to be a depricated method
 #COPY plugins.txt /usr/share/jenkins/plugins.txt
-#RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
-COPY plugins.txt /usr/share/jenkins/plugins.txt
-COPY install_jenkins_plugins.sh /usr/local/bin/install_jenkins_plugins.sh
-RUN /usr/local/bin/install_jenkins_plugins.sh /usr/share/jenkins/plugins.txt
+#COPY install_jenkins_plugins.sh /usr/local/bin/install_jenkins_plugins.sh
+#RUN /usr/local/bin/install_jenkins_plugins.sh /usr/share/jenkins/plugins.txt
 
 USER root
 
 RUN apt-get update && apt-get install -y openssl \
 						sshpass \
 						openssh-server \
-						git \
-						vim
+						git
 
 RUN echo 'jenkins:jenkins' | chpasswd \
 	&& mkdir /var/run/sshd	
@@ -26,10 +22,10 @@ RUN chmod a+x /usr/local/bin/startup.sh
 
 #installing docker START
 ENV DOCKER_BUCKET get.docker.com
-#ENV DOCKER_VERSION 1.12.3
-#ENV DOCKER_SHA256 626601deb41d9706ac98da23f673af6c0d4631c4d194a677a9a1a07d7219fa0f
-ENV DOCKER_VERSION 1.12.6
-ENV DOCKER_SHA256 cadc6025c841e034506703a06cf54204e51d0cadfae4bae62628ac648d82efdd
+ENV DOCKER_VERSION 1.12.3
+ENV DOCKER_SHA256 626601deb41d9706ac98da23f673af6c0d4631c4d194a677a9a1a07d7219fa0f
+#ENV DOCKER_VERSION 1.12.6
+#ENV DOCKER_SHA256 cadc6025c841e034506703a06cf54204e51d0cadfae4bae62628ac648d82efdd
 
 RUN set -x \
 	&& curl -fSL "https://${DOCKER_BUCKET}/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
