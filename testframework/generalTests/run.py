@@ -186,7 +186,7 @@ def prepare_report(working_folder, jobs, report_folder, category_name):
 		pattern = '(?<=href=\").+(?=\")'
 		matches = re.findall(pattern, job_body)
 		for old_path in matches:
-			new_path = os.path.join(job, old_path)
+			new_path = os.path.join(job, old_path.lstrip('/'))
 			job_body = job_body.replace(old_path, new_path)
 
 		body_accumulated_result = body_accumulated_result + job_body
