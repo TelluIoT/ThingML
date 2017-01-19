@@ -27,9 +27,7 @@ import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -45,118 +43,362 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
     @Override
     public String generateSubFunctions() {
-        StringBuilder b = new StringBuilder();
-        b.append("inline char * jumpspace(char *str)\n" +
-                "{\n" +
-                "  while(isspace(*str)) str++;\n" +
-                "\n" +
-                "  return str;\n" +
-                "}\n" +
-                "\n" +
-                "int next_char(char * str, char a, char b) {\n" +
-                "	char * p = str;\n" +
-                "	while((*p != '\\0') && (*p != a) && (*p != b)) {\n" +
-                "		p++;\n" +
-                "	}\n" +
-                "	if(*p == '\\0') {\n" +
-                "		return -1;\n" +
-                "	} else {\n" +
-                "		return p-str;\n" +
-                "	}\n" +
-                "}\n\n");
-        return b.toString() + messagesparser.toString();
+        StringBuilder sub = new StringBuilder();
+        // Function to jump to next occurence of a or b
+        sub.append("uint8_t *jump_to(uint8_t *msg, int len, uint8_t *ptr, uint8_t a, uint8_t b)\n");
+        sub.append("{\n");
+        sub.append("    if (!ptr) return NULL;\n");
+        sub.append("    while (ptr-msg <= len) {\n");
+        sub.append("        if(*ptr == a || *ptr == b) return ptr;\n");
+        sub.append("        ptr++;\n");
+        sub.append("    }\n");
+        sub.append("    return NULL;\n");
+        sub.append("}\n\n");
+
+        // Function to skip whitespace
+        sub.append("uint8_t *jump_space(uint8_t *msg, int len, uint8_t *ptr)\n");
+        sub.append("{\n");
+        sub.append("    if (!ptr) return NULL;\n");
+        sub.append("    while (ptr-msg <= len) {\n");
+        sub.append("        if (!isspace(*ptr)) return ptr;\n");
+        sub.append("        ptr++;\n");
+        sub.append("    }\n");
+        sub.append("    return NULL;\n");
+        sub.append("}\n\n");
+
+        return sub.toString() + messagesparser.toString();
+    }
+
+    Integer getMaximumSerializedParameterValueLength(Parameter p, CCompilerContext ctx) {
+        switch (ctx.getCType(p.getType())) {
+            // Signed types
+            case "signed char":
+            case "int8_t":
+                return 4; // -127 -> 127
+            case "short":
+            case "short int":
+            case "signed short":
+            case "signed short int":
+            case "int16_t":
+                return 6; // -32767 -> 32767
+            case "int":
+            case "signed":
+            case "signed int":
+            case "long":
+            case "long int":
+            case "signed long":
+            case "signed long int":
+            case "int32_t":
+                return 11; // −2147483647 -> 2147483647
+            case "long long":
+            case "long long int":
+            case "signed long long":
+            case "signed long long int":
+            case "int64_t":
+                return 20; // −9,223,372,036,854,775,807 -> 9,223,372,036,854,775,807
+            // Unsigned types
+            case "byte":
+            case "unsigned char":
+            case "uint8_t":
+                return 3; // 0 -> 255
+            case "unsigned short":
+            case "unsigned short int":
+            case "uint16_t":
+                return 5; // 0 -> 65,535
+            case "unsigned":
+            case "unsigned int":
+            case "unsigned long":
+            case "unsigned long int":
+            case "uint32_t":
+                return 10; // 0 -> 4,294,967,295
+            case "unsigned long long":
+            case "unsigned long long int":
+            case "uint64_t":
+                return 20; // 0 -> 18,446,744,073,709,551,615
+            // Floating point types
+            case "float":
+            case "double":
+                // TODO - Jakob, these can be veeery long, does it make sense to pre-allocate?
+                return 20;
+            // Boolean
+            case "bool":
+            case "boolean":
+                return 5; // true or false
+            default:
+                System.err.println("[ERROR] Serialization of type " + ctx.getCType(p.getType()) + " is not implemented in PosixJSONSerializerPlugin!");
+                return 4; // We will print 'null' for un-serializable parameters;
+        }
+    }
+
+    Integer getMaximumSerializedMessageLength(Message m, CCompilerContext ctx) {
+        Integer length = 8; // '{"":{}}\0' Base valid JSON serialization
+
+        // Message name
+        length += m.getName().length();
+
+        // For all forwarded parameters
+        for (Parameter p : m.getParameters()) {
+            if (!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                // '"":,' Base parameter JSON
+                length += 4;
+                // Parameter name
+                length += p.getName().length();
+                // The actual parameter value
+                length += getMaximumSerializedParameterValueLength(p, ctx);
+            }
+        }
+        return length;
+    };
+
+    void generateParameterSerialization(StringBuilder builder, String bufferName, Integer maxLength, Parameter p, CCompilerContext ctx) {
+        boolean serialized = false;
+        //FIXME: @Jakob: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
+        switch (ctx.getCType(p.getType())) {
+            case "int8_t":
+            case "int16_t":
+            case "int32_t":
+            case "int64_t":
+            case "int":
+            case "byte":
+            case "long":
+            case "long int":
+                builder.append("    result = sprintf(&"+bufferName+"[index], \"%d\", "+p.getName()+");\n");
+                builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+                serialized = true;
+                break;
+            case "uint8_t":
+            case "uint16_t":
+            case "uint32_t":
+            case "uint64_t":
+            case "unsigned int":
+            case "unsigned long int":
+                builder.append("    result = sprintf(&"+bufferName+"[index], \"%u\", "+p.getName()+");\n");
+                builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+                serialized = true;
+                break;
+            case "float":
+            case "double":
+                builder.append("    if (isnan("+p.getName()+") || isinf("+p.getName()+")) {\n");
+                builder.append("        result = sprintf(&"+bufferName+"[index],\"%.*s\", "+maxLength+"-index, \"null\");\n");
+                builder.append("    } else {\n");
+                builder.append("        result = sprintf(&"+bufferName+"[index], \"%#.15g\", "+p.getName()+");\n");
+                builder.append("    }\n");
+                builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+                serialized = true;
+                break;
+            case "bool":
+            case "boolean":
+                builder.append("    if ("+p.getName()+") { result = sprintf(&"+bufferName+"[index],\"%.*s\", "+maxLength+"-index, \"true\"); }\n");
+                builder.append("    else { result = sprintf(&"+bufferName+"[index],\"%.*s\", "+maxLength+"-index, \"false\"); }\n");
+                builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+                serialized = true;
+                break;
+            case "char":
+                // TODO: Jakob implement this, should be allowed with a single length string, or a number [-128->255]
+                // stroll is C++11, so we do not support it right now
+            case "long long":
+            case "long long int":
+            case "unsigned long long":
+            case "unsigned long long int":
+                // All other unsupported types
+            default:
+                break;
+        }
+        // TODO: Also handle fixed length arrays!!!
+        if (!serialized) {
+            builder.append("    if ("+p.getName()+") { result = sprintf(&"+bufferName+"[index],\"%.*s\", "+maxLength+"-index, \"null\"); }\n");
+            builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+        }
     }
 
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
-        builder.append("	int len = 7;//{\"\":{}}\n" +
-                "	len += " + m.getName().length() + ";//" + m.getName() + "\n");
+        CCompilerContext ctx = (CCompilerContext) context;
+        Integer maxLength = getMaximumSerializedMessageLength(m, ctx);
 
+        // Pre-allocate memory
+        builder.append("    uint8_t "+bufferName+"["+maxLength+"];\n");
+        builder.append("    int index = 0;\n");
+        builder.append("    int result;\n\n");
+
+        // Add start of message
+        builder.append("    //Start of serialized message\n");
+        builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"{\\\""+m.getName()+"\\\":{\");\n");
+        builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+
+        // Add all forwarded parameters
         boolean first = true;
         for (Parameter p : m.getParameters()) {
-            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                if (first) {
-                    first = false;
-                    builder.append("	len += " + (p.getName().length() + 3) + ";//\"" + p.getName().length() + "\":\n");
-                } else {
-                    builder.append("	len += " + (p.getName().length() + 4) + ";//,\"" + p.getName().length() + "\":\n");
-                }
+            if (!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                // Separator from previous message
+                String separator = ",";
+                if (first) { separator = ""; first = false; }
 
-                //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
-                if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
-                    builder.append("	len += snprintf(NULL, 0, \"%i\", " + p.getName() + ");\n");
-                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
-                    builder.append("	len += snprintf(NULL, 0, \"%g\", " + p.getName() + ");\n");
-                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
-                    builder.append("	len += snprintf(NULL, 0, " + p.getName() + " ? \"true\" : \"false\");\n");
-                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "char")) {
-                    builder.append("	len += snprintf(NULL, 0, \"\\\"%c\\\"\", " + p.getName() + ");\n");
-                } else {
-                    builder.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
-                    builder.append("	len += snprintf(NULL, 0, \"%s\", \"null\");\n");
-                }
+                // Add parameter start
+                builder.append("    // Parameter "+p.getName()+"\n");
+                builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \""+separator+"\\\""+p.getName()+"\\\":\");\n");
+                builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+
+                // Add the value of the parameter
+                generateParameterSerialization(builder, bufferName, maxLength, p, ctx);
             }
         }
-        builder.append("	char " + bufferName + "[len];\n" +
-                "	int index = 0;\n");
 
-        builder.append("	index += sprintf(" + bufferName + "+index, \"{\\\"" + m.getName() + "\\\":{\");\n");
+        // Add end of message
+        builder.append("    //End of serialized message\n");
+        builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"}}\");\n");
+        builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+        builder.append("    index += 1; //Also count zero-terminator\n");
 
+        return "index";
+    }
 
-        first = true;
+    void generateParameterParser(Parameter p, Integer bytepos, CCompilerContext ctx) {
+        // Generate union
+        messagesparser.append("            ");
+        messagesparser.append("union u_"+p.getName()+"_t { ");
+        messagesparser.append(ctx.getCType(p.getType())+" "+p.getName()+"; ");
+        messagesparser.append("uint8_t bytebuffer["+ctx.getCByteSize(p.getType(),0)+"]; ");
+        messagesparser.append("} u_"+p.getName()+";\n");
+
+        boolean parsed = false;
+        //FIXME: @Jakob: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
+        switch (ctx.getCType(p.getType())) {
+            case "int8_t":
+            case "int16_t":
+            case "int32_t":
+            case "int64_t":
+            case "int":
+            case "byte":
+            case "long":
+            case "long int":
+                messagesparser.append("            u_"+p.getName()+"."+p.getName()+" = strtol(pstart, &ptr, 10);\n");
+                parsed = true;
+                break;
+            case "uint8_t":
+            case "uint16_t":
+            case "uint32_t":
+            case "uint64_t":
+            case "unsigned int":
+            case "unsigned long int":
+                messagesparser.append("            u_"+p.getName()+"."+p.getName()+" = strtoul(pstart, &ptr, 10);\n");
+                parsed = true;
+                break;
+            case "float":
+            case "double":
+                messagesparser.append("            if (ptr-pstart >= 4 && strcmp(\"null\", pstart) == 0) { u_"+p.getName()+"."+p.getName()+" = NAN; }\n");
+                messagesparser.append("            else { u_"+p.getName()+"."+p.getName()+" = strtod(pstart, &ptr); }\n");
+                parsed = true;
+                break;
+            case "bool":
+            case "boolean":
+                // Everything is considered to be true, unless the value is the literal 'false' or '0'
+                messagesparser.append("            if (strcmp(\"false\", pstart) == 0) { u_"+p.getName()+"."+p.getName()+" = 0; }\n");
+                messagesparser.append("            else if (pstart[0] == '0' && (pstart[1] == ',' || pstart[1] == '}' || isspace(pstart[1]))) {  u_"+p.getName()+"."+p.getName()+" = 0; }\n");
+                messagesparser.append("            else { u_"+p.getName()+"."+p.getName()+" = 1; }\n");
+                parsed = true;
+                break;
+            case "char":
+                // TODO: Jakob implement this, should be allowed with a single length string, or a number [-128->255]
+                // stroll is C++11, so we do not support it right now
+            case "long long":
+            case "long long int":
+            case "unsigned long long":
+            case "unsigned long long int":
+                // All other unsupported types
+            default:
+                break;
+        }
+        // TODO: Also handle fixed length arrays!!!
+        if (parsed) {
+            // Copy the value onto the output buffer
+            messagesparser.append("            memcpy(&out_buffer["+bytepos+"], u_"+p.getName()+".bytebuffer, "+ctx.getCByteSize(p.getType(),0)+");\n");
+        } else {
+            // The type is not supported, set to 0
+            messagesparser.append("            //Type " + p.getType().getName() + " (in parameter "+p.getName()+") is not supported yet by the PosixJSONSerializer plugin\n");
+            messagesparser.append("            bzero(&out_buffer["+bytepos+"], "+ctx.getCByteSize(p.getType(),0)+");");
+        }
+    }
+
+    void generateMessageParser(Message m, CCompilerContext ctx) {
+        // Find parameters that we should forward, and their position in the buffer
+        Map<Integer, Parameter> parameters = new HashMap<Integer, Parameter>();
+        Map<Integer, Parameter> not_forwarded = new HashMap<Integer, Parameter>();
+        Integer bytePos = 2; // The first two is for port/message code
+        Integer forwardedParameters = 0;
         for (Parameter p : m.getParameters()) {
-            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append("	index += sprintf(" + bufferName + "+index, \",\");\n");
-                }
-
-                //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
-                if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
-                    builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%i\", " + p.getName() + ");\n");
-                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
-                    builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%g\", " + p.getName() + ");\n");
-                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
-                        || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
-                    builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":%s\", " + p.getName() + " ? \"true\" : \"false\");\n");
-                } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "char")) {
-                    builder.append("	index += sprintf(" + bufferName + "+index, \"\\\"" + p.getName() + "\\\":\\\"%c\\\"\", " + p.getName() + ");\n");
-                } else {
-                    builder.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
-                    builder.append("	index += sprintf(" + bufferName + "+index, \"null\");\n");
-                }
+            if (AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                not_forwarded.put(bytePos, p);
+            } else {
+                parameters.put(bytePos, p);
+                forwardedParameters += 1;
             }
+            bytePos += ctx.getCByteSize(p.getType(), 0);
         }
-        builder.append("	index += sprintf(" + bufferName + "+index, \"}}\");");
-        return "len";
+
+        // Start function
+        messagesparser.append("int parse_" + m.getName() + "(uint8_t *msg, int size, uint8_t *out_buffer) {\n");
+        messagesparser.append("    uint8_t *ptr = msg;\n");
+        messagesparser.append("    uint8_t *start = NULL;\n");
+        messagesparser.append("    uint8_t *end = NULL;\n");
+        messagesparser.append("    uint8_t *pstart = NULL;\n");
+        messagesparser.append("    int index = 0;\n");
+
+        // Add port/message code
+        messagesparser.append("    // Port-message code\n");
+        messagesparser.append("    out_buffer[index+0] = (" + ctx.getHandlerCode(configuration, m) + " >> 8);\n");
+        messagesparser.append("    out_buffer[index+1] = (" + ctx.getHandlerCode(configuration, m) + " & 0xFF);\n");
+        messagesparser.append("    index += 2;\n");
+
+        // Find a parameter
+        messagesparser.append("    // Find all forwarded parameters\n");
+        messagesparser.append("    int np;\n");
+        messagesparser.append("    for (np = 0; np < "+forwardedParameters+"; np++) {\n");
+        messagesparser.append("        // Parameter name\n");
+        messagesparser.append("        ptr = jump_space(msg, size, ptr);\n");
+        messagesparser.append("        if (!ptr || *ptr != '\"') return -2;\n");
+        messagesparser.append("        start = ptr+1;\n");
+        messagesparser.append("        ptr = jump_to(msg, size, start, '\"', '\"');\n");
+        messagesparser.append("        if (!ptr) return -3;\n");
+        messagesparser.append("        end = ptr;\n");
+        messagesparser.append("        // Parameter value\n");
+        messagesparser.append("        ptr = jump_to(msg, size, end, ':', ':');\n");
+        messagesparser.append("        if (!ptr) return -4;\n");
+        messagesparser.append("        ptr = jump_space(msg, size, ptr+1);\n");
+        messagesparser.append("        if (!ptr) return -5;\n");
+        messagesparser.append("        pstart = ptr;\n");
+        messagesparser.append("        ptr = jump_to(msg, size, pstart, ',', '}');\n");
+        messagesparser.append("        if (!ptr) return -6;\n");
+        messagesparser.append("        // Find matching parameter\n");
+        messagesparser.append("        if (ptr-pstart < 1) return -7;\n");
+        for (Map.Entry<Integer, Parameter> pospar : parameters.entrySet()) {
+            messagesparser.append("        else if (strncmp(\""+pospar.getValue().getName()+"\", start, end-start) == 0) {\n");
+            generateParameterParser(pospar.getValue(), pospar.getKey(), ctx);
+            messagesparser.append("        }\n");
+        }
+        messagesparser.append("        ptr = jump_to(msg, size, ptr, ',', '}');\n");
+        messagesparser.append("        if (!ptr) return -8;\n");
+        messagesparser.append("        ptr = ptr+1;\n");
+        messagesparser.append("    }\n");
+
+        // Set all non-forwarded parameters to zero-bytes
+        messagesparser.append("    // Zero-init all non-forwarded messages\n");
+        for (Map.Entry<Integer, Parameter> pospar : not_forwarded.entrySet()) {
+            messagesparser.append("    bzero(&out_buffer["+pospar.getKey()+"], "+ctx.getCByteSize(pospar.getValue().getType(),0)+"); ");
+            messagesparser.append("// "+pospar.getValue().getName()+"\n");
+        }
+
+        // Make sure there is not more rubbish at the end of the message
+        messagesparser.append("    // Make sure we are at the end of the message\n");
+        messagesparser.append("    ptr = jump_space(msg, size, ptr);\n");
+        messagesparser.append("    if (!ptr || *ptr != '}') return -9;\n");
+
+        // Parsing complete, return the length of the message on success
+        messagesparser.append("    // Parsing complete\n");
+        messagesparser.append("    return "+(ctx.getMessageSerializationSize(m)-2)+";\n");
+
+        // End function
+        messagesparser.append("}\n\n");
     }
 
     @Override
@@ -164,218 +406,61 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         if (!messages.isEmpty()) {
             CCompilerContext ctx = (CCompilerContext) context;
 
-            int maxMsgLength = 0;
+            // TODO - Jakob how to handle escaped characters?
+            // TODO - Jakob should we handle multiple messages after each other?
+
+            // Find the message name string
+            builder.append("    uint8_t *ptr = "+bufferName+";\n");
+            builder.append("    uint8_t *start = NULL;\n");
+            builder.append("    uint8_t *end = NULL;\n");
+            builder.append("    // Find opening '{'\n");
+            builder.append("    ptr = jump_space("+bufferName+", "+bufferSizeName+", ptr);\n");
+            builder.append("    if (!ptr || *ptr != '{') return;\n");
+            builder.append("    // Find start of message name '\"'\n");
+            builder.append("    ptr = jump_space("+bufferName+", "+bufferSizeName+", ptr+1);\n");
+            builder.append("    if (!ptr || *ptr != '\"') return;\n");
+            builder.append("    start = ptr+1;\n");
+            builder.append("    // Find end of message name '\"'\n");
+            builder.append("    ptr = jump_to("+bufferName+", "+bufferSizeName+", start, '\"', '\"');\n");
+            builder.append("    if (!ptr) return;\n");
+            builder.append("    end = ptr;\n\n");
+
+            // Find the message object
+            builder.append("    // Find the message object ':{'\n");
+            builder.append("    ptr = jump_space("+bufferName+", "+bufferSizeName+", ptr+1);\n");
+            builder.append("    if (!ptr || *ptr != ':') return;\n");
+            builder.append("    ptr = jump_space("+bufferName+", "+bufferSizeName+", ptr+1);\n");
+            builder.append("    if (!ptr || *ptr != '{') return;\n");
+            builder.append("    ptr++;\n\n");
+
+            // Allocate room for parsing the message
+            builder.append("    // Make room for parsing\n");
+            Integer bufferSize = 0;
+            for (Message m : messages)
+                if (ctx.getMessageSerializationSize(m) > bufferSize)
+                    bufferSize = ctx.getMessageSerializationSize(m);
+            bufferSize = bufferSize-2; // We don't store the source id in external messages
+            builder.append("    uint8_t enqueue_buffer["+bufferSize+"];\n\n");
+
+            // Then compare to the messages that we can receive
+            builder.append("    // Parse the message\n");
+            builder.append("    int result = -1;\n");
+            builder.append("    if (0) {}\n");
             for (Message m : messages) {
-                if (m.getName().length() > maxMsgLength) {
-                    maxMsgLength = m.getName().length();
-                }
+                builder.append("    else if (strncmp(\"" + m.getName() + "\", start, end-start) == 0) {\n");
+                generateMessageParser(m, ctx);
+                builder.append("        result = parse_" + m.getName() + "(ptr, size-(ptr-msg), enqueue_buffer);\n");
+                builder.append("    }\n");
             }
 
-
-            builder.append("char * m = jumpspace(" + bufferName + ");\n" +
-                    "\n" +
-                    "	if (*m != '{') {return;} // {\n" +
-                    "	m++;\n" +
-                    "	m = jumpspace(m);\n" +
-                    "\n" +
-                    "	if(*m != '\"') {return;} // \"\n" +
-                    "	m++;\n" +
-                    "\n" +
-                    "	char msg_name[" + (maxMsgLength+1) + "];\n" +
-                    "	int msg_name_len = next_char(m, '\"', '\"');\n" +
-                    "	if(msg_name_len <= 0) {return;} // empty name\n" +
-                    "	strncpy(msg_name, m, msg_name_len); // name\n" +
-                    "	msg_name[msg_name_len] = '\\0';\n" +
-                    "	m += msg_name_len; // \"\n" +
-                    "	m++;\n" +
-                    "	m = jumpspace(m);\n" +
-                    "\n" +
-                    "	if(*m != ':') {return;} // :\n" +
-                    "	m++;\n" +
-                    "	m = jumpspace(m);\n" +
-                    "\n" +
-                    "	if (*m != '{') {return;} // {\n" +
-                    "	m++;\n" +
-                    "	m = jumpspace(m);\n" +
-                    "\n");
-            builder.append("	uint8_t *msg_buf;\n");
-            builder.append("	int msg_buf_size;\n");
-            for (Message m : messages) {
-                builder.append("if(strcmp(\"" + m.getName() + "\", msg_name) == 0) {\n");
-                //declarer les unions
-                for (Parameter p : m.getParameters()) {
-                    builder.append("union u_" + p.getName() + "_t {\n");
-                    builder.append(ctx.getCType(p.getType()) + " p;\n");
-                    builder.append("byte bytebuffer[" + ctx.getCByteSize(p.getType(), 0) + "];\n");
-                    builder.append("} u_" + p.getName() + ";\n");
-                }
-                generateMessageParser(m);
-                builder.append("		int res = parse_" + m.getName() + "(m");
-
-                for (Parameter p : m.getParameters()) {
-                    if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                        builder.append(", &u_" + p.getName() + ".p");
-                    }
-                }
-                builder.append(");\n" +
-                        "\n" +
-                        "		if(res < 0) {\n" +
-                        "			return;\n" +
-                        "		} else {\n");
-
-                //enqueue
-                builder.append("	msg_buf_size = " + (ctx.getMessageSerializationSize(m) - 2) + ";\n");
-                builder.append("	uint8_t true_buf[msg_buf_size];\n");
-                builder.append("	true_buf[0] = (" + ctx.getHandlerCode(configuration, m) + " >> 8);\n");
-                builder.append("	true_buf[1] = (" + ctx.getHandlerCode(configuration, m) + " & 0xFF);\n");
-
-                int idx_bis = 2;
-                for (Parameter p : m.getParameters()) {
-                    if(AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                        builder.append("u_" + p.getName() + ".p = provided_" + p.getName() + ";\n");
-                    }
-                        
-                    for (int i = 0; i < ctx.getCByteSize(p.getType(), 0); i++) {
-
-                        builder.append("true_buf[" + (idx_bis + i) + "] = ");
-                        builder.append("u_" + p.getName() + ".bytebuffer[" + (ctx.getCByteSize(p.getType(), 0) - i - 1) + "];\n");
-
-                    }
-
-                    idx_bis = idx_bis + ctx.getCByteSize(p.getType(), 0);
-                }
-                builder.append("	externalMessageEnqueue(true_buf, msg_buf_size, " + sender + ");\n");
-                builder.append("			m+=res;\n" +
-                        "		}\n" +
-                        "	} else ");
-            }
-
-            builder.append("{\n" +
-                    "		return;\n" +
-                    "	}\n" +
-                    "	//parse\n" +
-                    "\n" +
-                    "	m = jumpspace(m);\n" +
-                    "	if (*m != '}') {return;} // }\n" +
-                    "	m++;\n" +
-                    "	m = jumpspace(m);\n" +
-                    "\n" +
-                    "	if (*m != '}') {return;} // }\n" +
-                    "\n" +
-                    "	//enqueue\n" +
-                    "	return;");
+            // Enqueue the message
+            builder.append("\n    // Enqueue the message\n");
+            builder.append("    if (result > 0) {\n");
+            builder.append("        externalMessageEnqueue(enqueue_buffer, result, "+sender+");\n");
+            builder.append("    } else {\n");
+            builder.append("        /*TRACE_LEVEL_1*/fprintf(stderr, \"[MQTT]: Error parsing message %i\\n\", result);\n");
+            builder.append("    }\n");
         }
-    }
-
-    void generateMessageParser(Message m) {
-        int maxParameterNameSize = 0;
-        for (Parameter p : m.getParameters()) {
-            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                if (maxParameterNameSize < p.getName().length()) {
-                    maxParameterNameSize = p.getName().length();
-                }
-            }
-        }
-
-        messagesparser.append("int parse_" + m.getName() + "(char * msg");
-        CCompilerContext ctx = (CCompilerContext) context;
-        boolean noParam = true;
-        int nbParam = 0;
-        for (Parameter p : m.getParameters()) {
-            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                messagesparser.append(", " + ctx.getCType(p.getType()) + " *" + p.getName());
-                noParam = false;
-                nbParam++;
-            }
-        }
-
-        messagesparser.append(") {\n");
-        if (!noParam) {
-            messagesparser.append("	char *m = msg;\n" +
-                    "	int cp;\n" +
-                    "	for(cp = 0; cp < " + nbParam + "; cp++) {\n" +
-                    "		m = jumpspace(m);\n" +
-                    "\n" +
-                    "		if(*m != '\"') {return -1;} // \"\n" +
-                    "		m++;\n" +
-                    "\n" +
-                    "		m = jumpspace(m);\n" +
-                    "		char param_name[" + (maxParameterNameSize + 1) + "];\n" +
-                    "		int param_name_len = next_char(m, '\"', '\"');\n" +
-                    "		if(param_name_len <= 0) {return -1;} // empty name\n" +
-                    "		strncpy(param_name, m, param_name_len); // name\n" +
-                    "		param_name[param_name_len] = '\\0';\n" +
-                    "		m += param_name_len;\n" +
-                    "		m++; // \"\n" +
-                    "		m = jumpspace(m);\n" +
-                    "\n" +
-                    "		if(*m != ':') {return -1;} // :\n" +
-                    "		m++;\n" +
-                    "		m = jumpspace(m);\n" +
-                    "\n");
-
-            messagesparser.append("		int param_val_len = next_char(m, ',', '}');\n" +
-                    "		char * mend = &m[param_val_len];\n");
-            messagesparser.append("		if(param_val_len <= 0) {return -1;} // empty val\n");
-            for (Parameter p : m.getParameters()) {
-                if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                    messagesparser.append("		if(strcmp(\"" + p.getName() + "\", param_name) == 0) { //" + p.getName() + "\n");
-
-                    //FIXME: @Nicolas: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
-                    if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint8_t")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint16_t")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint32_t")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "uint64_t")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int8_t")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int16_t")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int32_t")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int64_t")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "int")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "byte")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long int")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "unsigned int")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "long")) {
-                        messagesparser.append("			*" + p.getName() + " = (" + ctx.getCType(p.getType()) + ") strtol(m, &mend, 10);\n");
-                    } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "float")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "double")) {
-                        messagesparser.append("			*" + p.getName() + " = (" + ctx.getCType(p.getType()) + ") strtof(m, &mend);\n");
-                    } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "bool")
-                            || AnnotatedElementHelper.isDefined(p.getType(), "c_type", "boolean")) {
-                        messagesparser.append("			if(param_val_len < 4) {return -1;} // incorrect val\n" +
-                                "			char param_val_bool[5];\n" +
-                                "			param_val_bool[4] = '\\0';\n" +
-                                "			strncpy(param_val_bool, m, 4);\n" +
-                                "			if(strcmp(\"true\", param_val_bool) == 0) {\n" +
-                                "				*" + p.getName() + " = true;\n" +
-                                "			} else if (strcmp(\"fals\", param_val_bool) == 0) {\n" +
-                                "				*" + p.getName() + " = false;\n" +
-                                "			} else {\n" +
-                                "				return -1;\n" +
-                                "			}\n");
-                    } else if (AnnotatedElementHelper.isDefined(p.getType(), "c_type", "char")) {
-                        messagesparser.append("			if(param_val_len != 3) {return -1;} // incorrect val\n" +
-                                "				*" + p.getName() + " = m[1];\n");
-                    } else {
-                        messagesparser.append("	//Type " + p.getType().getName() + " is not supported yet by the PosixJSONSerializer plugin\n");
-                    }
-                    messagesparser.append("		} else ");
-                }
-            }
-            messagesparser.append("{\n" +
-                    "			return -1;\n" +
-                    "		}\n" +
-                    "		m += param_val_len; //val\n" +
-                    "\n" +
-                    "		\n" +
-                    "		if(*m == ',') {\n" +
-                    "			m++; // ,\n" +
-                    "		}\n" +
-                    "	}\n" +
-                    "	return m-msg;\n");
-        } else {
-            messagesparser.append(" return 0;\n");
-        }
-        messagesparser.append("}\n\n");
     }
 
     @Override

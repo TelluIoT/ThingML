@@ -374,6 +374,11 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
 
         builder.append("\n");
 
+        // TODO Jakob, maybe the compiler can figure this out itself, but then all the network plugins would need fixing
+        builder.append(ctx.getNetworkPluginInstance());
+        builder.append("\n");
+        // ENDTODO
+
         generateExternalMessageEnqueue(cfg,builder,ctx);
         builder.append("\n");
 
@@ -695,9 +700,10 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
     private void generateInitializationCode(Configuration cfg, StringBuilder initb, PosixMTCompilerContext ctx) {
         initb.append("initialize_configuration_" + cfg.getName() + "();\n");
         initb.append("\n");
-        initb.append("// Network Initilization \n");
+        initb.append("// Network Initialization");
         initb.append(ctx.getInitCode());
-        initb.append("\n");
+        initb.append("// End Network Initialization\n\n");
+
         for(Instance i : ConfigurationHelper.allInstances(cfg)) {
             
             //initb.append("" + ctx.getInstanceVarName(i) + ".fifo = &" + i.getName() + "_fifo;\n");

@@ -1,7 +1,5 @@
 #include "/*PORT_NAME*/.h"
 
-#define /*PORT_NAME*/_ESCAPE_CHAR /*ESCAPE_CHAR*/
-
 /*TOPIC_VAR*/
 static int /*PORT_NAME*/_topic_qos = 0;
 static char */*PORT_NAME*/_username = NULL;
@@ -23,19 +21,22 @@ void /*PORT_NAME*/_set_listener_id(uint16_t id) {
 
 void /*PORT_NAME*/_publish_callback(struct mosquitto *mosq, void *obj, uint16_t mid)
 {
+	struct mosquitto *mosq = obj;
+
+	
 }
 
 void /*PORT_NAME*/_message_callback(struct mosquitto *mosq, void *obj, const struct mosquitto_message *message)
 {
-    //printf("%s %s\n", message->topic, message->payload);
+    printf("%s %s\n", message->topic, message->payload);
     int len = strlen(message->payload);
     /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] receveid l:%i\n", len);
-    /*PARSER_CALL*/
-    
+    /*PORT_NAME*/_parser(message->payload, len);
 }
 
 void /*PORT_NAME*/_connect_callback(struct mosquitto *mosq, void *obj, int result)
 {
+    struct mosquitto *mosq = obj;
 
     int i;
     if(!result){
@@ -68,11 +69,11 @@ void /*PORT_NAME*/_subscribe_callback(struct mosquitto *mosq, void *obj, uint16_
 {
 	int i;
 
-	/*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] Subscribed (mid: %d): %d", mid, granted_qos[0]);
+	/*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Subscribed (mid: %d): %d", mid, granted_qos[0]);
 	for(i=1; i<qos_count; i++){
-		/*TRACE_LEVEL_3*/printf(", %d", granted_qos[i]);
+		/*TRACE_LEVEL_1*/printf(", %d", granted_qos[i]);
 	}
-	/*TRACE_LEVEL_3*/printf("\n");
+	/*TRACE_LEVEL_1*/printf("\n");
 }
 
 void /*PORT_NAME*/_setup() {
@@ -93,7 +94,6 @@ void /*PORT_NAME*/_setup() {
 	int will_qos = 0;
 	bool will_retain = false;
 	char *will_topic = NULL;
-	mosquitto_lib_init();
 
         /*MULTI_TOPIC_INIT*/
 
@@ -132,10 +132,14 @@ void /*PORT_NAME*/_setup() {
 	if(/*PORT_NAME*/_password && !/*PORT_NAME*/_username){
 		/*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] Warning: Not using password since username not set.\n");
 	}
-	//mosquitto_threaded_set(MQTT_mosq, true);
+	mosquitto_lib_init();
 	/*PORT_NAME*/_mosq = mosquitto_new(id, clean_session, NULL);
 	if(!/*PORT_NAME*/_mosq){
 		/*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] Error: Out of memory.\n");
+		return 1;
+	}
+	if(will_topic && mosquitto_will_set(/*PORT_NAME*/_mosq, true, will_topic, will_payloadlen, will_payload, will_qos, will_retain)){
+		/*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] Error: Problem setting will.\n");
 		return 1;
 	}
 	if(/*PORT_NAME*/_username && mosquitto_username_pw_set(/*PORT_NAME*/_mosq, /*PORT_NAME*/_username, /*PORT_NAME*/_password)){
@@ -185,8 +189,8 @@ void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size/*PUBLISH_MULTI_OR_MONO
         q++;
         n++;
     }
-
-    /*ZERO_ESCAPING_SEND*/
+    
+    /*ZERO_ESCAPING*/
 
     /*PUBLISH_MULTI_OR_MONO_CORE*/
     

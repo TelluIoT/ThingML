@@ -284,6 +284,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             builder.append("\n");
         }
 
+        // TODO Jakob, maybe the compiler can figure this out itself, but then all the network plugins would need fixing
+        builder.append(ctx.getNetworkPluginInstance());
+        builder.append("\n");
+        // ENDTODO
 
         generateMessageEnqueue(cfg, builder, headerbuilder, ctx);
         builder.append("\n");
@@ -1684,10 +1688,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         // * send function
 
         builder.append("\n");
-        builder.append("// Network Initilization \n");
-
+        builder.append("// Network Initialization");
         builder.append(ctx.getInitCode());
-        builder.append("\n\n// End Network Initilization \n\n");
+        builder.append("\n// End Network Initialization\n\n");
 
 
         if (AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors_lib")) {
@@ -1723,8 +1726,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ctx.generatePSPollingCode(cfg, builder);
 
         //Network Listener
-        builder.append("\n// Network Listener\n");
+        builder.append("\n// Network Listener");
         builder.append(ctx.getPollCode());
+        builder.append("// End Network Listener\n\n");
 
         if (ctx.getCompiler().getID().compareTo("arduino") != 0) { //FIXME Nicolas This code is awfull
             //New Empty Event Handler

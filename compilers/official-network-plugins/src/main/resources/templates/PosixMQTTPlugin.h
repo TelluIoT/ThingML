@@ -11,19 +11,15 @@
 #include <mosquitto.h>
 /*INCLUDES*/
 
-
-struct /*PORT_NAME*/_instance_type {
+struct /*PORT_NAME*/_Instance {
     uint16_t listener_id;
     /*INSTANCE_INFORMATION*/
-} /*PORT_NAME*/_instance;
+};
 
-void /*PORT_NAME*/_set_listener_id(uint16_t id);
+void /*PORT_NAME*/_setup(struct /*PORT_NAME*/_Instance *_instance);
 
-void /*PORT_NAME*/_setup();
-
-void /*PORT_NAME*/_start_receiver_process();
-
-void /*PORT_NAME*/_forwardMessage(uint8_t * msg, int size/*PUBLISH_MULTI_OR_MONO_DECLARATION*/);
+void /*PORT_NAME*/_start_receiver_thread();
+void /*PORT_NAME*/_loop_poll();
 
 /*FORWARDERS*/
 
