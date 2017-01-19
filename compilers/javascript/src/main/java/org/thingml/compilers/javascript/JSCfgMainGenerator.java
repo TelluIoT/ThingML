@@ -172,7 +172,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
             }
         }
-        builder.append("/*$PLUGINS$*/\n");
     }
 
     public static void generateInstances(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
@@ -181,6 +180,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             generateInstance(i, cfg, builder, ctx, useThis, debug);
         }
+        builder.append("/*$PLUGINS$*/\n");
     }
 
     public static void generateConnectors(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {

@@ -274,6 +274,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         builder.append("construct: function() {\n");
         if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
             JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
+            JSCfgMainGenerator.generateConnectors(cfg, builder, ctx, true);
             for (Map.Entry<Instance, List<Port>> e : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
                 final Instance i = e.getKey();
                 for (Port p : e.getValue()) {
