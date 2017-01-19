@@ -52,6 +52,7 @@ public abstract class CCompilerContext extends Context {
     StringBuilder includeCode = new StringBuilder();
     StringBuilder cppHeaderCode = new StringBuilder();
     Set<String> networkPluginFiles = new HashSet<String>();
+    StringBuilder networkPluginInstance = new StringBuilder();
     private Set<NetworkLibraryGenerator> NetworkLibraryGenerators;
     private Map<String, Map<String, String>> mapCepMsgParamAndStream;
     
@@ -860,8 +861,17 @@ public abstract class CCompilerContext extends Context {
         return cppHeaderCode;
     }
 
+    // TODO Jakob, maybe the compiler can figure this out itself, but then all the network plugins would need fixing
     public void addNetworkPluginFile(String cfile) { networkPluginFiles.add(cfile); }
     public Set<String> getNetworkPluginFiles() { return networkPluginFiles; }
+
+    public void addNetworkPluginInstance(String plugin, String instance) {
+        networkPluginInstance.append("//Instance "+instance+" for network plugin "+plugin+"\n");
+        networkPluginInstance.append("struct "+instance+"_Instance "+instance+"_instance;\n");
+    }
+    public String getNetworkPluginInstance() { return networkPluginInstance.toString(); }
+    // ENDTODO
+
 
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {}
 
