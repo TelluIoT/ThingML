@@ -28,6 +28,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
+import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.PrimitiveTyperHelper;
@@ -131,7 +132,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         //copy Gruntfile.js
         try {
             final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Gruntfile.js");
-            final List<String> pomLines = IOUtils.readLines(input);
+            final List<String> pomLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
             String pom = "";
             for (String line : pomLines) {
                 pom += line + "\n";
@@ -228,14 +229,17 @@ public class JSKevoreePlugin extends NetworkPlugin {
         }
         builder.append("const AbstractComponent = require('kevoree-entities/lib/AbstractComponent');\n");
 
-        for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            builder.append("const " + t.getName() + " = require('./" + t.getName() + "');\n");
+        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            for (Thing t : ConfigurationHelper.allThings(cfg)) {
+                builder.append("const " + t.getName() + " = require('./" + t.getName() + "');\n");
+            }
         }
 
         builder.append("/**\n* Kevoree component\n* @type {" + cfg.getName() + "}\n*/\n");
         builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
         builder.append("toString: '" + cfg.getName() + "',\n");
         builder.append("tdef_version: " + AnnotatedElementHelper.annotationOrElse(cfg, "tdef_version", "1") + ",\n");
+
 
 
         List<String> attributes = new ArrayList<String>();
@@ -302,7 +306,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
                 for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
                     if (EcoreUtil.equals(i, c.getInst().getInstance())) {
                         ports.add(c.getPort().getName());
-                        builder.append("case '" + c.getPort().getName() + "':\n");
+                        builder.append("case '" + c.getPort().getName() + "'://external port\n");
                         builder.append("switch(m._msg) {\n");
                         for (Message m : c.getPort().getSends()) {
                             builder.append("case '" + m.getName() + "':\n");
@@ -314,13 +318,27 @@ public class JSKevoreePlugin extends NetworkPlugin {
                         builder.append("break;\n");
                     }
                 }
+                for(Connector c : ConfigurationHelper.allConnectors(cfg)) {//FIXME: This can lead to similar labels in cases in case of n-m bindings...
+                    if (EcoreUtil.equals(i, c.getCli().getInstance())) {
+                        builder.append("case '" + c.getRequired().getName() + "'://connected ThingML port\n");
+                        builder.append("m._port = '" + c.getProvided().getName() + "';\n");
+                        builder.append("this." + c.getSrv().getInstance().getName() + ".send(m);\n");
+                        builder.append("break;\n");
+                    } else if (EcoreUtil.equals(i, c.getSrv().getInstance())) {
+                        builder.append("case '" + c.getProvided().getName() + "'://connected ThingML port\n");
+                        builder.append("m._port = '" + c.getRequired().getName() + "';\n");
+                        builder.append("this." + c.getCli().getInstance().getName() + ".send(m);\n");
+                        builder.append("break;\n");
+                    }
+                }
                 for (Map.Entry<Instance, List<Port>> e : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
                     if (EcoreUtil.equals(i, e.getKey())) {
                         for (Port p : e.getValue()) {
                             if (!ports.contains(p.getName())) {
+                                ports.add(p.getName());
+                                builder.append("case '" + p.getName() + "'://dangling ThingML port, which is exposed\n");
                                 builder.append("switch(m._msg) {\n");
-                                builder.append("case '" + p.getName() + "':\n");
-                                for (Message m : p.getReceives()) {
+                                for (Message m : p.getSends()) {
                                     builder.append("case '" + m.getName() + "':\n");
                                     builder.append("this.out_" + shortName(i, p, m) + "_out(JSON.stringify(m));\n");
                                     builder.append("break;\n");                                }
@@ -329,6 +347,13 @@ public class JSKevoreePlugin extends NetworkPlugin {
                                 builder.append("break;\n");
                             }
                         }
+                    }
+                }
+                for(Port p : ThingMLHelpers.allPorts(i.getType())) {
+                    if(p instanceof InternalPort) {
+                        builder.append("case '" + p.getName() + "'://internal ThingML port\n");
+                        builder.append("this." + i.getName() + ".send(m);\n");
+                        builder.append("break;\n");
                     }
                 }
                 builder.append("default:\n");
@@ -385,7 +410,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
             }
         }
 
-        for (Instance i : ConfigurationHelper.danglingPorts(cfg).keySet()) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
                 builder.append("this." + i.getName() + ".send({lc: 'init'});\n");
             } else {
