@@ -276,23 +276,17 @@ public class CompileThingFile implements IHandler {
 					}
 				}
 
-				boolean result = compiler.compile(cfg, options);
+				compiler.compile(cfg, options);
 				if(subCompiler != null) {
 					ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");
-					result = result && compiler.compileConnector(subCompiler, cfg);
+					compiler.compileConnector(subCompiler, cfg);
 				}
-
-				if (result) {
-					ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully.\n");
-				}
-				else {
-					ThingMLConsole.getInstance().printError("ERROR: Unable to compile configuration " + cfg.getName() + ". Check error messages above.\n");
-				}
+				ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully.\n");
 			}
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
-			ThingMLConsole.getInstance().printError("ERROR: Exeption calling ThingML Compiler: " + e.getLocalizedMessage());
-			ThingMLConsole.getInstance().printError("Please contact the ThingML development team");
+			ThingMLConsole.getInstance().printError("FATAL ERROR: Exeption calling ThingML Compiler: " + e.getLocalizedMessage());
+			ThingMLConsole.getInstance().printError("Please contact the ThingML development team (though GitHub's issue tracker) with 1) your input model, and 2) the following stack trace:");
 			e.printStackTrace(new PrintStream(ThingMLConsole.getInstance().getErrorSteam()));
 			e.printStackTrace();
 		}
