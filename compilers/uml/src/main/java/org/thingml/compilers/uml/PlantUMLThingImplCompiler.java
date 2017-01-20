@@ -193,7 +193,8 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("\t" + ThingMLHelpers.findContainingState(t).getName() + " : ");
         if(t.getEvent().size() > 0 && t.getEvent().get(0).getName()!= null)
             builder.append(t.getEvent().get(0).getName() + ":");
-        builder.append(p.getName() + "?" + msg.getName() + " / ");
+        if(p != null && msg != null)
+            builder.append(p.getName() + "?" + msg.getName() + " / ");
         generateGuardAndActions(t, builder, ctx);
         builder.append("\n");
     }
