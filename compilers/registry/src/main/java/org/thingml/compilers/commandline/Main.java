@@ -217,9 +217,10 @@ public class Main {
             }
             System.out.println("SUCCESS.");
 
-        } catch (Exception e) {
-            System.out.println("FATAL ERROR: " + e.getMessage());
-            e.printStackTrace();
+        } catch (Throwable ex) {
+            System.out.println("FATAL ERROR: " + ex.getMessage());
+            System.out.println("Please contact the ThingML development team (though GitHub's issue tracker) with 1) your input model, and 2) the following stack trace:");
+            ex.printStackTrace();
             return;
         }
 

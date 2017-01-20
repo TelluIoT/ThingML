@@ -204,8 +204,9 @@ public class ThingMLPanel extends JPanel {
                                     }
                                 }
                             } catch (Exception ex) {
-                                if (ThingMLApp.debug)
-                                    ex.printStackTrace();
+                                System.out.println("FATAL ERROR: " + ex.getMessage());
+                                System.out.println("Please contact the ThingML development team (though GitHub's issue tracker) with 1) your input model, and 2) the following stack trace:");
+                                ex.printStackTrace();
                             }
                         }
                     });
@@ -304,8 +305,9 @@ public class ThingMLPanel extends JPanel {
                                         
                                     }
                                 } catch (Exception ex) {
-                                    if (ThingMLApp.debug)
-                                        ex.printStackTrace();
+                                    System.out.println("FATAL ERROR: " + ex.getMessage());
+                                    System.out.println("Please contact the ThingML development team (though GitHub's issue tracker) with 1) your input model, and 2) the following stack trace:");
+                                    ex.printStackTrace();
                                 }
                             }
                         });
@@ -336,7 +338,8 @@ public class ThingMLPanel extends JPanel {
             java.util.Timer timer = new Timer();
             timer.scheduleAtFixedRate(new SeamlessNotification(), 250, 250);
 
-        } catch (Exception e) {
+        } catch (Throwable e) {
+
             if (ThingMLApp.debug)
                 e.printStackTrace();
         }

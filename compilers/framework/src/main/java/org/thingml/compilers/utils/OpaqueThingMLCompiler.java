@@ -60,13 +60,13 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
     }
 
     @Override
-    public boolean compile(Configuration cfg, String... options) {
-        try {
+    public void compile(Configuration cfg, String... options) {
+        //try { //this try catch was hiding errors from clients (editors, etc), making issue reporting and fixing difficult.
             println("Running " + getName() + " compiler on configuration " + cfg.getName());
             final long start = System.currentTimeMillis();
             do_call_compiler(cfg, options);
             println("Compilation complete. Took " + (System.currentTimeMillis() - start) + " ms.");
-        } catch (Error err) {
+        /*} catch (Error err) {
             erroln("Compilation error:" + err.getMessage());
             err.printStackTrace();
             return false;
@@ -74,20 +74,13 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
             e.printStackTrace();
             return false;
         }
-        return true;
+        return true;*/
     }
 
     @Override
-    public boolean compileConnector(String connector, Configuration cfg, String... options) {
+    public void compileConnector(String connector, Configuration cfg, String... options) {
         println("Running connector compiler " + connector + " on configuration " + cfg.getName());
-        final long start = System.currentTimeMillis();
-        boolean result = super.compileConnector(connector, cfg, options);
-        if (result) {
-            println("Compilation complete. Took " + (System.currentTimeMillis() - start) + " ms.");
-        } else {
-            println("Compilation error. Connector compiler " + connector + " not found.");
-        }
-        return result;
+        super.compileConnector(connector, cfg, options);
     }
 
     public abstract void do_call_compiler(Configuration cfg, String... options);
