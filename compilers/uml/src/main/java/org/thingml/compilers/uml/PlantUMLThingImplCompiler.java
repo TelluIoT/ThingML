@@ -148,14 +148,13 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("]");
         }
         if (t.getAction() != null) {
-            builder.append("\\naction ");
+            if (t.getEvent().size() == 0 && t.getGuard() == null)
+                builder.append("action ");
+            else
+                builder.append("\\naction ");
             ctx.getCompiler().getThingActionCompiler().generate(t.getAction(), builder, ctx);
         }
     }
-
-    /*private String protectString(String s) {
-        return s.replace("\\n", "\\\\n").replace("\n", "\\n").replace(System.getProperty("line.separator"), "\\n").replace("\t", "").replace("\r", "").replace("\"", "\'\'");
-    }*/
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         String content = builder.toString();
@@ -172,7 +171,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
                 temp.append(p.getName() + "?" + msg.getName());
             }
             generateGuardAndActions(t, temp, ctx);
-            content = content.replace(transition, "\n" + temp.toString() + "\\t||");
+            content = content.replace(transition, "\n" + temp.toString() + "\\n||");
             builder.delete(0, builder.length());
             builder.append(content);
         } else {

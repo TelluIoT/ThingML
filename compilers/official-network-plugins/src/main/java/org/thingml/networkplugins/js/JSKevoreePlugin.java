@@ -65,7 +65,6 @@ public class JSKevoreePlugin extends NetworkPlugin {
     public List<String> getTargetedLanguages() {
         List<String> res = new ArrayList<>();
         res.add("nodejs");
-        res.add("nodejsMT");
         return res;
     }
 
@@ -77,7 +76,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         generateKevScript(ctx, cfg);
     }
 
-    private void generateKevScript(Context ctx, Configuration cfg) {
+    protected void generateKevScript(Context ctx, Configuration cfg) {
         if (AnnotatedElementHelper.hasAnnotation(cfg, "kevscript")) {
             final String path = AnnotatedElementHelper.annotation(cfg, "kevscript").get(0);
             final URI uri = URI.create(path);
@@ -128,7 +127,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
 
     }
 
-    private void generateGruntFile(Context ctx) {
+    protected void generateGruntFile(Context ctx) {
         //copy Gruntfile.js
         try {
             final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Gruntfile.js");
@@ -155,7 +154,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         }
     }
 
-    private void updatePackageJSON(Context ctx, Configuration cfg) {
+    protected void updatePackageJSON(Context ctx, Configuration cfg) {
         //Update package.json
         try {
             final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/package.json");
@@ -197,36 +196,15 @@ public class JSKevoreePlugin extends NetworkPlugin {
         }
     }
 
-    private String getVariableName(Instance i, Property p, Context ctx) {
+    protected String getVariableName(Instance i, Property p, Context ctx) {
         return "dic_" + i.getName() + "_" + ctx.getVariableName(p);
     }
 
-    private String getGlobalVariableName(Property p, Context ctx) {
+    protected String getGlobalVariableName(Property p, Context ctx) {
         return "dic_" + ctx.getVariableName(p);
     }
 
-    private void generateWrapper(Context ctx, Configuration cfg) {
-        //Generate wrapper
-
-        //Move all .js file (previously generated) into lib folder
-        //final File dir = new File(ctx.getOutputDirectory() + "/" + cfg.getName());
-        final File lib = new File(ctx.getOutputDirectory(), "lib");
-        lib.mkdirs();
-        for (File f : ctx.getOutputDirectory().listFiles()) {
-            if (FilenameUtils.getExtension(f.getAbsolutePath()).equals("js") && !f.getName().equals("Gruntfile.js")) {
-                try {
-                    FileUtils.moveFileToDirectory(f, lib, false);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        final StringBuilder builder = ctx.getBuilder("/lib/" + cfg.getName() + ".js");
-        builder.append("'use strict';\n\n");
-        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
-            builder.append("const fork = require('child_process').fork;\n");
-        }
+    protected void generateRequires(StringBuilder builder, Context ctx, Configuration cfg) {
         builder.append("const AbstractComponent = require('kevoree-entities/lib/AbstractComponent');\n");
 
         if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
@@ -234,45 +212,9 @@ public class JSKevoreePlugin extends NetworkPlugin {
                 builder.append("const " + t.getName() + " = require('./" + t.getName() + "');\n");
             }
         }
+    }
 
-        builder.append("/**\n* Kevoree component\n* @type {" + cfg.getName() + "}\n*/\n");
-        builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
-        builder.append("toString: '" + cfg.getName() + "',\n");
-        builder.append("tdef_version: " + AnnotatedElementHelper.annotationOrElse(cfg, "tdef_version", "1") + ",\n");
-
-
-
-        List<String> attributes = new ArrayList<String>();
-        builder.append("//Attributes\n");
-        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
-                if (p.isChangeable() && p.getCardinality() == null && AnnotatedElementHelper.isDefined(p.getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
-                    if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
-                        builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
-                        final Expression e = ConfigurationHelper.initExpressions(cfg, i, p).get(0);
-                        if (e != null) {
-                            ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
-                        } else {
-                            builder.append("null\n");
-                        }
-                        builder.append("},\n");
-                    } else if ((AnnotatedElementHelper.isDefined(p, "kevoree", "merge") || AnnotatedElementHelper.isDefined(p, "kevoree", "only")) && !attributes.contains(p.getName())) {
-                        builder.append(getGlobalVariableName(p, ctx) + " : { \ndefaultValue: ");
-                        final Expression e = ConfigurationHelper.initExpressions(cfg, i, p).get(0);
-                        if (e != null) {
-                            ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
-                        } else {
-                            builder.append("null\n");
-                        }
-                        builder.append("},\n");
-                        attributes.add(p.getName());
-                    }
-                }
-            }
-        }
-
-        builder.append("construct: function() {\n");
-        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+    protected void generateConstruct(StringBuilder builder, Context ctx, Configuration cfg) {
             JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
             JSCfgMainGenerator.generateConnectors(cfg, builder, ctx, true);
             for (Map.Entry<Instance, List<Port>> e : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
@@ -292,100 +234,9 @@ public class JSKevoreePlugin extends NetworkPlugin {
                     }
                 }
             }
-        }
-        builder.append("},\n\n");
+    }
 
-
-        builder.append("start: function (done) {\n");
-        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
-            ctx.addContextAnnotation("folder", "lib");
-            JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
-            for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-                builder.append("this." + i.getName() + ".on('message', (m) => {\n");
-                builder.append("switch(m._port) {\n");
-                Set<String> ports = new HashSet<>();
-                for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
-                    if (EcoreUtil.equals(i, c.getInst().getInstance())) {
-                        ports.add(c.getPort().getName());
-                        builder.append("case '" + c.getPort().getName() + "'://external port\n");
-                        builder.append("switch(m._msg) {\n");
-                        for (Message m : c.getPort().getSends()) {
-                            builder.append("case '" + m.getName() + "':\n");
-                            builder.append("this.out_" + shortName(i, c.getPort(), m) + "_out(JSON.stringify(m));\n");
-                            builder.append("break;\n");
-                        }
-                        builder.append("default:\nbreak;\n");
-                        builder.append("}\n");
-                        builder.append("break;\n");
-                    }
-                }
-                for(Connector c : ConfigurationHelper.allConnectors(cfg)) {//FIXME: This can lead to similar labels in cases in case of n-m bindings...
-                    if (EcoreUtil.equals(i, c.getCli().getInstance())) {
-                        builder.append("case '" + c.getRequired().getName() + "'://connected ThingML port\n");
-                        builder.append("m._port = '" + c.getProvided().getName() + "';\n");
-                        builder.append("this." + c.getSrv().getInstance().getName() + ".send(m);\n");
-                        builder.append("break;\n");
-                    } else if (EcoreUtil.equals(i, c.getSrv().getInstance())) {
-                        builder.append("case '" + c.getProvided().getName() + "'://connected ThingML port\n");
-                        builder.append("m._port = '" + c.getRequired().getName() + "';\n");
-                        builder.append("this." + c.getCli().getInstance().getName() + ".send(m);\n");
-                        builder.append("break;\n");
-                    }
-                }
-                for (Map.Entry<Instance, List<Port>> e : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
-                    if (EcoreUtil.equals(i, e.getKey())) {
-                        for (Port p : e.getValue()) {
-                            if (!ports.contains(p.getName())) {
-                                ports.add(p.getName());
-                                builder.append("case '" + p.getName() + "'://dangling ThingML port, which is exposed\n");
-                                builder.append("switch(m._msg) {\n");
-                                for (Message m : p.getSends()) {
-                                    builder.append("case '" + m.getName() + "':\n");
-                                    builder.append("this.out_" + shortName(i, p, m) + "_out(JSON.stringify(m));\n");
-                                    builder.append("break;\n");                                }
-                                builder.append("default:\nbreak;\n");
-                                builder.append("}\n");
-                                builder.append("break;\n");
-                            }
-                        }
-                    }
-                }
-                for(Port p : ThingMLHelpers.allPorts(i.getType())) {
-                    if(p instanceof InternalPort) {
-                        builder.append("case '" + p.getName() + "'://internal ThingML port\n");
-                        builder.append("this." + i.getName() + ".send(m);\n");
-                        builder.append("break;\n");
-                    }
-                }
-                builder.append("default:\n");
-                builder.append("switch(m.lc) {\n");
-                builder.append("case 'updated':\n");
-                builder.append("switch(m.property){\n");
-                for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
-                    if (p.isChangeable() && p.getCardinality() == null && p.getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
-                        String accessor = "getValue";
-                        if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getType()))) {
-                            accessor = "getNumber";
-                        }
-                        if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
-                            generateThingMLListener(builder, ctx, p, i, accessor, false);
-                        } else if (AnnotatedElementHelper.isDefined(p, "kevoree", "merge")) {
-                            generateThingMLListener(builder, ctx, p, i, accessor, true);
-                        }
-                    }
-                }
-                builder.append("default: break;\n");
-                builder.append("}");
-                builder.append("break;\n");
-                builder.append("default: break;\n");
-                builder.append("}\n");
-                builder.append("break;\n");
-                builder.append("}\n");
-                builder.append("});\n\n");
-            }
-        }
-
-
+    protected void generateStart(StringBuilder builder, Context ctx, Configuration cfg) {
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
@@ -397,42 +248,21 @@ public class JSKevoreePlugin extends NetworkPlugin {
                     }
                     if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
                         generateKevoreeListener(builder, ctx, isNumber, p, i, false, accessor);
-                        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
-                            generateThingMLListener(builder, ctx, p, i, accessor, false);
-                        }
-
+                        generateThingMLListener(builder, ctx, p, i, accessor, false);
                     } else if (AnnotatedElementHelper.isDefined(p, "kevoree", "merge")) {
                         generateKevoreeListener(builder, ctx, isNumber, p, i, true, accessor);//FIXME: should generate one listener that update all thingml attribute, rather than n listeners on the same attribute that update one thingml attribute...
-                        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
-                            generateThingMLListener(builder, ctx, p, i, accessor, true);
-                        }
+                        generateThingMLListener(builder, ctx, p, i, accessor, true);
                     }
                 }
             }
         }
-
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
-                builder.append("this." + i.getName() + ".send({lc: 'init'});\n");
-            } else {
                 builder.append("this." + i.getName() + "._init();\n");
-            }
         }
         builder.append("done();\n");
-        builder.append("},\n\n");
+    }
 
-
-        builder.append("stop: function (done) {\n");
-        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
-                builder.append("this." + i.getName() + ".kill();\n");
-            } else {
-                builder.append("this." + i.getName() + "._stop();\n");
-            }
-        }
-        builder.append("done();\n");
-        builder.append("}");
-
+    protected void generatePorts(StringBuilder builder, Context ctx, Configuration cfg) {
         for (Map.Entry e : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
             final Instance i = (Instance) e.getKey();
             for (Port p : (List<Port>) e.getValue()) {
@@ -443,11 +273,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
                         if (j > 0)
                             builder.append("else ");
                         builder.append("if(msg.split('@:@')[0] === '" + m.getName() + "'){\n");
-                        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
-                            builder.append("this." + i.getName() + ".send(");
-                        } else {
-                            builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(");
-                        }
+                        builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(");
                         for (Parameter pa : m.getParameters()) {
                             if (m.getParameters().indexOf(pa) > 0)
                                 builder.append(", ");
@@ -479,15 +305,10 @@ public class JSKevoreePlugin extends NetworkPlugin {
                 final Instance i = c.getInst().getInstance();
                 for (Message m : c.getPort().getReceives()) {
                     builder.append(",\nin_" + shortName(i, c.getPort(), m) + "_in: function (msg) {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\n");
-                    if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
-                        builder.append("this." + i.getName() + ".send(JSON.parse(msg));\n");
-                    } else {
-                        builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
-                    }
+                    builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
                     builder.append("}");
                 }
                 for (Message m : c.getPort().getSends()) {
-                    if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
                         builder.append(",\n" + shortName(i, c.getPort(), m) + "_proxy: function() {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\nthis.out_" + shortName(i, c.getPort(), m) + "_out(");
                         int index;
                         for (index = 0; index < m.getParameters().size(); index++) {
@@ -498,11 +319,91 @@ public class JSKevoreePlugin extends NetworkPlugin {
                         if (index > 1)
                             builder.append("''");
                         builder.append(");}");
-                    }
                     builder.append(",\nout_" + shortName(i, c.getPort(), m) + "_out: function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
                 }
             }
         }
+    }
+
+    protected void generateStop(StringBuilder builder, Context ctx, Configuration cfg) {
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+            builder.append("this." + i.getName() + "._stop();\n");
+        }
+        builder.append("done();\n");
+    }
+
+        private void generateWrapper(Context ctx, Configuration cfg) {
+        //Generate wrapper
+
+        //Move all .js file (previously generated) into lib folder
+        //final File dir = new File(ctx.getOutputDirectory() + "/" + cfg.getName());
+        final File lib = new File(ctx.getOutputDirectory(), "lib");
+        lib.mkdirs();
+        for (File f : ctx.getOutputDirectory().listFiles()) {
+            if (FilenameUtils.getExtension(f.getAbsolutePath()).equals("js") && !f.getName().equals("Gruntfile.js")) {
+                try {
+                    FileUtils.moveFileToDirectory(f, lib, false);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        final StringBuilder builder = ctx.getBuilder("/lib/" + cfg.getName() + ".js");
+        builder.append("'use strict';\n\n");
+
+        generateRequires(builder, ctx, cfg);
+
+        builder.append("/**\n* Kevoree component\n* @type {" + cfg.getName() + "}\n*/\n");
+        builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
+        builder.append("toString: '" + cfg.getName() + "',\n");
+        builder.append("tdef_version: " + AnnotatedElementHelper.annotationOrElse(cfg, "tdef_version", "1") + ",\n");
+
+        List<String> attributes = new ArrayList<String>();
+        builder.append("//Attributes\n");
+        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+            for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
+                if (p.isChangeable() && p.getCardinality() == null && AnnotatedElementHelper.isDefined(p.getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
+                    if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
+                        builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
+                        final Expression e = ConfigurationHelper.initExpressions(cfg, i, p).get(0);
+                        if (e != null) {
+                            ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+                        } else {
+                            builder.append("null\n");
+                        }
+                        builder.append("},\n");
+                    } else if ((AnnotatedElementHelper.isDefined(p, "kevoree", "merge") || AnnotatedElementHelper.isDefined(p, "kevoree", "only")) && !attributes.contains(p.getName())) {
+                        builder.append(getGlobalVariableName(p, ctx) + " : { \ndefaultValue: ");
+                        final Expression e = ConfigurationHelper.initExpressions(cfg, i, p).get(0);
+                        if (e != null) {
+                            ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+                        } else {
+                            builder.append("null\n");
+                        }
+                        builder.append("},\n");
+                        attributes.add(p.getName());
+                    }
+                }
+            }
+        }
+
+        builder.append("construct: function() {\n");
+        generateConstruct(builder, ctx, cfg);
+        builder.append("},\n\n");
+
+
+        builder.append("start: function (done) {\n");
+        generateStart(builder, ctx, cfg);
+        builder.append("},\n\n");
+
+
+        builder.append("stop: function (done) {\n");
+        generateStop(builder, ctx, cfg);
+        builder.append("}");
+
+        generatePorts(builder, ctx, cfg);
+
         builder.append("});\n\n");
         builder.append("module.exports = " + cfg.getName() + ";\n");
 
@@ -519,7 +420,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         }
     }
 
-    private void generateKevoreeListener(StringBuilder builder, Context ctx, boolean isNumber, Property p, Instance i, boolean isGlobal, String accessor) {
+    protected void generateKevoreeListener(StringBuilder builder, Context ctx, boolean isNumber, Property p, Instance i, boolean isGlobal, String accessor) {
         //Update ThingML properties when Kevoree properties are updated
         if (!isGlobal) //per instance mapping
             builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', function (newValue) {");
@@ -536,39 +437,23 @@ public class JSKevoreePlugin extends NetworkPlugin {
         //builder.append("if(this." + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) { ");
         //builder.append("console.log(\"updating ThingML attribute...\");\n");
 
-        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
             builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
-        } else {
-            builder.append("this." + i.getName() + ".send({lc: 'set', property: '" + p.getName() + "', value: newValue});");
-        }
         //builder.append("}");
         builder.append("});\n");
 
         //Force update on startup, as listeners might be registered too late the first time
-        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
             builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = ");
-        } else {
-            builder.append("this." + i.getName() + ".send({lc: 'set', property: '" + p.getName() + "', value: ");
-        }
         if (!isGlobal) //per instance mapping
             builder.append("this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "')");
         else
             builder.append("this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "')");
-        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
-            builder.append("})");
-        }
         builder.append(";\n");
     }
 
-    private void generateThingMLListener(StringBuilder builder, Context ctx, Property p, Instance i, String accessor, boolean isGlobal) {
+    protected void generateThingMLListener(StringBuilder builder, Context ctx, Property p, Instance i, String accessor, boolean isGlobal) {
         //Update Kevoree properties when ThingML properties are updated
         String newValue = "newValue";
-        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
             builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {");
-        } else {
-            builder.append("case '" + p.getName() + "':\n");
-            newValue = "m.value";
-        }
         //builder.append("console.log(\"ThingML attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
         if (!isGlobal)
             builder.append("if(this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== " + newValue + ") {\n");
@@ -580,14 +465,10 @@ public class JSKevoreePlugin extends NetworkPlugin {
         else
             builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + ctx.getVariableName(p) + " = \"'+" + newValue + "+'\"');\n");
         builder.append("}");
-        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
             builder.append("}.bind(this));\n");
-        } else {
-            builder.append("break;\n");
-        }
     }
 
-    private String shortName(Instance i, Port p, Message m) {
+    protected String shortName(Instance i, Port p, Message m) {
         String result = "";
 
         if (i.getName().length() > 3) {

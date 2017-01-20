@@ -188,9 +188,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         if (useThis) {
             prefix = "this.";
         }
-        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
-
-        }
         if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
             builder.append("//Connecting ports...\n");
             for (Instance i : ConfigurationHelper.allInstances(cfg)) {
