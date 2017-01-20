@@ -4,7 +4,7 @@ Jenkins ThingML Test Framework builds ThingML artifacts, runs test cases and pub
 
 ### Test Framework
 The figure below sums up and highlights the work-flow and core parts of the framework.
-![Alt text](docs/overview.png "Workflow and core components")
+![Alt text](docs/overview.png "Work-flow and core components")
 
 The script `test.py` implements the figure above. Each time we want to execute test cases the script should be run. The configuration file `config.ini` controls the behavior of the framework.
 ```sh
@@ -99,13 +99,13 @@ loadbalancer_test_config=./testConfig.properties
 loadbalancer_lb_config=./loadBalanceTestConfig.properties
 ```
 where:
- - `docker_image_dir` specifies location of Dockerfile and the script to execute test cases. This container is build and launched by the `generalTests` executor. `docker_image_name` is the name of the docker image.
+ - `docker_image_dir` specifies location of `Dockerfile` and the script to execute test cases. This container is build and launched by the `generalTests` executor. `docker_image_name` is the name of the docker image.
  - `load_balance_util` uses testJar to load balance, the config for this balancer is `loadbalancer_lb_config`. [See testJar README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/README.md) 
 `test_jar`, `compiler_jar`, `network_plugin_jar` are binaries which are used by testJar to execute test cases. [See testJar README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/README.md)
  - `loadbalancer_test_config` defines test cases to execute. [See testJar README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/README.md) 
 
 ## Usage
-The framework is up and running on the local cloud. `Jenkinsfile` (in the root of the repository) defines the workflow to execute every time a change is pushed to the ThingML repository. Go to `Jenkins > ThingML Testing > Thing ML > select branch > select build > Test Execution Report` 
+The framework is up and running on the local cloud. `Jenkinsfile` (in the root of the repository) defines the work-flow to execute every time a change is pushed to the ThingML repository. Go to `Jenkins > ThingML Testing > Thing ML > select branch > select build > Test Execution Report 
 
 ## Installation
 [Installation instructions](https://github.com/SINTEF-9012/ThingML/blob/master/testframework/docs/installation.pdf)
