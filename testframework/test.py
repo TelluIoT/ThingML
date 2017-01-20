@@ -57,18 +57,6 @@ def run_tests():
 	full_test_working_folder = folder_path(root_test_folder, test_working_folder)
 	full_global_report_dir = folder_path(root_test_folder, global_report_dir)
 
-	master_slave_user = os.environ.get('MASTER_SLAVE_USER')
-	master_slave_pwd = os.environ.get('MASTER_SLAVE_PWD')
-	if not master_slave_user:
-		message = "MASTER_SLAVE_USER env variable is not set!. Exiting..."
-		sys.stderr.write(message + '\n');
-		return
-
-	if not master_slave_pwd:
-		message = "MASTER_SLAVE_PWD env variable is not set!. Exiting..."
-		sys.stderr.write(message + '\n');
-		return
-
 	#clean working directory and report directories
 	if os.path.isdir(full_test_working_folder):
 		shutil.rmtree(full_test_working_folder)
@@ -103,8 +91,7 @@ def run_tests():
 
 	#running jobs as subprocesses
 	for key, value in test_scripts.iteritems():
-		command = [value['script'], key, value['working_folder'], value['report_folder'], 
-			master_slave_user, master_slave_pwd, '22']
+		command = [value['script'], key, value['working_folder'], value['report_folder']]
 		print "Starting: " + " ".join(command)
 		proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		test_scripts[key]['proc'] = proc

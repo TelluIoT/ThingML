@@ -255,9 +255,26 @@ if __name__ == "__main__":
 	category_name = sys.argv[1]
 	working_folder = sys.argv[2]
 	report_folder = sys.argv[3]
-	master_slave_user = sys.argv[4]
-	master_slave_pwd = sys.argv[5]
-	master_ssh_port = sys.argv[6]
-	run_routine(category_name, working_folder, report_folder, master_slave_user, master_slave_pwd, master_ssh_port)
 
+	master_slave_user = os.environ.get('MASTER_SLAVE_USER')
+	master_slave_pwd = os.environ.get('MASTER_SLAVE_PWD')
+	master_ssh_port = os.environ.get('MASTER_SSH_PORT')
+
+	if not master_slave_user:
+		message = "MASTER_SLAVE_USER env variable is not set!. Exiting..."
+		sys.stderr.write(message + '\n');
+		sys.exit(1)
+
+	if not master_slave_pwd:
+		message = "MASTER_SLAVE_PWD env variable is not set!. Exiting..."
+		sys.stderr.write(message + '\n');
+		sys.exit(1)
+
+	if not master_slave_pwd:
+		message = "MASTER_SSH_PORT env variable is not set!. Exiting..."
+		sys.stderr.write(message + '\n');
+		sys.exit(1)
+
+	run_routine(category_name, working_folder, report_folder, master_slave_user, master_slave_pwd, master_ssh_port)
+	
 	sys.exit(0)
