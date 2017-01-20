@@ -5,11 +5,13 @@ Jenkins ThingML Test Framework builds ThingML artifacts, runs test cases and pub
 ### Test Framework
 The figure below sums up and higlights the workflow and core parts of the framework.
 ![Alt text](docs/overview.png "Workflow and core components")
+
 The script `test.py` implements the figure above. Each time we want to execute test cases the script should be run. The configuration file `config.ini` controls the behavior of the framework.
 ```sh
 [general]
 test_working_folder=work_folder
 global_report_dir = ../htmlreports
+
 [generalTests]
 category_name=generalTests
 category_test_script=run.py
@@ -37,9 +39,11 @@ To add a new test suite, one has to create a folder in the test framework root a
 [general]
 test_working_folder=work_folder
 global_report_dir = ../htmlreports
+
 [generalTests]
 category_name=generalTests
 category_test_script=run.py
+
 [arduinoTests]
 category_name=arduinoTests
 category_test_script=arduion_test_run.sh
@@ -78,9 +82,30 @@ testfolder
 ``` 
 The framework copies the contents of `<test_working_folder>/arduinoTests/report/arduinoTests` and uses it to compile the final report in the `<global_report_dir>` directory.
 
-### Explaining Test Suite: `generalTest` 
+### Explaining Test Suite: `generalTests` 
+The figure belows shows a set up of the framework with the `generalTest` suite running.
+![Alt text](docs/general_tests_overview.png "Test suite generalTests")
+The executor of the test suite does not run the test suite itself. It loadbalances all test cases and diligates their execution to docker containers which the executor builds and launches at runtime. Further, the `generalTests` executor accumulates results from the containers and publishes the report. The executor of the `generalTests` relays on [testJar README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/Custom_Tests_README.md) and `config.ini` sets parameters.
+```sh
+[runConfiguration]
+docker_image_dir = ./dockerfile
+docker_image_name = thingml/thingml-general-test-slave:latest
+load_balance_util = ./loadbalance.py
+test_jar = ../../testJar/target/testJar-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+compiler_jar = ../../compilers/registry/target/compilers.registry-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+network_plugin_jar = ../../compilers/official-network-plugins/target/official-network-plugins-1.0.0-SNAPSHOT.jar
+test_src_folder = ../../testJar/src
+loadbalancer_test_config=./testConfig.properties
+loadbalancer_lb_config=./loadBalanceTestConfig.properties
+```
+where:
+ - `docker_image_dir` specifies location of Dockerfile and the script to execute test cases. This container is build and launched by the `generalTests` executor. `docker_image_name` is the name of the docker image.
+ - `load_balance_util` uses testJar to load balance, the config for this balancer is `loadbalancer_lb_config`. [See testJar README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/Custom_Tests_README.md) 
+`test_jar`, `compiler_jar`, `network_plugin_jar` are binaries which are used by testJar to execute test cases. [See testJar README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/Custom_Tests_README.md)
+ - `loadbalancer_test_config` defines test cases to execute. [See testJar README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/Custom_Tests_README.md) 
 
 ## Usage
+The framework is up and running on the local cloud. `Jenkinsfile` (in the root of the repository) defines the workflow to execute every time a change is pushed to the ThingML repository. Go to Jenkins > ThingML Testing > Thing ML > select branch > select build > Test Execution Report 
+
 ## Installation
-### Build and Run Jenkins Container
-### Set Up Jenkins
+[Installation instructions](https://github.com/SINTEF-9012/ThingML/blob/master/testframework/docs/installation.pdf)
