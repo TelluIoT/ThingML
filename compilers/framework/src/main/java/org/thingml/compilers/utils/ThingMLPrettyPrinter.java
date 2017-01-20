@@ -105,7 +105,8 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(ExternStatement action, StringBuilder builder, Context ctx) {
-        builder.append("'" + action.getStatement() + "'");
+        builder.append("'" + CharacterEscaper.escapeEscapedCharacters(action.getStatement()).replace("\n", "\\n") + "'");
+        //builder.append("'" + action.getStatement() + "'");
         for (Expression e : action.getSegments()) {
             builder.append(" & ");
             generate(e, builder, ctx);
@@ -351,7 +352,8 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
-        builder.append("'" + expression.getExpression() + "'");
+        builder.append("'" + CharacterEscaper.escapeEscapedCharacters(expression.getExpression()).replace("\n", "\\n") + "'");
+        //builder.append("'" + expression.getExpression() + "'");
         for (Expression e : expression.getSegments()) {
             builder.append(" & ");
             generate(e, builder, ctx);
