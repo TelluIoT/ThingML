@@ -1,6 +1,9 @@
 # Jenkins ThingML Test Framework (beta)
 ## Overview
-Jenkins ThingML Test Framework builds ThingML artifacts, runs test cases and publish results. The framework is integrated with Jenkins, but does not relay on Jenkins to execute test cases and publish results. Strictly speaking, the framework does not have to run on top of Jenkins. It does not execute test cases itself, but rather delegates testing to external executors. The primary goal is to run executors, wait for the executors to complete and publish accumulated report. An external executors can be any program, which comply to certain criteria. Each executor runs a test suit with a number of test cases. The executor has to output to standard outputs (stdout/stderr) and publishes test results in a specific format in the specified folder.
+Jenkins ThingML Test Framework builds ThingML artifacts, runs test cases and publish results. The framework runs inside the Jenkins docker container. However, it does not relay on any Jenkins and therefore, we can run it separately.
+![Alt text](docs/overview_container.png "Framework inside Jenkins, work-flow and core components")
+
+The framework executes test cases by delegating testing to dedicated executors. The primary goal is to run executors, wait for the executors to complete and publish accumulated report. An external executors can be any program, which comply to certain criteria. Each executor runs a test suit with a number of test cases. The executor has to output to standard outputs (stdout/stderr) and publishes test results in a specific format in the specified folder.
 
 ### Test Framework
 The figure below sums up and highlights the work-flow and core parts of the framework.
