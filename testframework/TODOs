@@ -1,0 +1,6 @@
+1) central maven repository to share between executors
+2) add test suite for dnssd functionality
+3) convert html reports to xml junit reports (could be picked up by jenkins auotmatically)
+4) more jenkins slaves
+5) there is alot of mass in testJar with the html report generation functionality
+6) better load balancing
