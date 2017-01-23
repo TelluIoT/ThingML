@@ -7,6 +7,7 @@ import shutil
 import StringIO
 import subprocess
 import ConfigParser
+import xml.etree.ElementTree as ET
 
 CONFIG_NAME = 'config.ini'
 SCRIPT_ABSOLUTE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -22,6 +23,16 @@ SETTING_NETWORK_JAR = 'network_plugin_jar'
 SETTING_TEST_SRC_FOLDER = 'test_src_folder'
 SETTING_LB_BALANCER_CONFIG = 'loadbalancer_lb_config'
 
+
+def get_thingml_pom_version(pom_xml_file):
+	print "Retrieving ThingML version from: " + pom_xml_file
+	pom_xml = ET.parse(pom_xml_file)
+	root = pom_xml.getroot()
+	m = re.match('\{.*\}', root.tag)
+	ns = m.group(0) if m else ''
+	version = root.find(ns + 'version')
+	print "ThingML version: " + version.text
+	return version.text
 
 def copy_dir_contents(src, dst, symlinks=False, ignore=None):
 	for item in os.listdir(src):
@@ -86,8 +97,8 @@ def prep_job(job_folder, test_jar, compiler_jar, network_plugin_jar, test_src):
 	check_and_print_sdt(stdout, stderr)
 
 
-def load_balance(load_balance_script, working_folder, test_jar, compiler_jar, network_plugin_jar, test_src_folder, jobs):
-	command = [load_balance_script, working_folder]
+def load_balance(load_balance_script, working_folder, test_jar, compiler_jar, network_plugin_jar, test_src_folder, jobs, thingml_version):
+	command = [load_balance_script, working_folder, thingml_version]
 	print 'Load balancing: ' + ' '.join(command) + ' in ' + SCRIPT_ABSOLUTE_PATH
 	proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=SCRIPT_ABSOLUTE_PATH)
 	stdout, stderr = proc.communicate()
@@ -218,8 +229,11 @@ def prepare_report(working_folder, jobs, report_folder, category_name):
 		file.write(header_accumulated_result + body_accumulated_result + footer_accumulated_result)
 	
 
-def run_routine(category_name, working_folder, report_folder, master_slave_user, master_slave_pwd, master_ssh_port):
-	config = ConfigParser.ConfigParser()
+def run_routine(category_name, working_folder, report_folder, master_slave_user, master_slave_pwd, master_ssh_port, thingML_folder):
+	pom_xml_file = os.path.join(thingML_folder, "pom.xml")
+	thingml_version = get_thingml_pom_version(pom_xml_file)
+	defaults = {"thingml_version" : thingml_version}
+	config = ConfigParser.ConfigParser(defaults)
 	config.read(os.path.join(SCRIPT_ABSOLUTE_PATH, CONFIG_NAME))
 
 	dockerfile_path = config.get(CONFIG_SECTION, SETTING_DOKCERFILE_PATH)
@@ -246,7 +260,7 @@ def run_routine(category_name, working_folder, report_folder, master_slave_user,
 		'master_pass' : master_slave_pwd, 'docker_worker_image' : docker_image_name}
 
 	build_docker_image(dockerfile_path, docker_image_name)
-	load_balance(load_balance_script, working_folder, test_jar, compiler_jar, network_plugin_jar, test_src_folder, jobs)
+	load_balance(load_balance_script, working_folder, test_jar, compiler_jar, network_plugin_jar, test_src_folder, jobs, thingml_version)
 	execute_tests(jobs, **slave_params)
 	prepare_report(working_folder, jobs, report_folder, category_name)
 
@@ -255,6 +269,7 @@ if __name__ == "__main__":
 	category_name = sys.argv[1]
 	working_folder = sys.argv[2]
 	report_folder = sys.argv[3]
+	thingML_folder = sys.argv[4]
 
 	master_slave_user = os.environ.get('MASTER_SLAVE_USER')
 	master_slave_pwd = os.environ.get('MASTER_SLAVE_PWD')
@@ -275,6 +290,6 @@ if __name__ == "__main__":
 		sys.stderr.write(message + '\n');
 		sys.exit(1)
 
-	run_routine(category_name, working_folder, report_folder, master_slave_user, master_slave_pwd, str(master_ssh_port))
+	run_routine(category_name, working_folder, report_folder, master_slave_user, master_slave_pwd, str(master_ssh_port), thingML_folder)
 	
 	sys.exit(0)

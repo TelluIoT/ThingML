@@ -18,6 +18,7 @@ The framework is up and running on the local cloud. `Jenkinsfile` (in the root o
 [general]
 test_working_folder=work_folder
 global_report_dir = ../htmlreports
+thingml_repo = ../
 
 [generalTests]
 category_name=generalTests
@@ -32,13 +33,14 @@ The following section `[generalTests]` describes the test suit to execute. The n
 ### Test Suite
 To execute a test suite the framework spawns an executor for each test suite. In our example, the configuration file contains only one test suite, i.e. `generalTests`. The test framework reads the configuration, locates the folder with the `generalTests` and forks a process using `run.py` which is found in the located folder. In our example, it spawns a new process using the following command line:
 ```sh
-$> run.py <test-suite-name> <test-suite-working-folder> <test-suite-report-folder> 
+$> run.py <test-suite-name> <test-suite-working-folder> <test-suite-report-folder> <thingml-repo-folder>
 ```
 where:
  - `run.py` is taken from `category_test_script` and is an entry point of the executor.
  - The framework uses value of `category_name` to set the parameter `<test-suite-name>`.
  - `<test-suite-working-folder>` is an absolute path to the working folder of the executor, e.g. `/some_path/testframework/<test_working_folder>/<category_name>`.
  - `<test-suite-report-folder>` is an absolute path to the test executor report folder where the executor stores results of the test suite execution. The path has the following format `/some_path/testframework/<test_working_folder>/<category_name>/report`.
+ - `<thingml-repo-folder>` is an absolute path to the ThingML repository.
 
 ### Adding Test Suite
 To add a new test suite, one has to create a folder in the test framework root and add a script inside just created folder which launch a test suite execution. Thereafter, we need to add a new section in `config.ini`. 

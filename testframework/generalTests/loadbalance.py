@@ -15,7 +15,9 @@ SETTING_TEST_SRC_FOLDER = 'test_src_folder'
 SETTING_LB_TEST_CONFIG = 'loadbalancer_test_config'
 SETTING_LB_BALANCER_CONFIG = 'loadbalancer_lb_config'
 
-config = ConfigParser.ConfigParser()
+
+defaults = {"thingml_version" : sys.argv[2]}
+config = ConfigParser.ConfigParser(defaults)
 config.read(os.path.join(SCRIPT_ABSOLUTE_PATH, CONFIG_NAME))
 tesJar = config.get(CONFIG_SECTION, SETTING_TEST_JAR)
 testSrcRootFolder = config.get(CONFIG_SECTION, SETTING_TEST_SRC_FOLDER)
