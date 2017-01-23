@@ -1,17 +1,16 @@
 node {
-   def mvnHome
    stage('Downloading changes') { // for display purposes
-      git "https://github.com/vassik/ThingML.git"
+      git "https://github.com/SINTEF-9012/ThingML.git"
    }
    stage('Building Compilers') {
       // Run the maven build
       sh "mvn -Dmaven.test.failure.ignore clean install"
    }
    stage('Building TestJar') {
-       sh("cd testJar/ && mvn  -Dmaven.test.failure.ignore clean install && cd ..")
+      sh("cd testJar/ && mvn  -Dmaven.test.failure.ignore clean install && cd ..")
    }
    stage('Testing') {
-       sh "./testframework/test.py"
+      sh "./testframework/test.py"
    }
    stage('Publishing HTML Report') {
       publishHTML (target: [
