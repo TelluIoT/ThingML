@@ -11,7 +11,8 @@ node {
        sh("cd testJar/ && mvn  -Dmaven.test.failure.ignore clean install && cd ..")
    }
    stage('Testing') {
-       sh "./testframework/test.py"
+      sh 'export'
+       //sh "./testframework/test.py"
    }
    stage('Publishing HTML Report') {
       publishHTML (target: [
