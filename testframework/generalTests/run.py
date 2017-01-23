@@ -259,6 +259,9 @@ if __name__ == "__main__":
 	master_slave_user = os.environ.get('MASTER_SLAVE_USER')
 	master_slave_pwd = os.environ.get('MASTER_SLAVE_PWD')
 	master_ssh_port = os.environ.get('MASTER_SSH_PORT')
+	print "master_slave_user " + master_slave_user
+	print "master_slave_pwd " + master_slave_pwd
+	print "master_ssh_port" + master_ssh_port
 
 	if not master_slave_user:
 		message = "MASTER_SLAVE_USER env variable is not set!. Exiting..."
