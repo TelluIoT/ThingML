@@ -8,11 +8,15 @@ SSDPID=$(pidof sshd)
 [ $? -eq 0 ] && echo "SUCCESS: ssh daemon" || echo "FAILURE: ssh daemon"
 
 #setting up permissions for docker.sock
-if [[ -e "/var/run/docker.sock" ]] && [[ -n "$DOCKER_GID" ]]; then
-	echo "Setting permissions for docker.sock"
-	groupadd -g "$DOCKER_GID" docker
-	usermod -aG docker jenkins
-	echo "Added jenkins to the docker group"
+if ! grep -q docker /etc/group; then
+  if [[ -e "/var/run/docker.sock" ]] && [[ -n "$DOCKER_GID" ]] ; then
+  	echo "Setting permissions for docker.sock"
+  	groupadd -g "$DOCKER_GID" docker
+  	usermod -aG docker jenkins
+  	echo "Added jenkins to the docker group"
+  fi
+else
+  echo "docker group already exists"
 fi
 
 #setting up maven START
