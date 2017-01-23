@@ -3,13 +3,17 @@
 Jenkins ThingML Test Framework builds ThingML artifacts, runs test cases and publish results. The framework runs inside the Jenkins docker container. However, it does not relay on any Jenkins and therefore, we can run it separately.
 ![Alt text](docs/overview_container.png "Framework inside Jenkins, work-flow and core components")
 
-The framework executes test cases by delegating testing to dedicated executors. The primary goal is to run executors, wait for the executors to complete and publish accumulated report. An external executors can be any program, which comply to certain criteria. Each executor runs a test suit with a number of test cases. The executor has to output to standard outputs (stdout/stderr) and publishes test results in a specific format in the specified folder.
+The framework executes test cases by delegating testing to dedicated executors. The primary goal is to run executors, wait for the executors to complete and publish accumulated report. An external executors can be any program, which comply to certain criteria. Each executor runs a test suit with a number of test cases. We encourage that an executor runs the test suite in a separate container. The executor has to output to standard outputs (stdout/stderr) and publishes test results in a specific format in the specified folder.
 
-### Test Framework
-The figure below sums up and highlights the work-flow and core parts of the framework.
-![Alt text](docs/overview.png "Work-flow and core components")
+## How to use?
+The framework is up and running on the local cloud. `Jenkinsfile` (in the root of the repository) defines the work-flow to execute by Jenkins every time a change is pushed to the ThingML repository. The work-flow builds ThingML, runs the framework and makes results available at `Jenkins > ThingML Testing > ThingML > select branch > select build > Test Execution Report.
 
-The script `test.py` implements the figure above. Each time we want to execute test cases the script should be run. The configuration file `config.ini` controls the behavior of the framework.
+## Installation
+[Installation instructions](https://github.com/SINTEF-9012/ThingML/blob/master/testframework/docs/installation.pdf)
+
+## Test Framework
+### Configuration
+`test.py` defines the work-flow which Jenkins initiates if a change in the repository is detected or we trigger the build manually. The configuration file `config.ini` controls the behavior of the framework.
 ```sh
 [general]
 test_working_folder=work_folder
@@ -106,9 +110,3 @@ where:
  - `load_balance_util` uses testJar to load balance, the config for this balancer is `loadbalancer_lb_config`. [See testJar README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/README.md) 
 `test_jar`, `compiler_jar`, `network_plugin_jar` are binaries which are used by testJar to execute test cases. [See testJar README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/README.md)
  - `loadbalancer_test_config` defines test cases to execute. [See testJar README.md](https://github.com/SINTEF-9012/ThingML/blob/master/testJar/README.md) 
-
-## Usage
-The framework is up and running on the local cloud. `Jenkinsfile` (in the root of the repository) defines the work-flow to execute every time a change is pushed to the ThingML repository. Go to `Jenkins > ThingML Testing > Thing ML > select branch > select build > Test Execution Report 
-
-## Installation
-[Installation instructions](https://github.com/SINTEF-9012/ThingML/blob/master/testframework/docs/installation.pdf)
