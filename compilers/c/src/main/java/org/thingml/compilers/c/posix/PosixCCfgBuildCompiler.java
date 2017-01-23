@@ -26,6 +26,7 @@ import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 
 import java.io.File;
+import java.util.Set;
 
 /**
  * Created by ffl on 17.06.15.
@@ -141,6 +142,20 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
             mtemplate = mtemplate.replace("/*STATIC*/", "-static ");
         } else {
             mtemplate = mtemplate.replace("/*STATIC*/", "");
+        }
+
+        // Add network plugin generated source and object files
+        Set<String> networkPluginFiles = ctx.getNetworkPluginFiles();
+        for (String cfile : networkPluginFiles) {
+            String ofile;
+            if (cfile.endsWith(".c")) {
+                ofile = cfile.substring(0, cfile.length()-2)+".o";
+            } else {
+                ofile = cfile+".o";
+                cfile = cfile+".c";
+            }
+            srcs.append(cfile+" ");
+            objs.append(ofile+" ");
         }
 
         mtemplate = mtemplate.replace("/*SOURCES*/", srcs.toString().trim());

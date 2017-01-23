@@ -21,23 +21,16 @@ If you are going to compile Java code from ThingML, please:
 
 - Make sure you have a proper [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) (a JRE is not sufficient)
 - Install [Maven](http://maven.apache.org/)
-- Configure Eclipse so that it uses the JDK: `Window -> Preferences -> Java -> Installed JREs` (make sure it points to a JDK)
 
 ### &#x1F539; Javascript
 If you are going to compile Java code from ThingML, please:
 
 - Install [Node.JS](https://nodejs.org/en/)
 
-In Eclipse, from this update site: `Node.JS - http://www.nodeclipse.org/updates/enide-2015/`, install
-
-- Features included in Enide Studio .Features Set
-- Nodeclipse Node.js .Features Set	1.0.2.201509250223
-
 ### &#x1F539; UML
 If you are going to compile UML Diagrams from ThingML, please:
 
 - Install [Graphviz](http://www.graphviz.org/Download.php)
-- Install PlantUML plugins in Eclipse using this update site: `http://plantuml.sourceforge.net/updatesitejuno/` (See below for how to install plugins in Eclipse)
 
 ### &#x1F539; Arduino
 If you are going to compile Arduino code from ThingML, please:
@@ -77,6 +70,8 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 
 #### How to compile and run generated Java code
 
+&#x2757; Configure Eclipse so that it uses the JDK: `Window -> Preferences -> Java -> Installed JREs` (make sure it points to a JDK)
+
 - Right click on `pom.xml` (in `thingml-gen/java/your-configuration`)
 - `Run as -> Maven build... `
 - In `Goals` type: `clean install exec:java`
@@ -85,12 +80,16 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 
 #### How to compile and run generated JavaScript (Node.JS) code
 
+&#x2757; In Eclipse, from this update site: `Node.JS - http://www.nodeclipse.org/updates/enide-2015/`, install `Features included in Enide Studio .Features Set` and `Nodeclipse Node.js .Features Set	1.0.2.201509250223`
+
 - Right click on `package.json` (in `thingml-gen/nodejs/your-configuration`)
 - `Run as -> npm install `
 - Right click on `main.js`
 - `Run as -> Node Application`
 
 #### How to visualize generated UML (PlantUML) diagrams
+
+&#x2757; Install PlantUML plugins in Eclipse using this update site: `http://plantuml.sourceforge.net/updatesitejuno/` (See below for how to install plugins in Eclipse)
 
 - `Window -> Show View -> Other... -> PlantUML`
 

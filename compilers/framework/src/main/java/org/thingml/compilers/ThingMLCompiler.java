@@ -228,7 +228,7 @@ public abstract class ThingMLCompiler {
      * Entry point of the compiler
      * ************************************************************
      */
-    public abstract boolean compile(Configuration cfg, String... options);
+    public abstract void compile(Configuration cfg, String... options);
 
     /**
      * Creates debug profiles
@@ -337,15 +337,15 @@ public abstract class ThingMLCompiler {
         }
     }
 
-    public boolean compileConnector(String connector, Configuration cfg, String... options) {
+    public void compileConnector(String connector, Configuration cfg, String... options) {
         ctx.setCurrentConfiguration(cfg);
         final CfgExternalConnectorCompiler cc = connectorCompilers.get(connector);
         if (cc != null) {
             cc.generateExternalConnector(cfg, ctx, options);
             ctx.writeGeneratedCodeToFiles();
-            return true;
+        } else {
+            System.out.println("Cannot find compiler for connector " + connector);
         }
-        return false;
     }
 
     public ThingActionCompiler getThingActionCompiler() {

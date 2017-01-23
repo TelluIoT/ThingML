@@ -83,11 +83,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             } else {
                 builder.append("const ");
             }
-            String folder = "";
-            if (ctx.hasContextAnnotation("folder")) {
-                folder = ctx.getContextAnnotation("folder") + "/";
-            }
-            builder.append(i.getName() + " = fork('" + folder + ctx.firstToUpper(i.getType().getName()) + ".js', [\"" + i.getName() + "\", null");//FIXME: For Kevoree lib/xxx.js
+            builder.append(i.getName() + " = fork(require('" + ctx.firstToUpper(i.getType().getName()) + "').resolve(), [\"" + i.getName() + "\", null");//FIXME: For Kevoree lib/xxx.js
         } else {
             if (useThis) {
                 builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
@@ -176,7 +172,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
             }
         }
-        builder.append("/*$PLUGINS$*/\n");
     }
 
     public static void generateInstances(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
@@ -185,6 +180,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             generateInstance(i, cfg, builder, ctx, useThis, debug);
         }
+        builder.append("/*$PLUGINS$*/\n");
     }
 
     public static void generateConnectors(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
@@ -192,37 +188,25 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         if (useThis) {
             prefix = "this.";
         }
-        builder.append("//Connecting internal ports...\n");
-        for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
-            Instance i = entries.getKey();
-            for (InternalPort p : entries.getValue()) {
-                for (Message rec : p.getReceives()) {
-                    for (Message send : p.getSends()) {
-                        if (EcoreUtil.equals(rec, send)) {
-                            builder.append(prefix + i.getName() + "." + send.getName() + "On" + p.getName() + "Listeners.push(");
-                            builder.append(prefix + i.getName() + ".receive" + rec.getName() + "On" + p.getName() + ".bind(" + prefix + i.getName() + ")");
-                            builder.append(");\n");
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        builder.append("//Connecting ports...\n");
         if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            builder.append("//Connecting ports...\n");
             for (Instance i : ConfigurationHelper.allInstances(cfg)) {
                 builder.append(i.getName() + ".on('message', (m) => {\n");
                 builder.append("switch(m._port) {\n");
-                for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-                    if (EcoreUtil.equals(i, c.getCli().getInstance())) {
-                        builder.append("case '" + c.getRequired().getName() + "':\n");
-                        builder.append("m._port = '" + c.getProvided().getName() + "';\n");
-                        builder.append(c.getSrv().getInstance().getName() + ".send(m);\n");
-                    } else if (EcoreUtil.equals(i, c.getSrv().getInstance())) {
-                        builder.append("case '" + c.getProvided().getName() + "':\n");
-                        builder.append("m._port = '" + c.getRequired().getName() + "';\n");
-                        builder.append(c.getCli().getInstance().getName() + ".send(m);\n");
+                for(Port p : ThingMLHelpers.allPorts(i.getType())) {
+                    builder.append("case '" + p.getName() + "':\n");
+                    if(p instanceof InternalPort) {
+                        builder.append(i.getName() + ".send(m);\n");
+                    } else {
+                        for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
+                            if (EcoreUtil.equals(i, c.getCli().getInstance()) && EcoreUtil.equals(p, c.getRequired())) {
+                                builder.append("m._port = '" + c.getProvided().getName() + "';\n");
+                                builder.append(c.getSrv().getInstance().getName() + ".send(m);\n");
+                            } else if (EcoreUtil.equals(i, c.getSrv().getInstance()) && EcoreUtil.equals(p, c.getProvided())) {
+                                builder.append("m._port = '" + c.getRequired().getName() + "';\n");
+                                builder.append(c.getCli().getInstance().getName() + ".send(m);\n");
+                            }
+                        }
                     }
                     builder.append("break;\n");
                 }
@@ -231,6 +215,23 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 builder.append("});\n\n");
             }
         } else {
+            builder.append("//Connecting internal ports...\n");
+            for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
+                Instance i = entries.getKey();
+                for (InternalPort p : entries.getValue()) {
+                    for (Message rec : p.getReceives()) {
+                        for (Message send : p.getSends()) {
+                            if (EcoreUtil.equals(rec, send)) {
+                                builder.append(prefix + i.getName() + "." + send.getName() + "On" + p.getName() + "Listeners.push(");
+                                builder.append(prefix + i.getName() + ".receive" + rec.getName() + "On" + p.getName() + ".bind(" + prefix + i.getName() + ")");
+                                builder.append(");\n");
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            builder.append("//Connecting ports...\n");
             for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
                 for (Message req : c.getRequired().getReceives()) {
                     for (Message prov : c.getProvided().getSends()) {
@@ -285,8 +286,10 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 break;
             }
         }
-        for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            builder.append("const " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
+        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            for (Thing t : ConfigurationHelper.allThings(cfg)) {
+                builder.append("const " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
+            }
         }
         builder.append("/*$REQUIRE_PLUGINS$*/\n");
         generateInstances(cfg, builder, ctx, false);

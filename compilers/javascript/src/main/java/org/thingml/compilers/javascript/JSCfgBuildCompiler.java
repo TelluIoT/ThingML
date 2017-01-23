@@ -45,7 +45,6 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
             String pack = "";
             for (String line : packLines) {
                 pack += line + "\n";
-                //System.out.println("l:" + line);
             }
             input.close();
             pack = pack.replace("<NAME>", cfg.getName());

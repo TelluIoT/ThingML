@@ -33,7 +33,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
         CCompilerContext context = (CCompilerContext) ctx;
         final StringBuilder b = new StringBuilder();
-        builder.append(context.getConcreteThing().getName() + "_fork_" + action.getSession().getName() + "(_instance);\n");
+        builder.append(context.getConcreteThing().getName() + "_fork_" + action.getSession().getName() + "("+ context.getInstanceVarName() +");\n");
     }
 
 
@@ -74,7 +74,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
         builder.append(context.getCName(action.getFunction(), context.getConcreteThing()));
 
-        builder.append("(_instance");
+        builder.append("(" + context.getInstanceVarName());
         for (Expression p : action.getParameters()) {
             builder.append(", ");
             generate(p, builder, context);
@@ -179,7 +179,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                             "to be accessed.");
                 }
 
-                builder.append("_instance->cep_" + streamName + "->export_" + msgName + "_" + paramName + "()");
+                builder.append(((CCompilerContext) ctx).getInstanceVarName() + "->cep_" + streamName + "->export_" + msgName + "_" + paramName + "()");
             } else {
 
             }
@@ -239,10 +239,10 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                             //System.out.println("BuilderB: '" + builder + "'");
                         }
                     } else {
-                        builder.append("_instance->" + ThingMLElementHelper.qname(expression.getProperty(), "_") + "_var");
+                        builder.append(nctx.getInstanceVarName() + "->" + ThingMLElementHelper.qname(expression.getProperty(), "_") + "_var");
                     }
                 } else {
-                    builder.append("_instance->" + ThingMLElementHelper.qname(expression.getProperty(), "_") + "_var");
+                    builder.append(nctx.getInstanceVarName() + "->" + ThingMLElementHelper.qname(expression.getProperty(), "_") + "_var");
                 }
             } else {
                 Property p = (Property) expression.getProperty();
@@ -264,12 +264,17 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
-
         CCompilerContext context = (CCompilerContext) ctx;
+        //FIXME: @ffleurey, @Lyadis this is a dirty hack... I get we should set the concreteThing in the context somewhere before...
+        /*Thing concreteThing = context.getConcreteThing();
+        if (concreteThing == null) {
+            concreteThing = (Thing) expression.getFunction().eContainer();
+        }
 
+        builder.append(context.getCName(expression.getFunction(), concreteThing));*/
         builder.append(context.getCName(expression.getFunction(), context.getConcreteThing()));
 
-        builder.append("(_instance");
+        builder.append("(" + context.getInstanceVarName());
         for (Expression p : expression.getParameters()) {
             builder.append(", ");
             generate(p, builder, context);
