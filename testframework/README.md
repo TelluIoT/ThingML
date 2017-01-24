@@ -6,7 +6,7 @@ Jenkins ThingML Test Framework builds ThingML artifacts, runs test cases and pub
 The framework executes test cases by delegating testing to dedicated executors. The primary goal is to run executors, wait for the executors to complete and publish accumulated report. An external executors can be any program, which comply to certain criteria. Each executor runs a test suit with a number of test cases. We encourage that an executor runs the test suite in a separate container. The executor has to output to standard outputs (stdout/stderr) and publishes test results in a specific format in the specified folder.
 
 ## How to use?
-The framework is up and running on the local cloud. `Jenkinsfile` (in the root of the repository) defines the work-flow to execute by Jenkins every time a change is pushed to the ThingML repository. The work-flow builds ThingML, runs the framework and makes results available at `Jenkins > ThingML Testing > ThingML > select branch > select build > Test Execution Report`.
+The framework is up and running on the local cloud. `Jenkinsfile` (in the root of the repository) defines the work-flow to execute by Jenkins every time a change is pushed to the ThingML repository. The work-flow builds ThingML, runs the framework and makes results available at `Jenkins > SINTEF-9012 > ThingML > select branch > select build > Test Execution Report`.
 
 ## Installation
 [Installation instructions](https://github.com/SINTEF-9012/ThingML/blob/master/testframework/docs/installation.pdf)
