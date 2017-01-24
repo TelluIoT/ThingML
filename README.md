@@ -12,6 +12,8 @@ The ThingML language is supported by a set of tools, which include editors, tran
 
 > **Issues, bug reports and feature requests should be submitted to the [issue tracker on GitHub](https://github.com/SINTEF-9012/ThingML/issues)**
 
+> &#x1F537; &#x1F537; If you are contributing to this repository, please install [Git LFS](https://git-lfs.github.com/) and track all `jar` file: `git lfs track "*.jar"`
+
 ## &#x1F537; Prerequisites &#x2757;
 
 ThingML can compile code for various platforms and languages. Please make sure you follow the required steps
