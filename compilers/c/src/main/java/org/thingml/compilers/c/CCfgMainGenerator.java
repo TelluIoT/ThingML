@@ -331,12 +331,18 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     }
 
-    protected void generateIncludes(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+    // TODO Jakob made this public, should it not be used externally?
+    public String generateThingIncludes(Configuration cfg, CCompilerContext ctx) {
+        StringBuilder builder = new StringBuilder();
         ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
-
             builder.append("#include \"" + t.getName() + ".h\"\n");
         }
+        return builder.toString();
+    }
+
+    protected void generateIncludes(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
+        builder.append(this.generateThingIncludes(cfg, ctx));
         builder.append(ctx.getIncludeCode());
     }
 

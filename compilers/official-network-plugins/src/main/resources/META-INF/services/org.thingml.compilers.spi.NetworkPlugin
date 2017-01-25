@@ -10,6 +10,7 @@ org.thingml.networkplugins.c.posix.PosixNoPollWSPlugin
 org.thingml.networkplugins.c.posix.PosixSerialPlugin
 org.thingml.networkplugins.c.posix.PosixStdInPlugin
 org.thingml.networkplugins.c.posix.PosixUDPPlugin
+org.thingml.networkplugins.c.posix.PosixTimerPlugin
 org.thingml.networkplugins.cpp.rcd.RcdPortPlugin
 org.thingml.networkplugins.cpp.rcd.RcdTimerPlugin
 org.thingml.networkplugins.java.JavaSerialPlugin

@@ -28,6 +28,7 @@ import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.impl.ThingmlFactoryImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 
@@ -130,16 +131,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 String portName = protocol.getName();
 
                 /* ---------- General initialisation ---------- */
-                // TODO Jakob, this is kind of hack-ish
-                // Section copied from CCfgMainGenerator.java - generateIncludes
-                StringBuilder includes = new StringBuilder();
-                ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);
-                for (Thing t : ConfigurationHelper.allThings(cfg)) {
-                  includes.append("#include \"" + t.getName() + ".h\"\n");
-                }
-                includes.append(ctx.getIncludeCode());
-                htemplate = htemplate.replace("/*INCLUDES*/",includes);
-                // End hack-ish section
+                CCfgMainGenerator mainGenerator = (CCfgMainGenerator)ctx.getCompiler().getMainCompiler();
+                htemplate = htemplate.replace("/*INCLUDES*/", mainGenerator.generateThingIncludes(cfg, ctx));
 
                 // Replace PORT_NAME
                 ctemplate = ctemplate.replace("/*PORT_NAME*/", portName);
