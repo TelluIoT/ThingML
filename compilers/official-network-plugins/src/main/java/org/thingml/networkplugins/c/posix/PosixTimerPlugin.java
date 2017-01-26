@@ -154,9 +154,6 @@ public class PosixTimerPlugin  extends NetworkPlugin {
             ctemplate = ctemplate.replace("/*FORWARDERS*/", cforwarders.toString());
             htemplate = htemplate.replace("/*NB_SOFT_TIMERS*/", (numSoftTimers < 4) ? "4" : numSoftTimers.toString());
 
-            /* ----------- Enable/disable pthread-mutex for thread-safety -----------*/
-            ctemplate = ctemplate.replace("/*PTHREAD*/", "");
-
 
             /* ----------- Include instance structs -----------*/
             CCfgMainGenerator mainGenerator = (CCfgMainGenerator)cctx.getCompiler().getMainCompiler();
@@ -166,7 +163,8 @@ public class PosixTimerPlugin  extends NetworkPlugin {
             cctx.addToInitCode("// Initialise Timer:");
             cctx.addToInitCode("Timer_instance.listener_id = add_instance(&Timer_instance);");
             cctx.addToInitCode("Timer_setup(&Timer_instance);\n");
-            cctx.addToPollCode("Timer_poll(&Timer_instance);\n");
+            cctx.addToInitCode("pthread_t thread_Timer;");
+            cctx.addToInitCode("pthread_create( &thread_Timer, NULL, Timer_loop, &Timer_instance);\n");
 
 
             /* ----------- Append generated code file and to init in Configuration code ---------- */

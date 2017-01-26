@@ -201,15 +201,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 ctx.addToInitCode("// Initialise " + protocol.getName() + ":");
                 ctx.addToInitCode(portName + "_instance.listener_id = add_instance(&" + portName + "_instance);");
                 ctx.addToInitCode(protocol.getName() + "_setup(&"+portName+"_instance);");
-
-                if (ctx.getCompiler().getID() == "posixmt") {
-                    // Multi-threaded compiler
-                    ctx.addToInitCode("pthread_t thread_"+protocol.getName()+";");
-                    ctx.addToInitCode("pthread_create( &thread_"+protocol.getName()+", NULL, "+protocol.getName()+"_start_receiver_thread, NULL);\n");
-                } else {
-                    // Single-threaded compiler
-                    ctx.addToPollCode(protocol.getName()+"_loop_pool();\n");
-                }
+                ctx.addToInitCode("pthread_t thread_"+protocol.getName()+";");
+                ctx.addToInitCode("pthread_create( &thread_"+protocol.getName()+", NULL, "+protocol.getName()+"_start_receiver_thread, NULL);\n");
 
 
                 /* ----------- Append generated code file and to init in Configuration code ---------- */
