@@ -37,13 +37,6 @@ import java.util.Map;
  */
 public class JavaCompiler extends OpaqueThingMLCompiler {
 
-    {
-        Map<String, CfgExternalConnectorCompiler> connectorCompilerMap = new HashMap<String, CfgExternalConnectorCompiler>();
-        connectorCompilerMap.put("kevoree-java", new Java2Kevoree());
-        connectorCompilerMap.put("swing", new Java2Swing());
-        addConnectorCompilers(connectorCompilerMap);
-    }
-
     public JavaCompiler() {
         super(new JavaThingActionCompiler(), new JavaThingApiCompiler(), new JavaCfgMainGenerator(),
                 new JavaCfgBuildCompiler(), new JavaThingImplCompiler(),
@@ -54,6 +47,9 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
                 do_generic_check(cfg);
             }
         };
+        connectorCompilers.clear();
+        connectorCompilers.put("kevoree-java", new Java2Kevoree());
+        connectorCompilers.put("swing", new Java2Swing());
     }
 
     @Override

@@ -73,7 +73,7 @@ public abstract class ThingMLCompiler {
     private Map<Thing, DebugProfile> debugProfiles = new HashMap<>();
     private boolean containsDebug = false;
     //we might need several connector compilers has different ports might use different connectors
-    private Map<String, CfgExternalConnectorCompiler> connectorCompilers = new HashMap<String, CfgExternalConnectorCompiler>();
+    protected Map<String, CfgExternalConnectorCompiler> connectorCompilers = new HashMap<String, CfgExternalConnectorCompiler>();
     private OutputStream messageStream = System.out;
     private OutputStream errorStream = System.err;
     private File outputDirectory = null;
@@ -89,7 +89,6 @@ public abstract class ThingMLCompiler {
         this.mainCompiler = new CfgMainGenerator();
         this.cfgBuildCompiler = new CfgBuildCompiler();
         this.thingImplCompiler = new FSMBasedThingImplCompiler();
-        connectorCompilers.put("default", new CfgExternalConnectorCompiler());
         this.cepCompiler = new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration());
     }
 
@@ -370,10 +369,6 @@ public abstract class ThingMLCompiler {
 
     public ThingCepCompiler getCepCompiler() {
         return cepCompiler;
-    }
-
-    public void addConnectorCompilers(Map<String, CfgExternalConnectorCompiler> connectorCompilers) {
-        this.connectorCompilers.putAll(connectorCompilers);
     }
 
     public Map<String, CfgExternalConnectorCompiler> getConnectorCompilers() {

@@ -74,8 +74,8 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
         b2.append(command);
 
 
-        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            compileType(i.getType(), ctx, pack);
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
+            compileType(t, ctx, pack);
         }
         ctx.writeGeneratedCodeToFiles();
     }
