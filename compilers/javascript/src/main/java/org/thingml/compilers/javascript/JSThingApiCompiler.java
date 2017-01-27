@@ -16,10 +16,7 @@
  */
 package org.thingml.compilers.javascript;
 
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
+import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
@@ -39,6 +36,41 @@ public class JSThingApiCompiler extends ThingApiCompiler {
     public void generatePublicAPI(Thing thing, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.firstToUpper(thing.getName()) + ".js");
 
+
+        builder.append("//ThingML-defined functions\n");
+        for (Function f : ThingMLHelpers.allFunctions(thing)) {   //FIXME: should be extracted
+            if (!AnnotatedElementHelper.isDefined(f, "abstract", "true")) {//should be refined in a PSM thing
+                builder.append(ctx.firstToUpper(thing.getName()) + ".prototype." + f.getName() + " = function(");
+                int j = 0;
+                for (Parameter p : f.getParameters()) {
+                    if (j > 0)
+                        builder.append(", ");
+                    builder.append(ctx.getVariableName(p));
+                    j++;
+                }
+                builder.append(") {\n");
+                /*if (debugProfile.getDebugFunctions().contains(f)) {
+                    builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceFunctionBegin(thing, f) + "(");
+                    int i = 0;
+                    for (Parameter pa : f.getParameters()) {
+                        if (i > 0)
+                            builder.append(", ");
+                        builder.append("\" + ");
+                        builder.append(ctx.getVariableName(pa));
+                        builder.append(" + \"");
+                        i++;
+                    }
+                    builder.append(")...\");\n");
+                }*/
+                ctx.getCompiler().getThingActionCompiler().generate(f.getBody(), builder, ctx);
+
+                /*if (debugProfile.getDebugFunctions().contains(f)) {
+                    builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceFunctionDone(thing, f) + "\");\n");
+                }*/
+                builder.append("}\n\n");
+            }
+        }
+
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
             //Lifecycle
             builder.append("//Public API for lifecycle management\n");
@@ -50,8 +82,8 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
             builder.append("if (this.root !== null && this.root !== undefined) {\n");
             builder.append("const forkLength = this.root.forks.length;\n");
-            builder.append("var idFork = 0;");
-            builder.append("for (var _i = 0; _i < forkLength; _i++) {\n");
+            builder.append("let idFork = 0;");
+            builder.append("for (let _i = 0; _i < forkLength; _i++) {\n");
             builder.append("if (this.root.forks[_i] === this) {\n");
             builder.append("idFork = _i\n");
             builder.append("}\n");
@@ -83,7 +115,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(msg) {//msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}\n");
             builder.append("if(this.ready){\n");
-            builder.append("cepDispatch.call(this, msg);\n");
+            builder.append("this.cepDispatch(msg);\n");
             builder.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);\n");
             builder.append("this.forks.forEach(function(fork){\n");
             builder.append("fork._receive(msg);\n");

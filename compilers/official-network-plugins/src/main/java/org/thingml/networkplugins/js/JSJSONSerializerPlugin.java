@@ -51,16 +51,6 @@ public class JSJSONSerializerPlugin extends SerializationPlugin {
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
         System.out.println("generateSerialization " + bufferName + " : " + m.getName());
-        int size = 2; //code encoded by a 2 bytes
-        for (Parameter p : m.getParameters()) {
-            if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                if (p.getType() instanceof PrimitiveType) {
-                    size = size + ((PrimitiveType) p.getType()).getByteSize();
-                } else {
-                    throw new UnsupportedOperationException("Cannot serialized non primitive type " + p.getType().getName());
-                }
-            }
-        }
         //Serialize message into binary
         builder.append(bufferName + ".prototype." + m.getName() + "ToFormat = function(");
         for(Parameter p : m.getParameters()) {

@@ -95,12 +95,15 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             }
             builder.append("});\n");
         } else {
-            builder.append("setImmediate(send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + ".bind(this");
+            builder.append("this.send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + "(");
+            int i = 0;
             for (Expression p : action.getParameters()) {
-                builder.append(", ");
+                if (i > 0)
+                    builder.append(", ");
                 generate(p, builder, ctx);
+                i++;
             }
-            builder.append("));\n");
+            builder.append(");\n");
         }
     }
 
@@ -133,10 +136,13 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        builder.append(action.getFunction().getName() + ".call(this");
+        builder.append("this." + action.getFunction().getName() + "(");
+        int i = 0;
         for (Expression p : action.getParameters()) {
-            builder.append(", ");
+            if (i > 0)
+                builder.append(", ");
             generate(p, builder, ctx);
+            i++;
         }
         builder.append(");\n");
     }
@@ -241,10 +247,13 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
-        builder.append(expression.getFunction().getName() + ".call(this");
-for (Expression p : expression.getParameters()) {
-            builder.append(", ");
+        builder.append("this." + expression.getFunction().getName() + "(");
+        int i = 0;
+        for (Expression p : expression.getParameters()) {
+            if (i > 0)
+                builder.append(", ");
             generate(p, builder, ctx);
+            i++;
         }
         builder.append(")");
     }
