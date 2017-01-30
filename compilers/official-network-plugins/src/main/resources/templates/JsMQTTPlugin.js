@@ -10,17 +10,17 @@ function /*$NAME$*/(name, debug, serverURL, subtopic, pubtopic, instance, callba
     this.formatter = new Format();
     this.client = mqtt_lib.connect(serverURL);
 
-    this.client.on('connect', function open() {
+    this.client.on('connect', () => {
         this.client.subscribe(this.subtopic);
         callback(true);
-    }.bind(this));
+    });
 
-   	this.client.on('message', function(topic, message) {
+   	this.client.on('message', (topic, message) => {
    	    if (topic === this.subtopic) {
             const msg = this.formatter.parse(message);
             /*$DISPATCH$*/
         }
-   	}.bind(this));
+   	});
 };
 
 /*$RECEIVERS$*/

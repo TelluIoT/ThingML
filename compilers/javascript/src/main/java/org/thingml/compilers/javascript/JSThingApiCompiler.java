@@ -189,7 +189,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
         if (!AnnotatedElementHelper.isDefined(p, "public", "false") && p.getSends().size() > 0) {
             builder.append("//notify listeners\n");
-            builder.append(const_() + "arrayLength = self." + m.getName() + "On" + p.getName() + "Listeners.length;\n");
+            builder.append("let arrayLength = this.root." + m.getName() + "On" + p.getName() + "Listeners.length;\n");
 
             if (debug) {
                 builder.append("if (arrayLength < 1) {\n");
@@ -198,7 +198,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             }
 
             builder.append("for (let _i = 0; _i < arrayLength; _i++) {\n");
-            builder.append("self." + m.getName() + "On" + p.getName() + "Listeners[_i](");
+            builder.append("this.root." + m.getName() + "On" + p.getName() + "Listeners[_i](");
             int i = 0;
             for (Parameter pa : m.getParameters()) {
                 if (i > 0) {
