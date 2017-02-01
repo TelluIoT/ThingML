@@ -37,18 +37,19 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         return "const ";
     }
 
+    //FIXME: refactor as event emitter also for non-mt
     protected void generateListeners(Thing thing, StringBuilder builder, Context ctx) {
         builder.append("//callbacks for attributes\n");
         if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
             builder.append("this.propertyListener = {};\n\n");
-            //builder.append("//if (root === null || root === undefined) {//only the root can send message");
-            builder.append("//callbacks for third-party listeners\n");
+
+            /*builder.append("//callbacks for third-party listeners\n");
             for (Port p : ThingMLHelpers.allPorts(thing)) {
                 for (Message m : p.getSends()) {
                     builder.append("this." + m.getName() + "On" + p.getName() + "Listeners = [];\n");
                 }
-            }
-            //builder.append("//}\n");
+            }*/
+
         }
     }
 
@@ -81,6 +82,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("const Enum = require('./enums');\n");
         }
         builder.append("const StateJS = require('state.js');\n");
+        builder.append("const EventEmitter = require('events').EventEmitter;\n");
         builder.append("StateJS.internalTransitionsTriggerCompletion = true;\n");
 
         if (debugProfile.isActive()) {
@@ -88,8 +90,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         if (thing.getStreams().size() > 0) {
-            builder.append("const Rx = require('rx'),\n" +
-                    "\tEventEmitter = require('events').EventEmitter;\n");
+            builder.append("const Rx = require('rx'),\n");
         }
 
         if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
@@ -152,6 +153,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("this.root = (root === null)? this : root;\n");
         builder.append("this.debug = debug;\n");
         builder.append("this.ready = false;\n");
+        builder.append("this.bus = new EventEmitter();\n");
 
         builder.append("//Children\n");
         builder.append("this.forkID = 0;\n");
@@ -348,7 +350,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generateCompositeState(CompositeState c, StringBuilder builder, Context ctx) {
         String containerName = ctx.getContextAnnotation("container");
         if (CompositeStateHelper.hasSeveralRegions(c)) {
-            builder.append("let " + ThingMLElementHelper.qname(c, "_") + " = new StateJS.State(\"" + c.getName() + "\", " + containerName + ")\n");
+            builder.append("let " + ThingMLElementHelper.qname(c, "_") + " = new StateJS.State('" + c.getName() + "', " + containerName + ")\n");
             generateActionsForState(c, builder, ctx);
             builder.append(";\n");
             for (Region r : c.getRegion()) {
@@ -360,7 +362,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 generateState(s, builder, ctx);
             }
         } else {
-            builder.append("let " + ThingMLElementHelper.qname(c, "_") + " = new StateJS.State(\"" + c.getName() + "\", " + containerName + ")");
+            builder.append("let " + ThingMLElementHelper.qname(c, "_") + " = new StateJS.State('" + c.getName() + "', " + containerName + ")");
             generateActionsForState(c, builder, ctx);
             builder.append(";\n");
             for (State s : c.getSubstate()) {
@@ -369,9 +371,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         if (c.isHistory())
-            builder.append("let _initial_" + ThingMLElementHelper.qname(c, "_") + " = new StateJS.PseudoState(\"_initial\", " + ThingMLElementHelper.qname(c, "_") + ", StateJS.PseudoStateKind.ShallowHistory);\n");
+            builder.append("let _initial_" + ThingMLElementHelper.qname(c, "_") + " = new StateJS.PseudoState('_initial', " + ThingMLElementHelper.qname(c, "_") + ", StateJS.PseudoStateKind.ShallowHistory);\n");
         else
-            builder.append("let _initial_" + ThingMLElementHelper.qname(c, "_") + " = new StateJS.PseudoState(\"_initial\", " + ThingMLElementHelper.qname(c, "_") + ", StateJS.PseudoStateKind.Initial);\n");
+            builder.append("let _initial_" + ThingMLElementHelper.qname(c, "_") + " = new StateJS.PseudoState('_initial', " + ThingMLElementHelper.qname(c, "_") + ", StateJS.PseudoStateKind.Initial);\n");
         builder.append("_initial_" + ThingMLElementHelper.qname(c, "_") + ".to(" + ThingMLElementHelper.qname(c.getInitial(), "_") + ");\n");
     }
 
@@ -383,9 +385,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generateAtomicState(State s, StringBuilder builder, Context ctx) {
         String containerName = ctx.getContextAnnotation("container");
         if (s instanceof FinalState) {
-            builder.append("let " + ThingMLElementHelper.qname(s, "_") + " = new StateJS.FinalState(\"" + s.getName() + "\", " + containerName + ")");
+            builder.append("let " + ThingMLElementHelper.qname(s, "_") + " = new StateJS.FinalState('" + s.getName() + "', " + containerName + ")");
         } else {
-            builder.append("let " + ThingMLElementHelper.qname(s, "_") + " = new StateJS.State(\"" + s.getName() + "\", " + containerName + ")");
+            builder.append("let " + ThingMLElementHelper.qname(s, "_") + " = new StateJS.State('" + s.getName() + "', " + containerName + ")");
         }
         generateActionsForState(s, builder, ctx);
         builder.append(";\n");
@@ -393,11 +395,11 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
         String containerName = ctx.getContextAnnotation("container");
-        builder.append("let " + ThingMLElementHelper.qname(r, "_") + "_reg = new StateJS.Region(\"" + r.getName() + "\", " + containerName + ");\n");
+        builder.append("let " + ThingMLElementHelper.qname(r, "_") + "_reg = new StateJS.Region('" + r.getName() + "', " + containerName + ");\n");
         if (r.isHistory())
-            builder.append("let _initial_" + ThingMLElementHelper.qname(r, "_") + "_reg = new StateJS.PseudoState(\"_initial\", " + ThingMLElementHelper.qname(r, "_") + "_reg, StateJS.PseudoStateKind.ShallowHistory);\n");
+            builder.append("let _initial_" + ThingMLElementHelper.qname(r, "_") + "_reg = new StateJS.PseudoState('_initial', " + ThingMLElementHelper.qname(r, "_") + "_reg, StateJS.PseudoStateKind.ShallowHistory);\n");
         else
-            builder.append("let _initial_" + ThingMLElementHelper.qname(r, "_") + "_reg = new StateJS.PseudoState(\"_initial\", " + ThingMLElementHelper.qname(r, "_") + "_reg, StateJS.PseudoStateKind.Initial);\n");
+            builder.append("let _initial_" + ThingMLElementHelper.qname(r, "_") + "_reg = new StateJS.PseudoState('_initial', " + ThingMLElementHelper.qname(r, "_") + "_reg, StateJS.PseudoStateKind.Initial);\n");
         for (State s : r.getSubstate()) {
             ctx.addContextAnnotation("container", ThingMLElementHelper.qname(r, "_") + "_reg");
             generateState(s, builder, ctx);
@@ -433,7 +435,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         } else {
             builder.append(ThingMLElementHelper.qname(t.getSource(), "_") + ".to(" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
             builder.append(".when((" + msg.getName() + ") => {");
-            builder.append("return " + msg.getName() + "._port === \"" + p.getName() + "\" && " + msg.getName() + "._msg === \"" + msg.getName() + "\"");
+            builder.append("return " + msg.getName() + "._port === '" + p.getName() + "' && " + msg.getName() + "._msg === '" + msg.getName() + "'");
             if (t.getGuard() != null) {
                 builder.append(" && ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
@@ -443,15 +445,15 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         if (t.getAction() != null) {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
-                debugString = "" + ThingMLHelpers.findContainingThing(t).getName() + "_print_debug(this, \"" + ctx.traceTransition(ThingMLHelpers.findContainingThing(t), t, p, msg) + "\");\n";
+                debugString = "" + ThingMLHelpers.findContainingThing(t).getName() + "_print_debug(this, '" + ctx.traceTransition(ThingMLHelpers.findContainingThing(t), t, p, msg) + "');\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         } else {
             if (debugProfile.isDebugBehavior()) {
                 builder.append(".effect(() => {\n");
                 builder.append("" + ThingMLHelpers.findContainingThing(t).getName()
-                        + "_print_debug(this, \""
+                        + "_print_debug(this, '"
                         + ctx.traceTransition(ThingMLHelpers.findContainingThing(t), t, p, msg)
-                        + "\");\n");
+                        + "');\n");
                 builder.append("});\n");
             }
         }
@@ -477,7 +479,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(ThingMLElementHelper.qname(((State) t.eContainer()), "_") + ".to(null)");
             }
             builder.append(".when((" + msg.getName() + ") => {");
-            builder.append("return " + msg.getName() + "._port === \"" + p.getName() + "\" && " + msg.getName() + "._msg === \"" + msg.getName() + "\"");
+            builder.append("return " + msg.getName() + "._port === '" + p.getName() + "' && " + msg.getName() + "._msg === '" + msg.getName() + "'");
             if (t.getGuard() != null) {
                 builder.append(" && ");
                 ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
@@ -487,16 +489,16 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         if (t.getAction() != null) {
             String debugString = "";
             if (debugProfile.isDebugBehavior())
-                debugString = "" + ThingMLHelpers.findContainingThing(t).getName() + "_print_debug(this, \"" + ctx.traceInternal(ThingMLHelpers.findContainingThing(t), p, msg) + "\");\n";
+                debugString = "" + ThingMLHelpers.findContainingThing(t).getName() + "_print_debug(this, '" + ctx.traceInternal(ThingMLHelpers.findContainingThing(t), p, msg) + "');\n";
             generateHandlerAction(t, msg, builder, ctx, debugString);
         } else {
             if (p != null) {
                 if (debugProfile.isDebugBehavior()) {
                     builder.append(".effect(() => {\n");
                     builder.append("" + ThingMLHelpers.findContainingThing(t).getName()
-                            + "_print_debug(this, \""
+                            + "_print_debug(this, '"
                             + ctx.traceInternal(ThingMLHelpers.findContainingThing(t), p, msg)
-                            + "\");\n");
+                            + "');\n");
                     builder.append("});\n");
                 }
             }
@@ -509,7 +511,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("function " + thing.getName() + "_print_debug(instance, msg) {\n");
         builder.append("if(instance.debug) {\n");
         if (!ctx.getDebugWithID()) {
-            builder.append("console.log(instance.name + msg +\"\");\n");
+            builder.append("console.log(instance.name + msg +'');\n");
         }
         builder.append("}\n");
         builder.append("}\n\n");

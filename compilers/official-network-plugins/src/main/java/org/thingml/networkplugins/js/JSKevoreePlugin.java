@@ -221,7 +221,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
                 final Instance i = e.getKey();
                 for (Port p : e.getValue()) {
                     for (Message m : p.getSends()) {
-                        builder.append("this." + i.getName() + "." + m.getName() + "On" + p.getName() + "Listeners.push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
+                        builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => this." + shortName(i, p, m) + "_proxy(msg));\n");
                     }
                 }
             }
@@ -230,7 +230,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
                     final Instance i = c.getInst().getInstance();
                     for (Message m : c.getPort().getSends()) {
                         final Port p = c.getPort();
-                        builder.append("this." + i.getName() + "." + m.getName() + "On" + p.getName() + "Listeners.push(this." + shortName(i, p, m) + "_proxy.bind(this));\n");
+                        builder.append("this." + i.getName() + "." + m.getName() + "On" + p.getName() + "Listeners.push((msg) => this." + shortName(i, p, m) + "_proxy(msg));\n");
                     }
                 }
             }
@@ -453,7 +453,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
     protected void generateThingMLListener(StringBuilder builder, Context ctx, Property p, Instance i, String accessor, boolean isGlobal) {
         //Update Kevoree properties when ThingML properties are updated
         String newValue = "newValue";
-            builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', function(newValue) {");
+            builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', (newValue) => {");
         //builder.append("console.log(\"ThingML attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
         if (!isGlobal)
             builder.append("if(this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== " + newValue + ") {\n");
@@ -465,7 +465,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         else
             builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + ctx.getVariableName(p) + " = \"'+" + newValue + "+'\"');\n");
         builder.append("}");
-            builder.append("}.bind(this));\n");
+            builder.append("});\n");
     }
 
     protected String shortName(Instance i, Port p, Message m) {

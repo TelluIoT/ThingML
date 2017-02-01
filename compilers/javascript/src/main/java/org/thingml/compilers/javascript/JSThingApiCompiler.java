@@ -28,10 +28,6 @@ import org.thingml.compilers.thing.ThingApiCompiler;
  */
 public class JSThingApiCompiler extends ThingApiCompiler {
 
-    protected String const_() {
-        return "const ";
-    }
-
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
         final StringBuilder builder = ctx.getBuilder(ctx.firstToUpper(thing.getName()) + ".js");
@@ -101,7 +97,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._delete = function() {\n");
             builder.append("this.statemachine = null;\n");
             builder.append("this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = null;\n");
-            //TODO: remove listeners
+            builder.append("this.bus.removeAllListeners();\n");
             builder.append("}\n\n");
 
             //Communication
@@ -188,27 +184,13 @@ public class JSThingApiCompiler extends ThingApiCompiler {
         }
 
         if (!AnnotatedElementHelper.isDefined(p, "public", "false") && p.getSends().size() > 0) {
-            builder.append("//notify listeners\n");
-            builder.append("let arrayLength = this.root." + m.getName() + "On" + p.getName() + "Listeners.length;\n");
-
-            if (debug) {
-                builder.append("if (arrayLength < 1) {\n");
-                builder.append("" + t.getName() + "_print_debug(this, \"(" + ThingMLHelpers.findContainingThing(p).getName() + "): message lost, because no connector/listener is defined!\");\n");
-                builder.append("}\n");
-            }
-
-            builder.append("for (let _i = 0; _i < arrayLength; _i++) {\n");
-            builder.append("this.root." + m.getName() + "On" + p.getName() + "Listeners[_i](");
-            int i = 0;
+            builder.append("this.bus.emit(");
+            builder.append("'" + p.getName() + "?" + m.getName() + "'");
             for (Parameter pa : m.getParameters()) {
-                if (i > 0) {
-                    builder.append(", ");
-                }
+                builder.append(", ");
                 builder.append(ctx.protectKeyword(pa.getName()));
-                i++;
             }
             builder.append(");\n");
-            builder.append("}\n");
         }
     }
 

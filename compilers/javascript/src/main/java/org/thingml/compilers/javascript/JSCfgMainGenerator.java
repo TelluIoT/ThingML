@@ -83,12 +83,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             } else {
                 builder.append("const ");
             }
-            builder.append(i.getName() + " = fork(require('" + ctx.firstToUpper(i.getType().getName()) + "').resolve(), [\"" + i.getName() + "\", null");//FIXME: For Kevoree lib/xxx.js
+            builder.append(i.getName() + " = fork(require('" + ctx.firstToUpper(i.getType().getName()) + "').resolve(), ['" + i.getName() + "', null");//FIXME: For Kevoree lib/xxx.js
         } else {
             if (useThis) {
-                builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
+                builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "('" + i.getName() + "', null");
             } else {
-                builder.append("const " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "(\"" + i.getName() + "\", null");
+                builder.append("const " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "('" + i.getName() + "', null");
             }
         }
 
@@ -165,11 +165,11 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
         if (useThis) {
             if (debug || debugProfile.getDebugInstances().contains(i)) {
-                builder.append("this." + i.getName() + "." + i.getType().getName() + "_print_debug(this." + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
+                builder.append("this." + i.getName() + "." + i.getType().getName() + "_print_debug(this." + i.getName() + ", '" + ctx.traceInit(i.getType()) + "');\n");
             }
         } else {
             if (debug || debugProfile.getDebugInstances().contains(i)) {
-                builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", \"" + ctx.traceInit(i.getType()) + "\");\n");
+                builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", '" + ctx.traceInit(i.getType()) + "');\n");
             }
         }
     }
@@ -183,12 +183,33 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         builder.append("/*$PLUGINS$*/\n");
     }
 
+    private static void generateOnEvent(StringBuilder builder, String prefix, Message msg, String client, String clientPort, String server, String serverPort) {
+        builder.append(prefix + server + ".bus.on('" + serverPort + "?" + msg.getName() + "', (");
+        int id = 0;
+        for(Parameter pa : msg.getParameters()) {
+            if(id>0)
+                builder.append(", ");
+            builder.append(pa.getName());
+            id++;
+        }
+        builder.append(") => ");
+        builder.append(prefix + client + ".receive" + msg.getName() + "On" + clientPort + "(");
+        id = 0;
+        for(Parameter pa : msg.getParameters()) {
+            if(id>0)
+                builder.append(", ");
+            builder.append(pa.getName());
+            id++;
+        }
+        builder.append("));\n");
+    }
+
     public static void generateConnectors(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
         String prefix = "";
         if (useThis) {
             prefix = "this.";
         }
-        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {//FIXME: Harmonize event management between MT and non-MT
             builder.append("//Connecting ports...\n");
             for (Instance i : ConfigurationHelper.allInstances(cfg)) {
                 builder.append(i.getName() + ".on('message', (m) => {\n");
@@ -222,9 +243,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                     for (Message rec : p.getReceives()) {
                         for (Message send : p.getSends()) {
                             if (EcoreUtil.equals(rec, send)) {
-                                builder.append(prefix + i.getName() + "." + send.getName() + "On" + p.getName() + "Listeners.push(");
-                                builder.append(prefix + i.getName() + ".receive" + rec.getName() + "On" + p.getName() + ".bind(" + prefix + i.getName() + ")");
-                                builder.append(");\n");
+                                generateOnEvent(builder, prefix, send, i.getName(), p.getName(), i.getName(), p.getName());
                                 break;
                             }
                         }
@@ -236,9 +255,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 for (Message req : c.getRequired().getReceives()) {
                     for (Message prov : c.getProvided().getSends()) {
                         if (req.getName().equals(prov.getName())) {
-                            builder.append(prefix + c.getSrv().getInstance().getName() + "." + prov.getName() + "On" + c.getProvided().getName() + "Listeners.push(");
-                            builder.append(prefix + c.getCli().getInstance().getName() + ".receive" + req.getName() + "On" + c.getRequired().getName() + ".bind(" + prefix + c.getCli().getInstance().getName() + ")");
-                            builder.append(");\n");
+                            generateOnEvent(builder, prefix, req, c.getCli().getInstance().getName(), c.getRequired().getName(), c.getSrv().getInstance().getName(), c.getProvided().getName());
                             break;
                         }
                     }
@@ -246,9 +263,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 for (Message req : c.getProvided().getReceives()) {
                     for (Message prov : c.getRequired().getSends()) {
                         if (req.getName().equals(prov.getName())) {
-                            builder.append(prefix + c.getCli().getInstance().getName() + "." + prov.getName() + "On" + c.getRequired().getName() + "Listeners.push(");
-                            builder.append(prefix + c.getSrv().getInstance().getName() + ".receive" + req.getName() + "On" + c.getProvided().getName() + ".bind(" + prefix + c.getSrv().getInstance().getName() + ")");
-                            builder.append(");\n");
+                            generateOnEvent(builder, prefix, req, c.getSrv().getInstance().getName(), c.getProvided().getName(), c.getCli().getInstance().getName(), c.getRequired().getName());
                             break;
                         }
                     }
@@ -311,8 +326,6 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
         builder.append("//terminate all things on SIGINT (e.g. CTRL+C)\n");
         builder.append("process.on('SIGINT', function() {\n");
-        if(!AnnotatedElementHelper.isDefined(cfg, "nodejs_silent_shutdown", "true"))
-            builder.append("console.log(\"Stopping components... CTRL+D to force shutdown\");\n");
         instances = ConfigurationHelper.orderInstanceInit(cfg);
         while (!instances.isEmpty()) {
             inst = instances.get(0);
@@ -325,6 +338,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             }
         }
         builder.append("/*$STOP_PLUGINS$*/\n");
+        builder.append("setTimeout(() => {\n");
+        builder.append("process.exit();\n");
+        builder.append("}, 1000);\n");
         builder.append("});\n\n");
     }
 }
