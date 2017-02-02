@@ -19,6 +19,7 @@ package org.thingml.compilers.javascript;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.ThingApiCompiler;
@@ -34,7 +35,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
 
         builder.append("//ThingML-defined functions\n");
-        for (Function f : ThingMLHelpers.allFunctions(thing)) {   //FIXME: should be extracted
+        for (Function f : ThingMLHelpers.allFunctions(thing)) {
             if (!AnnotatedElementHelper.isDefined(f, "abstract", "true")) {//should be refined in a PSM thing
                 builder.append(ctx.firstToUpper(thing.getName()) + ".prototype." + f.getName() + " = function(");
                 int j = 0;
@@ -71,24 +72,26 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             //Lifecycle
             builder.append("//Public API for lifecycle management\n");
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._stop = function() {\n");
-            builder.append("this.forks.forEach(function (fork) {\n");
-            builder.append("fork._stop();\n");
-            builder.append("fork._delete();\n");
-            builder.append("});\n");
+            if(ThingHelper.hasSession(thing)) {
+                builder.append("this.forks.forEach(function (fork) {\n");
+                builder.append("fork._stop();\n");
+                builder.append("fork._delete();\n");
+                builder.append("});\n");
 
-            builder.append("if (this.root !== null && this.root !== undefined) {\n");
-            builder.append("const forkLength = this.root.forks.length;\n");
-            builder.append("let idFork = 0;");
-            builder.append("for (let _i = 0; _i < forkLength; _i++) {\n");
-            builder.append("if (this.root.forks[_i] === this) {\n");
-            builder.append("idFork = _i\n");
-            builder.append("}\n");
-            builder.append("}\n");
-            builder.append("this.root.forks.splice(idFork, 1);\n");
-            builder.append("}\n");
+                builder.append("const forkLength = this.root.forks.length;\n");
+                builder.append("let idFork = 0;");
+                builder.append("for (let _i = 0; _i < forkLength; _i++) {\n");
+                builder.append("if (this.root.forks[_i] === this) {\n");
+                builder.append("idFork = _i\n");
+                builder.append("}\n");
+                builder.append("}\n");
+                builder.append("this.root.forks.splice(idFork, 1);\n");
+            }
 
             builder.append("this.root = null;\n");
-            builder.append("this.forks = [];\n");
+            if(ThingHelper.hasSession(thing)) {
+                builder.append("this.forks = [];\n");
+            }
             builder.append("this.ready = false;\n");
             if (ThingMLHelpers.allStateMachines(thing).get(0).getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(ThingMLHelpers.allStateMachines(thing).get(0).getExit(), builder, ctx);
@@ -108,23 +111,18 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("this.ready = true;\n");
             builder.append("}\n\n");
 
-
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(msg) {//msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}\n");
             builder.append("if(this.ready){\n");
-            builder.append("this.cepDispatch(msg);\n");
+            if (thing.getStreams().size() > 0) {
+                builder.append("this.cepDispatch(msg);\n");
+            }
             builder.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);\n");
-            builder.append("this.forks.forEach(function(fork){\n");
-            builder.append("fork._receive(msg);\n");
-            builder.append("});\n");
+            if(ThingHelper.hasSession(thing)) {
+                builder.append("this.forks.forEach(function(fork){\n");
+                builder.append("fork._receive(msg);\n");
+                builder.append("});\n");
+            }
             builder.append("}}\n");
-
-            //function to register listeners on attributes
-            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.onPropertyChange = function (property, callback) {\n");
-            builder.append("if (this.propertyListener[property] === undefined) {");
-            builder.append("this.propertyListener[property] = [];");
-            builder.append("}\n");
-            builder.append("this.propertyListener[property].push(callback);\n");
-            builder.append("}\n\n");
 
             generatePublicPort(thing, builder, ctx);
         }
@@ -166,32 +164,4 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             }
         }
     }
-
-    protected void callListeners(Thing t, Port p, Message m, StringBuilder builder, Context ctx, DebugProfile debugProfile) {
-        final boolean debug = debugProfile.getDebugMessages().get(p) != null && debugProfile.getDebugMessages().get(p).contains(m);
-        if (debug) {
-            builder.append("" + t.getName() + "_print_debug(this, \"" + ctx.traceSendMessage(p.getOwner(), p, m) + "(");
-            int i = 0;
-            for (Parameter pa : m.getParameters()) {
-                if (i > 0)
-                    builder.append(", ");
-                builder.append("\" + ");
-                builder.append(ctx.protectKeyword(pa.getName()));
-                builder.append(" + \"");
-                i++;
-            }
-            builder.append(")\");\n");
-        }
-
-        if (!AnnotatedElementHelper.isDefined(p, "public", "false") && p.getSends().size() > 0) {
-            builder.append("this.bus.emit(");
-            builder.append("'" + p.getName() + "?" + m.getName() + "'");
-            for (Parameter pa : m.getParameters()) {
-                builder.append(", ");
-                builder.append(ctx.protectKeyword(pa.getName()));
-            }
-            builder.append(");\n");
-        }
-    }
-
 }

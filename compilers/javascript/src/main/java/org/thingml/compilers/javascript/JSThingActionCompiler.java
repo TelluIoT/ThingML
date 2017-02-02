@@ -24,6 +24,7 @@ import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
+import org.thingml.compilers.utils.CharacterEscaper;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -73,12 +74,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
                 builder.append("process.send({lc:'updated', property:'" + action.getProperty().getName() + "', value: this." + ctx.getVariableName(action.getProperty()) + "});\n");
             } else {
-                builder.append("if (this.propertyListener['" + action.getProperty().getName() + "'] !== undefined) {\n");
-                builder.append("let " + action.getProperty().getName() + "ListenersSize = this.propertyListener['" + action.getProperty().getName() + "'].length;\n");
-                builder.append("for (let _i = 0; _i < " + action.getProperty().getName() + "ListenersSize; _i++) {\n");
-                builder.append("this.propertyListener['" + action.getProperty().getName() + "'][_i](this." + ctx.getVariableName(action.getProperty()) + ");\n");
-                builder.append("}\n}\n");
-                //builder.append("if(this.debug) console.log(this.name + \"(" + ThingMLHelpers.findContainingThing(action.getProperty()).getName() + "): property " + action.getProperty().getName() + " changed from \" + debug_" + ThingMLElementHelper.qname( action.getProperty(), "_") + "_var" + " + \" to \" + this." + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var);\n");
+                builder.append("this.bus.emit('" + action.getProperty().getName() + "=', this." + ctx.getVariableName(action.getProperty()) + ");\n");
             }
         }
     }
@@ -95,13 +91,11 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             }
             builder.append("});\n");
         } else {
-            builder.append("this.send" + ctx.firstToUpper(action.getMessage().getName()) + "On" + ctx.firstToUpper(action.getPort().getName()) + "(");
-            int i = 0;
-            for (Expression p : action.getParameters()) {
-                if (i > 0)
-                    builder.append(", ");
-                generate(p, builder, ctx);
-                i++;
+            builder.append("this.bus.emit(");
+            builder.append("'" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
+            for (Expression pa : action.getParameters()) {
+                builder.append(", ");
+                generate(pa, builder, ctx);
             }
             builder.append(");\n");
         }
@@ -165,13 +159,11 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                 System.out.println("[ERROR] readonly variable " + action + " must be initialized");
         }
         builder.append(";\n");
-        builder.append("\n");
     }
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         builder.append("process.stderr.write(''+");
-        //builder.append("console.log(");
         generate(action.getMsg(), builder, ctx);
         builder.append(");\n");
     }
@@ -179,7 +171,6 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         builder.append("process.stdout.write(''+");
-        //builder.append("console.log(");
         generate(action.getMsg(), builder, ctx);
         builder.append(");\n");
     }
@@ -261,7 +252,12 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) {
         generate(expression.getLhs(), builder, ctx);
-        builder.append(" == ");
+        builder.append(" === ");
         generate(expression.getRhs(), builder, ctx);
+    }
+
+    @Override
+    public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
+        builder.append("'" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()) + "'");
     }
 }

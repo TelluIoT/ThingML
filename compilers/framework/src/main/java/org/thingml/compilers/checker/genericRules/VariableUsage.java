@@ -22,14 +22,19 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
 import org.sintef.thingml.helpers.ActionHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.sintef.thingml.helpers.ThingHelper;
 import org.sintef.thingml.helpers.TyperHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -64,20 +69,22 @@ public class VariableUsage extends Rule {
                     checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is read-only and cannot be re-assigned.", o);
                 }
             }
-            if (va.getType() == null) {//parsing probably still ongoing...v
+            /*if (va.getType() == null) {//parsing probably still ongoing...v
                 checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " has no type", va);
                 return;
-            }
-            final Type expected = TyperHelper.getBroadType(va.getType());
-            final Type actual = checker.typeChecker.computeTypeOf(e);
+            }*/
+            if (!(va.getType() == null)) {
+                final Type expected = TyperHelper.getBroadType(va.getType());
+                final Type actual = checker.typeChecker.computeTypeOf(e);
 
-            if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
-                if (actual.equals(Types.ERROR_TYPE)) {
-                    checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
-                } else if (actual.equals(Types.ANY_TYPE)) {
-                    checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed.", o);
-                } else if (!TyperHelper.isA(actual, expected)) {
-                    checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
+                if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
+                    if (actual.equals(Types.ERROR_TYPE)) {
+                        checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
+                    } else if (actual.equals(Types.ANY_TYPE)) {
+                        checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed.", o);
+                    } else if (!TyperHelper.isA(actual, expected)) {
+                        checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
+                    }
                 }
             }
         }
@@ -112,6 +119,19 @@ public class VariableUsage extends Rule {
                 LocalVariable lv = (LocalVariable) a;
                 if (lv.getInit() != null)
                     check(lv, lv.getInit(), t, checker, lv);
+            }
+        }
+
+        for(Property p : ThingHelper.allPropertiesInDepth(t)) {
+            boolean isUsed = false;
+            for(Property pr : ThingHelper.allUsedProperties(t)) {
+                if (EcoreUtil.equals(p, pr)) {
+                    isUsed = true;
+                    break;
+                }
+            }
+            if (!isUsed) {
+                checker.addGenericWarning("Property " + p.getName() + " of Thing " + t.getName() + " is never used. Consider removing (or using) it.", p);
             }
         }
     }

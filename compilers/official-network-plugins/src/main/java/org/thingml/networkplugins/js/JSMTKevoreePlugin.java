@@ -127,7 +127,7 @@ public class JSMTKevoreePlugin extends JSKevoreePlugin {
                 builder.append("switch(m.lc) {\n");
                 builder.append("case 'updated':\n");
                 builder.append("switch(m.property){\n");
-                for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
+                for (Property p : ThingHelper.allUsedProperties(i.getType())) {
                     if (p.isChangeable() && p.getCardinality() == null && p.getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
                         String accessor = "getValue";
                         if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getType()))) {
@@ -150,7 +150,7 @@ public class JSMTKevoreePlugin extends JSKevoreePlugin {
                 builder.append("});\n\n");
             }
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
+            for (Property p : ThingHelper.allUsedProperties(i.getType())) {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
                     String accessor = "getValue";
                     boolean isNumber = false;

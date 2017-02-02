@@ -93,7 +93,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
 
         StringBuilder mt = new StringBuilder();
-        for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: not optimal, to be improved
+        for (Property prop : ThingHelper.allUsedProperties(i.getType())) {//TODO: not optimal, to be improved
             for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
                 if (p.getKey().equals(prop) && prop.getCardinality() == null && !AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
                     String result = "";

@@ -221,7 +221,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
                 final Instance i = e.getKey();
                 for (Port p : e.getValue()) {
                     for (Message m : p.getSends()) {
-                        builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => this." + shortName(i, p, m) + "_proxy(msg));\n");
+                        builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => setImmediate(() => this." + shortName(i, p, m) + "_proxy(msg)));\n");
                     }
                 }
             }
@@ -230,7 +230,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
                     final Instance i = c.getInst().getInstance();
                     for (Message m : c.getPort().getSends()) {
                         final Port p = c.getPort();
-                        builder.append("this." + i.getName() + "." + m.getName() + "On" + p.getName() + "Listeners.push((msg) => this." + shortName(i, p, m) + "_proxy(msg));\n");
+                        builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => setImmediate(() => this." + shortName(i, p, m) + "_proxy(msg)));\n");
                     }
                 }
             }
@@ -238,7 +238,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
 
     protected void generateStart(StringBuilder builder, Context ctx, Configuration cfg) {
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
+            for (Property p : ThingHelper.allUsedProperties(i.getType())) {
                 if (p.isChangeable() && p.getCardinality() == null && p.getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
                     String accessor = "getValue";
                     boolean isNumber = false;
@@ -300,7 +300,6 @@ public class JSKevoreePlugin extends NetworkPlugin {
         }
 
         for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) { //External kevoree port should be split (to allow easy integration with external non-HEADS services)
-            //builder.append("\n//External connector for port " + c.getPort().getName() + " of instance " + c.getInst().getInstance().getName() + "\n");
             if (c.getProtocol().getName().equals("kevoree")) {
                 final Instance i = c.getInst().getInstance();
                 for (Message m : c.getPort().getReceives()) {
@@ -362,7 +361,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         List<String> attributes = new ArrayList<String>();
         builder.append("//Attributes\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
+            for (Property p : ThingHelper.allUsedProperties(i.getType())) {
                 if (p.isChangeable() && p.getCardinality() == null && AnnotatedElementHelper.isDefined(p.getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
                     if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
                         builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
@@ -423,22 +422,13 @@ public class JSKevoreePlugin extends NetworkPlugin {
     protected void generateKevoreeListener(StringBuilder builder, Context ctx, boolean isNumber, Property p, Instance i, boolean isGlobal, String accessor) {
         //Update ThingML properties when Kevoree properties are updated
         if (!isGlobal) //per instance mapping
-            builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', function (newValue) {");
+            builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', (newValue) => {");
         else
             builder.append("this.dictionary.on('" + ctx.getVariableName(p) + "', function (newValue) {");
         if (isNumber) {
             builder.append("newValue = Number(newValue);\n");
         }
-        /*if (!isGlobal) {//per instance mapping
-            builder.append("console.log(\"Kevoree attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
-        } else {
-            builder.append("console.log(\"Kevoree attribute " + ctx.getVariableName(p) + " updated...\");\n");
-        }*/
-        //builder.append("if(this." + i.getName() + "." + ctx.getVariableName(p) + " !== newValue) { ");
-        //builder.append("console.log(\"updating ThingML attribute...\");\n");
-
-            builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
-        //builder.append("}");
+        builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
         builder.append("});\n");
 
         //Force update on startup, as listeners might be registered too late the first time
@@ -453,13 +443,11 @@ public class JSKevoreePlugin extends NetworkPlugin {
     protected void generateThingMLListener(StringBuilder builder, Context ctx, Property p, Instance i, String accessor, boolean isGlobal) {
         //Update Kevoree properties when ThingML properties are updated
         String newValue = "newValue";
-            builder.append("this." + i.getName() + ".onPropertyChange('" + p.getName() + "', (newValue) => {");
-        //builder.append("console.log(\"ThingML attribute " + i.getName() + "_" + ctx.getVariableName(p) + " updated...\");\n");
+            builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "=', (newValue) => {");
         if (!isGlobal)
             builder.append("if(this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== " + newValue + ") {\n");
         else
             builder.append("if(this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "') !== " + newValue + ") {\n");
-        //builder.append("console.log(\"updating Kevoree attribute...\");\n");
         if (!isGlobal)
             builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + i.getName() + "_" + ctx.getVariableName(p) + " = \"'+" + newValue + "+'\"');\n");
         else

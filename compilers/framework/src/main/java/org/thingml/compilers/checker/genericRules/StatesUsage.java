@@ -72,13 +72,15 @@ public class StatesUsage extends Rule {
     private void check(Thing t, Checker checker) {
         for (StateMachine sm : ThingMLHelpers.allStateMachines(t)) {
             for (State s : StateHelper.allStates(sm)) {
+                if((EcoreUtil.equals(s, sm)))
+                    continue;
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Unreachable")) {
                     if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
                         checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
                     }
                 }
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Sink")) {
-                    if (!(s instanceof FinalState) && s.getOutgoing().size() == 0 && !EcoreUtil.equals(s, sm)) {
+                    if (!(s instanceof FinalState) && !(((CompositeState)s.eContainer()).getSubstate().size() == 1) && s.getOutgoing().size() == 0 && !EcoreUtil.equals(s, sm)) {
                         checker.addGenericNotice("Sink state " + s.getName() + " in Thing " + t.getName() + ".", s);
                     }
                 }

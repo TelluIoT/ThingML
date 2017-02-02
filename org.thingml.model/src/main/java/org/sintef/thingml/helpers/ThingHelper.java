@@ -33,6 +33,16 @@ import java.util.Set;
 public class ThingHelper {
 
 
+    public static boolean hasSession(Thing self) {
+        for(StateMachine sm : ThingMLHelpers.allStateMachines(self)) {
+            for(State s : StateHelper.allStatesIncludingSessions(sm)) {
+                if (s instanceof Session)
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isSingleton(Thing self) {
         return AnnotatedElementHelper.isDefined(self, "singleton", "true");
     }
@@ -72,6 +82,41 @@ public class ThingHelper {
         List<Property> result = ThingMLHelpers.allProperties(self);
         for(StateMachine sm : ThingMLHelpers.allStateMachines(self)) {
             result.addAll(CompositeStateHelper.allContainedProperties(sm));
+        }
+        return result;
+    }
+
+    public static List<Property> allUsedProperties(Thing self) {
+        List<Property> result = new ArrayList<>();
+        for(Property p : allPropertiesInDepth(self)) {
+            for (Action a : ActionHelper.getAllActions(self, VariableAssignment.class)) {
+                if (EcoreUtil.equals(p, ((VariableAssignment)a).getProperty())) {
+                    boolean isPresent = false;
+                    for(Property pr : result) {
+                        if (EcoreUtil.equals(p, pr)) {
+                            isPresent = true;
+                            break;
+                        }
+                    }
+                    if (!isPresent)
+                        result.add(p);
+                    break;
+                }
+            }
+            for (Expression e : ThingMLHelpers.getAllExpressions(self, PropertyReference.class)) {
+                if (EcoreUtil.equals(p, ((PropertyReference)e).getProperty())) {
+                    boolean isPresent = false;
+                    for(Property pr : result) {
+                        if (EcoreUtil.equals(p, pr)) {
+                            isPresent = true;
+                            break;
+                        }
+                    }
+                    if (!isPresent)
+                        result.add(p);
+                    break;
+                }
+            }
         }
         return result;
     }

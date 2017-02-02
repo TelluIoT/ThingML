@@ -52,7 +52,7 @@ public class ConnectorCycles extends Rule {
 
     @Override
     public String getDescription() {
-        return "Check that the configuration does not contains dependancis cycles";
+        return "Check that the configuration does not contains dependencies cycles";
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ConnectorCycles extends Rule {
         for (List<Instance> cycle : cycles) {
             if (cycle != null) {
                 if (cycle.size() != 1) {
-                    String msg = "Dependancies cycle: (";
+                    String msg = "Dependencies cycle: (";
                     boolean first = true;
                     for (Instance j : cycle) {
                         if (first) {
