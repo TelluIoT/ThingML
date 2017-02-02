@@ -21,6 +21,7 @@
  */
 package org.thingml.networkplugins.c.posix;
 
+import org.sintef.thingml.AnnotatedElement;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
@@ -41,6 +42,30 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         return new PosixJSONSerializerPlugin();
     }
 
+    @Override
+    public String getPluginID() {
+        return "PosixJSONSerializerPlugin";
+    }
+
+    @Override
+    public List<String> getTargetedLanguages() {
+
+        List<String> res = new ArrayList<>();
+        res.add("posix");
+        res.add("posixmt");
+        return res;
+    }
+
+    @Override
+    public List<String> getSupportedFormat() {
+
+        List<String> res = new ArrayList<>();
+        res.add("JSON");
+        res.add("json");
+        return res;
+    }
+
+    /* ---------- COMMON ----------*/
     @Override
     public String generateSubFunctions() {
         StringBuilder sub = new StringBuilder();
@@ -69,6 +94,17 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         return sub.toString() + messagesparser.toString();
     }
 
+    String getJSONParameterName(Message m, Parameter p, CCompilerContext ctx) {
+        String prefix = p.getName()+":";
+        for (String annotation : AnnotatedElementHelper.annotation(m, "json_parameter_name")) {
+            if (annotation.startsWith(prefix)) {
+                return annotation.substring(prefix.length());
+            }
+        }
+        return p.getName();
+    }
+
+    /* ---------- SERIALIZATION ----------*/
     Integer getMaximumSerializedParameterValueLength(Parameter p, CCompilerContext ctx) {
         switch (ctx.getCType(p.getType())) {
             // Signed types
@@ -124,33 +160,42 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
             case "bool":
             case "boolean":
                 return 5; // true or false
+            // Time
+            case "time_t":
+                // ISO8601 format, 24 characters + surrounding ""
+                return 26;
             default:
                 System.err.println("[ERROR] Serialization of type " + ctx.getCType(p.getType()) + " is not implemented in PosixJSONSerializerPlugin!");
                 return 4; // We will print 'null' for un-serializable parameters;
         }
     }
 
+    Integer getMaximumSerializedParameterLength(Parameter p, CCompilerContext ctx) {
+        Integer length = 4; // '"":,' Base parameter JSON
+        // Parameter name
+        length += p.getName().length();
+        // The actual parameter value
+        length += getMaximumSerializedParameterValueLength(p, ctx);
+
+        return length;
+    }
+
     Integer getMaximumSerializedMessageLength(Message m, CCompilerContext ctx) {
         Integer length = 8; // '{"":{}}\0' Base valid JSON serialization
 
         // Message name
-        length += m.getName().length();
+        length += AnnotatedElementHelper.annotationOrElse(m, "json_message_name", m.getName()).length();
 
         // For all forwarded parameters
         for (Parameter p : m.getParameters()) {
             if (!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                // '"":,' Base parameter JSON
-                length += 4;
-                // Parameter name
-                length += p.getName().length();
-                // The actual parameter value
-                length += getMaximumSerializedParameterValueLength(p, ctx);
+                length += getMaximumSerializedParameterLength(p, ctx);
             }
         }
         return length;
-    };
+    }
 
-    void generateParameterSerialization(StringBuilder builder, String bufferName, Integer maxLength, Parameter p, CCompilerContext ctx) {
+    void generateParameterValueSerialization(StringBuilder builder, String bufferName, Integer maxLength, Parameter p, CCompilerContext ctx) {
         boolean serialized = false;
         //FIXME: @Jakob: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
         switch (ctx.getCType(p.getType())) {
@@ -200,7 +245,15 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
             case "long long int":
             case "unsigned long long":
             case "unsigned long long int":
-                // All other unsupported types
+                break;
+            case "time_t":
+                builder.append("    struct tm tbuf;\n");
+                builder.append("    struct tm *timebuf = gmtime(&"+p.getName()+");\n");
+                builder.append("    result = strftime(&"+bufferName+"[index], "+maxLength+"-index, \"\\\"%FT%T.000Z\\\"\", timebuf);\n");
+                builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+                serialized = true;
+                break;
+            // All other unsupported types
             default:
                 break;
         }
@@ -208,6 +261,26 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         if (!serialized) {
             builder.append("    if ("+p.getName()+") { result = sprintf(&"+bufferName+"[index],\"%.*s\", "+maxLength+"-index, \"null\"); }\n");
             builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+        }
+    }
+
+    void generateParameterSerializations(StringBuilder builder, String bufferName, Integer maxLength, Message m, CCompilerContext ctx) {
+        boolean first = true;
+        for (Parameter p : m.getParameters()) {
+            if (!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
+                // Separator from previous message
+                String separator = ",";
+                if (first) { separator = ""; first = false; }
+
+                // Add parameter start
+                String pName = getJSONParameterName(m, p, ctx);
+                builder.append("    // Parameter "+p.getName()+"\n");
+                builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \""+separator+"\\\""+pName+"\\\":\");\n");
+                builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+
+                // Add the value of the parameter
+                generateParameterValueSerialization(builder, bufferName, maxLength, p, ctx);
+            }
         }
     }
 
@@ -222,27 +295,13 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         builder.append("    int result;\n\n");
 
         // Add start of message
+        String messageName = AnnotatedElementHelper.annotationOrElse(m, "json_message_name", m.getName());
         builder.append("    //Start of serialized message\n");
-        builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"{\\\""+m.getName()+"\\\":{\");\n");
+        builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"{\\\""+messageName+"\\\":{\");\n");
         builder.append("    if (result >= 0) { index += result; } else { return; }\n");
 
         // Add all forwarded parameters
-        boolean first = true;
-        for (Parameter p : m.getParameters()) {
-            if (!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                // Separator from previous message
-                String separator = ",";
-                if (first) { separator = ""; first = false; }
-
-                // Add parameter start
-                builder.append("    // Parameter "+p.getName()+"\n");
-                builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \""+separator+"\\\""+p.getName()+"\\\":\");\n");
-                builder.append("    if (result >= 0) { index += result; } else { return; }\n");
-
-                // Add the value of the parameter
-                generateParameterSerialization(builder, bufferName, maxLength, p, ctx);
-            }
-        }
+        generateParameterSerializations(builder, bufferName, maxLength, m, ctx);
 
         // Add end of message
         builder.append("    //End of serialized message\n");
@@ -252,6 +311,8 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
         return "index";
     }
+
+    /* ---------- PARSING----------*/
 
     void generateParameterParser(Parameter p, Integer bytepos, CCompilerContext ctx) {
         // Generate union
@@ -305,6 +366,13 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
             case "long long int":
             case "unsigned long long":
             case "unsigned long long int":
+                break;
+            case "time_t":
+                messagesparser.append("            struct tm timebuf;\n");
+                messagesparser.append("            if (strptime(pstart, \"\\\"%FT%T\", &timebuf) == NULL) { u_"+p.getName()+"."+p.getName()+" = 0; }\n");
+                messagesparser.append("            else { u_"+p.getName()+"."+p.getName()+" = timegm(&timebuf); }\n");
+                parsed = true;
+                break;
                 // All other unsupported types
             default:
                 break;
@@ -316,7 +384,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         } else {
             // The type is not supported, set to 0
             messagesparser.append("            //Type " + p.getType().getName() + " (in parameter "+p.getName()+") is not supported yet by the PosixJSONSerializer plugin\n");
-            messagesparser.append("            bzero(&out_buffer["+bytepos+"], "+ctx.getCByteSize(p.getType(),0)+");");
+            messagesparser.append("            bzero(&out_buffer["+bytepos+"], "+ctx.getCByteSize(p.getType(),0)+");\n");
         }
     }
 
@@ -372,7 +440,8 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         messagesparser.append("        // Find matching parameter\n");
         messagesparser.append("        if (ptr-pstart < 1) return -7;\n");
         for (Map.Entry<Integer, Parameter> pospar : parameters.entrySet()) {
-            messagesparser.append("        else if (strncmp(\""+pospar.getValue().getName()+"\", start, end-start) == 0) {\n");
+            String pName = getJSONParameterName(m, pospar.getValue(), ctx);
+            messagesparser.append("        else if (strncmp(\""+pName+"\", start, end-start) == 0) {\n");
             generateParameterParser(pospar.getValue(), pospar.getKey(), ctx);
             messagesparser.append("        }\n");
         }
@@ -447,7 +516,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
             builder.append("    int result = -1;\n");
             builder.append("    if (0) {}\n");
             for (Message m : messages) {
-                builder.append("    else if (strncmp(\"" + m.getName() + "\", start, end-start) == 0) {\n");
+                builder.append("    else if (strncmp(\"" + AnnotatedElementHelper.annotationOrElse(m, "json_message_name", m.getName()) + "\", start, end-start) == 0) {\n");
                 generateMessageParser(m, ctx);
                 builder.append("        result = parse_" + m.getName() + "(ptr, size-(ptr-msg), enqueue_buffer);\n");
                 builder.append("    }\n");
@@ -461,29 +530,6 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
             builder.append("        /*TRACE_LEVEL_1*/fprintf(stderr, \"[MQTT]: Error parsing message %i\\n\", result);\n");
             builder.append("    }\n");
         }
-    }
-
-    @Override
-    public String getPluginID() {
-        return "PosixJSONSerializerPlugin";
-    }
-
-    @Override
-    public List<String> getTargetedLanguages() {
-
-        List<String> res = new ArrayList<>();
-        res.add("posix");
-        res.add("posixmt");
-        return res;
-    }
-
-    @Override
-    public List<String> getSupportedFormat() {
-
-        List<String> res = new ArrayList<>();
-        res.add("JSON");
-        res.add("json");
-        return res;
     }
 
 }
