@@ -70,7 +70,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
     public String generateSubFunctions() {
         StringBuilder sub = new StringBuilder();
         // Function to jump to next occurence of a or b
-        sub.append("uint8_t *jump_to(uint8_t *msg, int len, uint8_t *ptr, uint8_t a, uint8_t b)\n");
+        sub.append("static uint8_t *jump_to(uint8_t *msg, int len, uint8_t *ptr, uint8_t a, uint8_t b)\n");
         sub.append("{\n");
         sub.append("    if (!ptr) return NULL;\n");
         sub.append("    while (ptr-msg <= len) {\n");
@@ -81,7 +81,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         sub.append("}\n\n");
 
         // Function to skip whitespace
-        sub.append("uint8_t *jump_space(uint8_t *msg, int len, uint8_t *ptr)\n");
+        sub.append("static uint8_t *jump_space(uint8_t *msg, int len, uint8_t *ptr)\n");
         sub.append("{\n");
         sub.append("    if (!ptr) return NULL;\n");
         sub.append("    while (ptr-msg <= len) {\n");
@@ -405,7 +405,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         }
 
         // Start function
-        messagesparser.append("int parse_" + m.getName() + "(uint8_t *msg, int size, uint8_t *out_buffer) {\n");
+        messagesparser.append("static int parse_" + m.getName() + "(uint8_t *msg, int size, uint8_t *out_buffer) {\n");
         messagesparser.append("    uint8_t *ptr = msg;\n");
         messagesparser.append("    uint8_t *start = NULL;\n");
         messagesparser.append("    uint8_t *end = NULL;\n");

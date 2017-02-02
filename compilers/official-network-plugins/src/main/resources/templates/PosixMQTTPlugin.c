@@ -150,18 +150,26 @@ void /*PORT_NAME*/_subscribe_callback(struct mosquitto *mosq, void *_instance, i
 void /*PORT_NAME*/_message_callback(struct mosquitto *mosq, void *_instance, const struct mosquitto_message *msg)
 {
     /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Received message (%i bytes) on topic %s\n", msg->payloadlen, msg->topic);
-    /*PORT_NAME*/_parser(msg->payload, msg->payloadlen, (struct /*PORT_NAME*/_Instance*)_instance);
+    // Find the topic index of the message
+    int i;
+    for (i = 0; i < /*NUM_TOPICS*/; i++)
+        if (strcmp(msg->topic, /*PORT_NAME*/_topics[i]) == 0) break;
+
+    // Only parse and enqueue the message if we are listening for it on this topic
+    if (i < /*NUM_TOPICS*/ && (/*TOPIC_INDEX_CHECK*/)) {
+        /*PORT_NAME*/_parser(msg->payload, msg->payloadlen, (struct /*PORT_NAME*/_Instance*)_instance);
+    }
 }
 
 
 /* ---------- FORWARDERS ----------*/
-void /*PORT_NAME*/_send_message(uint8_t *msg, int msglen)
+void /*PORT_NAME*/_send_message(uint8_t *msg, int msglen, int topic)
 {
-    int ret, i;
-    for (i = 0; i < /*NUM_TOPICS*/; i++) {
-        /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Sending message (%i bytes) on topic %s\n", msglen, /*PORT_NAME*/_topics[i]);
-        ret = mosquitto_publish(/*PORT_NAME*/_mosq, NULL, /*PORT_NAME*/_topics[i], msglen, msg, /*PORT_NAME*/_qos, false);
-        if (ret) fprintf(stderr, "[MQTT] mosquitto_publish failed for %s : %s\n", /*PORT_NAME*/_topics[i], mosquitto_strerror(ret));
+    int ret;
+    if (topic < /*NUM_TOPICS*/) {
+        /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Sending message (%i bytes) on topic %s\n", msglen, /*PORT_NAME*/_topics[topic]);
+        ret = mosquitto_publish(/*PORT_NAME*/_mosq, NULL, /*PORT_NAME*/_topics[topic], msglen, msg, /*PORT_NAME*/_qos, false);
+        if (ret) fprintf(stderr, "[MQTT] mosquitto_publish failed for %s : %s\n", /*PORT_NAME*/_topics[topic], mosquitto_strerror(ret));
     }
 }
 

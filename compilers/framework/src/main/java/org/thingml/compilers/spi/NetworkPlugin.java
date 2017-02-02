@@ -124,15 +124,28 @@ public abstract class NetworkPlugin extends Rule {
         return res;
     }
 
+    public Set<ThingPortMessage> getMessagesSent(ExternalConnector eco) {
+        Set<ThingPortMessage> res = new HashSet<ThingPortMessage>();
+        for (Message m : eco.getPort().getSends()) {
+            ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getInstance().getType(), eco.getPort(), m);
+            res.add(tpm);
+        }
+        return res;
+    }
+
     public Set<ThingPortMessage> getMessagesSent(Configuration cfg, Protocol prot) {
         Set<ThingPortMessage> res = new HashSet<ThingPortMessage>();
         for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
-            for (Message m : eco.getPort().getSends()) {
-                ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getInstance().getType(), eco.getPort(), m);
-                if (!res.contains(tpm)) {
-                    res.add(tpm);
-                }
-            }
+            res.addAll(this.getMessagesSent(eco));
+        }
+        return res;
+    }
+
+    public Set<ThingPortMessage> getMessagesReceived(ExternalConnector eco) {
+        Set<ThingPortMessage> res = new HashSet<ThingPortMessage>();
+        for (Message m : eco.getPort().getReceives()) {
+            ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getInstance().getType(), eco.getPort(), m);
+            res.add(tpm);
         }
         return res;
     }
@@ -140,12 +153,7 @@ public abstract class NetworkPlugin extends Rule {
     public Set<ThingPortMessage> getMessagesReceived(Configuration cfg, Protocol prot) {
         Set<ThingPortMessage> res = new HashSet<ThingPortMessage>();
         for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
-            for (Message m : eco.getPort().getReceives()) {
-                ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getInstance().getType(), eco.getPort(), m);
-                if (!res.contains(tpm)) {
-                    res.add(tpm);
-                }
-            }
+            res.addAll(this.getMessagesReceived(eco));
         }
         return res;
     }
