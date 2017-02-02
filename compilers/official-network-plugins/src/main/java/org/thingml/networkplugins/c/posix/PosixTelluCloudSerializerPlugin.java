@@ -19,6 +19,7 @@ package org.thingml.networkplugins.c.posix;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
+import org.sintef.thingml.PlatformAnnotation;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.impl.ParameterImpl;
 import org.thingml.compilers.c.CCompilerContext;
@@ -27,6 +28,8 @@ import org.thingml.compilers.spi.SerializationPlugin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by jakobho on 01.02.2017.
@@ -43,13 +46,21 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
     }
 
     @Override
+    String getJSONParameterName(Message m, Parameter p, CCompilerContext ctx) {
+        String original = super.getJSONParameterName(m, p, ctx);
+        // Replace any underscore with a dot
+        return original.replace('_','.');
+    }
+
+    @Override
     Integer getMaximumSerializedParameterValueLength(Parameter p, CCompilerContext ctx) {
         if (p.getName() == "observations") {
             TelluCloudGroupedParameter grouped = (TelluCloudGroupedParameter)p;
             // Return the length of the set and the contained grouped parameters
-            Integer length = 2; // '{}' Base group JSON
+            Integer length = 2; // '[]' Base group array JSON
             for (Parameter gp : grouped.m.getParameters()) {
                 length += getMaximumSerializedParameterLength(gp, ctx);
+                length += 2; // Surrounding '{}'
             }
             return length;
         } else {
@@ -62,15 +73,49 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
         if (p.getName() == "observations") {
             TelluCloudGroupedParameter grouped = (TelluCloudGroupedParameter)p;
             // This is our special grouped placeholder
-            builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"{\");\n");
+            builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"[\");\n");
             builder.append("    if (result >= 0) { index += result; } else { return; }\n");
-            builder.append("    // Start Tellu Cloud grouped observations\n");
+            builder.append("    /* ---------- Start Tellu Cloud grouped observations ---------- */\n");
 
-            generateParameterSerializations(builder, bufferName, maxLength, grouped.m, ctx);
+            // Generate the normal JSON parameters to put inside the group
+            StringBuilder original = new StringBuilder();
+            generateParameterSerializations(original, bufferName, maxLength, grouped.m, ctx);
+
+            // Modify to wrap each parameter inside an object '{}'
+            Boolean first = true;
+            Pattern regex = Pattern.compile("^\\s*result = sprintf[^,]+,\\s*\"%\\.\\*s\"[^\"]+(\",\\\\\")[^\"]+\":\"\\);$");
+            for (String line : original.toString().split("\\n")) {
+                if (line.matches("\\s*// Parameter.+")) {
+                    // Start of parameter, given by the '...// Parameter ...' string on the line
+                    // Start object
+                    if (!first){
+                        builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"}\");\n");
+                        builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+                    }
+                    // Normal comment line
+                    builder.append(line+"\n");
+                    // End object
+                    String separator = "";
+                    if (!first) separator = ",";
+
+                    builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \""+separator+"{\");\n");
+                    builder.append("    if (result >= 0) { index += result; } else { return; }\n");
+                    first = false;
+                } else {
+                    // Replace comma separators before parameter names
+                    Matcher m = regex.matcher(line);
+                    if (m.matches()) {
+                        line = line.substring(0,m.start(1)) + "\"\\\"" + line.substring(m.end(1));
+                    }
+                    builder.append(line+"\n");
+                }
+            }
+            builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"}\");\n");
+            builder.append("    if (result >= 0) { index += result; } else { return; }\n");
 
             // End of special grouped placeholder
-            builder.append("    // End Tellu Cloud grouped observations\n");
-            builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"}\");\n");
+            builder.append("    /* ----------- End Tellu Cloud grouped observations ----------- */\n");
+            builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \"]\");\n");
             builder.append("    if (result >= 0) { index += result; } else { return; }\n");
         } else {
             // Any other parameter is serialized normally
@@ -82,16 +127,21 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
     public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
         if (AnnotatedElementHelper.isDefined(m, "tellucloud_type", "observation")) {
             Message msg = EcoreUtil.copy(m);
+            // Remove the grouped parameters from the modified message
             List<Parameter> grouped = msg.getParameters().subList(2,msg.getParameters().size());
             List<Parameter> groupedCopy = new ArrayList<>(grouped);
-            // Remove the grouped parameters from the modified message
             grouped.clear();
-            // Add the grouped parameter
+            // Add the custom-handling grouped parameter
             Message placeholderMsg = EcoreUtil.copy(m);
             placeholderMsg.getParameters().clear();
             placeholderMsg.getParameters().addAll(groupedCopy);
             Parameter placeholder = new TelluCloudGroupedParameter(placeholderMsg);
             grouped.add(placeholder);
+            // Set the @json_message_name annotation
+            PlatformAnnotation jsonMsgName = EcoreUtil.copy(msg.getAnnotations().get(0));
+            jsonMsgName.setName("json_message_name");
+            jsonMsgName.setValue("observation");
+            msg.getAnnotations().add(jsonMsgName);
 
             // Generate JSON serialisation of modified message
             return super.generateSerialization(builder, bufferName, msg);
