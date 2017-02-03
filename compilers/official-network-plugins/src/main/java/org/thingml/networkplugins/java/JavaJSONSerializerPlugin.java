@@ -77,7 +77,7 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
+    public String generateSerialization(StringBuilder builder, String bufferName, Message m, ExternalConnector eco) {
         instantiateMessageType(builder, m);
         builder.append("/**Serializes a message into a JSON format*/\n");
         builder.append("private String format(final " + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
@@ -146,7 +146,7 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender, ExternalConnector eco) {
         updatePOM(context);
         copyInterface();
         builder.append("package org.thingml.generated.network;\n\n");

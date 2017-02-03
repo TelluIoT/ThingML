@@ -28,10 +28,7 @@ package org.thingml.networkplugins.java;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.ObjectType;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.PrimitiveType;
+import org.sintef.thingml.*;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.java.JavaHelper;
@@ -82,7 +79,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
+    public String generateSerialization(StringBuilder builder, String bufferName, Message m, ExternalConnector eco) {
         int size = 2; //code encoded by a 2 bytes
         for (Parameter p : m.getParameters()) {
             if (p.getType() instanceof PrimitiveType) {
@@ -121,7 +118,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender, ExternalConnector eco) {
         copyInterface();
         builder.append("package org.thingml.generated.network;\n\n");
         builder.append("import org.thingml.generated.messages.*;\n");

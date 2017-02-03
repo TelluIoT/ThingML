@@ -86,7 +86,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
+    public String generateSerialization(StringBuilder builder, String bufferName, Message m, ExternalConnector eco) {
         builder.append("byte " + bufferName + "[" + (cctx.getMessageSerializationSize(m) - 2 - cctx.getIgnoredParameterSerializationSize(m)) + "];\n");
 
         int HandlerCode = cctx.getHandlerCode(configuration, m);
@@ -134,7 +134,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender, ExternalConnector eco) {
         if(!messages.isEmpty()) {
             /*builder.append("if ((" + bufferSizeName + " >= 2) && ("+bufferName+" != NULL)) {\n");
             builder.append("uint8_t new_buf[" + bufferSizeName + "];\n");

@@ -28,6 +28,7 @@ package org.thingml.networkplugins.js;
 
 import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.IOUtils;
+import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.PrimitiveType;
@@ -73,7 +74,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
+    public String generateSerialization(StringBuilder builder, String bufferName, Message m, ExternalConnector eco) {
         int size = 2; //code encoded by a 2 bytes
         for (Parameter p : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
@@ -115,7 +116,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender, ExternalConnector eco) {
         updatePackageJSON();
         builder.append("var ByteBuffer = require(\"bytebuffer\");\n");
         builder.append("function " + bufferName + "(){\n");

@@ -21,6 +21,7 @@
  */
 package org.thingml.networkplugins.c.posix;
 
+import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
@@ -55,7 +56,7 @@ public class PosixTextDigitSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
+    public String generateSerialization(StringBuilder builder, String bufferName, Message m, ExternalConnector eco) {
         int size = 0;
         StringBuilder b = new StringBuilder();
 
@@ -100,7 +101,7 @@ public class PosixTextDigitSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender, ExternalConnector eco) {
         builder.append("int len = strlen((char *) " + bufferName + ");\n" +
                 "            /*TRACE_LEVEL_2*/printf(\"[/*PORT_NAME*/] l:%i\\n\", len);\n" +
                 "            if ((len % 3) == 0) {\n" +

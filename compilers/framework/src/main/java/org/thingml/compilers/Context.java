@@ -547,6 +547,8 @@ public class Context {
         if (AnnotatedElementHelper.hasAnnotation(p, "serializer")) {
             final String serID = AnnotatedElementHelper.annotation(p, "serializer").get(0);
             final SerializationPlugin sp = this.getCompiler().getSerializationPlugin(serID);
+            sp.setProtocol(p);
+
             if (sp != null) {
                 return sp;
             } else {

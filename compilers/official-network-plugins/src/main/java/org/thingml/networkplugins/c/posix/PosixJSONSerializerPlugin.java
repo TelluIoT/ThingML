@@ -22,6 +22,7 @@
 package org.thingml.networkplugins.c.posix;
 
 import org.sintef.thingml.AnnotatedElement;
+import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
@@ -285,7 +286,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
+    public String generateSerialization(StringBuilder builder, String bufferName, Message m, ExternalConnector eco) {
         CCompilerContext ctx = (CCompilerContext) context;
         Integer maxLength = getMaximumSerializedMessageLength(m, ctx);
 
@@ -471,7 +472,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender, ExternalConnector eco) {
         if (!messages.isEmpty()) {
             CCompilerContext ctx = (CCompilerContext) context;
 

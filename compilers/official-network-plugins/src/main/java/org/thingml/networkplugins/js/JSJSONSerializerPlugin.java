@@ -28,6 +28,7 @@ package org.thingml.networkplugins.js;
 
 import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.IOUtils;
+import org.sintef.thingml.ExternalConnector;
 import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.PrimitiveType;
@@ -49,7 +50,7 @@ public class JSJSONSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public String generateSerialization(StringBuilder builder, String bufferName, Message m) {
+    public String generateSerialization(StringBuilder builder, String bufferName, Message m, ExternalConnector eco) {
         System.out.println("generateSerialization " + bufferName + " : " + m.getName());
         //Serialize message into binary
         builder.append(bufferName + ".prototype." + m.getName() + "ToFormat = function(");
@@ -75,7 +76,7 @@ public class JSJSONSerializerPlugin extends SerializationPlugin {
     }
 
     @Override
-    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender) {
+    public void generateParserBody(StringBuilder builder, String bufferName, String bufferSizeName, Set<Message> messages, String sender, ExternalConnector eco) {
         builder.append("function " + bufferName + "(){\n");
         builder.append(bufferName + ".prototype.parse = function(json) {\n");
         builder.append("const msg = {};\n");
