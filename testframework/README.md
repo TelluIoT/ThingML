@@ -9,7 +9,11 @@ The framework executes test cases by delegating testing to dedicated executors. 
 The framework is up and running on the local cloud. `Jenkinsfile` (in the root of the repository) defines the work-flow to execute by Jenkins every time a change is pushed to the ThingML repository. The work-flow builds ThingML, runs the framework and makes results available at `Jenkins > SINTEF-9012 > ThingML > select branch > select build > Test Execution Report`.
 
 ## Installation
-[Installation instructions](https://github.com/SINTEF-9012/ThingML/blob/master/testframework/docs/installation.pdf)
+Docker run command:
+```sh
+docker run --restart always --name thingml-tf -d -p 8090:8080 -e JAVA_OPTS="\"-Dhudson.model.DirectoryBrowserSupport.CSP=script-src * 'unsafe-inline' 'unsafe-eval'; img-src *; style-src * 'unsafe-inline';\"" -e MASTER_SSH_PORT=22 -e MASTER_SLAVE_USER=jenkins -e MASTER_SLAVE_PWD=jenkins -e DOCKER_GID=993 -v /var/run/docker.sock:/var/run/docker.sock -v /home/sintef/thingml/jenkins_volumes/jenkins_home:/var/jenkins_home -v /home/sintef/thingml/jenkins_volumes/jenkins_mvn_repo:/var/jenkins_mvn/repo thingml/jenkins-thingml-tf:latest
+```
+For more details, see [installation](https://github.com/SINTEF-9012/ThingML/blob/master/testframework/docs/installation.pdf)
 
 ## Test Framework
 ### Configuration
