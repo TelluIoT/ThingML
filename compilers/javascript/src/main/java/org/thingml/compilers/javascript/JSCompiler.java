@@ -23,7 +23,6 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.javascript.cepHelper.JSCepViewCompiler;
 import org.thingml.compilers.javascript.cepHelper.JSGenerateSourceDeclaration;
@@ -32,9 +31,6 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by ffl on 25.11.14.

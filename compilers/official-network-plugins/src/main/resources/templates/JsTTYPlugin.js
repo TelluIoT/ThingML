@@ -10,12 +10,12 @@ function /*$NAME$*/(name, debug, instance, callback) {
         this.stdout = process.stdout;
         this.formatter = new Format();
 
-        this.stdin.on('data', function(received) {
+        this.stdin.on('data', (received) => {
             const msg = this.formatter.parse(received);
             /*$DISPATCH$*/
-        }.bind(this));
+        });
 
-        this.stdin.on('error', function(err) {
+        this.stdin.on('error', (err) => {
             console.log("Error during communication: " + err);
         });
         callback(true);

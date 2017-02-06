@@ -5,7 +5,7 @@
 //Redis back-end
 const RedisServer = require('redis-server');
 const redisServerInstance = new RedisServer(6379);
-redisServerInstance.open(function (error) {
+redisServerInstance.open((error) => {
   if (error) {
     console.log("Cannot start the Redis backend");
     throw new Error(error);
@@ -34,12 +34,12 @@ const moscaSettings = {
 const server = new mosca.Server(moscaSettings);
 server.on('ready', setup);
 
-server.on('clientConnected', function(client) {
+server.on('clientConnected', (client) => {
     console.log('client connected', client.id);
 });
 
 // fired when a message is received
-server.on('published', function(packet, client) {
+server.on('published', (packet, client) => {
   console.log('Published', packet.payload);
 });
 

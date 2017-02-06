@@ -47,6 +47,16 @@ public class JSThingCepCompiler extends ThingCepCompiler {
 
     }
 
+    public static int getCorrectParamIndex(Message message, Parameter parameter) {
+        List<Parameter> parameters = message.getParameters();
+        for (int i = 0; i < parameters.size(); i++) {
+            if (parameters.get(i).getName().equals(parameter.getName())) {
+                return i + 2;
+            }
+        }
+        return -1;
+    }
+
     public void generateSubscription(Stream stream, StringBuilder builder, Context context, String paramName, Message outPut) {
         if (!stream.isDynamic()) {
             builder.append(ThingMLElementHelper.qname(stream.getInput(), "_") + ".subscribe(\n");
@@ -65,7 +75,7 @@ public class JSThingCepCompiler extends ThingCepCompiler {
                 builder.append("var " + paramName + parameter.getName() + " = [];\n")
                         .append("for(var i = 0; i< " + paramName + ".length; i++) {\n")
                         .append(paramName + parameter.getName() + "[i] = ")
-                        .append(paramName + "[i][" + JSHelper.getCorrectParamIndex(outPut, parameter) + "];\n")
+                        .append(paramName + "[i][" + getCorrectParamIndex(outPut, parameter) + "];\n")
                         .append("}");
             }
         }

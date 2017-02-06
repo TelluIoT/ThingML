@@ -33,8 +33,6 @@ import org.sintef.thingml.Message;
 import org.sintef.thingml.Parameter;
 import org.sintef.thingml.PrimitiveType;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.java.JavaHelper;
-import org.thingml.compilers.javascript.JSHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
 
 import java.io.*;

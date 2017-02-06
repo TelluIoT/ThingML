@@ -9,14 +9,14 @@ function /*$NAME$*/(name, debug, serverURL, instance) {
     this.formatter = new Format();
     this.ws = new WebSocket(serverURL/*$PROTOCOL$*/);
 
-    this.ws.on('open', function open() {
+    this.ws.on('open', () => {
         /*$CALLBACK$*/
     });
 
-   	this.ws.on('message', function(data, flags) {
+   	this.ws.on('message', (data, flags) => {
         const msg = this.formatter.parse(data);
         /*$DISPATCH$*/
-   	}.bind(this));
+   	});
 };
 
 /*$RECEIVERS$*/
