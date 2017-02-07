@@ -22,7 +22,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.thingml.xtext.thingML.Thing#getFunctions <em>Functions</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Thing#getAssign <em>Assign</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Thing#getBehaviour <em>Behaviour</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Thing#getStreams <em>Streams</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getThing()
@@ -168,21 +167,5 @@ public interface Thing extends Type
    * @generated
    */
   EList<CompositeState> getBehaviour();
-
-  /**
-   * Returns the value of the '<em><b>Streams</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.Stream}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Streams</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Streams</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getThing_Streams()
-   * @model containment="true"
-   * @generated
-   */
-  EList<Stream> getStreams();
 
 } // Thing

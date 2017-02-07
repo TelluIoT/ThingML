@@ -102,7 +102,7 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) function=[Function|ID]
 	 *     (rule start) (ambiguity) intValue=INT
 	 *     (rule start) (ambiguity) property=[Variable|ID]
-	 *     (rule start) (ambiguity) reference=[ReferencedElmt|ID]
+	 *     (rule start) (ambiguity) receiveMsg=[Event|ID]
 	 *     (rule start) (ambiguity) stringValue=STRING_LIT
 	 *     (rule start) (ambiguity) {AndExpression.lhs=}
 	 *     (rule start) (ambiguity) {ArrayIndex.array=}

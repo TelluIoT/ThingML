@@ -176,81 +176,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createInternalPortAdapter();
       }
       @Override
-      public Adapter caseStream(Stream object)
-      {
-        return createStreamAdapter();
-      }
-      @Override
-      public Adapter caseSource(Source object)
-      {
-        return createSourceAdapter();
-      }
-      @Override
-      public Adapter caseViewSource(ViewSource object)
-      {
-        return createViewSourceAdapter();
-      }
-      @Override
-      public Adapter caseReferencedElmt(ReferencedElmt object)
-      {
-        return createReferencedElmtAdapter();
-      }
-      @Override
-      public Adapter caseElmtProperty(ElmtProperty object)
-      {
-        return createElmtPropertyAdapter();
-      }
-      @Override
-      public Adapter caseJoinSources(JoinSources object)
-      {
-        return createJoinSourcesAdapter();
-      }
-      @Override
-      public Adapter caseMergeSources(MergeSources object)
-      {
-        return createMergeSourcesAdapter();
-      }
-      @Override
-      public Adapter caseSimpleSource(SimpleSource object)
-      {
-        return createSimpleSourceAdapter();
-      }
-      @Override
-      public Adapter caseFilter(Filter object)
-      {
-        return createFilterAdapter();
-      }
-      @Override
-      public Adapter caseLengthWindow(LengthWindow object)
-      {
-        return createLengthWindowAdapter();
-      }
-      @Override
-      public Adapter caseTimeWindow(TimeWindow object)
-      {
-        return createTimeWindowAdapter();
-      }
-      @Override
-      public Adapter caseMessageParameter(MessageParameter object)
-      {
-        return createMessageParameterAdapter();
-      }
-      @Override
-      public Adapter caseSimpleParamRef(SimpleParamRef object)
-      {
-        return createSimpleParamRefAdapter();
-      }
-      @Override
-      public Adapter caseArrayParamRef(ArrayParamRef object)
-      {
-        return createArrayParamRefAdapter();
-      }
-      @Override
-      public Adapter caseLengthArray(LengthArray object)
-      {
-        return createLengthArrayAdapter();
-      }
-      @Override
       public Adapter caseRegion(Region object)
       {
         return createRegionAdapter();
@@ -426,9 +351,9 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createPropertyReferenceAdapter();
       }
       @Override
-      public Adapter caseReference(Reference object)
+      public Adapter caseEventReference(EventReference object)
       {
-        return createReferenceAdapter();
+        return createEventReferenceAdapter();
       }
       @Override
       public Adapter caseFunctionCallExpression(FunctionCallExpression object)
@@ -868,231 +793,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createInternalPortAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Stream <em>Stream</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.Stream
-   * @generated
-   */
-  public Adapter createStreamAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Source <em>Source</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.Source
-   * @generated
-   */
-  public Adapter createSourceAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.ViewSource <em>View Source</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.ViewSource
-   * @generated
-   */
-  public Adapter createViewSourceAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.ReferencedElmt <em>Referenced Elmt</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.ReferencedElmt
-   * @generated
-   */
-  public Adapter createReferencedElmtAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.ElmtProperty <em>Elmt Property</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.ElmtProperty
-   * @generated
-   */
-  public Adapter createElmtPropertyAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.JoinSources <em>Join Sources</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.JoinSources
-   * @generated
-   */
-  public Adapter createJoinSourcesAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.MergeSources <em>Merge Sources</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.MergeSources
-   * @generated
-   */
-  public Adapter createMergeSourcesAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.SimpleSource <em>Simple Source</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.SimpleSource
-   * @generated
-   */
-  public Adapter createSimpleSourceAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Filter <em>Filter</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.Filter
-   * @generated
-   */
-  public Adapter createFilterAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.LengthWindow <em>Length Window</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.LengthWindow
-   * @generated
-   */
-  public Adapter createLengthWindowAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.TimeWindow <em>Time Window</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.TimeWindow
-   * @generated
-   */
-  public Adapter createTimeWindowAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.MessageParameter <em>Message Parameter</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.MessageParameter
-   * @generated
-   */
-  public Adapter createMessageParameterAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.SimpleParamRef <em>Simple Param Ref</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.SimpleParamRef
-   * @generated
-   */
-  public Adapter createSimpleParamRefAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.ArrayParamRef <em>Array Param Ref</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.ArrayParamRef
-   * @generated
-   */
-  public Adapter createArrayParamRefAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.LengthArray <em>Length Array</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.LengthArray
-   * @generated
-   */
-  public Adapter createLengthArrayAdapter()
   {
     return null;
   }
@@ -1623,16 +1323,16 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Reference <em>Reference</em>}'.
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.EventReference <em>Event Reference</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see org.thingml.xtext.thingML.Reference
+   * @see org.thingml.xtext.thingML.EventReference
    * @generated
    */
-  public Adapter createReferenceAdapter()
+  public Adapter createEventReferenceAdapter()
   {
     return null;
   }

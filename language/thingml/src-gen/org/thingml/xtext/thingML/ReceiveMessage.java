@@ -22,7 +22,7 @@ package org.thingml.xtext.thingML;
  * @model
  * @generated
  */
-public interface ReceiveMessage extends ReferencedElmt, Event
+public interface ReceiveMessage extends Event
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.

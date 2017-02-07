@@ -21,7 +21,7 @@ package org.thingml.xtext.thingML;
  * @model
  * @generated
  */
-public interface Parameter extends AnnotatedElement, ReferencedElmt, Variable
+public interface Parameter extends AnnotatedElement, Variable
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.

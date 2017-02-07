@@ -18,11 +18,11 @@ import org.thingml.xtext.thingML.Decrement
 import org.thingml.xtext.thingML.ExternalConnector
 import org.thingml.xtext.thingML.Increment
 import org.thingml.xtext.thingML.Instance
-import org.thingml.xtext.thingML.MessageParameter
+
 import org.thingml.xtext.thingML.PropertyAssign
 import org.thingml.xtext.thingML.PropertyReference
 import org.thingml.xtext.thingML.ReceiveMessage
-import org.thingml.xtext.thingML.Reference
+
 import org.thingml.xtext.thingML.StartSession
 import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.thingML.Transition
@@ -35,8 +35,10 @@ import org.thingml.xtext.helpers.ConfigurationHelper
 import org.thingml.xtext.thingML.State
 import org.thingml.xtext.thingML.CompositeState
 import org.thingml.xtext.helpers.CompositeStateHelper
-import org.thingml.xtext.thingML.SimpleParamRef
+
 import org.eclipse.emf.ecore.ENamedElement
+import org.thingml.xtext.thingML.EventReference
+import java.util.logging.Handler
 
 /**
  * This class contains custom scoping description.
@@ -95,9 +97,6 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.instance_Type) {
 			return scopeForInstance_Type(context as Instance);
 		}
-		else if (reference == p.messageParameter_MsgRef) {
-			return scopeForMessageParameter_MsgRef(context as MessageParameter);
-		}
 		else if (reference == p.propertyAssign_Property) {
 			return scopeForPropertyAssign_Property(context as PropertyAssign);
 		}
@@ -109,9 +108,6 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		}
 		else if (reference == p.receiveMessage_Message) {
 			return scopeForReceiveMessage_Message(context as ReceiveMessage);
-		}
-		else if (reference == p.reference_Reference) {
-			return scopeForReference_Reference(context);
 		}
 		else if (reference == p.startSession_Session) {
 			return scopeForStartSession_Session(context as StartSession);
@@ -132,10 +128,13 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.compositeState_Initial) {
 			return scopeForCompositeState_Initial(context as CompositeState);
 		}
-	//	else if (reference == p.simpleParamRef_ParameterRef) {
-	//		return simpleParamRef_ParameterRef(context as SimpleParamRef);
-	//	}
-	
+		
+		else if (reference == p.eventReference_ReceiveMsg) {
+			return scopeForEventReference_ReceiveMsg(context as EventReference);
+		}
+		else if (reference == p.eventReference_Parameter) {
+			return scopeForEventReference_Parameter(context as EventReference);
+		}
 		else {
 			System.out.println("INFO: Resolving reference : " + reference.name + " in Class " + (reference.eContainer as ENamedElement).getName);
 		}
@@ -148,9 +147,25 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	protected ArrayList EMPTY = new ArrayList();
 	
 	
-	def protected IScope simpleParamRef_ParameterRef(SimpleParamRef context) {
-		//ThingMLHelpers.findContainingHandler(context).event
-		//Scopes.scopeFor( context. );
+	def protected IScope scopeForEventReference_ReceiveMsg(EventReference context) {
+		var h = ThingMLHelpers.findContainingHandler(context)
+		if (h==null) {
+			Scopes.scopeFor( EMPTY );
+		}
+		else {
+			Scopes.scopeFor(h.event)
+		}
+	}
+	
+	def protected IScope scopeForEventReference_Parameter(EventReference context) {
+		
+		if (context.receiveMsg != null && context.receiveMsg instanceof ReceiveMessage) {
+			Scopes.scopeFor( (context.receiveMsg as ReceiveMessage).message.parameters ); 
+		}
+		else {
+			Scopes.scopeFor( EMPTY );
+		}
+		
 	}
 	
 	def protected IScope scopeForCompositeState_Initial(CompositeState context) {
@@ -219,9 +234,6 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		Scopes.scopeFor( ThingMLHelpers.allThings(ThingMLHelpers.findContainingModel(context)) ); 
 	}
 	
-	def protected IScope scopeForMessageParameter_MsgRef(MessageParameter context) {
-		Scopes.scopeFor( EMPTY ); // TODO ???
-	}
 	
 	def protected IScope scopeForPropertyAssign_Property(PropertyAssign context) {
 		val ss = ThingMLHelpers.findContainingStartSession(context)

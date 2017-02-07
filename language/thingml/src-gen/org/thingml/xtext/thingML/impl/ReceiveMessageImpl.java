@@ -30,7 +30,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *
  * @generated
  */
-public class ReceiveMessageImpl extends ReferencedElmtImpl implements ReceiveMessage
+public class ReceiveMessageImpl extends EventImpl implements ReceiveMessage
 {
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
