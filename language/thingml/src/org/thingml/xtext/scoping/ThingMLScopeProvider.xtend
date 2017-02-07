@@ -33,7 +33,7 @@ import org.thingml.xtext.thingML.EnumLiteralRef
 import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.helpers.ConfigurationHelper
 import org.thingml.xtext.thingML.State
-import org.thingml.xtext.thingML.CompositeState
+import org.thingml.xtext.thingML.*
 import org.thingml.xtext.helpers.CompositeStateHelper
 
 import org.eclipse.emf.ecore.ENamedElement
@@ -128,7 +128,9 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.compositeState_Initial) {
 			return scopeForCompositeState_Initial(context as CompositeState);
 		}
-		
+		else if (reference == p.parallelRegion_Initial) {
+			return scopeForParallelRegion_Initial(context as ParallelRegion);
+		}
 		else if (reference == p.eventReference_ReceiveMsg) {
 			return scopeForEventReference_ReceiveMsg(context as EventReference);
 		}
@@ -169,6 +171,10 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	def protected IScope scopeForCompositeState_Initial(CompositeState context) {
+		Scopes.scopeFor( context.substate );
+	}
+	
+	def protected IScope scopeForParallelRegion_Initial(ParallelRegion context) {
 		Scopes.scopeFor( context.substate );
 	}
 	
