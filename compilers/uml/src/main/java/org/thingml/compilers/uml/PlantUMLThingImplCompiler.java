@@ -71,6 +71,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
         builder.append("@startuml\n");
         builder.append("skinparam defaultTextAlignment left\n");
+        builder.append("caption Behavior of thing " + ThingMLHelpers.findContainingThing(sm).getName() + "\n");
         builder.append("[*] --> " + sm.getName() + "\n");
         builder.append("state " + sm.getName() + "{\n");
         for (State s : sm.getSubstate()) {

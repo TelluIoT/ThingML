@@ -18,6 +18,7 @@ package org.thingml.compilers.uml;
 
 import org.sintef.thingml.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.sintef.thingml.helpers.ActionHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -31,24 +32,37 @@ import java.util.Set;
 public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 
     private Set<String> classes = new HashSet<>();
+    private Set<String> includes = new HashSet<>();
+
 
     private void generateIncludes(Thing thing, StringBuilder classes) {
         for (Thing include : thing.getIncludes()) {
-            classes.append(include.getName());
-            classes.append(" <|-- ");
-            classes.append(thing.getName());
-            classes.append("\n");
+            if(!includes.contains(include.getName() + "<" + thing.getName())) {
+                classes.append(include.getName());
+                classes.append(" <|-- ");
+                classes.append(thing.getName());
+                classes.append("\n");
+                includes.add(include.getName() + "<" + thing.getName());
+            }
             generateIncludes(include, classes);
         }
     }
 
-    private void generateClass(Thing thing, StringBuilder classes, Context ctx) {
+    private boolean isPSM(Thing thing) {
+        return ThingMLHelpers.getAllExpressions(thing, ExternExpression.class).size() > 0 || ActionHelper.getAllActions(thing, ExternStatement.class).size() > 0;
+    }
+
+    private void generateClass(Thing thing, StringBuilder classes, Context ctx, boolean compact) {
         if (!this.classes.contains(thing.getName())) {
             this.classes.add(thing.getName());
             if (thing.isFragment()) {
                 classes.append("class " + thing.getName() + " <<(F,#BC74ED)Fragment>> {\n");
             } else {
-                classes.append("class " + thing.getName() + " <<(T,#FF9400)>> {\n");
+                if(isPSM(thing)) {//PSM
+                    classes.append("class " + thing.getName() + " <<(T,#F94918)PSM>> {\n");
+                } else {//PIM
+                    classes.append("class " + thing.getName() + " <<(T,#5BBF09)PIM>> {\n");
+                }
             }
 
             if (thing.getProperties().size() > 0)
@@ -66,11 +80,16 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                 classes.append("..Messages..\n");
             for (Message m : thing.getMessages()) {
                 classes.append("-" + m.getName() + "(");
-                int i = 0;
-                for(Parameter p : m.getParameters()) {
-                    if (i > 0)
-                        classes.append(", ");
-                    classes.append(p.getName() + " : " + p.getType().getName());
+                if (compact) {
+                    if (m.getParameters().size() > 0)
+                        classes.append("...");
+                } else {
+                    int i = 0;
+                    for (Parameter p : m.getParameters()) {
+                        if (i > 0)
+                            classes.append(", ");
+                        classes.append(p.getName() + " : " + p.getType().getName());
+                    }
                 }
                 classes.append(")");
                 classes.append("\n");
@@ -91,11 +110,16 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                 classes.append("..Functions..\n");
             for (Function f : thing.getFunctions()) {
                 classes.append("-" + f.getName() + "(");
-                int i = 0;
-                for(Parameter p : f.getParameters()) {
-                    if (i > 0)
-                        classes.append(", ");
-                    classes.append(p.getName() + " : " + p.getType().getName());
+                if (compact) {
+                    if (f.getParameters().size() > 0)
+                        classes.append("...");
+                } else {
+                    int i = 0;
+                    for (Parameter p : f.getParameters()) {
+                        if (i > 0)
+                            classes.append(", ");
+                        classes.append(p.getName() + " : " + p.getType().getName());
+                    }
                 }
                 classes.append(") : ");
                 if (f.getType() != null) {
@@ -110,13 +134,13 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             if (thing.getAnnotations().size() > 0)
                 classes.append("note left of " + thing.getName() + " : ");
             for(PlatformAnnotation a : thing.getAnnotations()) {
-                classes.append("<b>@" + a.getName() + "</b> <color:royalBlue>\"" + a.getValue() + "\"</color>\\n");
+                classes.append("<b>@" + a.getName() + "</b> <color:royalBlue>\"" + a.getValue().replace("\n", "\\n").replace("\r\n", "\\n") + "\"</color>\\n");
             }
             if (thing.getAnnotations().size() > 0)
                 classes.append("\n");
 
             for (Thing include : thing.getIncludes()) {
-                generateClass(include, classes, ctx);
+                generateClass(include, classes, ctx, compact);
             }
         }
     }
@@ -126,8 +150,9 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
         //Instance component diagram
         final StringBuilder builder = ctx.getBuilder(cfg.getName() + "/docs/" + cfg.getName() + ".plantuml");
         builder.append("@startuml\n");
+        builder.append("caption Instances and Connectors in configuration " + cfg.getName() + "\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            builder.append("component " + i.getName() + "\n");
+            builder.append("component " + i.getName() + (isPSM(i.getType())?"<<PSM>>":"<<PIM>>") + "\n");
         }
         for(Protocol p : ConfigurationHelper.getUsedProtocols(cfg)) {
             builder.append("boundary " + p.getName() + "\n");
@@ -143,34 +168,59 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
 
 
         //Type/Thing class diagram
-        this.classes.clear();
         final StringBuilder classes = ctx.getBuilder(cfg.getName() + "/docs/" + cfg.getName() + "_class.plantuml");
+        final StringBuilder classes2 = ctx.getBuilder(cfg.getName() + "/docs/" + cfg.getName() + "_class_compact.plantuml");
         classes.append("@startuml\n");
+        classes.append("caption Things used in configuration " + cfg.getName() + "\n");
+        classes2.append("@startuml\n");
+        classes2.append("caption Things used in configuration " + cfg.getName() + "\n");
+        this.classes.clear();
         for(Thing thing : ConfigurationHelper.allThings(cfg)) {
-            generateClass(thing, classes, ctx);
+            generateClass(thing, classes, ctx, false);
         }
+        this.classes.clear();
+        for(Thing thing : ConfigurationHelper.allThings(cfg)) {
+            generateClass(thing, classes2, ctx, true);
+        }
+        this.includes.clear();
         for(Thing thing : ConfigurationHelper.allThings(cfg)) {
             generateIncludes(thing, classes);
         }
-        //DECIDE: Maybe move datatypes into another file??
+        this.includes.clear();
+        for(Thing thing : ConfigurationHelper.allThings(cfg)) {
+            generateIncludes(thing, classes2);
+        }
+        classes.append("@enduml");
+        classes2.append("@enduml");
+
+
+        final StringBuilder datatypes = ctx.getBuilder(cfg.getName() + "/docs/" + cfg.getName() + "_datatypes.plantuml");
+        datatypes.append("@startuml\n");
+        datatypes.append("caption Datatypes used in configuration " + cfg.getName() + "\n");
         for(Type t : ThingMLHelpers.allUsedSimpleTypes(ThingMLHelpers.findContainingModel(cfg))) {
             if (t instanceof PrimitiveType) {
-                classes.append("class " + t.getName() + " <<(D,#D2E524)" + ((PrimitiveType) t).getByteSize() + ">>\n");
+                datatypes.append("class " + t.getName() + " <<(D,#D2E524)" + ((PrimitiveType) t).getByteSize() + ">> {\n");
             } else if (t instanceof  ObjectType){
-                classes.append("class " + t.getName() + " <<(O,#E5D224)>>\n");
+                datatypes.append("class " + t.getName() + " <<(O,#E5D224)>> {\n");
             } else if (t instanceof  Enumeration) {
-                classes.append("class " + t.getName() + " <<(E,#24E5B2)>>\n");
-                //TODO: Literals
+                datatypes.append("class " + t.getName() + " <<(E,#24E5B2)>> {\n");
+                final Enumeration e = (Enumeration)t;
+                for(EnumerationLiteral l : e.getLiterals()) {
+                    datatypes.append("-" + l.getName() + "\n");
+                }
             }
+            datatypes.append("}\n");
             if (t.getAnnotations().size() > 0)
-                classes.append("note bottom of " + t.getName() + " : ");
+                datatypes.append("note bottom of " + t.getName() + " : ");
             for(PlatformAnnotation a : t.getAnnotations()) {
-                classes.append("<b>@" + a.getName() + "</b> <color:royalBlue>\"" + a.getValue() + "\"</color>\\n");
+                datatypes.append("<b>@" + a.getName() + "</b> <color:royalBlue>\"" + a.getValue().replace("\n", "\\n").replace("\r\n", "\\n") + "\"</color>\\n");
             }
             if (t.getAnnotations().size() > 0)
-                classes.append("\n");
+                datatypes.append("\n");
         }
+        datatypes.append("@enduml");
+
         //TODO: Protocols
-        classes.append("@enduml");
+
     }
 }
