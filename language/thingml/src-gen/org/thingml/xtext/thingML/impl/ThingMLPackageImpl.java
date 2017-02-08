@@ -16,7 +16,6 @@ import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.ArrayIndex;
-import org.thingml.xtext.thingML.ArrayParamRef;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.ConditionalAction;
@@ -26,18 +25,17 @@ import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.DivExpression;
 import org.thingml.xtext.thingML.DoubleLiteral;
-import org.thingml.xtext.thingML.ElmtProperty;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.Event;
+import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
 import org.thingml.xtext.thingML.ExternalConnector;
-import org.thingml.xtext.thingML.Filter;
 import org.thingml.xtext.thingML.FinalState;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.FunctionCallExpression;
@@ -51,16 +49,11 @@ import org.thingml.xtext.thingML.InstanceRef;
 import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.InternalPort;
 import org.thingml.xtext.thingML.InternalTransition;
-import org.thingml.xtext.thingML.JoinSources;
-import org.thingml.xtext.thingML.LengthArray;
-import org.thingml.xtext.thingML.LengthWindow;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.LoopAction;
 import org.thingml.xtext.thingML.LowerExpression;
 import org.thingml.xtext.thingML.LowerOrEqualExpression;
-import org.thingml.xtext.thingML.MergeSources;
 import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.MessageParameter;
 import org.thingml.xtext.thingML.MinusExpression;
 import org.thingml.xtext.thingML.ModExpression;
 import org.thingml.xtext.thingML.NotEqualsExpression;
@@ -80,25 +73,18 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.ReceiveMessage;
-import org.thingml.xtext.thingML.Reference;
-import org.thingml.xtext.thingML.ReferencedElmt;
 import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Session;
-import org.thingml.xtext.thingML.SimpleParamRef;
-import org.thingml.xtext.thingML.SimpleSource;
-import org.thingml.xtext.thingML.Source;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.State;
-import org.thingml.xtext.thingML.Stream;
 import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.ThingMLPackage;
-import org.thingml.xtext.thingML.TimeWindow;
 import org.thingml.xtext.thingML.TimesExpression;
 import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.Type;
@@ -106,7 +92,6 @@ import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.UnaryMinus;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
-import org.thingml.xtext.thingML.ViewSource;
 
 /**
  * <!-- begin-user-doc -->
@@ -255,111 +240,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * @generated
    */
   private EClass internalPortEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass streamEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass sourceEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass viewSourceEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass referencedElmtEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass elmtPropertyEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass joinSourcesEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass mergeSourcesEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass simpleSourceEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass filterEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass lengthWindowEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass timeWindowEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass messageParameterEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass simpleParamRefEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass arrayParamRefEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass lengthArrayEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -611,7 +491,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass referenceEClass = null;
+  private EClass eventReferenceEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -1179,16 +1059,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getThing_Streams()
-  {
-    return (EReference)thingEClass.getEStructuralFeatures().get(8);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getPropertyAssign()
   {
     return propertyAssignEClass;
@@ -1482,406 +1352,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
   public EClass getInternalPort()
   {
     return internalPortEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getStream()
-  {
-    return streamEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getStream_Name()
-  {
-    return (EAttribute)streamEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getStream_Input()
-  {
-    return (EReference)streamEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getStream_Selection()
-  {
-    return (EReference)streamEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getStream_Output()
-  {
-    return (EReference)streamEClass.getEStructuralFeatures().get(3);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getSource()
-  {
-    return sourceEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getViewSource()
-  {
-    return viewSourceEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getReferencedElmt()
-  {
-    return referencedElmtEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getElmtProperty()
-  {
-    return elmtPropertyEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getJoinSources()
-  {
-    return joinSourcesEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getJoinSources_Name()
-  {
-    return (EAttribute)joinSourcesEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getJoinSources_Sources()
-  {
-    return (EReference)joinSourcesEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getJoinSources_ResultMessage()
-  {
-    return (EReference)joinSourcesEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getJoinSources_Rules()
-  {
-    return (EReference)joinSourcesEClass.getEStructuralFeatures().get(3);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getJoinSources_Operators()
-  {
-    return (EReference)joinSourcesEClass.getEStructuralFeatures().get(4);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getMergeSources()
-  {
-    return mergeSourcesEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getMergeSources_Name()
-  {
-    return (EAttribute)mergeSourcesEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getMergeSources_Sources()
-  {
-    return (EReference)mergeSourcesEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getMergeSources_ResultMessage()
-  {
-    return (EReference)mergeSourcesEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getMergeSources_Operators()
-  {
-    return (EReference)mergeSourcesEClass.getEStructuralFeatures().get(3);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getSimpleSource()
-  {
-    return simpleSourceEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getSimpleSource_Name()
-  {
-    return (EAttribute)simpleSourceEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getSimpleSource_Message()
-  {
-    return (EReference)simpleSourceEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getSimpleSource_Operators()
-  {
-    return (EReference)simpleSourceEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getFilter()
-  {
-    return filterEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getFilter_Guard()
-  {
-    return (EReference)filterEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getLengthWindow()
-  {
-    return lengthWindowEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getLengthWindow_Size()
-  {
-    return (EReference)lengthWindowEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getLengthWindow_Step()
-  {
-    return (EReference)lengthWindowEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getTimeWindow()
-  {
-    return timeWindowEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getTimeWindow_Duration()
-  {
-    return (EReference)timeWindowEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getTimeWindow_Step()
-  {
-    return (EReference)timeWindowEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getMessageParameter()
-  {
-    return messageParameterEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getMessageParameter_Name()
-  {
-    return (EAttribute)messageParameterEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getMessageParameter_MsgRef()
-  {
-    return (EReference)messageParameterEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getSimpleParamRef()
-  {
-    return simpleParamRefEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getSimpleParamRef_ParameterRef()
-  {
-    return (EReference)simpleParamRefEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getArrayParamRef()
-  {
-    return arrayParamRefEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getArrayParamRef_ParameterRef()
-  {
-    return (EReference)arrayParamRefEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClass getLengthArray()
-  {
-    return lengthArrayEClass;
   }
 
   /**
@@ -2849,9 +2319,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getReference()
+  public EClass getEventReference()
   {
-    return referenceEClass;
+    return eventReferenceEClass;
   }
 
   /**
@@ -2859,9 +2329,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getReference_Reference()
+  public EReference getEventReference_ReceiveMsg()
   {
-    return (EReference)referenceEClass.getEStructuralFeatures().get(0);
+    return (EReference)eventReferenceEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2869,9 +2339,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getReference_Parameter()
+  public EReference getEventReference_Parameter()
   {
-    return (EReference)referenceEClass.getEStructuralFeatures().get(1);
+    return (EReference)eventReferenceEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -3706,7 +3176,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     createEReference(thingEClass, THING__FUNCTIONS);
     createEReference(thingEClass, THING__ASSIGN);
     createEReference(thingEClass, THING__BEHAVIOUR);
-    createEReference(thingEClass, THING__STREAMS);
 
     propertyAssignEClass = createEClass(PROPERTY_ASSIGN);
     createEReference(propertyAssignEClass, PROPERTY_ASSIGN__PROPERTY);
@@ -3747,61 +3216,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     providedPortEClass = createEClass(PROVIDED_PORT);
 
     internalPortEClass = createEClass(INTERNAL_PORT);
-
-    streamEClass = createEClass(STREAM);
-    createEAttribute(streamEClass, STREAM__NAME);
-    createEReference(streamEClass, STREAM__INPUT);
-    createEReference(streamEClass, STREAM__SELECTION);
-    createEReference(streamEClass, STREAM__OUTPUT);
-
-    sourceEClass = createEClass(SOURCE);
-
-    viewSourceEClass = createEClass(VIEW_SOURCE);
-
-    referencedElmtEClass = createEClass(REFERENCED_ELMT);
-
-    elmtPropertyEClass = createEClass(ELMT_PROPERTY);
-
-    joinSourcesEClass = createEClass(JOIN_SOURCES);
-    createEAttribute(joinSourcesEClass, JOIN_SOURCES__NAME);
-    createEReference(joinSourcesEClass, JOIN_SOURCES__SOURCES);
-    createEReference(joinSourcesEClass, JOIN_SOURCES__RESULT_MESSAGE);
-    createEReference(joinSourcesEClass, JOIN_SOURCES__RULES);
-    createEReference(joinSourcesEClass, JOIN_SOURCES__OPERATORS);
-
-    mergeSourcesEClass = createEClass(MERGE_SOURCES);
-    createEAttribute(mergeSourcesEClass, MERGE_SOURCES__NAME);
-    createEReference(mergeSourcesEClass, MERGE_SOURCES__SOURCES);
-    createEReference(mergeSourcesEClass, MERGE_SOURCES__RESULT_MESSAGE);
-    createEReference(mergeSourcesEClass, MERGE_SOURCES__OPERATORS);
-
-    simpleSourceEClass = createEClass(SIMPLE_SOURCE);
-    createEAttribute(simpleSourceEClass, SIMPLE_SOURCE__NAME);
-    createEReference(simpleSourceEClass, SIMPLE_SOURCE__MESSAGE);
-    createEReference(simpleSourceEClass, SIMPLE_SOURCE__OPERATORS);
-
-    filterEClass = createEClass(FILTER);
-    createEReference(filterEClass, FILTER__GUARD);
-
-    lengthWindowEClass = createEClass(LENGTH_WINDOW);
-    createEReference(lengthWindowEClass, LENGTH_WINDOW__SIZE);
-    createEReference(lengthWindowEClass, LENGTH_WINDOW__STEP);
-
-    timeWindowEClass = createEClass(TIME_WINDOW);
-    createEReference(timeWindowEClass, TIME_WINDOW__DURATION);
-    createEReference(timeWindowEClass, TIME_WINDOW__STEP);
-
-    messageParameterEClass = createEClass(MESSAGE_PARAMETER);
-    createEAttribute(messageParameterEClass, MESSAGE_PARAMETER__NAME);
-    createEReference(messageParameterEClass, MESSAGE_PARAMETER__MSG_REF);
-
-    simpleParamRefEClass = createEClass(SIMPLE_PARAM_REF);
-    createEReference(simpleParamRefEClass, SIMPLE_PARAM_REF__PARAMETER_REF);
-
-    arrayParamRefEClass = createEClass(ARRAY_PARAM_REF);
-    createEReference(arrayParamRefEClass, ARRAY_PARAM_REF__PARAMETER_REF);
-
-    lengthArrayEClass = createEClass(LENGTH_ARRAY);
 
     regionEClass = createEClass(REGION);
 
@@ -3934,9 +3348,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     propertyReferenceEClass = createEClass(PROPERTY_REFERENCE);
     createEReference(propertyReferenceEClass, PROPERTY_REFERENCE__PROPERTY);
 
-    referenceEClass = createEClass(REFERENCE);
-    createEReference(referenceEClass, REFERENCE__REFERENCE);
-    createEReference(referenceEClass, REFERENCE__PARAMETER);
+    eventReferenceEClass = createEClass(EVENT_REFERENCE);
+    createEReference(eventReferenceEClass, EVENT_REFERENCE__RECEIVE_MSG);
+    createEReference(eventReferenceEClass, EVENT_REFERENCE__PARAMETER);
 
     functionCallExpressionEClass = createEClass(FUNCTION_CALL_EXPRESSION);
     createEReference(functionCallExpressionEClass, FUNCTION_CALL_EXPRESSION__FUNCTION);
@@ -4077,31 +3491,14 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     protocolEClass.getESuperTypes().add(this.getAnnotatedElement());
     functionEClass.getESuperTypes().add(this.getAnnotatedElement());
     propertyEClass.getESuperTypes().add(this.getAnnotatedElement());
-    propertyEClass.getESuperTypes().add(this.getReferencedElmt());
     propertyEClass.getESuperTypes().add(this.getVariable());
     messageEClass.getESuperTypes().add(this.getAnnotatedElement());
-    messageEClass.getESuperTypes().add(this.getReferencedElmt());
     parameterEClass.getESuperTypes().add(this.getAnnotatedElement());
-    parameterEClass.getESuperTypes().add(this.getReferencedElmt());
     parameterEClass.getESuperTypes().add(this.getVariable());
     portEClass.getESuperTypes().add(this.getAnnotatedElement());
     requiredPortEClass.getESuperTypes().add(this.getPort());
     providedPortEClass.getESuperTypes().add(this.getPort());
     internalPortEClass.getESuperTypes().add(this.getPort());
-    streamEClass.getESuperTypes().add(this.getAnnotatedElement());
-    joinSourcesEClass.getESuperTypes().add(this.getSource());
-    joinSourcesEClass.getESuperTypes().add(this.getReferencedElmt());
-    mergeSourcesEClass.getESuperTypes().add(this.getSource());
-    mergeSourcesEClass.getESuperTypes().add(this.getReferencedElmt());
-    simpleSourceEClass.getESuperTypes().add(this.getSource());
-    simpleSourceEClass.getESuperTypes().add(this.getReferencedElmt());
-    filterEClass.getESuperTypes().add(this.getViewSource());
-    lengthWindowEClass.getESuperTypes().add(this.getViewSource());
-    timeWindowEClass.getESuperTypes().add(this.getViewSource());
-    messageParameterEClass.getESuperTypes().add(this.getReferencedElmt());
-    simpleParamRefEClass.getESuperTypes().add(this.getElmtProperty());
-    arrayParamRefEClass.getESuperTypes().add(this.getElmtProperty());
-    lengthArrayEClass.getESuperTypes().add(this.getElmtProperty());
     compositeStateEClass.getESuperTypes().add(this.getAnnotatedElement());
     compositeStateEClass.getESuperTypes().add(this.getRegion());
     compositeStateEClass.getESuperTypes().add(this.getState());
@@ -4116,12 +3513,10 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     handlerEClass.getESuperTypes().add(this.getAnnotatedElement());
     transitionEClass.getESuperTypes().add(this.getHandler());
     internalTransitionEClass.getESuperTypes().add(this.getHandler());
-    receiveMessageEClass.getESuperTypes().add(this.getReferencedElmt());
     receiveMessageEClass.getESuperTypes().add(this.getEvent());
     actionBlockEClass.getESuperTypes().add(this.getAction());
     externStatementEClass.getESuperTypes().add(this.getAction());
     localVariableEClass.getESuperTypes().add(this.getAnnotatedElement());
-    localVariableEClass.getESuperTypes().add(this.getReferencedElmt());
     localVariableEClass.getESuperTypes().add(this.getAction());
     localVariableEClass.getESuperTypes().add(this.getVariable());
     sendActionEClass.getESuperTypes().add(this.getAction());
@@ -4142,7 +3537,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     stringLiteralEClass.getESuperTypes().add(this.getExpression());
     doubleLiteralEClass.getESuperTypes().add(this.getExpression());
     propertyReferenceEClass.getESuperTypes().add(this.getExpression());
-    referenceEClass.getESuperTypes().add(this.getExpression());
+    eventReferenceEClass.getESuperTypes().add(this.getExpression());
     functionCallExpressionEClass.getESuperTypes().add(this.getExpression());
     configurationEClass.getESuperTypes().add(this.getAnnotatedElement());
     instanceEClass.getESuperTypes().add(this.getAnnotatedElement());
@@ -4209,7 +3604,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEReference(getThing_Functions(), this.getFunction(), null, "functions", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getThing_Assign(), this.getPropertyAssign(), null, "assign", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getThing_Behaviour(), this.getCompositeState(), null, "behaviour", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getThing_Streams(), this.getStream(), null, "streams", null, 0, -1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(propertyAssignEClass, PropertyAssign.class, "PropertyAssign", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getPropertyAssign_Property(), this.getProperty(), null, "property", null, 0, 1, PropertyAssign.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4250,61 +3644,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(providedPortEClass, ProvidedPort.class, "ProvidedPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(internalPortEClass, InternalPort.class, "InternalPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(streamEClass, Stream.class, "Stream", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getStream_Name(), ecorePackage.getEString(), "name", null, 0, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getStream_Input(), this.getSource(), null, "input", null, 0, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getStream_Selection(), this.getLocalVariable(), null, "selection", null, 0, -1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getStream_Output(), this.getSendAction(), null, "output", null, 0, 1, Stream.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(sourceEClass, Source.class, "Source", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(viewSourceEClass, ViewSource.class, "ViewSource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(referencedElmtEClass, ReferencedElmt.class, "ReferencedElmt", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(elmtPropertyEClass, ElmtProperty.class, "ElmtProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(joinSourcesEClass, JoinSources.class, "JoinSources", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getJoinSources_Name(), ecorePackage.getEString(), "name", null, 0, 1, JoinSources.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getJoinSources_Sources(), this.getSource(), null, "sources", null, 0, -1, JoinSources.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getJoinSources_ResultMessage(), this.getMessage(), null, "resultMessage", null, 0, 1, JoinSources.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getJoinSources_Rules(), this.getExpression(), null, "rules", null, 0, -1, JoinSources.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getJoinSources_Operators(), this.getViewSource(), null, "operators", null, 0, -1, JoinSources.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(mergeSourcesEClass, MergeSources.class, "MergeSources", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getMergeSources_Name(), ecorePackage.getEString(), "name", null, 0, 1, MergeSources.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getMergeSources_Sources(), this.getSource(), null, "sources", null, 0, -1, MergeSources.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getMergeSources_ResultMessage(), this.getMessage(), null, "resultMessage", null, 0, 1, MergeSources.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getMergeSources_Operators(), this.getViewSource(), null, "operators", null, 0, -1, MergeSources.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(simpleSourceEClass, SimpleSource.class, "SimpleSource", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getSimpleSource_Name(), ecorePackage.getEString(), "name", null, 0, 1, SimpleSource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getSimpleSource_Message(), this.getReceiveMessage(), null, "message", null, 0, 1, SimpleSource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getSimpleSource_Operators(), this.getViewSource(), null, "operators", null, 0, -1, SimpleSource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(filterEClass, Filter.class, "Filter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getFilter_Guard(), this.getExpression(), null, "guard", null, 0, 1, Filter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(lengthWindowEClass, LengthWindow.class, "LengthWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getLengthWindow_Size(), this.getExpression(), null, "size", null, 0, 1, LengthWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getLengthWindow_Step(), this.getExpression(), null, "step", null, 0, 1, LengthWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(timeWindowEClass, TimeWindow.class, "TimeWindow", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getTimeWindow_Duration(), this.getExpression(), null, "duration", null, 0, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getTimeWindow_Step(), this.getExpression(), null, "step", null, 0, 1, TimeWindow.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(messageParameterEClass, MessageParameter.class, "MessageParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getMessageParameter_Name(), ecorePackage.getEString(), "name", null, 0, 1, MessageParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getMessageParameter_MsgRef(), this.getMessage(), null, "msgRef", null, 0, 1, MessageParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(simpleParamRefEClass, SimpleParamRef.class, "SimpleParamRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getSimpleParamRef_ParameterRef(), this.getParameter(), null, "parameterRef", null, 0, 1, SimpleParamRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(arrayParamRefEClass, ArrayParamRef.class, "ArrayParamRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getArrayParamRef_ParameterRef(), this.getParameter(), null, "parameterRef", null, 0, 1, ArrayParamRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(lengthArrayEClass, LengthArray.class, "LengthArray", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(regionEClass, Region.class, "Region", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -4437,9 +3776,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(propertyReferenceEClass, PropertyReference.class, "PropertyReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getPropertyReference_Property(), this.getVariable(), null, "property", null, 0, 1, PropertyReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(referenceEClass, Reference.class, "Reference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getReference_Reference(), this.getReferencedElmt(), null, "reference", null, 0, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getReference_Parameter(), this.getElmtProperty(), null, "parameter", null, 0, 1, Reference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEClass(eventReferenceEClass, EventReference.class, "EventReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getEventReference_ReceiveMsg(), this.getEvent(), null, "receiveMsg", null, 0, 1, EventReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getEventReference_Parameter(), this.getParameter(), null, "parameter", null, 0, 1, EventReference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(functionCallExpressionEClass, FunctionCallExpression.class, "FunctionCallExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFunctionCallExpression_Function(), this.getFunction(), null, "function", null, 0, 1, FunctionCallExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

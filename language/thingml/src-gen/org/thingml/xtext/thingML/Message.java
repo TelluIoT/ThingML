@@ -22,7 +22,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface Message extends AnnotatedElement, ReferencedElmt
+public interface Message extends AnnotatedElement
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.

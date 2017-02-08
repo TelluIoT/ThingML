@@ -204,141 +204,6 @@ public interface ThingMLFactory extends EFactory
   InternalPort createInternalPort();
 
   /**
-   * Returns a new object of class '<em>Stream</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Stream</em>'.
-   * @generated
-   */
-  Stream createStream();
-
-  /**
-   * Returns a new object of class '<em>Source</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Source</em>'.
-   * @generated
-   */
-  Source createSource();
-
-  /**
-   * Returns a new object of class '<em>View Source</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>View Source</em>'.
-   * @generated
-   */
-  ViewSource createViewSource();
-
-  /**
-   * Returns a new object of class '<em>Referenced Elmt</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Referenced Elmt</em>'.
-   * @generated
-   */
-  ReferencedElmt createReferencedElmt();
-
-  /**
-   * Returns a new object of class '<em>Elmt Property</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Elmt Property</em>'.
-   * @generated
-   */
-  ElmtProperty createElmtProperty();
-
-  /**
-   * Returns a new object of class '<em>Join Sources</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Join Sources</em>'.
-   * @generated
-   */
-  JoinSources createJoinSources();
-
-  /**
-   * Returns a new object of class '<em>Merge Sources</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Merge Sources</em>'.
-   * @generated
-   */
-  MergeSources createMergeSources();
-
-  /**
-   * Returns a new object of class '<em>Simple Source</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Simple Source</em>'.
-   * @generated
-   */
-  SimpleSource createSimpleSource();
-
-  /**
-   * Returns a new object of class '<em>Filter</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Filter</em>'.
-   * @generated
-   */
-  Filter createFilter();
-
-  /**
-   * Returns a new object of class '<em>Length Window</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Length Window</em>'.
-   * @generated
-   */
-  LengthWindow createLengthWindow();
-
-  /**
-   * Returns a new object of class '<em>Time Window</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Time Window</em>'.
-   * @generated
-   */
-  TimeWindow createTimeWindow();
-
-  /**
-   * Returns a new object of class '<em>Message Parameter</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Message Parameter</em>'.
-   * @generated
-   */
-  MessageParameter createMessageParameter();
-
-  /**
-   * Returns a new object of class '<em>Simple Param Ref</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Simple Param Ref</em>'.
-   * @generated
-   */
-  SimpleParamRef createSimpleParamRef();
-
-  /**
-   * Returns a new object of class '<em>Array Param Ref</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Array Param Ref</em>'.
-   * @generated
-   */
-  ArrayParamRef createArrayParamRef();
-
-  /**
-   * Returns a new object of class '<em>Length Array</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Length Array</em>'.
-   * @generated
-   */
-  LengthArray createLengthArray();
-
-  /**
    * Returns a new object of class '<em>Region</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -654,13 +519,13 @@ public interface ThingMLFactory extends EFactory
   PropertyReference createPropertyReference();
 
   /**
-   * Returns a new object of class '<em>Reference</em>'.
+   * Returns a new object of class '<em>Event Reference</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Reference</em>'.
+   * @return a new object of class '<em>Event Reference</em>'.
    * @generated
    */
-  Reference createReference();
+  EventReference createEventReference();
 
   /**
    * Returns a new object of class '<em>Function Call Expression</em>'.

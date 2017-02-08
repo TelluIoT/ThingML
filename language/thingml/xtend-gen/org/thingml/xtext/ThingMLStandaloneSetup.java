@@ -11,7 +11,6 @@ import org.thingml.xtext.ThingMLStandaloneSetupGenerated;
 @SuppressWarnings("all")
 public class ThingMLStandaloneSetup extends ThingMLStandaloneSetupGenerated {
   public static void doSetup() {
-    ThingMLStandaloneSetup _thingMLStandaloneSetup = new ThingMLStandaloneSetup();
-    _thingMLStandaloneSetup.createInjectorAndDoEMFRegistration();
+    new ThingMLStandaloneSetup().createInjectorAndDoEMFRegistration();
   }
 }

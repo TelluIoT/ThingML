@@ -128,7 +128,7 @@ public class StateHelper {
                 }
             }
         }
-
+/*
         //add stream handlers if not present
         if (self instanceof CompositeState) {
             for (Stream s : ThingMLElementHelper.findContainingThing(self).getStreams()) {
@@ -156,6 +156,7 @@ public class StateHelper {
 
             }
         }
+        */
 
         return result;
     }
@@ -214,7 +215,7 @@ public class StateHelper {
                 }
             }
         }
-
+/*
         //add stream handlers if not present
         if (self instanceof CompositeState) {
             for (Stream s : ThingMLElementHelper.findContainingThing(self).getStreams()) {
@@ -242,7 +243,7 @@ public class StateHelper {
 
             }
         }
-
+*/
         return result;
     }
 

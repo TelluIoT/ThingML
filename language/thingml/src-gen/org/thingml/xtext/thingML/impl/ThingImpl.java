@@ -25,7 +25,6 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyAssign;
-import org.thingml.xtext.thingML.Stream;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
@@ -45,7 +44,6 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#getFunctions <em>Functions</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#getAssign <em>Assign</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#getBehaviour <em>Behaviour</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ThingImpl#getStreams <em>Streams</em>}</li>
  * </ul>
  *
  * @generated
@@ -141,16 +139,6 @@ public class ThingImpl extends TypeImpl implements Thing
    * @ordered
    */
   protected EList<CompositeState> behaviour;
-
-  /**
-   * The cached value of the '{@link #getStreams() <em>Streams</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getStreams()
-   * @generated
-   * @ordered
-   */
-  protected EList<Stream> streams;
 
   /**
    * <!-- begin-user-doc -->
@@ -299,20 +287,6 @@ public class ThingImpl extends TypeImpl implements Thing
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Stream> getStreams()
-  {
-    if (streams == null)
-    {
-      streams = new EObjectContainmentEList<Stream>(Stream.class, this, ThingMLPackage.THING__STREAMS);
-    }
-    return streams;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -330,8 +304,6 @@ public class ThingImpl extends TypeImpl implements Thing
         return ((InternalEList<?>)getAssign()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.THING__BEHAVIOUR:
         return ((InternalEList<?>)getBehaviour()).basicRemove(otherEnd, msgs);
-      case ThingMLPackage.THING__STREAMS:
-        return ((InternalEList<?>)getStreams()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -362,8 +334,6 @@ public class ThingImpl extends TypeImpl implements Thing
         return getAssign();
       case ThingMLPackage.THING__BEHAVIOUR:
         return getBehaviour();
-      case ThingMLPackage.THING__STREAMS:
-        return getStreams();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -410,10 +380,6 @@ public class ThingImpl extends TypeImpl implements Thing
         getBehaviour().clear();
         getBehaviour().addAll((Collection<? extends CompositeState>)newValue);
         return;
-      case ThingMLPackage.THING__STREAMS:
-        getStreams().clear();
-        getStreams().addAll((Collection<? extends Stream>)newValue);
-        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -452,9 +418,6 @@ public class ThingImpl extends TypeImpl implements Thing
       case ThingMLPackage.THING__BEHAVIOUR:
         getBehaviour().clear();
         return;
-      case ThingMLPackage.THING__STREAMS:
-        getStreams().clear();
-        return;
     }
     super.eUnset(featureID);
   }
@@ -485,8 +448,6 @@ public class ThingImpl extends TypeImpl implements Thing
         return assign != null && !assign.isEmpty();
       case ThingMLPackage.THING__BEHAVIOUR:
         return behaviour != null && !behaviour.isEmpty();
-      case ThingMLPackage.THING__STREAMS:
-        return streams != null && !streams.isEmpty();
     }
     return super.eIsSet(featureID);
   }

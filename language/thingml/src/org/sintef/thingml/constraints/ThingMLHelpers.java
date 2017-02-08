@@ -564,11 +564,7 @@ public class ThingMLHelpers {
 	public static ArrayList<Variable> allVisibleVariables (EObject container) {
 		ArrayList<Variable> result = new ArrayList<Variable>();
 		
-		if (container instanceof LocalVariable) {
-			if (container.eContainer() instanceof Stream) {
-				return allVisibleVariables(container.eContainer());
-			}
-		}
+
 		
 		// Add the variables of the block if we are in a block
 		ActionBlock b = findContainingActionBlock(container);
@@ -597,10 +593,7 @@ public class ThingMLHelpers {
 			result.addAll(allVisibleVariables(f.eContainer()));
 		}
 		
-		Stream stream = findContainingStream(container);
-		if (stream != null) {
-			result.addAll(stream.getSelection());
-		}	
+
 		
 		// Only the variables of the thing if we are in a thing:
 		Thing t = findContainingThing(container);
@@ -758,11 +751,11 @@ public class ThingMLHelpers {
 			}
 		}
 	}
-*/
+
 	public static Stream findContainingStream(EObject eObject) {
 		return findContainer(eObject,Stream.class);
 	}
-/*
+
 	public static List<SimpleSource> allSimpleSources(Source input) {
 		List<SimpleSource> result = new ArrayList<>();
 		if(input instanceof SimpleSource) {

@@ -85,21 +85,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.REQUIRED_PORT: return createRequiredPort();
       case ThingMLPackage.PROVIDED_PORT: return createProvidedPort();
       case ThingMLPackage.INTERNAL_PORT: return createInternalPort();
-      case ThingMLPackage.STREAM: return createStream();
-      case ThingMLPackage.SOURCE: return createSource();
-      case ThingMLPackage.VIEW_SOURCE: return createViewSource();
-      case ThingMLPackage.REFERENCED_ELMT: return createReferencedElmt();
-      case ThingMLPackage.ELMT_PROPERTY: return createElmtProperty();
-      case ThingMLPackage.JOIN_SOURCES: return createJoinSources();
-      case ThingMLPackage.MERGE_SOURCES: return createMergeSources();
-      case ThingMLPackage.SIMPLE_SOURCE: return createSimpleSource();
-      case ThingMLPackage.FILTER: return createFilter();
-      case ThingMLPackage.LENGTH_WINDOW: return createLengthWindow();
-      case ThingMLPackage.TIME_WINDOW: return createTimeWindow();
-      case ThingMLPackage.MESSAGE_PARAMETER: return createMessageParameter();
-      case ThingMLPackage.SIMPLE_PARAM_REF: return createSimpleParamRef();
-      case ThingMLPackage.ARRAY_PARAM_REF: return createArrayParamRef();
-      case ThingMLPackage.LENGTH_ARRAY: return createLengthArray();
       case ThingMLPackage.REGION: return createRegion();
       case ThingMLPackage.COMPOSITE_STATE: return createCompositeState();
       case ThingMLPackage.FINAL_STATE: return createFinalState();
@@ -135,7 +120,7 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.STRING_LITERAL: return createStringLiteral();
       case ThingMLPackage.DOUBLE_LITERAL: return createDoubleLiteral();
       case ThingMLPackage.PROPERTY_REFERENCE: return createPropertyReference();
-      case ThingMLPackage.REFERENCE: return createReference();
+      case ThingMLPackage.EVENT_REFERENCE: return createEventReference();
       case ThingMLPackage.FUNCTION_CALL_EXPRESSION: return createFunctionCallExpression();
       case ThingMLPackage.CONFIGURATION: return createConfiguration();
       case ThingMLPackage.INSTANCE: return createInstance();
@@ -383,171 +368,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     InternalPortImpl internalPort = new InternalPortImpl();
     return internalPort;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Stream createStream()
-  {
-    StreamImpl stream = new StreamImpl();
-    return stream;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Source createSource()
-  {
-    SourceImpl source = new SourceImpl();
-    return source;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ViewSource createViewSource()
-  {
-    ViewSourceImpl viewSource = new ViewSourceImpl();
-    return viewSource;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ReferencedElmt createReferencedElmt()
-  {
-    ReferencedElmtImpl referencedElmt = new ReferencedElmtImpl();
-    return referencedElmt;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ElmtProperty createElmtProperty()
-  {
-    ElmtPropertyImpl elmtProperty = new ElmtPropertyImpl();
-    return elmtProperty;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public JoinSources createJoinSources()
-  {
-    JoinSourcesImpl joinSources = new JoinSourcesImpl();
-    return joinSources;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public MergeSources createMergeSources()
-  {
-    MergeSourcesImpl mergeSources = new MergeSourcesImpl();
-    return mergeSources;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public SimpleSource createSimpleSource()
-  {
-    SimpleSourceImpl simpleSource = new SimpleSourceImpl();
-    return simpleSource;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Filter createFilter()
-  {
-    FilterImpl filter = new FilterImpl();
-    return filter;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public LengthWindow createLengthWindow()
-  {
-    LengthWindowImpl lengthWindow = new LengthWindowImpl();
-    return lengthWindow;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public TimeWindow createTimeWindow()
-  {
-    TimeWindowImpl timeWindow = new TimeWindowImpl();
-    return timeWindow;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public MessageParameter createMessageParameter()
-  {
-    MessageParameterImpl messageParameter = new MessageParameterImpl();
-    return messageParameter;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public SimpleParamRef createSimpleParamRef()
-  {
-    SimpleParamRefImpl simpleParamRef = new SimpleParamRefImpl();
-    return simpleParamRef;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ArrayParamRef createArrayParamRef()
-  {
-    ArrayParamRefImpl arrayParamRef = new ArrayParamRefImpl();
-    return arrayParamRef;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public LengthArray createLengthArray()
-  {
-    LengthArrayImpl lengthArray = new LengthArrayImpl();
-    return lengthArray;
   }
 
   /**
@@ -940,10 +760,10 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Reference createReference()
+  public EventReference createEventReference()
   {
-    ReferenceImpl reference = new ReferenceImpl();
-    return reference;
+    EventReferenceImpl eventReference = new EventReferenceImpl();
+    return eventReference;
   }
 
   /**

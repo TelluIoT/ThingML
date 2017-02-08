@@ -1,6 +1,6 @@
 define(["ace/lib/oop", "ace/mode/text", "ace/mode/text_highlight_rules"], function(oop, mText, mTextHighlightRules) {
 	var HighlightRules = function() {
-		var keywords = "action|and|buffer|by|composite|configuration|connector|datatype|do|during|else|end|entry|enumeration|error|event|exit|false|final|fork|fragment|from|function|guard|history|if|import|includes|init|instance|internal|join|keep|keeps|length|merge|message|not|object|on|optional|or|over|port|print|produce|property|protocol|provided|readonly|receives|region|required|return|select|sends|session|set|state|statechart|stream|thing|transition|true|var|while";
+		var keywords = "action|and|composite|configuration|connector|datatype|do|else|end|entry|enumeration|error|event|exit|false|final|fork|fragment|function|guard|history|if|import|includes|init|instance|internal|keeps|message|not|object|on|optional|or|over|port|print|property|protocol|provided|readonly|receives|region|required|return|sends|session|set|state|statechart|thing|transition|true|var|while";
 		this.$rules = {
 			"start": [
 				{token: "lparen", regex: "[\\[({]"},

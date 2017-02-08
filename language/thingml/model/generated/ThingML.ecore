@@ -57,8 +57,6 @@
         eType="#//PropertyAssign" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="behaviour" upperBound="-1"
         eType="#//CompositeState" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="streams" upperBound="-1"
-        eType="#//Stream" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PropertyAssign" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="property" eType="#//Property"/>
@@ -79,7 +77,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//Action"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Property" eSuperTypes="#//AnnotatedElement #//ReferencedElmt #//Variable">
+  <eClassifiers xsi:type="ecore:EClass" name="Property" eSuperTypes="#//AnnotatedElement #//Variable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="typeRef" eType="#//TypeRef"
@@ -87,12 +85,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//AnnotatedElement #//ReferencedElmt">
+  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//Parameter" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//AnnotatedElement #//ReferencedElmt #//Variable">
+  <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="#//AnnotatedElement #//Variable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="typeRef" eType="#//TypeRef"
         containment="true"/>
@@ -109,71 +107,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProvidedPort" eSuperTypes="#//Port"/>
   <eClassifiers xsi:type="ecore:EClass" name="InternalPort" eSuperTypes="#//Port"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Stream" eSuperTypes="#//AnnotatedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="input" eType="#//Source"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="selection" upperBound="-1"
-        eType="#//LocalVariable" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="output" eType="#//SendAction"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Source"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ViewSource"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ReferencedElmt"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ElmtProperty"/>
-  <eClassifiers xsi:type="ecore:EClass" name="JoinSources" eSuperTypes="#//Source #//ReferencedElmt">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sources" upperBound="-1"
-        eType="#//Source" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="resultMessage" eType="#//Message"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1"
-        eType="#//Expression" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
-        eType="#//ViewSource" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MergeSources" eSuperTypes="#//Source #//ReferencedElmt">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sources" upperBound="-1"
-        eType="#//Source" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="resultMessage" eType="#//Message"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
-        eType="#//ViewSource" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SimpleSource" eSuperTypes="#//Source #//ReferencedElmt">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="message" eType="#//ReceiveMessage"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="operators" upperBound="-1"
-        eType="#//ViewSource" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Filter" eSuperTypes="#//ViewSource">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" eType="#//Expression"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LengthWindow" eSuperTypes="#//ViewSource">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="size" eType="#//Expression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="step" eType="#//Expression"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TimeWindow" eSuperTypes="#//ViewSource">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="duration" eType="#//Expression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="step" eType="#//Expression"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MessageParameter" eSuperTypes="#//ReferencedElmt">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="msgRef" eType="#//Message"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SimpleParamRef" eSuperTypes="#//ElmtProperty">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameterRef" eType="#//Parameter"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ArrayParamRef" eSuperTypes="#//ElmtProperty">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameterRef" eType="#//Parameter"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LengthArray" eSuperTypes="#//ElmtProperty"/>
   <eClassifiers xsi:type="ecore:EClass" name="Region"/>
   <eClassifiers xsi:type="ecore:EClass" name="CompositeState" eSuperTypes="#//AnnotatedElement #//Region #//State">
     <eStructuralFeatures xsi:type="ecore:EReference" name="initial" eType="#//State"/>
@@ -226,7 +159,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InternalTransition" eSuperTypes="#//Handler"/>
   <eClassifiers xsi:type="ecore:EClass" name="Event"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ReceiveMessage" eSuperTypes="#//ReferencedElmt #//Event">
+  <eClassifiers xsi:type="ecore:EClass" name="ReceiveMessage" eSuperTypes="#//Event">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" eType="#//Port"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="message" eType="#//Message"/>
@@ -242,7 +175,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="segments" upperBound="-1"
         eType="#//Expression" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LocalVariable" eSuperTypes="#//AnnotatedElement #//ReferencedElmt #//Action #//Variable">
+  <eClassifiers xsi:type="ecore:EClass" name="LocalVariable" eSuperTypes="#//AnnotatedElement #//Action #//Variable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="typeRef" eType="#//TypeRef"
@@ -328,10 +261,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="PropertyReference" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="property" eType="#//Variable"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Reference" eSuperTypes="#//Expression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//ReferencedElmt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" eType="#//ElmtProperty"
-        containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EventReference" eSuperTypes="#//Expression">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="receiveMsg" eType="#//Event"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" eType="#//Parameter"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FunctionCallExpression" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="function" eType="#//Function"/>

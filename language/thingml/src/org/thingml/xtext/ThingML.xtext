@@ -20,7 +20,7 @@ PlatformAnnotation returns PlatformAnnotation:
 
 AnnotatedElement:
 	Protocol | Function | Property | Message | Parameter | Port | Configuration | Handler | State | CompositeState | 
-	FinalState | Type | PropertyAssign | Stream | Session | ParallelRegion | LocalVariable | Instance | AbstractConnector
+	FinalState | Type | PropertyAssign | /*Stream |*/ Session | ParallelRegion | LocalVariable | Instance | AbstractConnector
 ;
 
 
@@ -54,7 +54,7 @@ EnumerationLiteral returns EnumerationLiteral:
 Thing returns Thing:
 	'thing' (^fragment?='fragment')? name=ID ('includes' includes+=[Thing|ID] ( "," includes+=[Thing|ID])*)? 
 	( annotations+=PlatformAnnotation )*'{'
-		(messages+=Message | ports += Port | properties+=Property | functions+=Function | assign+=PropertyAssign | behaviour+=StateMachine | streams+=Stream)* 
+		(messages+=Message | ports += Port | properties+=Property | functions+=Function | assign+=PropertyAssign | behaviour+=StateMachine /* | streams+=Stream*/)* 
 	'}';
 
 PropertyAssign returns PropertyAssign:
@@ -112,7 +112,7 @@ InternalPort returns InternalPort:
 /*****************************************************************************
  *       CEP STREAMS                                                         *
  *****************************************************************************/
-	
+	/*
 Stream returns Stream:
 	'stream' name=ID ( annotations+=PlatformAnnotation )* 'from' input=Source
 	('select' selection+=LocalVariable ( "," selection+=LocalVariable)*)?
@@ -161,7 +161,7 @@ ArrayParamRef returns ArrayParamRef:
 LengthArray returns LengthArray:
 	{LengthArray}
 	'length';
-
+ 	*/
 /*****************************************************************************
  *       STATE MECHINES                                                      *
  *****************************************************************************/
@@ -233,7 +233,7 @@ InternalTransition returns InternalTransition:
 	('guard' guard=Expression)?
 	('action' action=Action)?;
 
-Event returns Event:
+Event:
 	ReceiveMessage;
 
 ReceiveMessage returns ReceiveMessage:
@@ -357,8 +357,8 @@ Modulo returns Expression:
 Primary returns Expression:
 	'(' Expression ')' |
 	{NotExpression} "not" term=Primary |
-	{UnaryMinus} '-' term=Primary |
-	ArrayIndexPostfix
+	{UnaryMinus} '-' term=Primary 
+	| ArrayIndexPostfix
 ;
 
 ArrayIndexPostfix returns Expression:
@@ -366,8 +366,8 @@ ArrayIndexPostfix returns Expression:
 ;
 
 AtomicExpression returns Expression:
-	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference | Reference | FunctionCallExpression 
-	// | MessageParameter /* NOT CONVINCED THAT MessageParameter SHOULD BE AN EXPRESSION */
+	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference | /*Reference |*/ FunctionCallExpression 
+	 | EventReference 
 ;
 
 ExternExpression returns ExternExpression:
@@ -394,19 +394,14 @@ PropertyReference returns PropertyReference:
 	property=[Variable|ID]
 ;
 
-Reference returns Reference:
-	reference=[ReferencedElmt|ID] "." parameter=ElmtProperty
+EventReference returns EventReference:
+	receiveMsg=[Event|ID] "." parameter=[Parameter|ID]
 ;
 
 FunctionCallExpression returns FunctionCallExpression:
 	function=[Function|ID]'('
 		( parameters+=Expression ( "," parameters+=Expression )* )?
 	')';
-
-
-
-
-// Missing Expressions: ArrayIndex  ;
 
 
 /*****************************************************************************

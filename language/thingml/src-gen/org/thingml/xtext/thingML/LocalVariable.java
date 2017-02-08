@@ -23,7 +23,7 @@ package org.thingml.xtext.thingML;
  * @model
  * @generated
  */
-public interface LocalVariable extends AnnotatedElement, ReferencedElmt, Action, Variable
+public interface LocalVariable extends AnnotatedElement, Action, Variable
 {
   /**
    * Returns the value of the '<em><b>Changeable</b></em>' attribute.
