@@ -220,7 +220,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("result += '';\n");
         builder.append("return result;\n");
-        builder.append("}\n");
+        builder.append("};\n");
 
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
     }

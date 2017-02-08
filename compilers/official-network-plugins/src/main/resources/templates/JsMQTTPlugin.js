@@ -21,7 +21,7 @@ function /*$NAME$*/(name, debug, serverURL, subtopic, pubtopic, instance, callba
             /*$DISPATCH$*/
         }
    	});
-};
+}
 
 /*$RECEIVERS$*/
 

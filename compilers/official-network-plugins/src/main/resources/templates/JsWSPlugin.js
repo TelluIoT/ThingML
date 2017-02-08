@@ -17,7 +17,7 @@ function /*$NAME$*/(name, debug, serverURL, instance) {
         const msg = this.formatter.parse(data);
         /*$DISPATCH$*/
    	});
-};
+}
 
 /*$RECEIVERS$*/
 

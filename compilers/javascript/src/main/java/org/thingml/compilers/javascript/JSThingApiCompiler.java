@@ -64,7 +64,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                 /*if (debugProfile.getDebugFunctions().contains(f)) {
                     builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceFunctionDone(thing, f) + "\");\n");
                 }*/
-                builder.append("}\n\n");
+                builder.append("};\n\n");
             }
         }
 
@@ -95,13 +95,13 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("this.ready = false;\n");
             if (ThingMLHelpers.allStateMachines(thing).get(0).getExit() != null)
                 ctx.getCompiler().getThingActionCompiler().generate(ThingMLHelpers.allStateMachines(thing).get(0).getExit(), builder, ctx);
-            builder.append("}\n\n");
+            builder.append("};\n\n");
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._delete = function() {\n");
             builder.append("this.statemachine = null;\n");
             builder.append("this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = null;\n");
             builder.append("this.bus.removeAllListeners();\n");
-            builder.append("}\n\n");
+            builder.append("};\n\n");
 
             //Communication
             builder.append("//Public API for third parties\n");
@@ -109,7 +109,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
             builder.append("this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance = new StateJS.StateMachineInstance(\"" + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + "\");\n");
             builder.append("StateJS.initialise(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + " );\n");
             builder.append("this.ready = true;\n");
-            builder.append("}\n\n");
+            builder.append("};\n\n");
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(msg) {//msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}\n");
             builder.append("if(this.ready){\n");
@@ -122,7 +122,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                 builder.append("fork._receive(msg);\n");
                 builder.append("});\n");
             }
-            builder.append("}}\n");
+            builder.append("}};\n");
 
             generatePublicPort(thing, builder, ctx);
         }
@@ -159,7 +159,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                         builder.append(", " + ctx.protectKeyword(pa.getName()) + ":" + ctx.protectKeyword(pa.getName()));
                     }
                     builder.append("});\n");
-                    builder.append("}\n\n");
+                    builder.append("};\n\n");
                 }
             }
         }

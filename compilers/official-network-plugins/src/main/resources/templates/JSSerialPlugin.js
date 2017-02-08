@@ -78,6 +78,7 @@ function /*$NAME$*/(name, debug, port, baudrate, instance, callback) {
             }
         });
     });
+}
 
     /*$RECEIVERS$*/
 
@@ -89,6 +90,5 @@ function /*$NAME$*/(name, debug, port, baudrate, instance, callback) {
 			console.log("Something went wrong when closing serial port " + port + " at " + baudrate + ":\n\t" + error);
 		});
 	};
-};
 
 module.exports = /*$NAME$*/;

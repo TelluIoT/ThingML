@@ -30,7 +30,7 @@ function /*$NAME$*/(name, debug, port, address, instance, callback) {
     this.server.bind(port);
 
     callback(true);
-};
+}
 
 /*$RECEIVERS$*/
 

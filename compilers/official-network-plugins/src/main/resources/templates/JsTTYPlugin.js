@@ -22,7 +22,7 @@ function /*$NAME$*/(name, debug, instance, callback) {
     } else {
         callback(false);
     }
-};
+}
 
 /*$RECEIVERS$*/
 
