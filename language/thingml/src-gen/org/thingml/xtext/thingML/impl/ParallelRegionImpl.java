@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.ParallelRegion;
+import org.thingml.xtext.thingML.RegionOrSession;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
@@ -34,6 +35,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#isHistory <em>History</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getSubstate <em>Substate</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getRegion <em>Region</em>}</li>
  * </ul>
  *
  * @generated
@@ -99,6 +101,16 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
    * @ordered
    */
   protected EList<State> substate;
+
+  /**
+   * The cached value of the '{@link #getRegion() <em>Region</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getRegion()
+   * @generated
+   * @ordered
+   */
+  protected EList<RegionOrSession> region;
 
   /**
    * <!-- begin-user-doc -->
@@ -229,6 +241,20 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
    * <!-- end-user-doc -->
    * @generated
    */
+  public EList<RegionOrSession> getRegion()
+  {
+    if (region == null)
+    {
+      region = new EObjectContainmentEList<RegionOrSession>(RegionOrSession.class, this, ThingMLPackage.PARALLEL_REGION__REGION);
+    }
+    return region;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -236,6 +262,8 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
     {
       case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
         return ((InternalEList<?>)getSubstate()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.PARALLEL_REGION__REGION:
+        return ((InternalEList<?>)getRegion()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -259,6 +287,8 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
         return isHistory();
       case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
         return getSubstate();
+      case ThingMLPackage.PARALLEL_REGION__REGION:
+        return getRegion();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -287,6 +317,10 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
         getSubstate().clear();
         getSubstate().addAll((Collection<? extends State>)newValue);
         return;
+      case ThingMLPackage.PARALLEL_REGION__REGION:
+        getRegion().clear();
+        getRegion().addAll((Collection<? extends RegionOrSession>)newValue);
+        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -313,6 +347,9 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
       case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
         getSubstate().clear();
         return;
+      case ThingMLPackage.PARALLEL_REGION__REGION:
+        getRegion().clear();
+        return;
     }
     super.eUnset(featureID);
   }
@@ -335,6 +372,8 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
         return history != HISTORY_EDEFAULT;
       case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
         return substate != null && !substate.isEmpty();
+      case ThingMLPackage.PARALLEL_REGION__REGION:
+        return region != null && !region.isEmpty();
     }
     return super.eIsSet(featureID);
   }

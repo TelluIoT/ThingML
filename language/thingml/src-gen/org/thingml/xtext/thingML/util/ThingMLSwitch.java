@@ -244,6 +244,14 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ThingMLPackage.REGION_OR_SESSION:
+      {
+        RegionOrSession regionOrSession = (RegionOrSession)theEObject;
+        T result = caseRegionOrSession(regionOrSession);
+        if (result == null) result = caseRegion(regionOrSession);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ThingMLPackage.COMPOSITE_STATE:
       {
         CompositeState compositeState = (CompositeState)theEObject;
@@ -267,9 +275,9 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Session session = (Session)theEObject;
         T result = caseSession(session);
-        if (result == null) result = caseRegion(session);
-        if (result == null) result = caseState(session);
         if (result == null) result = caseAnnotatedElement(session);
+        if (result == null) result = caseRegionOrSession(session);
+        if (result == null) result = caseRegion(session);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -278,6 +286,7 @@ public class ThingMLSwitch<T> extends Switch<T>
         ParallelRegion parallelRegion = (ParallelRegion)theEObject;
         T result = caseParallelRegion(parallelRegion);
         if (result == null) result = caseAnnotatedElement(parallelRegion);
+        if (result == null) result = caseRegionOrSession(parallelRegion);
         if (result == null) result = caseRegion(parallelRegion);
         if (result == null) result = defaultCase(theEObject);
         return result;
@@ -584,13 +593,6 @@ public class ThingMLSwitch<T> extends Switch<T>
         T result = caseExternalConnector(externalConnector);
         if (result == null) result = caseAbstractConnector(externalConnector);
         if (result == null) result = caseAnnotatedElement(externalConnector);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case ThingMLPackage.INSTANCE_REF:
-      {
-        InstanceRef instanceRef = (InstanceRef)theEObject;
-        T result = caseInstanceRef(instanceRef);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -1058,6 +1060,22 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseRegion(Region object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Region Or Session</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Region Or Session</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRegionOrSession(RegionOrSession object)
   {
     return null;
   }
@@ -1730,22 +1748,6 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseExternalConnector(ExternalConnector object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Instance Ref</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Instance Ref</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseInstanceRef(InstanceRef object)
   {
     return null;
   }

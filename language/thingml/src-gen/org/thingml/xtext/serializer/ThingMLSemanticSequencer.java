@@ -44,7 +44,6 @@ import org.thingml.xtext.thingML.GreaterExpression;
 import org.thingml.xtext.thingML.GreaterOrEqualExpression;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.Instance;
-import org.thingml.xtext.thingML.InstanceRef;
 import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.InternalPort;
 import org.thingml.xtext.thingML.InternalTransition;
@@ -199,9 +198,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.INSTANCE:
 				sequence_Instance(context, (Instance) semanticObject); 
-				return; 
-			case ThingMLPackage.INSTANCE_REF:
-				sequence_InstanceRef(context, (InstanceRef) semanticObject); 
 				return; 
 			case ThingMLPackage.INTEGER_LITERAL:
 				sequence_IntegerLiteral(context, (IntegerLiteral) semanticObject); 
@@ -730,7 +726,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *         entry=Action? 
 	 *         exit=Action? 
 	 *         (substate+=State | internal+=InternalTransition | outgoing+=Transition)* 
-	 *         region+=ParallelRegion*
+	 *         region+=RegionOrSession*
 	 *     )
 	 */
 	protected void sequence_CompositeState(ISerializationContext context, CompositeState semanticObject) {
@@ -754,7 +750,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *             entry=Action? 
 	 *             exit=Action? 
 	 *             (substate+=State | internal+=InternalTransition)* 
-	 *             region+=ParallelRegion*
+	 *             region+=RegionOrSession*
 	 *         ) | 
 	 *         (
 	 *             name=ID 
@@ -765,7 +761,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *             entry=Action? 
 	 *             exit=Action? 
 	 *             (substate+=State | internal+=InternalTransition | outgoing+=Transition)* 
-	 *             region+=ParallelRegion*
+	 *             region+=RegionOrSession*
 	 *         )
 	 *     )
 	 */
@@ -792,7 +788,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     ConfigPropertyAssign returns ConfigPropertyAssign
 	 *
 	 * Constraint:
-	 *     (instance=InstanceRef property=[Property|ID] index+=Expression* init=Expression annotations+=PlatformAnnotation*)
+	 *     (instance=[Instance|ID] property=[Property|ID] index+=Expression* init=Expression annotations+=PlatformAnnotation*)
 	 */
 	protected void sequence_ConfigPropertyAssign(ISerializationContext context, ConfigPropertyAssign semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -821,9 +817,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 * Constraint:
 	 *     (
 	 *         name=ID? 
-	 *         cli=InstanceRef 
+	 *         cli=[Instance|ID] 
 	 *         required=[RequiredPort|ID] 
-	 *         srv=InstanceRef 
+	 *         srv=[Instance|ID] 
 	 *         provided=[ProvidedPort|ID] 
 	 *         annotations+=PlatformAnnotation*
 	 *     )
@@ -1173,7 +1169,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     ExternalConnector returns ExternalConnector
 	 *
 	 * Constraint:
-	 *     (name=ID? inst=InstanceRef port=[Port|ID] protocol=[Protocol|ID] annotations+=PlatformAnnotation*)
+	 *     (name=ID? inst=[Instance|ID] port=[Port|ID] protocol=[Protocol|ID] annotations+=PlatformAnnotation*)
 	 */
 	protected void sequence_ExternalConnector(ISerializationContext context, ExternalConnector semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1272,24 +1268,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getIncrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.getVar());
-		feeder.finish();
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     InstanceRef returns InstanceRef
-	 *
-	 * Constraint:
-	 *     instance=[Instance|ID]
-	 */
-	protected void sequence_InstanceRef(ISerializationContext context, InstanceRef semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.INSTANCE_REF__INSTANCE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.INSTANCE_REF__INSTANCE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getInstanceRefAccess().getInstanceInstanceIDTerminalRuleCall_0_1(), semanticObject.getInstance());
 		feeder.finish();
 	}
 	
@@ -1614,10 +1592,18 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 * Contexts:
 	 *     AnnotatedElement returns ParallelRegion
 	 *     Region returns ParallelRegion
+	 *     RegionOrSession returns ParallelRegion
 	 *     ParallelRegion returns ParallelRegion
 	 *
 	 * Constraint:
-	 *     (name=ID? initial=[State|ID] history?='history'? annotations+=PlatformAnnotation* substate+=State*)
+	 *     (
+	 *         name=ID? 
+	 *         initial=[State|ID] 
+	 *         history?='history'? 
+	 *         annotations+=PlatformAnnotation* 
+	 *         substate+=State* 
+	 *         region+=RegionOrSession*
+	 *     )
 	 */
 	protected void sequence_ParallelRegion(ISerializationContext context, ParallelRegion semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1643,7 +1629,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     PlatformAnnotation returns PlatformAnnotation
 	 *
 	 * Constraint:
-	 *     (name=ID value=STRING_LIT)
+	 *     (name=ANNOTATION_ID value=STRING_LIT)
 	 */
 	protected void sequence_PlatformAnnotation(ISerializationContext context, PlatformAnnotation semanticObject) {
 		if (errorAcceptor != null) {
@@ -1653,8 +1639,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.PLATFORM_ANNOTATION__VALUE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getPlatformAnnotationAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getPlatformAnnotationAccess().getValueSTRING_LITTerminalRuleCall_2_0(), semanticObject.getValue());
+		feeder.accept(grammarAccess.getPlatformAnnotationAccess().getNameANNOTATION_IDTerminalRuleCall_0_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getPlatformAnnotationAccess().getValueSTRING_LITTerminalRuleCall_1_0(), semanticObject.getValue());
 		feeder.finish();
 	}
 	
@@ -1935,8 +1921,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 * Contexts:
 	 *     AnnotatedElement returns Session
 	 *     Region returns Session
+	 *     RegionOrSession returns Session
 	 *     Session returns Session
-	 *     State returns Session
 	 *
 	 * Constraint:
 	 *     (
@@ -1948,7 +1934,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *         entry=Action? 
 	 *         exit=Action? 
 	 *         (substate+=State | internal+=InternalTransition)* 
-	 *         region+=ParallelRegion*
+	 *         region+=RegionOrSession*
 	 *     )
 	 */
 	protected void sequence_Session(ISerializationContext context, Session semanticObject) {
@@ -1989,7 +1975,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *         entry=Action? 
 	 *         exit=Action? 
 	 *         (substate+=State | internal+=InternalTransition)* 
-	 *         region+=ParallelRegion*
+	 *         region+=RegionOrSession*
 	 *     )
 	 */
 	protected void sequence_StateMachine(ISerializationContext context, CompositeState semanticObject) {

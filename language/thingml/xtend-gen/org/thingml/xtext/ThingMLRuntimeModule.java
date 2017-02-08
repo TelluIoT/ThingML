@@ -3,11 +3,17 @@
  */
 package org.thingml.xtext;
 
+import org.eclipse.xtext.conversion.IValueConverterService;
 import org.thingml.xtext.AbstractThingMLRuntimeModule;
+import org.thingml.xtext.ThingMLTerminalConverter;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 @SuppressWarnings("all")
 public class ThingMLRuntimeModule extends AbstractThingMLRuntimeModule {
+  @Override
+  public Class<? extends IValueConverterService> bindIValueConverterService() {
+    return ThingMLTerminalConverter.class;
+  }
 }

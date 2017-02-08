@@ -108,29 +108,41 @@
   <eClassifiers xsi:type="ecore:EClass" name="ProvidedPort" eSuperTypes="#//Port"/>
   <eClassifiers xsi:type="ecore:EClass" name="InternalPort" eSuperTypes="#//Port"/>
   <eClassifiers xsi:type="ecore:EClass" name="Region"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RegionOrSession" eSuperTypes="#//Region"/>
   <eClassifiers xsi:type="ecore:EClass" name="CompositeState" eSuperTypes="#//AnnotatedElement #//Region #//State">
     <eStructuralFeatures xsi:type="ecore:EReference" name="initial" eType="#//State"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="history" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="substate" upperBound="-1"
         eType="#//State" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="region" upperBound="-1"
-        eType="#//ParallelRegion" containment="true"/>
+        eType="#//RegionOrSession" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FinalState" eSuperTypes="#//AnnotatedElement #//State"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Session" eSuperTypes="#//AnnotatedElement #//Region #//State">
+  <eClassifiers xsi:type="ecore:EClass" name="Session" eSuperTypes="#//AnnotatedElement #//RegionOrSession">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxInstances" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="initial" eType="#//State"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
+        eType="#//Property" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entry" eType="#//Action"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exit" eType="#//Action"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="substate" upperBound="-1"
         eType="#//State" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="internal" upperBound="-1"
+        eType="#//InternalTransition" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="region" upperBound="-1"
-        eType="#//ParallelRegion" containment="true"/>
+        eType="#//RegionOrSession" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ParallelRegion" eSuperTypes="#//AnnotatedElement #//Region">
+  <eClassifiers xsi:type="ecore:EClass" name="ParallelRegion" eSuperTypes="#//AnnotatedElement #//RegionOrSession">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="initial" eType="#//State"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="history" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="substate" upperBound="-1"
         eType="#//State" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="region" upperBound="-1"
+        eType="#//RegionOrSession" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="#//AnnotatedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -284,8 +296,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Thing"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConfigPropertyAssign">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="instance" eType="#//InstanceRef"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="instance" eType="#//Instance"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="property" eType="#//Property"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="index" upperBound="-1"
         eType="#//Expression" containment="true"/>
@@ -298,21 +309,15 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Connector" eSuperTypes="#//AbstractConnector">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cli" eType="#//InstanceRef"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cli" eType="#//Instance"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="required" eType="#//RequiredPort"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="srv" eType="#//InstanceRef"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="srv" eType="#//Instance"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="provided" eType="#//ProvidedPort"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExternalConnector" eSuperTypes="#//AbstractConnector">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="inst" eType="#//InstanceRef"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inst" eType="#//Instance"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" eType="#//Port"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="protocol" eType="#//Protocol"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InstanceRef">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="instance" eType="#//Instance"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OrExpression" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" eType="#//Expression"

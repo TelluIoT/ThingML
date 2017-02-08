@@ -30,30 +30,30 @@ import org.eclipse.emf.ecore.EObject;
 public interface ConfigPropertyAssign extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Instance</b></em>' containment reference.
+   * Returns the value of the '<em><b>Instance</b></em>' reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Instance</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Instance</em>' reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Instance</em>' containment reference.
-   * @see #setInstance(InstanceRef)
+   * @return the value of the '<em>Instance</em>' reference.
+   * @see #setInstance(Instance)
    * @see org.thingml.xtext.thingML.ThingMLPackage#getConfigPropertyAssign_Instance()
-   * @model containment="true"
+   * @model
    * @generated
    */
-  InstanceRef getInstance();
+  Instance getInstance();
 
   /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.ConfigPropertyAssign#getInstance <em>Instance</em>}' containment reference.
+   * Sets the value of the '{@link org.thingml.xtext.thingML.ConfigPropertyAssign#getInstance <em>Instance</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Instance</em>' containment reference.
+   * @param value the new value of the '<em>Instance</em>' reference.
    * @see #getInstance()
    * @generated
    */
-  void setInstance(InstanceRef value);
+  void setInstance(Instance value);
 
   /**
    * Returns the value of the '<em><b>Property</b></em>' reference.

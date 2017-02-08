@@ -4,7 +4,6 @@
 package org.thingml.xtext.thingML.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -12,7 +11,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.thingml.xtext.thingML.Connector;
-import org.thingml.xtext.thingML.InstanceRef;
+import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -36,14 +35,14 @@ import org.thingml.xtext.thingML.ThingMLPackage;
 public class ConnectorImpl extends AbstractConnectorImpl implements Connector
 {
   /**
-   * The cached value of the '{@link #getCli() <em>Cli</em>}' containment reference.
+   * The cached value of the '{@link #getCli() <em>Cli</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getCli()
    * @generated
    * @ordered
    */
-  protected InstanceRef cli;
+  protected Instance cli;
 
   /**
    * The cached value of the '{@link #getRequired() <em>Required</em>}' reference.
@@ -56,14 +55,14 @@ public class ConnectorImpl extends AbstractConnectorImpl implements Connector
   protected RequiredPort required;
 
   /**
-   * The cached value of the '{@link #getSrv() <em>Srv</em>}' containment reference.
+   * The cached value of the '{@link #getSrv() <em>Srv</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getSrv()
    * @generated
    * @ordered
    */
-  protected InstanceRef srv;
+  protected Instance srv;
 
   /**
    * The cached value of the '{@link #getProvided() <em>Provided</em>}' reference.
@@ -101,7 +100,27 @@ public class ConnectorImpl extends AbstractConnectorImpl implements Connector
    * <!-- end-user-doc -->
    * @generated
    */
-  public InstanceRef getCli()
+  public Instance getCli()
+  {
+    if (cli != null && cli.eIsProxy())
+    {
+      InternalEObject oldCli = (InternalEObject)cli;
+      cli = (Instance)eResolveProxy(oldCli);
+      if (cli != oldCli)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.CONNECTOR__CLI, oldCli, cli));
+      }
+    }
+    return cli;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Instance basicGetCli()
   {
     return cli;
   }
@@ -111,37 +130,12 @@ public class ConnectorImpl extends AbstractConnectorImpl implements Connector
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetCli(InstanceRef newCli, NotificationChain msgs)
+  public void setCli(Instance newCli)
   {
-    InstanceRef oldCli = cli;
+    Instance oldCli = cli;
     cli = newCli;
     if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.CONNECTOR__CLI, oldCli, newCli);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setCli(InstanceRef newCli)
-  {
-    if (newCli != cli)
-    {
-      NotificationChain msgs = null;
-      if (cli != null)
-        msgs = ((InternalEObject)cli).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.CONNECTOR__CLI, null, msgs);
-      if (newCli != null)
-        msgs = ((InternalEObject)newCli).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.CONNECTOR__CLI, null, msgs);
-      msgs = basicSetCli(newCli, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.CONNECTOR__CLI, newCli, newCli));
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.CONNECTOR__CLI, oldCli, cli));
   }
 
   /**
@@ -192,7 +186,27 @@ public class ConnectorImpl extends AbstractConnectorImpl implements Connector
    * <!-- end-user-doc -->
    * @generated
    */
-  public InstanceRef getSrv()
+  public Instance getSrv()
+  {
+    if (srv != null && srv.eIsProxy())
+    {
+      InternalEObject oldSrv = (InternalEObject)srv;
+      srv = (Instance)eResolveProxy(oldSrv);
+      if (srv != oldSrv)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.CONNECTOR__SRV, oldSrv, srv));
+      }
+    }
+    return srv;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Instance basicGetSrv()
   {
     return srv;
   }
@@ -202,37 +216,12 @@ public class ConnectorImpl extends AbstractConnectorImpl implements Connector
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetSrv(InstanceRef newSrv, NotificationChain msgs)
+  public void setSrv(Instance newSrv)
   {
-    InstanceRef oldSrv = srv;
+    Instance oldSrv = srv;
     srv = newSrv;
     if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.CONNECTOR__SRV, oldSrv, newSrv);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setSrv(InstanceRef newSrv)
-  {
-    if (newSrv != srv)
-    {
-      NotificationChain msgs = null;
-      if (srv != null)
-        msgs = ((InternalEObject)srv).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.CONNECTOR__SRV, null, msgs);
-      if (newSrv != null)
-        msgs = ((InternalEObject)newSrv).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.CONNECTOR__SRV, null, msgs);
-      msgs = basicSetSrv(newSrv, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.CONNECTOR__SRV, newSrv, newSrv));
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.CONNECTOR__SRV, oldSrv, srv));
   }
 
   /**
@@ -284,35 +273,19 @@ public class ConnectorImpl extends AbstractConnectorImpl implements Connector
    * @generated
    */
   @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case ThingMLPackage.CONNECTOR__CLI:
-        return basicSetCli(null, msgs);
-      case ThingMLPackage.CONNECTOR__SRV:
-        return basicSetSrv(null, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
     {
       case ThingMLPackage.CONNECTOR__CLI:
-        return getCli();
+        if (resolve) return getCli();
+        return basicGetCli();
       case ThingMLPackage.CONNECTOR__REQUIRED:
         if (resolve) return getRequired();
         return basicGetRequired();
       case ThingMLPackage.CONNECTOR__SRV:
-        return getSrv();
+        if (resolve) return getSrv();
+        return basicGetSrv();
       case ThingMLPackage.CONNECTOR__PROVIDED:
         if (resolve) return getProvided();
         return basicGetProvided();
@@ -331,13 +304,13 @@ public class ConnectorImpl extends AbstractConnectorImpl implements Connector
     switch (featureID)
     {
       case ThingMLPackage.CONNECTOR__CLI:
-        setCli((InstanceRef)newValue);
+        setCli((Instance)newValue);
         return;
       case ThingMLPackage.CONNECTOR__REQUIRED:
         setRequired((RequiredPort)newValue);
         return;
       case ThingMLPackage.CONNECTOR__SRV:
-        setSrv((InstanceRef)newValue);
+        setSrv((Instance)newValue);
         return;
       case ThingMLPackage.CONNECTOR__PROVIDED:
         setProvided((ProvidedPort)newValue);
@@ -357,13 +330,13 @@ public class ConnectorImpl extends AbstractConnectorImpl implements Connector
     switch (featureID)
     {
       case ThingMLPackage.CONNECTOR__CLI:
-        setCli((InstanceRef)null);
+        setCli((Instance)null);
         return;
       case ThingMLPackage.CONNECTOR__REQUIRED:
         setRequired((RequiredPort)null);
         return;
       case ThingMLPackage.CONNECTOR__SRV:
-        setSrv((InstanceRef)null);
+        setSrv((Instance)null);
         return;
       case ThingMLPackage.CONNECTOR__PROVIDED:
         setProvided((ProvidedPort)null);

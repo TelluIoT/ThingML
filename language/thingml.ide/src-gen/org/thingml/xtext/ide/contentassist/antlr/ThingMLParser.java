@@ -44,11 +44,12 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getProvidedPortAccess().getAlternatives_5(), "rule__ProvidedPort__Alternatives_5");
 					put(grammarAccess.getInternalPortAccess().getAlternatives_5(), "rule__InternalPort__Alternatives_5");
 					put(grammarAccess.getRegionAccess().getAlternatives(), "rule__Region__Alternatives");
+					put(grammarAccess.getRegionOrSessionAccess().getAlternatives(), "rule__RegionOrSession__Alternatives");
 					put(grammarAccess.getStateMachineAccess().getAlternatives_10(), "rule__StateMachine__Alternatives_10");
 					put(grammarAccess.getCompositeStateAccess().getAlternatives_11(), "rule__CompositeState__Alternatives_11");
 					put(grammarAccess.getSessionAccess().getAlternatives_10(), "rule__Session__Alternatives_10");
 					put(grammarAccess.getStateAccess().getAlternatives(), "rule__State__Alternatives");
-					put(grammarAccess.getStateAccess().getAlternatives_4_7(), "rule__State__Alternatives_4_7");
+					put(grammarAccess.getStateAccess().getAlternatives_3_7(), "rule__State__Alternatives_3_7");
 					put(grammarAccess.getHandlerAccess().getAlternatives(), "rule__Handler__Alternatives");
 					put(grammarAccess.getActionAccess().getAlternatives(), "rule__Action__Alternatives");
 					put(grammarAccess.getVariableAccess().getAlternatives(), "rule__Variable__Alternatives");
@@ -117,9 +118,9 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getSessionAccess().getGroup_9(), "rule__Session__Group_9__0");
 					put(grammarAccess.getParallelRegionAccess().getGroup(), "rule__ParallelRegion__Group__0");
 					put(grammarAccess.getParallelRegionAccess().getGroup_4(), "rule__ParallelRegion__Group_4__0");
-					put(grammarAccess.getStateAccess().getGroup_4(), "rule__State__Group_4__0");
-					put(grammarAccess.getStateAccess().getGroup_4_5(), "rule__State__Group_4_5__0");
-					put(grammarAccess.getStateAccess().getGroup_4_6(), "rule__State__Group_4_6__0");
+					put(grammarAccess.getStateAccess().getGroup_3(), "rule__State__Group_3__0");
+					put(grammarAccess.getStateAccess().getGroup_3_5(), "rule__State__Group_3_5__0");
+					put(grammarAccess.getStateAccess().getGroup_3_6(), "rule__State__Group_3_6__0");
 					put(grammarAccess.getTransitionAccess().getGroup(), "rule__Transition__Group__0");
 					put(grammarAccess.getTransitionAccess().getGroup_5(), "rule__Transition__Group_5__0");
 					put(grammarAccess.getTransitionAccess().getGroup_6(), "rule__Transition__Group_6__0");
@@ -194,8 +195,8 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getThingMLModelAccess().getTypesAssignment_1_0(), "rule__ThingMLModel__TypesAssignment_1_0");
 					put(grammarAccess.getThingMLModelAccess().getProtocolsAssignment_1_1(), "rule__ThingMLModel__ProtocolsAssignment_1_1");
 					put(grammarAccess.getThingMLModelAccess().getConfigsAssignment_1_2(), "rule__ThingMLModel__ConfigsAssignment_1_2");
-					put(grammarAccess.getPlatformAnnotationAccess().getNameAssignment_1(), "rule__PlatformAnnotation__NameAssignment_1");
-					put(grammarAccess.getPlatformAnnotationAccess().getValueAssignment_2(), "rule__PlatformAnnotation__ValueAssignment_2");
+					put(grammarAccess.getPlatformAnnotationAccess().getNameAssignment_0(), "rule__PlatformAnnotation__NameAssignment_0");
+					put(grammarAccess.getPlatformAnnotationAccess().getValueAssignment_1(), "rule__PlatformAnnotation__ValueAssignment_1");
 					put(grammarAccess.getTypeRefAccess().getTypeAssignment_0(), "rule__TypeRef__TypeAssignment_0");
 					put(grammarAccess.getTypeRefAccess().getIsArrayAssignment_1_0(), "rule__TypeRef__IsArrayAssignment_1_0");
 					put(grammarAccess.getTypeRefAccess().getCardinalityAssignment_1_1(), "rule__TypeRef__CardinalityAssignment_1_1");
@@ -302,13 +303,14 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getParallelRegionAccess().getHistoryAssignment_4_1(), "rule__ParallelRegion__HistoryAssignment_4_1");
 					put(grammarAccess.getParallelRegionAccess().getAnnotationsAssignment_5(), "rule__ParallelRegion__AnnotationsAssignment_5");
 					put(grammarAccess.getParallelRegionAccess().getSubstateAssignment_7(), "rule__ParallelRegion__SubstateAssignment_7");
-					put(grammarAccess.getStateAccess().getNameAssignment_4_1(), "rule__State__NameAssignment_4_1");
-					put(grammarAccess.getStateAccess().getAnnotationsAssignment_4_2(), "rule__State__AnnotationsAssignment_4_2");
-					put(grammarAccess.getStateAccess().getPropertiesAssignment_4_4(), "rule__State__PropertiesAssignment_4_4");
-					put(grammarAccess.getStateAccess().getEntryAssignment_4_5_2(), "rule__State__EntryAssignment_4_5_2");
-					put(grammarAccess.getStateAccess().getExitAssignment_4_6_2(), "rule__State__ExitAssignment_4_6_2");
-					put(grammarAccess.getStateAccess().getInternalAssignment_4_7_0(), "rule__State__InternalAssignment_4_7_0");
-					put(grammarAccess.getStateAccess().getOutgoingAssignment_4_7_1(), "rule__State__OutgoingAssignment_4_7_1");
+					put(grammarAccess.getParallelRegionAccess().getRegionAssignment_8(), "rule__ParallelRegion__RegionAssignment_8");
+					put(grammarAccess.getStateAccess().getNameAssignment_3_1(), "rule__State__NameAssignment_3_1");
+					put(grammarAccess.getStateAccess().getAnnotationsAssignment_3_2(), "rule__State__AnnotationsAssignment_3_2");
+					put(grammarAccess.getStateAccess().getPropertiesAssignment_3_4(), "rule__State__PropertiesAssignment_3_4");
+					put(grammarAccess.getStateAccess().getEntryAssignment_3_5_2(), "rule__State__EntryAssignment_3_5_2");
+					put(grammarAccess.getStateAccess().getExitAssignment_3_6_2(), "rule__State__ExitAssignment_3_6_2");
+					put(grammarAccess.getStateAccess().getInternalAssignment_3_7_0(), "rule__State__InternalAssignment_3_7_0");
+					put(grammarAccess.getStateAccess().getOutgoingAssignment_3_7_1(), "rule__State__OutgoingAssignment_3_7_1");
 					put(grammarAccess.getTransitionAccess().getNameAssignment_1(), "rule__Transition__NameAssignment_1");
 					put(grammarAccess.getTransitionAccess().getTargetAssignment_3(), "rule__Transition__TargetAssignment_3");
 					put(grammarAccess.getTransitionAccess().getAnnotationsAssignment_4(), "rule__Transition__AnnotationsAssignment_4");
@@ -406,7 +408,6 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getExternalConnectorAccess().getPortAssignment_4(), "rule__ExternalConnector__PortAssignment_4");
 					put(grammarAccess.getExternalConnectorAccess().getProtocolAssignment_6(), "rule__ExternalConnector__ProtocolAssignment_6");
 					put(grammarAccess.getExternalConnectorAccess().getAnnotationsAssignment_7(), "rule__ExternalConnector__AnnotationsAssignment_7");
-					put(grammarAccess.getInstanceRefAccess().getInstanceAssignment(), "rule__InstanceRef__InstanceAssignment");
 				}
 			};
 		}

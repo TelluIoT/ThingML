@@ -96,7 +96,7 @@ public interface CompositeState extends AnnotatedElement, Region, State
 
   /**
    * Returns the value of the '<em><b>Region</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.ParallelRegion}.
+   * The list contents are of type {@link org.thingml.xtext.thingML.RegionOrSession}.
    * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Region</em>' containment reference list isn't clear,
@@ -108,6 +108,6 @@ public interface CompositeState extends AnnotatedElement, Region, State
    * @model containment="true"
    * @generated
    */
-  EList<ParallelRegion> getRegion();
+  EList<RegionOrSession> getRegion();
 
 } // CompositeState

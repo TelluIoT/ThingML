@@ -16,7 +16,7 @@ Import returns ThingMLModel:
 ;
 */
 PlatformAnnotation returns PlatformAnnotation:
-	'@' name=ID value=STRING_LIT ; 
+	name=ANNOTATION_ID value=STRING_LIT ; 
 
 AnnotatedElement:
 	Protocol | Function | Property | Message | Parameter | Port | Configuration | Handler | State | CompositeState | 
@@ -167,7 +167,11 @@ LengthArray returns LengthArray:
  *****************************************************************************/
 
 Region:
-	CompositeState | ParallelRegion | Session;
+	RegionOrSession | CompositeState;
+	
+RegionOrSession:
+	ParallelRegion | Session
+;
 
 StateMachine returns CompositeState:
 	'statechart' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
@@ -175,7 +179,7 @@ StateMachine returns CompositeState:
 		('on' 'entry' entry=Action)?
 		('on' 'exit' exit=Action)?
 		(substate+=State | internal+=InternalTransition)*
-		(region+=ParallelRegion)*
+		(region+=RegionOrSession)*
 	'}';
 	
 FinalState returns FinalState:
@@ -188,7 +192,7 @@ CompositeState returns CompositeState:
 		('on' 'entry' entry=Action)?
 		('on' 'exit' exit=Action)?
 		(substate+=State | internal+=InternalTransition | outgoing+=Transition)*
-		(region+=ParallelRegion)*
+		(region+=RegionOrSession)*
 	'}';
 
 Session returns Session:
@@ -197,16 +201,17 @@ Session returns Session:
 		('on' 'entry' entry=Action)?
 		('on' 'exit' exit=Action)?
 		(substate+=State | internal+=InternalTransition)*
-		(region+=ParallelRegion)*
+		(region+=RegionOrSession)*
 	'}';
 
 ParallelRegion returns ParallelRegion:
 	'region' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
 		(substate+=State)*
+		(region+=RegionOrSession)*
 	'}';
 	
 State returns State:
-	StateMachine | FinalState | CompositeState | Session |
+	StateMachine | FinalState | CompositeState |
 	'state' name=ID ( annotations+=PlatformAnnotation )* '{'
 		(properties+=Property)*
 		('on' 'entry' entry=Action)?
@@ -418,21 +423,21 @@ Instance returns Instance:
 	'instance' name=ID ':' type=[Thing|ID] ( annotations+=PlatformAnnotation )*;
 
 ConfigPropertyAssign returns ConfigPropertyAssign:
-	'set' instance=InstanceRef '.' property=[Property|ID] ('[' index+=Expression ']')* '=' init=Expression ( annotations+=PlatformAnnotation )*;
+	'set' instance=[Instance|ID] '.' property=[Property|ID] ('[' index+=Expression ']')* '=' init=Expression ( annotations+=PlatformAnnotation )*;
 
 
 AbstractConnector:
 	Connector | ExternalConnector;
 	
 Connector returns Connector:
-	'connector'	(name=ID)? cli=InstanceRef '.' required=[RequiredPort|ID] '=>' srv=InstanceRef '.' provided=[ProvidedPort|ID] ( annotations+=PlatformAnnotation )*;
+	'connector'	(name=ID)? cli=[Instance|ID] '.' required=[RequiredPort|ID] '=>' srv=[Instance|ID] '.' provided=[ProvidedPort|ID] ( annotations+=PlatformAnnotation )*;
 
 ExternalConnector returns ExternalConnector:
-	'connector'	(name=ID)? inst=InstanceRef '.' port=[Port|ID] 'over' protocol=[Protocol|ID] ( annotations+=PlatformAnnotation )*;
-
+	'connector'	(name=ID)? inst=[Instance|ID] '.' port=[Port|ID] 'over' protocol=[Protocol|ID] ( annotations+=PlatformAnnotation )*;
+/* 
 InstanceRef returns InstanceRef:
 	instance=[Instance|ID];
-
+*/
 
 /*****************************************************************************
  *       TERMINALS                                                           *
@@ -447,6 +452,10 @@ terminal FLOAT returns ecore::EDouble :
 ('0'..'9')+ '.' ('0'..'9')* (('e'|'E') ('+' | '-')? ('0'..'9')+)?
 | '.' ('0'..'9')+ (('e'|'E') ('+' | '-')? ('0'..'9')+)?
 | ('0'..'9')+ ('e'|'E') ('+' | '-')? ('0'..'9')+;
+
+terminal ANNOTATION_ID:
+	"@" ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+
 
 terminal STRING_EXT:  
 			"'" ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|"'") )* "'";

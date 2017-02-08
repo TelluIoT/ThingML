@@ -18,13 +18,14 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#isHistory <em>History</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getSubstate <em>Substate</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getRegion <em>Region</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getParallelRegion()
  * @model
  * @generated
  */
-public interface ParallelRegion extends AnnotatedElement, Region
+public interface ParallelRegion extends AnnotatedElement, RegionOrSession
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -119,5 +120,21 @@ public interface ParallelRegion extends AnnotatedElement, Region
    * @generated
    */
   EList<State> getSubstate();
+
+  /**
+   * Returns the value of the '<em><b>Region</b></em>' containment reference list.
+   * The list contents are of type {@link org.thingml.xtext.thingML.RegionOrSession}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Region</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Region</em>' containment reference list.
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getParallelRegion_Region()
+   * @model containment="true"
+   * @generated
+   */
+  EList<RegionOrSession> getRegion();
 
 } // ParallelRegion

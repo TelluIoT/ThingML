@@ -81,37 +81,33 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	public class PlatformAnnotationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.PlatformAnnotation");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cCommercialAtKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Assignment cValueAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cValueSTRING_LITTerminalRuleCall_2_0 = (RuleCall)cValueAssignment_2.eContents().get(0);
+		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cNameANNOTATION_IDTerminalRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
+		private final Assignment cValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cValueSTRING_LITTerminalRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
 		
 		/// *
 		//Import returns ThingMLModel:
 		//	"import" importURI=STRING_LIT
 		//;
 		// * / PlatformAnnotation:
-		//	'@' name=ID value=STRING_LIT;
+		//	name=ANNOTATION_ID value=STRING_LIT;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'@' name=ID value=STRING_LIT
+		//name=ANNOTATION_ID value=STRING_LIT
 		public Group getGroup() { return cGroup; }
 		
-		//'@'
-		public Keyword getCommercialAtKeyword_0() { return cCommercialAtKeyword_0; }
+		//name=ANNOTATION_ID
+		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
 		
-		//name=ID
-		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
-		
-		//ID
-		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
+		//ANNOTATION_ID
+		public RuleCall getNameANNOTATION_IDTerminalRuleCall_0_0() { return cNameANNOTATION_IDTerminalRuleCall_0_0; }
 		
 		//value=STRING_LIT
-		public Assignment getValueAssignment_2() { return cValueAssignment_2; }
+		public Assignment getValueAssignment_1() { return cValueAssignment_1; }
 		
 		//STRING_LIT
-		public RuleCall getValueSTRING_LITTerminalRuleCall_2_0() { return cValueSTRING_LITTerminalRuleCall_2_0; }
+		public RuleCall getValueSTRING_LITTerminalRuleCall_1_0() { return cValueSTRING_LITTerminalRuleCall_1_0; }
 	}
 	public class AnnotatedElementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.AnnotatedElement");
@@ -1389,9 +1385,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	public class RegionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Region");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cCompositeStateParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cParallelRegionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cSessionParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cRegionOrSessionParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cCompositeStateParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		/// *****************************************************************************
 		// *       CEP STREAMS                                                         *
@@ -1447,20 +1442,36 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		// 	* / / *****************************************************************************
 		// *       STATE MECHINES                                                      *
 		// ***************************************************************************** / Region:
-		//	CompositeState | ParallelRegion | Session;
+		//	RegionOrSession | CompositeState;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//CompositeState | ParallelRegion | Session
+		//RegionOrSession | CompositeState
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
+		//RegionOrSession
+		public RuleCall getRegionOrSessionParserRuleCall_0() { return cRegionOrSessionParserRuleCall_0; }
+		
 		//CompositeState
-		public RuleCall getCompositeStateParserRuleCall_0() { return cCompositeStateParserRuleCall_0; }
+		public RuleCall getCompositeStateParserRuleCall_1() { return cCompositeStateParserRuleCall_1; }
+	}
+	public class RegionOrSessionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.RegionOrSession");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cParallelRegionParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cSessionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		
+		//RegionOrSession:
+		//	ParallelRegion | Session;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//ParallelRegion | Session
+		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//ParallelRegion
-		public RuleCall getParallelRegionParserRuleCall_1() { return cParallelRegionParserRuleCall_1; }
+		public RuleCall getParallelRegionParserRuleCall_0() { return cParallelRegionParserRuleCall_0; }
 		
 		//Session
-		public RuleCall getSessionParserRuleCall_2() { return cSessionParserRuleCall_2; }
+		public RuleCall getSessionParserRuleCall_1() { return cSessionParserRuleCall_1; }
 	}
 	public class StateMachineElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.StateMachine");
@@ -1497,20 +1508,20 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cInternalAssignment_10_1 = (Assignment)cAlternatives_10.eContents().get(1);
 		private final RuleCall cInternalInternalTransitionParserRuleCall_10_1_0 = (RuleCall)cInternalAssignment_10_1.eContents().get(0);
 		private final Assignment cRegionAssignment_11 = (Assignment)cGroup.eContents().get(11);
-		private final RuleCall cRegionParallelRegionParserRuleCall_11_0 = (RuleCall)cRegionAssignment_11.eContents().get(0);
+		private final RuleCall cRegionRegionOrSessionParserRuleCall_11_0 = (RuleCall)cRegionAssignment_11.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_12 = (Keyword)cGroup.eContents().get(12);
 		
 		//StateMachine CompositeState:
 		//	'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 		//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
 		//	internal+=InternalTransition)*
-		//	region+=ParallelRegion*
+		//	region+=RegionOrSession*
 		//	'}'
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 		//properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
-		//internal+=InternalTransition)* region+=ParallelRegion* '}'
+		//internal+=InternalTransition)* region+=RegionOrSession* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//'statechart'
@@ -1606,11 +1617,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//InternalTransition
 		public RuleCall getInternalInternalTransitionParserRuleCall_10_1_0() { return cInternalInternalTransitionParserRuleCall_10_1_0; }
 		
-		//region+=ParallelRegion*
+		//region+=RegionOrSession*
 		public Assignment getRegionAssignment_11() { return cRegionAssignment_11; }
 		
-		//ParallelRegion
-		public RuleCall getRegionParallelRegionParserRuleCall_11_0() { return cRegionParallelRegionParserRuleCall_11_0; }
+		//RegionOrSession
+		public RuleCall getRegionRegionOrSessionParserRuleCall_11_0() { return cRegionRegionOrSessionParserRuleCall_11_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_12() { return cRightCurlyBracketKeyword_12; }
@@ -1716,20 +1727,20 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cOutgoingAssignment_11_2 = (Assignment)cAlternatives_11.eContents().get(2);
 		private final RuleCall cOutgoingTransitionParserRuleCall_11_2_0 = (RuleCall)cOutgoingAssignment_11_2.eContents().get(0);
 		private final Assignment cRegionAssignment_12 = (Assignment)cGroup.eContents().get(12);
-		private final RuleCall cRegionParallelRegionParserRuleCall_12_0 = (RuleCall)cRegionAssignment_12.eContents().get(0);
+		private final RuleCall cRegionRegionOrSessionParserRuleCall_12_0 = (RuleCall)cRegionAssignment_12.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_13 = (Keyword)cGroup.eContents().get(13);
 		
 		//CompositeState:
 		//	'composite' 'state' name=ID 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 		//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
 		//	internal+=InternalTransition | outgoing+=Transition)*
-		//	region+=ParallelRegion*
+		//	region+=RegionOrSession*
 		//	'}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'composite' 'state' name=ID 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 		//properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
-		//internal+=InternalTransition | outgoing+=Transition)* region+=ParallelRegion* '}'
+		//internal+=InternalTransition | outgoing+=Transition)* region+=RegionOrSession* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//'composite'
@@ -1834,11 +1845,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//Transition
 		public RuleCall getOutgoingTransitionParserRuleCall_11_2_0() { return cOutgoingTransitionParserRuleCall_11_2_0; }
 		
-		//region+=ParallelRegion*
+		//region+=RegionOrSession*
 		public Assignment getRegionAssignment_12() { return cRegionAssignment_12; }
 		
-		//ParallelRegion
-		public RuleCall getRegionParallelRegionParserRuleCall_12_0() { return cRegionParallelRegionParserRuleCall_12_0; }
+		//RegionOrSession
+		public RuleCall getRegionRegionOrSessionParserRuleCall_12_0() { return cRegionRegionOrSessionParserRuleCall_12_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_13() { return cRightCurlyBracketKeyword_13; }
@@ -1879,20 +1890,20 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cInternalAssignment_10_1 = (Assignment)cAlternatives_10.eContents().get(1);
 		private final RuleCall cInternalInternalTransitionParserRuleCall_10_1_0 = (RuleCall)cInternalAssignment_10_1.eContents().get(0);
 		private final Assignment cRegionAssignment_11 = (Assignment)cGroup.eContents().get(11);
-		private final RuleCall cRegionParallelRegionParserRuleCall_11_0 = (RuleCall)cRegionAssignment_11.eContents().get(0);
+		private final RuleCall cRegionRegionOrSessionParserRuleCall_11_0 = (RuleCall)cRegionAssignment_11.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_12 = (Keyword)cGroup.eContents().get(12);
 		
 		//Session:
 		//	'session' name=ID ('<' maxInstances=INT '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
 		//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
 		//	internal+=InternalTransition)*
-		//	region+=ParallelRegion*
+		//	region+=RegionOrSession*
 		//	'}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'session' name=ID ('<' maxInstances=INT '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
 		//properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
-		//internal+=InternalTransition)* region+=ParallelRegion* '}'
+		//internal+=InternalTransition)* region+=RegionOrSession* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//'session'
@@ -1991,11 +2002,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//InternalTransition
 		public RuleCall getInternalInternalTransitionParserRuleCall_10_1_0() { return cInternalInternalTransitionParserRuleCall_10_1_0; }
 		
-		//region+=ParallelRegion*
+		//region+=RegionOrSession*
 		public Assignment getRegionAssignment_11() { return cRegionAssignment_11; }
 		
-		//ParallelRegion
-		public RuleCall getRegionParallelRegionParserRuleCall_11_0() { return cRegionParallelRegionParserRuleCall_11_0; }
+		//RegionOrSession
+		public RuleCall getRegionRegionOrSessionParserRuleCall_11_0() { return cRegionRegionOrSessionParserRuleCall_11_0; }
 		
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_12() { return cRightCurlyBracketKeyword_12; }
@@ -2019,16 +2030,19 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cLeftCurlyBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		private final Assignment cSubstateAssignment_7 = (Assignment)cGroup.eContents().get(7);
 		private final RuleCall cSubstateStateParserRuleCall_7_0 = (RuleCall)cSubstateAssignment_7.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_8 = (Keyword)cGroup.eContents().get(8);
+		private final Assignment cRegionAssignment_8 = (Assignment)cGroup.eContents().get(8);
+		private final RuleCall cRegionRegionOrSessionParserRuleCall_8_0 = (RuleCall)cRegionAssignment_8.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_9 = (Keyword)cGroup.eContents().get(9);
 		
 		//ParallelRegion:
 		//	'region' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 		//	substate+=State*
+		//	region+=RegionOrSession*
 		//	'}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'region' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
-		//substate+=State* '}'
+		//substate+=State* region+=RegionOrSession* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//'region'
@@ -2079,8 +2093,14 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//State
 		public RuleCall getSubstateStateParserRuleCall_7_0() { return cSubstateStateParserRuleCall_7_0; }
 		
+		//region+=RegionOrSession*
+		public Assignment getRegionAssignment_8() { return cRegionAssignment_8; }
+		
+		//RegionOrSession
+		public RuleCall getRegionRegionOrSessionParserRuleCall_8_0() { return cRegionRegionOrSessionParserRuleCall_8_0; }
+		
 		//'}'
-		public Keyword getRightCurlyBracketKeyword_8() { return cRightCurlyBracketKeyword_8; }
+		public Keyword getRightCurlyBracketKeyword_9() { return cRightCurlyBracketKeyword_9; }
 	}
 	public class StateElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.State");
@@ -2088,44 +2108,42 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cStateMachineParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cFinalStateParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cCompositeStateParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cSessionParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final Group cGroup_4 = (Group)cAlternatives.eContents().get(4);
-		private final Keyword cStateKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
-		private final Assignment cNameAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_4_1_0 = (RuleCall)cNameAssignment_4_1.eContents().get(0);
-		private final Assignment cAnnotationsAssignment_4_2 = (Assignment)cGroup_4.eContents().get(2);
-		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_4_2_0 = (RuleCall)cAnnotationsAssignment_4_2.eContents().get(0);
-		private final Keyword cLeftCurlyBracketKeyword_4_3 = (Keyword)cGroup_4.eContents().get(3);
-		private final Assignment cPropertiesAssignment_4_4 = (Assignment)cGroup_4.eContents().get(4);
-		private final RuleCall cPropertiesPropertyParserRuleCall_4_4_0 = (RuleCall)cPropertiesAssignment_4_4.eContents().get(0);
-		private final Group cGroup_4_5 = (Group)cGroup_4.eContents().get(5);
-		private final Keyword cOnKeyword_4_5_0 = (Keyword)cGroup_4_5.eContents().get(0);
-		private final Keyword cEntryKeyword_4_5_1 = (Keyword)cGroup_4_5.eContents().get(1);
-		private final Assignment cEntryAssignment_4_5_2 = (Assignment)cGroup_4_5.eContents().get(2);
-		private final RuleCall cEntryActionParserRuleCall_4_5_2_0 = (RuleCall)cEntryAssignment_4_5_2.eContents().get(0);
-		private final Group cGroup_4_6 = (Group)cGroup_4.eContents().get(6);
-		private final Keyword cOnKeyword_4_6_0 = (Keyword)cGroup_4_6.eContents().get(0);
-		private final Keyword cExitKeyword_4_6_1 = (Keyword)cGroup_4_6.eContents().get(1);
-		private final Assignment cExitAssignment_4_6_2 = (Assignment)cGroup_4_6.eContents().get(2);
-		private final RuleCall cExitActionParserRuleCall_4_6_2_0 = (RuleCall)cExitAssignment_4_6_2.eContents().get(0);
-		private final Alternatives cAlternatives_4_7 = (Alternatives)cGroup_4.eContents().get(7);
-		private final Assignment cInternalAssignment_4_7_0 = (Assignment)cAlternatives_4_7.eContents().get(0);
-		private final RuleCall cInternalInternalTransitionParserRuleCall_4_7_0_0 = (RuleCall)cInternalAssignment_4_7_0.eContents().get(0);
-		private final Assignment cOutgoingAssignment_4_7_1 = (Assignment)cAlternatives_4_7.eContents().get(1);
-		private final RuleCall cOutgoingTransitionParserRuleCall_4_7_1_0 = (RuleCall)cOutgoingAssignment_4_7_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_4_8 = (Keyword)cGroup_4.eContents().get(8);
+		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
+		private final Keyword cStateKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
+		private final Assignment cNameAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cNameIDTerminalRuleCall_3_1_0 = (RuleCall)cNameAssignment_3_1.eContents().get(0);
+		private final Assignment cAnnotationsAssignment_3_2 = (Assignment)cGroup_3.eContents().get(2);
+		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_3_2_0 = (RuleCall)cAnnotationsAssignment_3_2.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_3_3 = (Keyword)cGroup_3.eContents().get(3);
+		private final Assignment cPropertiesAssignment_3_4 = (Assignment)cGroup_3.eContents().get(4);
+		private final RuleCall cPropertiesPropertyParserRuleCall_3_4_0 = (RuleCall)cPropertiesAssignment_3_4.eContents().get(0);
+		private final Group cGroup_3_5 = (Group)cGroup_3.eContents().get(5);
+		private final Keyword cOnKeyword_3_5_0 = (Keyword)cGroup_3_5.eContents().get(0);
+		private final Keyword cEntryKeyword_3_5_1 = (Keyword)cGroup_3_5.eContents().get(1);
+		private final Assignment cEntryAssignment_3_5_2 = (Assignment)cGroup_3_5.eContents().get(2);
+		private final RuleCall cEntryActionParserRuleCall_3_5_2_0 = (RuleCall)cEntryAssignment_3_5_2.eContents().get(0);
+		private final Group cGroup_3_6 = (Group)cGroup_3.eContents().get(6);
+		private final Keyword cOnKeyword_3_6_0 = (Keyword)cGroup_3_6.eContents().get(0);
+		private final Keyword cExitKeyword_3_6_1 = (Keyword)cGroup_3_6.eContents().get(1);
+		private final Assignment cExitAssignment_3_6_2 = (Assignment)cGroup_3_6.eContents().get(2);
+		private final RuleCall cExitActionParserRuleCall_3_6_2_0 = (RuleCall)cExitAssignment_3_6_2.eContents().get(0);
+		private final Alternatives cAlternatives_3_7 = (Alternatives)cGroup_3.eContents().get(7);
+		private final Assignment cInternalAssignment_3_7_0 = (Assignment)cAlternatives_3_7.eContents().get(0);
+		private final RuleCall cInternalInternalTransitionParserRuleCall_3_7_0_0 = (RuleCall)cInternalAssignment_3_7_0.eContents().get(0);
+		private final Assignment cOutgoingAssignment_3_7_1 = (Assignment)cAlternatives_3_7.eContents().get(1);
+		private final RuleCall cOutgoingTransitionParserRuleCall_3_7_1_0 = (RuleCall)cOutgoingAssignment_3_7_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_3_8 = (Keyword)cGroup_3.eContents().get(8);
 		
 		//State:
-		//	StateMachine | FinalState | CompositeState | Session |
+		//	StateMachine | FinalState | CompositeState |
 		//	'state' name=ID annotations+=PlatformAnnotation* '{'
 		//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (internal+=InternalTransition |
 		//	outgoing+=Transition)*
 		//	'}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//StateMachine | FinalState | CompositeState | Session | 'state' name=ID annotations+=PlatformAnnotation* '{'
-		//properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (internal+=InternalTransition |
-		//outgoing+=Transition)* '}'
+		//StateMachine | FinalState | CompositeState | 'state' name=ID annotations+=PlatformAnnotation* '{' properties+=Property*
+		//('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (internal+=InternalTransition | outgoing+=Transition)* '}'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//StateMachine
@@ -2137,84 +2155,81 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//CompositeState
 		public RuleCall getCompositeStateParserRuleCall_2() { return cCompositeStateParserRuleCall_2; }
 		
-		//Session
-		public RuleCall getSessionParserRuleCall_3() { return cSessionParserRuleCall_3; }
-		
 		//'state' name=ID annotations+=PlatformAnnotation* '{' properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit'
 		//exit=Action)? (internal+=InternalTransition | outgoing+=Transition)* '}'
-		public Group getGroup_4() { return cGroup_4; }
+		public Group getGroup_3() { return cGroup_3; }
 		
 		//'state'
-		public Keyword getStateKeyword_4_0() { return cStateKeyword_4_0; }
+		public Keyword getStateKeyword_3_0() { return cStateKeyword_3_0; }
 		
 		//name=ID
-		public Assignment getNameAssignment_4_1() { return cNameAssignment_4_1; }
+		public Assignment getNameAssignment_3_1() { return cNameAssignment_3_1; }
 		
 		//ID
-		public RuleCall getNameIDTerminalRuleCall_4_1_0() { return cNameIDTerminalRuleCall_4_1_0; }
+		public RuleCall getNameIDTerminalRuleCall_3_1_0() { return cNameIDTerminalRuleCall_3_1_0; }
 		
 		//annotations+=PlatformAnnotation*
-		public Assignment getAnnotationsAssignment_4_2() { return cAnnotationsAssignment_4_2; }
+		public Assignment getAnnotationsAssignment_3_2() { return cAnnotationsAssignment_3_2; }
 		
 		//PlatformAnnotation
-		public RuleCall getAnnotationsPlatformAnnotationParserRuleCall_4_2_0() { return cAnnotationsPlatformAnnotationParserRuleCall_4_2_0; }
+		public RuleCall getAnnotationsPlatformAnnotationParserRuleCall_3_2_0() { return cAnnotationsPlatformAnnotationParserRuleCall_3_2_0; }
 		
 		//'{'
-		public Keyword getLeftCurlyBracketKeyword_4_3() { return cLeftCurlyBracketKeyword_4_3; }
+		public Keyword getLeftCurlyBracketKeyword_3_3() { return cLeftCurlyBracketKeyword_3_3; }
 		
 		//properties+=Property*
-		public Assignment getPropertiesAssignment_4_4() { return cPropertiesAssignment_4_4; }
+		public Assignment getPropertiesAssignment_3_4() { return cPropertiesAssignment_3_4; }
 		
 		//Property
-		public RuleCall getPropertiesPropertyParserRuleCall_4_4_0() { return cPropertiesPropertyParserRuleCall_4_4_0; }
+		public RuleCall getPropertiesPropertyParserRuleCall_3_4_0() { return cPropertiesPropertyParserRuleCall_3_4_0; }
 		
 		//('on' 'entry' entry=Action)?
-		public Group getGroup_4_5() { return cGroup_4_5; }
+		public Group getGroup_3_5() { return cGroup_3_5; }
 		
 		//'on'
-		public Keyword getOnKeyword_4_5_0() { return cOnKeyword_4_5_0; }
+		public Keyword getOnKeyword_3_5_0() { return cOnKeyword_3_5_0; }
 		
 		//'entry'
-		public Keyword getEntryKeyword_4_5_1() { return cEntryKeyword_4_5_1; }
+		public Keyword getEntryKeyword_3_5_1() { return cEntryKeyword_3_5_1; }
 		
 		//entry=Action
-		public Assignment getEntryAssignment_4_5_2() { return cEntryAssignment_4_5_2; }
+		public Assignment getEntryAssignment_3_5_2() { return cEntryAssignment_3_5_2; }
 		
 		//Action
-		public RuleCall getEntryActionParserRuleCall_4_5_2_0() { return cEntryActionParserRuleCall_4_5_2_0; }
+		public RuleCall getEntryActionParserRuleCall_3_5_2_0() { return cEntryActionParserRuleCall_3_5_2_0; }
 		
 		//('on' 'exit' exit=Action)?
-		public Group getGroup_4_6() { return cGroup_4_6; }
+		public Group getGroup_3_6() { return cGroup_3_6; }
 		
 		//'on'
-		public Keyword getOnKeyword_4_6_0() { return cOnKeyword_4_6_0; }
+		public Keyword getOnKeyword_3_6_0() { return cOnKeyword_3_6_0; }
 		
 		//'exit'
-		public Keyword getExitKeyword_4_6_1() { return cExitKeyword_4_6_1; }
+		public Keyword getExitKeyword_3_6_1() { return cExitKeyword_3_6_1; }
 		
 		//exit=Action
-		public Assignment getExitAssignment_4_6_2() { return cExitAssignment_4_6_2; }
+		public Assignment getExitAssignment_3_6_2() { return cExitAssignment_3_6_2; }
 		
 		//Action
-		public RuleCall getExitActionParserRuleCall_4_6_2_0() { return cExitActionParserRuleCall_4_6_2_0; }
+		public RuleCall getExitActionParserRuleCall_3_6_2_0() { return cExitActionParserRuleCall_3_6_2_0; }
 		
 		//(internal+=InternalTransition | outgoing+=Transition)*
-		public Alternatives getAlternatives_4_7() { return cAlternatives_4_7; }
+		public Alternatives getAlternatives_3_7() { return cAlternatives_3_7; }
 		
 		//internal+=InternalTransition
-		public Assignment getInternalAssignment_4_7_0() { return cInternalAssignment_4_7_0; }
+		public Assignment getInternalAssignment_3_7_0() { return cInternalAssignment_3_7_0; }
 		
 		//InternalTransition
-		public RuleCall getInternalInternalTransitionParserRuleCall_4_7_0_0() { return cInternalInternalTransitionParserRuleCall_4_7_0_0; }
+		public RuleCall getInternalInternalTransitionParserRuleCall_3_7_0_0() { return cInternalInternalTransitionParserRuleCall_3_7_0_0; }
 		
 		//outgoing+=Transition
-		public Assignment getOutgoingAssignment_4_7_1() { return cOutgoingAssignment_4_7_1; }
+		public Assignment getOutgoingAssignment_3_7_1() { return cOutgoingAssignment_3_7_1; }
 		
 		//Transition
-		public RuleCall getOutgoingTransitionParserRuleCall_4_7_1_0() { return cOutgoingTransitionParserRuleCall_4_7_1_0; }
+		public RuleCall getOutgoingTransitionParserRuleCall_3_7_1_0() { return cOutgoingTransitionParserRuleCall_3_7_1_0; }
 		
 		//'}'
-		public Keyword getRightCurlyBracketKeyword_4_8() { return cRightCurlyBracketKeyword_4_8; }
+		public Keyword getRightCurlyBracketKeyword_3_8() { return cRightCurlyBracketKeyword_3_8; }
 	}
 	public class HandlerElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Handler");
@@ -4098,7 +4113,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cSetKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cInstanceAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cInstanceInstanceRefParserRuleCall_1_0 = (RuleCall)cInstanceAssignment_1.eContents().get(0);
+		private final CrossReference cInstanceInstanceCrossReference_1_0 = (CrossReference)cInstanceAssignment_1.eContents().get(0);
+		private final RuleCall cInstanceInstanceIDTerminalRuleCall_1_0_1 = (RuleCall)cInstanceInstanceCrossReference_1_0.eContents().get(1);
 		private final Keyword cFullStopKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Assignment cPropertyAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final CrossReference cPropertyPropertyCrossReference_3_0 = (CrossReference)cPropertyAssignment_3.eContents().get(0);
@@ -4115,22 +4131,25 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_7_0 = (RuleCall)cAnnotationsAssignment_7.eContents().get(0);
 		
 		//ConfigPropertyAssign:
-		//	'set' instance=InstanceRef '.' property=[Property] ('[' index+=Expression ']')* '=' init=Expression
+		//	'set' instance=[Instance] '.' property=[Property] ('[' index+=Expression ']')* '=' init=Expression
 		//	annotations+=PlatformAnnotation*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'set' instance=InstanceRef '.' property=[Property] ('[' index+=Expression ']')* '=' init=Expression
+		//'set' instance=[Instance] '.' property=[Property] ('[' index+=Expression ']')* '=' init=Expression
 		//annotations+=PlatformAnnotation*
 		public Group getGroup() { return cGroup; }
 		
 		//'set'
 		public Keyword getSetKeyword_0() { return cSetKeyword_0; }
 		
-		//instance=InstanceRef
+		//instance=[Instance]
 		public Assignment getInstanceAssignment_1() { return cInstanceAssignment_1; }
 		
-		//InstanceRef
-		public RuleCall getInstanceInstanceRefParserRuleCall_1_0() { return cInstanceInstanceRefParserRuleCall_1_0; }
+		//[Instance]
+		public CrossReference getInstanceInstanceCrossReference_1_0() { return cInstanceInstanceCrossReference_1_0; }
+		
+		//ID
+		public RuleCall getInstanceInstanceIDTerminalRuleCall_1_0_1() { return cInstanceInstanceIDTerminalRuleCall_1_0_1; }
 		
 		//'.'
 		public Keyword getFullStopKeyword_2() { return cFullStopKeyword_2; }
@@ -4200,14 +4219,16 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		private final Assignment cCliAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cCliInstanceRefParserRuleCall_2_0 = (RuleCall)cCliAssignment_2.eContents().get(0);
+		private final CrossReference cCliInstanceCrossReference_2_0 = (CrossReference)cCliAssignment_2.eContents().get(0);
+		private final RuleCall cCliInstanceIDTerminalRuleCall_2_0_1 = (RuleCall)cCliInstanceCrossReference_2_0.eContents().get(1);
 		private final Keyword cFullStopKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		private final Assignment cRequiredAssignment_4 = (Assignment)cGroup.eContents().get(4);
 		private final CrossReference cRequiredRequiredPortCrossReference_4_0 = (CrossReference)cRequiredAssignment_4.eContents().get(0);
 		private final RuleCall cRequiredRequiredPortIDTerminalRuleCall_4_0_1 = (RuleCall)cRequiredRequiredPortCrossReference_4_0.eContents().get(1);
 		private final Keyword cEqualsSignGreaterThanSignKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		private final Assignment cSrvAssignment_6 = (Assignment)cGroup.eContents().get(6);
-		private final RuleCall cSrvInstanceRefParserRuleCall_6_0 = (RuleCall)cSrvAssignment_6.eContents().get(0);
+		private final CrossReference cSrvInstanceCrossReference_6_0 = (CrossReference)cSrvAssignment_6.eContents().get(0);
+		private final RuleCall cSrvInstanceIDTerminalRuleCall_6_0_1 = (RuleCall)cSrvInstanceCrossReference_6_0.eContents().get(1);
 		private final Keyword cFullStopKeyword_7 = (Keyword)cGroup.eContents().get(7);
 		private final Assignment cProvidedAssignment_8 = (Assignment)cGroup.eContents().get(8);
 		private final CrossReference cProvidedProvidedPortCrossReference_8_0 = (CrossReference)cProvidedAssignment_8.eContents().get(0);
@@ -4216,11 +4237,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_9_0 = (RuleCall)cAnnotationsAssignment_9.eContents().get(0);
 		
 		//Connector:
-		//	'connector' name=ID? cli=InstanceRef '.' required=[RequiredPort] '=>' srv=InstanceRef '.' provided=[ProvidedPort]
+		//	'connector' name=ID? cli=[Instance] '.' required=[RequiredPort] '=>' srv=[Instance] '.' provided=[ProvidedPort]
 		//	annotations+=PlatformAnnotation*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'connector' name=ID? cli=InstanceRef '.' required=[RequiredPort] '=>' srv=InstanceRef '.' provided=[ProvidedPort]
+		//'connector' name=ID? cli=[Instance] '.' required=[RequiredPort] '=>' srv=[Instance] '.' provided=[ProvidedPort]
 		//annotations+=PlatformAnnotation*
 		public Group getGroup() { return cGroup; }
 		
@@ -4233,11 +4254,14 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
 		
-		//cli=InstanceRef
+		//cli=[Instance]
 		public Assignment getCliAssignment_2() { return cCliAssignment_2; }
 		
-		//InstanceRef
-		public RuleCall getCliInstanceRefParserRuleCall_2_0() { return cCliInstanceRefParserRuleCall_2_0; }
+		//[Instance]
+		public CrossReference getCliInstanceCrossReference_2_0() { return cCliInstanceCrossReference_2_0; }
+		
+		//ID
+		public RuleCall getCliInstanceIDTerminalRuleCall_2_0_1() { return cCliInstanceIDTerminalRuleCall_2_0_1; }
 		
 		//'.'
 		public Keyword getFullStopKeyword_3() { return cFullStopKeyword_3; }
@@ -4254,11 +4278,14 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//'=>'
 		public Keyword getEqualsSignGreaterThanSignKeyword_5() { return cEqualsSignGreaterThanSignKeyword_5; }
 		
-		//srv=InstanceRef
+		//srv=[Instance]
 		public Assignment getSrvAssignment_6() { return cSrvAssignment_6; }
 		
-		//InstanceRef
-		public RuleCall getSrvInstanceRefParserRuleCall_6_0() { return cSrvInstanceRefParserRuleCall_6_0; }
+		//[Instance]
+		public CrossReference getSrvInstanceCrossReference_6_0() { return cSrvInstanceCrossReference_6_0; }
+		
+		//ID
+		public RuleCall getSrvInstanceIDTerminalRuleCall_6_0_1() { return cSrvInstanceIDTerminalRuleCall_6_0_1; }
 		
 		//'.'
 		public Keyword getFullStopKeyword_7() { return cFullStopKeyword_7; }
@@ -4285,7 +4312,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		private final Assignment cInstAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cInstInstanceRefParserRuleCall_2_0 = (RuleCall)cInstAssignment_2.eContents().get(0);
+		private final CrossReference cInstInstanceCrossReference_2_0 = (CrossReference)cInstAssignment_2.eContents().get(0);
+		private final RuleCall cInstInstanceIDTerminalRuleCall_2_0_1 = (RuleCall)cInstInstanceCrossReference_2_0.eContents().get(1);
 		private final Keyword cFullStopKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		private final Assignment cPortAssignment_4 = (Assignment)cGroup.eContents().get(4);
 		private final CrossReference cPortPortCrossReference_4_0 = (CrossReference)cPortAssignment_4.eContents().get(0);
@@ -4298,10 +4326,10 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_7_0 = (RuleCall)cAnnotationsAssignment_7.eContents().get(0);
 		
 		//ExternalConnector:
-		//	'connector' name=ID? inst=InstanceRef '.' port=[Port] 'over' protocol=[Protocol] annotations+=PlatformAnnotation*;
+		//	'connector' name=ID? inst=[Instance] '.' port=[Port] 'over' protocol=[Protocol] annotations+=PlatformAnnotation*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'connector' name=ID? inst=InstanceRef '.' port=[Port] 'over' protocol=[Protocol] annotations+=PlatformAnnotation*
+		//'connector' name=ID? inst=[Instance] '.' port=[Port] 'over' protocol=[Protocol] annotations+=PlatformAnnotation*
 		public Group getGroup() { return cGroup; }
 		
 		//'connector'
@@ -4313,11 +4341,14 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
 		
-		//inst=InstanceRef
+		//inst=[Instance]
 		public Assignment getInstAssignment_2() { return cInstAssignment_2; }
 		
-		//InstanceRef
-		public RuleCall getInstInstanceRefParserRuleCall_2_0() { return cInstInstanceRefParserRuleCall_2_0; }
+		//[Instance]
+		public CrossReference getInstInstanceCrossReference_2_0() { return cInstInstanceCrossReference_2_0; }
+		
+		//ID
+		public RuleCall getInstInstanceIDTerminalRuleCall_2_0_1() { return cInstInstanceIDTerminalRuleCall_2_0_1; }
 		
 		//'.'
 		public Keyword getFullStopKeyword_3() { return cFullStopKeyword_3; }
@@ -4349,25 +4380,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//PlatformAnnotation
 		public RuleCall getAnnotationsPlatformAnnotationParserRuleCall_7_0() { return cAnnotationsPlatformAnnotationParserRuleCall_7_0; }
 	}
-	public class InstanceRefElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.InstanceRef");
-		private final Assignment cInstanceAssignment = (Assignment)rule.eContents().get(1);
-		private final CrossReference cInstanceInstanceCrossReference_0 = (CrossReference)cInstanceAssignment.eContents().get(0);
-		private final RuleCall cInstanceInstanceIDTerminalRuleCall_0_1 = (RuleCall)cInstanceInstanceCrossReference_0.eContents().get(1);
-		
-		//InstanceRef:
-		//	instance=[Instance];
-		@Override public ParserRule getRule() { return rule; }
-		
-		//instance=[Instance]
-		public Assignment getInstanceAssignment() { return cInstanceAssignment; }
-		
-		//[Instance]
-		public CrossReference getInstanceInstanceCrossReference_0() { return cInstanceInstanceCrossReference_0; }
-		
-		//ID
-		public RuleCall getInstanceInstanceIDTerminalRuleCall_0_1() { return cInstanceInstanceIDTerminalRuleCall_0_1; }
-	}
 	
 	
 	private final ThingMLModelElements pThingMLModel;
@@ -4391,6 +4403,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	private final ProvidedPortElements pProvidedPort;
 	private final InternalPortElements pInternalPort;
 	private final RegionElements pRegion;
+	private final RegionOrSessionElements pRegionOrSession;
 	private final StateMachineElements pStateMachine;
 	private final FinalStateElements pFinalState;
 	private final CompositeStateElements pCompositeState;
@@ -4444,10 +4457,10 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	private final AbstractConnectorElements pAbstractConnector;
 	private final ConnectorElements pConnector;
 	private final ExternalConnectorElements pExternalConnector;
-	private final InstanceRefElements pInstanceRef;
 	private final TerminalRule tID;
 	private final TerminalRule tINT;
 	private final TerminalRule tFLOAT;
+	private final TerminalRule tANNOTATION_ID;
 	private final TerminalRule tSTRING_EXT;
 	private final TerminalRule tSTRING_LIT;
 	private final TerminalRule tML_COMMENT;
@@ -4481,6 +4494,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pProvidedPort = new ProvidedPortElements();
 		this.pInternalPort = new InternalPortElements();
 		this.pRegion = new RegionElements();
+		this.pRegionOrSession = new RegionOrSessionElements();
 		this.pStateMachine = new StateMachineElements();
 		this.pFinalState = new FinalStateElements();
 		this.pCompositeState = new CompositeStateElements();
@@ -4534,10 +4548,10 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pAbstractConnector = new AbstractConnectorElements();
 		this.pConnector = new ConnectorElements();
 		this.pExternalConnector = new ExternalConnectorElements();
-		this.pInstanceRef = new InstanceRefElements();
 		this.tID = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.ID");
 		this.tINT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.INT");
 		this.tFLOAT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.FLOAT");
+		this.tANNOTATION_ID = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.ANNOTATION_ID");
 		this.tSTRING_EXT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.STRING_EXT");
 		this.tSTRING_LIT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.STRING_LIT");
 		this.tML_COMMENT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.ML_COMMENT");
@@ -4584,7 +4598,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	//	"import" importURI=STRING_LIT
 	//;
 	// * / PlatformAnnotation:
-	//	'@' name=ID value=STRING_LIT;
+	//	name=ANNOTATION_ID value=STRING_LIT;
 	public PlatformAnnotationElements getPlatformAnnotationAccess() {
 		return pPlatformAnnotation;
 	}
@@ -4854,7 +4868,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	// 	* / / *****************************************************************************
 	// *       STATE MECHINES                                                      *
 	// ***************************************************************************** / Region:
-	//	CompositeState | ParallelRegion | Session;
+	//	RegionOrSession | CompositeState;
 	public RegionElements getRegionAccess() {
 		return pRegion;
 	}
@@ -4863,11 +4877,21 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getRegionAccess().getRule();
 	}
 	
+	//RegionOrSession:
+	//	ParallelRegion | Session;
+	public RegionOrSessionElements getRegionOrSessionAccess() {
+		return pRegionOrSession;
+	}
+	
+	public ParserRule getRegionOrSessionRule() {
+		return getRegionOrSessionAccess().getRule();
+	}
+	
 	//StateMachine CompositeState:
 	//	'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 	//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
 	//	internal+=InternalTransition)*
-	//	region+=ParallelRegion*
+	//	region+=RegionOrSession*
 	//	'}'
 	public StateMachineElements getStateMachineAccess() {
 		return pStateMachine;
@@ -4891,7 +4915,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	//	'composite' 'state' name=ID 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 	//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
 	//	internal+=InternalTransition | outgoing+=Transition)*
-	//	region+=ParallelRegion*
+	//	region+=RegionOrSession*
 	//	'}';
 	public CompositeStateElements getCompositeStateAccess() {
 		return pCompositeState;
@@ -4905,7 +4929,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	//	'session' name=ID ('<' maxInstances=INT '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
 	//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
 	//	internal+=InternalTransition)*
-	//	region+=ParallelRegion*
+	//	region+=RegionOrSession*
 	//	'}';
 	public SessionElements getSessionAccess() {
 		return pSession;
@@ -4918,6 +4942,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	//ParallelRegion:
 	//	'region' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 	//	substate+=State*
+	//	region+=RegionOrSession*
 	//	'}';
 	public ParallelRegionElements getParallelRegionAccess() {
 		return pParallelRegion;
@@ -4928,7 +4953,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//State:
-	//	StateMachine | FinalState | CompositeState | Session |
+	//	StateMachine | FinalState | CompositeState |
 	//	'state' name=ID annotations+=PlatformAnnotation* '{'
 	//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (internal+=InternalTransition |
 	//	outgoing+=Transition)*
@@ -5399,7 +5424,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ConfigPropertyAssign:
-	//	'set' instance=InstanceRef '.' property=[Property] ('[' index+=Expression ']')* '=' init=Expression
+	//	'set' instance=[Instance] '.' property=[Property] ('[' index+=Expression ']')* '=' init=Expression
 	//	annotations+=PlatformAnnotation*;
 	public ConfigPropertyAssignElements getConfigPropertyAssignAccess() {
 		return pConfigPropertyAssign;
@@ -5420,7 +5445,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Connector:
-	//	'connector' name=ID? cli=InstanceRef '.' required=[RequiredPort] '=>' srv=InstanceRef '.' provided=[ProvidedPort]
+	//	'connector' name=ID? cli=[Instance] '.' required=[RequiredPort] '=>' srv=[Instance] '.' provided=[ProvidedPort]
 	//	annotations+=PlatformAnnotation*;
 	public ConnectorElements getConnectorAccess() {
 		return pConnector;
@@ -5431,23 +5456,13 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ExternalConnector:
-	//	'connector' name=ID? inst=InstanceRef '.' port=[Port] 'over' protocol=[Protocol] annotations+=PlatformAnnotation*;
+	//	'connector' name=ID? inst=[Instance] '.' port=[Port] 'over' protocol=[Protocol] annotations+=PlatformAnnotation*;
 	public ExternalConnectorElements getExternalConnectorAccess() {
 		return pExternalConnector;
 	}
 	
 	public ParserRule getExternalConnectorRule() {
 		return getExternalConnectorAccess().getRule();
-	}
-	
-	//InstanceRef:
-	//	instance=[Instance];
-	public InstanceRefElements getInstanceRefAccess() {
-		return pInstanceRef;
-	}
-	
-	public ParserRule getInstanceRefRule() {
-		return getInstanceRefAccess().getRule();
 	}
 	
 	//terminal ID:
@@ -5468,6 +5483,12 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	//	| '0'..'9'+ ('e' | 'E') ('+' | '-')? '0'..'9'+;
 	public TerminalRule getFLOATRule() {
 		return tFLOAT;
+	}
+	
+	//terminal ANNOTATION_ID:
+	//	"@" ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;
+	public TerminalRule getANNOTATION_IDRule() {
+		return tANNOTATION_ID;
 	}
 	
 	//terminal STRING_EXT:

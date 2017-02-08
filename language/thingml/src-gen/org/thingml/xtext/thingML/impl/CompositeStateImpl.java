@@ -21,9 +21,9 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.InternalTransition;
-import org.thingml.xtext.thingML.ParallelRegion;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Region;
+import org.thingml.xtext.thingML.RegionOrSession;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.Transition;
@@ -170,7 +170,7 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
    * @generated
    * @ordered
    */
-  protected EList<ParallelRegion> region;
+  protected EList<RegionOrSession> region;
 
   /**
    * <!-- begin-user-doc -->
@@ -439,11 +439,11 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<ParallelRegion> getRegion()
+  public EList<RegionOrSession> getRegion()
   {
     if (region == null)
     {
-      region = new EObjectContainmentEList<ParallelRegion>(ParallelRegion.class, this, ThingMLPackage.COMPOSITE_STATE__REGION);
+      region = new EObjectContainmentEList<RegionOrSession>(RegionOrSession.class, this, ThingMLPackage.COMPOSITE_STATE__REGION);
     }
     return region;
   }
@@ -555,7 +555,7 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
         return;
       case ThingMLPackage.COMPOSITE_STATE__REGION:
         getRegion().clear();
-        getRegion().addAll((Collection<? extends ParallelRegion>)newValue);
+        getRegion().addAll((Collection<? extends RegionOrSession>)newValue);
         return;
     }
     super.eSet(featureID, newValue);

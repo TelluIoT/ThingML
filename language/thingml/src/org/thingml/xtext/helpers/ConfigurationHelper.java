@@ -46,7 +46,7 @@ public class ConfigurationHelper {
 
     }
 
-
+/*
     private static Configuration merge(Configuration self) {
 
         if (MergedConfigurationCache.getMergedConfiguration(self) != null)
@@ -71,7 +71,7 @@ public class ConfigurationHelper {
 
         return copy;
     }
-
+*/
 
     private static void _merge(Configuration self, Map<String, Instance> instances, List<AbstractConnector> connectors, Map<String, ConfigPropertyAssign> assigns) {
         // Add the instances of this configuration (actually a copy)
@@ -106,11 +106,11 @@ public class ConfigurationHelper {
         for(Connector c : ConfigurationHelper.getInternalConnectors(self)) {
             Connector copy = EcoreUtil.copy(c);
             // look for the instances:
-            Instance cli = instances.get(c.getCli().getInstance().getName());
-            Instance srv = instances.get(c.getSrv().getInstance().getName());
+            Instance cli = instances.get(c.getCli().getName());
+            Instance srv = instances.get(c.getSrv().getName());
 
-            copy.getCli().setInstance(cli);
-            copy.getSrv().setInstance(srv);
+            copy.setCli(cli);
+            copy.setSrv(srv);
 
             connectors.add(copy);
         }
@@ -118,9 +118,9 @@ public class ConfigurationHelper {
         for(ExternalConnector c : ConfigurationHelper.getExternalConnectors(self)) {
             ExternalConnector copy = EcoreUtil.copy(c);
             // look for the instances:
-            Instance cli = instances.get(c.getInst().getInstance().getName());
+            Instance cli = instances.get(c.getInst().getName());
 
-            copy.getInst().setInstance(cli);
+            copy.setInst(cli);
 
             connectors.add(copy);
         }
@@ -128,10 +128,10 @@ public class ConfigurationHelper {
         for(ConfigPropertyAssign a : self.getPropassigns()) {
             ConfigPropertyAssign copy = EcoreUtil.copy(a);
 
-            String inst_name = a.getInstance().getInstance().getName();
+            String inst_name = a.getInstance().getName();
 
             Instance inst = instances.get(inst_name);
-            copy.getInstance().setInstance(inst);
+            copy.setInstance(inst);
 
             String id = inst_name + "_" + a.getProperty().getName();
 
@@ -165,7 +165,8 @@ public class ConfigurationHelper {
     public static Set<Instance> allInstances(Configuration self) {
         MergedConfigurationCache.clearCache();
         Set<Instance> result = new HashSet<Instance>();
-        result.addAll(merge(self).getInstances());
+        //result.addAll(merge(self).getInstances());
+        result.addAll(self.getInstances());
         return result;
     }
 
@@ -173,7 +174,8 @@ public class ConfigurationHelper {
     public static Set<Connector> allConnectors(Configuration self) {
         Set<Connector> result = new HashSet<Connector>();
         MergedConfigurationCache.clearCache();
-        result.addAll(ConfigurationHelper.getInternalConnectors(merge(self)));
+        //result.addAll(ConfigurationHelper.getInternalConnectors(merge(self)));
+        result.addAll(ConfigurationHelper.getInternalConnectors(self));
         return result;
     }
 
@@ -181,7 +183,8 @@ public class ConfigurationHelper {
     public static Set<ConfigPropertyAssign> allPropAssigns(Configuration self) {
         Set<ConfigPropertyAssign> result = new HashSet<ConfigPropertyAssign>();
         MergedConfigurationCache.clearCache();
-        result.addAll(merge(self).getPropassigns());
+        //result.addAll(merge(self).getPropassigns());
+        result.addAll(self.getPropassigns());
         return result;
     }
 
@@ -262,7 +265,7 @@ public class ConfigurationHelper {
 
             Set<ConfigPropertyAssign> confassigns = new HashSet<ConfigPropertyAssign>();
             for(ConfigPropertyAssign a : allPropAssigns(self)) {
-                if (EcoreUtil.equals(a.getInstance().getInstance(), i) && EcoreUtil.equals(a.getProperty(), p)) {
+                if (EcoreUtil.equals(a.getInstance(), i) && EcoreUtil.equals(a.getProperty(), p)) {
                     confassigns.add(a);
                 }
             }
@@ -330,7 +333,7 @@ public class ConfigurationHelper {
         for(Instance i : allInstances(self)) {
             if (EcoreUtil.equals(i.getType(), t)) {
                 for(Connector c : allConnectors(self)) {
-                    if(EcoreUtil.equals(c.getCli().getInstance(), i) && EcoreUtil.equals(c.getRequired(), p)) {
+                    if(EcoreUtil.equals(c.getCli(), i) && EcoreUtil.equals(c.getRequired(), p)) {
                         for(Message m : p.getSends()) {
                             MSGLOOP: for(Message m2 : c.getProvided().getReceives()) { //TODO: we should implement a derived property on Thing to compute input and output messages, to avoid duplicating code (see below)
                                 if (EcoreUtil.equals(m, m2)) {
@@ -344,7 +347,7 @@ public class ConfigurationHelper {
                                         itable = new ArrayList<AbstractMap.SimpleImmutableEntry<Instance, Port>>();
                                         mtable.put(i, itable);
                                     }
-                                    itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getSrv().getInstance(), c.getProvided()));
+                                    itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getSrv(), c.getProvided()));
                                     //break MSGLOOP;
                                 }
                             }
@@ -352,7 +355,7 @@ public class ConfigurationHelper {
                     }
                 }
                 for(Connector c : allConnectors(self)) {
-                    if(EcoreUtil.equals(c.getSrv().getInstance(), i) && EcoreUtil.equals(c.getProvided(), p)) {
+                    if(EcoreUtil.equals(c.getSrv(), i) && EcoreUtil.equals(c.getProvided(), p)) {
                         for(Message m : p.getSends()) {
                             MSGLOOP: for(Message m2 : c.getRequired().getReceives()) { //TODO: remove duplicated code
                                 if (EcoreUtil.equals(m, m2)) {
@@ -366,7 +369,7 @@ public class ConfigurationHelper {
                                         itable = new ArrayList<AbstractMap.SimpleImmutableEntry<Instance, Port>>();
                                         mtable.put(i, itable);
                                     }
-                                    itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getCli().getInstance(), c.getRequired()));
+                                    itable.add(new AbstractMap.SimpleImmutableEntry<Instance, Port>(c.getCli(), c.getRequired()));
                                     //break MSGLOOP;
                                 }
                             }
@@ -405,8 +408,8 @@ public class ConfigurationHelper {
     public static List<Instance> getClients(Configuration self, Instance i) {
         List<Instance> result = new ArrayList<Instance>();
         for(Connector c : allConnectors(self)) {
-            if (EcoreUtil.equals(c.getSrv().getInstance(), i)) {
-                result.add(c.getCli().getInstance());
+            if (EcoreUtil.equals(c.getSrv(), i)) {
+                result.add(c.getCli());
             }
         }
         return result;
@@ -416,8 +419,8 @@ public class ConfigurationHelper {
     public static List<Instance> getServers(Configuration self, Instance i) {
         List<Instance> result = new ArrayList<Instance>();
         for(Connector c : allConnectors(self)) {
-            if (EcoreUtil.equals(c.getCli().getInstance(), i)) {
-                result.add(c.getSrv().getInstance());
+            if (EcoreUtil.equals(c.getCli(), i)) {
+                result.add(c.getSrv());
             }
         }
         return result;
@@ -431,14 +434,14 @@ public class ConfigurationHelper {
             for (Port p : ThingMLHelpers.allPorts(i.getType())) {
                 boolean connected = false;
                 for(Connector c : allConnectors(self)) {
-                    if ((EcoreUtil.equals(c.getCli().getInstance(), i) && EcoreUtil.equals(c.getRequired(), p)) || (EcoreUtil.equals(c.getProvided(), p) && EcoreUtil.equals(c.getSrv().getInstance(), i))) {
+                    if ((EcoreUtil.equals(c.getCli(), i) && EcoreUtil.equals(c.getRequired(), p)) || (EcoreUtil.equals(c.getProvided(), p) && EcoreUtil.equals(c.getSrv(), i))) {
                         connected = true;
                         break;
                     }
                 }
                 for(ExternalConnector c : getExternalConnectors(self)) {
                     //System.out.println("External connector " + c.getInst().getInstance().qname("_") + "." + c.getPort().getName() + "? " + i.getName() + "." + p.getName());
-                    if (EcoreUtil.equals(c.getInst().getInstance(), i) && EcoreUtil.equals(c.getPort(), p)) {
+                    if (EcoreUtil.equals(c.getInst(), i) && EcoreUtil.equals(c.getPort(), p)) {
                         System.out.println("\tis connected to " + i.getName() + "." + p.getName());
                         connected = true;
                         break;
@@ -477,8 +480,8 @@ public class ConfigurationHelper {
         //List<Connector> toBeRemoved = new LinkedList<Connector>();
         Instance needed;
         for (Connector co : Cos) {
-            if(co.getCli().getInstance().getName().compareTo(cur.getName()) == 0) {
-                needed = co.getSrv().getInstance();
+            if(co.getCli().getName().compareTo(cur.getName()) == 0) {
+                needed = co.getSrv();
                 for(Instance inst : Instances) {
                     if(inst.getName().compareTo(needed.getName()) == 0) {
                         Instances.remove(inst);

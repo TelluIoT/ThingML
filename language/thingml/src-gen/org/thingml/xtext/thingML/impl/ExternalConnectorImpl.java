@@ -4,7 +4,6 @@
 package org.thingml.xtext.thingML.impl;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -12,7 +11,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.thingml.xtext.thingML.ExternalConnector;
-import org.thingml.xtext.thingML.InstanceRef;
+import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -35,14 +34,14 @@ import org.thingml.xtext.thingML.ThingMLPackage;
 public class ExternalConnectorImpl extends AbstractConnectorImpl implements ExternalConnector
 {
   /**
-   * The cached value of the '{@link #getInst() <em>Inst</em>}' containment reference.
+   * The cached value of the '{@link #getInst() <em>Inst</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getInst()
    * @generated
    * @ordered
    */
-  protected InstanceRef inst;
+  protected Instance inst;
 
   /**
    * The cached value of the '{@link #getPort() <em>Port</em>}' reference.
@@ -90,7 +89,27 @@ public class ExternalConnectorImpl extends AbstractConnectorImpl implements Exte
    * <!-- end-user-doc -->
    * @generated
    */
-  public InstanceRef getInst()
+  public Instance getInst()
+  {
+    if (inst != null && inst.eIsProxy())
+    {
+      InternalEObject oldInst = (InternalEObject)inst;
+      inst = (Instance)eResolveProxy(oldInst);
+      if (inst != oldInst)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.EXTERNAL_CONNECTOR__INST, oldInst, inst));
+      }
+    }
+    return inst;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Instance basicGetInst()
   {
     return inst;
   }
@@ -100,37 +119,12 @@ public class ExternalConnectorImpl extends AbstractConnectorImpl implements Exte
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetInst(InstanceRef newInst, NotificationChain msgs)
+  public void setInst(Instance newInst)
   {
-    InstanceRef oldInst = inst;
+    Instance oldInst = inst;
     inst = newInst;
     if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.EXTERNAL_CONNECTOR__INST, oldInst, newInst);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setInst(InstanceRef newInst)
-  {
-    if (newInst != inst)
-    {
-      NotificationChain msgs = null;
-      if (inst != null)
-        msgs = ((InternalEObject)inst).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.EXTERNAL_CONNECTOR__INST, null, msgs);
-      if (newInst != null)
-        msgs = ((InternalEObject)newInst).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.EXTERNAL_CONNECTOR__INST, null, msgs);
-      msgs = basicSetInst(newInst, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.EXTERNAL_CONNECTOR__INST, newInst, newInst));
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.EXTERNAL_CONNECTOR__INST, oldInst, inst));
   }
 
   /**
@@ -225,28 +219,13 @@ public class ExternalConnectorImpl extends AbstractConnectorImpl implements Exte
    * @generated
    */
   @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
-  {
-    switch (featureID)
-    {
-      case ThingMLPackage.EXTERNAL_CONNECTOR__INST:
-        return basicSetInst(null, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
     {
       case ThingMLPackage.EXTERNAL_CONNECTOR__INST:
-        return getInst();
+        if (resolve) return getInst();
+        return basicGetInst();
       case ThingMLPackage.EXTERNAL_CONNECTOR__PORT:
         if (resolve) return getPort();
         return basicGetPort();
@@ -268,7 +247,7 @@ public class ExternalConnectorImpl extends AbstractConnectorImpl implements Exte
     switch (featureID)
     {
       case ThingMLPackage.EXTERNAL_CONNECTOR__INST:
-        setInst((InstanceRef)newValue);
+        setInst((Instance)newValue);
         return;
       case ThingMLPackage.EXTERNAL_CONNECTOR__PORT:
         setPort((Port)newValue);
@@ -291,7 +270,7 @@ public class ExternalConnectorImpl extends AbstractConnectorImpl implements Exte
     switch (featureID)
     {
       case ThingMLPackage.EXTERNAL_CONNECTOR__INST:
-        setInst((InstanceRef)null);
+        setInst((Instance)null);
         return;
       case ThingMLPackage.EXTERNAL_CONNECTOR__PORT:
         setPort((Port)null);

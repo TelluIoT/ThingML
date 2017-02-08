@@ -86,6 +86,7 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.PROVIDED_PORT: return createProvidedPort();
       case ThingMLPackage.INTERNAL_PORT: return createInternalPort();
       case ThingMLPackage.REGION: return createRegion();
+      case ThingMLPackage.REGION_OR_SESSION: return createRegionOrSession();
       case ThingMLPackage.COMPOSITE_STATE: return createCompositeState();
       case ThingMLPackage.FINAL_STATE: return createFinalState();
       case ThingMLPackage.SESSION: return createSession();
@@ -128,7 +129,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.ABSTRACT_CONNECTOR: return createAbstractConnector();
       case ThingMLPackage.CONNECTOR: return createConnector();
       case ThingMLPackage.EXTERNAL_CONNECTOR: return createExternalConnector();
-      case ThingMLPackage.INSTANCE_REF: return createInstanceRef();
       case ThingMLPackage.OR_EXPRESSION: return createOrExpression();
       case ThingMLPackage.AND_EXPRESSION: return createAndExpression();
       case ThingMLPackage.EQUALS_EXPRESSION: return createEqualsExpression();
@@ -379,6 +379,17 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     RegionImpl region = new RegionImpl();
     return region;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public RegionOrSession createRegionOrSession()
+  {
+    RegionOrSessionImpl regionOrSession = new RegionOrSessionImpl();
+    return regionOrSession;
   }
 
   /**
@@ -841,17 +852,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     ExternalConnectorImpl externalConnector = new ExternalConnectorImpl();
     return externalConnector;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public InstanceRef createInstanceRef()
-  {
-    InstanceRefImpl instanceRef = new InstanceRefImpl();
-    return instanceRef;
   }
 
   /**

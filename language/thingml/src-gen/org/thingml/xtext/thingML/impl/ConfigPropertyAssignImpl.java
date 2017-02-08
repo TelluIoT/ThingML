@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Expression;
-import org.thingml.xtext.thingML.InstanceRef;
+import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -46,14 +46,14 @@ import org.thingml.xtext.thingML.ThingMLPackage;
 public class ConfigPropertyAssignImpl extends MinimalEObjectImpl.Container implements ConfigPropertyAssign
 {
   /**
-   * The cached value of the '{@link #getInstance() <em>Instance</em>}' containment reference.
+   * The cached value of the '{@link #getInstance() <em>Instance</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getInstance()
    * @generated
    * @ordered
    */
-  protected InstanceRef instance;
+  protected Instance instance;
 
   /**
    * The cached value of the '{@link #getProperty() <em>Property</em>}' reference.
@@ -121,7 +121,27 @@ public class ConfigPropertyAssignImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
-  public InstanceRef getInstance()
+  public Instance getInstance()
+  {
+    if (instance != null && instance.eIsProxy())
+    {
+      InternalEObject oldInstance = (InternalEObject)instance;
+      instance = (Instance)eResolveProxy(oldInstance);
+      if (instance != oldInstance)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE, oldInstance, instance));
+      }
+    }
+    return instance;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Instance basicGetInstance()
   {
     return instance;
   }
@@ -131,37 +151,12 @@ public class ConfigPropertyAssignImpl extends MinimalEObjectImpl.Container imple
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetInstance(InstanceRef newInstance, NotificationChain msgs)
+  public void setInstance(Instance newInstance)
   {
-    InstanceRef oldInstance = instance;
+    Instance oldInstance = instance;
     instance = newInstance;
     if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE, oldInstance, newInstance);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setInstance(InstanceRef newInstance)
-  {
-    if (newInstance != instance)
-    {
-      NotificationChain msgs = null;
-      if (instance != null)
-        msgs = ((InternalEObject)instance).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE, null, msgs);
-      if (newInstance != null)
-        msgs = ((InternalEObject)newInstance).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE, null, msgs);
-      msgs = basicSetInstance(newInstance, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE, newInstance, newInstance));
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE, oldInstance, instance));
   }
 
   /**
@@ -293,8 +288,6 @@ public class ConfigPropertyAssignImpl extends MinimalEObjectImpl.Container imple
   {
     switch (featureID)
     {
-      case ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE:
-        return basicSetInstance(null, msgs);
       case ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INDEX:
         return ((InternalEList<?>)getIndex()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INIT:
@@ -316,7 +309,8 @@ public class ConfigPropertyAssignImpl extends MinimalEObjectImpl.Container imple
     switch (featureID)
     {
       case ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE:
-        return getInstance();
+        if (resolve) return getInstance();
+        return basicGetInstance();
       case ThingMLPackage.CONFIG_PROPERTY_ASSIGN__PROPERTY:
         if (resolve) return getProperty();
         return basicGetProperty();
@@ -342,7 +336,7 @@ public class ConfigPropertyAssignImpl extends MinimalEObjectImpl.Container imple
     switch (featureID)
     {
       case ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE:
-        setInstance((InstanceRef)newValue);
+        setInstance((Instance)newValue);
         return;
       case ThingMLPackage.CONFIG_PROPERTY_ASSIGN__PROPERTY:
         setProperty((Property)newValue);
@@ -373,7 +367,7 @@ public class ConfigPropertyAssignImpl extends MinimalEObjectImpl.Container imple
     switch (featureID)
     {
       case ThingMLPackage.CONFIG_PROPERTY_ASSIGN__INSTANCE:
-        setInstance((InstanceRef)null);
+        setInstance((Instance)null);
         return;
       case ThingMLPackage.CONFIG_PROPERTY_ASSIGN__PROPERTY:
         setProperty((Property)null);

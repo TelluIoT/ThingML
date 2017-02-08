@@ -181,6 +181,11 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createRegionAdapter();
       }
       @Override
+      public Adapter caseRegionOrSession(RegionOrSession object)
+      {
+        return createRegionOrSessionAdapter();
+      }
+      @Override
       public Adapter caseCompositeState(CompositeState object)
       {
         return createCompositeStateAdapter();
@@ -389,11 +394,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
       public Adapter caseExternalConnector(ExternalConnector object)
       {
         return createExternalConnectorAdapter();
-      }
-      @Override
-      public Adapter caseInstanceRef(InstanceRef object)
-      {
-        return createInstanceRefAdapter();
       }
       @Override
       public Adapter caseOrExpression(OrExpression object)
@@ -808,6 +808,21 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createRegionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.RegionOrSession <em>Region Or Session</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.RegionOrSession
+   * @generated
+   */
+  public Adapter createRegionOrSessionAdapter()
   {
     return null;
   }
@@ -1438,21 +1453,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createExternalConnectorAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.InstanceRef <em>Instance Ref</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.InstanceRef
-   * @generated
-   */
-  public Adapter createInstanceRefAdapter()
   {
     return null;
   }

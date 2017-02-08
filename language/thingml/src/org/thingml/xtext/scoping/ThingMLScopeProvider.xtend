@@ -39,6 +39,8 @@ import org.thingml.xtext.helpers.CompositeStateHelper
 import org.eclipse.emf.ecore.ENamedElement
 import org.thingml.xtext.thingML.EventReference
 import java.util.logging.Handler
+import org.thingml.xtext.helpers.ThingMLElementHelper
+import org.thingml.xtext.helpers.ThingHelper
 
 /**
  * This class contains custom scoping description.
@@ -137,6 +139,15 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.eventReference_Parameter) {
 			return scopeForEventReference_Parameter(context as EventReference);
 		}
+		else if (reference == p.session_Initial) {
+			return scopeForSession_Initial(context as Session);
+		}
+		else if (reference == p.startSession_Session) {
+			return scopeForStartSession_Session(context as StartSession);
+		}
+		else if (reference == p.configPropertyAssign_Instance || reference == p.connector_Cli || reference == p.connector_Srv || reference == p.externalConnector_Inst) {
+			return scopeForConfigurationInstances(ThingMLElementHelper.findContainingConfiguration(context));
+		}
 		else {
 			System.out.println("INFO: Resolving reference : " + reference.name + " in Class " + (reference.eContainer as ENamedElement).getName);
 		}
@@ -148,6 +159,14 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	
 	protected ArrayList EMPTY = new ArrayList();
 	
+	
+	def protected IScope scopeForConfigurationInstances(Configuration context) {
+		Scopes.scopeFor(ConfigurationHelper.allInstances(context));
+	}
+	
+	def protected IScope scopeForSession_Initial(Session context) {
+		Scopes.scopeFor( context.substate );
+	}
 	
 	def protected IScope scopeForEventReference_ReceiveMsg(EventReference context) {
 		var h = ThingMLHelpers.findContainingHandler(context)
@@ -167,7 +186,6 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else {
 			Scopes.scopeFor( EMPTY );
 		}
-		
 	}
 	
 	def protected IScope scopeForCompositeState_Initial(CompositeState context) {
@@ -191,7 +209,7 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	def protected IScope scopeForConfigPropertyAssign_Property(ConfigPropertyAssign context) {
-		Scopes.scopeFor( ThingMLHelpers.allProperties(context.instance.instance.type) );
+		Scopes.scopeFor( ThingMLHelpers.allProperties(context.instance.type) );
 	}
 	
 	def protected IScope scopeForConnector_CliSrV(Connector context) {
@@ -199,11 +217,11 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	def protected IScope scopeForConnector_Provided(Connector context) {
-		Scopes.scopeFor( ThingMLHelpers.allProvidedPorts(context.srv.instance.type) ); 
+		Scopes.scopeFor( ThingMLHelpers.allProvidedPorts(context.srv.type) ); 
 	}
 	
 	def protected IScope scopeForConnector_Required(Connector context) {
-		Scopes.scopeFor( ThingMLHelpers.allRequiredPorts(context.cli.instance.type) ); 
+		Scopes.scopeFor( ThingMLHelpers.allRequiredPorts(context.cli.type) ); 
 	}
 	
 	def protected IScope scopeForDecrement_Var(Decrement context) {
@@ -220,11 +238,12 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	def protected IScope scopeForExternalConnector_Port(ExternalConnector context) {
-		Scopes.scopeFor( EMPTY ); // TODO ???
+		
+		Scopes.scopeFor( ThingMLHelpers.allPorts(context.inst.type) );
 	}
 	
 	def protected IScope scopeForExternalConnector_Protocol(ExternalConnector context) {
-		Scopes.scopeFor( EMPTY ); // TODO ???
+		Scopes.scopeFor( ThingMLHelpers.allProtocols(ThingMLHelpers.findContainingModel(context)) ); 
 	}
 	
 	def protected IScope scopeForFunctionCallExpressionFunctionCallStatement_Function(EObject context) {
@@ -271,7 +290,7 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	def protected IScope scopeForStartSession_Session(StartSession context) {
-		Scopes.scopeFor( EMPTY ); // TODO
+		Scopes.scopeFor( ThingMLHelpers.allVisibleSessions(context) ); 
 	}
 	
 	def protected IScope scopeForThing_Includes(Thing context) {

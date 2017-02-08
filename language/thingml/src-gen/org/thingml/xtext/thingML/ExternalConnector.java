@@ -25,30 +25,30 @@ package org.thingml.xtext.thingML;
 public interface ExternalConnector extends AbstractConnector
 {
   /**
-   * Returns the value of the '<em><b>Inst</b></em>' containment reference.
+   * Returns the value of the '<em><b>Inst</b></em>' reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Inst</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Inst</em>' reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Inst</em>' containment reference.
-   * @see #setInst(InstanceRef)
+   * @return the value of the '<em>Inst</em>' reference.
+   * @see #setInst(Instance)
    * @see org.thingml.xtext.thingML.ThingMLPackage#getExternalConnector_Inst()
-   * @model containment="true"
+   * @model
    * @generated
    */
-  InstanceRef getInst();
+  Instance getInst();
 
   /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.ExternalConnector#getInst <em>Inst</em>}' containment reference.
+   * Sets the value of the '{@link org.thingml.xtext.thingML.ExternalConnector#getInst <em>Inst</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Inst</em>' containment reference.
+   * @param value the new value of the '<em>Inst</em>' reference.
    * @see #getInst()
    * @generated
    */
-  void setInst(InstanceRef value);
+  void setInst(Instance value);
 
   /**
    * Returns the value of the '<em><b>Port</b></em>' reference.

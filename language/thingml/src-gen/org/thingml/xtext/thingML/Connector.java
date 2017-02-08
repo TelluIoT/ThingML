@@ -26,30 +26,30 @@ package org.thingml.xtext.thingML;
 public interface Connector extends AbstractConnector
 {
   /**
-   * Returns the value of the '<em><b>Cli</b></em>' containment reference.
+   * Returns the value of the '<em><b>Cli</b></em>' reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Cli</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Cli</em>' reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Cli</em>' containment reference.
-   * @see #setCli(InstanceRef)
+   * @return the value of the '<em>Cli</em>' reference.
+   * @see #setCli(Instance)
    * @see org.thingml.xtext.thingML.ThingMLPackage#getConnector_Cli()
-   * @model containment="true"
+   * @model
    * @generated
    */
-  InstanceRef getCli();
+  Instance getCli();
 
   /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Connector#getCli <em>Cli</em>}' containment reference.
+   * Sets the value of the '{@link org.thingml.xtext.thingML.Connector#getCli <em>Cli</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Cli</em>' containment reference.
+   * @param value the new value of the '<em>Cli</em>' reference.
    * @see #getCli()
    * @generated
    */
-  void setCli(InstanceRef value);
+  void setCli(Instance value);
 
   /**
    * Returns the value of the '<em><b>Required</b></em>' reference.
@@ -78,30 +78,30 @@ public interface Connector extends AbstractConnector
   void setRequired(RequiredPort value);
 
   /**
-   * Returns the value of the '<em><b>Srv</b></em>' containment reference.
+   * Returns the value of the '<em><b>Srv</b></em>' reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Srv</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Srv</em>' reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Srv</em>' containment reference.
-   * @see #setSrv(InstanceRef)
+   * @return the value of the '<em>Srv</em>' reference.
+   * @see #setSrv(Instance)
    * @see org.thingml.xtext.thingML.ThingMLPackage#getConnector_Srv()
-   * @model containment="true"
+   * @model
    * @generated
    */
-  InstanceRef getSrv();
+  Instance getSrv();
 
   /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Connector#getSrv <em>Srv</em>}' containment reference.
+   * Sets the value of the '{@link org.thingml.xtext.thingML.Connector#getSrv <em>Srv</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Srv</em>' containment reference.
+   * @param value the new value of the '<em>Srv</em>' reference.
    * @see #getSrv()
    * @generated
    */
-  void setSrv(InstanceRef value);
+  void setSrv(Instance value);
 
   /**
    * Returns the value of the '<em><b>Provided</b></em>' reference.

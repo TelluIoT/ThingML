@@ -549,6 +549,16 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
+	public static ArrayList<Region> allContainingRegions(EObject element) {
+		ArrayList<Region> result = new ArrayList<Region>();
+		EObject current = element;
+		while(current != null) {
+			if (current instanceof Region) result.add((Region)current);
+			current = current.eContainer();
+		}
+		return result;
+	}
+	
 	public static ArrayList<Property> allProperties(State state) {
 		ArrayList<Property> result = new ArrayList<Property>();
 		// Properties from the states
@@ -560,6 +570,30 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
+	public static ArrayList<Session> allVisibleSessions (EObject container) {
+		ArrayList<Session> result = new ArrayList<Session>();
+		for (Region r : allContainingRegions(container)) {
+			if (r instanceof CompositeState) {
+				CompositeState cs = (CompositeState)r;
+				for (RegionOrSession rs : cs.getRegion()) {
+					if (rs instanceof Session) result.add((Session)rs);
+				}
+			}
+			else if (r instanceof Session) {
+				Session cs = (Session)r;
+				for (RegionOrSession rs : cs.getRegion()) {
+					if (rs instanceof Session) result.add((Session)rs);
+				}
+			}
+			else if (r instanceof ParallelRegion) {
+				ParallelRegion cs = (ParallelRegion)r;
+				for (RegionOrSession rs : cs.getRegion()) {
+					if (rs instanceof Session) result.add((Session)rs);
+				}
+			}
+		}
+		return result;
+	}
 	
 	public static ArrayList<Variable> allVisibleVariables (EObject container) {
 		ArrayList<Variable> result = new ArrayList<Variable>();
@@ -656,6 +690,16 @@ public class ThingMLHelpers {
 		for (ThingMLModel m : allThingMLModelModels(model)) {
 			for (Configuration c : m.getConfigs()) {
 				if (!result.contains(c)) result.add(c);
+			}
+		}
+		return result;
+	}
+	
+	public static ArrayList<Protocol> allProtocols(ThingMLModel model) {
+		ArrayList<Protocol> result = new ArrayList<Protocol>();
+		for (ThingMLModel m : allThingMLModelModels(model)) {
+			for (Protocol p : m.getProtocols()) {
+				if (!result.contains(p)) result.add(p);
 			}
 		}
 		return result;

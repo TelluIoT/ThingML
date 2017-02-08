@@ -213,6 +213,15 @@ public interface ThingMLFactory extends EFactory
   Region createRegion();
 
   /**
+   * Returns a new object of class '<em>Region Or Session</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Region Or Session</em>'.
+   * @generated
+   */
+  RegionOrSession createRegionOrSession();
+
+  /**
    * Returns a new object of class '<em>Composite State</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -589,15 +598,6 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   ExternalConnector createExternalConnector();
-
-  /**
-   * Returns a new object of class '<em>Instance Ref</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Instance Ref</em>'.
-   * @generated
-   */
-  InstanceRef createInstanceRef();
 
   /**
    * Returns a new object of class '<em>Or Expression</em>'.
