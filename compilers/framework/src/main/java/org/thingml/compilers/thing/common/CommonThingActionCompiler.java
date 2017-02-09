@@ -16,10 +16,9 @@
  */
 package org.thingml.compilers.thing.common;
 
+import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
@@ -277,63 +276,11 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append(")");
     }
 
-    @Override
-    public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        String messageName = "";
-        Message message = null;
-        if (expression.getReference() instanceof ReceiveMessage) {
-            ReceiveMessage rm = (ReceiveMessage) expression.getReference();
-            message = rm.getMessage();
-            messageName = message.getName();
-        } else if (expression.getReference() instanceof Source) {
-            Source source = (Source) expression.getReference();
-            if (source instanceof SimpleSource) {
-                ReceiveMessage rm = ((SimpleSource) source).getMessage();
-                message = rm.getMessage();
-                messageName = source.getName();
-            } else if (source instanceof SourceComposition) {
-                message = ((SourceComposition) source).getResultMessage();
-                messageName = source.getName();
-            } else {
-                throw new UnsupportedOperationException("Source " + source.getClass().getName() + " not supported.");
-            }
-        } else if (expression.getReference() instanceof MessageParameter) {
-            MessageParameter mp = (MessageParameter) expression.getReference();
-            messageName = mp.getName();
-            message = mp.getMsgRef();
-        } else if (expression.getReference() instanceof Variable) {
-            Variable var = (Variable) expression.getReference();
-            if (var.isIsArray()) {
-                generateReferenceArray(var, builder, ctx);
-                return;
-            } else {
-                throw new UnsupportedOperationException("The variable " + var.getName() + " must be an array.");
-            }
-        } else if (expression.getReference() instanceof Message) {
-            Message msg = (Message) expression.getReference();
-            messageName = msg.getName();
-            message = msg;
-        } else {
-            throw new UnsupportedOperationException("Reference " + expression.getReference().getClass().getName() + " not supported.");
-        }
-        generateReference(message, messageName, expression, builder, ctx);
-
-    }
-
+  
     protected void generateReferenceArray(Variable variable, StringBuilder builder, Context context) {
         builder.append(context.getVariableName(variable) + ".length");
     }
 
-    protected void generateReference(Message message, String messageName, Reference reference, StringBuilder builder, Context ctx) {
-        throw (new UnsupportedOperationException("This part of reference compiler (CommonThingActionCompiler) is platform specific and should be redefined."));
-    }
-
-    @Override
-    public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
-        builder.append("(");
-        generate(expression.getExp(), builder, ctx);
-        builder.append(")");
-    }
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {

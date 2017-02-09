@@ -16,10 +16,8 @@
  */
 package org.thingml.compilers.spi;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.PlatformAnnotation;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;

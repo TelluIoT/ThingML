@@ -24,7 +24,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.xtext.resource.XtextResource;
 import org.fusesource.jansi.AnsiConsole;
+import org.thingml.xtext.ThingMLStandaloneSetup;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.checker.Checker;
@@ -51,7 +56,7 @@ public abstract class ThingMLCompiler {
     //FIXME: the code below related to loading and errors should be refactored and probably moved. It is just here right now as a convenience.
     public static List<String> errors;
     public static List<String> warnings;
-    public static ThingmlResource resource;
+    public static XtextResource resource;
     public static File currentFile;
     protected Context ctx = new Context(this);
     Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
@@ -105,7 +110,7 @@ public abstract class ThingMLCompiler {
         ResourceSet rs = new ResourceSetImpl();
         URI xmiuri = URI.createFileURI(file.getAbsolutePath());
         Resource model = rs.createResource(xmiuri);
-        resource = (ThingmlResource) model;
+        resource = (XtextResource) model;
         try {
             model.load(null);
             org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(model);
@@ -135,8 +140,7 @@ public abstract class ThingMLCompiler {
     }
 
     private static void registerThingMLFactory() {
-        Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap(
-        ).put("thingml", new ThingmlResourceFactory());
+    	ThingMLStandaloneSetup.doSetup();
     }
 
     private static void save(ThingMLModel model, String location){

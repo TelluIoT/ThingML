@@ -27,8 +27,8 @@ package org.thingml.compilers.spi;
  */
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
@@ -119,7 +119,7 @@ public abstract class NetworkPlugin extends Rule {
     public Set<Thing> getThings(Configuration cfg, Protocol prot) {
         Set<Thing> res = new HashSet<>();
         for (ExternalConnector eco : this.getExternalConnectors(cfg, prot)) {
-            res.add(eco.getInst().getInstance().getType());
+            res.add(eco.getInst().getType());
         }
         return res;
     }
@@ -127,7 +127,7 @@ public abstract class NetworkPlugin extends Rule {
     public Set<ThingPortMessage> getMessagesSent(ExternalConnector eco) {
         Set<ThingPortMessage> res = new HashSet<ThingPortMessage>();
         for (Message m : eco.getPort().getSends()) {
-            ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getInstance().getType(), eco.getPort(), m);
+            ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getType(), eco.getPort(), m);
             res.add(tpm);
         }
         return res;
@@ -144,7 +144,7 @@ public abstract class NetworkPlugin extends Rule {
     public Set<ThingPortMessage> getMessagesReceived(ExternalConnector eco) {
         Set<ThingPortMessage> res = new HashSet<ThingPortMessage>();
         for (Message m : eco.getPort().getReceives()) {
-            ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getInstance().getType(), eco.getPort(), m);
+            ThingPortMessage tpm = new ThingPortMessage(eco.getInst().getType(), eco.getPort(), m);
             res.add(tpm);
         }
         return res;

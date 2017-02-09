@@ -66,10 +66,7 @@ public class ThingActionCompiler {
             generate((Decrement) action, builder, ctx);
         else if (action instanceof StartSession) {
             generate((StartSession) action, builder, ctx);
-        } else if (action instanceof StartStream) {
-            generate((StartStream) action, builder, ctx);
-        } else if (action instanceof StopStream) {
-            generate((StopStream) action, builder, ctx);
+
         } else {
             throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
@@ -83,14 +80,7 @@ public class ThingActionCompiler {
         throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
-    public void generate(StartStream action, StringBuilder builder, Context ctx) {
-        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
-    }
-
-    public void generate(StopStream action, StringBuilder builder, Context ctx) {
-        throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
-    }
-
+   
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is platform-specific and should be refined!"));
     }
@@ -174,10 +164,6 @@ public class ThingActionCompiler {
             generate((UnaryMinus) expression, builder, ctx);
         } else if (expression instanceof NotExpression) {
             generate((NotExpression) expression, builder, ctx);
-        } else if (expression instanceof Reference) {
-            generate((Reference) expression, builder, ctx);
-        } else if (expression instanceof ExpressionGroup) {
-            generate((ExpressionGroup) expression, builder, ctx);
         } else if (expression instanceof PropertyReference) {
             generate((PropertyReference) expression, builder, ctx);
         } else if (expression instanceof IntegerLiteral) {
@@ -263,14 +249,6 @@ public class ThingActionCompiler {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 
-
-    public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
-    }
-
-    public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
-        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
-    }
 
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));

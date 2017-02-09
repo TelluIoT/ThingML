@@ -16,7 +16,7 @@
  */
 package org.thingml.compilers.configuration;
 
-import org.sintef.thingml.Configuration;
+import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 
 

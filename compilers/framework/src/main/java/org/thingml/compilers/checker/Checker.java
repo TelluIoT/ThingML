@@ -26,6 +26,10 @@ import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.genericRules.*;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -242,14 +246,7 @@ abstract public class Checker {
         }
 
         public String print(EObject el) {
-            if (el == null)
-                return "";
-            if (el instanceof ThingMLElement) {
-                if (((ThingMLElement) el).getName() != null) {
-                    return ((ThingMLElement) el).getName();
-                }
-            }
-            return el.toString();
+        	return ThingMLElementHelper.getName(el);
         }
 
         public String toString() {

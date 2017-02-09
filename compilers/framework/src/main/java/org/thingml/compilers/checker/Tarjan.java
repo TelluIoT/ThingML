@@ -21,9 +21,10 @@
  */
 package org.thingml.compilers.checker;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -34,7 +35,7 @@ import java.util.Set;
  *
  * @author sintef
  */
-public class Tarjan<T extends ThingMLElement> {
+public class Tarjan<T extends EObject> {
     int index;
     List<Annotated<T>> Stack;
     Set<Annotated<T>> vertices;
@@ -65,8 +66,8 @@ public class Tarjan<T extends ThingMLElement> {
         List<Annotated<T>> res = new LinkedList<Annotated<T>>();
         if (el instanceof Instance) {
             for (Connector co : ConfigurationHelper.allConnectors(cfg)) {
-                if (EcoreUtil.equals(co.getCli().getInstance(), el)) {
-                    res.add(findElement((T) co.getSrv().getInstance()));
+                if (EcoreUtil.equals(co.getCli(), el)) {
+                    res.add(findElement((T) co.getSrv()));
                 }
             }
         } else {
@@ -137,7 +138,7 @@ public class Tarjan<T extends ThingMLElement> {
         }
 
         boolean equals(Annotated<T> other) {
-            return EcoreUtil.equals((ThingMLElement) this.el, (ThingMLElement) other.el);
+            return EcoreUtil.equals( (EObject)this.el, (EObject)other.el);
         }
 
     }

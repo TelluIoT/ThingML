@@ -17,11 +17,11 @@
 package org.thingml.compilers.configuration;
 
 import java.util.Iterator;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.ExternalThingPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by bmori on 17.12.2014.

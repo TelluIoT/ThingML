@@ -30,13 +30,13 @@
 package org.thingml.compilers.checker;
 
 
+import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.*;
+import org.thingml.xtext.thingML.util.ThingMLSwitch;
 import org.sintef.thingml.constraints.Types;
-import org.sintef.thingml.helpers.TyperHelper;
-import org.sintef.thingml.util.ThingmlSwitch;
 
 
-public class TypeChecker extends ThingmlSwitch<Type> {
+public class TypeChecker extends ThingMLSwitch<Type> {
 
     public Type computeTypeOf(Expression exp) {
         Type result = null;
