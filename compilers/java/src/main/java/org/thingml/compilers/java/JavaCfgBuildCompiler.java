@@ -17,11 +17,12 @@
 package org.thingml.compilers.java;
 
 import org.apache.commons.io.IOUtils;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Thing;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -29,32 +30,11 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 
 /**
  * Created by bmori on 17.12.2014.
  */
-public class JavaCfgBuildCompiler extends CfgBuildCompiler {
-
-    private String addReactiveXDep(Configuration cfg) {
-        boolean oneThingHasStream = false;
-
-        Iterator<Thing> it = ConfigurationHelper.allThings(cfg).iterator();
-        while (it.hasNext() && !oneThingHasStream) {
-            Thing t = it.next();
-            oneThingHasStream = oneThingHasStream || (t.getStreams().size() > 0);
-        }
-        if (oneThingHasStream) {
-            return "<dependency>\n" +
-                    "\t\t<groupId>io.reactivex</groupId>\n" +
-                    "\t\t<artifactId>rxjava</artifactId>\n" +
-                    "\t\t<version>1.1.3</version>\n" +
-                    "\t</dependency>";
-        } else {
-            return "";
-        }
-    }
-    
+public class JavaCfgBuildCompiler extends CfgBuildCompiler {    
     private String addSelfContainedBuild() {
         String res = "<plugin>\n" +
 "                <artifactId>maven-assembly-plugin</artifactId>\n" +
@@ -111,7 +91,6 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
                 pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep);
             }
 
-            pom = pom.replace("<!--DEP RX-->", addReactiveXDep(cfg));
             
             if(AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
                 pom = pom.replace("<!--SelfContained-->", addSelfContainedBuild());

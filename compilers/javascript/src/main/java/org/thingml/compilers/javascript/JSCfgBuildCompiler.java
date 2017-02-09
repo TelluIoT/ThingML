@@ -19,18 +19,19 @@ package org.thingml.compilers.javascript;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import org.apache.commons.io.IOUtils;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Thing;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
+
+import org.thingml.xtext.helpers.*;
 
 /**
  * Created by bmori on 17.12.2014.
@@ -57,19 +58,6 @@ public class JSCfgBuildCompiler extends CfgBuildCompiler {
                     deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
                 }
 
-            }
-
-            boolean addCEPdeps = false;
-
-            for (Thing t : ConfigurationHelper.allThings(cfg)) {
-                if (t.getStreams().size() > 0) {
-                    addCEPdeps = true;
-                }
-            }
-
-            if (addCEPdeps) {
-                deps.asObject().add("rx", "^4.1.0");
-                deps.asObject().add("events", "^1.1.0");
             }
 
             final File f = new File(ctx.getOutputDirectory() + "/package.json");

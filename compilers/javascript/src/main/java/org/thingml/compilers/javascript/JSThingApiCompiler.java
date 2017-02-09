@@ -16,10 +16,10 @@
  */
 package org.thingml.compilers.javascript;
 
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.ThingApiCompiler;
@@ -113,9 +113,6 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(msg) {//msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}\n");
             builder.append("if(this.ready){\n");
-            if (thing.getStreams().size() > 0) {
-                builder.append("this.cepDispatch(msg);\n");
-            }
             builder.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);\n");
             if(ThingHelper.hasSession(thing)) {
                 builder.append("this.forks.forEach(function(fork){\n");

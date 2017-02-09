@@ -16,9 +16,13 @@
  */
 package org.thingml.compilers.javascript;
 
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.StateHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
@@ -48,10 +52,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         if (debugProfile.isActive()) {
             generatePrintDebugFunction(thing, builder, ctx);
-        }
-
-        if (thing.getStreams().size() > 0) {
-            builder.append("const Rx = require('rx'),\n");
         }
 
         if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
@@ -136,38 +136,21 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }//TODO: public/private properties?
 
-        if (thing.getStreams().size() > 0) {
-            builder.append("this.eventEmitterForStream = new EventEmitter();\n");
-        }
         builder.append("this.build(name, root);\n");
         builder.append("}\n");
-
-        if (thing.getStreams().size() > 0) {
-            builder.append("//CEP dispatch functions\n");
-            builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.cepDispatch = function(message) {\n");
-            for (Stream s : thing.getStreams()) {
-                for (SimpleSource simpleSource : ThingMLHelpers.allSimpleSources(s.getInput())) {
-                    ReceiveMessage rm = simpleSource.getMessage();
-                    builder.append("if( message._port === '" + rm.getPort().getName() + "' && message._msg === '" + rm.getMessage().getName() + "') {\n")
-                            .append("\tthis.eventEmitterForStream.emit('" + ThingMLElementHelper.qname(simpleSource, "_") + "',message);\n")
-                            .append("}\n");
-                }
-            }
-            builder.append("}\n");
-        }
 
         builder.append("//State machine (states and regions)\n");
         builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.build = function(session, root) {//optional session name and root instance to fork a new session\n");
         if(ThingHelper.hasSession(thing)) {
             builder.append("if (root === null || root == undefined) {//building root component\n");
         }
-        for (StateMachine b : ThingMLHelpers.allStateMachines(thing)) {
+        for (CompositeState b : ThingMLHelpers.allStateMachines(thing)) {
             ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(b, builder, ctx);
         }
         if(ThingHelper.hasSession(thing)) {
             builder.append("}\n");
         }
-        for (StateMachine b : ThingMLHelpers.allStateMachines(thing)) {
+        for (CompositeState b : ThingMLHelpers.allStateMachines(thing)) {
             ctx.addContextAnnotation("session", "true");
             for (Session s : CompositeStateHelper.allContainedSessions(b)) {//FIXME: lots of code duplication here.....
                 builder.append("else if(session === '" + s.getName() + "') {//building session " + s.getName() + "\n");
@@ -205,10 +188,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             ctx.removeContextAnnotation("session");
         }
 
-        for (Stream stream : thing.getStreams()) {
-            ctx.getCompiler().getCepCompiler().generateStream(stream, builder, ctx);
-        }
-
         builder.append("}\n");
 
         ctx.getCompiler().getThingApiCompiler().generatePublicAPI(thing, ctx);
@@ -225,7 +204,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("module.exports = " + ctx.firstToUpper(thing.getName()) + ";\n");
     }
 
-    protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
+    protected void generateStateMachine(CompositeState sm, StringBuilder builder, Context ctx) {
         builder.append("this.statemachine = new StateJS.StateMachine('" + sm.getName() + "')");
         generateActionsForState(sm, builder, ctx);
         builder.append(";\n");
@@ -407,7 +386,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
-            if (t.eContainer() instanceof StateMachine) {
+            if (t.eContainer() instanceof CompositeState && t.eContainer().eContainer() instanceof Thing) {//should be root Composate
                 builder.append("this.statemachine.to(null)");
             } else {
                 builder.append(ThingMLElementHelper.qname(((State) t.eContainer()), "_") + ".to(null)");
@@ -418,7 +397,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(";})");
             }
         } else {
-            if (t.eContainer() instanceof StateMachine) {
+            if (t.eContainer() instanceof CompositeState && t.eContainer().eContainer() instanceof Thing) {
                 builder.append("this.statemachine.to(null)");
             } else {
                 builder.append(ThingMLElementHelper.qname(((State) t.eContainer()), "_") + ".to(null)");

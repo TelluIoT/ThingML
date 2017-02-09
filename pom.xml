@@ -205,13 +205,8 @@
     </repositories>
 
     <modules>
-        <module>org.emftext.commons.antlr3_4_0</module>
-		<module>org.thingml.model</module>
-        <module>org.thingml.parser</module>
-        <module>compilers</module>
-        <module>org.thingml.editor.standalone</module>
-        <module>org.thingml.editor.eclipse</module>
         <module>language</module>
+        <module>compilers</module>
         <!-- The standalone app can only be built on the server which has the keystore to sign the jar
         <module>../org.thingml.editor.standaloneApp</module>-->
         <!--<module>testJar</module>--><!--BUILT SEPARATELY-->

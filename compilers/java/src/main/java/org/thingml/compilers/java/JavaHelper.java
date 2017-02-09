@@ -17,8 +17,7 @@
 package org.thingml.compilers.java;
 
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.*;
 import org.thingml.compilers.Context;
 
 import java.util.HashSet;
@@ -103,7 +102,7 @@ public class JavaHelper {
         for (Parameter pa : m.getParameters()) {
             if (i > 0)
                 builder.append(", ");
-            builder.append(JavaHelper.getJavaType(pa.getType(), pa.isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+            builder.append(JavaHelper.getJavaType(pa.getTypeRef().getType(), pa.getTypeRef().isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
             i++;
         }
     }
@@ -113,7 +112,7 @@ public class JavaHelper {
         for (Parameter pa : m.getParameters()) {
             if (i > 0)
                 builder.append(", ");
-            builder.append("final " + JavaHelper.getJavaType(pa.getType(), pa.isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
+            builder.append("final " + JavaHelper.getJavaType(pa.getTypeRef().getType(), pa.getTypeRef().isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
             i++;
         }
     }
@@ -123,7 +122,7 @@ public class JavaHelper {
         for (Property pa : s.getProperties()) {
             if (i > 0)
                 builder.append(", ");
-            builder.append(JavaHelper.getJavaType(pa.getType(), pa.isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)) + "_");
+            builder.append(JavaHelper.getJavaType(pa.getTypeRef().getType(), pa.getTypeRef().isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)) + "_");
             i++;
         }
     }

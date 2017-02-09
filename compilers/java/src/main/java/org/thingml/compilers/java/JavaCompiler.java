@@ -16,17 +16,14 @@
  */
 package org.thingml.compilers.java;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Thing;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
-import org.thingml.compilers.java.cepHelper.JavaCepViewCompiler;
-import org.thingml.compilers.java.cepHelper.JavaGenerateSourceDeclaration;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
 
 import java.io.File;
 import java.util.HashMap;
@@ -39,8 +36,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
 
     public JavaCompiler() {
         super(new JavaThingActionCompiler(), new JavaThingApiCompiler(), new JavaCfgMainGenerator(),
-                new JavaCfgBuildCompiler(), new JavaThingImplCompiler(),
-                new JavaThingCepCompiler(new JavaCepViewCompiler(), new JavaGenerateSourceDeclaration()));
+                new JavaCfgBuildCompiler(), new JavaThingImplCompiler());
         this.checker = new Checker(this.getID()) {
             @Override
             public void do_check(Configuration cfg) {

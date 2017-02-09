@@ -18,17 +18,14 @@ package org.thingml.compilers.javascript;
 
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.javascript.cepHelper.JSCepViewCompiler;
-import org.thingml.compilers.javascript.cepHelper.JSGenerateSourceDeclaration;
+
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
-import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 
@@ -41,8 +38,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
 
     public JSCompiler() {
         super(new JSThingActionCompiler(), new JSThingApiCompiler(), new JSCfgMainGenerator(),
-                new JSCfgBuildCompiler(), new JSThingImplCompiler(),
-                new JSThingCepCompiler(new JSCepViewCompiler(), new JSGenerateSourceDeclaration()));
+                new JSCfgBuildCompiler(), new JSThingImplCompiler());
         this.checker = new Checker(this.getID()) {
             @Override
             public void do_check(Configuration cfg) {
@@ -51,7 +47,7 @@ public class JSCompiler extends OpaqueThingMLCompiler {
         };
     }
 
-    public JSCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
+    public JSCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
     }
 

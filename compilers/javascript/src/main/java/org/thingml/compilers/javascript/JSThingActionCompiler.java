@@ -16,10 +16,10 @@
  */
 package org.thingml.compilers.javascript;
 
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
@@ -115,16 +115,6 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         builder.append(session.getName() + "._init();\n");
     }
 
-    @Override
-    public void generate(StartStream action, StringBuilder builder, Context ctx) {
-        builder.append("start" + ThingMLElementHelper.qname(action.getStream().getInput(), "_") + "();\n");
-    }
-
-    @Override
-    public void generate(StopStream action, StringBuilder builder, Context ctx) {
-        builder.append("stop" + ThingMLElementHelper.qname(action.getStream().getInput(), "_") + "();\n");
-    }
-
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
@@ -173,19 +163,13 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         builder.append(");\n");
     }
 
-    @Override
+    /*@Override
     protected void generateReference(Message message, String messageName, Reference reference, StringBuilder builder, Context ctx) {
         ParamReference paramReference = (ParamReference) reference.getParameter(); //this method is called only when the reference parameter is a ParamReference
         String paramResult;
-        /*if (reference.getParameter() instanceof SimpleParamRef) {
-            paramResult = "[" + JSHelper.getCorrectParamIndex(message, paramReference.getParameterRef()) + "]";
-        } else if (reference.getParameter() instanceof ArrayParamRef) {*/
-            paramResult = "." + paramReference.getParameterRef().getName();
-        /*} else {
-            throw new UnsupportedOperationException("Parameter " + reference.getParameter().getClass().getName() + " is not supported.");
-        }*/
+        paramResult = "." + paramReference.getParameterRef().getName();
         builder.append(messageName + paramResult);
-    }
+    }*/
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {

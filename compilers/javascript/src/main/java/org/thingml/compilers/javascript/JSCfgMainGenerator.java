@@ -19,9 +19,7 @@ package org.thingml.compilers.javascript;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingHelper;
+import org.thingml.xtext.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -36,7 +34,7 @@ import java.util.Map;
 public class JSCfgMainGenerator extends CfgMainGenerator {
 
     public static String getDefaultValue(Type type) {
-        if (AnnotatedElementHelper.isDefined(type, "js_type", "boolean"))
+        if (org.thingml.xtext.helpers.AnnotatedElementHelper.isDefined(type, "js_type", "boolean"))
             return "false";
         else if (AnnotatedElementHelper.isDefined(type, "js_type", "int"))
             return "0";
@@ -98,7 +96,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 if (p.getKey().equals(prop) && prop.getCardinality() == null && !AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
                     String result = "";
                     if (prop.getType() instanceof Enumeration) {
-                        Enumeration enum_ = (Enumeration) prop.getType();
+                        Enumeration enum_ = (Enumeration) prop.getTypeRef().getType();
                         EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
                         StringBuilder tempbuilder = new StringBuilder();
                         if (enumL == null) {
@@ -220,12 +218,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                         builder.append(i.getName() + ".send(m);\n");
                     } else {
                         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-                            if (EcoreUtil.equals(i, c.getCli().getInstance()) && EcoreUtil.equals(p, c.getRequired())) {
+                            if (EcoreUtil.equals(i, c.getCli()) && EcoreUtil.equals(p, c.getRequired())) {
                                 builder.append("m._port = '" + c.getProvided().getName() + "';\n");
-                                builder.append(c.getSrv().getInstance().getName() + ".send(m);\n");
-                            } else if (EcoreUtil.equals(i, c.getSrv().getInstance()) && EcoreUtil.equals(p, c.getProvided())) {
+                                builder.append(c.getSrv().getName() + ".send(m);\n");
+                            } else if (EcoreUtil.equals(i, c.getSrv()) && EcoreUtil.equals(p, c.getProvided())) {
                                 builder.append("m._port = '" + c.getRequired().getName() + "';\n");
-                                builder.append(c.getCli().getInstance().getName() + ".send(m);\n");
+                                builder.append(c.getCli().getName() + ".send(m);\n");
                             }
                         }
                     }
@@ -255,7 +253,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 for (Message req : c.getRequired().getReceives()) {
                     for (Message prov : c.getProvided().getSends()) {
                         if (req.getName().equals(prov.getName())) {
-                            generateOnEvent(builder, prefix, req, c.getCli().getInstance().getName(), c.getRequired().getName(), c.getSrv().getInstance().getName(), c.getProvided().getName());
+                            generateOnEvent(builder, prefix, req, c.getCli().getName(), c.getRequired().getName(), c.getSrv().getName(), c.getProvided().getName());
                             break;
                         }
                     }
@@ -263,7 +261,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 for (Message req : c.getProvided().getReceives()) {
                     for (Message prov : c.getRequired().getSends()) {
                         if (req.getName().equals(prov.getName())) {
-                            generateOnEvent(builder, prefix, req, c.getSrv().getInstance().getName(), c.getProvided().getName(), c.getCli().getInstance().getName(), c.getRequired().getName());
+                            generateOnEvent(builder, prefix, req, c.getSrv().getName(), c.getProvided().getName(), c.getCli().getName(), c.getRequired().getName());
                             break;
                         }
                     }
