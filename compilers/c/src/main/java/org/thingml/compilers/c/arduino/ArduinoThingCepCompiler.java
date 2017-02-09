@@ -16,7 +16,7 @@
  */
 package org.thingml.compilers.c.arduino;
 
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.cepHelper.CCepHelper;

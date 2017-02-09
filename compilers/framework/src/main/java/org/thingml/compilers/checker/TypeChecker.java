@@ -30,7 +30,7 @@
 package org.thingml.compilers.checker;
 
 
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.Types;
 import org.sintef.thingml.helpers.TyperHelper;
 import org.sintef.thingml.util.ThingmlSwitch;

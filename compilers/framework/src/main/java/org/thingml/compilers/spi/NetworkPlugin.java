@@ -27,7 +27,7 @@ package org.thingml.compilers.spi;
  */
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Checker;

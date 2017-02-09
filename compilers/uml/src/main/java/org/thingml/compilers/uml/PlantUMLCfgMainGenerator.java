@@ -16,7 +16,7 @@
  */
 package org.thingml.compilers.uml;
 
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ActionHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;

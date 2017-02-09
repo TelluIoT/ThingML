@@ -21,7 +21,7 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.StateHelper;

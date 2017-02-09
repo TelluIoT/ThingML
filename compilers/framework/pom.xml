@@ -32,6 +32,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+	<properties>
+	<xtextVersion>2.10.0</xtextVersion>
+	</properties>
 
     <dependencies>
 
@@ -40,6 +43,41 @@
             <artifactId>thingml</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        
+        <dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext.junit4</artifactId>
+			<version>${xtextVersion}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext.xbase.junit</artifactId>
+			<version>${xtextVersion}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext</artifactId>
+			<version>${xtextVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext.xbase</artifactId>
+			<version>${xtextVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext.xtext</artifactId>
+			<version>${xtextVersion}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.xtext</groupId>
+			<artifactId>org.eclipse.xtext.xtext.generator</artifactId>
+			<version>${xtextVersion}</version>
+			<optional>true</optional>
+		</dependency>
 
         <!--
              <dependency>

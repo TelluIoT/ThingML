@@ -21,7 +21,7 @@
  */
 package org.thingml.compilers.c;
 
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.c.plugin.CByteArraySerializer;

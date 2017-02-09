@@ -18,7 +18,6 @@ package org.thingml.compilers.checker;
 
 import org.eclipse.emf.ecore.EObject;
 import org.thingml.compilers.ThingMLCompiler;
-import org.sintef.thingml.resource.thingml.*;
 
 import java.util.Collections;
 

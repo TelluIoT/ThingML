@@ -22,7 +22,7 @@
 package org.thingml.networkplugins.cpp.rcd;
 
 import java.io.UnsupportedEncodingException;
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;

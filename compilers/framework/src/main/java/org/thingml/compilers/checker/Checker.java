@@ -24,11 +24,6 @@ package org.thingml.compilers.checker;
 import org.eclipse.emf.ecore.EObject;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ThingMLElement;
-import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.genericRules.*;
 

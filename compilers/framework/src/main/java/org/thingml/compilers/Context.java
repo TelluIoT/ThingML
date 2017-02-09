@@ -18,10 +18,10 @@ package org.thingml.compilers;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.fusesource.jansi.Ansi;
-import org.sintef.thingml.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -311,9 +311,9 @@ public class Context {
         if (c.getName() != null)
             builder.append(c.getName());
         builder.append("_");
-        builder.append(getInstanceName(c.getCli().getInstance()) + "-" + c.getRequired());
+        builder.append(getInstanceName(c.getCli()) + "-" + c.getRequired());
         builder.append("_to_");
-        builder.append(getInstanceName(c.getSrv().getInstance()) + "-" + c.getProvided());
+        builder.append(getInstanceName(c.getSrv()) + "-" + c.getProvided());
         return builder.toString();
     }
 
@@ -379,7 +379,7 @@ public class Context {
         debugTraceWithID = b;
     }
 
-    public String traceOnEntry(Thing t, StateMachine sm) {
+    public String traceOnEntry(Thing t, CompositeState sm) {
         if (!debugTraceWithID) {
             return " (" + t.getName() + "): Enters " + sm.getName();
         } else {

@@ -19,7 +19,7 @@ package org.thingml.externalthingplugins.c.posix.dnssd;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.CompositeStateHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;

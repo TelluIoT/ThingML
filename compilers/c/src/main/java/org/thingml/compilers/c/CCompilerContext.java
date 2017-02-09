@@ -17,7 +17,7 @@
 package org.thingml.compilers.c;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;

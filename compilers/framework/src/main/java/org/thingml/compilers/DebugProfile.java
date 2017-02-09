@@ -16,7 +16,7 @@
  */
 package org.thingml.compilers;
 
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 
 import java.util.List;
 import java.util.Map;

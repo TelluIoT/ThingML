@@ -21,7 +21,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.eclipse.emf.common.util.EList;
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.Enumeration;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.*;

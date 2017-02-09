@@ -16,7 +16,7 @@
  */
 package org.thingml.compilers.c.cepHelper;
 
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.c.CCompilerContext;
 

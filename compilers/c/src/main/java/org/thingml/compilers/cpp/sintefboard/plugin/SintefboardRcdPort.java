@@ -21,7 +21,7 @@
  */
 package org.thingml.compilers.cpp.sintefboard.plugin;
 
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;

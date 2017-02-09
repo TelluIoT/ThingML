@@ -22,7 +22,7 @@
 package org.thingml.compilers.checker;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
+import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 
 import java.util.HashSet;
