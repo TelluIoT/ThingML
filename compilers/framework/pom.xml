@@ -36,25 +36,25 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.model</artifactId>
-            <version>${thingml.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.thingml</groupId>
-            <artifactId>org.thingml.parser.standalone</artifactId>
-            <version>${project.version}</version>
+            <groupId>thingml</groupId>
+            <artifactId>thingml</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <!--
-		<dependency>
-			<groupId>org.thingml</groupId>
-			<artifactId>org.thingml.parser.standalone</artifactId>
-			<version>${project.version}</version>
-		</dependency>
--->
+             <dependency>
+                 <groupId>org.thingml</groupId>
+                 <artifactId>org.thingml.parser.standalone</artifactId>
+                 <version>${project.version}</version>
+             </dependency>
+
+
+             <dependency>
+                 <groupId>org.thingml</groupId>
+                 <artifactId>org.thingml.parser.standalone</artifactId>
+                 <version>${project.version}</version>
+             </dependency>
+     -->
 
         <dependency>
             <groupId>commons-io</groupId>
