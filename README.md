@@ -25,7 +25,7 @@ If you are going to compile Java code from ThingML, please:
 - Install [Maven](http://maven.apache.org/)
 
 ### &#x1F539; Javascript
-If you are going to compile Java code from ThingML, please:
+If you are going to compile JavaScript (Node.JS) code from ThingML, please:
 
 - Install [Node.JS](https://nodejs.org/en/)
 
