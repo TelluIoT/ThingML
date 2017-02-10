@@ -33,10 +33,10 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Increment action, StringBuilder builder, Context ctx) {
-        if (action.getVar().getProperty() instanceof Property) {
-            builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-            builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality() != null, ctx) + ")");
-            builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+        if (action.getVar() instanceof Property) {
+            builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar())) + "(");
+            builder.append("(" + JavaHelper.getJavaType(action.getVar().getTypeRef().getType(), action.getVar().getTypeRef().getCardinality() != null, ctx) + ")");
+            builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar())) + "()");
             builder.append(" + 1));\n");
         } else {
             super.generate(action, builder, ctx);
@@ -45,10 +45,10 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
-        if (action.getVar().getProperty() instanceof Property) {
-            builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "(");
-            builder.append("(" + JavaHelper.getJavaType(action.getVar().getProperty().getType(), action.getVar().getProperty().getCardinality() != null, ctx) + ")");
-            builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar().getProperty())) + "()");
+        if (action.getVar() instanceof Property) {
+            builder.append("set" + ctx.firstToUpper(ctx.getVariableName(action.getVar())) + "(");
+            builder.append("(" + JavaHelper.getJavaType(action.getVar().getTypeRef().getType(), action.getVar().getTypeRef().getCardinality() != null, ctx) + ")");
+            builder.append("(get" + ctx.firstToUpper(ctx.getVariableName(action.getVar())) + "()");
             builder.append(" - 1));\n");
         } else {
             super.generate(action, builder, ctx);
@@ -149,7 +149,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             int j = 0;
             for (Parameter fp : action.getMessage().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.isIsArray(), p, builder, ctx);
+                    cast(fp.getTypeRef().getType(), fp.getTypeRef().isIsArray(), p, builder, ctx);
                     break;
                 }
                 j++;
@@ -177,9 +177,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        if (AnnotatedElementHelper.isDefined(action.getFunction(), "fork_thread", "true") && action.getFunction().getType() != null) {
-            System.err.println("function " + action.getFunction().getName() + "cannot be called with @fork_thread, as its return type (" + action.getFunction().getType().getName() + ") is not void");
-            throw new UnsupportedOperationException("function " + action.getFunction().getName() + "cannot be called with @fork_thread, as its return type (" + action.getFunction().getType().getName() + ") is not void");
+        if (AnnotatedElementHelper.isDefined(action.getFunction(), "fork_thread", "true") && action.getFunction().getTypeRef().getType() != null) {
+            System.err.println("function " + action.getFunction().getName() + "cannot be called with @fork_thread, as its return type (" + action.getFunction().getTypeRef().getType().getName() + ") is not void");
+            throw new UnsupportedOperationException("function " + action.getFunction().getName() + "cannot be called with @fork_thread, as its return type (" + action.getFunction().getTypeRef().getType().getName() + ") is not void");
         }
 
         if (AnnotatedElementHelper.isDefined(action.getFunction(), "fork_thread", "true")) {
@@ -215,7 +215,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         }
 
         //Define the type of the variable
-        builder.append(JavaHelper.getJavaType(action.getType(), action.isIsArray(), ctx));
+        builder.append(JavaHelper.getJavaType(action.getTypeRef().getType(), action.getTypeRef().isIsArray(), ctx));
         builder.append(" ");
 
         builder.append(ctx.getVariableName(action));
@@ -275,7 +275,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
         if (!ctx.getAtInitTimeLock()) {
-            if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getCardinality() == null)
+            if (expression.getProperty() instanceof Property && ((Property) expression.getProperty()).getTypeRef().getCardinality() == null)
                 builder.append("get" + ctx.firstToUpper(ctx.getVariableName(expression.getProperty())) + "()");
             else
                 builder.append(ctx.getVariableName(expression.getProperty()));
@@ -306,7 +306,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             int j = 0;
             for (Parameter fp : expression.getFunction().getParameters()) {
                 if (i == j) {//parameter p corresponds to formal parameter fp
-                    cast(fp.getType(), fp.isIsArray(), p, builder, ctx);
+                    cast(fp.getTypeRef().getType(), fp.getTypeRef().isIsArray(), p, builder, ctx);
                     break;
                 }
                 j++;

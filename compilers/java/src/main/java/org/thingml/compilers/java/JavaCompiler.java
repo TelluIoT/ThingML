@@ -24,6 +24,7 @@ import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Thing;
 
 import java.io.File;
 import java.util.HashMap;

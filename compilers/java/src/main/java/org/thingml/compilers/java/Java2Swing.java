@@ -311,10 +311,10 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                     if (p.getTypeRef().getType() instanceof Enumeration) {
                         //builder append p.getType.scala_type + "[] values" + self.getName + Context.firstToUpper(p.getName) + " = {"
                         //builder append p.getType.asInstanceOf[Enumeration].getLiterals.collect{case l => p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName.toUpperCase() + "()"}.mkString(", ") + "};\n"
-                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JComboBox(values_" + p.getType().getName() + ".keySet().toArray());\n");
+                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JComboBox(values_" + p.getTypeRef().getType().getName() + ".keySet().toArray());\n");
                     } else {
                         tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JTextField();\n");
-                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ".setText(\"" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + "\");\n");
+                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ".setText(\"" + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null, ctx) + "\");\n");
                     }
 
                     tempBuilder.append("c.gridx = 1;\n");
@@ -398,8 +398,8 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                                 tempBuilder.append(ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), false, ctx)));
                                 parseBuilder.append(ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), false, ctx)));
                             }*/
-                            tempBuilder.append("StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText())");
-                            parseBuilder.append("StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, params[" + msg.getParameters().indexOf(p) + "].trim())");
+                            tempBuilder.append("StringHelper.toObject (" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ".class, getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText())");
+                            parseBuilder.append("StringHelper.toObject (" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ".class, params[" + msg.getParameters().indexOf(p) + "].trim())");
                         }
                     } else {
                         builder.append("getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText().getBytes()");

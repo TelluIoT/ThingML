@@ -19,8 +19,8 @@ package org.thingml.compilers.java;
 import org.apache.commons.io.IOUtils;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingApiCompiler;
 
@@ -50,7 +50,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         if (e.getLiterals().size() > 0) {
             int i = 0;
             for (EnumerationLiteral l : e.getLiterals()) {
-                String java_name = ((ThingMLElement) l.eContainer()).getName().toUpperCase() + "_" + l.getName().toUpperCase();
+                String java_name = ((Enumeration) l.eContainer()).getName().toUpperCase() + "_" + l.getName().toUpperCase();
                 String enum_val = "";
                 if (!AnnotatedElementHelper.annotation(l, "enum_val").isEmpty()) {
                     enum_val = AnnotatedElementHelper.annotation(l, "enum_val").toArray()[0].toString();
