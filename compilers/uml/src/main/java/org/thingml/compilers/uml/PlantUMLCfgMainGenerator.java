@@ -16,10 +16,10 @@
  */
 package org.thingml.compilers.uml;
 
+import org.thingml.xtext.helpers.ActionHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ActionHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 
@@ -68,7 +68,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             if (thing.getProperties().size() > 0)
                 classes.append("..Properties..\n");
             for (Property p : thing.getProperties()) {
-                classes.append("-" + p.getName() + " : " + p.getType().getName());
+                classes.append("-" + p.getName() + " : " + p.getTypeRef().getType().getName());
                 if (p.getInit() != null) {
                     classes.append(" = ");
                     ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), classes, ctx);
@@ -88,7 +88,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                     for (Parameter p : m.getParameters()) {
                         if (i > 0)
                             classes.append(", ");
-                        classes.append(p.getName() + " : " + p.getType().getName());
+                        classes.append(p.getName() + " : " + p.getTypeRef().getType().getName());
                     }
                 }
                 classes.append(")");
@@ -118,12 +118,12 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                     for (Parameter p : f.getParameters()) {
                         if (i > 0)
                             classes.append(", ");
-                        classes.append(p.getName() + " : " + p.getType().getName());
+                        classes.append(p.getName() + " : " + p.getTypeRef().getType().getName());
                     }
                 }
                 classes.append(") : ");
-                if (f.getType() != null) {
-                    classes.append(f.getType().getName());
+                if (f.getTypeRef().getType() != null) {
+                    classes.append(f.getTypeRef().getType().getName());
                 } else {
                     classes.append("void");
                 }
@@ -158,11 +158,11 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             builder.append("boundary " + p.getName() + "\n");
         }
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-            builder.append(c.getCli().getInstance().getName() + " -(0- " + c.getSrv().getInstance().getName() + " : " +
+            builder.append(c.getCli().getName() + " -(0- " + c.getSrv().getName() + " : " +
                     c.getRequired().getName() + " => " + c.getProvided().getName() + "\n");
         }
         for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
-            builder.append(c.getInst().getInstance().getName() + " .. " + c.getProtocol().getName() + " : " + c.getPort().getName() + "\n");
+            builder.append(c.getInst().getName() + " .. " + c.getProtocol().getName() + " : " + c.getPort().getName() + "\n");
         }
         builder.append("@enduml");
 

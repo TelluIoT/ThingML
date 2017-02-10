@@ -21,11 +21,11 @@
  */
 package org.thingml.testconfigurationgenerator;
 
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.thingmltools.ThingMLTool;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  *

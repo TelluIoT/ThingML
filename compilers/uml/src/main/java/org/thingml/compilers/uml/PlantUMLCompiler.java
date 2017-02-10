@@ -16,12 +16,7 @@
  */
 package org.thingml.compilers.uml;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
@@ -31,6 +26,11 @@ import org.thingml.compilers.thing.*;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.utils.ThingMLPrettyPrinter;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 import java.io.*;
 
@@ -40,8 +40,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     public PlantUMLCompiler() {
         super(new ThingMLPrettyPrinter(), new ThingApiCompiler(), new PlantUMLCfgMainGenerator(),
-                new CfgBuildCompiler(), new PlantUMLThingImplCompiler(),
-                new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
+                new CfgBuildCompiler(), new PlantUMLThingImplCompiler());
         this.checker = new Checker(this.getID()) {
             @Override
             public void do_check(Configuration cfg) {
@@ -50,8 +49,8 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
         };
     }
 
-    public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
-        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
+    public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
+        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
         this.checker = new Checker(this.getID()) {
             @Override
             public void do_check(Configuration cfg) {
@@ -92,7 +91,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
         for (Thing th : ConfigurationHelper.allThings(t)) {
-            for (StateMachine sm : ThingMLHelpers.allStateMachines(th)) {
+            for (CompositeState sm : ThingMLHelpers.allStateMachines(th)) {
                 ((FSMBasedThingImplCompiler) getThingImplCompiler()).generateState(sm, ctx.getBuilder(t.getName() + "/docs/" + th.getName() + "_" + sm.getName() + ".plantuml"), ctx);
             }
         }

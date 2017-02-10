@@ -21,12 +21,12 @@
  */
 package org.thingml.thingmltools;
 
-import org.sintef.thingml.ThingMLModel;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  *

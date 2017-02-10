@@ -24,13 +24,14 @@ package org.thingml.compilers.commandline;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ThingMLModel;
+
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.compilers.registry.ThingMLToolRegistry;
 import org.thingml.thingmltools.ThingMLTool;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 import java.io.File;
 

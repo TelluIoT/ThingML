@@ -16,10 +16,9 @@
  */
 package org.thingml.compilers.uml;
 
+import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.CompositeStateHelper;
-import org.sintef.thingml.helpers.StateHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 
@@ -68,7 +67,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
+    protected void generateStateMachine(CompositeState sm, StringBuilder builder, Context ctx) {
         builder.append("@startuml\n");
         builder.append("skinparam defaultTextAlignment left\n");
         builder.append("caption Behavior of thing " + ThingMLHelpers.findContainingThing(sm).getName() + "\n");
@@ -159,7 +158,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         String content = builder.toString();
-        String transition = t.getSource().getName() + " --> " + t.getTarget().getName();
+        String transition = ((State)t.eContainer()).getName() + " --> " + t.getTarget().getName();
         if ((msg != null && p != null) || t.getAction() != null || t.getGuard() != null) {
             transition = transition + " : ";
         }
@@ -176,7 +175,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.delete(0, builder.length());
             builder.append(content);
         } else {
-            builder.append("\n" + t.getSource().getName() + " --> " + t.getTarget().getName());
+            builder.append("\n" + ((State)t.eContainer()).getName() + " --> " + t.getTarget().getName());
             if ((msg != null && p != null) || t.getAction() != null || t.getGuard() != null) {
                 builder.append(" : ");
             }
