@@ -32,7 +32,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
         traceVariablePre(action, builder, ctx);
-        if (action.getProperty().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
+        if (action.getProperty().getTypeRef().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
             for (Expression i : action.getIndex()) {
                 if (action.getProperty() instanceof Property) {
                     builder.append(ctx.getContextAnnotation("thisRef"));
@@ -42,7 +42,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                 generate(i, tempBuilder, ctx);
                 builder.append("[" + tempBuilder.toString() + "]");
                 builder.append(" = ");
-                cast(action.getProperty().getType(), false, action.getExpression(), builder, ctx);
+                cast(action.getProperty().getTypeRef().getType(), false, action.getExpression(), builder, ctx);
                 builder.append(";\n");
 
             }
@@ -52,7 +52,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             }
             builder.append(ctx.getVariableName(action.getProperty()));
             builder.append(" = ");
-            cast(action.getProperty().getType(), action.getProperty().isIsArray(), action.getExpression(), builder, ctx);
+            cast(action.getProperty().getTypeRef().getType(), action.getProperty().getTypeRef().isIsArray(), action.getExpression(), builder, ctx);
             builder.append(";\n");
         }
         traceVariablePost(action, builder, ctx);
@@ -104,7 +104,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         Session session = action.getSession();
         builder.append("const " + session.getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(session).getName()) + "(\"" + session.getName() + "\", this");
         for (Property p : ThingMLHelpers.allProperties(ThingMLHelpers.findContainingThing(session))) {
-            if (p.isIsArray() || p.getCardinality() != null) {
+            if (p.getTypeRef().isIsArray() || p.getTypeRef().getCardinality() != null) {
                 builder.append(", this." + ThingMLElementHelper.qname(p, "_") + "_var.slice(0)");
             } else {
                 builder.append(", this." + ThingMLElementHelper.qname(p, "_") + "_var");
@@ -140,7 +140,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             builder.append(" = ");
             generate(action.getInit(), builder, ctx);
         } else {
-            if (action.getCardinality() != null) {
+            if (action.getTypeRef().getCardinality() != null) {
                 builder.append(" = []");
             }
             if (!action.isChangeable())
@@ -185,7 +185,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                         if (!p.isChangeable()) {
                             boolean found = false;
                             for (ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
-                                String tmp = ThingMLElementHelper.findContainingConfiguration(pa.getInstance().getInstance()).getName() + "_" + pa.getInstance().getInstance().getName();
+                                String tmp = ThingMLElementHelper.findContainingConfiguration(pa.getInstance()).getName() + "_" + pa.getInstance().getName();
 
                                 if (ctx.currentInstance.getName().equals(tmp)) {
                                     if (pa.getProperty().getName().compareTo(p.getName()) == 0) {

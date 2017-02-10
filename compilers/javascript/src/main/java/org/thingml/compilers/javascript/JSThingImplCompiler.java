@@ -348,7 +348,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         if (t.getEvent().size() == 0) {
-            builder.append(ThingMLElementHelper.qname(t.getSource(), "_") + ".to(" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
+            builder.append(ThingMLElementHelper.qname(t.eContainer(), "_") + ".to(" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
             if (t.getGuard() != null) {
                 builder.append(".when((message) => {");
                 builder.append(" return ");
@@ -357,7 +357,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             }
 
         } else {
-            builder.append(ThingMLElementHelper.qname(t.getSource(), "_") + ".to(" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
+            builder.append(ThingMLElementHelper.qname(t.eContainer(), "_") + ".to(" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
             builder.append(".when((" + msg.getName() + ") => {");
             builder.append("return " + msg.getName() + "._port === '" + p.getName() + "' && " + msg.getName() + "._msg === '" + msg.getName() + "'");
             if (t.getGuard() != null) {

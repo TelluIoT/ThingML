@@ -93,9 +93,9 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         StringBuilder mt = new StringBuilder();
         for (Property prop : ThingHelper.allUsedProperties(i.getType())) {//TODO: not optimal, to be improved
             for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
-                if (p.getKey().equals(prop) && prop.getCardinality() == null && !AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
+                if (p.getKey().equals(prop) && prop.getTypeRef().getCardinality() == null && !AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
                     String result = "";
-                    if (prop.getType() instanceof Enumeration) {
+                    if (prop.getTypeRef().getType() instanceof Enumeration) {
                         Enumeration enum_ = (Enumeration) prop.getTypeRef().getType();
                         EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
                         StringBuilder tempbuilder = new StringBuilder();
@@ -114,7 +114,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
                             result += tempbuilder.toString();
                         } else {
-                            result += getDefaultValue(p.getKey().getType());
+                            result += getDefaultValue(p.getKey().getTypeRef().getType());
                         }
                     }
                     builder.append(", ");
