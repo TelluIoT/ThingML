@@ -161,6 +161,7 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         EnumerationLiteral enumerationLiteral = (EnumerationLiteral)theEObject;
         T result = caseEnumerationLiteral(enumerationLiteral);
+        if (result == null) result = caseAnnotatedElement(enumerationLiteral);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }

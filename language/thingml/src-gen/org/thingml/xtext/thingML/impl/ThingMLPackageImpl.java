@@ -1003,16 +1003,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getEnumerationLiteral_Annotations()
-  {
-    return (EReference)enumerationLiteralEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getThing()
   {
     return thingEClass;
@@ -1373,6 +1363,26 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EReference getRegion_Initial()
+  {
+    return (EReference)regionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getRegion_History()
+  {
+    return (EAttribute)regionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getRegionOrSession()
   {
     return regionOrSessionEClass;
@@ -1393,7 +1403,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getCompositeState_Initial()
+  public EReference getCompositeState_Substate()
   {
     return (EReference)compositeStateEClass.getEStructuralFeatures().get(0);
   }
@@ -1403,29 +1413,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getCompositeState_History()
-  {
-    return (EAttribute)compositeStateEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getCompositeState_Substate()
-  {
-    return (EReference)compositeStateEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EReference getCompositeState_Region()
   {
-    return (EReference)compositeStateEClass.getEStructuralFeatures().get(3);
+    return (EReference)compositeStateEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1473,7 +1463,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getSession_Initial()
+  public EReference getSession_Properties()
   {
     return (EReference)sessionEClass.getEStructuralFeatures().get(2);
   }
@@ -1483,7 +1473,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getSession_Properties()
+  public EReference getSession_Entry()
   {
     return (EReference)sessionEClass.getEStructuralFeatures().get(3);
   }
@@ -1493,7 +1483,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getSession_Entry()
+  public EReference getSession_Exit()
   {
     return (EReference)sessionEClass.getEStructuralFeatures().get(4);
   }
@@ -1503,7 +1493,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getSession_Exit()
+  public EReference getSession_Substate()
   {
     return (EReference)sessionEClass.getEStructuralFeatures().get(5);
   }
@@ -1513,7 +1503,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getSession_Substate()
+  public EReference getSession_Internal()
   {
     return (EReference)sessionEClass.getEStructuralFeatures().get(6);
   }
@@ -1523,19 +1513,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getSession_Internal()
-  {
-    return (EReference)sessionEClass.getEStructuralFeatures().get(7);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EReference getSession_Region()
   {
-    return (EReference)sessionEClass.getEStructuralFeatures().get(8);
+    return (EReference)sessionEClass.getEStructuralFeatures().get(7);
   }
 
   /**
@@ -1563,7 +1543,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getParallelRegion_Initial()
+  public EReference getParallelRegion_Substate()
   {
     return (EReference)parallelRegionEClass.getEStructuralFeatures().get(1);
   }
@@ -1573,29 +1553,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getParallelRegion_History()
-  {
-    return (EAttribute)parallelRegionEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getParallelRegion_Substate()
-  {
-    return (EReference)parallelRegionEClass.getEStructuralFeatures().get(3);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EReference getParallelRegion_Region()
   {
-    return (EReference)parallelRegionEClass.getEStructuralFeatures().get(4);
+    return (EReference)parallelRegionEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -3193,7 +3153,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     enumerationLiteralEClass = createEClass(ENUMERATION_LITERAL);
     createEAttribute(enumerationLiteralEClass, ENUMERATION_LITERAL__NAME);
-    createEReference(enumerationLiteralEClass, ENUMERATION_LITERAL__ANNOTATIONS);
 
     thingEClass = createEClass(THING);
     createEAttribute(thingEClass, THING__FRAGMENT);
@@ -3242,12 +3201,12 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     internalPortEClass = createEClass(INTERNAL_PORT);
 
     regionEClass = createEClass(REGION);
+    createEReference(regionEClass, REGION__INITIAL);
+    createEAttribute(regionEClass, REGION__HISTORY);
 
     regionOrSessionEClass = createEClass(REGION_OR_SESSION);
 
     compositeStateEClass = createEClass(COMPOSITE_STATE);
-    createEReference(compositeStateEClass, COMPOSITE_STATE__INITIAL);
-    createEAttribute(compositeStateEClass, COMPOSITE_STATE__HISTORY);
     createEReference(compositeStateEClass, COMPOSITE_STATE__SUBSTATE);
     createEReference(compositeStateEClass, COMPOSITE_STATE__REGION);
 
@@ -3256,7 +3215,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     sessionEClass = createEClass(SESSION);
     createEAttribute(sessionEClass, SESSION__NAME);
     createEAttribute(sessionEClass, SESSION__MAX_INSTANCES);
-    createEReference(sessionEClass, SESSION__INITIAL);
     createEReference(sessionEClass, SESSION__PROPERTIES);
     createEReference(sessionEClass, SESSION__ENTRY);
     createEReference(sessionEClass, SESSION__EXIT);
@@ -3266,8 +3224,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     parallelRegionEClass = createEClass(PARALLEL_REGION);
     createEAttribute(parallelRegionEClass, PARALLEL_REGION__NAME);
-    createEReference(parallelRegionEClass, PARALLEL_REGION__INITIAL);
-    createEAttribute(parallelRegionEClass, PARALLEL_REGION__HISTORY);
     createEReference(parallelRegionEClass, PARALLEL_REGION__SUBSTATE);
     createEReference(parallelRegionEClass, PARALLEL_REGION__REGION);
 
@@ -3511,6 +3467,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     primitiveTypeEClass.getESuperTypes().add(this.getType());
     objectTypeEClass.getESuperTypes().add(this.getType());
     enumerationEClass.getESuperTypes().add(this.getType());
+    enumerationLiteralEClass.getESuperTypes().add(this.getAnnotatedElement());
     thingEClass.getESuperTypes().add(this.getType());
     propertyAssignEClass.getESuperTypes().add(this.getAnnotatedElement());
     protocolEClass.getESuperTypes().add(this.getAnnotatedElement());
@@ -3622,7 +3579,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     initEClass(enumerationLiteralEClass, EnumerationLiteral.class, "EnumerationLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getEnumerationLiteral_Name(), ecorePackage.getEString(), "name", null, 0, 1, EnumerationLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getEnumerationLiteral_Annotations(), this.getPlatformAnnotation(), null, "annotations", null, 0, -1, EnumerationLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(thingEClass, Thing.class, "Thing", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getThing_Fragment(), ecorePackage.getEBoolean(), "fragment", null, 0, 1, Thing.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3671,12 +3627,12 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(internalPortEClass, InternalPort.class, "InternalPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(regionEClass, Region.class, "Region", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getRegion_Initial(), this.getState(), null, "initial", null, 0, 1, Region.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getRegion_History(), ecorePackage.getEBoolean(), "history", null, 0, 1, Region.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(regionOrSessionEClass, RegionOrSession.class, "RegionOrSession", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(compositeStateEClass, CompositeState.class, "CompositeState", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getCompositeState_Initial(), this.getState(), null, "initial", null, 0, 1, CompositeState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getCompositeState_History(), ecorePackage.getEBoolean(), "history", null, 0, 1, CompositeState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCompositeState_Substate(), this.getState(), null, "substate", null, 0, -1, CompositeState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCompositeState_Region(), this.getRegionOrSession(), null, "region", null, 0, -1, CompositeState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -3685,7 +3641,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(sessionEClass, Session.class, "Session", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getSession_Name(), ecorePackage.getEString(), "name", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getSession_MaxInstances(), ecorePackage.getEInt(), "maxInstances", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getSession_Initial(), this.getState(), null, "initial", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getSession_Properties(), this.getProperty(), null, "properties", null, 0, -1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getSession_Entry(), this.getAction(), null, "entry", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getSession_Exit(), this.getAction(), null, "exit", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3695,8 +3650,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     initEClass(parallelRegionEClass, ParallelRegion.class, "ParallelRegion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getParallelRegion_Name(), ecorePackage.getEString(), "name", null, 0, 1, ParallelRegion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getParallelRegion_Initial(), this.getState(), null, "initial", null, 0, 1, ParallelRegion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getParallelRegion_History(), ecorePackage.getEBoolean(), "history", null, 0, 1, ParallelRegion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getParallelRegion_Substate(), this.getState(), null, "substate", null, 0, -1, ParallelRegion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getParallelRegion_Region(), this.getRegionOrSession(), null, "region", null, 0, -1, ParallelRegion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

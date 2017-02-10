@@ -20,7 +20,7 @@ PlatformAnnotation returns PlatformAnnotation:
 
 AnnotatedElement:
 	Protocol | Function | Property | Message | Parameter | Port | Configuration | Handler | State | CompositeState | 
-	FinalState | Type | PropertyAssign | /*Stream |*/ Session | ParallelRegion | LocalVariable | Instance | AbstractConnector
+	FinalState | Type | PropertyAssign | /*Stream |*/ Session | ParallelRegion | LocalVariable | Instance | AbstractConnector | EnumerationLiteral
 ;
 
 Variable:
@@ -170,7 +170,8 @@ LengthArray returns LengthArray:
  *****************************************************************************/
 
 Region:
-	RegionOrSession | CompositeState;
+	'region' 'init' initial=[State|ID] ('keeps' history?='history')?  // just to get those properties in the abstract class
+	| RegionOrSession | CompositeState;
 	
 RegionOrSession:
 	ParallelRegion | Session

@@ -229,6 +229,12 @@ public abstract class AbstractThingMLProposalProvider extends AbstractJavaBasedC
 	public void completeInternalPort_Receives(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		lookupCrossReference(((CrossReference)assignment.getTerminal()), context, acceptor);
 	}
+	public void completeRegion_Initial(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		lookupCrossReference(((CrossReference)assignment.getTerminal()), context, acceptor);
+	}
+	public void completeRegion_History(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
+		// subclasses may override
+	}
 	public void completeStateMachine_Name(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);
 	}

@@ -127,20 +127,14 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.variableAssignment_Property) {
 			return scopeForVariableAssignment_Property(context as VariableAssignment);
 		}
-		else if (reference == p.compositeState_Initial) {
-			return scopeForCompositeState_Initial(context as CompositeState);
-		}
-		else if (reference == p.parallelRegion_Initial) {
-			return scopeForParallelRegion_Initial(context as ParallelRegion);
+		else if (reference == p.region_Initial) {
+			return scopeForRegion_Initial(context as Region);
 		}
 		else if (reference == p.eventReference_ReceiveMsg) {
 			return scopeForEventReference_ReceiveMsg(context as EventReference);
 		}
 		else if (reference == p.eventReference_Parameter) {
 			return scopeForEventReference_Parameter(context as EventReference);
-		}
-		else if (reference == p.session_Initial) {
-			return scopeForSession_Initial(context as Session);
 		}
 		else if (reference == p.startSession_Session) {
 			return scopeForStartSession_Session(context as StartSession);
@@ -188,8 +182,10 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		}
 	}
 	
-	def protected IScope scopeForCompositeState_Initial(CompositeState context) {
-		Scopes.scopeFor( context.substate );
+	def protected IScope scopeForRegion_Initial(Region context) {
+		if (context instanceof ParallelRegion) return Scopes.scopeFor( context.substate );
+		if (context instanceof CompositeState) return Scopes.scopeFor( context.substate );
+		if (context instanceof Session) return Scopes.scopeFor( context.substate );
 	}
 	
 	def protected IScope scopeForParallelRegion_Initial(ParallelRegion context) {

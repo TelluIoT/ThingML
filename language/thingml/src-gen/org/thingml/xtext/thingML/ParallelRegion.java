@@ -29,8 +29,6 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getInitial <em>Initial</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#isHistory <em>History</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getSubstate <em>Substate</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.ParallelRegion#getRegion <em>Region</em>}</li>
  * </ul>
@@ -66,58 +64,6 @@ public interface ParallelRegion extends AnnotatedElement, RegionOrSession
    * @generated
    */
   void setName(String value);
-
-  /**
-   * Returns the value of the '<em><b>Initial</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Initial</em>' reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Initial</em>' reference.
-   * @see #setInitial(State)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getParallelRegion_Initial()
-   * @model
-   * @generated
-   */
-  State getInitial();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.ParallelRegion#getInitial <em>Initial</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Initial</em>' reference.
-   * @see #getInitial()
-   * @generated
-   */
-  void setInitial(State value);
-
-  /**
-   * Returns the value of the '<em><b>History</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>History</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>History</em>' attribute.
-   * @see #setHistory(boolean)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getParallelRegion_History()
-   * @model
-   * @generated
-   */
-  boolean isHistory();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.ParallelRegion#isHistory <em>History</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>History</em>' attribute.
-   * @see #isHistory()
-   * @generated
-   */
-  void setHistory(boolean value);
 
   /**
    * Returns the value of the '<em><b>Substate</b></em>' containment reference list.

@@ -82,6 +82,7 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.ReceiveMessage;
+import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
@@ -290,6 +291,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.RECEIVE_MESSAGE:
 				sequence_ReceiveMessage(context, (ReceiveMessage) semanticObject); 
+				return; 
+			case ThingMLPackage.REGION:
+				sequence_Region(context, (Region) semanticObject); 
 				return; 
 			case ThingMLPackage.REQUIRED_PORT:
 				sequence_RequiredPort(context, (RequiredPort) semanticObject); 
@@ -956,6 +960,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns EnumerationLiteral
 	 *     EnumerationLiteral returns EnumerationLiteral
 	 *
 	 * Constraint:
@@ -1879,6 +1884,18 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     (name=ID? port=[Port|ID] message=[Message|ID])
 	 */
 	protected void sequence_ReceiveMessage(ISerializationContext context, ReceiveMessage semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Region returns Region
+	 *
+	 * Constraint:
+	 *     (initial=[State|ID] history?='history'?)
+	 */
+	protected void sequence_Region(ISerializationContext context, Region semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

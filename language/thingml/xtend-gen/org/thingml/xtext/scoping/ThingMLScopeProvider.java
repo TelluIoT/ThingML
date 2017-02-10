@@ -41,6 +41,7 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.ReceiveMessage;
+import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Session;
@@ -180,49 +181,37 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
                                                   if (_equals_20) {
                                                     return this.scopeForVariableAssignment_Property(((VariableAssignment) context));
                                                   } else {
-                                                    EReference _compositeState_Initial = this.p.getCompositeState_Initial();
-                                                    boolean _equals_21 = Objects.equal(reference, _compositeState_Initial);
+                                                    EReference _region_Initial = this.p.getRegion_Initial();
+                                                    boolean _equals_21 = Objects.equal(reference, _region_Initial);
                                                     if (_equals_21) {
-                                                      return this.scopeForCompositeState_Initial(((CompositeState) context));
+                                                      return this.scopeForRegion_Initial(((Region) context));
                                                     } else {
-                                                      EReference _parallelRegion_Initial = this.p.getParallelRegion_Initial();
-                                                      boolean _equals_22 = Objects.equal(reference, _parallelRegion_Initial);
+                                                      EReference _eventReference_ReceiveMsg = this.p.getEventReference_ReceiveMsg();
+                                                      boolean _equals_22 = Objects.equal(reference, _eventReference_ReceiveMsg);
                                                       if (_equals_22) {
-                                                        return this.scopeForParallelRegion_Initial(((ParallelRegion) context));
+                                                        return this.scopeForEventReference_ReceiveMsg(((EventReference) context));
                                                       } else {
-                                                        EReference _eventReference_ReceiveMsg = this.p.getEventReference_ReceiveMsg();
-                                                        boolean _equals_23 = Objects.equal(reference, _eventReference_ReceiveMsg);
+                                                        EReference _eventReference_Parameter = this.p.getEventReference_Parameter();
+                                                        boolean _equals_23 = Objects.equal(reference, _eventReference_Parameter);
                                                         if (_equals_23) {
-                                                          return this.scopeForEventReference_ReceiveMsg(((EventReference) context));
+                                                          return this.scopeForEventReference_Parameter(((EventReference) context));
                                                         } else {
-                                                          EReference _eventReference_Parameter = this.p.getEventReference_Parameter();
-                                                          boolean _equals_24 = Objects.equal(reference, _eventReference_Parameter);
+                                                          EReference _startSession_Session_1 = this.p.getStartSession_Session();
+                                                          boolean _equals_24 = Objects.equal(reference, _startSession_Session_1);
                                                           if (_equals_24) {
-                                                            return this.scopeForEventReference_Parameter(((EventReference) context));
+                                                            return this.scopeForStartSession_Session(((StartSession) context));
                                                           } else {
-                                                            EReference _session_Initial = this.p.getSession_Initial();
-                                                            boolean _equals_25 = Objects.equal(reference, _session_Initial);
-                                                            if (_equals_25) {
-                                                              return this.scopeForSession_Initial(((Session) context));
+                                                            if ((((Objects.equal(reference, this.p.getConfigPropertyAssign_Instance()) || Objects.equal(reference, this.p.getConnector_Cli())) || Objects.equal(reference, this.p.getConnector_Srv())) || Objects.equal(reference, this.p.getExternalConnector_Inst()))) {
+                                                              Configuration _findContainingConfiguration = ThingMLElementHelper.findContainingConfiguration(context);
+                                                              return this.scopeForConfigurationInstances(_findContainingConfiguration);
                                                             } else {
-                                                              EReference _startSession_Session_1 = this.p.getStartSession_Session();
-                                                              boolean _equals_26 = Objects.equal(reference, _startSession_Session_1);
-                                                              if (_equals_26) {
-                                                                return this.scopeForStartSession_Session(((StartSession) context));
-                                                              } else {
-                                                                if ((((Objects.equal(reference, this.p.getConfigPropertyAssign_Instance()) || Objects.equal(reference, this.p.getConnector_Cli())) || Objects.equal(reference, this.p.getConnector_Srv())) || Objects.equal(reference, this.p.getExternalConnector_Inst()))) {
-                                                                  Configuration _findContainingConfiguration = ThingMLElementHelper.findContainingConfiguration(context);
-                                                                  return this.scopeForConfigurationInstances(_findContainingConfiguration);
-                                                                } else {
-                                                                  String _name = reference.getName();
-                                                                  String _plus = ("INFO: Resolving reference : " + _name);
-                                                                  String _plus_1 = (_plus + " in Class ");
-                                                                  EObject _eContainer = reference.eContainer();
-                                                                  String _name_1 = ((ENamedElement) _eContainer).getName();
-                                                                  String _plus_2 = (_plus_1 + _name_1);
-                                                                  System.out.println(_plus_2);
-                                                                }
-                                                              }
+                                                              String _name = reference.getName();
+                                                              String _plus = ("INFO: Resolving reference : " + _name);
+                                                              String _plus_1 = (_plus + " in Class ");
+                                                              EObject _eContainer = reference.eContainer();
+                                                              String _name_1 = ((ENamedElement) _eContainer).getName();
+                                                              String _plus_2 = (_plus_1 + _name_1);
+                                                              System.out.println(_plus_2);
                                                             }
                                                           }
                                                         }
@@ -297,9 +286,20 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
     return _xifexpression;
   }
   
-  protected IScope scopeForCompositeState_Initial(final CompositeState context) {
-    EList<State> _substate = context.getSubstate();
-    return Scopes.scopeFor(_substate);
+  protected IScope scopeForRegion_Initial(final Region context) {
+    if ((context instanceof ParallelRegion)) {
+      EList<State> _substate = ((ParallelRegion)context).getSubstate();
+      return Scopes.scopeFor(_substate);
+    }
+    if ((context instanceof CompositeState)) {
+      EList<State> _substate_1 = ((CompositeState)context).getSubstate();
+      return Scopes.scopeFor(_substate_1);
+    }
+    if ((context instanceof Session)) {
+      EList<State> _substate_2 = ((Session)context).getSubstate();
+      return Scopes.scopeFor(_substate_2);
+    }
+    return null;
   }
   
   protected IScope scopeForParallelRegion_Initial(final ParallelRegion context) {

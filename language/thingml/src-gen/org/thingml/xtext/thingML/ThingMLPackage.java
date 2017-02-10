@@ -451,22 +451,22 @@ public interface ThingMLPackage extends EPackage
   int ENUMERATION_LITERAL = 9;
 
   /**
-   * The feature id for the '<em><b>Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int ENUMERATION_LITERAL__NAME = 0;
-
-  /**
    * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int ENUMERATION_LITERAL__ANNOTATIONS = 1;
+  int ENUMERATION_LITERAL__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ENUMERATION_LITERAL__NAME = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The number of structural features of the '<em>Enumeration Literal</em>' class.
@@ -475,7 +475,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int ENUMERATION_LITERAL_FEATURE_COUNT = 2;
+  int ENUMERATION_LITERAL_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
 
   /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.ThingImpl <em>Thing</em>}' class.
@@ -1138,13 +1138,31 @@ public interface ThingMLPackage extends EPackage
   int REGION = 21;
 
   /**
+   * The feature id for the '<em><b>Initial</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REGION__INITIAL = 0;
+
+  /**
+   * The feature id for the '<em><b>History</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REGION__HISTORY = 1;
+
+  /**
    * The number of structural features of the '<em>Region</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int REGION_FEATURE_COUNT = 0;
+  int REGION_FEATURE_COUNT = 2;
 
   /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.RegionOrSessionImpl <em>Region Or Session</em>}' class.
@@ -1155,6 +1173,24 @@ public interface ThingMLPackage extends EPackage
    * @generated
    */
   int REGION_OR_SESSION = 22;
+
+  /**
+   * The feature id for the '<em><b>Initial</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REGION_OR_SESSION__INITIAL = REGION__INITIAL;
+
+  /**
+   * The feature id for the '<em><b>History</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REGION_OR_SESSION__HISTORY = REGION__HISTORY;
 
   /**
    * The number of structural features of the '<em>Region Or Session</em>' class.
@@ -1185,67 +1221,13 @@ public interface ThingMLPackage extends EPackage
   int COMPOSITE_STATE__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
 
   /**
-   * The feature id for the '<em><b>Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int COMPOSITE_STATE__NAME = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
-
-  /**
-   * The feature id for the '<em><b>Properties</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int COMPOSITE_STATE__PROPERTIES = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
-
-  /**
-   * The feature id for the '<em><b>Entry</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int COMPOSITE_STATE__ENTRY = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
-
-  /**
-   * The feature id for the '<em><b>Exit</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int COMPOSITE_STATE__EXIT = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
-
-  /**
-   * The feature id for the '<em><b>Internal</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int COMPOSITE_STATE__INTERNAL = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
-
-  /**
-   * The feature id for the '<em><b>Outgoing</b></em>' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int COMPOSITE_STATE__OUTGOING = ANNOTATED_ELEMENT_FEATURE_COUNT + 5;
-
-  /**
    * The feature id for the '<em><b>Initial</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int COMPOSITE_STATE__INITIAL = ANNOTATED_ELEMENT_FEATURE_COUNT + 6;
+  int COMPOSITE_STATE__INITIAL = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>History</b></em>' attribute.
@@ -1254,7 +1236,61 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int COMPOSITE_STATE__HISTORY = ANNOTATED_ELEMENT_FEATURE_COUNT + 7;
+  int COMPOSITE_STATE__HISTORY = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPOSITE_STATE__NAME = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+
+  /**
+   * The feature id for the '<em><b>Properties</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPOSITE_STATE__PROPERTIES = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
+
+  /**
+   * The feature id for the '<em><b>Entry</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPOSITE_STATE__ENTRY = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
+
+  /**
+   * The feature id for the '<em><b>Exit</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPOSITE_STATE__EXIT = ANNOTATED_ELEMENT_FEATURE_COUNT + 5;
+
+  /**
+   * The feature id for the '<em><b>Internal</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPOSITE_STATE__INTERNAL = ANNOTATED_ELEMENT_FEATURE_COUNT + 6;
+
+  /**
+   * The feature id for the '<em><b>Outgoing</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int COMPOSITE_STATE__OUTGOING = ANNOTATED_ELEMENT_FEATURE_COUNT + 7;
 
   /**
    * The feature id for the '<em><b>Substate</b></em>' containment reference list.
@@ -1385,13 +1421,31 @@ public interface ThingMLPackage extends EPackage
   int SESSION__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
 
   /**
+   * The feature id for the '<em><b>Initial</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SESSION__INITIAL = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>History</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SESSION__HISTORY = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
+
+  /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int SESSION__NAME = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
+  int SESSION__NAME = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
 
   /**
    * The feature id for the '<em><b>Max Instances</b></em>' attribute.
@@ -1400,16 +1454,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int SESSION__MAX_INSTANCES = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
-
-  /**
-   * The feature id for the '<em><b>Initial</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int SESSION__INITIAL = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+  int SESSION__MAX_INSTANCES = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
 
   /**
    * The feature id for the '<em><b>Properties</b></em>' containment reference list.
@@ -1418,7 +1463,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int SESSION__PROPERTIES = ANNOTATED_ELEMENT_FEATURE_COUNT + 3;
+  int SESSION__PROPERTIES = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
 
   /**
    * The feature id for the '<em><b>Entry</b></em>' containment reference.
@@ -1427,7 +1472,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int SESSION__ENTRY = ANNOTATED_ELEMENT_FEATURE_COUNT + 4;
+  int SESSION__ENTRY = ANNOTATED_ELEMENT_FEATURE_COUNT + 5;
 
   /**
    * The feature id for the '<em><b>Exit</b></em>' containment reference.
@@ -1436,7 +1481,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int SESSION__EXIT = ANNOTATED_ELEMENT_FEATURE_COUNT + 5;
+  int SESSION__EXIT = ANNOTATED_ELEMENT_FEATURE_COUNT + 6;
 
   /**
    * The feature id for the '<em><b>Substate</b></em>' containment reference list.
@@ -1445,7 +1490,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int SESSION__SUBSTATE = ANNOTATED_ELEMENT_FEATURE_COUNT + 6;
+  int SESSION__SUBSTATE = ANNOTATED_ELEMENT_FEATURE_COUNT + 7;
 
   /**
    * The feature id for the '<em><b>Internal</b></em>' containment reference list.
@@ -1454,7 +1499,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int SESSION__INTERNAL = ANNOTATED_ELEMENT_FEATURE_COUNT + 7;
+  int SESSION__INTERNAL = ANNOTATED_ELEMENT_FEATURE_COUNT + 8;
 
   /**
    * The feature id for the '<em><b>Region</b></em>' containment reference list.
@@ -1463,7 +1508,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int SESSION__REGION = ANNOTATED_ELEMENT_FEATURE_COUNT + 8;
+  int SESSION__REGION = ANNOTATED_ELEMENT_FEATURE_COUNT + 9;
 
   /**
    * The number of structural features of the '<em>Session</em>' class.
@@ -1472,7 +1517,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int SESSION_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 9;
+  int SESSION_FEATURE_COUNT = ANNOTATED_ELEMENT_FEATURE_COUNT + 10;
 
   /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl <em>Parallel Region</em>}' class.
@@ -1494,22 +1539,13 @@ public interface ThingMLPackage extends EPackage
   int PARALLEL_REGION__ANNOTATIONS = ANNOTATED_ELEMENT__ANNOTATIONS;
 
   /**
-   * The feature id for the '<em><b>Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int PARALLEL_REGION__NAME = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
-
-  /**
    * The feature id for the '<em><b>Initial</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int PARALLEL_REGION__INITIAL = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
+  int PARALLEL_REGION__INITIAL = ANNOTATED_ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>History</b></em>' attribute.
@@ -1518,7 +1554,16 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int PARALLEL_REGION__HISTORY = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
+  int PARALLEL_REGION__HISTORY = ANNOTATED_ELEMENT_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int PARALLEL_REGION__NAME = ANNOTATED_ELEMENT_FEATURE_COUNT + 2;
 
   /**
    * The feature id for the '<em><b>Substate</b></em>' containment reference list.
@@ -3930,17 +3975,6 @@ public interface ThingMLPackage extends EPackage
   EAttribute getEnumerationLiteral_Name();
 
   /**
-   * Returns the meta object for the containment reference list '{@link org.thingml.xtext.thingML.EnumerationLiteral#getAnnotations <em>Annotations</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Annotations</em>'.
-   * @see org.thingml.xtext.thingML.EnumerationLiteral#getAnnotations()
-   * @see #getEnumerationLiteral()
-   * @generated
-   */
-  EReference getEnumerationLiteral_Annotations();
-
-  /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.Thing <em>Thing</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4325,6 +4359,28 @@ public interface ThingMLPackage extends EPackage
   EClass getRegion();
 
   /**
+   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.Region#getInitial <em>Initial</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Initial</em>'.
+   * @see org.thingml.xtext.thingML.Region#getInitial()
+   * @see #getRegion()
+   * @generated
+   */
+  EReference getRegion_Initial();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.Region#isHistory <em>History</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>History</em>'.
+   * @see org.thingml.xtext.thingML.Region#isHistory()
+   * @see #getRegion()
+   * @generated
+   */
+  EAttribute getRegion_History();
+
+  /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.RegionOrSession <em>Region Or Session</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -4343,28 +4399,6 @@ public interface ThingMLPackage extends EPackage
    * @generated
    */
   EClass getCompositeState();
-
-  /**
-   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.CompositeState#getInitial <em>Initial</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Initial</em>'.
-   * @see org.thingml.xtext.thingML.CompositeState#getInitial()
-   * @see #getCompositeState()
-   * @generated
-   */
-  EReference getCompositeState_Initial();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.CompositeState#isHistory <em>History</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>History</em>'.
-   * @see org.thingml.xtext.thingML.CompositeState#isHistory()
-   * @see #getCompositeState()
-   * @generated
-   */
-  EAttribute getCompositeState_History();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.thingml.xtext.thingML.CompositeState#getSubstate <em>Substate</em>}'.
@@ -4429,17 +4463,6 @@ public interface ThingMLPackage extends EPackage
    * @generated
    */
   EAttribute getSession_MaxInstances();
-
-  /**
-   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.Session#getInitial <em>Initial</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Initial</em>'.
-   * @see org.thingml.xtext.thingML.Session#getInitial()
-   * @see #getSession()
-   * @generated
-   */
-  EReference getSession_Initial();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.thingml.xtext.thingML.Session#getProperties <em>Properties</em>}'.
@@ -4527,28 +4550,6 @@ public interface ThingMLPackage extends EPackage
    * @generated
    */
   EAttribute getParallelRegion_Name();
-
-  /**
-   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.ParallelRegion#getInitial <em>Initial</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Initial</em>'.
-   * @see org.thingml.xtext.thingML.ParallelRegion#getInitial()
-   * @see #getParallelRegion()
-   * @generated
-   */
-  EReference getParallelRegion_Initial();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.ParallelRegion#isHistory <em>History</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>History</em>'.
-   * @see org.thingml.xtext.thingML.ParallelRegion#isHistory()
-   * @see #getParallelRegion()
-   * @generated
-   */
-  EAttribute getParallelRegion_History();
 
   /**
    * Returns the meta object for the containment reference list '{@link org.thingml.xtext.thingML.ParallelRegion#getSubstate <em>Substate</em>}'.
@@ -6454,14 +6455,6 @@ public interface ThingMLPackage extends EPackage
     EAttribute ENUMERATION_LITERAL__NAME = eINSTANCE.getEnumerationLiteral_Name();
 
     /**
-     * The meta object literal for the '<em><b>Annotations</b></em>' containment reference list feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference ENUMERATION_LITERAL__ANNOTATIONS = eINSTANCE.getEnumerationLiteral_Annotations();
-
-    /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.ThingImpl <em>Thing</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -6774,6 +6767,22 @@ public interface ThingMLPackage extends EPackage
     EClass REGION = eINSTANCE.getRegion();
 
     /**
+     * The meta object literal for the '<em><b>Initial</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference REGION__INITIAL = eINSTANCE.getRegion_Initial();
+
+    /**
+     * The meta object literal for the '<em><b>History</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute REGION__HISTORY = eINSTANCE.getRegion_History();
+
+    /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.RegionOrSessionImpl <em>Region Or Session</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -6792,22 +6801,6 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EClass COMPOSITE_STATE = eINSTANCE.getCompositeState();
-
-    /**
-     * The meta object literal for the '<em><b>Initial</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference COMPOSITE_STATE__INITIAL = eINSTANCE.getCompositeState_Initial();
-
-    /**
-     * The meta object literal for the '<em><b>History</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute COMPOSITE_STATE__HISTORY = eINSTANCE.getCompositeState_History();
 
     /**
      * The meta object literal for the '<em><b>Substate</b></em>' containment reference list feature.
@@ -6860,14 +6853,6 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EAttribute SESSION__MAX_INSTANCES = eINSTANCE.getSession_MaxInstances();
-
-    /**
-     * The meta object literal for the '<em><b>Initial</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference SESSION__INITIAL = eINSTANCE.getSession_Initial();
 
     /**
      * The meta object literal for the '<em><b>Properties</b></em>' containment reference list feature.
@@ -6934,22 +6919,6 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EAttribute PARALLEL_REGION__NAME = eINSTANCE.getParallelRegion_Name();
-
-    /**
-     * The meta object literal for the '<em><b>Initial</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference PARALLEL_REGION__INITIAL = eINSTANCE.getParallelRegion_Initial();
-
-    /**
-     * The meta object literal for the '<em><b>History</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute PARALLEL_REGION__HISTORY = eINSTANCE.getParallelRegion_History();
 
     /**
      * The meta object literal for the '<em><b>Substate</b></em>' containment reference list feature.

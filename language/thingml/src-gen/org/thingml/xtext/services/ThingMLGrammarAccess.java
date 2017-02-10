@@ -143,14 +143,17 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cLocalVariableParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
 		private final RuleCall cInstanceParserRuleCall_16 = (RuleCall)cAlternatives.eContents().get(16);
 		private final RuleCall cAbstractConnectorParserRuleCall_17 = (RuleCall)cAlternatives.eContents().get(17);
+		private final RuleCall cEnumerationLiteralParserRuleCall_18 = (RuleCall)cAlternatives.eContents().get(18);
 		
 		//AnnotatedElement:
 		//	Protocol | Function | Property | Message | Parameter | Port | Configuration | Handler | State | CompositeState |
-		//	FinalState | Type | PropertyAssign | Session | ParallelRegion | LocalVariable | Instance | AbstractConnector;
+		//	FinalState | Type | PropertyAssign | Session | ParallelRegion | LocalVariable | Instance | AbstractConnector |
+		//	EnumerationLiteral;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Protocol | Function | Property | Message | Parameter | Port | Configuration | Handler | State | CompositeState |
-		//FinalState | Type | PropertyAssign | Session | ParallelRegion | LocalVariable | Instance | AbstractConnector
+		//FinalState | Type | PropertyAssign | Session | ParallelRegion | LocalVariable | Instance | AbstractConnector |
+		//EnumerationLiteral
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//Protocol
@@ -206,6 +209,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//AbstractConnector
 		public RuleCall getAbstractConnectorParserRuleCall_17() { return cAbstractConnectorParserRuleCall_17; }
+		
+		//EnumerationLiteral
+		public RuleCall getEnumerationLiteralParserRuleCall_18() { return cEnumerationLiteralParserRuleCall_18; }
 	}
 	public class VariableElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Variable");
@@ -1450,8 +1456,18 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	public class RegionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Region");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cRegionOrSessionParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cCompositeStateParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Keyword cRegionKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
+		private final Keyword cInitKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final Assignment cInitialAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
+		private final CrossReference cInitialStateCrossReference_0_2_0 = (CrossReference)cInitialAssignment_0_2.eContents().get(0);
+		private final RuleCall cInitialStateIDTerminalRuleCall_0_2_0_1 = (RuleCall)cInitialStateCrossReference_0_2_0.eContents().get(1);
+		private final Group cGroup_0_3 = (Group)cGroup_0.eContents().get(3);
+		private final Keyword cKeepsKeyword_0_3_0 = (Keyword)cGroup_0_3.eContents().get(0);
+		private final Assignment cHistoryAssignment_0_3_1 = (Assignment)cGroup_0_3.eContents().get(1);
+		private final Keyword cHistoryHistoryKeyword_0_3_1_0 = (Keyword)cHistoryAssignment_0_3_1.eContents().get(0);
+		private final RuleCall cRegionOrSessionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cCompositeStateParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		
 		/// *****************************************************************************
 		// *       CEP STREAMS                                                         *
@@ -1507,17 +1523,49 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		// 	* / / *****************************************************************************
 		// *       STATE MECHINES                                                      *
 		// ***************************************************************************** / Region:
-		//	RegionOrSession | CompositeState;
+		//	'region' 'init' initial=[State] ('keeps' history?='history')? // just to get those properties in the abstract class
+		//	| RegionOrSession | CompositeState;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//RegionOrSession | CompositeState
+		//'region' 'init' initial=[State] ('keeps' history?='history')? // just to get those properties in the abstract class
+		//| RegionOrSession | CompositeState
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
+		//'region' 'init' initial=[State] ('keeps' history?='history')?
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//'region'
+		public Keyword getRegionKeyword_0_0() { return cRegionKeyword_0_0; }
+		
+		//'init'
+		public Keyword getInitKeyword_0_1() { return cInitKeyword_0_1; }
+		
+		//initial=[State]
+		public Assignment getInitialAssignment_0_2() { return cInitialAssignment_0_2; }
+		
+		//[State]
+		public CrossReference getInitialStateCrossReference_0_2_0() { return cInitialStateCrossReference_0_2_0; }
+		
+		//ID
+		public RuleCall getInitialStateIDTerminalRuleCall_0_2_0_1() { return cInitialStateIDTerminalRuleCall_0_2_0_1; }
+		
+		//('keeps' history?='history')?
+		public Group getGroup_0_3() { return cGroup_0_3; }
+		
+		//'keeps'
+		public Keyword getKeepsKeyword_0_3_0() { return cKeepsKeyword_0_3_0; }
+		
+		//history?='history'
+		public Assignment getHistoryAssignment_0_3_1() { return cHistoryAssignment_0_3_1; }
+		
+		//'history'
+		public Keyword getHistoryHistoryKeyword_0_3_1_0() { return cHistoryHistoryKeyword_0_3_1_0; }
+		
 		//RegionOrSession
-		public RuleCall getRegionOrSessionParserRuleCall_0() { return cRegionOrSessionParserRuleCall_0; }
+		public RuleCall getRegionOrSessionParserRuleCall_1() { return cRegionOrSessionParserRuleCall_1; }
 		
 		//CompositeState
-		public RuleCall getCompositeStateParserRuleCall_1() { return cCompositeStateParserRuleCall_1; }
+		public RuleCall getCompositeStateParserRuleCall_2() { return cCompositeStateParserRuleCall_2; }
 	}
 	public class RegionOrSessionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.RegionOrSession");
@@ -4651,7 +4699,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//AnnotatedElement:
 	//	Protocol | Function | Property | Message | Parameter | Port | Configuration | Handler | State | CompositeState |
-	//	FinalState | Type | PropertyAssign | Session | ParallelRegion | LocalVariable | Instance | AbstractConnector;
+	//	FinalState | Type | PropertyAssign | Session | ParallelRegion | LocalVariable | Instance | AbstractConnector |
+	//	EnumerationLiteral;
 	public AnnotatedElementElements getAnnotatedElementAccess() {
 		return pAnnotatedElement;
 	}
@@ -4920,7 +4969,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	// 	* / / *****************************************************************************
 	// *       STATE MECHINES                                                      *
 	// ***************************************************************************** / Region:
-	//	RegionOrSession | CompositeState;
+	//	'region' 'init' initial=[State] ('keeps' history?='history')? // just to get those properties in the abstract class
+	//	| RegionOrSession | CompositeState;
 	public RegionElements getRegionAccess() {
 		return pRegion;
 	}

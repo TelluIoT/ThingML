@@ -116,6 +116,8 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getInternalPortAccess().getGroup_5_0_2(), "rule__InternalPort__Group_5_0_2__0");
 					put(grammarAccess.getInternalPortAccess().getGroup_5_1(), "rule__InternalPort__Group_5_1__0");
 					put(grammarAccess.getInternalPortAccess().getGroup_5_1_2(), "rule__InternalPort__Group_5_1_2__0");
+					put(grammarAccess.getRegionAccess().getGroup_0(), "rule__Region__Group_0__0");
+					put(grammarAccess.getRegionAccess().getGroup_0_3(), "rule__Region__Group_0_3__0");
 					put(grammarAccess.getStateMachineAccess().getGroup(), "rule__StateMachine__Group__0");
 					put(grammarAccess.getStateMachineAccess().getGroup_4(), "rule__StateMachine__Group_4__0");
 					put(grammarAccess.getStateMachineAccess().getGroup_8(), "rule__StateMachine__Group_8__0");
@@ -280,6 +282,8 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getInternalPortAccess().getSendsAssignment_5_0_2_1(), "rule__InternalPort__SendsAssignment_5_0_2_1");
 					put(grammarAccess.getInternalPortAccess().getReceivesAssignment_5_1_1(), "rule__InternalPort__ReceivesAssignment_5_1_1");
 					put(grammarAccess.getInternalPortAccess().getReceivesAssignment_5_1_2_1(), "rule__InternalPort__ReceivesAssignment_5_1_2_1");
+					put(grammarAccess.getRegionAccess().getInitialAssignment_0_2(), "rule__Region__InitialAssignment_0_2");
+					put(grammarAccess.getRegionAccess().getHistoryAssignment_0_3_1(), "rule__Region__HistoryAssignment_0_3_1");
 					put(grammarAccess.getStateMachineAccess().getNameAssignment_1(), "rule__StateMachine__NameAssignment_1");
 					put(grammarAccess.getStateMachineAccess().getInitialAssignment_3(), "rule__StateMachine__InitialAssignment_3");
 					put(grammarAccess.getStateMachineAccess().getHistoryAssignment_4_1(), "rule__StateMachine__HistoryAssignment_4_1");

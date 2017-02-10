@@ -30,7 +30,6 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.Session#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Session#getMaxInstances <em>Max Instances</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.Session#getInitial <em>Initial</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Session#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Session#getEntry <em>Entry</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Session#getExit <em>Exit</em>}</li>
@@ -96,32 +95,6 @@ public interface Session extends AnnotatedElement, RegionOrSession
    * @generated
    */
   void setMaxInstances(int value);
-
-  /**
-   * Returns the value of the '<em><b>Initial</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Initial</em>' reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Initial</em>' reference.
-   * @see #setInitial(State)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getSession_Initial()
-   * @model
-   * @generated
-   */
-  State getInitial();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Session#getInitial <em>Initial</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Initial</em>' reference.
-   * @see #getInitial()
-   * @generated
-   */
-  void setInitial(State value);
 
   /**
    * Returns the value of the '<em><b>Properties</b></em>' containment reference list.

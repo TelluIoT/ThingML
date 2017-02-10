@@ -488,8 +488,8 @@ public abstract class CCompilerContext extends Context {
     public String getConcatenatedParameterTypes(Message m) {
         String ret = "";
         for (Parameter p : m.getParameters()) {
-            ret += "_" + getCType(p.getType());
-            if (p.getCardinality() != null) ret+= "_ptr";
+            ret += "_" + getCType(p.getTypeRef().getType());
+            if (p.getTypeRef().getCardinality() != null) ret+= "_ptr";
         }
         return(ret);
     }
@@ -562,8 +562,8 @@ public abstract class CCompilerContext extends Context {
         builder.append("uint16_t sender");
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
-            builder.append(getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
+            builder.append(getCType(p.getTypeRef().getType()));
+            if (p.getTypeRef().getCardinality() != null) builder.append("*");
             builder.append(" param_" + p.getName());
         }
         builder.append(")");
@@ -585,8 +585,8 @@ public abstract class CCompilerContext extends Context {
         builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName());
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
-            builder.append(getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
+            builder.append(getCType(p.getTypeRef().getType()));
+            if (p.getTypeRef().getCardinality() != null) builder.append("*");
             builder.append(" " + p.getName());
         }
         builder.append(")");
@@ -594,8 +594,8 @@ public abstract class CCompilerContext extends Context {
 
     public void appendFormalParameterDeclarations(StringBuilder builder, Message m) {
         for (Parameter p : m.getParameters()) {
-            builder.append(getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
+            builder.append(getCType(p.getTypeRef().getType()));
+            if (p.getTypeRef().getCardinality() != null) builder.append("*");
             builder.append(" " + p.getName());
             builder.append(";\n");
         }
@@ -625,8 +625,8 @@ public abstract class CCompilerContext extends Context {
         builder.append("struct " + getInstanceStructName(thing) + " *");
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
-            builder.append(getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
+            builder.append(getCType(p.getTypeRef().getType()));
+            if (p.getTypeRef().getCardinality() != null) builder.append("*");
         }
         builder.append(")");
     }
@@ -635,7 +635,7 @@ public abstract class CCompilerContext extends Context {
         int result = 2; // 2 bytes to store the port/message code
         result += 2; // to store the id of the source instance
         for (Parameter p : m.getParameters()) {
-            result += this.getCByteSize(p.getType(), 0);
+            result += this.getCByteSize(p.getTypeRef().getType(), 0);
         }
         return result;
     }
@@ -644,7 +644,7 @@ public abstract class CCompilerContext extends Context {
         int result = 0; 
         for (Parameter p : m.getParameters()) {
             if(AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                result += this.getCByteSize(p.getType(), 0);
+                result += this.getCByteSize(p.getTypeRef().getType(), 0);
             }
         }
         return result;
@@ -655,12 +655,12 @@ public abstract class CCompilerContext extends Context {
         result += 2; // to store the id of the source instance
         String res = "";
         for (Parameter p : m.getParameters()) {
-            if(p.isIsArray()) {
+            if(p.getTypeRef().isIsArray()) {
                 StringBuilder cardBuilder = new StringBuilder();
-                getCompiler().getThingActionCompiler().generate(p.getCardinality(), cardBuilder, this);
-                res += "(" + cardBuilder + " * " + getCByteSize(p.getType(), 0) + ")";
+                getCompiler().getThingActionCompiler().generate(p.getTypeRef().getCardinality(), cardBuilder, this);
+                res += "(" + cardBuilder + " * " + getCByteSize(p.getTypeRef().getType(), 0) + ")";
             } else {
-                result += this.getCByteSize(p.getType(), 0);
+                result += this.getCByteSize(p.getTypeRef().getType(), 0);
             }
         }
         if(res.compareTo("") == 0)
@@ -749,10 +749,10 @@ public abstract class CCompilerContext extends Context {
             // This should not happen and should be checked before.
             throw  new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
         } else {
-            if(pt.isIsArray()) {
+            if(pt.getTypeRef().isIsArray()) {
                 
                 StringBuilder cardBuilder = new StringBuilder();
-                getCompiler().getThingActionCompiler().generate(pt.getCardinality(), cardBuilder, this);
+                getCompiler().getThingActionCompiler().generate(pt.getTypeRef().getCardinality(), cardBuilder, this);
                 builder.append("union u_" + v + "_t {\n");
                 builder.append("    " + getCType(t) + " p[" + cardBuilder + "];\n");
                 builder.append("    byte bytebuffer[" + getCByteSize(t, 0) + " * (" + cardBuilder + ")];\n");
@@ -800,9 +800,9 @@ public abstract class CCompilerContext extends Context {
 
         for (Parameter pt : m.getParameters()) {
             builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = this.getCByteSize(pt.getType(), 0);
+            int i = this.getCByteSize(pt.getTypeRef().getType(), 0);
             String v = pt.getName();
-            if (this.isPointer(pt.getType())) {
+            if (this.isPointer(pt.getTypeRef().getType())) {
                 // This should not happen and should be checked before.
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
@@ -810,8 +810,8 @@ public abstract class CCompilerContext extends Context {
                 if (!ignoreList.contains(pt.getName())) {
 
                     builder.append("union u_" + v + "_t {\n");
-                    builder.append(this.getCType(pt.getType()) + " p;\n");
-                    builder.append("byte bytebuffer[" + this.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append(this.getCType(pt.getTypeRef().getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + this.getCByteSize(pt.getTypeRef().getType(), 0) + "];\n");
                     builder.append("} u_" + v + ";\n");
                     builder.append("u_" + v + ".p = " + v + ";\n");
 

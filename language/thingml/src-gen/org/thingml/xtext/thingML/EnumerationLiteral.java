@@ -17,9 +17,6 @@
  */
 package org.thingml.xtext.thingML;
 
-import org.eclipse.emf.common.util.EList;
-
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,14 +28,13 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.EnumerationLiteral#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.EnumerationLiteral#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getEnumerationLiteral()
  * @model
  * @generated
  */
-public interface EnumerationLiteral extends EObject
+public interface EnumerationLiteral extends AnnotatedElement
 {
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
@@ -65,21 +61,5 @@ public interface EnumerationLiteral extends EObject
    * @generated
    */
   void setName(String value);
-
-  /**
-   * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
-   * The list contents are of type {@link org.thingml.xtext.thingML.PlatformAnnotation}.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Annotations</em>' containment reference list isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Annotations</em>' containment reference list.
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getEnumerationLiteral_Annotations()
-   * @model containment="true"
-   * @generated
-   */
-  EList<PlatformAnnotation> getAnnotations();
 
 } // EnumerationLiteral

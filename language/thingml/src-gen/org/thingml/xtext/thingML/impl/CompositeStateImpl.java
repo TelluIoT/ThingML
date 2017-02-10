@@ -50,14 +50,14 @@ import org.thingml.xtext.thingML.Transition;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getInitial <em>Initial</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#isHistory <em>History</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getEntry <em>Entry</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getExit <em>Exit</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getInternal <em>Internal</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getOutgoing <em>Outgoing</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getInitial <em>Initial</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#isHistory <em>History</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getSubstate <em>Substate</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.CompositeStateImpl#getRegion <em>Region</em>}</li>
  * </ul>
@@ -66,6 +66,36 @@ import org.thingml.xtext.thingML.Transition;
  */
 public class CompositeStateImpl extends AnnotatedElementImpl implements CompositeState
 {
+  /**
+   * The cached value of the '{@link #getInitial() <em>Initial</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getInitial()
+   * @generated
+   * @ordered
+   */
+  protected State initial;
+
+  /**
+   * The default value of the '{@link #isHistory() <em>History</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isHistory()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean HISTORY_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isHistory() <em>History</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isHistory()
+   * @generated
+   * @ordered
+   */
+  protected boolean history = HISTORY_EDEFAULT;
+
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -137,36 +167,6 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
   protected EList<Transition> outgoing;
 
   /**
-   * The cached value of the '{@link #getInitial() <em>Initial</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getInitial()
-   * @generated
-   * @ordered
-   */
-  protected State initial;
-
-  /**
-   * The default value of the '{@link #isHistory() <em>History</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isHistory()
-   * @generated
-   * @ordered
-   */
-  protected static final boolean HISTORY_EDEFAULT = false;
-
-  /**
-   * The cached value of the '{@link #isHistory() <em>History</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isHistory()
-   * @generated
-   * @ordered
-   */
-  protected boolean history = HISTORY_EDEFAULT;
-
-  /**
    * The cached value of the '{@link #getSubstate() <em>Substate</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -205,6 +205,72 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
   protected EClass eStaticClass()
   {
     return ThingMLPackage.Literals.COMPOSITE_STATE;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public State getInitial()
+  {
+    if (initial != null && initial.eIsProxy())
+    {
+      InternalEObject oldInitial = (InternalEObject)initial;
+      initial = (State)eResolveProxy(oldInitial);
+      if (initial != oldInitial)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.COMPOSITE_STATE__INITIAL, oldInitial, initial));
+      }
+    }
+    return initial;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public State basicGetInitial()
+  {
+    return initial;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setInitial(State newInitial)
+  {
+    State oldInitial = initial;
+    initial = newInitial;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.COMPOSITE_STATE__INITIAL, oldInitial, initial));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public boolean isHistory()
+  {
+    return history;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setHistory(boolean newHistory)
+  {
+    boolean oldHistory = history;
+    history = newHistory;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.COMPOSITE_STATE__HISTORY, oldHistory, history));
   }
 
   /**
@@ -373,72 +439,6 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
    * <!-- end-user-doc -->
    * @generated
    */
-  public State getInitial()
-  {
-    if (initial != null && initial.eIsProxy())
-    {
-      InternalEObject oldInitial = (InternalEObject)initial;
-      initial = (State)eResolveProxy(oldInitial);
-      if (initial != oldInitial)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.COMPOSITE_STATE__INITIAL, oldInitial, initial));
-      }
-    }
-    return initial;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public State basicGetInitial()
-  {
-    return initial;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setInitial(State newInitial)
-  {
-    State oldInitial = initial;
-    initial = newInitial;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.COMPOSITE_STATE__INITIAL, oldInitial, initial));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public boolean isHistory()
-  {
-    return history;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setHistory(boolean newHistory)
-  {
-    boolean oldHistory = history;
-    history = newHistory;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.COMPOSITE_STATE__HISTORY, oldHistory, history));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EList<State> getSubstate()
   {
     if (substate == null)
@@ -500,6 +500,11 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
   {
     switch (featureID)
     {
+      case ThingMLPackage.COMPOSITE_STATE__INITIAL:
+        if (resolve) return getInitial();
+        return basicGetInitial();
+      case ThingMLPackage.COMPOSITE_STATE__HISTORY:
+        return isHistory();
       case ThingMLPackage.COMPOSITE_STATE__NAME:
         return getName();
       case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
@@ -512,11 +517,6 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
         return getInternal();
       case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
         return getOutgoing();
-      case ThingMLPackage.COMPOSITE_STATE__INITIAL:
-        if (resolve) return getInitial();
-        return basicGetInitial();
-      case ThingMLPackage.COMPOSITE_STATE__HISTORY:
-        return isHistory();
       case ThingMLPackage.COMPOSITE_STATE__SUBSTATE:
         return getSubstate();
       case ThingMLPackage.COMPOSITE_STATE__REGION:
@@ -536,6 +536,12 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
   {
     switch (featureID)
     {
+      case ThingMLPackage.COMPOSITE_STATE__INITIAL:
+        setInitial((State)newValue);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__HISTORY:
+        setHistory((Boolean)newValue);
+        return;
       case ThingMLPackage.COMPOSITE_STATE__NAME:
         setName((String)newValue);
         return;
@@ -556,12 +562,6 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
       case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
         getOutgoing().clear();
         getOutgoing().addAll((Collection<? extends Transition>)newValue);
-        return;
-      case ThingMLPackage.COMPOSITE_STATE__INITIAL:
-        setInitial((State)newValue);
-        return;
-      case ThingMLPackage.COMPOSITE_STATE__HISTORY:
-        setHistory((Boolean)newValue);
         return;
       case ThingMLPackage.COMPOSITE_STATE__SUBSTATE:
         getSubstate().clear();
@@ -585,6 +585,12 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
   {
     switch (featureID)
     {
+      case ThingMLPackage.COMPOSITE_STATE__INITIAL:
+        setInitial((State)null);
+        return;
+      case ThingMLPackage.COMPOSITE_STATE__HISTORY:
+        setHistory(HISTORY_EDEFAULT);
+        return;
       case ThingMLPackage.COMPOSITE_STATE__NAME:
         setName(NAME_EDEFAULT);
         return;
@@ -602,12 +608,6 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
         return;
       case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
         getOutgoing().clear();
-        return;
-      case ThingMLPackage.COMPOSITE_STATE__INITIAL:
-        setInitial((State)null);
-        return;
-      case ThingMLPackage.COMPOSITE_STATE__HISTORY:
-        setHistory(HISTORY_EDEFAULT);
         return;
       case ThingMLPackage.COMPOSITE_STATE__SUBSTATE:
         getSubstate().clear();
@@ -629,6 +629,10 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
   {
     switch (featureID)
     {
+      case ThingMLPackage.COMPOSITE_STATE__INITIAL:
+        return initial != null;
+      case ThingMLPackage.COMPOSITE_STATE__HISTORY:
+        return history != HISTORY_EDEFAULT;
       case ThingMLPackage.COMPOSITE_STATE__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.COMPOSITE_STATE__PROPERTIES:
@@ -641,10 +645,6 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
         return internal != null && !internal.isEmpty();
       case ThingMLPackage.COMPOSITE_STATE__OUTGOING:
         return outgoing != null && !outgoing.isEmpty();
-      case ThingMLPackage.COMPOSITE_STATE__INITIAL:
-        return initial != null;
-      case ThingMLPackage.COMPOSITE_STATE__HISTORY:
-        return history != HISTORY_EDEFAULT;
       case ThingMLPackage.COMPOSITE_STATE__SUBSTATE:
         return substate != null && !substate.isEmpty();
       case ThingMLPackage.COMPOSITE_STATE__REGION:
@@ -665,6 +665,8 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
     {
       switch (derivedFeatureID)
       {
+        case ThingMLPackage.COMPOSITE_STATE__INITIAL: return ThingMLPackage.REGION__INITIAL;
+        case ThingMLPackage.COMPOSITE_STATE__HISTORY: return ThingMLPackage.REGION__HISTORY;
         default: return -1;
       }
     }
@@ -696,6 +698,8 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
     {
       switch (baseFeatureID)
       {
+        case ThingMLPackage.REGION__INITIAL: return ThingMLPackage.COMPOSITE_STATE__INITIAL;
+        case ThingMLPackage.REGION__HISTORY: return ThingMLPackage.COMPOSITE_STATE__HISTORY;
         default: return -1;
       }
     }
@@ -726,10 +730,10 @@ public class CompositeStateImpl extends AnnotatedElementImpl implements Composit
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (name: ");
-    result.append(name);
-    result.append(", history: ");
+    result.append(" (history: ");
     result.append(history);
+    result.append(", name: ");
+    result.append(name);
     result.append(')');
     return result.toString();
   }
