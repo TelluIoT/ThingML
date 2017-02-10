@@ -27,12 +27,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.PrimitiveTyperHelper;
+import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.PrimitiveTyperHelper;
-import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSCfgMainGenerator;
 import org.thingml.compilers.javascript.JSCompiler;
@@ -227,7 +226,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
             }
             for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
                 if (c.getProtocol().getName().equals("kevoree")) {
-                    final Instance i = c.getInst().getInstance();
+                    final Instance i = c.getInst();
                     for (Message m : c.getPort().getSends()) {
                         final Port p = c.getPort();
                         builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => setImmediate(() => this." + shortName(i, p, m) + "_proxy(msg)));\n");
@@ -239,10 +238,10 @@ public class JSKevoreePlugin extends NetworkPlugin {
     protected void generateStart(StringBuilder builder, Context ctx, Configuration cfg) {
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : ThingHelper.allUsedProperties(i.getType())) {
-                if (p.isChangeable() && p.getCardinality() == null && p.getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
+                if (p.isChangeable() && p.getTypeRef().getCardinality() == null && p.getTypeRef().getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
                     String accessor = "getValue";
                     boolean isNumber = false;
-                    if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getType()))) {
+                    if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getTypeRef().getType()))) {
                         accessor = "getNumber";
                         isNumber = true;
                     }
@@ -301,7 +300,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
 
         for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) { //External kevoree port should be split (to allow easy integration with external non-HEADS services)
             if (c.getProtocol().getName().equals("kevoree")) {
-                final Instance i = c.getInst().getInstance();
+                final Instance i = c.getInst();
                 for (Message m : c.getPort().getReceives()) {
                     builder.append(",\nin_" + shortName(i, c.getPort(), m) + "_in: function (msg) {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\n");
                     builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
@@ -362,7 +361,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         builder.append("//Attributes\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : ThingHelper.allUsedProperties(i.getType())) {
-                if (p.isChangeable() && p.getCardinality() == null && AnnotatedElementHelper.isDefined(p.getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
+                if (p.isChangeable() && p.getTypeRef().getCardinality() == null && AnnotatedElementHelper.isDefined(p.getTypeRef().getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
                     if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
                         builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
                         final Expression e = ConfigurationHelper.initExpressions(cfg, i, p).get(0);

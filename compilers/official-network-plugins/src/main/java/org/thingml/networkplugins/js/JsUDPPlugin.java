@@ -24,8 +24,8 @@ package org.thingml.networkplugins.js;
 import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -214,12 +214,12 @@ public class JsUDPPlugin extends NetworkPlugin {
                 final String port = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "port", "41234");
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\nconst UDP = require('./UDPJS');");
-                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst udp = new UDP(\"UDP\", false, " + port + ", \"" + url + "\", " + conn.getInst().getInstance().getName() + ", function (started) {if (!started) {process.exit(1);}});\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst udp = new UDP(\"UDP\", false, " + port + ", \"" + url + "\", " + conn.getInst().getName() + ", function (started) {if (!started) {process.exit(1);}});\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "udp._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getInstance().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
+                    builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
                     builder.append("(msg) => setImmediate(() => udp.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
                     builder.append("));\n");
 

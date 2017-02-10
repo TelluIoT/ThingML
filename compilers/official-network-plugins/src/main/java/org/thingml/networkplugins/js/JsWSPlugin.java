@@ -24,8 +24,8 @@ package org.thingml.networkplugins.js;
 import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -246,12 +246,12 @@ public class JsWSPlugin extends NetworkPlugin {
                 final String url = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "ws://127.0.0.1");
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\nconst websocket = require('./WSJS');");
-                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst ws = new websocket(\"WS\", false, \"" + url + "\", " + conn.getInst().getInstance().getName() + ");\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst ws = new websocket(\"WS\", false, \"" + url + "\", " + conn.getInst().getName() + ");\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "ws._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getInstance().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
+                    builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
                     builder.append("(msg) => setImmediate(() => ws.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
                     builder.append("));\n");
 

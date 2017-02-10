@@ -22,12 +22,12 @@
 package org.thingml.networkplugins.js;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.PrimitiveTyperHelper;
-import org.sintef.thingml.helpers.ThingHelper;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.PrimitiveTyperHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSCfgMainGenerator;
 
@@ -71,7 +71,7 @@ public class JSMTKevoreePlugin extends JSKevoreePlugin {
                 builder.append("switch(m._port) {\n");
                 Set<String> ports = new HashSet<>();
                 for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
-                    if (EcoreUtil.equals(i, c.getInst().getInstance())) {
+                    if (EcoreUtil.equals(i, c.getInst())) {
                         ports.add(c.getPort().getName());
                         builder.append("case '" + c.getPort().getName() + "'://external port\n");
                         builder.append("switch(m._msg) {\n");
@@ -86,15 +86,15 @@ public class JSMTKevoreePlugin extends JSKevoreePlugin {
                     }
                 }
                 for(Connector c : ConfigurationHelper.allConnectors(cfg)) {//FIXME: This can lead to similar labels in cases in case of n-m bindings...
-                    if (EcoreUtil.equals(i, c.getCli().getInstance())) {
+                    if (EcoreUtil.equals(i, c.getCli())) {
                         builder.append("case '" + c.getRequired().getName() + "'://connected ThingML port\n");
                         builder.append("m._port = '" + c.getProvided().getName() + "';\n");
-                        builder.append("this." + c.getSrv().getInstance().getName() + ".send(m);\n");
+                        builder.append("this." + c.getSrv().getName() + ".send(m);\n");
                         builder.append("break;\n");
-                    } else if (EcoreUtil.equals(i, c.getSrv().getInstance())) {
+                    } else if (EcoreUtil.equals(i, c.getSrv())) {
                         builder.append("case '" + c.getProvided().getName() + "'://connected ThingML port\n");
                         builder.append("m._port = '" + c.getRequired().getName() + "';\n");
-                        builder.append("this." + c.getCli().getInstance().getName() + ".send(m);\n");
+                        builder.append("this." + c.getCli().getName() + ".send(m);\n");
                         builder.append("break;\n");
                     }
                 }
@@ -128,9 +128,9 @@ public class JSMTKevoreePlugin extends JSKevoreePlugin {
                 builder.append("case 'updated':\n");
                 builder.append("switch(m.property){\n");
                 for (Property p : ThingHelper.allUsedProperties(i.getType())) {
-                    if (p.isChangeable() && p.getCardinality() == null && p.getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
+                    if (p.isChangeable() && p.getTypeRef().getCardinality() == null && p.getTypeRef().getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
                         String accessor = "getValue";
-                        if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getType()))) {
+                        if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getTypeRef().getType()))) {
                             accessor = "getNumber";
                         }
                         if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
@@ -151,10 +151,10 @@ public class JSMTKevoreePlugin extends JSKevoreePlugin {
             }
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : ThingHelper.allUsedProperties(i.getType())) {
-                if (p.isChangeable() && p.getCardinality() == null && p.getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
+                if (p.isChangeable() && p.getTypeRef().getCardinality() == null && p.getTypeRef().getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
                     String accessor = "getValue";
                     boolean isNumber = false;
-                    if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getType()))) {
+                    if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getTypeRef().getType()))) {
                         accessor = "getNumber";
                         isNumber = true;
                     }
@@ -211,7 +211,7 @@ public class JSMTKevoreePlugin extends JSKevoreePlugin {
         for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) { //External kevoree port should be split (to allow easy integration with external non-HEADS services)
             //builder.append("\n//External connector for port " + c.getPort().getName() + " of instance " + c.getInst().getInstance().getName() + "\n");
             if (c.getProtocol().getName().equals("kevoree")) {
-                final Instance i = c.getInst().getInstance();
+                final Instance i = c.getInst();
                 for (Message m : c.getPort().getReceives()) {
                     builder.append(",\nin_" + shortName(i, c.getPort(), m) + "_in: function (msg) {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\n");
                     builder.append("this." + i.getName() + ".send(JSON.parse(msg));\n");

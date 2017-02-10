@@ -28,12 +28,12 @@ package org.thingml.networkplugins.js;
 
 import com.eclipsesource.json.JsonObject;
 import org.apache.commons.io.IOUtils;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.PrimitiveType;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PrimitiveType;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -76,8 +76,8 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
         int size = 2; //code encoded by a 2 bytes
         for (Parameter p : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
-                if (p.getType() instanceof PrimitiveType) {
-                    size = size + ((PrimitiveType) p.getType()).getByteSize();
+                if (p.getTypeRef().getType() instanceof PrimitiveType) {
+                    size = size + ((PrimitiveType) p.getTypeRef().getType()).getByteSize();
                 }
             }
         }
@@ -95,15 +95,15 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
         builder.append("var bb = new ByteBuffer(capacity=" + size + ", littleEndian=false).writeShort(" + code + ")\n");
         for(Parameter p : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
-                final String ctype = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type") ? AnnotatedElementHelper.annotation(p.getType(), "c_type").get(0).replace("_t", "") : "byte";
-                if (p.getType() instanceof PrimitiveType) {
+                final String ctype = AnnotatedElementHelper.hasAnnotation(p.getTypeRef().getType(), "c_type") ? AnnotatedElementHelper.annotation(p.getTypeRef().getType(), "c_type").get(0).replace("_t", "") : "byte";
+                if (p.getTypeRef().getType() instanceof PrimitiveType) {
                     if ("char".equals(ctype)) {
                         builder.append(".writeByte(" + p.getName() + ".charCodeAt(0))\n");
                     } else {
                         builder.append(".write" + context.firstToUpper(ctype) + "(" + p.getName() + ")\n");
                     }
                 } else {
-                    throw new UnsupportedOperationException("Cannot serialize objects (non-primitive type) " + p.getType().getName());
+                    throw new UnsupportedOperationException("Cannot serialize objects (non-primitive type) " + p.getTypeRef().getType().getName());
                 }
             }
         }
@@ -140,7 +140,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
             builder.append("msg._msg = '" + m.getName() + "';\n");
             for(Parameter p : m.getParameters()) {
                 if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
-                    final String type = AnnotatedElementHelper.hasAnnotation(p.getType(), "c_type")?AnnotatedElementHelper.annotation(p.getType(),"c_type").get(0).replace("_t", ""):null;
+                    final String type = AnnotatedElementHelper.hasAnnotation(p.getTypeRef().getType(), "c_type")?AnnotatedElementHelper.annotation(p.getTypeRef().getType(),"c_type").get(0).replace("_t", ""):null;
                     //if (type == null) //TODO: we should probably raise an exception here
                     if ("char".equals(type)) {
                         builder.append("msg." + p.getName() + " = String.fromCharCode(bb.readByte());\n");
