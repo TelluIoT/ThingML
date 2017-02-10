@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.Variable;
 
 /**
  * <!-- begin-user-doc -->
@@ -257,6 +258,46 @@ public class ParameterImpl extends AnnotatedElementImpl implements Parameter
         return typeRef != null;
     }
     return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == Variable.class)
+    {
+      switch (derivedFeatureID)
+      {
+        case ThingMLPackage.PARAMETER__NAME: return ThingMLPackage.VARIABLE__NAME;
+        case ThingMLPackage.PARAMETER__TYPE_REF: return ThingMLPackage.VARIABLE__TYPE_REF;
+        default: return -1;
+      }
+    }
+    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == Variable.class)
+    {
+      switch (baseFeatureID)
+      {
+        case ThingMLPackage.VARIABLE__NAME: return ThingMLPackage.PARAMETER__NAME;
+        case ThingMLPackage.VARIABLE__TYPE_REF: return ThingMLPackage.PARAMETER__TYPE_REF;
+        default: return -1;
+      }
+    }
+    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
   }
 
   /**

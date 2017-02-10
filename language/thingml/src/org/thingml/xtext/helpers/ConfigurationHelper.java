@@ -169,6 +169,34 @@ public class ConfigurationHelper {
         result.addAll(self.getInstances());
         return result;
     }
+    
+    /**
+    *
+    * @param self
+    * @param i
+    * @return instance sending the list of messages to i
+    */
+   public static Map<Instance, List<Message>> allMessagesReceivedBy(Configuration self, Instance i) {
+       Map<Instance, List<Message>> result = new HashMap<>();
+       for(Connector c : allConnectors(self)) {
+           if (EcoreUtil.equals(c.getCli(), i)) {
+               List messages = result.get(c.getSrv());
+               if (messages == null) {
+                   messages = new ArrayList();
+               }
+               messages.addAll(c.getProvided().getSends());
+               result.put(c.getSrv(), messages);
+           } else if (EcoreUtil.equals(c.getSrv(), i)) {
+               List messages = result.get(c.getCli());
+               if (messages == null) {
+                   messages = new ArrayList();
+               }
+               messages.addAll(c.getRequired().getSends());
+               result.put(c.getCli(), messages);
+           }
+       }
+       return result;
+   }
 
 
     public static Set<Connector> allConnectors(Configuration self) {

@@ -22,10 +22,10 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.*;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
-import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -81,7 +81,7 @@ public class MessagesUsage extends Rule {
                         } else {
                             for (Parameter pa : m.getParameters()) {
                                 Expression e = a.getParameters().get(m.getParameters().indexOf(pa));
-                                Type expected = TyperHelper.getBroadType(pa.getType());
+                                Type expected = TyperHelper.getBroadType(pa.getTypeRef().getType());
                                 Type actual = checker.typeChecker.computeTypeOf(e);
                                 if (actual != null) {
                                     if (actual.equals(Types.ERROR_TYPE)) {
@@ -100,7 +100,7 @@ public class MessagesUsage extends Rule {
                     checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", m);
                 else {//check if message is serializable
                     for (Parameter pa : m.getParameters()) {
-                        if ((pa.getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
+                        if ((pa.getTypeRef().getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
                             checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.", pa);
                             break;
                         }
@@ -108,13 +108,13 @@ public class MessagesUsage extends Rule {
                 }
             }
             for (Message m : p.getReceives()) {
-                for (StateMachine sm : ThingMLHelpers.allStateMachines(t)) {
+                for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
                     if (StateHelper.allMessageHandlers(sm).get(p) == null || StateHelper.allMessageHandlers(sm).get(p).get(m) == null) {
                         checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received.", m);
                     }
                 }
                 for (Parameter pa : m.getParameters()) {
-                    if ((pa.getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
+                    if ((pa.getTypeRef().getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
                         checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be received from the network, please use only primitive datatypes.", pa);
                         break;
                     }

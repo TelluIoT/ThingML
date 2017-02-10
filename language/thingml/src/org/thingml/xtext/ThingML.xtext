@@ -23,6 +23,9 @@ AnnotatedElement:
 	FinalState | Type | PropertyAssign | /*Stream |*/ Session | ParallelRegion | LocalVariable | Instance | AbstractConnector
 ;
 
+Variable:
+	"var" name=ID ':' typeRef=TypeRef | // This is never used, it is just to have the attributes in the superclass
+	LocalVariable | Property | Parameter ;
 
 /*****************************************************************************
  *       TYPES / ENUMERATIONS                                                *
@@ -252,8 +255,6 @@ Action returns Action:
 	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction |
 	ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
 
-Variable:
-	LocalVariable | Property | Parameter ;
 
 ActionBlock returns ActionBlock:
 	{ActionBlock}

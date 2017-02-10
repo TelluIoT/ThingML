@@ -17,6 +17,7 @@
 package org.thingml.compilers.checker;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.validation.EObjectDiagnosticImpl;
 import org.thingml.compilers.ThingMLCompiler;
 
 import java.util.Collections;
@@ -27,6 +28,7 @@ import java.util.Collections;
 public class EMFWrapper implements ErrorWrapper {
     @Override
     public void addError(final String msg, final EObject el) {
+    	/*
         IThingmlProblem problem = new IThingmlProblem() {
             public String getMessage() {
                 return msg;
@@ -44,12 +46,13 @@ public class EMFWrapper implements ErrorWrapper {
                 return Collections.EMPTY_LIST;
             }
         };
-        ThingMLCompiler.resource.addProblem(problem, el);
+        */
+        ThingMLCompiler.resource.getErrors().add(null);
     }
 
     @Override
     public void addWarning(final String msg, final EObject el) {
-        IThingmlProblem problem = new IThingmlProblem() {
+        /*IThingmlProblem problem = new IThingmlProblem() {
             public String getMessage() {
                 return msg;
             }
@@ -66,6 +69,7 @@ public class EMFWrapper implements ErrorWrapper {
                 return Collections.EMPTY_LIST;
             }
         };
-        ThingMLCompiler.resource.addProblem(problem, el);
+        */
+        ThingMLCompiler.resource.getErrors().add(null);
     }
 }

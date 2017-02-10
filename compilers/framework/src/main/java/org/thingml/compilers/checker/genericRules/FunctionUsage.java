@@ -23,13 +23,13 @@ package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.ActionHelper;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
-import org.sintef.thingml.helpers.ActionHelper;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.TyperHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -70,7 +70,7 @@ public class FunctionUsage extends Rule {
                 } else {
                     for (Parameter p : f.getParameters()) {
                         Expression e = params.get(f.getParameters().indexOf(p));
-                        Type expected = TyperHelper.getBroadType(p.getType());
+                        Type expected = TyperHelper.getBroadType(p.getTypeRef().getType());
                         Type actual = checker.typeChecker.computeTypeOf(e);
                         if (actual != null) {
                             if (actual.equals(Types.ERROR_TYPE)) {
@@ -116,14 +116,14 @@ public class FunctionUsage extends Rule {
             }
         }
 
-        if (f.getType() != null) {
+        if (f.getTypeRef().getType() != null) {
             for (Action a : ActionHelper.getAllActions(t, ReturnAction.class)) {
                 EObject parent = a.eContainer();
                 while (parent != null && !EcoreUtil.equals(parent, f)) {
                     parent = parent.eContainer();
                 }
                 if (EcoreUtil.equals(parent, f)) {
-                    Type actualType = TyperHelper.getBroadType(f.getType());
+                    Type actualType = TyperHelper.getBroadType(f.getTypeRef().getType());
                     Type returnType = checker.typeChecker.computeTypeOf(((ReturnAction) a).getExp());
                     if (returnType.equals(Types.ERROR_TYPE)) {
                         checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
@@ -158,7 +158,7 @@ public class FunctionUsage extends Rule {
             for (Action b : ActionHelper.getAllActions(t, FunctionCallStatement.class)) {
                 //FIXME brice
                 if (b instanceof FunctionCallStatement) {
-                    FunctionCall a = (FunctionCall) b;
+                	FunctionCallStatement a = (FunctionCallStatement) b;
                     if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
                         found = true;
                     }

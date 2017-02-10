@@ -28,8 +28,6 @@ package org.thingml.xtext.thingML;
  * </p>
  * <ul>
  *   <li>{@link org.thingml.xtext.thingML.LocalVariable#isChangeable <em>Changeable</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.LocalVariable#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.LocalVariable#getTypeRef <em>Type Ref</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.LocalVariable#getInit <em>Init</em>}</li>
  * </ul>
  *
@@ -37,7 +35,7 @@ package org.thingml.xtext.thingML;
  * @model
  * @generated
  */
-public interface LocalVariable extends AnnotatedElement, Action, Variable
+public interface LocalVariable extends AnnotatedElement, Variable, Action
 {
   /**
    * Returns the value of the '<em><b>Changeable</b></em>' attribute.
@@ -64,58 +62,6 @@ public interface LocalVariable extends AnnotatedElement, Action, Variable
    * @generated
    */
   void setChangeable(boolean value);
-
-  /**
-   * Returns the value of the '<em><b>Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Name</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Name</em>' attribute.
-   * @see #setName(String)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getLocalVariable_Name()
-   * @model
-   * @generated
-   */
-  String getName();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.LocalVariable#getName <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Name</em>' attribute.
-   * @see #getName()
-   * @generated
-   */
-  void setName(String value);
-
-  /**
-   * Returns the value of the '<em><b>Type Ref</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Type Ref</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Type Ref</em>' containment reference.
-   * @see #setTypeRef(TypeRef)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getLocalVariable_TypeRef()
-   * @model containment="true"
-   * @generated
-   */
-  TypeRef getTypeRef();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.LocalVariable#getTypeRef <em>Type Ref</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Type Ref</em>' containment reference.
-   * @see #getTypeRef()
-   * @generated
-   */
-  void setTypeRef(TypeRef value);
 
   /**
    * Returns the value of the '<em><b>Init</b></em>' containment reference.

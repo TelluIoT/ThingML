@@ -207,6 +207,58 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//AbstractConnector
 		public RuleCall getAbstractConnectorParserRuleCall_17() { return cAbstractConnectorParserRuleCall_17; }
 	}
+	public class VariableElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Variable");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Keyword cVarKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
+		private final Assignment cNameAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final RuleCall cNameIDTerminalRuleCall_0_1_0 = (RuleCall)cNameAssignment_0_1.eContents().get(0);
+		private final Keyword cColonKeyword_0_2 = (Keyword)cGroup_0.eContents().get(2);
+		private final Assignment cTypeRefAssignment_0_3 = (Assignment)cGroup_0.eContents().get(3);
+		private final RuleCall cTypeRefTypeRefParserRuleCall_0_3_0 = (RuleCall)cTypeRefAssignment_0_3.eContents().get(0);
+		private final RuleCall cLocalVariableParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cPropertyParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cParameterParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		
+		//Variable:
+		//	"var" name=ID ':' typeRef=TypeRef | LocalVariable | Property | Parameter;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//"var" name=ID ':' typeRef=TypeRef | LocalVariable | Property | Parameter
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//"var" name=ID ':' typeRef=TypeRef
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//"var"
+		public Keyword getVarKeyword_0_0() { return cVarKeyword_0_0; }
+		
+		//name=ID
+		public Assignment getNameAssignment_0_1() { return cNameAssignment_0_1; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_0_1_0() { return cNameIDTerminalRuleCall_0_1_0; }
+		
+		//':'
+		public Keyword getColonKeyword_0_2() { return cColonKeyword_0_2; }
+		
+		//typeRef=TypeRef
+		public Assignment getTypeRefAssignment_0_3() { return cTypeRefAssignment_0_3; }
+		
+		//TypeRef
+		public RuleCall getTypeRefTypeRefParserRuleCall_0_3_0() { return cTypeRefTypeRefParserRuleCall_0_3_0; }
+		
+		//// This is never used, it is just to have the attributes in the superclass
+		//LocalVariable
+		public RuleCall getLocalVariableParserRuleCall_1() { return cLocalVariableParserRuleCall_1; }
+		
+		//Property
+		public RuleCall getPropertyParserRuleCall_2() { return cPropertyParserRuleCall_2; }
+		
+		//Parameter
+		public RuleCall getParameterParserRuleCall_3() { return cParameterParserRuleCall_3; }
+	}
 	public class TypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.TypeRef");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -2583,29 +2635,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//LocalVariable
 		public RuleCall getLocalVariableParserRuleCall_13() { return cLocalVariableParserRuleCall_13; }
 	}
-	public class VariableElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Variable");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cLocalVariableParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cPropertyParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cParameterParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		
-		//Variable:
-		//	LocalVariable | Property | Parameter;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//LocalVariable | Property | Parameter
-		public Alternatives getAlternatives() { return cAlternatives; }
-		
-		//LocalVariable
-		public RuleCall getLocalVariableParserRuleCall_0() { return cLocalVariableParserRuleCall_0; }
-		
-		//Property
-		public RuleCall getPropertyParserRuleCall_1() { return cPropertyParserRuleCall_1; }
-		
-		//Parameter
-		public RuleCall getParameterParserRuleCall_2() { return cParameterParserRuleCall_2; }
-	}
 	public class ActionBlockElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.ActionBlock");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -4398,6 +4427,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	private final ThingMLModelElements pThingMLModel;
 	private final PlatformAnnotationElements pPlatformAnnotation;
 	private final AnnotatedElementElements pAnnotatedElement;
+	private final VariableElements pVariable;
 	private final TypeRefElements pTypeRef;
 	private final TypeElements pType;
 	private final PrimitiveTypeElements pPrimitiveType;
@@ -4429,7 +4459,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	private final EventElements pEvent;
 	private final ReceiveMessageElements pReceiveMessage;
 	private final ActionElements pAction;
-	private final VariableElements pVariable;
 	private final ActionBlockElements pActionBlock;
 	private final ExternStatementElements pExternStatement;
 	private final LocalVariableElements pLocalVariable;
@@ -4489,6 +4518,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pThingMLModel = new ThingMLModelElements();
 		this.pPlatformAnnotation = new PlatformAnnotationElements();
 		this.pAnnotatedElement = new AnnotatedElementElements();
+		this.pVariable = new VariableElements();
 		this.pTypeRef = new TypeRefElements();
 		this.pType = new TypeElements();
 		this.pPrimitiveType = new PrimitiveTypeElements();
@@ -4520,7 +4550,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pEvent = new EventElements();
 		this.pReceiveMessage = new ReceiveMessageElements();
 		this.pAction = new ActionElements();
-		this.pVariable = new VariableElements();
 		this.pActionBlock = new ActionBlockElements();
 		this.pExternStatement = new ExternStatementElements();
 		this.pLocalVariable = new LocalVariableElements();
@@ -4629,6 +4658,16 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getAnnotatedElementRule() {
 		return getAnnotatedElementAccess().getRule();
+	}
+	
+	//Variable:
+	//	"var" name=ID ':' typeRef=TypeRef | LocalVariable | Property | Parameter;
+	public VariableElements getVariableAccess() {
+		return pVariable;
+	}
+	
+	public ParserRule getVariableRule() {
+		return getVariableAccess().getRule();
 	}
 	
 	/// *****************************************************************************
@@ -5043,16 +5082,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getActionRule() {
 		return getActionAccess().getRule();
-	}
-	
-	//Variable:
-	//	LocalVariable | Property | Parameter;
-	public VariableElements getVariableAccess() {
-		return pVariable;
-	}
-	
-	public ParserRule getVariableRule() {
-		return getVariableAccess().getRule();
 	}
 	
 	//ActionBlock:

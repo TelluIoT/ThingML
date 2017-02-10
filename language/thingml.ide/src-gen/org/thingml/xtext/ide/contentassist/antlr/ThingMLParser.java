@@ -50,6 +50,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 				{
 					put(grammarAccess.getThingMLModelAccess().getAlternatives_1(), "rule__ThingMLModel__Alternatives_1");
 					put(grammarAccess.getAnnotatedElementAccess().getAlternatives(), "rule__AnnotatedElement__Alternatives");
+					put(grammarAccess.getVariableAccess().getAlternatives(), "rule__Variable__Alternatives");
 					put(grammarAccess.getTypeAccess().getAlternatives(), "rule__Type__Alternatives");
 					put(grammarAccess.getThingAccess().getAlternatives_6(), "rule__Thing__Alternatives_6");
 					put(grammarAccess.getPortAccess().getAlternatives(), "rule__Port__Alternatives");
@@ -65,7 +66,6 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getStateAccess().getAlternatives_3_7(), "rule__State__Alternatives_3_7");
 					put(grammarAccess.getHandlerAccess().getAlternatives(), "rule__Handler__Alternatives");
 					put(grammarAccess.getActionAccess().getAlternatives(), "rule__Action__Alternatives");
-					put(grammarAccess.getVariableAccess().getAlternatives(), "rule__Variable__Alternatives");
 					put(grammarAccess.getEqualityAccess().getAlternatives_1(), "rule__Equality__Alternatives_1");
 					put(grammarAccess.getComparaisonAccess().getAlternatives_1(), "rule__Comparaison__Alternatives_1");
 					put(grammarAccess.getAdditionAccess().getAlternatives_1(), "rule__Addition__Alternatives_1");
@@ -78,6 +78,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getThingMLModelAccess().getGroup(), "rule__ThingMLModel__Group__0");
 					put(grammarAccess.getThingMLModelAccess().getGroup_0(), "rule__ThingMLModel__Group_0__0");
 					put(grammarAccess.getPlatformAnnotationAccess().getGroup(), "rule__PlatformAnnotation__Group__0");
+					put(grammarAccess.getVariableAccess().getGroup_0(), "rule__Variable__Group_0__0");
 					put(grammarAccess.getTypeRefAccess().getGroup(), "rule__TypeRef__Group__0");
 					put(grammarAccess.getTypeRefAccess().getGroup_1(), "rule__TypeRef__Group_1__0");
 					put(grammarAccess.getPrimitiveTypeAccess().getGroup(), "rule__PrimitiveType__Group__0");
@@ -210,6 +211,8 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getThingMLModelAccess().getConfigsAssignment_1_2(), "rule__ThingMLModel__ConfigsAssignment_1_2");
 					put(grammarAccess.getPlatformAnnotationAccess().getNameAssignment_0(), "rule__PlatformAnnotation__NameAssignment_0");
 					put(grammarAccess.getPlatformAnnotationAccess().getValueAssignment_1(), "rule__PlatformAnnotation__ValueAssignment_1");
+					put(grammarAccess.getVariableAccess().getNameAssignment_0_1(), "rule__Variable__NameAssignment_0_1");
+					put(grammarAccess.getVariableAccess().getTypeRefAssignment_0_3(), "rule__Variable__TypeRefAssignment_0_3");
 					put(grammarAccess.getTypeRefAccess().getTypeAssignment_0(), "rule__TypeRef__TypeAssignment_0");
 					put(grammarAccess.getTypeRefAccess().getIsArrayAssignment_1_0(), "rule__TypeRef__IsArrayAssignment_1_0");
 					put(grammarAccess.getTypeRefAccess().getCardinalityAssignment_1_1(), "rule__TypeRef__CardinalityAssignment_1_1");

@@ -22,10 +22,9 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.*;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.StateHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;
@@ -70,14 +69,17 @@ public class StatesUsage extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
-        for (StateMachine sm : ThingMLHelpers.allStateMachines(t)) {
-            for (State s : StateHelper.allStates(sm)) {
+        for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
+            for (State s : org.thingml.xtext.helpers.StateHelper.allStates(sm)) {
                 if((EcoreUtil.equals(s, sm)))
                     continue;
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Unreachable")) {
-                    if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
+                    //TODO: Re-implement the unreachable condition
+                	/*
+                	if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
                         checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
                     }
+                    */
                 }
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Sink")) {
                     if (!(s instanceof FinalState) && !(((CompositeState)s.eContainer()).getSubstate().size() == 1) && s.getOutgoing().size() == 0 && !EcoreUtil.equals(s, sm)) {

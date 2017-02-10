@@ -65,6 +65,15 @@ public interface ThingMLFactory extends EFactory
   AnnotatedElement createAnnotatedElement();
 
   /**
+   * Returns a new object of class '<em>Variable</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Variable</em>'.
+   * @generated
+   */
+  Variable createVariable();
+
+  /**
    * Returns a new object of class '<em>Type Ref</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -333,15 +342,6 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   Action createAction();
-
-  /**
-   * Returns a new object of class '<em>Variable</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Variable</em>'.
-   * @generated
-   */
-  Variable createVariable();
 
   /**
    * Returns a new object of class '<em>Action Block</em>'.

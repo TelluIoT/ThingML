@@ -26,17 +26,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.ConfigPropertyAssign;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.PropertyAssign;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.thingML.*;
 
 /**
  *
@@ -78,7 +71,7 @@ public class PropertyInitialization extends Rule {
         }
         
         for(ConfigPropertyAssign pa : cfg.getPropassigns()) {
-            instProperties.get(pa.getInstance().getInstance()).get(pa.getProperty()).b = (pa.getInit() != null);
+            instProperties.get(pa.getInstance()).get(pa.getProperty()).b = (pa.getInit() != null);
         }
         
         for(Map.Entry<Instance, Map<Property,Bwrapper>> ip : instProperties.entrySet()) {

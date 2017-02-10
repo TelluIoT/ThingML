@@ -22,12 +22,11 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.EObject;
+import org.thingml.xtext.helpers.ActionHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
-import org.sintef.thingml.helpers.ActionHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.TyperHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -64,7 +63,7 @@ public class ControlStructures extends Rule {
             checker.addGenericWarning("Condition cannot be typed as Boolean", o);
             return;
         }
-        checker.addGenericError("Condition is not a Boolean (" + TyperHelper.getBroadType(actual).getName() + ")", o);
+        checker.addGenericError("Condition is not a Boolean (" + org.thingml.xtext.helpers.TyperHelper.getBroadType(actual).getName() + ")", o);
     }
 
     @Override
@@ -96,6 +95,7 @@ public class ControlStructures extends Rule {
                 check(lv.getCondition(), lv, checker);
             }
         }
+        /*
         for (Stream s : t.getStreams()) {
             for (ViewSource vs : s.getInput().getOperators()) {
                 if (vs instanceof Filter) {
@@ -104,6 +104,7 @@ public class ControlStructures extends Rule {
                 }
             }
         }
+        */
     }
 
 }

@@ -23,13 +23,10 @@ package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.*;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.constraints.Types;
-import org.sintef.thingml.helpers.ActionHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingHelper;
-import org.sintef.thingml.helpers.TyperHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -62,7 +59,7 @@ public class VariableUsage extends Rule {
     }
 
     private void check(Variable va, Expression e, Thing t, Checker checker, EObject o) {
-        if (va.getCardinality() == null) {//TODO: check arrays
+        if (va.getTypeRef().getCardinality() == null) {//TODO: check arrays
             if (va instanceof Property) {
                 Property p = (Property) va;
                 if (!p.isChangeable()) {
@@ -73,8 +70,8 @@ public class VariableUsage extends Rule {
                 checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " has no type", va);
                 return;
             }*/
-            if (!(va.getType() == null)) {
-                final Type expected = TyperHelper.getBroadType(va.getType());
+            if (!(va.getTypeRef().getType() == null)) {
+                final Type expected = TyperHelper.getBroadType(va.getTypeRef().getType());
                 final Type actual = checker.typeChecker.computeTypeOf(e);
 
                 if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)

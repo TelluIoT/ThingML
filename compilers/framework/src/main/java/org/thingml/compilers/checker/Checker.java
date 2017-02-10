@@ -74,9 +74,7 @@ abstract public class Checker {
         Rules.add(new StatesUsage());
         Rules.add(new VariableUsage());
         Rules.add(new ControlStructures());
-        Rules.add(new StreamNaming());
         Rules.add(new DuplicatedMessageInPort());
-        Rules.add(new MultipleWindowStreams());
         Rules.add(new PropertyInitialization());
         Rules.add(new LostMessages());
     }

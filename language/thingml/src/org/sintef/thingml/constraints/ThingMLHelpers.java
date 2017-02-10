@@ -839,13 +839,6 @@ public class ThingMLHelpers {
 		return result;
 	}
 
-	public static EObject findContainingFuncOp(EObject eObject) {
-		while(eObject != null && !(eObject instanceof Function)) {
-			eObject = eObject.eContainer();
-		}
-		return  eObject;
-	}
-
 
 	public static List<Expression> getAllExpressions(EObject self, Class clazz) {
 		List<Expression> result = new ArrayList<Expression>();

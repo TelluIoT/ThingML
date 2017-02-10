@@ -22,9 +22,9 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -85,14 +85,14 @@ public class LostMessages extends Rule {
                 }
                 if (!found) {//See if another instance can receive the message
                     for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-                        if (EcoreUtil.equals(c.getSrv().getInstance(), j)) {
+                        if (EcoreUtil.equals(c.getSrv(), j)) {
                             for(Message m2 : c.getRequired().getReceives()) {
                                 if(EcoreUtil.equals(m, m2)) {
                                     found = true;
                                     break;
                                 }
                             }
-                        } else if (EcoreUtil.equals(c.getCli().getInstance(), j)) {
+                        } else if (EcoreUtil.equals(c.getCli(), j)) {
                             for(Message m2 : c.getProvided().getReceives()) {
                                 if(EcoreUtil.equals(m, m2)) {
                                     found = true;

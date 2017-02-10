@@ -108,6 +108,13 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case ThingMLPackage.VARIABLE:
+      {
+        Variable variable = (Variable)theEObject;
+        T result = caseVariable(variable);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case ThingMLPackage.TYPE_REF:
       {
         TypeRef typeRef = (TypeRef)theEObject;
@@ -361,13 +368,6 @@ public class ThingMLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case ThingMLPackage.VARIABLE:
-      {
-        Variable variable = (Variable)theEObject;
-        T result = caseVariable(variable);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case ThingMLPackage.ACTION_BLOCK:
       {
         ActionBlock actionBlock = (ActionBlock)theEObject;
@@ -389,8 +389,8 @@ public class ThingMLSwitch<T> extends Switch<T>
         LocalVariable localVariable = (LocalVariable)theEObject;
         T result = caseLocalVariable(localVariable);
         if (result == null) result = caseAnnotatedElement(localVariable);
-        if (result == null) result = caseAction(localVariable);
         if (result == null) result = caseVariable(localVariable);
+        if (result == null) result = caseAction(localVariable);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -786,6 +786,22 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseAnnotatedElement(AnnotatedElement object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Variable</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Variable</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseVariable(Variable object)
   {
     return null;
   }
@@ -1266,22 +1282,6 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseAction(Action object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Variable</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Variable</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseVariable(Variable object)
   {
     return null;
   }

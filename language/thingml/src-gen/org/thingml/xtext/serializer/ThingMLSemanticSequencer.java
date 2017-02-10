@@ -96,6 +96,7 @@ import org.thingml.xtext.thingML.TimesExpression;
 import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.UnaryMinus;
+import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
 
 @SuppressWarnings("all")
@@ -328,6 +329,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.UNARY_MINUS:
 				sequence_Primary(context, (UnaryMinus) semanticObject); 
+				return; 
+			case ThingMLPackage.VARIABLE:
+				sequence_Variable(context, (Variable) semanticObject); 
 				return; 
 			case ThingMLPackage.VARIABLE_ASSIGNMENT:
 				sequence_VariableAssignment(context, (VariableAssignment) semanticObject); 
@@ -1372,8 +1376,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns LocalVariable
-	 *     Action returns LocalVariable
 	 *     Variable returns LocalVariable
+	 *     Action returns LocalVariable
 	 *     LocalVariable returns LocalVariable
 	 *
 	 * Constraint:
@@ -1626,8 +1630,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns Parameter
-	 *     Parameter returns Parameter
 	 *     Variable returns Parameter
+	 *     Parameter returns Parameter
 	 *
 	 * Constraint:
 	 *     (name=ID typeRef=TypeRef annotations+=PlatformAnnotation*)
@@ -1828,8 +1832,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     AnnotatedElement returns Property
-	 *     Property returns Property
 	 *     Variable returns Property
+	 *     Property returns Property
 	 *
 	 * Constraint:
 	 *     (changeable?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
@@ -2141,6 +2145,27 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 */
 	protected void sequence_VariableAssignment(ISerializationContext context, VariableAssignment semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Variable returns Variable
+	 *
+	 * Constraint:
+	 *     (name=ID typeRef=TypeRef)
+	 */
+	protected void sequence_Variable(ISerializationContext context, Variable semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.VARIABLE__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.VARIABLE__NAME));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.VARIABLE__TYPE_REF) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.VARIABLE__TYPE_REF));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getVariableAccess().getNameIDTerminalRuleCall_0_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getVariableAccess().getTypeRefTypeRefParserRuleCall_0_3_0(), semanticObject.getTypeRef());
+		feeder.finish();
 	}
 	
 	

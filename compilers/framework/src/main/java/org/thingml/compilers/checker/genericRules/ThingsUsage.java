@@ -21,14 +21,13 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ConfigurationHelper;
+
+import org.sintef.thingml.constraints.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.*;
 
 /**
  *

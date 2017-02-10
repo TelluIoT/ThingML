@@ -221,9 +221,9 @@ public class TypeChecker extends ThingMLSwitch<Type> {
 
     @Override
     public Type casePropertyReference(PropertyReference object) {
-        return TyperHelper.getBroadType(object.getProperty().getType());
+        return TyperHelper.getBroadType(object.getProperty().getTypeRef().getType());
     }
-
+/*
     @Override
     public Type caseExpressionGroup(ExpressionGroup object) {
         return computeTypeOf(object.getExp());
@@ -247,12 +247,12 @@ public class TypeChecker extends ThingMLSwitch<Type> {
         }
         return Types.ANY_TYPE;
     }
-
+*/
     @Override
     public Type caseFunctionCallExpression(FunctionCallExpression object) {
-        if (object.getFunction().getType() == null)
+        if (object.getFunction().getTypeRef().getType() == null)
             return Types.VOID_TYPE;
-        return TyperHelper.getBroadType(object.getFunction().getType());
+        return TyperHelper.getBroadType(object.getFunction().getTypeRef().getType());
     }
 
     @Override

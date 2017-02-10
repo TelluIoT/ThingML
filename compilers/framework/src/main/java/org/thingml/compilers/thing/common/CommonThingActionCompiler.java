@@ -18,11 +18,11 @@ package org.thingml.compilers.thing.common;
 
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.*;
+import org.eclipse.emf.ecore.EObject;
 import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
-
 
 /**
  * Created by bmori on 01.12.2014.
@@ -47,14 +47,14 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
         traceVariablePre(action, builder, ctx);
-        if (action.getProperty().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
+        if (action.getProperty().getTypeRef().getCardinality() != null && action.getIndex() != null) {//this is an array (and we want to affect just one index)
             for (Expression i : action.getIndex()) {
                 builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
                 StringBuilder tempBuilder = new StringBuilder();
                 generate(i, tempBuilder, ctx);
                 builder.append("[" + tempBuilder.toString() + "]");
                 builder.append(" = ");
-                cast(action.getProperty().getType(), false, action.getExpression(), builder, ctx);
+                cast(action.getProperty().getTypeRef().getType(), false, action.getExpression(), builder, ctx);
                 //generateMainAndInit(action.getExpression(), builder, ctx);
                 builder.append(";\n");
 
@@ -65,7 +65,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
             }
             builder.append(ThingMLElementHelper.qname(action.getProperty(), "_") + "_var");
             builder.append(" = ");
-            cast(action.getProperty().getType(), action.getProperty().isIsArray(), action.getExpression(), builder, ctx);
+            cast(action.getProperty().getTypeRef().getType(), action.getProperty().getTypeRef().isIsArray(), action.getExpression(), builder, ctx);
             //generateMainAndInit(action.getExpression(), builder, ctx);
             builder.append(";\n");
         }
@@ -129,13 +129,14 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
-        TypedElement parent = ThingMLHelpers.findContainingFuncOp(action);
+        //EObject parent = ThingMLHelpers.findContainingFuncOp(action);
         boolean isArray = false;
         if (action.getExp() instanceof PropertyReference) {
             PropertyReference pr = (PropertyReference) action.getExp();
-            isArray = pr.getProperty().isIsArray() || pr.getProperty().getCardinality() != null;
+            isArray = pr.getProperty().getTypeRef().isIsArray() || pr.getProperty().getTypeRef().getCardinality() != null;
         }
-        cast(parent.getType(), isArray, action.getExp(), builder, ctx);
+        //FIXME: Brice, the cast for returns was lost in translation
+        //cast(parent.getType(), isArray, action.getExp(), builder, ctx);
         builder.append(";\n");
     }
 
@@ -304,7 +305,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-        if (expression.isBoolValue())
+        if (expression.getBoolValue().equals("true"))
             builder.append("true");
         else
             builder.append("false");

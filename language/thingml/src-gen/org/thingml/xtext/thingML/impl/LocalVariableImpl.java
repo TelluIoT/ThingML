@@ -25,10 +25,12 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.Variable;
 
 /**
  * <!-- begin-user-doc -->
@@ -38,9 +40,9 @@ import org.thingml.xtext.thingML.TypeRef;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.LocalVariableImpl#isChangeable <em>Changeable</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.LocalVariableImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.LocalVariableImpl#getTypeRef <em>Type Ref</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.LocalVariableImpl#isChangeable <em>Changeable</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.LocalVariableImpl#getInit <em>Init</em>}</li>
  * </ul>
  *
@@ -48,26 +50,6 @@ import org.thingml.xtext.thingML.TypeRef;
  */
 public class LocalVariableImpl extends AnnotatedElementImpl implements LocalVariable
 {
-  /**
-   * The default value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isChangeable()
-   * @generated
-   * @ordered
-   */
-  protected static final boolean CHANGEABLE_EDEFAULT = false;
-
-  /**
-   * The cached value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isChangeable()
-   * @generated
-   * @ordered
-   */
-  protected boolean changeable = CHANGEABLE_EDEFAULT;
-
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -99,6 +81,26 @@ public class LocalVariableImpl extends AnnotatedElementImpl implements LocalVari
   protected TypeRef typeRef;
 
   /**
+   * The default value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isChangeable()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean CHANGEABLE_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isChangeable()
+   * @generated
+   * @ordered
+   */
+  protected boolean changeable = CHANGEABLE_EDEFAULT;
+
+  /**
    * The cached value of the '{@link #getInit() <em>Init</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -127,29 +129,6 @@ public class LocalVariableImpl extends AnnotatedElementImpl implements LocalVari
   protected EClass eStaticClass()
   {
     return ThingMLPackage.Literals.LOCAL_VARIABLE;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public boolean isChangeable()
-  {
-    return changeable;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setChangeable(boolean newChangeable)
-  {
-    boolean oldChangeable = changeable;
-    changeable = newChangeable;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE, oldChangeable, changeable));
   }
 
   /**
@@ -228,6 +207,29 @@ public class LocalVariableImpl extends AnnotatedElementImpl implements LocalVari
    * <!-- end-user-doc -->
    * @generated
    */
+  public boolean isChangeable()
+  {
+    return changeable;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setChangeable(boolean newChangeable)
+  {
+    boolean oldChangeable = changeable;
+    changeable = newChangeable;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE, oldChangeable, changeable));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public Expression getInit()
   {
     return init;
@@ -299,12 +301,12 @@ public class LocalVariableImpl extends AnnotatedElementImpl implements LocalVari
   {
     switch (featureID)
     {
-      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
-        return isChangeable();
       case ThingMLPackage.LOCAL_VARIABLE__NAME:
         return getName();
       case ThingMLPackage.LOCAL_VARIABLE__TYPE_REF:
         return getTypeRef();
+      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
+        return isChangeable();
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         return getInit();
     }
@@ -321,14 +323,14 @@ public class LocalVariableImpl extends AnnotatedElementImpl implements LocalVari
   {
     switch (featureID)
     {
-      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
-        setChangeable((Boolean)newValue);
-        return;
       case ThingMLPackage.LOCAL_VARIABLE__NAME:
         setName((String)newValue);
         return;
       case ThingMLPackage.LOCAL_VARIABLE__TYPE_REF:
         setTypeRef((TypeRef)newValue);
+        return;
+      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
+        setChangeable((Boolean)newValue);
         return;
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         setInit((Expression)newValue);
@@ -347,14 +349,14 @@ public class LocalVariableImpl extends AnnotatedElementImpl implements LocalVari
   {
     switch (featureID)
     {
-      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
-        setChangeable(CHANGEABLE_EDEFAULT);
-        return;
       case ThingMLPackage.LOCAL_VARIABLE__NAME:
         setName(NAME_EDEFAULT);
         return;
       case ThingMLPackage.LOCAL_VARIABLE__TYPE_REF:
         setTypeRef((TypeRef)null);
+        return;
+      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
+        setChangeable(CHANGEABLE_EDEFAULT);
         return;
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         setInit((Expression)null);
@@ -373,16 +375,70 @@ public class LocalVariableImpl extends AnnotatedElementImpl implements LocalVari
   {
     switch (featureID)
     {
-      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
-        return changeable != CHANGEABLE_EDEFAULT;
       case ThingMLPackage.LOCAL_VARIABLE__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case ThingMLPackage.LOCAL_VARIABLE__TYPE_REF:
         return typeRef != null;
+      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
+        return changeable != CHANGEABLE_EDEFAULT;
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         return init != null;
     }
     return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == Variable.class)
+    {
+      switch (derivedFeatureID)
+      {
+        case ThingMLPackage.LOCAL_VARIABLE__NAME: return ThingMLPackage.VARIABLE__NAME;
+        case ThingMLPackage.LOCAL_VARIABLE__TYPE_REF: return ThingMLPackage.VARIABLE__TYPE_REF;
+        default: return -1;
+      }
+    }
+    if (baseClass == Action.class)
+    {
+      switch (derivedFeatureID)
+      {
+        default: return -1;
+      }
+    }
+    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == Variable.class)
+    {
+      switch (baseFeatureID)
+      {
+        case ThingMLPackage.VARIABLE__NAME: return ThingMLPackage.LOCAL_VARIABLE__NAME;
+        case ThingMLPackage.VARIABLE__TYPE_REF: return ThingMLPackage.LOCAL_VARIABLE__TYPE_REF;
+        default: return -1;
+      }
+    }
+    if (baseClass == Action.class)
+    {
+      switch (baseFeatureID)
+      {
+        default: return -1;
+      }
+    }
+    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
   }
 
   /**
@@ -396,10 +452,10 @@ public class LocalVariableImpl extends AnnotatedElementImpl implements LocalVari
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (changeable: ");
-    result.append(changeable);
-    result.append(", name: ");
+    result.append(" (name: ");
     result.append(name);
+    result.append(", changeable: ");
+    result.append(changeable);
     result.append(')');
     return result.toString();
   }

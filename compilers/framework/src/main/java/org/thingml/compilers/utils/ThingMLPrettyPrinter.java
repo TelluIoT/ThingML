@@ -169,7 +169,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         if (!action.isChangeable()) {
             builder.append("readonly ");
         }
-        builder.append("var " + action.getName() + " : " + action.getType().getName());
+        builder.append("var " + action.getName() + " : " + action.getTypeRef().getType().getName());
         if (action.getInit() != null) {
             builder.append(" = ");
             generate(action.getInit(), builder, ctx);
@@ -303,25 +303,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         generate(expression.getTerm(), builder, ctx);
     }
 
-    @Override
-    public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        ThingMLElement thingMLElement = (ThingMLElement) expression.getReference();
-        if (expression.getParameter() instanceof ParamReference) {
-            ParamReference paramReference = (ParamReference) expression.getParameter();
-            builder.append(thingMLElement.getName() + "." + paramReference.getParameterRef().getName());
-        } else if (expression.getParameter() instanceof ParamReference) {
-            throw new UnsupportedOperationException("Not yet implemented.");
-        } else {
-            throw new UnsupportedOperationException("Parameter " + expression.getReference().getClass().getName() + " is currently not supported.");
-        }
-    }
 
-    @Override
-    public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
-        builder.append("(");
-        generate(expression.getExp(), builder, ctx);
-        builder.append(")");
-    }
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
@@ -345,7 +327,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-        if (expression.isBoolValue())
+        if (expression.getBoolValue().equals("true"))
             builder.append("true");
         else
             builder.append("false");

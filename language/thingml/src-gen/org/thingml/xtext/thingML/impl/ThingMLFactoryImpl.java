@@ -82,6 +82,7 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.THING_ML_MODEL: return createThingMLModel();
       case ThingMLPackage.PLATFORM_ANNOTATION: return createPlatformAnnotation();
       case ThingMLPackage.ANNOTATED_ELEMENT: return createAnnotatedElement();
+      case ThingMLPackage.VARIABLE: return createVariable();
       case ThingMLPackage.TYPE_REF: return createTypeRef();
       case ThingMLPackage.TYPE: return createType();
       case ThingMLPackage.PRIMITIVE_TYPE: return createPrimitiveType();
@@ -112,7 +113,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.EVENT: return createEvent();
       case ThingMLPackage.RECEIVE_MESSAGE: return createReceiveMessage();
       case ThingMLPackage.ACTION: return createAction();
-      case ThingMLPackage.VARIABLE: return createVariable();
       case ThingMLPackage.ACTION_BLOCK: return createActionBlock();
       case ThingMLPackage.EXTERN_STATEMENT: return createExternStatement();
       case ThingMLPackage.LOCAL_VARIABLE: return createLocalVariable();
@@ -195,6 +195,17 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     AnnotatedElementImpl annotatedElement = new AnnotatedElementImpl();
     return annotatedElement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Variable createVariable()
+  {
+    VariableImpl variable = new VariableImpl();
+    return variable;
   }
 
   /**
@@ -525,17 +536,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     ActionImpl action = new ActionImpl();
     return action;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Variable createVariable()
-  {
-    VariableImpl variable = new VariableImpl();
-    return variable;
   }
 
   /**

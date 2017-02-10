@@ -389,7 +389,7 @@ public class Context {
 
     public String traceOnEntry(Thing t, Region r, State s) {
         if (!debugTraceWithID) {
-            return " (" + t.getName() + "): Enters " + r.getName() + ":" + s.getName();
+            return " (" + t.getName() + "): Enters " + ThingMLElementHelper.getName(r) + ":" + s.getName();
         } else {
             return null;
         }
@@ -397,7 +397,7 @@ public class Context {
 
     public String traceOnExit(Thing t, Region r, State s) {
         if (!debugTraceWithID) {
-            return " (" + t.getName() + "): Exits " + r.getName() + ":" + s.getName();
+            return " (" + t.getName() + "): Exits " + ThingMLElementHelper.getName(r) + ":" + s.getName();
         } else {
             return null;
         }
@@ -440,7 +440,7 @@ public class Context {
             if (p != null) {
                 return " (" + t.getName()
                         + "): transition "
-                        + tr.getSource().getName()
+                        + ((State)tr.eContainer()).getName()
                         + " -> " + tr.getTarget().getName() + " event "
                         + p.getName() + "?"
                         + m.getName();
@@ -456,7 +456,7 @@ public class Context {
         if (!debugTraceWithID) {
             return " (" + t.getName()
                     + "): transition "
-                    + tr.getSource().getName()
+                    + ((State)tr.eContainer()).getName()
                     + " -> " + tr.getTarget().getName();
         } else {
             return null;

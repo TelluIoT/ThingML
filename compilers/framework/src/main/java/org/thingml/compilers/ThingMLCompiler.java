@@ -67,7 +67,7 @@ public abstract class ThingMLCompiler {
     private CfgMainGenerator mainCompiler;
     private CfgBuildCompiler cfgBuildCompiler;
     private ThingImplCompiler thingImplCompiler;
-    private ThingCepCompiler cepCompiler;
+
     //Debug
     private Map<Thing, DebugProfile> debugProfiles = new HashMap<>();
     private boolean containsDebug = false;
@@ -88,16 +88,14 @@ public abstract class ThingMLCompiler {
         this.mainCompiler = new CfgMainGenerator();
         this.cfgBuildCompiler = new CfgBuildCompiler();
         this.thingImplCompiler = new FSMBasedThingImplCompiler();
-        this.cepCompiler = new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration());
     }
 
-    public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
+    public ThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
         this.thingActionCompiler = thingActionCompiler;
         this.thingApiCompiler = thingApiCompiler;
         this.mainCompiler = mainCompiler;
         this.cfgBuildCompiler = cfgBuildCompiler;
         this.thingImplCompiler = thingImplCompiler;
-        this.cepCompiler = cepCompiler;
     }
 
     public static ThingMLModel loadModel(final File file) {
@@ -178,14 +176,10 @@ public abstract class ThingMLCompiler {
             isOK = false;
             System.err.println("ERROR: The input model contains " + model.getErrors().size() + " errors.");
             for (Resource.Diagnostic d : model.getErrors()) {
-                if (d instanceof IThingmlTextDiagnostic) {
-                    IThingmlTextDiagnostic e = (IThingmlTextDiagnostic) d;
-                    System.err.println("Syntax error in file " + d.getLocation() + " (" + e.getLine() + ", " + e.getColumn() + ")");
-                    errors.add("Syntax error in file " + d.getLocation() + " (" + e.getLine() + ", " + e.getColumn() + ")");
-                } else {
+                
                     System.err.println("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
                     errors.add("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
-                }
+                
             }
         }
 
@@ -363,10 +357,6 @@ public abstract class ThingMLCompiler {
 
     public ThingImplCompiler getThingImplCompiler() {
         return thingImplCompiler;
-    }
-
-    public ThingCepCompiler getCepCompiler() {
-        return cepCompiler;
     }
 
     public Map<String, CfgExternalConnectorCompiler> getConnectorCompilers() {

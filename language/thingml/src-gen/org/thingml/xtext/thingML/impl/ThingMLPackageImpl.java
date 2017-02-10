@@ -141,6 +141,13 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass variableEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass typeRefEClass = null;
 
   /**
@@ -345,13 +352,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * @generated
    */
   private EClass actionEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass variableEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -843,6 +843,36 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getVariable()
+  {
+    return variableEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getVariable_Name()
+  {
+    return (EAttribute)variableEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getVariable_TypeRef()
+  {
+    return (EReference)variableEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getTypeRef()
   {
     return typeRefEClass;
@@ -1203,29 +1233,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getProperty_Name()
-  {
-    return (EAttribute)propertyEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getProperty_TypeRef()
-  {
-    return (EReference)propertyEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EReference getProperty_Init()
   {
-    return (EReference)propertyEClass.getEStructuralFeatures().get(3);
+    return (EReference)propertyEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1266,26 +1276,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
   public EClass getParameter()
   {
     return parameterEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getParameter_Name()
-  {
-    return (EAttribute)parameterEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getParameter_TypeRef()
-  {
-    return (EReference)parameterEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1823,16 +1813,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getVariable()
-  {
-    return variableEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EClass getActionBlock()
   {
     return actionBlockEClass;
@@ -1903,29 +1883,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getLocalVariable_Name()
-  {
-    return (EAttribute)localVariableEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getLocalVariable_TypeRef()
-  {
-    return (EReference)localVariableEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EReference getLocalVariable_Init()
   {
-    return (EReference)localVariableEClass.getEStructuralFeatures().get(3);
+    return (EReference)localVariableEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -3211,6 +3171,10 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     annotatedElementEClass = createEClass(ANNOTATED_ELEMENT);
     createEReference(annotatedElementEClass, ANNOTATED_ELEMENT__ANNOTATIONS);
 
+    variableEClass = createEClass(VARIABLE);
+    createEAttribute(variableEClass, VARIABLE__NAME);
+    createEReference(variableEClass, VARIABLE__TYPE_REF);
+
     typeRefEClass = createEClass(TYPE_REF);
     createEReference(typeRefEClass, TYPE_REF__TYPE);
     createEAttribute(typeRefEClass, TYPE_REF__IS_ARRAY);
@@ -3257,8 +3221,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     propertyEClass = createEClass(PROPERTY);
     createEAttribute(propertyEClass, PROPERTY__CHANGEABLE);
-    createEAttribute(propertyEClass, PROPERTY__NAME);
-    createEReference(propertyEClass, PROPERTY__TYPE_REF);
     createEReference(propertyEClass, PROPERTY__INIT);
 
     messageEClass = createEClass(MESSAGE);
@@ -3266,8 +3228,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     createEReference(messageEClass, MESSAGE__PARAMETERS);
 
     parameterEClass = createEClass(PARAMETER);
-    createEAttribute(parameterEClass, PARAMETER__NAME);
-    createEReference(parameterEClass, PARAMETER__TYPE_REF);
 
     portEClass = createEClass(PORT);
     createEAttribute(portEClass, PORT__NAME);
@@ -3339,8 +3299,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     actionEClass = createEClass(ACTION);
 
-    variableEClass = createEClass(VARIABLE);
-
     actionBlockEClass = createEClass(ACTION_BLOCK);
     createEReference(actionBlockEClass, ACTION_BLOCK__ACTIONS);
 
@@ -3350,8 +3308,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     localVariableEClass = createEClass(LOCAL_VARIABLE);
     createEAttribute(localVariableEClass, LOCAL_VARIABLE__CHANGEABLE);
-    createEAttribute(localVariableEClass, LOCAL_VARIABLE__NAME);
-    createEReference(localVariableEClass, LOCAL_VARIABLE__TYPE_REF);
     createEReference(localVariableEClass, LOCAL_VARIABLE__INIT);
 
     sendActionEClass = createEClass(SEND_ACTION);
@@ -3586,8 +3542,8 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     actionBlockEClass.getESuperTypes().add(this.getAction());
     externStatementEClass.getESuperTypes().add(this.getAction());
     localVariableEClass.getESuperTypes().add(this.getAnnotatedElement());
-    localVariableEClass.getESuperTypes().add(this.getAction());
     localVariableEClass.getESuperTypes().add(this.getVariable());
+    localVariableEClass.getESuperTypes().add(this.getAction());
     sendActionEClass.getESuperTypes().add(this.getAction());
     variableAssignmentEClass.getESuperTypes().add(this.getAction());
     incrementEClass.getESuperTypes().add(this.getAction());
@@ -3644,6 +3600,10 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(annotatedElementEClass, AnnotatedElement.class, "AnnotatedElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getAnnotatedElement_Annotations(), this.getPlatformAnnotation(), null, "annotations", null, 0, -1, AnnotatedElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+    initEClass(variableEClass, Variable.class, "Variable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getVariable_Name(), ecorePackage.getEString(), "name", null, 0, 1, Variable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getVariable_TypeRef(), this.getTypeRef(), null, "typeRef", null, 0, 1, Variable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(typeRefEClass, TypeRef.class, "TypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getTypeRef_Type(), this.getType(), null, "type", null, 0, 1, TypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getTypeRef_IsArray(), ecorePackage.getEBoolean(), "isArray", null, 0, 1, TypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3690,8 +3650,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     initEClass(propertyEClass, Property.class, "Property", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getProperty_Changeable(), ecorePackage.getEBoolean(), "changeable", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getProperty_Name(), ecorePackage.getEString(), "name", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getProperty_TypeRef(), this.getTypeRef(), null, "typeRef", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getProperty_Init(), this.getExpression(), null, "init", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(messageEClass, Message.class, "Message", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3699,8 +3657,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEReference(getMessage_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, Message.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(parameterEClass, Parameter.class, "Parameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getParameter_Name(), ecorePackage.getEString(), "name", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getParameter_TypeRef(), this.getTypeRef(), null, "typeRef", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(portEClass, Port.class, "Port", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getPort_Name(), ecorePackage.getEString(), "name", null, 0, 1, Port.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3772,8 +3728,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     initEClass(actionEClass, Action.class, "Action", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(variableEClass, Variable.class, "Variable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
     initEClass(actionBlockEClass, ActionBlock.class, "ActionBlock", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getActionBlock_Actions(), this.getAction(), null, "actions", null, 0, -1, ActionBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -3783,8 +3737,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
 
     initEClass(localVariableEClass, LocalVariable.class, "LocalVariable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getLocalVariable_Changeable(), ecorePackage.getEBoolean(), "changeable", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getLocalVariable_Name(), ecorePackage.getEString(), "name", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getLocalVariable_TypeRef(), this.getTypeRef(), null, "typeRef", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLocalVariable_Init(), this.getExpression(), null, "init", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(sendActionEClass, SendAction.class, "SendAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

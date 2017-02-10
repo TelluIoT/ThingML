@@ -22,10 +22,11 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.StateHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.*;
 import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.StateHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -68,7 +69,7 @@ public class NonDeterministicTransitions extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
-        for (StateMachine sm : ThingMLHelpers.allStateMachines(t)) {
+        for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
             for (State s : StateHelper.allStates(sm)) {
                 List<Event> guarded = new ArrayList<Event>();
                 List<Event> notGuarded = new ArrayList<Event>();
@@ -89,7 +90,7 @@ public class NonDeterministicTransitions extends Rule {
                 for (Event g : guarded) {
                     for (Event ng : notGuarded) {
                         if (EcoreUtil.equals(g, ng)) {
-                            checker.addGenericError("Non deterministic behaviour: Two transitions handling " + g.getName() + ", with at least one without a guard", g);
+                            checker.addGenericError("Non deterministic behaviour: Two transitions handling " + ThingMLElementHelper.getName(g) + ", with at least one without a guard", g);
                         }
                     }
                 }

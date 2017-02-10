@@ -26,8 +26,8 @@ import org.thingml.compilers.thing.ThingImplCompiler;
 public class FSMBasedThingImplCompiler extends ThingImplCompiler {
 
     public void generateState(State s, StringBuilder builder, Context ctx) {
-        if (s instanceof StateMachine) {
-            generateStateMachine((StateMachine) s, builder, ctx);
+        if (s.eContainer() instanceof Thing) {
+            generateStateMachine((CompositeState) s, builder, ctx);
         } else if (s instanceof CompositeState) {
             generateCompositeState((CompositeState) s, builder, ctx);
         } else if (s instanceof FinalState) {
@@ -37,7 +37,7 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
         }
     }
 
-    protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
+    protected void generateStateMachine(CompositeState sm, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("State Machine to be implemented");
     }
 
