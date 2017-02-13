@@ -28,8 +28,8 @@ package org.thingml.networkplugins.java;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.java.JavaHelper;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -85,7 +85,7 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
         builder.append("final JsonObject params = new JsonObject();\n");
         for (Parameter p : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                String t = AnnotatedElementHelper.annotationOrElse(p.getType(), "java_type", "void");
+                String t = AnnotatedElementHelper.annotationOrElse(p.getTypeRef().getType(), "java_type", "void");
                 if (t.equals("char")) {
                     builder.append("params.add(\"" + p.getName() + "\", \"\" + _this." + p.getName() + ");\n");
                 } else {
@@ -175,10 +175,10 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
                 if(!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
                     if (m.getParameters().indexOf(p) > 0)
                         builder.append(", ");
-                    builder.append("(" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, context) + ") ");
+                    builder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null, context) + ") ");
                     builder.append("msg.get(msgName).asObject().get(\"" + p.getName() + "\")");
                     String getter = "asString()";
-                    switch (AnnotatedElementHelper.annotationOrElse(p.getType(), "java_type", "void")) {
+                    switch (AnnotatedElementHelper.annotationOrElse(p.getTypeRef().getType(), "java_type", "void")) {
                         case "short": getter = "asInt()"; break;
                         case "int": getter = "asInt()"; break;
                         case "long": getter = "asInt()"; break;
