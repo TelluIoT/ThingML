@@ -29,6 +29,15 @@ import java.util.Map;
  */
 public class ThingHelper {
 
+    public static boolean hasSession(Thing self) {
+        for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
+            for(State s : StateHelper.allStatesIncludingSessions(sm)) {
+                if (s instanceof Session)
+                    return true;
+            }
+        }
+        return false;
+}
 
     public static boolean isSingleton(Thing self) {
         return AnnotatedElementHelper.isDefined(self, "singleton", "true");
