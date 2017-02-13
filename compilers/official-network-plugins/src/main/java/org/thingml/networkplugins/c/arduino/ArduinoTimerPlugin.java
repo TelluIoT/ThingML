@@ -22,8 +22,8 @@
 package org.thingml.networkplugins.c.arduino;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
@@ -515,7 +515,7 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
 
         public void generateInstructions(CCompilerContext ctx, StringBuilder builder) {
             for (ExternalConnector eco : ExternalConnectors) {
-                Thing t = eco.getInst().getInstance().getType();
+                Thing t = eco.getInst().getType();
                 Port p = eco.getPort();
 
                 for (Message m : p.getSends()) {

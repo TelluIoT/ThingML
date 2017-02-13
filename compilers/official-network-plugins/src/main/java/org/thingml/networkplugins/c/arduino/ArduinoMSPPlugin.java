@@ -21,8 +21,8 @@
  */
 package org.thingml.networkplugins.c.arduino;
 
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
@@ -71,7 +71,7 @@ public class ArduinoMSPPlugin extends NetworkPlugin {
             
             int j = 0;
             for (Parameter pt : message.getParameters()) {
-                int bytes = cctx.getCByteSize(pt.getType(), 0);
+                int bytes = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
                 for (int i = bytes; i > 0; i--)
                     builder.append("            msg[i++] = buffer["+(j+i-1)+"];\n");
                 j += bytes;
@@ -101,7 +101,7 @@ public class ArduinoMSPPlugin extends NetworkPlugin {
             builder.append("    byte msg["+size+"];\n");
             builder.append("    uint8_t i = 0;\n");
             for (Parameter pt : m.getParameters()) {
-                int bytes = cctx.getCByteSize(pt.getType(), 0);
+                int bytes = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
                 String v = pt.getName();
                 for (int i = 0; i < bytes; i++)
                     builder.append("    msg[i++] = ("+v+" >> "+(i*8)+") & 0xFF;\n");
