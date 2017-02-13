@@ -21,9 +21,9 @@
  */
 package org.thingml.networkplugins.c.posix;
 
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.impl.ThingmlFactoryImpl;
+import org.thingml.xtext.thingML.impl.ThingMLFactoryImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
@@ -66,8 +66,8 @@ public class PosixWebSocketPlugin extends NetworkPlugin {
     private void addDependencies() {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         if (!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "websockets")) {
-            ThingmlFactory factory;
-            factory = ThingmlFactoryImpl.init();
+            ThingMLFactory factory;
+            factory = ThingMLFactoryImpl.init();
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("add_c_libraries");
             pan.setValue("websockets");

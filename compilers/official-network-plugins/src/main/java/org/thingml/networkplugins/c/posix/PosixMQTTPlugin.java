@@ -21,11 +21,9 @@
  */
 package org.thingml.networkplugins.c.posix;
 
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.impl.ThingmlFactoryImpl;
+import org.thingml.xtext.thingML.impl.ThingMLFactoryImpl;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CCfgMainGenerator;
@@ -67,8 +65,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
 
     private void addDependencies() {
         if (!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "mosquitto")) {
-            ThingmlFactory factory;
-            factory = ThingmlFactoryImpl.init();
+            ThingMLFactory factory;
+            factory = ThingMLFactoryImpl.init();
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("add_c_libraries");
             pan.setValue("mosquitto");

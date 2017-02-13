@@ -26,11 +26,11 @@
  */
 package org.thingml.networkplugins.c;
 
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
 
 import java.util.ArrayList;
 import java.util.List;

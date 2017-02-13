@@ -21,13 +21,13 @@
  */
 package org.thingml.networkplugins.c;
 
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,16 +70,16 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
         int j = 3;
         for (Parameter pt : m.getParameters()) {
             builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = cctx.getCByteSize(pt.getType(), 0);
+            int i = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
             String v = pt.getName();
-            if (cctx.isPointer(pt.getType())) {
+            if (cctx.isPointer(pt.getTypeRef().getType())) {
                 // This should not happen and should be checked before.
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
                 if (!AnnotatedElementHelper.isDefined(pt, "ignore", "true")) {
                     builder.append("union u_" + v + "_t {\n");
-                    builder.append(cctx.getCType(pt.getType()) + " p;\n");
-                    builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append(cctx.getCType(pt.getTypeRef().getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getTypeRef().getType(), 0) + "];\n");
                     builder.append("} u_" + v + ";\n");
                     builder.append("u_" + v + ".p = " + v + ";\n");
                     for (int k1 = 0; k1 < i; k1++) {
@@ -111,11 +111,11 @@ public class CMSPSerializerPlugin extends SerializationPlugin {
             builder.append("        case " + cctx.getHandlerCode(configuration, m) + ":\n");
             int j = 2;
             for (Parameter pt : m.getParameters()) {
-                for (int i = cctx.getCByteSize(pt.getType(), 0) - 1; i >= 0; i--) {
+                for (int i = cctx.getCByteSize(pt.getTypeRef().getType(), 0) - 1; i >= 0; i--) {
                     builder.append("            msg_buf[index] = " + bufferName + "[" + (j + i) + "];\n");
                     builder.append("            index++;\n");
                 }
-                j += cctx.getCByteSize(pt.getType(), 0);
+                j += cctx.getCByteSize(pt.getTypeRef().getType(), 0);
             }
             builder.append("        break;\n");
         }
