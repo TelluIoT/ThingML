@@ -134,7 +134,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             if (thing.getAnnotations().size() > 0)
                 classes.append("note left of " + thing.getName() + " : ");
             for(PlatformAnnotation a : thing.getAnnotations()) {
-                classes.append("<b>@" + a.getName() + "</b> <color:royalBlue>\"" + a.getValue().replace("\n", "\\n").replace("\r\n", "\\n") + "\"</color>\\n");
+                classes.append("<b>@" + a.getName() + "</b> <color:royalBlue>\"" + a.getValue().replace("\n", "\\n") + "\"</color>\\n");
             }
             if (thing.getAnnotations().size() > 0)
                 classes.append("\n");
