@@ -50,13 +50,13 @@ import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
 import org.sintef.thingml.ThingMLModel;
 import org.sintef.thingml.Type;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 
 /**
  *

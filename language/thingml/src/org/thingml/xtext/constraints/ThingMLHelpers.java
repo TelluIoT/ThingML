@@ -27,24 +27,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sintef.thingml.constraints;
-
-import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.thingML.*;
-import org.thingml.xtext.helpers.RegionHelper;
-import org.thingml.xtext.helpers.ThingHelper;
-import org.thingml.xtext.helpers.ThingMLElementHelper;
+package org.thingml.xtext.constraints;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
+
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.RegionHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.ObjectType;
+import org.thingml.xtext.thingML.ParallelRegion;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.PrimitiveType;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.ProvidedPort;
+import org.thingml.xtext.thingML.Region;
+import org.thingml.xtext.thingML.RegionOrSession;
+import org.thingml.xtext.thingML.RequiredPort;
+import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.Variable;
 
 
 public class ThingMLHelpers {

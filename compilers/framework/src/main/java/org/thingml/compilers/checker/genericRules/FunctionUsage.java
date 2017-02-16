@@ -23,13 +23,13 @@ package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.constraints.Types;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 

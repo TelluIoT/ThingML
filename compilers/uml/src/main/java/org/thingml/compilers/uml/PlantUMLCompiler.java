@@ -16,7 +16,6 @@
  */
 package org.thingml.compilers.uml;
 
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
@@ -26,6 +25,7 @@ import org.thingml.compilers.thing.*;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.utils.ThingMLPrettyPrinter;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;

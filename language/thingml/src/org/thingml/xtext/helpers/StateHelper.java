@@ -16,8 +16,8 @@
  */
 package org.thingml.xtext.helpers;
 
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 
 import java.util.*;
 

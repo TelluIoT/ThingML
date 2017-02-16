@@ -19,12 +19,12 @@ package org.thingml.externalthingplugins.c.posix.dnssd.strategies;
 import org.sintef.thingml.State;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.CompositeStateHelper;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.interfaces.c.ICThingApiStateIDStrategy;
 import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
 import org.thingml.externalthingplugins.c.posix.dnssd.utils.DNSSDUtils;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 
 import java.util.List;
 

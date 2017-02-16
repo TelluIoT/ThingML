@@ -17,7 +17,7 @@
 package org.thingml.compilers.java;
 
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;

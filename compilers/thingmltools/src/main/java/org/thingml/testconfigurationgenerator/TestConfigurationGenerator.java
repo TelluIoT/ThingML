@@ -21,8 +21,8 @@
  */
 package org.thingml.testconfigurationgenerator;
 
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.thingmltools.ThingMLTool;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;

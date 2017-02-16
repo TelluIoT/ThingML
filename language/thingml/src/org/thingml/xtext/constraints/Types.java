@@ -14,7 +14,7 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.sintef.thingml.constraints;
+package org.thingml.xtext.constraints;
 
 import org.thingml.xtext.thingML.*;
 import org.thingml.xtext.thingML.impl.ThingMLPackageImpl;

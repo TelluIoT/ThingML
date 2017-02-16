@@ -16,13 +16,13 @@
  */
 package org.thingml.compilers.java;
 
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.constraints.Types;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 

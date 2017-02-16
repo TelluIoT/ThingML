@@ -3,44 +3,39 @@
  */
 package org.thingml.xtext.scoping
 
+import java.util.ArrayList
+import org.eclipse.emf.ecore.ENamedElement
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.thingml.xtext.thingML.ThingMLPackage
 import org.eclipse.xtext.scoping.IScope
-import org.thingml.xtext.thingML.Port
-import org.sintef.thingml.constraints.ThingMLHelpers
-import org.thingml.xtext.thingML.Thing
 import org.eclipse.xtext.scoping.Scopes
-import org.thingml.xtext.thingML.SendAction
+import org.thingml.xtext.constraints.ThingMLHelpers
+import org.thingml.xtext.helpers.ConfigurationHelper
+import org.thingml.xtext.helpers.ThingMLElementHelper
+import org.thingml.xtext.thingML.CompositeState
 import org.thingml.xtext.thingML.ConfigPropertyAssign
+import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.thingML.Connector
 import org.thingml.xtext.thingML.Decrement
+import org.thingml.xtext.thingML.EnumLiteralRef
+import org.thingml.xtext.thingML.EventReference
 import org.thingml.xtext.thingML.ExternalConnector
 import org.thingml.xtext.thingML.Increment
 import org.thingml.xtext.thingML.Instance
-
+import org.thingml.xtext.thingML.ParallelRegion
+import org.thingml.xtext.thingML.Port
 import org.thingml.xtext.thingML.PropertyAssign
 import org.thingml.xtext.thingML.PropertyReference
 import org.thingml.xtext.thingML.ReceiveMessage
-
+import org.thingml.xtext.thingML.Region
+import org.thingml.xtext.thingML.SendAction
+import org.thingml.xtext.thingML.Session
 import org.thingml.xtext.thingML.StartSession
-import org.thingml.xtext.thingML.ThingMLModel
-import org.thingml.xtext.thingML.Transition
-import org.thingml.xtext.thingML.TypeRef
-import org.thingml.xtext.thingML.VariableAssignment
-import java.util.ArrayList
-import org.thingml.xtext.thingML.EnumLiteralRef
-import org.thingml.xtext.thingML.Configuration
-import org.thingml.xtext.helpers.ConfigurationHelper
 import org.thingml.xtext.thingML.State
-import org.thingml.xtext.thingML.*
-import org.thingml.xtext.helpers.CompositeStateHelper
-
-import org.eclipse.emf.ecore.ENamedElement
-import org.thingml.xtext.thingML.EventReference
-import java.util.logging.Handler
-import org.thingml.xtext.helpers.ThingMLElementHelper
-import org.thingml.xtext.helpers.ThingHelper
+import org.thingml.xtext.thingML.Thing
+import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.thingML.Transition
+import org.thingml.xtext.thingML.VariableAssignment
 
 /**
  * This class contains custom scoping description.

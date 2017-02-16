@@ -16,9 +16,9 @@
  */
 package org.thingml.compilers.uml;
 
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 

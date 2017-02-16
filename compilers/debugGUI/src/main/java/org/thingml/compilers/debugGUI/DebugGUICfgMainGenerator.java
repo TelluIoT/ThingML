@@ -21,8 +21,8 @@
  */
 package org.thingml.compilers.debugGUI;
 
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.impl.ThingmlFactoryImpl;

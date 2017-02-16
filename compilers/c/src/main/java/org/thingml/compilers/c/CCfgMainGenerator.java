@@ -21,11 +21,10 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.eclipse.emf.common.util.EList;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.*;
 import org.thingml.xtext.thingML.*;
 import org.thingml.xtext.thingML.Enumeration;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;

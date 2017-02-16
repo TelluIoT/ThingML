@@ -18,7 +18,6 @@ package org.thingml.compilers.cpp.sintefboard;
 
 import org.sintef.thingml.Configuration;
 import org.sintef.thingml.Thing;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
@@ -26,6 +25,7 @@ import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingCepSourceDeclaration;
 import org.thingml.compilers.thing.ThingCepViewCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 
 /**
  * Created by ffl on 25.11.14.

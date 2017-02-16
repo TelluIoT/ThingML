@@ -22,11 +22,10 @@
 package org.thingml.compilers.checker.genericRules;
 
 
-import org.sintef.thingml.constraints.ThingMLHelpers;
-
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.Tarjan;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.*;

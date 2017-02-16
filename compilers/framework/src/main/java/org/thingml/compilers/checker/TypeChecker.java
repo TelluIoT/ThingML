@@ -30,10 +30,10 @@
 package org.thingml.compilers.checker;
 
 
+import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.*;
 import org.thingml.xtext.thingML.util.ThingMLSwitch;
-import org.sintef.thingml.constraints.Types;
 
 
 public class TypeChecker extends ThingMLSwitch<Type> {

@@ -32,7 +32,6 @@ import org.sintef.thingml.Region;
 import org.sintef.thingml.Session;
 import org.sintef.thingml.StateMachine;
 import org.sintef.thingml.Thing;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.CompositeStateHelper;
 import org.sintef.thingml.helpers.RegionHelper;
 import org.sintef.thingml.helpers.StateHelper;
@@ -40,6 +39,7 @@ import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 
 /**
  *

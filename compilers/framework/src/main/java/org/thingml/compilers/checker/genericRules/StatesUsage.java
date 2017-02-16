@@ -22,9 +22,9 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.*;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;

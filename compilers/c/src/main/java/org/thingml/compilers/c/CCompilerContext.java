@@ -17,11 +17,11 @@
 package org.thingml.compilers.c;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.ThingMLCompiler;

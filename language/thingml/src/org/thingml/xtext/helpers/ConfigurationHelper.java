@@ -17,7 +17,7 @@
 package org.thingml.xtext.helpers;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.*;
 
 import java.util.*;

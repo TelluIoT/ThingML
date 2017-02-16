@@ -16,8 +16,8 @@
  */
 package org.thingml.compilers.c;
 
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;

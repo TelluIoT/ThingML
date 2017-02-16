@@ -23,9 +23,8 @@ package org.thingml.compilers.checker;
 
 
 
-import org.sintef.thingml.constraints.ThingMLHelpers;
-
 import org.thingml.compilers.checker.Checker.InfoType;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 

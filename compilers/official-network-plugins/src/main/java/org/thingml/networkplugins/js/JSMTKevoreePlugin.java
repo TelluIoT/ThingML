@@ -22,7 +22,7 @@
 package org.thingml.networkplugins.js;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.PrimitiveTyperHelper;

@@ -16,10 +16,10 @@
  */
 package org.thingml.xtext.helpers;
 
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.*;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 
 import java.util.ArrayList;
 import java.util.List;
