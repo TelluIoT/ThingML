@@ -21,8 +21,8 @@
  */
 package org.thingml.compilers.debugGUI.plugin;
 
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.debugGUI.DebugGUINetworkLibraryGenerator;
 
@@ -99,7 +99,7 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
                         builder.append("tmp_param = document.getElementById(\"param_" + m.getName() + "_" + p.getName() + "\").value;\n");
                         builder.append("tolog += tmp_param;\n");
                         //builder.append("tosend += intToBytes(tmp_param, " + p.getType().annotation("c_byte_size").iterator().next() + ");\n");
-                        PrimitiveType ty = (PrimitiveType) p.getType();
+                        PrimitiveType ty = (PrimitiveType) p.getTypeRef().getType();
                         builder.append("tosend += \"" + p.getName() + " : \" + tmp_param;\n");
                     }
                     builder.append("tosend = \"}\";\n");

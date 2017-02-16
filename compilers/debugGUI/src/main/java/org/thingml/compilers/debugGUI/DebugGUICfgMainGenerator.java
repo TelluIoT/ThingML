@@ -22,10 +22,10 @@
 package org.thingml.compilers.debugGUI;
 
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.impl.ThingmlFactoryImpl;
+import org.thingml.xtext.thingML.impl.ThingMLFactoryImpl;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.debugGUI.plugin.WSjs;
 
@@ -115,8 +115,8 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
 
             StringBuilder proxyThingML = new StringBuilder();
 
-            ThingmlFactory factory;
-            factory = ThingmlFactoryImpl.init();
+            ThingMLFactory factory;
+            factory = ThingMLFactoryImpl.init();
             List<PlatformAnnotation> lpan = new LinkedList<PlatformAnnotation>();
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("platform");
@@ -227,7 +227,7 @@ public class DebugGUICfgMainGenerator extends CfgMainGenerator {
                 } else {
                     builder.append(", ");
                 }
-                builder.append(p.getName() + " : " + p.getType().getName());
+                builder.append(p.getName() + " : " + p.getTypeRef().getType().getName());
             }
             builder.append(")");
             for (PlatformAnnotation pan : AnnotatedElementHelper.allAnnotations(m)) {
