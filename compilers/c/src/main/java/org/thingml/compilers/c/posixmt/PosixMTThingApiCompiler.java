@@ -24,22 +24,21 @@ package org.thingml.compilers.c.posixmt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.sintef.thingml.Handler;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.Region;
-import org.sintef.thingml.Session;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.helpers.CompositeStateHelper;
-import org.sintef.thingml.helpers.RegionHelper;
-import org.sintef.thingml.helpers.StateHelper;
-import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.RegionHelper;
+import org.thingml.xtext.helpers.StateHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Region;
+import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  *
@@ -63,7 +62,7 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
     @Override
     protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("// Definition of the sessions stuct:\n\n");
-        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
         if(!CompositeStateHelper.allContainedSessions(sm).isEmpty()) {
             builder.append("struct session_t;\n\n");
         }
@@ -118,14 +117,14 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         // Create variables for all the properties defined in the Thing and States
         builder.append("// Variables for the properties of the instance\n");
         for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-            builder.append(ctx.getCType(p.getType()) + " ");
-            if (p.getCardinality() != null) {//array
+            builder.append(ctx.getCType(p.getTypeRef().getType()) + " ");
+            if (p.getTypeRef().getCardinality() != null) {//array
                 builder.append("* ");
             }
             builder.append(ctx.getCVarName(p));
             
             builder.append(";\n");
-            if(p.getCardinality() != null) {//array
+            if(p.getTypeRef().getCardinality() != null) {//array
                 builder.append("uint16_t ");
                 builder.append(ctx.getCVarName(p));
                 builder.append("_size;\n");

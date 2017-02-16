@@ -22,9 +22,9 @@
 package org.thingml.compilers.c.checkerRules;
 
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 
@@ -63,10 +63,10 @@ public class PointerParameters extends Rule {
                     messages.addAll(p.getSends());
                     for (Message m : messages) {
                         for (Parameter pt : m.getParameters()) {
-                            if (AnnotatedElementHelper.isDefined(pt.getType(), "c_byte_size", "*")) {
+                            if (AnnotatedElementHelper.isDefined(pt.getTypeRef().getType(), "c_byte_size", "*")) {
                                 checker.addError("C", "Message including pointer parameters sent/received asynchronously.", m);
                             }
-                            if (pt.isIsArray()) {
+                            if (pt.getTypeRef().isIsArray()) {
                                 checker.addError("C", "Message including array parameters sent/received asynchronously.", m);
                             }
                         }

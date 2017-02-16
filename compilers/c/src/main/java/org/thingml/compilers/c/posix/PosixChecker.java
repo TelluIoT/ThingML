@@ -21,8 +21,8 @@
  */
 package org.thingml.compilers.c.posix;
 
-import org.sintef.thingml.Configuration;
 import org.thingml.compilers.c.CChecker;
+import org.thingml.xtext.thingML.Configuration;
 
 /**
  *

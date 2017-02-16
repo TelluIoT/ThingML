@@ -21,15 +21,17 @@
  */
 package org.thingml.compilers.c.plugin;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CMessageSerializer;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
 
 import java.util.List;
 import java.util.Set;
+
+//FIXME: Is this still used? Seems that CByteArraySerializerPlugin (in official network plugins) does the same?!
 
 /**
  *
@@ -55,16 +57,16 @@ public class CMSPSerializer extends CMessageSerializer {
 
         for (Parameter pt : m.getParameters()) {
             builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = ctx.getCByteSize(pt.getType(), 0);
+            int i = ctx.getCByteSize(pt.getTypeRef().getType(), 0);
             String v = pt.getName();
-            if (ctx.isPointer(pt.getType())) {
+            if (ctx.isPointer(pt.getTypeRef().getType())) {
                 // This should not happen and should be checked before.
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
                 if (!ctx.containsParam(IgnoreList, pt)) {
                     builder.append("union u_" + v + "_t {\n");
-                    builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append(ctx.getCType(pt.getTypeRef().getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getTypeRef().getType(), 0) + "];\n");
                     builder.append("} u_" + v + ";\n");
                     builder.append("u_" + v + ".p = " + v + ";\n");
 
@@ -104,11 +106,11 @@ public class CMSPSerializer extends CMessageSerializer {
 
             for (Parameter pt : m.getParameters()) {
 
-                for (int i = ctx.getCByteSize(pt.getType(), 0) - 1; i >= 0; i--) {
+                for (int i = ctx.getCByteSize(pt.getTypeRef().getType(), 0) - 1; i >= 0; i--) {
                     builder.append("            msg_buf[index] = msg[" + (j + i) + "];\n");
                     builder.append("            index++;\n");
                 }
-                j += ctx.getCByteSize(pt.getType(), 0);
+                j += ctx.getCByteSize(pt.getTypeRef().getType(), 0);
             }
 
             builder.append("        break;\n");

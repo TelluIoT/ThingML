@@ -17,29 +17,23 @@
 package org.thingml.compilers.c;
 
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.RegionHelper;
+import org.thingml.xtext.helpers.StateHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.CompositeStateHelper;
-import org.sintef.thingml.helpers.StateHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.interfaces.c.ICThingImpEventHandlerStrategy;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
-
-import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
-import org.thingml.compilers.c.cepHelper.CCepHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.sintef.thingml.helpers.RegionHelper;
-import org.sintef.thingml.helpers.ThingHelper;
-
-import static org.thingml.compilers.c.cepHelper.CCepHelper.handlerShouldTrigger;
-import static org.thingml.compilers.c.cepHelper.CCepHelper.shouldTriggerOnInputNumber;
 
 
 /**
@@ -157,11 +151,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         generatePrivateMessageSendingOperations(thing, builder, ctx, debugProfile);
         builder.append("\n");
 
-
-        //FIXME: should call getCompiler
-        if (!CCepHelper.getStreamWithBuffer(thing).isEmpty())
-            ArduinoThingCepCompiler.generateCEPLibImpl(thing, builder, ctx);
-
         // Get the template and replace the values
         String itemplate = ctx.getThingImplTemplate();
         itemplate = itemplate.replace("/*NAME*/", thing.getName());
@@ -181,9 +170,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(c_proto);
         } else {
             // Generate the normal prototype
-            if (func.getType() != null) {
-                builder.append(ctx.getCType(func.getType()));
-                if (func.getCardinality() != null) builder.append("*");
+            if (func.getTypeRef().getType() != null) {
+                builder.append(ctx.getCType(func.getTypeRef().getType()));
+                if (func.getTypeRef().getCardinality() != null) builder.append("*");
             } else builder.append("void");
 
             if (!isPrototype) {
@@ -195,8 +184,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
             for (Parameter p : func.getParameters()) {
                 builder.append(", ");
-                builder.append(ctx.getCType(p.getType()));
-                if (p.getCardinality() != null || p.isIsArray()) builder.append("*");
+                builder.append(ctx.getCType(p.getTypeRef().getType()));
+                if (p.getTypeRef().getCardinality() != null || p.getTypeRef().isIsArray()) builder.append("*");
                 builder.append(" " + p.getName());
             }
             builder.append(")");
@@ -217,7 +206,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateStateMachineOnExitCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
-            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+            CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
             builder.append("void " + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
 
             //fix for empty statechart
@@ -321,7 +310,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateCforThingLinuxThread(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
 
-        if (func.getType() != null) {
+        if (func.getTypeRef().getType() != null) {
             System.err.println("WARNING: function with annotation fork_linux_thread must return void");
         }
 
@@ -350,8 +339,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         for (Parameter p : func.getParameters()) {
             b_params.append(", ");
-            b_params.append(ctx.getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
+            b_params.append(ctx.getCType(p.getTypeRef().getType()));
+            if (p.getTypeRef().getCardinality() != null) builder.append("*");
             b_params.append(" " + p.getName());
         }
 
@@ -386,7 +375,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
 
-        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
+        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
 
         // steffend - This is commented out because it is already generated as part of the API
         //if (isGeneratingCpp()) {
@@ -454,7 +443,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
 
-        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
+        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
 
         if (isGeneratingCpp()) {
             cppHeaderBuilder.append("// generateExitActions\nvoid " + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
@@ -503,7 +492,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
 
-        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
+        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
 
         Map<Port, Map<Message, List<Handler>>> handlers = StateHelper.allMessageHandlersIncludingSessions(sm);
 
@@ -589,103 +578,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         for(ICThingImpEventHandlerStrategy strategy : eventHandlerStrategies)
             strategy.generateEventHandlers(thing, builder, ctx, debugProfile);
-    }
-
-    /**
-     * Dispatch message to concerned stream, by enqueing, or do all the needed stuff if there is no need for a buffer.
-     *
-     * @param thing Thing instance
-     * @param port Port receiving the message
-     * @param msg Message concerned
-     * @param ctx Compiler context
-     * @param builder StringBuilder, should come from handle_port_msg
-     */
-    private void generateStreamDispatch(Thing thing, Port port, Message msg, CCompilerContext ctx, StringBuilder builder) {
-        for (Stream s : thing.getStreams()) {
-            Source source = s.getInput();
-
-            // Gather all the sources
-            Map<SimpleSource, String> sourceMap = CCepHelper.gatherSourcesOfStream(source);
-
-            for (SimpleSource sc : sourceMap.keySet()) {
-                if (sourceMap.get(sc).equals(msg.getName())) {
-                    builder.append("//begin stream dispatch\n");
-
-                    for (Parameter p : msg.getParameters())
-                        ctx.putCepMsgParam(msg.getName(), p.getName(), s.getName());
-
-                    int nbCondition = 0;
-                    // guard
-                    for (ViewSource vs : sc.getOperators()) {
-                        if (vs instanceof Filter) {
-                            builder.append("if (");
-                            ctx.getCompiler().getThingActionCompiler().generate(((Filter) vs).getGuard(), builder, ctx);
-                            nbCondition++;
-                            builder.append(") {\n");
-                        }
-                    }
-
-                    boolean shouldProduce = handlerShouldTrigger(s, ctx);
-
-
-                    // produce the action or propagate the event
-                    if (source instanceof SimpleSource && shouldProduce) {
-                        for (LocalVariable lv : s.getSelection()) {
-                            lv.setName(ThingMLElementHelper.qname(lv, "_"));
-                            ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
-                        }
-                        ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
-                    } else if (source instanceof MergeSources && shouldProduce) {
-                        Message rMsg = ((MergeSources) source).getResultMessage();
-
-                        // since we don't call the checkTrigger we need to check the source guard as well
-                        List<String> guardsList = new ArrayList<>();
-                        for (ViewSource vs : source.getOperators()) {
-                            if (vs instanceof Filter) {
-                                StringBuilder sourceGuard = new StringBuilder();
-                                ctx.getCompiler().getThingActionCompiler().generate(((Filter) vs).getGuard(), sourceGuard, ctx);
-                                guardsList.add(sourceGuard.toString());
-                            }
-                        }
-
-                        if (guardsList.size() > 0)
-                            builder.append("if (" + String.join(" && ", guardsList) + ") {\n");
-
-                        int paramIndex = 0;
-                        for (Parameter p : rMsg.getParameters()) {
-                            builder.append(ctx.getCType(p.getType()) + " " + p.getName() + " = " + msg.getParameters().get(paramIndex).getName() + ";\n");
-                            paramIndex++;
-                        }
-
-                        for (LocalVariable lv : s.getSelection()) {
-                            lv.setName(source.getName() + "_" + lv.getName());
-                            ctx.getCompiler().getThingActionCompiler().generate(lv, builder, ctx);
-                        }
-
-                        ctx.getCompiler().getThingActionCompiler().generate(s.getOutput(), builder, ctx);
-
-                        if (guardsList.size() > 0)
-                            builder.append("}\n");
-                    } else {
-                        builder.append("_instance->cep_" + s.getName() + "->" + msg.getName() + "_queueEvent");
-                        ctx.appendActualParameters(thing, builder, msg, "_instance");
-                        builder.append(";\n");
-                    }
-
-
-                    // Length Window
-                    if (shouldTriggerOnInputNumber(s, ctx))
-                        builder.append("  _instance->cep_" + s.getName() + "->checkTrigger(_instance);\n");
-
-                    // closing braces, see guards
-                    for (int i = 0; i < nbCondition; i++) {
-                        builder.append("}\n");
-                    }
-                    builder.append("//End stream dispatch\n");
-                    ctx.resetCepMsgContext();
-                }
-            }
-        }
     }
 
     protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx, DebugProfile debugProfile) {
@@ -919,7 +811,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             }
 
                 // Execute the exit actions for current states (starting at the deepest)
-                builder.append(ThingMLElementHelper.qname(ThingMLHelpers.allStateMachines(thing).get(0), "_") + "_OnExit(" + ctx.getStateID(et.getSource()) + ", " + ctx.getInstanceVarName() + ");\n");
+                builder.append(ThingMLElementHelper.qname(ThingMLHelpers.allStateMachines(thing).get(0), "_") + "_OnExit(" + ctx.getStateID((State)et.eContainer()) + ", " + ctx.getInstanceVarName() + ");\n");
                 // Set the new current state
                 builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(et.getTarget()) + ";\n");
 
@@ -1075,7 +967,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
             builder.append("    //Copy of properties\n");
             for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                if (!p.isIsArray()) {//Not an array
+                if (!p.getTypeRef().isIsArray()) {//Not an array
                     builder.append("new_session->" + ctx.getVariableName(p) + " = ");
                     builder.append("_instance->" + ctx.getVariableName(p));
                     builder.append(";\n");
@@ -1098,7 +990,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             }
 
             builder.append("    new_session->" + ctx.getStateVarName(ThingMLHelpers.allStateMachines(thing).get(0)) + " = " + ctx.getStateID(s.getInitial()) + ";\n");
-            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+            CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
             for(Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
                 if((!RegionHelper.allContainedRegionsAndSessions(s).contains(r)) || ((r instanceof Session) && (r != s))) {
                     builder.append("    new_session->" + ctx.getStateVarName(r) + " = -1;\n");

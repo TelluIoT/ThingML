@@ -17,11 +17,10 @@
 package org.thingml.compilers.c.arduino;
 
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.cepHelper.CCepHelper;
 
 import java.util.ArrayList;
 
@@ -112,14 +111,6 @@ public class CCompilerContextArduino extends CCompilerContext {
                 }
 
             }
-        }
-    }
-
-    public void renameParameterUniquely(Thing thing) {
-        for (Stream s : thing.getStreams()) {
-            for (Message m : CCepHelper.getMessageFromStream(s).keySet())
-                for (Parameter p: m.getParameters())
-                    p.setName(s.getName() + m.getName() + p.getName());
         }
     }
 

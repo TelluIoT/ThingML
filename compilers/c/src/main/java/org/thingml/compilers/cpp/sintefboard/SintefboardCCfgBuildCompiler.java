@@ -16,11 +16,11 @@
  */
 package org.thingml.compilers.cpp.sintefboard;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
 
 /**
  * Created by ffl on 17.06.15.

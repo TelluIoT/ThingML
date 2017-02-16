@@ -112,7 +112,7 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
 
         for (ExternalConnector eco : this.getExternalConnectors()) {
             //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
-            Thing t = eco.getInst().getInstance().getType();
+            Thing t = eco.getInst().getType();
             Port p = eco.getPort();
 
             for (Message m : p.getSends()) {

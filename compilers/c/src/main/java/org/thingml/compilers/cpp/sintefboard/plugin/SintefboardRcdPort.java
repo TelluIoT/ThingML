@@ -21,8 +21,8 @@
  */
 package org.thingml.compilers.cpp.sintefboard.plugin;
 
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
 
@@ -111,8 +111,8 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
             ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
 
 
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".c").append(ctemplate);
-            ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".h").append(htemplate);
+            ctx.getBuilder(eco.getInst().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".c").append(ctemplate);
+            ctx.getBuilder(eco.getInst().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol().getName() + ".h").append(htemplate);
 
         }
     }
@@ -125,7 +125,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
             //************ Generate methods for sending meassages to ports
             for (ExternalConnector eco : this.getExternalConnectors()) {
                 //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
-                Thing t = eco.getInst().getInstance().getType();
+                Thing t = eco.getInst().getType();
                 Port p = eco.getPort();
 
                 for (Message m : p.getSends()) {
@@ -178,7 +178,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
             builder.append("switch (from_port) {\n");
             for (ExternalConnector eco : this.getExternalConnectors()) {
                 //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
-                Thing t = eco.getInst().getInstance().getType();
+                Thing t = eco.getInst().getType();
                 Port p = eco.getPort();
                 String portname = eco.getName();
                 String portnum = portname.replace("Rcdport", "");

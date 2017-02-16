@@ -23,14 +23,14 @@ package org.thingml.compilers.c.posixmt;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.Type;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.posix.CCompilerContextPosix;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Type;
 
 /**
  *
@@ -74,10 +74,10 @@ public class PosixMTCompilerContext extends CCompilerContextPosix{
             // This should not happen and should be checked before.
             throw new Error("ERROR: Attempting to deserialize a pointer (for type " + t.getName() + "). This is not allowed.");
         } else {
-            if(pt.isIsArray()) {
+            if(pt.getTypeRef().isIsArray()) {
                 
                 StringBuilder cardBuilder = new StringBuilder();
-                getCompiler().getThingActionCompiler().generate(pt.getCardinality(), cardBuilder, this);
+                getCompiler().getThingActionCompiler().generate(pt.getTypeRef().getCardinality(), cardBuilder, this);
                 builder.append("union u_" + v + "_t {\n");
                 builder.append("    " + getCType(t) + " p[" + cardBuilder + "];\n");
                 builder.append("    byte bytebuffer[" + getCByteSize(t, 0) + " * (" + cardBuilder + ")];\n");
@@ -119,8 +119,8 @@ public class PosixMTCompilerContext extends CCompilerContextPosix{
         builder.append("uint16_t sender");
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
-            builder.append(getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
+            builder.append(getCType(p.getTypeRef().getType()));
+            if (p.getTypeRef().getCardinality() != null) builder.append("*");
             builder.append(" " + p.getName());
         }
         builder.append(")");
@@ -130,8 +130,8 @@ public class PosixMTCompilerContext extends CCompilerContextPosix{
         builder.append("(struct " + getInstanceStructName(t) + " * inst");
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
-            builder.append(getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
+            builder.append(getCType(p.getTypeRef().getType()));
+            if (p.getTypeRef().getCardinality() != null) builder.append("*");
             builder.append(" " + p.getName());
         }
         builder.append(")");
@@ -143,8 +143,8 @@ public class PosixMTCompilerContext extends CCompilerContextPosix{
         builder.append("struct " + getInstanceStructName(thing) + " *" + getInstanceVarName());
         for (Parameter p : m.getParameters()) {
             builder.append(", ");
-            builder.append(getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
+            builder.append(getCType(p.getTypeRef().getType()));
+            if (p.getTypeRef().getCardinality() != null) builder.append("*");
             builder.append(" " + p.getName());
         }
         builder.append(")");
@@ -153,8 +153,8 @@ public class PosixMTCompilerContext extends CCompilerContextPosix{
     @Override
     public void appendFormalParameterDeclarations(StringBuilder builder, Message m) {
         for (Parameter p : m.getParameters()) {
-            builder.append(getCType(p.getType()));
-            if (p.getCardinality() != null) builder.append("*");
+            builder.append(getCType(p.getTypeRef().getType()));
+            if (p.getTypeRef().getCardinality() != null) builder.append("*");
             builder.append(" " + p.getName());
             builder.append(";\n");
         }

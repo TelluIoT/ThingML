@@ -29,7 +29,6 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.c.cepHelper.CCepHelper;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 
 import java.util.*;
