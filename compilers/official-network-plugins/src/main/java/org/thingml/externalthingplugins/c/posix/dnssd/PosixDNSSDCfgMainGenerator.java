@@ -17,9 +17,9 @@
 package org.thingml.externalthingplugins.c.posix.dnssd;
 
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
@@ -88,7 +88,7 @@ public class PosixDNSSDCfgMainGenerator extends CCfgMainGenerator {
         if (ThingMLHelpers.allStateMachines(inst.getType()).size() == 0)
             return; // there is no state machine
 
-        StateMachine sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
+        CompositeState sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
         builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" +
                 DNSSDUtils.getTerminateStateName(inst.getType()) + ", &" + ctx.getInstanceVarName(inst) + ");\n");
     }

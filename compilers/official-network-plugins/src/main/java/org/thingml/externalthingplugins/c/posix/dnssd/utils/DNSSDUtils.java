@@ -18,12 +18,11 @@ package org.thingml.externalthingplugins.c.posix.dnssd.utils;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.Thing;
 import org.thingml.compilers.c.CCompilerContext;
-
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Thing;
 
 import java.util.*;
 

@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.helpers.CompositeStateHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
@@ -166,7 +166,7 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
 
-        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
 
 
         builder.append("void " + getCppNameScope() + ThingMLElementHelper.qname(sm, "_") + "_OnEntry(int state, ");

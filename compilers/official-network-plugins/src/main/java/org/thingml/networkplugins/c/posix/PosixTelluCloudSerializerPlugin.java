@@ -146,7 +146,7 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
             Message placeholderMsg = EcoreUtil.copy(m);
             placeholderMsg.getParameters().clear();
             placeholderMsg.getParameters().addAll(groupedCopy);
-            Parameter placeholder = new TelluCloudGroupedParameter(placeholderMsg);
+            Parameter placeholder = (Parameter) new TelluCloudGroupedParameter(placeholderMsg); //FIXME: added a cast, which seemed not necessary. Probably something fishy going on around here...
             grouped.add(placeholder);
             // Set the @json_message_name annotation
             PlatformAnnotation jsonMsgName = EcoreUtil.copy(msg.getAnnotations().get(0));
