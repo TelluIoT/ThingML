@@ -52,17 +52,22 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
         return ThingMLHelpers.getAllExpressions(thing, ExternExpression.class).size() > 0 || ActionHelper.getAllActions(thing, ExternStatement.class).size() > 0;
     }
 
+    private boolean isGUI(Thing thing) {
+        return AnnotatedElementHelper.isDefined(thing,"mock", "true");
+    }
+
     private void generateClass(Thing thing, StringBuilder classes, Context ctx, boolean compact) {
         if (!this.classes.contains(thing.getName())) {
             this.classes.add(thing.getName());
             if (thing.isFragment()) {
                 classes.append("class " + thing.getName() + " <<(F,#BC74ED)Fragment>> {\n");
-            } else {
-                if(isPSM(thing)) {//PSM
-                    classes.append("class " + thing.getName() + " <<(T,#F94918)PSM>> {\n");
-                } else {//PIM
-                    classes.append("class " + thing.getName() + " <<(T,#5BBF09)PIM>> {\n");
-                }
+            } else if (isGUI(thing)) {
+                classes.append("class " + thing.getName() + " <<(G,#5394FC)GUI>> {\n");
+            }
+            else if(isPSM(thing)) {//PSM
+                classes.append("class " + thing.getName() + " <<(T,#F94918)PSM>> {\n");
+            } else {//PIM
+                classes.append("class " + thing.getName() + " <<(T,#5BBF09)PIM>> {\n");
             }
 
             if (thing.getProperties().size() > 0)
@@ -152,7 +157,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
         builder.append("@startuml\n");
         builder.append("caption Instances and Connectors in configuration " + cfg.getName() + "\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            builder.append("component " + i.getName() + (isPSM(i.getType())?"<<PSM>>":"<<PIM>>") + "\n");
+            builder.append("component " + i.getName() + (isGUI(i.getType())?"<<GUI>>":isPSM(i.getType())?"<<PSM>>":"<<PIM>>") + "\n");
         }
         for(Protocol p : ConfigurationHelper.getUsedProtocols(cfg)) {
             builder.append("boundary " + p.getName() + "\n");
@@ -213,7 +218,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             if (t.getAnnotations().size() > 0)
                 datatypes.append("note bottom of " + t.getName() + " : ");
             for(PlatformAnnotation a : t.getAnnotations()) {
-                datatypes.append("<b>@" + a.getName() + "</b> <color:royalBlue>\"" + a.getValue().replace("\n", "\\n").replace("\r\n", "\\n") + "\"</color>\\n");
+                datatypes.append("<b>@" + a.getName() + "</b> <color:royalBlue>\"" + a.getValue().replace("\n", "\\n") + "\"</color>\\n");
             }
             if (t.getAnnotations().size() > 0)
                 datatypes.append("\n");
