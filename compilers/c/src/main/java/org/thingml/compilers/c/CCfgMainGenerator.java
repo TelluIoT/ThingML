@@ -19,19 +19,44 @@ package org.thingml.compilers.c;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.*;
-import org.thingml.xtext.thingML.*;
-import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.spi.ExternalThingPlugin;
-
-import java.util.*;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.StateContainerHelper;
+import org.thingml.xtext.helpers.StateHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Connector;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.InternalPort;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
 
 /**
  * Created by ffl on 29.05.15.
@@ -1578,10 +1603,10 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
         // init state variables:
         if (ThingMLHelpers.allStateMachines(inst.getType()).size() > 0) { // There is a state machine
-            for (Region r : CompositeStateHelper.allContainedRegions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
+            for (StateContainer r : CompositeStateHelper.allContainedRegions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
-            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
+            for(Session s : CompositeStateHelper.allContainedSessions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(s) + " = -1;\n");
         }
         }
@@ -1844,6 +1869,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
 
+    //TODO: Check that it still works after migration
     private void generateSessionInstanceDeclaration(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, CompositeState cs, String curMaxInstances) {        
         for(Session s : CompositeStateHelper.allContainedSessions(cs)) {
             StringBuilder maxInstances = new StringBuilder();
@@ -1864,34 +1890,42 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         
     }
 
-    private void generateSessionInstanceInitialization(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, String inst_var, String index, CompositeState cs) {
-        
+    //TODO: Check that it still works after migration    
+    private void generateSessionInstanceInitialization(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, String inst_var, String index, CompositeState cs) {        
         for(Session s : cs.getSession()) {
-            StringBuilder maxInstances = new StringBuilder();
-            ctx.generateFixedAtInitValue(cfg, i, s.getMaxInstances(), maxInstances);
-            builder.append("//Instance: " + i.getName() + ", Session: " + s.getName() + "\n");
-            builder.append(inst_var + ".nb_max_sessions_" + s.getName() + " = " + maxInstances + ";\n");
-            builder.append(inst_var + ".sessions_" + s.getName() + 
-                    " = &sessions_" + i.getName() + "_" + s.getName() + "[" + index + "];\n");
-            
-            builder.append("uint16_t " + i.getName() + "_" + s.getName() + "_index = 0;\n");
-            builder.append("while (" + i.getName() + "_" + s.getName() + "_index < (" + maxInstances + ")) {\n");
-            builder.append("sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index].active = false;\n");
-            
-            for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-                //builder.append(ctx.getCType(a.getType()) + " ");
-                builder.append("sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index]." + ctx.getCVarName(a) + " = &(array_" + i.getName() + "_" + s.getName() + "_" + ctx.getCVarName(a));
-                builder.append("[" + index + " + " + i.getName() + "_" + s.getName() + "_index][0]);\n");
-            }
-            
-            builder.append("//Subsessions\n");
-            String sessionInstanceVar = "sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index]";
-            String sessionIndex = index + " + " + i.getName() + "_" + s.getName() + "_index";
-            generateSessionInstanceInitialization(cfg, ctx, builder, i, sessionInstanceVar, sessionIndex, s);
-            builder.append("\n");
-            builder.append(i.getName() + "_" + s.getName() + "_index++;\n");
-            builder.append("}\n");
+            generateSessionInstanceInitialization(cfg, ctx, builder, i, inst_var, index, s);
         }
         
     }
+
+    //TODO: Check that it still works after migration
+    private void generateSessionInstanceInitialization(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, String inst_var, String index, Session s) {
+        StringBuilder maxInstances = new StringBuilder();
+        ctx.generateFixedAtInitValue(cfg, i, s.getMaxInstances(), maxInstances);
+        builder.append("//Instance: " + i.getName() + ", Session: " + s.getName() + "\n");
+        builder.append(inst_var + ".nb_max_sessions_" + s.getName() + " = " + maxInstances + ";\n");
+        builder.append(inst_var + ".sessions_" + s.getName() + 
+                " = &sessions_" + i.getName() + "_" + s.getName() + "[" + index + "];\n");
+        
+        builder.append("uint16_t " + i.getName() + "_" + s.getName() + "_index = 0;\n");
+        builder.append("while (" + i.getName() + "_" + s.getName() + "_index < (" + maxInstances + ")) {\n");
+        builder.append("sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index].active = false;\n");
+        
+        for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
+            //builder.append(ctx.getCType(a.getType()) + " ");
+            builder.append("sessions_" + i.getName() + "_" + s.getName() + "[" + index + " + " + i.getName() + "_" + s.getName() + "_index]." + ctx.getCVarName(a) + " = &(array_" + i.getName() + "_" + s.getName() + "_" + ctx.getCVarName(a));
+            builder.append("[" + index + " + " + i.getName() + "_" + s.getName() + "_index][0]);\n");
+        }
+        
+        builder.append("//Subsessions\n");
+        for(Session sub : StateContainerHelper.allContainedSessions(s)) {
+        	String sessionInstanceVar = "sessions_" + i.getName() + "_" + sub.getName() + "[" + index + " + " + i.getName() + "_" + sub.getName() + "_index]";
+        	String sessionIndex = index + " + " + i.getName() + "_" + sub.getName() + "_index";
+        	generateSessionInstanceInitialization(cfg, ctx, builder, i, sessionInstanceVar, sessionIndex, sub);
+        	builder.append("\n");
+        	builder.append(i.getName() + "_" + sub.getName() + "_index++;\n");
+        }
+        builder.append("}\n");    
+    }
+
 }

@@ -16,12 +16,19 @@
  */
 package org.thingml.compilers.java;
 
-import org.thingml.xtext.thingML.*;
-import org.thingml.xtext.helpers.*;
-import org.thingml.compilers.Context;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import org.thingml.compilers.Context;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Type;
 
 /**
  * Created by bmori on 09.12.2014.

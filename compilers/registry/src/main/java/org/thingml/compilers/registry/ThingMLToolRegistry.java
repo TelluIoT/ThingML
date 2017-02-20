@@ -21,12 +21,12 @@
  */
 package org.thingml.compilers.registry;
 
-import org.thingml.testconfigurationgenerator.TestConfigurationGenerator;
-import org.thingml.thingmltools.ThingMLTool;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
+
+import org.thingml.testconfigurationgenerator.TestConfigurationGenerator;
+import org.thingml.thingmltools.ThingMLTool;
 
 /**
  *

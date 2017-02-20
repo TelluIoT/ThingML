@@ -16,11 +16,22 @@
  */
 package org.thingml.compilers.uml;
 
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.CompositeStateHelper;
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Event;
+import org.thingml.xtext.thingML.FinalState;
+import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.InternalTransition;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.ReceiveMessage;
+import org.thingml.xtext.thingML.Region;
+import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.Transition;
 
 /**
  * Created by bmori on 16.04.2015.
@@ -86,7 +97,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
             generateRegion(r, builder, ctx);
         }
 
-        for(Session s : CompositeStateHelper.allFirstLevelSessions(sm)) {
+        for(Session s : sm.getSession()) {
             generateRegion(s, builder, ctx);
         }
 
@@ -108,7 +119,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
             generateRegion(r, builder, ctx);
         }
 
-        for(Session s : CompositeStateHelper.allFirstLevelSessions(c)) {
+        for(Session s : c.getSession()) {
             generateRegion(s, builder, ctx);
         }
 
@@ -166,8 +177,8 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
             StringBuilder temp = new StringBuilder();
             temp.append(transition);
             if (msg != null && p != null) {
-                if(t.getEvent().size() > 0 && t.getEvent().get(0).getName()!= null)
-                    temp.append(t.getEvent().get(0).getName() + ":");
+                if(t.getEvent().size() > 0 && ((ReceiveMessage)t.getEvent().get(0)).getName()!= null)
+                    temp.append(((ReceiveMessage)t.getEvent().get(0)).getName() + ":");
                 temp.append(p.getName() + "?" + msg.getName());
             }
             generateGuardAndActions(t, temp, ctx);
@@ -180,8 +191,8 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append(" : ");
             }
             if (msg != null && p != null) {
-                if(t.getEvent().size() > 0 && t.getEvent().get(0).getName()!= null)
-                    builder.append(t.getEvent().get(0).getName() + ":");
+                if(t.getEvent().size() > 0 && ((ReceiveMessage)t.getEvent().get(0)).getName()!= null)
+                    builder.append(((ReceiveMessage)t.getEvent().get(0)).getName() + ":");
                 builder.append(p.getName() + "?" + msg.getName());
             }
             generateGuardAndActions(t, builder, ctx);
@@ -191,8 +202,8 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
         builder.append("\t" + ThingMLHelpers.findContainingState(t).getName() + " : ");
-        if(t.getEvent().size() > 0 && t.getEvent().get(0).getName()!= null)
-            builder.append(t.getEvent().get(0).getName() + ":");
+        if(t.getEvent().size() > 0 && ((ReceiveMessage)t.getEvent().get(0)).getName()!= null)
+            builder.append(((ReceiveMessage)t.getEvent().get(0)).getName() + ":");
         if(p != null && msg != null)
             builder.append(p.getName() + "?" + msg.getName() + " / ");
         generateGuardAndActions(t, builder, ctx);

@@ -17,26 +17,26 @@
 package org.thingml.compilers.registry;
 
 
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.arduino.ArduinoCompiler;
-import org.thingml.compilers.c.posix.PosixCompiler;
-import org.thingml.compilers.cpp.sintefboard.SintefboardCompiler;
-import org.thingml.compilers.debugGUI.DebugGUICompiler;
-import org.thingml.compilers.java.JavaCompiler;
-import org.thingml.compilers.javascript.JSCompiler;
-import org.thingml.compilers.javascript.JSMTCompiler;
-import org.thingml.compilers.spi.ExternalThingPlugin;
-import org.thingml.compilers.uml.PlantUMLCompiler;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.Set;
+
+import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.c.arduino.ArduinoCompiler;
+import org.thingml.compilers.c.posix.PosixCompiler;
 import org.thingml.compilers.c.posixmt.PosixMTCompiler;
+import org.thingml.compilers.cpp.sintefboard.SintefboardCompiler;
+import org.thingml.compilers.debugGUI.DebugGUICompiler;
+import org.thingml.compilers.java.JavaCompiler;
+import org.thingml.compilers.javascript.JSCompiler;
+import org.thingml.compilers.javascript.JSMTCompiler;
+import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.compilers.uml.PlantUMLCompiler;
 
 /**
  * Created by ffl on 25.11.14.

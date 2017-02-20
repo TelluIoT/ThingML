@@ -21,14 +21,14 @@
  */
 package org.thingml.compilers.c.plugin;
 
+import java.util.List;
+
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CMessageSerializer;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-
-import java.util.List;
 
 //FIXME: Is this still used? Seems that CByteArraySerializerPlugin (in official network plugins) does the same?!
 

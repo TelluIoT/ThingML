@@ -18,7 +18,10 @@ package org.thingml.compilers.c.posix;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.*;
+import org.thingml.compilers.c.CCfgMainGenerator;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CExternalThingEnabledApiCompiler;
+import org.thingml.compilers.c.CExternalThingEnabledImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;

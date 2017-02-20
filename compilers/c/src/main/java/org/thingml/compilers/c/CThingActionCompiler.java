@@ -16,15 +16,26 @@
  */
 package org.thingml.compilers.c;
 
+import org.thingml.compilers.Context;
+import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
-import org.thingml.xtext.thingML.*;
-import org.eclipse.emf.ecore.EObject;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.thing.common.CommonThingActionCompiler;
-
-import java.util.Map;
+import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.ConfigPropertyAssign;
+import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.FunctionCallExpression;
+import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.LocalVariable;
+import org.thingml.xtext.thingML.NamedElement;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.SendAction;
+import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 
 public abstract class CThingActionCompiler extends CommonThingActionCompiler {
@@ -253,8 +264,8 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
     }
 
 
-    private String c_name(EObject t) {
-        return ((ThingMLElement) t.eContainer()).getName().toUpperCase() + "_" + t.getName().toUpperCase();
+    private String c_name(NamedElement t) {
+        return ((NamedElement) t.eContainer()).getName().toUpperCase() + "_" + t.getName().toUpperCase();
     }
 
     @Override

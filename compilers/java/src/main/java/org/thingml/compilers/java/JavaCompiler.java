@@ -16,19 +16,16 @@
  */
 package org.thingml.compilers.java;
 
+import java.io.File;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by ffl on 25.11.14.

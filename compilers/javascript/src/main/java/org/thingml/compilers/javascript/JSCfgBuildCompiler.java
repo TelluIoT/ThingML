@@ -16,22 +16,22 @@
  */
 package org.thingml.compilers.javascript;
 
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
-import org.apache.commons.io.IOUtils;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Thing;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.thingml.xtext.helpers.*;
+import org.apache.commons.io.IOUtils;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Thing;
+
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
 
 /**
  * Created by bmori on 17.12.2014.

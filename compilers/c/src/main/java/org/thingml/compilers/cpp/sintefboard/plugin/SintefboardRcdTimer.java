@@ -24,6 +24,7 @@ package org.thingml.compilers.cpp.sintefboard.plugin;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;

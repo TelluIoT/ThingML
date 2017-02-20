@@ -23,7 +23,7 @@ package org.thingml.compilers.c.posixmt;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.thingml.compilers.Context;
+
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.posix.CCompilerContextPosix;
 import org.thingml.xtext.thingML.Message;

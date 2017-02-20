@@ -16,20 +16,16 @@
  */
 package org.thingml.compilers.c.posixmt;
 
-import org.thingml.compilers.c.posix.*;
+import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CThingApiCompiler;
-import org.thingml.compilers.c.CThingImplCompiler;
+import org.thingml.compilers.c.posix.PosixCCfgBuildCompiler;
+import org.thingml.compilers.c.posix.PosixChecker;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
-
-import java.io.File;
-import org.thingml.compilers.Context;
 
 /**
  * Created by ffl on 25.11.14.

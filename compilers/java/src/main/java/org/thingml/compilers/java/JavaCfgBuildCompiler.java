@@ -16,20 +16,17 @@
  */
 package org.thingml.compilers.java;
 
-import org.apache.commons.io.IOUtils;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Thing;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
 
 /**
  * Created by bmori on 17.12.2014.

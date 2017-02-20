@@ -16,17 +16,22 @@
  */
 package org.thingml.compilers.java;
 
-import org.apache.commons.io.IOUtils;
-import org.thingml.xtext.thingML.*;
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.helpers.ThingMLElementHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.thing.ThingApiCompiler;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Type;
 
 
 /**

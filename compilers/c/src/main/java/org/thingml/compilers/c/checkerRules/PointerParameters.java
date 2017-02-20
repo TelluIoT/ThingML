@@ -21,15 +21,19 @@
  */
 package org.thingml.compilers.c.checkerRules;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.thingML.*;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
-
-import java.util.LinkedList;
-import java.util.List;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  *

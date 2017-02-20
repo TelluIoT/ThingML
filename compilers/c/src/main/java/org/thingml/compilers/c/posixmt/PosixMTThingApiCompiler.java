@@ -23,21 +23,21 @@ package org.thingml.compilers.c.posixmt;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.CompositeStateHelper;
-import org.thingml.xtext.helpers.RegionHelper;
+import org.thingml.xtext.helpers.StateContainerHelper;
 import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
-import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 
 /**
@@ -52,10 +52,10 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         super.generateCHeaderAnnotation(thing, builder, ctx);
     }
     
-    protected List<Region> regionSession(Region r) {
-        List<Region> res = new ArrayList<Region>();
-        res.addAll(RegionHelper.allContainedSessions(r));
-        for(Session s : RegionHelper.allContainedSessions(r)) res.addAll(regionSession(s));
+    protected List<StateContainer> regionSession(StateContainer r) {
+        List<StateContainer> res = new ArrayList<StateContainer>();
+        res.addAll(StateContainerHelper.allContainedSessions(r));
+        for(Session s : StateContainerHelper.allContainedSessions(r)) res.addAll(regionSession(s));
         return res;
     }
     
@@ -109,7 +109,7 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
             builder.append("int initState;\n");
-            for (Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
+            for (StateContainer r : StateContainerHelper.allContainedRegionsAndSessions(sm)) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
         }
@@ -159,7 +159,7 @@ public class PosixMTThingApiCompiler extends CThingApiCompiler {
         }
         
         builder.append("\n// Fork Sessions\n");
-        for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+        for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
             builder.append("void fork_" + s.getName() + "(struct " + ctx.getInstanceStructName(thing) + " * _instance);\n\n");
         }
         

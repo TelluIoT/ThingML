@@ -21,14 +21,14 @@
  */
 package org.thingml.compilers.c;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.thingml.compilers.c.checkerRules.ArrayCardinality;
 import org.thingml.compilers.c.checkerRules.PointerParameters;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.thingML.Configuration;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *

@@ -16,17 +16,17 @@
  */
 package org.thingml.compilers.c.posix;
 
+import java.io.File;
+import java.util.Set;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
-
-import java.io.File;
-import java.lang.reflect.AnnotatedElement;
-import java.util.Set;
 
 /**
  * Created by ffl on 17.06.15.

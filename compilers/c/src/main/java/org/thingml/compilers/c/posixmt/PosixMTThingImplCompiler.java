@@ -23,15 +23,15 @@ package org.thingml.compilers.c.posixmt;
 
 
 import java.util.HashSet;
-
 import java.util.Set;
+
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.CompositeStateHelper;
-import org.thingml.xtext.helpers.RegionHelper;
+import org.thingml.xtext.helpers.StateContainerHelper;
 import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
@@ -40,8 +40,8 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
-import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 
@@ -224,20 +224,16 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("new_session->next = _instance->sessions_" + s.getName() + ";\n");
         builder.append("_instance->sessions_" + s.getName() + " = new_session;\n");
         
-        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
-        for(Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
-            if((!RegionHelper.allContainedRegionsAndSessions(s).contains(r)) || ((r instanceof Session) && (r != s))) {
+        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);        
+        for(StateContainer r : StateContainerHelper.allContainedRegionsAndSessions(sm)) {
+            if((!StateContainerHelper.allContainedRegionsAndSessions(s).contains(r)) || ((r instanceof Session) && (r != s))) {
                 builder.append("new_session->s." + ctx.getStateVarName(r) + " = -1;\n");
             } else {
                 builder.append("new_session->s." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
         }
-        for(Session ss : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+        for(Session ss : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
             builder.append("new_session->s.sessions_" + ss.getName() + " = NULL;\n");
-        }
-        
-        if (ThingMLHelpers.allStateMachines(thing).size() > 0) { // there is a state machine
-            builder.append("new_session->s.initState = " + ctx.getStateID(s) + ";\n");
         }
         
         builder.append("pthread_create( &(new_session->thread), NULL, " + thing.getName() + "_run, (void *) &(new_session->s));\n");
@@ -255,7 +251,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             
             builder.append("    fifo_lock(&(_instance->fifo));\n");
             builder.append("    //Active = false;\n");
-            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+            for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
                 builder.append("    struct session_t * head_" + s.getName() + " = _instance->sessions_" + s.getName() + ";\n");
                 builder.append("    while (head_" + s.getName() + " != NULL) {\n");
                 builder.append("        fifo_lock(&(head_" + s.getName() + "->s.fifo));\n");
@@ -265,7 +261,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                 builder.append("    }\n");
             }
             builder.append("    //Join\n");
-            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+            for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
                 builder.append("    head_" + s.getName() + " = _instance->sessions_" + s.getName() + ";\n");
                 builder.append("    struct session_t * prev_" + s.getName() + ";\n");
                 builder.append("    while (head_" + s.getName() + " != NULL) {\n");
@@ -286,7 +282,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             
             builder.append("void " + thing.getName() + "_clean_sessions(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
             builder.append("        fifo_lock(&(_instance->fifo));\n");
-            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+            for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
                 builder.append("        struct session_t * head_" + s.getName() + " = _instance->sessions_" + s.getName() + ";\n");
                 builder.append("        struct session_t ** prev_" + s.getName() + " = &(_instance->sessions_" + s.getName() + ");\n");
                 builder.append("        struct session_t * next_" + s.getName() + ";\n");
@@ -457,7 +453,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("        " + thing.getName() + "_processMessageQueue(_instance);\n");
         
         
-        if(!RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
+        if(!StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
             builder.append("        " + thing.getName() + "_clean_sessions(_instance);\n");
             builder.append("        //Termination\n");
             builder.append("        if(!_instance->active) {\n");
@@ -495,7 +491,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                     }
                     builder.append("    }\n");
                     
-                    for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+                    for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
                         builder.append("    struct session_t * head_" + s.getName() + " = inst->sessions_" + s.getName() + ";\n");
                         builder.append("    while (head_" + s.getName() + " != NULL) {\n");
 
