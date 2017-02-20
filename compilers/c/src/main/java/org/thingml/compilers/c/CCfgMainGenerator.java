@@ -1844,9 +1844,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         }
     }
 
-    private void generateSessionInstanceDeclaration(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, Session cs, String curMaxInstances) {
-        
-        for(Session s : CompositeStateHelper.allFirstLevelSessions(cs)) {
+    private void generateSessionInstanceDeclaration(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, CompositeState cs, String curMaxInstances) {        
+        for(Session s : CompositeStateHelper.allContainedSessions(cs)) {
             StringBuilder maxInstances = new StringBuilder();
             maxInstances.append(curMaxInstances + " * (");
             ctx.generateFixedAtInitValue(cfg, i, s.getMaxInstances(), maxInstances);
@@ -1860,17 +1859,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append("[" + maxInstances + "][");
                 ctx.generateFixedAtInitValue(cfg, i, a.getTypeRef().getCardinality(), builder);
                 builder.append("];\n");
-            }
-            
-            builder.append("//Subsessions\n");
-            generateSessionInstanceDeclaration(cfg, ctx, builder, i, s, maxInstances.toString());
+            }            
         }
         
     }
 
     private void generateSessionInstanceInitialization(Configuration cfg, CCompilerContext ctx, StringBuilder builder, Instance i, String inst_var, String index, CompositeState cs) {
         
-        for(Session s : CompositeStateHelper.allFirstLevelSessions(cs)) {
+        for(Session s : cs.getSession()) {
             StringBuilder maxInstances = new StringBuilder();
             ctx.generateFixedAtInitValue(cfg, i, s.getMaxInstances(), maxInstances);
             builder.append("//Instance: " + i.getName() + ", Session: " + s.getName() + "\n");

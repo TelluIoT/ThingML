@@ -158,7 +158,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("root.forkID = root.forkID + 1;\n");
                 builder.append("this.forkID = root.forkID;\n");
                 builder.append("this.statemachine = new StateJS.StateMachine('" + s.getName() + "')");
-                generateActionsForState(s, builder, ctx);
                 builder.append(";\n");
                 ctx.addContextAnnotation("container", "this." + ThingMLElementHelper.qname(ThingMLHelpers.findContainingRegion(s), "_"));
                 builder.append("let " + ThingMLElementHelper.qname(s, "_") + "_session = new StateJS.Region('" + s.getName() + "', this.statemachine);\n");
@@ -168,21 +167,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(st, builder, ctx);
                 }
                 builder.append("_initial_" + ThingMLElementHelper.qname(s, "_") + "_session.to(" + ThingMLElementHelper.qname(s.getInitial(), "_") + ");\n");
-                for (Handler h : StateHelper.allEmptyHandlers(s)) {
-                    generateHandler(h, null, null, builder, ctx);
-                }
-                final Map<Port, Map<Message, List<Handler>>> allHanders = StateHelper.allMessageHandlers(s);
-                for (Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
-                    final Port p = entry.getKey();
-                    final Map<Message, List<Handler>> map = entry.getValue();
-                    for (Map.Entry<Message, List<Handler>> entry2 : map.entrySet()) {
-                        final List<Handler> handlers = entry2.getValue();
-                        final Message m = entry2.getKey();
-                        for (Handler h : handlers) {
-                            generateHandler(h, m, p, builder, ctx);
-                        }
-                    }
-                }
                 builder.append("}\n");
             }
             ctx.removeContextAnnotation("session");

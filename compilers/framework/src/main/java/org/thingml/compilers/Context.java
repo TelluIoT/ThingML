@@ -387,7 +387,7 @@ public class Context {
         }
     }
 
-    public String traceOnEntry(Thing t, Region r, State s) {
+    public String traceOnEntry(Thing t, StateContainer r, State s) {
         if (!debugTraceWithID) {
             return " (" + t.getName() + "): Enters " + ThingMLElementHelper.getName(r) + ":" + s.getName();
         } else {
@@ -395,7 +395,7 @@ public class Context {
         }
     }
 
-    public String traceOnExit(Thing t, Region r, State s) {
+    public String traceOnExit(Thing t, StateContainer r, State s) {
         if (!debugTraceWithID) {
             return " (" + t.getName() + "): Exits " + ThingMLElementHelper.getName(r) + ":" + s.getName();
         } else {

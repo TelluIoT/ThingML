@@ -54,7 +54,7 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
     }
 
 
-    public void generateRegion(Region r, StringBuilder builder, Context ctx) {
+    public void generateRegion(StateContainer r, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("Region to be implemented");
     }
 

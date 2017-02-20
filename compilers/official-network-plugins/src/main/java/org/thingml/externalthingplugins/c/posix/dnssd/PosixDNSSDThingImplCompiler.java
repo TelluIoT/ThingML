@@ -182,11 +182,11 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
             builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
                     + ctx.traceOnEntry(thing, sm) + "\\n\");\n");
         }
-        ArrayList<Region> regions = new ArrayList<Region>();
+        ArrayList<StateContainer> regions = new ArrayList<StateContainer>();
         regions.add(cs);
         regions.addAll(cs.getRegion());
         // Init state
-        for (Region r : regions) {
+        for (StateContainer r : regions) {
             if (!r.isHistory()) {
                 builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
@@ -196,7 +196,7 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
         builder.append("("+ ctx.getInstanceVarName() +");\n");
 
         // Recurse on contained states
-        for (Region r : regions) {
+        for (StateContainer r : regions) {
             builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName() + ");\n");
         }
 

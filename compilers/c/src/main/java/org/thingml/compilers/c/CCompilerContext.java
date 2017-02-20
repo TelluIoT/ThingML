@@ -471,7 +471,7 @@ public abstract class CCompilerContext extends Context {
         return  "f_" + thing.getName() + "_" + f.getName();
     }
 
-    public String getStateVarName(Region r) {
+    public String getStateVarName(StateContainer r) {
         return ThingMLElementHelper.qname(r, "_") + "_State";
     }
 

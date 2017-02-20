@@ -38,7 +38,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         pack += ".messages";
 
         final StringBuilder builder = ctx.getNewBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(m.getName()) + "MessageType.java");
-        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, false, false);
+        JavaHelper.generateHeader(pack, rootPack, builder, ctx, false, false);
         builder.append("import java.nio.*;\n\n");
         builder.append("public class " + ctx.firstToUpper(m.getName()) + "MessageType extends EventType {\n");
         builder.append("public " + ctx.firstToUpper(m.getName()) + "MessageType(short code) {super(\"" + m.getName() + "\", code);\n}\n\n");
@@ -470,7 +470,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         for (CompositeState b : ThingMLHelpers.allStateMachines(thing)) {
-            for (Region r : RegionHelper.allContainedRegions(b)) {
+            for (StateContainer r : CompositeStateHelper.allContainedRegions(b)) {            	
                 ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(r, builder, ctx);
             }
         }
@@ -668,7 +668,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     public void generateRegion(Region r, StringBuilder builder, Context ctx) {
-
         if (r instanceof CompositeState) {
             builder.append("private CompositeState build" + ThingMLElementHelper.qname(r, "_") + "(){\n");
             CompositeState c = (CompositeState) r;
