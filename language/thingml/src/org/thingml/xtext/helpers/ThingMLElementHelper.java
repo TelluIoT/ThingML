@@ -80,14 +80,10 @@ public class ThingMLElementHelper {
     }
     
     public static String getName(EObject self) {
-    	 EAttribute name_attribut = null;
-         for (EAttribute a : self.eClass().getEAllAttributes()) {
-         	if (a.getName().equals("name")) {name_attribut = a; break;}
-         }
-         if (name_attribut != null) {
-         	return self.eGet(name_attribut).toString();
-         }
-         else return null;
+    	
+    	if (self instanceof NamedElement) return ((NamedElement)self).getName();
+    	else return null;
+    	
     }
 
 }
