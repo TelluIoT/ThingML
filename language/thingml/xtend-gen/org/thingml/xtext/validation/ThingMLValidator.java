@@ -6,6 +6,7 @@ package org.thingml.xtext.validation;
 import java.util.HashSet;
 import java.util.LinkedList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.thingml.xtext.thingML.Thing;
@@ -24,13 +25,15 @@ public class ThingMLValidator extends AbstractThingMLValidator {
    */
   @Check
   public void checkNoCyclesInThingIncludes(final Thing thing) {
-    boolean _isEmpty = thing.getIncludes().isEmpty();
+    EList<Thing> _includes = thing.getIncludes();
+    boolean _isEmpty = _includes.isEmpty();
     if (_isEmpty) {
       return;
     }
     final HashSet<Thing> visitedThings = CollectionLiterals.<Thing>newHashSet(thing);
     LinkedList<Thing> toCheck = new LinkedList<Thing>();
-    toCheck.addAll(thing.getIncludes());
+    EList<Thing> _includes_1 = thing.getIncludes();
+    toCheck.addAll(_includes_1);
     while ((!toCheck.isEmpty())) {
       {
         final Thing current = toCheck.pollFirst();
@@ -39,12 +42,13 @@ public class ThingMLValidator extends AbstractThingMLValidator {
           String _name = current.getName();
           String _plus = ("Cycle in the hierarchy of Thing \'" + _name);
           String _plus_1 = (_plus + "\'");
-          this.error(_plus_1, ThingMLPackage.eINSTANCE.getThing_Includes());
+          EReference _thing_Includes = ThingMLPackage.eINSTANCE.getThing_Includes();
+          this.error(_plus_1, _thing_Includes);
           return;
         }
         visitedThings.add(current);
-        EList<Thing> _includes = current.getIncludes();
-        for (final Thing t : _includes) {
+        EList<Thing> _includes_2 = current.getIncludes();
+        for (final Thing t : _includes_2) {
           boolean _contains_1 = toCheck.contains(t);
           boolean _not = (!_contains_1);
           if (_not) {

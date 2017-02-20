@@ -62,12 +62,14 @@ public class ServerLauncher {
           throw Exceptions.sneakyThrow(_e);
         }
       };
-      new Thread(_function_1).start();
+      Thread _thread = new Thread(_function_1);
+      _thread.start();
       server.join();
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception exception = (Exception)_t;
-        log.warn(exception.getMessage());
+        String _message = exception.getMessage();
+        log.warn(_message);
         System.exit(1);
       } else {
         throw Exceptions.sneakyThrow(_t);
