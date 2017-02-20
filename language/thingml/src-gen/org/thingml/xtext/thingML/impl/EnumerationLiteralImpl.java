@@ -17,13 +17,21 @@
  */
 package org.thingml.xtext.thingML.impl;
 
-import org.eclipse.emf.common.notify.Notification;
+import java.util.Collection;
+
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
 /**
@@ -34,32 +42,22 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.EnumerationLiteralImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.EnumerationLiteralImpl#getAnnotations <em>Annotations</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class EnumerationLiteralImpl extends AnnotatedElementImpl implements EnumerationLiteral
+public class EnumerationLiteralImpl extends NamedElementImpl implements EnumerationLiteral
 {
   /**
-   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getName()
+   * @see #getAnnotations()
    * @generated
    * @ordered
    */
-  protected static final String NAME_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected String name = NAME_EDEFAULT;
+  protected EList<PlatformAnnotation> annotations;
 
   /**
    * <!-- begin-user-doc -->
@@ -87,9 +85,13 @@ public class EnumerationLiteralImpl extends AnnotatedElementImpl implements Enum
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getName()
+  public EList<PlatformAnnotation> getAnnotations()
   {
-    return name;
+    if (annotations == null)
+    {
+      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.ENUMERATION_LITERAL__ANNOTATIONS);
+    }
+    return annotations;
   }
 
   /**
@@ -97,12 +99,15 @@ public class EnumerationLiteralImpl extends AnnotatedElementImpl implements Enum
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setName(String newName)
+  @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
-    String oldName = name;
-    name = newName;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.ENUMERATION_LITERAL__NAME, oldName, name));
+    switch (featureID)
+    {
+      case ThingMLPackage.ENUMERATION_LITERAL__ANNOTATIONS:
+        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+    }
+    return super.eInverseRemove(otherEnd, featureID, msgs);
   }
 
   /**
@@ -115,8 +120,8 @@ public class EnumerationLiteralImpl extends AnnotatedElementImpl implements Enum
   {
     switch (featureID)
     {
-      case ThingMLPackage.ENUMERATION_LITERAL__NAME:
-        return getName();
+      case ThingMLPackage.ENUMERATION_LITERAL__ANNOTATIONS:
+        return getAnnotations();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -126,13 +131,15 @@ public class EnumerationLiteralImpl extends AnnotatedElementImpl implements Enum
    * <!-- end-user-doc -->
    * @generated
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
     switch (featureID)
     {
-      case ThingMLPackage.ENUMERATION_LITERAL__NAME:
-        setName((String)newValue);
+      case ThingMLPackage.ENUMERATION_LITERAL__ANNOTATIONS:
+        getAnnotations().clear();
+        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -148,8 +155,8 @@ public class EnumerationLiteralImpl extends AnnotatedElementImpl implements Enum
   {
     switch (featureID)
     {
-      case ThingMLPackage.ENUMERATION_LITERAL__NAME:
-        setName(NAME_EDEFAULT);
+      case ThingMLPackage.ENUMERATION_LITERAL__ANNOTATIONS:
+        getAnnotations().clear();
         return;
     }
     super.eUnset(featureID);
@@ -165,8 +172,8 @@ public class EnumerationLiteralImpl extends AnnotatedElementImpl implements Enum
   {
     switch (featureID)
     {
-      case ThingMLPackage.ENUMERATION_LITERAL__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case ThingMLPackage.ENUMERATION_LITERAL__ANNOTATIONS:
+        return annotations != null && !annotations.isEmpty();
     }
     return super.eIsSet(featureID);
   }
@@ -177,15 +184,36 @@ public class EnumerationLiteralImpl extends AnnotatedElementImpl implements Enum
    * @generated
    */
   @Override
-  public String toString()
+  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
   {
-    if (eIsProxy()) return super.toString();
+    if (baseClass == AnnotatedElement.class)
+    {
+      switch (derivedFeatureID)
+      {
+        case ThingMLPackage.ENUMERATION_LITERAL__ANNOTATIONS: return ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS;
+        default: return -1;
+      }
+    }
+    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+  }
 
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (name: ");
-    result.append(name);
-    result.append(')');
-    return result.toString();
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == AnnotatedElement.class)
+    {
+      switch (baseFeatureID)
+      {
+        case ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS: return ThingMLPackage.ENUMERATION_LITERAL__ANNOTATIONS;
+        default: return -1;
+      }
+    }
+    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
   }
 
 } //EnumerationLiteralImpl

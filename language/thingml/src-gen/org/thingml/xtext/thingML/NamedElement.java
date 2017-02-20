@@ -17,49 +17,50 @@
  */
 package org.thingml.xtext.thingML;
 
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Instance</b></em>'.
+ * A representation of the model object '<em><b>Named Element</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.Instance#getType <em>Type</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.NamedElement#getName <em>Name</em>}</li>
  * </ul>
  *
- * @see org.thingml.xtext.thingML.ThingMLPackage#getInstance()
+ * @see org.thingml.xtext.thingML.ThingMLPackage#getNamedElement()
  * @model
  * @generated
  */
-public interface Instance extends NamedElement, AnnotatedElement
+public interface NamedElement extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Type</b></em>' reference.
+   * Returns the value of the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Type</em>' reference isn't clear,
+   * If the meaning of the '<em>Name</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Type</em>' reference.
-   * @see #setType(Thing)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getInstance_Type()
+   * @return the value of the '<em>Name</em>' attribute.
+   * @see #setName(String)
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getNamedElement_Name()
    * @model
    * @generated
    */
-  Thing getType();
+  String getName();
 
   /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Instance#getType <em>Type</em>}' reference.
+   * Sets the value of the '{@link org.thingml.xtext.thingML.NamedElement#getName <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Type</em>' reference.
-   * @see #getType()
+   * @param value the new value of the '<em>Name</em>' attribute.
+   * @see #getName()
    * @generated
    */
-  void setType(Thing value);
+  void setName(String value);
 
-} // Instance
+} // NamedElement

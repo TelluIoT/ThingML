@@ -33,7 +33,9 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.InternalTransition;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -47,7 +49,7 @@ import org.thingml.xtext.thingML.Transition;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getEntry <em>Entry</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.StateImpl#getExit <em>Exit</em>}</li>
@@ -57,27 +59,17 @@ import org.thingml.xtext.thingML.Transition;
  *
  * @generated
  */
-public class StateImpl extends AnnotatedElementImpl implements State
+public class StateImpl extends NamedElementImpl implements State
 {
   /**
-   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getName()
+   * @see #getAnnotations()
    * @generated
    * @ordered
    */
-  protected static final String NAME_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected String name = NAME_EDEFAULT;
+  protected EList<PlatformAnnotation> annotations;
 
   /**
    * The cached value of the '{@link #getProperties() <em>Properties</em>}' containment reference list.
@@ -155,22 +147,13 @@ public class StateImpl extends AnnotatedElementImpl implements State
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getName()
+  public EList<PlatformAnnotation> getAnnotations()
   {
-    return name;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setName(String newName)
-  {
-    String oldName = name;
-    name = newName;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.STATE__NAME, oldName, name));
+    if (annotations == null)
+    {
+      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.STATE__ANNOTATIONS);
+    }
+    return annotations;
   }
 
   /**
@@ -321,6 +304,8 @@ public class StateImpl extends AnnotatedElementImpl implements State
   {
     switch (featureID)
     {
+      case ThingMLPackage.STATE__ANNOTATIONS:
+        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.STATE__PROPERTIES:
         return ((InternalEList<?>)getProperties()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.STATE__ENTRY:
@@ -345,8 +330,8 @@ public class StateImpl extends AnnotatedElementImpl implements State
   {
     switch (featureID)
     {
-      case ThingMLPackage.STATE__NAME:
-        return getName();
+      case ThingMLPackage.STATE__ANNOTATIONS:
+        return getAnnotations();
       case ThingMLPackage.STATE__PROPERTIES:
         return getProperties();
       case ThingMLPackage.STATE__ENTRY:
@@ -372,8 +357,9 @@ public class StateImpl extends AnnotatedElementImpl implements State
   {
     switch (featureID)
     {
-      case ThingMLPackage.STATE__NAME:
-        setName((String)newValue);
+      case ThingMLPackage.STATE__ANNOTATIONS:
+        getAnnotations().clear();
+        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
       case ThingMLPackage.STATE__PROPERTIES:
         getProperties().clear();
@@ -407,8 +393,8 @@ public class StateImpl extends AnnotatedElementImpl implements State
   {
     switch (featureID)
     {
-      case ThingMLPackage.STATE__NAME:
-        setName(NAME_EDEFAULT);
+      case ThingMLPackage.STATE__ANNOTATIONS:
+        getAnnotations().clear();
         return;
       case ThingMLPackage.STATE__PROPERTIES:
         getProperties().clear();
@@ -439,8 +425,8 @@ public class StateImpl extends AnnotatedElementImpl implements State
   {
     switch (featureID)
     {
-      case ThingMLPackage.STATE__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case ThingMLPackage.STATE__ANNOTATIONS:
+        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.STATE__PROPERTIES:
         return properties != null && !properties.isEmpty();
       case ThingMLPackage.STATE__ENTRY:
@@ -461,15 +447,36 @@ public class StateImpl extends AnnotatedElementImpl implements State
    * @generated
    */
   @Override
-  public String toString()
+  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
   {
-    if (eIsProxy()) return super.toString();
+    if (baseClass == AnnotatedElement.class)
+    {
+      switch (derivedFeatureID)
+      {
+        case ThingMLPackage.STATE__ANNOTATIONS: return ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS;
+        default: return -1;
+      }
+    }
+    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+  }
 
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (name: ");
-    result.append(name);
-    result.append(')');
-    return result.toString();
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == AnnotatedElement.class)
+    {
+      switch (baseFeatureID)
+      {
+        case ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS: return ThingMLPackage.STATE__ANNOTATIONS;
+        default: return -1;
+      }
+    }
+    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
   }
 
 } //StateImpl

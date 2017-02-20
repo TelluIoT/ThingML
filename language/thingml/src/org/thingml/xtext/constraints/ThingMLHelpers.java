@@ -54,7 +54,6 @@ import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.ObjectType;
-import org.thingml.xtext.thingML.ParallelRegion;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Port;
@@ -63,11 +62,11 @@ import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.Region;
-import org.thingml.xtext.thingML.RegionOrSession;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
@@ -80,12 +79,25 @@ public class ThingMLHelpers {
 	 * Resolution of containers
 	 * ***********************************************************/
 
+	@SuppressWarnings("unchecked") // I know what I am doing :-)
 	public static <C> C findContainer(EObject eObject, Class<C> cClass) {
 		while (eObject != null && !cClass.isAssignableFrom(eObject.getClass())) {
 			eObject = eObject.eContainer();
 		}
 		return (C) eObject;
 	}
+	
+    @SuppressWarnings("unchecked") // I know what I am doing :-)
+	public static <C> List<C> allContainedElementsOfType(EObject parent, Class<?> c) {
+    	final List<C> result = new ArrayList<C>();
+    	org.eclipse.emf.common.util.TreeIterator<EObject> it = parent.eAllContents();
+    	while (it.hasNext()) {
+    		EObject o = it.next();
+    		if ( c.isInstance(o) ) result.add((C)o); 
+    	}
+    	
+    	return result;
+    }
 
 	public static ThingMLModel findContainingModel(EObject object) {
 		return findContainer(object, ThingMLModel.class);
@@ -118,6 +130,10 @@ public class ThingMLHelpers {
 	public static State findContainingState(EObject object) {
 		return findContainer(object,State.class);
 	}
+	
+	public static CompositeState findContainingCompositeState(EObject object) {
+		return findContainer(object,CompositeState.class);
+	}
 
 	public static Region findContainingRegion(EObject object) {
 		return findContainer(object,Region.class);
@@ -131,6 +147,7 @@ public class ThingMLHelpers {
 		return findContainer(object, StartSession.class);
 	}
 	
+
 	/* ***********************************************************
 	 * Type checking and expressions
 	 * ***********************************************************/
@@ -597,27 +614,12 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
-	public static ArrayList<Session> allVisibleSessions (EObject container) {
+	public static ArrayList<Session> allVisibleSessions (EObject context) {
 		ArrayList<Session> result = new ArrayList<Session>();
-		for (Region r : allContainingRegions(container)) {
-			if (r instanceof CompositeState) {
-				CompositeState cs = (CompositeState)r;
-				for (RegionOrSession rs : cs.getRegion()) {
-					if (rs instanceof Session) result.add((Session)rs);
-				}
-			}
-			else if (r instanceof Session) {
-				Session cs = (Session)r;
-				for (RegionOrSession rs : cs.getRegion()) {
-					if (rs instanceof Session) result.add((Session)rs);
-				}
-			}
-			else if (r instanceof ParallelRegion) {
-				ParallelRegion cs = (ParallelRegion)r;
-				for (RegionOrSession rs : cs.getRegion()) {
-					if (rs instanceof Session) result.add((Session)rs);
-				}
-			}
+		CompositeState container = ThingMLHelpers.findContainingCompositeState(context);
+		
+		if ( container != null ) {
+			result.addAll(container.getSession());
 		}
 		return result;
 	}
@@ -692,8 +694,8 @@ public class ThingMLHelpers {
 
 	public static ArrayList<State> allValidTargetStates(State state) {
 		ArrayList<State> result = new ArrayList<State>();
-		if (state instanceof CompositeState) result.addAll(RegionHelper.getSubstate(findContainingRegion(state.eContainer())));
-		else result.addAll(RegionHelper.getSubstate(findContainingRegion(state)));
+		StateContainer parent = (StateContainer)state.eContainer();
+		result.addAll(parent.getSubstate());
 		return result;
 	}
 	

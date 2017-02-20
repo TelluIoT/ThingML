@@ -16,7 +16,6 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.scoping.AbstractThingMLScopeProvider;
-import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
@@ -32,7 +31,6 @@ import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.ParallelRegion;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
@@ -41,12 +39,12 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.ReceiveMessage;
-import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.ThingMLPackage;
@@ -181,10 +179,10 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
                                                   if (_equals_20) {
                                                     return this.scopeForVariableAssignment_Property(((VariableAssignment) context));
                                                   } else {
-                                                    EReference _region_Initial = this.p.getRegion_Initial();
-                                                    boolean _equals_21 = Objects.equal(reference, _region_Initial);
+                                                    EReference _stateContainer_Initial = this.p.getStateContainer_Initial();
+                                                    boolean _equals_21 = Objects.equal(reference, _stateContainer_Initial);
                                                     if (_equals_21) {
-                                                      return this.scopeForRegion_Initial(((Region) context));
+                                                      return this.scopeForStateContainer_Initial(((StateContainer) context));
                                                     } else {
                                                       EReference _eventReference_ReceiveMsg = this.p.getEventReference_ReceiveMsg();
                                                       boolean _equals_22 = Objects.equal(reference, _eventReference_ReceiveMsg);
@@ -246,6 +244,11 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
   
   protected ArrayList EMPTY = new ArrayList<Object>();
   
+  protected IScope scopeForStateContainer_Initial(final StateContainer context) {
+    EList<State> _substate = context.getSubstate();
+    return Scopes.scopeFor(_substate);
+  }
+  
   protected IScope scopeForConfigurationInstances(final Configuration context) {
     Set<Instance> _allInstances = ConfigurationHelper.allInstances(context);
     return Scopes.scopeFor(_allInstances);
@@ -284,27 +287,6 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
       _xifexpression = Scopes.scopeFor(this.EMPTY);
     }
     return _xifexpression;
-  }
-  
-  protected IScope scopeForRegion_Initial(final Region context) {
-    if ((context instanceof ParallelRegion)) {
-      EList<State> _substate = ((ParallelRegion)context).getSubstate();
-      return Scopes.scopeFor(_substate);
-    }
-    if ((context instanceof CompositeState)) {
-      EList<State> _substate_1 = ((CompositeState)context).getSubstate();
-      return Scopes.scopeFor(_substate_1);
-    }
-    if ((context instanceof Session)) {
-      EList<State> _substate_2 = ((Session)context).getSubstate();
-      return Scopes.scopeFor(_substate_2);
-    }
-    return null;
-  }
-  
-  protected IScope scopeForParallelRegion_Initial(final ParallelRegion context) {
-    EList<State> _substate = context.getSubstate();
-    return Scopes.scopeFor(_substate);
   }
   
   protected IScope scopeForPort_SendsReceives(final Port context) {
@@ -402,22 +384,15 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
   protected IScope scopeForPropertyAssign_Property(final PropertyAssign context) {
     IScope _xblockexpression = null;
     {
-      final StartSession ss = ThingMLHelpers.findContainingStartSession(context);
-      boolean _notEquals = (!Objects.equal(ss, null));
-      if (_notEquals) {
-        Session _session = ss.getSession();
-        EList<Property> _properties = _session.getProperties();
-        return Scopes.scopeFor(_properties);
-      }
       final Thing t = ThingMLHelpers.findContainingThing(context);
-      boolean _notEquals_1 = (!Objects.equal(t, null));
-      if (_notEquals_1) {
+      boolean _notEquals = (!Objects.equal(t, null));
+      if (_notEquals) {
         ArrayList<Property> _allProperties = ThingMLHelpers.allProperties(t);
         return Scopes.scopeFor(_allProperties);
       }
       final Instance i = ThingMLHelpers.findContainingInstance(context);
-      boolean _notEquals_2 = (!Objects.equal(i, null));
-      if (_notEquals_2) {
+      boolean _notEquals_1 = (!Objects.equal(i, null));
+      if (_notEquals_1) {
         Thing _type = i.getType();
         ArrayList<Property> _allProperties_1 = ThingMLHelpers.allProperties(_type);
         return Scopes.scopeFor(_allProperties_1);

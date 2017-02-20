@@ -33,11 +33,13 @@ thing TestSession4 includes Test
 				end
 			}
 
-			session t<2> init T1 {
+			
+		}
+		
+		session t<2> init T1 {
 				final state T1 {
 					on entry harnessOut!testOut(ID)
 				}		
 			}
-		}
     }
 }

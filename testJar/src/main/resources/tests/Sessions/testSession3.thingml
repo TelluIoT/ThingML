@@ -46,7 +46,10 @@ thing TestSession3 includes Test
                 on entry harnessOut!testOut('\'X\'')
             }
 
-			session t<2> init T1 {
+			
+		}
+		
+		session t<2> init T1 {
 				state T1 {
                     on entry do
                         harnessOut!testOut('\'T\'')
@@ -58,6 +61,5 @@ thing TestSession3 includes Test
 					action sessionPort!pong()
 				}		
 			}
-		}
     }
 }

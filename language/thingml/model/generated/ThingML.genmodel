@@ -16,11 +16,13 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//PlatformAnnotation/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//PlatformAnnotation/value"/>
     </genClasses>
+    <genClasses ecoreClass="ThingML.ecore#//NamedElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//NamedElement/name"/>
+    </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//AnnotatedElement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//AnnotatedElement/annotations"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Variable">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Variable/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Variable/typeRef"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//TypeRef">
@@ -28,9 +30,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//TypeRef/isArray"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//TypeRef/cardinality"/>
     </genClasses>
-    <genClasses ecoreClass="ThingML.ecore#//Type">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Type/name"/>
-    </genClasses>
+    <genClasses ecoreClass="ThingML.ecore#//Type"/>
     <genClasses ecoreClass="ThingML.ecore#//PrimitiveType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//PrimitiveType/ByteSize"/>
     </genClasses>
@@ -38,9 +38,7 @@
     <genClasses ecoreClass="ThingML.ecore#//Enumeration">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Enumeration/literals"/>
     </genClasses>
-    <genClasses ecoreClass="ThingML.ecore#//EnumerationLiteral">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//EnumerationLiteral/name"/>
-    </genClasses>
+    <genClasses ecoreClass="ThingML.ecore#//EnumerationLiteral"/>
     <genClasses ecoreClass="ThingML.ecore#//Thing">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Thing/fragment"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//Thing/includes"/>
@@ -56,11 +54,8 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//PropertyAssign/index"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//PropertyAssign/init"/>
     </genClasses>
-    <genClasses ecoreClass="ThingML.ecore#//Protocol">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Protocol/name"/>
-    </genClasses>
+    <genClasses ecoreClass="ThingML.ecore#//Protocol"/>
     <genClasses ecoreClass="ThingML.ecore#//Function">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Function/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Function/parameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Function/typeRef"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Function/body"/>
@@ -70,12 +65,10 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Property/init"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Message">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Message/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Message/parameters"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Parameter"/>
     <genClasses ecoreClass="ThingML.ecore#//Port">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Port/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//Port/sends"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//Port/receives"/>
     </genClasses>
@@ -84,33 +77,7 @@
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//ProvidedPort"/>
     <genClasses ecoreClass="ThingML.ecore#//InternalPort"/>
-    <genClasses ecoreClass="ThingML.ecore#//Region">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//Region/initial"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Region/history"/>
-    </genClasses>
-    <genClasses ecoreClass="ThingML.ecore#//RegionOrSession"/>
-    <genClasses ecoreClass="ThingML.ecore#//CompositeState">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//CompositeState/substate"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//CompositeState/region"/>
-    </genClasses>
-    <genClasses ecoreClass="ThingML.ecore#//FinalState"/>
-    <genClasses ecoreClass="ThingML.ecore#//Session">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Session/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Session/maxInstances"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Session/properties"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Session/entry"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Session/exit"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Session/substate"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Session/internal"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Session/region"/>
-    </genClasses>
-    <genClasses ecoreClass="ThingML.ecore#//ParallelRegion">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//ParallelRegion/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ParallelRegion/substate"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ParallelRegion/region"/>
-    </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//State">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//State/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//State/properties"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//State/entry"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//State/exit"/>
@@ -118,7 +85,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//State/outgoing"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Handler">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Handler/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Handler/event"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Handler/guard"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Handler/action"/>
@@ -127,6 +93,20 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//Transition/target"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//InternalTransition"/>
+    <genClasses ecoreClass="ThingML.ecore#//CompositeState">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//CompositeState/region"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//CompositeState/session"/>
+    </genClasses>
+    <genClasses ecoreClass="ThingML.ecore#//Session">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Session/maxInstances"/>
+    </genClasses>
+    <genClasses ecoreClass="ThingML.ecore#//Region"/>
+    <genClasses ecoreClass="ThingML.ecore#//FinalState"/>
+    <genClasses ecoreClass="ThingML.ecore#//StateContainer">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//StateContainer/initial"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//StateContainer/history"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//StateContainer/substate"/>
+    </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Event"/>
     <genClasses ecoreClass="ThingML.ecore#//ReceiveMessage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//ReceiveMessage/name"/>
@@ -219,13 +199,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//FunctionCallExpression/parameters"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Configuration">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Configuration/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Configuration/instances"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Configuration/connectors"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Configuration/propassigns"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Instance">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Instance/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//Instance/type"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//ConfigPropertyAssign">
@@ -235,9 +213,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ConfigPropertyAssign/init"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ConfigPropertyAssign/annotations"/>
     </genClasses>
-    <genClasses ecoreClass="ThingML.ecore#//AbstractConnector">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//AbstractConnector/name"/>
-    </genClasses>
+    <genClasses ecoreClass="ThingML.ecore#//AbstractConnector"/>
     <genClasses ecoreClass="ThingML.ecore#//Connector">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//Connector/cli"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//Connector/required"/>

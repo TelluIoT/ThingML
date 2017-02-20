@@ -22,7 +22,6 @@ import org.thingml.xtext.thingML.EventReference
 import org.thingml.xtext.thingML.ExternalConnector
 import org.thingml.xtext.thingML.Increment
 import org.thingml.xtext.thingML.Instance
-import org.thingml.xtext.thingML.ParallelRegion
 import org.thingml.xtext.thingML.Port
 import org.thingml.xtext.thingML.PropertyAssign
 import org.thingml.xtext.thingML.PropertyReference
@@ -36,6 +35,7 @@ import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.thingML.Transition
 import org.thingml.xtext.thingML.VariableAssignment
+import org.thingml.xtext.thingML.StateContainer
 
 /**
  * This class contains custom scoping description.
@@ -122,8 +122,8 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.variableAssignment_Property) {
 			return scopeForVariableAssignment_Property(context as VariableAssignment);
 		}
-		else if (reference == p.region_Initial) {
-			return scopeForRegion_Initial(context as Region);
+		else if (reference == p.stateContainer_Initial) {
+			return scopeForStateContainer_Initial(context as StateContainer);
 		}
 		else if (reference == p.eventReference_ReceiveMsg) {
 			return scopeForEventReference_ReceiveMsg(context as EventReference);
@@ -148,6 +148,9 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	
 	protected ArrayList EMPTY = new ArrayList();
 	
+	def protected IScope scopeForStateContainer_Initial(StateContainer context) {
+		Scopes.scopeFor(context.substate);
+	}
 	
 	def protected IScope scopeForConfigurationInstances(Configuration context) {
 		Scopes.scopeFor(ConfigurationHelper.allInstances(context));
@@ -177,15 +180,8 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		}
 	}
 	
-	def protected IScope scopeForRegion_Initial(Region context) {
-		if (context instanceof ParallelRegion) return Scopes.scopeFor( context.substate );
-		if (context instanceof CompositeState) return Scopes.scopeFor( context.substate );
-		if (context instanceof Session) return Scopes.scopeFor( context.substate );
-	}
 	
-	def protected IScope scopeForParallelRegion_Initial(ParallelRegion context) {
-		Scopes.scopeFor( context.substate );
-	}
+	
 	
 	def protected IScope scopeForPort_SendsReceives(Port context) {
 		Scopes.scopeFor( ThingMLHelpers.allMessages(context.eContainer as Thing) );
@@ -252,8 +248,6 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	
 	
 	def protected IScope scopeForPropertyAssign_Property(PropertyAssign context) {
-		val ss = ThingMLHelpers.findContainingStartSession(context)
-		if (ss != null) return Scopes.scopeFor( ss.session.properties );
 		
 		val t = ThingMLHelpers.findContainingThing(context)
 		if (t != null) return Scopes.scopeFor( ThingMLHelpers.allProperties(t) );

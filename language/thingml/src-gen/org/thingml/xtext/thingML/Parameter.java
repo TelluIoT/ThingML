@@ -28,6 +28,6 @@ package org.thingml.xtext.thingML;
  * @model
  * @generated
  */
-public interface Parameter extends AnnotatedElement, Variable
+public interface Parameter extends Variable
 {
 } // Parameter

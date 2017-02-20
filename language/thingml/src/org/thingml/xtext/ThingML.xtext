@@ -18,9 +18,17 @@ Import returns ThingMLModel:
 PlatformAnnotation returns PlatformAnnotation:
 	name=ANNOTATION_ID value=STRING_LIT ; 
 
+
+NamedElement:
+	Protocol | Function  | Message | Port | Configuration | Handler | State | StateContainer | 
+	Type | Variable | Instance | AbstractConnector | EnumerationLiteral |
+	";" name=ID // This is never used, it is just to have the attributes in the superclass
+;
+
 AnnotatedElement:
-	Protocol | Function | Property | Message | Parameter | Port | Configuration | Handler | State | CompositeState | 
-	FinalState | Type | PropertyAssign | /*Stream |*/ Session | ParallelRegion | LocalVariable | Instance | AbstractConnector | EnumerationLiteral
+	Protocol | Function  | Message | Port | Configuration | Handler | State | StateContainer | 
+	Type | PropertyAssign | Variable | Instance | AbstractConnector | EnumerationLiteral |
+	";" ( annotations+=PlatformAnnotation )* // This is never used, it is just to have the attributes in the superclass
 ;
 
 Variable:
@@ -169,51 +177,6 @@ LengthArray returns LengthArray:
  *       STATE MECHINES                                                      *
  *****************************************************************************/
 
-Region:
-	'region' 'init' initial=[State|ID] ('keeps' history?='history')?  // just to get those properties in the abstract class
-	| RegionOrSession | CompositeState;
-	
-RegionOrSession:
-	ParallelRegion | Session
-;
-
-StateMachine returns CompositeState:
-	'statechart' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
-		(properties+=Property)*
-		('on' 'entry' entry=Action)?
-		('on' 'exit' exit=Action)?
-		(substate+=State | internal+=InternalTransition)*
-		(region+=RegionOrSession)*
-	'}';
-	
-FinalState returns FinalState:
-	'final' 'state' name=ID ( annotations+=PlatformAnnotation )* '{' ('on' 'entry' entry=Action)? '}'
-;
-
-CompositeState returns CompositeState:
-	'composite' 'state' name=ID 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
-		(properties+=Property)*
-		('on' 'entry' entry=Action)?
-		('on' 'exit' exit=Action)?
-		(substate+=State | internal+=InternalTransition | outgoing+=Transition)*
-		(region+=RegionOrSession)*
-	'}';
-
-Session returns Session:
-	'session' name=ID ('<' maxInstances=INT '>')? 'init' initial=[State|ID] ( annotations+=PlatformAnnotation )* '{'
-		(properties+=Property)*
-		('on' 'entry' entry=Action)?
-		('on' 'exit' exit=Action)?
-		(substate+=State | internal+=InternalTransition)*
-		(region+=RegionOrSession)*
-	'}';
-
-ParallelRegion returns ParallelRegion:
-	'region' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
-		(substate+=State)*
-		(region+=RegionOrSession)*
-	'}';
-	
 State returns State:
 	StateMachine | FinalState | CompositeState |
 	'state' name=ID ( annotations+=PlatformAnnotation )* '{'
@@ -242,11 +205,55 @@ InternalTransition returns InternalTransition:
 	('guard' guard=Expression)?
 	('action' action=Action)?;
 
+
+CompositeState returns CompositeState:
+	'composite' 'state' name=ID 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
+		(properties+=Property)*
+		('on' 'entry' entry=Action)?
+		('on' 'exit' exit=Action)?
+		(substate+=State | internal+=InternalTransition | outgoing+=Transition)*
+		(region+=Region | session+=Session)*
+	'}';
+
+StateMachine returns CompositeState: // Actually only another syntax for a composite state
+	'statechart' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
+		(properties+=Property)*
+		('on' 'entry' entry=Action)?
+		('on' 'exit' exit=Action)?
+		(substate+=State | internal+=InternalTransition)*
+		(region+=Region | session+=Session)*
+	'}';
+
+Session returns Session:
+	'session' name=ID ('<' maxInstances=INT '>')? 'init' initial=[State|ID] ( annotations+=PlatformAnnotation )* '{'
+		(substate+=State)*
+	'}';
+
+Region returns Region:
+	'region' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
+		(substate+=State)*
+	'}';
+
+FinalState returns FinalState:
+	'final' 'state' name=ID ( annotations+=PlatformAnnotation )* '{' ('on' 'entry' entry=Action)? '}'
+;
+
+StateContainer:
+	CompositeState | Region | Session |
+	'keeps' initial=[State|ID] ('keeps' history?='history')?	 '{' // This is never used, it is just to have the attributes in the superclass
+		(substate+=State)*
+	'}'
+;
+
+/*****************************************************************************
+ *       EVENTS                                                             *
+ *****************************************************************************/
 Event:
 	ReceiveMessage;
 
 ReceiveMessage returns ReceiveMessage:
 	(name=ID ":")? port=[Port|ID]'?'message=[Message|ID];
+
 
 /*****************************************************************************
  *       ACTIONS                                                             *
@@ -266,8 +273,6 @@ ExternStatement returns ExternStatement:
 	
 LocalVariable returns LocalVariable:
 	(^changeable?='readonly')? 'var' name=ID ':'  typeRef=TypeRef ( '=' init=Expression)? ( annotations+=PlatformAnnotation )*
-		//('isArray' isArray=EBoolean)?
-		//('cardinality' cardinality=Expression)?
 ;
 
 SendAction returns SendAction:

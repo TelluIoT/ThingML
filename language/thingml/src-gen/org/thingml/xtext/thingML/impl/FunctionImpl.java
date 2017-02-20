@@ -33,8 +33,10 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.TypeRef;
 
@@ -46,7 +48,7 @@ import org.thingml.xtext.thingML.TypeRef;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getTypeRef <em>Type Ref</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getBody <em>Body</em>}</li>
@@ -54,27 +56,17 @@ import org.thingml.xtext.thingML.TypeRef;
  *
  * @generated
  */
-public class FunctionImpl extends AnnotatedElementImpl implements Function
+public class FunctionImpl extends NamedElementImpl implements Function
 {
   /**
-   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getName()
+   * @see #getAnnotations()
    * @generated
    * @ordered
    */
-  protected static final String NAME_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected String name = NAME_EDEFAULT;
+  protected EList<PlatformAnnotation> annotations;
 
   /**
    * The cached value of the '{@link #getParameters() <em>Parameters</em>}' containment reference list.
@@ -132,22 +124,13 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getName()
+  public EList<PlatformAnnotation> getAnnotations()
   {
-    return name;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setName(String newName)
-  {
-    String oldName = name;
-    name = newName;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.FUNCTION__NAME, oldName, name));
+    if (annotations == null)
+    {
+      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.FUNCTION__ANNOTATIONS);
+    }
+    return annotations;
   }
 
   /**
@@ -270,6 +253,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
   {
     switch (featureID)
     {
+      case ThingMLPackage.FUNCTION__ANNOTATIONS:
+        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.FUNCTION__PARAMETERS:
         return ((InternalEList<?>)getParameters()).basicRemove(otherEnd, msgs);
       case ThingMLPackage.FUNCTION__TYPE_REF:
@@ -290,8 +275,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
   {
     switch (featureID)
     {
-      case ThingMLPackage.FUNCTION__NAME:
-        return getName();
+      case ThingMLPackage.FUNCTION__ANNOTATIONS:
+        return getAnnotations();
       case ThingMLPackage.FUNCTION__PARAMETERS:
         return getParameters();
       case ThingMLPackage.FUNCTION__TYPE_REF:
@@ -313,8 +298,9 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
   {
     switch (featureID)
     {
-      case ThingMLPackage.FUNCTION__NAME:
-        setName((String)newValue);
+      case ThingMLPackage.FUNCTION__ANNOTATIONS:
+        getAnnotations().clear();
+        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
       case ThingMLPackage.FUNCTION__PARAMETERS:
         getParameters().clear();
@@ -340,8 +326,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
   {
     switch (featureID)
     {
-      case ThingMLPackage.FUNCTION__NAME:
-        setName(NAME_EDEFAULT);
+      case ThingMLPackage.FUNCTION__ANNOTATIONS:
+        getAnnotations().clear();
         return;
       case ThingMLPackage.FUNCTION__PARAMETERS:
         getParameters().clear();
@@ -366,8 +352,8 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
   {
     switch (featureID)
     {
-      case ThingMLPackage.FUNCTION__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case ThingMLPackage.FUNCTION__ANNOTATIONS:
+        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.FUNCTION__PARAMETERS:
         return parameters != null && !parameters.isEmpty();
       case ThingMLPackage.FUNCTION__TYPE_REF:
@@ -384,15 +370,36 @@ public class FunctionImpl extends AnnotatedElementImpl implements Function
    * @generated
    */
   @Override
-  public String toString()
+  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
   {
-    if (eIsProxy()) return super.toString();
+    if (baseClass == AnnotatedElement.class)
+    {
+      switch (derivedFeatureID)
+      {
+        case ThingMLPackage.FUNCTION__ANNOTATIONS: return ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS;
+        default: return -1;
+      }
+    }
+    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+  }
 
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (name: ");
-    result.append(name);
-    result.append(')');
-    return result.toString();
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == AnnotatedElement.class)
+    {
+      switch (baseFeatureID)
+      {
+        case ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS: return ThingMLPackage.FUNCTION__ANNOTATIONS;
+        default: return -1;
+      }
+    }
+    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
   }
 
 } //FunctionImpl

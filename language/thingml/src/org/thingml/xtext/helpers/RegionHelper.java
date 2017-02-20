@@ -16,6 +16,7 @@
  */
 package org.thingml.xtext.helpers;
 
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.*;
 
 import java.util.ArrayList;
@@ -30,110 +31,31 @@ public class RegionHelper {
 
     //Derived properties
 
-	public static List<State> getSubstate(Region self) {
-		if (self instanceof CompositeState) {
-			return ((CompositeState)self).getSubstate();
-		}
-		else if (self instanceof Session) {
-			return ((Session)self).getSubstate();
-		}
-		else if (self instanceof ParallelRegion) {
-			return ((ParallelRegion)self).getSubstate();
-		}
-		throw new Error("ERROR: Incomplete implementation of RegionHelper.getSubstate");
-	}
 	
 
     public static List<State> allContainedStates(Region self) {
-        final List<State> result = new ArrayList<State>();
-        for(Region r : allContainedRegions(self)) {
-            if (r instanceof State) {
-                result.add((State)r);
-            }
-            for(State s : getSubstate(r)) {
-                if (! (s instanceof Region)) {
-                    result.add(s);
-                }
-            }
-        }
-        return result;
-    }
-
-
-    public static List<Region> allContainedRegions(Region self) {
-        final List<Region> result = new ArrayList<Region>();
-        result.add(self);
-        if (self instanceof CompositeState) {
-            for(Region r : ((CompositeState)self).getRegion()) {
-                result.addAll(RegionHelper.allContainedRegions(r));
-            }
-        }
-        for (State s : getSubstate(self)) {
-            if (s instanceof Region) {
-                result.addAll(RegionHelper.allContainedRegions((Region)s));
-            }
-        }
-        return result;
+        return ThingMLHelpers.<State>allContainedElementsOfType(self, State.class);
     }
     
-    public static List<Region> allContainedRegionsAndSessions(Region self) {
-        final List<Region> result = new ArrayList<Region>();
+    
+   public static List<StateContainer> allContainedRegions(Region self) {
+       final List<StateContainer> result = new ArrayList<StateContainer>();
+       result.add(self);
+       result.addAll(ThingMLHelpers.<StateContainer>allContainedElementsOfType(self, CompositeState.class));
+       result.addAll(ThingMLHelpers.<StateContainer>allContainedElementsOfType(self, Region.class));
+       return result;
+    }
+    
+    public static List<StateContainer> allContainedRegionsAndSessions(Region self) {
+    	List<StateContainer> result = new ArrayList<StateContainer>();
         result.add(self);
-        if (self instanceof CompositeState) {
-            for(Region r : ((CompositeState)self).getRegion()) {
-                result.addAll(RegionHelper.allContainedRegionsAndSessions(r));
-            }
-        }
-        if (self instanceof Session) {
-            for(Region r : ((Session)self).getRegion()) {
-                result.addAll(RegionHelper.allContainedRegionsAndSessions(r));
-            }
-        }
-        for (State s : getSubstate(self)) {
-            if (s instanceof Region) {
-                result.addAll(RegionHelper.allContainedRegionsAndSessions((Region)s));
-            }
-        }
+        result.addAll(ThingMLHelpers.<StateContainer>allContainedElementsOfType(self, StateContainer.class));
         return result;
     }
     
     public static List<Session> allContainedSessions(Region self) {
-        final List<Session> result = new ArrayList<Session>();
-        if (self instanceof CompositeState) {
-            for(Region r : ((CompositeState)self).getRegion()) {
-                result.addAll(RegionHelper.allContainedSessions(r));
-            }
-        }
-        if (self instanceof Session) {
-            result.add((Session)self);
-            for(Region r : ((Session)self).getRegion()) {
-                result.addAll(RegionHelper.allContainedSessions(r));
-            }
-        }
-        for (State s : getSubstate(self)) {
-            if (s instanceof Session) {
-                result.addAll(RegionHelper.allContainedSessions((Session)s));
-            }
-        }
-        return result;
-    }
-    
-    public static List<Session> allFirstLevelSessions(Region self) {
-        final List<Session> result = new ArrayList<Session>();
-        if (self instanceof Session) {
-            result.add((Session)self);
-            return result;
-        }
-        if (self instanceof CompositeState) {
-            for(Region r : ((CompositeState)self).getRegion()) {
-                result.addAll(RegionHelper.allFirstLevelSessions(r));
-            }
-        }
-        for (State s : getSubstate(self)) {
-            if (s instanceof Session) {
-                result.addAll(RegionHelper.allFirstLevelSessions((Session)s));
-            }
-        }
+    	List<Session> result = new ArrayList<Session>();
+        result.addAll(ThingMLHelpers.<Session>allContainedElementsOfType(self, Session.class));
         return result;
     }
 
@@ -145,20 +67,7 @@ public class RegionHelper {
         return result;
     }
 
-
-
-    public static List<Region> directSubRegions(Region self) {
-        final List<Region> result = new ArrayList<Region>();
-        result.add(self);
-        if (self instanceof CompositeState) {
-            for (Region r : ((CompositeState)self).getRegion()){
-                result.addAll(RegionHelper.allContainedRegions(r));
-            }
-        }
-        return result;
-    }
-
-
+    
     public static List<CompositeState> allContainedCompositeStates(Region self) {
         final List<CompositeState> result = new ArrayList<CompositeState>();
         for(State s : allContainedStates(self)) {

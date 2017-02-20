@@ -28,7 +28,6 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.Function#getName <em>Name</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Function#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Function#getTypeRef <em>Type Ref</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Function#getBody <em>Body</em>}</li>
@@ -38,34 +37,8 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface Function extends AnnotatedElement
+public interface Function extends NamedElement, AnnotatedElement
 {
-  /**
-   * Returns the value of the '<em><b>Name</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Name</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Name</em>' attribute.
-   * @see #setName(String)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getFunction_Name()
-   * @model
-   * @generated
-   */
-  String getName();
-
-  /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Function#getName <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Name</em>' attribute.
-   * @see #getName()
-   * @generated
-   */
-  void setName(String value);
-
   /**
    * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
    * The list contents are of type {@link org.thingml.xtext.thingML.Parameter}.

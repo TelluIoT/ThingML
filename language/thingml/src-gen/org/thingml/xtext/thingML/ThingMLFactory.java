@@ -56,6 +56,15 @@ public interface ThingMLFactory extends EFactory
   PlatformAnnotation createPlatformAnnotation();
 
   /**
+   * Returns a new object of class '<em>Named Element</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Named Element</em>'.
+   * @generated
+   */
+  NamedElement createNamedElement();
+
+  /**
    * Returns a new object of class '<em>Annotated Element</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -227,60 +236,6 @@ public interface ThingMLFactory extends EFactory
   InternalPort createInternalPort();
 
   /**
-   * Returns a new object of class '<em>Region</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Region</em>'.
-   * @generated
-   */
-  Region createRegion();
-
-  /**
-   * Returns a new object of class '<em>Region Or Session</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Region Or Session</em>'.
-   * @generated
-   */
-  RegionOrSession createRegionOrSession();
-
-  /**
-   * Returns a new object of class '<em>Composite State</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Composite State</em>'.
-   * @generated
-   */
-  CompositeState createCompositeState();
-
-  /**
-   * Returns a new object of class '<em>Final State</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Final State</em>'.
-   * @generated
-   */
-  FinalState createFinalState();
-
-  /**
-   * Returns a new object of class '<em>Session</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Session</em>'.
-   * @generated
-   */
-  Session createSession();
-
-  /**
-   * Returns a new object of class '<em>Parallel Region</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Parallel Region</em>'.
-   * @generated
-   */
-  ParallelRegion createParallelRegion();
-
-  /**
    * Returns a new object of class '<em>State</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -315,6 +270,51 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   InternalTransition createInternalTransition();
+
+  /**
+   * Returns a new object of class '<em>Composite State</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Composite State</em>'.
+   * @generated
+   */
+  CompositeState createCompositeState();
+
+  /**
+   * Returns a new object of class '<em>Session</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Session</em>'.
+   * @generated
+   */
+  Session createSession();
+
+  /**
+   * Returns a new object of class '<em>Region</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Region</em>'.
+   * @generated
+   */
+  Region createRegion();
+
+  /**
+   * Returns a new object of class '<em>Final State</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Final State</em>'.
+   * @generated
+   */
+  FinalState createFinalState();
+
+  /**
+   * Returns a new object of class '<em>State Container</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>State Container</em>'.
+   * @generated
+   */
+  StateContainer createStateContainer();
 
   /**
    * Returns a new object of class '<em>Event</em>'.

@@ -32,31 +32,40 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.thingml.xtext.thingML.ParallelRegion;
-import org.thingml.xtext.thingML.Region;
-import org.thingml.xtext.thingML.RegionOrSession;
+import org.thingml.xtext.thingML.AnnotatedElement;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Parallel Region</b></em>'.
+ * An implementation of the model object '<em><b>State Container</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getInitial <em>Initial</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#isHistory <em>History</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getSubstate <em>Substate</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.ParallelRegionImpl#getRegion <em>Region</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.StateContainerImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.StateContainerImpl#getInitial <em>Initial</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.StateContainerImpl#isHistory <em>History</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.StateContainerImpl#getSubstate <em>Substate</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ParallelRegionImpl extends AnnotatedElementImpl implements ParallelRegion
+public class StateContainerImpl extends NamedElementImpl implements StateContainer
 {
+  /**
+   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getAnnotations()
+   * @generated
+   * @ordered
+   */
+  protected EList<PlatformAnnotation> annotations;
+
   /**
    * The cached value of the '{@link #getInitial() <em>Initial</em>}' reference.
    * <!-- begin-user-doc -->
@@ -88,26 +97,6 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   protected boolean history = HISTORY_EDEFAULT;
 
   /**
-   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected static final String NAME_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected String name = NAME_EDEFAULT;
-
-  /**
    * The cached value of the '{@link #getSubstate() <em>Substate</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -118,21 +107,11 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   protected EList<State> substate;
 
   /**
-   * The cached value of the '{@link #getRegion() <em>Region</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getRegion()
-   * @generated
-   * @ordered
-   */
-  protected EList<RegionOrSession> region;
-
-  /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected ParallelRegionImpl()
+  protected StateContainerImpl()
   {
     super();
   }
@@ -145,7 +124,21 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   @Override
   protected EClass eStaticClass()
   {
-    return ThingMLPackage.Literals.PARALLEL_REGION;
+    return ThingMLPackage.Literals.STATE_CONTAINER;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<PlatformAnnotation> getAnnotations()
+  {
+    if (annotations == null)
+    {
+      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.STATE_CONTAINER__ANNOTATIONS);
+    }
+    return annotations;
   }
 
   /**
@@ -162,7 +155,7 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
       if (initial != oldInitial)
       {
         if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.PARALLEL_REGION__INITIAL, oldInitial, initial));
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, ThingMLPackage.STATE_CONTAINER__INITIAL, oldInitial, initial));
       }
     }
     return initial;
@@ -188,7 +181,7 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
     State oldInitial = initial;
     initial = newInitial;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PARALLEL_REGION__INITIAL, oldInitial, initial));
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.STATE_CONTAINER__INITIAL, oldInitial, initial));
   }
 
   /**
@@ -211,30 +204,7 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
     boolean oldHistory = history;
     history = newHistory;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PARALLEL_REGION__HISTORY, oldHistory, history));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setName(String newName)
-  {
-    String oldName = name;
-    name = newName;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PARALLEL_REGION__NAME, oldName, name));
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.STATE_CONTAINER__HISTORY, oldHistory, history));
   }
 
   /**
@@ -246,23 +216,9 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   {
     if (substate == null)
     {
-      substate = new EObjectContainmentEList<State>(State.class, this, ThingMLPackage.PARALLEL_REGION__SUBSTATE);
+      substate = new EObjectContainmentEList<State>(State.class, this, ThingMLPackage.STATE_CONTAINER__SUBSTATE);
     }
     return substate;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EList<RegionOrSession> getRegion()
-  {
-    if (region == null)
-    {
-      region = new EObjectContainmentEList<RegionOrSession>(RegionOrSession.class, this, ThingMLPackage.PARALLEL_REGION__REGION);
-    }
-    return region;
   }
 
   /**
@@ -275,10 +231,10 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   {
     switch (featureID)
     {
-      case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
+      case ThingMLPackage.STATE_CONTAINER__ANNOTATIONS:
+        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.STATE_CONTAINER__SUBSTATE:
         return ((InternalEList<?>)getSubstate()).basicRemove(otherEnd, msgs);
-      case ThingMLPackage.PARALLEL_REGION__REGION:
-        return ((InternalEList<?>)getRegion()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -293,17 +249,15 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   {
     switch (featureID)
     {
-      case ThingMLPackage.PARALLEL_REGION__INITIAL:
+      case ThingMLPackage.STATE_CONTAINER__ANNOTATIONS:
+        return getAnnotations();
+      case ThingMLPackage.STATE_CONTAINER__INITIAL:
         if (resolve) return getInitial();
         return basicGetInitial();
-      case ThingMLPackage.PARALLEL_REGION__HISTORY:
+      case ThingMLPackage.STATE_CONTAINER__HISTORY:
         return isHistory();
-      case ThingMLPackage.PARALLEL_REGION__NAME:
-        return getName();
-      case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
+      case ThingMLPackage.STATE_CONTAINER__SUBSTATE:
         return getSubstate();
-      case ThingMLPackage.PARALLEL_REGION__REGION:
-        return getRegion();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -319,22 +273,19 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   {
     switch (featureID)
     {
-      case ThingMLPackage.PARALLEL_REGION__INITIAL:
+      case ThingMLPackage.STATE_CONTAINER__ANNOTATIONS:
+        getAnnotations().clear();
+        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
+        return;
+      case ThingMLPackage.STATE_CONTAINER__INITIAL:
         setInitial((State)newValue);
         return;
-      case ThingMLPackage.PARALLEL_REGION__HISTORY:
+      case ThingMLPackage.STATE_CONTAINER__HISTORY:
         setHistory((Boolean)newValue);
         return;
-      case ThingMLPackage.PARALLEL_REGION__NAME:
-        setName((String)newValue);
-        return;
-      case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
+      case ThingMLPackage.STATE_CONTAINER__SUBSTATE:
         getSubstate().clear();
         getSubstate().addAll((Collection<? extends State>)newValue);
-        return;
-      case ThingMLPackage.PARALLEL_REGION__REGION:
-        getRegion().clear();
-        getRegion().addAll((Collection<? extends RegionOrSession>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -350,20 +301,17 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   {
     switch (featureID)
     {
-      case ThingMLPackage.PARALLEL_REGION__INITIAL:
+      case ThingMLPackage.STATE_CONTAINER__ANNOTATIONS:
+        getAnnotations().clear();
+        return;
+      case ThingMLPackage.STATE_CONTAINER__INITIAL:
         setInitial((State)null);
         return;
-      case ThingMLPackage.PARALLEL_REGION__HISTORY:
+      case ThingMLPackage.STATE_CONTAINER__HISTORY:
         setHistory(HISTORY_EDEFAULT);
         return;
-      case ThingMLPackage.PARALLEL_REGION__NAME:
-        setName(NAME_EDEFAULT);
-        return;
-      case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
+      case ThingMLPackage.STATE_CONTAINER__SUBSTATE:
         getSubstate().clear();
-        return;
-      case ThingMLPackage.PARALLEL_REGION__REGION:
-        getRegion().clear();
         return;
     }
     super.eUnset(featureID);
@@ -379,16 +327,14 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   {
     switch (featureID)
     {
-      case ThingMLPackage.PARALLEL_REGION__INITIAL:
+      case ThingMLPackage.STATE_CONTAINER__ANNOTATIONS:
+        return annotations != null && !annotations.isEmpty();
+      case ThingMLPackage.STATE_CONTAINER__INITIAL:
         return initial != null;
-      case ThingMLPackage.PARALLEL_REGION__HISTORY:
+      case ThingMLPackage.STATE_CONTAINER__HISTORY:
         return history != HISTORY_EDEFAULT;
-      case ThingMLPackage.PARALLEL_REGION__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ThingMLPackage.PARALLEL_REGION__SUBSTATE:
+      case ThingMLPackage.STATE_CONTAINER__SUBSTATE:
         return substate != null && !substate.isEmpty();
-      case ThingMLPackage.PARALLEL_REGION__REGION:
-        return region != null && !region.isEmpty();
     }
     return super.eIsSet(featureID);
   }
@@ -401,19 +347,11 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   @Override
   public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
   {
-    if (baseClass == Region.class)
+    if (baseClass == AnnotatedElement.class)
     {
       switch (derivedFeatureID)
       {
-        case ThingMLPackage.PARALLEL_REGION__INITIAL: return ThingMLPackage.REGION__INITIAL;
-        case ThingMLPackage.PARALLEL_REGION__HISTORY: return ThingMLPackage.REGION__HISTORY;
-        default: return -1;
-      }
-    }
-    if (baseClass == RegionOrSession.class)
-    {
-      switch (derivedFeatureID)
-      {
+        case ThingMLPackage.STATE_CONTAINER__ANNOTATIONS: return ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS;
         default: return -1;
       }
     }
@@ -428,19 +366,11 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
   @Override
   public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
   {
-    if (baseClass == Region.class)
+    if (baseClass == AnnotatedElement.class)
     {
       switch (baseFeatureID)
       {
-        case ThingMLPackage.REGION__INITIAL: return ThingMLPackage.PARALLEL_REGION__INITIAL;
-        case ThingMLPackage.REGION__HISTORY: return ThingMLPackage.PARALLEL_REGION__HISTORY;
-        default: return -1;
-      }
-    }
-    if (baseClass == RegionOrSession.class)
-    {
-      switch (baseFeatureID)
-      {
+        case ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS: return ThingMLPackage.STATE_CONTAINER__ANNOTATIONS;
         default: return -1;
       }
     }
@@ -460,10 +390,8 @@ public class ParallelRegionImpl extends AnnotatedElementImpl implements Parallel
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (history: ");
     result.append(history);
-    result.append(", name: ");
-    result.append(name);
     result.append(')');
     return result.toString();
   }
 
-} //ParallelRegionImpl
+} //StateContainerImpl

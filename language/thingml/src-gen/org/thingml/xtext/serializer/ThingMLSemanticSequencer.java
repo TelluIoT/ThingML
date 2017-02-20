@@ -30,6 +30,7 @@ import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransi
 import org.thingml.xtext.services.ThingMLGrammarAccess;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
+import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.CompositeState;
@@ -67,11 +68,11 @@ import org.thingml.xtext.thingML.LowerOrEqualExpression;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.MinusExpression;
 import org.thingml.xtext.thingML.ModExpression;
+import org.thingml.xtext.thingML.NamedElement;
 import org.thingml.xtext.thingML.NotEqualsExpression;
 import org.thingml.xtext.thingML.NotExpression;
 import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.OrExpression;
-import org.thingml.xtext.thingML.ParallelRegion;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.PlusExpression;
 import org.thingml.xtext.thingML.PrimitiveType;
@@ -89,6 +90,7 @@ import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -120,6 +122,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 			case ThingMLPackage.AND_EXPRESSION:
 				sequence_AndExpression(context, (AndExpression) semanticObject); 
 				return; 
+			case ThingMLPackage.ANNOTATED_ELEMENT:
+				sequence_AnnotatedElement(context, (AnnotatedElement) semanticObject); 
+				return; 
 			case ThingMLPackage.ARRAY_INDEX:
 				sequence_ArrayIndexPostfix(context, (ArrayIndex) semanticObject); 
 				return; 
@@ -127,12 +132,13 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				sequence_BooleanLiteral(context, (BooleanLiteral) semanticObject); 
 				return; 
 			case ThingMLPackage.COMPOSITE_STATE:
-				if (rule == grammarAccess.getRegionRule()
-						|| rule == grammarAccess.getCompositeStateRule()) {
+				if (rule == grammarAccess.getCompositeStateRule()
+						|| rule == grammarAccess.getStateContainerRule()) {
 					sequence_CompositeState(context, (CompositeState) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getAnnotatedElementRule()
+				else if (rule == grammarAccess.getNamedElementRule()
+						|| rule == grammarAccess.getAnnotatedElementRule()
 						|| rule == grammarAccess.getStateRule()) {
 					sequence_CompositeState_StateMachine(context, (CompositeState) semanticObject); 
 					return; 
@@ -244,6 +250,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 			case ThingMLPackage.MOD_EXPRESSION:
 				sequence_Modulo(context, (ModExpression) semanticObject); 
 				return; 
+			case ThingMLPackage.NAMED_ELEMENT:
+				sequence_NamedElement(context, (NamedElement) semanticObject); 
+				return; 
 			case ThingMLPackage.NOT_EQUALS_EXPRESSION:
 				sequence_Equality(context, (NotEqualsExpression) semanticObject); 
 				return; 
@@ -255,9 +264,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.OR_EXPRESSION:
 				sequence_OrExpression(context, (OrExpression) semanticObject); 
-				return; 
-			case ThingMLPackage.PARALLEL_REGION:
-				sequence_ParallelRegion(context, (ParallelRegion) semanticObject); 
 				return; 
 			case ThingMLPackage.PARAMETER:
 				sequence_Parameter(context, (org.thingml.xtext.thingML.Parameter) semanticObject); 
@@ -312,6 +318,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.STATE:
 				sequence_State(context, (State) semanticObject); 
+				return; 
+			case ThingMLPackage.STATE_CONTAINER:
+				sequence_StateContainer(context, (StateContainer) semanticObject); 
 				return; 
 			case ThingMLPackage.STRING_LITERAL:
 				sequence_StringLiteral(context, (StringLiteral) semanticObject); 
@@ -481,6 +490,18 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 		feeder.accept(grammarAccess.getAndExpressionAccess().getAndExpressionLhsAction_1_0(), semanticObject.getLhs());
 		feeder.accept(grammarAccess.getAndExpressionAccess().getRhsEqualityParserRuleCall_1_2_0(), semanticObject.getRhs());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     AnnotatedElement returns AnnotatedElement
+	 *
+	 * Constraint:
+	 *     annotations+=PlatformAnnotation+
+	 */
+	protected void sequence_AnnotatedElement(ISerializationContext context, AnnotatedElement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -734,8 +755,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
-	 *     Region returns CompositeState
 	 *     CompositeState returns CompositeState
+	 *     StateContainer returns CompositeState
 	 *
 	 * Constraint:
 	 *     (
@@ -747,7 +768,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *         entry=Action? 
 	 *         exit=Action? 
 	 *         (substate+=State | internal+=InternalTransition | outgoing+=Transition)* 
-	 *         region+=RegionOrSession*
+	 *         region+=Region? 
+	 *         (session+=Session? region+=Region?)*
 	 *     )
 	 */
 	protected void sequence_CompositeState(ISerializationContext context, CompositeState semanticObject) {
@@ -757,22 +779,12 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns CompositeState
 	 *     AnnotatedElement returns CompositeState
 	 *     State returns CompositeState
 	 *
 	 * Constraint:
 	 *     (
-	 *         (
-	 *             name=ID? 
-	 *             initial=[State|ID] 
-	 *             history?='history'? 
-	 *             annotations+=PlatformAnnotation* 
-	 *             properties+=Property* 
-	 *             entry=Action? 
-	 *             exit=Action? 
-	 *             (substate+=State | internal+=InternalTransition)* 
-	 *             region+=RegionOrSession*
-	 *         ) | 
 	 *         (
 	 *             name=ID 
 	 *             initial=[State|ID] 
@@ -782,7 +794,20 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *             entry=Action? 
 	 *             exit=Action? 
 	 *             (substate+=State | internal+=InternalTransition | outgoing+=Transition)* 
-	 *             region+=RegionOrSession*
+	 *             region+=Region? 
+	 *             (session+=Session? region+=Region?)*
+	 *         ) | 
+	 *         (
+	 *             name=ID? 
+	 *             initial=[State|ID] 
+	 *             history?='history'? 
+	 *             annotations+=PlatformAnnotation* 
+	 *             properties+=Property* 
+	 *             entry=Action? 
+	 *             exit=Action? 
+	 *             (substate+=State | internal+=InternalTransition)* 
+	 *             region+=Region? 
+	 *             (session+=Session? region+=Region?)*
 	 *         )
 	 *     )
 	 */
@@ -818,6 +843,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Configuration
 	 *     AnnotatedElement returns Configuration
 	 *     Configuration returns Configuration
 	 *
@@ -831,6 +857,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Connector
 	 *     AnnotatedElement returns Connector
 	 *     AbstractConnector returns Connector
 	 *     Connector returns Connector
@@ -960,6 +987,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns EnumerationLiteral
 	 *     AnnotatedElement returns EnumerationLiteral
 	 *     EnumerationLiteral returns EnumerationLiteral
 	 *
@@ -973,6 +1001,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Enumeration
 	 *     AnnotatedElement returns Enumeration
 	 *     Type returns Enumeration
 	 *     Enumeration returns Enumeration
@@ -1186,6 +1215,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns ExternalConnector
 	 *     AnnotatedElement returns ExternalConnector
 	 *     AbstractConnector returns ExternalConnector
 	 *     ExternalConnector returns ExternalConnector
@@ -1200,9 +1230,10 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns FinalState
 	 *     AnnotatedElement returns FinalState
-	 *     FinalState returns FinalState
 	 *     State returns FinalState
+	 *     FinalState returns FinalState
 	 *
 	 * Constraint:
 	 *     (name=ID annotations+=PlatformAnnotation* entry=Action?)
@@ -1264,6 +1295,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Function
 	 *     AnnotatedElement returns Function
 	 *     Function returns Function
 	 *
@@ -1296,6 +1328,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Instance
 	 *     AnnotatedElement returns Instance
 	 *     Instance returns Instance
 	 *
@@ -1352,6 +1385,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns InternalPort
 	 *     AnnotatedElement returns InternalPort
 	 *     Port returns InternalPort
 	 *     InternalPort returns InternalPort
@@ -1366,6 +1400,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns InternalTransition
 	 *     AnnotatedElement returns InternalTransition
 	 *     Handler returns InternalTransition
 	 *     InternalTransition returns InternalTransition
@@ -1380,6 +1415,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns LocalVariable
 	 *     AnnotatedElement returns LocalVariable
 	 *     Variable returns LocalVariable
 	 *     Action returns LocalVariable
@@ -1417,6 +1453,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Message
 	 *     AnnotatedElement returns Message
 	 *     Message returns Message
 	 *
@@ -1556,6 +1593,25 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns NamedElement
+	 *
+	 * Constraint:
+	 *     name=ID
+	 */
+	protected void sequence_NamedElement(ISerializationContext context, NamedElement semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.NAMED_ELEMENT__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.NAMED_ELEMENT__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getNamedElementAccess().getNameIDTerminalRuleCall_13_1_0(), semanticObject.getName());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns ObjectType
 	 *     AnnotatedElement returns ObjectType
 	 *     Type returns ObjectType
 	 *     ObjectType returns ObjectType
@@ -1612,28 +1668,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
-	 *     AnnotatedElement returns ParallelRegion
-	 *     Region returns ParallelRegion
-	 *     RegionOrSession returns ParallelRegion
-	 *     ParallelRegion returns ParallelRegion
-	 *
-	 * Constraint:
-	 *     (
-	 *         name=ID? 
-	 *         initial=[State|ID] 
-	 *         history?='history'? 
-	 *         annotations+=PlatformAnnotation* 
-	 *         substate+=State* 
-	 *         region+=RegionOrSession*
-	 *     )
-	 */
-	protected void sequence_ParallelRegion(ISerializationContext context, ParallelRegion semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
+	 *     NamedElement returns Parameter
 	 *     AnnotatedElement returns Parameter
 	 *     Variable returns Parameter
 	 *     Parameter returns Parameter
@@ -1747,6 +1782,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns PrimitiveType
 	 *     AnnotatedElement returns PrimitiveType
 	 *     Type returns PrimitiveType
 	 *     PrimitiveType returns PrimitiveType
@@ -1836,6 +1872,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Property
 	 *     AnnotatedElement returns Property
 	 *     Variable returns Property
 	 *     Property returns Property
@@ -1850,6 +1887,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Protocol
 	 *     AnnotatedElement returns Protocol
 	 *     Protocol returns Protocol
 	 *
@@ -1863,6 +1901,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns ProvidedPort
 	 *     AnnotatedElement returns ProvidedPort
 	 *     Port returns ProvidedPort
 	 *     ProvidedPort returns ProvidedPort
@@ -1890,10 +1929,13 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Region
+	 *     AnnotatedElement returns Region
 	 *     Region returns Region
+	 *     StateContainer returns Region
 	 *
 	 * Constraint:
-	 *     (initial=[State|ID] history?='history'?)
+	 *     (name=ID? initial=[State|ID] history?='history'? annotations+=PlatformAnnotation* substate+=State*)
 	 */
 	protected void sequence_Region(ISerializationContext context, Region semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1902,6 +1944,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns RequiredPort
 	 *     AnnotatedElement returns RequiredPort
 	 *     Port returns RequiredPort
 	 *     RequiredPort returns RequiredPort
@@ -1953,23 +1996,13 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Session
 	 *     AnnotatedElement returns Session
-	 *     Region returns Session
-	 *     RegionOrSession returns Session
 	 *     Session returns Session
+	 *     StateContainer returns Session
 	 *
 	 * Constraint:
-	 *     (
-	 *         name=ID 
-	 *         maxInstances=INT? 
-	 *         initial=[State|ID] 
-	 *         annotations+=PlatformAnnotation* 
-	 *         properties+=Property* 
-	 *         entry=Action? 
-	 *         exit=Action? 
-	 *         (substate+=State | internal+=InternalTransition)* 
-	 *         region+=RegionOrSession*
-	 *     )
+	 *     (name=ID maxInstances=INT? initial=[State|ID] annotations+=PlatformAnnotation* substate+=State*)
 	 */
 	protected void sequence_Session(ISerializationContext context, Session semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1997,6 +2030,20 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns StateContainer
+	 *     AnnotatedElement returns StateContainer
+	 *     StateContainer returns StateContainer
+	 *
+	 * Constraint:
+	 *     (initial=[State|ID] history?='history'? substate+=State*)
+	 */
+	protected void sequence_StateContainer(ISerializationContext context, StateContainer semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     StateMachine returns CompositeState
 	 *
 	 * Constraint:
@@ -2009,7 +2056,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *         entry=Action? 
 	 *         exit=Action? 
 	 *         (substate+=State | internal+=InternalTransition)* 
-	 *         region+=RegionOrSession*
+	 *         region+=Region? 
+	 *         (session+=Session? region+=Region?)*
 	 *     )
 	 */
 	protected void sequence_StateMachine(ISerializationContext context, CompositeState semanticObject) {
@@ -2019,6 +2067,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns State
 	 *     AnnotatedElement returns State
 	 *     State returns State
 	 *
@@ -2094,6 +2143,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Thing
 	 *     AnnotatedElement returns Thing
 	 *     Type returns Thing
 	 *     Thing returns Thing
@@ -2121,6 +2171,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Transition
 	 *     AnnotatedElement returns Transition
 	 *     Handler returns Transition
 	 *     Transition returns Transition
@@ -2167,6 +2218,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Variable
+	 *     AnnotatedElement returns Variable
 	 *     Variable returns Variable
 	 *
 	 * Constraint:
@@ -2174,8 +2227,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 */
 	protected void sequence_Variable(ISerializationContext context, Variable semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.VARIABLE__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.VARIABLE__NAME));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.NAMED_ELEMENT__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.NAMED_ELEMENT__NAME));
 			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.VARIABLE__TYPE_REF) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.VARIABLE__TYPE_REF));
 		}
