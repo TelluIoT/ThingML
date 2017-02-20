@@ -35,6 +35,7 @@ import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.InternalTransition;
 import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.NamedElement;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Property;
@@ -157,7 +158,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             } else {
                 builder.append("private ");
             }
-            final String returnType = JavaHelper.getJavaType(f.getTypeRef().getType(), f.getTypeRef().isIsArray(), ctx);
+            final String returnType = JavaHelper.getJavaType(((f.getTypeRef()!=null)?f.getTypeRef().getType():null), f.getTypeRef().isIsArray(), ctx);
             builder.append(returnType + " " + f.getName() + "(");
             JavaHelper.generateParameter(f, builder, ctx);
             builder.append(") {\n");
@@ -396,7 +397,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("//Attributes\n");
         for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             builder.append("private ");
-            if (!p.isChangeable()) {
+            if (p.isReadonly()) {
                 builder.append("final ");
             }
             builder.append(JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p) + ";\n");
@@ -437,7 +438,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         boolean hasReadonly = false;
         for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-            if (!p.isChangeable()) {
+            if (p.isReadonly()) {
                 hasReadonly = true;
                 break;
             }
@@ -448,7 +449,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("public " + ctx.firstToUpper(thing.getName()) + "(");
             int i = 0;
             for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                if (!p.isChangeable()) {
+                if (p.isReadonly()) {
                     if (i > 0)
                         builder.append(", ");
                     builder.append("final " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p));
@@ -458,7 +459,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(") {\n");
             builder.append("super();\n");
             for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                if (!p.isChangeable()) {
+                if (p.isReadonly()) {
                     builder.append("this." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n");
                 }
             }
@@ -480,7 +481,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("//Getters and Setters for non readonly/final attributes\n");
         for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
             builder.append("public " + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " get" + ctx.firstToUpper(ctx.getVariableName(p)) + "() {\nreturn " + ctx.getVariableName(p) + ";\n}\n\n");
-            if (p.isChangeable()) {
+            if (!p.isReadonly()) {
                 builder.append("public void set" + ctx.firstToUpper(ctx.getVariableName(p)) + "(" + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().isIsArray(), ctx) + " " + ctx.getVariableName(p) + ") {\nthis." + ctx.getVariableName(p) + " = " + ctx.getVariableName(p) + ";\n}\n\n");
             }
         }
@@ -684,7 +685,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 
         if (s.eContainer() instanceof State || s.eContainer() instanceof Region) {
         	
-            builder.append("states_" + ThingMLElementHelper.qname((s.eContainer()), "_") + ".add(state_" + ThingMLElementHelper.qname(s, "_") + ");\n");
+            builder.append("states_" + ThingMLElementHelper.qname(((NamedElement)s.eContainer()), "_") + ".add(state_" + ThingMLElementHelper.qname(s, "_") + ");\n");
         }
     }
 
@@ -736,7 +737,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 ReceiveMessage r = (ReceiveMessage) e;
                 if (i instanceof Transition) {
                     Transition t = (Transition) i;
-                    builder.append("transitions_" + ThingMLElementHelper.qname(( s.eContainer()), "_") + ".add(new Transition(\"");
+                    builder.append("transitions_" + ThingMLElementHelper.qname(((NamedElement) s.eContainer()), "_") + ".add(new Transition(\"");
                     if (i.getName() != null)
                         builder.append(i.getName());
                     else
@@ -744,7 +745,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append("\"," + r.getMessage().getName() + "Type, " + r.getPort().getName() + "_port, state_" + ThingMLElementHelper.qname(s, "_") + ", state_" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
                 } else {
                     InternalTransition h = (InternalTransition) i;
-                    builder.append("transitions_" + ThingMLElementHelper.qname(( s.eContainer()), "_") + ".add(new InternalTransition(\"");
+                    builder.append("transitions_" + ThingMLElementHelper.qname(((NamedElement) s.eContainer()), "_") + ".add(new InternalTransition(\"");
                     if (i.getName() != null)
                         builder.append(i.getName());
                     else
@@ -795,7 +796,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         } else {    //FIXME: lots of duplication here from above
             if (i instanceof Transition) {
                 Transition t = (Transition) i;
-                builder.append("transitions_" + ThingMLElementHelper.qname(( s.eContainer()), "_") + ".add(new Transition(\"");
+                builder.append("transitions_" + ThingMLElementHelper.qname(( (NamedElement)s.eContainer()), "_") + ".add(new Transition(\"");
                 if (i.getName() != null)
                     builder.append(i.getName());
                 else
@@ -803,7 +804,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("\", ne.getType(), null, state_" + ThingMLElementHelper.qname(s, "_") + ", state_" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
             } else {
                 InternalTransition h = (InternalTransition) i;
-                builder.append("transitions_" + ThingMLElementHelper.qname(( s.eContainer()), "_") + ".add(new InternalTransition(\"");
+                builder.append("transitions_" + ThingMLElementHelper.qname(((NamedElement) s.eContainer()), "_") + ".add(new InternalTransition(\"");
                 if (i.getName() != null)
                     builder.append(i.getName());
                 else

@@ -36,8 +36,7 @@ public class ThingMLServlet extends XtextServlet {
         return ObjectExtensions.<ExecutorService>operator_doubleArrow(_newCachedThreadPool, _function_1);
       };
       final Provider<ExecutorService> executorServiceProvider = _function;
-      ThingMLWebSetup _thingMLWebSetup = new ThingMLWebSetup(executorServiceProvider);
-      _thingMLWebSetup.createInjectorAndDoEMFRegistration();
+      new ThingMLWebSetup(executorServiceProvider).createInjectorAndDoEMFRegistration();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

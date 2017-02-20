@@ -928,8 +928,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	public class PropertyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Property");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cChangeableAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final Keyword cChangeableReadonlyKeyword_0_0 = (Keyword)cChangeableAssignment_0.eContents().get(0);
+		private final Assignment cReadonlyAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final Keyword cReadonlyReadonlyKeyword_0_0 = (Keyword)cReadonlyAssignment_0.eContents().get(0);
 		private final Keyword cPropertyKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cNameIDTerminalRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
@@ -944,7 +944,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_6_0 = (RuleCall)cAnnotationsAssignment_6.eContents().get(0);
 		
 		//Property:
-		//	^changeable?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)?
+		//	readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)?
 		//	annotations+=PlatformAnnotation*
 		//	//('isArray' isArray=EBoolean)?
 		//	//('changeable' changeable=EBoolean)?
@@ -952,14 +952,14 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//^changeable?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*
+		//readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*
 		public Group getGroup() { return cGroup; }
 		
-		//^changeable?='readonly'?
-		public Assignment getChangeableAssignment_0() { return cChangeableAssignment_0; }
+		//readonly?='readonly'?
+		public Assignment getReadonlyAssignment_0() { return cReadonlyAssignment_0; }
 		
 		//'readonly'
-		public Keyword getChangeableReadonlyKeyword_0_0() { return cChangeableReadonlyKeyword_0_0; }
+		public Keyword getReadonlyReadonlyKeyword_0_0() { return cReadonlyReadonlyKeyword_0_0; }
 		
 		//'property'
 		public Keyword getPropertyKeyword_1() { return cPropertyKeyword_1; }
@@ -2778,8 +2778,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	public class LocalVariableElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.LocalVariable");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cChangeableAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final Keyword cChangeableReadonlyKeyword_0_0 = (Keyword)cChangeableAssignment_0.eContents().get(0);
+		private final Assignment cReadonlyAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final Keyword cReadonlyReadonlyKeyword_0_0 = (Keyword)cReadonlyAssignment_0.eContents().get(0);
 		private final Keyword cVarKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cNameIDTerminalRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
@@ -2794,17 +2794,17 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_6_0 = (RuleCall)cAnnotationsAssignment_6.eContents().get(0);
 		
 		//LocalVariable:
-		//	^changeable?='readonly'? 'var' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*;
+		//	readonly?='readonly'? 'var' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//^changeable?='readonly'? 'var' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*
+		//readonly?='readonly'? 'var' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*
 		public Group getGroup() { return cGroup; }
 		
-		//^changeable?='readonly'?
-		public Assignment getChangeableAssignment_0() { return cChangeableAssignment_0; }
+		//readonly?='readonly'?
+		public Assignment getReadonlyAssignment_0() { return cReadonlyAssignment_0; }
 		
 		//'readonly'
-		public Keyword getChangeableReadonlyKeyword_0_0() { return cChangeableReadonlyKeyword_0_0; }
+		public Keyword getReadonlyReadonlyKeyword_0_0() { return cReadonlyReadonlyKeyword_0_0; }
 		
 		//'var'
 		public Keyword getVarKeyword_1() { return cVarKeyword_1; }
@@ -4867,7 +4867,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Property:
-	//	^changeable?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)?
+	//	readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)?
 	//	annotations+=PlatformAnnotation*
 	//	//('isArray' isArray=EBoolean)?
 	//	//('changeable' changeable=EBoolean)?
@@ -5180,7 +5180,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//LocalVariable:
-	//	^changeable?='readonly'? 'var' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*;
+	//	readonly?='readonly'? 'var' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*;
 	public LocalVariableElements getLocalVariableAccess() {
 		return pLocalVariable;
 	}

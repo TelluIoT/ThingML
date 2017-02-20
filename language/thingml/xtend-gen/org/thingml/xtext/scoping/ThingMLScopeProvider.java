@@ -5,8 +5,6 @@ package org.thingml.xtext.scoping;
 
 import com.google.common.base.Objects;
 import java.util.ArrayList;
-import java.util.Set;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -21,36 +19,24 @@ import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
-import org.thingml.xtext.thingML.Enumeration;
-import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Event;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.ExternalConnector;
-import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.Instance;
-import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyAssign;
 import org.thingml.xtext.thingML.PropertyReference;
-import org.thingml.xtext.thingML.Protocol;
-import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.ReceiveMessage;
-import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.ThingMLPackage;
 import org.thingml.xtext.thingML.Transition;
-import org.thingml.xtext.thingML.Type;
-import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
@@ -200,8 +186,7 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
                                                             return this.scopeForStartSession_Session(((StartSession) context));
                                                           } else {
                                                             if ((((Objects.equal(reference, this.p.getConfigPropertyAssign_Instance()) || Objects.equal(reference, this.p.getConnector_Cli())) || Objects.equal(reference, this.p.getConnector_Srv())) || Objects.equal(reference, this.p.getExternalConnector_Inst()))) {
-                                                              Configuration _findContainingConfiguration = ThingMLElementHelper.findContainingConfiguration(context);
-                                                              return this.scopeForConfigurationInstances(_findContainingConfiguration);
+                                                              return this.scopeForConfigurationInstances(ThingMLElementHelper.findContainingConfiguration(context));
                                                             } else {
                                                               String _name = reference.getName();
                                                               String _plus = ("INFO: Resolving reference : " + _name);
@@ -245,18 +230,15 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
   protected ArrayList EMPTY = new ArrayList<Object>();
   
   protected IScope scopeForStateContainer_Initial(final StateContainer context) {
-    EList<State> _substate = context.getSubstate();
-    return Scopes.scopeFor(_substate);
+    return Scopes.scopeFor(context.getSubstate());
   }
   
   protected IScope scopeForConfigurationInstances(final Configuration context) {
-    Set<Instance> _allInstances = ConfigurationHelper.allInstances(context);
-    return Scopes.scopeFor(_allInstances);
+    return Scopes.scopeFor(ConfigurationHelper.allInstances(context));
   }
   
   protected IScope scopeForSession_Initial(final Session context) {
-    EList<State> _substate = context.getSubstate();
-    return Scopes.scopeFor(_substate);
+    return Scopes.scopeFor(context.getSubstate());
   }
   
   protected IScope scopeForEventReference_ReceiveMsg(final EventReference context) {
@@ -268,8 +250,7 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
       if (_equals) {
         _xifexpression = Scopes.scopeFor(this.EMPTY);
       } else {
-        EList<Event> _event = h.getEvent();
-        _xifexpression = Scopes.scopeFor(_event);
+        _xifexpression = Scopes.scopeFor(h.getEvent());
       }
       _xblockexpression = _xifexpression;
     }
@@ -280,9 +261,7 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
     IScope _xifexpression = null;
     if (((!Objects.equal(context.getReceiveMsg(), null)) && (context.getReceiveMsg() instanceof ReceiveMessage))) {
       Event _receiveMsg = context.getReceiveMsg();
-      Message _message = ((ReceiveMessage) _receiveMsg).getMessage();
-      EList<Parameter> _parameters = _message.getParameters();
-      _xifexpression = Scopes.scopeFor(_parameters);
+      _xifexpression = Scopes.scopeFor(((ReceiveMessage) _receiveMsg).getMessage().getParameters());
     } else {
       _xifexpression = Scopes.scopeFor(this.EMPTY);
     }
@@ -291,94 +270,64 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
   
   protected IScope scopeForPort_SendsReceives(final Port context) {
     EObject _eContainer = context.eContainer();
-    ArrayList<Message> _allMessages = ThingMLHelpers.allMessages(((Thing) _eContainer));
-    return Scopes.scopeFor(_allMessages);
+    return Scopes.scopeFor(ThingMLHelpers.allMessages(((Thing) _eContainer)));
   }
   
   protected IScope scopeForSendAction_Port(final SendAction context) {
-    Thing _findContainingThing = ThingMLHelpers.findContainingThing(context);
-    ArrayList<Port> _allPorts = ThingMLHelpers.allPorts(_findContainingThing);
-    return Scopes.scopeFor(_allPorts);
+    return Scopes.scopeFor(ThingMLHelpers.allPorts(ThingMLHelpers.findContainingThing(context)));
   }
   
   protected IScope scopeForSendAction_Message(final SendAction context) {
-    Port _port = context.getPort();
-    EList<Message> _sends = _port.getSends();
-    return Scopes.scopeFor(_sends);
+    return Scopes.scopeFor(context.getPort().getSends());
   }
   
   protected IScope scopeForConfigPropertyAssign_Property(final ConfigPropertyAssign context) {
-    Instance _instance = context.getInstance();
-    Thing _type = _instance.getType();
-    ArrayList<Property> _allProperties = ThingMLHelpers.allProperties(_type);
-    return Scopes.scopeFor(_allProperties);
+    return Scopes.scopeFor(ThingMLHelpers.allProperties(context.getInstance().getType()));
   }
   
   protected IScope scopeForConnector_CliSrV(final Connector context) {
     EObject _eContainer = context.eContainer();
-    Set<Instance> _allInstances = ConfigurationHelper.allInstances(((Configuration) _eContainer));
-    return Scopes.scopeFor(_allInstances);
+    return Scopes.scopeFor(ConfigurationHelper.allInstances(((Configuration) _eContainer)));
   }
   
   protected IScope scopeForConnector_Provided(final Connector context) {
-    Instance _srv = context.getSrv();
-    Thing _type = _srv.getType();
-    ArrayList<ProvidedPort> _allProvidedPorts = ThingMLHelpers.allProvidedPorts(_type);
-    return Scopes.scopeFor(_allProvidedPorts);
+    return Scopes.scopeFor(ThingMLHelpers.allProvidedPorts(context.getSrv().getType()));
   }
   
   protected IScope scopeForConnector_Required(final Connector context) {
-    Instance _cli = context.getCli();
-    Thing _type = _cli.getType();
-    ArrayList<RequiredPort> _allRequiredPorts = ThingMLHelpers.allRequiredPorts(_type);
-    return Scopes.scopeFor(_allRequiredPorts);
+    return Scopes.scopeFor(ThingMLHelpers.allRequiredPorts(context.getCli().getType()));
   }
   
   protected IScope scopeForDecrement_Var(final Decrement context) {
-    ArrayList<Variable> _allVisibleVariables = ThingMLHelpers.allVisibleVariables(context);
-    return Scopes.scopeFor(_allVisibleVariables);
+    return Scopes.scopeFor(ThingMLHelpers.allVisibleVariables(context));
   }
   
   protected IScope scopeForEnumLiteralRef_Enum(final EnumLiteralRef context) {
-    ThingMLModel _findContainingModel = ThingMLHelpers.findContainingModel(context);
-    ArrayList<Enumeration> _allEnnumerations = ThingMLHelpers.allEnnumerations(_findContainingModel);
-    return Scopes.scopeFor(_allEnnumerations);
+    return Scopes.scopeFor(ThingMLHelpers.allEnnumerations(ThingMLHelpers.findContainingModel(context)));
   }
   
   protected IScope scopeForEnumLiteralRef_Literal(final EnumLiteralRef context) {
-    Enumeration _enum = context.getEnum();
-    EList<EnumerationLiteral> _literals = _enum.getLiterals();
-    return Scopes.scopeFor(_literals);
+    return Scopes.scopeFor(context.getEnum().getLiterals());
   }
   
   protected IScope scopeForExternalConnector_Port(final ExternalConnector context) {
-    Instance _inst = context.getInst();
-    Thing _type = _inst.getType();
-    ArrayList<Port> _allPorts = ThingMLHelpers.allPorts(_type);
-    return Scopes.scopeFor(_allPorts);
+    return Scopes.scopeFor(ThingMLHelpers.allPorts(context.getInst().getType()));
   }
   
   protected IScope scopeForExternalConnector_Protocol(final ExternalConnector context) {
-    ThingMLModel _findContainingModel = ThingMLHelpers.findContainingModel(context);
-    ArrayList<Protocol> _allProtocols = ThingMLHelpers.allProtocols(_findContainingModel);
-    return Scopes.scopeFor(_allProtocols);
+    return Scopes.scopeFor(ThingMLHelpers.allProtocols(ThingMLHelpers.findContainingModel(context)));
   }
   
   protected IScope scopeForFunctionCallExpressionFunctionCallStatement_Function(final EObject context) {
-    Thing _findContainingThing = ThingMLHelpers.findContainingThing(context);
-    ArrayList<Function> _allFunctions = ThingMLHelpers.allFunctions(_findContainingThing);
-    return Scopes.scopeFor(_allFunctions);
+    return Scopes.scopeFor(ThingMLHelpers.allFunctions(ThingMLHelpers.findContainingThing(context)));
   }
   
   protected IScope scopeForIncrement_Var(final Increment context) {
-    ArrayList<Variable> _allVisibleVariables = ThingMLHelpers.allVisibleVariables(context);
-    return Scopes.scopeFor(_allVisibleVariables);
+    return Scopes.scopeFor(ThingMLHelpers.allVisibleVariables(context));
   }
   
   protected IScope scopeForInstance_Type(final Instance context) {
-    ThingMLModel _findContainingModel = ThingMLHelpers.findContainingModel(context);
-    ArrayList<Thing> _allThings = ThingMLHelpers.allThings(_findContainingModel);
-    return Scopes.scopeFor(_allThings);
+    return Scopes.scopeFor(ThingMLHelpers.allThings(ThingMLHelpers.findContainingModel(context)));
   }
   
   protected IScope scopeForPropertyAssign_Property(final PropertyAssign context) {
@@ -387,15 +336,12 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
       final Thing t = ThingMLHelpers.findContainingThing(context);
       boolean _notEquals = (!Objects.equal(t, null));
       if (_notEquals) {
-        ArrayList<Property> _allProperties = ThingMLHelpers.allProperties(t);
-        return Scopes.scopeFor(_allProperties);
+        return Scopes.scopeFor(ThingMLHelpers.allProperties(t));
       }
       final Instance i = ThingMLHelpers.findContainingInstance(context);
       boolean _notEquals_1 = (!Objects.equal(i, null));
       if (_notEquals_1) {
-        Thing _type = i.getType();
-        ArrayList<Property> _allProperties_1 = ThingMLHelpers.allProperties(_type);
-        return Scopes.scopeFor(_allProperties_1);
+        return Scopes.scopeFor(ThingMLHelpers.allProperties(i.getType()));
       }
       _xblockexpression = Scopes.scopeFor(this.EMPTY);
     }
@@ -403,20 +349,15 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
   }
   
   protected IScope scopeForPropertyReference_Property(final PropertyReference context) {
-    ArrayList<Variable> _allVisibleVariables = ThingMLHelpers.allVisibleVariables(context);
-    return Scopes.scopeFor(_allVisibleVariables);
+    return Scopes.scopeFor(ThingMLHelpers.allVisibleVariables(context));
   }
   
   protected IScope scopeForReceiveMessage_Port(final ReceiveMessage context) {
-    Thing _findContainingThing = ThingMLHelpers.findContainingThing(context);
-    ArrayList<Port> _allPorts = ThingMLHelpers.allPorts(_findContainingThing);
-    return Scopes.scopeFor(_allPorts);
+    return Scopes.scopeFor(ThingMLHelpers.allPorts(ThingMLHelpers.findContainingThing(context)));
   }
   
   protected IScope scopeForReceiveMessage_Message(final ReceiveMessage context) {
-    Port _port = context.getPort();
-    EList<Message> _receives = _port.getReceives();
-    return Scopes.scopeFor(_receives);
+    return Scopes.scopeFor(context.getPort().getReceives());
   }
   
   protected IScope scopeForReference_Reference(final EObject context) {
@@ -424,30 +365,23 @@ public class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
   }
   
   protected IScope scopeForStartSession_Session(final StartSession context) {
-    ArrayList<Session> _allVisibleSessions = ThingMLHelpers.allVisibleSessions(context);
-    return Scopes.scopeFor(_allVisibleSessions);
+    return Scopes.scopeFor(ThingMLHelpers.allVisibleSessions(context));
   }
   
   protected IScope scopeForThing_Includes(final Thing context) {
-    ThingMLModel _findContainingModel = ThingMLHelpers.findContainingModel(context);
-    ArrayList<Thing> _allThings = ThingMLHelpers.allThings(_findContainingModel);
-    return Scopes.scopeFor(_allThings);
+    return Scopes.scopeFor(ThingMLHelpers.allThings(ThingMLHelpers.findContainingModel(context)));
   }
   
   protected IScope scopeForTransition_Target(final Transition context) {
     EObject _eContainer = context.eContainer();
-    ArrayList<State> _allValidTargetStates = ThingMLHelpers.allValidTargetStates(((State) _eContainer));
-    return Scopes.scopeFor(_allValidTargetStates);
+    return Scopes.scopeFor(ThingMLHelpers.allValidTargetStates(((State) _eContainer)));
   }
   
   protected IScope scopeForTypeRef_Type(final EObject context) {
-    ThingMLModel _findContainingModel = ThingMLHelpers.findContainingModel(context);
-    ArrayList<Type> _allTypes = ThingMLHelpers.allTypes(_findContainingModel);
-    return Scopes.scopeFor(_allTypes);
+    return Scopes.scopeFor(ThingMLHelpers.allTypes(ThingMLHelpers.findContainingModel(context)));
   }
   
   protected IScope scopeForVariableAssignment_Property(final VariableAssignment context) {
-    ArrayList<Variable> _allVisibleVariables = ThingMLHelpers.allVisibleVariables(context);
-    return Scopes.scopeFor(_allVisibleVariables);
+    return Scopes.scopeFor(ThingMLHelpers.allVisibleVariables(context));
   }
 }

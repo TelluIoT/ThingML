@@ -71,7 +71,7 @@ public class VariableUsage extends Rule {
         if (va.getTypeRef().getCardinality() == null) {//TODO: check arrays
             if (va instanceof Property) {
                 Property p = (Property) va;
-                if (!p.isChangeable()) {
+                if (p.isReadonly()) {
                     checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is read-only and cannot be re-assigned.", o);
                 }
             }
@@ -79,7 +79,7 @@ public class VariableUsage extends Rule {
                 checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " has no type", va);
                 return;
             }*/
-            if (!(va.getTypeRef().getType() == null)) {
+            if (va.getTypeRef() != null && va.getTypeRef().getType() != null) {
                 final Type expected = TyperHelper.getBroadType(va.getTypeRef().getType());
                 final Type actual = checker.typeChecker.computeTypeOf(e);
 

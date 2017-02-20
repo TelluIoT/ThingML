@@ -254,7 +254,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getFunctionAccess().getTypeRefAssignment_5_1(), "rule__Function__TypeRefAssignment_5_1");
 					put(grammarAccess.getFunctionAccess().getAnnotationsAssignment_6(), "rule__Function__AnnotationsAssignment_6");
 					put(grammarAccess.getFunctionAccess().getBodyAssignment_7(), "rule__Function__BodyAssignment_7");
-					put(grammarAccess.getPropertyAccess().getChangeableAssignment_0(), "rule__Property__ChangeableAssignment_0");
+					put(grammarAccess.getPropertyAccess().getReadonlyAssignment_0(), "rule__Property__ReadonlyAssignment_0");
 					put(grammarAccess.getPropertyAccess().getNameAssignment_2(), "rule__Property__NameAssignment_2");
 					put(grammarAccess.getPropertyAccess().getTypeRefAssignment_4(), "rule__Property__TypeRefAssignment_4");
 					put(grammarAccess.getPropertyAccess().getInitAssignment_5_1(), "rule__Property__InitAssignment_5_1");
@@ -348,7 +348,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getActionBlockAccess().getActionsAssignment_2(), "rule__ActionBlock__ActionsAssignment_2");
 					put(grammarAccess.getExternStatementAccess().getStatementAssignment_0(), "rule__ExternStatement__StatementAssignment_0");
 					put(grammarAccess.getExternStatementAccess().getSegmentsAssignment_1_1(), "rule__ExternStatement__SegmentsAssignment_1_1");
-					put(grammarAccess.getLocalVariableAccess().getChangeableAssignment_0(), "rule__LocalVariable__ChangeableAssignment_0");
+					put(grammarAccess.getLocalVariableAccess().getReadonlyAssignment_0(), "rule__LocalVariable__ReadonlyAssignment_0");
 					put(grammarAccess.getLocalVariableAccess().getNameAssignment_2(), "rule__LocalVariable__NameAssignment_2");
 					put(grammarAccess.getLocalVariableAccess().getTypeRefAssignment_4(), "rule__LocalVariable__TypeRefAssignment_4");
 					put(grammarAccess.getLocalVariableAccess().getInitAssignment_5_1(), "rule__LocalVariable__InitAssignment_5_1");

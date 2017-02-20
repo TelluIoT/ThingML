@@ -229,7 +229,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
             if (!ctx.getAtInitTimeLock()) {
                 if (nctx.getConcreteInstance() != null) {
                     Property p = (Property) expression.getProperty();
-                    if (!p.isChangeable()) {
+                    if (p.isReadonly()) {
                         boolean found = false;
                         for (ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
                             String tmp = ThingMLHelpers.findContainingConfiguration(pa.getInstance()).getName() + "_" + pa.getInstance().getName();

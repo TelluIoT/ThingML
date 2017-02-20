@@ -3403,11 +3403,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleProperty"
-    // InternalThingML.g:1332:1: ruleProperty returns [EObject current=null] : ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'property' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) ;
+    // InternalThingML.g:1332:1: ruleProperty returns [EObject current=null] : ( ( (lv_readonly_0_0= 'readonly' ) )? otherlv_1= 'property' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) ;
     public final EObject ruleProperty() throws RecognitionException {
         EObject current = null;
 
-        Token lv_changeable_0_0=null;
+        Token lv_readonly_0_0=null;
         Token otherlv_1=null;
         Token lv_name_2_0=null;
         Token otherlv_3=null;
@@ -3423,13 +3423,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:1338:2: ( ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'property' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) )
-            // InternalThingML.g:1339:2: ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'property' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:1338:2: ( ( ( (lv_readonly_0_0= 'readonly' ) )? otherlv_1= 'property' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) )
+            // InternalThingML.g:1339:2: ( ( (lv_readonly_0_0= 'readonly' ) )? otherlv_1= 'property' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
             {
-            // InternalThingML.g:1339:2: ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'property' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
-            // InternalThingML.g:1340:3: ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'property' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:1339:2: ( ( (lv_readonly_0_0= 'readonly' ) )? otherlv_1= 'property' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:1340:3: ( (lv_readonly_0_0= 'readonly' ) )? otherlv_1= 'property' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
             {
-            // InternalThingML.g:1340:3: ( (lv_changeable_0_0= 'readonly' ) )?
+            // InternalThingML.g:1340:3: ( (lv_readonly_0_0= 'readonly' ) )?
             int alt26=2;
             int LA26_0 = input.LA(1);
 
@@ -3438,20 +3438,20 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt26) {
                 case 1 :
-                    // InternalThingML.g:1341:4: (lv_changeable_0_0= 'readonly' )
+                    // InternalThingML.g:1341:4: (lv_readonly_0_0= 'readonly' )
                     {
-                    // InternalThingML.g:1341:4: (lv_changeable_0_0= 'readonly' )
-                    // InternalThingML.g:1342:5: lv_changeable_0_0= 'readonly'
+                    // InternalThingML.g:1341:4: (lv_readonly_0_0= 'readonly' )
+                    // InternalThingML.g:1342:5: lv_readonly_0_0= 'readonly'
                     {
-                    lv_changeable_0_0=(Token)match(input,37,FOLLOW_29); 
+                    lv_readonly_0_0=(Token)match(input,37,FOLLOW_29); 
 
-                    					newLeafNode(lv_changeable_0_0, grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0());
+                    					newLeafNode(lv_readonly_0_0, grammarAccess.getPropertyAccess().getReadonlyReadonlyKeyword_0_0());
                     				
 
                     					if (current==null) {
                     						current = createModelElement(grammarAccess.getPropertyRule());
                     					}
-                    					setWithLastConsumed(current, "changeable", true, "readonly");
+                    					setWithLastConsumed(current, "readonly", true, "readonly");
                     				
 
                     }
@@ -10234,11 +10234,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleLocalVariable"
-    // InternalThingML.g:4089:1: ruleLocalVariable returns [EObject current=null] : ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) ;
+    // InternalThingML.g:4089:1: ruleLocalVariable returns [EObject current=null] : ( ( (lv_readonly_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) ;
     public final EObject ruleLocalVariable() throws RecognitionException {
         EObject current = null;
 
-        Token lv_changeable_0_0=null;
+        Token lv_readonly_0_0=null;
         Token otherlv_1=null;
         Token lv_name_2_0=null;
         Token otherlv_3=null;
@@ -10254,13 +10254,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4095:2: ( ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) )
-            // InternalThingML.g:4096:2: ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:4095:2: ( ( ( (lv_readonly_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) )
+            // InternalThingML.g:4096:2: ( ( (lv_readonly_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
             {
-            // InternalThingML.g:4096:2: ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
-            // InternalThingML.g:4097:3: ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:4096:2: ( ( (lv_readonly_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:4097:3: ( (lv_readonly_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
             {
-            // InternalThingML.g:4097:3: ( (lv_changeable_0_0= 'readonly' ) )?
+            // InternalThingML.g:4097:3: ( (lv_readonly_0_0= 'readonly' ) )?
             int alt96=2;
             int LA96_0 = input.LA(1);
 
@@ -10269,20 +10269,20 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt96) {
                 case 1 :
-                    // InternalThingML.g:4098:4: (lv_changeable_0_0= 'readonly' )
+                    // InternalThingML.g:4098:4: (lv_readonly_0_0= 'readonly' )
                     {
-                    // InternalThingML.g:4098:4: (lv_changeable_0_0= 'readonly' )
-                    // InternalThingML.g:4099:5: lv_changeable_0_0= 'readonly'
+                    // InternalThingML.g:4098:4: (lv_readonly_0_0= 'readonly' )
+                    // InternalThingML.g:4099:5: lv_readonly_0_0= 'readonly'
                     {
-                    lv_changeable_0_0=(Token)match(input,37,FOLLOW_65); 
+                    lv_readonly_0_0=(Token)match(input,37,FOLLOW_65); 
 
-                    					newLeafNode(lv_changeable_0_0, grammarAccess.getLocalVariableAccess().getChangeableReadonlyKeyword_0_0());
+                    					newLeafNode(lv_readonly_0_0, grammarAccess.getLocalVariableAccess().getReadonlyReadonlyKeyword_0_0());
                     				
 
                     					if (current==null) {
                     						current = createModelElement(grammarAccess.getLocalVariableRule());
                     					}
-                    					setWithLastConsumed(current, "changeable", true, "readonly");
+                    					setWithLastConsumed(current, "readonly", true, "readonly");
                     				
 
                     }

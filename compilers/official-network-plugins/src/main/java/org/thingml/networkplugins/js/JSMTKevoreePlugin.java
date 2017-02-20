@@ -142,7 +142,7 @@ public class JSMTKevoreePlugin extends JSKevoreePlugin {
                 builder.append("case 'updated':\n");
                 builder.append("switch(m.property){\n");
                 for (Property p : ThingHelper.allUsedProperties(i.getType())) {
-                    if (p.isChangeable() && p.getTypeRef().getCardinality() == null && p.getTypeRef().getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
+                    if (!p.isReadonly() && p.getTypeRef().getCardinality() == null && p.getTypeRef().getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
                         String accessor = "getValue";
                         if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getTypeRef().getType()))) {
                             accessor = "getNumber";
@@ -165,7 +165,7 @@ public class JSMTKevoreePlugin extends JSKevoreePlugin {
             }
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : ThingHelper.allUsedProperties(i.getType())) {
-                if (p.isChangeable() && p.getTypeRef().getCardinality() == null && p.getTypeRef().getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
+                if (!p.isReadonly() && p.getTypeRef().getCardinality() == null && p.getTypeRef().getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
                     String accessor = "getValue";
                     boolean isNumber = false;
                     if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getTypeRef().getType()))) {

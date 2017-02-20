@@ -258,7 +258,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
     protected void generateStart(StringBuilder builder, Context ctx, Configuration cfg) {
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : ThingHelper.allUsedProperties(i.getType())) {
-                if (p.isChangeable() && p.getTypeRef().getCardinality() == null && p.getTypeRef().getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
+                if (!p.isReadonly() && p.getTypeRef().getCardinality() == null && p.getTypeRef().getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
                     String accessor = "getValue";
                     boolean isNumber = false;
                     if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getTypeRef().getType()))) {
@@ -381,7 +381,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
         builder.append("//Attributes\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : ThingHelper.allUsedProperties(i.getType())) {
-                if (p.isChangeable() && p.getTypeRef().getCardinality() == null && AnnotatedElementHelper.isDefined(p.getTypeRef().getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
+                if (!p.isReadonly() && p.getTypeRef().getCardinality() == null && AnnotatedElementHelper.isDefined(p.getTypeRef().getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
                     if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
                         builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
                         final Expression e = ConfigurationHelper.initExpressions(cfg, i, p).get(0);

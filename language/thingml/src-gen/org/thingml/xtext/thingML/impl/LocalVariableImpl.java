@@ -37,7 +37,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.LocalVariableImpl#isChangeable <em>Changeable</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.LocalVariableImpl#isReadonly <em>Readonly</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.LocalVariableImpl#getInit <em>Init</em>}</li>
  * </ul>
  *
@@ -46,24 +46,24 @@ import org.thingml.xtext.thingML.ThingMLPackage;
 public class LocalVariableImpl extends VariableImpl implements LocalVariable
 {
   /**
-   * The default value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+   * The default value of the '{@link #isReadonly() <em>Readonly</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isChangeable()
+   * @see #isReadonly()
    * @generated
    * @ordered
    */
-  protected static final boolean CHANGEABLE_EDEFAULT = false;
+  protected static final boolean READONLY_EDEFAULT = false;
 
   /**
-   * The cached value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+   * The cached value of the '{@link #isReadonly() <em>Readonly</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isChangeable()
+   * @see #isReadonly()
    * @generated
    * @ordered
    */
-  protected boolean changeable = CHANGEABLE_EDEFAULT;
+  protected boolean readonly = READONLY_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getInit() <em>Init</em>}' containment reference.
@@ -101,9 +101,9 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable
    * <!-- end-user-doc -->
    * @generated
    */
-  public boolean isChangeable()
+  public boolean isReadonly()
   {
-    return changeable;
+    return readonly;
   }
 
   /**
@@ -111,12 +111,12 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setChangeable(boolean newChangeable)
+  public void setReadonly(boolean newReadonly)
   {
-    boolean oldChangeable = changeable;
-    changeable = newChangeable;
+    boolean oldReadonly = readonly;
+    readonly = newReadonly;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE, oldChangeable, changeable));
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.LOCAL_VARIABLE__READONLY, oldReadonly, readonly));
   }
 
   /**
@@ -193,8 +193,8 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable
   {
     switch (featureID)
     {
-      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
-        return isChangeable();
+      case ThingMLPackage.LOCAL_VARIABLE__READONLY:
+        return isReadonly();
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         return getInit();
     }
@@ -211,8 +211,8 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable
   {
     switch (featureID)
     {
-      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
-        setChangeable((Boolean)newValue);
+      case ThingMLPackage.LOCAL_VARIABLE__READONLY:
+        setReadonly((Boolean)newValue);
         return;
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         setInit((Expression)newValue);
@@ -231,8 +231,8 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable
   {
     switch (featureID)
     {
-      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
-        setChangeable(CHANGEABLE_EDEFAULT);
+      case ThingMLPackage.LOCAL_VARIABLE__READONLY:
+        setReadonly(READONLY_EDEFAULT);
         return;
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         setInit((Expression)null);
@@ -251,8 +251,8 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable
   {
     switch (featureID)
     {
-      case ThingMLPackage.LOCAL_VARIABLE__CHANGEABLE:
-        return changeable != CHANGEABLE_EDEFAULT;
+      case ThingMLPackage.LOCAL_VARIABLE__READONLY:
+        return readonly != READONLY_EDEFAULT;
       case ThingMLPackage.LOCAL_VARIABLE__INIT:
         return init != null;
     }
@@ -270,8 +270,8 @@ public class LocalVariableImpl extends VariableImpl implements LocalVariable
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (changeable: ");
-    result.append(changeable);
+    result.append(" (readonly: ");
+    result.append(readonly);
     result.append(')');
     return result.toString();
   }

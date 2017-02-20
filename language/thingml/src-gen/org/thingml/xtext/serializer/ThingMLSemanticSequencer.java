@@ -1422,7 +1422,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     LocalVariable returns LocalVariable
 	 *
 	 * Constraint:
-	 *     (changeable?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
+	 *     (readonly?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
 	 */
 	protected void sequence_LocalVariable(ISerializationContext context, LocalVariable semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1878,7 +1878,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Property returns Property
 	 *
 	 * Constraint:
-	 *     (changeable?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
+	 *     (readonly?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
 	 */
 	protected void sequence_Property(ISerializationContext context, Property semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -817,13 +817,13 @@ public interface ThingMLPackage extends EPackage
   int PROPERTY__TYPE_REF = VARIABLE__TYPE_REF;
 
   /**
-   * The feature id for the '<em><b>Changeable</b></em>' attribute.
+   * The feature id for the '<em><b>Readonly</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int PROPERTY__CHANGEABLE = VARIABLE_FEATURE_COUNT + 0;
+  int PROPERTY__READONLY = VARIABLE_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Init</b></em>' containment reference.
@@ -2044,13 +2044,13 @@ public interface ThingMLPackage extends EPackage
   int LOCAL_VARIABLE__TYPE_REF = VARIABLE__TYPE_REF;
 
   /**
-   * The feature id for the '<em><b>Changeable</b></em>' attribute.
+   * The feature id for the '<em><b>Readonly</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int LOCAL_VARIABLE__CHANGEABLE = VARIABLE_FEATURE_COUNT + 0;
+  int LOCAL_VARIABLE__READONLY = VARIABLE_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Init</b></em>' containment reference.
@@ -4149,15 +4149,15 @@ public interface ThingMLPackage extends EPackage
   EClass getProperty();
 
   /**
-   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.Property#isChangeable <em>Changeable</em>}'.
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.Property#isReadonly <em>Readonly</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Changeable</em>'.
-   * @see org.thingml.xtext.thingML.Property#isChangeable()
+   * @return the meta object for the attribute '<em>Readonly</em>'.
+   * @see org.thingml.xtext.thingML.Property#isReadonly()
    * @see #getProperty()
    * @generated
    */
-  EAttribute getProperty_Changeable();
+  EAttribute getProperty_Readonly();
 
   /**
    * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.Property#getInit <em>Init</em>}'.
@@ -4656,15 +4656,15 @@ public interface ThingMLPackage extends EPackage
   EClass getLocalVariable();
 
   /**
-   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.LocalVariable#isChangeable <em>Changeable</em>}'.
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.LocalVariable#isReadonly <em>Readonly</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Changeable</em>'.
-   * @see org.thingml.xtext.thingML.LocalVariable#isChangeable()
+   * @return the meta object for the attribute '<em>Readonly</em>'.
+   * @see org.thingml.xtext.thingML.LocalVariable#isReadonly()
    * @see #getLocalVariable()
    * @generated
    */
-  EAttribute getLocalVariable_Changeable();
+  EAttribute getLocalVariable_Readonly();
 
   /**
    * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.LocalVariable#getInit <em>Init</em>}'.
@@ -6373,12 +6373,12 @@ public interface ThingMLPackage extends EPackage
     EClass PROPERTY = eINSTANCE.getProperty();
 
     /**
-     * The meta object literal for the '<em><b>Changeable</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Readonly</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute PROPERTY__CHANGEABLE = eINSTANCE.getProperty_Changeable();
+    EAttribute PROPERTY__READONLY = eINSTANCE.getProperty_Readonly();
 
     /**
      * The meta object literal for the '<em><b>Init</b></em>' containment reference feature.
@@ -6799,12 +6799,12 @@ public interface ThingMLPackage extends EPackage
     EClass LOCAL_VARIABLE = eINSTANCE.getLocalVariable();
 
     /**
-     * The meta object literal for the '<em><b>Changeable</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Readonly</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute LOCAL_VARIABLE__CHANGEABLE = eINSTANCE.getLocalVariable_Changeable();
+    EAttribute LOCAL_VARIABLE__READONLY = eINSTANCE.getLocalVariable_Readonly();
 
     /**
      * The meta object literal for the '<em><b>Init</b></em>' containment reference feature.

@@ -340,7 +340,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("//Attributes\n");
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             for (Property p : ThingHelper.allPropertiesInDepth(i.getType())) {
-                if (p.isChangeable() && p.getTypeRef().getCardinality() == null && AnnotatedElementHelper.isDefined(p.getTypeRef().getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
+                if (!p.isReadonly() && p.getTypeRef().getCardinality() == null && AnnotatedElementHelper.isDefined(p.getTypeRef().getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
                     if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
                         generateAttribute(builder, ctx, cfg, p, i, false);
                     } else if ((AnnotatedElementHelper.isDefined(p, "kevoree", "merge") || AnnotatedElementHelper.isDefined(p, "kevoree", "only")) && !attributes.contains(p.getName())) {

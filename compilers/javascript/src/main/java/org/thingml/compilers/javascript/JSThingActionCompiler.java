@@ -26,6 +26,7 @@ import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
+import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
@@ -34,6 +35,7 @@ import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
@@ -148,7 +150,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        if (action.isChangeable())
+        if (!action.isReadonly())
             builder.append("let ");
         else
             builder.append("const ");
@@ -160,7 +162,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             if (action.getTypeRef().getCardinality() != null) {
                 builder.append(" = []");
             }
-            if (!action.isChangeable())
+            if (action.isReadonly())
                 System.out.println("[ERROR] readonly variable " + action + " must be initialized");
         }
         builder.append(";\n");
@@ -199,7 +201,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
                 if (!ctx.getAtInitTimeLock()) {
                     if (ctx.currentInstance != null) {
                         Property p = (Property) expression.getProperty();
-                        if (!p.isChangeable()) {
+                        if (p.isReadonly()) {
                             boolean found = false;
                             for (ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
                                 String tmp = ThingMLElementHelper.findContainingConfiguration(pa.getInstance()).getName() + "_" + pa.getInstance().getName();
@@ -258,5 +260,10 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
         builder.append("'" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()) + "'");
+    }
+    
+    @Override
+    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
+        builder.append((((ReceiveMessage)expression.getReceiveMsg()).getMessage().getName()) + "." + expression.getParameter().getName());
     }
 }

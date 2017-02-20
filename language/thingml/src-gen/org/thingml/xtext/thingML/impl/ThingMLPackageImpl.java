@@ -1183,7 +1183,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getProperty_Changeable()
+  public EAttribute getProperty_Readonly()
   {
     return (EAttribute)propertyEClass.getEStructuralFeatures().get(0);
   }
@@ -1663,7 +1663,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getLocalVariable_Changeable()
+  public EAttribute getLocalVariable_Readonly()
   {
     return (EAttribute)localVariableEClass.getEStructuralFeatures().get(0);
   }
@@ -2977,7 +2977,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     createEReference(functionEClass, FUNCTION__BODY);
 
     propertyEClass = createEClass(PROPERTY);
-    createEAttribute(propertyEClass, PROPERTY__CHANGEABLE);
+    createEAttribute(propertyEClass, PROPERTY__READONLY);
     createEReference(propertyEClass, PROPERTY__INIT);
 
     messageEClass = createEClass(MESSAGE);
@@ -3046,7 +3046,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     createEReference(externStatementEClass, EXTERN_STATEMENT__SEGMENTS);
 
     localVariableEClass = createEClass(LOCAL_VARIABLE);
-    createEAttribute(localVariableEClass, LOCAL_VARIABLE__CHANGEABLE);
+    createEAttribute(localVariableEClass, LOCAL_VARIABLE__READONLY);
     createEReference(localVariableEClass, LOCAL_VARIABLE__INIT);
 
     sendActionEClass = createEClass(SEND_ACTION);
@@ -3390,7 +3390,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEReference(getFunction_Body(), this.getAction(), null, "body", null, 0, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(propertyEClass, Property.class, "Property", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getProperty_Changeable(), ecorePackage.getEBoolean(), "changeable", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getProperty_Readonly(), ecorePackage.getEBoolean(), "readonly", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getProperty_Init(), this.getExpression(), null, "init", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(messageEClass, Message.class, "Message", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3459,7 +3459,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEReference(getExternStatement_Segments(), this.getExpression(), null, "segments", null, 0, -1, ExternStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(localVariableEClass, LocalVariable.class, "LocalVariable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getLocalVariable_Changeable(), ecorePackage.getEBoolean(), "changeable", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getLocalVariable_Readonly(), ecorePackage.getEBoolean(), "readonly", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getLocalVariable_Init(), this.getExpression(), null, "init", null, 0, 1, LocalVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(sendActionEClass, SendAction.class, "SendAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

@@ -205,7 +205,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        if (!action.isChangeable()) {
+        if (action.isReadonly()) {
             builder.append("readonly ");
         }
         builder.append("var " + action.getName() + " : " + action.getTypeRef().getType().getName());

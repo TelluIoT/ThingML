@@ -128,7 +128,7 @@ public class FunctionUsage extends Rule {
             }
         }
 
-        if (f.getTypeRef().getType() != null) {
+        if (f.getTypeRef() != null && f.getTypeRef().getType() != null) {
             for (Action a : ActionHelper.getAllActions(t, ReturnAction.class)) {
                 EObject parent = a.eContainer();
                 while (parent != null && !EcoreUtil.equals(parent, f)) {

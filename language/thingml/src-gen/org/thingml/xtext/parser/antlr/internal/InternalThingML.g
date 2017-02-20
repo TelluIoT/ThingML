@@ -1339,15 +1339,15 @@ ruleProperty returns [EObject current=null]
 	(
 		(
 			(
-				lv_changeable_0_0='readonly'
+				lv_readonly_0_0='readonly'
 				{
-					newLeafNode(lv_changeable_0_0, grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0());
+					newLeafNode(lv_readonly_0_0, grammarAccess.getPropertyAccess().getReadonlyReadonlyKeyword_0_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getPropertyRule());
 					}
-					setWithLastConsumed($current, "changeable", true, "readonly");
+					setWithLastConsumed($current, "readonly", true, "readonly");
 				}
 			)
 		)?
@@ -4096,15 +4096,15 @@ ruleLocalVariable returns [EObject current=null]
 	(
 		(
 			(
-				lv_changeable_0_0='readonly'
+				lv_readonly_0_0='readonly'
 				{
-					newLeafNode(lv_changeable_0_0, grammarAccess.getLocalVariableAccess().getChangeableReadonlyKeyword_0_0());
+					newLeafNode(lv_readonly_0_0, grammarAccess.getLocalVariableAccess().getReadonlyReadonlyKeyword_0_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getLocalVariableRule());
 					}
-					setWithLastConsumed($current, "changeable", true, "readonly");
+					setWithLastConsumed($current, "readonly", true, "readonly");
 				}
 			)
 		)?

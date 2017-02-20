@@ -29,6 +29,7 @@ import org.thingml.xtext.thingML.DoubleLiteral;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
+import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
@@ -219,6 +220,8 @@ public class ThingActionCompiler {
             generate((ExternExpression) expression, builder, ctx);
         } else if (expression instanceof FunctionCallExpression) {
             generate((FunctionCallExpression) expression, builder, ctx);
+        } else if (expression instanceof EventReference) {
+        	generate((EventReference) expression, builder, ctx);
         } else {
             throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
@@ -318,6 +321,10 @@ public class ThingActionCompiler {
     }
 
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+    
+    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 }

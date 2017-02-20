@@ -4683,9 +4683,9 @@ rule__Property__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getPropertyAccess().getChangeableAssignment_0()); }
-	(rule__Property__ChangeableAssignment_0)?
-	{ after(grammarAccess.getPropertyAccess().getChangeableAssignment_0()); }
+	{ before(grammarAccess.getPropertyAccess().getReadonlyAssignment_0()); }
+	(rule__Property__ReadonlyAssignment_0)?
+	{ after(grammarAccess.getPropertyAccess().getReadonlyAssignment_0()); }
 )
 ;
 finally {
@@ -10515,9 +10515,9 @@ rule__LocalVariable__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getLocalVariableAccess().getChangeableAssignment_0()); }
-	(rule__LocalVariable__ChangeableAssignment_0)?
-	{ after(grammarAccess.getLocalVariableAccess().getChangeableAssignment_0()); }
+	{ before(grammarAccess.getLocalVariableAccess().getReadonlyAssignment_0()); }
+	(rule__LocalVariable__ReadonlyAssignment_0)?
+	{ after(grammarAccess.getLocalVariableAccess().getReadonlyAssignment_0()); }
 )
 ;
 finally {
@@ -16176,19 +16176,19 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__Property__ChangeableAssignment_0
+rule__Property__ReadonlyAssignment_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0()); }
+		{ before(grammarAccess.getPropertyAccess().getReadonlyReadonlyKeyword_0_0()); }
 		(
-			{ before(grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0()); }
+			{ before(grammarAccess.getPropertyAccess().getReadonlyReadonlyKeyword_0_0()); }
 			'readonly'
-			{ after(grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0()); }
+			{ after(grammarAccess.getPropertyAccess().getReadonlyReadonlyKeyword_0_0()); }
 		)
-		{ after(grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0()); }
+		{ after(grammarAccess.getPropertyAccess().getReadonlyReadonlyKeyword_0_0()); }
 	)
 ;
 finally {
@@ -17690,19 +17690,19 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__LocalVariable__ChangeableAssignment_0
+rule__LocalVariable__ReadonlyAssignment_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getLocalVariableAccess().getChangeableReadonlyKeyword_0_0()); }
+		{ before(grammarAccess.getLocalVariableAccess().getReadonlyReadonlyKeyword_0_0()); }
 		(
-			{ before(grammarAccess.getLocalVariableAccess().getChangeableReadonlyKeyword_0_0()); }
+			{ before(grammarAccess.getLocalVariableAccess().getReadonlyReadonlyKeyword_0_0()); }
 			'readonly'
-			{ after(grammarAccess.getLocalVariableAccess().getChangeableReadonlyKeyword_0_0()); }
+			{ after(grammarAccess.getLocalVariableAccess().getReadonlyReadonlyKeyword_0_0()); }
 		)
-		{ after(grammarAccess.getLocalVariableAccess().getChangeableReadonlyKeyword_0_0()); }
+		{ after(grammarAccess.getLocalVariableAccess().getReadonlyReadonlyKeyword_0_0()); }
 	)
 ;
 finally {

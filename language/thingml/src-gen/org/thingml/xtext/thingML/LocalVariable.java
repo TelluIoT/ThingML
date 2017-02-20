@@ -27,7 +27,7 @@ package org.thingml.xtext.thingML;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.LocalVariable#isChangeable <em>Changeable</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.LocalVariable#isReadonly <em>Readonly</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.LocalVariable#getInit <em>Init</em>}</li>
  * </ul>
  *
@@ -38,30 +38,30 @@ package org.thingml.xtext.thingML;
 public interface LocalVariable extends Variable, Action
 {
   /**
-   * Returns the value of the '<em><b>Changeable</b></em>' attribute.
+   * Returns the value of the '<em><b>Readonly</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Changeable</em>' attribute isn't clear,
+   * If the meaning of the '<em>Readonly</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Changeable</em>' attribute.
-   * @see #setChangeable(boolean)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getLocalVariable_Changeable()
+   * @return the value of the '<em>Readonly</em>' attribute.
+   * @see #setReadonly(boolean)
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getLocalVariable_Readonly()
    * @model
    * @generated
    */
-  boolean isChangeable();
+  boolean isReadonly();
 
   /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.LocalVariable#isChangeable <em>Changeable</em>}' attribute.
+   * Sets the value of the '{@link org.thingml.xtext.thingML.LocalVariable#isReadonly <em>Readonly</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Changeable</em>' attribute.
-   * @see #isChangeable()
+   * @param value the new value of the '<em>Readonly</em>' attribute.
+   * @see #isReadonly()
    * @generated
    */
-  void setChangeable(boolean value);
+  void setReadonly(boolean value);
 
   /**
    * Returns the value of the '<em><b>Init</b></em>' containment reference.

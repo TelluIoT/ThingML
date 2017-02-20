@@ -15400,20 +15400,20 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Property__Group__0__Impl"
-    // InternalThingML.g:4680:1: rule__Property__Group__0__Impl : ( ( rule__Property__ChangeableAssignment_0 )? ) ;
+    // InternalThingML.g:4680:1: rule__Property__Group__0__Impl : ( ( rule__Property__ReadonlyAssignment_0 )? ) ;
     public final void rule__Property__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalThingML.g:4684:1: ( ( ( rule__Property__ChangeableAssignment_0 )? ) )
-            // InternalThingML.g:4685:1: ( ( rule__Property__ChangeableAssignment_0 )? )
+            // InternalThingML.g:4684:1: ( ( ( rule__Property__ReadonlyAssignment_0 )? ) )
+            // InternalThingML.g:4685:1: ( ( rule__Property__ReadonlyAssignment_0 )? )
             {
-            // InternalThingML.g:4685:1: ( ( rule__Property__ChangeableAssignment_0 )? )
-            // InternalThingML.g:4686:2: ( rule__Property__ChangeableAssignment_0 )?
+            // InternalThingML.g:4685:1: ( ( rule__Property__ReadonlyAssignment_0 )? )
+            // InternalThingML.g:4686:2: ( rule__Property__ReadonlyAssignment_0 )?
             {
-             before(grammarAccess.getPropertyAccess().getChangeableAssignment_0()); 
-            // InternalThingML.g:4687:2: ( rule__Property__ChangeableAssignment_0 )?
+             before(grammarAccess.getPropertyAccess().getReadonlyAssignment_0()); 
+            // InternalThingML.g:4687:2: ( rule__Property__ReadonlyAssignment_0 )?
             int alt50=2;
             int LA50_0 = input.LA(1);
 
@@ -15422,10 +15422,10 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
             }
             switch (alt50) {
                 case 1 :
-                    // InternalThingML.g:4687:3: rule__Property__ChangeableAssignment_0
+                    // InternalThingML.g:4687:3: rule__Property__ReadonlyAssignment_0
                     {
                     pushFollow(FOLLOW_2);
-                    rule__Property__ChangeableAssignment_0();
+                    rule__Property__ReadonlyAssignment_0();
 
                     state._fsp--;
 
@@ -15435,7 +15435,7 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
 
             }
 
-             after(grammarAccess.getPropertyAccess().getChangeableAssignment_0()); 
+             after(grammarAccess.getPropertyAccess().getReadonlyAssignment_0()); 
 
             }
 
@@ -33545,20 +33545,20 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__LocalVariable__Group__0__Impl"
-    // InternalThingML.g:10512:1: rule__LocalVariable__Group__0__Impl : ( ( rule__LocalVariable__ChangeableAssignment_0 )? ) ;
+    // InternalThingML.g:10512:1: rule__LocalVariable__Group__0__Impl : ( ( rule__LocalVariable__ReadonlyAssignment_0 )? ) ;
     public final void rule__LocalVariable__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalThingML.g:10516:1: ( ( ( rule__LocalVariable__ChangeableAssignment_0 )? ) )
-            // InternalThingML.g:10517:1: ( ( rule__LocalVariable__ChangeableAssignment_0 )? )
+            // InternalThingML.g:10516:1: ( ( ( rule__LocalVariable__ReadonlyAssignment_0 )? ) )
+            // InternalThingML.g:10517:1: ( ( rule__LocalVariable__ReadonlyAssignment_0 )? )
             {
-            // InternalThingML.g:10517:1: ( ( rule__LocalVariable__ChangeableAssignment_0 )? )
-            // InternalThingML.g:10518:2: ( rule__LocalVariable__ChangeableAssignment_0 )?
+            // InternalThingML.g:10517:1: ( ( rule__LocalVariable__ReadonlyAssignment_0 )? )
+            // InternalThingML.g:10518:2: ( rule__LocalVariable__ReadonlyAssignment_0 )?
             {
-             before(grammarAccess.getLocalVariableAccess().getChangeableAssignment_0()); 
-            // InternalThingML.g:10519:2: ( rule__LocalVariable__ChangeableAssignment_0 )?
+             before(grammarAccess.getLocalVariableAccess().getReadonlyAssignment_0()); 
+            // InternalThingML.g:10519:2: ( rule__LocalVariable__ReadonlyAssignment_0 )?
             int alt115=2;
             int LA115_0 = input.LA(1);
 
@@ -33567,10 +33567,10 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
             }
             switch (alt115) {
                 case 1 :
-                    // InternalThingML.g:10519:3: rule__LocalVariable__ChangeableAssignment_0
+                    // InternalThingML.g:10519:3: rule__LocalVariable__ReadonlyAssignment_0
                     {
                     pushFollow(FOLLOW_2);
-                    rule__LocalVariable__ChangeableAssignment_0();
+                    rule__LocalVariable__ReadonlyAssignment_0();
 
                     state._fsp--;
 
@@ -33580,7 +33580,7 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
 
             }
 
-             after(grammarAccess.getLocalVariableAccess().getChangeableAssignment_0()); 
+             after(grammarAccess.getLocalVariableAccess().getReadonlyAssignment_0()); 
 
             }
 
@@ -50318,9 +50318,9 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__Function__BodyAssignment_7"
 
 
-    // $ANTLR start "rule__Property__ChangeableAssignment_0"
-    // InternalThingML.g:16179:1: rule__Property__ChangeableAssignment_0 : ( ( 'readonly' ) ) ;
-    public final void rule__Property__ChangeableAssignment_0() throws RecognitionException {
+    // $ANTLR start "rule__Property__ReadonlyAssignment_0"
+    // InternalThingML.g:16179:1: rule__Property__ReadonlyAssignment_0 : ( ( 'readonly' ) ) ;
+    public final void rule__Property__ReadonlyAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -50331,17 +50331,17 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
             // InternalThingML.g:16184:2: ( ( 'readonly' ) )
             // InternalThingML.g:16185:3: ( 'readonly' )
             {
-             before(grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0()); 
+             before(grammarAccess.getPropertyAccess().getReadonlyReadonlyKeyword_0_0()); 
             // InternalThingML.g:16186:3: ( 'readonly' )
             // InternalThingML.g:16187:4: 'readonly'
             {
-             before(grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0()); 
+             before(grammarAccess.getPropertyAccess().getReadonlyReadonlyKeyword_0_0()); 
             match(input,95,FOLLOW_2); 
-             after(grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0()); 
+             after(grammarAccess.getPropertyAccess().getReadonlyReadonlyKeyword_0_0()); 
 
             }
 
-             after(grammarAccess.getPropertyAccess().getChangeableReadonlyKeyword_0_0()); 
+             after(grammarAccess.getPropertyAccess().getReadonlyReadonlyKeyword_0_0()); 
 
             }
 
@@ -50360,7 +50360,7 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__Property__ChangeableAssignment_0"
+    // $ANTLR end "rule__Property__ReadonlyAssignment_0"
 
 
     // $ANTLR start "rule__Property__NameAssignment_2"
@@ -54212,9 +54212,9 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__ExternStatement__SegmentsAssignment_1_1"
 
 
-    // $ANTLR start "rule__LocalVariable__ChangeableAssignment_0"
-    // InternalThingML.g:17693:1: rule__LocalVariable__ChangeableAssignment_0 : ( ( 'readonly' ) ) ;
-    public final void rule__LocalVariable__ChangeableAssignment_0() throws RecognitionException {
+    // $ANTLR start "rule__LocalVariable__ReadonlyAssignment_0"
+    // InternalThingML.g:17693:1: rule__LocalVariable__ReadonlyAssignment_0 : ( ( 'readonly' ) ) ;
+    public final void rule__LocalVariable__ReadonlyAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
@@ -54225,17 +54225,17 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
             // InternalThingML.g:17698:2: ( ( 'readonly' ) )
             // InternalThingML.g:17699:3: ( 'readonly' )
             {
-             before(grammarAccess.getLocalVariableAccess().getChangeableReadonlyKeyword_0_0()); 
+             before(grammarAccess.getLocalVariableAccess().getReadonlyReadonlyKeyword_0_0()); 
             // InternalThingML.g:17700:3: ( 'readonly' )
             // InternalThingML.g:17701:4: 'readonly'
             {
-             before(grammarAccess.getLocalVariableAccess().getChangeableReadonlyKeyword_0_0()); 
+             before(grammarAccess.getLocalVariableAccess().getReadonlyReadonlyKeyword_0_0()); 
             match(input,95,FOLLOW_2); 
-             after(grammarAccess.getLocalVariableAccess().getChangeableReadonlyKeyword_0_0()); 
+             after(grammarAccess.getLocalVariableAccess().getReadonlyReadonlyKeyword_0_0()); 
 
             }
 
-             after(grammarAccess.getLocalVariableAccess().getChangeableReadonlyKeyword_0_0()); 
+             after(grammarAccess.getLocalVariableAccess().getReadonlyReadonlyKeyword_0_0()); 
 
             }
 
@@ -54254,7 +54254,7 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__LocalVariable__ChangeableAssignment_0"
+    // $ANTLR end "rule__LocalVariable__ReadonlyAssignment_0"
 
 
     // $ANTLR start "rule__LocalVariable__NameAssignment_2"

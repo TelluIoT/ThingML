@@ -229,7 +229,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        if (!action.isChangeable()) {
+        if (action.isReadonly()) {
             builder.append("final ");
         }
 
@@ -245,7 +245,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
             cast(action.getTypeRef().getType(), action.getTypeRef().isIsArray(), action.getInit(), builder, ctx);
             builder.append(";\n");
         } else {
-            if (!action.isChangeable()) {
+            if (action.isReadonly()) {
                 System.err.println("WARNING: non changeable variable (" + action.getName() + ") should have been initialized ");
                 builder.append("/*final variable should have been initialized. Please fix your ThingML model*/");
             }
@@ -300,7 +300,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
                 builder.append(ctx.getVariableName(expression.getProperty()));
         } else {
             Property p = (Property) expression.getProperty();
-            if (p.isChangeable()) {
+            if (!p.isReadonly()) {
                 System.out.println("Error: non Read-only property (" + p.getName() + ") used in array cardinality definition.");
             }
             Expression e = ConfigurationHelper.initExpressions(ctx.getCurrentConfiguration(), ctx.currentInstance, p).get(0);

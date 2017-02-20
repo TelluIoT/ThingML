@@ -61,7 +61,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Function/body"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Property">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Property/changeable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Property/readonly"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Property/init"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Message">
@@ -122,7 +122,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ExternStatement/segments"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//LocalVariable">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//LocalVariable/changeable"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//LocalVariable/readonly"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//LocalVariable/init"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//SendAction">

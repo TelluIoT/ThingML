@@ -81,7 +81,7 @@ Function returns Function:
 ;
 
 Property returns Property:
-	(^changeable?='readonly')? 'property' name=ID ':' typeRef=TypeRef ( '=' init=Expression)?
+	(readonly?='readonly')? 'property' name=ID ':' typeRef=TypeRef ( '=' init=Expression)?
 	( annotations+=PlatformAnnotation )*
 		//('isArray' isArray=EBoolean)?
 		//('changeable' changeable=EBoolean)?
@@ -272,7 +272,7 @@ ExternStatement returns ExternStatement:
 	statement = STRING_EXT ('&' segments+=Expression)*;
 	
 LocalVariable returns LocalVariable:
-	(^changeable?='readonly')? 'var' name=ID ':'  typeRef=TypeRef ( '=' init=Expression)? ( annotations+=PlatformAnnotation )*
+	(readonly?='readonly')? 'var' name=ID ':'  typeRef=TypeRef ( '=' init=Expression)? ( annotations+=PlatformAnnotation )*
 ;
 
 SendAction returns SendAction:

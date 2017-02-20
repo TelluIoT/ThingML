@@ -5,7 +5,6 @@ package org.thingml.xtext.web;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.util.Modules;
 import java.util.concurrent.ExecutorService;
@@ -26,9 +25,7 @@ public class ThingMLWebSetup extends ThingMLStandaloneSetup {
   public Injector createInjector() {
     final ThingMLRuntimeModule runtimeModule = new ThingMLRuntimeModule();
     final ThingMLWebModule webModule = new ThingMLWebModule(this.executorServiceProvider);
-    Modules.OverriddenModuleBuilder _override = Modules.override(runtimeModule);
-    Module _with = _override.with(webModule);
-    return Guice.createInjector(_with);
+    return Guice.createInjector(Modules.override(runtimeModule).with(webModule));
   }
   
   public ThingMLWebSetup(final Provider<ExecutorService> executorServiceProvider) {
