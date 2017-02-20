@@ -98,7 +98,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//CompositeState/session"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Session">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Session/maxInstances"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Session/maxInstances"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Region"/>
     <genClasses ecoreClass="ThingML.ecore#//FinalState"/>

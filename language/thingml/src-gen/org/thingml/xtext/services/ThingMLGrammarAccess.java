@@ -2266,7 +2266,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
 		private final Keyword cLessThanSignKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
 		private final Assignment cMaxInstancesAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
-		private final RuleCall cMaxInstancesINTTerminalRuleCall_2_1_0 = (RuleCall)cMaxInstancesAssignment_2_1.eContents().get(0);
+		private final RuleCall cMaxInstancesExpressionParserRuleCall_2_1_0 = (RuleCall)cMaxInstancesAssignment_2_1.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_2_2 = (Keyword)cGroup_2.eContents().get(2);
 		private final Keyword cInitKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		private final Assignment cInitialAssignment_4 = (Assignment)cGroup.eContents().get(4);
@@ -2280,12 +2280,12 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_8 = (Keyword)cGroup.eContents().get(8);
 		
 		//Session:
-		//	'session' name=ID ('<' maxInstances=INT '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
+		//	'session' name=ID ('<' maxInstances=Expression '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
 		//	substate+=State*
 		//	'}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'session' name=ID ('<' maxInstances=INT '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
+		//'session' name=ID ('<' maxInstances=Expression '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
 		//substate+=State* '}'
 		public Group getGroup() { return cGroup; }
 		
@@ -2298,17 +2298,17 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
 		
-		//('<' maxInstances=INT '>')?
+		//('<' maxInstances=Expression '>')?
 		public Group getGroup_2() { return cGroup_2; }
 		
 		//'<'
 		public Keyword getLessThanSignKeyword_2_0() { return cLessThanSignKeyword_2_0; }
 		
-		//maxInstances=INT
+		//maxInstances=Expression
 		public Assignment getMaxInstancesAssignment_2_1() { return cMaxInstancesAssignment_2_1; }
 		
-		//INT
-		public RuleCall getMaxInstancesINTTerminalRuleCall_2_1_0() { return cMaxInstancesINTTerminalRuleCall_2_1_0; }
+		//Expression
+		public RuleCall getMaxInstancesExpressionParserRuleCall_2_1_0() { return cMaxInstancesExpressionParserRuleCall_2_1_0; }
 		
 		//'>'
 		public Keyword getGreaterThanSignKeyword_2_2() { return cGreaterThanSignKeyword_2_2; }
@@ -5077,7 +5077,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Session:
-	//	'session' name=ID ('<' maxInstances=INT '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
+	//	'session' name=ID ('<' maxInstances=Expression '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
 	//	substate+=State*
 	//	'}';
 	public SessionElements getSessionAccess() {

@@ -17353,9 +17353,9 @@ rule__Session__MaxInstancesAssignment_2_1
 	}
 :
 	(
-		{ before(grammarAccess.getSessionAccess().getMaxInstancesINTTerminalRuleCall_2_1_0()); }
-		RULE_INT
-		{ after(grammarAccess.getSessionAccess().getMaxInstancesINTTerminalRuleCall_2_1_0()); }
+		{ before(grammarAccess.getSessionAccess().getMaxInstancesExpressionParserRuleCall_2_1_0()); }
+		ruleExpression
+		{ after(grammarAccess.getSessionAccess().getMaxInstancesExpressionParserRuleCall_2_1_0()); }
 	)
 ;
 finally {

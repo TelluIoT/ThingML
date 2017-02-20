@@ -1694,7 +1694,7 @@ public interface ThingMLPackage extends EPackage
   int SESSION__SUBSTATE = STATE_CONTAINER__SUBSTATE;
 
   /**
-   * The feature id for the '<em><b>Max Instances</b></em>' attribute.
+   * The feature id for the '<em><b>Max Instances</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -4456,15 +4456,15 @@ public interface ThingMLPackage extends EPackage
   EClass getSession();
 
   /**
-   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.Session#getMaxInstances <em>Max Instances</em>}'.
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.Session#getMaxInstances <em>Max Instances</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Max Instances</em>'.
+   * @return the meta object for the containment reference '<em>Max Instances</em>'.
    * @see org.thingml.xtext.thingML.Session#getMaxInstances()
    * @see #getSession()
    * @generated
    */
-  EAttribute getSession_MaxInstances();
+  EReference getSession_MaxInstances();
 
   /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.Region <em>Region</em>}'.
@@ -6629,12 +6629,12 @@ public interface ThingMLPackage extends EPackage
     EClass SESSION = eINSTANCE.getSession();
 
     /**
-     * The meta object literal for the '<em><b>Max Instances</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Max Instances</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute SESSION__MAX_INSTANCES = eINSTANCE.getSession_MaxInstances();
+    EReference SESSION__MAX_INSTANCES = eINSTANCE.getSession_MaxInstances();
 
     /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.RegionImpl <em>Region</em>}' class.

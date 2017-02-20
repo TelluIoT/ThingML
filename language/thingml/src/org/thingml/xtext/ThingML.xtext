@@ -225,7 +225,7 @@ StateMachine returns CompositeState: // Actually only another syntax for a compo
 	'}';
 
 Session returns Session:
-	'session' name=ID ('<' maxInstances=INT '>')? 'init' initial=[State|ID] ( annotations+=PlatformAnnotation )* '{'
+	'session' name=ID ('<' maxInstances=Expression '>')? 'init' initial=[State|ID] ( annotations+=PlatformAnnotation )* '{'
 		(substate+=State)*
 	'}';
 

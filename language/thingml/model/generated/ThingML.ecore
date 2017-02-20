@@ -127,7 +127,8 @@
         eType="#//Session" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Session" eSuperTypes="#//StateContainer">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxInstances" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="maxInstances" eType="#//Expression"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Region" eSuperTypes="#//StateContainer"/>
   <eClassifiers xsi:type="ecore:EClass" name="FinalState" eSuperTypes="#//State"/>
