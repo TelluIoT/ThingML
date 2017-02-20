@@ -21,21 +21,33 @@
  */
 package org.thingml.networkplugins.js;
 
-import com.eclipsesource.json.JsonObject;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.thingML.*;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.AbstractConnector;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
+
+import com.eclipsesource.json.JsonObject;
 
 public class JsMQTTPlugin extends NetworkPlugin {
 

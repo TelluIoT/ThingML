@@ -21,21 +21,26 @@
  */
 package org.thingml.compilers.spi;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  *
  * @author sintef
  */
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  *

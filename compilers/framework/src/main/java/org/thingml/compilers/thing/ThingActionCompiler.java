@@ -16,8 +16,47 @@
  */
 package org.thingml.compilers.thing;
 
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.AndExpression;
+import org.thingml.xtext.thingML.ArrayIndex;
+import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.ConditionalAction;
+import org.thingml.xtext.thingML.Decrement;
+import org.thingml.xtext.thingML.DivExpression;
+import org.thingml.xtext.thingML.DoubleLiteral;
+import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.EqualsExpression;
+import org.thingml.xtext.thingML.ErrorAction;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExternExpression;
+import org.thingml.xtext.thingML.ExternStatement;
+import org.thingml.xtext.thingML.FunctionCallExpression;
+import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.GreaterExpression;
+import org.thingml.xtext.thingML.GreaterOrEqualExpression;
+import org.thingml.xtext.thingML.Increment;
+import org.thingml.xtext.thingML.IntegerLiteral;
+import org.thingml.xtext.thingML.LocalVariable;
+import org.thingml.xtext.thingML.LoopAction;
+import org.thingml.xtext.thingML.LowerExpression;
+import org.thingml.xtext.thingML.LowerOrEqualExpression;
+import org.thingml.xtext.thingML.MinusExpression;
+import org.thingml.xtext.thingML.ModExpression;
+import org.thingml.xtext.thingML.NotEqualsExpression;
+import org.thingml.xtext.thingML.NotExpression;
+import org.thingml.xtext.thingML.OrExpression;
+import org.thingml.xtext.thingML.PlusExpression;
+import org.thingml.xtext.thingML.PrintAction;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.ReturnAction;
+import org.thingml.xtext.thingML.SendAction;
+import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.StringLiteral;
+import org.thingml.xtext.thingML.TimesExpression;
+import org.thingml.xtext.thingML.UnaryMinus;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 public class ThingActionCompiler {
 

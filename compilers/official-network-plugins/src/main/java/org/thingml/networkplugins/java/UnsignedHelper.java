@@ -16,9 +16,6 @@
  */
 package org.thingml.networkplugins.java;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 /**
  * Created by bmori on 21.10.2016.
  */

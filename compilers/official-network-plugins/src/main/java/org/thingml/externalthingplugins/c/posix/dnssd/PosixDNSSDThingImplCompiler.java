@@ -19,15 +19,21 @@ package org.thingml.externalthingplugins.c.posix.dnssd;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.CompositeStateHelper;
-import org.thingml.xtext.helpers.ThingMLElementHelper;
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
 import org.thingml.externalthingplugins.c.posix.dnssd.utils.DNSSDUtils;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by vassik on 01.11.16.

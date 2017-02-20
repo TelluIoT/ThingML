@@ -21,12 +21,12 @@
  */
 package org.thingml.compilers.debugGUI.plugin;
 
+import java.util.Set;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.debugGUI.DebugGUINetworkLibraryGenerator;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ExternalConnector;
-
-import java.util.Set;
 
 /**
  *

@@ -21,14 +21,15 @@
  */
 package org.thingml.compilers.debugGUI;
 
+import java.io.File;
+
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.compilers.thing.*;
+import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ExternalConnector;
-
-import java.io.File;
 
 /**
  *

@@ -28,8 +28,6 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-import java.util.List;
-
 /**
  *
  * @author sintef

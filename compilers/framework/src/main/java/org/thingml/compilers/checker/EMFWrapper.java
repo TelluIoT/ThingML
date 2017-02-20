@@ -17,10 +17,7 @@
 package org.thingml.compilers.checker;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.validation.EObjectDiagnosticImpl;
 import org.thingml.compilers.ThingMLCompiler;
-
-import java.util.Collections;
 
 /**
  * Created by bmori on 28.01.2016.

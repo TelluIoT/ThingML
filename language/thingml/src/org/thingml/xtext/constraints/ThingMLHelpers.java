@@ -39,7 +39,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.helpers.RegionHelper;
+import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Action;
@@ -71,6 +71,7 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.Variable;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 
 public class ThingMLHelpers {
@@ -97,8 +98,8 @@ public class ThingMLHelpers {
     	}
     	
     	return result;
-    }
-
+    }    
+    
 	public static ThingMLModel findContainingModel(EObject object) {
 		return findContainer(object, ThingMLModel.class);
 	}
@@ -893,5 +894,16 @@ public class ThingMLHelpers {
 		}
 		return msg;
 	}
+	
+	public static ArrayList<Variable> allVariables(Thing thing) { //TODO: Does this get absolutely all variables?
+		ArrayList<Variable> result = new ArrayList<Variable>();
+		for (Thing t : allThingFragments(thing)) {
+			for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {
+			    VariableAssignment assignment = (VariableAssignment)a;
+			    result.add(assignment.getProperty());
+			}
+		}
+		return result;
+}	
 
 }

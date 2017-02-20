@@ -16,17 +16,16 @@
  */
 package org.thingml.compilers.utils;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.xtext.thingML.Configuration;
-
-import java.io.OutputStream;
-import java.io.PrintStream;
 
 /**
  * Created by ffl on 24.11.14.

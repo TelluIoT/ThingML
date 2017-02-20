@@ -21,19 +21,31 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.TyperHelper;
-import org.thingml.xtext.thingML.*;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
-
-import java.util.List;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.FunctionCallExpression;
+import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.ReturnAction;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
  *

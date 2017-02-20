@@ -16,22 +16,25 @@
  */
 package org.thingml.compilers;
 
-import org.eclipse.emf.common.util.TreeIterator;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.xtext.resource.XtextResource;
-import org.fusesource.jansi.AnsiConsole;
-import org.thingml.xtext.ThingMLStandaloneSetup;
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.helpers.ThingHelper;
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
@@ -39,13 +42,24 @@ import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
-import org.thingml.compilers.thing.*;
+import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
+import org.thingml.xtext.ThingMLStandaloneSetup;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  * Created by ffl on 23.11.14.

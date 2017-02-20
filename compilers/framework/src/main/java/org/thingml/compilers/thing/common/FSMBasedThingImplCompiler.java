@@ -16,9 +16,18 @@
  */
 package org.thingml.compilers.thing.common;
 
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.FinalState;
+import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.InternalTransition;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Transition;
 
 /**
  * Created by bmori on 15.04.2015.

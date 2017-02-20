@@ -26,14 +26,6 @@
  */
 package org.thingml.networkplugins.java;
 
-import org.apache.commons.io.IOUtils;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.thingML.*;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.java.JavaHelper;
-import org.thingml.compilers.spi.SerializationPlugin;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -42,6 +34,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.java.JavaHelper;
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PrimitiveType;
 
 public class JavaByteArraySerializerPlugin extends SerializationPlugin {
 

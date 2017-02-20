@@ -21,15 +21,16 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.helpers.ThingHelper;
-import org.thingml.xtext.thingML.*;
+import org.thingml.xtext.thingML.ConfigPropertyAssign;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Property;
 
 /**
  *

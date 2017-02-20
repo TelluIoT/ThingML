@@ -17,6 +17,7 @@
 package org.thingml.compilers.configuration;
 
 import java.util.Iterator;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;

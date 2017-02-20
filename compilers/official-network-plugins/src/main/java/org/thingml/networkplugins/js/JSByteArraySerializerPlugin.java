@@ -26,7 +26,16 @@
  */
 package org.thingml.networkplugins.js;
 
-import com.eclipsesource.json.JsonObject;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.io.IOUtils;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
@@ -35,11 +44,7 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrimitiveType;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import com.eclipsesource.json.JsonObject;
 
 public class JSByteArraySerializerPlugin extends SerializationPlugin {
 

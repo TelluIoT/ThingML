@@ -22,12 +22,17 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.*;
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.FinalState;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  *

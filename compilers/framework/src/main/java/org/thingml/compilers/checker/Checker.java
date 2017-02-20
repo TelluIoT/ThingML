@@ -21,20 +21,33 @@
  */
 package org.thingml.compilers.checker;
 
-import org.eclipse.emf.ecore.EObject;
-import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.checker.genericRules.*;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.helpers.ThingMLElementHelper;
-import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.ThingMLModel;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.eclipse.emf.ecore.EObject;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.checker.genericRules.AutotransitionCycles;
+import org.thingml.compilers.checker.genericRules.ConnectorCycles;
+import org.thingml.compilers.checker.genericRules.ControlStructures;
+import org.thingml.compilers.checker.genericRules.DuplicatedMessageInPort;
+import org.thingml.compilers.checker.genericRules.FunctionUsage;
+import org.thingml.compilers.checker.genericRules.InternalTransitions;
+import org.thingml.compilers.checker.genericRules.LostMessages;
+import org.thingml.compilers.checker.genericRules.MessagesUsage;
+import org.thingml.compilers.checker.genericRules.NonDeterministicTransitions;
+import org.thingml.compilers.checker.genericRules.PortsUsage;
+import org.thingml.compilers.checker.genericRules.PropertyInitialization;
+import org.thingml.compilers.checker.genericRules.StatesUsage;
+import org.thingml.compilers.checker.genericRules.ThingsUsage;
+import org.thingml.compilers.checker.genericRules.VariableUsage;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  *

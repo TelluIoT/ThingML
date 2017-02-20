@@ -26,20 +26,17 @@
  */
 package org.thingml.networkplugins.c;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.plugin.CByteArraySerializer;
 import org.thingml.compilers.spi.SerializationPlugin;
-import org.thingml.networkplugins.java.JavaByteArraySerializerPlugin;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class CByteArraySerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;

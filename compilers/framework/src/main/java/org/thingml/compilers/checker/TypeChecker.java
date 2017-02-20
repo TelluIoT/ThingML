@@ -32,7 +32,30 @@ package org.thingml.compilers.checker;
 
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.TyperHelper;
-import org.thingml.xtext.thingML.*;
+import org.thingml.xtext.thingML.AndExpression;
+import org.thingml.xtext.thingML.ArrayIndex;
+import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.DivExpression;
+import org.thingml.xtext.thingML.DoubleLiteral;
+import org.thingml.xtext.thingML.EqualsExpression;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExternExpression;
+import org.thingml.xtext.thingML.FunctionCallExpression;
+import org.thingml.xtext.thingML.GreaterExpression;
+import org.thingml.xtext.thingML.GreaterOrEqualExpression;
+import org.thingml.xtext.thingML.IntegerLiteral;
+import org.thingml.xtext.thingML.LowerExpression;
+import org.thingml.xtext.thingML.LowerOrEqualExpression;
+import org.thingml.xtext.thingML.MinusExpression;
+import org.thingml.xtext.thingML.ModExpression;
+import org.thingml.xtext.thingML.NotExpression;
+import org.thingml.xtext.thingML.OrExpression;
+import org.thingml.xtext.thingML.PlusExpression;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.StringLiteral;
+import org.thingml.xtext.thingML.TimesExpression;
+import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.UnaryMinus;
 import org.thingml.xtext.thingML.util.ThingMLSwitch;
 
 

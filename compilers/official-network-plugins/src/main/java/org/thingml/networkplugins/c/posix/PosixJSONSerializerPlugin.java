@@ -21,14 +21,18 @@
  */
 package org.thingml.networkplugins.c.posix;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-
-import java.util.*;
 
 /**
  *

@@ -21,13 +21,16 @@
  */
 package org.thingml.compilers.spi;
 
-import org.thingml.xtext.thingML.*;
+import java.util.List;
+import java.util.Set;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
-
-import java.util.List;
-import java.util.Set;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Protocol;
 
 /**
  *

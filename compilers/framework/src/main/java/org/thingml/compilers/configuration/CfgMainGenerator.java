@@ -16,9 +16,11 @@
  */
 package org.thingml.compilers.configuration;
 
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.ExternalThingPlugin;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  * Created by bmori on 10.12.2014.

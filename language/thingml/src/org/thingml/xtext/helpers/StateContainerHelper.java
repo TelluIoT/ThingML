@@ -27,18 +27,18 @@ import java.util.Set;
 /**
  * Created by ffl on 10.05.2016.
  */
-public class RegionHelper {
+public class StateContainerHelper {
 
     //Derived properties
 
 	
 
-    public static List<State> allContainedStates(Region self) {
+    public static List<State> allContainedStates(StateContainer self) {
         return ThingMLHelpers.<State>allContainedElementsOfType(self, State.class);
     }
     
     
-   public static List<StateContainer> allContainedRegions(Region self) {
+   public static List<StateContainer> allContainedRegions(StateContainer self) {
        final List<StateContainer> result = new ArrayList<StateContainer>();
        result.add(self);
        result.addAll(ThingMLHelpers.<StateContainer>allContainedElementsOfType(self, CompositeState.class));
@@ -46,20 +46,20 @@ public class RegionHelper {
        return result;
     }
     
-    public static List<StateContainer> allContainedRegionsAndSessions(Region self) {
+    public static List<StateContainer> allContainedRegionsAndSessions(StateContainer self) {
     	List<StateContainer> result = new ArrayList<StateContainer>();
         result.add(self);
         result.addAll(ThingMLHelpers.<StateContainer>allContainedElementsOfType(self, StateContainer.class));
         return result;
     }
     
-    public static List<Session> allContainedSessions(Region self) {
+    public static List<Session> allContainedSessions(StateContainer self) {
     	List<Session> result = new ArrayList<Session>();
         result.addAll(ThingMLHelpers.<Session>allContainedElementsOfType(self, Session.class));
         return result;
     }
 
-    public static List<Property> allContainedProperties(Region self) {
+    public static List<Property> allContainedProperties(StateContainer self) {
         final List<Property> result = new ArrayList<Property>();
         for(State s : allContainedStates(self)) {
             result.addAll(s.getProperties());
@@ -68,7 +68,7 @@ public class RegionHelper {
     }
 
     
-    public static List<CompositeState> allContainedCompositeStates(Region self) {
+    public static List<CompositeState> allContainedCompositeStates(StateContainer self) {
         final List<CompositeState> result = new ArrayList<CompositeState>();
         for(State s : allContainedStates(self)) {
             if (s instanceof CompositeState) {
@@ -79,14 +79,14 @@ public class RegionHelper {
     }
 
 
-    public static List<State> allContainedSimpleStates(Region self) {
+    public static List<State> allContainedSimpleStates(StateContainer self) {
         final List<State> result = allContainedStates(self);
         result.removeAll(allContainedCompositeStates(self));
         return result;
     }
 
 
-    public static Set<Type> allUsedTypes(Region self) {
+    public static Set<Type> allUsedTypes(StateContainer self) {
         Set<Type> result = new HashSet<Type>();
         for(Property p : allContainedProperties(self)) {
             result.add(p.getTypeRef().getType());

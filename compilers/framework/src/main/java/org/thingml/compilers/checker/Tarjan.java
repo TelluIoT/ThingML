@@ -21,15 +21,19 @@
  */
 package org.thingml.compilers.checker;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.thingML.*;
-
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Connector;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.Transition;
 
 /**
  *

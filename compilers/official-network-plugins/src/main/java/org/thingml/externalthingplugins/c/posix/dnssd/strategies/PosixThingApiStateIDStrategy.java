@@ -16,6 +16,8 @@
  */
 package org.thingml.externalthingplugins.c.posix.dnssd.strategies;
 
+import java.util.List;
+
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.interfaces.c.ICThingApiStateIDStrategy;
 import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
@@ -25,8 +27,6 @@ import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
-
-import java.util.List;
 
 /**
  * Created by vassik on 15.11.16.

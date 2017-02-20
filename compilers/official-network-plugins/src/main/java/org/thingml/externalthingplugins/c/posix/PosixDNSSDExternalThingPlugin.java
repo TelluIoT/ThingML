@@ -16,24 +16,27 @@
  */
 package org.thingml.externalthingplugins.c.posix;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CThingApiCompiler;
 import org.thingml.compilers.c.CThingImplCompiler;
-
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDCCfgBuildGenerator;
+import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDCfgMainGenerator;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingApiCompiler;
 import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDThingImplCompiler;
-import org.thingml.externalthingplugins.c.posix.dnssd.PosixDNSSDCfgMainGenerator;
-import org.thingml.externalthingplugins.c.posix.dnssd.strategies.*;
+import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiHandleMsgPubPrototypeStrategy;
+import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiIncludesStrategy;
+import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiStateIDStrategy;
+import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiStructDNSSDStrategy;
+import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingImplHandleMsgStrategy;
 import org.thingml.xtext.thingML.Configuration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by vassik on 21.10.16.

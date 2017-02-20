@@ -16,6 +16,12 @@
  */
 package org.thingml.networkplugins.c.posix;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.impl.ParameterImpl;
 import org.thingml.compilers.c.CCompilerContext;
@@ -25,12 +31,6 @@ import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PlatformAnnotation;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by jakobho on 01.02.2017.

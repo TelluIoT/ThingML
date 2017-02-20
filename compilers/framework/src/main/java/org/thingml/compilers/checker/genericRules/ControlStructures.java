@@ -22,13 +22,20 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.EObject;
+import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.thingML.*;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.ConditionalAction;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.LoopAction;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
 
 /**
  *

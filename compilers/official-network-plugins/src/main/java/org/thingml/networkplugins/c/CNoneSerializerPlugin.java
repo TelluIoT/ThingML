@@ -26,15 +26,15 @@
  */
 package org.thingml.networkplugins.c;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 public class CNoneSerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;

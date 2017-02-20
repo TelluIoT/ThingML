@@ -22,17 +22,20 @@
 package org.thingml.compilers.checker.genericRules;
 
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.checker.Tarjan;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.thingML.*;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  *

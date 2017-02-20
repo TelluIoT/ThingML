@@ -22,18 +22,24 @@
 package org.thingml.networkplugins.cpp.rcd;
 
 import java.io.UnsupportedEncodingException;
-
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.thingML.*;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.spi.NetworkPlugin;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.thingml.compilers.Context;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.ProvidedPort;
+import org.thingml.xtext.thingML.RequiredPort;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  *

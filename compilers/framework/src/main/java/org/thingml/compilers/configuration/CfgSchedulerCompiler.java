@@ -16,8 +16,8 @@
  */
 package org.thingml.compilers.configuration;
 
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
+import org.thingml.xtext.thingML.Configuration;
 
 
 public class CfgSchedulerCompiler {

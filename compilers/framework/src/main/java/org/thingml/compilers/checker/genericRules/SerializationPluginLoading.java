@@ -22,11 +22,13 @@
 package org.thingml.compilers.checker.genericRules;
 
 import java.io.UnsupportedEncodingException;
+
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.spi.SerializationPlugin;
-import org.thingml.xtext.helpers.*;
-import org.thingml.xtext.thingML.*;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
 
 /**
  *

@@ -21,17 +21,31 @@
  */
 package org.thingml.networkplugins.js;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.javascript.JSCfgMainGenerator;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.PrimitiveTyperHelper;
 import org.thingml.xtext.helpers.ThingHelper;
-import org.thingml.xtext.thingML.*;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.javascript.JSCfgMainGenerator;
-
-import java.util.*;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Connector;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.InternalPort;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.PrimitiveType;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Thing;
 
 public class JSMTKevoreePlugin extends JSKevoreePlugin {
 

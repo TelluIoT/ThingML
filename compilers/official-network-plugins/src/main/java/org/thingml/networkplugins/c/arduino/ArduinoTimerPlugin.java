@@ -21,15 +21,25 @@
  */
 package org.thingml.networkplugins.c.arduino;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
-
-import java.math.BigInteger;
-import java.util.*;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  *

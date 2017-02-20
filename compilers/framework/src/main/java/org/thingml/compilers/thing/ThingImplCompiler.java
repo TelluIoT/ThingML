@@ -16,8 +16,8 @@
  */
 package org.thingml.compilers.thing;
 
-import org.thingml.xtext.thingML.*;
 import org.thingml.compilers.Context;
+import org.thingml.xtext.thingML.Thing;
 
 
 public class ThingImplCompiler {
