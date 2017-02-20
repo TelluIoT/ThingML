@@ -1473,9 +1473,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getSession_MaxInstances()
+  public EReference getSession_MaxInstances()
   {
-    return (EAttribute)sessionEClass.getEStructuralFeatures().get(0);
+    return (EReference)sessionEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -3018,7 +3018,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     createEReference(compositeStateEClass, COMPOSITE_STATE__SESSION);
 
     sessionEClass = createEClass(SESSION);
-    createEAttribute(sessionEClass, SESSION__MAX_INSTANCES);
+    createEReference(sessionEClass, SESSION__MAX_INSTANCES);
 
     regionEClass = createEClass(REGION);
 
@@ -3431,7 +3431,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEReference(getCompositeState_Session(), this.getSession(), null, "session", null, 0, -1, CompositeState.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(sessionEClass, Session.class, "Session", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getSession_MaxInstances(), ecorePackage.getEInt(), "maxInstances", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getSession_MaxInstances(), this.getExpression(), null, "maxInstances", null, 0, 1, Session.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(regionEClass, Region.class, "Region", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

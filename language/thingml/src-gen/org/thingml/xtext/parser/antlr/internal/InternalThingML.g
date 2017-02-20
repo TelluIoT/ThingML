@@ -3296,19 +3296,20 @@ ruleSession returns [EObject current=null]
 			}
 			(
 				(
-					lv_maxInstances_3_0=RULE_INT
 					{
-						newLeafNode(lv_maxInstances_3_0, grammarAccess.getSessionAccess().getMaxInstancesINTTerminalRuleCall_2_1_0());
+						newCompositeNode(grammarAccess.getSessionAccess().getMaxInstancesExpressionParserRuleCall_2_1_0());
 					}
+					lv_maxInstances_3_0=ruleExpression
 					{
 						if ($current==null) {
-							$current = createModelElement(grammarAccess.getSessionRule());
+							$current = createModelElementForParent(grammarAccess.getSessionRule());
 						}
-						setWithLastConsumed(
+						set(
 							$current,
 							"maxInstances",
 							lv_maxInstances_3_0,
-							"org.thingml.xtext.ThingML.INT");
+							"org.thingml.xtext.ThingML.Expression");
+						afterParserOrEnumRuleCall();
 					}
 				)
 			)

@@ -8167,19 +8167,20 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSession"
-    // InternalThingML.g:3262:1: ruleSession returns [EObject current=null] : (otherlv_0= 'session' ( (lv_name_1_0= RULE_ID ) ) (otherlv_2= '<' ( (lv_maxInstances_3_0= RULE_INT ) ) otherlv_4= '>' )? otherlv_5= 'init' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* otherlv_8= '{' ( (lv_substate_9_0= ruleState ) )* otherlv_10= '}' ) ;
+    // InternalThingML.g:3262:1: ruleSession returns [EObject current=null] : (otherlv_0= 'session' ( (lv_name_1_0= RULE_ID ) ) (otherlv_2= '<' ( (lv_maxInstances_3_0= ruleExpression ) ) otherlv_4= '>' )? otherlv_5= 'init' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* otherlv_8= '{' ( (lv_substate_9_0= ruleState ) )* otherlv_10= '}' ) ;
     public final EObject ruleSession() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_0=null;
         Token lv_name_1_0=null;
         Token otherlv_2=null;
-        Token lv_maxInstances_3_0=null;
         Token otherlv_4=null;
         Token otherlv_5=null;
         Token otherlv_6=null;
         Token otherlv_8=null;
         Token otherlv_10=null;
+        EObject lv_maxInstances_3_0 = null;
+
         EObject lv_annotations_7_0 = null;
 
         EObject lv_substate_9_0 = null;
@@ -8189,11 +8190,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:3268:2: ( (otherlv_0= 'session' ( (lv_name_1_0= RULE_ID ) ) (otherlv_2= '<' ( (lv_maxInstances_3_0= RULE_INT ) ) otherlv_4= '>' )? otherlv_5= 'init' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* otherlv_8= '{' ( (lv_substate_9_0= ruleState ) )* otherlv_10= '}' ) )
-            // InternalThingML.g:3269:2: (otherlv_0= 'session' ( (lv_name_1_0= RULE_ID ) ) (otherlv_2= '<' ( (lv_maxInstances_3_0= RULE_INT ) ) otherlv_4= '>' )? otherlv_5= 'init' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* otherlv_8= '{' ( (lv_substate_9_0= ruleState ) )* otherlv_10= '}' )
+            // InternalThingML.g:3268:2: ( (otherlv_0= 'session' ( (lv_name_1_0= RULE_ID ) ) (otherlv_2= '<' ( (lv_maxInstances_3_0= ruleExpression ) ) otherlv_4= '>' )? otherlv_5= 'init' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* otherlv_8= '{' ( (lv_substate_9_0= ruleState ) )* otherlv_10= '}' ) )
+            // InternalThingML.g:3269:2: (otherlv_0= 'session' ( (lv_name_1_0= RULE_ID ) ) (otherlv_2= '<' ( (lv_maxInstances_3_0= ruleExpression ) ) otherlv_4= '>' )? otherlv_5= 'init' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* otherlv_8= '{' ( (lv_substate_9_0= ruleState ) )* otherlv_10= '}' )
             {
-            // InternalThingML.g:3269:2: (otherlv_0= 'session' ( (lv_name_1_0= RULE_ID ) ) (otherlv_2= '<' ( (lv_maxInstances_3_0= RULE_INT ) ) otherlv_4= '>' )? otherlv_5= 'init' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* otherlv_8= '{' ( (lv_substate_9_0= ruleState ) )* otherlv_10= '}' )
-            // InternalThingML.g:3270:3: otherlv_0= 'session' ( (lv_name_1_0= RULE_ID ) ) (otherlv_2= '<' ( (lv_maxInstances_3_0= RULE_INT ) ) otherlv_4= '>' )? otherlv_5= 'init' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* otherlv_8= '{' ( (lv_substate_9_0= ruleState ) )* otherlv_10= '}'
+            // InternalThingML.g:3269:2: (otherlv_0= 'session' ( (lv_name_1_0= RULE_ID ) ) (otherlv_2= '<' ( (lv_maxInstances_3_0= ruleExpression ) ) otherlv_4= '>' )? otherlv_5= 'init' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* otherlv_8= '{' ( (lv_substate_9_0= ruleState ) )* otherlv_10= '}' )
+            // InternalThingML.g:3270:3: otherlv_0= 'session' ( (lv_name_1_0= RULE_ID ) ) (otherlv_2= '<' ( (lv_maxInstances_3_0= ruleExpression ) ) otherlv_4= '>' )? otherlv_5= 'init' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* otherlv_8= '{' ( (lv_substate_9_0= ruleState ) )* otherlv_10= '}'
             {
             otherlv_0=(Token)match(input,61,FOLLOW_6); 
 
@@ -8225,7 +8226,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:3292:3: (otherlv_2= '<' ( (lv_maxInstances_3_0= RULE_INT ) ) otherlv_4= '>' )?
+            // InternalThingML.g:3292:3: (otherlv_2= '<' ( (lv_maxInstances_3_0= ruleExpression ) ) otherlv_4= '>' )?
             int alt80=2;
             int LA80_0 = input.LA(1);
 
@@ -8234,31 +8235,36 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt80) {
                 case 1 :
-                    // InternalThingML.g:3293:4: otherlv_2= '<' ( (lv_maxInstances_3_0= RULE_INT ) ) otherlv_4= '>'
+                    // InternalThingML.g:3293:4: otherlv_2= '<' ( (lv_maxInstances_3_0= ruleExpression ) ) otherlv_4= '>'
                     {
-                    otherlv_2=(Token)match(input,20,FOLLOW_12); 
+                    otherlv_2=(Token)match(input,20,FOLLOW_23); 
 
                     				newLeafNode(otherlv_2, grammarAccess.getSessionAccess().getLessThanSignKeyword_2_0());
                     			
-                    // InternalThingML.g:3297:4: ( (lv_maxInstances_3_0= RULE_INT ) )
-                    // InternalThingML.g:3298:5: (lv_maxInstances_3_0= RULE_INT )
+                    // InternalThingML.g:3297:4: ( (lv_maxInstances_3_0= ruleExpression ) )
+                    // InternalThingML.g:3298:5: (lv_maxInstances_3_0= ruleExpression )
                     {
-                    // InternalThingML.g:3298:5: (lv_maxInstances_3_0= RULE_INT )
-                    // InternalThingML.g:3299:6: lv_maxInstances_3_0= RULE_INT
+                    // InternalThingML.g:3298:5: (lv_maxInstances_3_0= ruleExpression )
+                    // InternalThingML.g:3299:6: lv_maxInstances_3_0= ruleExpression
                     {
-                    lv_maxInstances_3_0=(Token)match(input,RULE_INT,FOLLOW_13); 
 
-                    						newLeafNode(lv_maxInstances_3_0, grammarAccess.getSessionAccess().getMaxInstancesINTTerminalRuleCall_2_1_0());
+                    						newCompositeNode(grammarAccess.getSessionAccess().getMaxInstancesExpressionParserRuleCall_2_1_0());
                     					
+                    pushFollow(FOLLOW_13);
+                    lv_maxInstances_3_0=ruleExpression();
+
+                    state._fsp--;
+
 
                     						if (current==null) {
-                    							current = createModelElement(grammarAccess.getSessionRule());
+                    							current = createModelElementForParent(grammarAccess.getSessionRule());
                     						}
-                    						setWithLastConsumed(
+                    						set(
                     							current,
                     							"maxInstances",
                     							lv_maxInstances_3_0,
-                    							"org.thingml.xtext.ThingML.INT");
+                    							"org.thingml.xtext.ThingML.Expression");
+                    						afterParserOrEnumRuleCall();
                     					
 
                     }
@@ -8280,11 +8286,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_5, grammarAccess.getSessionAccess().getInitKeyword_3());
             		
-            // InternalThingML.g:3324:3: ( (otherlv_6= RULE_ID ) )
-            // InternalThingML.g:3325:4: (otherlv_6= RULE_ID )
+            // InternalThingML.g:3325:3: ( (otherlv_6= RULE_ID ) )
+            // InternalThingML.g:3326:4: (otherlv_6= RULE_ID )
             {
-            // InternalThingML.g:3325:4: (otherlv_6= RULE_ID )
-            // InternalThingML.g:3326:5: otherlv_6= RULE_ID
+            // InternalThingML.g:3326:4: (otherlv_6= RULE_ID )
+            // InternalThingML.g:3327:5: otherlv_6= RULE_ID
             {
 
             					if (current==null) {
@@ -8301,7 +8307,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:3337:3: ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:3338:3: ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
             loop81:
             do {
                 int alt81=2;
@@ -8314,10 +8320,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt81) {
             	case 1 :
-            	    // InternalThingML.g:3338:4: (lv_annotations_7_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:3339:4: (lv_annotations_7_0= rulePlatformAnnotation )
             	    {
-            	    // InternalThingML.g:3338:4: (lv_annotations_7_0= rulePlatformAnnotation )
-            	    // InternalThingML.g:3339:5: lv_annotations_7_0= rulePlatformAnnotation
+            	    // InternalThingML.g:3339:4: (lv_annotations_7_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:3340:5: lv_annotations_7_0= rulePlatformAnnotation
             	    {
 
             	    					newCompositeNode(grammarAccess.getSessionAccess().getAnnotationsPlatformAnnotationParserRuleCall_5_0());
@@ -8354,7 +8360,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_8, grammarAccess.getSessionAccess().getLeftCurlyBracketKeyword_6());
             		
-            // InternalThingML.g:3360:3: ( (lv_substate_9_0= ruleState ) )*
+            // InternalThingML.g:3361:3: ( (lv_substate_9_0= ruleState ) )*
             loop82:
             do {
                 int alt82=2;
@@ -8367,10 +8373,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt82) {
             	case 1 :
-            	    // InternalThingML.g:3361:4: (lv_substate_9_0= ruleState )
+            	    // InternalThingML.g:3362:4: (lv_substate_9_0= ruleState )
             	    {
-            	    // InternalThingML.g:3361:4: (lv_substate_9_0= ruleState )
-            	    // InternalThingML.g:3362:5: lv_substate_9_0= ruleState
+            	    // InternalThingML.g:3362:4: (lv_substate_9_0= ruleState )
+            	    // InternalThingML.g:3363:5: lv_substate_9_0= ruleState
             	    {
 
             	    					newCompositeNode(grammarAccess.getSessionAccess().getSubstateStateParserRuleCall_7_0());
@@ -8430,7 +8436,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleRegion"
-    // InternalThingML.g:3387:1: entryRuleRegion returns [EObject current=null] : iv_ruleRegion= ruleRegion EOF ;
+    // InternalThingML.g:3388:1: entryRuleRegion returns [EObject current=null] : iv_ruleRegion= ruleRegion EOF ;
     public final EObject entryRuleRegion() throws RecognitionException {
         EObject current = null;
 
@@ -8438,8 +8444,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:3387:47: (iv_ruleRegion= ruleRegion EOF )
-            // InternalThingML.g:3388:2: iv_ruleRegion= ruleRegion EOF
+            // InternalThingML.g:3388:47: (iv_ruleRegion= ruleRegion EOF )
+            // InternalThingML.g:3389:2: iv_ruleRegion= ruleRegion EOF
             {
              newCompositeNode(grammarAccess.getRegionRule()); 
             pushFollow(FOLLOW_1);
@@ -8466,7 +8472,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleRegion"
-    // InternalThingML.g:3394:1: ruleRegion returns [EObject current=null] : (otherlv_0= 'region' ( (lv_name_1_0= RULE_ID ) )? otherlv_2= 'init' ( (otherlv_3= RULE_ID ) ) (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )? ( (lv_annotations_6_0= rulePlatformAnnotation ) )* otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) ;
+    // InternalThingML.g:3395:1: ruleRegion returns [EObject current=null] : (otherlv_0= 'region' ( (lv_name_1_0= RULE_ID ) )? otherlv_2= 'init' ( (otherlv_3= RULE_ID ) ) (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )? ( (lv_annotations_6_0= rulePlatformAnnotation ) )* otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) ;
     public final EObject ruleRegion() throws RecognitionException {
         EObject current = null;
 
@@ -8487,17 +8493,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:3400:2: ( (otherlv_0= 'region' ( (lv_name_1_0= RULE_ID ) )? otherlv_2= 'init' ( (otherlv_3= RULE_ID ) ) (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )? ( (lv_annotations_6_0= rulePlatformAnnotation ) )* otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) )
-            // InternalThingML.g:3401:2: (otherlv_0= 'region' ( (lv_name_1_0= RULE_ID ) )? otherlv_2= 'init' ( (otherlv_3= RULE_ID ) ) (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )? ( (lv_annotations_6_0= rulePlatformAnnotation ) )* otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' )
+            // InternalThingML.g:3401:2: ( (otherlv_0= 'region' ( (lv_name_1_0= RULE_ID ) )? otherlv_2= 'init' ( (otherlv_3= RULE_ID ) ) (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )? ( (lv_annotations_6_0= rulePlatformAnnotation ) )* otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) )
+            // InternalThingML.g:3402:2: (otherlv_0= 'region' ( (lv_name_1_0= RULE_ID ) )? otherlv_2= 'init' ( (otherlv_3= RULE_ID ) ) (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )? ( (lv_annotations_6_0= rulePlatformAnnotation ) )* otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' )
             {
-            // InternalThingML.g:3401:2: (otherlv_0= 'region' ( (lv_name_1_0= RULE_ID ) )? otherlv_2= 'init' ( (otherlv_3= RULE_ID ) ) (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )? ( (lv_annotations_6_0= rulePlatformAnnotation ) )* otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' )
-            // InternalThingML.g:3402:3: otherlv_0= 'region' ( (lv_name_1_0= RULE_ID ) )? otherlv_2= 'init' ( (otherlv_3= RULE_ID ) ) (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )? ( (lv_annotations_6_0= rulePlatformAnnotation ) )* otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}'
+            // InternalThingML.g:3402:2: (otherlv_0= 'region' ( (lv_name_1_0= RULE_ID ) )? otherlv_2= 'init' ( (otherlv_3= RULE_ID ) ) (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )? ( (lv_annotations_6_0= rulePlatformAnnotation ) )* otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' )
+            // InternalThingML.g:3403:3: otherlv_0= 'region' ( (lv_name_1_0= RULE_ID ) )? otherlv_2= 'init' ( (otherlv_3= RULE_ID ) ) (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )? ( (lv_annotations_6_0= rulePlatformAnnotation ) )* otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}'
             {
             otherlv_0=(Token)match(input,62,FOLLOW_53); 
 
             			newLeafNode(otherlv_0, grammarAccess.getRegionAccess().getRegionKeyword_0());
             		
-            // InternalThingML.g:3406:3: ( (lv_name_1_0= RULE_ID ) )?
+            // InternalThingML.g:3407:3: ( (lv_name_1_0= RULE_ID ) )?
             int alt83=2;
             int LA83_0 = input.LA(1);
 
@@ -8506,10 +8512,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt83) {
                 case 1 :
-                    // InternalThingML.g:3407:4: (lv_name_1_0= RULE_ID )
+                    // InternalThingML.g:3408:4: (lv_name_1_0= RULE_ID )
                     {
-                    // InternalThingML.g:3407:4: (lv_name_1_0= RULE_ID )
-                    // InternalThingML.g:3408:5: lv_name_1_0= RULE_ID
+                    // InternalThingML.g:3408:4: (lv_name_1_0= RULE_ID )
+                    // InternalThingML.g:3409:5: lv_name_1_0= RULE_ID
                     {
                     lv_name_1_0=(Token)match(input,RULE_ID,FOLLOW_47); 
 
@@ -8538,11 +8544,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_2, grammarAccess.getRegionAccess().getInitKeyword_2());
             		
-            // InternalThingML.g:3428:3: ( (otherlv_3= RULE_ID ) )
-            // InternalThingML.g:3429:4: (otherlv_3= RULE_ID )
+            // InternalThingML.g:3429:3: ( (otherlv_3= RULE_ID ) )
+            // InternalThingML.g:3430:4: (otherlv_3= RULE_ID )
             {
-            // InternalThingML.g:3429:4: (otherlv_3= RULE_ID )
-            // InternalThingML.g:3430:5: otherlv_3= RULE_ID
+            // InternalThingML.g:3430:4: (otherlv_3= RULE_ID )
+            // InternalThingML.g:3431:5: otherlv_3= RULE_ID
             {
 
             					if (current==null) {
@@ -8559,7 +8565,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:3441:3: (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )?
+            // InternalThingML.g:3442:3: (otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) ) )?
             int alt84=2;
             int LA84_0 = input.LA(1);
 
@@ -8568,17 +8574,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt84) {
                 case 1 :
-                    // InternalThingML.g:3442:4: otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) )
+                    // InternalThingML.g:3443:4: otherlv_4= 'keeps' ( (lv_history_5_0= 'history' ) )
                     {
                     otherlv_4=(Token)match(input,58,FOLLOW_49); 
 
                     				newLeafNode(otherlv_4, grammarAccess.getRegionAccess().getKeepsKeyword_4_0());
                     			
-                    // InternalThingML.g:3446:4: ( (lv_history_5_0= 'history' ) )
-                    // InternalThingML.g:3447:5: (lv_history_5_0= 'history' )
+                    // InternalThingML.g:3447:4: ( (lv_history_5_0= 'history' ) )
+                    // InternalThingML.g:3448:5: (lv_history_5_0= 'history' )
                     {
-                    // InternalThingML.g:3447:5: (lv_history_5_0= 'history' )
-                    // InternalThingML.g:3448:6: lv_history_5_0= 'history'
+                    // InternalThingML.g:3448:5: (lv_history_5_0= 'history' )
+                    // InternalThingML.g:3449:6: lv_history_5_0= 'history'
                     {
                     lv_history_5_0=(Token)match(input,59,FOLLOW_15); 
 
@@ -8602,7 +8608,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:3461:3: ( (lv_annotations_6_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:3462:3: ( (lv_annotations_6_0= rulePlatformAnnotation ) )*
             loop85:
             do {
                 int alt85=2;
@@ -8615,10 +8621,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt85) {
             	case 1 :
-            	    // InternalThingML.g:3462:4: (lv_annotations_6_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:3463:4: (lv_annotations_6_0= rulePlatformAnnotation )
             	    {
-            	    // InternalThingML.g:3462:4: (lv_annotations_6_0= rulePlatformAnnotation )
-            	    // InternalThingML.g:3463:5: lv_annotations_6_0= rulePlatformAnnotation
+            	    // InternalThingML.g:3463:4: (lv_annotations_6_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:3464:5: lv_annotations_6_0= rulePlatformAnnotation
             	    {
 
             	    					newCompositeNode(grammarAccess.getRegionAccess().getAnnotationsPlatformAnnotationParserRuleCall_5_0());
@@ -8655,7 +8661,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_7, grammarAccess.getRegionAccess().getLeftCurlyBracketKeyword_6());
             		
-            // InternalThingML.g:3484:3: ( (lv_substate_8_0= ruleState ) )*
+            // InternalThingML.g:3485:3: ( (lv_substate_8_0= ruleState ) )*
             loop86:
             do {
                 int alt86=2;
@@ -8668,10 +8674,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt86) {
             	case 1 :
-            	    // InternalThingML.g:3485:4: (lv_substate_8_0= ruleState )
+            	    // InternalThingML.g:3486:4: (lv_substate_8_0= ruleState )
             	    {
-            	    // InternalThingML.g:3485:4: (lv_substate_8_0= ruleState )
-            	    // InternalThingML.g:3486:5: lv_substate_8_0= ruleState
+            	    // InternalThingML.g:3486:4: (lv_substate_8_0= ruleState )
+            	    // InternalThingML.g:3487:5: lv_substate_8_0= ruleState
             	    {
 
             	    					newCompositeNode(grammarAccess.getRegionAccess().getSubstateStateParserRuleCall_7_0());
@@ -8731,7 +8737,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleFinalState"
-    // InternalThingML.g:3511:1: entryRuleFinalState returns [EObject current=null] : iv_ruleFinalState= ruleFinalState EOF ;
+    // InternalThingML.g:3512:1: entryRuleFinalState returns [EObject current=null] : iv_ruleFinalState= ruleFinalState EOF ;
     public final EObject entryRuleFinalState() throws RecognitionException {
         EObject current = null;
 
@@ -8739,8 +8745,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:3511:51: (iv_ruleFinalState= ruleFinalState EOF )
-            // InternalThingML.g:3512:2: iv_ruleFinalState= ruleFinalState EOF
+            // InternalThingML.g:3512:51: (iv_ruleFinalState= ruleFinalState EOF )
+            // InternalThingML.g:3513:2: iv_ruleFinalState= ruleFinalState EOF
             {
              newCompositeNode(grammarAccess.getFinalStateRule()); 
             pushFollow(FOLLOW_1);
@@ -8767,7 +8773,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleFinalState"
-    // InternalThingML.g:3518:1: ruleFinalState returns [EObject current=null] : (otherlv_0= 'final' otherlv_1= 'state' ( (lv_name_2_0= RULE_ID ) ) ( (lv_annotations_3_0= rulePlatformAnnotation ) )* otherlv_4= '{' (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )? otherlv_8= '}' ) ;
+    // InternalThingML.g:3519:1: ruleFinalState returns [EObject current=null] : (otherlv_0= 'final' otherlv_1= 'state' ( (lv_name_2_0= RULE_ID ) ) ( (lv_annotations_3_0= rulePlatformAnnotation ) )* otherlv_4= '{' (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )? otherlv_8= '}' ) ;
     public final EObject ruleFinalState() throws RecognitionException {
         EObject current = null;
 
@@ -8787,11 +8793,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:3524:2: ( (otherlv_0= 'final' otherlv_1= 'state' ( (lv_name_2_0= RULE_ID ) ) ( (lv_annotations_3_0= rulePlatformAnnotation ) )* otherlv_4= '{' (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )? otherlv_8= '}' ) )
-            // InternalThingML.g:3525:2: (otherlv_0= 'final' otherlv_1= 'state' ( (lv_name_2_0= RULE_ID ) ) ( (lv_annotations_3_0= rulePlatformAnnotation ) )* otherlv_4= '{' (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )? otherlv_8= '}' )
+            // InternalThingML.g:3525:2: ( (otherlv_0= 'final' otherlv_1= 'state' ( (lv_name_2_0= RULE_ID ) ) ( (lv_annotations_3_0= rulePlatformAnnotation ) )* otherlv_4= '{' (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )? otherlv_8= '}' ) )
+            // InternalThingML.g:3526:2: (otherlv_0= 'final' otherlv_1= 'state' ( (lv_name_2_0= RULE_ID ) ) ( (lv_annotations_3_0= rulePlatformAnnotation ) )* otherlv_4= '{' (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )? otherlv_8= '}' )
             {
-            // InternalThingML.g:3525:2: (otherlv_0= 'final' otherlv_1= 'state' ( (lv_name_2_0= RULE_ID ) ) ( (lv_annotations_3_0= rulePlatformAnnotation ) )* otherlv_4= '{' (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )? otherlv_8= '}' )
-            // InternalThingML.g:3526:3: otherlv_0= 'final' otherlv_1= 'state' ( (lv_name_2_0= RULE_ID ) ) ( (lv_annotations_3_0= rulePlatformAnnotation ) )* otherlv_4= '{' (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )? otherlv_8= '}'
+            // InternalThingML.g:3526:2: (otherlv_0= 'final' otherlv_1= 'state' ( (lv_name_2_0= RULE_ID ) ) ( (lv_annotations_3_0= rulePlatformAnnotation ) )* otherlv_4= '{' (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )? otherlv_8= '}' )
+            // InternalThingML.g:3527:3: otherlv_0= 'final' otherlv_1= 'state' ( (lv_name_2_0= RULE_ID ) ) ( (lv_annotations_3_0= rulePlatformAnnotation ) )* otherlv_4= '{' (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )? otherlv_8= '}'
             {
             otherlv_0=(Token)match(input,63,FOLLOW_46); 
 
@@ -8801,11 +8807,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getFinalStateAccess().getStateKeyword_1());
             		
-            // InternalThingML.g:3534:3: ( (lv_name_2_0= RULE_ID ) )
-            // InternalThingML.g:3535:4: (lv_name_2_0= RULE_ID )
+            // InternalThingML.g:3535:3: ( (lv_name_2_0= RULE_ID ) )
+            // InternalThingML.g:3536:4: (lv_name_2_0= RULE_ID )
             {
-            // InternalThingML.g:3535:4: (lv_name_2_0= RULE_ID )
-            // InternalThingML.g:3536:5: lv_name_2_0= RULE_ID
+            // InternalThingML.g:3536:4: (lv_name_2_0= RULE_ID )
+            // InternalThingML.g:3537:5: lv_name_2_0= RULE_ID
             {
             lv_name_2_0=(Token)match(input,RULE_ID,FOLLOW_15); 
 
@@ -8827,7 +8833,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:3552:3: ( (lv_annotations_3_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:3553:3: ( (lv_annotations_3_0= rulePlatformAnnotation ) )*
             loop87:
             do {
                 int alt87=2;
@@ -8840,10 +8846,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt87) {
             	case 1 :
-            	    // InternalThingML.g:3553:4: (lv_annotations_3_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:3554:4: (lv_annotations_3_0= rulePlatformAnnotation )
             	    {
-            	    // InternalThingML.g:3553:4: (lv_annotations_3_0= rulePlatformAnnotation )
-            	    // InternalThingML.g:3554:5: lv_annotations_3_0= rulePlatformAnnotation
+            	    // InternalThingML.g:3554:4: (lv_annotations_3_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:3555:5: lv_annotations_3_0= rulePlatformAnnotation
             	    {
 
             	    					newCompositeNode(grammarAccess.getFinalStateAccess().getAnnotationsPlatformAnnotationParserRuleCall_3_0());
@@ -8880,7 +8886,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_4, grammarAccess.getFinalStateAccess().getLeftCurlyBracketKeyword_4());
             		
-            // InternalThingML.g:3575:3: (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )?
+            // InternalThingML.g:3576:3: (otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) ) )?
             int alt88=2;
             int LA88_0 = input.LA(1);
 
@@ -8889,7 +8895,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt88) {
                 case 1 :
-                    // InternalThingML.g:3576:4: otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) )
+                    // InternalThingML.g:3577:4: otherlv_5= 'on' otherlv_6= 'entry' ( (lv_entry_7_0= ruleAction ) )
                     {
                     otherlv_5=(Token)match(input,48,FOLLOW_36); 
 
@@ -8899,11 +8905,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                     				newLeafNode(otherlv_6, grammarAccess.getFinalStateAccess().getEntryKeyword_5_1());
                     			
-                    // InternalThingML.g:3584:4: ( (lv_entry_7_0= ruleAction ) )
-                    // InternalThingML.g:3585:5: (lv_entry_7_0= ruleAction )
+                    // InternalThingML.g:3585:4: ( (lv_entry_7_0= ruleAction ) )
+                    // InternalThingML.g:3586:5: (lv_entry_7_0= ruleAction )
                     {
-                    // InternalThingML.g:3585:5: (lv_entry_7_0= ruleAction )
-                    // InternalThingML.g:3586:6: lv_entry_7_0= ruleAction
+                    // InternalThingML.g:3586:5: (lv_entry_7_0= ruleAction )
+                    // InternalThingML.g:3587:6: lv_entry_7_0= ruleAction
                     {
 
                     						newCompositeNode(grammarAccess.getFinalStateAccess().getEntryActionParserRuleCall_5_2_0());
@@ -8963,7 +8969,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleStateContainer"
-    // InternalThingML.g:3612:1: entryRuleStateContainer returns [EObject current=null] : iv_ruleStateContainer= ruleStateContainer EOF ;
+    // InternalThingML.g:3613:1: entryRuleStateContainer returns [EObject current=null] : iv_ruleStateContainer= ruleStateContainer EOF ;
     public final EObject entryRuleStateContainer() throws RecognitionException {
         EObject current = null;
 
@@ -8971,8 +8977,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:3612:55: (iv_ruleStateContainer= ruleStateContainer EOF )
-            // InternalThingML.g:3613:2: iv_ruleStateContainer= ruleStateContainer EOF
+            // InternalThingML.g:3613:55: (iv_ruleStateContainer= ruleStateContainer EOF )
+            // InternalThingML.g:3614:2: iv_ruleStateContainer= ruleStateContainer EOF
             {
              newCompositeNode(grammarAccess.getStateContainerRule()); 
             pushFollow(FOLLOW_1);
@@ -8999,7 +9005,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleStateContainer"
-    // InternalThingML.g:3619:1: ruleStateContainer returns [EObject current=null] : (this_CompositeState_0= ruleCompositeState | this_Region_1= ruleRegion | this_Session_2= ruleSession | (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) ) ;
+    // InternalThingML.g:3620:1: ruleStateContainer returns [EObject current=null] : (this_CompositeState_0= ruleCompositeState | this_Region_1= ruleRegion | this_Session_2= ruleSession | (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) ) ;
     public final EObject ruleStateContainer() throws RecognitionException {
         EObject current = null;
 
@@ -9022,10 +9028,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:3625:2: ( (this_CompositeState_0= ruleCompositeState | this_Region_1= ruleRegion | this_Session_2= ruleSession | (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) ) )
-            // InternalThingML.g:3626:2: (this_CompositeState_0= ruleCompositeState | this_Region_1= ruleRegion | this_Session_2= ruleSession | (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) )
+            // InternalThingML.g:3626:2: ( (this_CompositeState_0= ruleCompositeState | this_Region_1= ruleRegion | this_Session_2= ruleSession | (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) ) )
+            // InternalThingML.g:3627:2: (this_CompositeState_0= ruleCompositeState | this_Region_1= ruleRegion | this_Session_2= ruleSession | (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) )
             {
-            // InternalThingML.g:3626:2: (this_CompositeState_0= ruleCompositeState | this_Region_1= ruleRegion | this_Session_2= ruleSession | (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) )
+            // InternalThingML.g:3627:2: (this_CompositeState_0= ruleCompositeState | this_Region_1= ruleRegion | this_Session_2= ruleSession | (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' ) )
             int alt91=4;
             switch ( input.LA(1) ) {
             case 56:
@@ -9057,7 +9063,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             switch (alt91) {
                 case 1 :
-                    // InternalThingML.g:3627:3: this_CompositeState_0= ruleCompositeState
+                    // InternalThingML.g:3628:3: this_CompositeState_0= ruleCompositeState
                     {
 
                     			newCompositeNode(grammarAccess.getStateContainerAccess().getCompositeStateParserRuleCall_0());
@@ -9075,7 +9081,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalThingML.g:3636:3: this_Region_1= ruleRegion
+                    // InternalThingML.g:3637:3: this_Region_1= ruleRegion
                     {
 
                     			newCompositeNode(grammarAccess.getStateContainerAccess().getRegionParserRuleCall_1());
@@ -9093,7 +9099,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalThingML.g:3645:3: this_Session_2= ruleSession
+                    // InternalThingML.g:3646:3: this_Session_2= ruleSession
                     {
 
                     			newCompositeNode(grammarAccess.getStateContainerAccess().getSessionParserRuleCall_2());
@@ -9111,20 +9117,20 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalThingML.g:3654:3: (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' )
+                    // InternalThingML.g:3655:3: (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' )
                     {
-                    // InternalThingML.g:3654:3: (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' )
-                    // InternalThingML.g:3655:4: otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}'
+                    // InternalThingML.g:3655:3: (otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}' )
+                    // InternalThingML.g:3656:4: otherlv_3= 'keeps' ( (otherlv_4= RULE_ID ) ) (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )? otherlv_7= '{' ( (lv_substate_8_0= ruleState ) )* otherlv_9= '}'
                     {
                     otherlv_3=(Token)match(input,58,FOLLOW_6); 
 
                     				newLeafNode(otherlv_3, grammarAccess.getStateContainerAccess().getKeepsKeyword_3_0());
                     			
-                    // InternalThingML.g:3659:4: ( (otherlv_4= RULE_ID ) )
-                    // InternalThingML.g:3660:5: (otherlv_4= RULE_ID )
+                    // InternalThingML.g:3660:4: ( (otherlv_4= RULE_ID ) )
+                    // InternalThingML.g:3661:5: (otherlv_4= RULE_ID )
                     {
-                    // InternalThingML.g:3660:5: (otherlv_4= RULE_ID )
-                    // InternalThingML.g:3661:6: otherlv_4= RULE_ID
+                    // InternalThingML.g:3661:5: (otherlv_4= RULE_ID )
+                    // InternalThingML.g:3662:6: otherlv_4= RULE_ID
                     {
 
                     						if (current==null) {
@@ -9141,7 +9147,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalThingML.g:3672:4: (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )?
+                    // InternalThingML.g:3673:4: (otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) ) )?
                     int alt89=2;
                     int LA89_0 = input.LA(1);
 
@@ -9150,17 +9156,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     switch (alt89) {
                         case 1 :
-                            // InternalThingML.g:3673:5: otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) )
+                            // InternalThingML.g:3674:5: otherlv_5= 'keeps' ( (lv_history_6_0= 'history' ) )
                             {
                             otherlv_5=(Token)match(input,58,FOLLOW_49); 
 
                             					newLeafNode(otherlv_5, grammarAccess.getStateContainerAccess().getKeepsKeyword_3_2_0());
                             				
-                            // InternalThingML.g:3677:5: ( (lv_history_6_0= 'history' ) )
-                            // InternalThingML.g:3678:6: (lv_history_6_0= 'history' )
+                            // InternalThingML.g:3678:5: ( (lv_history_6_0= 'history' ) )
+                            // InternalThingML.g:3679:6: (lv_history_6_0= 'history' )
                             {
-                            // InternalThingML.g:3678:6: (lv_history_6_0= 'history' )
-                            // InternalThingML.g:3679:7: lv_history_6_0= 'history'
+                            // InternalThingML.g:3679:6: (lv_history_6_0= 'history' )
+                            // InternalThingML.g:3680:7: lv_history_6_0= 'history'
                             {
                             lv_history_6_0=(Token)match(input,59,FOLLOW_61); 
 
@@ -9188,7 +9194,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                     				newLeafNode(otherlv_7, grammarAccess.getStateContainerAccess().getLeftCurlyBracketKeyword_3_3());
                     			
-                    // InternalThingML.g:3696:4: ( (lv_substate_8_0= ruleState ) )*
+                    // InternalThingML.g:3697:4: ( (lv_substate_8_0= ruleState ) )*
                     loop90:
                     do {
                         int alt90=2;
@@ -9201,10 +9207,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                         switch (alt90) {
                     	case 1 :
-                    	    // InternalThingML.g:3697:5: (lv_substate_8_0= ruleState )
+                    	    // InternalThingML.g:3698:5: (lv_substate_8_0= ruleState )
                     	    {
-                    	    // InternalThingML.g:3697:5: (lv_substate_8_0= ruleState )
-                    	    // InternalThingML.g:3698:6: lv_substate_8_0= ruleState
+                    	    // InternalThingML.g:3698:5: (lv_substate_8_0= ruleState )
+                    	    // InternalThingML.g:3699:6: lv_substate_8_0= ruleState
                     	    {
 
                     	    						newCompositeNode(grammarAccess.getStateContainerAccess().getSubstateStateParserRuleCall_3_4_0());
@@ -9270,7 +9276,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleEvent"
-    // InternalThingML.g:3724:1: entryRuleEvent returns [EObject current=null] : iv_ruleEvent= ruleEvent EOF ;
+    // InternalThingML.g:3725:1: entryRuleEvent returns [EObject current=null] : iv_ruleEvent= ruleEvent EOF ;
     public final EObject entryRuleEvent() throws RecognitionException {
         EObject current = null;
 
@@ -9278,8 +9284,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:3724:46: (iv_ruleEvent= ruleEvent EOF )
-            // InternalThingML.g:3725:2: iv_ruleEvent= ruleEvent EOF
+            // InternalThingML.g:3725:46: (iv_ruleEvent= ruleEvent EOF )
+            // InternalThingML.g:3726:2: iv_ruleEvent= ruleEvent EOF
             {
              newCompositeNode(grammarAccess.getEventRule()); 
             pushFollow(FOLLOW_1);
@@ -9306,7 +9312,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleEvent"
-    // InternalThingML.g:3731:1: ruleEvent returns [EObject current=null] : this_ReceiveMessage_0= ruleReceiveMessage ;
+    // InternalThingML.g:3732:1: ruleEvent returns [EObject current=null] : this_ReceiveMessage_0= ruleReceiveMessage ;
     public final EObject ruleEvent() throws RecognitionException {
         EObject current = null;
 
@@ -9317,8 +9323,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:3737:2: (this_ReceiveMessage_0= ruleReceiveMessage )
-            // InternalThingML.g:3738:2: this_ReceiveMessage_0= ruleReceiveMessage
+            // InternalThingML.g:3738:2: (this_ReceiveMessage_0= ruleReceiveMessage )
+            // InternalThingML.g:3739:2: this_ReceiveMessage_0= ruleReceiveMessage
             {
 
             		newCompositeNode(grammarAccess.getEventAccess().getReceiveMessageParserRuleCall());
@@ -9352,7 +9358,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleReceiveMessage"
-    // InternalThingML.g:3749:1: entryRuleReceiveMessage returns [EObject current=null] : iv_ruleReceiveMessage= ruleReceiveMessage EOF ;
+    // InternalThingML.g:3750:1: entryRuleReceiveMessage returns [EObject current=null] : iv_ruleReceiveMessage= ruleReceiveMessage EOF ;
     public final EObject entryRuleReceiveMessage() throws RecognitionException {
         EObject current = null;
 
@@ -9360,8 +9366,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:3749:55: (iv_ruleReceiveMessage= ruleReceiveMessage EOF )
-            // InternalThingML.g:3750:2: iv_ruleReceiveMessage= ruleReceiveMessage EOF
+            // InternalThingML.g:3750:55: (iv_ruleReceiveMessage= ruleReceiveMessage EOF )
+            // InternalThingML.g:3751:2: iv_ruleReceiveMessage= ruleReceiveMessage EOF
             {
              newCompositeNode(grammarAccess.getReceiveMessageRule()); 
             pushFollow(FOLLOW_1);
@@ -9388,7 +9394,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleReceiveMessage"
-    // InternalThingML.g:3756:1: ruleReceiveMessage returns [EObject current=null] : ( ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '?' ( (otherlv_4= RULE_ID ) ) ) ;
+    // InternalThingML.g:3757:1: ruleReceiveMessage returns [EObject current=null] : ( ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '?' ( (otherlv_4= RULE_ID ) ) ) ;
     public final EObject ruleReceiveMessage() throws RecognitionException {
         EObject current = null;
 
@@ -9402,13 +9408,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:3762:2: ( ( ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '?' ( (otherlv_4= RULE_ID ) ) ) )
-            // InternalThingML.g:3763:2: ( ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '?' ( (otherlv_4= RULE_ID ) ) )
+            // InternalThingML.g:3763:2: ( ( ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '?' ( (otherlv_4= RULE_ID ) ) ) )
+            // InternalThingML.g:3764:2: ( ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '?' ( (otherlv_4= RULE_ID ) ) )
             {
-            // InternalThingML.g:3763:2: ( ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '?' ( (otherlv_4= RULE_ID ) ) )
-            // InternalThingML.g:3764:3: ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '?' ( (otherlv_4= RULE_ID ) )
+            // InternalThingML.g:3764:2: ( ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '?' ( (otherlv_4= RULE_ID ) ) )
+            // InternalThingML.g:3765:3: ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '?' ( (otherlv_4= RULE_ID ) )
             {
-            // InternalThingML.g:3764:3: ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )?
+            // InternalThingML.g:3765:3: ( ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':' )?
             int alt92=2;
             int LA92_0 = input.LA(1);
 
@@ -9421,13 +9427,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt92) {
                 case 1 :
-                    // InternalThingML.g:3765:4: ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':'
+                    // InternalThingML.g:3766:4: ( (lv_name_0_0= RULE_ID ) ) otherlv_1= ':'
                     {
-                    // InternalThingML.g:3765:4: ( (lv_name_0_0= RULE_ID ) )
-                    // InternalThingML.g:3766:5: (lv_name_0_0= RULE_ID )
+                    // InternalThingML.g:3766:4: ( (lv_name_0_0= RULE_ID ) )
+                    // InternalThingML.g:3767:5: (lv_name_0_0= RULE_ID )
                     {
-                    // InternalThingML.g:3766:5: (lv_name_0_0= RULE_ID )
-                    // InternalThingML.g:3767:6: lv_name_0_0= RULE_ID
+                    // InternalThingML.g:3767:5: (lv_name_0_0= RULE_ID )
+                    // InternalThingML.g:3768:6: lv_name_0_0= RULE_ID
                     {
                     lv_name_0_0=(Token)match(input,RULE_ID,FOLLOW_7); 
 
@@ -9459,11 +9465,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:3788:3: ( (otherlv_2= RULE_ID ) )
-            // InternalThingML.g:3789:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:3789:3: ( (otherlv_2= RULE_ID ) )
+            // InternalThingML.g:3790:4: (otherlv_2= RULE_ID )
             {
-            // InternalThingML.g:3789:4: (otherlv_2= RULE_ID )
-            // InternalThingML.g:3790:5: otherlv_2= RULE_ID
+            // InternalThingML.g:3790:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:3791:5: otherlv_2= RULE_ID
             {
 
             					if (current==null) {
@@ -9484,11 +9490,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_3, grammarAccess.getReceiveMessageAccess().getQuestionMarkKeyword_2());
             		
-            // InternalThingML.g:3805:3: ( (otherlv_4= RULE_ID ) )
-            // InternalThingML.g:3806:4: (otherlv_4= RULE_ID )
+            // InternalThingML.g:3806:3: ( (otherlv_4= RULE_ID ) )
+            // InternalThingML.g:3807:4: (otherlv_4= RULE_ID )
             {
-            // InternalThingML.g:3806:4: (otherlv_4= RULE_ID )
-            // InternalThingML.g:3807:5: otherlv_4= RULE_ID
+            // InternalThingML.g:3807:4: (otherlv_4= RULE_ID )
+            // InternalThingML.g:3808:5: otherlv_4= RULE_ID
             {
 
             					if (current==null) {
@@ -9528,7 +9534,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleAction"
-    // InternalThingML.g:3822:1: entryRuleAction returns [EObject current=null] : iv_ruleAction= ruleAction EOF ;
+    // InternalThingML.g:3823:1: entryRuleAction returns [EObject current=null] : iv_ruleAction= ruleAction EOF ;
     public final EObject entryRuleAction() throws RecognitionException {
         EObject current = null;
 
@@ -9536,8 +9542,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:3822:47: (iv_ruleAction= ruleAction EOF )
-            // InternalThingML.g:3823:2: iv_ruleAction= ruleAction EOF
+            // InternalThingML.g:3823:47: (iv_ruleAction= ruleAction EOF )
+            // InternalThingML.g:3824:2: iv_ruleAction= ruleAction EOF
             {
              newCompositeNode(grammarAccess.getActionRule()); 
             pushFollow(FOLLOW_1);
@@ -9564,7 +9570,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAction"
-    // InternalThingML.g:3829:1: ruleAction returns [EObject current=null] : (this_ActionBlock_0= ruleActionBlock | this_ExternStatement_1= ruleExternStatement | this_SendAction_2= ruleSendAction | this_VariableAssignment_3= ruleVariableAssignment | this_Increment_4= ruleIncrement | this_Decrement_5= ruleDecrement | this_LoopAction_6= ruleLoopAction | this_ConditionalAction_7= ruleConditionalAction | this_ReturnAction_8= ruleReturnAction | this_PrintAction_9= rulePrintAction | this_ErrorAction_10= ruleErrorAction | this_StartSession_11= ruleStartSession | this_FunctionCallStatement_12= ruleFunctionCallStatement | this_LocalVariable_13= ruleLocalVariable ) ;
+    // InternalThingML.g:3830:1: ruleAction returns [EObject current=null] : (this_ActionBlock_0= ruleActionBlock | this_ExternStatement_1= ruleExternStatement | this_SendAction_2= ruleSendAction | this_VariableAssignment_3= ruleVariableAssignment | this_Increment_4= ruleIncrement | this_Decrement_5= ruleDecrement | this_LoopAction_6= ruleLoopAction | this_ConditionalAction_7= ruleConditionalAction | this_ReturnAction_8= ruleReturnAction | this_PrintAction_9= rulePrintAction | this_ErrorAction_10= ruleErrorAction | this_StartSession_11= ruleStartSession | this_FunctionCallStatement_12= ruleFunctionCallStatement | this_LocalVariable_13= ruleLocalVariable ) ;
     public final EObject ruleAction() throws RecognitionException {
         EObject current = null;
 
@@ -9601,15 +9607,15 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:3835:2: ( (this_ActionBlock_0= ruleActionBlock | this_ExternStatement_1= ruleExternStatement | this_SendAction_2= ruleSendAction | this_VariableAssignment_3= ruleVariableAssignment | this_Increment_4= ruleIncrement | this_Decrement_5= ruleDecrement | this_LoopAction_6= ruleLoopAction | this_ConditionalAction_7= ruleConditionalAction | this_ReturnAction_8= ruleReturnAction | this_PrintAction_9= rulePrintAction | this_ErrorAction_10= ruleErrorAction | this_StartSession_11= ruleStartSession | this_FunctionCallStatement_12= ruleFunctionCallStatement | this_LocalVariable_13= ruleLocalVariable ) )
-            // InternalThingML.g:3836:2: (this_ActionBlock_0= ruleActionBlock | this_ExternStatement_1= ruleExternStatement | this_SendAction_2= ruleSendAction | this_VariableAssignment_3= ruleVariableAssignment | this_Increment_4= ruleIncrement | this_Decrement_5= ruleDecrement | this_LoopAction_6= ruleLoopAction | this_ConditionalAction_7= ruleConditionalAction | this_ReturnAction_8= ruleReturnAction | this_PrintAction_9= rulePrintAction | this_ErrorAction_10= ruleErrorAction | this_StartSession_11= ruleStartSession | this_FunctionCallStatement_12= ruleFunctionCallStatement | this_LocalVariable_13= ruleLocalVariable )
+            // InternalThingML.g:3836:2: ( (this_ActionBlock_0= ruleActionBlock | this_ExternStatement_1= ruleExternStatement | this_SendAction_2= ruleSendAction | this_VariableAssignment_3= ruleVariableAssignment | this_Increment_4= ruleIncrement | this_Decrement_5= ruleDecrement | this_LoopAction_6= ruleLoopAction | this_ConditionalAction_7= ruleConditionalAction | this_ReturnAction_8= ruleReturnAction | this_PrintAction_9= rulePrintAction | this_ErrorAction_10= ruleErrorAction | this_StartSession_11= ruleStartSession | this_FunctionCallStatement_12= ruleFunctionCallStatement | this_LocalVariable_13= ruleLocalVariable ) )
+            // InternalThingML.g:3837:2: (this_ActionBlock_0= ruleActionBlock | this_ExternStatement_1= ruleExternStatement | this_SendAction_2= ruleSendAction | this_VariableAssignment_3= ruleVariableAssignment | this_Increment_4= ruleIncrement | this_Decrement_5= ruleDecrement | this_LoopAction_6= ruleLoopAction | this_ConditionalAction_7= ruleConditionalAction | this_ReturnAction_8= ruleReturnAction | this_PrintAction_9= rulePrintAction | this_ErrorAction_10= ruleErrorAction | this_StartSession_11= ruleStartSession | this_FunctionCallStatement_12= ruleFunctionCallStatement | this_LocalVariable_13= ruleLocalVariable )
             {
-            // InternalThingML.g:3836:2: (this_ActionBlock_0= ruleActionBlock | this_ExternStatement_1= ruleExternStatement | this_SendAction_2= ruleSendAction | this_VariableAssignment_3= ruleVariableAssignment | this_Increment_4= ruleIncrement | this_Decrement_5= ruleDecrement | this_LoopAction_6= ruleLoopAction | this_ConditionalAction_7= ruleConditionalAction | this_ReturnAction_8= ruleReturnAction | this_PrintAction_9= rulePrintAction | this_ErrorAction_10= ruleErrorAction | this_StartSession_11= ruleStartSession | this_FunctionCallStatement_12= ruleFunctionCallStatement | this_LocalVariable_13= ruleLocalVariable )
+            // InternalThingML.g:3837:2: (this_ActionBlock_0= ruleActionBlock | this_ExternStatement_1= ruleExternStatement | this_SendAction_2= ruleSendAction | this_VariableAssignment_3= ruleVariableAssignment | this_Increment_4= ruleIncrement | this_Decrement_5= ruleDecrement | this_LoopAction_6= ruleLoopAction | this_ConditionalAction_7= ruleConditionalAction | this_ReturnAction_8= ruleReturnAction | this_PrintAction_9= rulePrintAction | this_ErrorAction_10= ruleErrorAction | this_StartSession_11= ruleStartSession | this_FunctionCallStatement_12= ruleFunctionCallStatement | this_LocalVariable_13= ruleLocalVariable )
             int alt93=14;
             alt93 = dfa93.predict(input);
             switch (alt93) {
                 case 1 :
-                    // InternalThingML.g:3837:3: this_ActionBlock_0= ruleActionBlock
+                    // InternalThingML.g:3838:3: this_ActionBlock_0= ruleActionBlock
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getActionBlockParserRuleCall_0());
@@ -9627,7 +9633,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalThingML.g:3846:3: this_ExternStatement_1= ruleExternStatement
+                    // InternalThingML.g:3847:3: this_ExternStatement_1= ruleExternStatement
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getExternStatementParserRuleCall_1());
@@ -9645,7 +9651,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalThingML.g:3855:3: this_SendAction_2= ruleSendAction
+                    // InternalThingML.g:3856:3: this_SendAction_2= ruleSendAction
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getSendActionParserRuleCall_2());
@@ -9663,7 +9669,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalThingML.g:3864:3: this_VariableAssignment_3= ruleVariableAssignment
+                    // InternalThingML.g:3865:3: this_VariableAssignment_3= ruleVariableAssignment
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getVariableAssignmentParserRuleCall_3());
@@ -9681,7 +9687,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalThingML.g:3873:3: this_Increment_4= ruleIncrement
+                    // InternalThingML.g:3874:3: this_Increment_4= ruleIncrement
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getIncrementParserRuleCall_4());
@@ -9699,7 +9705,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalThingML.g:3882:3: this_Decrement_5= ruleDecrement
+                    // InternalThingML.g:3883:3: this_Decrement_5= ruleDecrement
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getDecrementParserRuleCall_5());
@@ -9717,7 +9723,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // InternalThingML.g:3891:3: this_LoopAction_6= ruleLoopAction
+                    // InternalThingML.g:3892:3: this_LoopAction_6= ruleLoopAction
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getLoopActionParserRuleCall_6());
@@ -9735,7 +9741,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 8 :
-                    // InternalThingML.g:3900:3: this_ConditionalAction_7= ruleConditionalAction
+                    // InternalThingML.g:3901:3: this_ConditionalAction_7= ruleConditionalAction
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getConditionalActionParserRuleCall_7());
@@ -9753,7 +9759,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 9 :
-                    // InternalThingML.g:3909:3: this_ReturnAction_8= ruleReturnAction
+                    // InternalThingML.g:3910:3: this_ReturnAction_8= ruleReturnAction
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getReturnActionParserRuleCall_8());
@@ -9771,7 +9777,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 10 :
-                    // InternalThingML.g:3918:3: this_PrintAction_9= rulePrintAction
+                    // InternalThingML.g:3919:3: this_PrintAction_9= rulePrintAction
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getPrintActionParserRuleCall_9());
@@ -9789,7 +9795,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 11 :
-                    // InternalThingML.g:3927:3: this_ErrorAction_10= ruleErrorAction
+                    // InternalThingML.g:3928:3: this_ErrorAction_10= ruleErrorAction
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getErrorActionParserRuleCall_10());
@@ -9807,7 +9813,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 12 :
-                    // InternalThingML.g:3936:3: this_StartSession_11= ruleStartSession
+                    // InternalThingML.g:3937:3: this_StartSession_11= ruleStartSession
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getStartSessionParserRuleCall_11());
@@ -9825,7 +9831,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 13 :
-                    // InternalThingML.g:3945:3: this_FunctionCallStatement_12= ruleFunctionCallStatement
+                    // InternalThingML.g:3946:3: this_FunctionCallStatement_12= ruleFunctionCallStatement
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getFunctionCallStatementParserRuleCall_12());
@@ -9843,7 +9849,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 14 :
-                    // InternalThingML.g:3954:3: this_LocalVariable_13= ruleLocalVariable
+                    // InternalThingML.g:3955:3: this_LocalVariable_13= ruleLocalVariable
                     {
 
                     			newCompositeNode(grammarAccess.getActionAccess().getLocalVariableParserRuleCall_13());
@@ -9883,7 +9889,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleActionBlock"
-    // InternalThingML.g:3966:1: entryRuleActionBlock returns [EObject current=null] : iv_ruleActionBlock= ruleActionBlock EOF ;
+    // InternalThingML.g:3967:1: entryRuleActionBlock returns [EObject current=null] : iv_ruleActionBlock= ruleActionBlock EOF ;
     public final EObject entryRuleActionBlock() throws RecognitionException {
         EObject current = null;
 
@@ -9891,8 +9897,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:3966:52: (iv_ruleActionBlock= ruleActionBlock EOF )
-            // InternalThingML.g:3967:2: iv_ruleActionBlock= ruleActionBlock EOF
+            // InternalThingML.g:3967:52: (iv_ruleActionBlock= ruleActionBlock EOF )
+            // InternalThingML.g:3968:2: iv_ruleActionBlock= ruleActionBlock EOF
             {
              newCompositeNode(grammarAccess.getActionBlockRule()); 
             pushFollow(FOLLOW_1);
@@ -9919,7 +9925,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleActionBlock"
-    // InternalThingML.g:3973:1: ruleActionBlock returns [EObject current=null] : ( () otherlv_1= 'do' ( (lv_actions_2_0= ruleAction ) )* otherlv_3= 'end' ) ;
+    // InternalThingML.g:3974:1: ruleActionBlock returns [EObject current=null] : ( () otherlv_1= 'do' ( (lv_actions_2_0= ruleAction ) )* otherlv_3= 'end' ) ;
     public final EObject ruleActionBlock() throws RecognitionException {
         EObject current = null;
 
@@ -9932,14 +9938,14 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:3979:2: ( ( () otherlv_1= 'do' ( (lv_actions_2_0= ruleAction ) )* otherlv_3= 'end' ) )
-            // InternalThingML.g:3980:2: ( () otherlv_1= 'do' ( (lv_actions_2_0= ruleAction ) )* otherlv_3= 'end' )
+            // InternalThingML.g:3980:2: ( ( () otherlv_1= 'do' ( (lv_actions_2_0= ruleAction ) )* otherlv_3= 'end' ) )
+            // InternalThingML.g:3981:2: ( () otherlv_1= 'do' ( (lv_actions_2_0= ruleAction ) )* otherlv_3= 'end' )
             {
-            // InternalThingML.g:3980:2: ( () otherlv_1= 'do' ( (lv_actions_2_0= ruleAction ) )* otherlv_3= 'end' )
-            // InternalThingML.g:3981:3: () otherlv_1= 'do' ( (lv_actions_2_0= ruleAction ) )* otherlv_3= 'end'
+            // InternalThingML.g:3981:2: ( () otherlv_1= 'do' ( (lv_actions_2_0= ruleAction ) )* otherlv_3= 'end' )
+            // InternalThingML.g:3982:3: () otherlv_1= 'do' ( (lv_actions_2_0= ruleAction ) )* otherlv_3= 'end'
             {
-            // InternalThingML.g:3981:3: ()
-            // InternalThingML.g:3982:4: 
+            // InternalThingML.g:3982:3: ()
+            // InternalThingML.g:3983:4: 
             {
 
             				current = forceCreateModelElement(
@@ -9953,7 +9959,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getActionBlockAccess().getDoKeyword_1());
             		
-            // InternalThingML.g:3992:3: ( (lv_actions_2_0= ruleAction ) )*
+            // InternalThingML.g:3993:3: ( (lv_actions_2_0= ruleAction ) )*
             loop94:
             do {
                 int alt94=2;
@@ -9966,10 +9972,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt94) {
             	case 1 :
-            	    // InternalThingML.g:3993:4: (lv_actions_2_0= ruleAction )
+            	    // InternalThingML.g:3994:4: (lv_actions_2_0= ruleAction )
             	    {
-            	    // InternalThingML.g:3993:4: (lv_actions_2_0= ruleAction )
-            	    // InternalThingML.g:3994:5: lv_actions_2_0= ruleAction
+            	    // InternalThingML.g:3994:4: (lv_actions_2_0= ruleAction )
+            	    // InternalThingML.g:3995:5: lv_actions_2_0= ruleAction
             	    {
 
             	    					newCompositeNode(grammarAccess.getActionBlockAccess().getActionsActionParserRuleCall_2_0());
@@ -10029,7 +10035,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExternStatement"
-    // InternalThingML.g:4019:1: entryRuleExternStatement returns [EObject current=null] : iv_ruleExternStatement= ruleExternStatement EOF ;
+    // InternalThingML.g:4020:1: entryRuleExternStatement returns [EObject current=null] : iv_ruleExternStatement= ruleExternStatement EOF ;
     public final EObject entryRuleExternStatement() throws RecognitionException {
         EObject current = null;
 
@@ -10037,8 +10043,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4019:56: (iv_ruleExternStatement= ruleExternStatement EOF )
-            // InternalThingML.g:4020:2: iv_ruleExternStatement= ruleExternStatement EOF
+            // InternalThingML.g:4020:56: (iv_ruleExternStatement= ruleExternStatement EOF )
+            // InternalThingML.g:4021:2: iv_ruleExternStatement= ruleExternStatement EOF
             {
              newCompositeNode(grammarAccess.getExternStatementRule()); 
             pushFollow(FOLLOW_1);
@@ -10065,7 +10071,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExternStatement"
-    // InternalThingML.g:4026:1: ruleExternStatement returns [EObject current=null] : ( ( (lv_statement_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* ) ;
+    // InternalThingML.g:4027:1: ruleExternStatement returns [EObject current=null] : ( ( (lv_statement_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* ) ;
     public final EObject ruleExternStatement() throws RecognitionException {
         EObject current = null;
 
@@ -10078,17 +10084,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4032:2: ( ( ( (lv_statement_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* ) )
-            // InternalThingML.g:4033:2: ( ( (lv_statement_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* )
+            // InternalThingML.g:4033:2: ( ( ( (lv_statement_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* ) )
+            // InternalThingML.g:4034:2: ( ( (lv_statement_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* )
             {
-            // InternalThingML.g:4033:2: ( ( (lv_statement_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* )
-            // InternalThingML.g:4034:3: ( (lv_statement_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )*
+            // InternalThingML.g:4034:2: ( ( (lv_statement_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* )
+            // InternalThingML.g:4035:3: ( (lv_statement_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )*
             {
-            // InternalThingML.g:4034:3: ( (lv_statement_0_0= RULE_STRING_EXT ) )
-            // InternalThingML.g:4035:4: (lv_statement_0_0= RULE_STRING_EXT )
+            // InternalThingML.g:4035:3: ( (lv_statement_0_0= RULE_STRING_EXT ) )
+            // InternalThingML.g:4036:4: (lv_statement_0_0= RULE_STRING_EXT )
             {
-            // InternalThingML.g:4035:4: (lv_statement_0_0= RULE_STRING_EXT )
-            // InternalThingML.g:4036:5: lv_statement_0_0= RULE_STRING_EXT
+            // InternalThingML.g:4036:4: (lv_statement_0_0= RULE_STRING_EXT )
+            // InternalThingML.g:4037:5: lv_statement_0_0= RULE_STRING_EXT
             {
             lv_statement_0_0=(Token)match(input,RULE_STRING_EXT,FOLLOW_64); 
 
@@ -10110,7 +10116,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:4052:3: (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )*
+            // InternalThingML.g:4053:3: (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )*
             loop95:
             do {
                 int alt95=2;
@@ -10123,17 +10129,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt95) {
             	case 1 :
-            	    // InternalThingML.g:4053:4: otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) )
+            	    // InternalThingML.g:4054:4: otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) )
             	    {
             	    otherlv_1=(Token)match(input,67,FOLLOW_23); 
 
             	    				newLeafNode(otherlv_1, grammarAccess.getExternStatementAccess().getAmpersandKeyword_1_0());
             	    			
-            	    // InternalThingML.g:4057:4: ( (lv_segments_2_0= ruleExpression ) )
-            	    // InternalThingML.g:4058:5: (lv_segments_2_0= ruleExpression )
+            	    // InternalThingML.g:4058:4: ( (lv_segments_2_0= ruleExpression ) )
+            	    // InternalThingML.g:4059:5: (lv_segments_2_0= ruleExpression )
             	    {
-            	    // InternalThingML.g:4058:5: (lv_segments_2_0= ruleExpression )
-            	    // InternalThingML.g:4059:6: lv_segments_2_0= ruleExpression
+            	    // InternalThingML.g:4059:5: (lv_segments_2_0= ruleExpression )
+            	    // InternalThingML.g:4060:6: lv_segments_2_0= ruleExpression
             	    {
 
             	    						newCompositeNode(grammarAccess.getExternStatementAccess().getSegmentsExpressionParserRuleCall_1_1_0());
@@ -10192,7 +10198,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleLocalVariable"
-    // InternalThingML.g:4081:1: entryRuleLocalVariable returns [EObject current=null] : iv_ruleLocalVariable= ruleLocalVariable EOF ;
+    // InternalThingML.g:4082:1: entryRuleLocalVariable returns [EObject current=null] : iv_ruleLocalVariable= ruleLocalVariable EOF ;
     public final EObject entryRuleLocalVariable() throws RecognitionException {
         EObject current = null;
 
@@ -10200,8 +10206,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4081:54: (iv_ruleLocalVariable= ruleLocalVariable EOF )
-            // InternalThingML.g:4082:2: iv_ruleLocalVariable= ruleLocalVariable EOF
+            // InternalThingML.g:4082:54: (iv_ruleLocalVariable= ruleLocalVariable EOF )
+            // InternalThingML.g:4083:2: iv_ruleLocalVariable= ruleLocalVariable EOF
             {
              newCompositeNode(grammarAccess.getLocalVariableRule()); 
             pushFollow(FOLLOW_1);
@@ -10228,7 +10234,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleLocalVariable"
-    // InternalThingML.g:4088:1: ruleLocalVariable returns [EObject current=null] : ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) ;
+    // InternalThingML.g:4089:1: ruleLocalVariable returns [EObject current=null] : ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) ;
     public final EObject ruleLocalVariable() throws RecognitionException {
         EObject current = null;
 
@@ -10248,13 +10254,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4094:2: ( ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) )
-            // InternalThingML.g:4095:2: ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:4095:2: ( ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) )
+            // InternalThingML.g:4096:2: ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
             {
-            // InternalThingML.g:4095:2: ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
-            // InternalThingML.g:4096:3: ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:4096:2: ( ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:4097:3: ( (lv_changeable_0_0= 'readonly' ) )? otherlv_1= 'var' ( (lv_name_2_0= RULE_ID ) ) otherlv_3= ':' ( (lv_typeRef_4_0= ruleTypeRef ) ) (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )? ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
             {
-            // InternalThingML.g:4096:3: ( (lv_changeable_0_0= 'readonly' ) )?
+            // InternalThingML.g:4097:3: ( (lv_changeable_0_0= 'readonly' ) )?
             int alt96=2;
             int LA96_0 = input.LA(1);
 
@@ -10263,10 +10269,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt96) {
                 case 1 :
-                    // InternalThingML.g:4097:4: (lv_changeable_0_0= 'readonly' )
+                    // InternalThingML.g:4098:4: (lv_changeable_0_0= 'readonly' )
                     {
-                    // InternalThingML.g:4097:4: (lv_changeable_0_0= 'readonly' )
-                    // InternalThingML.g:4098:5: lv_changeable_0_0= 'readonly'
+                    // InternalThingML.g:4098:4: (lv_changeable_0_0= 'readonly' )
+                    // InternalThingML.g:4099:5: lv_changeable_0_0= 'readonly'
                     {
                     lv_changeable_0_0=(Token)match(input,37,FOLLOW_65); 
 
@@ -10291,11 +10297,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getLocalVariableAccess().getVarKeyword_1());
             		
-            // InternalThingML.g:4114:3: ( (lv_name_2_0= RULE_ID ) )
-            // InternalThingML.g:4115:4: (lv_name_2_0= RULE_ID )
+            // InternalThingML.g:4115:3: ( (lv_name_2_0= RULE_ID ) )
+            // InternalThingML.g:4116:4: (lv_name_2_0= RULE_ID )
             {
-            // InternalThingML.g:4115:4: (lv_name_2_0= RULE_ID )
-            // InternalThingML.g:4116:5: lv_name_2_0= RULE_ID
+            // InternalThingML.g:4116:4: (lv_name_2_0= RULE_ID )
+            // InternalThingML.g:4117:5: lv_name_2_0= RULE_ID
             {
             lv_name_2_0=(Token)match(input,RULE_ID,FOLLOW_7); 
 
@@ -10321,11 +10327,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_3, grammarAccess.getLocalVariableAccess().getColonKeyword_3());
             		
-            // InternalThingML.g:4136:3: ( (lv_typeRef_4_0= ruleTypeRef ) )
-            // InternalThingML.g:4137:4: (lv_typeRef_4_0= ruleTypeRef )
+            // InternalThingML.g:4137:3: ( (lv_typeRef_4_0= ruleTypeRef ) )
+            // InternalThingML.g:4138:4: (lv_typeRef_4_0= ruleTypeRef )
             {
-            // InternalThingML.g:4137:4: (lv_typeRef_4_0= ruleTypeRef )
-            // InternalThingML.g:4138:5: lv_typeRef_4_0= ruleTypeRef
+            // InternalThingML.g:4138:4: (lv_typeRef_4_0= ruleTypeRef )
+            // InternalThingML.g:4139:5: lv_typeRef_4_0= ruleTypeRef
             {
 
             					newCompositeNode(grammarAccess.getLocalVariableAccess().getTypeRefTypeRefParserRuleCall_4_0());
@@ -10352,7 +10358,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:4155:3: (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )?
+            // InternalThingML.g:4156:3: (otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) ) )?
             int alt97=2;
             int LA97_0 = input.LA(1);
 
@@ -10361,17 +10367,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt97) {
                 case 1 :
-                    // InternalThingML.g:4156:4: otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) )
+                    // InternalThingML.g:4157:4: otherlv_5= '=' ( (lv_init_6_0= ruleExpression ) )
                     {
                     otherlv_5=(Token)match(input,32,FOLLOW_23); 
 
                     				newLeafNode(otherlv_5, grammarAccess.getLocalVariableAccess().getEqualsSignKeyword_5_0());
                     			
-                    // InternalThingML.g:4160:4: ( (lv_init_6_0= ruleExpression ) )
-                    // InternalThingML.g:4161:5: (lv_init_6_0= ruleExpression )
+                    // InternalThingML.g:4161:4: ( (lv_init_6_0= ruleExpression ) )
+                    // InternalThingML.g:4162:5: (lv_init_6_0= ruleExpression )
                     {
-                    // InternalThingML.g:4161:5: (lv_init_6_0= ruleExpression )
-                    // InternalThingML.g:4162:6: lv_init_6_0= ruleExpression
+                    // InternalThingML.g:4162:5: (lv_init_6_0= ruleExpression )
+                    // InternalThingML.g:4163:6: lv_init_6_0= ruleExpression
                     {
 
                     						newCompositeNode(grammarAccess.getLocalVariableAccess().getInitExpressionParserRuleCall_5_1_0());
@@ -10404,7 +10410,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:4180:3: ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:4181:3: ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
             loop98:
             do {
                 int alt98=2;
@@ -10417,10 +10423,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt98) {
             	case 1 :
-            	    // InternalThingML.g:4181:4: (lv_annotations_7_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:4182:4: (lv_annotations_7_0= rulePlatformAnnotation )
             	    {
-            	    // InternalThingML.g:4181:4: (lv_annotations_7_0= rulePlatformAnnotation )
-            	    // InternalThingML.g:4182:5: lv_annotations_7_0= rulePlatformAnnotation
+            	    // InternalThingML.g:4182:4: (lv_annotations_7_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:4183:5: lv_annotations_7_0= rulePlatformAnnotation
             	    {
 
             	    					newCompositeNode(grammarAccess.getLocalVariableAccess().getAnnotationsPlatformAnnotationParserRuleCall_6_0());
@@ -10476,7 +10482,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleSendAction"
-    // InternalThingML.g:4203:1: entryRuleSendAction returns [EObject current=null] : iv_ruleSendAction= ruleSendAction EOF ;
+    // InternalThingML.g:4204:1: entryRuleSendAction returns [EObject current=null] : iv_ruleSendAction= ruleSendAction EOF ;
     public final EObject entryRuleSendAction() throws RecognitionException {
         EObject current = null;
 
@@ -10484,8 +10490,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4203:51: (iv_ruleSendAction= ruleSendAction EOF )
-            // InternalThingML.g:4204:2: iv_ruleSendAction= ruleSendAction EOF
+            // InternalThingML.g:4204:51: (iv_ruleSendAction= ruleSendAction EOF )
+            // InternalThingML.g:4205:2: iv_ruleSendAction= ruleSendAction EOF
             {
              newCompositeNode(grammarAccess.getSendActionRule()); 
             pushFollow(FOLLOW_1);
@@ -10512,7 +10518,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleSendAction"
-    // InternalThingML.g:4210:1: ruleSendAction returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '!' ( (otherlv_2= RULE_ID ) ) otherlv_3= '(' ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )? otherlv_7= ')' ) ;
+    // InternalThingML.g:4211:1: ruleSendAction returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '!' ( (otherlv_2= RULE_ID ) ) otherlv_3= '(' ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )? otherlv_7= ')' ) ;
     public final EObject ruleSendAction() throws RecognitionException {
         EObject current = null;
 
@@ -10531,17 +10537,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4216:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '!' ( (otherlv_2= RULE_ID ) ) otherlv_3= '(' ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )? otherlv_7= ')' ) )
-            // InternalThingML.g:4217:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '!' ( (otherlv_2= RULE_ID ) ) otherlv_3= '(' ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )? otherlv_7= ')' )
+            // InternalThingML.g:4217:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '!' ( (otherlv_2= RULE_ID ) ) otherlv_3= '(' ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )? otherlv_7= ')' ) )
+            // InternalThingML.g:4218:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '!' ( (otherlv_2= RULE_ID ) ) otherlv_3= '(' ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )? otherlv_7= ')' )
             {
-            // InternalThingML.g:4217:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '!' ( (otherlv_2= RULE_ID ) ) otherlv_3= '(' ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )? otherlv_7= ')' )
-            // InternalThingML.g:4218:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '!' ( (otherlv_2= RULE_ID ) ) otherlv_3= '(' ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )? otherlv_7= ')'
+            // InternalThingML.g:4218:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '!' ( (otherlv_2= RULE_ID ) ) otherlv_3= '(' ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )? otherlv_7= ')' )
+            // InternalThingML.g:4219:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '!' ( (otherlv_2= RULE_ID ) ) otherlv_3= '(' ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )? otherlv_7= ')'
             {
-            // InternalThingML.g:4218:3: ( (otherlv_0= RULE_ID ) )
-            // InternalThingML.g:4219:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:4219:3: ( (otherlv_0= RULE_ID ) )
+            // InternalThingML.g:4220:4: (otherlv_0= RULE_ID )
             {
-            // InternalThingML.g:4219:4: (otherlv_0= RULE_ID )
-            // InternalThingML.g:4220:5: otherlv_0= RULE_ID
+            // InternalThingML.g:4220:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:4221:5: otherlv_0= RULE_ID
             {
 
             					if (current==null) {
@@ -10562,11 +10568,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getSendActionAccess().getExclamationMarkKeyword_1());
             		
-            // InternalThingML.g:4235:3: ( (otherlv_2= RULE_ID ) )
-            // InternalThingML.g:4236:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:4236:3: ( (otherlv_2= RULE_ID ) )
+            // InternalThingML.g:4237:4: (otherlv_2= RULE_ID )
             {
-            // InternalThingML.g:4236:4: (otherlv_2= RULE_ID )
-            // InternalThingML.g:4237:5: otherlv_2= RULE_ID
+            // InternalThingML.g:4237:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:4238:5: otherlv_2= RULE_ID
             {
 
             					if (current==null) {
@@ -10587,7 +10593,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_3, grammarAccess.getSendActionAccess().getLeftParenthesisKeyword_3());
             		
-            // InternalThingML.g:4252:3: ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )?
+            // InternalThingML.g:4253:3: ( ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )* )?
             int alt100=2;
             int LA100_0 = input.LA(1);
 
@@ -10596,13 +10602,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt100) {
                 case 1 :
-                    // InternalThingML.g:4253:4: ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )*
+                    // InternalThingML.g:4254:4: ( (lv_parameters_4_0= ruleExpression ) ) (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )*
                     {
-                    // InternalThingML.g:4253:4: ( (lv_parameters_4_0= ruleExpression ) )
-                    // InternalThingML.g:4254:5: (lv_parameters_4_0= ruleExpression )
+                    // InternalThingML.g:4254:4: ( (lv_parameters_4_0= ruleExpression ) )
+                    // InternalThingML.g:4255:5: (lv_parameters_4_0= ruleExpression )
                     {
-                    // InternalThingML.g:4254:5: (lv_parameters_4_0= ruleExpression )
-                    // InternalThingML.g:4255:6: lv_parameters_4_0= ruleExpression
+                    // InternalThingML.g:4255:5: (lv_parameters_4_0= ruleExpression )
+                    // InternalThingML.g:4256:6: lv_parameters_4_0= ruleExpression
                     {
 
                     						newCompositeNode(grammarAccess.getSendActionAccess().getParametersExpressionParserRuleCall_4_0_0());
@@ -10629,7 +10635,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalThingML.g:4272:4: (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )*
+                    // InternalThingML.g:4273:4: (otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) ) )*
                     loop99:
                     do {
                         int alt99=2;
@@ -10642,17 +10648,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                         switch (alt99) {
                     	case 1 :
-                    	    // InternalThingML.g:4273:5: otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) )
+                    	    // InternalThingML.g:4274:5: otherlv_5= ',' ( (lv_parameters_6_0= ruleExpression ) )
                     	    {
                     	    otherlv_5=(Token)match(input,30,FOLLOW_23); 
 
                     	    					newLeafNode(otherlv_5, grammarAccess.getSendActionAccess().getCommaKeyword_4_1_0());
                     	    				
-                    	    // InternalThingML.g:4277:5: ( (lv_parameters_6_0= ruleExpression ) )
-                    	    // InternalThingML.g:4278:6: (lv_parameters_6_0= ruleExpression )
+                    	    // InternalThingML.g:4278:5: ( (lv_parameters_6_0= ruleExpression ) )
+                    	    // InternalThingML.g:4279:6: (lv_parameters_6_0= ruleExpression )
                     	    {
-                    	    // InternalThingML.g:4278:6: (lv_parameters_6_0= ruleExpression )
-                    	    // InternalThingML.g:4279:7: lv_parameters_6_0= ruleExpression
+                    	    // InternalThingML.g:4279:6: (lv_parameters_6_0= ruleExpression )
+                    	    // InternalThingML.g:4280:7: lv_parameters_6_0= ruleExpression
                     	    {
 
                     	    							newCompositeNode(grammarAccess.getSendActionAccess().getParametersExpressionParserRuleCall_4_1_1_0());
@@ -10721,7 +10727,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleVariableAssignment"
-    // InternalThingML.g:4306:1: entryRuleVariableAssignment returns [EObject current=null] : iv_ruleVariableAssignment= ruleVariableAssignment EOF ;
+    // InternalThingML.g:4307:1: entryRuleVariableAssignment returns [EObject current=null] : iv_ruleVariableAssignment= ruleVariableAssignment EOF ;
     public final EObject entryRuleVariableAssignment() throws RecognitionException {
         EObject current = null;
 
@@ -10729,8 +10735,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4306:59: (iv_ruleVariableAssignment= ruleVariableAssignment EOF )
-            // InternalThingML.g:4307:2: iv_ruleVariableAssignment= ruleVariableAssignment EOF
+            // InternalThingML.g:4307:59: (iv_ruleVariableAssignment= ruleVariableAssignment EOF )
+            // InternalThingML.g:4308:2: iv_ruleVariableAssignment= ruleVariableAssignment EOF
             {
              newCompositeNode(grammarAccess.getVariableAssignmentRule()); 
             pushFollow(FOLLOW_1);
@@ -10757,7 +10763,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVariableAssignment"
-    // InternalThingML.g:4313:1: ruleVariableAssignment returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )* otherlv_4= '=' ( (lv_expression_5_0= ruleExpression ) ) ) ;
+    // InternalThingML.g:4314:1: ruleVariableAssignment returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )* otherlv_4= '=' ( (lv_expression_5_0= ruleExpression ) ) ) ;
     public final EObject ruleVariableAssignment() throws RecognitionException {
         EObject current = null;
 
@@ -10774,17 +10780,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4319:2: ( ( ( (otherlv_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )* otherlv_4= '=' ( (lv_expression_5_0= ruleExpression ) ) ) )
-            // InternalThingML.g:4320:2: ( ( (otherlv_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )* otherlv_4= '=' ( (lv_expression_5_0= ruleExpression ) ) )
+            // InternalThingML.g:4320:2: ( ( ( (otherlv_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )* otherlv_4= '=' ( (lv_expression_5_0= ruleExpression ) ) ) )
+            // InternalThingML.g:4321:2: ( ( (otherlv_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )* otherlv_4= '=' ( (lv_expression_5_0= ruleExpression ) ) )
             {
-            // InternalThingML.g:4320:2: ( ( (otherlv_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )* otherlv_4= '=' ( (lv_expression_5_0= ruleExpression ) ) )
-            // InternalThingML.g:4321:3: ( (otherlv_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )* otherlv_4= '=' ( (lv_expression_5_0= ruleExpression ) )
+            // InternalThingML.g:4321:2: ( ( (otherlv_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )* otherlv_4= '=' ( (lv_expression_5_0= ruleExpression ) ) )
+            // InternalThingML.g:4322:3: ( (otherlv_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )* otherlv_4= '=' ( (lv_expression_5_0= ruleExpression ) )
             {
-            // InternalThingML.g:4321:3: ( (otherlv_0= RULE_ID ) )
-            // InternalThingML.g:4322:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:4322:3: ( (otherlv_0= RULE_ID ) )
+            // InternalThingML.g:4323:4: (otherlv_0= RULE_ID )
             {
-            // InternalThingML.g:4322:4: (otherlv_0= RULE_ID )
-            // InternalThingML.g:4323:5: otherlv_0= RULE_ID
+            // InternalThingML.g:4323:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:4324:5: otherlv_0= RULE_ID
             {
 
             					if (current==null) {
@@ -10801,7 +10807,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:4334:3: (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )*
+            // InternalThingML.g:4335:3: (otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']' )*
             loop101:
             do {
                 int alt101=2;
@@ -10814,17 +10820,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt101) {
             	case 1 :
-            	    // InternalThingML.g:4335:4: otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']'
+            	    // InternalThingML.g:4336:4: otherlv_1= '[' ( (lv_index_2_0= ruleExpression ) ) otherlv_3= ']'
             	    {
             	    otherlv_1=(Token)match(input,17,FOLLOW_23); 
 
             	    				newLeafNode(otherlv_1, grammarAccess.getVariableAssignmentAccess().getLeftSquareBracketKeyword_1_0());
             	    			
-            	    // InternalThingML.g:4339:4: ( (lv_index_2_0= ruleExpression ) )
-            	    // InternalThingML.g:4340:5: (lv_index_2_0= ruleExpression )
+            	    // InternalThingML.g:4340:4: ( (lv_index_2_0= ruleExpression ) )
+            	    // InternalThingML.g:4341:5: (lv_index_2_0= ruleExpression )
             	    {
-            	    // InternalThingML.g:4340:5: (lv_index_2_0= ruleExpression )
-            	    // InternalThingML.g:4341:6: lv_index_2_0= ruleExpression
+            	    // InternalThingML.g:4341:5: (lv_index_2_0= ruleExpression )
+            	    // InternalThingML.g:4342:6: lv_index_2_0= ruleExpression
             	    {
 
             	    						newCompositeNode(grammarAccess.getVariableAssignmentAccess().getIndexExpressionParserRuleCall_1_1_0());
@@ -10868,11 +10874,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_4, grammarAccess.getVariableAssignmentAccess().getEqualsSignKeyword_2());
             		
-            // InternalThingML.g:4367:3: ( (lv_expression_5_0= ruleExpression ) )
-            // InternalThingML.g:4368:4: (lv_expression_5_0= ruleExpression )
+            // InternalThingML.g:4368:3: ( (lv_expression_5_0= ruleExpression ) )
+            // InternalThingML.g:4369:4: (lv_expression_5_0= ruleExpression )
             {
-            // InternalThingML.g:4368:4: (lv_expression_5_0= ruleExpression )
-            // InternalThingML.g:4369:5: lv_expression_5_0= ruleExpression
+            // InternalThingML.g:4369:4: (lv_expression_5_0= ruleExpression )
+            // InternalThingML.g:4370:5: lv_expression_5_0= ruleExpression
             {
 
             					newCompositeNode(grammarAccess.getVariableAssignmentAccess().getExpressionExpressionParserRuleCall_3_0());
@@ -10922,7 +10928,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleIncrement"
-    // InternalThingML.g:4390:1: entryRuleIncrement returns [EObject current=null] : iv_ruleIncrement= ruleIncrement EOF ;
+    // InternalThingML.g:4391:1: entryRuleIncrement returns [EObject current=null] : iv_ruleIncrement= ruleIncrement EOF ;
     public final EObject entryRuleIncrement() throws RecognitionException {
         EObject current = null;
 
@@ -10930,8 +10936,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4390:50: (iv_ruleIncrement= ruleIncrement EOF )
-            // InternalThingML.g:4391:2: iv_ruleIncrement= ruleIncrement EOF
+            // InternalThingML.g:4391:50: (iv_ruleIncrement= ruleIncrement EOF )
+            // InternalThingML.g:4392:2: iv_ruleIncrement= ruleIncrement EOF
             {
              newCompositeNode(grammarAccess.getIncrementRule()); 
             pushFollow(FOLLOW_1);
@@ -10958,7 +10964,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleIncrement"
-    // InternalThingML.g:4397:1: ruleIncrement returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '++' ) ;
+    // InternalThingML.g:4398:1: ruleIncrement returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '++' ) ;
     public final EObject ruleIncrement() throws RecognitionException {
         EObject current = null;
 
@@ -10969,17 +10975,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4403:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '++' ) )
-            // InternalThingML.g:4404:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '++' )
+            // InternalThingML.g:4404:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '++' ) )
+            // InternalThingML.g:4405:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '++' )
             {
-            // InternalThingML.g:4404:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '++' )
-            // InternalThingML.g:4405:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '++'
+            // InternalThingML.g:4405:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '++' )
+            // InternalThingML.g:4406:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '++'
             {
-            // InternalThingML.g:4405:3: ( (otherlv_0= RULE_ID ) )
-            // InternalThingML.g:4406:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:4406:3: ( (otherlv_0= RULE_ID ) )
+            // InternalThingML.g:4407:4: (otherlv_0= RULE_ID )
             {
-            // InternalThingML.g:4406:4: (otherlv_0= RULE_ID )
-            // InternalThingML.g:4407:5: otherlv_0= RULE_ID
+            // InternalThingML.g:4407:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:4408:5: otherlv_0= RULE_ID
             {
 
             					if (current==null) {
@@ -11023,7 +11029,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleDecrement"
-    // InternalThingML.g:4426:1: entryRuleDecrement returns [EObject current=null] : iv_ruleDecrement= ruleDecrement EOF ;
+    // InternalThingML.g:4427:1: entryRuleDecrement returns [EObject current=null] : iv_ruleDecrement= ruleDecrement EOF ;
     public final EObject entryRuleDecrement() throws RecognitionException {
         EObject current = null;
 
@@ -11031,8 +11037,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4426:50: (iv_ruleDecrement= ruleDecrement EOF )
-            // InternalThingML.g:4427:2: iv_ruleDecrement= ruleDecrement EOF
+            // InternalThingML.g:4427:50: (iv_ruleDecrement= ruleDecrement EOF )
+            // InternalThingML.g:4428:2: iv_ruleDecrement= ruleDecrement EOF
             {
              newCompositeNode(grammarAccess.getDecrementRule()); 
             pushFollow(FOLLOW_1);
@@ -11059,7 +11065,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleDecrement"
-    // InternalThingML.g:4433:1: ruleDecrement returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '--' ) ;
+    // InternalThingML.g:4434:1: ruleDecrement returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '--' ) ;
     public final EObject ruleDecrement() throws RecognitionException {
         EObject current = null;
 
@@ -11070,17 +11076,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4439:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '--' ) )
-            // InternalThingML.g:4440:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '--' )
+            // InternalThingML.g:4440:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '--' ) )
+            // InternalThingML.g:4441:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '--' )
             {
-            // InternalThingML.g:4440:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '--' )
-            // InternalThingML.g:4441:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '--'
+            // InternalThingML.g:4441:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '--' )
+            // InternalThingML.g:4442:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '--'
             {
-            // InternalThingML.g:4441:3: ( (otherlv_0= RULE_ID ) )
-            // InternalThingML.g:4442:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:4442:3: ( (otherlv_0= RULE_ID ) )
+            // InternalThingML.g:4443:4: (otherlv_0= RULE_ID )
             {
-            // InternalThingML.g:4442:4: (otherlv_0= RULE_ID )
-            // InternalThingML.g:4443:5: otherlv_0= RULE_ID
+            // InternalThingML.g:4443:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:4444:5: otherlv_0= RULE_ID
             {
 
             					if (current==null) {
@@ -11124,7 +11130,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleLoopAction"
-    // InternalThingML.g:4462:1: entryRuleLoopAction returns [EObject current=null] : iv_ruleLoopAction= ruleLoopAction EOF ;
+    // InternalThingML.g:4463:1: entryRuleLoopAction returns [EObject current=null] : iv_ruleLoopAction= ruleLoopAction EOF ;
     public final EObject entryRuleLoopAction() throws RecognitionException {
         EObject current = null;
 
@@ -11132,8 +11138,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4462:51: (iv_ruleLoopAction= ruleLoopAction EOF )
-            // InternalThingML.g:4463:2: iv_ruleLoopAction= ruleLoopAction EOF
+            // InternalThingML.g:4463:51: (iv_ruleLoopAction= ruleLoopAction EOF )
+            // InternalThingML.g:4464:2: iv_ruleLoopAction= ruleLoopAction EOF
             {
              newCompositeNode(grammarAccess.getLoopActionRule()); 
             pushFollow(FOLLOW_1);
@@ -11160,7 +11166,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleLoopAction"
-    // InternalThingML.g:4469:1: ruleLoopAction returns [EObject current=null] : (otherlv_0= 'while' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) ) ;
+    // InternalThingML.g:4470:1: ruleLoopAction returns [EObject current=null] : (otherlv_0= 'while' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) ) ;
     public final EObject ruleLoopAction() throws RecognitionException {
         EObject current = null;
 
@@ -11176,11 +11182,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4475:2: ( (otherlv_0= 'while' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) ) )
-            // InternalThingML.g:4476:2: (otherlv_0= 'while' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) )
+            // InternalThingML.g:4476:2: ( (otherlv_0= 'while' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) ) )
+            // InternalThingML.g:4477:2: (otherlv_0= 'while' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) )
             {
-            // InternalThingML.g:4476:2: (otherlv_0= 'while' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) )
-            // InternalThingML.g:4477:3: otherlv_0= 'while' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) )
+            // InternalThingML.g:4477:2: (otherlv_0= 'while' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) )
+            // InternalThingML.g:4478:3: otherlv_0= 'while' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) )
             {
             otherlv_0=(Token)match(input,71,FOLLOW_25); 
 
@@ -11190,11 +11196,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getLoopActionAccess().getLeftParenthesisKeyword_1());
             		
-            // InternalThingML.g:4485:3: ( (lv_condition_2_0= ruleExpression ) )
-            // InternalThingML.g:4486:4: (lv_condition_2_0= ruleExpression )
+            // InternalThingML.g:4486:3: ( (lv_condition_2_0= ruleExpression ) )
+            // InternalThingML.g:4487:4: (lv_condition_2_0= ruleExpression )
             {
-            // InternalThingML.g:4486:4: (lv_condition_2_0= ruleExpression )
-            // InternalThingML.g:4487:5: lv_condition_2_0= ruleExpression
+            // InternalThingML.g:4487:4: (lv_condition_2_0= ruleExpression )
+            // InternalThingML.g:4488:5: lv_condition_2_0= ruleExpression
             {
 
             					newCompositeNode(grammarAccess.getLoopActionAccess().getConditionExpressionParserRuleCall_2_0());
@@ -11225,11 +11231,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_3, grammarAccess.getLoopActionAccess().getRightParenthesisKeyword_3());
             		
-            // InternalThingML.g:4508:3: ( (lv_action_4_0= ruleAction ) )
-            // InternalThingML.g:4509:4: (lv_action_4_0= ruleAction )
+            // InternalThingML.g:4509:3: ( (lv_action_4_0= ruleAction ) )
+            // InternalThingML.g:4510:4: (lv_action_4_0= ruleAction )
             {
-            // InternalThingML.g:4509:4: (lv_action_4_0= ruleAction )
-            // InternalThingML.g:4510:5: lv_action_4_0= ruleAction
+            // InternalThingML.g:4510:4: (lv_action_4_0= ruleAction )
+            // InternalThingML.g:4511:5: lv_action_4_0= ruleAction
             {
 
             					newCompositeNode(grammarAccess.getLoopActionAccess().getActionActionParserRuleCall_4_0());
@@ -11279,7 +11285,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleConditionalAction"
-    // InternalThingML.g:4531:1: entryRuleConditionalAction returns [EObject current=null] : iv_ruleConditionalAction= ruleConditionalAction EOF ;
+    // InternalThingML.g:4532:1: entryRuleConditionalAction returns [EObject current=null] : iv_ruleConditionalAction= ruleConditionalAction EOF ;
     public final EObject entryRuleConditionalAction() throws RecognitionException {
         EObject current = null;
 
@@ -11287,8 +11293,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4531:58: (iv_ruleConditionalAction= ruleConditionalAction EOF )
-            // InternalThingML.g:4532:2: iv_ruleConditionalAction= ruleConditionalAction EOF
+            // InternalThingML.g:4532:58: (iv_ruleConditionalAction= ruleConditionalAction EOF )
+            // InternalThingML.g:4533:2: iv_ruleConditionalAction= ruleConditionalAction EOF
             {
              newCompositeNode(grammarAccess.getConditionalActionRule()); 
             pushFollow(FOLLOW_1);
@@ -11315,7 +11321,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleConditionalAction"
-    // InternalThingML.g:4538:1: ruleConditionalAction returns [EObject current=null] : (otherlv_0= 'if' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )? ) ;
+    // InternalThingML.g:4539:1: ruleConditionalAction returns [EObject current=null] : (otherlv_0= 'if' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )? ) ;
     public final EObject ruleConditionalAction() throws RecognitionException {
         EObject current = null;
 
@@ -11334,11 +11340,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4544:2: ( (otherlv_0= 'if' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )? ) )
-            // InternalThingML.g:4545:2: (otherlv_0= 'if' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )? )
+            // InternalThingML.g:4545:2: ( (otherlv_0= 'if' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )? ) )
+            // InternalThingML.g:4546:2: (otherlv_0= 'if' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )? )
             {
-            // InternalThingML.g:4545:2: (otherlv_0= 'if' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )? )
-            // InternalThingML.g:4546:3: otherlv_0= 'if' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )?
+            // InternalThingML.g:4546:2: (otherlv_0= 'if' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )? )
+            // InternalThingML.g:4547:3: otherlv_0= 'if' otherlv_1= '(' ( (lv_condition_2_0= ruleExpression ) ) otherlv_3= ')' ( (lv_action_4_0= ruleAction ) ) (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )?
             {
             otherlv_0=(Token)match(input,72,FOLLOW_25); 
 
@@ -11348,11 +11354,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getConditionalActionAccess().getLeftParenthesisKeyword_1());
             		
-            // InternalThingML.g:4554:3: ( (lv_condition_2_0= ruleExpression ) )
-            // InternalThingML.g:4555:4: (lv_condition_2_0= ruleExpression )
+            // InternalThingML.g:4555:3: ( (lv_condition_2_0= ruleExpression ) )
+            // InternalThingML.g:4556:4: (lv_condition_2_0= ruleExpression )
             {
-            // InternalThingML.g:4555:4: (lv_condition_2_0= ruleExpression )
-            // InternalThingML.g:4556:5: lv_condition_2_0= ruleExpression
+            // InternalThingML.g:4556:4: (lv_condition_2_0= ruleExpression )
+            // InternalThingML.g:4557:5: lv_condition_2_0= ruleExpression
             {
 
             					newCompositeNode(grammarAccess.getConditionalActionAccess().getConditionExpressionParserRuleCall_2_0());
@@ -11383,11 +11389,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_3, grammarAccess.getConditionalActionAccess().getRightParenthesisKeyword_3());
             		
-            // InternalThingML.g:4577:3: ( (lv_action_4_0= ruleAction ) )
-            // InternalThingML.g:4578:4: (lv_action_4_0= ruleAction )
+            // InternalThingML.g:4578:3: ( (lv_action_4_0= ruleAction ) )
+            // InternalThingML.g:4579:4: (lv_action_4_0= ruleAction )
             {
-            // InternalThingML.g:4578:4: (lv_action_4_0= ruleAction )
-            // InternalThingML.g:4579:5: lv_action_4_0= ruleAction
+            // InternalThingML.g:4579:4: (lv_action_4_0= ruleAction )
+            // InternalThingML.g:4580:5: lv_action_4_0= ruleAction
             {
 
             					newCompositeNode(grammarAccess.getConditionalActionAccess().getActionActionParserRuleCall_4_0());
@@ -11414,7 +11420,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:4596:3: (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )?
+            // InternalThingML.g:4597:3: (otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) ) )?
             int alt102=2;
             int LA102_0 = input.LA(1);
 
@@ -11423,17 +11429,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt102) {
                 case 1 :
-                    // InternalThingML.g:4597:4: otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) )
+                    // InternalThingML.g:4598:4: otherlv_5= 'else' ( (lv_elseAction_6_0= ruleAction ) )
                     {
                     otherlv_5=(Token)match(input,73,FOLLOW_28); 
 
                     				newLeafNode(otherlv_5, grammarAccess.getConditionalActionAccess().getElseKeyword_5_0());
                     			
-                    // InternalThingML.g:4601:4: ( (lv_elseAction_6_0= ruleAction ) )
-                    // InternalThingML.g:4602:5: (lv_elseAction_6_0= ruleAction )
+                    // InternalThingML.g:4602:4: ( (lv_elseAction_6_0= ruleAction ) )
+                    // InternalThingML.g:4603:5: (lv_elseAction_6_0= ruleAction )
                     {
-                    // InternalThingML.g:4602:5: (lv_elseAction_6_0= ruleAction )
-                    // InternalThingML.g:4603:6: lv_elseAction_6_0= ruleAction
+                    // InternalThingML.g:4603:5: (lv_elseAction_6_0= ruleAction )
+                    // InternalThingML.g:4604:6: lv_elseAction_6_0= ruleAction
                     {
 
                     						newCompositeNode(grammarAccess.getConditionalActionAccess().getElseActionActionParserRuleCall_5_1_0());
@@ -11489,7 +11495,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleReturnAction"
-    // InternalThingML.g:4625:1: entryRuleReturnAction returns [EObject current=null] : iv_ruleReturnAction= ruleReturnAction EOF ;
+    // InternalThingML.g:4626:1: entryRuleReturnAction returns [EObject current=null] : iv_ruleReturnAction= ruleReturnAction EOF ;
     public final EObject entryRuleReturnAction() throws RecognitionException {
         EObject current = null;
 
@@ -11497,8 +11503,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4625:53: (iv_ruleReturnAction= ruleReturnAction EOF )
-            // InternalThingML.g:4626:2: iv_ruleReturnAction= ruleReturnAction EOF
+            // InternalThingML.g:4626:53: (iv_ruleReturnAction= ruleReturnAction EOF )
+            // InternalThingML.g:4627:2: iv_ruleReturnAction= ruleReturnAction EOF
             {
              newCompositeNode(grammarAccess.getReturnActionRule()); 
             pushFollow(FOLLOW_1);
@@ -11525,7 +11531,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleReturnAction"
-    // InternalThingML.g:4632:1: ruleReturnAction returns [EObject current=null] : (otherlv_0= 'return' ( (lv_exp_1_0= ruleExpression ) ) ) ;
+    // InternalThingML.g:4633:1: ruleReturnAction returns [EObject current=null] : (otherlv_0= 'return' ( (lv_exp_1_0= ruleExpression ) ) ) ;
     public final EObject ruleReturnAction() throws RecognitionException {
         EObject current = null;
 
@@ -11537,21 +11543,21 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4638:2: ( (otherlv_0= 'return' ( (lv_exp_1_0= ruleExpression ) ) ) )
-            // InternalThingML.g:4639:2: (otherlv_0= 'return' ( (lv_exp_1_0= ruleExpression ) ) )
+            // InternalThingML.g:4639:2: ( (otherlv_0= 'return' ( (lv_exp_1_0= ruleExpression ) ) ) )
+            // InternalThingML.g:4640:2: (otherlv_0= 'return' ( (lv_exp_1_0= ruleExpression ) ) )
             {
-            // InternalThingML.g:4639:2: (otherlv_0= 'return' ( (lv_exp_1_0= ruleExpression ) ) )
-            // InternalThingML.g:4640:3: otherlv_0= 'return' ( (lv_exp_1_0= ruleExpression ) )
+            // InternalThingML.g:4640:2: (otherlv_0= 'return' ( (lv_exp_1_0= ruleExpression ) ) )
+            // InternalThingML.g:4641:3: otherlv_0= 'return' ( (lv_exp_1_0= ruleExpression ) )
             {
             otherlv_0=(Token)match(input,74,FOLLOW_23); 
 
             			newLeafNode(otherlv_0, grammarAccess.getReturnActionAccess().getReturnKeyword_0());
             		
-            // InternalThingML.g:4644:3: ( (lv_exp_1_0= ruleExpression ) )
-            // InternalThingML.g:4645:4: (lv_exp_1_0= ruleExpression )
+            // InternalThingML.g:4645:3: ( (lv_exp_1_0= ruleExpression ) )
+            // InternalThingML.g:4646:4: (lv_exp_1_0= ruleExpression )
             {
-            // InternalThingML.g:4645:4: (lv_exp_1_0= ruleExpression )
-            // InternalThingML.g:4646:5: lv_exp_1_0= ruleExpression
+            // InternalThingML.g:4646:4: (lv_exp_1_0= ruleExpression )
+            // InternalThingML.g:4647:5: lv_exp_1_0= ruleExpression
             {
 
             					newCompositeNode(grammarAccess.getReturnActionAccess().getExpExpressionParserRuleCall_1_0());
@@ -11601,7 +11607,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRulePrintAction"
-    // InternalThingML.g:4667:1: entryRulePrintAction returns [EObject current=null] : iv_rulePrintAction= rulePrintAction EOF ;
+    // InternalThingML.g:4668:1: entryRulePrintAction returns [EObject current=null] : iv_rulePrintAction= rulePrintAction EOF ;
     public final EObject entryRulePrintAction() throws RecognitionException {
         EObject current = null;
 
@@ -11609,8 +11615,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4667:52: (iv_rulePrintAction= rulePrintAction EOF )
-            // InternalThingML.g:4668:2: iv_rulePrintAction= rulePrintAction EOF
+            // InternalThingML.g:4668:52: (iv_rulePrintAction= rulePrintAction EOF )
+            // InternalThingML.g:4669:2: iv_rulePrintAction= rulePrintAction EOF
             {
              newCompositeNode(grammarAccess.getPrintActionRule()); 
             pushFollow(FOLLOW_1);
@@ -11637,7 +11643,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePrintAction"
-    // InternalThingML.g:4674:1: rulePrintAction returns [EObject current=null] : (otherlv_0= 'print' ( (lv_msg_1_0= ruleExpression ) ) ) ;
+    // InternalThingML.g:4675:1: rulePrintAction returns [EObject current=null] : (otherlv_0= 'print' ( (lv_msg_1_0= ruleExpression ) ) ) ;
     public final EObject rulePrintAction() throws RecognitionException {
         EObject current = null;
 
@@ -11649,21 +11655,21 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4680:2: ( (otherlv_0= 'print' ( (lv_msg_1_0= ruleExpression ) ) ) )
-            // InternalThingML.g:4681:2: (otherlv_0= 'print' ( (lv_msg_1_0= ruleExpression ) ) )
+            // InternalThingML.g:4681:2: ( (otherlv_0= 'print' ( (lv_msg_1_0= ruleExpression ) ) ) )
+            // InternalThingML.g:4682:2: (otherlv_0= 'print' ( (lv_msg_1_0= ruleExpression ) ) )
             {
-            // InternalThingML.g:4681:2: (otherlv_0= 'print' ( (lv_msg_1_0= ruleExpression ) ) )
-            // InternalThingML.g:4682:3: otherlv_0= 'print' ( (lv_msg_1_0= ruleExpression ) )
+            // InternalThingML.g:4682:2: (otherlv_0= 'print' ( (lv_msg_1_0= ruleExpression ) ) )
+            // InternalThingML.g:4683:3: otherlv_0= 'print' ( (lv_msg_1_0= ruleExpression ) )
             {
             otherlv_0=(Token)match(input,75,FOLLOW_23); 
 
             			newLeafNode(otherlv_0, grammarAccess.getPrintActionAccess().getPrintKeyword_0());
             		
-            // InternalThingML.g:4686:3: ( (lv_msg_1_0= ruleExpression ) )
-            // InternalThingML.g:4687:4: (lv_msg_1_0= ruleExpression )
+            // InternalThingML.g:4687:3: ( (lv_msg_1_0= ruleExpression ) )
+            // InternalThingML.g:4688:4: (lv_msg_1_0= ruleExpression )
             {
-            // InternalThingML.g:4687:4: (lv_msg_1_0= ruleExpression )
-            // InternalThingML.g:4688:5: lv_msg_1_0= ruleExpression
+            // InternalThingML.g:4688:4: (lv_msg_1_0= ruleExpression )
+            // InternalThingML.g:4689:5: lv_msg_1_0= ruleExpression
             {
 
             					newCompositeNode(grammarAccess.getPrintActionAccess().getMsgExpressionParserRuleCall_1_0());
@@ -11713,7 +11719,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleErrorAction"
-    // InternalThingML.g:4709:1: entryRuleErrorAction returns [EObject current=null] : iv_ruleErrorAction= ruleErrorAction EOF ;
+    // InternalThingML.g:4710:1: entryRuleErrorAction returns [EObject current=null] : iv_ruleErrorAction= ruleErrorAction EOF ;
     public final EObject entryRuleErrorAction() throws RecognitionException {
         EObject current = null;
 
@@ -11721,8 +11727,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4709:52: (iv_ruleErrorAction= ruleErrorAction EOF )
-            // InternalThingML.g:4710:2: iv_ruleErrorAction= ruleErrorAction EOF
+            // InternalThingML.g:4710:52: (iv_ruleErrorAction= ruleErrorAction EOF )
+            // InternalThingML.g:4711:2: iv_ruleErrorAction= ruleErrorAction EOF
             {
              newCompositeNode(grammarAccess.getErrorActionRule()); 
             pushFollow(FOLLOW_1);
@@ -11749,7 +11755,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleErrorAction"
-    // InternalThingML.g:4716:1: ruleErrorAction returns [EObject current=null] : (otherlv_0= 'error' ( (lv_msg_1_0= ruleExpression ) ) ) ;
+    // InternalThingML.g:4717:1: ruleErrorAction returns [EObject current=null] : (otherlv_0= 'error' ( (lv_msg_1_0= ruleExpression ) ) ) ;
     public final EObject ruleErrorAction() throws RecognitionException {
         EObject current = null;
 
@@ -11761,21 +11767,21 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4722:2: ( (otherlv_0= 'error' ( (lv_msg_1_0= ruleExpression ) ) ) )
-            // InternalThingML.g:4723:2: (otherlv_0= 'error' ( (lv_msg_1_0= ruleExpression ) ) )
+            // InternalThingML.g:4723:2: ( (otherlv_0= 'error' ( (lv_msg_1_0= ruleExpression ) ) ) )
+            // InternalThingML.g:4724:2: (otherlv_0= 'error' ( (lv_msg_1_0= ruleExpression ) ) )
             {
-            // InternalThingML.g:4723:2: (otherlv_0= 'error' ( (lv_msg_1_0= ruleExpression ) ) )
-            // InternalThingML.g:4724:3: otherlv_0= 'error' ( (lv_msg_1_0= ruleExpression ) )
+            // InternalThingML.g:4724:2: (otherlv_0= 'error' ( (lv_msg_1_0= ruleExpression ) ) )
+            // InternalThingML.g:4725:3: otherlv_0= 'error' ( (lv_msg_1_0= ruleExpression ) )
             {
             otherlv_0=(Token)match(input,76,FOLLOW_23); 
 
             			newLeafNode(otherlv_0, grammarAccess.getErrorActionAccess().getErrorKeyword_0());
             		
-            // InternalThingML.g:4728:3: ( (lv_msg_1_0= ruleExpression ) )
-            // InternalThingML.g:4729:4: (lv_msg_1_0= ruleExpression )
+            // InternalThingML.g:4729:3: ( (lv_msg_1_0= ruleExpression ) )
+            // InternalThingML.g:4730:4: (lv_msg_1_0= ruleExpression )
             {
-            // InternalThingML.g:4729:4: (lv_msg_1_0= ruleExpression )
-            // InternalThingML.g:4730:5: lv_msg_1_0= ruleExpression
+            // InternalThingML.g:4730:4: (lv_msg_1_0= ruleExpression )
+            // InternalThingML.g:4731:5: lv_msg_1_0= ruleExpression
             {
 
             					newCompositeNode(grammarAccess.getErrorActionAccess().getMsgExpressionParserRuleCall_1_0());
@@ -11825,7 +11831,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleStartSession"
-    // InternalThingML.g:4751:1: entryRuleStartSession returns [EObject current=null] : iv_ruleStartSession= ruleStartSession EOF ;
+    // InternalThingML.g:4752:1: entryRuleStartSession returns [EObject current=null] : iv_ruleStartSession= ruleStartSession EOF ;
     public final EObject entryRuleStartSession() throws RecognitionException {
         EObject current = null;
 
@@ -11833,8 +11839,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4751:53: (iv_ruleStartSession= ruleStartSession EOF )
-            // InternalThingML.g:4752:2: iv_ruleStartSession= ruleStartSession EOF
+            // InternalThingML.g:4752:53: (iv_ruleStartSession= ruleStartSession EOF )
+            // InternalThingML.g:4753:2: iv_ruleStartSession= ruleStartSession EOF
             {
              newCompositeNode(grammarAccess.getStartSessionRule()); 
             pushFollow(FOLLOW_1);
@@ -11861,7 +11867,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleStartSession"
-    // InternalThingML.g:4758:1: ruleStartSession returns [EObject current=null] : (otherlv_0= 'fork' ( (otherlv_1= RULE_ID ) ) ) ;
+    // InternalThingML.g:4759:1: ruleStartSession returns [EObject current=null] : (otherlv_0= 'fork' ( (otherlv_1= RULE_ID ) ) ) ;
     public final EObject ruleStartSession() throws RecognitionException {
         EObject current = null;
 
@@ -11872,21 +11878,21 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4764:2: ( (otherlv_0= 'fork' ( (otherlv_1= RULE_ID ) ) ) )
-            // InternalThingML.g:4765:2: (otherlv_0= 'fork' ( (otherlv_1= RULE_ID ) ) )
+            // InternalThingML.g:4765:2: ( (otherlv_0= 'fork' ( (otherlv_1= RULE_ID ) ) ) )
+            // InternalThingML.g:4766:2: (otherlv_0= 'fork' ( (otherlv_1= RULE_ID ) ) )
             {
-            // InternalThingML.g:4765:2: (otherlv_0= 'fork' ( (otherlv_1= RULE_ID ) ) )
-            // InternalThingML.g:4766:3: otherlv_0= 'fork' ( (otherlv_1= RULE_ID ) )
+            // InternalThingML.g:4766:2: (otherlv_0= 'fork' ( (otherlv_1= RULE_ID ) ) )
+            // InternalThingML.g:4767:3: otherlv_0= 'fork' ( (otherlv_1= RULE_ID ) )
             {
             otherlv_0=(Token)match(input,77,FOLLOW_6); 
 
             			newLeafNode(otherlv_0, grammarAccess.getStartSessionAccess().getForkKeyword_0());
             		
-            // InternalThingML.g:4770:3: ( (otherlv_1= RULE_ID ) )
-            // InternalThingML.g:4771:4: (otherlv_1= RULE_ID )
+            // InternalThingML.g:4771:3: ( (otherlv_1= RULE_ID ) )
+            // InternalThingML.g:4772:4: (otherlv_1= RULE_ID )
             {
-            // InternalThingML.g:4771:4: (otherlv_1= RULE_ID )
-            // InternalThingML.g:4772:5: otherlv_1= RULE_ID
+            // InternalThingML.g:4772:4: (otherlv_1= RULE_ID )
+            // InternalThingML.g:4773:5: otherlv_1= RULE_ID
             {
 
             					if (current==null) {
@@ -11926,7 +11932,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleFunctionCallStatement"
-    // InternalThingML.g:4787:1: entryRuleFunctionCallStatement returns [EObject current=null] : iv_ruleFunctionCallStatement= ruleFunctionCallStatement EOF ;
+    // InternalThingML.g:4788:1: entryRuleFunctionCallStatement returns [EObject current=null] : iv_ruleFunctionCallStatement= ruleFunctionCallStatement EOF ;
     public final EObject entryRuleFunctionCallStatement() throws RecognitionException {
         EObject current = null;
 
@@ -11934,8 +11940,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4787:62: (iv_ruleFunctionCallStatement= ruleFunctionCallStatement EOF )
-            // InternalThingML.g:4788:2: iv_ruleFunctionCallStatement= ruleFunctionCallStatement EOF
+            // InternalThingML.g:4788:62: (iv_ruleFunctionCallStatement= ruleFunctionCallStatement EOF )
+            // InternalThingML.g:4789:2: iv_ruleFunctionCallStatement= ruleFunctionCallStatement EOF
             {
              newCompositeNode(grammarAccess.getFunctionCallStatementRule()); 
             pushFollow(FOLLOW_1);
@@ -11962,7 +11968,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleFunctionCallStatement"
-    // InternalThingML.g:4794:1: ruleFunctionCallStatement returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' ) ;
+    // InternalThingML.g:4795:1: ruleFunctionCallStatement returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' ) ;
     public final EObject ruleFunctionCallStatement() throws RecognitionException {
         EObject current = null;
 
@@ -11979,17 +11985,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4800:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' ) )
-            // InternalThingML.g:4801:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' )
+            // InternalThingML.g:4801:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' ) )
+            // InternalThingML.g:4802:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' )
             {
-            // InternalThingML.g:4801:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' )
-            // InternalThingML.g:4802:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')'
+            // InternalThingML.g:4802:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' )
+            // InternalThingML.g:4803:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')'
             {
-            // InternalThingML.g:4802:3: ( (otherlv_0= RULE_ID ) )
-            // InternalThingML.g:4803:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:4803:3: ( (otherlv_0= RULE_ID ) )
+            // InternalThingML.g:4804:4: (otherlv_0= RULE_ID )
             {
-            // InternalThingML.g:4803:4: (otherlv_0= RULE_ID )
-            // InternalThingML.g:4804:5: otherlv_0= RULE_ID
+            // InternalThingML.g:4804:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:4805:5: otherlv_0= RULE_ID
             {
 
             					if (current==null) {
@@ -12010,7 +12016,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getFunctionCallStatementAccess().getLeftParenthesisKeyword_1());
             		
-            // InternalThingML.g:4819:3: ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )?
+            // InternalThingML.g:4820:3: ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )?
             int alt104=2;
             int LA104_0 = input.LA(1);
 
@@ -12019,13 +12025,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt104) {
                 case 1 :
-                    // InternalThingML.g:4820:4: ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )*
+                    // InternalThingML.g:4821:4: ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )*
                     {
-                    // InternalThingML.g:4820:4: ( (lv_parameters_2_0= ruleExpression ) )
-                    // InternalThingML.g:4821:5: (lv_parameters_2_0= ruleExpression )
+                    // InternalThingML.g:4821:4: ( (lv_parameters_2_0= ruleExpression ) )
+                    // InternalThingML.g:4822:5: (lv_parameters_2_0= ruleExpression )
                     {
-                    // InternalThingML.g:4821:5: (lv_parameters_2_0= ruleExpression )
-                    // InternalThingML.g:4822:6: lv_parameters_2_0= ruleExpression
+                    // InternalThingML.g:4822:5: (lv_parameters_2_0= ruleExpression )
+                    // InternalThingML.g:4823:6: lv_parameters_2_0= ruleExpression
                     {
 
                     						newCompositeNode(grammarAccess.getFunctionCallStatementAccess().getParametersExpressionParserRuleCall_2_0_0());
@@ -12052,7 +12058,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalThingML.g:4839:4: (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )*
+                    // InternalThingML.g:4840:4: (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )*
                     loop103:
                     do {
                         int alt103=2;
@@ -12065,17 +12071,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                         switch (alt103) {
                     	case 1 :
-                    	    // InternalThingML.g:4840:5: otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) )
+                    	    // InternalThingML.g:4841:5: otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) )
                     	    {
                     	    otherlv_3=(Token)match(input,30,FOLLOW_23); 
 
                     	    					newLeafNode(otherlv_3, grammarAccess.getFunctionCallStatementAccess().getCommaKeyword_2_1_0());
                     	    				
-                    	    // InternalThingML.g:4844:5: ( (lv_parameters_4_0= ruleExpression ) )
-                    	    // InternalThingML.g:4845:6: (lv_parameters_4_0= ruleExpression )
+                    	    // InternalThingML.g:4845:5: ( (lv_parameters_4_0= ruleExpression ) )
+                    	    // InternalThingML.g:4846:6: (lv_parameters_4_0= ruleExpression )
                     	    {
-                    	    // InternalThingML.g:4845:6: (lv_parameters_4_0= ruleExpression )
-                    	    // InternalThingML.g:4846:7: lv_parameters_4_0= ruleExpression
+                    	    // InternalThingML.g:4846:6: (lv_parameters_4_0= ruleExpression )
+                    	    // InternalThingML.g:4847:7: lv_parameters_4_0= ruleExpression
                     	    {
 
                     	    							newCompositeNode(grammarAccess.getFunctionCallStatementAccess().getParametersExpressionParserRuleCall_2_1_1_0());
@@ -12144,7 +12150,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExpression"
-    // InternalThingML.g:4873:1: entryRuleExpression returns [EObject current=null] : iv_ruleExpression= ruleExpression EOF ;
+    // InternalThingML.g:4874:1: entryRuleExpression returns [EObject current=null] : iv_ruleExpression= ruleExpression EOF ;
     public final EObject entryRuleExpression() throws RecognitionException {
         EObject current = null;
 
@@ -12152,8 +12158,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4873:51: (iv_ruleExpression= ruleExpression EOF )
-            // InternalThingML.g:4874:2: iv_ruleExpression= ruleExpression EOF
+            // InternalThingML.g:4874:51: (iv_ruleExpression= ruleExpression EOF )
+            // InternalThingML.g:4875:2: iv_ruleExpression= ruleExpression EOF
             {
              newCompositeNode(grammarAccess.getExpressionRule()); 
             pushFollow(FOLLOW_1);
@@ -12180,7 +12186,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExpression"
-    // InternalThingML.g:4880:1: ruleExpression returns [EObject current=null] : this_OrExpression_0= ruleOrExpression ;
+    // InternalThingML.g:4881:1: ruleExpression returns [EObject current=null] : this_OrExpression_0= ruleOrExpression ;
     public final EObject ruleExpression() throws RecognitionException {
         EObject current = null;
 
@@ -12191,8 +12197,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4886:2: (this_OrExpression_0= ruleOrExpression )
-            // InternalThingML.g:4887:2: this_OrExpression_0= ruleOrExpression
+            // InternalThingML.g:4887:2: (this_OrExpression_0= ruleOrExpression )
+            // InternalThingML.g:4888:2: this_OrExpression_0= ruleOrExpression
             {
 
             		newCompositeNode(grammarAccess.getExpressionAccess().getOrExpressionParserRuleCall());
@@ -12226,7 +12232,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleOrExpression"
-    // InternalThingML.g:4898:1: entryRuleOrExpression returns [EObject current=null] : iv_ruleOrExpression= ruleOrExpression EOF ;
+    // InternalThingML.g:4899:1: entryRuleOrExpression returns [EObject current=null] : iv_ruleOrExpression= ruleOrExpression EOF ;
     public final EObject entryRuleOrExpression() throws RecognitionException {
         EObject current = null;
 
@@ -12234,8 +12240,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4898:53: (iv_ruleOrExpression= ruleOrExpression EOF )
-            // InternalThingML.g:4899:2: iv_ruleOrExpression= ruleOrExpression EOF
+            // InternalThingML.g:4899:53: (iv_ruleOrExpression= ruleOrExpression EOF )
+            // InternalThingML.g:4900:2: iv_ruleOrExpression= ruleOrExpression EOF
             {
              newCompositeNode(grammarAccess.getOrExpressionRule()); 
             pushFollow(FOLLOW_1);
@@ -12262,7 +12268,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleOrExpression"
-    // InternalThingML.g:4905:1: ruleOrExpression returns [EObject current=null] : (this_AndExpression_0= ruleAndExpression ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )* ) ;
+    // InternalThingML.g:4906:1: ruleOrExpression returns [EObject current=null] : (this_AndExpression_0= ruleAndExpression ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )* ) ;
     public final EObject ruleOrExpression() throws RecognitionException {
         EObject current = null;
 
@@ -12276,11 +12282,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4911:2: ( (this_AndExpression_0= ruleAndExpression ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )* ) )
-            // InternalThingML.g:4912:2: (this_AndExpression_0= ruleAndExpression ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )* )
+            // InternalThingML.g:4912:2: ( (this_AndExpression_0= ruleAndExpression ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )* ) )
+            // InternalThingML.g:4913:2: (this_AndExpression_0= ruleAndExpression ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )* )
             {
-            // InternalThingML.g:4912:2: (this_AndExpression_0= ruleAndExpression ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )* )
-            // InternalThingML.g:4913:3: this_AndExpression_0= ruleAndExpression ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )*
+            // InternalThingML.g:4913:2: (this_AndExpression_0= ruleAndExpression ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )* )
+            // InternalThingML.g:4914:3: this_AndExpression_0= ruleAndExpression ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )*
             {
 
             			newCompositeNode(grammarAccess.getOrExpressionAccess().getAndExpressionParserRuleCall_0());
@@ -12294,7 +12300,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             			current = this_AndExpression_0;
             			afterParserOrEnumRuleCall();
             		
-            // InternalThingML.g:4921:3: ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )*
+            // InternalThingML.g:4922:3: ( () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) ) )*
             loop105:
             do {
                 int alt105=2;
@@ -12307,10 +12313,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt105) {
             	case 1 :
-            	    // InternalThingML.g:4922:4: () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) )
+            	    // InternalThingML.g:4923:4: () otherlv_2= 'or' ( (lv_rhs_3_0= ruleAndExpression ) )
             	    {
-            	    // InternalThingML.g:4922:4: ()
-            	    // InternalThingML.g:4923:5: 
+            	    // InternalThingML.g:4923:4: ()
+            	    // InternalThingML.g:4924:5: 
             	    {
 
             	    					current = forceCreateModelElementAndSet(
@@ -12324,11 +12330,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    				newLeafNode(otherlv_2, grammarAccess.getOrExpressionAccess().getOrKeyword_1_1());
             	    			
-            	    // InternalThingML.g:4933:4: ( (lv_rhs_3_0= ruleAndExpression ) )
-            	    // InternalThingML.g:4934:5: (lv_rhs_3_0= ruleAndExpression )
+            	    // InternalThingML.g:4934:4: ( (lv_rhs_3_0= ruleAndExpression ) )
+            	    // InternalThingML.g:4935:5: (lv_rhs_3_0= ruleAndExpression )
             	    {
-            	    // InternalThingML.g:4934:5: (lv_rhs_3_0= ruleAndExpression )
-            	    // InternalThingML.g:4935:6: lv_rhs_3_0= ruleAndExpression
+            	    // InternalThingML.g:4935:5: (lv_rhs_3_0= ruleAndExpression )
+            	    // InternalThingML.g:4936:6: lv_rhs_3_0= ruleAndExpression
             	    {
 
             	    						newCompositeNode(grammarAccess.getOrExpressionAccess().getRhsAndExpressionParserRuleCall_1_2_0());
@@ -12387,7 +12393,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleAndExpression"
-    // InternalThingML.g:4957:1: entryRuleAndExpression returns [EObject current=null] : iv_ruleAndExpression= ruleAndExpression EOF ;
+    // InternalThingML.g:4958:1: entryRuleAndExpression returns [EObject current=null] : iv_ruleAndExpression= ruleAndExpression EOF ;
     public final EObject entryRuleAndExpression() throws RecognitionException {
         EObject current = null;
 
@@ -12395,8 +12401,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:4957:54: (iv_ruleAndExpression= ruleAndExpression EOF )
-            // InternalThingML.g:4958:2: iv_ruleAndExpression= ruleAndExpression EOF
+            // InternalThingML.g:4958:54: (iv_ruleAndExpression= ruleAndExpression EOF )
+            // InternalThingML.g:4959:2: iv_ruleAndExpression= ruleAndExpression EOF
             {
              newCompositeNode(grammarAccess.getAndExpressionRule()); 
             pushFollow(FOLLOW_1);
@@ -12423,7 +12429,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAndExpression"
-    // InternalThingML.g:4964:1: ruleAndExpression returns [EObject current=null] : (this_Equality_0= ruleEquality ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )* ) ;
+    // InternalThingML.g:4965:1: ruleAndExpression returns [EObject current=null] : (this_Equality_0= ruleEquality ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )* ) ;
     public final EObject ruleAndExpression() throws RecognitionException {
         EObject current = null;
 
@@ -12437,11 +12443,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:4970:2: ( (this_Equality_0= ruleEquality ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )* ) )
-            // InternalThingML.g:4971:2: (this_Equality_0= ruleEquality ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )* )
+            // InternalThingML.g:4971:2: ( (this_Equality_0= ruleEquality ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )* ) )
+            // InternalThingML.g:4972:2: (this_Equality_0= ruleEquality ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )* )
             {
-            // InternalThingML.g:4971:2: (this_Equality_0= ruleEquality ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )* )
-            // InternalThingML.g:4972:3: this_Equality_0= ruleEquality ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )*
+            // InternalThingML.g:4972:2: (this_Equality_0= ruleEquality ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )* )
+            // InternalThingML.g:4973:3: this_Equality_0= ruleEquality ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )*
             {
 
             			newCompositeNode(grammarAccess.getAndExpressionAccess().getEqualityParserRuleCall_0());
@@ -12455,7 +12461,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             			current = this_Equality_0;
             			afterParserOrEnumRuleCall();
             		
-            // InternalThingML.g:4980:3: ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )*
+            // InternalThingML.g:4981:3: ( () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) ) )*
             loop106:
             do {
                 int alt106=2;
@@ -12468,10 +12474,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt106) {
             	case 1 :
-            	    // InternalThingML.g:4981:4: () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) )
+            	    // InternalThingML.g:4982:4: () otherlv_2= 'and' ( (lv_rhs_3_0= ruleEquality ) )
             	    {
-            	    // InternalThingML.g:4981:4: ()
-            	    // InternalThingML.g:4982:5: 
+            	    // InternalThingML.g:4982:4: ()
+            	    // InternalThingML.g:4983:5: 
             	    {
 
             	    					current = forceCreateModelElementAndSet(
@@ -12485,11 +12491,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    				newLeafNode(otherlv_2, grammarAccess.getAndExpressionAccess().getAndKeyword_1_1());
             	    			
-            	    // InternalThingML.g:4992:4: ( (lv_rhs_3_0= ruleEquality ) )
-            	    // InternalThingML.g:4993:5: (lv_rhs_3_0= ruleEquality )
+            	    // InternalThingML.g:4993:4: ( (lv_rhs_3_0= ruleEquality ) )
+            	    // InternalThingML.g:4994:5: (lv_rhs_3_0= ruleEquality )
             	    {
-            	    // InternalThingML.g:4993:5: (lv_rhs_3_0= ruleEquality )
-            	    // InternalThingML.g:4994:6: lv_rhs_3_0= ruleEquality
+            	    // InternalThingML.g:4994:5: (lv_rhs_3_0= ruleEquality )
+            	    // InternalThingML.g:4995:6: lv_rhs_3_0= ruleEquality
             	    {
 
             	    						newCompositeNode(grammarAccess.getAndExpressionAccess().getRhsEqualityParserRuleCall_1_2_0());
@@ -12548,7 +12554,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleEquality"
-    // InternalThingML.g:5016:1: entryRuleEquality returns [EObject current=null] : iv_ruleEquality= ruleEquality EOF ;
+    // InternalThingML.g:5017:1: entryRuleEquality returns [EObject current=null] : iv_ruleEquality= ruleEquality EOF ;
     public final EObject entryRuleEquality() throws RecognitionException {
         EObject current = null;
 
@@ -12556,8 +12562,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5016:49: (iv_ruleEquality= ruleEquality EOF )
-            // InternalThingML.g:5017:2: iv_ruleEquality= ruleEquality EOF
+            // InternalThingML.g:5017:49: (iv_ruleEquality= ruleEquality EOF )
+            // InternalThingML.g:5018:2: iv_ruleEquality= ruleEquality EOF
             {
              newCompositeNode(grammarAccess.getEqualityRule()); 
             pushFollow(FOLLOW_1);
@@ -12584,7 +12590,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleEquality"
-    // InternalThingML.g:5023:1: ruleEquality returns [EObject current=null] : (this_Comparaison_0= ruleComparaison ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )* ) ;
+    // InternalThingML.g:5024:1: ruleEquality returns [EObject current=null] : (this_Comparaison_0= ruleComparaison ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )* ) ;
     public final EObject ruleEquality() throws RecognitionException {
         EObject current = null;
 
@@ -12601,11 +12607,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5029:2: ( (this_Comparaison_0= ruleComparaison ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )* ) )
-            // InternalThingML.g:5030:2: (this_Comparaison_0= ruleComparaison ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )* )
+            // InternalThingML.g:5030:2: ( (this_Comparaison_0= ruleComparaison ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )* ) )
+            // InternalThingML.g:5031:2: (this_Comparaison_0= ruleComparaison ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )* )
             {
-            // InternalThingML.g:5030:2: (this_Comparaison_0= ruleComparaison ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )* )
-            // InternalThingML.g:5031:3: this_Comparaison_0= ruleComparaison ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )*
+            // InternalThingML.g:5031:2: (this_Comparaison_0= ruleComparaison ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )* )
+            // InternalThingML.g:5032:3: this_Comparaison_0= ruleComparaison ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )*
             {
 
             			newCompositeNode(grammarAccess.getEqualityAccess().getComparaisonParserRuleCall_0());
@@ -12619,7 +12625,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             			current = this_Comparaison_0;
             			afterParserOrEnumRuleCall();
             		
-            // InternalThingML.g:5039:3: ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )*
+            // InternalThingML.g:5040:3: ( ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) ) | ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) ) )*
             loop107:
             do {
                 int alt107=3;
@@ -12635,13 +12641,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt107) {
             	case 1 :
-            	    // InternalThingML.g:5040:4: ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) )
+            	    // InternalThingML.g:5041:4: ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) )
             	    {
-            	    // InternalThingML.g:5040:4: ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) )
-            	    // InternalThingML.g:5041:5: () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) )
+            	    // InternalThingML.g:5041:4: ( () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) ) )
+            	    // InternalThingML.g:5042:5: () otherlv_2= '==' ( (lv_rhs_3_0= ruleComparaison ) )
             	    {
-            	    // InternalThingML.g:5041:5: ()
-            	    // InternalThingML.g:5042:6: 
+            	    // InternalThingML.g:5042:5: ()
+            	    // InternalThingML.g:5043:6: 
             	    {
 
             	    						current = forceCreateModelElementAndSet(
@@ -12655,11 +12661,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_2, grammarAccess.getEqualityAccess().getEqualsSignEqualsSignKeyword_1_0_1());
             	    				
-            	    // InternalThingML.g:5052:5: ( (lv_rhs_3_0= ruleComparaison ) )
-            	    // InternalThingML.g:5053:6: (lv_rhs_3_0= ruleComparaison )
+            	    // InternalThingML.g:5053:5: ( (lv_rhs_3_0= ruleComparaison ) )
+            	    // InternalThingML.g:5054:6: (lv_rhs_3_0= ruleComparaison )
             	    {
-            	    // InternalThingML.g:5053:6: (lv_rhs_3_0= ruleComparaison )
-            	    // InternalThingML.g:5054:7: lv_rhs_3_0= ruleComparaison
+            	    // InternalThingML.g:5054:6: (lv_rhs_3_0= ruleComparaison )
+            	    // InternalThingML.g:5055:7: lv_rhs_3_0= ruleComparaison
             	    {
 
             	    							newCompositeNode(grammarAccess.getEqualityAccess().getRhsComparaisonParserRuleCall_1_0_2_0());
@@ -12693,13 +12699,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalThingML.g:5073:4: ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) )
+            	    // InternalThingML.g:5074:4: ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) )
             	    {
-            	    // InternalThingML.g:5073:4: ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) )
-            	    // InternalThingML.g:5074:5: () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) )
+            	    // InternalThingML.g:5074:4: ( () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) ) )
+            	    // InternalThingML.g:5075:5: () otherlv_5= '!=' ( (lv_rhs_6_0= ruleComparaison ) )
             	    {
-            	    // InternalThingML.g:5074:5: ()
-            	    // InternalThingML.g:5075:6: 
+            	    // InternalThingML.g:5075:5: ()
+            	    // InternalThingML.g:5076:6: 
             	    {
 
             	    						current = forceCreateModelElementAndSet(
@@ -12713,11 +12719,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_5, grammarAccess.getEqualityAccess().getExclamationMarkEqualsSignKeyword_1_1_1());
             	    				
-            	    // InternalThingML.g:5085:5: ( (lv_rhs_6_0= ruleComparaison ) )
-            	    // InternalThingML.g:5086:6: (lv_rhs_6_0= ruleComparaison )
+            	    // InternalThingML.g:5086:5: ( (lv_rhs_6_0= ruleComparaison ) )
+            	    // InternalThingML.g:5087:6: (lv_rhs_6_0= ruleComparaison )
             	    {
-            	    // InternalThingML.g:5086:6: (lv_rhs_6_0= ruleComparaison )
-            	    // InternalThingML.g:5087:7: lv_rhs_6_0= ruleComparaison
+            	    // InternalThingML.g:5087:6: (lv_rhs_6_0= ruleComparaison )
+            	    // InternalThingML.g:5088:7: lv_rhs_6_0= ruleComparaison
             	    {
 
             	    							newCompositeNode(grammarAccess.getEqualityAccess().getRhsComparaisonParserRuleCall_1_1_2_0());
@@ -12779,7 +12785,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleComparaison"
-    // InternalThingML.g:5110:1: entryRuleComparaison returns [EObject current=null] : iv_ruleComparaison= ruleComparaison EOF ;
+    // InternalThingML.g:5111:1: entryRuleComparaison returns [EObject current=null] : iv_ruleComparaison= ruleComparaison EOF ;
     public final EObject entryRuleComparaison() throws RecognitionException {
         EObject current = null;
 
@@ -12787,8 +12793,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5110:52: (iv_ruleComparaison= ruleComparaison EOF )
-            // InternalThingML.g:5111:2: iv_ruleComparaison= ruleComparaison EOF
+            // InternalThingML.g:5111:52: (iv_ruleComparaison= ruleComparaison EOF )
+            // InternalThingML.g:5112:2: iv_ruleComparaison= ruleComparaison EOF
             {
              newCompositeNode(grammarAccess.getComparaisonRule()); 
             pushFollow(FOLLOW_1);
@@ -12815,7 +12821,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleComparaison"
-    // InternalThingML.g:5117:1: ruleComparaison returns [EObject current=null] : (this_Addition_0= ruleAddition ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )* ) ;
+    // InternalThingML.g:5118:1: ruleComparaison returns [EObject current=null] : (this_Addition_0= ruleAddition ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )* ) ;
     public final EObject ruleComparaison() throws RecognitionException {
         EObject current = null;
 
@@ -12838,11 +12844,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5123:2: ( (this_Addition_0= ruleAddition ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )* ) )
-            // InternalThingML.g:5124:2: (this_Addition_0= ruleAddition ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )* )
+            // InternalThingML.g:5124:2: ( (this_Addition_0= ruleAddition ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )* ) )
+            // InternalThingML.g:5125:2: (this_Addition_0= ruleAddition ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )* )
             {
-            // InternalThingML.g:5124:2: (this_Addition_0= ruleAddition ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )* )
-            // InternalThingML.g:5125:3: this_Addition_0= ruleAddition ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )*
+            // InternalThingML.g:5125:2: (this_Addition_0= ruleAddition ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )* )
+            // InternalThingML.g:5126:3: this_Addition_0= ruleAddition ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )*
             {
 
             			newCompositeNode(grammarAccess.getComparaisonAccess().getAdditionParserRuleCall_0());
@@ -12856,7 +12862,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             			current = this_Addition_0;
             			afterParserOrEnumRuleCall();
             		
-            // InternalThingML.g:5133:3: ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )*
+            // InternalThingML.g:5134:3: ( ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) ) | ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) ) | ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) ) | ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) ) )*
             loop108:
             do {
                 int alt108=5;
@@ -12886,13 +12892,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt108) {
             	case 1 :
-            	    // InternalThingML.g:5134:4: ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) )
+            	    // InternalThingML.g:5135:4: ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) )
             	    {
-            	    // InternalThingML.g:5134:4: ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) )
-            	    // InternalThingML.g:5135:5: () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) )
+            	    // InternalThingML.g:5135:4: ( () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) ) )
+            	    // InternalThingML.g:5136:5: () otherlv_2= '>' ( (lv_rhs_3_0= ruleAddition ) )
             	    {
-            	    // InternalThingML.g:5135:5: ()
-            	    // InternalThingML.g:5136:6: 
+            	    // InternalThingML.g:5136:5: ()
+            	    // InternalThingML.g:5137:6: 
             	    {
 
             	    						current = forceCreateModelElementAndSet(
@@ -12906,11 +12912,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_2, grammarAccess.getComparaisonAccess().getGreaterThanSignKeyword_1_0_1());
             	    				
-            	    // InternalThingML.g:5146:5: ( (lv_rhs_3_0= ruleAddition ) )
-            	    // InternalThingML.g:5147:6: (lv_rhs_3_0= ruleAddition )
+            	    // InternalThingML.g:5147:5: ( (lv_rhs_3_0= ruleAddition ) )
+            	    // InternalThingML.g:5148:6: (lv_rhs_3_0= ruleAddition )
             	    {
-            	    // InternalThingML.g:5147:6: (lv_rhs_3_0= ruleAddition )
-            	    // InternalThingML.g:5148:7: lv_rhs_3_0= ruleAddition
+            	    // InternalThingML.g:5148:6: (lv_rhs_3_0= ruleAddition )
+            	    // InternalThingML.g:5149:7: lv_rhs_3_0= ruleAddition
             	    {
 
             	    							newCompositeNode(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_0_2_0());
@@ -12944,13 +12950,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalThingML.g:5167:4: ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) )
+            	    // InternalThingML.g:5168:4: ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) )
             	    {
-            	    // InternalThingML.g:5167:4: ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) )
-            	    // InternalThingML.g:5168:5: () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) )
+            	    // InternalThingML.g:5168:4: ( () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) ) )
+            	    // InternalThingML.g:5169:5: () otherlv_5= '<' ( (lv_rhs_6_0= ruleAddition ) )
             	    {
-            	    // InternalThingML.g:5168:5: ()
-            	    // InternalThingML.g:5169:6: 
+            	    // InternalThingML.g:5169:5: ()
+            	    // InternalThingML.g:5170:6: 
             	    {
 
             	    						current = forceCreateModelElementAndSet(
@@ -12964,11 +12970,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_5, grammarAccess.getComparaisonAccess().getLessThanSignKeyword_1_1_1());
             	    				
-            	    // InternalThingML.g:5179:5: ( (lv_rhs_6_0= ruleAddition ) )
-            	    // InternalThingML.g:5180:6: (lv_rhs_6_0= ruleAddition )
+            	    // InternalThingML.g:5180:5: ( (lv_rhs_6_0= ruleAddition ) )
+            	    // InternalThingML.g:5181:6: (lv_rhs_6_0= ruleAddition )
             	    {
-            	    // InternalThingML.g:5180:6: (lv_rhs_6_0= ruleAddition )
-            	    // InternalThingML.g:5181:7: lv_rhs_6_0= ruleAddition
+            	    // InternalThingML.g:5181:6: (lv_rhs_6_0= ruleAddition )
+            	    // InternalThingML.g:5182:7: lv_rhs_6_0= ruleAddition
             	    {
 
             	    							newCompositeNode(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_1_2_0());
@@ -13002,13 +13008,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 3 :
-            	    // InternalThingML.g:5200:4: ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) )
+            	    // InternalThingML.g:5201:4: ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) )
             	    {
-            	    // InternalThingML.g:5200:4: ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) )
-            	    // InternalThingML.g:5201:5: () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) )
+            	    // InternalThingML.g:5201:4: ( () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) ) )
+            	    // InternalThingML.g:5202:5: () otherlv_8= '>=' ( (lv_rhs_9_0= ruleAddition ) )
             	    {
-            	    // InternalThingML.g:5201:5: ()
-            	    // InternalThingML.g:5202:6: 
+            	    // InternalThingML.g:5202:5: ()
+            	    // InternalThingML.g:5203:6: 
             	    {
 
             	    						current = forceCreateModelElementAndSet(
@@ -13022,11 +13028,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_8, grammarAccess.getComparaisonAccess().getGreaterThanSignEqualsSignKeyword_1_2_1());
             	    				
-            	    // InternalThingML.g:5212:5: ( (lv_rhs_9_0= ruleAddition ) )
-            	    // InternalThingML.g:5213:6: (lv_rhs_9_0= ruleAddition )
+            	    // InternalThingML.g:5213:5: ( (lv_rhs_9_0= ruleAddition ) )
+            	    // InternalThingML.g:5214:6: (lv_rhs_9_0= ruleAddition )
             	    {
-            	    // InternalThingML.g:5213:6: (lv_rhs_9_0= ruleAddition )
-            	    // InternalThingML.g:5214:7: lv_rhs_9_0= ruleAddition
+            	    // InternalThingML.g:5214:6: (lv_rhs_9_0= ruleAddition )
+            	    // InternalThingML.g:5215:7: lv_rhs_9_0= ruleAddition
             	    {
 
             	    							newCompositeNode(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_2_2_0());
@@ -13060,13 +13066,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 4 :
-            	    // InternalThingML.g:5233:4: ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) )
+            	    // InternalThingML.g:5234:4: ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) )
             	    {
-            	    // InternalThingML.g:5233:4: ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) )
-            	    // InternalThingML.g:5234:5: () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) )
+            	    // InternalThingML.g:5234:4: ( () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) ) )
+            	    // InternalThingML.g:5235:5: () otherlv_11= '<=' ( (lv_rhs_12_0= ruleAddition ) )
             	    {
-            	    // InternalThingML.g:5234:5: ()
-            	    // InternalThingML.g:5235:6: 
+            	    // InternalThingML.g:5235:5: ()
+            	    // InternalThingML.g:5236:6: 
             	    {
 
             	    						current = forceCreateModelElementAndSet(
@@ -13080,11 +13086,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_11, grammarAccess.getComparaisonAccess().getLessThanSignEqualsSignKeyword_1_3_1());
             	    				
-            	    // InternalThingML.g:5245:5: ( (lv_rhs_12_0= ruleAddition ) )
-            	    // InternalThingML.g:5246:6: (lv_rhs_12_0= ruleAddition )
+            	    // InternalThingML.g:5246:5: ( (lv_rhs_12_0= ruleAddition ) )
+            	    // InternalThingML.g:5247:6: (lv_rhs_12_0= ruleAddition )
             	    {
-            	    // InternalThingML.g:5246:6: (lv_rhs_12_0= ruleAddition )
-            	    // InternalThingML.g:5247:7: lv_rhs_12_0= ruleAddition
+            	    // InternalThingML.g:5247:6: (lv_rhs_12_0= ruleAddition )
+            	    // InternalThingML.g:5248:7: lv_rhs_12_0= ruleAddition
             	    {
 
             	    							newCompositeNode(grammarAccess.getComparaisonAccess().getRhsAdditionParserRuleCall_1_3_2_0());
@@ -13146,7 +13152,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleAddition"
-    // InternalThingML.g:5270:1: entryRuleAddition returns [EObject current=null] : iv_ruleAddition= ruleAddition EOF ;
+    // InternalThingML.g:5271:1: entryRuleAddition returns [EObject current=null] : iv_ruleAddition= ruleAddition EOF ;
     public final EObject entryRuleAddition() throws RecognitionException {
         EObject current = null;
 
@@ -13154,8 +13160,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5270:49: (iv_ruleAddition= ruleAddition EOF )
-            // InternalThingML.g:5271:2: iv_ruleAddition= ruleAddition EOF
+            // InternalThingML.g:5271:49: (iv_ruleAddition= ruleAddition EOF )
+            // InternalThingML.g:5272:2: iv_ruleAddition= ruleAddition EOF
             {
              newCompositeNode(grammarAccess.getAdditionRule()); 
             pushFollow(FOLLOW_1);
@@ -13182,7 +13188,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAddition"
-    // InternalThingML.g:5277:1: ruleAddition returns [EObject current=null] : (this_Multiplication_0= ruleMultiplication ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )* ) ;
+    // InternalThingML.g:5278:1: ruleAddition returns [EObject current=null] : (this_Multiplication_0= ruleMultiplication ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )* ) ;
     public final EObject ruleAddition() throws RecognitionException {
         EObject current = null;
 
@@ -13199,11 +13205,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5283:2: ( (this_Multiplication_0= ruleMultiplication ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )* ) )
-            // InternalThingML.g:5284:2: (this_Multiplication_0= ruleMultiplication ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )* )
+            // InternalThingML.g:5284:2: ( (this_Multiplication_0= ruleMultiplication ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )* ) )
+            // InternalThingML.g:5285:2: (this_Multiplication_0= ruleMultiplication ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )* )
             {
-            // InternalThingML.g:5284:2: (this_Multiplication_0= ruleMultiplication ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )* )
-            // InternalThingML.g:5285:3: this_Multiplication_0= ruleMultiplication ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )*
+            // InternalThingML.g:5285:2: (this_Multiplication_0= ruleMultiplication ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )* )
+            // InternalThingML.g:5286:3: this_Multiplication_0= ruleMultiplication ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )*
             {
 
             			newCompositeNode(grammarAccess.getAdditionAccess().getMultiplicationParserRuleCall_0());
@@ -13217,7 +13223,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             			current = this_Multiplication_0;
             			afterParserOrEnumRuleCall();
             		
-            // InternalThingML.g:5293:3: ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )*
+            // InternalThingML.g:5294:3: ( ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) ) | ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) ) )*
             loop109:
             do {
                 int alt109=3;
@@ -13233,13 +13239,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt109) {
             	case 1 :
-            	    // InternalThingML.g:5294:4: ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) )
+            	    // InternalThingML.g:5295:4: ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) )
             	    {
-            	    // InternalThingML.g:5294:4: ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) )
-            	    // InternalThingML.g:5295:5: () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) )
+            	    // InternalThingML.g:5295:4: ( () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) ) )
+            	    // InternalThingML.g:5296:5: () otherlv_2= '+' ( (lv_rhs_3_0= ruleMultiplication ) )
             	    {
-            	    // InternalThingML.g:5295:5: ()
-            	    // InternalThingML.g:5296:6: 
+            	    // InternalThingML.g:5296:5: ()
+            	    // InternalThingML.g:5297:6: 
             	    {
 
             	    						current = forceCreateModelElementAndSet(
@@ -13253,11 +13259,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_2, grammarAccess.getAdditionAccess().getPlusSignKeyword_1_0_1());
             	    				
-            	    // InternalThingML.g:5306:5: ( (lv_rhs_3_0= ruleMultiplication ) )
-            	    // InternalThingML.g:5307:6: (lv_rhs_3_0= ruleMultiplication )
+            	    // InternalThingML.g:5307:5: ( (lv_rhs_3_0= ruleMultiplication ) )
+            	    // InternalThingML.g:5308:6: (lv_rhs_3_0= ruleMultiplication )
             	    {
-            	    // InternalThingML.g:5307:6: (lv_rhs_3_0= ruleMultiplication )
-            	    // InternalThingML.g:5308:7: lv_rhs_3_0= ruleMultiplication
+            	    // InternalThingML.g:5308:6: (lv_rhs_3_0= ruleMultiplication )
+            	    // InternalThingML.g:5309:7: lv_rhs_3_0= ruleMultiplication
             	    {
 
             	    							newCompositeNode(grammarAccess.getAdditionAccess().getRhsMultiplicationParserRuleCall_1_0_2_0());
@@ -13291,13 +13297,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalThingML.g:5327:4: ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) )
+            	    // InternalThingML.g:5328:4: ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) )
             	    {
-            	    // InternalThingML.g:5327:4: ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) )
-            	    // InternalThingML.g:5328:5: () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) )
+            	    // InternalThingML.g:5328:4: ( () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) ) )
+            	    // InternalThingML.g:5329:5: () otherlv_5= '-' ( (lv_rhs_6_0= ruleMultiplication ) )
             	    {
-            	    // InternalThingML.g:5328:5: ()
-            	    // InternalThingML.g:5329:6: 
+            	    // InternalThingML.g:5329:5: ()
+            	    // InternalThingML.g:5330:6: 
             	    {
 
             	    						current = forceCreateModelElementAndSet(
@@ -13311,11 +13317,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_5, grammarAccess.getAdditionAccess().getHyphenMinusKeyword_1_1_1());
             	    				
-            	    // InternalThingML.g:5339:5: ( (lv_rhs_6_0= ruleMultiplication ) )
-            	    // InternalThingML.g:5340:6: (lv_rhs_6_0= ruleMultiplication )
+            	    // InternalThingML.g:5340:5: ( (lv_rhs_6_0= ruleMultiplication ) )
+            	    // InternalThingML.g:5341:6: (lv_rhs_6_0= ruleMultiplication )
             	    {
-            	    // InternalThingML.g:5340:6: (lv_rhs_6_0= ruleMultiplication )
-            	    // InternalThingML.g:5341:7: lv_rhs_6_0= ruleMultiplication
+            	    // InternalThingML.g:5341:6: (lv_rhs_6_0= ruleMultiplication )
+            	    // InternalThingML.g:5342:7: lv_rhs_6_0= ruleMultiplication
             	    {
 
             	    							newCompositeNode(grammarAccess.getAdditionAccess().getRhsMultiplicationParserRuleCall_1_1_2_0());
@@ -13377,7 +13383,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleMultiplication"
-    // InternalThingML.g:5364:1: entryRuleMultiplication returns [EObject current=null] : iv_ruleMultiplication= ruleMultiplication EOF ;
+    // InternalThingML.g:5365:1: entryRuleMultiplication returns [EObject current=null] : iv_ruleMultiplication= ruleMultiplication EOF ;
     public final EObject entryRuleMultiplication() throws RecognitionException {
         EObject current = null;
 
@@ -13385,8 +13391,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5364:55: (iv_ruleMultiplication= ruleMultiplication EOF )
-            // InternalThingML.g:5365:2: iv_ruleMultiplication= ruleMultiplication EOF
+            // InternalThingML.g:5365:55: (iv_ruleMultiplication= ruleMultiplication EOF )
+            // InternalThingML.g:5366:2: iv_ruleMultiplication= ruleMultiplication EOF
             {
              newCompositeNode(grammarAccess.getMultiplicationRule()); 
             pushFollow(FOLLOW_1);
@@ -13413,7 +13419,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleMultiplication"
-    // InternalThingML.g:5371:1: ruleMultiplication returns [EObject current=null] : (this_Modulo_0= ruleModulo ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )* ) ;
+    // InternalThingML.g:5372:1: ruleMultiplication returns [EObject current=null] : (this_Modulo_0= ruleModulo ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )* ) ;
     public final EObject ruleMultiplication() throws RecognitionException {
         EObject current = null;
 
@@ -13430,11 +13436,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5377:2: ( (this_Modulo_0= ruleModulo ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )* ) )
-            // InternalThingML.g:5378:2: (this_Modulo_0= ruleModulo ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )* )
+            // InternalThingML.g:5378:2: ( (this_Modulo_0= ruleModulo ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )* ) )
+            // InternalThingML.g:5379:2: (this_Modulo_0= ruleModulo ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )* )
             {
-            // InternalThingML.g:5378:2: (this_Modulo_0= ruleModulo ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )* )
-            // InternalThingML.g:5379:3: this_Modulo_0= ruleModulo ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )*
+            // InternalThingML.g:5379:2: (this_Modulo_0= ruleModulo ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )* )
+            // InternalThingML.g:5380:3: this_Modulo_0= ruleModulo ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )*
             {
 
             			newCompositeNode(grammarAccess.getMultiplicationAccess().getModuloParserRuleCall_0());
@@ -13448,7 +13454,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             			current = this_Modulo_0;
             			afterParserOrEnumRuleCall();
             		
-            // InternalThingML.g:5387:3: ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )*
+            // InternalThingML.g:5388:3: ( ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) ) | ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) ) )*
             loop110:
             do {
                 int alt110=3;
@@ -13464,13 +13470,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt110) {
             	case 1 :
-            	    // InternalThingML.g:5388:4: ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) )
+            	    // InternalThingML.g:5389:4: ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) )
             	    {
-            	    // InternalThingML.g:5388:4: ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) )
-            	    // InternalThingML.g:5389:5: () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) )
+            	    // InternalThingML.g:5389:4: ( () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) ) )
+            	    // InternalThingML.g:5390:5: () otherlv_2= '*' ( (lv_rhs_3_0= ruleModulo ) )
             	    {
-            	    // InternalThingML.g:5389:5: ()
-            	    // InternalThingML.g:5390:6: 
+            	    // InternalThingML.g:5390:5: ()
+            	    // InternalThingML.g:5391:6: 
             	    {
 
             	    						current = forceCreateModelElementAndSet(
@@ -13484,11 +13490,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_2, grammarAccess.getMultiplicationAccess().getAsteriskKeyword_1_0_1());
             	    				
-            	    // InternalThingML.g:5400:5: ( (lv_rhs_3_0= ruleModulo ) )
-            	    // InternalThingML.g:5401:6: (lv_rhs_3_0= ruleModulo )
+            	    // InternalThingML.g:5401:5: ( (lv_rhs_3_0= ruleModulo ) )
+            	    // InternalThingML.g:5402:6: (lv_rhs_3_0= ruleModulo )
             	    {
-            	    // InternalThingML.g:5401:6: (lv_rhs_3_0= ruleModulo )
-            	    // InternalThingML.g:5402:7: lv_rhs_3_0= ruleModulo
+            	    // InternalThingML.g:5402:6: (lv_rhs_3_0= ruleModulo )
+            	    // InternalThingML.g:5403:7: lv_rhs_3_0= ruleModulo
             	    {
 
             	    							newCompositeNode(grammarAccess.getMultiplicationAccess().getRhsModuloParserRuleCall_1_0_2_0());
@@ -13522,13 +13528,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalThingML.g:5421:4: ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) )
+            	    // InternalThingML.g:5422:4: ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) )
             	    {
-            	    // InternalThingML.g:5421:4: ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) )
-            	    // InternalThingML.g:5422:5: () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) )
+            	    // InternalThingML.g:5422:4: ( () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) ) )
+            	    // InternalThingML.g:5423:5: () otherlv_5= '/' ( (lv_rhs_6_0= ruleModulo ) )
             	    {
-            	    // InternalThingML.g:5422:5: ()
-            	    // InternalThingML.g:5423:6: 
+            	    // InternalThingML.g:5423:5: ()
+            	    // InternalThingML.g:5424:6: 
             	    {
 
             	    						current = forceCreateModelElementAndSet(
@@ -13542,11 +13548,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             	    					newLeafNode(otherlv_5, grammarAccess.getMultiplicationAccess().getSolidusKeyword_1_1_1());
             	    				
-            	    // InternalThingML.g:5433:5: ( (lv_rhs_6_0= ruleModulo ) )
-            	    // InternalThingML.g:5434:6: (lv_rhs_6_0= ruleModulo )
+            	    // InternalThingML.g:5434:5: ( (lv_rhs_6_0= ruleModulo ) )
+            	    // InternalThingML.g:5435:6: (lv_rhs_6_0= ruleModulo )
             	    {
-            	    // InternalThingML.g:5434:6: (lv_rhs_6_0= ruleModulo )
-            	    // InternalThingML.g:5435:7: lv_rhs_6_0= ruleModulo
+            	    // InternalThingML.g:5435:6: (lv_rhs_6_0= ruleModulo )
+            	    // InternalThingML.g:5436:7: lv_rhs_6_0= ruleModulo
             	    {
 
             	    							newCompositeNode(grammarAccess.getMultiplicationAccess().getRhsModuloParserRuleCall_1_1_2_0());
@@ -13608,7 +13614,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleModulo"
-    // InternalThingML.g:5458:1: entryRuleModulo returns [EObject current=null] : iv_ruleModulo= ruleModulo EOF ;
+    // InternalThingML.g:5459:1: entryRuleModulo returns [EObject current=null] : iv_ruleModulo= ruleModulo EOF ;
     public final EObject entryRuleModulo() throws RecognitionException {
         EObject current = null;
 
@@ -13616,8 +13622,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5458:47: (iv_ruleModulo= ruleModulo EOF )
-            // InternalThingML.g:5459:2: iv_ruleModulo= ruleModulo EOF
+            // InternalThingML.g:5459:47: (iv_ruleModulo= ruleModulo EOF )
+            // InternalThingML.g:5460:2: iv_ruleModulo= ruleModulo EOF
             {
              newCompositeNode(grammarAccess.getModuloRule()); 
             pushFollow(FOLLOW_1);
@@ -13644,7 +13650,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleModulo"
-    // InternalThingML.g:5465:1: ruleModulo returns [EObject current=null] : (this_Primary_0= rulePrimary ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )? ) ;
+    // InternalThingML.g:5466:1: ruleModulo returns [EObject current=null] : (this_Primary_0= rulePrimary ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )? ) ;
     public final EObject ruleModulo() throws RecognitionException {
         EObject current = null;
 
@@ -13658,11 +13664,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5471:2: ( (this_Primary_0= rulePrimary ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )? ) )
-            // InternalThingML.g:5472:2: (this_Primary_0= rulePrimary ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )? )
+            // InternalThingML.g:5472:2: ( (this_Primary_0= rulePrimary ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )? ) )
+            // InternalThingML.g:5473:2: (this_Primary_0= rulePrimary ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )? )
             {
-            // InternalThingML.g:5472:2: (this_Primary_0= rulePrimary ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )? )
-            // InternalThingML.g:5473:3: this_Primary_0= rulePrimary ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )?
+            // InternalThingML.g:5473:2: (this_Primary_0= rulePrimary ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )? )
+            // InternalThingML.g:5474:3: this_Primary_0= rulePrimary ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )?
             {
 
             			newCompositeNode(grammarAccess.getModuloAccess().getPrimaryParserRuleCall_0());
@@ -13676,7 +13682,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             			current = this_Primary_0;
             			afterParserOrEnumRuleCall();
             		
-            // InternalThingML.g:5481:3: ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )?
+            // InternalThingML.g:5482:3: ( () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) ) )?
             int alt111=2;
             int LA111_0 = input.LA(1);
 
@@ -13685,10 +13691,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt111) {
                 case 1 :
-                    // InternalThingML.g:5482:4: () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) )
+                    // InternalThingML.g:5483:4: () otherlv_2= '%' ( (lv_rhs_3_0= ruleExpression ) )
                     {
-                    // InternalThingML.g:5482:4: ()
-                    // InternalThingML.g:5483:5: 
+                    // InternalThingML.g:5483:4: ()
+                    // InternalThingML.g:5484:5: 
                     {
 
                     					current = forceCreateModelElementAndSet(
@@ -13702,11 +13708,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                     				newLeafNode(otherlv_2, grammarAccess.getModuloAccess().getPercentSignKeyword_1_1());
                     			
-                    // InternalThingML.g:5493:4: ( (lv_rhs_3_0= ruleExpression ) )
-                    // InternalThingML.g:5494:5: (lv_rhs_3_0= ruleExpression )
+                    // InternalThingML.g:5494:4: ( (lv_rhs_3_0= ruleExpression ) )
+                    // InternalThingML.g:5495:5: (lv_rhs_3_0= ruleExpression )
                     {
-                    // InternalThingML.g:5494:5: (lv_rhs_3_0= ruleExpression )
-                    // InternalThingML.g:5495:6: lv_rhs_3_0= ruleExpression
+                    // InternalThingML.g:5495:5: (lv_rhs_3_0= ruleExpression )
+                    // InternalThingML.g:5496:6: lv_rhs_3_0= ruleExpression
                     {
 
                     						newCompositeNode(grammarAccess.getModuloAccess().getRhsExpressionParserRuleCall_1_2_0());
@@ -13762,7 +13768,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRulePrimary"
-    // InternalThingML.g:5517:1: entryRulePrimary returns [EObject current=null] : iv_rulePrimary= rulePrimary EOF ;
+    // InternalThingML.g:5518:1: entryRulePrimary returns [EObject current=null] : iv_rulePrimary= rulePrimary EOF ;
     public final EObject entryRulePrimary() throws RecognitionException {
         EObject current = null;
 
@@ -13770,8 +13776,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5517:48: (iv_rulePrimary= rulePrimary EOF )
-            // InternalThingML.g:5518:2: iv_rulePrimary= rulePrimary EOF
+            // InternalThingML.g:5518:48: (iv_rulePrimary= rulePrimary EOF )
+            // InternalThingML.g:5519:2: iv_rulePrimary= rulePrimary EOF
             {
              newCompositeNode(grammarAccess.getPrimaryRule()); 
             pushFollow(FOLLOW_1);
@@ -13798,7 +13804,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePrimary"
-    // InternalThingML.g:5524:1: rulePrimary returns [EObject current=null] : ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) ) | ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) ) | this_ArrayIndexPostfix_9= ruleArrayIndexPostfix ) ;
+    // InternalThingML.g:5525:1: rulePrimary returns [EObject current=null] : ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) ) | ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) ) | this_ArrayIndexPostfix_9= ruleArrayIndexPostfix ) ;
     public final EObject rulePrimary() throws RecognitionException {
         EObject current = null;
 
@@ -13819,10 +13825,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5530:2: ( ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) ) | ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) ) | this_ArrayIndexPostfix_9= ruleArrayIndexPostfix ) )
-            // InternalThingML.g:5531:2: ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) ) | ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) ) | this_ArrayIndexPostfix_9= ruleArrayIndexPostfix )
+            // InternalThingML.g:5531:2: ( ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) ) | ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) ) | this_ArrayIndexPostfix_9= ruleArrayIndexPostfix ) )
+            // InternalThingML.g:5532:2: ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) ) | ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) ) | this_ArrayIndexPostfix_9= ruleArrayIndexPostfix )
             {
-            // InternalThingML.g:5531:2: ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) ) | ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) ) | this_ArrayIndexPostfix_9= ruleArrayIndexPostfix )
+            // InternalThingML.g:5532:2: ( (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' ) | ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) ) | ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) ) | this_ArrayIndexPostfix_9= ruleArrayIndexPostfix )
             int alt112=4;
             switch ( input.LA(1) ) {
             case 35:
@@ -13860,10 +13866,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             switch (alt112) {
                 case 1 :
-                    // InternalThingML.g:5532:3: (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' )
+                    // InternalThingML.g:5533:3: (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' )
                     {
-                    // InternalThingML.g:5532:3: (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' )
-                    // InternalThingML.g:5533:4: otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')'
+                    // InternalThingML.g:5533:3: (otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')' )
+                    // InternalThingML.g:5534:4: otherlv_0= '(' this_Expression_1= ruleExpression otherlv_2= ')'
                     {
                     otherlv_0=(Token)match(input,35,FOLLOW_23); 
 
@@ -13892,13 +13898,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalThingML.g:5551:3: ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) )
+                    // InternalThingML.g:5552:3: ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) )
                     {
-                    // InternalThingML.g:5551:3: ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) )
-                    // InternalThingML.g:5552:4: () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) )
+                    // InternalThingML.g:5552:3: ( () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) ) )
+                    // InternalThingML.g:5553:4: () otherlv_4= 'not' ( (lv_term_5_0= rulePrimary ) )
                     {
-                    // InternalThingML.g:5552:4: ()
-                    // InternalThingML.g:5553:5: 
+                    // InternalThingML.g:5553:4: ()
+                    // InternalThingML.g:5554:5: 
                     {
 
                     					current = forceCreateModelElement(
@@ -13912,11 +13918,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                     				newLeafNode(otherlv_4, grammarAccess.getPrimaryAccess().getNotKeyword_1_1());
                     			
-                    // InternalThingML.g:5563:4: ( (lv_term_5_0= rulePrimary ) )
-                    // InternalThingML.g:5564:5: (lv_term_5_0= rulePrimary )
+                    // InternalThingML.g:5564:4: ( (lv_term_5_0= rulePrimary ) )
+                    // InternalThingML.g:5565:5: (lv_term_5_0= rulePrimary )
                     {
-                    // InternalThingML.g:5564:5: (lv_term_5_0= rulePrimary )
-                    // InternalThingML.g:5565:6: lv_term_5_0= rulePrimary
+                    // InternalThingML.g:5565:5: (lv_term_5_0= rulePrimary )
+                    // InternalThingML.g:5566:6: lv_term_5_0= rulePrimary
                     {
 
                     						newCompositeNode(grammarAccess.getPrimaryAccess().getTermPrimaryParserRuleCall_1_2_0());
@@ -13950,13 +13956,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalThingML.g:5584:3: ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) )
+                    // InternalThingML.g:5585:3: ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) )
                     {
-                    // InternalThingML.g:5584:3: ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) )
-                    // InternalThingML.g:5585:4: () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) )
+                    // InternalThingML.g:5585:3: ( () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) ) )
+                    // InternalThingML.g:5586:4: () otherlv_7= '-' ( (lv_term_8_0= rulePrimary ) )
                     {
-                    // InternalThingML.g:5585:4: ()
-                    // InternalThingML.g:5586:5: 
+                    // InternalThingML.g:5586:4: ()
+                    // InternalThingML.g:5587:5: 
                     {
 
                     					current = forceCreateModelElement(
@@ -13970,11 +13976,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                     				newLeafNode(otherlv_7, grammarAccess.getPrimaryAccess().getHyphenMinusKeyword_2_1());
                     			
-                    // InternalThingML.g:5596:4: ( (lv_term_8_0= rulePrimary ) )
-                    // InternalThingML.g:5597:5: (lv_term_8_0= rulePrimary )
+                    // InternalThingML.g:5597:4: ( (lv_term_8_0= rulePrimary ) )
+                    // InternalThingML.g:5598:5: (lv_term_8_0= rulePrimary )
                     {
-                    // InternalThingML.g:5597:5: (lv_term_8_0= rulePrimary )
-                    // InternalThingML.g:5598:6: lv_term_8_0= rulePrimary
+                    // InternalThingML.g:5598:5: (lv_term_8_0= rulePrimary )
+                    // InternalThingML.g:5599:6: lv_term_8_0= rulePrimary
                     {
 
                     						newCompositeNode(grammarAccess.getPrimaryAccess().getTermPrimaryParserRuleCall_2_2_0());
@@ -14008,7 +14014,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalThingML.g:5617:3: this_ArrayIndexPostfix_9= ruleArrayIndexPostfix
+                    // InternalThingML.g:5618:3: this_ArrayIndexPostfix_9= ruleArrayIndexPostfix
                     {
 
                     			newCompositeNode(grammarAccess.getPrimaryAccess().getArrayIndexPostfixParserRuleCall_3());
@@ -14048,7 +14054,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleArrayIndexPostfix"
-    // InternalThingML.g:5629:1: entryRuleArrayIndexPostfix returns [EObject current=null] : iv_ruleArrayIndexPostfix= ruleArrayIndexPostfix EOF ;
+    // InternalThingML.g:5630:1: entryRuleArrayIndexPostfix returns [EObject current=null] : iv_ruleArrayIndexPostfix= ruleArrayIndexPostfix EOF ;
     public final EObject entryRuleArrayIndexPostfix() throws RecognitionException {
         EObject current = null;
 
@@ -14056,8 +14062,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5629:58: (iv_ruleArrayIndexPostfix= ruleArrayIndexPostfix EOF )
-            // InternalThingML.g:5630:2: iv_ruleArrayIndexPostfix= ruleArrayIndexPostfix EOF
+            // InternalThingML.g:5630:58: (iv_ruleArrayIndexPostfix= ruleArrayIndexPostfix EOF )
+            // InternalThingML.g:5631:2: iv_ruleArrayIndexPostfix= ruleArrayIndexPostfix EOF
             {
              newCompositeNode(grammarAccess.getArrayIndexPostfixRule()); 
             pushFollow(FOLLOW_1);
@@ -14084,7 +14090,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleArrayIndexPostfix"
-    // InternalThingML.g:5636:1: ruleArrayIndexPostfix returns [EObject current=null] : (this_AtomicExpression_0= ruleAtomicExpression ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )? ) ;
+    // InternalThingML.g:5637:1: ruleArrayIndexPostfix returns [EObject current=null] : (this_AtomicExpression_0= ruleAtomicExpression ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )? ) ;
     public final EObject ruleArrayIndexPostfix() throws RecognitionException {
         EObject current = null;
 
@@ -14099,11 +14105,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5642:2: ( (this_AtomicExpression_0= ruleAtomicExpression ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )? ) )
-            // InternalThingML.g:5643:2: (this_AtomicExpression_0= ruleAtomicExpression ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )? )
+            // InternalThingML.g:5643:2: ( (this_AtomicExpression_0= ruleAtomicExpression ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )? ) )
+            // InternalThingML.g:5644:2: (this_AtomicExpression_0= ruleAtomicExpression ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )? )
             {
-            // InternalThingML.g:5643:2: (this_AtomicExpression_0= ruleAtomicExpression ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )? )
-            // InternalThingML.g:5644:3: this_AtomicExpression_0= ruleAtomicExpression ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )?
+            // InternalThingML.g:5644:2: (this_AtomicExpression_0= ruleAtomicExpression ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )? )
+            // InternalThingML.g:5645:3: this_AtomicExpression_0= ruleAtomicExpression ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )?
             {
 
             			newCompositeNode(grammarAccess.getArrayIndexPostfixAccess().getAtomicExpressionParserRuleCall_0());
@@ -14117,7 +14123,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             			current = this_AtomicExpression_0;
             			afterParserOrEnumRuleCall();
             		
-            // InternalThingML.g:5652:3: ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )?
+            // InternalThingML.g:5653:3: ( () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']' )?
             int alt113=2;
             int LA113_0 = input.LA(1);
 
@@ -14126,10 +14132,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt113) {
                 case 1 :
-                    // InternalThingML.g:5653:4: () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']'
+                    // InternalThingML.g:5654:4: () otherlv_2= '[' ( (lv_index_3_0= ruleExpression ) ) otherlv_4= ']'
                     {
-                    // InternalThingML.g:5653:4: ()
-                    // InternalThingML.g:5654:5: 
+                    // InternalThingML.g:5654:4: ()
+                    // InternalThingML.g:5655:5: 
                     {
 
                     					current = forceCreateModelElementAndSet(
@@ -14143,11 +14149,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                     				newLeafNode(otherlv_2, grammarAccess.getArrayIndexPostfixAccess().getLeftSquareBracketKeyword_1_1());
                     			
-                    // InternalThingML.g:5664:4: ( (lv_index_3_0= ruleExpression ) )
-                    // InternalThingML.g:5665:5: (lv_index_3_0= ruleExpression )
+                    // InternalThingML.g:5665:4: ( (lv_index_3_0= ruleExpression ) )
+                    // InternalThingML.g:5666:5: (lv_index_3_0= ruleExpression )
                     {
-                    // InternalThingML.g:5665:5: (lv_index_3_0= ruleExpression )
-                    // InternalThingML.g:5666:6: lv_index_3_0= ruleExpression
+                    // InternalThingML.g:5666:5: (lv_index_3_0= ruleExpression )
+                    // InternalThingML.g:5667:6: lv_index_3_0= ruleExpression
                     {
 
                     						newCompositeNode(grammarAccess.getArrayIndexPostfixAccess().getIndexExpressionParserRuleCall_1_2_0());
@@ -14207,7 +14213,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleAtomicExpression"
-    // InternalThingML.g:5692:1: entryRuleAtomicExpression returns [EObject current=null] : iv_ruleAtomicExpression= ruleAtomicExpression EOF ;
+    // InternalThingML.g:5693:1: entryRuleAtomicExpression returns [EObject current=null] : iv_ruleAtomicExpression= ruleAtomicExpression EOF ;
     public final EObject entryRuleAtomicExpression() throws RecognitionException {
         EObject current = null;
 
@@ -14215,8 +14221,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5692:57: (iv_ruleAtomicExpression= ruleAtomicExpression EOF )
-            // InternalThingML.g:5693:2: iv_ruleAtomicExpression= ruleAtomicExpression EOF
+            // InternalThingML.g:5693:57: (iv_ruleAtomicExpression= ruleAtomicExpression EOF )
+            // InternalThingML.g:5694:2: iv_ruleAtomicExpression= ruleAtomicExpression EOF
             {
              newCompositeNode(grammarAccess.getAtomicExpressionRule()); 
             pushFollow(FOLLOW_1);
@@ -14243,7 +14249,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAtomicExpression"
-    // InternalThingML.g:5699:1: ruleAtomicExpression returns [EObject current=null] : (this_ExternExpression_0= ruleExternExpression | this_EnumLiteralRef_1= ruleEnumLiteralRef | this_IntegerLiteral_2= ruleIntegerLiteral | this_BooleanLiteral_3= ruleBooleanLiteral | this_StringLiteral_4= ruleStringLiteral | this_DoubleLiteral_5= ruleDoubleLiteral | this_PropertyReference_6= rulePropertyReference | this_FunctionCallExpression_7= ruleFunctionCallExpression | this_EventReference_8= ruleEventReference ) ;
+    // InternalThingML.g:5700:1: ruleAtomicExpression returns [EObject current=null] : (this_ExternExpression_0= ruleExternExpression | this_EnumLiteralRef_1= ruleEnumLiteralRef | this_IntegerLiteral_2= ruleIntegerLiteral | this_BooleanLiteral_3= ruleBooleanLiteral | this_StringLiteral_4= ruleStringLiteral | this_DoubleLiteral_5= ruleDoubleLiteral | this_PropertyReference_6= rulePropertyReference | this_FunctionCallExpression_7= ruleFunctionCallExpression | this_EventReference_8= ruleEventReference ) ;
     public final EObject ruleAtomicExpression() throws RecognitionException {
         EObject current = null;
 
@@ -14270,15 +14276,15 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5705:2: ( (this_ExternExpression_0= ruleExternExpression | this_EnumLiteralRef_1= ruleEnumLiteralRef | this_IntegerLiteral_2= ruleIntegerLiteral | this_BooleanLiteral_3= ruleBooleanLiteral | this_StringLiteral_4= ruleStringLiteral | this_DoubleLiteral_5= ruleDoubleLiteral | this_PropertyReference_6= rulePropertyReference | this_FunctionCallExpression_7= ruleFunctionCallExpression | this_EventReference_8= ruleEventReference ) )
-            // InternalThingML.g:5706:2: (this_ExternExpression_0= ruleExternExpression | this_EnumLiteralRef_1= ruleEnumLiteralRef | this_IntegerLiteral_2= ruleIntegerLiteral | this_BooleanLiteral_3= ruleBooleanLiteral | this_StringLiteral_4= ruleStringLiteral | this_DoubleLiteral_5= ruleDoubleLiteral | this_PropertyReference_6= rulePropertyReference | this_FunctionCallExpression_7= ruleFunctionCallExpression | this_EventReference_8= ruleEventReference )
+            // InternalThingML.g:5706:2: ( (this_ExternExpression_0= ruleExternExpression | this_EnumLiteralRef_1= ruleEnumLiteralRef | this_IntegerLiteral_2= ruleIntegerLiteral | this_BooleanLiteral_3= ruleBooleanLiteral | this_StringLiteral_4= ruleStringLiteral | this_DoubleLiteral_5= ruleDoubleLiteral | this_PropertyReference_6= rulePropertyReference | this_FunctionCallExpression_7= ruleFunctionCallExpression | this_EventReference_8= ruleEventReference ) )
+            // InternalThingML.g:5707:2: (this_ExternExpression_0= ruleExternExpression | this_EnumLiteralRef_1= ruleEnumLiteralRef | this_IntegerLiteral_2= ruleIntegerLiteral | this_BooleanLiteral_3= ruleBooleanLiteral | this_StringLiteral_4= ruleStringLiteral | this_DoubleLiteral_5= ruleDoubleLiteral | this_PropertyReference_6= rulePropertyReference | this_FunctionCallExpression_7= ruleFunctionCallExpression | this_EventReference_8= ruleEventReference )
             {
-            // InternalThingML.g:5706:2: (this_ExternExpression_0= ruleExternExpression | this_EnumLiteralRef_1= ruleEnumLiteralRef | this_IntegerLiteral_2= ruleIntegerLiteral | this_BooleanLiteral_3= ruleBooleanLiteral | this_StringLiteral_4= ruleStringLiteral | this_DoubleLiteral_5= ruleDoubleLiteral | this_PropertyReference_6= rulePropertyReference | this_FunctionCallExpression_7= ruleFunctionCallExpression | this_EventReference_8= ruleEventReference )
+            // InternalThingML.g:5707:2: (this_ExternExpression_0= ruleExternExpression | this_EnumLiteralRef_1= ruleEnumLiteralRef | this_IntegerLiteral_2= ruleIntegerLiteral | this_BooleanLiteral_3= ruleBooleanLiteral | this_StringLiteral_4= ruleStringLiteral | this_DoubleLiteral_5= ruleDoubleLiteral | this_PropertyReference_6= rulePropertyReference | this_FunctionCallExpression_7= ruleFunctionCallExpression | this_EventReference_8= ruleEventReference )
             int alt114=9;
             alt114 = dfa114.predict(input);
             switch (alt114) {
                 case 1 :
-                    // InternalThingML.g:5707:3: this_ExternExpression_0= ruleExternExpression
+                    // InternalThingML.g:5708:3: this_ExternExpression_0= ruleExternExpression
                     {
 
                     			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getExternExpressionParserRuleCall_0());
@@ -14296,7 +14302,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalThingML.g:5716:3: this_EnumLiteralRef_1= ruleEnumLiteralRef
+                    // InternalThingML.g:5717:3: this_EnumLiteralRef_1= ruleEnumLiteralRef
                     {
 
                     			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getEnumLiteralRefParserRuleCall_1());
@@ -14314,7 +14320,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 3 :
-                    // InternalThingML.g:5725:3: this_IntegerLiteral_2= ruleIntegerLiteral
+                    // InternalThingML.g:5726:3: this_IntegerLiteral_2= ruleIntegerLiteral
                     {
 
                     			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getIntegerLiteralParserRuleCall_2());
@@ -14332,7 +14338,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 4 :
-                    // InternalThingML.g:5734:3: this_BooleanLiteral_3= ruleBooleanLiteral
+                    // InternalThingML.g:5735:3: this_BooleanLiteral_3= ruleBooleanLiteral
                     {
 
                     			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getBooleanLiteralParserRuleCall_3());
@@ -14350,7 +14356,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 5 :
-                    // InternalThingML.g:5743:3: this_StringLiteral_4= ruleStringLiteral
+                    // InternalThingML.g:5744:3: this_StringLiteral_4= ruleStringLiteral
                     {
 
                     			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getStringLiteralParserRuleCall_4());
@@ -14368,7 +14374,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 6 :
-                    // InternalThingML.g:5752:3: this_DoubleLiteral_5= ruleDoubleLiteral
+                    // InternalThingML.g:5753:3: this_DoubleLiteral_5= ruleDoubleLiteral
                     {
 
                     			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getDoubleLiteralParserRuleCall_5());
@@ -14386,7 +14392,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 7 :
-                    // InternalThingML.g:5761:3: this_PropertyReference_6= rulePropertyReference
+                    // InternalThingML.g:5762:3: this_PropertyReference_6= rulePropertyReference
                     {
 
                     			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getPropertyReferenceParserRuleCall_6());
@@ -14404,7 +14410,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 8 :
-                    // InternalThingML.g:5770:3: this_FunctionCallExpression_7= ruleFunctionCallExpression
+                    // InternalThingML.g:5771:3: this_FunctionCallExpression_7= ruleFunctionCallExpression
                     {
 
                     			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getFunctionCallExpressionParserRuleCall_7());
@@ -14422,7 +14428,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 9 :
-                    // InternalThingML.g:5779:3: this_EventReference_8= ruleEventReference
+                    // InternalThingML.g:5780:3: this_EventReference_8= ruleEventReference
                     {
 
                     			newCompositeNode(grammarAccess.getAtomicExpressionAccess().getEventReferenceParserRuleCall_8());
@@ -14462,7 +14468,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExternExpression"
-    // InternalThingML.g:5791:1: entryRuleExternExpression returns [EObject current=null] : iv_ruleExternExpression= ruleExternExpression EOF ;
+    // InternalThingML.g:5792:1: entryRuleExternExpression returns [EObject current=null] : iv_ruleExternExpression= ruleExternExpression EOF ;
     public final EObject entryRuleExternExpression() throws RecognitionException {
         EObject current = null;
 
@@ -14470,8 +14476,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5791:57: (iv_ruleExternExpression= ruleExternExpression EOF )
-            // InternalThingML.g:5792:2: iv_ruleExternExpression= ruleExternExpression EOF
+            // InternalThingML.g:5792:57: (iv_ruleExternExpression= ruleExternExpression EOF )
+            // InternalThingML.g:5793:2: iv_ruleExternExpression= ruleExternExpression EOF
             {
              newCompositeNode(grammarAccess.getExternExpressionRule()); 
             pushFollow(FOLLOW_1);
@@ -14498,7 +14504,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExternExpression"
-    // InternalThingML.g:5798:1: ruleExternExpression returns [EObject current=null] : ( ( (lv_expression_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* ) ;
+    // InternalThingML.g:5799:1: ruleExternExpression returns [EObject current=null] : ( ( (lv_expression_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* ) ;
     public final EObject ruleExternExpression() throws RecognitionException {
         EObject current = null;
 
@@ -14511,17 +14517,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5804:2: ( ( ( (lv_expression_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* ) )
-            // InternalThingML.g:5805:2: ( ( (lv_expression_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* )
+            // InternalThingML.g:5805:2: ( ( ( (lv_expression_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* ) )
+            // InternalThingML.g:5806:2: ( ( (lv_expression_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* )
             {
-            // InternalThingML.g:5805:2: ( ( (lv_expression_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* )
-            // InternalThingML.g:5806:3: ( (lv_expression_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )*
+            // InternalThingML.g:5806:2: ( ( (lv_expression_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )* )
+            // InternalThingML.g:5807:3: ( (lv_expression_0_0= RULE_STRING_EXT ) ) (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )*
             {
-            // InternalThingML.g:5806:3: ( (lv_expression_0_0= RULE_STRING_EXT ) )
-            // InternalThingML.g:5807:4: (lv_expression_0_0= RULE_STRING_EXT )
+            // InternalThingML.g:5807:3: ( (lv_expression_0_0= RULE_STRING_EXT ) )
+            // InternalThingML.g:5808:4: (lv_expression_0_0= RULE_STRING_EXT )
             {
-            // InternalThingML.g:5807:4: (lv_expression_0_0= RULE_STRING_EXT )
-            // InternalThingML.g:5808:5: lv_expression_0_0= RULE_STRING_EXT
+            // InternalThingML.g:5808:4: (lv_expression_0_0= RULE_STRING_EXT )
+            // InternalThingML.g:5809:5: lv_expression_0_0= RULE_STRING_EXT
             {
             lv_expression_0_0=(Token)match(input,RULE_STRING_EXT,FOLLOW_64); 
 
@@ -14543,7 +14549,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:5824:3: (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )*
+            // InternalThingML.g:5825:3: (otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) ) )*
             loop115:
             do {
                 int alt115=2;
@@ -14556,17 +14562,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt115) {
             	case 1 :
-            	    // InternalThingML.g:5825:4: otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) )
+            	    // InternalThingML.g:5826:4: otherlv_1= '&' ( (lv_segments_2_0= ruleExpression ) )
             	    {
             	    otherlv_1=(Token)match(input,67,FOLLOW_23); 
 
             	    				newLeafNode(otherlv_1, grammarAccess.getExternExpressionAccess().getAmpersandKeyword_1_0());
             	    			
-            	    // InternalThingML.g:5829:4: ( (lv_segments_2_0= ruleExpression ) )
-            	    // InternalThingML.g:5830:5: (lv_segments_2_0= ruleExpression )
+            	    // InternalThingML.g:5830:4: ( (lv_segments_2_0= ruleExpression ) )
+            	    // InternalThingML.g:5831:5: (lv_segments_2_0= ruleExpression )
             	    {
-            	    // InternalThingML.g:5830:5: (lv_segments_2_0= ruleExpression )
-            	    // InternalThingML.g:5831:6: lv_segments_2_0= ruleExpression
+            	    // InternalThingML.g:5831:5: (lv_segments_2_0= ruleExpression )
+            	    // InternalThingML.g:5832:6: lv_segments_2_0= ruleExpression
             	    {
 
             	    						newCompositeNode(grammarAccess.getExternExpressionAccess().getSegmentsExpressionParserRuleCall_1_1_0());
@@ -14625,7 +14631,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleEnumLiteralRef"
-    // InternalThingML.g:5853:1: entryRuleEnumLiteralRef returns [EObject current=null] : iv_ruleEnumLiteralRef= ruleEnumLiteralRef EOF ;
+    // InternalThingML.g:5854:1: entryRuleEnumLiteralRef returns [EObject current=null] : iv_ruleEnumLiteralRef= ruleEnumLiteralRef EOF ;
     public final EObject entryRuleEnumLiteralRef() throws RecognitionException {
         EObject current = null;
 
@@ -14633,8 +14639,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5853:55: (iv_ruleEnumLiteralRef= ruleEnumLiteralRef EOF )
-            // InternalThingML.g:5854:2: iv_ruleEnumLiteralRef= ruleEnumLiteralRef EOF
+            // InternalThingML.g:5854:55: (iv_ruleEnumLiteralRef= ruleEnumLiteralRef EOF )
+            // InternalThingML.g:5855:2: iv_ruleEnumLiteralRef= ruleEnumLiteralRef EOF
             {
              newCompositeNode(grammarAccess.getEnumLiteralRefRule()); 
             pushFollow(FOLLOW_1);
@@ -14661,7 +14667,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleEnumLiteralRef"
-    // InternalThingML.g:5860:1: ruleEnumLiteralRef returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= ':' ( (otherlv_2= RULE_ID ) ) ) ;
+    // InternalThingML.g:5861:1: ruleEnumLiteralRef returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= ':' ( (otherlv_2= RULE_ID ) ) ) ;
     public final EObject ruleEnumLiteralRef() throws RecognitionException {
         EObject current = null;
 
@@ -14673,17 +14679,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5866:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= ':' ( (otherlv_2= RULE_ID ) ) ) )
-            // InternalThingML.g:5867:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= ':' ( (otherlv_2= RULE_ID ) ) )
+            // InternalThingML.g:5867:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= ':' ( (otherlv_2= RULE_ID ) ) ) )
+            // InternalThingML.g:5868:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= ':' ( (otherlv_2= RULE_ID ) ) )
             {
-            // InternalThingML.g:5867:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= ':' ( (otherlv_2= RULE_ID ) ) )
-            // InternalThingML.g:5868:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= ':' ( (otherlv_2= RULE_ID ) )
+            // InternalThingML.g:5868:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= ':' ( (otherlv_2= RULE_ID ) ) )
+            // InternalThingML.g:5869:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= ':' ( (otherlv_2= RULE_ID ) )
             {
-            // InternalThingML.g:5868:3: ( (otherlv_0= RULE_ID ) )
-            // InternalThingML.g:5869:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:5869:3: ( (otherlv_0= RULE_ID ) )
+            // InternalThingML.g:5870:4: (otherlv_0= RULE_ID )
             {
-            // InternalThingML.g:5869:4: (otherlv_0= RULE_ID )
-            // InternalThingML.g:5870:5: otherlv_0= RULE_ID
+            // InternalThingML.g:5870:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:5871:5: otherlv_0= RULE_ID
             {
 
             					if (current==null) {
@@ -14704,11 +14710,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getEnumLiteralRefAccess().getColonKeyword_1());
             		
-            // InternalThingML.g:5885:3: ( (otherlv_2= RULE_ID ) )
-            // InternalThingML.g:5886:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:5886:3: ( (otherlv_2= RULE_ID ) )
+            // InternalThingML.g:5887:4: (otherlv_2= RULE_ID )
             {
-            // InternalThingML.g:5886:4: (otherlv_2= RULE_ID )
-            // InternalThingML.g:5887:5: otherlv_2= RULE_ID
+            // InternalThingML.g:5887:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:5888:5: otherlv_2= RULE_ID
             {
 
             					if (current==null) {
@@ -14748,7 +14754,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleIntegerLiteral"
-    // InternalThingML.g:5902:1: entryRuleIntegerLiteral returns [EObject current=null] : iv_ruleIntegerLiteral= ruleIntegerLiteral EOF ;
+    // InternalThingML.g:5903:1: entryRuleIntegerLiteral returns [EObject current=null] : iv_ruleIntegerLiteral= ruleIntegerLiteral EOF ;
     public final EObject entryRuleIntegerLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -14756,8 +14762,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5902:55: (iv_ruleIntegerLiteral= ruleIntegerLiteral EOF )
-            // InternalThingML.g:5903:2: iv_ruleIntegerLiteral= ruleIntegerLiteral EOF
+            // InternalThingML.g:5903:55: (iv_ruleIntegerLiteral= ruleIntegerLiteral EOF )
+            // InternalThingML.g:5904:2: iv_ruleIntegerLiteral= ruleIntegerLiteral EOF
             {
              newCompositeNode(grammarAccess.getIntegerLiteralRule()); 
             pushFollow(FOLLOW_1);
@@ -14784,7 +14790,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleIntegerLiteral"
-    // InternalThingML.g:5909:1: ruleIntegerLiteral returns [EObject current=null] : ( (lv_intValue_0_0= RULE_INT ) ) ;
+    // InternalThingML.g:5910:1: ruleIntegerLiteral returns [EObject current=null] : ( (lv_intValue_0_0= RULE_INT ) ) ;
     public final EObject ruleIntegerLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -14794,14 +14800,14 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5915:2: ( ( (lv_intValue_0_0= RULE_INT ) ) )
-            // InternalThingML.g:5916:2: ( (lv_intValue_0_0= RULE_INT ) )
+            // InternalThingML.g:5916:2: ( ( (lv_intValue_0_0= RULE_INT ) ) )
+            // InternalThingML.g:5917:2: ( (lv_intValue_0_0= RULE_INT ) )
             {
-            // InternalThingML.g:5916:2: ( (lv_intValue_0_0= RULE_INT ) )
-            // InternalThingML.g:5917:3: (lv_intValue_0_0= RULE_INT )
+            // InternalThingML.g:5917:2: ( (lv_intValue_0_0= RULE_INT ) )
+            // InternalThingML.g:5918:3: (lv_intValue_0_0= RULE_INT )
             {
-            // InternalThingML.g:5917:3: (lv_intValue_0_0= RULE_INT )
-            // InternalThingML.g:5918:4: lv_intValue_0_0= RULE_INT
+            // InternalThingML.g:5918:3: (lv_intValue_0_0= RULE_INT )
+            // InternalThingML.g:5919:4: lv_intValue_0_0= RULE_INT
             {
             lv_intValue_0_0=(Token)match(input,RULE_INT,FOLLOW_2); 
 
@@ -14843,7 +14849,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleBooleanLiteral"
-    // InternalThingML.g:5937:1: entryRuleBooleanLiteral returns [EObject current=null] : iv_ruleBooleanLiteral= ruleBooleanLiteral EOF ;
+    // InternalThingML.g:5938:1: entryRuleBooleanLiteral returns [EObject current=null] : iv_ruleBooleanLiteral= ruleBooleanLiteral EOF ;
     public final EObject entryRuleBooleanLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -14851,8 +14857,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5937:55: (iv_ruleBooleanLiteral= ruleBooleanLiteral EOF )
-            // InternalThingML.g:5938:2: iv_ruleBooleanLiteral= ruleBooleanLiteral EOF
+            // InternalThingML.g:5938:55: (iv_ruleBooleanLiteral= ruleBooleanLiteral EOF )
+            // InternalThingML.g:5939:2: iv_ruleBooleanLiteral= ruleBooleanLiteral EOF
             {
              newCompositeNode(grammarAccess.getBooleanLiteralRule()); 
             pushFollow(FOLLOW_1);
@@ -14879,7 +14885,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleBooleanLiteral"
-    // InternalThingML.g:5944:1: ruleBooleanLiteral returns [EObject current=null] : ( ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) ) ) ;
+    // InternalThingML.g:5945:1: ruleBooleanLiteral returns [EObject current=null] : ( ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) ) ) ;
     public final EObject ruleBooleanLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -14890,16 +14896,16 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5950:2: ( ( ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) ) ) )
-            // InternalThingML.g:5951:2: ( ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) ) )
+            // InternalThingML.g:5951:2: ( ( ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) ) ) )
+            // InternalThingML.g:5952:2: ( ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) ) )
             {
-            // InternalThingML.g:5951:2: ( ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) ) )
-            // InternalThingML.g:5952:3: ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) )
+            // InternalThingML.g:5952:2: ( ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) ) )
+            // InternalThingML.g:5953:3: ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) )
             {
-            // InternalThingML.g:5952:3: ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) )
-            // InternalThingML.g:5953:4: (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' )
+            // InternalThingML.g:5953:3: ( (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' ) )
+            // InternalThingML.g:5954:4: (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' )
             {
-            // InternalThingML.g:5953:4: (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' )
+            // InternalThingML.g:5954:4: (lv_boolValue_0_1= 'true' | lv_boolValue_0_2= 'false' )
             int alt116=2;
             int LA116_0 = input.LA(1);
 
@@ -14917,7 +14923,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt116) {
                 case 1 :
-                    // InternalThingML.g:5954:5: lv_boolValue_0_1= 'true'
+                    // InternalThingML.g:5955:5: lv_boolValue_0_1= 'true'
                     {
                     lv_boolValue_0_1=(Token)match(input,90,FOLLOW_2); 
 
@@ -14933,7 +14939,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalThingML.g:5965:5: lv_boolValue_0_2= 'false'
+                    // InternalThingML.g:5966:5: lv_boolValue_0_2= 'false'
                     {
                     lv_boolValue_0_2=(Token)match(input,91,FOLLOW_2); 
 
@@ -14977,7 +14983,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleStringLiteral"
-    // InternalThingML.g:5981:1: entryRuleStringLiteral returns [EObject current=null] : iv_ruleStringLiteral= ruleStringLiteral EOF ;
+    // InternalThingML.g:5982:1: entryRuleStringLiteral returns [EObject current=null] : iv_ruleStringLiteral= ruleStringLiteral EOF ;
     public final EObject entryRuleStringLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -14985,8 +14991,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:5981:54: (iv_ruleStringLiteral= ruleStringLiteral EOF )
-            // InternalThingML.g:5982:2: iv_ruleStringLiteral= ruleStringLiteral EOF
+            // InternalThingML.g:5982:54: (iv_ruleStringLiteral= ruleStringLiteral EOF )
+            // InternalThingML.g:5983:2: iv_ruleStringLiteral= ruleStringLiteral EOF
             {
              newCompositeNode(grammarAccess.getStringLiteralRule()); 
             pushFollow(FOLLOW_1);
@@ -15013,7 +15019,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleStringLiteral"
-    // InternalThingML.g:5988:1: ruleStringLiteral returns [EObject current=null] : ( (lv_stringValue_0_0= RULE_STRING_LIT ) ) ;
+    // InternalThingML.g:5989:1: ruleStringLiteral returns [EObject current=null] : ( (lv_stringValue_0_0= RULE_STRING_LIT ) ) ;
     public final EObject ruleStringLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -15023,14 +15029,14 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:5994:2: ( ( (lv_stringValue_0_0= RULE_STRING_LIT ) ) )
-            // InternalThingML.g:5995:2: ( (lv_stringValue_0_0= RULE_STRING_LIT ) )
+            // InternalThingML.g:5995:2: ( ( (lv_stringValue_0_0= RULE_STRING_LIT ) ) )
+            // InternalThingML.g:5996:2: ( (lv_stringValue_0_0= RULE_STRING_LIT ) )
             {
-            // InternalThingML.g:5995:2: ( (lv_stringValue_0_0= RULE_STRING_LIT ) )
-            // InternalThingML.g:5996:3: (lv_stringValue_0_0= RULE_STRING_LIT )
+            // InternalThingML.g:5996:2: ( (lv_stringValue_0_0= RULE_STRING_LIT ) )
+            // InternalThingML.g:5997:3: (lv_stringValue_0_0= RULE_STRING_LIT )
             {
-            // InternalThingML.g:5996:3: (lv_stringValue_0_0= RULE_STRING_LIT )
-            // InternalThingML.g:5997:4: lv_stringValue_0_0= RULE_STRING_LIT
+            // InternalThingML.g:5997:3: (lv_stringValue_0_0= RULE_STRING_LIT )
+            // InternalThingML.g:5998:4: lv_stringValue_0_0= RULE_STRING_LIT
             {
             lv_stringValue_0_0=(Token)match(input,RULE_STRING_LIT,FOLLOW_2); 
 
@@ -15072,7 +15078,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleDoubleLiteral"
-    // InternalThingML.g:6016:1: entryRuleDoubleLiteral returns [EObject current=null] : iv_ruleDoubleLiteral= ruleDoubleLiteral EOF ;
+    // InternalThingML.g:6017:1: entryRuleDoubleLiteral returns [EObject current=null] : iv_ruleDoubleLiteral= ruleDoubleLiteral EOF ;
     public final EObject entryRuleDoubleLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -15080,8 +15086,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:6016:54: (iv_ruleDoubleLiteral= ruleDoubleLiteral EOF )
-            // InternalThingML.g:6017:2: iv_ruleDoubleLiteral= ruleDoubleLiteral EOF
+            // InternalThingML.g:6017:54: (iv_ruleDoubleLiteral= ruleDoubleLiteral EOF )
+            // InternalThingML.g:6018:2: iv_ruleDoubleLiteral= ruleDoubleLiteral EOF
             {
              newCompositeNode(grammarAccess.getDoubleLiteralRule()); 
             pushFollow(FOLLOW_1);
@@ -15108,7 +15114,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleDoubleLiteral"
-    // InternalThingML.g:6023:1: ruleDoubleLiteral returns [EObject current=null] : ( (lv_doubleValue_0_0= RULE_FLOAT ) ) ;
+    // InternalThingML.g:6024:1: ruleDoubleLiteral returns [EObject current=null] : ( (lv_doubleValue_0_0= RULE_FLOAT ) ) ;
     public final EObject ruleDoubleLiteral() throws RecognitionException {
         EObject current = null;
 
@@ -15118,14 +15124,14 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:6029:2: ( ( (lv_doubleValue_0_0= RULE_FLOAT ) ) )
-            // InternalThingML.g:6030:2: ( (lv_doubleValue_0_0= RULE_FLOAT ) )
+            // InternalThingML.g:6030:2: ( ( (lv_doubleValue_0_0= RULE_FLOAT ) ) )
+            // InternalThingML.g:6031:2: ( (lv_doubleValue_0_0= RULE_FLOAT ) )
             {
-            // InternalThingML.g:6030:2: ( (lv_doubleValue_0_0= RULE_FLOAT ) )
-            // InternalThingML.g:6031:3: (lv_doubleValue_0_0= RULE_FLOAT )
+            // InternalThingML.g:6031:2: ( (lv_doubleValue_0_0= RULE_FLOAT ) )
+            // InternalThingML.g:6032:3: (lv_doubleValue_0_0= RULE_FLOAT )
             {
-            // InternalThingML.g:6031:3: (lv_doubleValue_0_0= RULE_FLOAT )
-            // InternalThingML.g:6032:4: lv_doubleValue_0_0= RULE_FLOAT
+            // InternalThingML.g:6032:3: (lv_doubleValue_0_0= RULE_FLOAT )
+            // InternalThingML.g:6033:4: lv_doubleValue_0_0= RULE_FLOAT
             {
             lv_doubleValue_0_0=(Token)match(input,RULE_FLOAT,FOLLOW_2); 
 
@@ -15167,7 +15173,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRulePropertyReference"
-    // InternalThingML.g:6051:1: entryRulePropertyReference returns [EObject current=null] : iv_rulePropertyReference= rulePropertyReference EOF ;
+    // InternalThingML.g:6052:1: entryRulePropertyReference returns [EObject current=null] : iv_rulePropertyReference= rulePropertyReference EOF ;
     public final EObject entryRulePropertyReference() throws RecognitionException {
         EObject current = null;
 
@@ -15175,8 +15181,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:6051:58: (iv_rulePropertyReference= rulePropertyReference EOF )
-            // InternalThingML.g:6052:2: iv_rulePropertyReference= rulePropertyReference EOF
+            // InternalThingML.g:6052:58: (iv_rulePropertyReference= rulePropertyReference EOF )
+            // InternalThingML.g:6053:2: iv_rulePropertyReference= rulePropertyReference EOF
             {
              newCompositeNode(grammarAccess.getPropertyReferenceRule()); 
             pushFollow(FOLLOW_1);
@@ -15203,7 +15209,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "rulePropertyReference"
-    // InternalThingML.g:6058:1: rulePropertyReference returns [EObject current=null] : ( (otherlv_0= RULE_ID ) ) ;
+    // InternalThingML.g:6059:1: rulePropertyReference returns [EObject current=null] : ( (otherlv_0= RULE_ID ) ) ;
     public final EObject rulePropertyReference() throws RecognitionException {
         EObject current = null;
 
@@ -15213,14 +15219,14 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:6064:2: ( ( (otherlv_0= RULE_ID ) ) )
-            // InternalThingML.g:6065:2: ( (otherlv_0= RULE_ID ) )
+            // InternalThingML.g:6065:2: ( ( (otherlv_0= RULE_ID ) ) )
+            // InternalThingML.g:6066:2: ( (otherlv_0= RULE_ID ) )
             {
-            // InternalThingML.g:6065:2: ( (otherlv_0= RULE_ID ) )
-            // InternalThingML.g:6066:3: (otherlv_0= RULE_ID )
+            // InternalThingML.g:6066:2: ( (otherlv_0= RULE_ID ) )
+            // InternalThingML.g:6067:3: (otherlv_0= RULE_ID )
             {
-            // InternalThingML.g:6066:3: (otherlv_0= RULE_ID )
-            // InternalThingML.g:6067:4: otherlv_0= RULE_ID
+            // InternalThingML.g:6067:3: (otherlv_0= RULE_ID )
+            // InternalThingML.g:6068:4: otherlv_0= RULE_ID
             {
 
             				if (current==null) {
@@ -15257,7 +15263,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleEventReference"
-    // InternalThingML.g:6081:1: entryRuleEventReference returns [EObject current=null] : iv_ruleEventReference= ruleEventReference EOF ;
+    // InternalThingML.g:6082:1: entryRuleEventReference returns [EObject current=null] : iv_ruleEventReference= ruleEventReference EOF ;
     public final EObject entryRuleEventReference() throws RecognitionException {
         EObject current = null;
 
@@ -15265,8 +15271,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:6081:55: (iv_ruleEventReference= ruleEventReference EOF )
-            // InternalThingML.g:6082:2: iv_ruleEventReference= ruleEventReference EOF
+            // InternalThingML.g:6082:55: (iv_ruleEventReference= ruleEventReference EOF )
+            // InternalThingML.g:6083:2: iv_ruleEventReference= ruleEventReference EOF
             {
              newCompositeNode(grammarAccess.getEventReferenceRule()); 
             pushFollow(FOLLOW_1);
@@ -15293,7 +15299,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleEventReference"
-    // InternalThingML.g:6088:1: ruleEventReference returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '.' ( (otherlv_2= RULE_ID ) ) ) ;
+    // InternalThingML.g:6089:1: ruleEventReference returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '.' ( (otherlv_2= RULE_ID ) ) ) ;
     public final EObject ruleEventReference() throws RecognitionException {
         EObject current = null;
 
@@ -15305,17 +15311,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:6094:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '.' ( (otherlv_2= RULE_ID ) ) ) )
-            // InternalThingML.g:6095:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '.' ( (otherlv_2= RULE_ID ) ) )
+            // InternalThingML.g:6095:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '.' ( (otherlv_2= RULE_ID ) ) ) )
+            // InternalThingML.g:6096:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '.' ( (otherlv_2= RULE_ID ) ) )
             {
-            // InternalThingML.g:6095:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '.' ( (otherlv_2= RULE_ID ) ) )
-            // InternalThingML.g:6096:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '.' ( (otherlv_2= RULE_ID ) )
+            // InternalThingML.g:6096:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '.' ( (otherlv_2= RULE_ID ) ) )
+            // InternalThingML.g:6097:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '.' ( (otherlv_2= RULE_ID ) )
             {
-            // InternalThingML.g:6096:3: ( (otherlv_0= RULE_ID ) )
-            // InternalThingML.g:6097:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:6097:3: ( (otherlv_0= RULE_ID ) )
+            // InternalThingML.g:6098:4: (otherlv_0= RULE_ID )
             {
-            // InternalThingML.g:6097:4: (otherlv_0= RULE_ID )
-            // InternalThingML.g:6098:5: otherlv_0= RULE_ID
+            // InternalThingML.g:6098:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:6099:5: otherlv_0= RULE_ID
             {
 
             					if (current==null) {
@@ -15336,11 +15342,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getEventReferenceAccess().getFullStopKeyword_1());
             		
-            // InternalThingML.g:6113:3: ( (otherlv_2= RULE_ID ) )
-            // InternalThingML.g:6114:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:6114:3: ( (otherlv_2= RULE_ID ) )
+            // InternalThingML.g:6115:4: (otherlv_2= RULE_ID )
             {
-            // InternalThingML.g:6114:4: (otherlv_2= RULE_ID )
-            // InternalThingML.g:6115:5: otherlv_2= RULE_ID
+            // InternalThingML.g:6115:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:6116:5: otherlv_2= RULE_ID
             {
 
             					if (current==null) {
@@ -15380,7 +15386,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleFunctionCallExpression"
-    // InternalThingML.g:6130:1: entryRuleFunctionCallExpression returns [EObject current=null] : iv_ruleFunctionCallExpression= ruleFunctionCallExpression EOF ;
+    // InternalThingML.g:6131:1: entryRuleFunctionCallExpression returns [EObject current=null] : iv_ruleFunctionCallExpression= ruleFunctionCallExpression EOF ;
     public final EObject entryRuleFunctionCallExpression() throws RecognitionException {
         EObject current = null;
 
@@ -15388,8 +15394,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:6130:63: (iv_ruleFunctionCallExpression= ruleFunctionCallExpression EOF )
-            // InternalThingML.g:6131:2: iv_ruleFunctionCallExpression= ruleFunctionCallExpression EOF
+            // InternalThingML.g:6131:63: (iv_ruleFunctionCallExpression= ruleFunctionCallExpression EOF )
+            // InternalThingML.g:6132:2: iv_ruleFunctionCallExpression= ruleFunctionCallExpression EOF
             {
              newCompositeNode(grammarAccess.getFunctionCallExpressionRule()); 
             pushFollow(FOLLOW_1);
@@ -15416,7 +15422,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleFunctionCallExpression"
-    // InternalThingML.g:6137:1: ruleFunctionCallExpression returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' ) ;
+    // InternalThingML.g:6138:1: ruleFunctionCallExpression returns [EObject current=null] : ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' ) ;
     public final EObject ruleFunctionCallExpression() throws RecognitionException {
         EObject current = null;
 
@@ -15433,17 +15439,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:6143:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' ) )
-            // InternalThingML.g:6144:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' )
+            // InternalThingML.g:6144:2: ( ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' ) )
+            // InternalThingML.g:6145:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' )
             {
-            // InternalThingML.g:6144:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' )
-            // InternalThingML.g:6145:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')'
+            // InternalThingML.g:6145:2: ( ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')' )
+            // InternalThingML.g:6146:3: ( (otherlv_0= RULE_ID ) ) otherlv_1= '(' ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )? otherlv_5= ')'
             {
-            // InternalThingML.g:6145:3: ( (otherlv_0= RULE_ID ) )
-            // InternalThingML.g:6146:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:6146:3: ( (otherlv_0= RULE_ID ) )
+            // InternalThingML.g:6147:4: (otherlv_0= RULE_ID )
             {
-            // InternalThingML.g:6146:4: (otherlv_0= RULE_ID )
-            // InternalThingML.g:6147:5: otherlv_0= RULE_ID
+            // InternalThingML.g:6147:4: (otherlv_0= RULE_ID )
+            // InternalThingML.g:6148:5: otherlv_0= RULE_ID
             {
 
             					if (current==null) {
@@ -15464,7 +15470,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_1, grammarAccess.getFunctionCallExpressionAccess().getLeftParenthesisKeyword_1());
             		
-            // InternalThingML.g:6162:3: ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )?
+            // InternalThingML.g:6163:3: ( ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )* )?
             int alt118=2;
             int LA118_0 = input.LA(1);
 
@@ -15473,13 +15479,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt118) {
                 case 1 :
-                    // InternalThingML.g:6163:4: ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )*
+                    // InternalThingML.g:6164:4: ( (lv_parameters_2_0= ruleExpression ) ) (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )*
                     {
-                    // InternalThingML.g:6163:4: ( (lv_parameters_2_0= ruleExpression ) )
-                    // InternalThingML.g:6164:5: (lv_parameters_2_0= ruleExpression )
+                    // InternalThingML.g:6164:4: ( (lv_parameters_2_0= ruleExpression ) )
+                    // InternalThingML.g:6165:5: (lv_parameters_2_0= ruleExpression )
                     {
-                    // InternalThingML.g:6164:5: (lv_parameters_2_0= ruleExpression )
-                    // InternalThingML.g:6165:6: lv_parameters_2_0= ruleExpression
+                    // InternalThingML.g:6165:5: (lv_parameters_2_0= ruleExpression )
+                    // InternalThingML.g:6166:6: lv_parameters_2_0= ruleExpression
                     {
 
                     						newCompositeNode(grammarAccess.getFunctionCallExpressionAccess().getParametersExpressionParserRuleCall_2_0_0());
@@ -15506,7 +15512,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                     }
 
-                    // InternalThingML.g:6182:4: (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )*
+                    // InternalThingML.g:6183:4: (otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) ) )*
                     loop117:
                     do {
                         int alt117=2;
@@ -15519,17 +15525,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                         switch (alt117) {
                     	case 1 :
-                    	    // InternalThingML.g:6183:5: otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) )
+                    	    // InternalThingML.g:6184:5: otherlv_3= ',' ( (lv_parameters_4_0= ruleExpression ) )
                     	    {
                     	    otherlv_3=(Token)match(input,30,FOLLOW_23); 
 
                     	    					newLeafNode(otherlv_3, grammarAccess.getFunctionCallExpressionAccess().getCommaKeyword_2_1_0());
                     	    				
-                    	    // InternalThingML.g:6187:5: ( (lv_parameters_4_0= ruleExpression ) )
-                    	    // InternalThingML.g:6188:6: (lv_parameters_4_0= ruleExpression )
+                    	    // InternalThingML.g:6188:5: ( (lv_parameters_4_0= ruleExpression ) )
+                    	    // InternalThingML.g:6189:6: (lv_parameters_4_0= ruleExpression )
                     	    {
-                    	    // InternalThingML.g:6188:6: (lv_parameters_4_0= ruleExpression )
-                    	    // InternalThingML.g:6189:7: lv_parameters_4_0= ruleExpression
+                    	    // InternalThingML.g:6189:6: (lv_parameters_4_0= ruleExpression )
+                    	    // InternalThingML.g:6190:7: lv_parameters_4_0= ruleExpression
                     	    {
 
                     	    							newCompositeNode(grammarAccess.getFunctionCallExpressionAccess().getParametersExpressionParserRuleCall_2_1_1_0());
@@ -15598,7 +15604,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleConfiguration"
-    // InternalThingML.g:6216:1: entryRuleConfiguration returns [EObject current=null] : iv_ruleConfiguration= ruleConfiguration EOF ;
+    // InternalThingML.g:6217:1: entryRuleConfiguration returns [EObject current=null] : iv_ruleConfiguration= ruleConfiguration EOF ;
     public final EObject entryRuleConfiguration() throws RecognitionException {
         EObject current = null;
 
@@ -15606,8 +15612,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:6216:54: (iv_ruleConfiguration= ruleConfiguration EOF )
-            // InternalThingML.g:6217:2: iv_ruleConfiguration= ruleConfiguration EOF
+            // InternalThingML.g:6217:54: (iv_ruleConfiguration= ruleConfiguration EOF )
+            // InternalThingML.g:6218:2: iv_ruleConfiguration= ruleConfiguration EOF
             {
              newCompositeNode(grammarAccess.getConfigurationRule()); 
             pushFollow(FOLLOW_1);
@@ -15634,7 +15640,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleConfiguration"
-    // InternalThingML.g:6223:1: ruleConfiguration returns [EObject current=null] : (otherlv_0= 'configuration' ( (lv_name_1_0= RULE_ID ) ) ( (lv_annotations_2_0= rulePlatformAnnotation ) )* otherlv_3= '{' ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )* otherlv_7= '}' ) ;
+    // InternalThingML.g:6224:1: ruleConfiguration returns [EObject current=null] : (otherlv_0= 'configuration' ( (lv_name_1_0= RULE_ID ) ) ( (lv_annotations_2_0= rulePlatformAnnotation ) )* otherlv_3= '{' ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )* otherlv_7= '}' ) ;
     public final EObject ruleConfiguration() throws RecognitionException {
         EObject current = null;
 
@@ -15655,21 +15661,21 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:6229:2: ( (otherlv_0= 'configuration' ( (lv_name_1_0= RULE_ID ) ) ( (lv_annotations_2_0= rulePlatformAnnotation ) )* otherlv_3= '{' ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )* otherlv_7= '}' ) )
-            // InternalThingML.g:6230:2: (otherlv_0= 'configuration' ( (lv_name_1_0= RULE_ID ) ) ( (lv_annotations_2_0= rulePlatformAnnotation ) )* otherlv_3= '{' ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )* otherlv_7= '}' )
+            // InternalThingML.g:6230:2: ( (otherlv_0= 'configuration' ( (lv_name_1_0= RULE_ID ) ) ( (lv_annotations_2_0= rulePlatformAnnotation ) )* otherlv_3= '{' ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )* otherlv_7= '}' ) )
+            // InternalThingML.g:6231:2: (otherlv_0= 'configuration' ( (lv_name_1_0= RULE_ID ) ) ( (lv_annotations_2_0= rulePlatformAnnotation ) )* otherlv_3= '{' ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )* otherlv_7= '}' )
             {
-            // InternalThingML.g:6230:2: (otherlv_0= 'configuration' ( (lv_name_1_0= RULE_ID ) ) ( (lv_annotations_2_0= rulePlatformAnnotation ) )* otherlv_3= '{' ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )* otherlv_7= '}' )
-            // InternalThingML.g:6231:3: otherlv_0= 'configuration' ( (lv_name_1_0= RULE_ID ) ) ( (lv_annotations_2_0= rulePlatformAnnotation ) )* otherlv_3= '{' ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )* otherlv_7= '}'
+            // InternalThingML.g:6231:2: (otherlv_0= 'configuration' ( (lv_name_1_0= RULE_ID ) ) ( (lv_annotations_2_0= rulePlatformAnnotation ) )* otherlv_3= '{' ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )* otherlv_7= '}' )
+            // InternalThingML.g:6232:3: otherlv_0= 'configuration' ( (lv_name_1_0= RULE_ID ) ) ( (lv_annotations_2_0= rulePlatformAnnotation ) )* otherlv_3= '{' ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )* otherlv_7= '}'
             {
             otherlv_0=(Token)match(input,93,FOLLOW_6); 
 
             			newLeafNode(otherlv_0, grammarAccess.getConfigurationAccess().getConfigurationKeyword_0());
             		
-            // InternalThingML.g:6235:3: ( (lv_name_1_0= RULE_ID ) )
-            // InternalThingML.g:6236:4: (lv_name_1_0= RULE_ID )
+            // InternalThingML.g:6236:3: ( (lv_name_1_0= RULE_ID ) )
+            // InternalThingML.g:6237:4: (lv_name_1_0= RULE_ID )
             {
-            // InternalThingML.g:6236:4: (lv_name_1_0= RULE_ID )
-            // InternalThingML.g:6237:5: lv_name_1_0= RULE_ID
+            // InternalThingML.g:6237:4: (lv_name_1_0= RULE_ID )
+            // InternalThingML.g:6238:5: lv_name_1_0= RULE_ID
             {
             lv_name_1_0=(Token)match(input,RULE_ID,FOLLOW_15); 
 
@@ -15691,7 +15697,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:6253:3: ( (lv_annotations_2_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:6254:3: ( (lv_annotations_2_0= rulePlatformAnnotation ) )*
             loop119:
             do {
                 int alt119=2;
@@ -15704,10 +15710,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt119) {
             	case 1 :
-            	    // InternalThingML.g:6254:4: (lv_annotations_2_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:6255:4: (lv_annotations_2_0= rulePlatformAnnotation )
             	    {
-            	    // InternalThingML.g:6254:4: (lv_annotations_2_0= rulePlatformAnnotation )
-            	    // InternalThingML.g:6255:5: lv_annotations_2_0= rulePlatformAnnotation
+            	    // InternalThingML.g:6255:4: (lv_annotations_2_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:6256:5: lv_annotations_2_0= rulePlatformAnnotation
             	    {
 
             	    					newCompositeNode(grammarAccess.getConfigurationAccess().getAnnotationsPlatformAnnotationParserRuleCall_2_0());
@@ -15744,7 +15750,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_3, grammarAccess.getConfigurationAccess().getLeftCurlyBracketKeyword_3());
             		
-            // InternalThingML.g:6276:3: ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )*
+            // InternalThingML.g:6277:3: ( ( (lv_instances_4_0= ruleInstance ) ) | ( (lv_connectors_5_0= ruleAbstractConnector ) ) | ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) ) )*
             loop120:
             do {
                 int alt120=4;
@@ -15769,13 +15775,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt120) {
             	case 1 :
-            	    // InternalThingML.g:6277:4: ( (lv_instances_4_0= ruleInstance ) )
+            	    // InternalThingML.g:6278:4: ( (lv_instances_4_0= ruleInstance ) )
             	    {
-            	    // InternalThingML.g:6277:4: ( (lv_instances_4_0= ruleInstance ) )
-            	    // InternalThingML.g:6278:5: (lv_instances_4_0= ruleInstance )
+            	    // InternalThingML.g:6278:4: ( (lv_instances_4_0= ruleInstance ) )
+            	    // InternalThingML.g:6279:5: (lv_instances_4_0= ruleInstance )
             	    {
-            	    // InternalThingML.g:6278:5: (lv_instances_4_0= ruleInstance )
-            	    // InternalThingML.g:6279:6: lv_instances_4_0= ruleInstance
+            	    // InternalThingML.g:6279:5: (lv_instances_4_0= ruleInstance )
+            	    // InternalThingML.g:6280:6: lv_instances_4_0= ruleInstance
             	    {
 
             	    						newCompositeNode(grammarAccess.getConfigurationAccess().getInstancesInstanceParserRuleCall_4_0_0());
@@ -15806,13 +15812,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 2 :
-            	    // InternalThingML.g:6297:4: ( (lv_connectors_5_0= ruleAbstractConnector ) )
+            	    // InternalThingML.g:6298:4: ( (lv_connectors_5_0= ruleAbstractConnector ) )
             	    {
-            	    // InternalThingML.g:6297:4: ( (lv_connectors_5_0= ruleAbstractConnector ) )
-            	    // InternalThingML.g:6298:5: (lv_connectors_5_0= ruleAbstractConnector )
+            	    // InternalThingML.g:6298:4: ( (lv_connectors_5_0= ruleAbstractConnector ) )
+            	    // InternalThingML.g:6299:5: (lv_connectors_5_0= ruleAbstractConnector )
             	    {
-            	    // InternalThingML.g:6298:5: (lv_connectors_5_0= ruleAbstractConnector )
-            	    // InternalThingML.g:6299:6: lv_connectors_5_0= ruleAbstractConnector
+            	    // InternalThingML.g:6299:5: (lv_connectors_5_0= ruleAbstractConnector )
+            	    // InternalThingML.g:6300:6: lv_connectors_5_0= ruleAbstractConnector
             	    {
 
             	    						newCompositeNode(grammarAccess.getConfigurationAccess().getConnectorsAbstractConnectorParserRuleCall_4_1_0());
@@ -15843,13 +15849,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             	    }
             	    break;
             	case 3 :
-            	    // InternalThingML.g:6317:4: ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) )
+            	    // InternalThingML.g:6318:4: ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) )
             	    {
-            	    // InternalThingML.g:6317:4: ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) )
-            	    // InternalThingML.g:6318:5: (lv_propassigns_6_0= ruleConfigPropertyAssign )
+            	    // InternalThingML.g:6318:4: ( (lv_propassigns_6_0= ruleConfigPropertyAssign ) )
+            	    // InternalThingML.g:6319:5: (lv_propassigns_6_0= ruleConfigPropertyAssign )
             	    {
-            	    // InternalThingML.g:6318:5: (lv_propassigns_6_0= ruleConfigPropertyAssign )
-            	    // InternalThingML.g:6319:6: lv_propassigns_6_0= ruleConfigPropertyAssign
+            	    // InternalThingML.g:6319:5: (lv_propassigns_6_0= ruleConfigPropertyAssign )
+            	    // InternalThingML.g:6320:6: lv_propassigns_6_0= ruleConfigPropertyAssign
             	    {
 
             	    						newCompositeNode(grammarAccess.getConfigurationAccess().getPropassignsConfigPropertyAssignParserRuleCall_4_2_0());
@@ -15912,7 +15918,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleInstance"
-    // InternalThingML.g:6345:1: entryRuleInstance returns [EObject current=null] : iv_ruleInstance= ruleInstance EOF ;
+    // InternalThingML.g:6346:1: entryRuleInstance returns [EObject current=null] : iv_ruleInstance= ruleInstance EOF ;
     public final EObject entryRuleInstance() throws RecognitionException {
         EObject current = null;
 
@@ -15920,8 +15926,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:6345:49: (iv_ruleInstance= ruleInstance EOF )
-            // InternalThingML.g:6346:2: iv_ruleInstance= ruleInstance EOF
+            // InternalThingML.g:6346:49: (iv_ruleInstance= ruleInstance EOF )
+            // InternalThingML.g:6347:2: iv_ruleInstance= ruleInstance EOF
             {
              newCompositeNode(grammarAccess.getInstanceRule()); 
             pushFollow(FOLLOW_1);
@@ -15948,7 +15954,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleInstance"
-    // InternalThingML.g:6352:1: ruleInstance returns [EObject current=null] : (otherlv_0= 'instance' ( (lv_name_1_0= RULE_ID ) ) otherlv_2= ':' ( (otherlv_3= RULE_ID ) ) ( (lv_annotations_4_0= rulePlatformAnnotation ) )* ) ;
+    // InternalThingML.g:6353:1: ruleInstance returns [EObject current=null] : (otherlv_0= 'instance' ( (lv_name_1_0= RULE_ID ) ) otherlv_2= ':' ( (otherlv_3= RULE_ID ) ) ( (lv_annotations_4_0= rulePlatformAnnotation ) )* ) ;
     public final EObject ruleInstance() throws RecognitionException {
         EObject current = null;
 
@@ -15963,21 +15969,21 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:6358:2: ( (otherlv_0= 'instance' ( (lv_name_1_0= RULE_ID ) ) otherlv_2= ':' ( (otherlv_3= RULE_ID ) ) ( (lv_annotations_4_0= rulePlatformAnnotation ) )* ) )
-            // InternalThingML.g:6359:2: (otherlv_0= 'instance' ( (lv_name_1_0= RULE_ID ) ) otherlv_2= ':' ( (otherlv_3= RULE_ID ) ) ( (lv_annotations_4_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:6359:2: ( (otherlv_0= 'instance' ( (lv_name_1_0= RULE_ID ) ) otherlv_2= ':' ( (otherlv_3= RULE_ID ) ) ( (lv_annotations_4_0= rulePlatformAnnotation ) )* ) )
+            // InternalThingML.g:6360:2: (otherlv_0= 'instance' ( (lv_name_1_0= RULE_ID ) ) otherlv_2= ':' ( (otherlv_3= RULE_ID ) ) ( (lv_annotations_4_0= rulePlatformAnnotation ) )* )
             {
-            // InternalThingML.g:6359:2: (otherlv_0= 'instance' ( (lv_name_1_0= RULE_ID ) ) otherlv_2= ':' ( (otherlv_3= RULE_ID ) ) ( (lv_annotations_4_0= rulePlatformAnnotation ) )* )
-            // InternalThingML.g:6360:3: otherlv_0= 'instance' ( (lv_name_1_0= RULE_ID ) ) otherlv_2= ':' ( (otherlv_3= RULE_ID ) ) ( (lv_annotations_4_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:6360:2: (otherlv_0= 'instance' ( (lv_name_1_0= RULE_ID ) ) otherlv_2= ':' ( (otherlv_3= RULE_ID ) ) ( (lv_annotations_4_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:6361:3: otherlv_0= 'instance' ( (lv_name_1_0= RULE_ID ) ) otherlv_2= ':' ( (otherlv_3= RULE_ID ) ) ( (lv_annotations_4_0= rulePlatformAnnotation ) )*
             {
             otherlv_0=(Token)match(input,94,FOLLOW_6); 
 
             			newLeafNode(otherlv_0, grammarAccess.getInstanceAccess().getInstanceKeyword_0());
             		
-            // InternalThingML.g:6364:3: ( (lv_name_1_0= RULE_ID ) )
-            // InternalThingML.g:6365:4: (lv_name_1_0= RULE_ID )
+            // InternalThingML.g:6365:3: ( (lv_name_1_0= RULE_ID ) )
+            // InternalThingML.g:6366:4: (lv_name_1_0= RULE_ID )
             {
-            // InternalThingML.g:6365:4: (lv_name_1_0= RULE_ID )
-            // InternalThingML.g:6366:5: lv_name_1_0= RULE_ID
+            // InternalThingML.g:6366:4: (lv_name_1_0= RULE_ID )
+            // InternalThingML.g:6367:5: lv_name_1_0= RULE_ID
             {
             lv_name_1_0=(Token)match(input,RULE_ID,FOLLOW_7); 
 
@@ -16003,11 +16009,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_2, grammarAccess.getInstanceAccess().getColonKeyword_2());
             		
-            // InternalThingML.g:6386:3: ( (otherlv_3= RULE_ID ) )
-            // InternalThingML.g:6387:4: (otherlv_3= RULE_ID )
+            // InternalThingML.g:6387:3: ( (otherlv_3= RULE_ID ) )
+            // InternalThingML.g:6388:4: (otherlv_3= RULE_ID )
             {
-            // InternalThingML.g:6387:4: (otherlv_3= RULE_ID )
-            // InternalThingML.g:6388:5: otherlv_3= RULE_ID
+            // InternalThingML.g:6388:4: (otherlv_3= RULE_ID )
+            // InternalThingML.g:6389:5: otherlv_3= RULE_ID
             {
 
             					if (current==null) {
@@ -16024,7 +16030,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:6399:3: ( (lv_annotations_4_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:6400:3: ( (lv_annotations_4_0= rulePlatformAnnotation ) )*
             loop121:
             do {
                 int alt121=2;
@@ -16037,10 +16043,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt121) {
             	case 1 :
-            	    // InternalThingML.g:6400:4: (lv_annotations_4_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:6401:4: (lv_annotations_4_0= rulePlatformAnnotation )
             	    {
-            	    // InternalThingML.g:6400:4: (lv_annotations_4_0= rulePlatformAnnotation )
-            	    // InternalThingML.g:6401:5: lv_annotations_4_0= rulePlatformAnnotation
+            	    // InternalThingML.g:6401:4: (lv_annotations_4_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:6402:5: lv_annotations_4_0= rulePlatformAnnotation
             	    {
 
             	    					newCompositeNode(grammarAccess.getInstanceAccess().getAnnotationsPlatformAnnotationParserRuleCall_4_0());
@@ -16096,7 +16102,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleConfigPropertyAssign"
-    // InternalThingML.g:6422:1: entryRuleConfigPropertyAssign returns [EObject current=null] : iv_ruleConfigPropertyAssign= ruleConfigPropertyAssign EOF ;
+    // InternalThingML.g:6423:1: entryRuleConfigPropertyAssign returns [EObject current=null] : iv_ruleConfigPropertyAssign= ruleConfigPropertyAssign EOF ;
     public final EObject entryRuleConfigPropertyAssign() throws RecognitionException {
         EObject current = null;
 
@@ -16104,8 +16110,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:6422:61: (iv_ruleConfigPropertyAssign= ruleConfigPropertyAssign EOF )
-            // InternalThingML.g:6423:2: iv_ruleConfigPropertyAssign= ruleConfigPropertyAssign EOF
+            // InternalThingML.g:6423:61: (iv_ruleConfigPropertyAssign= ruleConfigPropertyAssign EOF )
+            // InternalThingML.g:6424:2: iv_ruleConfigPropertyAssign= ruleConfigPropertyAssign EOF
             {
              newCompositeNode(grammarAccess.getConfigPropertyAssignRule()); 
             pushFollow(FOLLOW_1);
@@ -16132,7 +16138,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleConfigPropertyAssign"
-    // InternalThingML.g:6429:1: ruleConfigPropertyAssign returns [EObject current=null] : (otherlv_0= 'set' ( (otherlv_1= RULE_ID ) ) otherlv_2= '.' ( (otherlv_3= RULE_ID ) ) (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )* otherlv_7= '=' ( (lv_init_8_0= ruleExpression ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* ) ;
+    // InternalThingML.g:6430:1: ruleConfigPropertyAssign returns [EObject current=null] : (otherlv_0= 'set' ( (otherlv_1= RULE_ID ) ) otherlv_2= '.' ( (otherlv_3= RULE_ID ) ) (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )* otherlv_7= '=' ( (lv_init_8_0= ruleExpression ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* ) ;
     public final EObject ruleConfigPropertyAssign() throws RecognitionException {
         EObject current = null;
 
@@ -16154,21 +16160,21 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:6435:2: ( (otherlv_0= 'set' ( (otherlv_1= RULE_ID ) ) otherlv_2= '.' ( (otherlv_3= RULE_ID ) ) (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )* otherlv_7= '=' ( (lv_init_8_0= ruleExpression ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* ) )
-            // InternalThingML.g:6436:2: (otherlv_0= 'set' ( (otherlv_1= RULE_ID ) ) otherlv_2= '.' ( (otherlv_3= RULE_ID ) ) (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )* otherlv_7= '=' ( (lv_init_8_0= ruleExpression ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:6436:2: ( (otherlv_0= 'set' ( (otherlv_1= RULE_ID ) ) otherlv_2= '.' ( (otherlv_3= RULE_ID ) ) (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )* otherlv_7= '=' ( (lv_init_8_0= ruleExpression ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* ) )
+            // InternalThingML.g:6437:2: (otherlv_0= 'set' ( (otherlv_1= RULE_ID ) ) otherlv_2= '.' ( (otherlv_3= RULE_ID ) ) (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )* otherlv_7= '=' ( (lv_init_8_0= ruleExpression ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* )
             {
-            // InternalThingML.g:6436:2: (otherlv_0= 'set' ( (otherlv_1= RULE_ID ) ) otherlv_2= '.' ( (otherlv_3= RULE_ID ) ) (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )* otherlv_7= '=' ( (lv_init_8_0= ruleExpression ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* )
-            // InternalThingML.g:6437:3: otherlv_0= 'set' ( (otherlv_1= RULE_ID ) ) otherlv_2= '.' ( (otherlv_3= RULE_ID ) ) (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )* otherlv_7= '=' ( (lv_init_8_0= ruleExpression ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:6437:2: (otherlv_0= 'set' ( (otherlv_1= RULE_ID ) ) otherlv_2= '.' ( (otherlv_3= RULE_ID ) ) (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )* otherlv_7= '=' ( (lv_init_8_0= ruleExpression ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:6438:3: otherlv_0= 'set' ( (otherlv_1= RULE_ID ) ) otherlv_2= '.' ( (otherlv_3= RULE_ID ) ) (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )* otherlv_7= '=' ( (lv_init_8_0= ruleExpression ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )*
             {
             otherlv_0=(Token)match(input,31,FOLLOW_6); 
 
             			newLeafNode(otherlv_0, grammarAccess.getConfigPropertyAssignAccess().getSetKeyword_0());
             		
-            // InternalThingML.g:6441:3: ( (otherlv_1= RULE_ID ) )
-            // InternalThingML.g:6442:4: (otherlv_1= RULE_ID )
+            // InternalThingML.g:6442:3: ( (otherlv_1= RULE_ID ) )
+            // InternalThingML.g:6443:4: (otherlv_1= RULE_ID )
             {
-            // InternalThingML.g:6442:4: (otherlv_1= RULE_ID )
-            // InternalThingML.g:6443:5: otherlv_1= RULE_ID
+            // InternalThingML.g:6443:4: (otherlv_1= RULE_ID )
+            // InternalThingML.g:6444:5: otherlv_1= RULE_ID
             {
 
             					if (current==null) {
@@ -16189,11 +16195,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_2, grammarAccess.getConfigPropertyAssignAccess().getFullStopKeyword_2());
             		
-            // InternalThingML.g:6458:3: ( (otherlv_3= RULE_ID ) )
-            // InternalThingML.g:6459:4: (otherlv_3= RULE_ID )
+            // InternalThingML.g:6459:3: ( (otherlv_3= RULE_ID ) )
+            // InternalThingML.g:6460:4: (otherlv_3= RULE_ID )
             {
-            // InternalThingML.g:6459:4: (otherlv_3= RULE_ID )
-            // InternalThingML.g:6460:5: otherlv_3= RULE_ID
+            // InternalThingML.g:6460:4: (otherlv_3= RULE_ID )
+            // InternalThingML.g:6461:5: otherlv_3= RULE_ID
             {
 
             					if (current==null) {
@@ -16210,7 +16216,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:6471:3: (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )*
+            // InternalThingML.g:6472:3: (otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']' )*
             loop122:
             do {
                 int alt122=2;
@@ -16223,17 +16229,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt122) {
             	case 1 :
-            	    // InternalThingML.g:6472:4: otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']'
+            	    // InternalThingML.g:6473:4: otherlv_4= '[' ( (lv_index_5_0= ruleExpression ) ) otherlv_6= ']'
             	    {
             	    otherlv_4=(Token)match(input,17,FOLLOW_23); 
 
             	    				newLeafNode(otherlv_4, grammarAccess.getConfigPropertyAssignAccess().getLeftSquareBracketKeyword_4_0());
             	    			
-            	    // InternalThingML.g:6476:4: ( (lv_index_5_0= ruleExpression ) )
-            	    // InternalThingML.g:6477:5: (lv_index_5_0= ruleExpression )
+            	    // InternalThingML.g:6477:4: ( (lv_index_5_0= ruleExpression ) )
+            	    // InternalThingML.g:6478:5: (lv_index_5_0= ruleExpression )
             	    {
-            	    // InternalThingML.g:6477:5: (lv_index_5_0= ruleExpression )
-            	    // InternalThingML.g:6478:6: lv_index_5_0= ruleExpression
+            	    // InternalThingML.g:6478:5: (lv_index_5_0= ruleExpression )
+            	    // InternalThingML.g:6479:6: lv_index_5_0= ruleExpression
             	    {
 
             	    						newCompositeNode(grammarAccess.getConfigPropertyAssignAccess().getIndexExpressionParserRuleCall_4_1_0());
@@ -16277,11 +16283,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_7, grammarAccess.getConfigPropertyAssignAccess().getEqualsSignKeyword_5());
             		
-            // InternalThingML.g:6504:3: ( (lv_init_8_0= ruleExpression ) )
-            // InternalThingML.g:6505:4: (lv_init_8_0= ruleExpression )
+            // InternalThingML.g:6505:3: ( (lv_init_8_0= ruleExpression ) )
+            // InternalThingML.g:6506:4: (lv_init_8_0= ruleExpression )
             {
-            // InternalThingML.g:6505:4: (lv_init_8_0= ruleExpression )
-            // InternalThingML.g:6506:5: lv_init_8_0= ruleExpression
+            // InternalThingML.g:6506:4: (lv_init_8_0= ruleExpression )
+            // InternalThingML.g:6507:5: lv_init_8_0= ruleExpression
             {
 
             					newCompositeNode(grammarAccess.getConfigPropertyAssignAccess().getInitExpressionParserRuleCall_6_0());
@@ -16308,7 +16314,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:6523:3: ( (lv_annotations_9_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:6524:3: ( (lv_annotations_9_0= rulePlatformAnnotation ) )*
             loop123:
             do {
                 int alt123=2;
@@ -16321,10 +16327,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt123) {
             	case 1 :
-            	    // InternalThingML.g:6524:4: (lv_annotations_9_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:6525:4: (lv_annotations_9_0= rulePlatformAnnotation )
             	    {
-            	    // InternalThingML.g:6524:4: (lv_annotations_9_0= rulePlatformAnnotation )
-            	    // InternalThingML.g:6525:5: lv_annotations_9_0= rulePlatformAnnotation
+            	    // InternalThingML.g:6525:4: (lv_annotations_9_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:6526:5: lv_annotations_9_0= rulePlatformAnnotation
             	    {
 
             	    					newCompositeNode(grammarAccess.getConfigPropertyAssignAccess().getAnnotationsPlatformAnnotationParserRuleCall_7_0());
@@ -16380,7 +16386,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleAbstractConnector"
-    // InternalThingML.g:6546:1: entryRuleAbstractConnector returns [EObject current=null] : iv_ruleAbstractConnector= ruleAbstractConnector EOF ;
+    // InternalThingML.g:6547:1: entryRuleAbstractConnector returns [EObject current=null] : iv_ruleAbstractConnector= ruleAbstractConnector EOF ;
     public final EObject entryRuleAbstractConnector() throws RecognitionException {
         EObject current = null;
 
@@ -16388,8 +16394,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:6546:58: (iv_ruleAbstractConnector= ruleAbstractConnector EOF )
-            // InternalThingML.g:6547:2: iv_ruleAbstractConnector= ruleAbstractConnector EOF
+            // InternalThingML.g:6547:58: (iv_ruleAbstractConnector= ruleAbstractConnector EOF )
+            // InternalThingML.g:6548:2: iv_ruleAbstractConnector= ruleAbstractConnector EOF
             {
              newCompositeNode(grammarAccess.getAbstractConnectorRule()); 
             pushFollow(FOLLOW_1);
@@ -16416,7 +16422,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleAbstractConnector"
-    // InternalThingML.g:6553:1: ruleAbstractConnector returns [EObject current=null] : (this_Connector_0= ruleConnector | this_ExternalConnector_1= ruleExternalConnector ) ;
+    // InternalThingML.g:6554:1: ruleAbstractConnector returns [EObject current=null] : (this_Connector_0= ruleConnector | this_ExternalConnector_1= ruleExternalConnector ) ;
     public final EObject ruleAbstractConnector() throws RecognitionException {
         EObject current = null;
 
@@ -16429,10 +16435,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:6559:2: ( (this_Connector_0= ruleConnector | this_ExternalConnector_1= ruleExternalConnector ) )
-            // InternalThingML.g:6560:2: (this_Connector_0= ruleConnector | this_ExternalConnector_1= ruleExternalConnector )
+            // InternalThingML.g:6560:2: ( (this_Connector_0= ruleConnector | this_ExternalConnector_1= ruleExternalConnector ) )
+            // InternalThingML.g:6561:2: (this_Connector_0= ruleConnector | this_ExternalConnector_1= ruleExternalConnector )
             {
-            // InternalThingML.g:6560:2: (this_Connector_0= ruleConnector | this_ExternalConnector_1= ruleExternalConnector )
+            // InternalThingML.g:6561:2: (this_Connector_0= ruleConnector | this_ExternalConnector_1= ruleExternalConnector )
             int alt124=2;
             int LA124_0 = input.LA(1);
 
@@ -16442,39 +16448,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                 if ( (LA124_1==RULE_ID) ) {
                     int LA124_2 = input.LA(3);
 
-                    if ( (LA124_2==92) ) {
+                    if ( (LA124_2==RULE_ID) ) {
                         int LA124_3 = input.LA(4);
 
-                        if ( (LA124_3==RULE_ID) ) {
-                            int LA124_5 = input.LA(5);
+                        if ( (LA124_3==92) ) {
+                            int LA124_4 = input.LA(5);
 
-                            if ( (LA124_5==97) ) {
-                                alt124=2;
-                            }
-                            else if ( (LA124_5==96) ) {
-                                alt124=1;
-                            }
-                            else {
-                                NoViableAltException nvae =
-                                    new NoViableAltException("", 124, 5, input);
-
-                                throw nvae;
-                            }
-                        }
-                        else {
-                            NoViableAltException nvae =
-                                new NoViableAltException("", 124, 3, input);
-
-                            throw nvae;
-                        }
-                    }
-                    else if ( (LA124_2==RULE_ID) ) {
-                        int LA124_4 = input.LA(4);
-
-                        if ( (LA124_4==92) ) {
-                            int LA124_3 = input.LA(5);
-
-                            if ( (LA124_3==RULE_ID) ) {
+                            if ( (LA124_4==RULE_ID) ) {
                                 int LA124_5 = input.LA(6);
 
                                 if ( (LA124_5==97) ) {
@@ -16492,7 +16472,33 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                             }
                             else {
                                 NoViableAltException nvae =
-                                    new NoViableAltException("", 124, 3, input);
+                                    new NoViableAltException("", 124, 4, input);
+
+                                throw nvae;
+                            }
+                        }
+                        else {
+                            NoViableAltException nvae =
+                                new NoViableAltException("", 124, 3, input);
+
+                            throw nvae;
+                        }
+                    }
+                    else if ( (LA124_2==92) ) {
+                        int LA124_4 = input.LA(4);
+
+                        if ( (LA124_4==RULE_ID) ) {
+                            int LA124_5 = input.LA(5);
+
+                            if ( (LA124_5==97) ) {
+                                alt124=2;
+                            }
+                            else if ( (LA124_5==96) ) {
+                                alt124=1;
+                            }
+                            else {
+                                NoViableAltException nvae =
+                                    new NoViableAltException("", 124, 5, input);
 
                                 throw nvae;
                             }
@@ -16526,7 +16532,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt124) {
                 case 1 :
-                    // InternalThingML.g:6561:3: this_Connector_0= ruleConnector
+                    // InternalThingML.g:6562:3: this_Connector_0= ruleConnector
                     {
 
                     			newCompositeNode(grammarAccess.getAbstractConnectorAccess().getConnectorParserRuleCall_0());
@@ -16544,7 +16550,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // InternalThingML.g:6570:3: this_ExternalConnector_1= ruleExternalConnector
+                    // InternalThingML.g:6571:3: this_ExternalConnector_1= ruleExternalConnector
                     {
 
                     			newCompositeNode(grammarAccess.getAbstractConnectorAccess().getExternalConnectorParserRuleCall_1());
@@ -16584,7 +16590,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleConnector"
-    // InternalThingML.g:6582:1: entryRuleConnector returns [EObject current=null] : iv_ruleConnector= ruleConnector EOF ;
+    // InternalThingML.g:6583:1: entryRuleConnector returns [EObject current=null] : iv_ruleConnector= ruleConnector EOF ;
     public final EObject entryRuleConnector() throws RecognitionException {
         EObject current = null;
 
@@ -16592,8 +16598,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:6582:50: (iv_ruleConnector= ruleConnector EOF )
-            // InternalThingML.g:6583:2: iv_ruleConnector= ruleConnector EOF
+            // InternalThingML.g:6583:50: (iv_ruleConnector= ruleConnector EOF )
+            // InternalThingML.g:6584:2: iv_ruleConnector= ruleConnector EOF
             {
              newCompositeNode(grammarAccess.getConnectorRule()); 
             pushFollow(FOLLOW_1);
@@ -16620,7 +16626,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleConnector"
-    // InternalThingML.g:6589:1: ruleConnector returns [EObject current=null] : (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= '=>' ( (otherlv_6= RULE_ID ) ) otherlv_7= '.' ( (otherlv_8= RULE_ID ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* ) ;
+    // InternalThingML.g:6590:1: ruleConnector returns [EObject current=null] : (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= '=>' ( (otherlv_6= RULE_ID ) ) otherlv_7= '.' ( (otherlv_8= RULE_ID ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* ) ;
     public final EObject ruleConnector() throws RecognitionException {
         EObject current = null;
 
@@ -16640,17 +16646,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:6595:2: ( (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= '=>' ( (otherlv_6= RULE_ID ) ) otherlv_7= '.' ( (otherlv_8= RULE_ID ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* ) )
-            // InternalThingML.g:6596:2: (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= '=>' ( (otherlv_6= RULE_ID ) ) otherlv_7= '.' ( (otherlv_8= RULE_ID ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:6596:2: ( (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= '=>' ( (otherlv_6= RULE_ID ) ) otherlv_7= '.' ( (otherlv_8= RULE_ID ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* ) )
+            // InternalThingML.g:6597:2: (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= '=>' ( (otherlv_6= RULE_ID ) ) otherlv_7= '.' ( (otherlv_8= RULE_ID ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* )
             {
-            // InternalThingML.g:6596:2: (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= '=>' ( (otherlv_6= RULE_ID ) ) otherlv_7= '.' ( (otherlv_8= RULE_ID ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* )
-            // InternalThingML.g:6597:3: otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= '=>' ( (otherlv_6= RULE_ID ) ) otherlv_7= '.' ( (otherlv_8= RULE_ID ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:6597:2: (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= '=>' ( (otherlv_6= RULE_ID ) ) otherlv_7= '.' ( (otherlv_8= RULE_ID ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:6598:3: otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= '=>' ( (otherlv_6= RULE_ID ) ) otherlv_7= '.' ( (otherlv_8= RULE_ID ) ) ( (lv_annotations_9_0= rulePlatformAnnotation ) )*
             {
             otherlv_0=(Token)match(input,95,FOLLOW_6); 
 
             			newLeafNode(otherlv_0, grammarAccess.getConnectorAccess().getConnectorKeyword_0());
             		
-            // InternalThingML.g:6601:3: ( (lv_name_1_0= RULE_ID ) )?
+            // InternalThingML.g:6602:3: ( (lv_name_1_0= RULE_ID ) )?
             int alt125=2;
             int LA125_0 = input.LA(1);
 
@@ -16663,10 +16669,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt125) {
                 case 1 :
-                    // InternalThingML.g:6602:4: (lv_name_1_0= RULE_ID )
+                    // InternalThingML.g:6603:4: (lv_name_1_0= RULE_ID )
                     {
-                    // InternalThingML.g:6602:4: (lv_name_1_0= RULE_ID )
-                    // InternalThingML.g:6603:5: lv_name_1_0= RULE_ID
+                    // InternalThingML.g:6603:4: (lv_name_1_0= RULE_ID )
+                    // InternalThingML.g:6604:5: lv_name_1_0= RULE_ID
                     {
                     lv_name_1_0=(Token)match(input,RULE_ID,FOLLOW_6); 
 
@@ -16691,11 +16697,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:6619:3: ( (otherlv_2= RULE_ID ) )
-            // InternalThingML.g:6620:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:6620:3: ( (otherlv_2= RULE_ID ) )
+            // InternalThingML.g:6621:4: (otherlv_2= RULE_ID )
             {
-            // InternalThingML.g:6620:4: (otherlv_2= RULE_ID )
-            // InternalThingML.g:6621:5: otherlv_2= RULE_ID
+            // InternalThingML.g:6621:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:6622:5: otherlv_2= RULE_ID
             {
 
             					if (current==null) {
@@ -16716,11 +16722,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_3, grammarAccess.getConnectorAccess().getFullStopKeyword_3());
             		
-            // InternalThingML.g:6636:3: ( (otherlv_4= RULE_ID ) )
-            // InternalThingML.g:6637:4: (otherlv_4= RULE_ID )
+            // InternalThingML.g:6637:3: ( (otherlv_4= RULE_ID ) )
+            // InternalThingML.g:6638:4: (otherlv_4= RULE_ID )
             {
-            // InternalThingML.g:6637:4: (otherlv_4= RULE_ID )
-            // InternalThingML.g:6638:5: otherlv_4= RULE_ID
+            // InternalThingML.g:6638:4: (otherlv_4= RULE_ID )
+            // InternalThingML.g:6639:5: otherlv_4= RULE_ID
             {
 
             					if (current==null) {
@@ -16741,11 +16747,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_5, grammarAccess.getConnectorAccess().getEqualsSignGreaterThanSignKeyword_5());
             		
-            // InternalThingML.g:6653:3: ( (otherlv_6= RULE_ID ) )
-            // InternalThingML.g:6654:4: (otherlv_6= RULE_ID )
+            // InternalThingML.g:6654:3: ( (otherlv_6= RULE_ID ) )
+            // InternalThingML.g:6655:4: (otherlv_6= RULE_ID )
             {
-            // InternalThingML.g:6654:4: (otherlv_6= RULE_ID )
-            // InternalThingML.g:6655:5: otherlv_6= RULE_ID
+            // InternalThingML.g:6655:4: (otherlv_6= RULE_ID )
+            // InternalThingML.g:6656:5: otherlv_6= RULE_ID
             {
 
             					if (current==null) {
@@ -16766,11 +16772,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_7, grammarAccess.getConnectorAccess().getFullStopKeyword_7());
             		
-            // InternalThingML.g:6670:3: ( (otherlv_8= RULE_ID ) )
-            // InternalThingML.g:6671:4: (otherlv_8= RULE_ID )
+            // InternalThingML.g:6671:3: ( (otherlv_8= RULE_ID ) )
+            // InternalThingML.g:6672:4: (otherlv_8= RULE_ID )
             {
-            // InternalThingML.g:6671:4: (otherlv_8= RULE_ID )
-            // InternalThingML.g:6672:5: otherlv_8= RULE_ID
+            // InternalThingML.g:6672:4: (otherlv_8= RULE_ID )
+            // InternalThingML.g:6673:5: otherlv_8= RULE_ID
             {
 
             					if (current==null) {
@@ -16787,7 +16793,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:6683:3: ( (lv_annotations_9_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:6684:3: ( (lv_annotations_9_0= rulePlatformAnnotation ) )*
             loop126:
             do {
                 int alt126=2;
@@ -16800,10 +16806,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt126) {
             	case 1 :
-            	    // InternalThingML.g:6684:4: (lv_annotations_9_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:6685:4: (lv_annotations_9_0= rulePlatformAnnotation )
             	    {
-            	    // InternalThingML.g:6684:4: (lv_annotations_9_0= rulePlatformAnnotation )
-            	    // InternalThingML.g:6685:5: lv_annotations_9_0= rulePlatformAnnotation
+            	    // InternalThingML.g:6685:4: (lv_annotations_9_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:6686:5: lv_annotations_9_0= rulePlatformAnnotation
             	    {
 
             	    					newCompositeNode(grammarAccess.getConnectorAccess().getAnnotationsPlatformAnnotationParserRuleCall_9_0());
@@ -16859,7 +16865,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExternalConnector"
-    // InternalThingML.g:6706:1: entryRuleExternalConnector returns [EObject current=null] : iv_ruleExternalConnector= ruleExternalConnector EOF ;
+    // InternalThingML.g:6707:1: entryRuleExternalConnector returns [EObject current=null] : iv_ruleExternalConnector= ruleExternalConnector EOF ;
     public final EObject entryRuleExternalConnector() throws RecognitionException {
         EObject current = null;
 
@@ -16867,8 +16873,8 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // InternalThingML.g:6706:58: (iv_ruleExternalConnector= ruleExternalConnector EOF )
-            // InternalThingML.g:6707:2: iv_ruleExternalConnector= ruleExternalConnector EOF
+            // InternalThingML.g:6707:58: (iv_ruleExternalConnector= ruleExternalConnector EOF )
+            // InternalThingML.g:6708:2: iv_ruleExternalConnector= ruleExternalConnector EOF
             {
              newCompositeNode(grammarAccess.getExternalConnectorRule()); 
             pushFollow(FOLLOW_1);
@@ -16895,7 +16901,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExternalConnector"
-    // InternalThingML.g:6713:1: ruleExternalConnector returns [EObject current=null] : (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= 'over' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) ;
+    // InternalThingML.g:6714:1: ruleExternalConnector returns [EObject current=null] : (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= 'over' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) ;
     public final EObject ruleExternalConnector() throws RecognitionException {
         EObject current = null;
 
@@ -16913,17 +16919,17 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalThingML.g:6719:2: ( (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= 'over' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) )
-            // InternalThingML.g:6720:2: (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= 'over' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:6720:2: ( (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= 'over' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* ) )
+            // InternalThingML.g:6721:2: (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= 'over' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
             {
-            // InternalThingML.g:6720:2: (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= 'over' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
-            // InternalThingML.g:6721:3: otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= 'over' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:6721:2: (otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= 'over' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )* )
+            // InternalThingML.g:6722:3: otherlv_0= 'connector' ( (lv_name_1_0= RULE_ID ) )? ( (otherlv_2= RULE_ID ) ) otherlv_3= '.' ( (otherlv_4= RULE_ID ) ) otherlv_5= 'over' ( (otherlv_6= RULE_ID ) ) ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
             {
             otherlv_0=(Token)match(input,95,FOLLOW_6); 
 
             			newLeafNode(otherlv_0, grammarAccess.getExternalConnectorAccess().getConnectorKeyword_0());
             		
-            // InternalThingML.g:6725:3: ( (lv_name_1_0= RULE_ID ) )?
+            // InternalThingML.g:6726:3: ( (lv_name_1_0= RULE_ID ) )?
             int alt127=2;
             int LA127_0 = input.LA(1);
 
@@ -16936,10 +16942,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             }
             switch (alt127) {
                 case 1 :
-                    // InternalThingML.g:6726:4: (lv_name_1_0= RULE_ID )
+                    // InternalThingML.g:6727:4: (lv_name_1_0= RULE_ID )
                     {
-                    // InternalThingML.g:6726:4: (lv_name_1_0= RULE_ID )
-                    // InternalThingML.g:6727:5: lv_name_1_0= RULE_ID
+                    // InternalThingML.g:6727:4: (lv_name_1_0= RULE_ID )
+                    // InternalThingML.g:6728:5: lv_name_1_0= RULE_ID
                     {
                     lv_name_1_0=(Token)match(input,RULE_ID,FOLLOW_6); 
 
@@ -16964,11 +16970,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:6743:3: ( (otherlv_2= RULE_ID ) )
-            // InternalThingML.g:6744:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:6744:3: ( (otherlv_2= RULE_ID ) )
+            // InternalThingML.g:6745:4: (otherlv_2= RULE_ID )
             {
-            // InternalThingML.g:6744:4: (otherlv_2= RULE_ID )
-            // InternalThingML.g:6745:5: otherlv_2= RULE_ID
+            // InternalThingML.g:6745:4: (otherlv_2= RULE_ID )
+            // InternalThingML.g:6746:5: otherlv_2= RULE_ID
             {
 
             					if (current==null) {
@@ -16989,11 +16995,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_3, grammarAccess.getExternalConnectorAccess().getFullStopKeyword_3());
             		
-            // InternalThingML.g:6760:3: ( (otherlv_4= RULE_ID ) )
-            // InternalThingML.g:6761:4: (otherlv_4= RULE_ID )
+            // InternalThingML.g:6761:3: ( (otherlv_4= RULE_ID ) )
+            // InternalThingML.g:6762:4: (otherlv_4= RULE_ID )
             {
-            // InternalThingML.g:6761:4: (otherlv_4= RULE_ID )
-            // InternalThingML.g:6762:5: otherlv_4= RULE_ID
+            // InternalThingML.g:6762:4: (otherlv_4= RULE_ID )
+            // InternalThingML.g:6763:5: otherlv_4= RULE_ID
             {
 
             					if (current==null) {
@@ -17014,11 +17020,11 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             			newLeafNode(otherlv_5, grammarAccess.getExternalConnectorAccess().getOverKeyword_5());
             		
-            // InternalThingML.g:6777:3: ( (otherlv_6= RULE_ID ) )
-            // InternalThingML.g:6778:4: (otherlv_6= RULE_ID )
+            // InternalThingML.g:6778:3: ( (otherlv_6= RULE_ID ) )
+            // InternalThingML.g:6779:4: (otherlv_6= RULE_ID )
             {
-            // InternalThingML.g:6778:4: (otherlv_6= RULE_ID )
-            // InternalThingML.g:6779:5: otherlv_6= RULE_ID
+            // InternalThingML.g:6779:4: (otherlv_6= RULE_ID )
+            // InternalThingML.g:6780:5: otherlv_6= RULE_ID
             {
 
             					if (current==null) {
@@ -17035,7 +17041,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
             }
 
-            // InternalThingML.g:6790:3: ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
+            // InternalThingML.g:6791:3: ( (lv_annotations_7_0= rulePlatformAnnotation ) )*
             loop128:
             do {
                 int alt128=2;
@@ -17048,10 +17054,10 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
 
                 switch (alt128) {
             	case 1 :
-            	    // InternalThingML.g:6791:4: (lv_annotations_7_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:6792:4: (lv_annotations_7_0= rulePlatformAnnotation )
             	    {
-            	    // InternalThingML.g:6791:4: (lv_annotations_7_0= rulePlatformAnnotation )
-            	    // InternalThingML.g:6792:5: lv_annotations_7_0= rulePlatformAnnotation
+            	    // InternalThingML.g:6792:4: (lv_annotations_7_0= rulePlatformAnnotation )
+            	    // InternalThingML.g:6793:5: lv_annotations_7_0= rulePlatformAnnotation
             	    {
 
             	    					newCompositeNode(grammarAccess.getExternalConnectorAccess().getAnnotationsPlatformAnnotationParserRuleCall_7_0());
@@ -17113,13 +17119,13 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
     static final String dfa_1s = "\20\uffff";
     static final String dfa_2s = "\1\6\2\uffff\1\21\14\uffff";
     static final String dfa_3s = "\1\115\2\uffff\1\106\14\uffff";
-    static final String dfa_4s = "\1\uffff\1\1\1\2\1\uffff\1\7\1\10\1\11\1\12\1\13\1\14\1\16\1\6\1\15\1\5\1\4\1\3";
+    static final String dfa_4s = "\1\uffff\1\1\1\2\1\uffff\1\7\1\10\1\11\1\12\1\13\1\14\1\16\1\3\1\6\1\15\1\5\1\4";
     static final String dfa_5s = "\20\uffff}>";
     static final String[] dfa_6s = {
             "\1\3\1\uffff\1\2\6\uffff\1\12\25\uffff\1\12\33\uffff\1\1\5\uffff\1\4\1\5\1\uffff\1\6\1\7\1\10\1\11",
             "",
             "",
-            "\1\16\16\uffff\1\16\2\uffff\1\14\40\uffff\1\17\1\15\1\13",
+            "\1\17\16\uffff\1\17\2\uffff\1\15\40\uffff\1\13\1\16\1\14",
             "",
             "",
             "",
@@ -17155,19 +17161,19 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             this.transition = dfa_6;
         }
         public String getDescription() {
-            return "3836:2: (this_ActionBlock_0= ruleActionBlock | this_ExternStatement_1= ruleExternStatement | this_SendAction_2= ruleSendAction | this_VariableAssignment_3= ruleVariableAssignment | this_Increment_4= ruleIncrement | this_Decrement_5= ruleDecrement | this_LoopAction_6= ruleLoopAction | this_ConditionalAction_7= ruleConditionalAction | this_ReturnAction_8= ruleReturnAction | this_PrintAction_9= rulePrintAction | this_ErrorAction_10= ruleErrorAction | this_StartSession_11= ruleStartSession | this_FunctionCallStatement_12= ruleFunctionCallStatement | this_LocalVariable_13= ruleLocalVariable )";
+            return "3837:2: (this_ActionBlock_0= ruleActionBlock | this_ExternStatement_1= ruleExternStatement | this_SendAction_2= ruleSendAction | this_VariableAssignment_3= ruleVariableAssignment | this_Increment_4= ruleIncrement | this_Decrement_5= ruleDecrement | this_LoopAction_6= ruleLoopAction | this_ConditionalAction_7= ruleConditionalAction | this_ReturnAction_8= ruleReturnAction | this_PrintAction_9= rulePrintAction | this_ErrorAction_10= ruleErrorAction | this_StartSession_11= ruleStartSession | this_FunctionCallStatement_12= ruleFunctionCallStatement | this_LocalVariable_13= ruleLocalVariable )";
         }
     }
     static final String dfa_7s = "\13\uffff";
-    static final String dfa_8s = "\2\uffff\1\10\10\uffff";
+    static final String dfa_8s = "\2\uffff\1\11\10\uffff";
     static final String dfa_9s = "\1\4\1\uffff\1\5\10\uffff";
     static final String dfa_10s = "\1\133\1\uffff\1\137\10\uffff";
-    static final String dfa_11s = "\1\uffff\1\1\1\uffff\1\3\1\4\1\5\1\6\1\10\1\7\1\11\1\2";
+    static final String dfa_11s = "\1\uffff\1\1\1\uffff\1\3\1\4\1\5\1\6\1\2\1\10\1\7\1\11";
     static final String dfa_12s = "\13\uffff}>";
     static final String[] dfa_13s = {
             "\1\5\1\uffff\1\2\1\3\1\1\1\6\120\uffff\2\4",
             "",
-            "\2\10\1\uffff\1\10\6\uffff\1\10\1\12\2\10\1\uffff\2\10\4\uffff\1\10\3\uffff\2\10\2\uffff\1\10\1\7\6\10\3\uffff\4\10\2\uffff\1\10\3\uffff\2\10\3\uffff\4\10\1\uffff\3\10\3\uffff\22\10\3\uffff\1\11\1\uffff\2\10",
+            "\2\11\1\uffff\1\11\6\uffff\1\11\1\7\2\11\1\uffff\2\11\4\uffff\1\11\3\uffff\2\11\2\uffff\1\11\1\10\6\11\3\uffff\4\11\2\uffff\1\11\3\uffff\2\11\3\uffff\4\11\1\uffff\3\11\3\uffff\22\11\3\uffff\1\12\1\uffff\2\11",
             "",
             "",
             "",
@@ -17200,7 +17206,7 @@ public class InternalThingMLParser extends AbstractInternalAntlrParser {
             this.transition = dfa_13;
         }
         public String getDescription() {
-            return "5706:2: (this_ExternExpression_0= ruleExternExpression | this_EnumLiteralRef_1= ruleEnumLiteralRef | this_IntegerLiteral_2= ruleIntegerLiteral | this_BooleanLiteral_3= ruleBooleanLiteral | this_StringLiteral_4= ruleStringLiteral | this_DoubleLiteral_5= ruleDoubleLiteral | this_PropertyReference_6= rulePropertyReference | this_FunctionCallExpression_7= ruleFunctionCallExpression | this_EventReference_8= ruleEventReference )";
+            return "5707:2: (this_ExternExpression_0= ruleExternExpression | this_EnumLiteralRef_1= ruleEnumLiteralRef | this_IntegerLiteral_2= ruleIntegerLiteral | this_BooleanLiteral_3= ruleBooleanLiteral | this_StringLiteral_4= ruleStringLiteral | this_DoubleLiteral_5= ruleDoubleLiteral | this_PropertyReference_6= rulePropertyReference | this_FunctionCallExpression_7= ruleFunctionCallExpression | this_EventReference_8= ruleEventReference )";
         }
     }
  

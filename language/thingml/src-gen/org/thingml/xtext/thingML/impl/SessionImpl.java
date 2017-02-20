@@ -18,11 +18,14 @@
 package org.thingml.xtext.thingML.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
@@ -42,24 +45,14 @@ import org.thingml.xtext.thingML.ThingMLPackage;
 public class SessionImpl extends StateContainerImpl implements Session
 {
   /**
-   * The default value of the '{@link #getMaxInstances() <em>Max Instances</em>}' attribute.
+   * The cached value of the '{@link #getMaxInstances() <em>Max Instances</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getMaxInstances()
    * @generated
    * @ordered
    */
-  protected static final int MAX_INSTANCES_EDEFAULT = 0;
-
-  /**
-   * The cached value of the '{@link #getMaxInstances() <em>Max Instances</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getMaxInstances()
-   * @generated
-   * @ordered
-   */
-  protected int maxInstances = MAX_INSTANCES_EDEFAULT;
+  protected Expression maxInstances;
 
   /**
    * <!-- begin-user-doc -->
@@ -87,7 +80,7 @@ public class SessionImpl extends StateContainerImpl implements Session
    * <!-- end-user-doc -->
    * @generated
    */
-  public int getMaxInstances()
+  public Expression getMaxInstances()
   {
     return maxInstances;
   }
@@ -97,12 +90,53 @@ public class SessionImpl extends StateContainerImpl implements Session
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setMaxInstances(int newMaxInstances)
+  public NotificationChain basicSetMaxInstances(Expression newMaxInstances, NotificationChain msgs)
   {
-    int oldMaxInstances = maxInstances;
+    Expression oldMaxInstances = maxInstances;
     maxInstances = newMaxInstances;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__MAX_INSTANCES, oldMaxInstances, maxInstances));
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__MAX_INSTANCES, oldMaxInstances, newMaxInstances);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setMaxInstances(Expression newMaxInstances)
+  {
+    if (newMaxInstances != maxInstances)
+    {
+      NotificationChain msgs = null;
+      if (maxInstances != null)
+        msgs = ((InternalEObject)maxInstances).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.SESSION__MAX_INSTANCES, null, msgs);
+      if (newMaxInstances != null)
+        msgs = ((InternalEObject)newMaxInstances).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.SESSION__MAX_INSTANCES, null, msgs);
+      msgs = basicSetMaxInstances(newMaxInstances, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.SESSION__MAX_INSTANCES, newMaxInstances, newMaxInstances));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  {
+    switch (featureID)
+    {
+      case ThingMLPackage.SESSION__MAX_INSTANCES:
+        return basicSetMaxInstances(null, msgs);
+    }
+    return super.eInverseRemove(otherEnd, featureID, msgs);
   }
 
   /**
@@ -132,7 +166,7 @@ public class SessionImpl extends StateContainerImpl implements Session
     switch (featureID)
     {
       case ThingMLPackage.SESSION__MAX_INSTANCES:
-        setMaxInstances((Integer)newValue);
+        setMaxInstances((Expression)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -149,7 +183,7 @@ public class SessionImpl extends StateContainerImpl implements Session
     switch (featureID)
     {
       case ThingMLPackage.SESSION__MAX_INSTANCES:
-        setMaxInstances(MAX_INSTANCES_EDEFAULT);
+        setMaxInstances((Expression)null);
         return;
     }
     super.eUnset(featureID);
@@ -166,26 +200,9 @@ public class SessionImpl extends StateContainerImpl implements Session
     switch (featureID)
     {
       case ThingMLPackage.SESSION__MAX_INSTANCES:
-        return maxInstances != MAX_INSTANCES_EDEFAULT;
+        return maxInstances != null;
     }
     return super.eIsSet(featureID);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public String toString()
-  {
-    if (eIsProxy()) return super.toString();
-
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (maxInstances: ");
-    result.append(maxInstances);
-    result.append(')');
-    return result.toString();
   }
 
 } //SessionImpl

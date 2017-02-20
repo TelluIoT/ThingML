@@ -29729,7 +29729,7 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
             // InternalThingML.g:9262:1: ( rule__Session__Group_2__0__Impl rule__Session__Group_2__1 )
             // InternalThingML.g:9263:2: rule__Session__Group_2__0__Impl rule__Session__Group_2__1
             {
-            pushFollow(FOLLOW_12);
+            pushFollow(FOLLOW_28);
             rule__Session__Group_2__0__Impl();
 
             state._fsp--;
@@ -53340,21 +53340,25 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__Session__MaxInstancesAssignment_2_1"
-    // InternalThingML.g:17350:1: rule__Session__MaxInstancesAssignment_2_1 : ( RULE_INT ) ;
+    // InternalThingML.g:17350:1: rule__Session__MaxInstancesAssignment_2_1 : ( ruleExpression ) ;
     public final void rule__Session__MaxInstancesAssignment_2_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalThingML.g:17354:1: ( ( RULE_INT ) )
-            // InternalThingML.g:17355:2: ( RULE_INT )
+            // InternalThingML.g:17354:1: ( ( ruleExpression ) )
+            // InternalThingML.g:17355:2: ( ruleExpression )
             {
-            // InternalThingML.g:17355:2: ( RULE_INT )
-            // InternalThingML.g:17356:3: RULE_INT
+            // InternalThingML.g:17355:2: ( ruleExpression )
+            // InternalThingML.g:17356:3: ruleExpression
             {
-             before(grammarAccess.getSessionAccess().getMaxInstancesINTTerminalRuleCall_2_1_0()); 
-            match(input,RULE_INT,FOLLOW_2); 
-             after(grammarAccess.getSessionAccess().getMaxInstancesINTTerminalRuleCall_2_1_0()); 
+             before(grammarAccess.getSessionAccess().getMaxInstancesExpressionParserRuleCall_2_1_0()); 
+            pushFollow(FOLLOW_2);
+            ruleExpression();
+
+            state._fsp--;
+
+             after(grammarAccess.getSessionAccess().getMaxInstancesExpressionParserRuleCall_2_1_0()); 
 
             }
 
@@ -57561,13 +57565,13 @@ public class InternalThingMLParser extends AbstractInternalContentAssistParser {
     static final String dfa_1s = "\20\uffff";
     static final String dfa_2s = "\1\6\2\uffff\1\40\14\uffff";
     static final String dfa_3s = "\1\137\2\uffff\1\104\14\uffff";
-    static final String dfa_4s = "\1\uffff\1\1\1\2\1\uffff\1\7\1\10\1\11\1\12\1\13\1\14\1\16\1\15\1\4\1\6\1\5\1\3";
+    static final String dfa_4s = "\1\uffff\1\1\1\2\1\uffff\1\7\1\10\1\11\1\12\1\13\1\14\1\16\1\3\1\15\1\4\1\6\1\5";
     static final String dfa_5s = "\20\uffff}>";
     static final String[] dfa_6s = {
             "\1\3\1\uffff\1\2\10\uffff\1\12\55\uffff\1\1\5\uffff\1\4\1\5\1\uffff\1\6\1\7\1\10\1\11\23\uffff\1\12",
             "",
             "",
-            "\2\14\2\uffff\1\13\35\uffff\1\17\1\16\1\15",
+            "\2\15\2\uffff\1\14\35\uffff\1\13\1\17\1\16",
             "",
             "",
             "",
