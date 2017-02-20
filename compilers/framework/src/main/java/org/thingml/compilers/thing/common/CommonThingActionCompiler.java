@@ -122,7 +122,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         }
     }
     
-    private String cleanExtern(String extern) {
+    protected String cleanExtern(String extern) {
     	if(extern.startsWith("'") && extern.endsWith("'")) {
     		return extern.substring(1, extern.length()-1);
     	}

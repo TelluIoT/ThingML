@@ -158,7 +158,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             } else {
                 builder.append("private ");
             }
-            final String returnType = JavaHelper.getJavaType(((f.getTypeRef()!=null)?f.getTypeRef().getType():null), f.getTypeRef().isIsArray(), ctx);
+            final String returnType = JavaHelper.getJavaType(((f.getTypeRef()!=null)?f.getTypeRef().getType():null), ((f.getTypeRef()!=null)?f.getTypeRef().isIsArray():false), ctx);
             builder.append(returnType + " " + f.getName() + "(");
             JavaHelper.generateParameter(f, builder, ctx);
             builder.append(") {\n");
@@ -689,7 +689,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
     }
 
-    public void generateRegion(Region r, StringBuilder builder, Context ctx) {
+    public void generateRegion(StateContainer r, StringBuilder builder, Context ctx) {
         if (r instanceof CompositeState) {
             builder.append("private CompositeState build" + ThingMLElementHelper.qname(r, "_") + "(){\n");
             CompositeState c = (CompositeState) r;
@@ -703,7 +703,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("}\n\n");
     }
 
-    private void buildRegion(Region r, StringBuilder builder, Context ctx) {
+    private void buildRegion(StateContainer r, StringBuilder builder, Context ctx) {
         builder.append("final List<AtomicState> states_" + ThingMLElementHelper.qname(r, "_") + " = new ArrayList<AtomicState>();\n");
         for (State s : r.getSubstate()) {
             if (s instanceof CompositeState) {

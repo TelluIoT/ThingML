@@ -29,6 +29,7 @@ import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
+import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
@@ -40,6 +41,7 @@ import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.Type;
@@ -81,7 +83,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getRhs();
-                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                if (cleanExtern(ext.getExpression()).trim().equals("null")) {//we check for null pointer, should use ==
                     super.generate(expression, builder, ctx);
                     return;
                 }
@@ -93,7 +95,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         } else if (TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
             if (expression.getLhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getLhs();
-                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                if (cleanExtern(ext.getExpression()).trim().equals("null")) {//we check for null pointer, should use ==
                     super.generate(expression, builder, ctx);
                     return;
                 }
@@ -114,7 +116,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getRhs();
-                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                if (cleanExtern(ext.getExpression()).trim().equals("null")) {//we check for null pointer, should use ==
                     super.generate(expression, builder, ctx);
                     return;
                 }
@@ -127,7 +129,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         } else if (TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getLhs();
-                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
+                if (cleanExtern(ext.getExpression()).trim().equals("null")) {//we check for null pointer, should use ==
                     super.generate(expression, builder, ctx);
                     return;
                 }
@@ -354,4 +356,9 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         generate(exp, builder, ctx);
         builder.append(")");
     }
+    
+    @Override
+    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
+        builder.append((((ReceiveMessage)expression.getReceiveMsg()).getMessage().getName()) + "." + expression.getParameter().getName());
+    }    
 }
