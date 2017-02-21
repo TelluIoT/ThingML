@@ -235,11 +235,13 @@ public class ThingMLHelpers {
 		ArrayList<Type> result = new ArrayList<Type>();
 		for (ThingMLModel m : allThingMLModelModels(model)) {
 			for (Type t : m.getTypes()) {
+				if (t instanceof Thing || t instanceof Protocol) continue;
 				if (!result.contains(t)) result.add(t);
 			}
 		}
 		return result;
 	}
+	
 
     /**
      * Returns the list of all types that are actually used in the model
