@@ -21,6 +21,7 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -69,10 +70,32 @@ public class FunctionUsage extends Rule {
 
     @Override
     public String getDescription() {
-        return "Check that each function defined in a thing is actually called.";
+        return "Check that functions are used, properly called (params) and that can be statically bound to one and only one concrete function";
     }
 
     private boolean check(Checker checker, Thing t, Function call, List<Expression> params, Function f, EObject o) {
+    	List<Function> functions = new ArrayList<>();
+    	for(Function fn : ThingMLHelpers.allFunctions(t)) {
+    		if (fn.getName().equals(f.getName())) {
+    			if (!fn.isAbstract()) {
+    				functions.add(fn);
+    			}
+    		}
+    	}
+    	if (functions.size() == 0) {
+            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " cannot be bound to any concrete implementation.\nMake sure it exists one and only concrete implementation of " + f.getName() + " in the context of Thing " + t.getName(), f);    		
+    	} else if (functions.size() > 1) {
+    		String msg = "Function " + f.getName() + " of Thing " + t.getName() + " can be resolved to multiple concrete implementations: ";
+    		int i = 0;
+    		for(Function fn : functions) {
+    			if (i > 0)
+    				msg += ", ";
+    			msg += ((Thing)fn.eContainer()).getName() + ":" + fn.getName();
+    			i++;
+    		}
+    		msg += ".\nMake sure it exists one and only concrete implementation of " + f.getName() + " in the context of Thing " + t.getName();
+            checker.addGenericError(msg, f);    		
+    	}    	    	
         boolean found = false;
         if (EcoreUtil.equals(call, f)) {
             if (!AnnotatedElementHelper.isDefined(f, "SuppressWarnings", "Parameters")) {
@@ -106,8 +129,6 @@ public class FunctionUsage extends Rule {
             }
             //break;
         }
-
-
         return found;
     }
 
@@ -168,7 +189,6 @@ public class FunctionUsage extends Rule {
             check(checker, t, f);
             boolean found = false;
             for (Action b : ActionHelper.getAllActions(t, FunctionCallStatement.class)) {
-                //FIXME brice
                 if (b instanceof FunctionCallStatement) {
                 	FunctionCallStatement a = (FunctionCallStatement) b;
                     if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
@@ -177,7 +197,6 @@ public class FunctionUsage extends Rule {
                 }
             }
             for (Expression b : ThingMLHelpers.getAllExpressions(t, FunctionCallExpression.class)) {
-                //FIXME brice
                 if (b instanceof FunctionCallExpression) {
                     FunctionCallExpression a = (FunctionCallExpression) b;
                     if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {

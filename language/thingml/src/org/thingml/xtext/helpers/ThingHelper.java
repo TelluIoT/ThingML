@@ -31,6 +31,15 @@ import java.util.Set;
  */
 public class ThingHelper {
 
+	public static Function getConcreteFunction(Thing self, Function f) throws Exception {
+		for(Function fn : ThingMLHelpers.allFunctions(self)) {
+			if (fn.getName().equals(f.getName()) && !fn.isAbstract()) {//Should be enough to check on names as we cannot have two functions with same name (though <> params)
+				return fn;
+			}
+		}
+		throw new Exception("Cannot bind ThingML function " + f.getName() + " in thing " + self.getName());
+	}
+	
     public static boolean hasSession(Thing self) {
         for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
             for(State s : StateHelper.allStatesIncludingSessions(sm)) {
