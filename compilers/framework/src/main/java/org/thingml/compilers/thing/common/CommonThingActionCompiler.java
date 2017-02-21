@@ -25,6 +25,7 @@ import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.DivExpression;
@@ -322,12 +323,10 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         generate(expression.getTerm(), builder, ctx);
         builder.append(")");
     }
-
   
     protected void generateReferenceArray(Variable variable, StringBuilder builder, Context context) {
         builder.append(context.getVariableName(variable) + ".length");
     }
-
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
@@ -351,10 +350,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-        if (expression.getBoolValue().equals("true"))
-            builder.append("true");
-        else
-            builder.append("false");
+        builder.append(Boolean.toString(expression.isBoolValue()));    	
     }
 
     @Override
@@ -373,5 +369,10 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {//TODO: this should actually be factorizable
         builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
+    }
+    
+    public void generate(CastExpression expression, StringBuilder builder, Context ctx) {
+        //We do not cast explicitly in the generated code. Should a cast be needed, it has to be done in an extern expression
+    	generate(expression.getTerm(), builder, ctx);
     }
 }
