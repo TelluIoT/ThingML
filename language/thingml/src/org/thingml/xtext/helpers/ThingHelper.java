@@ -31,6 +31,16 @@ import java.util.Set;
  */
 public class ThingHelper {
 
+	public static List<Function> allConcreteFunctions(Thing self) {
+		List<Function> result = new ArrayList<>();
+		for(Function fn : ThingMLHelpers.allFunctions(self)) {
+			if (!fn.isAbstract()) {
+				result.add(fn);
+			}
+		}
+		return result;
+	}
+	
 	public static Function getConcreteFunction(Thing self, Function f) throws Exception {
 		for(Function fn : ThingMLHelpers.allFunctions(self)) {
 			if (fn.getName().equals(f.getName()) && !fn.isAbstract()) {//Should be enough to check on names as we cannot have two functions with same name (though <> params)

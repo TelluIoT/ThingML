@@ -39,8 +39,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
 
         builder.append("//ThingML-defined functions\n");
-        for (Function f : ThingMLHelpers.allFunctions(thing)) {
-            if (!AnnotatedElementHelper.isDefined(f, "abstract", "true")) {//should be refined in a PSM thing
+        for (Function f : ThingHelper.allConcreteFunctions(thing)) {
                 builder.append(ctx.firstToUpper(thing.getName()) + ".prototype." + f.getName() + " = function(");
                 int j = 0;
                 for (Parameter p : f.getParameters()) {
@@ -69,7 +68,6 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                     builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceFunctionDone(thing, f) + "\");\n");
                 }*/
                 builder.append("};\n\n");
-            }
         }
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {

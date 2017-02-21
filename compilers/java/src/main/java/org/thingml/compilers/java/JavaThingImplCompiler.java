@@ -151,7 +151,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateFunction(Function f, Thing thing, StringBuilder builder, Context ctx) {
-        if (!AnnotatedElementHelper.isDefined(f, "abstract", "true")) {
             DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(thing);
             if (AnnotatedElementHelper.hasAnnotation(f, "override") || AnnotatedElementHelper.hasAnnotation(f, "implements")) {
                 builder.append("@Override\npublic ");
@@ -179,7 +178,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
                 builder.append("printDebug(\"" + ctx.traceFunctionDone(thing, f) + "\");");
             }
             builder.append("}\n");
-        }
     }
 
     @Override
@@ -534,7 +532,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         builder.append("return this;\n");
         builder.append("}\n\n");
 
-        for (Function f : ThingMLHelpers.allFunctions(thing)) {
+        for (Function f : ThingHelper.allConcreteFunctions(thing)) {
             generateFunction(f, thing, builder, ctx);
         }
 
