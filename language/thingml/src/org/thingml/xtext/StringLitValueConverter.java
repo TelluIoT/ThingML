@@ -8,7 +8,7 @@ public class StringLitValueConverter extends AbstractLexerBasedConverter<String>
 
 	@Override
 	public String toValue(String string, INode node) throws ValueConverterException {
-		if(string.startsWith("\"") && string.endsWith("\"")) {
+		if(string != null && string.length() >= 2 && string.startsWith("\"") && string.endsWith("\"")) {
     		return string.substring(1, string.length()-1);
     	}
     	return string;

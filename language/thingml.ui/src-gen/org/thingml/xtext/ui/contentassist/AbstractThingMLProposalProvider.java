@@ -542,7 +542,6 @@ public abstract class AbstractThingMLProposalProvider extends AbstractJavaBasedC
 	}
 	public void completeBooleanLiteral_BoolValue(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		// subclasses may override
-		// subclasses may override
 	}
 	public void completeStringLiteral_StringValue(EObject model, Assignment assignment, ContentAssistContext context, ICompletionProposalAcceptor acceptor) {
 		completeRuleCall(((RuleCall)assignment.getTerminal()), context, acceptor);

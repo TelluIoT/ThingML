@@ -393,7 +393,7 @@ IntegerLiteral returns IntegerLiteral:
 	intValue=INT;
 
 BooleanLiteral returns BooleanLiteral:
-	boolValue= ('true' | 'false')
+	(boolValue?='true') | {BooleanLiteral} 'false'
 	;
 
 StringLiteral returns StringLiteral:

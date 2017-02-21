@@ -5100,11 +5100,11 @@ public interface ThingMLPackage extends EPackage
   EClass getBooleanLiteral();
 
   /**
-   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.BooleanLiteral#getBoolValue <em>Bool Value</em>}'.
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.BooleanLiteral#isBoolValue <em>Bool Value</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Bool Value</em>'.
-   * @see org.thingml.xtext.thingML.BooleanLiteral#getBoolValue()
+   * @see org.thingml.xtext.thingML.BooleanLiteral#isBoolValue()
    * @see #getBooleanLiteral()
    * @generated
    */

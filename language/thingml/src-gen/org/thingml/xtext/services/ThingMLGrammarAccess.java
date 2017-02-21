@@ -3945,26 +3945,34 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class BooleanLiteralElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.BooleanLiteral");
-		private final Assignment cBoolValueAssignment = (Assignment)rule.eContents().get(1);
-		private final Alternatives cBoolValueAlternatives_0 = (Alternatives)cBoolValueAssignment.eContents().get(0);
-		private final Keyword cBoolValueTrueKeyword_0_0 = (Keyword)cBoolValueAlternatives_0.eContents().get(0);
-		private final Keyword cBoolValueFalseKeyword_0_1 = (Keyword)cBoolValueAlternatives_0.eContents().get(1);
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Assignment cBoolValueAssignment_0 = (Assignment)cAlternatives.eContents().get(0);
+		private final Keyword cBoolValueTrueKeyword_0_0 = (Keyword)cBoolValueAssignment_0.eContents().get(0);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final Action cBooleanLiteralAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cFalseKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
 		
 		//BooleanLiteral:
-		//	boolValue=('true' | 'false');
+		//	boolValue?='true' | {BooleanLiteral} 'false';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//boolValue=('true' | 'false')
-		public Assignment getBoolValueAssignment() { return cBoolValueAssignment; }
+		//boolValue?='true' | {BooleanLiteral} 'false'
+		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//('true' | 'false')
-		public Alternatives getBoolValueAlternatives_0() { return cBoolValueAlternatives_0; }
+		//boolValue?='true'
+		public Assignment getBoolValueAssignment_0() { return cBoolValueAssignment_0; }
 		
 		//'true'
 		public Keyword getBoolValueTrueKeyword_0_0() { return cBoolValueTrueKeyword_0_0; }
 		
+		//{BooleanLiteral} 'false'
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{BooleanLiteral}
+		public Action getBooleanLiteralAction_1_0() { return cBooleanLiteralAction_1_0; }
+		
 		//'false'
-		public Keyword getBoolValueFalseKeyword_0_1() { return cBoolValueFalseKeyword_0_1; }
+		public Keyword getFalseKeyword_1_1() { return cFalseKeyword_1_1; }
 	}
 	public class StringLiteralElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.StringLiteral");
@@ -5466,7 +5474,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//BooleanLiteral:
-	//	boolValue=('true' | 'false');
+	//	boolValue?='true' | {BooleanLiteral} 'false';
 	public BooleanLiteralElements getBooleanLiteralAccess() {
 		return pBooleanLiteral;
 	}

@@ -5970,28 +5970,31 @@ ruleBooleanLiteral returns [EObject current=null]
 	(
 		(
 			(
-				lv_boolValue_0_1='true'
+				lv_boolValue_0_0='true'
 				{
-					newLeafNode(lv_boolValue_0_1, grammarAccess.getBooleanLiteralAccess().getBoolValueTrueKeyword_0_0());
+					newLeafNode(lv_boolValue_0_0, grammarAccess.getBooleanLiteralAccess().getBoolValueTrueKeyword_0_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getBooleanLiteralRule());
 					}
-					setWithLastConsumed($current, "boolValue", lv_boolValue_0_1, null);
-				}
-				    |
-				lv_boolValue_0_2='false'
-				{
-					newLeafNode(lv_boolValue_0_2, grammarAccess.getBooleanLiteralAccess().getBoolValueFalseKeyword_0_1());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getBooleanLiteralRule());
-					}
-					setWithLastConsumed($current, "boolValue", lv_boolValue_0_2, null);
+					setWithLastConsumed($current, "boolValue", true, "true");
 				}
 			)
+		)
+		    |
+		(
+			(
+				{
+					$current = forceCreateModelElement(
+						grammarAccess.getBooleanLiteralAccess().getBooleanLiteralAction_1_0(),
+						$current);
+				}
+			)
+			otherlv_2='false'
+			{
+				newLeafNode(otherlv_2, grammarAccess.getBooleanLiteralAccess().getFalseKeyword_1_1());
+			}
 		)
 	)
 ;

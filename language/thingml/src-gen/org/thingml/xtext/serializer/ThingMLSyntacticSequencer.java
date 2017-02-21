@@ -106,9 +106,9 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) '-' term=Primary
+	 *     (rule start) (ambiguity) 'false' (rule start)
 	 *     (rule start) (ambiguity) 'not' term=Primary
-	 *     (rule start) (ambiguity) boolValue='false'
-	 *     (rule start) (ambiguity) boolValue='true'
+	 *     (rule start) (ambiguity) boolValue?='true'
 	 *     (rule start) (ambiguity) doubleValue=FLOAT
 	 *     (rule start) (ambiguity) enum=[Enumeration|ID]
 	 *     (rule start) (ambiguity) expression=STRING_EXT

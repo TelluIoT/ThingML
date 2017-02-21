@@ -27,7 +27,7 @@ package org.thingml.xtext.thingML;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.BooleanLiteral#getBoolValue <em>Bool Value</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.BooleanLiteral#isBoolValue <em>Bool Value</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getBooleanLiteral()
@@ -45,21 +45,21 @@ public interface BooleanLiteral extends Expression
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Bool Value</em>' attribute.
-   * @see #setBoolValue(String)
+   * @see #setBoolValue(boolean)
    * @see org.thingml.xtext.thingML.ThingMLPackage#getBooleanLiteral_BoolValue()
    * @model
    * @generated
    */
-  String getBoolValue();
+  boolean isBoolValue();
 
   /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.BooleanLiteral#getBoolValue <em>Bool Value</em>}' attribute.
+   * Sets the value of the '{@link org.thingml.xtext.thingML.BooleanLiteral#isBoolValue <em>Bool Value</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param value the new value of the '<em>Bool Value</em>' attribute.
-   * @see #getBoolValue()
+   * @see #isBoolValue()
    * @generated
    */
-  void setBoolValue(String value);
+  void setBoolValue(boolean value);
 
 } // BooleanLiteral

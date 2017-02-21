@@ -578,7 +578,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     BooleanLiteral returns BooleanLiteral
 	 *
 	 * Constraint:
-	 *     (boolValue='true' | boolValue='false')
+	 *     boolValue?='true'?
 	 */
 	protected void sequence_BooleanLiteral(ISerializationContext context, BooleanLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

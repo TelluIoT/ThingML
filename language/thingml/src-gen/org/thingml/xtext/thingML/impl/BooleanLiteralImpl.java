@@ -34,7 +34,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.BooleanLiteralImpl#getBoolValue <em>Bool Value</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.BooleanLiteralImpl#isBoolValue <em>Bool Value</em>}</li>
  * </ul>
  *
  * @generated
@@ -42,24 +42,24 @@ import org.thingml.xtext.thingML.ThingMLPackage;
 public class BooleanLiteralImpl extends ExpressionImpl implements BooleanLiteral
 {
   /**
-   * The default value of the '{@link #getBoolValue() <em>Bool Value</em>}' attribute.
+   * The default value of the '{@link #isBoolValue() <em>Bool Value</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getBoolValue()
+   * @see #isBoolValue()
    * @generated
    * @ordered
    */
-  protected static final String BOOL_VALUE_EDEFAULT = null;
+  protected static final boolean BOOL_VALUE_EDEFAULT = false;
 
   /**
-   * The cached value of the '{@link #getBoolValue() <em>Bool Value</em>}' attribute.
+   * The cached value of the '{@link #isBoolValue() <em>Bool Value</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getBoolValue()
+   * @see #isBoolValue()
    * @generated
    * @ordered
    */
-  protected String boolValue = BOOL_VALUE_EDEFAULT;
+  protected boolean boolValue = BOOL_VALUE_EDEFAULT;
 
   /**
    * <!-- begin-user-doc -->
@@ -87,7 +87,7 @@ public class BooleanLiteralImpl extends ExpressionImpl implements BooleanLiteral
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getBoolValue()
+  public boolean isBoolValue()
   {
     return boolValue;
   }
@@ -97,9 +97,9 @@ public class BooleanLiteralImpl extends ExpressionImpl implements BooleanLiteral
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setBoolValue(String newBoolValue)
+  public void setBoolValue(boolean newBoolValue)
   {
-    String oldBoolValue = boolValue;
+    boolean oldBoolValue = boolValue;
     boolValue = newBoolValue;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.BOOLEAN_LITERAL__BOOL_VALUE, oldBoolValue, boolValue));
@@ -116,7 +116,7 @@ public class BooleanLiteralImpl extends ExpressionImpl implements BooleanLiteral
     switch (featureID)
     {
       case ThingMLPackage.BOOLEAN_LITERAL__BOOL_VALUE:
-        return getBoolValue();
+        return isBoolValue();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -132,7 +132,7 @@ public class BooleanLiteralImpl extends ExpressionImpl implements BooleanLiteral
     switch (featureID)
     {
       case ThingMLPackage.BOOLEAN_LITERAL__BOOL_VALUE:
-        setBoolValue((String)newValue);
+        setBoolValue((Boolean)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -166,7 +166,7 @@ public class BooleanLiteralImpl extends ExpressionImpl implements BooleanLiteral
     switch (featureID)
     {
       case ThingMLPackage.BOOLEAN_LITERAL__BOOL_VALUE:
-        return BOOL_VALUE_EDEFAULT == null ? boolValue != null : !BOOL_VALUE_EDEFAULT.equals(boolValue);
+        return boolValue != BOOL_VALUE_EDEFAULT;
     }
     return super.eIsSet(featureID);
   }

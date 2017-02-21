@@ -74,7 +74,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getMultiplicationAccess().getAlternatives_1(), "rule__Multiplication__Alternatives_1");
 					put(grammarAccess.getPrimaryAccess().getAlternatives(), "rule__Primary__Alternatives");
 					put(grammarAccess.getAtomicExpressionAccess().getAlternatives(), "rule__AtomicExpression__Alternatives");
-					put(grammarAccess.getBooleanLiteralAccess().getBoolValueAlternatives_0(), "rule__BooleanLiteral__BoolValueAlternatives_0");
+					put(grammarAccess.getBooleanLiteralAccess().getAlternatives(), "rule__BooleanLiteral__Alternatives");
 					put(grammarAccess.getConfigurationAccess().getAlternatives_4(), "rule__Configuration__Alternatives_4");
 					put(grammarAccess.getAbstractConnectorAccess().getAlternatives(), "rule__AbstractConnector__Alternatives");
 					put(grammarAccess.getThingMLModelAccess().getGroup(), "rule__ThingMLModel__Group__0");
@@ -199,6 +199,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getExternExpressionAccess().getGroup(), "rule__ExternExpression__Group__0");
 					put(grammarAccess.getExternExpressionAccess().getGroup_1(), "rule__ExternExpression__Group_1__0");
 					put(grammarAccess.getEnumLiteralRefAccess().getGroup(), "rule__EnumLiteralRef__Group__0");
+					put(grammarAccess.getBooleanLiteralAccess().getGroup_1(), "rule__BooleanLiteral__Group_1__0");
 					put(grammarAccess.getEventReferenceAccess().getGroup(), "rule__EventReference__Group__0");
 					put(grammarAccess.getFunctionCallExpressionAccess().getGroup(), "rule__FunctionCallExpression__Group__0");
 					put(grammarAccess.getFunctionCallExpressionAccess().getGroup_2(), "rule__FunctionCallExpression__Group_2__0");
@@ -396,7 +397,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getEnumLiteralRefAccess().getEnumAssignment_0(), "rule__EnumLiteralRef__EnumAssignment_0");
 					put(grammarAccess.getEnumLiteralRefAccess().getLiteralAssignment_2(), "rule__EnumLiteralRef__LiteralAssignment_2");
 					put(grammarAccess.getIntegerLiteralAccess().getIntValueAssignment(), "rule__IntegerLiteral__IntValueAssignment");
-					put(grammarAccess.getBooleanLiteralAccess().getBoolValueAssignment(), "rule__BooleanLiteral__BoolValueAssignment");
+					put(grammarAccess.getBooleanLiteralAccess().getBoolValueAssignment_0(), "rule__BooleanLiteral__BoolValueAssignment_0");
 					put(grammarAccess.getStringLiteralAccess().getStringValueAssignment(), "rule__StringLiteral__StringValueAssignment");
 					put(grammarAccess.getDoubleLiteralAccess().getDoubleValueAssignment(), "rule__DoubleLiteral__DoubleValueAssignment");
 					put(grammarAccess.getPropertyReferenceAccess().getPropertyAssignment(), "rule__PropertyReference__PropertyAssignment");
