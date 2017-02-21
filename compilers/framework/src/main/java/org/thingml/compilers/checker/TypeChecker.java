@@ -35,6 +35,7 @@ import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.DivExpression;
 import org.thingml.xtext.thingML.DoubleLiteral;
 import org.thingml.xtext.thingML.EqualsExpression;
@@ -74,8 +75,13 @@ public class TypeChecker extends ThingMLSwitch<Type> {
         }
         return result;
     }
-
+      
     @Override
+	public Type caseCastExpression(CastExpression object) {
+        return TyperHelper.getBroadType(object.getType());
+	}
+
+	@Override
     public Type caseExternExpression(ExternExpression object) {
         return Types.ANY_TYPE;
     }

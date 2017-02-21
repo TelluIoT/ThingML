@@ -22,6 +22,7 @@ import org.thingml.compilers.utils.CharacterEscaper;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EqualsExpression;
@@ -266,4 +267,5 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
         builder.append((((ReceiveMessage)expression.getReceiveMsg()).getMessage().getName()) + "." + expression.getParameter().getName());
     }
+    
 }
