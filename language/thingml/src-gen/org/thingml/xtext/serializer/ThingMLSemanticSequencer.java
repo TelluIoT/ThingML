@@ -2002,7 +2002,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     StateContainer returns Session
 	 *
 	 * Constraint:
-	 *     (name=ID maxInstances=Expression? initial=[State|ID] annotations+=PlatformAnnotation* substate+=State*)
+	 *     (name=ID (maxInstances=IntegerLiteral | maxInstances=PropertyReference)? initial=[State|ID] annotations+=PlatformAnnotation* substate+=State*)
 	 */
 	protected void sequence_Session(ISerializationContext context, Session semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

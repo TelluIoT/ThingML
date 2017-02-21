@@ -65,6 +65,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getCompositeStateAccess().getAlternatives_12(), "rule__CompositeState__Alternatives_12");
 					put(grammarAccess.getStateMachineAccess().getAlternatives_10(), "rule__StateMachine__Alternatives_10");
 					put(grammarAccess.getStateMachineAccess().getAlternatives_11(), "rule__StateMachine__Alternatives_11");
+					put(grammarAccess.getSessionAccess().getMaxInstancesAlternatives_2_1_0(), "rule__Session__MaxInstancesAlternatives_2_1_0");
 					put(grammarAccess.getStateContainerAccess().getAlternatives(), "rule__StateContainer__Alternatives");
 					put(grammarAccess.getActionAccess().getAlternatives(), "rule__Action__Alternatives");
 					put(grammarAccess.getEqualityAccess().getAlternatives_1(), "rule__Equality__Alternatives_1");

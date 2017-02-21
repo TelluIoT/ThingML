@@ -2280,6 +2280,27 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__Session__MaxInstancesAlternatives_2_1_0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getSessionAccess().getMaxInstancesIntegerLiteralParserRuleCall_2_1_0_0()); }
+		ruleIntegerLiteral
+		{ after(grammarAccess.getSessionAccess().getMaxInstancesIntegerLiteralParserRuleCall_2_1_0_0()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getSessionAccess().getMaxInstancesPropertyReferenceParserRuleCall_2_1_0_1()); }
+		rulePropertyReference
+		{ after(grammarAccess.getSessionAccess().getMaxInstancesPropertyReferenceParserRuleCall_2_1_0_1()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__StateContainer__Alternatives
 	@init {
 		int stackSize = keepStackSize();
@@ -17353,9 +17374,9 @@ rule__Session__MaxInstancesAssignment_2_1
 	}
 :
 	(
-		{ before(grammarAccess.getSessionAccess().getMaxInstancesExpressionParserRuleCall_2_1_0()); }
-		ruleExpression
-		{ after(grammarAccess.getSessionAccess().getMaxInstancesExpressionParserRuleCall_2_1_0()); }
+		{ before(grammarAccess.getSessionAccess().getMaxInstancesAlternatives_2_1_0()); }
+		(rule__Session__MaxInstancesAlternatives_2_1_0)
+		{ after(grammarAccess.getSessionAccess().getMaxInstancesAlternatives_2_1_0()); }
 	)
 ;
 finally {

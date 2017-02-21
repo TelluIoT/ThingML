@@ -2266,7 +2266,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
 		private final Keyword cLessThanSignKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
 		private final Assignment cMaxInstancesAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
-		private final RuleCall cMaxInstancesExpressionParserRuleCall_2_1_0 = (RuleCall)cMaxInstancesAssignment_2_1.eContents().get(0);
+		private final Alternatives cMaxInstancesAlternatives_2_1_0 = (Alternatives)cMaxInstancesAssignment_2_1.eContents().get(0);
+		private final RuleCall cMaxInstancesIntegerLiteralParserRuleCall_2_1_0_0 = (RuleCall)cMaxInstancesAlternatives_2_1_0.eContents().get(0);
+		private final RuleCall cMaxInstancesPropertyReferenceParserRuleCall_2_1_0_1 = (RuleCall)cMaxInstancesAlternatives_2_1_0.eContents().get(1);
 		private final Keyword cGreaterThanSignKeyword_2_2 = (Keyword)cGroup_2.eContents().get(2);
 		private final Keyword cInitKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		private final Assignment cInitialAssignment_4 = (Assignment)cGroup.eContents().get(4);
@@ -2280,13 +2282,14 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_8 = (Keyword)cGroup.eContents().get(8);
 		
 		//Session:
-		//	'session' name=ID ('<' maxInstances=Expression '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
+		//	'session' name=ID ('<' maxInstances=(IntegerLiteral | PropertyReference) '>')? 'init' initial=[State]
+		//	annotations+=PlatformAnnotation* '{'
 		//	substate+=State*
 		//	'}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'session' name=ID ('<' maxInstances=Expression '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
-		//substate+=State* '}'
+		//'session' name=ID ('<' maxInstances=(IntegerLiteral | PropertyReference) '>')? 'init' initial=[State]
+		//annotations+=PlatformAnnotation* '{' substate+=State* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//'session'
@@ -2298,17 +2301,23 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
 		
-		//('<' maxInstances=Expression '>')?
+		//('<' maxInstances=(IntegerLiteral | PropertyReference) '>')?
 		public Group getGroup_2() { return cGroup_2; }
 		
 		//'<'
 		public Keyword getLessThanSignKeyword_2_0() { return cLessThanSignKeyword_2_0; }
 		
-		//maxInstances=Expression
+		//maxInstances=(IntegerLiteral | PropertyReference)
 		public Assignment getMaxInstancesAssignment_2_1() { return cMaxInstancesAssignment_2_1; }
 		
-		//Expression
-		public RuleCall getMaxInstancesExpressionParserRuleCall_2_1_0() { return cMaxInstancesExpressionParserRuleCall_2_1_0; }
+		//(IntegerLiteral | PropertyReference)
+		public Alternatives getMaxInstancesAlternatives_2_1_0() { return cMaxInstancesAlternatives_2_1_0; }
+		
+		//IntegerLiteral
+		public RuleCall getMaxInstancesIntegerLiteralParserRuleCall_2_1_0_0() { return cMaxInstancesIntegerLiteralParserRuleCall_2_1_0_0; }
+		
+		//PropertyReference
+		public RuleCall getMaxInstancesPropertyReferenceParserRuleCall_2_1_0_1() { return cMaxInstancesPropertyReferenceParserRuleCall_2_1_0_1; }
 		
 		//'>'
 		public Keyword getGreaterThanSignKeyword_2_2() { return cGreaterThanSignKeyword_2_2; }
@@ -3835,7 +3844,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//PropertyReference
 		public RuleCall getPropertyReferenceParserRuleCall_6() { return cPropertyReferenceParserRuleCall_6; }
 		
-		/// *Reference |* / FunctionCallExpression
+		//FunctionCallExpression
 		public RuleCall getFunctionCallExpressionParserRuleCall_7() { return cFunctionCallExpressionParserRuleCall_7; }
 		
 		//EventReference
@@ -5077,7 +5086,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Session:
-	//	'session' name=ID ('<' maxInstances=Expression '>')? 'init' initial=[State] annotations+=PlatformAnnotation* '{'
+	//	'session' name=ID ('<' maxInstances=(IntegerLiteral | PropertyReference) '>')? 'init' initial=[State]
+	//	annotations+=PlatformAnnotation* '{'
 	//	substate+=State*
 	//	'}';
 	public SessionElements getSessionAccess() {

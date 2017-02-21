@@ -14,7 +14,7 @@ import org.thingml.xtext.web.AbstractThingMLWebModule;
 @FinalFieldsConstructor
 @SuppressWarnings("all")
 public class ThingMLWebModule extends AbstractThingMLWebModule {
-  public ThingMLWebModule(final Provider<ExecutorService> arg0) {
-    super(arg0);
+  public ThingMLWebModule(final Provider<ExecutorService> executorServiceProvider) {
+    super(executorServiceProvider);
   }
 }

@@ -3296,21 +3296,39 @@ ruleSession returns [EObject current=null]
 			}
 			(
 				(
-					{
-						newCompositeNode(grammarAccess.getSessionAccess().getMaxInstancesExpressionParserRuleCall_2_1_0());
-					}
-					lv_maxInstances_3_0=ruleExpression
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getSessionRule());
+					(
+						{
+							newCompositeNode(grammarAccess.getSessionAccess().getMaxInstancesIntegerLiteralParserRuleCall_2_1_0_0());
 						}
-						set(
-							$current,
-							"maxInstances",
-							lv_maxInstances_3_0,
-							"org.thingml.xtext.ThingML.Expression");
-						afterParserOrEnumRuleCall();
-					}
+						lv_maxInstances_3_1=ruleIntegerLiteral
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getSessionRule());
+							}
+							set(
+								$current,
+								"maxInstances",
+								lv_maxInstances_3_1,
+								"org.thingml.xtext.ThingML.IntegerLiteral");
+							afterParserOrEnumRuleCall();
+						}
+						    |
+						{
+							newCompositeNode(grammarAccess.getSessionAccess().getMaxInstancesPropertyReferenceParserRuleCall_2_1_0_1());
+						}
+						lv_maxInstances_3_2=rulePropertyReference
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getSessionRule());
+							}
+							set(
+								$current,
+								"maxInstances",
+								lv_maxInstances_3_2,
+								"org.thingml.xtext.ThingML.PropertyReference");
+							afterParserOrEnumRuleCall();
+						}
+					)
 				)
 			)
 			otherlv_4='>'
