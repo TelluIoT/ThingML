@@ -17,7 +17,6 @@
  */
 package org.thingml.xtext.thingML;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -29,6 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface Event extends EObject
+public interface Event extends NamedElement
 {
 } // Event

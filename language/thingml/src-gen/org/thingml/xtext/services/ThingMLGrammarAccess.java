@@ -138,20 +138,21 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cInstanceParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
 		private final RuleCall cAbstractConnectorParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
 		private final RuleCall cEnumerationLiteralParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
-		private final Group cGroup_13 = (Group)cAlternatives.eContents().get(13);
-		private final Keyword cSemicolonKeyword_13_0 = (Keyword)cGroup_13.eContents().get(0);
-		private final Assignment cNameAssignment_13_1 = (Assignment)cGroup_13.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_13_1_0 = (RuleCall)cNameAssignment_13_1.eContents().get(0);
+		private final RuleCall cEventParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
+		private final Group cGroup_14 = (Group)cAlternatives.eContents().get(14);
+		private final Keyword cSemicolonKeyword_14_0 = (Keyword)cGroup_14.eContents().get(0);
+		private final Assignment cNameAssignment_14_1 = (Assignment)cGroup_14.eContents().get(1);
+		private final RuleCall cNameIDTerminalRuleCall_14_1_0 = (RuleCall)cNameAssignment_14_1.eContents().get(0);
 		
 		//NamedElement:
 		//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance
-		//	| AbstractConnector | EnumerationLiteral |
+		//	| AbstractConnector | EnumerationLiteral | Event |
 		//	";" name=ID // This is never used, it is just to have the attributes in the superclass
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance |
-		//AbstractConnector | EnumerationLiteral | ";" name=ID
+		//AbstractConnector | EnumerationLiteral | Event | ";" name=ID
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//Protocol
@@ -193,17 +194,20 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//EnumerationLiteral
 		public RuleCall getEnumerationLiteralParserRuleCall_12() { return cEnumerationLiteralParserRuleCall_12; }
 		
+		//Event
+		public RuleCall getEventParserRuleCall_13() { return cEventParserRuleCall_13; }
+		
 		//";" name=ID
-		public Group getGroup_13() { return cGroup_13; }
+		public Group getGroup_14() { return cGroup_14; }
 		
 		//";"
-		public Keyword getSemicolonKeyword_13_0() { return cSemicolonKeyword_13_0; }
+		public Keyword getSemicolonKeyword_14_0() { return cSemicolonKeyword_14_0; }
 		
 		//name=ID
-		public Assignment getNameAssignment_13_1() { return cNameAssignment_13_1; }
+		public Assignment getNameAssignment_14_1() { return cNameAssignment_14_1; }
 		
 		//ID
-		public RuleCall getNameIDTerminalRuleCall_13_1_0() { return cNameIDTerminalRuleCall_13_1_0; }
+		public RuleCall getNameIDTerminalRuleCall_14_1_0() { return cNameIDTerminalRuleCall_14_1_0; }
 	}
 	public class AnnotatedElementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.AnnotatedElement");
@@ -4730,7 +4734,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//NamedElement:
 	//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance
-	//	| AbstractConnector | EnumerationLiteral |
+	//	| AbstractConnector | EnumerationLiteral | Event |
 	//	";" name=ID // This is never used, it is just to have the attributes in the superclass
 	//;
 	public NamedElementElements getNamedElementAccess() {

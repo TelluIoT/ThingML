@@ -19,8 +19,6 @@ package org.thingml.xtext.thingML.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.thingml.xtext.thingML.Event;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
@@ -31,7 +29,7 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  *
  * @generated
  */
-public class EventImpl extends MinimalEObjectImpl.Container implements Event
+public class EventImpl extends NamedElementImpl implements Event
 {
   /**
    * <!-- begin-user-doc -->

@@ -1868,13 +1868,22 @@ public interface ThingMLPackage extends EPackage
   int EVENT = 31;
 
   /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EVENT__NAME = NAMED_ELEMENT__NAME;
+
+  /**
    * The number of structural features of the '<em>Event</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int EVENT_FEATURE_COUNT = 0;
+  int EVENT_FEATURE_COUNT = NAMED_ELEMENT_FEATURE_COUNT + 0;
 
   /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.ReceiveMessageImpl <em>Receive Message</em>}' class.
@@ -1893,7 +1902,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int RECEIVE_MESSAGE__NAME = EVENT_FEATURE_COUNT + 0;
+  int RECEIVE_MESSAGE__NAME = EVENT__NAME;
 
   /**
    * The feature id for the '<em><b>Port</b></em>' reference.
@@ -1902,7 +1911,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int RECEIVE_MESSAGE__PORT = EVENT_FEATURE_COUNT + 1;
+  int RECEIVE_MESSAGE__PORT = EVENT_FEATURE_COUNT + 0;
 
   /**
    * The feature id for the '<em><b>Message</b></em>' reference.
@@ -1911,7 +1920,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int RECEIVE_MESSAGE__MESSAGE = EVENT_FEATURE_COUNT + 2;
+  int RECEIVE_MESSAGE__MESSAGE = EVENT_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Receive Message</em>' class.
@@ -1920,7 +1929,7 @@ public interface ThingMLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int RECEIVE_MESSAGE_FEATURE_COUNT = EVENT_FEATURE_COUNT + 3;
+  int RECEIVE_MESSAGE_FEATURE_COUNT = EVENT_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.ActionImpl <em>Action</em>}' class.
@@ -4550,17 +4559,6 @@ public interface ThingMLPackage extends EPackage
   EClass getReceiveMessage();
 
   /**
-   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.ReceiveMessage#getName <em>Name</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Name</em>'.
-   * @see org.thingml.xtext.thingML.ReceiveMessage#getName()
-   * @see #getReceiveMessage()
-   * @generated
-   */
-  EAttribute getReceiveMessage_Name();
-
-  /**
    * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.ReceiveMessage#getPort <em>Port</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -6709,14 +6707,6 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EClass RECEIVE_MESSAGE = eINSTANCE.getReceiveMessage();
-
-    /**
-     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute RECEIVE_MESSAGE__NAME = eINSTANCE.getReceiveMessage_Name();
 
     /**
      * The meta object literal for the '<em><b>Port</b></em>' reference feature.

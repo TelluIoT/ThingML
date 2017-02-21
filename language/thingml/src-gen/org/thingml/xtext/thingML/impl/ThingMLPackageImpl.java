@@ -1563,19 +1563,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getReceiveMessage_Name()
-  {
-    return (EAttribute)receiveMessageEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EReference getReceiveMessage_Port()
   {
-    return (EReference)receiveMessageEClass.getEStructuralFeatures().get(1);
+    return (EReference)receiveMessageEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1585,7 +1575,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    */
   public EReference getReceiveMessage_Message()
   {
-    return (EReference)receiveMessageEClass.getEStructuralFeatures().get(2);
+    return (EReference)receiveMessageEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -3032,7 +3022,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     eventEClass = createEClass(EVENT);
 
     receiveMessageEClass = createEClass(RECEIVE_MESSAGE);
-    createEAttribute(receiveMessageEClass, RECEIVE_MESSAGE__NAME);
     createEReference(receiveMessageEClass, RECEIVE_MESSAGE__PORT);
     createEReference(receiveMessageEClass, RECEIVE_MESSAGE__MESSAGE);
 
@@ -3280,6 +3269,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     finalStateEClass.getESuperTypes().add(this.getState());
     stateContainerEClass.getESuperTypes().add(this.getNamedElement());
     stateContainerEClass.getESuperTypes().add(this.getAnnotatedElement());
+    eventEClass.getESuperTypes().add(this.getNamedElement());
     receiveMessageEClass.getESuperTypes().add(this.getEvent());
     actionBlockEClass.getESuperTypes().add(this.getAction());
     externStatementEClass.getESuperTypes().add(this.getAction());
@@ -3445,7 +3435,6 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(eventEClass, Event.class, "Event", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(receiveMessageEClass, ReceiveMessage.class, "ReceiveMessage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getReceiveMessage_Name(), ecorePackage.getEString(), "name", null, 0, 1, ReceiveMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getReceiveMessage_Port(), this.getPort(), null, "port", null, 0, 1, ReceiveMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getReceiveMessage_Message(), this.getMessage(), null, "message", null, 0, 1, ReceiveMessage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

@@ -375,6 +375,7 @@ public class ThingMLSwitch<T> extends Switch<T>
       {
         Event event = (Event)theEObject;
         T result = caseEvent(event);
+        if (result == null) result = caseNamedElement(event);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -383,6 +384,7 @@ public class ThingMLSwitch<T> extends Switch<T>
         ReceiveMessage receiveMessage = (ReceiveMessage)theEObject;
         T result = caseReceiveMessage(receiveMessage);
         if (result == null) result = caseEvent(receiveMessage);
+        if (result == null) result = caseNamedElement(receiveMessage);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }

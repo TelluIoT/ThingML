@@ -21,7 +21,7 @@ PlatformAnnotation returns PlatformAnnotation:
 
 NamedElement:
 	Protocol | Function  | Message | Port | Configuration | Handler | State | StateContainer | 
-	Type | Variable | Instance | AbstractConnector | EnumerationLiteral |
+	Type | Variable | Instance | AbstractConnector | EnumerationLiteral | Event |
 	";" name=ID // This is never used, it is just to have the attributes in the superclass
 ;
 

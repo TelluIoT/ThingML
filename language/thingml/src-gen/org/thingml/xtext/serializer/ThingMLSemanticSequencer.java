@@ -1604,7 +1604,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.NAMED_ELEMENT__NAME));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getNamedElementAccess().getNameIDTerminalRuleCall_13_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getNamedElementAccess().getNameIDTerminalRuleCall_14_1_0(), semanticObject.getName());
 		feeder.finish();
 	}
 	
@@ -1916,6 +1916,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns ReceiveMessage
 	 *     Event returns ReceiveMessage
 	 *     ReceiveMessage returns ReceiveMessage
 	 *

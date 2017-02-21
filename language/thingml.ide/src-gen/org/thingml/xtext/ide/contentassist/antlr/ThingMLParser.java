@@ -80,7 +80,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getThingMLModelAccess().getGroup(), "rule__ThingMLModel__Group__0");
 					put(grammarAccess.getThingMLModelAccess().getGroup_0(), "rule__ThingMLModel__Group_0__0");
 					put(grammarAccess.getPlatformAnnotationAccess().getGroup(), "rule__PlatformAnnotation__Group__0");
-					put(grammarAccess.getNamedElementAccess().getGroup_13(), "rule__NamedElement__Group_13__0");
+					put(grammarAccess.getNamedElementAccess().getGroup_14(), "rule__NamedElement__Group_14__0");
 					put(grammarAccess.getAnnotatedElementAccess().getGroup_14(), "rule__AnnotatedElement__Group_14__0");
 					put(grammarAccess.getVariableAccess().getGroup_0(), "rule__Variable__Group_0__0");
 					put(grammarAccess.getTypeRefAccess().getGroup(), "rule__TypeRef__Group__0");
@@ -215,7 +215,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getThingMLModelAccess().getConfigsAssignment_1_2(), "rule__ThingMLModel__ConfigsAssignment_1_2");
 					put(grammarAccess.getPlatformAnnotationAccess().getNameAssignment_0(), "rule__PlatformAnnotation__NameAssignment_0");
 					put(grammarAccess.getPlatformAnnotationAccess().getValueAssignment_1(), "rule__PlatformAnnotation__ValueAssignment_1");
-					put(grammarAccess.getNamedElementAccess().getNameAssignment_13_1(), "rule__NamedElement__NameAssignment_13_1");
+					put(grammarAccess.getNamedElementAccess().getNameAssignment_14_1(), "rule__NamedElement__NameAssignment_14_1");
 					put(grammarAccess.getAnnotatedElementAccess().getAnnotationsAssignment_14_1(), "rule__AnnotatedElement__AnnotationsAssignment_14_1");
 					put(grammarAccess.getVariableAccess().getNameAssignment_0_1(), "rule__Variable__NameAssignment_0_1");
 					put(grammarAccess.getVariableAccess().getTypeRefAssignment_0_3(), "rule__Variable__TypeRefAssignment_0_3");
