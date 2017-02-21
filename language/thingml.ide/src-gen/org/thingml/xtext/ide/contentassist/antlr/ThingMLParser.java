@@ -171,6 +171,9 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getFunctionCallStatementAccess().getGroup(), "rule__FunctionCallStatement__Group__0");
 					put(grammarAccess.getFunctionCallStatementAccess().getGroup_2(), "rule__FunctionCallStatement__Group_2__0");
 					put(grammarAccess.getFunctionCallStatementAccess().getGroup_2_1(), "rule__FunctionCallStatement__Group_2_1__0");
+					put(grammarAccess.getCastExpressionAccess().getGroup(), "rule__CastExpression__Group__0");
+					put(grammarAccess.getCastExpressionAccess().getGroup_1(), "rule__CastExpression__Group_1__0");
+					put(grammarAccess.getCastExpressionAccess().getGroup_1_3(), "rule__CastExpression__Group_1_3__0");
 					put(grammarAccess.getOrExpressionAccess().getGroup(), "rule__OrExpression__Group__0");
 					put(grammarAccess.getOrExpressionAccess().getGroup_1(), "rule__OrExpression__Group_1__0");
 					put(grammarAccess.getAndExpressionAccess().getGroup(), "rule__AndExpression__Group__0");
@@ -376,6 +379,8 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getFunctionCallStatementAccess().getFunctionAssignment_0(), "rule__FunctionCallStatement__FunctionAssignment_0");
 					put(grammarAccess.getFunctionCallStatementAccess().getParametersAssignment_2_0(), "rule__FunctionCallStatement__ParametersAssignment_2_0");
 					put(grammarAccess.getFunctionCallStatementAccess().getParametersAssignment_2_1_1(), "rule__FunctionCallStatement__ParametersAssignment_2_1_1");
+					put(grammarAccess.getCastExpressionAccess().getTypeAssignment_1_2(), "rule__CastExpression__TypeAssignment_1_2");
+					put(grammarAccess.getCastExpressionAccess().getIsArrayAssignment_1_3_0(), "rule__CastExpression__IsArrayAssignment_1_3_0");
 					put(grammarAccess.getOrExpressionAccess().getRhsAssignment_1_2(), "rule__OrExpression__RhsAssignment_1_2");
 					put(grammarAccess.getAndExpressionAccess().getRhsAssignment_1_2(), "rule__AndExpression__RhsAssignment_1_2");
 					put(grammarAccess.getEqualityAccess().getRhsAssignment_1_0_2(), "rule__Equality__RhsAssignment_1_0_2");

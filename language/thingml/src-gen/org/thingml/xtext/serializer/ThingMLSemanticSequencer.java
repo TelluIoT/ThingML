@@ -33,6 +33,7 @@ import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
@@ -130,6 +131,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.BOOLEAN_LITERAL:
 				sequence_BooleanLiteral(context, (BooleanLiteral) semanticObject); 
+				return; 
+			case ThingMLPackage.CAST_EXPRESSION:
+				sequence_CastExpression(context, (CastExpression) semanticObject); 
 				return; 
 			case ThingMLPackage.COMPOSITE_STATE:
 				if (rule == grammarAccess.getCompositeStateRule()
@@ -370,6 +374,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns MinusExpression
+	 *     CastExpression returns MinusExpression
+	 *     CastExpression.CastExpression_1_0 returns MinusExpression
 	 *     OrExpression returns MinusExpression
 	 *     OrExpression.OrExpression_1_0 returns MinusExpression
 	 *     AndExpression returns MinusExpression
@@ -412,6 +418,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns PlusExpression
+	 *     CastExpression returns PlusExpression
+	 *     CastExpression.CastExpression_1_0 returns PlusExpression
 	 *     OrExpression returns PlusExpression
 	 *     OrExpression.OrExpression_1_0 returns PlusExpression
 	 *     AndExpression returns PlusExpression
@@ -454,6 +462,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns AndExpression
+	 *     CastExpression returns AndExpression
+	 *     CastExpression.CastExpression_1_0 returns AndExpression
 	 *     OrExpression returns AndExpression
 	 *     OrExpression.OrExpression_1_0 returns AndExpression
 	 *     AndExpression returns AndExpression
@@ -508,6 +518,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns ArrayIndex
+	 *     CastExpression returns ArrayIndex
+	 *     CastExpression.CastExpression_1_0 returns ArrayIndex
 	 *     OrExpression returns ArrayIndex
 	 *     OrExpression.OrExpression_1_0 returns ArrayIndex
 	 *     AndExpression returns ArrayIndex
@@ -551,6 +563,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns BooleanLiteral
+	 *     CastExpression returns BooleanLiteral
+	 *     CastExpression.CastExpression_1_0 returns BooleanLiteral
 	 *     OrExpression returns BooleanLiteral
 	 *     OrExpression.OrExpression_1_0 returns BooleanLiteral
 	 *     AndExpression returns BooleanLiteral
@@ -587,7 +601,44 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     Expression returns CastExpression
+	 *     CastExpression returns CastExpression
+	 *     CastExpression.CastExpression_1_0 returns CastExpression
+	 *     OrExpression returns CastExpression
+	 *     OrExpression.OrExpression_1_0 returns CastExpression
+	 *     AndExpression returns CastExpression
+	 *     AndExpression.AndExpression_1_0 returns CastExpression
+	 *     Equality returns CastExpression
+	 *     Equality.EqualsExpression_1_0_0 returns CastExpression
+	 *     Equality.NotEqualsExpression_1_1_0 returns CastExpression
+	 *     Comparaison returns CastExpression
+	 *     Comparaison.GreaterExpression_1_0_0 returns CastExpression
+	 *     Comparaison.LowerExpression_1_1_0 returns CastExpression
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns CastExpression
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns CastExpression
+	 *     Addition returns CastExpression
+	 *     Addition.PlusExpression_1_0_0 returns CastExpression
+	 *     Addition.MinusExpression_1_1_0 returns CastExpression
+	 *     Multiplication returns CastExpression
+	 *     Multiplication.TimesExpression_1_0_0 returns CastExpression
+	 *     Multiplication.DivExpression_1_1_0 returns CastExpression
+	 *     Modulo returns CastExpression
+	 *     Modulo.ModExpression_1_0 returns CastExpression
+	 *     Primary returns CastExpression
+	 *
+	 * Constraint:
+	 *     (term=CastExpression_CastExpression_1_0 type=[Type|ID] isArray?='['?)
+	 */
+	protected void sequence_CastExpression(ISerializationContext context, CastExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Expression returns GreaterExpression
+	 *     CastExpression returns GreaterExpression
+	 *     CastExpression.CastExpression_1_0 returns GreaterExpression
 	 *     OrExpression returns GreaterExpression
 	 *     OrExpression.OrExpression_1_0 returns GreaterExpression
 	 *     AndExpression returns GreaterExpression
@@ -630,6 +681,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns GreaterOrEqualExpression
+	 *     CastExpression returns GreaterOrEqualExpression
+	 *     CastExpression.CastExpression_1_0 returns GreaterOrEqualExpression
 	 *     OrExpression returns GreaterOrEqualExpression
 	 *     OrExpression.OrExpression_1_0 returns GreaterOrEqualExpression
 	 *     AndExpression returns GreaterOrEqualExpression
@@ -672,6 +725,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns LowerExpression
+	 *     CastExpression returns LowerExpression
+	 *     CastExpression.CastExpression_1_0 returns LowerExpression
 	 *     OrExpression returns LowerExpression
 	 *     OrExpression.OrExpression_1_0 returns LowerExpression
 	 *     AndExpression returns LowerExpression
@@ -714,6 +769,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns LowerOrEqualExpression
+	 *     CastExpression returns LowerOrEqualExpression
+	 *     CastExpression.CastExpression_1_0 returns LowerOrEqualExpression
 	 *     OrExpression returns LowerOrEqualExpression
 	 *     OrExpression.OrExpression_1_0 returns LowerOrEqualExpression
 	 *     AndExpression returns LowerOrEqualExpression
@@ -899,6 +956,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns DoubleLiteral
+	 *     CastExpression returns DoubleLiteral
+	 *     CastExpression.CastExpression_1_0 returns DoubleLiteral
 	 *     OrExpression returns DoubleLiteral
 	 *     OrExpression.OrExpression_1_0 returns DoubleLiteral
 	 *     AndExpression returns DoubleLiteral
@@ -942,6 +1001,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns EnumLiteralRef
+	 *     CastExpression returns EnumLiteralRef
+	 *     CastExpression.CastExpression_1_0 returns EnumLiteralRef
 	 *     OrExpression returns EnumLiteralRef
 	 *     OrExpression.OrExpression_1_0 returns EnumLiteralRef
 	 *     AndExpression returns EnumLiteralRef
@@ -1017,6 +1078,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns EqualsExpression
+	 *     CastExpression returns EqualsExpression
+	 *     CastExpression.CastExpression_1_0 returns EqualsExpression
 	 *     OrExpression returns EqualsExpression
 	 *     OrExpression.OrExpression_1_0 returns EqualsExpression
 	 *     AndExpression returns EqualsExpression
@@ -1059,6 +1122,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns NotEqualsExpression
+	 *     CastExpression returns NotEqualsExpression
+	 *     CastExpression.CastExpression_1_0 returns NotEqualsExpression
 	 *     OrExpression returns NotEqualsExpression
 	 *     OrExpression.OrExpression_1_0 returns NotEqualsExpression
 	 *     AndExpression returns NotEqualsExpression
@@ -1120,6 +1185,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns EventReference
+	 *     CastExpression returns EventReference
+	 *     CastExpression.CastExpression_1_0 returns EventReference
 	 *     OrExpression returns EventReference
 	 *     OrExpression.OrExpression_1_0 returns EventReference
 	 *     AndExpression returns EventReference
@@ -1166,6 +1233,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns ExternExpression
+	 *     CastExpression returns ExternExpression
+	 *     CastExpression.CastExpression_1_0 returns ExternExpression
 	 *     OrExpression returns ExternExpression
 	 *     OrExpression.OrExpression_1_0 returns ExternExpression
 	 *     AndExpression returns ExternExpression
@@ -1246,6 +1315,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns FunctionCallExpression
+	 *     CastExpression returns FunctionCallExpression
+	 *     CastExpression.CastExpression_1_0 returns FunctionCallExpression
 	 *     OrExpression returns FunctionCallExpression
 	 *     OrExpression.OrExpression_1_0 returns FunctionCallExpression
 	 *     AndExpression returns FunctionCallExpression
@@ -1343,6 +1414,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns IntegerLiteral
+	 *     CastExpression returns IntegerLiteral
+	 *     CastExpression.CastExpression_1_0 returns IntegerLiteral
 	 *     OrExpression returns IntegerLiteral
 	 *     OrExpression.OrExpression_1_0 returns IntegerLiteral
 	 *     AndExpression returns IntegerLiteral
@@ -1468,6 +1541,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns ModExpression
+	 *     CastExpression returns ModExpression
+	 *     CastExpression.CastExpression_1_0 returns ModExpression
 	 *     OrExpression returns ModExpression
 	 *     OrExpression.OrExpression_1_0 returns ModExpression
 	 *     AndExpression returns ModExpression
@@ -1510,6 +1585,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns DivExpression
+	 *     CastExpression returns DivExpression
+	 *     CastExpression.CastExpression_1_0 returns DivExpression
 	 *     OrExpression returns DivExpression
 	 *     OrExpression.OrExpression_1_0 returns DivExpression
 	 *     AndExpression returns DivExpression
@@ -1552,6 +1629,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns TimesExpression
+	 *     CastExpression returns TimesExpression
+	 *     CastExpression.CastExpression_1_0 returns TimesExpression
 	 *     OrExpression returns TimesExpression
 	 *     OrExpression.OrExpression_1_0 returns TimesExpression
 	 *     AndExpression returns TimesExpression
@@ -1627,6 +1706,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns OrExpression
+	 *     CastExpression returns OrExpression
+	 *     CastExpression.CastExpression_1_0 returns OrExpression
 	 *     OrExpression returns OrExpression
 	 *     OrExpression.OrExpression_1_0 returns OrExpression
 	 *     AndExpression returns OrExpression
@@ -1705,6 +1786,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns NotExpression
+	 *     CastExpression returns NotExpression
+	 *     CastExpression.CastExpression_1_0 returns NotExpression
 	 *     OrExpression returns NotExpression
 	 *     OrExpression.OrExpression_1_0 returns NotExpression
 	 *     AndExpression returns NotExpression
@@ -1744,6 +1827,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns UnaryMinus
+	 *     CastExpression returns UnaryMinus
+	 *     CastExpression.CastExpression_1_0 returns UnaryMinus
 	 *     OrExpression returns UnaryMinus
 	 *     OrExpression.OrExpression_1_0 returns UnaryMinus
 	 *     AndExpression returns UnaryMinus
@@ -1830,6 +1915,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns PropertyReference
+	 *     CastExpression returns PropertyReference
+	 *     CastExpression.CastExpression_1_0 returns PropertyReference
 	 *     OrExpression returns PropertyReference
 	 *     OrExpression.OrExpression_1_0 returns PropertyReference
 	 *     AndExpression returns PropertyReference
@@ -2090,6 +2177,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns StringLiteral
+	 *     CastExpression returns StringLiteral
+	 *     CastExpression.CastExpression_1_0 returns StringLiteral
 	 *     OrExpression returns StringLiteral
 	 *     OrExpression.OrExpression_1_0 returns StringLiteral
 	 *     AndExpression returns StringLiteral

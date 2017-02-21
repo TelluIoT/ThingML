@@ -4904,13 +4904,86 @@ ruleExpression returns [EObject current=null]
 	leaveRule();
 }:
 	{
-		newCompositeNode(grammarAccess.getExpressionAccess().getOrExpressionParserRuleCall());
+		newCompositeNode(grammarAccess.getExpressionAccess().getCastExpressionParserRuleCall());
 	}
-	this_OrExpression_0=ruleOrExpression
+	this_CastExpression_0=ruleCastExpression
 	{
-		$current = $this_OrExpression_0.current;
+		$current = $this_CastExpression_0.current;
 		afterParserOrEnumRuleCall();
 	}
+;
+
+// Entry rule entryRuleCastExpression
+entryRuleCastExpression returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getCastExpressionRule()); }
+	iv_ruleCastExpression=ruleCastExpression
+	{ $current=$iv_ruleCastExpression.current; }
+	EOF;
+
+// Rule CastExpression
+ruleCastExpression returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getCastExpressionAccess().getOrExpressionParserRuleCall_0());
+		}
+		this_OrExpression_0=ruleOrExpression
+		{
+			$current = $this_OrExpression_0.current;
+			afterParserOrEnumRuleCall();
+		}
+		(
+			(
+				{
+					$current = forceCreateModelElementAndSet(
+						grammarAccess.getCastExpressionAccess().getCastExpressionTermAction_1_0(),
+						$current);
+				}
+			)
+			otherlv_2='as'
+			{
+				newLeafNode(otherlv_2, grammarAccess.getCastExpressionAccess().getAsKeyword_1_1());
+			}
+			(
+				(
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getCastExpressionRule());
+						}
+					}
+					otherlv_3=RULE_ID
+					{
+						newLeafNode(otherlv_3, grammarAccess.getCastExpressionAccess().getTypeTypeCrossReference_1_2_0());
+					}
+				)
+			)
+			(
+				(
+					(
+						lv_isArray_4_0='['
+						{
+							newLeafNode(lv_isArray_4_0, grammarAccess.getCastExpressionAccess().getIsArrayLeftSquareBracketKeyword_1_3_0_0());
+						}
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getCastExpressionRule());
+							}
+							setWithLastConsumed($current, "isArray", true, "[");
+						}
+					)
+				)
+				otherlv_5=']'
+				{
+					newLeafNode(otherlv_5, grammarAccess.getCastExpressionAccess().getRightSquareBracketKeyword_1_3_1());
+				}
+			)?
+		)?
+	)
 ;
 
 // Entry rule entryRuleOrExpression

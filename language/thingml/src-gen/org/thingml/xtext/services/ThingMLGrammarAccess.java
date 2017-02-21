@@ -3290,7 +3290,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class ExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Expression");
-		private final RuleCall cOrExpressionParserRuleCall = (RuleCall)rule.eContents().get(1);
+		private final RuleCall cCastExpressionParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		/// *****************************************************************************
 		// *       EXPRESSIONS                                                         *
@@ -3299,11 +3299,66 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		////LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | 
 		////ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
 		//Expression:
-		//	OrExpression;
+		//	CastExpression;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//CastExpression
+		public RuleCall getCastExpressionParserRuleCall() { return cCastExpressionParserRuleCall; }
+	}
+	public class CastExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.CastExpression");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cOrExpressionParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Action cCastExpressionTermAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final Keyword cAsKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Assignment cTypeAssignment_1_2 = (Assignment)cGroup_1.eContents().get(2);
+		private final CrossReference cTypeTypeCrossReference_1_2_0 = (CrossReference)cTypeAssignment_1_2.eContents().get(0);
+		private final RuleCall cTypeTypeIDTerminalRuleCall_1_2_0_1 = (RuleCall)cTypeTypeCrossReference_1_2_0.eContents().get(1);
+		private final Group cGroup_1_3 = (Group)cGroup_1.eContents().get(3);
+		private final Assignment cIsArrayAssignment_1_3_0 = (Assignment)cGroup_1_3.eContents().get(0);
+		private final Keyword cIsArrayLeftSquareBracketKeyword_1_3_0_0 = (Keyword)cIsArrayAssignment_1_3_0.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_1_3_1 = (Keyword)cGroup_1_3.eContents().get(1);
+		
+		//CastExpression Expression:
+		//	OrExpression ({CastExpression.term=current} "as" type=[Type] (^isArray?='[' ']')?)?
+		@Override public ParserRule getRule() { return rule; }
+		
+		//OrExpression ({CastExpression.term=current} "as" type=[Type] (^isArray?='[' ']')?)?
+		public Group getGroup() { return cGroup; }
+		
 		//OrExpression
-		public RuleCall getOrExpressionParserRuleCall() { return cOrExpressionParserRuleCall; }
+		public RuleCall getOrExpressionParserRuleCall_0() { return cOrExpressionParserRuleCall_0; }
+		
+		//({CastExpression.term=current} "as" type=[Type] (^isArray?='[' ']')?)?
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{CastExpression.term=current}
+		public Action getCastExpressionTermAction_1_0() { return cCastExpressionTermAction_1_0; }
+		
+		//"as"
+		public Keyword getAsKeyword_1_1() { return cAsKeyword_1_1; }
+		
+		//type=[Type]
+		public Assignment getTypeAssignment_1_2() { return cTypeAssignment_1_2; }
+		
+		//[Type]
+		public CrossReference getTypeTypeCrossReference_1_2_0() { return cTypeTypeCrossReference_1_2_0; }
+		
+		//ID
+		public RuleCall getTypeTypeIDTerminalRuleCall_1_2_0_1() { return cTypeTypeIDTerminalRuleCall_1_2_0_1; }
+		
+		//(^isArray?='[' ']')?
+		public Group getGroup_1_3() { return cGroup_1_3; }
+		
+		//^isArray?='['
+		public Assignment getIsArrayAssignment_1_3_0() { return cIsArrayAssignment_1_3_0; }
+		
+		//'['
+		public Keyword getIsArrayLeftSquareBracketKeyword_1_3_0_0() { return cIsArrayLeftSquareBracketKeyword_1_3_0_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_1_3_1() { return cRightSquareBracketKeyword_1_3_1; }
 	}
 	public class OrExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.OrExpression");
@@ -4565,6 +4620,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	private final StartSessionElements pStartSession;
 	private final FunctionCallStatementElements pFunctionCallStatement;
 	private final ExpressionElements pExpression;
+	private final CastExpressionElements pCastExpression;
 	private final OrExpressionElements pOrExpression;
 	private final AndExpressionElements pAndExpression;
 	private final EqualityElements pEquality;
@@ -4656,6 +4712,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pStartSession = new StartSessionElements();
 		this.pFunctionCallStatement = new FunctionCallStatementElements();
 		this.pExpression = new ExpressionElements();
+		this.pCastExpression = new CastExpressionElements();
 		this.pOrExpression = new OrExpressionElements();
 		this.pAndExpression = new AndExpressionElements();
 		this.pEquality = new EqualityElements();
@@ -5328,13 +5385,23 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	////LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | 
 	////ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
 	//Expression:
-	//	OrExpression;
+	//	CastExpression;
 	public ExpressionElements getExpressionAccess() {
 		return pExpression;
 	}
 	
 	public ParserRule getExpressionRule() {
 		return getExpressionAccess().getRule();
+	}
+	
+	//CastExpression Expression:
+	//	OrExpression ({CastExpression.term=current} "as" type=[Type] (^isArray?='[' ']')?)?
+	public CastExpressionElements getCastExpressionAccess() {
+		return pCastExpression;
+	}
+	
+	public ParserRule getCastExpressionRule() {
+		return getCastExpressionAccess().getRule();
 	}
 	
 	//OrExpression Expression:

@@ -119,6 +119,7 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) stringValue=STRING_LIT
 	 *     (rule start) (ambiguity) {AndExpression.lhs=}
 	 *     (rule start) (ambiguity) {ArrayIndex.array=}
+	 *     (rule start) (ambiguity) {CastExpression.term=}
 	 *     (rule start) (ambiguity) {DivExpression.lhs=}
 	 *     (rule start) (ambiguity) {EqualsExpression.lhs=}
 	 *     (rule start) (ambiguity) {GreaterExpression.lhs=}
@@ -142,6 +143,7 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) {AndExpression.lhs=}
+	 *     (rule start) (ambiguity) {CastExpression.term=}
 	 *     (rule start) (ambiguity) {DivExpression.lhs=}
 	 *     (rule start) (ambiguity) {EqualsExpression.lhs=}
 	 *     (rule start) (ambiguity) {GreaterExpression.lhs=}

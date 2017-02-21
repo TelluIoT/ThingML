@@ -321,7 +321,11 @@ FunctionCallStatement returns FunctionCallStatement:
 	//ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
 
 
-Expression: OrExpression;
+Expression: CastExpression;
+
+CastExpression returns Expression:
+	OrExpression ({CastExpression.term=current} "as" type=[Type|ID] (^isArray?='['']')?)?
+;
 
 OrExpression returns Expression:
 	AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*
