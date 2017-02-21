@@ -38,6 +38,7 @@ import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.DivExpression;
 import org.thingml.xtext.thingML.DoubleLiteral;
 import org.thingml.xtext.thingML.EqualsExpression;
+import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
@@ -246,31 +247,13 @@ public class TypeChecker extends ThingMLSwitch<Type> {
     public Type casePropertyReference(PropertyReference object) {
         return TyperHelper.getBroadType(object.getProperty().getTypeRef().getType());
     }
-/*
+    
+    
     @Override
-    public Type caseExpressionGroup(ExpressionGroup object) {
-        return computeTypeOf(object.getExp());
-    }
+	public Type caseEventReference(EventReference object) {
+    	return TyperHelper.getBroadType(object.getParameter().getTypeRef().getType());
+	}
 
-    @Override
-    public Type caseReference(Reference object) {
-        if (object.getReference() instanceof ReceiveMessage) {
-            ReceiveMessage rm = (ReceiveMessage) object.getReference();
-            if (object.getParameter() instanceof SimpleParamRef) {
-                SimpleParamRef ref = (SimpleParamRef) object.getParameter();
-                if (ref.getParameterRef().getType() == null)
-                    return Types.ERROR_TYPE;
-                return TyperHelper.getBroadType(ref.getParameterRef().getType());
-            }
-        } else if (object instanceof PropertyReference) {
-            PropertyReference pr = (PropertyReference) object;
-            if (pr.getProperty().getType() == null)
-                return Types.ERROR_TYPE;
-            return TyperHelper.getBroadType(pr.getProperty().getType());
-        }
-        return Types.ANY_TYPE;
-    }
-*/
     @Override
     public Type caseFunctionCallExpression(FunctionCallExpression object) {
         if (object.getFunction().getTypeRef().getType() == null)
