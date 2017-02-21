@@ -224,6 +224,11 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//ExternalConnector/port"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//ExternalConnector/protocol"/>
     </genClasses>
+    <genClasses ecoreClass="ThingML.ecore#//CastExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//CastExpression/term"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ThingML.ecore#//CastExpression/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//CastExpression/isArray"/>
+    </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//OrExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//OrExpression/lhs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//OrExpression/rhs"/>

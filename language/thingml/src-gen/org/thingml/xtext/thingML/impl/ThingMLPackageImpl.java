@@ -31,6 +31,7 @@ import org.thingml.xtext.thingML.AndExpression;
 import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
@@ -562,6 +563,13 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * @generated
    */
   private EClass externalConnectorEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass castExpressionEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -2423,6 +2431,46 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getCastExpression()
+  {
+    return castExpressionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCastExpression_Term()
+  {
+    return (EReference)castExpressionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCastExpression_Type()
+  {
+    return (EReference)castExpressionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getCastExpression_IsArray()
+  {
+    return (EAttribute)castExpressionEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getOrExpression()
   {
     return orExpressionEClass;
@@ -3140,6 +3188,11 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     createEReference(externalConnectorEClass, EXTERNAL_CONNECTOR__PORT);
     createEReference(externalConnectorEClass, EXTERNAL_CONNECTOR__PROTOCOL);
 
+    castExpressionEClass = createEClass(CAST_EXPRESSION);
+    createEReference(castExpressionEClass, CAST_EXPRESSION__TERM);
+    createEReference(castExpressionEClass, CAST_EXPRESSION__TYPE);
+    createEAttribute(castExpressionEClass, CAST_EXPRESSION__IS_ARRAY);
+
     orExpressionEClass = createEClass(OR_EXPRESSION);
     createEReference(orExpressionEClass, OR_EXPRESSION__LHS);
     createEReference(orExpressionEClass, OR_EXPRESSION__RHS);
@@ -3303,6 +3356,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     abstractConnectorEClass.getESuperTypes().add(this.getAnnotatedElement());
     connectorEClass.getESuperTypes().add(this.getAbstractConnector());
     externalConnectorEClass.getESuperTypes().add(this.getAbstractConnector());
+    castExpressionEClass.getESuperTypes().add(this.getExpression());
     orExpressionEClass.getESuperTypes().add(this.getExpression());
     andExpressionEClass.getESuperTypes().add(this.getExpression());
     equalsExpressionEClass.getESuperTypes().add(this.getExpression());
@@ -3506,7 +3560,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEAttribute(getIntegerLiteral_IntValue(), ecorePackage.getEInt(), "intValue", null, 0, 1, IntegerLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(booleanLiteralEClass, BooleanLiteral.class, "BooleanLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getBooleanLiteral_BoolValue(), ecorePackage.getEString(), "boolValue", null, 0, 1, BooleanLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getBooleanLiteral_BoolValue(), ecorePackage.getEBoolean(), "boolValue", null, 0, 1, BooleanLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(stringLiteralEClass, StringLiteral.class, "StringLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getStringLiteral_StringValue(), ecorePackage.getEString(), "stringValue", null, 0, 1, StringLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -3552,6 +3606,11 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEReference(getExternalConnector_Inst(), this.getInstance(), null, "inst", null, 0, 1, ExternalConnector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getExternalConnector_Port(), this.getPort(), null, "port", null, 0, 1, ExternalConnector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getExternalConnector_Protocol(), this.getProtocol(), null, "protocol", null, 0, 1, ExternalConnector.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(castExpressionEClass, CastExpression.class, "CastExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getCastExpression_Term(), this.getExpression(), null, "term", null, 0, 1, CastExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getCastExpression_Type(), this.getType(), null, "type", null, 0, 1, CastExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getCastExpression_IsArray(), ecorePackage.getEBoolean(), "isArray", null, 0, 1, CastExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(orExpressionEClass, OrExpression.class, "OrExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getOrExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, OrExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

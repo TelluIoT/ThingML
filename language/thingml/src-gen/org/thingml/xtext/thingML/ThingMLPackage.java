@@ -3115,6 +3115,52 @@ public interface ThingMLPackage extends EPackage
   int EXTERNAL_CONNECTOR_FEATURE_COUNT = ABSTRACT_CONNECTOR_FEATURE_COUNT + 3;
 
   /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.CastExpressionImpl <em>Cast Expression</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.CastExpressionImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getCastExpression()
+   * @generated
+   */
+  int CAST_EXPRESSION = 64;
+
+  /**
+   * The feature id for the '<em><b>Term</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CAST_EXPRESSION__TERM = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Type</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CAST_EXPRESSION__TYPE = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Is Array</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CAST_EXPRESSION__IS_ARRAY = EXPRESSION_FEATURE_COUNT + 2;
+
+  /**
+   * The number of structural features of the '<em>Cast Expression</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CAST_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 3;
+
+  /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.OrExpressionImpl <em>Or Expression</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3122,7 +3168,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getOrExpression()
    * @generated
    */
-  int OR_EXPRESSION = 64;
+  int OR_EXPRESSION = 65;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3159,7 +3205,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getAndExpression()
    * @generated
    */
-  int AND_EXPRESSION = 65;
+  int AND_EXPRESSION = 66;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3196,7 +3242,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getEqualsExpression()
    * @generated
    */
-  int EQUALS_EXPRESSION = 66;
+  int EQUALS_EXPRESSION = 67;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3233,7 +3279,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getNotEqualsExpression()
    * @generated
    */
-  int NOT_EQUALS_EXPRESSION = 67;
+  int NOT_EQUALS_EXPRESSION = 68;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3270,7 +3316,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getGreaterExpression()
    * @generated
    */
-  int GREATER_EXPRESSION = 68;
+  int GREATER_EXPRESSION = 69;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3307,7 +3353,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLowerExpression()
    * @generated
    */
-  int LOWER_EXPRESSION = 69;
+  int LOWER_EXPRESSION = 70;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3344,7 +3390,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getGreaterOrEqualExpression()
    * @generated
    */
-  int GREATER_OR_EQUAL_EXPRESSION = 70;
+  int GREATER_OR_EQUAL_EXPRESSION = 71;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3381,7 +3427,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getLowerOrEqualExpression()
    * @generated
    */
-  int LOWER_OR_EQUAL_EXPRESSION = 71;
+  int LOWER_OR_EQUAL_EXPRESSION = 72;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3418,7 +3464,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getPlusExpression()
    * @generated
    */
-  int PLUS_EXPRESSION = 72;
+  int PLUS_EXPRESSION = 73;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3455,7 +3501,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getMinusExpression()
    * @generated
    */
-  int MINUS_EXPRESSION = 73;
+  int MINUS_EXPRESSION = 74;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3492,7 +3538,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getTimesExpression()
    * @generated
    */
-  int TIMES_EXPRESSION = 74;
+  int TIMES_EXPRESSION = 75;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3529,7 +3575,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getDivExpression()
    * @generated
    */
-  int DIV_EXPRESSION = 75;
+  int DIV_EXPRESSION = 76;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3566,7 +3612,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getModExpression()
    * @generated
    */
-  int MOD_EXPRESSION = 76;
+  int MOD_EXPRESSION = 77;
 
   /**
    * The feature id for the '<em><b>Lhs</b></em>' containment reference.
@@ -3603,7 +3649,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getNotExpression()
    * @generated
    */
-  int NOT_EXPRESSION = 77;
+  int NOT_EXPRESSION = 78;
 
   /**
    * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -3631,7 +3677,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getUnaryMinus()
    * @generated
    */
-  int UNARY_MINUS = 78;
+  int UNARY_MINUS = 79;
 
   /**
    * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -3659,7 +3705,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getArrayIndex()
    * @generated
    */
-  int ARRAY_INDEX = 79;
+  int ARRAY_INDEX = 80;
 
   /**
    * The feature id for the '<em><b>Array</b></em>' containment reference.
@@ -5100,11 +5146,11 @@ public interface ThingMLPackage extends EPackage
   EClass getBooleanLiteral();
 
   /**
-   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.BooleanLiteral#getBoolValue <em>Bool Value</em>}'.
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.BooleanLiteral#isBoolValue <em>Bool Value</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Bool Value</em>'.
-   * @see org.thingml.xtext.thingML.BooleanLiteral#getBoolValue()
+   * @see org.thingml.xtext.thingML.BooleanLiteral#isBoolValue()
    * @see #getBooleanLiteral()
    * @generated
    */
@@ -5472,6 +5518,49 @@ public interface ThingMLPackage extends EPackage
    * @generated
    */
   EReference getExternalConnector_Protocol();
+
+  /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.CastExpression <em>Cast Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Cast Expression</em>'.
+   * @see org.thingml.xtext.thingML.CastExpression
+   * @generated
+   */
+  EClass getCastExpression();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.CastExpression#getTerm <em>Term</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Term</em>'.
+   * @see org.thingml.xtext.thingML.CastExpression#getTerm()
+   * @see #getCastExpression()
+   * @generated
+   */
+  EReference getCastExpression_Term();
+
+  /**
+   * Returns the meta object for the reference '{@link org.thingml.xtext.thingML.CastExpression#getType <em>Type</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Type</em>'.
+   * @see org.thingml.xtext.thingML.CastExpression#getType()
+   * @see #getCastExpression()
+   * @generated
+   */
+  EReference getCastExpression_Type();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.CastExpression#isIsArray <em>Is Array</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Is Array</em>'.
+   * @see org.thingml.xtext.thingML.CastExpression#isIsArray()
+   * @see #getCastExpression()
+   * @generated
+   */
+  EAttribute getCastExpression_IsArray();
 
   /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.OrExpression <em>Or Expression</em>}'.
@@ -7457,6 +7546,40 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EReference EXTERNAL_CONNECTOR__PROTOCOL = eINSTANCE.getExternalConnector_Protocol();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.CastExpressionImpl <em>Cast Expression</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.CastExpressionImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getCastExpression()
+     * @generated
+     */
+    EClass CAST_EXPRESSION = eINSTANCE.getCastExpression();
+
+    /**
+     * The meta object literal for the '<em><b>Term</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CAST_EXPRESSION__TERM = eINSTANCE.getCastExpression_Term();
+
+    /**
+     * The meta object literal for the '<em><b>Type</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CAST_EXPRESSION__TYPE = eINSTANCE.getCastExpression_Type();
+
+    /**
+     * The meta object literal for the '<em><b>Is Array</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute CAST_EXPRESSION__IS_ARRAY = eINSTANCE.getCastExpression_IsArray();
 
     /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.OrExpressionImpl <em>Or Expression</em>}' class.

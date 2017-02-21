@@ -74,7 +74,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getMultiplicationAccess().getAlternatives_1(), "rule__Multiplication__Alternatives_1");
 					put(grammarAccess.getPrimaryAccess().getAlternatives(), "rule__Primary__Alternatives");
 					put(grammarAccess.getAtomicExpressionAccess().getAlternatives(), "rule__AtomicExpression__Alternatives");
-					put(grammarAccess.getBooleanLiteralAccess().getBoolValueAlternatives_0(), "rule__BooleanLiteral__BoolValueAlternatives_0");
+					put(grammarAccess.getBooleanLiteralAccess().getAlternatives(), "rule__BooleanLiteral__Alternatives");
 					put(grammarAccess.getConfigurationAccess().getAlternatives_4(), "rule__Configuration__Alternatives_4");
 					put(grammarAccess.getAbstractConnectorAccess().getAlternatives(), "rule__AbstractConnector__Alternatives");
 					put(grammarAccess.getThingMLModelAccess().getGroup(), "rule__ThingMLModel__Group__0");
@@ -171,6 +171,9 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getFunctionCallStatementAccess().getGroup(), "rule__FunctionCallStatement__Group__0");
 					put(grammarAccess.getFunctionCallStatementAccess().getGroup_2(), "rule__FunctionCallStatement__Group_2__0");
 					put(grammarAccess.getFunctionCallStatementAccess().getGroup_2_1(), "rule__FunctionCallStatement__Group_2_1__0");
+					put(grammarAccess.getCastExpressionAccess().getGroup(), "rule__CastExpression__Group__0");
+					put(grammarAccess.getCastExpressionAccess().getGroup_1(), "rule__CastExpression__Group_1__0");
+					put(grammarAccess.getCastExpressionAccess().getGroup_1_3(), "rule__CastExpression__Group_1_3__0");
 					put(grammarAccess.getOrExpressionAccess().getGroup(), "rule__OrExpression__Group__0");
 					put(grammarAccess.getOrExpressionAccess().getGroup_1(), "rule__OrExpression__Group_1__0");
 					put(grammarAccess.getAndExpressionAccess().getGroup(), "rule__AndExpression__Group__0");
@@ -199,6 +202,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getExternExpressionAccess().getGroup(), "rule__ExternExpression__Group__0");
 					put(grammarAccess.getExternExpressionAccess().getGroup_1(), "rule__ExternExpression__Group_1__0");
 					put(grammarAccess.getEnumLiteralRefAccess().getGroup(), "rule__EnumLiteralRef__Group__0");
+					put(grammarAccess.getBooleanLiteralAccess().getGroup_1(), "rule__BooleanLiteral__Group_1__0");
 					put(grammarAccess.getEventReferenceAccess().getGroup(), "rule__EventReference__Group__0");
 					put(grammarAccess.getFunctionCallExpressionAccess().getGroup(), "rule__FunctionCallExpression__Group__0");
 					put(grammarAccess.getFunctionCallExpressionAccess().getGroup_2(), "rule__FunctionCallExpression__Group_2__0");
@@ -375,6 +379,8 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getFunctionCallStatementAccess().getFunctionAssignment_0(), "rule__FunctionCallStatement__FunctionAssignment_0");
 					put(grammarAccess.getFunctionCallStatementAccess().getParametersAssignment_2_0(), "rule__FunctionCallStatement__ParametersAssignment_2_0");
 					put(grammarAccess.getFunctionCallStatementAccess().getParametersAssignment_2_1_1(), "rule__FunctionCallStatement__ParametersAssignment_2_1_1");
+					put(grammarAccess.getCastExpressionAccess().getTypeAssignment_1_2(), "rule__CastExpression__TypeAssignment_1_2");
+					put(grammarAccess.getCastExpressionAccess().getIsArrayAssignment_1_3_0(), "rule__CastExpression__IsArrayAssignment_1_3_0");
 					put(grammarAccess.getOrExpressionAccess().getRhsAssignment_1_2(), "rule__OrExpression__RhsAssignment_1_2");
 					put(grammarAccess.getAndExpressionAccess().getRhsAssignment_1_2(), "rule__AndExpression__RhsAssignment_1_2");
 					put(grammarAccess.getEqualityAccess().getRhsAssignment_1_0_2(), "rule__Equality__RhsAssignment_1_0_2");
@@ -396,7 +402,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getEnumLiteralRefAccess().getEnumAssignment_0(), "rule__EnumLiteralRef__EnumAssignment_0");
 					put(grammarAccess.getEnumLiteralRefAccess().getLiteralAssignment_2(), "rule__EnumLiteralRef__LiteralAssignment_2");
 					put(grammarAccess.getIntegerLiteralAccess().getIntValueAssignment(), "rule__IntegerLiteral__IntValueAssignment");
-					put(grammarAccess.getBooleanLiteralAccess().getBoolValueAssignment(), "rule__BooleanLiteral__BoolValueAssignment");
+					put(grammarAccess.getBooleanLiteralAccess().getBoolValueAssignment_0(), "rule__BooleanLiteral__BoolValueAssignment_0");
 					put(grammarAccess.getStringLiteralAccess().getStringValueAssignment(), "rule__StringLiteral__StringValueAssignment");
 					put(grammarAccess.getDoubleLiteralAccess().getDoubleValueAssignment(), "rule__DoubleLiteral__DoubleValueAssignment");
 					put(grammarAccess.getPropertyReferenceAccess().getPropertyAssignment(), "rule__PropertyReference__PropertyAssignment");

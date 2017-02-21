@@ -106,9 +106,9 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) '-' term=Primary
+	 *     (rule start) (ambiguity) 'false' (rule start)
 	 *     (rule start) (ambiguity) 'not' term=Primary
-	 *     (rule start) (ambiguity) boolValue='false'
-	 *     (rule start) (ambiguity) boolValue='true'
+	 *     (rule start) (ambiguity) boolValue?='true'
 	 *     (rule start) (ambiguity) doubleValue=FLOAT
 	 *     (rule start) (ambiguity) enum=[Enumeration|ID]
 	 *     (rule start) (ambiguity) expression=STRING_EXT
@@ -119,6 +119,7 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) stringValue=STRING_LIT
 	 *     (rule start) (ambiguity) {AndExpression.lhs=}
 	 *     (rule start) (ambiguity) {ArrayIndex.array=}
+	 *     (rule start) (ambiguity) {CastExpression.term=}
 	 *     (rule start) (ambiguity) {DivExpression.lhs=}
 	 *     (rule start) (ambiguity) {EqualsExpression.lhs=}
 	 *     (rule start) (ambiguity) {GreaterExpression.lhs=}
@@ -142,6 +143,7 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) {AndExpression.lhs=}
+	 *     (rule start) (ambiguity) {CastExpression.term=}
 	 *     (rule start) (ambiguity) {DivExpression.lhs=}
 	 *     (rule start) (ambiguity) {EqualsExpression.lhs=}
 	 *     (rule start) (ambiguity) {GreaterExpression.lhs=}

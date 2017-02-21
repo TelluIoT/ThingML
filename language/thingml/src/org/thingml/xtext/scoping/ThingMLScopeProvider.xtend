@@ -119,6 +119,9 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.typeRef_Type) {
 			return scopeForTypeRef_Type(context);
 		}
+		else if (reference == p.castExpression_Type) {
+			return scopeForCastExpression_Type(context);
+		}
 		else if (reference == p.variableAssignment_Property) {
 			return scopeForVariableAssignment_Property(context as VariableAssignment);
 		}
@@ -290,6 +293,11 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	def protected IScope scopeForTypeRef_Type(EObject context) {
 		Scopes.scopeFor( ThingMLHelpers.allTypes(ThingMLHelpers.findContainingModel(context)) ); 
 	}
+	
+	def protected IScope scopeForCastExpression_Type(EObject context) {
+		Scopes.scopeFor( ThingMLHelpers.allTypes(ThingMLHelpers.findContainingModel(context)) ); 
+	}
+	
 	
 	def protected IScope scopeForVariableAssignment_Property(VariableAssignment context) {
 		Scopes.scopeFor( ThingMLHelpers.allVisibleVariables(context) );

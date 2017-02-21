@@ -143,6 +143,7 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.ABSTRACT_CONNECTOR: return createAbstractConnector();
       case ThingMLPackage.CONNECTOR: return createConnector();
       case ThingMLPackage.EXTERNAL_CONNECTOR: return createExternalConnector();
+      case ThingMLPackage.CAST_EXPRESSION: return createCastExpression();
       case ThingMLPackage.OR_EXPRESSION: return createOrExpression();
       case ThingMLPackage.AND_EXPRESSION: return createAndExpression();
       case ThingMLPackage.EQUALS_EXPRESSION: return createEqualsExpression();
@@ -866,6 +867,17 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     ExternalConnectorImpl externalConnector = new ExternalConnectorImpl();
     return externalConnector;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public CastExpression createCastExpression()
+  {
+    CastExpressionImpl castExpression = new CastExpressionImpl();
+    return castExpression;
   }
 
   /**

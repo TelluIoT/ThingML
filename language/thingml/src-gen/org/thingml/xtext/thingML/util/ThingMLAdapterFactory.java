@@ -410,6 +410,11 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createExternalConnectorAdapter();
       }
       @Override
+      public Adapter caseCastExpression(CastExpression object)
+      {
+        return createCastExpressionAdapter();
+      }
+      @Override
       public Adapter caseOrExpression(OrExpression object)
       {
         return createOrExpressionAdapter();
@@ -1467,6 +1472,21 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createExternalConnectorAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.CastExpression <em>Cast Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.CastExpression
+   * @generated
+   */
+  public Adapter createCastExpressionAdapter()
   {
     return null;
   }
