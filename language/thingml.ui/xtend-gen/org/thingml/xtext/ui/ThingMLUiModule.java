@@ -6,8 +6,10 @@ package org.thingml.xtext.ui;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultHighlightingConfiguration;
 import org.thingml.xtext.ui.AbstractThingMLUiModule;
 import org.thingml.xtext.ui.ThingMLAntlrTokenToAttributeIdMapper;
+import org.thingml.xtext.ui.ThingMLHighlightingConfiguration;
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -17,6 +19,10 @@ import org.thingml.xtext.ui.ThingMLAntlrTokenToAttributeIdMapper;
 public class ThingMLUiModule extends AbstractThingMLUiModule {
   public Class<? extends AbstractAntlrTokenToAttributeIdMapper> bindAbstractAntlrTokenToAttributeIdMapper() {
     return ThingMLAntlrTokenToAttributeIdMapper.class;
+  }
+  
+  public Class<? extends DefaultHighlightingConfiguration> bindDefaultHighlightingConfiguration() {
+    return ThingMLHighlightingConfiguration.class;
   }
   
   public ThingMLUiModule(final AbstractUIPlugin plugin) {
