@@ -75,17 +75,18 @@ Protocol returns Protocol:
 	'protocol' name=ID ( annotations+=PlatformAnnotation )* ';';
 
 Function returns Function:
-	'function' name=ID '(' (parameters+=Parameter ( "," parameters+=Parameter)* )? ')' (':' typeRef=TypeRef)? ( annotations+=PlatformAnnotation )* body=Action
-		//('isArray' isArray=EBoolean)?
-		//('cardinality' cardinality=Expression)?
+	'function' name=ID '(' (parameters+=Parameter ( "," parameters+=Parameter)* )? ')' (':' typeRef=TypeRef)? 
+							( annotations+=PlatformAnnotation )* body=Action | AbstractFunction
+;
+
+AbstractFunction returns Function:
+	abstract?='abstract' 'function' name=ID '(' (parameters+=Parameter ( "," parameters+=Parameter)* )? ')' (':' typeRef=TypeRef)? 
+							( annotations+=PlatformAnnotation )* 
 ;
 
 Property returns Property:
 	(readonly?='readonly')? 'property' name=ID ':' typeRef=TypeRef ( '=' init=Expression)?
 	( annotations+=PlatformAnnotation )*
-		//('isArray' isArray=EBoolean)?
-		//('changeable' changeable=EBoolean)?
-		//('cardinality' cardinality=Expression)?
 ;
 
 Message returns Message:
@@ -94,8 +95,6 @@ Message returns Message:
 	
 Parameter returns Parameter:
 	name=ID ':' typeRef=TypeRef ( annotations+=PlatformAnnotation )*
-//		('isArray' isArray=EBoolean)?
-//		('cardinality' cardinality=Expression)?
 ;
 
 Port returns Port:
@@ -120,59 +119,7 @@ InternalPort returns InternalPort:
 		('receives' receives+=[Message|ID] ( "," receives+=[Message|ID])* ))*
 	'}';
 
-/*****************************************************************************
- *       CEP STREAMS                                                         *
- *****************************************************************************/
-	/*
-Stream returns Stream:
-	'stream' name=ID ( annotations+=PlatformAnnotation )* 'from' input=Source
-	('select' selection+=LocalVariable ( "," selection+=LocalVariable)*)?
-	'produce' output=SendAction ;
-	
-Source returns Source:
-	JoinSources | MergeSources | SimpleSource;
 
-ViewSource returns ViewSource:
-	Filter | LengthWindow | TimeWindow;	
-
-ReferencedElmt returns ReferencedElmt:
-	Message | Parameter | Property | ReceiveMessage | LocalVariable | JoinSources | MergeSources | SimpleSource | MessageParameter;
-
-ElmtProperty returns ElmtProperty:
-	SimpleParamRef | ArrayParamRef | LengthArray;
-
-
-JoinSources returns JoinSources:
-	'join' name=ID ':' '[' sources+=Source ( "&" sources+=Source)* '->' resultMessage=[Message|ID] '(' rules+=Expression ( "," rules+=Expression)* ')' ']' ('::' operators+=ViewSource)*;
-
-MergeSources returns MergeSources:
-	'merge' name=ID ':' '[' sources+=Source ( "|" sources+=Source)* '->' resultMessage=[Message|ID] ']' ('::' operators+=ViewSource)*;
-
-SimpleSource returns SimpleSource:
-	name=ID ':' message=ReceiveMessage  ('::' operators+=ViewSource)*;
-
-Filter returns Filter:
-	'keep' 'if' guard=Expression;
-
-LengthWindow returns LengthWindow:
-	'buffer' size=Expression ('by' step=Expression)?;
-
-TimeWindow returns TimeWindow:
-	'during' duration=Expression ('by' step=Expression)?;
-
-MessageParameter returns MessageParameter:
-	name=ID ':' msgRef=[Message|ID] ;
-
-SimpleParamRef returns SimpleParamRef:
-	parameterRef=[Parameter|ID];
-
-ArrayParamRef returns ArrayParamRef:
-	parameterRef=[Parameter|ID] '[' ']';
-
-LengthArray returns LengthArray:
-	{LengthArray}
-	'length';
- 	*/
 /*****************************************************************************
  *       STATE MECHINES                                                      *
  *****************************************************************************/

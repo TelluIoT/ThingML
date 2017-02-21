@@ -771,13 +771,22 @@ public interface ThingMLPackage extends EPackage
   int FUNCTION__BODY = NAMED_ELEMENT_FEATURE_COUNT + 3;
 
   /**
+   * The feature id for the '<em><b>Abstract</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FUNCTION__ABSTRACT = NAMED_ELEMENT_FEATURE_COUNT + 4;
+
+  /**
    * The number of structural features of the '<em>Function</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FUNCTION_FEATURE_COUNT = NAMED_ELEMENT_FEATURE_COUNT + 4;
+  int FUNCTION_FEATURE_COUNT = NAMED_ELEMENT_FEATURE_COUNT + 5;
 
   /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.PropertyImpl <em>Property</em>}' class.
@@ -4194,6 +4203,17 @@ public interface ThingMLPackage extends EPackage
   EReference getFunction_Body();
 
   /**
+   * Returns the meta object for the attribute '{@link org.thingml.xtext.thingML.Function#isAbstract <em>Abstract</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Abstract</em>'.
+   * @see org.thingml.xtext.thingML.Function#isAbstract()
+   * @see #getFunction()
+   * @generated
+   */
+  EAttribute getFunction_Abstract();
+
+  /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.Property <em>Property</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -6448,6 +6468,14 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EReference FUNCTION__BODY = eINSTANCE.getFunction_Body();
+
+    /**
+     * The meta object literal for the '<em><b>Abstract</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute FUNCTION__ABSTRACT = eINSTANCE.getFunction_Abstract();
 
     /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.PropertyImpl <em>Property</em>}' class.

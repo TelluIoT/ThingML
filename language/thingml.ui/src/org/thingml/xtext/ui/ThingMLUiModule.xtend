@@ -4,10 +4,16 @@
 package org.thingml.xtext.ui
 
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
+import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration
+import org.eclipse.xtext.ide.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
  */
 @FinalFieldsConstructor
 class ThingMLUiModule extends AbstractThingMLUiModule {
+	
+	def Class<? extends AbstractAntlrTokenToAttributeIdMapper> bindAbstractAntlrTokenToAttributeIdMapper() {
+		ThingMLAntlrTokenToAttributeIdMapper
+	}
 }

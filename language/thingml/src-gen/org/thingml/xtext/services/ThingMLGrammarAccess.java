@@ -835,99 +835,199 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class FunctionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Function");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cFunctionKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Keyword cLeftParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Assignment cParametersAssignment_3_0 = (Assignment)cGroup_3.eContents().get(0);
-		private final RuleCall cParametersParameterParserRuleCall_3_0_0 = (RuleCall)cParametersAssignment_3_0.eContents().get(0);
-		private final Group cGroup_3_1 = (Group)cGroup_3.eContents().get(1);
-		private final Keyword cCommaKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
-		private final Assignment cParametersAssignment_3_1_1 = (Assignment)cGroup_3_1.eContents().get(1);
-		private final RuleCall cParametersParameterParserRuleCall_3_1_1_0 = (RuleCall)cParametersAssignment_3_1_1.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
-		private final Keyword cColonKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
-		private final Assignment cTypeRefAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
-		private final RuleCall cTypeRefTypeRefParserRuleCall_5_1_0 = (RuleCall)cTypeRefAssignment_5_1.eContents().get(0);
-		private final Assignment cAnnotationsAssignment_6 = (Assignment)cGroup.eContents().get(6);
-		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_6_0 = (RuleCall)cAnnotationsAssignment_6.eContents().get(0);
-		private final Assignment cBodyAssignment_7 = (Assignment)cGroup.eContents().get(7);
-		private final RuleCall cBodyActionParserRuleCall_7_0 = (RuleCall)cBodyAssignment_7.eContents().get(0);
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
+		private final Keyword cFunctionKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
+		private final Assignment cNameAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
+		private final RuleCall cNameIDTerminalRuleCall_0_1_0 = (RuleCall)cNameAssignment_0_1.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_0_2 = (Keyword)cGroup_0.eContents().get(2);
+		private final Group cGroup_0_3 = (Group)cGroup_0.eContents().get(3);
+		private final Assignment cParametersAssignment_0_3_0 = (Assignment)cGroup_0_3.eContents().get(0);
+		private final RuleCall cParametersParameterParserRuleCall_0_3_0_0 = (RuleCall)cParametersAssignment_0_3_0.eContents().get(0);
+		private final Group cGroup_0_3_1 = (Group)cGroup_0_3.eContents().get(1);
+		private final Keyword cCommaKeyword_0_3_1_0 = (Keyword)cGroup_0_3_1.eContents().get(0);
+		private final Assignment cParametersAssignment_0_3_1_1 = (Assignment)cGroup_0_3_1.eContents().get(1);
+		private final RuleCall cParametersParameterParserRuleCall_0_3_1_1_0 = (RuleCall)cParametersAssignment_0_3_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_0_4 = (Keyword)cGroup_0.eContents().get(4);
+		private final Group cGroup_0_5 = (Group)cGroup_0.eContents().get(5);
+		private final Keyword cColonKeyword_0_5_0 = (Keyword)cGroup_0_5.eContents().get(0);
+		private final Assignment cTypeRefAssignment_0_5_1 = (Assignment)cGroup_0_5.eContents().get(1);
+		private final RuleCall cTypeRefTypeRefParserRuleCall_0_5_1_0 = (RuleCall)cTypeRefAssignment_0_5_1.eContents().get(0);
+		private final Assignment cAnnotationsAssignment_0_6 = (Assignment)cGroup_0.eContents().get(6);
+		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_0_6_0 = (RuleCall)cAnnotationsAssignment_0_6.eContents().get(0);
+		private final Assignment cBodyAssignment_0_7 = (Assignment)cGroup_0.eContents().get(7);
+		private final RuleCall cBodyActionParserRuleCall_0_7_0 = (RuleCall)cBodyAssignment_0_7.eContents().get(0);
+		private final RuleCall cAbstractFunctionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
 		//Function:
 		//	'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':' typeRef=TypeRef)?
-		//	annotations+=PlatformAnnotation* body=Action
-		//	//('isArray' isArray=EBoolean)?
-		//	//('cardinality' cardinality=Expression)?
-		//;
+		//	annotations+=PlatformAnnotation* body=Action | AbstractFunction;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':' typeRef=TypeRef)?
+		//annotations+=PlatformAnnotation* body=Action | AbstractFunction
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':' typeRef=TypeRef)?
 		//annotations+=PlatformAnnotation* body=Action
-		public Group getGroup() { return cGroup; }
+		public Group getGroup_0() { return cGroup_0; }
 		
 		//'function'
-		public Keyword getFunctionKeyword_0() { return cFunctionKeyword_0; }
+		public Keyword getFunctionKeyword_0_0() { return cFunctionKeyword_0_0; }
 		
 		//name=ID
-		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		public Assignment getNameAssignment_0_1() { return cNameAssignment_0_1; }
 		
 		//ID
-		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
+		public RuleCall getNameIDTerminalRuleCall_0_1_0() { return cNameIDTerminalRuleCall_0_1_0; }
 		
 		//'('
-		public Keyword getLeftParenthesisKeyword_2() { return cLeftParenthesisKeyword_2; }
+		public Keyword getLeftParenthesisKeyword_0_2() { return cLeftParenthesisKeyword_0_2; }
 		
 		//(parameters+=Parameter ("," parameters+=Parameter)*)?
-		public Group getGroup_3() { return cGroup_3; }
+		public Group getGroup_0_3() { return cGroup_0_3; }
 		
 		//parameters+=Parameter
-		public Assignment getParametersAssignment_3_0() { return cParametersAssignment_3_0; }
+		public Assignment getParametersAssignment_0_3_0() { return cParametersAssignment_0_3_0; }
 		
 		//Parameter
-		public RuleCall getParametersParameterParserRuleCall_3_0_0() { return cParametersParameterParserRuleCall_3_0_0; }
+		public RuleCall getParametersParameterParserRuleCall_0_3_0_0() { return cParametersParameterParserRuleCall_0_3_0_0; }
 		
 		//("," parameters+=Parameter)*
-		public Group getGroup_3_1() { return cGroup_3_1; }
+		public Group getGroup_0_3_1() { return cGroup_0_3_1; }
 		
 		//","
-		public Keyword getCommaKeyword_3_1_0() { return cCommaKeyword_3_1_0; }
+		public Keyword getCommaKeyword_0_3_1_0() { return cCommaKeyword_0_3_1_0; }
 		
 		//parameters+=Parameter
-		public Assignment getParametersAssignment_3_1_1() { return cParametersAssignment_3_1_1; }
+		public Assignment getParametersAssignment_0_3_1_1() { return cParametersAssignment_0_3_1_1; }
 		
 		//Parameter
-		public RuleCall getParametersParameterParserRuleCall_3_1_1_0() { return cParametersParameterParserRuleCall_3_1_1_0; }
+		public RuleCall getParametersParameterParserRuleCall_0_3_1_1_0() { return cParametersParameterParserRuleCall_0_3_1_1_0; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_4() { return cRightParenthesisKeyword_4; }
+		public Keyword getRightParenthesisKeyword_0_4() { return cRightParenthesisKeyword_0_4; }
 		
 		//(':' typeRef=TypeRef)?
-		public Group getGroup_5() { return cGroup_5; }
+		public Group getGroup_0_5() { return cGroup_0_5; }
 		
 		//':'
-		public Keyword getColonKeyword_5_0() { return cColonKeyword_5_0; }
+		public Keyword getColonKeyword_0_5_0() { return cColonKeyword_0_5_0; }
 		
 		//typeRef=TypeRef
-		public Assignment getTypeRefAssignment_5_1() { return cTypeRefAssignment_5_1; }
+		public Assignment getTypeRefAssignment_0_5_1() { return cTypeRefAssignment_0_5_1; }
 		
 		//TypeRef
-		public RuleCall getTypeRefTypeRefParserRuleCall_5_1_0() { return cTypeRefTypeRefParserRuleCall_5_1_0; }
+		public RuleCall getTypeRefTypeRefParserRuleCall_0_5_1_0() { return cTypeRefTypeRefParserRuleCall_0_5_1_0; }
 		
 		//annotations+=PlatformAnnotation*
-		public Assignment getAnnotationsAssignment_6() { return cAnnotationsAssignment_6; }
+		public Assignment getAnnotationsAssignment_0_6() { return cAnnotationsAssignment_0_6; }
 		
 		//PlatformAnnotation
-		public RuleCall getAnnotationsPlatformAnnotationParserRuleCall_6_0() { return cAnnotationsPlatformAnnotationParserRuleCall_6_0; }
+		public RuleCall getAnnotationsPlatformAnnotationParserRuleCall_0_6_0() { return cAnnotationsPlatformAnnotationParserRuleCall_0_6_0; }
 		
 		//body=Action
-		public Assignment getBodyAssignment_7() { return cBodyAssignment_7; }
+		public Assignment getBodyAssignment_0_7() { return cBodyAssignment_0_7; }
 		
 		//Action
-		public RuleCall getBodyActionParserRuleCall_7_0() { return cBodyActionParserRuleCall_7_0; }
+		public RuleCall getBodyActionParserRuleCall_0_7_0() { return cBodyActionParserRuleCall_0_7_0; }
+		
+		//AbstractFunction
+		public RuleCall getAbstractFunctionParserRuleCall_1() { return cAbstractFunctionParserRuleCall_1; }
+	}
+	public class AbstractFunctionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.AbstractFunction");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cAbstractAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final Keyword cAbstractAbstractKeyword_0_0 = (Keyword)cAbstractAssignment_0.eContents().get(0);
+		private final Keyword cFunctionKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cNameIDTerminalRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
+		private final Assignment cParametersAssignment_4_0 = (Assignment)cGroup_4.eContents().get(0);
+		private final RuleCall cParametersParameterParserRuleCall_4_0_0 = (RuleCall)cParametersAssignment_4_0.eContents().get(0);
+		private final Group cGroup_4_1 = (Group)cGroup_4.eContents().get(1);
+		private final Keyword cCommaKeyword_4_1_0 = (Keyword)cGroup_4_1.eContents().get(0);
+		private final Assignment cParametersAssignment_4_1_1 = (Assignment)cGroup_4_1.eContents().get(1);
+		private final RuleCall cParametersParameterParserRuleCall_4_1_1_0 = (RuleCall)cParametersAssignment_4_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
+		private final Keyword cColonKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
+		private final Assignment cTypeRefAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
+		private final RuleCall cTypeRefTypeRefParserRuleCall_6_1_0 = (RuleCall)cTypeRefAssignment_6_1.eContents().get(0);
+		private final Assignment cAnnotationsAssignment_7 = (Assignment)cGroup.eContents().get(7);
+		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_7_0 = (RuleCall)cAnnotationsAssignment_7.eContents().get(0);
+		
+		//AbstractFunction Function:
+		//	abstract?='abstract' 'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':'
+		//	typeRef=TypeRef)?
+		//	annotations+=PlatformAnnotation*
+		@Override public ParserRule getRule() { return rule; }
+		
+		//abstract?='abstract' 'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':'
+		//typeRef=TypeRef)? annotations+=PlatformAnnotation*
+		public Group getGroup() { return cGroup; }
+		
+		//abstract?='abstract'
+		public Assignment getAbstractAssignment_0() { return cAbstractAssignment_0; }
+		
+		//'abstract'
+		public Keyword getAbstractAbstractKeyword_0_0() { return cAbstractAbstractKeyword_0_0; }
+		
+		//'function'
+		public Keyword getFunctionKeyword_1() { return cFunctionKeyword_1; }
+		
+		//name=ID
+		public Assignment getNameAssignment_2() { return cNameAssignment_2; }
+		
+		//ID
+		public RuleCall getNameIDTerminalRuleCall_2_0() { return cNameIDTerminalRuleCall_2_0; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_3() { return cLeftParenthesisKeyword_3; }
+		
+		//(parameters+=Parameter ("," parameters+=Parameter)*)?
+		public Group getGroup_4() { return cGroup_4; }
+		
+		//parameters+=Parameter
+		public Assignment getParametersAssignment_4_0() { return cParametersAssignment_4_0; }
+		
+		//Parameter
+		public RuleCall getParametersParameterParserRuleCall_4_0_0() { return cParametersParameterParserRuleCall_4_0_0; }
+		
+		//("," parameters+=Parameter)*
+		public Group getGroup_4_1() { return cGroup_4_1; }
+		
+		//","
+		public Keyword getCommaKeyword_4_1_0() { return cCommaKeyword_4_1_0; }
+		
+		//parameters+=Parameter
+		public Assignment getParametersAssignment_4_1_1() { return cParametersAssignment_4_1_1; }
+		
+		//Parameter
+		public RuleCall getParametersParameterParserRuleCall_4_1_1_0() { return cParametersParameterParserRuleCall_4_1_1_0; }
+		
+		//')'
+		public Keyword getRightParenthesisKeyword_5() { return cRightParenthesisKeyword_5; }
+		
+		//(':' typeRef=TypeRef)?
+		public Group getGroup_6() { return cGroup_6; }
+		
+		//':'
+		public Keyword getColonKeyword_6_0() { return cColonKeyword_6_0; }
+		
+		//typeRef=TypeRef
+		public Assignment getTypeRefAssignment_6_1() { return cTypeRefAssignment_6_1; }
+		
+		//TypeRef
+		public RuleCall getTypeRefTypeRefParserRuleCall_6_1_0() { return cTypeRefTypeRefParserRuleCall_6_1_0; }
+		
+		//annotations+=PlatformAnnotation*
+		public Assignment getAnnotationsAssignment_7() { return cAnnotationsAssignment_7; }
+		
+		//PlatformAnnotation
+		public RuleCall getAnnotationsPlatformAnnotationParserRuleCall_7_0() { return cAnnotationsPlatformAnnotationParserRuleCall_7_0; }
 	}
 	public class PropertyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Property");
@@ -949,11 +1049,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//Property:
 		//	readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)?
-		//	annotations+=PlatformAnnotation*
-		//	//('isArray' isArray=EBoolean)?
-		//	//('changeable' changeable=EBoolean)?
-		//	//('cardinality' cardinality=Expression)?
-		//;
+		//	annotations+=PlatformAnnotation*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*
@@ -1085,10 +1181,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_3_0 = (RuleCall)cAnnotationsAssignment_3.eContents().get(0);
 		
 		//Parameter:
-		//	name=ID ':' typeRef=TypeRef annotations+=PlatformAnnotation*
-		//	//		('isArray' isArray=EBoolean)?
-		//	//		('cardinality' cardinality=Expression)?
-		//;
+		//	name=ID ':' typeRef=TypeRef annotations+=PlatformAnnotation*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//name=ID ':' typeRef=TypeRef annotations+=PlatformAnnotation*
@@ -1569,57 +1662,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_3_8 = (Keyword)cGroup_3.eContents().get(8);
 		
 		/// *****************************************************************************
-		// *       CEP STREAMS                                                         *
-		// ***************************************************************************** / / *
-		//Stream returns Stream:
-		//	'stream' name=ID ( annotations+=PlatformAnnotation )* 'from' input=Source
-		//	('select' selection+=LocalVariable ( "," selection+=LocalVariable)*)?
-		//	'produce' output=SendAction ;
-		//	
-		//Source returns Source:
-		//	JoinSources | MergeSources | SimpleSource;
-		//
-		//ViewSource returns ViewSource:
-		//	Filter | LengthWindow | TimeWindow;	
-		//
-		//ReferencedElmt returns ReferencedElmt:
-		//	Message | Parameter | Property | ReceiveMessage | LocalVariable | JoinSources | MergeSources | SimpleSource | MessageParameter;
-		//
-		//ElmtProperty returns ElmtProperty:
-		//	SimpleParamRef | ArrayParamRef | LengthArray;
-		//
-		//
-		//JoinSources returns JoinSources:
-		//	'join' name=ID ':' '[' sources+=Source ( "&" sources+=Source)* '->' resultMessage=[Message|ID] '(' rules+=Expression ( "," rules+=Expression)* ')' ']' ('::' operators+=ViewSource)*;
-		//
-		//MergeSources returns MergeSources:
-		//	'merge' name=ID ':' '[' sources+=Source ( "|" sources+=Source)* '->' resultMessage=[Message|ID] ']' ('::' operators+=ViewSource)*;
-		//
-		//SimpleSource returns SimpleSource:
-		//	name=ID ':' message=ReceiveMessage  ('::' operators+=ViewSource)*;
-		//
-		//Filter returns Filter:
-		//	'keep' 'if' guard=Expression;
-		//
-		//LengthWindow returns LengthWindow:
-		//	'buffer' size=Expression ('by' step=Expression)?;
-		//
-		//TimeWindow returns TimeWindow:
-		//	'during' duration=Expression ('by' step=Expression)?;
-		//
-		//MessageParameter returns MessageParameter:
-		//	name=ID ':' msgRef=[Message|ID] ;
-		//
-		//SimpleParamRef returns SimpleParamRef:
-		//	parameterRef=[Parameter|ID];
-		//
-		//ArrayParamRef returns ArrayParamRef:
-		//	parameterRef=[Parameter|ID] '[' ']';
-		//
-		//LengthArray returns LengthArray:
-		//	{LengthArray}
-		//	'length';
-		// 	* / / *****************************************************************************
 		// *       STATE MECHINES                                                      *
 		// ***************************************************************************** / State:
 		//	StateMachine | FinalState | CompositeState |
@@ -4585,6 +4627,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	private final PropertyAssignElements pPropertyAssign;
 	private final ProtocolElements pProtocol;
 	private final FunctionElements pFunction;
+	private final AbstractFunctionElements pAbstractFunction;
 	private final PropertyElements pProperty;
 	private final MessageElements pMessage;
 	private final ParameterElements pParameter;
@@ -4677,6 +4720,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pPropertyAssign = new PropertyAssignElements();
 		this.pProtocol = new ProtocolElements();
 		this.pFunction = new FunctionElements();
+		this.pAbstractFunction = new AbstractFunctionElements();
 		this.pProperty = new PropertyElements();
 		this.pMessage = new MessageElements();
 		this.pParameter = new ParameterElements();
@@ -4932,10 +4976,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//Function:
 	//	'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':' typeRef=TypeRef)?
-	//	annotations+=PlatformAnnotation* body=Action
-	//	//('isArray' isArray=EBoolean)?
-	//	//('cardinality' cardinality=Expression)?
-	//;
+	//	annotations+=PlatformAnnotation* body=Action | AbstractFunction;
 	public FunctionElements getFunctionAccess() {
 		return pFunction;
 	}
@@ -4944,13 +4985,21 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getFunctionAccess().getRule();
 	}
 	
+	//AbstractFunction Function:
+	//	abstract?='abstract' 'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':'
+	//	typeRef=TypeRef)?
+	//	annotations+=PlatformAnnotation*
+	public AbstractFunctionElements getAbstractFunctionAccess() {
+		return pAbstractFunction;
+	}
+	
+	public ParserRule getAbstractFunctionRule() {
+		return getAbstractFunctionAccess().getRule();
+	}
+	
 	//Property:
 	//	readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)?
-	//	annotations+=PlatformAnnotation*
-	//	//('isArray' isArray=EBoolean)?
-	//	//('changeable' changeable=EBoolean)?
-	//	//('cardinality' cardinality=Expression)?
-	//;
+	//	annotations+=PlatformAnnotation*;
 	public PropertyElements getPropertyAccess() {
 		return pProperty;
 	}
@@ -4971,10 +5020,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Parameter:
-	//	name=ID ':' typeRef=TypeRef annotations+=PlatformAnnotation*
-	//	//		('isArray' isArray=EBoolean)?
-	//	//		('cardinality' cardinality=Expression)?
-	//;
+	//	name=ID ':' typeRef=TypeRef annotations+=PlatformAnnotation*;
 	public ParameterElements getParameterAccess() {
 		return pParameter;
 	}
@@ -5030,57 +5076,6 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	/// *****************************************************************************
-	// *       CEP STREAMS                                                         *
-	// ***************************************************************************** / / *
-	//Stream returns Stream:
-	//	'stream' name=ID ( annotations+=PlatformAnnotation )* 'from' input=Source
-	//	('select' selection+=LocalVariable ( "," selection+=LocalVariable)*)?
-	//	'produce' output=SendAction ;
-	//	
-	//Source returns Source:
-	//	JoinSources | MergeSources | SimpleSource;
-	//
-	//ViewSource returns ViewSource:
-	//	Filter | LengthWindow | TimeWindow;	
-	//
-	//ReferencedElmt returns ReferencedElmt:
-	//	Message | Parameter | Property | ReceiveMessage | LocalVariable | JoinSources | MergeSources | SimpleSource | MessageParameter;
-	//
-	//ElmtProperty returns ElmtProperty:
-	//	SimpleParamRef | ArrayParamRef | LengthArray;
-	//
-	//
-	//JoinSources returns JoinSources:
-	//	'join' name=ID ':' '[' sources+=Source ( "&" sources+=Source)* '->' resultMessage=[Message|ID] '(' rules+=Expression ( "," rules+=Expression)* ')' ']' ('::' operators+=ViewSource)*;
-	//
-	//MergeSources returns MergeSources:
-	//	'merge' name=ID ':' '[' sources+=Source ( "|" sources+=Source)* '->' resultMessage=[Message|ID] ']' ('::' operators+=ViewSource)*;
-	//
-	//SimpleSource returns SimpleSource:
-	//	name=ID ':' message=ReceiveMessage  ('::' operators+=ViewSource)*;
-	//
-	//Filter returns Filter:
-	//	'keep' 'if' guard=Expression;
-	//
-	//LengthWindow returns LengthWindow:
-	//	'buffer' size=Expression ('by' step=Expression)?;
-	//
-	//TimeWindow returns TimeWindow:
-	//	'during' duration=Expression ('by' step=Expression)?;
-	//
-	//MessageParameter returns MessageParameter:
-	//	name=ID ':' msgRef=[Message|ID] ;
-	//
-	//SimpleParamRef returns SimpleParamRef:
-	//	parameterRef=[Parameter|ID];
-	//
-	//ArrayParamRef returns ArrayParamRef:
-	//	parameterRef=[Parameter|ID] '[' ']';
-	//
-	//LengthArray returns LengthArray:
-	//	{LengthArray}
-	//	'length';
-	// 	* / / *****************************************************************************
 	// *       STATE MECHINES                                                      *
 	// ***************************************************************************** / State:
 	//	StateMachine | FinalState | CompositeState |

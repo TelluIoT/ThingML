@@ -59,6 +59,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Function/parameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Function/typeRef"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//Function/body"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Function/abstract"/>
     </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//Property">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ThingML.ecore#//Property/readonly"/>

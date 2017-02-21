@@ -204,8 +204,17 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				sequence_FinalState(context, (FinalState) semanticObject); 
 				return; 
 			case ThingMLPackage.FUNCTION:
-				sequence_Function(context, (Function) semanticObject); 
-				return; 
+				if (rule == grammarAccess.getAbstractFunctionRule()) {
+					sequence_AbstractFunction(context, (Function) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getNamedElementRule()
+						|| rule == grammarAccess.getAnnotatedElementRule()
+						|| rule == grammarAccess.getFunctionRule()) {
+					sequence_AbstractFunction_Function(context, (Function) semanticObject); 
+					return; 
+				}
+				else break;
 			case ThingMLPackage.FUNCTION_CALL_EXPRESSION:
 				sequence_FunctionCallExpression(context, (FunctionCallExpression) semanticObject); 
 				return; 
@@ -357,6 +366,35 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 		if (errorAcceptor != null)
 			errorAcceptor.accept(diagnosticProvider.createInvalidContextOrTypeDiagnostic(semanticObject, context));
 	}
+	
+	/**
+	 * Contexts:
+	 *     AbstractFunction returns Function
+	 *
+	 * Constraint:
+	 *     (abstract?='abstract' name=ID (parameters+=Parameter parameters+=Parameter*)? typeRef=TypeRef? annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_AbstractFunction(ISerializationContext context, Function semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns Function
+	 *     AnnotatedElement returns Function
+	 *     Function returns Function
+	 *
+	 * Constraint:
+	 *     (
+	 *         (name=ID (parameters+=Parameter parameters+=Parameter*)? typeRef=TypeRef? annotations+=PlatformAnnotation* body=Action) | 
+	 *         (abstract?='abstract' name=ID (parameters+=Parameter parameters+=Parameter*)? typeRef=TypeRef? annotations+=PlatformAnnotation*)
+	 *     )
+	 */
+	protected void sequence_AbstractFunction_Function(ISerializationContext context, Function semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
 	
 	/**
 	 * Contexts:
@@ -1360,20 +1398,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     (function=[Function|ID] (parameters+=Expression parameters+=Expression*)?)
 	 */
 	protected void sequence_FunctionCallStatement(ISerializationContext context, FunctionCallStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     NamedElement returns Function
-	 *     AnnotatedElement returns Function
-	 *     Function returns Function
-	 *
-	 * Constraint:
-	 *     (name=ID (parameters+=Parameter parameters+=Parameter*)? typeRef=TypeRef? annotations+=PlatformAnnotation* body=Action)
-	 */
-	protected void sequence_Function(ISerializationContext context, Function semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

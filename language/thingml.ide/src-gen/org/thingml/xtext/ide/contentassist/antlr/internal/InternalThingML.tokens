@@ -25,6 +25,7 @@
 '?'=60
 '['=31
 ']'=17
+'abstract'=95
 'action'=52
 'and'=76
 'as'=74
@@ -46,7 +47,7 @@
 'fragment'=94
 'function'=33
 'guard'=51
-'history'=97
+'history'=98
 'if'=68
 'import'=14
 'includes'=27
@@ -58,7 +59,7 @@
 'not'=86
 'object'=22
 'on'=45
-'optional'=96
+'optional'=97
 'or'=75
 'over'=93
 'port'=39
@@ -66,7 +67,7 @@
 'property'=36
 'protocol'=32
 'provided'=42
-'readonly'=95
+'readonly'=96
 'receives'=41
 'region'=58
 'required'=38
@@ -78,7 +79,7 @@
 'statechart'=56
 'thing'=26
 'transition'=48
-'true'=98
+'true'=99
 'var'=15
 'while'=67
 '{'=24
@@ -178,3 +179,4 @@ T__95=95
 T__96=96
 T__97=97
 T__98=98
+T__99=99

@@ -52,6 +52,7 @@ import org.thingml.xtext.thingML.TypeRef;
  *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getTypeRef <em>Type Ref</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#getBody <em>Body</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.FunctionImpl#isAbstract <em>Abstract</em>}</li>
  * </ul>
  *
  * @generated
@@ -97,6 +98,26 @@ public class FunctionImpl extends NamedElementImpl implements Function
    * @ordered
    */
   protected Action body;
+
+  /**
+   * The default value of the '{@link #isAbstract() <em>Abstract</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isAbstract()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean ABSTRACT_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isAbstract() <em>Abstract</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isAbstract()
+   * @generated
+   * @ordered
+   */
+  protected boolean abstract_ = ABSTRACT_EDEFAULT;
 
   /**
    * <!-- begin-user-doc -->
@@ -248,6 +269,29 @@ public class FunctionImpl extends NamedElementImpl implements Function
    * <!-- end-user-doc -->
    * @generated
    */
+  public boolean isAbstract()
+  {
+    return abstract_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setAbstract(boolean newAbstract)
+  {
+    boolean oldAbstract = abstract_;
+    abstract_ = newAbstract;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.FUNCTION__ABSTRACT, oldAbstract, abstract_));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -283,6 +327,8 @@ public class FunctionImpl extends NamedElementImpl implements Function
         return getTypeRef();
       case ThingMLPackage.FUNCTION__BODY:
         return getBody();
+      case ThingMLPackage.FUNCTION__ABSTRACT:
+        return isAbstract();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -312,6 +358,9 @@ public class FunctionImpl extends NamedElementImpl implements Function
       case ThingMLPackage.FUNCTION__BODY:
         setBody((Action)newValue);
         return;
+      case ThingMLPackage.FUNCTION__ABSTRACT:
+        setAbstract((Boolean)newValue);
+        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -338,6 +387,9 @@ public class FunctionImpl extends NamedElementImpl implements Function
       case ThingMLPackage.FUNCTION__BODY:
         setBody((Action)null);
         return;
+      case ThingMLPackage.FUNCTION__ABSTRACT:
+        setAbstract(ABSTRACT_EDEFAULT);
+        return;
     }
     super.eUnset(featureID);
   }
@@ -360,6 +412,8 @@ public class FunctionImpl extends NamedElementImpl implements Function
         return typeRef != null;
       case ThingMLPackage.FUNCTION__BODY:
         return body != null;
+      case ThingMLPackage.FUNCTION__ABSTRACT:
+        return abstract_ != ABSTRACT_EDEFAULT;
     }
     return super.eIsSet(featureID);
   }
@@ -400,6 +454,23 @@ public class FunctionImpl extends NamedElementImpl implements Function
       }
     }
     return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (abstract: ");
+    result.append(abstract_);
+    result.append(')');
+    return result.toString();
   }
 
 } //FunctionImpl

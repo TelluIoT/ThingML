@@ -1181,6 +1181,16 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EAttribute getFunction_Abstract()
+  {
+    return (EAttribute)functionEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getProperty()
   {
     return propertyEClass;
@@ -3013,6 +3023,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     createEReference(functionEClass, FUNCTION__PARAMETERS);
     createEReference(functionEClass, FUNCTION__TYPE_REF);
     createEReference(functionEClass, FUNCTION__BODY);
+    createEAttribute(functionEClass, FUNCTION__ABSTRACT);
 
     propertyEClass = createEClass(PROPERTY);
     createEAttribute(propertyEClass, PROPERTY__READONLY);
@@ -3432,6 +3443,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEReference(getFunction_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFunction_TypeRef(), this.getTypeRef(), null, "typeRef", null, 0, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFunction_Body(), this.getAction(), null, "body", null, 0, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getFunction_Abstract(), ecorePackage.getEBoolean(), "abstract", null, 0, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(propertyEClass, Property.class, "Property", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getProperty_Readonly(), ecorePackage.getEBoolean(), "readonly", null, 0, 1, Property.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

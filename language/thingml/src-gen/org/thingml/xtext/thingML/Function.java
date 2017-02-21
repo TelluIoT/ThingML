@@ -31,6 +31,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.thingml.xtext.thingML.Function#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Function#getTypeRef <em>Type Ref</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.Function#getBody <em>Body</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.Function#isAbstract <em>Abstract</em>}</li>
  * </ul>
  *
  * @see org.thingml.xtext.thingML.ThingMLPackage#getFunction()
@@ -106,5 +107,31 @@ public interface Function extends NamedElement, AnnotatedElement
    * @generated
    */
   void setBody(Action value);
+
+  /**
+   * Returns the value of the '<em><b>Abstract</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Abstract</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Abstract</em>' attribute.
+   * @see #setAbstract(boolean)
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getFunction_Abstract()
+   * @model
+   * @generated
+   */
+  boolean isAbstract();
+
+  /**
+   * Sets the value of the '{@link org.thingml.xtext.thingML.Function#isAbstract <em>Abstract</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Abstract</em>' attribute.
+   * @see #isAbstract()
+   * @generated
+   */
+  void setAbstract(boolean value);
 
 } // Function
