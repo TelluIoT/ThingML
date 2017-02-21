@@ -56,7 +56,7 @@ public class StatesUsage extends Rule {
 
     @Override
     public String getDescription() {
-        return "Check for sink and unreachable states.";
+        return "Check that a thing has no more than one state machine, that state are reachable, etc";
     }
 
     @Override
@@ -74,6 +74,18 @@ public class StatesUsage extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
+    	if (ThingMLHelpers.allStateMachines(t).size() > 1) {
+    		String msg = "Thing " + t.getName() + " has multiple state machines: ";
+    		int i = 0;
+    		for(CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
+    			if (i > 0)
+    				msg += ", ";
+    			msg += ((Thing)sm.eContainer()).getName() + ":" + sm.getName(); 
+    			i++;
+    		}
+    		msg += ".\nMake sure one and only state machine is defined in the context of Thing " + t.getName();
+            checker.addGenericError(msg, t);    		
+    	}    	    	
         for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
             for (State s : org.thingml.xtext.helpers.StateHelper.allStates(sm)) {
                 if((EcoreUtil.equals(s, sm)))
