@@ -50,7 +50,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-        if (Boolean.parseBoolean(expression.getBoolValue()))
+        if (expression.isBoolValue())
             builder.append("1");
         else
             builder.append("0");

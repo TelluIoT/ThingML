@@ -351,10 +351,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-        if (expression.getBoolValue().equals("true"))
-            builder.append("true");
-        else
-            builder.append("false");
+        builder.append(Boolean.toString(expression.isBoolValue()));    	
     }
 
     @Override
