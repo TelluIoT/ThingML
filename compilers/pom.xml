@@ -41,6 +41,7 @@
         <module>thingmltools</module>
         <module>registry</module>
         <module>official-network-plugins</module>
+		<module>bundle</module>
     </modules>
 
 </project>

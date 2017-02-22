@@ -27,6 +27,14 @@
 	<artifactId>thingml.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
+	<dependencies>
+		<dependency>
+		  <groupId>org.thingml</groupId>
+		  <artifactId>compilers.bundle</artifactId>
+		  <version>${thingml.version}</version>
+		</dependency>
+	</dependencies>
+	
 	<build>
 		<plugins>
 			<plugin>
