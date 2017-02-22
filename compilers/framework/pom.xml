@@ -39,7 +39,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>thingml</groupId>
+            <groupId>org.thingml</groupId>
             <artifactId>thingml</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
