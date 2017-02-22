@@ -888,9 +888,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *             properties+=Property* 
 	 *             entry=Action? 
 	 *             exit=Action? 
-	 *             (substate+=State | internal+=InternalTransition | outgoing+=Transition)* 
-	 *             region+=Region? 
-	 *             (session+=Session? region+=Region?)*
+	 *             substate+=State? 
+	 *             ((internal+=InternalTransition | outgoing+=Transition)? substate+=State?)* 
+	 *             (region+=Region | session+=Session)*
 	 *         ) | 
 	 *         (
 	 *             name=ID? 
@@ -900,9 +900,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *             properties+=Property* 
 	 *             entry=Action? 
 	 *             exit=Action? 
-	 *             (substate+=State | internal+=InternalTransition)* 
-	 *             region+=Region? 
-	 *             (session+=Session? region+=Region?)*
+	 *             substate+=State? 
+	 *             (internal+=InternalTransition? substate+=State?)* 
+	 *             (region+=Region | session+=Session)*
 	 *         )
 	 *     )
 	 */
@@ -986,7 +986,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.DECREMENT__VAR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getDecrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.getVar());
+		feeder.accept(grammarAccess.getDecrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.eGet(ThingMLPackage.Literals.DECREMENT__VAR, false));
 		feeder.finish();
 	}
 	
@@ -1078,8 +1078,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.ENUM_LITERAL_REF__LITERAL));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getEnumLiteralRefAccess().getEnumEnumerationIDTerminalRuleCall_0_0_1(), semanticObject.getEnum());
-		feeder.accept(grammarAccess.getEnumLiteralRefAccess().getLiteralEnumerationLiteralIDTerminalRuleCall_2_0_1(), semanticObject.getLiteral());
+		feeder.accept(grammarAccess.getEnumLiteralRefAccess().getEnumEnumerationIDTerminalRuleCall_0_0_1(), semanticObject.eGet(ThingMLPackage.Literals.ENUM_LITERAL_REF__ENUM, false));
+		feeder.accept(grammarAccess.getEnumLiteralRefAccess().getLiteralEnumerationLiteralIDTerminalRuleCall_2_0_1(), semanticObject.eGet(ThingMLPackage.Literals.ENUM_LITERAL_REF__LITERAL, false));
 		feeder.finish();
 	}
 	
@@ -1262,8 +1262,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.EVENT_REFERENCE__PARAMETER));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getEventReferenceAccess().getReceiveMsgEventIDTerminalRuleCall_0_0_1(), semanticObject.getReceiveMsg());
-		feeder.accept(grammarAccess.getEventReferenceAccess().getParameterParameterIDTerminalRuleCall_2_0_1(), semanticObject.getParameter());
+		feeder.accept(grammarAccess.getEventReferenceAccess().getReceiveMsgEventIDTerminalRuleCall_0_0_1(), semanticObject.eGet(ThingMLPackage.Literals.EVENT_REFERENCE__RECEIVE_MSG, false));
+		feeder.accept(grammarAccess.getEventReferenceAccess().getParameterParameterIDTerminalRuleCall_2_0_1(), semanticObject.eGet(ThingMLPackage.Literals.EVENT_REFERENCE__PARAMETER, false));
 		feeder.finish();
 	}
 	
@@ -1416,7 +1416,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.INCREMENT__VAR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getIncrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.getVar());
+		feeder.accept(grammarAccess.getIncrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.eGet(ThingMLPackage.Literals.INCREMENT__VAR, false));
 		feeder.finish();
 	}
 	
@@ -1976,7 +1976,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.PROPERTY_REFERENCE__PROPERTY));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getPropertyReferenceAccess().getPropertyVariableIDTerminalRuleCall_0_1(), semanticObject.getProperty());
+		feeder.accept(grammarAccess.getPropertyReferenceAccess().getPropertyVariableIDTerminalRuleCall_0_1(), semanticObject.eGet(ThingMLPackage.Literals.PROPERTY_REFERENCE__PROPERTY, false));
 		feeder.finish();
 	}
 	
@@ -2135,7 +2135,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.START_SESSION__SESSION));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getStartSessionAccess().getSessionSessionIDTerminalRuleCall_1_0_1(), semanticObject.getSession());
+		feeder.accept(grammarAccess.getStartSessionAccess().getSessionSessionIDTerminalRuleCall_1_0_1(), semanticObject.eGet(ThingMLPackage.Literals.START_SESSION__SESSION, false));
 		feeder.finish();
 	}
 	

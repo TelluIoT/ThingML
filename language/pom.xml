@@ -21,14 +21,22 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>language</artifactId>
 	<packaging>pom</packaging>
+	
+	<name>ThingML :: Language</name>
+	<parent>
+		<groupId>org.thingml</groupId>
+		<artifactId>org.thingml.root</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
 
 	<properties>
-		<tycho-version>0.23.1</tycho-version>
-		<xtextVersion>2.10.0</xtextVersion>
+		<tycho-version>0.25.0</tycho-version>
+		<xtextVersion>2.11.0</xtextVersion>
 		<project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+	
 	<modules>
 		<module>thingml</module>
 		<module>thingml.ide</module>
@@ -40,7 +48,9 @@
 		<module>thingml.tests</module>
 		<module>thingml.ui.tests</module>
 	</modules>
-	<build>
+	
+	
+		<build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -94,7 +104,6 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
 							<groupId>org.thingml</groupId>
@@ -132,7 +141,9 @@
 						<execution>
 							<goals>
 								<goal>compile</goal>
+								<goal>xtend-install-debug-info</goal>
 								<goal>testCompile</goal>
+								<goal>xtend-test-install-debug-info</goal>
 							</goals>
 						</execution>
 					</executions>
@@ -298,10 +309,5 @@
 
 	<dependencies>
 	</dependencies>
-	<name>ThingML :: Language</name>
-	<parent>
-		<groupId>org.thingml</groupId>
-		<artifactId>org.thingml.root</artifactId>
-		<version>2.0.0-SNAPSHOT</version>
-	</parent>
+	
 </project>

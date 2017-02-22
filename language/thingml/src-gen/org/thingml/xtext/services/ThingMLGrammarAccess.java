@@ -99,11 +99,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cValueSTRING_LITTerminalRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
 		
-		/// *
+		///*
 		//Import returns ThingMLModel:
 		//	"import" importURI=STRING_LIT
 		//;
-		// * / PlatformAnnotation:
+		//*/ PlatformAnnotation:
 		//	name=ANNOTATION_ID value=STRING_LIT;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -361,9 +361,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cCardinalityExpressionParserRuleCall_1_1_0 = (RuleCall)cCardinalityAssignment_1_1.eContents().get(0);
 		private final Keyword cRightSquareBracketKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
 		
-		/// *****************************************************************************
+		///*****************************************************************************
 		// *       TYPES / ENUMERATIONS                                                *
-		// ***************************************************************************** / TypeRef:
+		// *****************************************************************************/ TypeRef:
 		//	type=[Type] (^isArray?='[' cardinality=Expression? ']')?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -620,18 +620,18 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cBehaviourStateMachineParserRuleCall_6_5_0 = (RuleCall)cBehaviourAssignment_6_5.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_7 = (Keyword)cGroup.eContents().get(7);
 		
-		/// *****************************************************************************
+		///*****************************************************************************
 		// *       THING / COMPONENT MODEL                                             *
-		// ***************************************************************************** / Thing:
+		// *****************************************************************************/ Thing:
 		//	'thing' ^fragment?='fragment'? name=ID ('includes' includes+=[Thing] ("," includes+=[Thing])*)?
 		//	annotations+=PlatformAnnotation* '{' (messages+=Message | ports+=Port | properties+=Property | functions+=Function |
-		//	assign+=PropertyAssign | behaviour+=StateMachine / * | streams+=Stream* /)*
+		//	assign+=PropertyAssign | behaviour+=StateMachine /* | streams+=Stream*/)*
 		//	'}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'thing' ^fragment?='fragment'? name=ID ('includes' includes+=[Thing] ("," includes+=[Thing])*)?
 		//annotations+=PlatformAnnotation* '{' (messages+=Message | ports+=Port | properties+=Property | functions+=Function |
-		//assign+=PropertyAssign | behaviour+=StateMachine / * | streams+=Stream* /)* '}'
+		//assign+=PropertyAssign | behaviour+=StateMachine /* | streams+=Stream*/)* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//'thing'
@@ -689,7 +689,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		public Keyword getLeftCurlyBracketKeyword_5() { return cLeftCurlyBracketKeyword_5; }
 		
 		//(messages+=Message | ports+=Port | properties+=Property | functions+=Function | assign+=PropertyAssign |
-		//behaviour+=StateMachine / * | streams+=Stream* /)*
+		//behaviour+=StateMachine /* | streams+=Stream*/)*
 		public Alternatives getAlternatives_6() { return cAlternatives_6; }
 		
 		//messages+=Message
@@ -962,7 +962,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//AbstractFunction Function:
 		//	abstract?='abstract' 'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':'
 		//	typeRef=TypeRef)?
-		//	annotations+=PlatformAnnotation*
+		//	annotations+=PlatformAnnotation*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//abstract?='abstract' 'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':'
@@ -1661,9 +1661,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cOutgoingTransitionParserRuleCall_3_7_1_0 = (RuleCall)cOutgoingAssignment_3_7_1.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_3_8 = (Keyword)cGroup_3.eContents().get(8);
 		
-		/// *****************************************************************************
+		///*****************************************************************************
 		// *       STATE MECHINES                                                      *
-		// ***************************************************************************** / State:
+		// *****************************************************************************/ State:
 		//	StateMachine | FinalState | CompositeState |
 		//	'state' name=ID annotations+=PlatformAnnotation* '{'
 		//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (internal+=InternalTransition |
@@ -2182,7 +2182,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//StateMachine CompositeState: // Actually only another syntax for a composite state
 		//	'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 		//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
-		//	internal+=InternalTransition)* (region+=Region | session+=Session)* '}'
+		//	internal+=InternalTransition)* (region+=Region | session+=Session)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//// Actually only another syntax for a composite state
@@ -2628,9 +2628,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Event");
 		private final RuleCall cReceiveMessageParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
-		/// *****************************************************************************
+		///*****************************************************************************
 		// *       EVENTS                                                             *
-		// ***************************************************************************** / Event:
+		// *****************************************************************************/ Event:
 		//	ReceiveMessage;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -2710,9 +2710,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cFunctionCallStatementParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
 		private final RuleCall cLocalVariableParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
 		
-		/// *****************************************************************************
+		///*****************************************************************************
 		// *       ACTIONS                                                             *
-		// ***************************************************************************** / Action:
+		// *****************************************************************************/ Action:
 		//	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction |
 		//	ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
 		@Override public ParserRule getRule() { return rule; }
@@ -3334,9 +3334,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Expression");
 		private final RuleCall cCastExpressionParserRuleCall = (RuleCall)rule.eContents().get(1);
 		
-		/// *****************************************************************************
+		///*****************************************************************************
 		// *       EXPRESSIONS                                                         *
-		// ***************************************************************************** / //ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
+		// *****************************************************************************/ //ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
 		////PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | 
 		////LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | 
 		////ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
@@ -3363,7 +3363,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightSquareBracketKeyword_1_3_1 = (Keyword)cGroup_1_3.eContents().get(1);
 		
 		//CastExpression Expression:
-		//	OrExpression ({CastExpression.term=current} "as" type=[Type] (^isArray?='[' ']')?)?
+		//	OrExpression ({CastExpression.term=current} "as" type=[Type] (^isArray?='[' ']')?)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//OrExpression ({CastExpression.term=current} "as" type=[Type] (^isArray?='[' ']')?)?
@@ -3413,7 +3413,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRhsAndExpressionParserRuleCall_1_2_0 = (RuleCall)cRhsAssignment_1_2.eContents().get(0);
 		
 		//OrExpression Expression:
-		//	AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*
+		//	AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*
@@ -3448,7 +3448,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRhsEqualityParserRuleCall_1_2_0 = (RuleCall)cRhsAssignment_1_2.eContents().get(0);
 		
 		//AndExpression Expression:
-		//	Equality ({AndExpression.lhs=current} "and" rhs=Equality)*
+		//	Equality ({AndExpression.lhs=current} "and" rhs=Equality)*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Equality ({AndExpression.lhs=current} "and" rhs=Equality)*
@@ -3490,7 +3490,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//Equality Expression:
 		//	Comparaison ({EqualsExpression.lhs=current} "==" rhs=Comparaison | {NotEqualsExpression.lhs=current} "!="
-		//	rhs=Comparaison)*
+		//	rhs=Comparaison)*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Comparaison ({EqualsExpression.lhs=current} "==" rhs=Comparaison | {NotEqualsExpression.lhs=current} "!="
@@ -3561,7 +3561,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//Comparaison Expression:
 		//	Addition ({GreaterExpression.lhs=current} ">" rhs=Addition | {LowerExpression.lhs=current} "<" rhs=Addition |
-		//	{GreaterOrEqualExpression.lhs=current} ">=" rhs=Addition | {LowerOrEqualExpression.lhs=current} "<=" rhs=Addition)*
+		//	{GreaterOrEqualExpression.lhs=current} ">=" rhs=Addition | {LowerOrEqualExpression.lhs=current} "<=" rhs=Addition)*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Addition ({GreaterExpression.lhs=current} ">" rhs=Addition | {LowerExpression.lhs=current} "<" rhs=Addition |
@@ -3653,7 +3653,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//Addition Expression:
 		//	Multiplication ({PlusExpression.lhs=current} "+" rhs=Multiplication | {MinusExpression.lhs=current} "-"
-		//	rhs=Multiplication)*
+		//	rhs=Multiplication)*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Multiplication ({PlusExpression.lhs=current} "+" rhs=Multiplication | {MinusExpression.lhs=current} "-"
@@ -3713,7 +3713,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRhsModuloParserRuleCall_1_1_2_0 = (RuleCall)cRhsAssignment_1_1_2.eContents().get(0);
 		
 		//Multiplication Expression:
-		//	Modulo ({TimesExpression.lhs=current} "*" rhs=Modulo | {DivExpression.lhs=current} "/" rhs=Modulo)*
+		//	Modulo ({TimesExpression.lhs=current} "*" rhs=Modulo | {DivExpression.lhs=current} "/" rhs=Modulo)*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Modulo ({TimesExpression.lhs=current} "*" rhs=Modulo | {DivExpression.lhs=current} "/" rhs=Modulo)*
@@ -3766,7 +3766,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cRhsExpressionParserRuleCall_1_2_0 = (RuleCall)cRhsAssignment_1_2.eContents().get(0);
 		
 		//Modulo Expression:
-		//	Primary ({ModExpression.lhs=current} "%" rhs=Expression)?
+		//	Primary ({ModExpression.lhs=current} "%" rhs=Expression)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Primary ({ModExpression.lhs=current} "%" rhs=Expression)?
@@ -3811,7 +3811,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//Primary Expression:
 		//	'(' Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary
-		//	| ArrayIndexPostfix
+		//	| ArrayIndexPostfix;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'(' Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary | ArrayIndexPostfix
@@ -3874,7 +3874,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightSquareBracketKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
 		
 		//ArrayIndexPostfix Expression:
-		//	AtomicExpression ({ArrayIndex.array=current} '[' index=Expression ']')?
+		//	AtomicExpression ({ArrayIndex.array=current} '[' index=Expression ']')?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//AtomicExpression ({ArrayIndex.array=current} '[' index=Expression ']')?
@@ -3917,7 +3917,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//AtomicExpression Expression:
 		//	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral |
 		//	PropertyReference | FunctionCallExpression
-		//	| EventReference
+		//	| EventReference;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference
@@ -4237,9 +4237,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cPropassignsConfigPropertyAssignParserRuleCall_4_2_0 = (RuleCall)cPropassignsAssignment_4_2.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		
-		/// *****************************************************************************
+		///*****************************************************************************
 		// *       CONFIGURATIONS                                                      *
-		// ***************************************************************************** / Configuration:
+		// *****************************************************************************/ Configuration:
 		//	'configuration' name=ID annotations+=PlatformAnnotation* '{' (instances+=Instance | connectors+=AbstractConnector |
 		//	propassigns+=ConfigPropertyAssign)*
 		//	'}';
@@ -4827,11 +4827,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getThingMLModelAccess().getRule();
 	}
 	
-	/// *
+	///*
 	//Import returns ThingMLModel:
 	//	"import" importURI=STRING_LIT
 	//;
-	// * / PlatformAnnotation:
+	//*/ PlatformAnnotation:
 	//	name=ANNOTATION_ID value=STRING_LIT;
 	public PlatformAnnotationElements getPlatformAnnotationAccess() {
 		return pPlatformAnnotation;
@@ -4877,9 +4877,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getVariableAccess().getRule();
 	}
 	
-	/// *****************************************************************************
+	///*****************************************************************************
 	// *       TYPES / ENUMERATIONS                                                *
-	// ***************************************************************************** / TypeRef:
+	// *****************************************************************************/ TypeRef:
 	//	type=[Type] (^isArray?='[' cardinality=Expression? ']')?;
 	public TypeRefElements getTypeRefAccess() {
 		return pTypeRef;
@@ -4939,12 +4939,12 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getEnumerationLiteralAccess().getRule();
 	}
 	
-	/// *****************************************************************************
+	///*****************************************************************************
 	// *       THING / COMPONENT MODEL                                             *
-	// ***************************************************************************** / Thing:
+	// *****************************************************************************/ Thing:
 	//	'thing' ^fragment?='fragment'? name=ID ('includes' includes+=[Thing] ("," includes+=[Thing])*)?
 	//	annotations+=PlatformAnnotation* '{' (messages+=Message | ports+=Port | properties+=Property | functions+=Function |
-	//	assign+=PropertyAssign | behaviour+=StateMachine / * | streams+=Stream* /)*
+	//	assign+=PropertyAssign | behaviour+=StateMachine /* | streams+=Stream*/)*
 	//	'}';
 	public ThingElements getThingAccess() {
 		return pThing;
@@ -4988,7 +4988,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	//AbstractFunction Function:
 	//	abstract?='abstract' 'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':'
 	//	typeRef=TypeRef)?
-	//	annotations+=PlatformAnnotation*
+	//	annotations+=PlatformAnnotation*;
 	public AbstractFunctionElements getAbstractFunctionAccess() {
 		return pAbstractFunction;
 	}
@@ -5075,9 +5075,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getInternalPortAccess().getRule();
 	}
 	
-	/// *****************************************************************************
+	///*****************************************************************************
 	// *       STATE MECHINES                                                      *
-	// ***************************************************************************** / State:
+	// *****************************************************************************/ State:
 	//	StateMachine | FinalState | CompositeState |
 	//	'state' name=ID annotations+=PlatformAnnotation* '{'
 	//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (internal+=InternalTransition |
@@ -5140,7 +5140,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	//StateMachine CompositeState: // Actually only another syntax for a composite state
 	//	'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 	//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
-	//	internal+=InternalTransition)* (region+=Region | session+=Session)* '}'
+	//	internal+=InternalTransition)* (region+=Region | session+=Session)* '}';
 	public StateMachineElements getStateMachineAccess() {
 		return pStateMachine;
 	}
@@ -5197,9 +5197,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getStateContainerAccess().getRule();
 	}
 	
-	/// *****************************************************************************
+	///*****************************************************************************
 	// *       EVENTS                                                             *
-	// ***************************************************************************** / Event:
+	// *****************************************************************************/ Event:
 	//	ReceiveMessage;
 	public EventElements getEventAccess() {
 		return pEvent;
@@ -5219,9 +5219,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getReceiveMessageAccess().getRule();
 	}
 	
-	/// *****************************************************************************
+	///*****************************************************************************
 	// *       ACTIONS                                                             *
-	// ***************************************************************************** / Action:
+	// *****************************************************************************/ Action:
 	//	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction |
 	//	ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
 	public ActionElements getActionAccess() {
@@ -5373,9 +5373,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getFunctionCallStatementAccess().getRule();
 	}
 	
-	/// *****************************************************************************
+	///*****************************************************************************
 	// *       EXPRESSIONS                                                         *
-	// ***************************************************************************** / //ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
+	// *****************************************************************************/ //ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
 	////PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | 
 	////LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | 
 	////ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
@@ -5390,7 +5390,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//CastExpression Expression:
-	//	OrExpression ({CastExpression.term=current} "as" type=[Type] (^isArray?='[' ']')?)?
+	//	OrExpression ({CastExpression.term=current} "as" type=[Type] (^isArray?='[' ']')?)?;
 	public CastExpressionElements getCastExpressionAccess() {
 		return pCastExpression;
 	}
@@ -5400,7 +5400,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//OrExpression Expression:
-	//	AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*
+	//	AndExpression ({OrExpression.lhs=current} "or" rhs=AndExpression)*;
 	public OrExpressionElements getOrExpressionAccess() {
 		return pOrExpression;
 	}
@@ -5410,7 +5410,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//AndExpression Expression:
-	//	Equality ({AndExpression.lhs=current} "and" rhs=Equality)*
+	//	Equality ({AndExpression.lhs=current} "and" rhs=Equality)*;
 	public AndExpressionElements getAndExpressionAccess() {
 		return pAndExpression;
 	}
@@ -5421,7 +5421,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//Equality Expression:
 	//	Comparaison ({EqualsExpression.lhs=current} "==" rhs=Comparaison | {NotEqualsExpression.lhs=current} "!="
-	//	rhs=Comparaison)*
+	//	rhs=Comparaison)*;
 	public EqualityElements getEqualityAccess() {
 		return pEquality;
 	}
@@ -5432,7 +5432,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//Comparaison Expression:
 	//	Addition ({GreaterExpression.lhs=current} ">" rhs=Addition | {LowerExpression.lhs=current} "<" rhs=Addition |
-	//	{GreaterOrEqualExpression.lhs=current} ">=" rhs=Addition | {LowerOrEqualExpression.lhs=current} "<=" rhs=Addition)*
+	//	{GreaterOrEqualExpression.lhs=current} ">=" rhs=Addition | {LowerOrEqualExpression.lhs=current} "<=" rhs=Addition)*;
 	public ComparaisonElements getComparaisonAccess() {
 		return pComparaison;
 	}
@@ -5443,7 +5443,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//Addition Expression:
 	//	Multiplication ({PlusExpression.lhs=current} "+" rhs=Multiplication | {MinusExpression.lhs=current} "-"
-	//	rhs=Multiplication)*
+	//	rhs=Multiplication)*;
 	public AdditionElements getAdditionAccess() {
 		return pAddition;
 	}
@@ -5453,7 +5453,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Multiplication Expression:
-	//	Modulo ({TimesExpression.lhs=current} "*" rhs=Modulo | {DivExpression.lhs=current} "/" rhs=Modulo)*
+	//	Modulo ({TimesExpression.lhs=current} "*" rhs=Modulo | {DivExpression.lhs=current} "/" rhs=Modulo)*;
 	public MultiplicationElements getMultiplicationAccess() {
 		return pMultiplication;
 	}
@@ -5463,7 +5463,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Modulo Expression:
-	//	Primary ({ModExpression.lhs=current} "%" rhs=Expression)?
+	//	Primary ({ModExpression.lhs=current} "%" rhs=Expression)?;
 	public ModuloElements getModuloAccess() {
 		return pModulo;
 	}
@@ -5474,7 +5474,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//Primary Expression:
 	//	'(' Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary
-	//	| ArrayIndexPostfix
+	//	| ArrayIndexPostfix;
 	public PrimaryElements getPrimaryAccess() {
 		return pPrimary;
 	}
@@ -5484,7 +5484,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ArrayIndexPostfix Expression:
-	//	AtomicExpression ({ArrayIndex.array=current} '[' index=Expression ']')?
+	//	AtomicExpression ({ArrayIndex.array=current} '[' index=Expression ']')?;
 	public ArrayIndexPostfixElements getArrayIndexPostfixAccess() {
 		return pArrayIndexPostfix;
 	}
@@ -5496,7 +5496,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	//AtomicExpression Expression:
 	//	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral |
 	//	PropertyReference | FunctionCallExpression
-	//	| EventReference
+	//	| EventReference;
 	public AtomicExpressionElements getAtomicExpressionAccess() {
 		return pAtomicExpression;
 	}
@@ -5596,9 +5596,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		return getFunctionCallExpressionAccess().getRule();
 	}
 	
-	/// *****************************************************************************
+	///*****************************************************************************
 	// *       CONFIGURATIONS                                                      *
-	// ***************************************************************************** / Configuration:
+	// *****************************************************************************/ Configuration:
 	//	'configuration' name=ID annotations+=PlatformAnnotation* '{' (instances+=Instance | connectors+=AbstractConnector |
 	//	propassigns+=ConfigPropertyAssign)*
 	//	'}';
@@ -5701,7 +5701,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal ML_COMMENT:
-	//	'/ *'->'* /';
+	//	'/*'->'*/';
 	public TerminalRule getML_COMMENTRule() {
 		return tML_COMMENT;
 	}

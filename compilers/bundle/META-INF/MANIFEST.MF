@@ -1,14 +1,14 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1487767009028
+Bnd-LastModified: 1487776417890
 Build-Jdk: 1.8.0_25
 Built-By: ffl
 Bundle-ClassPath: jars/official-network-plugins-2.0.0-SNAPSHOT.jar,jars/
  compilers.c-2.0.0-SNAPSHOT.jar,jars/compilers.java-2.0.0-SNAPSHOT.jar,j
  ars/compilers.javascript-2.0.0-SNAPSHOT.jar,jars/minimal-json-0.9.4.jar
- ,jars/compilers.framework-2.0.0-SNAPSHOT.jar,jars/commons-io-2.5.jar,ja
- rs/jansi-1.14.jar,jars/compilers.debugGUI-2.0.0-SNAPSHOT.jar,jars/compi
- lers.registry-2.0.0-SNAPSHOT.jar,jars/compilers.uml-2.0.0-SNAPSHOT.jar,
- jars/jcommander-1.58.jar
+ ,jars/compilers.framework-2.0.0-SNAPSHOT.jar,jars/thingml.ide-2.0.0-SNA
+ PSHOT.jar,jars/commons-io-2.5.jar,jars/jansi-1.14.jar,jars/compilers.de
+ bugGUI-2.0.0-SNAPSHOT.jar,jars/compilers.registry-2.0.0-SNAPSHOT.jar,ja
+ rs/compilers.uml-2.0.0-SNAPSHOT.jar,jars/jcommander-1.58.jar
 Bundle-DocURL: http://thingml.org
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
 Bundle-ManifestVersion: 2
@@ -29,19 +29,26 @@ Embedded-Artifacts: jars/official-network-plugins-2.0.0-SNAPSHOT.jar;g="
  r;g="org.thingml";a="compilers.javascript";v="2.0.0-SNAPSHOT",jars/mini
  mal-json-0.9.4.jar;g="com.eclipsesource.minimal-json";a="minimal-json";
  v="0.9.4",jars/compilers.framework-2.0.0-SNAPSHOT.jar;g="org.thingml";a
- ="compilers.framework";v="2.0.0-SNAPSHOT",jars/commons-io-2.5.jar;g="co
- mmons-io";a="commons-io";v="2.5",jars/jansi-1.14.jar;g="org.fusesource.
- jansi";a="jansi";v="1.14",jars/compilers.debugGUI-2.0.0-SNAPSHOT.jar;g=
- "org.thingml";a="compilers.debugGUI";v="2.0.0-SNAPSHOT",jars/compilers.
- registry-2.0.0-SNAPSHOT.jar;g="org.thingml";a="compilers.registry";v="2
- .0.0-SNAPSHOT",jars/compilers.uml-2.0.0-SNAPSHOT.jar;g="org.thingml";a=
- "compilers.uml";v="2.0.0-SNAPSHOT",jars/jcommander-1.58.jar;g="com.beus
- t";a="jcommander";v="1.58"
-Import-Package: org.eclipse.emf.common.util,org.eclipse.emf.ecore,org.ec
- lipse.emf.ecore.resource,org.eclipse.emf.ecore.resource.impl,org.eclips
- e.emf.ecore.util,org.eclipse.emf.ecore.xmi.impl,org.eclipse.xtext.impl,
- org.eclipse.xtext.resource,org.thingml.xtext,org.thingml.xtext.constrai
- nts,org.thingml.xtext.helpers,org.thingml.xtext.thingML,org.thingml.xte
- xt.thingML.impl,org.thingml.xtext.thingML.util
+ ="compilers.framework";v="2.0.0-SNAPSHOT",jars/thingml.ide-2.0.0-SNAPSH
+ OT.jar;g="org.thingml";a="thingml.ide";v="2.0.0-SNAPSHOT",jars/commons-
+ io-2.5.jar;g="commons-io";a="commons-io";v="2.5",jars/jansi-1.14.jar;g=
+ "org.fusesource.jansi";a="jansi";v="1.14",jars/compilers.debugGUI-2.0.0
+ -SNAPSHOT.jar;g="org.thingml";a="compilers.debugGUI";v="2.0.0-SNAPSHOT"
+ ,jars/compilers.registry-2.0.0-SNAPSHOT.jar;g="org.thingml";a="compiler
+ s.registry";v="2.0.0-SNAPSHOT",jars/compilers.uml-2.0.0-SNAPSHOT.jar;g=
+ "org.thingml";a="compilers.uml";v="2.0.0-SNAPSHOT",jars/jcommander-1.58
+ .jar;g="com.beust";a="jcommander";v="1.58"
+Import-Package: com.google.inject;version="[1.3,2)",com.google.inject.bi
+ nder;version="[1.3,2)",com.google.inject.name;version="[1.3,2)",org.ant
+ lr.runtime,org.eclipse.emf.common.util,org.eclipse.emf.ecore,org.eclips
+ e.emf.ecore.resource,org.eclipse.emf.ecore.resource.impl,org.eclipse.em
+ f.ecore.util,org.eclipse.emf.ecore.xmi.impl,org.eclipse.xtext,org.eclip
+ se.xtext.ide,org.eclipse.xtext.ide.editor.contentassist,org.eclipse.xte
+ xt.ide.editor.contentassist.antlr,org.eclipse.xtext.ide.editor.contenta
+ ssist.antlr.internal,org.eclipse.xtext.ide.editor.partialEditing,org.ec
+ lipse.xtext.impl,org.eclipse.xtext.resource,org.eclipse.xtext.util,org.
+ thingml.xtext,org.thingml.xtext.constraints,org.thingml.xtext.helpers,o
+ rg.thingml.xtext.services,org.thingml.xtext.thingML,org.thingml.xtext.t
+ hingML.impl,org.thingml.xtext.thingML.util
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
 Tool: Bnd-3.2.0.201605172007

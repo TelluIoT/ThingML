@@ -7,7 +7,8 @@ Bundle-SymbolicName: thingml.ide; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: thingml,
  org.eclipse.xtext.ide,
- org.eclipse.xtext.xbase.ide
+ org.eclipse.xtext.xbase.ide,
+ org.antlr.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.thingml.xtext.ide.contentassist.antlr.internal,
  org.thingml.xtext.ide.contentassist.antlr

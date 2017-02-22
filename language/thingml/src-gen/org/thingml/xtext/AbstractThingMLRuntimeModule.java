@@ -137,7 +137,7 @@ public abstract class AbstractThingMLRuntimeModule extends DefaultRuntimeModule 
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
-	public Provider<InternalThingMLLexer> provideInternalThingMLLexer() {
+	public Provider<? extends InternalThingMLLexer> provideInternalThingMLLexer() {
 		return LexerProvider.create(InternalThingMLLexer.class);
 	}
 	

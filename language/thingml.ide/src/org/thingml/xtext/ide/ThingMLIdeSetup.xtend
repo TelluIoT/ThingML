@@ -14,14 +14,20 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.xtext.web;
+package org.thingml.xtext.ide
 
-import org.eclipse.xtext.web.server.DefaultWebModule;
+import com.google.inject.Guice
+import org.eclipse.xtext.util.Modules2
+import org.thingml.xtext.ThingMLRuntimeModule
+import org.thingml.xtext.ThingMLStandaloneSetup
 
 /**
- * Manual modifications go to {@link ThingMLWebModule}.
+ * Initialization support for running Xtext languages as language servers.
  */
-@SuppressWarnings("all")
-public abstract class AbstractThingMLWebModule extends DefaultWebModule {
+class ThingMLIdeSetup extends ThingMLStandaloneSetup {
 
+	override createInjector() {
+		Guice.createInjector(Modules2.mixin(new ThingMLRuntimeModule, new ThingMLIdeModule))
+	}
+	
 }

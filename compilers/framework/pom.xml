@@ -33,7 +33,7 @@
     </parent>
 
 	<properties>
-	<xtextVersion>2.10.0</xtextVersion>
+	<xtextVersion>2.11.0</xtextVersion>
 	</properties>
 
     <dependencies>
@@ -41,59 +41,27 @@
         <dependency>
             <groupId>org.thingml</groupId>
             <artifactId>thingml</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
+            <version>${thingml.version}</version>
         </dependency>
         
         <dependency>
-			<groupId>org.eclipse.xtext</groupId>
-			<artifactId>org.eclipse.xtext.junit4</artifactId>
-			<version>${xtextVersion}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.xtext</groupId>
-			<artifactId>org.eclipse.xtext.xbase.junit</artifactId>
-			<version>${xtextVersion}</version>
-			<scope>test</scope>
-		</dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>thingml.ide</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+        
 		<dependency>
 			<groupId>org.eclipse.xtext</groupId>
 			<artifactId>org.eclipse.xtext</artifactId>
 			<version>${xtextVersion}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.eclipse.xtext</groupId>
 			<artifactId>org.eclipse.xtext.xbase</artifactId>
 			<version>${xtextVersion}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.xtext</groupId>
-			<artifactId>org.eclipse.xtext.xtext</artifactId>
-			<version>${xtextVersion}</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.xtext</groupId>
-			<artifactId>org.eclipse.xtext.xtext.generator</artifactId>
-			<version>${xtextVersion}</version>
-			<optional>true</optional>
-		</dependency>
-
-        <!--
-             <dependency>
-                 <groupId>org.thingml</groupId>
-                 <artifactId>org.thingml.parser.standalone</artifactId>
-                 <version>${project.version}</version>
-             </dependency>
-
-
-             <dependency>
-                 <groupId>org.thingml</groupId>
-                 <artifactId>org.thingml.parser.standalone</artifactId>
-                 <version>${project.version}</version>
-             </dependency>
-     -->
-
+			
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

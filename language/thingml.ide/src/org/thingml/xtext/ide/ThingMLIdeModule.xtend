@@ -14,14 +14,11 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.xtext.web;
+package org.thingml.xtext.ide
 
-import org.eclipse.xtext.web.server.DefaultWebModule;
 
 /**
- * Manual modifications go to {@link ThingMLWebModule}.
+ * Use this class to register ide components.
  */
-@SuppressWarnings("all")
-public abstract class AbstractThingMLWebModule extends DefaultWebModule {
-
+class ThingMLIdeModule extends AbstractThingMLIdeModule {
 }

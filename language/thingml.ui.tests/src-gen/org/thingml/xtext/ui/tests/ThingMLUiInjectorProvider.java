@@ -17,7 +17,7 @@
 package org.thingml.xtext.ui.tests;
 
 import com.google.inject.Injector;
-import org.eclipse.xtext.junit4.IInjectorProvider;
+import org.eclipse.xtext.testing.IInjectorProvider;
 import thingml.ui.internal.ThingmlActivator;
 
 public class ThingMLUiInjectorProvider implements IInjectorProvider {

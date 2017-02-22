@@ -30,8 +30,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <thingml.version>${project.version}</thingml.version>
-        <eclipse.version>3.8.0</eclipse.version>
-        <emf.version>2.7.0</emf.version>
         <bundle.vendor>SINTEF</bundle.vendor>
 	<maven.compiler.source>1.8</maven.compiler.source>
 	<maven.compiler.target>1.8</maven.compiler.target>
@@ -207,7 +205,9 @@
     </repositories>
 
     <modules>
+		<module>language/thingml.target</module>
         <module>language/thingml</module>
+		
         <module>compilers</module>
         <!-- The standalone app can only be built on the server which has the keystore to sign the jar
         <module>../org.thingml.editor.standaloneApp</module>-->
