@@ -96,7 +96,7 @@
 				<configuration>
 					<target>
 						<artifact>
-							<groupId>thingml</groupId>
+							<groupId>org.thingml</groupId>
 							<artifactId>thingml.target</artifactId>
 							<version>${project.version}</version>
 						</artifact>
