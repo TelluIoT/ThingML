@@ -64,7 +64,13 @@
 		</pluginManagement>
 	</build>
 
-	<dependencies>
+		<dependencies>
+		<dependency>
+		  <groupId>org.thingml</groupId>
+		  <artifactId>compilers.bundle</artifactId>
+		  <version>${thingml.version}</version>
+		</dependency>
 	</dependencies>
+	
 	<name>ThingML :: Language :: Eclipse :: Repository</name>
 </project>

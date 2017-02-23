@@ -63,6 +63,14 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<dependencies>
+		<dependency>
+		  <groupId>org.thingml</groupId>
+		  <artifactId>compilers.bundle</artifactId>
+		  <version>${thingml.version}</version>
+		</dependency>
+	</dependencies>
 
 	<profiles>
 		<profile>

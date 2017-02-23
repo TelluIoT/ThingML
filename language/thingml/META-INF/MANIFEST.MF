@@ -15,15 +15,17 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtend.lib,
  org.eclipse.emf.common
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.thingml.xtext.parser.antlr,
- org.thingml.xtext,
- org.thingml.xtext.thingML,
- org.thingml.xtext.validation,
+Export-Package: org.thingml.xtext,
+ org.thingml.xtext.constraints,
+ org.thingml.xtext.generator,
+ org.thingml.xtext.helpers,
+ org.thingml.xtext.parser.antlr,
  org.thingml.xtext.parser.antlr.internal,
- org.thingml.xtext.thingML.util,
  org.thingml.xtext.scoping,
  org.thingml.xtext.serializer,
  org.thingml.xtext.services,
+ org.thingml.xtext.thingML,
  org.thingml.xtext.thingML.impl,
- org.thingml.xtext.generator
+ org.thingml.xtext.thingML.util,
+ org.thingml.xtext.validation
 Import-Package: org.apache.log4j

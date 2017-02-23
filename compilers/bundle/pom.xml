@@ -32,7 +32,6 @@
     </parent>
 	
 	  <properties>
-    <tycho-version>1.0.0</tycho-version>
     <manifest-location>META-INF</manifest-location>
   </properties>
 
@@ -63,9 +62,9 @@
 		  <manifestLocation>${manifest-location}</manifestLocation>
           <instructions>
             <Embed-Dependency>*;scope=compile|runtime;artifactId=!org.eclipse.*|thingml</Embed-Dependency>
-            <!--<_exportcontents>
-              org.thingml.**;
-            </_exportcontents>-->
+            <_exportcontents>
+              org.thingml.compilers.*;
+            </_exportcontents>
             <Bundle-ClassPath>{maven-dependencies}</Bundle-ClassPath>
             <Embed-Transitive>true</Embed-Transitive>
             <Embed-Directory>jars</Embed-Directory>

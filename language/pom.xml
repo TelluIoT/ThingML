@@ -84,6 +84,12 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+     				<excludes>
+      					<!-- provide plug-ins not containing any source code -->
+      					<plugin id="org.thingml.compilers.bundle" />
+     				</excludes>
+    			</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -104,6 +110,7 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+					<pomDependencies>consider</pomDependencies>
 					<target>
 						<artifact>
 							<groupId>org.thingml</groupId>
