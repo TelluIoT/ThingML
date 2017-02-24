@@ -44,6 +44,7 @@
     </dependencies>
 
       <build>
+      
     <plugins>
 		<plugin>
           <artifactId>maven-jar-plugin</artifactId>
@@ -63,7 +64,7 @@
           <instructions>
             <Embed-Dependency>*;scope=compile|runtime;artifactId=!org.eclipse.*|thingml</Embed-Dependency>
             <_exportcontents>
-              org.thingml.compilers.*;
+             !org.eclipse.*;!org.thingml.xtext.*;*;
             </_exportcontents>
             <Bundle-ClassPath>{maven-dependencies}</Bundle-ClassPath>
             <Embed-Transitive>true</Embed-Transitive>
@@ -74,7 +75,6 @@
         </configuration>
       </plugin>
     </plugins>
-
 
     <pluginManagement>
       <plugins>

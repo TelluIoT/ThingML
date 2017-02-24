@@ -33,6 +33,8 @@
 		  <artifactId>compilers.bundle</artifactId>
 		  <version>${thingml.version}</version>
 		</dependency>
+		
+		
 	</dependencies>
 	
 	<build>
