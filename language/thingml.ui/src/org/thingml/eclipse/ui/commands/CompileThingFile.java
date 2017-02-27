@@ -16,6 +16,7 @@
  */
 package org.thingml.eclipse.ui.commands;
 
+import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,36 +48,36 @@ import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
 
 public class CompileThingFile implements IHandler {
-	
-    private static ServiceLoader<NetworkPlugin> plugins = ServiceLoader.load(NetworkPlugin.class);
-    private static Set<NetworkPlugin> loadedPlugins;
-    private static ServiceLoader<SerializationPlugin> serPlugins = ServiceLoader.load(SerializationPlugin.class);
-    private static Set<SerializationPlugin> loadedSerPlugins;
-    
-    //IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
-    static {
-    	loadedPlugins = new HashSet<>();
-        plugins.reload();
-        Iterator<NetworkPlugin> it = plugins.iterator();
-        ThingMLConsole.getInstance().printMessage("Loading network plugins:\n");
-        while(it.hasNext()) {        	
-            NetworkPlugin p = it.next();
-            loadedPlugins.add(p);
-            ThingMLConsole.getInstance().printMessage("\t-" + p.getName() + "\n");
-        }
-        loadedSerPlugins = new HashSet<>();
-        serPlugins.reload();
-        Iterator<SerializationPlugin> sit = serPlugins.iterator();
-        ThingMLConsole.getInstance().printMessage("Loading serialization plugins:\n");
-        while(sit.hasNext()) {
-            SerializationPlugin sp = sit.next();
-            loadedSerPlugins.add(sp);
-            ThingMLConsole.getInstance().printMessage("\t-" + sp.getName() + "\n");
-        }
-    }
+	private static ServiceLoader<NetworkPlugin> plugins = ServiceLoader.load(NetworkPlugin.class);
+	private static Set<NetworkPlugin> loadedPlugins;
+	private static ServiceLoader<SerializationPlugin> serPlugins = ServiceLoader.load(SerializationPlugin.class);
+	private static Set<SerializationPlugin> loadedSerPlugins;
 
-	
+	//IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+
+	static {
+		loadedPlugins = new HashSet<>();
+		plugins.reload();
+		Iterator<NetworkPlugin> it = plugins.iterator();
+		ThingMLConsole.getInstance().printMessage("Loading network plugins:\n");
+		while(it.hasNext()) {        	
+			NetworkPlugin p = it.next();
+			loadedPlugins.add(p);
+			ThingMLConsole.getInstance().printMessage("\t-" + p.getName() + "\n");
+		}
+		loadedSerPlugins = new HashSet<>();
+		serPlugins.reload();
+		Iterator<SerializationPlugin> sit = serPlugins.iterator();
+		ThingMLConsole.getInstance().printMessage("Loading serialization plugins:\n");
+		while(sit.hasNext()) {
+			SerializationPlugin sp = sit.next();
+			loadedSerPlugins.add(sp);
+			ThingMLConsole.getInstance().printMessage("\t-" + sp.getName() + "\n");
+		}
+	}
+
+
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
 		// TODO Auto-generated method stub
@@ -101,50 +102,60 @@ public class CompileThingFile implements IHandler {
 				subCompiler = compilerName.split("/")[1];
 				compilerName = compilerName.split("/")[0];
 			}
-			
+
 			ThingMLCompiler compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
 			for(NetworkPlugin np : loadedPlugins) {
 				for(String lang : np.getTargetedLanguages())
-                if(lang.compareTo(compiler.getID()) == 0) {
-                    compiler.addNetworkPlugin(np);
-                }
-            }
-            for(SerializationPlugin sp : loadedSerPlugins) {
-                if(sp.getTargetedLanguages().contains(compiler.getID())) {
-                    compiler.addSerializationPlugin(sp);
-                }
-            }
-            /*
+					if(lang.compareTo(compiler.getID()) == 0) {
+						compiler.addNetworkPlugin(np);
+					}
+			}
+			for(SerializationPlugin sp : loadedSerPlugins) {
+				if(sp.getTargetedLanguages().contains(compiler.getID())) {
+					compiler.addSerializationPlugin(sp);
+				}
+			}
+			/*
             if (compiler instanceof PlantUMLCompiler) {
             	PlantUMLThingImplCompiler.FACTORIZE_TRANSITIONS = store.getBoolean(PreferenceConstants.UML_FACTORIZE);
             	ThingMLPrettyPrinter.HIDE_BLOCKS = store.getBoolean(PreferenceConstants.UML_HIDE_BLOCK);
             	ThingMLPrettyPrinter.MAX_BLOCK_SIZE = store.getInt(PreferenceConstants.UML_BLOCK_SIZE);
             	ThingMLPrettyPrinter.USE_ELLIPSIS_FOR_PARAMS = store.getBoolean(PreferenceConstants.UML_ELLIPSIS);
             }
-            */
+			 */
 			ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\" (Platform: " + compiler.getID() + ")\n");
 
 			// Fetch the input model to be used
+			java.io.File f = null;
 			IFile target_file = null;
-			ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();
-			if (selection != null & selection instanceof IStructuredSelection) {
-				IStructuredSelection strucSelection = (IStructuredSelection) selection;
-
-				if (!strucSelection.isEmpty() && strucSelection.getFirstElement() instanceof IFile) {
-					target_file = (IFile) strucSelection.getFirstElement();
+			if (event.getApplicationContext() instanceof File) {
+				f = (File) event.getApplicationContext();				
+			} else {
+				if (event.getApplicationContext() instanceof IFile) {
+					target_file = (IFile) event.getApplicationContext();
 				}
 				else {
-					ThingMLConsole.getInstance().printError("ERROR: The selection is empty or does not contains a ThingML file. Compilation stopped.\n");
-					return null;
-				}
+					ISelection selection = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().getSelection();			
+					if (selection != null & selection instanceof IStructuredSelection) {
+						IStructuredSelection strucSelection = (IStructuredSelection) selection;
 
-				if (strucSelection.size() > 1) {
-					ThingMLConsole.getInstance().printDebug("WARNING: Selection contains more than one model. Using the first and ingnoring others.\n");
+						if (!strucSelection.isEmpty() && strucSelection.getFirstElement() instanceof IFile) {
+							target_file = (IFile) strucSelection.getFirstElement();
+						}
+						else {
+							ThingMLConsole.getInstance().printError("ERROR: The selection is empty or does not contains a ThingML file. Compilation stopped.\n");
+							return null;
+						}
+
+						if (strucSelection.size() > 1) {
+							ThingMLConsole.getInstance().printDebug("WARNING: Selection contains more than one model. Using the first and ingnoring others.\n");
+						}
+					}
 				}
+				f = target_file.getLocation().toFile();
 			}
 
-			java.io.File f = target_file.getLocation().toFile();
-			ThingMLConsole.getInstance().printDebug("Selected input file: " + target_file.toString() + " (" + f.getAbsolutePath() + ")\n");
+			ThingMLConsole.getInstance().printDebug("Selected input file: " + f.getName() + " (" + f.getAbsolutePath() + ")\n");
 
 			ThingMLModel model = ThingMLCompiler.loadModel(f);
 			if (model == null) {
@@ -158,10 +169,10 @@ public class CompileThingFile implements IHandler {
 			for(String warning : ThingMLCompiler.warnings) {
 				ThingMLConsole.getInstance().printMessage(warning + "\n");
 			}
-			
-			
 
-			
+
+
+
 			/*System.out.println("checking.......");
 			CheckThingMLFile.running = true;
 
@@ -169,28 +180,28 @@ public class CompileThingFile implements IHandler {
 			//validator.setIncludeLiveConstraints(true);
 
 			//IStatus status = validator.validate(model);
-			
+
 			Resource r = ThingMLCompiler.resource;
 			if (!r.eAdapters().contains(liveValidationContentAdapter)) {
 				r.eAdapters().add(liveValidationContentAdapter);
 			}
-			
+
 			CheckThingMLFile.running = false;
 			System.out.println("done!");*/
-			
+
 
 			// Look for a Configurations to compile
 			ArrayList<Configuration> toCompile = new ArrayList<Configuration>();
 			for ( Configuration cfg :  ThingMLHelpers.allConfigurations(model)) {
 				toCompile.add(cfg);
 			}
-			
+
 			if (toCompile.isEmpty()) {
 				ThingMLConsole.getInstance().printError("ERROR: The selected model does not contain any concrete Configuration to compile. \n");
 				ThingMLConsole.getInstance().printError("Compilation stopped.\n");
 				return null;
 			}
-			
+
 			/*for(Configuration cfg : toCompile) {
 				ThingMLCompiler.checker.Errors.clear();
 				ThingMLCompiler.checker.Warnings.clear();
@@ -208,7 +219,7 @@ public class CompileThingFile implements IHandler {
 					ThingMLConsole.getInstance().printError(err.message + "(" + err.source + ")");
 				}
 			}*/
-			
+
 
 			// Create the output directory in the current project in a folder "/thingml-gen/<platform>/"
 			IProject project = target_file.getProject();
@@ -231,7 +242,7 @@ public class CompileThingFile implements IHandler {
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);*/
 
 
-			
+
 			String pack = "true"; //store.getString(PreferenceConstants.PACK_STRING);
 			String[] options = new String[1];
 			options[0] = pack;
@@ -239,7 +250,7 @@ public class CompileThingFile implements IHandler {
 			// Compile all the configuration
 			for ( Configuration cfg :  toCompile ) {
 				java.io.File cfg_folder = new java.io.File(platform_folder, cfg.getName());
-        java.io.File in_folder = f.getAbsoluteFile().getParentFile();
+				java.io.File in_folder = f.getAbsoluteFile().getParentFile();
 				if (cfg_folder.exists()) {
 					ThingMLConsole.getInstance().printDebug("Cleaning folder " + cfg_folder.getAbsolutePath() + "\n");
 					ThingMLConsole.getInstance().emptyFolder(cfg_folder);
@@ -249,7 +260,7 @@ public class CompileThingFile implements IHandler {
 				}
 				compiler = ThingMLCompilerRegistry.getInstance().createCompilerInstanceByName(compilerName);
 				compiler.setOutputDirectory(cfg_folder);
-        compiler.setInputDirectory(in_folder);
+				compiler.setInputDirectory(in_folder);
 				compiler.setErrorStream(ThingMLConsole.getInstance().getErrorSteam());
 				compiler.setMessageStream(ThingMLConsole.getInstance().getMessageSteam());
 
@@ -273,7 +284,7 @@ public class CompileThingFile implements IHandler {
 						ThingMLConsole.getInstance().printMessage(i.toString());		         
 					}
 				}
-*/
+				 */
 				compiler.compile(cfg, options);
 				if(subCompiler != null) {
 					ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");

@@ -23,6 +23,9 @@ import java.io.OutputStream;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.GCData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IOConsole;
@@ -31,6 +34,23 @@ import org.eclipse.ui.console.IOConsoleOutputStream;
 public class ThingMLConsole {
 
 	private static ThingMLConsole instance;
+	
+	private static Color COLOR = new Color(new Device() {
+		
+		@Override
+		public boolean isAutoScalable() {
+			return false;
+		}
+		
+		@Override
+		public long internal_new_GC(GCData data) {
+			return 0;
+		}
+		
+		@Override
+		public void internal_dispose_GC(long hDC, GCData data) {				
+		}
+	}, new RGB(0, 0, 0));
 	
 	public static ThingMLConsole getInstance() {
 		if (instance == null) {
@@ -41,17 +61,23 @@ public class ThingMLConsole {
 	
 	private static Color getOutputColor() {
 		Display display = Display.getCurrent();
-		return display.getSystemColor(SWT.COLOR_BLUE);
+		if (display != null)
+			return display.getSystemColor(SWT.COLOR_BLUE);
+		return COLOR;
 	}
 	
 	private static Color getDebugColor() {
 		Display display = Display.getCurrent();
-		return display.getSystemColor(SWT.COLOR_BLACK);
+		if(display != null)
+			return display.getSystemColor(SWT.COLOR_BLACK);
+		return COLOR;
 	}
 	
 	private static Color getErrorColor() {
 		Display display = Display.getCurrent();
-		return display.getSystemColor(SWT.COLOR_RED);
+		if (display != null)
+			return display.getSystemColor(SWT.COLOR_RED);
+		return COLOR;
 	}
 	
 	private IOConsoleOutputStream dbg;
