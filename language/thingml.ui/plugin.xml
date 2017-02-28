@@ -480,6 +480,30 @@
       </command>
    </extension>
  
+
+<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+    <launchConfigurationType
+        name="ThingML launch"
+        delegate="org.thingml.eclipse.ui.commands.ThingMLLaunchConfiguration"
+        modes="run"
+        id="thingml.run">
+    </launchConfigurationType>
+</extension>
+
+
+
+<extension
+    point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+    <launchConfigurationTabGroup
+        class="org.thingml.eclipse.ui.commands.ThingMLRunTabGroup"
+        id="thingml.launchConfigurationTabGroup"
+        type="thingml.run">
+    </launchConfigurationTabGroup>
+</extension>
+
+
+
+ 
  
 	
 </plugin>

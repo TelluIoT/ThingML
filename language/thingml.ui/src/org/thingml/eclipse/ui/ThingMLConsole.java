@@ -23,9 +23,6 @@ import java.io.OutputStream;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GCData;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IOConsole;
@@ -35,22 +32,7 @@ public class ThingMLConsole {
 
 	private static ThingMLConsole instance;
 	
-	private static Color COLOR = new Color(new Device() {
-		
-		@Override
-		public boolean isAutoScalable() {
-			return false;
-		}
-		
-		@Override
-		public long internal_new_GC(GCData data) {
-			return 0;
-		}
-		
-		@Override
-		public void internal_dispose_GC(long hDC, GCData data) {				
-		}
-	}, new RGB(0, 0, 0));
+	private static Color COLOR = new Color(new Display(), 0, 0, 0);
 	
 	public static ThingMLConsole getInstance() {
 		if (instance == null) {
