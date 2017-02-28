@@ -106,7 +106,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
     }
 
     /* ---------- SERIALIZATION ----------*/
-    Integer getMaximumSerializedParameterValueLength(Parameter p, CCompilerContext ctx) {
+    Integer getMaximumSerializedParameterValueLength(Parameter p, CCompilerContext ctx, ExternalConnector eco) {
         switch (ctx.getCType(p.getType())) {
             // Signed types
             case "signed char":
@@ -171,17 +171,17 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         }
     }
 
-    Integer getMaximumSerializedParameterLength(Parameter p, CCompilerContext ctx) {
+    Integer getMaximumSerializedParameterLength(Parameter p, CCompilerContext ctx, ExternalConnector eco) {
         Integer length = 4; // '"":,' Base parameter JSON
         // Parameter name
         length += p.getName().length();
         // The actual parameter value
-        length += getMaximumSerializedParameterValueLength(p, ctx);
+        length += getMaximumSerializedParameterValueLength(p, ctx, eco);
 
         return length;
     }
 
-    Integer getMaximumSerializedMessageLength(Message m, CCompilerContext ctx) {
+    Integer getMaximumSerializedMessageLength(Message m, CCompilerContext ctx, ExternalConnector eco) {
         Integer length = 8; // '{"":{}}\0' Base valid JSON serialization
 
         // Message name
@@ -190,13 +190,13 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         // For all forwarded parameters
         for (Parameter p : m.getParameters()) {
             if (!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
-                length += getMaximumSerializedParameterLength(p, ctx);
+                length += getMaximumSerializedParameterLength(p, ctx, eco);
             }
         }
         return length;
     }
 
-    void generateParameterValueSerialization(StringBuilder builder, String bufferName, Integer maxLength, Parameter p, CCompilerContext ctx) {
+    void generateParameterValueSerialization(StringBuilder builder, String bufferName, Integer maxLength, Parameter p, CCompilerContext ctx, ExternalConnector eco) {
         boolean serialized = false;
         //FIXME: @Jakob: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
         switch (ctx.getCType(p.getType())) {
@@ -265,7 +265,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         }
     }
 
-    void generateParameterSerializations(StringBuilder builder, String bufferName, Integer maxLength, Message m, CCompilerContext ctx) {
+    void generateParameterSerializations(StringBuilder builder, String bufferName, Integer maxLength, Message m, CCompilerContext ctx, ExternalConnector eco) {
         boolean first = true;
         for (Parameter p : m.getParameters()) {
             if (!AnnotatedElementHelper.isDefined(m, "do_not_forward", p.getName())) {
@@ -280,7 +280,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                 builder.append("    if (result >= 0) { index += result; } else { return; }\n");
 
                 // Add the value of the parameter
-                generateParameterValueSerialization(builder, bufferName, maxLength, p, ctx);
+                generateParameterValueSerialization(builder, bufferName, maxLength, p, ctx, eco);
             }
         }
     }
@@ -288,7 +288,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
     @Override
     public String generateSerialization(StringBuilder builder, String bufferName, Message m, ExternalConnector eco) {
         CCompilerContext ctx = (CCompilerContext) context;
-        Integer maxLength = getMaximumSerializedMessageLength(m, ctx);
+        Integer maxLength = getMaximumSerializedMessageLength(m, ctx, eco);
 
         // Pre-allocate memory
         builder.append("    uint8_t "+bufferName+"["+maxLength+"];\n");
@@ -302,7 +302,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         builder.append("    if (result >= 0) { index += result; } else { return; }\n");
 
         // Add all forwarded parameters
-        generateParameterSerializations(builder, bufferName, maxLength, m, ctx);
+        generateParameterSerializations(builder, bufferName, maxLength, m, ctx, eco);
 
         // Add end of message
         builder.append("    //End of serialized message\n");

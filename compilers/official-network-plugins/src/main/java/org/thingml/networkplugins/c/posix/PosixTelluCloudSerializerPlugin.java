@@ -54,29 +54,39 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
     }
 
     @Override
-    Integer getMaximumSerializedParameterValueLength(Parameter p, CCompilerContext ctx) {
-        if (p.getName().equals("deviceID")) {
+    Integer getMaximumSerializedParameterValueLength(Parameter p, CCompilerContext ctx, ExternalConnector eco) {
+        if (p.getName().equals("deviceId")) {
             // This will be a string literal given by an annotation
-            return 0;
+            String deviceId = AnnotatedElementHelper.annotationOrElse(eco, "tellucloud_deviceid", "");
+            if (deviceId.isEmpty()) deviceId = AnnotatedElementHelper.annotationOrElse(eco.getProtocol(), "tellucloud_deviceid", "");
+            if (deviceId.isEmpty()) return 4; // Print a null
+            else return deviceId.length()+2; // String + surrounding '""'
 
         } else if (p.getName().equals("observations")) {
             TelluCloudGroupedParameter grouped = (TelluCloudGroupedParameter)p;
             // Return the length of the set and the contained grouped parameters
             Integer length = 2; // '[]' Base group array JSON
             for (Parameter gp : grouped.m.getParameters()) {
-                length += getMaximumSerializedParameterLength(gp, ctx);
+                length += getMaximumSerializedParameterLength(gp, ctx, eco);
                 length += 2; // Surrounding '{}'
             }
             return length;
         } else {
-            return super.getMaximumSerializedParameterValueLength(p, ctx);
+            return super.getMaximumSerializedParameterValueLength(p, ctx, eco);
         }
     }
 
     @Override
-    void generateParameterValueSerialization(StringBuilder builder, String bufferName, Integer maxLength, Parameter p, CCompilerContext ctx) {
+    void generateParameterValueSerialization(StringBuilder builder, String bufferName, Integer maxLength, Parameter p, CCompilerContext ctx, ExternalConnector eco) {
         if (p.getName().equals("deviceId")) {
-           builder.append("!!!!!!!!! DEVICE ID !!!!!!!!\n");
+            // Print the string literal given by the annotation
+            String deviceId = AnnotatedElementHelper.annotationOrElse(eco, "tellucloud_deviceid", "");
+            if (deviceId.isEmpty()) deviceId = AnnotatedElementHelper.annotationOrElse(eco.getProtocol(), "tellucloud_deviceid", "");
+            if (deviceId.isEmpty()) deviceId = "null";
+            else deviceId = "\\\""+deviceId+"\\\"";
+
+            builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \""+deviceId+"\");\n");
+            builder.append("    if (result >= 0) { index += result; } else { return; }\n");
         } else if (p.getName().equals("observations")) {
             TelluCloudGroupedParameter grouped = (TelluCloudGroupedParameter)p;
             // This is our special grouped placeholder
@@ -86,7 +96,7 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
 
             // Generate the normal JSON parameters to put inside the group
             StringBuilder original = new StringBuilder();
-            generateParameterSerializations(original, bufferName, maxLength, grouped.m, ctx);
+            generateParameterSerializations(original, bufferName, maxLength, grouped.m, ctx, eco);
 
             // Modify to wrap each parameter inside an object '{}'
             Boolean first = true;
@@ -126,7 +136,7 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
             builder.append("    if (result >= 0) { index += result; } else { return; }\n");
         } else {
             // Any other parameter is serialized normally
-            super.generateParameterValueSerialization(builder, bufferName, maxLength, p, ctx);
+            super.generateParameterValueSerialization(builder, bufferName, maxLength, p, ctx, eco);
         }
     }
 
@@ -155,10 +165,10 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
             msg.getAnnotations().add(jsonMsgName);
 
             // Generate JSON serialisation of modified message
-            return super.generateSerialization(builder, bufferName, msg);
+            return super.generateSerialization(builder, bufferName, msg, eco);
         } else {
             // Generate normal JSON serialisation
-            return super.generateSerialization(builder, bufferName, m);
+            return super.generateSerialization(builder, bufferName, m, eco);
         }
     }
 
