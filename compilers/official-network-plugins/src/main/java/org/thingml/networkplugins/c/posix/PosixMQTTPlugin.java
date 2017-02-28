@@ -54,6 +54,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
         res.add("MQTT");
         res.add("MQTT1");
         res.add("MQTT2");
+        res.add("MQTT3");
+        res.add("MQTT4");
         res.add("mqtt");
         return res;
     }
