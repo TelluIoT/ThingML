@@ -28,7 +28,7 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.fusesource.jansi.Ansi;
+//import org.fusesource.jansi.Ansi;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -78,7 +78,7 @@ public class Context {
     private File outputDirectory = null;
     private Boolean atInitTimeLock = false;
 
-    public Ansi ansi = new Ansi();
+    //public Ansi ansi = new Ansi();
 
     public Context(ThingMLCompiler compiler) {
         this.debugStrings = new HashMap<Integer, String>();

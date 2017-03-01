@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -189,19 +190,25 @@ public abstract class ThingMLCompiler {
         if (model.getErrors().size() > 0) {
             isOK = false;
             System.err.println("ERROR: The input model contains " + model.getErrors().size() + " errors.");
-            for (Resource.Diagnostic d : model.getErrors()) {
-                
-                    System.err.println("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
-                    errors.add("Error in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
-                
+            for (Resource.Diagnostic d : model.getErrors()) {    
+            		String location = d.getLocation();
+            		if (location == null) {
+            			location = model.getURI().toFileString();
+            		}            	
+                    System.err.println("Error in file  " + location + " (" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+                    errors.add("Error in file  " + location + " (" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());            	
             }
         }
 
         if (model.getWarnings().size() > 0) {
             System.out.println("WARNING: The input model contains " + model.getWarnings().size() + " warnings.");
             for (Resource.Diagnostic d : model.getWarnings()) {
-                System.out.println("Warning in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
-                warnings.add("Warning in file  " + d.getLocation() + "(" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+          		String location = d.getLocation();
+        		if (location == null) {
+        			location = model.getURI().toFileString();
+        		}              	
+                System.out.println("Warning in file  " + location + " (" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+                warnings.add("Warning in file  " + location + " (" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
             }
         }
         return isOK;

@@ -68,11 +68,11 @@
             <version>2.5</version>
         </dependency>
 
-        <dependency>
+        <!-- <dependency>
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
             <version>1.14</version>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 

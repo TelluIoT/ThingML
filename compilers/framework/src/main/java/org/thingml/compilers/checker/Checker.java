@@ -21,14 +21,11 @@
  */
 package org.thingml.compilers.checker;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
-import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.genericRules.AutotransitionCycles;
 import org.thingml.compilers.checker.genericRules.ConnectorCycles;
@@ -57,7 +54,7 @@ abstract public class Checker {
     public Set<CheckerInfo> Errors;
     public Set<CheckerInfo> Warnings;
     public Set<CheckerInfo> Notices;
-    public List<ErrorWrapper> wrappers;
+    //public List<ErrorWrapper> wrappers;
     public TypeChecker typeChecker = new TypeChecker();
     private Set<Rule> Rules;
     private String compiler;
@@ -69,8 +66,8 @@ abstract public class Checker {
         Errors = new HashSet<CheckerInfo>();
         Warnings = new HashSet<CheckerInfo>();
         Notices = new HashSet<CheckerInfo>();
-        wrappers = new ArrayList<ErrorWrapper>();
-        wrappers.add(new EMFWrapper());
+        /*wrappers = new ArrayList<ErrorWrapper>();
+        wrappers.add(new EMFWrapper());*/
 
         this.ctx = new Context(null);
         this.compiler = compiler;
@@ -118,44 +115,44 @@ abstract public class Checker {
 
     public void addError(String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
-        for (ErrorWrapper wrapper : wrappers) {
+        /*for (ErrorWrapper wrapper : wrappers) {
             wrapper.addError(msg, el);
-        }
+        }*/
     }
 
     public void addError(String compiler, String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
-        for (ErrorWrapper wrapper : wrappers) {
+        /*for (ErrorWrapper wrapper : wrappers) {
             wrapper.addError(msg, el);
-        }
+        }*/
     }
 
     public void addGenericError(String msg, EObject el) {
         Errors.add(new CheckerInfo(InfoType.ERROR, generic, msg, el));
-        for (ErrorWrapper wrapper : wrappers) {
+        /*for (ErrorWrapper wrapper : wrappers) {
             wrapper.addError(msg, el);
-        }
+        }*/
     }
 
     public void addWarning(String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
-        for (ErrorWrapper wrapper : wrappers) {
+        /*for (ErrorWrapper wrapper : wrappers) {
             wrapper.addWarning(msg, el);
-        }
+        }*/
     }
 
     public void addWarning(String compiler, String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
-        for (ErrorWrapper wrapper : wrappers) {
+        /*for (ErrorWrapper wrapper : wrappers) {
             wrapper.addWarning(msg, el);
-        }
+        }*/
     }
 
     public void addGenericWarning(String msg, EObject el) {
         Warnings.add(new CheckerInfo(InfoType.WARNING, generic, msg, el));
-        for (ErrorWrapper wrapper : wrappers) {
+        /*for (ErrorWrapper wrapper : wrappers) {
             wrapper.addWarning(msg, el);
-        }
+        }*/
     }
 
     public void addNotice(String msg, EObject el) {
@@ -183,58 +180,58 @@ abstract public class Checker {
     }
 
     public void printReport() {
-       new Thread() {
+       /*new Thread() {
             @Override
             public void run() {
-                super.run();
-                AnsiConsole.systemInstall();
-                ctx.ansi.fg(Ansi.Color.BLUE);
+                super.run();*/
+                //AnsiConsole.systemInstall();
+                //ctx.ansi.fg(Ansi.Color.BLUE);
                 printNotices();
-                ctx.ansi.fg(Ansi.Color.MAGENTA);
+                //ctx.ansi.fg(Ansi.Color.MAGENTA);
                 printWarnings();
-                ctx.ansi.fg(Ansi.Color.RED);
+                //ctx.ansi.fg(Ansi.Color.RED);
                 printErrors();
-                ctx.ansi.reset();
-                if (ctx.ansi.isEnabled()) System.out.print(ctx.ansi);
-                AnsiConsole.systemUninstall();
-            }
-        }.start();
+                //ctx.ansi.reset();
+                //if (ctx.ansi.isEnabled()) System.out.print(ctx.ansi);
+                //AnsiConsole.systemUninstall();
+      /*      }
+        }.start();*/
     }
 
     public void printErrors() {
-        if(ctx.ansi.isEnabled()) {
+        /*if(ctx.ansi.isEnabled()) {
             for (final CheckerInfo i : Errors) {
                 ctx.ansi.a(i.toString());
             }
-        } else {
+        } else {*/
             for (final CheckerInfo i : Errors) {
-                System.out.print(i.toString());
+                System.err.print(i.toString());
             }
-        }
+        //}
     }
 
     public void printWarnings() {
-        if(ctx.ansi.isEnabled()) {
+        /*if(ctx.ansi.isEnabled()) {
             for (final CheckerInfo i : Warnings) {
                 ctx.ansi.a(i.toString());
             }
-        } else {
+        } else {*/
             for (final CheckerInfo i : Warnings) {
                 System.out.print(i.toString());
             }
-        }
+        //}
     }
 
     public void printNotices() {
-        if(ctx.ansi.isEnabled()) {
+        /*if(ctx.ansi.isEnabled()) {
             for (CheckerInfo i : Notices) {
                 ctx.ansi.a(i.toString());
             }
-        } else {
+        } else {*/
             for (CheckerInfo i : Notices) {
                 System.out.print(i.toString());
             }
-        }
+        //}
     }
 
     // ---------------------- Structures ----------------------
