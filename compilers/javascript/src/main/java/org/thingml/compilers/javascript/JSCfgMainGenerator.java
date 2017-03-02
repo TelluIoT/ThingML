@@ -176,7 +176,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
         }
 
 
-        if (useThis) {
+        /*if (useThis) { //FIXME: have a pass on debug traces
             if (debug || debugProfile.getDebugInstances().contains(i)) {
                 builder.append("this." + i.getName() + "." + i.getType().getName() + "_print_debug(this." + i.getName() + ", '" + ctx.traceInit(i.getType()) + "');\n");
             }
@@ -184,7 +184,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             if (debug || debugProfile.getDebugInstances().contains(i)) {
                 builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", '" + ctx.traceInit(i.getType()) + "');\n");
             }
-        }
+        }*/
     }
 
     public static void generateInstances(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
