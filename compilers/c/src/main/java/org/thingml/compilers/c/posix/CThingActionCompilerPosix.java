@@ -58,6 +58,7 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
         Checker checker = ctx.getCompiler().checker;
         Type actual = checker.typeChecker.computeTypeOf(action.getMsg());
         generate(action.getMsg(), b, ctx);
+        System.out.println(">>>>>" + b.toString());
         if (actual != null) {
             if (actual.getName().equals("Integer")) {
                 builder.append("fprintf(stdout, \"%i\"," + b.toString() + ");\n");
@@ -65,6 +66,7 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
                 builder.append("fprintf(stdout, \"%c\"," + b.toString() + ");\n");
             } else if (actual.getName().equals("String")) {
                 builder.append("fprintf(stdout, " + b.toString() + ");\n");
+                System.out.println(">>>>>>>>" + "fprintf(stdout, " + b.toString() + ");\n");
             } else if (actual.getName().equals("Real")) {
                 builder.append("fprintf(stdout, \"%f\"," + b.toString() + ");\n");
             } else if (actual.getName().equals("Boolean")) {

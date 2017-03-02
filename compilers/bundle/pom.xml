@@ -76,7 +76,8 @@
       </plugin>
     </plugins>
 
-    <!-- <pluginManagement>
+    <!-- 
+    <pluginManagement>
       <plugins>
         <plugin>
           <groupId>org.eclipse.m2e</groupId>

@@ -95,8 +95,9 @@ public class ThingHelper {
     }
 
 
-    public static List<Property> allPropertiesInDepth(Thing self) {
-        List<Property> result = ThingMLHelpers.allProperties(self);
+    public static Set<Property> allPropertiesInDepth(Thing self) {
+    	Set<Property> result = new HashSet<Property>();
+    	result.addAll(ThingMLHelpers.allProperties(self));
         for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
             result.addAll(CompositeStateHelper.allContainedProperties(sm));
         }
