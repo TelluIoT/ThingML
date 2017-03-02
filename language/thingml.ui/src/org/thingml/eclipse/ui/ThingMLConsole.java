@@ -32,7 +32,7 @@ public class ThingMLConsole {
 
 	private static ThingMLConsole instance;
 	
-	private static Color COLOR = new Color(new Display(), 0, 0, 0);
+	//private static Color COLOR = new Color(new Display(), 0, 0, 0);
 	
 	public static ThingMLConsole getInstance() {
 		if (instance == null) {
@@ -45,21 +45,21 @@ public class ThingMLConsole {
 		Display display = Display.getCurrent();
 		if (display != null)
 			return display.getSystemColor(SWT.COLOR_BLUE);
-		return COLOR;
+		return null;
 	}
 	
 	private static Color getDebugColor() {
 		Display display = Display.getCurrent();
 		if(display != null)
 			return display.getSystemColor(SWT.COLOR_BLACK);
-		return COLOR;
+		return null;
 	}
 	
 	private static Color getErrorColor() {
 		Display display = Display.getCurrent();
 		if (display != null)
 			return display.getSystemColor(SWT.COLOR_RED);
-		return COLOR;
+		return null;
 	}
 	
 	private IOConsoleOutputStream dbg;
