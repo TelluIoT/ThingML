@@ -109,8 +109,8 @@ public class CompositeStateHelper {
     }
 
 
-    public static List<CompositeState> allContainedCompositeStatesIncludingSessions(CompositeState self) {
-        List<CompositeState> result = new ArrayList<CompositeState>();
+    public static Set<CompositeState> allContainedCompositeStatesIncludingSessions(CompositeState self) {
+    	Set<CompositeState> result = new HashSet<CompositeState>();
         for(State s : allContainedStatesIncludingSessions(self)) {
             if (s instanceof CompositeState) {
                 result.add((CompositeState)s);

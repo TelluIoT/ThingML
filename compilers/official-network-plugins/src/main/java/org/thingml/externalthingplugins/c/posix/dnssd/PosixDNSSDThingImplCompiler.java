@@ -181,7 +181,7 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
         builder.append("switch(state) {\n");
 
         //there must be one empty state
-        CompositeState cs = CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm).get(0);
+        CompositeState cs = CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm).iterator().next();
 
         builder.append("case " + ctx.getStateID(cs) + ":{\n");
         if (debugProfile.isDebugBehavior()) {
