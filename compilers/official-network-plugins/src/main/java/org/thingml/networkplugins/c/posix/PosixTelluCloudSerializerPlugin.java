@@ -16,23 +16,18 @@
  */
 package org.thingml.networkplugins.c.posix;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.*;
+import org.thingml.xtext.thingML.impl.ParameterImpl;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.spi.SerializationPlugin;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.thingML.ExternalConnector;
-import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.thingML.PlatformAnnotation;
-import org.thingml.xtext.thingML.TypeRef;
-import org.thingml.xtext.thingML.impl.ParameterImpl;
-
 
 /**
  * Created by jakobho on 01.02.2017.
@@ -56,29 +51,39 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
     }
 
     @Override
-    Integer getMaximumSerializedParameterValueLength(Parameter p, CCompilerContext ctx) {
-        if (p.getName().equals("deviceID")) {
+    Integer getMaximumSerializedParameterValueLength(Parameter p, CCompilerContext ctx, ExternalConnector eco) {
+        if (p.getName().equals("deviceId")) {
             // This will be a string literal given by an annotation
-            return 0;
+            String deviceId = AnnotatedElementHelper.annotationOrElse(eco, "tellucloud_deviceid", "");
+            if (deviceId.isEmpty()) deviceId = AnnotatedElementHelper.annotationOrElse(eco.getProtocol(), "tellucloud_deviceid", "");
+            if (deviceId.isEmpty()) return 4; // Print a null
+            else return deviceId.length()+2; // String + surrounding '""'
 
         } else if (p.getName().equals("observations")) {
             TelluCloudGroupedParameter grouped = (TelluCloudGroupedParameter)p;
             // Return the length of the set and the contained grouped parameters
             Integer length = 2; // '[]' Base group array JSON
             for (Parameter gp : grouped.m.getParameters()) {
-                length += getMaximumSerializedParameterLength(gp, ctx);
+                length += getMaximumSerializedParameterLength(gp, ctx, eco);
                 length += 2; // Surrounding '{}'
             }
             return length;
         } else {
-            return super.getMaximumSerializedParameterValueLength(p, ctx);
+            return super.getMaximumSerializedParameterValueLength(p, ctx, eco);
         }
     }
 
     @Override
-    void generateParameterValueSerialization(StringBuilder builder, String bufferName, Integer maxLength, Parameter p, CCompilerContext ctx) {
+    void generateParameterValueSerialization(StringBuilder builder, String bufferName, Integer maxLength, Parameter p, CCompilerContext ctx, ExternalConnector eco) {
         if (p.getName().equals("deviceId")) {
-           builder.append("!!!!!!!!! DEVICE ID !!!!!!!!\n");
+            // Print the string literal given by the annotation
+            String deviceId = AnnotatedElementHelper.annotationOrElse(eco, "tellucloud_deviceid", "");
+            if (deviceId.isEmpty()) deviceId = AnnotatedElementHelper.annotationOrElse(eco.getProtocol(), "tellucloud_deviceid", "");
+            if (deviceId.isEmpty()) deviceId = "null";
+            else deviceId = "\\\""+deviceId+"\\\"";
+
+            builder.append("    result = sprintf(&"+bufferName+"[index], \"%.*s\", "+maxLength+"-index, \""+deviceId+"\");\n");
+            builder.append("    if (result >= 0) { index += result; } else { return; }\n");
         } else if (p.getName().equals("observations")) {
             TelluCloudGroupedParameter grouped = (TelluCloudGroupedParameter)p;
             // This is our special grouped placeholder
@@ -88,7 +93,7 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
 
             // Generate the normal JSON parameters to put inside the group
             StringBuilder original = new StringBuilder();
-            generateParameterSerializations(original, bufferName, maxLength, grouped.m, ctx);
+            generateParameterSerializations(original, bufferName, maxLength, grouped.m, ctx, eco);
 
             // Modify to wrap each parameter inside an object '{}'
             Boolean first = true;
@@ -128,7 +133,7 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
             builder.append("    if (result >= 0) { index += result; } else { return; }\n");
         } else {
             // Any other parameter is serialized normally
-            super.generateParameterValueSerialization(builder, bufferName, maxLength, p, ctx);
+            super.generateParameterValueSerialization(builder, bufferName, maxLength, p, ctx, eco);
         }
     }
 
@@ -148,7 +153,7 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
             Message placeholderMsg = EcoreUtil.copy(m);
             placeholderMsg.getParameters().clear();
             placeholderMsg.getParameters().addAll(groupedCopy);
-            Parameter placeholder = new TelluCloudGroupedParameter(placeholderMsg); 
+            Parameter placeholder = new TelluCloudGroupedParameter(placeholderMsg);
             grouped.add(placeholder);
             // Set the @json_message_name annotation
             PlatformAnnotation jsonMsgName = EcoreUtil.copy(msg.getAnnotations().get(0));
@@ -174,14 +179,11 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
     private class TelluCloudGroupedParameter extends ParameterImpl {
         Message m;
 
-        //BasicEList<PlatformAnnotation> ans = new BasicEList<PlatformAnnotation>();
-        
         public TelluCloudGroupedParameter(Message msg)
         {
             super();
             this.setName("observations");
             this.m = msg;
         }
-
     }
 }
