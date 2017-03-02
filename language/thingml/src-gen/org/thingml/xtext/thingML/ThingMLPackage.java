@@ -1,16 +1,17 @@
 /**
+ * *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ *  *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ *  *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
@@ -3650,6 +3651,34 @@ public interface ThingMLPackage extends EPackage
   int MOD_EXPRESSION_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 2;
 
   /**
+   * The meta object id for the '{@link org.thingml.xtext.thingML.impl.ExpressionGroupImpl <em>Expression Group</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.thingml.xtext.thingML.impl.ExpressionGroupImpl
+   * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getExpressionGroup()
+   * @generated
+   */
+  int EXPRESSION_GROUP = 78;
+
+  /**
+   * The feature id for the '<em><b>Term</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EXPRESSION_GROUP__TERM = EXPRESSION_FEATURE_COUNT + 0;
+
+  /**
+   * The number of structural features of the '<em>Expression Group</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int EXPRESSION_GROUP_FEATURE_COUNT = EXPRESSION_FEATURE_COUNT + 1;
+
+  /**
    * The meta object id for the '{@link org.thingml.xtext.thingML.impl.NotExpressionImpl <em>Not Expression</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -3657,7 +3686,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getNotExpression()
    * @generated
    */
-  int NOT_EXPRESSION = 78;
+  int NOT_EXPRESSION = 79;
 
   /**
    * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -3685,7 +3714,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getUnaryMinus()
    * @generated
    */
-  int UNARY_MINUS = 79;
+  int UNARY_MINUS = 80;
 
   /**
    * The feature id for the '<em><b>Term</b></em>' containment reference.
@@ -3713,7 +3742,7 @@ public interface ThingMLPackage extends EPackage
    * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getArrayIndex()
    * @generated
    */
-  int ARRAY_INDEX = 80;
+  int ARRAY_INDEX = 81;
 
   /**
    * The feature id for the '<em><b>Array</b></em>' containment reference.
@@ -5998,6 +6027,27 @@ public interface ThingMLPackage extends EPackage
   EReference getModExpression_Rhs();
 
   /**
+   * Returns the meta object for class '{@link org.thingml.xtext.thingML.ExpressionGroup <em>Expression Group</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Expression Group</em>'.
+   * @see org.thingml.xtext.thingML.ExpressionGroup
+   * @generated
+   */
+  EClass getExpressionGroup();
+
+  /**
+   * Returns the meta object for the containment reference '{@link org.thingml.xtext.thingML.ExpressionGroup#getTerm <em>Term</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Term</em>'.
+   * @see org.thingml.xtext.thingML.ExpressionGroup#getTerm()
+   * @see #getExpressionGroup()
+   * @generated
+   */
+  EReference getExpressionGroup_Term();
+
+  /**
    * Returns the meta object for class '{@link org.thingml.xtext.thingML.NotExpression <em>Not Expression</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -7945,6 +7995,24 @@ public interface ThingMLPackage extends EPackage
      * @generated
      */
     EReference MOD_EXPRESSION__RHS = eINSTANCE.getModExpression_Rhs();
+
+    /**
+     * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.ExpressionGroupImpl <em>Expression Group</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.thingml.xtext.thingML.impl.ExpressionGroupImpl
+     * @see org.thingml.xtext.thingML.impl.ThingMLPackageImpl#getExpressionGroup()
+     * @generated
+     */
+    EClass EXPRESSION_GROUP = eINSTANCE.getExpressionGroup();
+
+    /**
+     * The meta object literal for the '<em><b>Term</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference EXPRESSION_GROUP__TERM = eINSTANCE.getExpressionGroup_Term();
 
     /**
      * The meta object literal for the '{@link org.thingml.xtext.thingML.impl.NotExpressionImpl <em>Not Expression</em>}' class.

@@ -1,16 +1,17 @@
 /**
+ * *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ *  *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ *  *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
@@ -47,6 +48,7 @@ import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.Event;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
 import org.thingml.xtext.thingML.ExternalConnector;
@@ -660,6 +662,13 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * @generated
    */
   private EClass modExpressionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass expressionGroupEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -2870,6 +2879,26 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getExpressionGroup()
+  {
+    return expressionGroupEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getExpressionGroup_Term()
+  {
+    return (EReference)expressionGroupEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getNotExpression()
   {
     return notExpressionEClass;
@@ -3255,6 +3284,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     createEReference(modExpressionEClass, MOD_EXPRESSION__LHS);
     createEReference(modExpressionEClass, MOD_EXPRESSION__RHS);
 
+    expressionGroupEClass = createEClass(EXPRESSION_GROUP);
+    createEReference(expressionGroupEClass, EXPRESSION_GROUP__TERM);
+
     notExpressionEClass = createEClass(NOT_EXPRESSION);
     createEReference(notExpressionEClass, NOT_EXPRESSION__TERM);
 
@@ -3380,6 +3412,7 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     timesExpressionEClass.getESuperTypes().add(this.getExpression());
     divExpressionEClass.getESuperTypes().add(this.getExpression());
     modExpressionEClass.getESuperTypes().add(this.getExpression());
+    expressionGroupEClass.getESuperTypes().add(this.getExpression());
     notExpressionEClass.getESuperTypes().add(this.getExpression());
     unaryMinusEClass.getESuperTypes().add(this.getExpression());
     arrayIndexEClass.getESuperTypes().add(this.getExpression());
@@ -3674,6 +3707,9 @@ public class ThingMLPackageImpl extends EPackageImpl implements ThingMLPackage
     initEClass(modExpressionEClass, ModExpression.class, "ModExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getModExpression_Lhs(), this.getExpression(), null, "lhs", null, 0, 1, ModExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getModExpression_Rhs(), this.getExpression(), null, "rhs", null, 0, 1, ModExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(expressionGroupEClass, ExpressionGroup.class, "ExpressionGroup", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getExpressionGroup_Term(), this.getExpression(), null, "term", null, 0, 1, ExpressionGroup.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(notExpressionEClass, NotExpression.class, "NotExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNotExpression_Term(), this.getExpression(), null, "term", null, 0, 1, NotExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

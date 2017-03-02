@@ -1,16 +1,17 @@
 /**
+ * *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ *  *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ *  *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
@@ -477,6 +478,11 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
       public Adapter caseModExpression(ModExpression object)
       {
         return createModExpressionAdapter();
+      }
+      @Override
+      public Adapter caseExpressionGroup(ExpressionGroup object)
+      {
+        return createExpressionGroupAdapter();
       }
       @Override
       public Adapter caseNotExpression(NotExpression object)
@@ -1681,6 +1687,21 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createModExpressionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.ExpressionGroup <em>Expression Group</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.ExpressionGroup
+   * @generated
+   */
+  public Adapter createExpressionGroupAdapter()
   {
     return null;
   }

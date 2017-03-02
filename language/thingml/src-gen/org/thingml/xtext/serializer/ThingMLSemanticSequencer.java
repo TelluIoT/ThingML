@@ -48,6 +48,7 @@ import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
+import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
 import org.thingml.xtext.thingML.ExternalConnector;
@@ -190,6 +191,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.EVENT_REFERENCE:
 				sequence_EventReference(context, (EventReference) semanticObject); 
+				return; 
+			case ThingMLPackage.EXPRESSION_GROUP:
+				sequence_Primary(context, (ExpressionGroup) semanticObject); 
 				return; 
 			case ThingMLPackage.EXTERN_EXPRESSION:
 				sequence_ExternExpression(context, (ExternExpression) semanticObject); 
@@ -429,12 +433,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Addition returns MinusExpression
 	 *     Addition.PlusExpression_1_0_0 returns MinusExpression
 	 *     Addition.MinusExpression_1_1_0 returns MinusExpression
-	 *     Multiplication returns MinusExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns MinusExpression
-	 *     Multiplication.DivExpression_1_1_0 returns MinusExpression
-	 *     Modulo returns MinusExpression
-	 *     Modulo.ModExpression_1_0 returns MinusExpression
-	 *     Primary returns MinusExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Addition_MinusExpression_1_1_0 rhs=Multiplication)
@@ -473,12 +471,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Addition returns PlusExpression
 	 *     Addition.PlusExpression_1_0_0 returns PlusExpression
 	 *     Addition.MinusExpression_1_1_0 returns PlusExpression
-	 *     Multiplication returns PlusExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns PlusExpression
-	 *     Multiplication.DivExpression_1_1_0 returns PlusExpression
-	 *     Modulo returns PlusExpression
-	 *     Modulo.ModExpression_1_0 returns PlusExpression
-	 *     Primary returns PlusExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Addition_PlusExpression_1_0_0 rhs=Multiplication)
@@ -506,23 +498,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     OrExpression.OrExpression_1_0 returns AndExpression
 	 *     AndExpression returns AndExpression
 	 *     AndExpression.AndExpression_1_0 returns AndExpression
-	 *     Equality returns AndExpression
-	 *     Equality.EqualsExpression_1_0_0 returns AndExpression
-	 *     Equality.NotEqualsExpression_1_1_0 returns AndExpression
-	 *     Comparaison returns AndExpression
-	 *     Comparaison.GreaterExpression_1_0_0 returns AndExpression
-	 *     Comparaison.LowerExpression_1_1_0 returns AndExpression
-	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns AndExpression
-	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns AndExpression
-	 *     Addition returns AndExpression
-	 *     Addition.PlusExpression_1_0_0 returns AndExpression
-	 *     Addition.MinusExpression_1_1_0 returns AndExpression
-	 *     Multiplication returns AndExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns AndExpression
-	 *     Multiplication.DivExpression_1_1_0 returns AndExpression
-	 *     Modulo returns AndExpression
-	 *     Modulo.ModExpression_1_0 returns AndExpression
-	 *     Primary returns AndExpression
 	 *
 	 * Constraint:
 	 *     (lhs=AndExpression_AndExpression_1_0 rhs=Equality)
@@ -641,28 +616,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 * Contexts:
 	 *     Expression returns CastExpression
 	 *     CastExpression returns CastExpression
-	 *     CastExpression.CastExpression_1_0 returns CastExpression
-	 *     OrExpression returns CastExpression
-	 *     OrExpression.OrExpression_1_0 returns CastExpression
-	 *     AndExpression returns CastExpression
-	 *     AndExpression.AndExpression_1_0 returns CastExpression
-	 *     Equality returns CastExpression
-	 *     Equality.EqualsExpression_1_0_0 returns CastExpression
-	 *     Equality.NotEqualsExpression_1_1_0 returns CastExpression
-	 *     Comparaison returns CastExpression
-	 *     Comparaison.GreaterExpression_1_0_0 returns CastExpression
-	 *     Comparaison.LowerExpression_1_1_0 returns CastExpression
-	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns CastExpression
-	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns CastExpression
-	 *     Addition returns CastExpression
-	 *     Addition.PlusExpression_1_0_0 returns CastExpression
-	 *     Addition.MinusExpression_1_1_0 returns CastExpression
-	 *     Multiplication returns CastExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns CastExpression
-	 *     Multiplication.DivExpression_1_1_0 returns CastExpression
-	 *     Modulo returns CastExpression
-	 *     Modulo.ModExpression_1_0 returns CastExpression
-	 *     Primary returns CastExpression
 	 *
 	 * Constraint:
 	 *     (term=CastExpression_CastExpression_1_0 type=[Type|ID] isArray?='['?)
@@ -689,15 +642,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Comparaison.LowerExpression_1_1_0 returns GreaterExpression
 	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns GreaterExpression
 	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns GreaterExpression
-	 *     Addition returns GreaterExpression
-	 *     Addition.PlusExpression_1_0_0 returns GreaterExpression
-	 *     Addition.MinusExpression_1_1_0 returns GreaterExpression
-	 *     Multiplication returns GreaterExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns GreaterExpression
-	 *     Multiplication.DivExpression_1_1_0 returns GreaterExpression
-	 *     Modulo returns GreaterExpression
-	 *     Modulo.ModExpression_1_0 returns GreaterExpression
-	 *     Primary returns GreaterExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Comparaison_GreaterExpression_1_0_0 rhs=Addition)
@@ -733,15 +677,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Comparaison.LowerExpression_1_1_0 returns GreaterOrEqualExpression
 	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns GreaterOrEqualExpression
 	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns GreaterOrEqualExpression
-	 *     Addition returns GreaterOrEqualExpression
-	 *     Addition.PlusExpression_1_0_0 returns GreaterOrEqualExpression
-	 *     Addition.MinusExpression_1_1_0 returns GreaterOrEqualExpression
-	 *     Multiplication returns GreaterOrEqualExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns GreaterOrEqualExpression
-	 *     Multiplication.DivExpression_1_1_0 returns GreaterOrEqualExpression
-	 *     Modulo returns GreaterOrEqualExpression
-	 *     Modulo.ModExpression_1_0 returns GreaterOrEqualExpression
-	 *     Primary returns GreaterOrEqualExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Comparaison_GreaterOrEqualExpression_1_2_0 rhs=Addition)
@@ -777,15 +712,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Comparaison.LowerExpression_1_1_0 returns LowerExpression
 	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns LowerExpression
 	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns LowerExpression
-	 *     Addition returns LowerExpression
-	 *     Addition.PlusExpression_1_0_0 returns LowerExpression
-	 *     Addition.MinusExpression_1_1_0 returns LowerExpression
-	 *     Multiplication returns LowerExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns LowerExpression
-	 *     Multiplication.DivExpression_1_1_0 returns LowerExpression
-	 *     Modulo returns LowerExpression
-	 *     Modulo.ModExpression_1_0 returns LowerExpression
-	 *     Primary returns LowerExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Comparaison_LowerExpression_1_1_0 rhs=Addition)
@@ -821,15 +747,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Comparaison.LowerExpression_1_1_0 returns LowerOrEqualExpression
 	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns LowerOrEqualExpression
 	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns LowerOrEqualExpression
-	 *     Addition returns LowerOrEqualExpression
-	 *     Addition.PlusExpression_1_0_0 returns LowerOrEqualExpression
-	 *     Addition.MinusExpression_1_1_0 returns LowerOrEqualExpression
-	 *     Multiplication returns LowerOrEqualExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns LowerOrEqualExpression
-	 *     Multiplication.DivExpression_1_1_0 returns LowerOrEqualExpression
-	 *     Modulo returns LowerOrEqualExpression
-	 *     Modulo.ModExpression_1_0 returns LowerOrEqualExpression
-	 *     Primary returns LowerOrEqualExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Comparaison_LowerOrEqualExpression_1_3_0 rhs=Addition)
@@ -900,9 +817,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *             properties+=Property* 
 	 *             entry=Action? 
 	 *             exit=Action? 
-	 *             internal+=InternalTransition? 
-	 *             (substate+=State? internal+=InternalTransition?)* 
-	 *             (region+=Region | session+=Session)*
+	 *             (substate+=State | internal+=InternalTransition)* 
+	 *             region+=Region? 
+	 *             (session+=Session? region+=Region?)*
 	 *         )
 	 *     )
 	 */
@@ -1125,20 +1042,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Equality returns EqualsExpression
 	 *     Equality.EqualsExpression_1_0_0 returns EqualsExpression
 	 *     Equality.NotEqualsExpression_1_1_0 returns EqualsExpression
-	 *     Comparaison returns EqualsExpression
-	 *     Comparaison.GreaterExpression_1_0_0 returns EqualsExpression
-	 *     Comparaison.LowerExpression_1_1_0 returns EqualsExpression
-	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns EqualsExpression
-	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns EqualsExpression
-	 *     Addition returns EqualsExpression
-	 *     Addition.PlusExpression_1_0_0 returns EqualsExpression
-	 *     Addition.MinusExpression_1_1_0 returns EqualsExpression
-	 *     Multiplication returns EqualsExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns EqualsExpression
-	 *     Multiplication.DivExpression_1_1_0 returns EqualsExpression
-	 *     Modulo returns EqualsExpression
-	 *     Modulo.ModExpression_1_0 returns EqualsExpression
-	 *     Primary returns EqualsExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Equality_EqualsExpression_1_0_0 rhs=Comparaison)
@@ -1169,20 +1072,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Equality returns NotEqualsExpression
 	 *     Equality.EqualsExpression_1_0_0 returns NotEqualsExpression
 	 *     Equality.NotEqualsExpression_1_1_0 returns NotEqualsExpression
-	 *     Comparaison returns NotEqualsExpression
-	 *     Comparaison.GreaterExpression_1_0_0 returns NotEqualsExpression
-	 *     Comparaison.LowerExpression_1_1_0 returns NotEqualsExpression
-	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns NotEqualsExpression
-	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns NotEqualsExpression
-	 *     Addition returns NotEqualsExpression
-	 *     Addition.PlusExpression_1_0_0 returns NotEqualsExpression
-	 *     Addition.MinusExpression_1_1_0 returns NotEqualsExpression
-	 *     Multiplication returns NotEqualsExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns NotEqualsExpression
-	 *     Multiplication.DivExpression_1_1_0 returns NotEqualsExpression
-	 *     Modulo returns NotEqualsExpression
-	 *     Modulo.ModExpression_1_0 returns NotEqualsExpression
-	 *     Primary returns NotEqualsExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Equality_NotEqualsExpression_1_1_0 rhs=Comparaison)
@@ -1586,8 +1475,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Multiplication.TimesExpression_1_0_0 returns ModExpression
 	 *     Multiplication.DivExpression_1_1_0 returns ModExpression
 	 *     Modulo returns ModExpression
-	 *     Modulo.ModExpression_1_0 returns ModExpression
-	 *     Primary returns ModExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Modulo_ModExpression_1_0 rhs=Expression)
@@ -1629,9 +1516,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Multiplication returns DivExpression
 	 *     Multiplication.TimesExpression_1_0_0 returns DivExpression
 	 *     Multiplication.DivExpression_1_1_0 returns DivExpression
-	 *     Modulo returns DivExpression
-	 *     Modulo.ModExpression_1_0 returns DivExpression
-	 *     Primary returns DivExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Multiplication_DivExpression_1_1_0 rhs=Modulo)
@@ -1673,9 +1557,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Multiplication returns TimesExpression
 	 *     Multiplication.TimesExpression_1_0_0 returns TimesExpression
 	 *     Multiplication.DivExpression_1_1_0 returns TimesExpression
-	 *     Modulo returns TimesExpression
-	 *     Modulo.ModExpression_1_0 returns TimesExpression
-	 *     Primary returns TimesExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Multiplication_TimesExpression_1_0_0 rhs=Modulo)
@@ -1734,25 +1615,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     CastExpression.CastExpression_1_0 returns OrExpression
 	 *     OrExpression returns OrExpression
 	 *     OrExpression.OrExpression_1_0 returns OrExpression
-	 *     AndExpression returns OrExpression
-	 *     AndExpression.AndExpression_1_0 returns OrExpression
-	 *     Equality returns OrExpression
-	 *     Equality.EqualsExpression_1_0_0 returns OrExpression
-	 *     Equality.NotEqualsExpression_1_1_0 returns OrExpression
-	 *     Comparaison returns OrExpression
-	 *     Comparaison.GreaterExpression_1_0_0 returns OrExpression
-	 *     Comparaison.LowerExpression_1_1_0 returns OrExpression
-	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns OrExpression
-	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns OrExpression
-	 *     Addition returns OrExpression
-	 *     Addition.PlusExpression_1_0_0 returns OrExpression
-	 *     Addition.MinusExpression_1_1_0 returns OrExpression
-	 *     Multiplication returns OrExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns OrExpression
-	 *     Multiplication.DivExpression_1_1_0 returns OrExpression
-	 *     Modulo returns OrExpression
-	 *     Modulo.ModExpression_1_0 returns OrExpression
-	 *     Primary returns OrExpression
 	 *
 	 * Constraint:
 	 *     (lhs=OrExpression_OrExpression_1_0 rhs=AndExpression)
@@ -1803,6 +1665,47 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getPlatformAnnotationAccess().getNameANNOTATION_IDTerminalRuleCall_0_0(), semanticObject.getName());
 		feeder.accept(grammarAccess.getPlatformAnnotationAccess().getValueSTRING_LITTerminalRuleCall_1_0(), semanticObject.getValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Expression returns ExpressionGroup
+	 *     CastExpression returns ExpressionGroup
+	 *     CastExpression.CastExpression_1_0 returns ExpressionGroup
+	 *     OrExpression returns ExpressionGroup
+	 *     OrExpression.OrExpression_1_0 returns ExpressionGroup
+	 *     AndExpression returns ExpressionGroup
+	 *     AndExpression.AndExpression_1_0 returns ExpressionGroup
+	 *     Equality returns ExpressionGroup
+	 *     Equality.EqualsExpression_1_0_0 returns ExpressionGroup
+	 *     Equality.NotEqualsExpression_1_1_0 returns ExpressionGroup
+	 *     Comparaison returns ExpressionGroup
+	 *     Comparaison.GreaterExpression_1_0_0 returns ExpressionGroup
+	 *     Comparaison.LowerExpression_1_1_0 returns ExpressionGroup
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns ExpressionGroup
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns ExpressionGroup
+	 *     Addition returns ExpressionGroup
+	 *     Addition.PlusExpression_1_0_0 returns ExpressionGroup
+	 *     Addition.MinusExpression_1_1_0 returns ExpressionGroup
+	 *     Multiplication returns ExpressionGroup
+	 *     Multiplication.TimesExpression_1_0_0 returns ExpressionGroup
+	 *     Multiplication.DivExpression_1_1_0 returns ExpressionGroup
+	 *     Modulo returns ExpressionGroup
+	 *     Modulo.ModExpression_1_0 returns ExpressionGroup
+	 *     Primary returns ExpressionGroup
+	 *
+	 * Constraint:
+	 *     term=Expression
+	 */
+	protected void sequence_Primary(ISerializationContext context, ExpressionGroup semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.EXPRESSION_GROUP__TERM) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.EXPRESSION_GROUP__TERM));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPrimaryAccess().getTermExpressionParserRuleCall_0_2_0(), semanticObject.getTerm());
 		feeder.finish();
 	}
 	

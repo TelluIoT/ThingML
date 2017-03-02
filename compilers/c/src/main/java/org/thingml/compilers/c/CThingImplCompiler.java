@@ -734,13 +734,13 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
 
     	
-    	
+    	/*
         builder.append("//Region list: " );
         for (StateContainer r : CompositeStateHelper.allContainedRegions(cs)) {
             builder.append(r.getName() + " ");
         }
         builder.append("\n");
-
+*/
         for (StateContainer r : CompositeStateHelper.allContainedRegions(cs)) {
         	
             builder.append("//Region " + r.getName() + "\n");

@@ -282,6 +282,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ModExpression/lhs"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ModExpression/rhs"/>
     </genClasses>
+    <genClasses ecoreClass="ThingML.ecore#//ExpressionGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//ExpressionGroup/term"/>
+    </genClasses>
     <genClasses ecoreClass="ThingML.ecore#//NotExpression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ThingML.ecore#//NotExpression/term"/>
     </genClasses>

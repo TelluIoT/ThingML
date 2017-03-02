@@ -401,6 +401,7 @@ public class ThingMLParser extends AbstractContentAssistParser {
 					put(grammarAccess.getMultiplicationAccess().getRhsAssignment_1_0_2(), "rule__Multiplication__RhsAssignment_1_0_2");
 					put(grammarAccess.getMultiplicationAccess().getRhsAssignment_1_1_2(), "rule__Multiplication__RhsAssignment_1_1_2");
 					put(grammarAccess.getModuloAccess().getRhsAssignment_1_2(), "rule__Modulo__RhsAssignment_1_2");
+					put(grammarAccess.getPrimaryAccess().getTermAssignment_0_2(), "rule__Primary__TermAssignment_0_2");
 					put(grammarAccess.getPrimaryAccess().getTermAssignment_1_2(), "rule__Primary__TermAssignment_1_2");
 					put(grammarAccess.getPrimaryAccess().getTermAssignment_2_2(), "rule__Primary__TermAssignment_2_2");
 					put(grammarAccess.getArrayIndexPostfixAccess().getIndexAssignment_1_2(), "rule__ArrayIndexPostfix__IndexAssignment_1_2");

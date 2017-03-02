@@ -35,6 +35,7 @@ import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
 import org.thingml.xtext.thingML.Function;
@@ -322,6 +323,13 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(NotExpression expression, StringBuilder builder, Context ctx) {
         builder.append(" !(");
+        generate(expression.getTerm(), builder, ctx);
+        builder.append(")");
+    }
+    
+    @Override
+    public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
+        builder.append("(");
         generate(expression.getTerm(), builder, ctx);
         builder.append(")");
     }
