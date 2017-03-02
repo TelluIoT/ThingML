@@ -287,6 +287,13 @@ public class ThingMLHelpers {
                         }
                     }
                 }
+                for(Function m : ThingMLHelpers.allFunctions(thing)) {
+                	for(Parameter p : m.getParameters()) {
+                        if (EcoreUtil.equals(p.getTypeRef().getType(), t)) {
+                            result.add(t);
+                        }
+                    }
+                }
             }
         }
         return result;
