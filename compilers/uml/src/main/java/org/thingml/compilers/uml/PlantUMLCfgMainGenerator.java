@@ -147,7 +147,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                     }
                 }
                 classes.append(") : ");
-                if (f.getTypeRef().getType() != null) {
+                if (f.getTypeRef() != null && f.getTypeRef().getType() != null) {
                     classes.append(f.getTypeRef().getType().getName());
                 } else {
                     classes.append("void");

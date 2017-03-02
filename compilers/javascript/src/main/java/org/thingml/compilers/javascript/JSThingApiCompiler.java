@@ -20,7 +20,6 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Message;

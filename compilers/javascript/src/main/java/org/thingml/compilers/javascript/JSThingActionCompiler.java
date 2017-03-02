@@ -18,11 +18,9 @@ package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
-import org.thingml.compilers.utils.CharacterEscaper;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
-import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EqualsExpression;

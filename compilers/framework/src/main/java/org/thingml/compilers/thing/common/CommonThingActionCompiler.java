@@ -18,7 +18,6 @@ package org.thingml.compilers.thing.common;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
-import org.thingml.compilers.utils.CharacterEscaper;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Action;
@@ -355,7 +354,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
-        //builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()) + "\"");
         builder.append("\"" + expression.getStringValue() + "\"");
     }
 

@@ -30,7 +30,9 @@ import org.thingml.xtext.thingML.DoubleLiteral;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
+import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
 import org.thingml.xtext.thingML.FunctionCallExpression;
@@ -51,6 +53,7 @@ import org.thingml.xtext.thingML.OrExpression;
 import org.thingml.xtext.thingML.PlusExpression;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
@@ -73,10 +76,6 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     public static int indent_level = 0;
 
     //ThingML pretty printer (useful for documentation, etc)
-
-    private String protectString(String s) {
-        return s.replace("\\n", "\\\\n").replace("\n", "\\n").replace(System.getProperty("line.separator"), "\\n").replace("\t", "").replace("\r", "").replace("\"", "\'\'");
-    }
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
@@ -144,7 +143,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(ExternStatement action, StringBuilder builder, Context ctx) {
-        builder.append("'" + CharacterEscaper.escapeEscapedCharacters(action.getStatement()).replace("\n", "\\n") + "'");
+        builder.append("'" + action.getStatement().replace("\n", "\\n") + "'");
         //builder.append("'" + action.getStatement() + "'");
         for (Expression e : action.getSegments()) {
             builder.append(" & ");
@@ -361,7 +360,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
-        builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()).replace("\n", "\\n").replace("\\n","\\\\n") + "\"");
+        builder.append("\"" + expression.getStringValue().replace("\n", "\\n").replace("\\n","\\\\n") + "\"");
     }
 
     @Override
@@ -376,7 +375,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
-        builder.append("'" + CharacterEscaper.escapeEscapedCharacters(expression.getExpression()).replace("\n", "\\n") + "'");
+        builder.append("'" + expression.getExpression().replace("\n", "\\n") + "'");
         //builder.append("'" + expression.getExpression() + "'");
         for (Expression e : expression.getSegments()) {
             builder.append(" & ");
@@ -408,4 +407,16 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         generate(action.getVar(), builder, ctx);
         builder.append("--" + NEW_LINE);
     }
+    
+    @Override
+    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
+        builder.append((((ReceiveMessage)expression.getReceiveMsg()).getMessage().getName()) + "." + expression.getParameter().getName());
+    }    
+    
+    @Override
+    public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
+        builder.append("(");
+        generate(expression.getTerm(), builder, ctx);
+        builder.append(")");
+    }    
 }
