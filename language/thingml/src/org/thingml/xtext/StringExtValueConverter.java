@@ -19,20 +19,21 @@ package org.thingml.xtext;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.conversion.impl.AbstractLexerBasedConverter;
 import org.eclipse.xtext.nodemodel.INode;
+import org.thingml.xtext.helpers.CharacterEscaper;
 
 public class StringExtValueConverter extends AbstractLexerBasedConverter<String> {
 
 	@Override
 	public String toValue(String string, INode node) throws ValueConverterException {
 		if(string != null && string.length() >= 2 && string.startsWith("'") && string.endsWith("'")) {
-    		return string.substring(1, string.length()-1);
+    		return CharacterEscaper.unescapeEscapedCharacters(string.substring(1, string.length()-1));
     	}
     	return string;
 	}
 
 	@Override
 	public String toString(String value) {
-		return "'" + super.toString(value) + "'";
+		return "'" + CharacterEscaper.escapeEscapedCharacters(super.toString(value)) + "'";
 	}
 	
 	

@@ -83,7 +83,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getRhs();
-                if (cleanExtern(ext.getExpression()).trim().equals("null")) {//we check for null pointer, should use ==
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
                     super.generate(expression, builder, ctx);
                     return;
                 }
@@ -95,7 +95,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         } else if (TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
             if (expression.getLhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getLhs();
-                if (cleanExtern(ext.getExpression()).trim().equals("null")) {//we check for null pointer, should use ==
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
                     super.generate(expression, builder, ctx);
                     return;
                 }
@@ -116,7 +116,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getRhs();
-                if (cleanExtern(ext.getExpression()).trim().equals("null")) {//we check for null pointer, should use ==
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
                     super.generate(expression, builder, ctx);
                     return;
                 }
@@ -129,7 +129,7 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
         } else if (TyperHelper.isA(rightType, Types.OBJECT_TYPE)) {
             if (expression.getRhs() instanceof ExternExpression) {
                 final ExternExpression ext = (ExternExpression) expression.getLhs();
-                if (cleanExtern(ext.getExpression()).trim().equals("null")) {//we check for null pointer, should use ==
+                if (ext.getExpression().trim().equals("null")) {//we check for null pointer, should use ==
                     super.generate(expression, builder, ctx);
                     return;
                 }

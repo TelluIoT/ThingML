@@ -124,17 +124,17 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
             generate(a, builder, ctx);
         }
     }
-    
+    /*
     protected String cleanExtern(String extern) {
     	if(extern.startsWith("'") && extern.endsWith("'")) {
     		return extern.substring(1, extern.length()-1);
     	}
     	return extern;
     }
-
+*/
     @Override
     public void generate(ExternStatement action, StringBuilder builder, Context ctx) {
-        builder.append(cleanExtern(action.getStatement()));
+        builder.append(action.getStatement());
         for (Expression e : action.getSegments()) {
             generate(e, builder, ctx);
         }
@@ -362,7 +362,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     @Override
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
-        builder.append(cleanExtern(expression.getExpression()));
+        builder.append(expression.getExpression());
         for (Expression e : expression.getSegments()) {
             generate(e, builder, ctx);
         }
