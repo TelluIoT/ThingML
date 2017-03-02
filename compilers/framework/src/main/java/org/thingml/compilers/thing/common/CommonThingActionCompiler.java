@@ -19,6 +19,7 @@ package org.thingml.compilers.thing.common;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.utils.CharacterEscaper;
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ActionBlock;
@@ -36,6 +37,7 @@ import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
+import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.GreaterExpression;
@@ -176,14 +178,14 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
-        //EObject parent = ThingMLHelpers.findContainingFuncOp(action);
+        Function parent = ThingMLHelpers.findContainingFunction(action);
         boolean isArray = false;
         if (action.getExp() instanceof PropertyReference) {
             PropertyReference pr = (PropertyReference) action.getExp();
             isArray = pr.getProperty().getTypeRef().isIsArray() || pr.getProperty().getTypeRef().getCardinality() != null;
         }
         //FIXME: Brice, the cast for returns was lost in translation
-        //cast(parent.getType(), isArray, action.getExp(), builder, ctx);
+        cast(parent.getTypeRef().getType(), isArray, action.getExp(), builder, ctx);
         builder.append(";\n");
     }
 
