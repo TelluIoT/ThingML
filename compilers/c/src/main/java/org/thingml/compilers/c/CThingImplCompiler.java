@@ -594,8 +594,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx, DebugProfile debugProfile) {
-        if (cs instanceof Session) return;
-        for (Region r :cs.getRegion()) {
+
+        for (StateContainer r :CompositeStateHelper.allContainedRegions(cs)) {
             builder.append("//Region " + r.getName() + "\n");
 
             ArrayList<State> states = new ArrayList<State>();
