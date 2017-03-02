@@ -24,6 +24,7 @@ import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
@@ -291,6 +292,10 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
             generate(p, builder, context);
         }
         builder.append(")");
+    }
+    
+    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
+        builder.append(expression.getParameter().getName());
     }
 
     //TODO: check if some inherited methods should be overidden

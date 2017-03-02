@@ -16,6 +16,7 @@
  */
 package org.thingml.compilers.c.arduino;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.thingml.compilers.ThingMLCompiler;
@@ -79,7 +80,7 @@ public class CCompilerContextArduino extends CCompilerContext {
         pde.append(generatedCode.get(main).toString());
 
         //writeTextFile(getCurrentConfiguration().getName() + ".pde", pde.toString());
-        writeTextFile(getCurrentConfiguration().getName() + ".ino", pde.toString());
+        writeTextFile(getCurrentConfiguration().getName() + File.separatorChar + getCurrentConfiguration().getName() + ".ino", pde.toString());
 
     }
 

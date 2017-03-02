@@ -186,7 +186,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(c_proto);
         } else {
             // Generate the normal prototype
-            if (func.getTypeRef().getType() != null) {
+            if (func.getTypeRef() != null && func.getTypeRef().getType() != null) {
                 builder.append(ctx.getCType(func.getTypeRef().getType()));
                 if (func.getTypeRef().getCardinality() != null) builder.append("*");
             } else builder.append("void");
@@ -326,7 +326,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generateCforThingLinuxThread(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
 
-        if (func.getTypeRef().getType() != null) {
+        if (func.getTypeRef() != null && func.getTypeRef().getType() != null) {
             System.err.println("WARNING: function with annotation fork_linux_thread must return void");
         }
 
@@ -733,15 +733,17 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void dispatchToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, Port port, Message msg, CCompilerContext ctx, DebugProfile debugProfile) {
 
-       /* builder.append("//Region list: " );
-        for (Region r : CompositeStateHelper.directSubRegions(cs)) {
+    	
+    	
+        builder.append("//Region list: " );
+        for (StateContainer r : CompositeStateHelper.allContainedRegions(cs)) {
             builder.append(r.getName() + " ");
         }
-        builder.append("\n");*/
+        builder.append("\n");
 
-        for (Region r : cs.getRegion()) {
-            if (!(r instanceof Session)) {
-                builder.append("//Region " + r.getName() + "\n");
+        for (StateContainer r : CompositeStateHelper.allContainedRegions(cs)) {
+        	
+            builder.append("//Region " + r.getName() + "\n");
 
             // for all states of the region, if the state can handle the message and that state is active we forward the message
             builder.append("uint8_t " + ctx.getStateVarName(r) + "_event_consumed = 0;\n");
@@ -759,7 +761,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             }
                 builder.append("//End Region " + r.getName() + "\n");
         }
-        }
+        
 
         if ((cs.eContainer() instanceof Region) && (!(cs.eContainer() instanceof Session))) {
             builder.append(ctx.getStateVarName((Region) cs.eContainer()) + "_event_consumed = 0 ");

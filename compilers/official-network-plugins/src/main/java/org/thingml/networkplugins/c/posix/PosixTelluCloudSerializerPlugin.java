@@ -23,7 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.impl.ParameterImpl;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
@@ -31,6 +30,9 @@ import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.TypeRef;
+import org.thingml.xtext.thingML.impl.ParameterImpl;
+
 
 /**
  * Created by jakobho on 01.02.2017.
@@ -146,7 +148,7 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
             Message placeholderMsg = EcoreUtil.copy(m);
             placeholderMsg.getParameters().clear();
             placeholderMsg.getParameters().addAll(groupedCopy);
-            Parameter placeholder = (Parameter) new TelluCloudGroupedParameter(placeholderMsg); //FIXME: added a cast, which seemed not necessary. Probably something fishy going on around here...
+            Parameter placeholder = new TelluCloudGroupedParameter(placeholderMsg); 
             grouped.add(placeholder);
             // Set the @json_message_name annotation
             PlatformAnnotation jsonMsgName = EcoreUtil.copy(msg.getAnnotations().get(0));
@@ -155,10 +157,10 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
             msg.getAnnotations().add(jsonMsgName);
 
             // Generate JSON serialisation of modified message
-            return super.generateSerialization(builder, bufferName, msg);
+            return super.generateSerialization(builder, bufferName, msg, eco);
         } else {
             // Generate normal JSON serialisation
-            return super.generateSerialization(builder, bufferName, m);
+            return super.generateSerialization(builder, bufferName, m, eco);
         }
     }
 
@@ -172,11 +174,14 @@ public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
     private class TelluCloudGroupedParameter extends ParameterImpl {
         Message m;
 
+        //BasicEList<PlatformAnnotation> ans = new BasicEList<PlatformAnnotation>();
+        
         public TelluCloudGroupedParameter(Message msg)
         {
             super();
             this.setName("observations");
             this.m = msg;
         }
+
     }
 }
