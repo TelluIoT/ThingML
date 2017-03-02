@@ -311,7 +311,7 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                     ctx.appendFormalParameters(t, builder, m);
                     builder.append("{\n");
 
-                    String lengthVar = sp.generateSerialization(builder, "buffer", m);
+                    String lengthVar = sp.generateSerialization(builder, "buffer", m, eco);
 
                     // Send the message over MQTT
                     List<Integer> topicIndices = findPublishTopicIndices(prot, eco);
