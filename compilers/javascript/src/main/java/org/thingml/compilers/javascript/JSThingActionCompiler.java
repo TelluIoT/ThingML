@@ -260,7 +260,8 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
-        builder.append("'" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()) + "'");
+        //builder.append("'" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()) + "'");
+    	builder.append("'" + expression.getStringValue() + "'");
     }
     
     @Override
