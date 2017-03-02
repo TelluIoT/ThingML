@@ -1,16 +1,17 @@
 /**
+ * *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ *  *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ *  *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
@@ -751,6 +752,14 @@ public class ThingMLSwitch<T> extends Switch<T>
         ModExpression modExpression = (ModExpression)theEObject;
         T result = caseModExpression(modExpression);
         if (result == null) result = caseExpression(modExpression);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case ThingMLPackage.EXPRESSION_GROUP:
+      {
+        ExpressionGroup expressionGroup = (ExpressionGroup)theEObject;
+        T result = caseExpressionGroup(expressionGroup);
+        if (result == null) result = caseExpression(expressionGroup);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -2026,6 +2035,22 @@ public class ThingMLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseModExpression(ModExpression object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Expression Group</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Expression Group</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseExpressionGroup(ExpressionGroup object)
   {
     return null;
   }

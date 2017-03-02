@@ -17,55 +17,49 @@
  */
 package org.thingml.xtext.thingML.impl;
 
-import java.util.Collection;
-
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
-import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
-import org.thingml.xtext.thingML.AnnotatedElement;
-import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Annotated Element</b></em>'.
+ * An implementation of the model object '<em><b>Expression Group</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.AnnotatedElementImpl#getAnnotations <em>Annotations</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.ExpressionGroupImpl#getTerm <em>Term</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class AnnotatedElementImpl extends MinimalEObjectImpl.Container implements AnnotatedElement
+public class ExpressionGroupImpl extends ExpressionImpl implements ExpressionGroup
 {
   /**
-   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
+   * The cached value of the '{@link #getTerm() <em>Term</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getAnnotations()
+   * @see #getTerm()
    * @generated
    * @ordered
    */
-  protected EList<PlatformAnnotation> annotations;
+  protected Expression term;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected AnnotatedElementImpl()
+  protected ExpressionGroupImpl()
   {
     super();
   }
@@ -78,7 +72,7 @@ public class AnnotatedElementImpl extends MinimalEObjectImpl.Container implement
   @Override
   protected EClass eStaticClass()
   {
-    return ThingMLPackage.Literals.ANNOTATED_ELEMENT;
+    return ThingMLPackage.Literals.EXPRESSION_GROUP;
   }
 
   /**
@@ -86,13 +80,47 @@ public class AnnotatedElementImpl extends MinimalEObjectImpl.Container implement
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<PlatformAnnotation> getAnnotations()
+  public Expression getTerm()
   {
-    if (annotations == null)
+    return term;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetTerm(Expression newTerm, NotificationChain msgs)
+  {
+    Expression oldTerm = term;
+    term = newTerm;
+    if (eNotificationRequired())
     {
-      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.EXPRESSION_GROUP__TERM, oldTerm, newTerm);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
     }
-    return annotations;
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setTerm(Expression newTerm)
+  {
+    if (newTerm != term)
+    {
+      NotificationChain msgs = null;
+      if (term != null)
+        msgs = ((InternalEObject)term).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.EXPRESSION_GROUP__TERM, null, msgs);
+      if (newTerm != null)
+        msgs = ((InternalEObject)newTerm).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.EXPRESSION_GROUP__TERM, null, msgs);
+      msgs = basicSetTerm(newTerm, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.EXPRESSION_GROUP__TERM, newTerm, newTerm));
   }
 
   /**
@@ -105,8 +133,8 @@ public class AnnotatedElementImpl extends MinimalEObjectImpl.Container implement
   {
     switch (featureID)
     {
-      case ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS:
-        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+      case ThingMLPackage.EXPRESSION_GROUP__TERM:
+        return basicSetTerm(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -121,8 +149,8 @@ public class AnnotatedElementImpl extends MinimalEObjectImpl.Container implement
   {
     switch (featureID)
     {
-      case ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS:
-        return getAnnotations();
+      case ThingMLPackage.EXPRESSION_GROUP__TERM:
+        return getTerm();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -132,15 +160,13 @@ public class AnnotatedElementImpl extends MinimalEObjectImpl.Container implement
    * <!-- end-user-doc -->
    * @generated
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
     switch (featureID)
     {
-      case ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS:
-        getAnnotations().clear();
-        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
+      case ThingMLPackage.EXPRESSION_GROUP__TERM:
+        setTerm((Expression)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -156,8 +182,8 @@ public class AnnotatedElementImpl extends MinimalEObjectImpl.Container implement
   {
     switch (featureID)
     {
-      case ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS:
-        getAnnotations().clear();
+      case ThingMLPackage.EXPRESSION_GROUP__TERM:
+        setTerm((Expression)null);
         return;
     }
     super.eUnset(featureID);
@@ -173,10 +199,10 @@ public class AnnotatedElementImpl extends MinimalEObjectImpl.Container implement
   {
     switch (featureID)
     {
-      case ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS:
-        return annotations != null && !annotations.isEmpty();
+      case ThingMLPackage.EXPRESSION_GROUP__TERM:
+        return term != null;
     }
     return super.eIsSet(featureID);
   }
 
-} //AnnotatedElementImpl
+} //ExpressionGroupImpl

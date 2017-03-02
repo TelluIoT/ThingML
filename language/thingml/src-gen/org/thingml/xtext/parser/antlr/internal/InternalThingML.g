@@ -5786,21 +5786,39 @@ rulePrimary returns [EObject current=null]
 }:
 	(
 		(
-			otherlv_0='('
+			(
+				{
+					$current = forceCreateModelElement(
+						grammarAccess.getPrimaryAccess().getExpressionGroupAction_0_0(),
+						$current);
+				}
+			)
+			otherlv_1='('
 			{
-				newLeafNode(otherlv_0, grammarAccess.getPrimaryAccess().getLeftParenthesisKeyword_0_0());
+				newLeafNode(otherlv_1, grammarAccess.getPrimaryAccess().getLeftParenthesisKeyword_0_1());
 			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getPrimaryAccess().getTermExpressionParserRuleCall_0_2_0());
+					}
+					lv_term_2_0=ruleExpression
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getPrimaryRule());
+						}
+						set(
+							$current,
+							"term",
+							lv_term_2_0,
+							"org.thingml.xtext.ThingML.Expression");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+			otherlv_3=')'
 			{
-				newCompositeNode(grammarAccess.getPrimaryAccess().getExpressionParserRuleCall_0_1());
-			}
-			this_Expression_1=ruleExpression
-			{
-				$current = $this_Expression_1.current;
-				afterParserOrEnumRuleCall();
-			}
-			otherlv_2=')'
-			{
-				newLeafNode(otherlv_2, grammarAccess.getPrimaryAccess().getRightParenthesisKeyword_0_2());
+				newLeafNode(otherlv_3, grammarAccess.getPrimaryAccess().getRightParenthesisKeyword_0_3());
 			}
 		)
 		    |
@@ -5812,16 +5830,16 @@ rulePrimary returns [EObject current=null]
 						$current);
 				}
 			)
-			otherlv_4='not'
+			otherlv_5='not'
 			{
-				newLeafNode(otherlv_4, grammarAccess.getPrimaryAccess().getNotKeyword_1_1());
+				newLeafNode(otherlv_5, grammarAccess.getPrimaryAccess().getNotKeyword_1_1());
 			}
 			(
 				(
 					{
 						newCompositeNode(grammarAccess.getPrimaryAccess().getTermPrimaryParserRuleCall_1_2_0());
 					}
-					lv_term_5_0=rulePrimary
+					lv_term_6_0=rulePrimary
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getPrimaryRule());
@@ -5829,7 +5847,7 @@ rulePrimary returns [EObject current=null]
 						set(
 							$current,
 							"term",
-							lv_term_5_0,
+							lv_term_6_0,
 							"org.thingml.xtext.ThingML.Primary");
 						afterParserOrEnumRuleCall();
 					}
@@ -5845,16 +5863,16 @@ rulePrimary returns [EObject current=null]
 						$current);
 				}
 			)
-			otherlv_7='-'
+			otherlv_8='-'
 			{
-				newLeafNode(otherlv_7, grammarAccess.getPrimaryAccess().getHyphenMinusKeyword_2_1());
+				newLeafNode(otherlv_8, grammarAccess.getPrimaryAccess().getHyphenMinusKeyword_2_1());
 			}
 			(
 				(
 					{
 						newCompositeNode(grammarAccess.getPrimaryAccess().getTermPrimaryParserRuleCall_2_2_0());
 					}
-					lv_term_8_0=rulePrimary
+					lv_term_9_0=rulePrimary
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getPrimaryRule());
@@ -5862,7 +5880,7 @@ rulePrimary returns [EObject current=null]
 						set(
 							$current,
 							"term",
-							lv_term_8_0,
+							lv_term_9_0,
 							"org.thingml.xtext.ThingML.Primary");
 						afterParserOrEnumRuleCall();
 					}
@@ -5873,9 +5891,9 @@ rulePrimary returns [EObject current=null]
 		{
 			newCompositeNode(grammarAccess.getPrimaryAccess().getArrayIndexPostfixParserRuleCall_3());
 		}
-		this_ArrayIndexPostfix_9=ruleArrayIndexPostfix
+		this_ArrayIndexPostfix_10=ruleArrayIndexPostfix
 		{
-			$current = $this_ArrayIndexPostfix_9.current;
+			$current = $this_ArrayIndexPostfix_10.current;
 			afterParserOrEnumRuleCall();
 		}
 	)

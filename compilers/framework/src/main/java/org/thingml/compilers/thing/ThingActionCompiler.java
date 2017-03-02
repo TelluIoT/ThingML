@@ -32,6 +32,7 @@ import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
 import org.thingml.xtext.thingML.FunctionCallExpression;
@@ -105,9 +106,9 @@ public class ThingActionCompiler {
             generate((Increment) action, builder, ctx);
         else if (action instanceof Decrement)
             generate((Decrement) action, builder, ctx);
-        else if (action instanceof StartSession) {
+        else if (action instanceof StartSession) 
             generate((StartSession) action, builder, ctx);
-        } else {
+        else {
             throw (new UnsupportedOperationException("This action (" + action.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
     }
@@ -223,12 +224,18 @@ public class ThingActionCompiler {
         	generate((EventReference) expression, builder, ctx);
         } else if (expression instanceof CastExpression) {
         	generate((CastExpression) expression, builder, ctx);
+        } else if (expression instanceof ExpressionGroup)  {
+            generate((ExpressionGroup) expression, builder, ctx);
         } else {
             throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is unknown... Please update your action compilers as a new action/expression might have been introduced in ThingML"));
         }
     }
     
     public void generate(CastExpression expression, StringBuilder builder, Context ctx) {
+        throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
+    }
+    
+    public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
         throw (new UnsupportedOperationException("This expression (" + expression.getClass().getName() + ") is platform-specific and should be refined!"));
     }
 

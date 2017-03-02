@@ -3794,9 +3794,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.thingml.xtext.ThingML.Primary");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
-		private final Keyword cLeftParenthesisKeyword_0_0 = (Keyword)cGroup_0.eContents().get(0);
-		private final RuleCall cExpressionParserRuleCall_0_1 = (RuleCall)cGroup_0.eContents().get(1);
-		private final Keyword cRightParenthesisKeyword_0_2 = (Keyword)cGroup_0.eContents().get(2);
+		private final Action cExpressionGroupAction_0_0 = (Action)cGroup_0.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final Assignment cTermAssignment_0_2 = (Assignment)cGroup_0.eContents().get(2);
+		private final RuleCall cTermExpressionParserRuleCall_0_2_0 = (RuleCall)cTermAssignment_0_2.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_0_3 = (Keyword)cGroup_0.eContents().get(3);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
 		private final Action cNotExpressionAction_1_0 = (Action)cGroup_1.eContents().get(0);
 		private final Keyword cNotKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
@@ -3810,24 +3812,31 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cArrayIndexPostfixParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		
 		//Primary Expression:
-		//	'(' Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary
+		//	{ExpressionGroup} '(' term=Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary
 		//	| ArrayIndexPostfix;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'(' Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary | ArrayIndexPostfix
+		//{ExpressionGroup} '(' term=Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary |
+		//ArrayIndexPostfix
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//'(' Expression ')'
+		//{ExpressionGroup} '(' term=Expression ')'
 		public Group getGroup_0() { return cGroup_0; }
 		
+		//{ExpressionGroup}
+		public Action getExpressionGroupAction_0_0() { return cExpressionGroupAction_0_0; }
+		
 		//'('
-		public Keyword getLeftParenthesisKeyword_0_0() { return cLeftParenthesisKeyword_0_0; }
+		public Keyword getLeftParenthesisKeyword_0_1() { return cLeftParenthesisKeyword_0_1; }
+		
+		//term=Expression
+		public Assignment getTermAssignment_0_2() { return cTermAssignment_0_2; }
 		
 		//Expression
-		public RuleCall getExpressionParserRuleCall_0_1() { return cExpressionParserRuleCall_0_1; }
+		public RuleCall getTermExpressionParserRuleCall_0_2_0() { return cTermExpressionParserRuleCall_0_2_0; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_0_2() { return cRightParenthesisKeyword_0_2; }
+		public Keyword getRightParenthesisKeyword_0_3() { return cRightParenthesisKeyword_0_3; }
 		
 		//{NotExpression} "not" term=Primary
 		public Group getGroup_1() { return cGroup_1; }
@@ -5473,7 +5482,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Primary Expression:
-	//	'(' Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary
+	//	{ExpressionGroup} '(' term=Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary
 	//	| ArrayIndexPostfix;
 	public PrimaryElements getPrimaryAccess() {
 		return pPrimary;

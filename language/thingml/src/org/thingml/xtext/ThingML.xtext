@@ -318,11 +318,12 @@ Modulo returns Expression:
 
 
 Primary returns Expression:
-	'(' Expression ')' |
+	{ExpressionGroup} '(' term=Expression ')' |
 	{NotExpression} "not" term=Primary |
 	{UnaryMinus} '-' term=Primary 
 	| ArrayIndexPostfix
 ;
+
 
 ArrayIndexPostfix returns Expression:
 	AtomicExpression ( {ArrayIndex.array=current} '[' index=Expression ']')?

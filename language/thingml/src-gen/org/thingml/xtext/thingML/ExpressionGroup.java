@@ -20,46 +20,46 @@ package org.thingml.xtext.thingML;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Increment</b></em>'.
+ * A representation of the model object '<em><b>Expression Group</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.Increment#getVar <em>Var</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.ExpressionGroup#getTerm <em>Term</em>}</li>
  * </ul>
  *
- * @see org.thingml.xtext.thingML.ThingMLPackage#getIncrement()
+ * @see org.thingml.xtext.thingML.ThingMLPackage#getExpressionGroup()
  * @model
  * @generated
  */
-public interface Increment extends Action
+public interface ExpressionGroup extends Expression
 {
   /**
-   * Returns the value of the '<em><b>Var</b></em>' reference.
+   * Returns the value of the '<em><b>Term</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Var</em>' reference isn't clear,
+   * If the meaning of the '<em>Term</em>' containment reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Var</em>' reference.
-   * @see #setVar(Variable)
-   * @see org.thingml.xtext.thingML.ThingMLPackage#getIncrement_Var()
-   * @model
+   * @return the value of the '<em>Term</em>' containment reference.
+   * @see #setTerm(Expression)
+   * @see org.thingml.xtext.thingML.ThingMLPackage#getExpressionGroup_Term()
+   * @model containment="true"
    * @generated
    */
-  Variable getVar();
+  Expression getTerm();
 
   /**
-   * Sets the value of the '{@link org.thingml.xtext.thingML.Increment#getVar <em>Var</em>}' reference.
+   * Sets the value of the '{@link org.thingml.xtext.thingML.ExpressionGroup#getTerm <em>Term</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Var</em>' reference.
-   * @see #getVar()
+   * @param value the new value of the '<em>Term</em>' containment reference.
+   * @see #getTerm()
    * @generated
    */
-  void setVar(Variable value);
+  void setTerm(Expression value);
 
-} // Increment
+} // ExpressionGroup
