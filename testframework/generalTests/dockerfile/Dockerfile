@@ -13,6 +13,7 @@ RUN mkdir workingdir \
 	gcc \
 	make
 
+RUN echo "alias node='nodejs'" >> /root/.bashrc
 COPY dojob.py workingdir/dojob.py
 RUN chmod a+x workingdir/dojob.py
 WORKDIR workingdir
