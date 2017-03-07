@@ -1,7 +1,6 @@
 node {
    stage('Downloading changes') { // for display purposes
-      //git "https://github.com/SINTEF-9012/ThingML.git"
-      checkout scm
+      git "https://github.com/SINTEF-9012/ThingML.git"
    }
    stage('Building Compilers') {
       // Run the maven build
