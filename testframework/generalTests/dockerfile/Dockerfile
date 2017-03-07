@@ -12,7 +12,8 @@ RUN mkdir workingdir \
 	make
 
 RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - \
-	&& apt-get install --no-install-recommends -qqy nodejs
+	&& apt-get install --no-install-recommends -qqy nodejs \
+	build-essential
 
 COPY dojob.py workingdir/dojob.py
 RUN chmod a+x workingdir/dojob.py
