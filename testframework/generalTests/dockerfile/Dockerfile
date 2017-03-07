@@ -12,9 +12,8 @@ RUN mkdir workingdir \
 	make
 
 RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - \
-	&& apt-get install -y nodejs
+	&& apt-get install --no-install-recommends -qqy nodejs
 
-RUN echo "alias node='nodejs'" >> /root/.bashrc
 COPY dojob.py workingdir/dojob.py
 RUN chmod a+x workingdir/dojob.py
 WORKDIR workingdir
