@@ -64,441 +64,452 @@ import com.eclipsesource.json.WriterConfig;
 
 public class JSKevoreePlugin extends NetworkPlugin {
 
-    public JSKevoreePlugin() {
-        super();
-    }
+	public JSKevoreePlugin() {
+		super();
+	}
 
-    public String getPluginID() {
-        return "JSKevoreePlugin";
-    }
+	public String getPluginID() {
+		return "JSKevoreePlugin";
+	}
 
-    public List<String> getSupportedProtocols() {
-        List<String> res = new ArrayList<>();
-        res.add("kevoree");
-        res.add("Kevoree");
-        res.add("kev");
-        res.add("Kev");
-        return res;
-    }
+	public List<String> getSupportedProtocols() {
+		List<String> res = new ArrayList<>();
+		res.add("kevoree");
+		res.add("Kevoree");
+		res.add("kev");
+		res.add("Kev");
+		return res;
+	}
 
-    public List<String> getTargetedLanguages() {
-        List<String> res = new ArrayList<>();
-        res.add("nodejs");
-        return res;
-    }
+	public List<String> getTargetedLanguages() {
+		List<String> res = new ArrayList<>();
+		res.add("nodejs");
+		return res;
+	}
 
-    public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
-        //ctx.getCompiler().processDebug(cfg);
-        updatePackageJSON(ctx, cfg);
-        generateGruntFile(ctx);
-        generateWrapper(ctx, cfg);
-        generateKevScript(ctx, cfg);
-    }
+	public void generateNetworkLibrary(Configuration cfg, Context ctx, Set<Protocol> protocols) {
+		//ctx.getCompiler().processDebug(cfg);
+		updatePackageJSON(ctx, cfg);
+		generateGruntFile(ctx);
+		generateWrapper(ctx, cfg);
+		generateKevScript(ctx, cfg);
+	}
 
-    protected void generateKevScript(Context ctx, Configuration cfg) {
-        if (AnnotatedElementHelper.hasAnnotation(cfg, "kevscript")) {
-            final String path = AnnotatedElementHelper.annotation(cfg, "kevscript").get(0);
-            final URI uri = URI.create(path);
-            File toCopy = null;
-            if(uri.isAbsolute()) {
-                toCopy = new File(uri);
-            } else {
-                toCopy = new File(ctx.getCompiler().currentFile.toURI().resolve(path));
-            }
-            try {
-                FileUtils.copyFile(toCopy, new File(ctx.getOutputDirectory(), "/kevs/main.kevs"));
-                return;
-            } catch (IOException e) {
-                System.err.println("Cannot find file " + AnnotatedElementHelper.annotation(cfg, "kevscript").get(0) + ". Will create a new one from scratch instead");
-            }
-        }
+	protected void generateKevScript(Context ctx, Configuration cfg) {
+		if (AnnotatedElementHelper.hasAnnotation(cfg, "kevscript")) {
+			final String path = AnnotatedElementHelper.annotation(cfg, "kevscript").get(0);
+			final URI uri = URI.create(path);
+			File toCopy = null;
+			if(uri.isAbsolute()) {
+				toCopy = new File(uri);
+			} else {
+				toCopy = new File(ctx.getCompiler().currentFile.toURI().resolve(path));
+			}
+			try {
+				FileUtils.copyFile(toCopy, new File(ctx.getOutputDirectory(), "/kevs/main.kevs"));
+				return;
+			} catch (IOException e) {
+				System.err.println("Cannot find file " + AnnotatedElementHelper.annotation(cfg, "kevscript").get(0) + ". Will create a new one from scratch instead");
+			}
+		}
 
-        StringBuilder kevScript = ctx.getBuilder("/kevs/main.kevs");
-        kevScript.append("//create a default JavaScript node\n");
-        kevScript.append("add node0 : JavascriptNode/LATEST/LATEST\n");
+		StringBuilder kevScript = ctx.getBuilder("/kevs/main.kevs");
+		kevScript.append("//create a default JavaScript node\n");
+		kevScript.append("add node0 : JavascriptNode/LATEST/LATEST\n");
 
-            kevScript.append("//create a default group to manage the node(s)\n");
-            kevScript.append("add sync : CentralizedWSGroup/LATEST/LATEST\n");
-            kevScript.append("attach node0 sync\n\n");
-            kevScript.append("set sync.isMaster/node0 = 'true'\n");
-            kevScript.append("//instantiate Kevoree/ThingML components\n");
-            kevScript.append("add node0." + cfg.getName() + "_0 : thingml." + cfg.getName() + "/1/LATEST\n");//TODO: allow customizing version number and namespace
+		kevScript.append("//create a default group to manage the node(s)\n");
+		kevScript.append("add sync : CentralizedWSGroup/LATEST/LATEST\n");
+		kevScript.append("attach node0 sync\n\n");
+		kevScript.append("set sync.isMaster/node0 = 'true'\n");
+		kevScript.append("//instantiate Kevoree/ThingML components\n");
+		kevScript.append("add node0." + cfg.getName() + "_0 : thingml." + cfg.getName() + "/1/LATEST\n");//TODO: allow customizing version number and namespace
 
-            for (String k : AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "kevscript_import")) {
-                kevScript.append(k);
-            }
-            if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "kevscript_import"))
-                kevScript.append("\n");
+		for (String k : AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "kevscript_import")) {
+			kevScript.append(k);
+		}
+		if (AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "kevscript_import"))
+			kevScript.append("\n");
 
-            kevScript.append("\n");
+		kevScript.append("\n");
 
-            PrintWriter w = null;
-            try {
-                new File(ctx.getOutputDirectory() + "/kevs").mkdirs();
-                w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/kevs/main.kevs")));
-                w.println(kevScript);
-                w.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                IOUtils.closeQuietly(w);
-            }
+		PrintWriter w = null;
+		try {
+			new File(ctx.getOutputDirectory() + "/kevs").mkdirs();
+			w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/kevs/main.kevs")));
+			w.println(kevScript);
+			w.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(w);
+		}
 
-    }
+	}
 
-    protected void generateGruntFile(Context ctx) {
-        //copy Gruntfile.js
-        try {
-            final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Gruntfile.js");
-            final List<String> pomLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
-            String pom = "";
-            for (String line : pomLines) {
-                pom += line + "\n";
-            }
-            input.close();
-            String dep = "";
-            int i = 0;
-            for (String d : AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "kevoree_import")) {
-                if (i > 0)
-                    dep += ", ";
-                dep += "'" + ctx.getOutputDirectory().getParentFile().getAbsolutePath().replace("\\", "/") + "/" + d + "'";
-                i++;
-            }
-            pom = pom.replace("mergeLocalLibraries: []", "mergeLocalLibraries: [" + dep + "]");
-            final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/Gruntfile.js")));
-            w.println(pom);
-            w.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	protected void generateGruntFile(Context ctx) {
+		//copy Gruntfile.js
+		try {
+			final InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/lib/Gruntfile.js");
+			final List<String> pomLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
+			String pom = "";
+			for (String line : pomLines) {
+				pom += line + "\n";
+			}
+			input.close();
+			String dep = "";
+			int i = 0;
+			for (String d : AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "kevoree_import")) {
+				if (i > 0)
+					dep += ", ";
+				dep += "'" + ctx.getOutputDirectory().getParentFile().getAbsolutePath().replace("\\", "/") + "/" + d + "'";
+				i++;
+			}
+			pom = pom.replace("mergeLocalLibraries: []", "mergeLocalLibraries: [" + dep + "]");
+			final PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/Gruntfile.js")));
+			w.println(pom);
+			w.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    protected void updatePackageJSON(Context ctx, Configuration cfg) {
-        //Update package.json
-        try {
-            final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/package.json");
-            final List<String> packLines = IOUtils.readLines(input);
-            String pack = "";
-            for (String line : packLines) {
-                pack += line + "\n";
-            }
-            input.close();
+	protected void updatePackageJSON(Context ctx, Configuration cfg) {
+		//Update package.json
+		try {
+			final InputStream input = new FileInputStream(ctx.getOutputDirectory() + "/package.json");
+			final List<String> packLines = IOUtils.readLines(input);
+			String pack = "";
+			for (String line : packLines) {
+				pack += line + "\n";
+			}
+			input.close();
 
-            final JsonObject json = JsonObject.readFrom(pack);
-            json.set("main", "lib/" + cfg.getName() + ".js");
-            final JsonObject deps = json.get("dependencies").asObject();
-            deps.add("kevoree-entities", "^9.0.0");
-            final JsonObject devDeps = json.get("devDependencies").asObject();
-            devDeps.add("grunt", "^1");
-            devDeps.add("grunt-kevoree", "^5");
-            devDeps.add("grunt-kevoree-genmodel", "^3");
-            devDeps.add("grunt-kevoree-registry", "^3");
-            devDeps.add("grunt-kevoree-registry", "^3");
-            devDeps.add("eslint", "^3.11.1");
-            devDeps.add("load-grunt-tasks", "^3");
-            final JsonObject scripts = json.get("scripts").asObject();
-            scripts.add("prepublish", "npm run lint && grunt");
-            scripts.add("postpublish", "grunt publish");
-            scripts.add("lint", "eslint lib");
+			final JsonObject json = JsonObject.readFrom(pack);
+			json.set("main", "lib/" + cfg.getName() + ".js");
+			final JsonObject deps = json.get("dependencies").asObject();
+			deps.add("kevoree-entities", "^9.0.0");
+			final JsonObject devDeps = json.get("devDependencies").asObject();
+			devDeps.add("grunt", "^1");
+			devDeps.add("grunt-kevoree", "^5");
+			devDeps.add("grunt-kevoree-genmodel", "^3");
+			devDeps.add("grunt-kevoree-registry", "^3");
+			devDeps.add("grunt-kevoree-registry", "^3");
+			devDeps.add("eslint", "^3.11.1");
+			devDeps.add("load-grunt-tasks", "^3");
+			final JsonObject scripts = json.get("scripts").asObject();
+			scripts.add("prepublish", "npm run lint && grunt");
+			scripts.add("postpublish", "grunt publish");
+			scripts.add("lint", "eslint lib");
 
-            //TODO: read description from annotation
+			//TODO: read description from annotation
 
-            final JsonObject kevProp = JsonObject.readFrom("{\"namespace\":\"thingml\"}");//TODO: read namespace from annotation
-            json.add("kevoree", kevProp);
+			final JsonObject kevProp = JsonObject.readFrom("{\"namespace\":\"thingml\"}");//TODO: read namespace from annotation
+			json.add("kevoree", kevProp);
 
-            final File f = new File(ctx.getOutputDirectory() + "/package.json");
-            final OutputStream output = new FileOutputStream(f);
-            IOUtils.write(json.toString(WriterConfig.PRETTY_PRINT), output, Charset.forName("UTF-8"));
-            IOUtils.closeQuietly(output);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+			final File f = new File(ctx.getOutputDirectory() + "/package.json");
+			final OutputStream output = new FileOutputStream(f);
+			IOUtils.write(json.toString(WriterConfig.PRETTY_PRINT), output, Charset.forName("UTF-8"));
+			IOUtils.closeQuietly(output);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    protected String getVariableName(Instance i, Property p, Context ctx) {
-        return "dic_" + i.getName() + "_" + ctx.getVariableName(p);
-    }
+	protected String getVariableName(Instance i, Property p, Context ctx) {
+		return "dic_" + i.getName() + "_" + ctx.getVariableName(p);
+	}
 
-    protected String getGlobalVariableName(Property p, Context ctx) {
-        return "dic_" + ctx.getVariableName(p);
-    }
+	protected String getGlobalVariableName(Property p, Context ctx) {
+		return "dic_" + ctx.getVariableName(p);
+	}
 
-    protected void generateRequires(StringBuilder builder, Context ctx, Configuration cfg) {
-        builder.append("const AbstractComponent = require('kevoree-entities/lib/AbstractComponent');\n");
+	protected void generateRequires(StringBuilder builder, Context ctx, Configuration cfg) {
+		builder.append("const AbstractComponent = require('kevoree-entities/lib/AbstractComponent');\n");
 
-        if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
-            for (Thing t : ConfigurationHelper.allThings(cfg)) {
-                builder.append("const " + t.getName() + " = require('./" + t.getName() + "');\n");
-            }
-        }
-    }
+		if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+			for (Thing t : ConfigurationHelper.allThings(cfg)) {
+				builder.append("const " + t.getName() + " = require('./" + t.getName() + "');\n");
+			}
+		}
+	}
 
-    protected void generateConstruct(StringBuilder builder, Context ctx, Configuration cfg) {
-            JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
-            JSCfgMainGenerator.generateConnectors(cfg, builder, ctx, true);
-            for (Map.Entry<Instance, List<Port>> e : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
-                final Instance i = e.getKey();
-                for (Port p : e.getValue()) {
-                    for (Message m : p.getSends()) {
-                        builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => setImmediate(() => this." + shortName(i, p, m) + "_proxy(msg)));\n");
-                    }
-                }
-            }
-            for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
-                if (c.getProtocol().getName().equals("kevoree")) {
-                    final Instance i = c.getInst();
-                    for (Message m : c.getPort().getSends()) {
-                        final Port p = c.getPort();
-                        builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => setImmediate(() => this." + shortName(i, p, m) + "_proxy(msg)));\n");
-                    }
-                }
-            }
-    }
+	protected void generateConstruct(StringBuilder builder, Context ctx, Configuration cfg) {
+		JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
+		
+		for(Instance i : ConfigurationHelper.allInstances(cfg)) {
+			for (Property prop : ThingHelper.allUsedProperties(i.getType())) {
+				if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing && AnnotatedElementHelper.hasAnnotation(prop, "kevoree_init")) {
+					builder.append(i.getName() + "_" + prop.getName() + " = ");
+					builder.append(AnnotatedElementHelper.annotation(prop, "kevoree_init").get(0));
+					builder.append(";\n");
+				}
+			}
+		}
+		
+		JSCfgMainGenerator.generateConnectors(cfg, builder, ctx, true);
+		for (Map.Entry<Instance, List<Port>> e : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
+			final Instance i = e.getKey();
+			for (Port p : e.getValue()) {
+				for (Message m : p.getSends()) {
+					builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => setImmediate(() => this." + shortName(i, p, m) + "_proxy(msg)));\n");
+				}
+			}
+		}
+		for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
+			if (c.getProtocol().getName().equals("kevoree")) {
+				final Instance i = c.getInst();
+				for (Message m : c.getPort().getSends()) {
+					final Port p = c.getPort();
+					builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => setImmediate(() => this." + shortName(i, p, m) + "_proxy(msg)));\n");
+				}
+			}
+		}
+	}
 
-    protected void generateStart(StringBuilder builder, Context ctx, Configuration cfg) {
-        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            for (Property p : ThingHelper.allUsedProperties(i.getType())) {
-                if (!p.isReadonly() && p.getTypeRef().getCardinality() == null && p.getTypeRef().getType() instanceof PrimitiveType && p.eContainer() instanceof Thing) {
-                    String accessor = "getValue";
-                    boolean isNumber = false;
-                    if (PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getTypeRef().getType()))) {
-                        accessor = "getNumber";
-                        isNumber = true;
-                    }
-                    if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
-                        generateKevoreeListener(builder, ctx, isNumber, p, i, false, accessor);
-                        generateThingMLListener(builder, ctx, p, i, accessor, false);
-                    } else if (AnnotatedElementHelper.isDefined(p, "kevoree", "merge")) {
-                        generateKevoreeListener(builder, ctx, isNumber, p, i, true, accessor);//FIXME: should generate one listener that update all thingml attribute, rather than n listeners on the same attribute that update one thingml attribute...
-                        generateThingMLListener(builder, ctx, p, i, accessor, true);
-                    }
-                }
-            }
-        }
-        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-                builder.append("this." + i.getName() + "._init();\n");
-        }
-        builder.append("done();\n");
-    }
+	protected void generateStart(StringBuilder builder, Context ctx, Configuration cfg) {
+		for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+			for (Property p : ThingHelper.allUsedProperties(i.getType())) {
+				if (!p.isReadonly() && p.getTypeRef().getCardinality() == null /*&& p.getTypeRef().getType() instanceof PrimitiveType*/) {
+					String accessor = "getValue";
+					boolean isNumber = false;
+					if (p instanceof PrimitiveType && PrimitiveTyperHelper.isNumber(((PrimitiveType) p.getTypeRef().getType()))) {
+						accessor = "getNumber";
+						isNumber = true;
+					}
+					if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
+						generateKevoreeListener(builder, ctx, isNumber, p, i, false, accessor);
+						generateThingMLListener(builder, ctx, p, i, accessor, false);
+					} else if (AnnotatedElementHelper.isDefined(p, "kevoree", "merge")) {
+						generateKevoreeListener(builder, ctx, isNumber, p, i, true, accessor);//FIXME: should generate one listener that update all thingml attribute, rather than n listeners on the same attribute that update one thingml attribute...
+						generateThingMLListener(builder, ctx, p, i, accessor, true);
+					}
+				}
+			}
+		}
+		for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+			builder.append("this." + i.getName() + "._init();\n");
+		}
+		builder.append("done();\n");
+	}
 
-    protected void generatePorts(StringBuilder builder, Context ctx, Configuration cfg) {
-        for (Map.Entry e : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
-            final Instance i = (Instance) e.getKey();
-            for (Port p : (List<Port>) e.getValue()) {
-                if (!p.getReceives().isEmpty()) {
-                    builder.append(",\nin_" + shortName(i, p, null) + "_in: function (msg) {//Dangling ThingML port " + p.getName() + " (handling all incoming messages)\n");
-                    int j = 0;
-                    for (Message m : p.getReceives()) {
-                        if (j > 0)
-                            builder.append("else ");
-                        builder.append("if(msg.split('@:@')[0] === '" + m.getName() + "'){\n");
-                        builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(");
-                        for (Parameter pa : m.getParameters()) {
-                            if (m.getParameters().indexOf(pa) > 0)
-                                builder.append(", ");
-                            builder.append("msg.split('@:@')[1].split(';')[" + m.getParameters().indexOf(pa) + "]");
-                        }
-                        builder.append(");\n}\n");
-                        j++;
-                    }
-                    builder.append("}");
-                }
+	protected void generatePorts(StringBuilder builder, Context ctx, Configuration cfg) {
+		for (Map.Entry<Instance, List<Port>> e : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
+			final Instance i = (Instance) e.getKey();
+			for (Port p : (List<Port>) e.getValue()) {
+				if (!p.getReceives().isEmpty()) {
+					builder.append(",\nin_" + shortName(i, p, null) + "_in: function (msg) {//Dangling ThingML port " + p.getName() + " (handling all incoming messages)\n");
+					int j = 0;
+					for (Message m : p.getReceives()) {
+						if (j > 0)
+							builder.append("else ");
+						builder.append("if(msg.split('@:@')[0] === '" + m.getName() + "'){\n");
+						builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + p.getName() + "(");
+						for (Parameter pa : m.getParameters()) {
+							if (m.getParameters().indexOf(pa) > 0)
+								builder.append(", ");
+							builder.append("msg.split('@:@')[1].split(';')[" + m.getParameters().indexOf(pa) + "]");
+						}
+						builder.append(");\n}\n");
+						j++;
+					}
+					builder.append("}");
+				}
 
-                if (!p.getSends().isEmpty()) {
-                    for (Message m : p.getSends()) {
-                        builder.append(",\n" + shortName(i, p, m) + "_proxy: function() {//Dangling ThingML port " + p.getName() + " (handler for message " + m.getName() + ")\nthis.out_" + shortName(i, p, null) + "_out(");
-                        builder.append("'" + m.getName() + "@:@'");
-                        for (Parameter pa : m.getParameters()) {
-                            builder.append(" + arguments[" + m.getParameters().indexOf(pa) + "] + ';'");
-                        }
-                        builder.append(");}");
-                    }
-                    builder.append(",\nout_" + shortName(i, p, null) + "_out: function() {/* Kevoree required port (out) for dangling ThingML port " + p.getName() + "\nThis will be overwritten @runtime by Kevoree JS */}");
-                }
-            }
-        }
+				if (!p.getSends().isEmpty()) {
+					for (Message m : p.getSends()) {
+						builder.append(",\n" + shortName(i, p, m) + "_proxy: function() {//Dangling ThingML port " + p.getName() + " (handler for message " + m.getName() + ")\nthis.out_" + shortName(i, p, null) + "_out(");
+						builder.append("'" + m.getName() + "@:@'");
+						for (Parameter pa : m.getParameters()) {
+							builder.append(" + arguments[" + m.getParameters().indexOf(pa) + "] + ';'");
+						}
+						builder.append(");}");
+					}
+					builder.append(",\nout_" + shortName(i, p, null) + "_out: function() {/* Kevoree required port (out) for dangling ThingML port " + p.getName() + "\nThis will be overwritten @runtime by Kevoree JS */}");
+				}
+			}
+		}
 
-        for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) { //External kevoree port should be split (to allow easy integration with external non-HEADS services)
-            if (c.getProtocol().getName().equals("kevoree")) {
-                final Instance i = c.getInst();
-                for (Message m : c.getPort().getReceives()) {
-                    builder.append(",\nin_" + shortName(i, c.getPort(), m) + "_in: function (msg) {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\n");
-                    builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
-                    builder.append("}");
-                }
-                for (Message m : c.getPort().getSends()) {
-                        builder.append(",\n" + shortName(i, c.getPort(), m) + "_proxy: function() {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\nthis.out_" + shortName(i, c.getPort(), m) + "_out(");
-                        int index;
-                        for (index = 0; index < m.getParameters().size(); index++) {
-                            if (index > 0)
-                                builder.append(" + ';' + ");
-                            builder.append("arguments[" + index + "]");
-                        }
-                        if (index > 1)
-                            builder.append("''");
-                        builder.append(");}");
-                    builder.append(",\nout_" + shortName(i, c.getPort(), m) + "_out: function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
-                }
-            }
-        }
-    }
+		for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) { //External kevoree port should be split (to allow easy integration with external non-HEADS services)
+			if (c.getProtocol().getName().equals("kevoree")) {
+				final Instance i = c.getInst();
+				for (Message m : c.getPort().getReceives()) {
+					builder.append(",\nin_" + shortName(i, c.getPort(), m) + "_in: function (msg) {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\n");
+					builder.append("this." + i.getName() + ".receive" + m.getName() + "On" + c.getPort().getName() + "(msg.split(';'));\n");
+					builder.append("}");
+				}
+				for (Message m : c.getPort().getSends()) {
+					builder.append(",\n" + shortName(i, c.getPort(), m) + "_proxy: function() {//@protocol \"kevoree\" for message " + m.getName() + " on port " + c.getPort().getName() + "\nthis.out_" + shortName(i, c.getPort(), m) + "_out(");
+					int index;
+					for (index = 0; index < m.getParameters().size(); index++) {
+						if (index > 0)
+							builder.append(" + ';' + ");
+						builder.append("arguments[" + index + "]");
+					}
+					if (index > 1)
+						builder.append("''");
+					builder.append(");}");
+					builder.append(",\nout_" + shortName(i, c.getPort(), m) + "_out: function(msg) {/* This will be overwritten @runtime by Kevoree JS */}");
+				}
+			}
+		}
+	}
 
-    protected void generateStop(StringBuilder builder, Context ctx, Configuration cfg) {
-        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            builder.append("this." + i.getName() + "._stop();\n");
-        }
-        builder.append("done();\n");
-    }
+	protected void generateStop(StringBuilder builder, Context ctx, Configuration cfg) {
+		for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+			builder.append("this." + i.getName() + "._stop();\n");
+		}
+		builder.append("done();\n");
+	}
 
-        private void generateWrapper(Context ctx, Configuration cfg) {
-        //Generate wrapper
+	private void generateWrapper(Context ctx, Configuration cfg) {
+		//Generate wrapper
 
-        //Move all .js file (previously generated) into lib folder
-        //final File dir = new File(ctx.getOutputDirectory() + "/" + cfg.getName());
-        final File lib = new File(ctx.getOutputDirectory(), "lib");
-        lib.mkdirs();
-        for (File f : ctx.getOutputDirectory().listFiles()) {
-            if (FilenameUtils.getExtension(f.getAbsolutePath()).equals("js") && !f.getName().equals("Gruntfile.js")) {
-                try {
-                    FileUtils.moveFileToDirectory(f, lib, false);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+		//Move all .js file (previously generated) into lib folder
+		//final File dir = new File(ctx.getOutputDirectory() + "/" + cfg.getName());
+		final File lib = new File(ctx.getOutputDirectory(), "lib");
+		lib.mkdirs();
+		for (File f : ctx.getOutputDirectory().listFiles()) {
+			if (FilenameUtils.getExtension(f.getAbsolutePath()).equals("js") && !f.getName().equals("Gruntfile.js")) {
+				try {
+					FileUtils.moveFileToDirectory(f, lib, false);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
-        final StringBuilder builder = ctx.getBuilder("/lib/" + cfg.getName() + ".js");
-        builder.append("'use strict';\n\n");
+		final StringBuilder builder = ctx.getBuilder("/lib/" + cfg.getName() + ".js");
+		builder.append("'use strict';\n\n");
 
-        generateRequires(builder, ctx, cfg);
+		generateRequires(builder, ctx, cfg);
 
-        builder.append("/**\n* Kevoree component\n* @type {" + cfg.getName() + "}\n*/\n");
-        builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
-        builder.append("toString: '" + cfg.getName() + "',\n");
-        builder.append("tdef_version: " + AnnotatedElementHelper.annotationOrElse(cfg, "tdef_version", "1") + ",\n");
+		builder.append("/**\n* Kevoree component\n* @type {" + cfg.getName() + "}\n*/\n");
+		builder.append("var " + cfg.getName() + " = AbstractComponent.extend({\n");
+		builder.append("toString: '" + cfg.getName() + "',\n");
+		builder.append("tdef_version: " + AnnotatedElementHelper.annotationOrElse(cfg, "tdef_version", "1") + ",\n");
 
-        List<String> attributes = new ArrayList<String>();
-        builder.append("//Attributes\n");
-        for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-            for (Property p : ThingHelper.allUsedProperties(i.getType())) {
-                if (!p.isReadonly() && p.getTypeRef().getCardinality() == null && AnnotatedElementHelper.isDefined(p.getTypeRef().getType(), "java_primitive", "true") && p.eContainer() instanceof Thing) {
-                    if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
-                        builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
-                        final Expression e = ConfigurationHelper.initExpressions(cfg, i, p).get(0);
-                        if (e != null) {
-                            ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
-                        } else {
-                            builder.append("null\n");
-                        }
-                        builder.append("},\n");
-                    } else if ((AnnotatedElementHelper.isDefined(p, "kevoree", "merge") || AnnotatedElementHelper.isDefined(p, "kevoree", "only")) && !attributes.contains(p.getName())) {
-                        builder.append(getGlobalVariableName(p, ctx) + " : { \ndefaultValue: ");
-                        final Expression e = ConfigurationHelper.initExpressions(cfg, i, p).get(0);
-                        if (e != null) {
-                            ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
-                        } else {
-                            builder.append("null\n");
-                        }
-                        builder.append("},\n");
-                        attributes.add(p.getName());
-                    }
-                }
-            }
-        }
+		List<String> attributes = new ArrayList<String>();
+		builder.append("//Attributes\n");
+		for (Instance i : ConfigurationHelper.allInstances(cfg)) {
+			for (Property p : ThingHelper.allUsedProperties(i.getType())) {
+				if (!p.isReadonly() && p.getTypeRef().getCardinality() == null /*&& AnnotatedElementHelper.isDefined(p.getTypeRef().getType(), "java_primitive", "true") && p.eContainer() instanceof Thing*/) {
+					if (AnnotatedElementHelper.isDefined(p, "kevoree", "instance")) {
+						builder.append(getVariableName(i, p, ctx) + " : { \ndefaultValue: ");
+						final Expression e = ConfigurationHelper.initExpressions(cfg, i, p).get(0);
+						if (e != null) {
+							ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+						} else {
+							builder.append("null\n");
+						}
+						builder.append("},\n");
+					} else if ((AnnotatedElementHelper.isDefined(p, "kevoree", "merge") || AnnotatedElementHelper.isDefined(p, "kevoree", "only")) && !attributes.contains(p.getName())) {
+						builder.append(getGlobalVariableName(p, ctx) + " : { \ndefaultValue: ");
+						final Expression e = ConfigurationHelper.initExpressions(cfg, i, p).get(0);
+						if (e != null) {
+							ctx.getCompiler().getThingActionCompiler().generate(e, builder, ctx);
+						} else {
+							builder.append("null\n");
+						}
+						builder.append("},\n");
+						attributes.add(p.getName());
+					}
+				}
+			}
+		}
 
-        builder.append("construct: function() {\n");
-        generateConstruct(builder, ctx, cfg);
-        builder.append("},\n\n");
-
-
-        builder.append("start: function (done) {\n");
-        generateStart(builder, ctx, cfg);
-        builder.append("},\n\n");
+		builder.append("construct: function() {\n");
+		generateConstruct(builder, ctx, cfg);
+		builder.append("},\n\n");
 
 
-        builder.append("stop: function (done) {\n");
-        generateStop(builder, ctx, cfg);
-        builder.append("}");
+		builder.append("start: function (done) {\n");
+		generateStart(builder, ctx, cfg);
+		builder.append("},\n\n");
 
-        generatePorts(builder, ctx, cfg);
 
-        builder.append("});\n\n");
-        builder.append("module.exports = " + cfg.getName() + ";\n");
+		builder.append("stop: function (done) {\n");
+		generateStop(builder, ctx, cfg);
+		builder.append("}");
 
-        PrintWriter w = null;
-        try {
-            new File(ctx.getOutputDirectory() + "/lib").mkdirs();
-            w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/lib/" + cfg.getName() + ".js")));
-            w.println(builder.toString());
-            w.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(w);
-        }
-    }
+		generatePorts(builder, ctx, cfg);
 
-    protected void generateKevoreeListener(StringBuilder builder, Context ctx, boolean isNumber, Property p, Instance i, boolean isGlobal, String accessor) {
-        //Update ThingML properties when Kevoree properties are updated
-        if (!isGlobal) //per instance mapping
-            builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', (newValue) => {");
-        else
-            builder.append("this.dictionary.on('" + ctx.getVariableName(p) + "', function (newValue) {");
-        if (isNumber) {
-            builder.append("newValue = Number(newValue);\n");
-        }
-        builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
-        builder.append("});\n");
+		builder.append("});\n\n");
+		builder.append("module.exports = " + cfg.getName() + ";\n");
 
-        //Force update on startup, as listeners might be registered too late the first time
-            builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = ");
-        if (!isGlobal) //per instance mapping
-            builder.append("this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "')");
-        else
-            builder.append("this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "')");
-        builder.append(";\n");
-    }
+		PrintWriter w = null;
+		try {
+			new File(ctx.getOutputDirectory() + "/lib").mkdirs();
+			w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/lib/" + cfg.getName() + ".js")));
+			w.println(builder.toString());
+			w.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(w);
+		}
+	}
 
-    protected void generateThingMLListener(StringBuilder builder, Context ctx, Property p, Instance i, String accessor, boolean isGlobal) {
-        //Update Kevoree properties when ThingML properties are updated
-        String newValue = "newValue";
-            builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "=', (newValue) => {");
-        if (!isGlobal)
-            builder.append("if(this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== " + newValue + ") {\n");
-        else
-            builder.append("if(this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "') !== " + newValue + ") {\n");
-        if (!isGlobal)
-            builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + i.getName() + "_" + ctx.getVariableName(p) + " = \"'+" + newValue + "+'\"');\n");
-        else
-            builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + ctx.getVariableName(p) + " = \"'+" + newValue + "+'\"');\n");
-        builder.append("}");
-            builder.append("});\n");
-    }
+	protected void generateKevoreeListener(StringBuilder builder, Context ctx, boolean isNumber, Property p, Instance i, boolean isGlobal, String accessor) {
+		//Update ThingML properties when Kevoree properties are updated
+		if (!isGlobal) //per instance mapping
+			builder.append("this.dictionary.on('" + i.getName() + "_" + ctx.getVariableName(p) + "', (newValue) => {");
+		else
+			builder.append("this.dictionary.on('" + ctx.getVariableName(p) + "', function (newValue) {");
+		if (isNumber) {
+			builder.append("newValue = Number(newValue);\n");
+		}
+		builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = newValue;");
+		builder.append("});\n");
 
-    protected String shortName(Instance i, Port p, Message m) {
-        String result = "";
+		//Force update on startup, as listeners might be registered too late the first time
+		builder.append("this." + i.getName() + "." + ctx.getVariableName(p) + " = ");
+		if (!isGlobal) //per instance mapping
+			builder.append("this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "')");
+		else
+			builder.append("this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "')");
+		builder.append(";\n");
+	}
 
-        if (i.getName().length() > 3) {
-            result += i.getName().substring(0, 3);
-        } else {
-            result += i.getName();
-        }
+	protected void generateThingMLListener(StringBuilder builder, Context ctx, Property p, Instance i, String accessor, boolean isGlobal) {
+		//Update Kevoree properties when ThingML properties are updated
+		String newValue = "newValue";
+		builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "=', (newValue) => {");
+		if (!isGlobal)
+			builder.append("if(this.dictionary." + accessor + "('" + i.getName() + "_" + ctx.getVariableName(p) + "') !== " + newValue + ") {\n");
+		else
+			builder.append("if(this.dictionary." + accessor + "('" + ctx.getVariableName(p) + "') !== " + newValue + ") {\n");
+		if (!isGlobal)
+			builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + i.getName() + "_" + ctx.getVariableName(p) + " = \"'+" + newValue + "+'\"');\n");
+		else
+			builder.append("this.submitScript('set '+this.getNodeName()+'.'+this.getName()+'." + ctx.getVariableName(p) + " = \"'+" + newValue + "+'\"');\n");
+		builder.append("}");
+		builder.append("});\n");
+	}
 
-        result += "_";
+	protected String shortName(Instance i, Port p, Message m) {
+		String result = "";
 
-        if (p.getName().length() > 3) {
-            result += p.getName().substring(0, 3);
-        } else {
-            result += p.getName();
-        }
+		if (i.getName().length() > 3) {
+			result += i.getName().substring(0, 3);
+		} else {
+			result += i.getName();
+		}
 
-        result += "_";
+		result += "_";
 
-        if (m != null) {
-            result += m.getName();
-        }
+		if (p.getName().length() > 3) {
+			result += p.getName().substring(0, 3);
+		} else {
+			result += p.getName();
+		}
 
-        return result;
-    }
+		result += "_";
+
+		if (m != null) {
+			result += m.getName();
+		}
+
+		return result;
+	}
 
 }
