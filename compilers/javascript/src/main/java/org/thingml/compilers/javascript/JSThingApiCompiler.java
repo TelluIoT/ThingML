@@ -120,7 +120,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                 builder.append("fork._receive(msg);\n");
                 builder.append("});\n");
             }
-            builder.append("}};\n");
+            builder.append("} else { setTimeout(()=>this._receive(msg),0) }};\n");
 
             generatePublicPort(thing, builder, ctx);
         }
