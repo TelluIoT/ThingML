@@ -66,7 +66,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
             generatePrintDebugFunction(thing, builder, ctx);
         }
 
-        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+        if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
             builder.append("var instance = undefined;\n");
             builder.append("process.on('message', (m) => {\n");
             builder.append("switch (m.lc) {\n");

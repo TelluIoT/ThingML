@@ -41,7 +41,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSCfgMainGenerator;
-import org.thingml.compilers.javascript.JSCompiler;
+import org.thingml.compilers.javascript.NodeJSCompiler;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
@@ -226,7 +226,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
 	protected void generateRequires(StringBuilder builder, Context ctx, Configuration cfg) {
 		builder.append("const AbstractComponent = require('kevoree-entities/lib/AbstractComponent');\n");
 
-		if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+		if(!((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
 			for (Thing t : ConfigurationHelper.allThings(cfg)) {
 				builder.append("const " + t.getName() + " = require('./" + t.getName() + "');\n");
 			}

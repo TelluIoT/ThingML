@@ -26,20 +26,20 @@ import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 /**
  * Created by bmori on 09.01.2017.
  */
-public class JSMTCompiler extends JSCompiler {
+public class NodeJSMTCompiler extends NodeJSCompiler {
 
-    public JSMTCompiler() {
+    public NodeJSMTCompiler() {
         multiThreaded = true;
     }
 
-    public JSMTCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
+    public NodeJSMTCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
         multiThreaded = true;
     }
 
     @Override
     public ThingMLCompiler clone() {
-        return new JSMTCompiler();
+        return new NodeJSMTCompiler();
     }
 
     @Override

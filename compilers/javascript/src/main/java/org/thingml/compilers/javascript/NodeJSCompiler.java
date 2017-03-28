@@ -37,11 +37,11 @@ import org.thingml.xtext.thingML.Type;
 /**
  * Created by ffl on 25.11.14.
  */
-public class JSCompiler extends OpaqueThingMLCompiler {
+public class NodeJSCompiler extends OpaqueThingMLCompiler {
 
     public boolean multiThreaded = false;
 
-    public JSCompiler() {
+    public NodeJSCompiler() {
         super(new JSThingActionCompiler(), new JSThingApiCompiler(), new JSCfgMainGenerator(),
                 new JSCfgBuildCompiler(), new JSThingImplCompiler());
         this.checker = new Checker(this.getID()) {
@@ -52,13 +52,13 @@ public class JSCompiler extends OpaqueThingMLCompiler {
         };
     }
 
-    public JSCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
+    public NodeJSCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
     }
 
     @Override
     public ThingMLCompiler clone() {
-        return new JSCompiler();
+        return new NodeJSCompiler();
     }
 
     @Override

@@ -127,7 +127,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 	public static void generateInstance(Instance i, Configuration cfg, StringBuilder builder, Context ctx, boolean useThis, boolean debug) {
 		generatePropertyDecl(builder, ctx, cfg, i);		
 		//MT
-		if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+		if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
 			if (useThis) {
 				builder.append("this.");
 			} else {
@@ -165,13 +165,13 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		}
 
 		//MT
-		if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+		if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
 			builder.append("]");
 		}
 
 		builder.append(");\n");
 
-		if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+		if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
 			if (useThis) {
 				builder.append("this.");
 			}
@@ -224,7 +224,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		if (useThis) {
 			prefix = "this.";
 		}
-		if(((JSCompiler)ctx.getCompiler()).multiThreaded) {//FIXME: Harmonize event management between MT and non-MT
+		if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {//FIXME: Harmonize event management between MT and non-MT
 			builder.append("//Connecting ports...\n");
 			for (Instance i : ConfigurationHelper.allInstances(cfg)) {
 				builder.append(i.getName() + ".on('message', (m) => {\n");
@@ -306,7 +306,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			}
 		}
 
-		if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+		if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
 			builder.append("const fork = require('child_process').fork;\n");
 		}
 
@@ -316,7 +316,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 				break;
 			}
 		}
-		if(!((JSCompiler)ctx.getCompiler()).multiThreaded) {
+		if(!((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
 			for (Thing t : ConfigurationHelper.allThings(cfg)) {
 				builder.append("const " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
 			}
@@ -331,7 +331,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		while (!instances.isEmpty()) {
 			inst = instances.get(instances.size() - 1);
 			instances.remove(inst);
-			if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+			if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
 				builder.append(inst.getName() + ".send({lc: 'init'});\n");
 			} else {
 				builder.append(inst.getName() + "._init();\n");
@@ -345,7 +345,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		while (!instances.isEmpty()) {
 			inst = instances.get(0);
 			instances.remove(inst);
-			if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+			if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
 				builder.append(inst.getName() + ".kill();\n");
 			} else {
 				builder.append(inst.getName() + "._stop();\n");

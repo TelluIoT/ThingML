@@ -87,7 +87,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
         if (action.getProperty().eContainer() instanceof Thing) {//we can only listen to properties of a Thing, not all local variables, etc
             builder.append("//notify listeners of that attribute\n");
-            if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+            if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
                 builder.append("process.send({lc:'updated', property:'" + action.getProperty().getName() + "', value: this." + ctx.getVariableName(action.getProperty()) + "});\n");
             } else {
                 builder.append("this.bus.emit('" + action.getProperty().getName() + "=', this." + ctx.getVariableName(action.getProperty()) + ");\n");
@@ -97,7 +97,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        if(((JSCompiler)ctx.getCompiler()).multiThreaded) {
+        if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
             builder.append("process.send({_port: '" + action.getPort().getName() + "', _msg: '" + action.getMessage().getName() + "'");
             int i = 0;
             for(Parameter param : action.getMessage().getParameters()) {
