@@ -31,6 +31,7 @@ import org.thingml.compilers.c.posixmt.PosixMTCompiler;
 import org.thingml.compilers.cpp.sintefboard.SintefboardCompiler;
 import org.thingml.compilers.debugGUI.DebugGUICompiler;
 import org.thingml.compilers.java.JavaCompiler;
+import org.thingml.compilers.javascript.BrowserJSCompiler;
 import org.thingml.compilers.javascript.NodeJSCompiler;
 import org.thingml.compilers.javascript.NodeJSMTCompiler;
 import org.thingml.compilers.spi.ExternalThingPlugin;
@@ -63,6 +64,7 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new PosixMTCompiler());
             instance.addCompiler(new SintefboardCompiler());
             instance.addCompiler(new JavaCompiler());
+            instance.addCompiler(new BrowserJSCompiler());
             instance.addCompiler(new NodeJSCompiler());
             instance.addCompiler(new NodeJSMTCompiler());
             instance.addCompiler(new PlantUMLCompiler());
