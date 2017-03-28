@@ -36,7 +36,7 @@ import com.eclipsesource.json.JsonValue;
 /**
  * Created by bmori on 17.12.2014.
  */
-public class JSCfgBuildCompiler extends CfgBuildCompiler {
+public class NodeJSCfgBuildCompiler extends CfgBuildCompiler {
 
     @Override
     public void generateBuildScript(Configuration cfg, Context ctx) {

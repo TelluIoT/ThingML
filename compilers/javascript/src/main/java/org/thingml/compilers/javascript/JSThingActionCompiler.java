@@ -86,35 +86,19 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
         if (action.getProperty().eContainer() instanceof Thing) {//we can only listen to properties of a Thing, not all local variables, etc
-            builder.append("//notify listeners of that attribute\n");
-            if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-                builder.append("process.send({lc:'updated', property:'" + action.getProperty().getName() + "', value: this." + ctx.getVariableName(action.getProperty()) + "});\n");
-            } else {
-                builder.append("this.bus.emit('" + action.getProperty().getName() + "=', this." + ctx.getVariableName(action.getProperty()) + ");\n");
-            }
+            builder.append("this.bus.emit('" + action.getProperty().getName() + "=', this." + ctx.getVariableName(action.getProperty()) + ");\n");
         }
     }
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-            builder.append("process.send({_port: '" + action.getPort().getName() + "', _msg: '" + action.getMessage().getName() + "'");
-            int i = 0;
-            for(Parameter param : action.getMessage().getParameters()) {
-                builder.append(", " + param.getName() + ": ");
-                generate(action.getParameters().get(i), builder, ctx);
-                i++;
-            }
-            builder.append("});\n");
-        } else {
-            builder.append("this.bus.emit(");
-            builder.append("'" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
-            for (Expression pa : action.getParameters()) {
-                builder.append(", ");
-                generate(pa, builder, ctx);
-            }
-            builder.append(");\n");
+        builder.append("this.bus.emit(");
+        builder.append("'" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
+        for (Expression pa : action.getParameters()) {
+            builder.append(", ");
+            generate(pa, builder, ctx);
         }
+        builder.append(");\n");
     }
 
     @Override
@@ -169,14 +153,14 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-        builder.append("process.stderr.write(''+");
+        builder.append("console.error(''+");
         generate(action.getMsg(), builder, ctx);
         builder.append(");\n");
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        builder.append("process.stdout.write(''+");
+        builder.append("console.log(''+");
         generate(action.getMsg(), builder, ctx);
         builder.append(");\n");
     }

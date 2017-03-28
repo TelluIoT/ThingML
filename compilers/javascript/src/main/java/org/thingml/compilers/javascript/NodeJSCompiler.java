@@ -42,8 +42,8 @@ public class NodeJSCompiler extends OpaqueThingMLCompiler {
     public boolean multiThreaded = false;
 
     public NodeJSCompiler() {
-        super(new JSThingActionCompiler(), new JSThingApiCompiler(), new JSCfgMainGenerator(),
-                new JSCfgBuildCompiler(), new JSThingImplCompiler());
+        super(new NodeJSThingActionCompiler(), new JSThingApiCompiler(), new NodeJSCfgMainGenerator(),
+                new NodeJSCfgBuildCompiler(), new NodeJSThingImplCompiler());
         this.checker = new Checker(this.getID()) {
             @Override
             public void do_check(Configuration cfg) {

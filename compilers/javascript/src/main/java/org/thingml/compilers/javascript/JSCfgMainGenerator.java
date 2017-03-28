@@ -125,24 +125,13 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 	}
 
 	public static void generateInstance(Instance i, Configuration cfg, StringBuilder builder, Context ctx, boolean useThis, boolean debug) {
-		generatePropertyDecl(builder, ctx, cfg, i);		
-		//MT
-		if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-			if (useThis) {
-				builder.append("this.");
-			} else {
-				builder.append("const ");
-			}
-			builder.append(i.getName() + " = fork(require('" + ctx.firstToUpper(i.getType().getName()) + "').resolve(), ['" + i.getName() + "', null");//FIXME: For Kevoree lib/xxx.js
-		} else {
-			if (useThis) {
-				builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "('" + i.getName() + "', null");
-			} else {
-				builder.append("const " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "('" + i.getName() + "', null");
-			}
-		}
+		generatePropertyDecl(builder, ctx, cfg, i);
 
-		StringBuilder mt = new StringBuilder();
+        if (useThis) {
+            builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "('" + i.getName() + "', null");
+        } else {
+            builder.append("const " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "('" + i.getName() + "', null");
+        }
 
 		for (Property prop : ThingHelper.allUsedProperties(i.getType())) {
 			if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
@@ -164,20 +153,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			builder.append(", false");
 		}
 
-		//MT
-		if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-			builder.append("]");
-		}
-
 		builder.append(");\n");
-
-		if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-			if (useThis) {
-				builder.append("this.");
-			}
-			builder.append(i.getName() + ".send({lc: 'new'" + mt.toString() + "});\n");
-		}
-
 
 		/*if (useThis) { //FIXME: have a pass on debug traces
             if (debug || debugProfile.getDebugInstances().contains(i)) {
@@ -224,138 +200,39 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		if (useThis) {
 			prefix = "this.";
 		}
-		if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {//FIXME: Harmonize event management between MT and non-MT
-			builder.append("//Connecting ports...\n");
-			for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-				builder.append(i.getName() + ".on('message', (m) => {\n");
-				builder.append("switch(m._port) {\n");
-				for(Port p : ThingMLHelpers.allPorts(i.getType())) {
-					builder.append("case '" + p.getName() + "':\n");
-					if(p instanceof InternalPort) {
-						builder.append(i.getName() + ".send(m);\n");
-					} else {
-						for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-							if (EcoreUtil.equals(i, c.getCli()) && EcoreUtil.equals(p, c.getRequired())) {
-								builder.append("m._port = '" + c.getProvided().getName() + "';\n");
-								builder.append(c.getSrv().getName() + ".send(m);\n");
-							} else if (EcoreUtil.equals(i, c.getSrv()) && EcoreUtil.equals(p, c.getProvided())) {
-								builder.append("m._port = '" + c.getRequired().getName() + "';\n");
-								builder.append(c.getCli().getName() + ".send(m);\n");
-							}
-						}
-					}
-					builder.append("break;\n");
-				}
-				builder.append("default:\nbreak;\n");
-				builder.append("}\n");
-				builder.append("});\n\n");
-			}
-		} else {
-			builder.append("//Connecting internal ports...\n");
-			for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
-				Instance i = entries.getKey();
-				for (InternalPort p : entries.getValue()) {
-					for (Message rec : p.getReceives()) {
-						for (Message send : p.getSends()) {
-							if (EcoreUtil.equals(rec, send)) {
-								generateOnEvent(builder, prefix, send, i.getName(), p.getName(), i.getName(), p.getName());
-								break;
-							}
-						}
-					}
-				}
-			}
-			builder.append("//Connecting ports...\n");
-			for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-				for (Message req : c.getRequired().getReceives()) {
-					for (Message prov : c.getProvided().getSends()) {
-						if (req.getName().equals(prov.getName())) {
-							generateOnEvent(builder, prefix, req, c.getCli().getName(), c.getRequired().getName(), c.getSrv().getName(), c.getProvided().getName());
-							break;
-						}
-					}
-				}
-				for (Message req : c.getProvided().getReceives()) {
-					for (Message prov : c.getRequired().getSends()) {
-						if (req.getName().equals(prov.getName())) {
-							generateOnEvent(builder, prefix, req, c.getSrv().getName(), c.getProvided().getName(), c.getCli().getName(), c.getRequired().getName());
-							break;
-						}
-					}
-				}
-			}
-		}
+        builder.append("//Connecting internal ports...\n");
+        for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
+            Instance i = entries.getKey();
+            for (InternalPort p : entries.getValue()) {
+                for (Message rec : p.getReceives()) {
+                    for (Message send : p.getSends()) {
+                        if (EcoreUtil.equals(rec, send)) {
+                            generateOnEvent(builder, prefix, send, i.getName(), p.getName(), i.getName(), p.getName());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        builder.append("//Connecting ports...\n");
+        for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
+            for (Message req : c.getRequired().getReceives()) {
+                for (Message prov : c.getProvided().getSends()) {
+                    if (req.getName().equals(prov.getName())) {
+                        generateOnEvent(builder, prefix, req, c.getCli().getName(), c.getRequired().getName(), c.getSrv().getName(), c.getProvided().getName());
+                        break;
+                    }
+                }
+            }
+            for (Message req : c.getProvided().getReceives()) {
+                for (Message prov : c.getRequired().getSends()) {
+                    if (req.getName().equals(prov.getName())) {
+                        generateOnEvent(builder, prefix, req, c.getSrv().getName(), c.getProvided().getName(), c.getCli().getName(), c.getRequired().getName());
+                        break;
+                    }
+                }
+            }
+        }
 		builder.append("/*$PLUGINS_CONNECTORS$*/\n");
-	}
-
-	@Override
-	public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
-		final StringBuilder builder = ctx.getBuilder("main.js");
-
-		builder.append("'use strict';\n\n");
-
-		boolean debug = false;
-		if (AnnotatedElementHelper.isDefined(cfg, "debug", "true")) ;
-		debug = true;
-		if (!debug) {
-			for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-				if (AnnotatedElementHelper.isDefined(i, "debug", "true")) {
-					debug = true;
-					break;
-				}
-			}
-		}
-
-		if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-			builder.append("const fork = require('child_process').fork;\n");
-		}
-
-		for (Type ty : ThingMLHelpers.allUsedSimpleTypes(model)) {
-			if (ty instanceof Enumeration) {
-				builder.append("const Enum = require('./enums');\n");
-				break;
-			}
-		}
-		if(!((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-			for (Thing t : ConfigurationHelper.allThings(cfg)) {
-				builder.append("const " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
-			}
-		}
-		builder.append("/*$REQUIRE_PLUGINS$*/\n");
-		generateInstances(cfg, builder, ctx, false);
-		generateConnectors(cfg, builder, ctx, false);
-
-
-		List<Instance> instances = ConfigurationHelper.orderInstanceInit(cfg);
-		Instance inst;
-		while (!instances.isEmpty()) {
-			inst = instances.get(instances.size() - 1);
-			instances.remove(inst);
-			if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-				builder.append(inst.getName() + ".send({lc: 'init'});\n");
-			} else {
-				builder.append(inst.getName() + "._init();\n");
-			}
-		}
-		builder.append("/*$PLUGINS_END$*/\n");
-
-		builder.append("//terminate all things on SIGINT (e.g. CTRL+C)\n");
-		builder.append("process.on('SIGINT', function() {\n");
-		instances = ConfigurationHelper.orderInstanceInit(cfg);
-		while (!instances.isEmpty()) {
-			inst = instances.get(0);
-			instances.remove(inst);
-			if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-				builder.append(inst.getName() + ".kill();\n");
-			} else {
-				builder.append(inst.getName() + "._stop();\n");
-				builder.append(inst.getName() + "._delete();\n");
-			}
-		}
-		builder.append("/*$STOP_PLUGINS$*/\n");
-		builder.append("setTimeout(() => {\n");
-		builder.append("process.exit();\n");
-		builder.append("}, 1000);\n");
-		builder.append("});\n\n");
 	}
 }
