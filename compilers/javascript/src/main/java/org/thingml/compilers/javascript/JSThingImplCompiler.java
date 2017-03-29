@@ -77,7 +77,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
         if(ThingHelper.hasSession(thing)) {
             builder.append("//Children\n");
-            builder.append("this.forkID = 0;\n");
             builder.append("this.forks = [];\n");
         }
 
@@ -91,35 +90,25 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                     builder.append(" = ");
                     ctx.getCompiler().getThingActionCompiler().generate(initExp, builder, ctx);
                 }
-                //TODO: Init
                 builder.append(";\n");
             } else {
                 builder.append("this." + ThingMLElementHelper.qname(p, "_") + "_var" + " = " + ThingMLElementHelper.qname(p, "_") + "_var" + ";\n");
                 builder.append("this.debug_" + ThingMLElementHelper.qname(p, "_") + "_var" + " = " + ThingMLElementHelper.qname(p, "_") + "_var" + ";\n");
             }
-        }//TODO: public/private properties?
+        }
 
-        builder.append("this.build(name, root);\n");
+        builder.append("this.build(name);\n");
         builder.append("}\n");
 
         builder.append("//State machine (states and regions)\n");
-        builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.build = function(session, root) {//optional session name and root instance to fork a new session\n");
-        if(ThingHelper.hasSession(thing)) {
-            builder.append("if (root === null || root == undefined) {//building root component\n");
-        }
-        for (CompositeState b : ThingMLHelpers.allStateMachines(thing)) {
-            ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(b, builder, ctx);
-        }
-        if(ThingHelper.hasSession(thing)) {
-            builder.append("}\n");
-        }
+        builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.build = function(session) {//optional session name and root instance to fork a new session\n");        
         for (CompositeState b : ThingMLHelpers.allStateMachines(thing)) {
             ctx.addContextAnnotation("session", "true");
+            int s_id = 0;
             for (Session s : CompositeStateHelper.allContainedSessions(b)) {//FIXME: lots of code duplication here.....
-                builder.append("else if(session === '" + s.getName() + "') {//building session " + s.getName() + "\n");
-                builder.append("this.root = root;\n");
-                builder.append("root.forkID = root.forkID + 1;\n");
-                builder.append("this.forkID = root.forkID;\n");
+            	if (s_id > 0)
+            		builder.append("else ");
+                builder.append("if(session === '" + s.getName() + "') {//building session " + s.getName() + "\n");
                 builder.append("this.statemachine = new StateJS.StateMachine('" + s.getName() + "')");
                 builder.append(";\n");
                 ctx.addContextAnnotation("container", "this." + ThingMLElementHelper.qname(ThingMLHelpers.findContainingRegion(s), "_"));
@@ -128,11 +117,25 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
                 for (State st : s.getSubstate()) {
                     ctx.addContextAnnotation("container", ThingMLElementHelper.qname(s, "_") + "_session");
                     ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(st, builder, ctx);
-                }
+                }                                                                          
                 builder.append("_initial_" + ThingMLElementHelper.qname(s, "_") + "_session.to(" + ThingMLElementHelper.qname(s.getInitial(), "_") + ");\n");
+                                            
+                //FIXME: Transitions in sessions!                
+                
                 builder.append("}\n");
+                s_id++;
             }
             ctx.removeContextAnnotation("session");
+        }
+        
+        if(ThingHelper.hasSession(thing)) {
+            builder.append("else {//building root component\n");
+        }
+        for (CompositeState b : ThingMLHelpers.allStateMachines(thing)) {
+            ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(b, builder, ctx);
+        }
+        if(ThingHelper.hasSession(thing)) {
+            builder.append("}\n");
         }
 
         builder.append("}\n");

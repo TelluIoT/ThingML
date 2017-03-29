@@ -34,18 +34,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.thingml.xtext.thingML.*;
-import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker.CheckerInfo;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
-import org.thingml.compilers.uml.PlantUMLCompiler;
-import org.thingml.compilers.uml.PlantUMLThingImplCompiler;
-import org.thingml.compilers.utils.ThingMLPrettyPrinter;
-import org.thingml.eclipse.ui.Activator;
 import org.thingml.eclipse.ui.ThingMLConsole;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 public class CompileThingFile implements IHandler {
 
@@ -243,7 +240,7 @@ public class CompileThingFile implements IHandler {
 
 
 
-			String pack = "true"; //store.getString(PreferenceConstants.PACK_STRING);
+			String pack = "org.thingml.generated"; //store.getString(PreferenceConstants.PACK_STRING);
 			String[] options = new String[1];
 			options[0] = pack;
 

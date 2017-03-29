@@ -128,36 +128,6 @@ public class StateHelper {
                 }
             }
         }
-/*
-        //add stream handlers if not present
-        if (self instanceof CompositeState) {
-            for (Stream s : ThingMLElementHelper.findContainingThing(self).getStreams()) {
-                ReceiveMessage rMsg;
-
-                if (s.getInput() instanceof SimpleSource) {
-                    rMsg = ((SimpleSource) s.getInput()).getMessage();
-                    addMessageToHandlers(result, rMsg, null);
-                } else if (s.getInput() instanceof JoinSources) {
-                    for (Source source : ((JoinSources) s.getInput()).getSources()) {
-                        if (source instanceof SimpleSource) {
-                            rMsg = ((SimpleSource) source).getMessage();
-                            addMessageToHandlers(result, rMsg, null);
-                        }
-                    }
-                } else if (s.getInput() instanceof MergeSources) {
-                    for (Source source : ((MergeSources) s.getInput()).getSources()) {
-                        if (source instanceof SimpleSource) {
-                            rMsg = ((SimpleSource) source).getMessage();
-                            addMessageToHandlers(result, rMsg, null);
-                        }
-
-                    }
-                }
-
-            }
-        }
-        */
-
         return result;
     }
 

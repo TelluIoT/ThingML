@@ -22,6 +22,7 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
+import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
@@ -29,6 +30,7 @@ import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrintAction;
@@ -251,4 +253,19 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
         builder.append((((ReceiveMessage)expression.getReceiveMsg()).getMessage().getName()) + "." + expression.getParameter().getName());
     }
     
+    @Override
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+    	if(action.getVar() instanceof Property) {
+    		builder.append("this.");
+    	}
+    	super.generate(action, builder, ctx);
+    }
+
+    @Override
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+    	if(action.getVar() instanceof Property) {
+    		builder.append("this.");
+    	}
+    	super.generate(action, builder, ctx);
+    }
 }

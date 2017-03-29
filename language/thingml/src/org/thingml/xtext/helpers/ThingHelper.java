@@ -16,15 +16,29 @@
  */
 package org.thingml.xtext.helpers;
 
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.thingML.*;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.InternalTransition;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.PropertyAssign;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Transition;
+import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.Variable;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
  * Created by ffl on 10.05.2016.
@@ -52,13 +66,11 @@ public class ThingHelper {
 	
     public static boolean hasSession(Thing self) {
         for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
-            for(State s : StateHelper.allStatesIncludingSessions(sm)) {
-                if (s instanceof Session)
-                    return true;
-            }
+        	if(CompositeStateHelper.allContainedSessions(sm).size() > 0)
+        		return true;
         }
         return false;
-}
+    }
 
     public static boolean isSingleton(Thing self) {
         return AnnotatedElementHelper.isDefined(self, "singleton", "true");

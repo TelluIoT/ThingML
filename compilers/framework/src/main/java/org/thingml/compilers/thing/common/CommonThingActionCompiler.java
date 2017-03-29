@@ -30,21 +30,16 @@ import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.DivExpression;
 import org.thingml.xtext.thingML.DoubleLiteral;
-import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EqualsExpression;
-import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
 import org.thingml.xtext.thingML.Function;
-import org.thingml.xtext.thingML.FunctionCallExpression;
-import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.GreaterExpression;
 import org.thingml.xtext.thingML.GreaterOrEqualExpression;
 import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.IntegerLiteral;
-import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.LoopAction;
 import org.thingml.xtext.thingML.LowerExpression;
 import org.thingml.xtext.thingML.LowerOrEqualExpression;
@@ -54,10 +49,8 @@ import org.thingml.xtext.thingML.NotEqualsExpression;
 import org.thingml.xtext.thingML.NotExpression;
 import org.thingml.xtext.thingML.OrExpression;
 import org.thingml.xtext.thingML.PlusExpression;
-import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.ReturnAction;
-import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.TimesExpression;
@@ -73,10 +66,10 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     //ThingML actions that can be compiled the same way for any imperative language like (Java, JS, C)
 
-    @Override
-    public void generate(SendAction action, StringBuilder builder, Context ctx) {//TODO: this might actually be factorizable if we agree on the methods' signatures to send message
+    /*@Override
+    public void generate(SendAction action, StringBuilder builder, Context ctx) {
         builder.append("//Platform-specific action (" + action.getClass().getName() + ") should be refined in a sub-compiler");
-    }
+    }*/
 
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
 
@@ -124,14 +117,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
             generate(a, builder, ctx);
         }
     }
-    /*
-    protected String cleanExtern(String extern) {
-    	if(extern.startsWith("'") && extern.endsWith("'")) {
-    		return extern.substring(1, extern.length()-1);
-    	}
-    	return extern;
-    }
-*/
+
     @Override
     public void generate(ExternStatement action, StringBuilder builder, Context ctx) {
         builder.append(action.getStatement());
@@ -165,7 +151,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append("\n}\n");
     }
 
-    @Override
+    /*@Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
         builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
     }
@@ -173,7 +159,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
         builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
-    }
+    }*/
 
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
@@ -184,12 +170,11 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
             PropertyReference pr = (PropertyReference) action.getExp();
             isArray = pr.getProperty().getTypeRef().isIsArray() || pr.getProperty().getTypeRef().getCardinality() != null;
         }
-        //FIXME: Brice, the cast for returns was lost in translation
         cast(parent.getTypeRef().getType(), isArray, action.getExp(), builder, ctx);
         builder.append(";\n");
     }
 
-    @Override
+    /*@Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
         builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
     }
@@ -197,17 +182,19 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
     @Override
     public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
         builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
-    }
+    }*/
 
     @Override
     public void generate(Increment action, StringBuilder builder, Context ctx) {
-        generate(action.getVar(), builder, ctx);
+    	builder.append(ctx.getVariableName(action.getVar()));
+        //generate(action.getVar(), builder, ctx);
         builder.append("++;\n");
     }
 
     @Override
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
-        generate(action.getVar(), builder, ctx);
+    	builder.append(ctx.getVariableName(action.getVar()));
+    	//generate(action.getVar(), builder, ctx);
         builder.append("--;\n");
     }
 
@@ -337,10 +324,10 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append(context.getVariableName(variable) + ".length");
     }
 
-    @Override
+    /*@Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
         builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
-    }
+    }*/
 
     @Override
     public void generate(IntegerLiteral expression, StringBuilder builder, Context ctx) {
@@ -362,10 +349,10 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append(Boolean.toString(expression.isBoolValue()));    	
     }
 
-    @Override
+    /*@Override
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
         builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
-    }
+    }*/
 
     @Override
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
@@ -375,10 +362,10 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         }
     }
 
-    @Override
+    /*@Override
     public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {//TODO: this should actually be factorizable
         builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
-    }
+    }*/
     
     public void generate(CastExpression expression, StringBuilder builder, Context ctx) {
         //We do not cast explicitly in the generated code. Should a cast be needed, it has to be done in an extern expression
