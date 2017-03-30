@@ -236,15 +236,22 @@ public class JSKevoreePlugin extends NetworkPlugin {
 	protected void generateConstruct(StringBuilder builder, Context ctx, Configuration cfg) {
 		JSCfgMainGenerator.generateInstances(cfg, builder, ctx, true);
 		
+		String content = builder.toString();
+		
 		for(Instance i : ConfigurationHelper.allInstances(cfg)) {
 			for (Property prop : ThingHelper.allUsedProperties(i.getType())) {
 				if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing && AnnotatedElementHelper.hasAnnotation(prop, "kevoree_init")) {
-					builder.append(i.getName() + "_" + prop.getName() + " = ");
-					builder.append(AnnotatedElementHelper.annotation(prop, "kevoree_init").get(0));
-					builder.append(";\n");
+					final StringBuilder temp = new StringBuilder();
+					temp.append(i.getName() + "_" + prop.getName() + " = ");
+					temp.append(AnnotatedElementHelper.annotation(prop, "kevoree_init").get(0));
+					temp.append(";\n");
+					content = content.replace("/*$CONFIGURATION " + i.getName() + "$*/", temp.toString() + "\n/*$CONFIGURATION " + i.getName() + "$*/");					
 				}
 			}
 		}
+		
+		builder.delete(0, builder.length());
+		builder.append(content);
 		
 		JSCfgMainGenerator.generateConnectors(cfg, builder, ctx, true);
 		for (Map.Entry<Instance, List<Port>> e : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
