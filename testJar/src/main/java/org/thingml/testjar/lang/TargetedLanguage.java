@@ -46,6 +46,8 @@ public abstract class TargetedLanguage {
     public int spareThreads = 0;
     
     public Command generateThingML(SimpleGeneratedTest t) {
+        /*
+        Seems like -t and --options were removed from compiler command line
         String[] execCmd = new String[11];
         execCmd[0] = "java";
         execCmd[1] = "-jar";
@@ -57,7 +59,18 @@ public abstract class TargetedLanguage {
         execCmd[7] = "-o";
         execCmd[8] = t.genCfgDir.getAbsolutePath();
         execCmd[9] = "--options";
-        execCmd[10] = compilerID;
+        execCmd[10] = compilerID;*/
+
+        String[] execCmd = new String[9];
+        execCmd[0] = "java";
+        execCmd[1] = "-jar";
+        execCmd[2] = t.compilerJar.getAbsolutePath();
+        execCmd[3] = "-s";
+        execCmd[4] = t.srcTestCase.getAbsolutePath();
+        execCmd[5] = "-o";
+        execCmd[6] = t.genCfgDir.getAbsolutePath();
+        execCmd[7] = "-c";
+        execCmd[8] = compilerID;
         
         return new Command(execCmd, "(.)*SUCCESS(.)*", null, "Error at generation");
     }
