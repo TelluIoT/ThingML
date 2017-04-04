@@ -34,7 +34,7 @@
     </parent>
 
     <dependencies>
-        <!--<dependency>
+        <dependency>
             <groupId>org.thingml</groupId>
             <artifactId>org.thingml.parser.standalone</artifactId>
             <version>${project.version}</version>
@@ -43,7 +43,7 @@
             <groupId>org.thingml</groupId>
             <artifactId>compilers.registry</artifactId>
             <version>${project.version}</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
