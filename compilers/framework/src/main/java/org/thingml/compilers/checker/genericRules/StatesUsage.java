@@ -99,7 +99,7 @@ public class StatesUsage extends Rule {
                     */
                 }
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Sink")) {
-                    if (!(s instanceof FinalState) && !(((CompositeState)s.eContainer()).getSubstate().size() == 1) && s.getOutgoing().size() == 0 && !EcoreUtil.equals(s, sm)) {
+                    if (!(s instanceof FinalState) && !(((Region)s.eContainer()).getSubstate().size() == 1) && s.getOutgoing().size() == 0 && !EcoreUtil.equals(s, sm)) {
                         checker.addGenericNotice("Sink state " + s.getName() + " in Thing " + t.getName() + ".", s);
                     }
                 }
