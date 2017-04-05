@@ -46,7 +46,7 @@
 		<module>thingml.feature</module>
 		<module>thingml.repository</module>
 		<module>thingml.tests</module>
-		<module>thingml.ui.tests</module>
+		<!--<module>thingml.ui.tests</module>-->
 	</modules>
 	
 	
