@@ -115,7 +115,10 @@ public class Main {
         JCommander jcom = new JCommander(main, args);
 
         // HELP Handling
-        if (main.help || ((main.compiler == null) && (!main.listPlugins))) {
+        //comment
+        if (main.help || ((main.compiler == null) && (main.tool == null) && (!main.listPlugins))) {
+         //uncomment
+        //if (main.help || ((main.compiler == null) && (!main.listPlugins))) {
             //uncomment
             //printUsage(jcom, registry);
 
