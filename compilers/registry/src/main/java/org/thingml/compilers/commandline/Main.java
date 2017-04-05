@@ -116,7 +116,11 @@ public class Main {
 
         // HELP Handling
         if (main.help || ((main.compiler == null) && (!main.listPlugins))) {
-            printUsage(jcom, registry);
+            //uncomment
+            //printUsage(jcom, registry);
+
+            //comment
+            printUsage(jcom, registry, toolregistry);
             if (main.listPlugins) {
                 System.out.println();
                 //uncomment
@@ -129,7 +133,11 @@ public class Main {
         }
 
         if (main.listPlugins) {
-            printPluginList(jcom, registry);
+            //uncomment
+            //printPluginList(jcom, registry);
+
+            //comment
+            printUsage(jcom, registry, toolregistry);
             return;
         }
 

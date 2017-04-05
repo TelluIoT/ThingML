@@ -31,11 +31,33 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <properties>
+        <xtextVersion>2.11.0</xtextVersion>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.thingml</groupId>
-            <artifactId>compilers.registry</artifactId>
-            <version>${project.version}</version>
+            <artifactId>thingml</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>thingml.ide</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.xtext</groupId>
+            <artifactId>org.eclipse.xtext</artifactId>
+            <version>${xtextVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.xtext</groupId>
+            <artifactId>org.eclipse.xtext.xbase</artifactId>
+            <version>${xtextVersion}</version>
         </dependency>
 
     </dependencies>
