@@ -49,7 +49,7 @@ public class lPosix extends TargetedLanguage {
         String prg = t.name + "_Cfg";
         
         String[] execCmd = new String[1];
-        execCmd[0] = "./" + prg;
+        execCmd[0] = "timeout -s SIGTERM 10s ./" + prg;
         
         return new Command(execCmd, ".+", null, "Error at c execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }
