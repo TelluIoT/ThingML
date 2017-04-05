@@ -7,6 +7,9 @@ node {
       // Run the maven build
       sh "mvn -Dmaven.test.failure.ignore clean install"
    }
+   stage('Building Xtext plugings') {
+	sh("cd language/ && mvn  -Dmaven.test.failure.ignore clean install && cd ..")
+   }
    stage('Building TestJar') {
       sh("cd testJar/ && mvn  -Dmaven.test.failure.ignore clean install && cd ..")
    }
