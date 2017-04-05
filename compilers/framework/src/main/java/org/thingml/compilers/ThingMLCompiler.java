@@ -344,6 +344,16 @@ public abstract class ThingMLCompiler {
             }
             DebugProfile profile = new DebugProfile(thing, debugBehavior, debugFunctions, debugProperties, debugMessages, debugInstances);
             debugProfiles.put(thing, profile);
+            
+            // The behaviour of a thing may be defines in an included fragment which will also need to have a debug profile attached
+            // TODO: This is not a complete solution. If a fragement is imported in several things only the last will count
+            for (Thing t : ThingHelper.allIncludedThings(thing)) {
+            	
+            		profile = new DebugProfile(t, debugBehavior, debugFunctions, debugProperties, debugMessages, debugInstances);
+                    debugProfiles.put(t, profile);
+            	
+            }
+            
             this.containsDebug = this.containsDebug || profile.isActive();
         }
     }
