@@ -64,6 +64,12 @@
             <version>${thingml.version}</version>
         </dependency>
 
+        <!--this dependency should be removed-->
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>compilers.thingmltools</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>com.beust</groupId>
