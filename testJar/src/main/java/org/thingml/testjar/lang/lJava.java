@@ -68,7 +68,13 @@ public class lJava extends TargetedLanguage {
             execCmd[1] = "/c";
             i = 2;
         } else {
-            execCmd = new String[2];
+            //execCmd = new String[2];
+            execCmd = new String[6];
+            execCmd[0] = "timeout";
+            execCmd[1] = "-s";
+            execCmd[2] = "9";
+            execCmd[3] = "30s";
+            i=4;
         }
         execCmd[i] = maven;
         execCmd[i+1] = "exec:java";
