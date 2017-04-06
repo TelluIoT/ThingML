@@ -45,6 +45,16 @@ import org.thingml.xtext.thingML.VariableAssignment;
  */
 public class ThingHelper {
 
+	
+	public static Set<Thing> allIncludedThings(Thing self) {
+		HashSet<Thing> result = new HashSet<>();
+		for(Thing t : self.getIncludes()) {
+			result.add(t);
+			result.addAll(allIncludedThings(t));
+		}
+		return result;
+	}
+	
 	public static List<Function> allConcreteFunctions(Thing self) {
 		List<Function> result = new ArrayList<>();
 		for(Function fn : ThingMLHelpers.allFunctions(self)) {

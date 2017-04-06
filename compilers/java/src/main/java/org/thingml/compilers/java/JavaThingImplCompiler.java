@@ -647,6 +647,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append("final AtomicState state_" + ThingMLElementHelper.qname(s, "_") + " = new AtomicState(\"" + s.getName() + "\")\n");
         }
         DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(ThingMLHelpers.findContainingThing(s));
+
         if (s.getEntry() != null || s.getExit() != null || debugProfile.isDebugBehavior() || s instanceof FinalState) {
             builder.append("{\n");
             if (s.getEntry() != null || debugProfile.isDebugBehavior() || s instanceof FinalState) {
