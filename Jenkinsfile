@@ -8,10 +8,10 @@ node {
       sh "mvn -Dmaven.test.failure.ignore clean install"
    }
    stage('Building Xtext plugins') {
-	sh("cd language/ && mvn  -Dmaven.test.failure.ignore clean install && cd ..")
+	sh("cd language/ && mvn -Dmaven.test.failure.ignore -pl \!thingml.ui.tests clean install && cd ..")
    }
    stage('Building TestJar') {
-      sh("cd testJar/ && mvn  -Dmaven.test.failure.ignore clean install && cd ..")
+      sh("cd testJar/ && mvn -Dmaven.test.failure.ignore clean install && cd ..")
    }
    stage('Testing') {
       sh "./testframework/test.py"
