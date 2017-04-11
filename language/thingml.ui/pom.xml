@@ -28,6 +28,7 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<dependencies>
+	
 		<dependency>
 		  <groupId>org.thingml</groupId>
 		  <artifactId>compilers.bundle</artifactId>

@@ -58,6 +58,7 @@
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-source-plugin</artifactId>
@@ -71,6 +72,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>tycho-source-feature-plugin</artifactId>
@@ -87,7 +89,7 @@
 				<configuration>
      				<excludes>
       					<!-- provide plug-ins not containing any source code -->
-      					<plugin id="org.thingml.compilers.bundle" />
+      					<plugin id="compilers.bundle" />
      				</excludes>
     			</configuration>
 			</plugin>

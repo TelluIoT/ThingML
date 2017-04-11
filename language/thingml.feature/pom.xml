@@ -27,13 +27,15 @@
 	<artifactId>thingml.feature</artifactId>
 	<packaging>eclipse-feature</packaging>
 
-
 	<dependencies>
+	
 		<dependency>
 		  <groupId>org.thingml</groupId>
 		  <artifactId>compilers.bundle</artifactId>
 		  <version>${thingml.version}</version>
 		</dependency>
+		
+		
 	</dependencies>
 	
 	<name>ThingML :: Language :: Eclipse :: Feature</name>

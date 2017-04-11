@@ -20,7 +20,7 @@ Require-Bundle: thingml,
  org.eclipse.xtext.builder,
  org.eclipse.xtend.lib;resolution:=optional,
  org.eclipse.xtext.xbase.lib,
- org.thingml.compilers.bundle;bundle-version="2.0.0"
+ compilers.bundle
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.thingml.xtext.ui.contentassist,
