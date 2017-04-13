@@ -145,8 +145,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNameIDTerminalRuleCall_14_1_0 = (RuleCall)cNameAssignment_14_1.eContents().get(0);
 		
 		//NamedElement:
-		//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance
-		//	| AbstractConnector | EnumerationLiteral | Event |
+		//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance |
+		//	AbstractConnector | EnumerationLiteral | Event |
 		//	";" name=ID // This is never used, it is just to have the attributes in the superclass
 		//;
 		@Override public ParserRule getRule() { return rule; }
@@ -4851,8 +4851,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//NamedElement:
-	//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance
-	//	| AbstractConnector | EnumerationLiteral | Event |
+	//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance |
+	//	AbstractConnector | EnumerationLiteral | Event |
 	//	";" name=ID // This is never used, it is just to have the attributes in the superclass
 	//;
 	public NamedElementElements getNamedElementAccess() {
