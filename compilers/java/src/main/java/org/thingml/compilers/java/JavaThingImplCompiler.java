@@ -190,6 +190,16 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         final StringBuilder builder = ctx.getBuilder("src/main/java/" + pack.replace(".", "/") + "/" + ctx.firstToUpper(thing.getName()) + ".java");
         boolean hasMessages = ThingMLHelpers.allMessages(thing).size() > 0;
         JavaHelper.generateHeader(pack, pack, builder, ctx, false, hasMessages);
+        
+        // Add import statements from the java_import annotation on the Thing
+        if (AnnotatedElementHelper.hasAnnotation(thing, "java_import")) {
+        	 builder.append("\n//START: @java_import annotation\n");
+        	 for (String str : AnnotatedElementHelper.annotation(thing, "java_import")) {
+        		 builder.append(str);
+        		 builder.append("\n");
+        	 }
+        	 builder.append("\n//END: @java_import annotation\n");
+        }
 
         builder.append("\n/**\n");
         builder.append(" * Definition for type : " + thing.getName() + "\n");
@@ -217,6 +227,17 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
             }
         }
         builder.append(" {\n\n");
+        
+     // Add import statements from the java_import annotation on the Thing
+        if (AnnotatedElementHelper.hasAnnotation(thing, "java_features")) {
+        	 builder.append("\n\t// START: @java_features annotation\n");
+        	 for (String str : AnnotatedElementHelper.annotation(thing, "java_features")) {
+        		 builder.append(str);
+        		 builder.append("\n");
+        	 }
+        	 builder.append("\n\t// END: @java_features annotation\n");
+        	 builder.append("\n");
+        }
 
         builder.append("private List<AttributeListener> attListener = new ArrayList<AttributeListener>();\n");
         builder.append("public void addAttributeListener(AttributeListener listener){\nthis.attListener.add(listener);\n}\n\n");
