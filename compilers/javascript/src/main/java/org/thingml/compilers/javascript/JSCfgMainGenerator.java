@@ -99,7 +99,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 		}
 
 		for (Property prop : ThingHelper.allUsedProperties(i.getType())) {//TODO: not optimal, to be improved
-			if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
+			if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing && prop.getTypeRef().getCardinality() == null) {
 				boolean isInit = false;
 				builder.append("var " + i.getName() + "_" + prop.getName() + " = ");
 				for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
