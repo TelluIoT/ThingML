@@ -1198,7 +1198,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 for (Message m : p.getSends()) {
                     for (Thing t2 : ConfigurationHelper.allThings(cfg)) {
                         for (Port p2 : ThingMLHelpers.allPorts(t2)) {
-                            if (AnnotatedElementHelper.isDefined(p2, "sync_send", "true")) continue;
+                            //if (AnnotatedElementHelper.isDefined(p2, "sync_send", "true")) continue; 
                             if (p2.getReceives().contains(m)) {
                                 messageSent.add(m);
                             }
