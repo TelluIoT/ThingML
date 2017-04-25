@@ -226,8 +226,8 @@ public class JsTTYPlugin extends NetworkPlugin {
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
                     builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
-                    builder.append("(msg) => setImmediate(() => tty.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
-                    builder.append("));\n");
+                    builder.append("(msg) => tty.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
+                    builder.append(");\n");
 
                     /*builder.append(conn.getInst().getInstance().getName() + "." + req.getName() + "On" + conn.getPort().getName() + "Listeners.push(");
                     builder.append("tty.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(tty)");

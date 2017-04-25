@@ -274,8 +274,8 @@ public class JsMQTTPlugin extends NetworkPlugin {
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
                     builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
-                    builder.append("(msg) => setImmediate(() => mqtt.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
-                    builder.append("));\n");
+                    builder.append("(msg) => mqtt.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
+                    builder.append(");\n");
                 }
                 main = main.replace("/*$PLUGINS_CONNECTORS$*/", builder.toString() + "\n/*$PLUGINS_CONNECTORS$*/");
 
