@@ -129,7 +129,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             builder.append(", ");
             generate(pa, builder, ctx);
         }
-        builder.append(");\n");
+        builder.append(")");
     	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
             builder.append(")");
     	}
