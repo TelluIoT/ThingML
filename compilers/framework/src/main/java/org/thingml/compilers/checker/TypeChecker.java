@@ -41,6 +41,7 @@ import org.thingml.xtext.thingML.DoubleLiteral;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.GreaterExpression;
@@ -75,6 +76,12 @@ public class TypeChecker extends ThingMLSwitch<Type> {
         }
         return result;
     }
+    
+    @Override
+	public Type caseExpressionGroup(ExpressionGroup object) {
+        return TyperHelper.getBroadType(computeTypeOf(object.getTerm()));
+	}
+
       
     @Override
 	public Type caseCastExpression(CastExpression object) {

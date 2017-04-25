@@ -17,12 +17,17 @@
 package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.Context;
+import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.Types;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Decrement;
+import org.thingml.xtext.thingML.DivExpression;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
@@ -42,12 +47,33 @@ import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
  * Created by bmori on 01.12.2014.
  */
 public class JSThingActionCompiler extends CommonThingActionCompiler {
+
+    /**
+     * JS does not really have integers, and hence no proper integer division
+     * @param expression
+     * @param builder
+     * @param ctx
+     */
+    @Override
+    public void generate(DivExpression expression, StringBuilder builder, Context ctx) {
+        final Type lhsType = TyperHelper.getBroadType(ThingMLCompiler.checker.typeChecker.computeTypeOf(expression.getLhs()));
+        if(Types.INTEGER_TYPE.equals(lhsType)) {//integer division if LHS is integer
+            builder.append("Math.floor(");
+            generate(expression.getLhs(), builder, ctx);
+            builder.append(" / ");
+            generate(expression.getRhs(), builder, ctx);
+            builder.append(")");
+        } else {
+            super.generate(expression, builder, ctx);
+        }
+    }
 
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
@@ -94,13 +120,20 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
+    	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
+            builder.append("setImmediate(() => ");
+    	}
         builder.append("this.bus.emit(");
         builder.append("'" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
         for (Expression pa : action.getParameters()) {
             builder.append(", ");
             generate(pa, builder, ctx);
         }
-        builder.append(");\n");
+        builder.append(")");
+    	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
+            builder.append(")");
+    	}
+        builder.append(";\n");
     }
 
     @Override

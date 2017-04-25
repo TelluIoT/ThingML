@@ -17,28 +17,10 @@
 package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.thing.common.CommonThingActionCompiler;
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.helpers.ThingMLElementHelper;
-import org.thingml.xtext.thingML.ConfigPropertyAssign;
-import org.thingml.xtext.thingML.EnumLiteralRef;
-import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
-import org.thingml.xtext.thingML.EventReference;
-import org.thingml.xtext.thingML.Expression;
-import org.thingml.xtext.thingML.FunctionCallExpression;
-import org.thingml.xtext.thingML.FunctionCallStatement;
-import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrintAction;
-import org.thingml.xtext.thingML.Property;
-import org.thingml.xtext.thingML.PropertyReference;
-import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.SendAction;
-import org.thingml.xtext.thingML.Session;
-import org.thingml.xtext.thingML.StartSession;
-import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.VariableAssignment;
 

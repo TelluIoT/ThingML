@@ -16,15 +16,9 @@
  */
 package org.thingml.compilers.javascript;
 
-import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.compilers.configuration.CfgMainGenerator;
-import org.thingml.compilers.thing.ThingActionCompiler;
-import org.thingml.compilers.thing.ThingApiCompiler;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
@@ -41,7 +35,7 @@ import org.thingml.xtext.thingML.Type;
 public class BrowserJSCompiler extends OpaqueThingMLCompiler {
 
     public BrowserJSCompiler() {
-        super(new JSThingActionCompiler(), new JSThingApiCompiler(), new BrowserJSCfgMainGenerator(),
+        super(new BrowserThingActionCompiler(), new JSThingApiCompiler(), new BrowserJSCfgMainGenerator(),
                 new BrowserJSCfgBuildCompiler(), new BrowserJSThingImplCompiler());
         this.checker = new Checker(this.getID()) {
             @Override

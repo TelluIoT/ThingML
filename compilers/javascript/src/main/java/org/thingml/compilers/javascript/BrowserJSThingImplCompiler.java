@@ -16,31 +16,8 @@
  */
 package org.thingml.compilers.javascript;
 
-import java.util.List;
-import java.util.Map;
-
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.helpers.CompositeStateHelper;
-import org.thingml.xtext.helpers.StateHelper;
-import org.thingml.xtext.helpers.ThingHelper;
-import org.thingml.xtext.helpers.ThingMLElementHelper;
-import org.thingml.xtext.thingML.CompositeState;
-import org.thingml.xtext.thingML.Expression;
-import org.thingml.xtext.thingML.FinalState;
-import org.thingml.xtext.thingML.Handler;
-import org.thingml.xtext.thingML.InternalTransition;
-import org.thingml.xtext.thingML.Message;
-import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.Property;
-import org.thingml.xtext.thingML.Region;
-import org.thingml.xtext.thingML.Session;
-import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.thingML.Transition;
 
 /**
  * Created by jakobho on 28.03.2017.

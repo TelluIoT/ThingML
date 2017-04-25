@@ -258,7 +258,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
 			final Instance i = e.getKey();
 			for (Port p : e.getValue()) {
 				for (Message m : p.getSends()) {
-					builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => setImmediate(() => this." + shortName(i, p, m) + "_proxy(msg)));\n");
+					builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => this." + shortName(i, p, m) + "_proxy(msg));\n");
 				}
 			}
 		}
@@ -267,7 +267,7 @@ public class JSKevoreePlugin extends NetworkPlugin {
 				final Instance i = c.getInst();
 				for (Message m : c.getPort().getSends()) {
 					final Port p = c.getPort();
-					builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => setImmediate(() => this." + shortName(i, p, m) + "_proxy(msg)));\n");
+					builder.append("this." + i.getName() + ".bus.on('" + p.getName() + "?" + m.getName() + "', (msg) => this." + shortName(i, p, m) + "_proxy(msg));\n");
 				}
 			}
 		}
