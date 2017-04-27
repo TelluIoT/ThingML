@@ -16,8 +16,14 @@
  */
 package org.thingml.compilers.javascript;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+
+import org.apache.commons.io.FileUtils;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
@@ -41,6 +47,29 @@ public class BrowserJSCfgBuildCompiler extends CfgBuildCompiler {
         ctx.getBuilder("lib/EventEmitter.min.js").append(ctx.getTemplateByID("javascript/lib/EventEmitter.min.js"));
         builder.append("\t\t<script type=\"application/javascript\" src=\"lib/EventEmitter.min.js\"></script>\n");
 
+        //Copy libraries. Workaround for Issue #176 TODO: find a better solution
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
+        	File libFolder = new File(ctx.getOutputDirectory() + "/lib");
+        	libFolder.mkdirs();
+        	for(String dep : AnnotatedElementHelper.annotation(t, "js_dep")) {    			
+    			final URI uri = URI.create(dep.split("target=")[0].split("src=")[1].replace("\\\"", "").trim());//FIXME: Dirty hack, which will explode any time we do not respect the src="" target="" syntax
+    			File toCopy = null;
+    			if(uri.isAbsolute()) {
+    				toCopy = new File(uri);
+    			} else {
+    				toCopy = new File(ctx.getCompiler().currentFile.toURI().resolve(uri));
+    			}
+    			try {
+    				FileUtils.copyFile(toCopy, new File(ctx.getOutputDirectory(), uri.toString()));
+    				builder.append("\t\t<script type=\"application/javascript\" ");
+    	            builder.append(dep.replace("\\", "").replace("\\\\", ""));
+    	            builder.append("></script>\n");
+    			} catch (IOException e) {
+    				System.err.println("Cannot find file " + uri.toString());
+    			}
+        	}
+        }
+        
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             builder.append("\t\t<script type=\"application/javascript\" src=\"");
             builder.append(ctx.firstToUpper(t.getName()) + ".js");
