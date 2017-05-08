@@ -272,6 +272,29 @@ public class ConfigurationHelper {
         return result;
     }
 
+    public static Set<ObjectType> allObjectTypes(Configuration self) {
+       Set<ObjectType> result = new HashSet<ObjectType>();
+
+       for(Thing thing : allThings(self)) {
+           for(Property p : ThingHelper.allPropertiesInDepth(thing)) {
+               if (p.getTypeRef().getType() instanceof ObjectType) {
+                   ObjectType type = (ObjectType)p.getTypeRef().getType();
+                   result.add(type);
+               }
+           }
+           for(Message m : ThingMLHelpers.allMessages(thing)) {
+               for(Parameter p : m.getParameters()) {
+                   if (p.getTypeRef().getType() instanceof ObjectType) {
+                       ObjectType type = (ObjectType)p.getTypeRef().getType();
+                       result.add(type);
+                   }
+               }
+           }
+       }
+
+       return result;
+    }
+
 
     public static List<Expression> initExpressions(Configuration self, Instance i, Property p) {
         List<Expression> result = new ArrayList<Expression>();
