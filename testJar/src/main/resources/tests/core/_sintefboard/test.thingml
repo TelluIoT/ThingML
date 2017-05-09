@@ -17,32 +17,18 @@ FILE* cpuFile = NULL;"
 	end
 
 	statechart PosixHarness init Testing {
-		property transitionsCount : Long = 0
- 	    property stateNumber: String = ""
-        property time : LongLong = 0
-
 		state Testing {
 
             internal event m : dump?testOut
             action do
                 write(m.c)
-            	transitionsCount=transitionsCount+1
             end
-
-            internal event dump?perfTestOut
-            action transitionsCount=transitionsCount+1
 
             transition -> Failed
             event dump?testFailure
 
             transition -> End
             event dumpEnd?testEnd
-
-            internal event m: dumpEnd?perfTestSize
-            action do
-                time = m.time
-                transitionsCount=transitionsCount+1
-            end
 		}
 
 		final state Failed {
@@ -50,9 +36,6 @@ FILE* cpuFile = NULL;"
                 print("*FAILURE*\n")
                 'if (testFile != NULL) {
                     fclose(testFile);
-                }
-                if (cpuFile != NULL) {
-                    fclose(cpuFile);
                 }
                 exit(-1);'
             end
