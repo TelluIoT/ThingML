@@ -8,11 +8,17 @@ thing TestDumpArduino includes TestDump
 @pim "TestArness"
 @platform "arduino"
 {
+ 	property benchmark: Boolean = false
+
 	statechart ArduinoHarness init Testing {
+		property transitionsCount : Long = 0
+ 		property stateNumber: String = ""
+
 		state Testing {
             internal event m : dump?testOut
             action do
-				        print m.c
+				print m.c
+            	transitionsCount=transitionsCount+1
             end
 
             transition -> Failed
