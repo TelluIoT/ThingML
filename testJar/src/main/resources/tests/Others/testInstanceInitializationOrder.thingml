@@ -7,9 +7,9 @@ thing fragment Msgs {
 thing TestInstanceInitializationOrder includes Test, Msgs
 @test "t # ABC"
 @conf "instance B : I"
-@conf "set B.inst = '\\\'B\\\''"
+@conf "set B.inst = '\'B\''"
 @conf "instance C : I"
-@conf "set C.inst = '\\\'C\\\''"
+@conf "set C.inst = '\'C\''"
 @conf "connector C.r => B.p"
 @conf "connector B.r => test.p"
 {
