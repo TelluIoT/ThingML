@@ -111,21 +111,13 @@ public class VariableUsage extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
-        for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {
-            //FIXME @Brice see testIfElse
-            if (a instanceof VariableAssignment) {
-                VariableAssignment va = (VariableAssignment) a;
-                if (va.getExpression() != null)
-                    check(va.getProperty(), va.getExpression(), t, checker, va);
-            }
+        for (VariableAssignment va : ActionHelper.getAllActions(t, VariableAssignment.class)) {
+            if (va.getExpression() != null)
+                check(va.getProperty(), va.getExpression(), t, checker, va);            
         }
-        for (Action a : ActionHelper.getAllActions(t, LocalVariable.class)) {
-            //FIXME @Brice see testIfElse
-            if (a instanceof LocalVariable) {
-                LocalVariable lv = (LocalVariable) a;
-                if (lv.getInit() != null)
-                    check(lv, lv.getInit(), t, checker, lv);
-            }
+        for (LocalVariable lv : ActionHelper.getAllActions(t, LocalVariable.class)) {
+            if (lv.getInit() != null)
+                check(lv, lv.getInit(), t, checker, lv);            
         }
 
         for(Property p : ThingHelper.allPropertiesInDepth(t)) {

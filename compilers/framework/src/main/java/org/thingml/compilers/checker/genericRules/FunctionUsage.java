@@ -116,13 +116,10 @@ public class FunctionUsage extends Rule {
                                 checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
                             }
                         }
-                        for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {//TODO: implement allActions on Function directly
-                            if (a instanceof VariableAssignment) {
-                                VariableAssignment va = (VariableAssignment) a;
-                                if (va.getProperty().equals(p)) {
-                                    checker.addWarning("Re-assigning parameter " + p.getName() + " can have side effects", va);
-                                }
-                            }
+                        for (VariableAssignment va : ActionHelper.getAllActions(t, VariableAssignment.class)) {//TODO: implement allActions on Function directly
+                            if (va.getProperty().equals(p)) {
+                                checker.addWarning("Re-assigning parameter " + p.getName() + " can have side effects", va);
+                            }                            
                         }
                     }
                 }
@@ -135,14 +132,11 @@ public class FunctionUsage extends Rule {
     public void check(Checker checker, Thing t, Function f) {
         for (Parameter p : f.getParameters()) {
             boolean isUsed = false;
-            for (Expression exp : ThingMLHelpers.getAllExpressions(t, PropertyReference.class)) {//TODO: see above
-                if (exp instanceof PropertyReference) {
-                    PropertyReference pr = (PropertyReference) exp;
-                    if (pr.getProperty().equals(p)) {
-                        isUsed = true;
-                        break;
-                    }
-                }
+            for (PropertyReference pr : ThingMLHelpers.getAllExpressions(t, PropertyReference.class)) {//TODO: see above
+                if (pr.getProperty().equals(p)) {
+                    isUsed = true;
+                    break;
+                }                
             }
             if (!isUsed) {
                 checker.addWarning("Parameter " + p.getName() + " is never read", p);
@@ -188,21 +182,15 @@ public class FunctionUsage extends Rule {
         for (Function f : ThingMLHelpers.allFunctions(t)) {
             check(checker, t, f);
             boolean found = false;
-            for (Action b : ActionHelper.getAllActions(t, FunctionCallStatement.class)) {
-                if (b instanceof FunctionCallStatement) {
-                	FunctionCallStatement a = (FunctionCallStatement) b;
-                    if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
-                        found = true;
-                    }
-                }
+            for (FunctionCallStatement a : ActionHelper.getAllActions(t, FunctionCallStatement.class)) {
+                if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
+                    found = true;
+                }                
             }
-            for (Expression b : ThingMLHelpers.getAllExpressions(t, FunctionCallExpression.class)) {
-                if (b instanceof FunctionCallExpression) {
-                    FunctionCallExpression a = (FunctionCallExpression) b;
-                    if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
-                        found = true;
-                    }
-                }
+            for (FunctionCallExpression a : ThingMLHelpers.getAllExpressions(t, FunctionCallExpression.class)) {
+                if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
+                    found = true;
+                }                
             }
             if (!found && !AnnotatedElementHelper.isDefined(f, "SuppressWarnings", "Call"))
                 checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is never called.", f);

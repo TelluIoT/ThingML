@@ -87,8 +87,7 @@ public class MessagesUsage extends Rule {
         for (Port p : ThingMLHelpers.allPorts(t)) {
             for (Message m : p.getSends()) {
                 boolean found = false;
-                for (Action b : ActionHelper.getAllActions(t, SendAction.class)) {
-                    SendAction a = (SendAction) b;
+                for (SendAction a : ActionHelper.getAllActions(t, SendAction.class)) {
                     if (EcoreUtil.equals(a.getMessage(), m)) {
                         found = true;
                         if (m.getParameters().size() != a.getParameters().size()) {

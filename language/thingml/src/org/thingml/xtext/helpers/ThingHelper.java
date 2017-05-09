@@ -196,8 +196,8 @@ public class ThingHelper {
     public static List<Property> allUsedProperties(Thing self) {
         List<Property> result = new ArrayList<>();
         for(Property p : allPropertiesInDepth(self)) {
-            for (Action a : ActionHelper.getAllActions(self, VariableAssignment.class)) {
-                if (EcoreUtil.equals(p, ((VariableAssignment)a).getProperty())) {
+            for (VariableAssignment a : ActionHelper.getAllActions(self, VariableAssignment.class)) {
+                if (EcoreUtil.equals(p, a.getProperty())) {
                     boolean isPresent = false;
                     for(Property pr : result) {
                         if (EcoreUtil.equals(p, pr)) {
@@ -210,8 +210,8 @@ public class ThingHelper {
                     break;
                 }
             }
-            for (Expression e : ThingMLHelpers.getAllExpressions(self, PropertyReference.class)) {
-                if (EcoreUtil.equals(p, ((PropertyReference)e).getProperty())) {
+            for (PropertyReference e : ThingMLHelpers.getAllExpressions(self, PropertyReference.class)) {
+                if (EcoreUtil.equals(p, e.getProperty())) {
                     boolean isPresent = false;
                     for(Property pr : result) {
                         if (EcoreUtil.equals(p, pr)) {

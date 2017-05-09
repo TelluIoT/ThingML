@@ -220,7 +220,7 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	def protected IScope scopeForEnumLiteralRef_Enum(EnumLiteralRef context) {
-		Scopes.scopeFor( ThingMLHelpers.allEnnumerations(ThingMLHelpers.findContainingModel(context)) ); 
+		Scopes.scopeFor( ThingMLHelpers.allEnumerations(ThingMLHelpers.findContainingModel(context)) ); 
 	}
 	
 	def protected IScope scopeForEnumLiteralRef_Literal(EnumLiteralRef context) {

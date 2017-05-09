@@ -52,6 +52,7 @@ import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.Parameter;
@@ -266,6 +267,18 @@ public class ThingMLHelpers {
                         }
                     }
                 }
+                for(Function f : ThingMLHelpers.allFunctions(thing)) {
+                	for(Parameter p : f.getParameters()) {
+                        if (EcoreUtil.equals(p.getTypeRef().getType(), t)) {
+                            result.add(t);
+                        }
+                    }
+                }
+                for (LocalVariable v : ActionHelper.getAllActions(thing, LocalVariable.class)) {
+                    if (EcoreUtil.equals(v.getTypeRef().getType(), t)) {
+                        result.add(t);
+                    }	                	
+                }
             }
         }
         return result;
@@ -294,6 +307,11 @@ public class ThingMLHelpers {
                         }
                     }
                 }
+                for (LocalVariable v : ActionHelper.getAllActions(thing, LocalVariable.class)) {
+                    if (EcoreUtil.equals(v.getTypeRef().getType(), t)) {
+                        result.add(t);
+                    }	                	
+                }
             }
         }
         return result;
@@ -310,7 +328,7 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
-	public static ArrayList<Enumeration> allEnnumerations(ThingMLModel model) {
+	public static ArrayList<Enumeration> allEnumerations(ThingMLModel model) {
 		ArrayList<Enumeration> result = new ArrayList<Enumeration>();
 		for (ThingMLModel m : allThingMLModelModels(model)) {
 			for (Type t : m.getTypes()) {
@@ -334,7 +352,7 @@ public class ThingMLHelpers {
 	
 	public static ArrayList<Enumeration> findEnumeration(ThingMLModel model, String name, boolean fuzzy) {
 		ArrayList<Enumeration> result = new ArrayList<Enumeration>();
-		for (Enumeration t : allEnnumerations(model)) {
+		for (Enumeration t : allEnumerations(model)) {
 			if (t.getName().startsWith(name)) {
 				if (fuzzy) result.add(t);
 				else if (t.getName().equals(name)) result.add(t);
@@ -879,15 +897,15 @@ public class ThingMLHelpers {
 	}
 
 
-	public static List<Expression> getAllExpressions(EObject self, Class clazz) {
-		List<Expression> result = new ArrayList<Expression>();
+	public static <T extends Expression> List<T> getAllExpressions(EObject self, Class<T> clazz) {
+		List<T> result = new ArrayList<T>();
 		TreeIterator<EObject> it = self.eAllContents();
 		while(it.hasNext()) {
 			EObject o = it.next();
-			if (clazz.isInstance(o)) result.add((Expression) o);
+			if (clazz.isInstance(o)) result.add((T) o);
 		}
 
-		if (clazz.isInstance(self))result.add((Expression)self);
+		if (clazz.isInstance(self))result.add((T)self);
 		return result;
 	}
 
@@ -907,8 +925,7 @@ public class ThingMLHelpers {
 	public static ArrayList<Variable> allVariables(Thing thing) { //TODO: Does this get absolutely all variables?
 		ArrayList<Variable> result = new ArrayList<Variable>();
 		for (Thing t : allThingFragments(thing)) {
-			for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {
-			    VariableAssignment assignment = (VariableAssignment)a;
+			for (VariableAssignment assignment : ActionHelper.getAllActions(t, VariableAssignment.class)) {
 			    result.add(assignment.getProperty());
 			}
 		}

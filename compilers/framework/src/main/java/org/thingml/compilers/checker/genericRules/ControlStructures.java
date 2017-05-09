@@ -32,7 +32,9 @@ import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.LoopAction;
+import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
@@ -64,8 +66,9 @@ public class ControlStructures extends Rule {
 
     private void check(Expression e, EObject o, Checker checker) {
         Type actual = checker.typeChecker.computeTypeOf(e);
-        if (actual.equals(Types.BOOLEAN_TYPE))
-            return;
+        if (actual.equals(Types.BOOLEAN_TYPE)) {
+        	return;
+        }
         if (actual.equals(Types.ANY_TYPE)) {
             checker.addGenericWarning("Condition cannot be typed as Boolean", o);
             return;
@@ -88,30 +91,12 @@ public class ControlStructures extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
-        for (Action a : ActionHelper.getAllActions(t, ConditionalAction.class)) {
-            //FIXME @Brice see testIfElse
-            if (a instanceof ConditionalAction) {
-                ConditionalAction va = (ConditionalAction) a;
-                check(va.getCondition(), va, checker);
-            }
+        for (ConditionalAction va : ActionHelper.getAllActions(t, ConditionalAction.class)) {
+            check(va.getCondition(), va, checker);
         }
-        for (Action a : ActionHelper.getAllActions(t, LoopAction.class)) {
-            //FIXME @Brice see testIfElse
-            if (a instanceof LoopAction) {
-                LoopAction lv = (LoopAction) a;
-                check(lv.getCondition(), lv, checker);
-            }
+        for (LoopAction lv : ActionHelper.getAllActions(t, LoopAction.class)) {
+            check(lv.getCondition(), lv, checker);            
         }
-        /*
-        for (Stream s : t.getStreams()) {
-            for (ViewSource vs : s.getInput().getOperators()) {
-                if (vs instanceof Filter) {
-                    Filter f = (Filter) vs;
-                    check(f.getGuard(), f, checker);
-                }
-            }
-        }
-        */
     }
 
 }
