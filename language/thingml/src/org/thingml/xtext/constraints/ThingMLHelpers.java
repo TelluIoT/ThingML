@@ -101,6 +101,10 @@ public class ThingMLHelpers {
     	return result;
     }    
     
+    public static StateContainer findContainingStateContainer(EObject object) {
+		return findContainer(object, StateContainer.class);
+	}
+    
 	public static ThingMLModel findContainingModel(EObject object) {
 		return findContainer(object, ThingMLModel.class);
 	}
@@ -832,60 +836,7 @@ public class ThingMLHelpers {
 		return result;
 	}
 	*/
-	/* ***********************************************************
-	 * Resolution for Specific Actions / Expressions
-	 * ***********************************************************/
-/*
-	public static List<ReceiveMessage> allReceiveMessages(Source input) {
-		List<ReceiveMessage> result = new ArrayList<>();
-		getAllReceiveMessages(input,result);
-		return result;
-	}
 
-	private static void getAllReceiveMessages(Source input, List<ReceiveMessage> result) {
-		if(input instanceof SimpleSource) {
-			result.add(((SimpleSource)input).getMessage());
-		} else if (input instanceof SourceComposition) {
-			SourceComposition composition = (SourceComposition) input;
-			for(Source s : composition.getSources()) {
-				getAllReceiveMessages(s,result);
-			}
-		}
-	}
-
-	public static Stream findContainingStream(EObject eObject) {
-		return findContainer(eObject,Stream.class);
-	}
-
-	public static List<SimpleSource> allSimpleSources(Source input) {
-		List<SimpleSource> result = new ArrayList<>();
-		if(input instanceof SimpleSource) {
-			result.add((SimpleSource)input);
-		} else if(input instanceof SourceComposition) {
-			SourceComposition composition = (SourceComposition) input;
-			for(Source s : composition.getSources()) {
-				result.addAll(allSimpleSources(s));
-			}
-		}
-		return result;
-	}
-
-	public static ThingMLElement findReferenceContainer(Reference container) {
-		EObject parent = container.eContainer();
-		List<String> parents = new ArrayList<String>();
-		
-		while (parent !=null && !(parent instanceof Handler || parent instanceof Stream || parent instanceof SourceComposition || parent instanceof SimpleSource)) {
-			parents.add(parent.getClass().getName());
-			parent = parent.eContainer();
-		}
-		if (parent == null) {
-			for(String p : parents) {
-				System.out.println("Parent:" + parent);
-			}
-		}
-		return (ThingMLElement) parent;
-	}
-*/
 	public static Expression findRootExpressions(Expression expression) {
 		Expression result = expression;
 		EObject parent = expression.eContainer();
