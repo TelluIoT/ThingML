@@ -153,7 +153,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateStateMachine(CompositeState sm, StringBuilder builder, Context ctx) {
-        builder.append("this.statemachine = new StateJS.StateMachine('" + sm.getName() + "')");
+        builder.append("this.statemachine = new StateJS.StateMachine('" + (sm.getName()!=null?sm.getName():"default") + "')");
         generateActionsForState(sm, builder, ctx);
         builder.append(";\n");
         if (sm.isHistory())
