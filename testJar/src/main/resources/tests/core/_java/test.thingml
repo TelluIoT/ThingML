@@ -8,12 +8,12 @@ thing TestDumpJava includes TestDump
 {
     readonly property device : Dumper = 'new org.thingml.devices.Dumper()'
 
-	function write(string : String) 
+	function write(string : String)
 	do
     	'((org.thingml.devices.Dumper)' & device & ').write(' & string & ');'
     	print(string)
 	end
-	
+
 	statechart JavaHarness init Testing {
 		property transitionsCount : Long = 0
         property time : LongLong = 0
@@ -29,33 +29,33 @@ thing TestDumpJava includes TestDump
             action do
                 transitionsCount=transitionsCount+1
             end
-            
-            transition -> Failed 
+
+            transition -> Failed
             event dump?testFailure
-            
+
             transition -> End
             event dumpEnd?testEnd
-            
+
             internal event m: dumpEnd?perfTestSize
             action do
                 time = m.time
                 transitionsCount=transitionsCount+1
             end
 		}
-		
-		state Failed {
+
+		final state Failed {
 			on entry do
 			    write("*FAILURE*")
 			    'System.exit(-1);'
 			end
 		}
 
-		state End {
+		final state End {
 			on entry do
 				'try{java.io.PrintWriter pw = new java.io.PrintWriter("cputime");'
 				'pw.println(""+'&time&');'
 				'pw.close();}catch(Exception e){;}'
-				print(" [Done]\n End of thingml processus") 
+				print(" [Done]\n End of thingml processus")
 				'((org.thingml.devices.Dumper)' & device & ').stop((int)'&transitionsCount&');
 				System.out.println("Memory: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));'
 				'System.exit(0);'
