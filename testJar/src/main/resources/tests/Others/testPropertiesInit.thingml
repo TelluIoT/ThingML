@@ -2,8 +2,8 @@ import "../thingml.thingml"
 
 thing TestPropertiesInit includes Test
 @test "x # AABBCCDDEEFF"
-@conf "set test.C1 = '\\\'C\\\''"
-@conf "set test.D1 = '\\\'D\\\''"
+@conf "set test.C1 = '\'C\''"
+@conf "set test.D1 = '\'D\''"
 @conf "set test.E1 = 5 + 5"
 @conf "set test.F1 = 5 + 5"
 {
