@@ -47,18 +47,18 @@ public abstract class TestCase {
     public Command ongoingCmd;
     public File compilerJar;
     public File pluginJar;
-    
+
     public abstract void collectResults();
-    
-    
+
+
     public static String upperFirstChar(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
-    
+
     public static Set<File> listTestFiles(final File folder, String pattern) {
         Set<File> res = new HashSet<>();
         Pattern p = Pattern.compile(pattern);
-        
+
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 res.addAll(listTestFiles(fileEntry, pattern));
@@ -70,10 +70,10 @@ public abstract class TestCase {
                 }
             }
         }
-        
+
         return res;
     }
-    
+
     public void writeLogFile() {
         if (!logFile.getParentFile().exists())
             logFile.getParentFile().mkdirs();
@@ -82,7 +82,7 @@ public abstract class TestCase {
             w.print(log);
             w.close();
         } catch (Exception ex) {
-            System.err.println("Problem writting log");
+            System.err.println("Problem writing log");
             ex.printStackTrace();
         }
     }

@@ -24,7 +24,6 @@ FILE* cpuFile = NULL;"
             internal event m : dump?testOut
             action do
                 write(m.c)
-            	transitionsCount=transitionsCount+1
             end
 
             transition -> Failed
