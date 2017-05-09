@@ -1,0 +1,11 @@
+import "../timestamp.thingml"
+
+
+thing TimestampJava includes Timestamp
+@pim "Timestamp"
+@platform "java"
+{
+    function timestamp() : LongLong do
+        return 'System.currentTimeMillis()'
+    end
+}

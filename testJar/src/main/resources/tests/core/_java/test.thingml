@@ -15,6 +15,8 @@ thing TestDumpJava includes TestDump
 	end
 
 	statechart JavaHarness init Testing {
+		property transitionsCount : Long = 0
+        property time : LongLong = 0
 		state Testing {
 
             internal event m : dump?testOut
@@ -22,11 +24,22 @@ thing TestDumpJava includes TestDump
                 write('Character.toString('&m.c&')')
             end
 
+            internal event dump?perfTestOut
+            action do
+                transitionsCount=transitionsCount+1
+            end
+
             transition -> Failed
             event dump?testFailure
 
             transition -> End
             event dumpEnd?testEnd
+
+            internal event m: dumpEnd?perfTestSize
+            action do
+                time = m.time
+                transitionsCount=transitionsCount+1
+            end
 		}
 
 		final state Failed {
@@ -38,7 +51,12 @@ thing TestDumpJava includes TestDump
 
 		final state End {
 			on entry do
+				'try{java.io.PrintWriter pw = new java.io.PrintWriter("cputime");'
+				'pw.println(""+'&time&');'
+				'pw.close();}catch(Exception e){;}'
 				print(" [Done]\n End of thingml processus")
+				'((org.thingml.devices.Dumper)' & device & ').stop((int)'&transitionsCount&');
+				System.out.println("Memory: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));'
 				'System.exit(0);'
 			end
 		}
