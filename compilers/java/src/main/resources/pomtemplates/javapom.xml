@@ -57,6 +57,12 @@
             <artifactId>org.thingml.jasm</artifactId>
             <version>${jasm.version}</version>
         </dependency>
+        
+        <dependency>
+    		<groupId>org.codehaus.plexus</groupId>
+    		<artifactId>plexus</artifactId>
+    		<version>4.0</version>
+   		</dependency>
 
         <!--FIXME: should be only here if debug-->
         <!--<dependency>
@@ -74,7 +80,6 @@
 
         <!--Additional dependencies-->
         <!--DEP-->
-        <!--DEP RX-->
     </dependencies>
 
 
