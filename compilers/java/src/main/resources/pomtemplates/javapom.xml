@@ -10,7 +10,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <thingml.version>0.6.0-SNAPSHOT</thingml.version>
-        <jasm.version>1.0.2-SNAPSHOT</jasm.version>
+        <jasm.version>1.0.3-SNAPSHOT</jasm.version>
         <!--PROP-->
     </properties>
 
