@@ -114,7 +114,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
         if (action.getProperty().eContainer() instanceof Thing) {//we can only listen to properties of a Thing, not all local variables, etc
-            builder.append("this.bus.emit('" + action.getProperty().getName() + "=', this." + ctx.getVariableName(action.getProperty()) + ");\n");
+            builder.append("this.root.bus.emit('" + action.getProperty().getName() + "=', this." + ctx.getVariableName(action.getProperty()) + ");\n");
         }
     }
 
@@ -123,7 +123,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     	if(!AnnotatedElementHelper.isDefined(action.getPort(), "sync_send", "true")) {
             builder.append("setImmediate(() => ");
     	}
-        builder.append("this.bus.emit(");
+        builder.append("this.root.bus.emit(");
         builder.append("'" + action.getPort().getName() + "?" + action.getMessage().getName() + "'");
         for (Expression pa : action.getParameters()) {
             builder.append(", ");
