@@ -511,7 +511,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
         }
 
         for (CompositeState b : ThingMLHelpers.allStateMachines(thing)) {
-            for (StateContainer r : CompositeStateHelper.allContainedRegions(b)) {            	
+            for (StateContainer r : CompositeStateHelper.allContainedRegionsAndSessions(b)) {            	
                 ((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateRegion(r, builder, ctx);
             }
         }
