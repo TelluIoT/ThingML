@@ -38,7 +38,7 @@ import org.thingml.xtext.thingML.Transition;
  */
 public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
-    public static boolean FACTORIZE_TRANSITIONS = true;
+    public static boolean FACTORIZE_TRANSITIONS = false;
 
     private void doBuildAction(Action a, StringBuilder builder, Context ctx) {
             ctx.getCompiler().getThingActionCompiler().generate(a, builder, ctx);
@@ -187,13 +187,15 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(content);
         } else {
             builder.append("\n" + ((State)t.eContainer()).getName() + " --> " + t.getTarget().getName());
-            if ((msg != null && p != null) || t.getAction() != null || t.getGuard() != null) {
+            if (t.getName()!=null || (msg != null && p != null) || t.getAction() != null || t.getGuard() != null) {
                 builder.append(" : ");
             }
             if (t.getName()!=null) {
-            	builder.append(t.getName()+"\\n");
+            	builder.append(t.getName());
             }
             if (msg != null && p != null) {
+            	if (t.getName()!=null)
+            		builder.append("\\n");
                 if(t.getEvent().size() > 0 && ((ReceiveMessage)t.getEvent().get(0)).getName()!= null)
                     builder.append(((ReceiveMessage)t.getEvent().get(0)).getName() + ":");
                 builder.append(p.getName() + "?" + msg.getName());
