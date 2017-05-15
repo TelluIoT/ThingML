@@ -38,22 +38,11 @@ thing TestDumpNodejs includes TestDump
             	transitionsCount=transitionsCount+1
             end
 
-            internal event dump?perfTestOut
-            action do
-                transitionsCount=transitionsCount+1
-            end
-
             transition -> Failed
             event dump?testFailure
 
             transition -> End
             event dumpEnd?testEnd
-
-            internal event m: dumpEnd?perfTestSize
-            action do
-                time = m.time
-                transitionsCount=transitionsCount+1
-            end
 		}
 
 		final state Failed {
