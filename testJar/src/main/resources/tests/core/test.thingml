@@ -20,13 +20,19 @@ thing fragment TestHarness includes TestMsg {
 
 thing fragment Test includes TestMsg {
 
-	required port harnessOut {
+	required port harnessOut
+	@sync_send "true"
+	{
 		sends testOut, testFailure
 	}
+	
 	required port harnessIn {
 		receives testIn
 	}
-	required port testEnd {
+
+	required port testEnd
+  @sync_send "true"
+	{
 		sends testEnd
 	}
 }
@@ -34,10 +40,12 @@ thing fragment Test includes TestMsg {
 
 thing fragment TestDump includes TestMsg {
 
-	provided port dump {
+	provided port dump
+	{
 		receives testOut,testFailure
 	}
-	provided port dumpEnd {
+	provided port dumpEnd
+	{
 		receives testEnd
 	}
 }
