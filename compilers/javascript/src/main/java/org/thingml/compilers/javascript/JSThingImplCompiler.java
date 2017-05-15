@@ -74,7 +74,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 		builder.append("this.root = (root === null)? this : root;\n");
 		builder.append("this.debug = debug;\n");
 		builder.append("this.ready = false;\n");
-		builder.append("this.bus = new EventEmitter();\n");
+		builder.append("this.bus = (root === null)? new EventEmitter() : this.root.bus;\n");
 
 		if(ThingHelper.hasSession(thing)) {
 			builder.append("//Children\n");
@@ -111,19 +111,6 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 					builder.append("else ");
 				builder.append("if(session === '" + s.getName() + "') {//building session " + s.getName() + "\n");
 				generateCompositeState(s, builder, ctx);
-				/*builder.append("this.statemachine = new StateJS.StateMachine('" + s.getName() + "')");
-				builder.append(";\n");
-				ctx.addContextAnnotation("container", "this." + ThingMLElementHelper.qname(ThingMLHelpers.findContainingRegion(s), "_"));
-				builder.append("let " + ThingMLElementHelper.qname(s, "_") + "_session = new StateJS.Region('" + s.getName() + "', this.statemachine);\n");
-				builder.append("let _initial_" + ThingMLElementHelper.qname(s, "_") + "_session = new StateJS.PseudoState('_initial', " + ThingMLElementHelper.qname(s, "_") + "_session, StateJS.PseudoStateKind.Initial);\n");
-				for (State st : s.getSubstate()) {
-					ctx.addContextAnnotation("container", ThingMLElementHelper.qname(s, "_") + "_session");
-					((FSMBasedThingImplCompiler) ctx.getCompiler().getThingImplCompiler()).generateState(st, builder, ctx);
-				}                                                                          
-				builder.append("_initial_" + ThingMLElementHelper.qname(s, "_") + "_session.to(" + ThingMLElementHelper.qname(s.getInitial(), "_") + ");\n");
-
-				//FIXME: Transitions in sessions!*/                
-
 				builder.append("}\n");
 				s_id++;
 			}
