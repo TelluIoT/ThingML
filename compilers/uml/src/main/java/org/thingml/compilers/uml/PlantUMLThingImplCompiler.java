@@ -190,6 +190,9 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
             if ((msg != null && p != null) || t.getAction() != null || t.getGuard() != null) {
                 builder.append(" : ");
             }
+            if (t.getName()!=null) {
+            	builder.append(t.getName()+"\\n");
+            }
             if (msg != null && p != null) {
                 if(t.getEvent().size() > 0 && ((ReceiveMessage)t.getEvent().get(0)).getName()!= null)
                     builder.append(((ReceiveMessage)t.getEvent().get(0)).getName() + ":");
