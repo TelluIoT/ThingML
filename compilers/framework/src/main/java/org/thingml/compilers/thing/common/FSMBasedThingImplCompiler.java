@@ -37,8 +37,8 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
     public void generateState(State s, StringBuilder builder, Context ctx) {
         if (s.eContainer() instanceof Thing) {
             generateStateMachine((CompositeState) s, builder, ctx);
-        } else if (s instanceof CompositeState) {
-            generateCompositeState((CompositeState) s, builder, ctx);
+        } else if (s instanceof StateContainer) {
+            generateCompositeState((StateContainer) s, builder, ctx);
         } else if (s instanceof FinalState) {
             generateFinalState((FinalState) s, builder, ctx);
         } else {
@@ -50,7 +50,7 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
         throw new UnsupportedOperationException("State Machine to be implemented");
     }
 
-    protected void generateCompositeState(CompositeState cs, StringBuilder builder, Context ctx) {
+    protected void generateCompositeState(StateContainer cs, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("Composite State to be implemented");
     }
 
