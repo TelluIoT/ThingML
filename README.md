@@ -112,7 +112,7 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 
 ## &#x1F537; Compile ThingML from the sources
 
-> You need Maven and a proper JDK8+
+> You need Git, Git LFS, Maven, and a proper JDK8+
 
 ```bash
 git clone https://github.com/SINTEF-9012/ThingML.git
