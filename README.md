@@ -91,7 +91,7 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 
 #### How to visualize generated UML (PlantUML) diagrams
 
-&#x2757; Install PlantUML plugins in Eclipse using this update site: `http://plantuml.sourceforge.net/updatesitejuno/` (See below for how to install plugins in Eclipse)
+&#x2757; Install PlantUML plugins in Eclipse using this update site: `http://files.idi.ntnu.no/publish/plantuml/repository/` (See below for how to install plugins in Eclipse)
 
 - `Window -> Show View -> Other... -> PlantUML`
 
