@@ -235,6 +235,18 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 				}
 			}
 			builder.append("this._initial_" + ThingMLElementHelper.qname(sm, "_") + ".to(" + ThingMLElementHelper.qname(sm.getInitial(), "_") + ");\n");
+			final Map<Port, Map<Message, List<Handler>>> allHanders = StateHelper.allMessageHandlersSC(c);
+			for (Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
+				final Port p = entry.getKey();
+				final Map<Message, List<Handler>> map = entry.getValue();
+				for (Map.Entry<Message, List<Handler>> entry2 : map.entrySet()) {
+					final List<Handler> handlers = entry2.getValue();
+					final Message m = entry2.getKey();
+					for (Handler h : handlers) {
+						generateHandler(h, m, p, builder, ctx);
+					}
+				}
+			}
 		} else {
 			String containerName = ctx.getContextAnnotation("container");
 			if (c instanceof CompositeState && CompositeStateHelper.hasSeveralRegions((CompositeState)c)) {

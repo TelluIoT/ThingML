@@ -4,19 +4,21 @@ thing TestSession2 includes Test
 @test "ABC # (ABC|ACB|BAC|BCA|CAB|CBA)"
 {
 	property ID : Char = '\'M\''
-	
+
 	message m(id : Char)
 	message n(id : Char)
 
-	internal port p {
+	internal port p
+	@sync_send "true"
+	{
 		sends m, n
 		receives m, n
 	}
 
 	statechart Chart init INIT {
-    
+
     	state INIT {
-			internal 
+			internal
 			event e : harnessIn?testIn
 			action do
 				ID = e.c
@@ -37,9 +39,9 @@ thing TestSession2 includes Test
 				guard e.id == ID
 				action p!n(ID)
 			}
-			
+
 			final state S2 {
-			}		
+			}
 		}
     }
 }

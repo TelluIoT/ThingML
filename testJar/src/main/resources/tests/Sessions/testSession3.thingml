@@ -3,22 +3,24 @@ import "../thingml.thingml"
 thing TestSession3 includes Test
 @test "x # STX"
 {
-    
+
     message ready();
     message ping();
     message pong();
-    
-    internal port sessionPort {
+
+    internal port sessionPort
+    @sync_send "true"
+    {
         sends ready, ping, pong
-        receives ready, ping, pong    
+        receives ready, ping, pong
     }
 
 	statechart Chart init INIT {
-    
+
     	readonly property brice : Int16 = 42
-    
+
     	state INIT {
-			internal 
+			internal
 			event e : harnessIn?testIn
 			guard e.c == '\'x\''
 			action fork s
@@ -39,7 +41,7 @@ thing TestSession3 includes Test
                 on entry do
                     sessionPort!ping()
                 end
-                
+
                 transition -> S3
                 event sessionPort?pong
 			}
@@ -48,20 +50,20 @@ thing TestSession3 includes Test
                 on entry harnessOut!testOut('\'X\'')
             }
 
-			
+
 		}
-		
+
 		session t<2> init T1 {
 				state T1 {
                     on entry do
                         harnessOut!testOut('\'T\'')
                         sessionPort!ready()
                     end
-    
-					internal 
+
+					internal
 					event sessionPort?ping
 					action sessionPort!pong()
-				}		
+				}
 			}
     }
 }

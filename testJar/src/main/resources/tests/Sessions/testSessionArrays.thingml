@@ -13,18 +13,20 @@ thing TestSessionArrays includes Test
 		harnessOut!testOut(A[1])
 		harnessOut!testOut(A[2])
 	end
-	
+
 	message n()
 
-	internal port p {
+	internal port p
+	@sync_send "true"
+	{
 		sends n
 		receives n
 	}
 
 	statechart Chart init INIT {
-    
+
     	state INIT {
-			internal 
+			internal
 			event e : harnessIn?testIn
 			action do
 				f(ar)
@@ -48,9 +50,9 @@ thing TestSessionArrays includes Test
 
 				transition -> S2
 				action p!n()
-			}		
+			}
 			final state S2 {
-			}		
+			}
 		}
     }
 }
