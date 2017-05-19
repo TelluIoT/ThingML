@@ -532,9 +532,6 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 			builder.append(p.getName() + "_port = ((" + ctx.firstToUpper(thing.getName()) + ")root)." + p.getName() + "_port;\n");
 		}
 		builder.append("}\n");
-
-		builder.append("createCepStreams();\n");//FIXME: update JASM framework so as we can remove this...
-
 		builder.append("if (session == null){\n");
 		builder.append("//Init state machine\n");
 		for (CompositeState b : ThingMLHelpers.allStateMachines(thing)) {
