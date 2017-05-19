@@ -279,6 +279,26 @@ public class StateHelper {
 		return !allEmptyHandlersIncludingSessions(self).isEmpty();
 	}
 
+	public static List<Handler> allEmptyHandlersSC(StateContainer self) {
+		final List<Handler> result = new ArrayList<Handler>();
+		for(State s1 : self.getSubstate()){
+			for (State s : allStates(s1)) {
+				List<Handler> handlers = new ArrayList<Handler>();
+				for (Transition t : s.getOutgoing()) {
+					handlers.add(t);
+				}
+				for (InternalTransition i : s.getInternal()) {
+					handlers.add(i);
+				}
+				for (Handler t : handlers) {
+					if (t.getEvent().isEmpty()) {
+						result.add(t);
+					}
+				}
+			}
+		}
+		return result;
+	}
 
 	public static List<Handler> allEmptyHandlers(State self) {
 		final List<Handler> result = new ArrayList<Handler>();
