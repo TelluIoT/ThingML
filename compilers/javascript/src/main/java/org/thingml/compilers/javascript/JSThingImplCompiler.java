@@ -222,6 +222,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 				}
 			}
 			builder.append("this._initial_" + ThingMLElementHelper.qname(sm, "_") + ".to(" + ThingMLElementHelper.qname(sm.getInitial(), "_") + ");\n");
+			for (Handler h : StateHelper.allEmptyHandlersSC(c)) {
+				generateHandler(h, null, null, builder, ctx);
+			}
 			final Map<Port, Map<Message, List<Handler>>> allHanders = StateHelper.allMessageHandlersSC(c);
 			for (Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {
 				final Port p = entry.getKey();
