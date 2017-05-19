@@ -17,7 +17,7 @@ thing TestSession3 includes Test
 
 	statechart Chart init INIT {
 
-    	readonly property brice : Int16 = 42
+    	readonly property poolSize : Int16 = 42
 
     	state INIT {
 			internal
@@ -26,7 +26,7 @@ thing TestSession3 includes Test
 			action fork s
     	}
 
-		session s<brice> init S1 {
+		session s<poolSize> init S1 {
 			state S1 {
 				on entry do
                     harnessOut!testOut('\'S\'')

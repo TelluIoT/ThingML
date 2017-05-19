@@ -6,7 +6,6 @@ thing TestSessionEmptyEvents includes Test
 	message n()
 
 	internal port p
-	@sync_send "true"
 	{
 		sends n
 		receives n
