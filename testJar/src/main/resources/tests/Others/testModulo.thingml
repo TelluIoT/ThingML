@@ -1,0 +1,32 @@
+import "../thingml.thingml"
+
+//Test for issue #178
+thing TestModulo includes Test 
+@test "x # x"
+{
+  
+    statechart TestPropertyPing init INIT {
+        
+    
+    	state INIT {
+			
+    		transition -> STOP
+			event m : harnessIn?testIn
+			guard m.c == '\'x\'' and (4 % 2 == 0) //true. Note: this should be parseable without having to put parenthesis like ((4 % 2) == 0)
+			action do
+				    harnessOut!testOut('\'x\'')
+	                end			  		
+
+    		transition -> STOP
+			event m : harnessIn?testIn
+			guard m.c == '\'x\'' and (1 == 4 % 2) //false. Note: this should be parseable without having to put parenthesis like (1 == (4 % 2))
+			action do
+				    harnessOut!testOut('\'z\'')
+	                end
+    	}
+
+	state STOP {
+
+	}
+    }
+}
