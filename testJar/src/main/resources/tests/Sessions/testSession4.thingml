@@ -5,9 +5,7 @@ thing TestSession4 includes Test
 {
 	message m(u : UInt8)
 
-	internal port p
-	@sync_send "true"
-	{
+	internal port p	{
 		sends m
 		receives m
 	}

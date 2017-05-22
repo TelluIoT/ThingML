@@ -8,9 +8,7 @@ thing TestSession3 includes Test
     message ping();
     message pong();
 
-    internal port sessionPort
-    @sync_send "true"
-    {
+    internal port sessionPort {
         sends ready, ping, pong
         receives ready, ping, pong
     }

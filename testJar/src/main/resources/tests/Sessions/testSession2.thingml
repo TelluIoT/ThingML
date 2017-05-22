@@ -8,9 +8,7 @@ thing TestSession2 includes Test
 	message m(id : Char)
 	message n(id : Char)
 
-	internal port p
-	@sync_send "true"
-	{
+	internal port p	{
 		sends m, n
 		receives m, n
 	}
