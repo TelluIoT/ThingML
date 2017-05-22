@@ -19,7 +19,7 @@ thing TestTriggerInsideTransition includes Test
 			transition -> F
 			event m : harnessIn?testIn
 			guard m.c == '\'t\''
-			action p!m             //this should be queued and make the state machine to go to state G right after it has entered F
+			action p!m()             //this should be queued and make the state machine to go to state G right after it has entered F
 		}
 		
 		state F {
