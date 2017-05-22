@@ -704,10 +704,10 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		}
 		builder.append(";\n");
 
-		if (s.eContainer() instanceof State || s.eContainer() instanceof Region) {
+		//if (s.eContainer() instanceof State || s.eContainer() instanceof Region) {
 
 			builder.append("states_" + ThingMLElementHelper.qname(((NamedElement)s.eContainer()), "_") + ".add(state_" + ThingMLElementHelper.qname(s, "_") + ");\n");
-		}
+		//}
 	}
 
 	public void generateRegion(StateContainer r, StringBuilder builder, Context ctx) {
