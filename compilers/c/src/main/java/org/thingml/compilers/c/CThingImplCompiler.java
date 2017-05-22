@@ -254,7 +254,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         builder.append("//Prototypes: Function\n");
         for (Function f : ThingMLHelpers.allFunctions(thing)) {
-            if (!AnnotatedElementHelper.isDefined(f, "abstract", "true")) {
+        	if (!f.isAbstract()) {
                 generatePrototypeforThingDirect(f, builder, ctx, thing, true);
                 builder.append(";\n");
 
@@ -269,7 +269,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generateCFunctions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("// Declaration of functions:\n");
         for (Function f : ThingMLHelpers.allFunctions(thing)) {
-            if (!AnnotatedElementHelper.isDefined(f, "abstract", "true")) { // Generate only for concrete functions
+        	if (!f.isAbstract()) {// Generate only for concrete functions
                 generateCFunction(f, thing, builder, ctx, debugProfile);
             }
         }
