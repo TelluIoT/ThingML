@@ -1,7 +1,7 @@
 import "../thingml.thingml"
 
 thing TestSerialization includes Test
-@test "123456789A # 123456789A"
+@test "12345689A # 12345689A"
 @conf "connector test.pout => test.pin"
 {
 	message m1();
