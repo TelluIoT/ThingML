@@ -15,7 +15,7 @@ thing TestChar includes Test
     	state S0 {
     		internal
 			event m : harnessIn?testIn
-			guard (m.c == '\'1\'') and (min == '\'\\0\'')
+			guard (m.c == '\'1\'') and (min == '\'\0\'')
 			action harnessOut!testOut('\'1\'')
 
     		internal
