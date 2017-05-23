@@ -136,7 +136,6 @@ public class StateHelper {
 	public static Map<Port, Map<Message, List<Handler>>> allMessageHandlers(State self) {
 		Map<Port, Map<Message, List<Handler>>> result = new HashMap<Port, Map<Message, List<Handler>>>();
 		for (State s : allStates(self)) {
-			//println("Processisng state " + s.getName)
 			List<Handler> handlers = new ArrayList<Handler>();
 			for (Transition t : s.getOutgoing()) {
 				handlers.add(t);
@@ -145,7 +144,6 @@ public class StateHelper {
 				handlers.add(i);
 			}
 			for (Handler t : handlers) {
-				//println("  Processisng handler " + t + " Event = " + t.getEvent)
 				for (Event e : t.getEvent()) {
 					if (e instanceof ReceiveMessage) {
 						ReceiveMessage rm = (ReceiveMessage) e;

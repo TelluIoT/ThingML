@@ -16,6 +16,7 @@
  */
 package org.thingml.xtext.helpers;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.*;
 
@@ -33,11 +34,27 @@ public class CompositeStateHelper {
         final List<State> result = new ArrayList<State>();
         for(StateContainer r : allContainedRegions(self)) {
             if (r instanceof State && !(r instanceof Session)) {
-                result.add((State)r);
+            	boolean found = false;
+            	for(State s : result) {
+            		if(EcoreUtil.equals(r, s)) {
+            			found = true;
+            			break;
+            		}
+            	}
+            	if(!found)
+            		result.add((State)r);
             }
             for(State s : r.getSubstate()) {
                 if (! (s instanceof Region)) {
-                    result.add(s);
+                	boolean found = false;
+                	for(State rs : result) {
+                		if(EcoreUtil.equals(s, rs)) {
+                			found = true;
+                			break;
+                		}
+                	}
+                	if(!found)
+                		result.add(s);
                 }
             }
         }
