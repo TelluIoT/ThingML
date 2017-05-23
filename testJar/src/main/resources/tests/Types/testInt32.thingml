@@ -1,20 +1,19 @@
 import "../thingml.thingml"
 
-thing TestInt32 includes Test 
+thing TestInt32 includes Test
 @test "1234 # 1234"
 {
 
-	property min : Int32 = '-2147483648'
-	//property min : Int32 = -2147483648 Integer literal parsing problem
+	property min : Int32 = -2147483648
 	property max : Int32 = 2147483647
 	property zero : Int32 = 0
 	property order : Int32 = 1
-    
+
     statechart TestType init S0 {
-    
+
     	state S0 {
     		internal event m : harnessIn?testIn
-			guard ((m.c == '\'1\'') and (min == '-2147483648'))
+			guard ((m.c == '\'1\'') and (min == -2147483648))
 			action harnessOut!testOut('\'1\'')
 
     		internal event m : harnessIn?testIn

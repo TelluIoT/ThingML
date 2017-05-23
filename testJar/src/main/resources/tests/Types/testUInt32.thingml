@@ -6,8 +6,7 @@ thing TestUInt32 includes Test
 {
 
 	property min : UInt32 = 0
-	property max : UInt32 = '4294967295'
-	//property max : UInt32 = 4294967295  Integer literal parsing problem
+	property max : UInt32 = 4294967295
 	property zero : UInt32 = 0
 	property order : UInt32 = 1
 
@@ -22,7 +21,7 @@ thing TestUInt32 includes Test
 
     		internal
 			event m : harnessIn?testIn
-			guard (m.c == '\'2\'') and (max == '4294967295')
+			guard (m.c == '\'2\'') and (max == 4294967295)
 			action harnessOut!testOut('\'2\'')
 
     		internal

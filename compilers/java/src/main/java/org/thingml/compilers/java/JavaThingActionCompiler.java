@@ -35,6 +35,7 @@ import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Increment;
+import org.thingml.xtext.thingML.IntegerLiteral;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.NotEqualsExpression;
 import org.thingml.xtext.thingML.Parameter;
@@ -360,5 +361,14 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(EventReference expression, StringBuilder builder, Context ctx) {
         builder.append((((ReceiveMessage)expression.getReceiveMsg()).getMessage().getName()) + "." + expression.getParameter().getName());
-    }    
+    }
+
+	@Override
+	public void generate(IntegerLiteral expression, StringBuilder builder, Context ctx) {
+		super.generate(expression, builder, ctx);
+		if (expression.getIntValue() > 2147483647 || expression.getIntValue() < -2147483647)
+			builder.append("L");
+	} 
+    
+    
 }
