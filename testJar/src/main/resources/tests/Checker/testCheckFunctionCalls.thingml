@@ -1,7 +1,7 @@
 import "../thingml.thingml"
 
 thing TestCheckFunctionCalls includes Test
-@test "x # "
+@test "x # x"
 {
     function foo(a : Integer) do
       //...

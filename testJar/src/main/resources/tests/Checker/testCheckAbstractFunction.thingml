@@ -12,7 +12,7 @@ thing fragment Foo
 }
 
 thing TestCheckAbstractFunction includes Test, Foo
-@test "x # "
+@test "x # x"
 {
     //Should fail because function foo is not implemented
 

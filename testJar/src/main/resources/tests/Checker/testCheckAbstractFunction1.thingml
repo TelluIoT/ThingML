@@ -10,7 +10,7 @@ thing fragment Foo
 }
 
 thing TestCheckAbstractFunction1 includes Test, Foo
-@test "x # "
+@test "x # x"
 {
     //Should fail because function foo cannot be implemented twice
     function foo() do
