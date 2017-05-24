@@ -11,7 +11,7 @@ thing fragment Foo
 
 }
 
-thing CheckAbstractFunction includes Test, Foo
+thing TestCheckAbstractFunction includes Test, Foo
 @test "x # "
 {
     //Should fail because function foo is not implemented

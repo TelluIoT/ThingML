@@ -1,6 +1,6 @@
 import "../thingml.thingml"
 
-thing CheckFunctionCalls includes Test, Foo
+thing TestCheckFunctionCalls includes Test, Foo
 @test "x # "
 {
     function foo(a : Integer)
