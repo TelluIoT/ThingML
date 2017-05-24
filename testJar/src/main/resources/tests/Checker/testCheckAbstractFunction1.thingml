@@ -26,7 +26,6 @@ thing TestCheckAbstractFunction1 includes Test, Foo
 			guard m.c == '\'x\''
 			action do
 				foo()
-        bar()
 			end
 
     	}

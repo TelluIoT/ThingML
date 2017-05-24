@@ -1,9 +1,11 @@
 import "../thingml.thingml"
 
-thing TestCheckFunctionCalls includes Test, Foo
+thing TestCheckFunctionCalls includes Test
 @test "x # "
 {
-    function foo(a : Integer)
+    function foo(a : Integer) do
+      //...
+    end
 
     statechart TestAbstractFunction init INIT {
 
