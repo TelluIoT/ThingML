@@ -66,7 +66,7 @@
 
  * **Action**: (Abstract)
  * **ActionBlock**: Defines a group of action (executed sequentially).
- * **ExternStatement**: Statement expressed in plateform code (ie**: c, java, javascript...). ex: 'printf("Hello World);'
+ * **ExternStatement**: Statement expressed in plateform code (ie**: c, java, javascript...). ex: `'printf("Hello World);'`
  * **LocalVariable**: Variable defined for an Action block.
  * **SendAction**: Sending of a message on a port with given parameters.
  * **VariableAssignment**: Assignement of a value/instance to a variable.
@@ -94,12 +94,12 @@
  * **Primary**: (not,-)Expression
  * **ArrayIndexPostfix**: Expression[Expression]
  * **AtomicExpression**: (Abstract)
- * **ExternExpression**: Expression expressed in plateform language. ex: '1 < 2'
+ * **ExternExpression**: Expression expressed in plateform language. ex: `'1 < 2'`
  * **EnumLiteralRef**
- * **IntegerLiteral** ex: 42
+ * **IntegerLiteral** ex: `42`
  * **BooleanLiteral**: (True, False)
- * **StringLiteral**: ex: "my string"
- * **DoubleLiteral** ex: 0.3E-2, 3.14, 10e5
+ * **StringLiteral**: ex: `"my string"`
+ * **DoubleLiteral** ex: `0.3E-2`, `3.14`, `10e5`
  * **EnumerationLiteral**
  * **PropertyReference**
  * **EventReference**
