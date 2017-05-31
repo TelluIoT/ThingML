@@ -25,6 +25,7 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Enumeration;
@@ -69,7 +70,14 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
     }
 
     private boolean isPSM(Thing thing) {
-        return ThingMLHelpers.getAllExpressions(thing, ExternExpression.class).size() > 0 || ActionHelper.getAllActions(thing, ExternStatement.class).size() > 0;
+    	boolean result = ThingMLHelpers.getAllExpressions(thing, ExternExpression.class).size() > 0 || ActionHelper.getAllActions(thing, ExternStatement.class).size() > 0;
+    	if (result)
+    		return result;
+    	for (Thing t : ThingHelper.allIncludedThings(thing)) {
+    		if (isPSM(t)) 
+    			return true;
+    	}
+    	return false;
     }
 
     private boolean isGUI(Thing thing) {
