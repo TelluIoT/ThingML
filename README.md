@@ -50,13 +50,8 @@ The easiest way to get started with ThingML is to use the ThingML plugins in the
 
 1. [Download Eclipse for Java Developers](https://eclipse.org/downloads/)
 2. Install and Launch Eclipse
-3. Install EMFText plugins: `Help -> Install New Software... -> Add...` and choose `EMFText` as a name and `http://update.emftext.org/release` as location, and then `OK`. Select `EMFText` and continue with the install procedure &#x23F3;
-4. Install the latest release of the ThingML plugins:
-  1. [Download the latest update site](https://github.com/SINTEF-9012/ThingML/releases)  
-  2. In Eclipse `Help -> Install New Software... -> Add... -> Archive...`, and select the `zip` you have just downloaded, give a name to this update site and then `OK`
-  3. Select `ThingML` and continue the install procedure &#x23F3;
-
-> Another update site is also available for ThingML at `http://thingml.org/dist/update/`. This update site contains all the latest features but might be less stable.
+3. Install XText plugins: `Help -> Install New Software... -> Add...` and choose `XText` as a name and `Xtext - http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/` as location, and then `OK`. Select `XText` and continue with the install procedure &#x23F3;
+4. Install the ThingML plugins: Same procedure. Use `ThingML - http://thingml.org/dist/update2/` update site, and select ThingML &#x23F3;
 
 You are now ready to use ThingML. &#x270C;
 
