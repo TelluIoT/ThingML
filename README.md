@@ -23,9 +23,10 @@ If you are going to compile Java code from ThingML, please:
 - Install [Maven](http://maven.apache.org/)
 
 ### &#x1F539; Javascript
-If you are going to compile Javascript code from ThingML, please:
+If you are going to compile Javascript code from ThingML, for:
 
-- Install [Node.JS](https://nodejs.org/en/)
+- NodeJS: Install [Node.JS](https://nodejs.org/en/)
+- Browser: Make sure you have a decent web browser (Chrome or Firefox should work fine, and probably some others)
 
 ### &#x1F539; UML
 If you are going to compile UML Diagrams from ThingML, please:
@@ -50,13 +51,8 @@ The easiest way to get started with ThingML is to use the ThingML plugins in the
 
 1. [Download Eclipse for Java Developers](https://eclipse.org/downloads/)
 2. Install and Launch Eclipse
-3. Install EMFText plugins: `Help -> Install New Software... -> Add...` and choose `EMFText` as a name and `http://update.emftext.org/release` as location, and then `OK`. Select `EMFText` and continue with the install procedure &#x23F3;
-4. Install the latest release of the ThingML plugins:
-  1. [Download the latest update site](https://github.com/SINTEF-9012/ThingML/releases)  
-  2. In Eclipse `Help -> Install New Software... -> Add... -> Archive...`, and select the `zip` you have just downloaded, give a name to this update site and then `OK`
-  3. Select `ThingML` and continue the install procedure &#x23F3;
-
-> Another update site is also available for ThingML at `http://thingml.org/dist/update/`. This update site contains all the latest features but might be less stable.
+3. Install XText plugins: `Help -> Install New Software... -> Add...` and choose `XText` as a name and `Xtext - http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/` as location, and then `OK`. Select `XText` and continue with the install procedure &#x23F3;
+4. Install the ThingML plugins: Same procedure. Use `ThingML - http://thingml.org/dist/update2/` update site, and select ThingML &#x23F3;
 
 You are now ready to use ThingML. &#x270C;
 
@@ -78,6 +74,12 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 
 > If Maven claims it cannot find a `pom.xml` file, change the base directory in the `Run as -> Maven build...` window using the `Workspace...` button, so that it points to `thingml-gen/java/your-configuration`.
 
+#### How to compile and run generated JavaScript (for the Browser) code
+
+Nothing special. Open the generated `index.html` file in your System Browser (ideally Chrome or Firefox)
+
+> Do not use the default web browser embedded into Eclipse!
+
 #### How to compile and run generated JavaScript (Node.JS) code
 
 &#x2757; In Eclipse, from this update site: `Node.JS - http://www.nodeclipse.org/updates/enide-2015/`, install `Features included in Enide Studio .Features Set` and `Nodeclipse Node.js .Features Set	1.0.2.201509250223`
@@ -92,6 +94,8 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 &#x2757; Install PlantUML plugins in Eclipse using this update site: `http://files.idi.ntnu.no/publish/plantuml/repository/` (See below for how to install plugins in Eclipse)
 
 - `Window -> Show View -> Other... -> PlantUML`
+
+> Make sure you have Graphviz installed (see [Prerequisites](#-prerequisites-))
 
 ####  How to compile and run generated C code
 
