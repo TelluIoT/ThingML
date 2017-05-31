@@ -95,7 +95,7 @@ Nothing special. Open the generated `index.html` file in your System Browser (id
 
 - `Window -> Show View -> Other... -> PlantUML`
 
-> Make sure you have Graphviz installed (see [Prerequisites](#-prerequisites))
+> Make sure you have Graphviz installed (see [Prerequisites](#-prerequisites-))
 
 ####  How to compile and run generated C code
 
