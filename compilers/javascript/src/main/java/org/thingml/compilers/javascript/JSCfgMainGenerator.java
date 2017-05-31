@@ -93,7 +93,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			}
 		}
 
-		for (Property prop : ThingHelper.allUsedProperties(i.getType())) {//TODO: not optimal, to be improved
+		for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: use allUsedProperties when fixed
 			if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing && prop.getTypeRef().getCardinality() == null) {
 				boolean isInit = false;
 				builder.append("var " + i.getName() + "_" + prop.getName() + " = ");
@@ -128,7 +128,7 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             builder.append("const " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "('" + i.getName() + "', null");
         }
 
-		for (Property prop : ThingHelper.allUsedProperties(i.getType())) {
+		for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//use allUsedProperties
 			if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
 				builder.append(", " + i.getName() + "_" + prop.getName());
 			}

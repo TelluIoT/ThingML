@@ -62,7 +62,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 		builder.append(" **/\n");
 
 		builder.append("function " + ctx.firstToUpper(thing.getName()) + "(name, root");
-		for (Property p : ThingHelper.allUsedProperties(thing)) {
+		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+		//for (Property p : ThingHelper.allUsedProperties(thing)) {  //FIXME: allUsedProperties does not work in some cases where we use includes...
 			if (!AnnotatedElementHelper.isDefined(p, "private", "true") && p.eContainer() instanceof Thing) {
 				builder.append(", ");
 				builder.append(ThingMLElementHelper.qname(p, "_") + "_var");
@@ -82,7 +83,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 		}
 
 		builder.append("//Attributes\n");
-		for (Property p : ThingHelper.allUsedProperties(thing)) {
+		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+		//for (Property p : ThingHelper.allUsedProperties(thing)) { //FIXME: allUsedProperties does not work in some cases where we use includes...
 			if (AnnotatedElementHelper.isDefined(p, "private", "true") || !(p.eContainer() instanceof Thing)) {
 				builder.append("this.");
 				builder.append(ThingMLElementHelper.qname(p, "_") + "_var");
@@ -133,7 +135,8 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
 		builder.append(ctx.firstToUpper(thing.getName()) + ".prototype.toString = function() {\n");
 		builder.append("let result = 'instance ' + this.name + ':' + this.constructor.name + '\\n';\n");
-		for (Property p : ThingHelper.allUsedProperties(thing)) {
+		for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
+		//for (Property p : ThingHelper.allUsedProperties(thing)) { //FIXME
 			builder.append("result += '\\n\\t" + p.getName() + " = ' + this." + ctx.getVariableName(p) + ";\n");
 		}
 		builder.append("result += '';\n");
