@@ -1,4 +1,4 @@
-![ThingML](https://github.com/SINTEF-9012/ThingML/raw/xtext/Logotype_ThingML_100317_500px.png)
+![ThingML](https://github.com/SINTEF-9012/ThingML/raw/master/Logotype_ThingML_100317_500px.png)
 
 The ThingML approach is composed of *i*) a **modeling language**, *ii*) a set of **tools** and *iii*) a **methodology**. The modeling language combines well-proven software modeling constructs for the design and implementation of distributed reactive systems:
 
@@ -188,9 +188,7 @@ A set of tutorials is available [here](https://github.com/HEADS-project/training
 
 ### &#x1F539; How is ThingML formalized?
 
-The ThingML language is formalized into an [EMF-based metamodel](https://github.com/SINTEF-9012/ThingML/blob/master/org.thingml.model/README.md). The textual syntax is formalized as an [EMFText grammar](https://github.com/SINTEF-9012/ThingML/blob/master/org.thingml.model/src/main/model/thingml.cs).
-
-> As EMFText is not supported anymore, we are currently migrating the syntax (and an updated metamodel) to XText.
+The ThingML language is formalized into an [EMF-based metamodel](https://github.com/SINTEF-9012/ThingML/blob/master/language/thingml/model/generated/ThingML.ecore). The textual syntax is formalized as an [XText grammar](https://github.com/SINTEF-9012/ThingML/blob/master/language/thingml/src/org/thingml/xtext/ThingML.xtext).
 
 ### &#x1F539; All that code is wonderful, but I need some Science... &#x1F4DA;
 
@@ -198,7 +196,7 @@ ThingML is backed by a set of scientific publications (PDFs can easily be found 
 
 - **Model-Based Software Engineering to Tame the IoT Jungle**  
 Brice Morin, Nicolas Harrand and Franck Fleurey  
-To appear in *IEEE Software, Special Issue on Internet of Things*, 2017.
+In *IEEE Software, Special Issue on Internet of Things*, 2017.
 - **ThingML, A Language and Code Generation Framework for Heterogeneous Targets**  
 N. Harrand, F. Fleurey, B. Morin and K.E. Husa  
 In *MODELS’16: ACM/IEEE 19th International Conference on Model Driven Engineering Languages and Systems. Practice and Innovation track*. St Malo, France, October 2-7, 2016
@@ -265,9 +263,11 @@ ThingMLCompiler.saveAsXMI(myModel, "target.xmi");
 
 >Protip1: Make sure you have a good understanding of the [ThingML metamodel](#-how-is-thingml-formalized)
 
->Protip2: Have a look at the [helper functions](https://github.com/SINTEF-9012/ThingML/tree/master/org.thingml.model/src/main/java/org/sintef/thingml/helpers) which simplify some typical treatments
+>Protip2: Have a look at the [helper functions](https://github.com/SINTEF-9012/ThingML/tree/master/language/thingml/src/org/thingml/xtext/helpers) which simplify some typical treatments
 
-> Models saved this way will contain all the imports that the original file refered to in one big file  
+> Models saved this way will contain all the imports that the original file refered to in one big file 
+
+> This feature might currently be broken as we migrated to XText.
 
 ## &#x1F537; More
 
