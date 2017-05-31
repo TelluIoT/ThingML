@@ -16,9 +16,51 @@
  */
 package org.thingml.compilers.utils;
 
-import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingActionCompiler;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.ActionBlock;
+import org.thingml.xtext.thingML.AndExpression;
+import org.thingml.xtext.thingML.ArrayIndex;
+import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.ConditionalAction;
+import org.thingml.xtext.thingML.Decrement;
+import org.thingml.xtext.thingML.DivExpression;
+import org.thingml.xtext.thingML.DoubleLiteral;
+import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.EqualsExpression;
+import org.thingml.xtext.thingML.ErrorAction;
+import org.thingml.xtext.thingML.EventReference;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExpressionGroup;
+import org.thingml.xtext.thingML.ExternExpression;
+import org.thingml.xtext.thingML.ExternStatement;
+import org.thingml.xtext.thingML.FunctionCallExpression;
+import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.GreaterExpression;
+import org.thingml.xtext.thingML.GreaterOrEqualExpression;
+import org.thingml.xtext.thingML.Increment;
+import org.thingml.xtext.thingML.IntegerLiteral;
+import org.thingml.xtext.thingML.LocalVariable;
+import org.thingml.xtext.thingML.LoopAction;
+import org.thingml.xtext.thingML.LowerExpression;
+import org.thingml.xtext.thingML.LowerOrEqualExpression;
+import org.thingml.xtext.thingML.MinusExpression;
+import org.thingml.xtext.thingML.ModExpression;
+import org.thingml.xtext.thingML.NotEqualsExpression;
+import org.thingml.xtext.thingML.NotExpression;
+import org.thingml.xtext.thingML.OrExpression;
+import org.thingml.xtext.thingML.PlusExpression;
+import org.thingml.xtext.thingML.PrintAction;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.ReceiveMessage;
+import org.thingml.xtext.thingML.ReturnAction;
+import org.thingml.xtext.thingML.SendAction;
+import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.StringLiteral;
+import org.thingml.xtext.thingML.TimesExpression;
+import org.thingml.xtext.thingML.UnaryMinus;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -34,10 +76,6 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
     public static int indent_level = 0;
 
     //ThingML pretty printer (useful for documentation, etc)
-
-    private String protectString(String s) {
-        return s.replace("\\n", "\\\\n").replace("\n", "\\n").replace(System.getProperty("line.separator"), "\\n").replace("\t", "").replace("\r", "").replace("\"", "\'\'");
-    }
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
@@ -105,7 +143,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(ExternStatement action, StringBuilder builder, Context ctx) {
-        builder.append("'" + CharacterEscaper.escapeEscapedCharacters(action.getStatement()).replace("\n", "\\n") + "'");
+        builder.append("'" + action.getStatement().replace("\n", "\\n") + "'");
         //builder.append("'" + action.getStatement() + "'");
         for (Expression e : action.getSegments()) {
             builder.append(" & ");
@@ -166,10 +204,10 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        if (!action.isChangeable()) {
+        if (action.isReadonly()) {
             builder.append("readonly ");
         }
-        builder.append("var " + action.getName() + " : " + action.getType().getName());
+        builder.append("var " + action.getName() + " : " + action.getTypeRef().getType().getName());
         if (action.getInit() != null) {
             builder.append(" = ");
             generate(action.getInit(), builder, ctx);
@@ -303,25 +341,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         generate(expression.getTerm(), builder, ctx);
     }
 
-    @Override
-    public void generate(Reference expression, StringBuilder builder, Context ctx) {
-        ThingMLElement thingMLElement = (ThingMLElement) expression.getReference();
-        if (expression.getParameter() instanceof ParamReference) {
-            ParamReference paramReference = (ParamReference) expression.getParameter();
-            builder.append(thingMLElement.getName() + "." + paramReference.getParameterRef().getName());
-        } else if (expression.getParameter() instanceof ParamReference) {
-            throw new UnsupportedOperationException("Not yet implemented.");
-        } else {
-            throw new UnsupportedOperationException("Parameter " + expression.getReference().getClass().getName() + " is currently not supported.");
-        }
-    }
 
-    @Override
-    public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
-        builder.append("(");
-        generate(expression.getExp(), builder, ctx);
-        builder.append(")");
-    }
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
@@ -340,15 +360,12 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(StringLiteral expression, StringBuilder builder, Context ctx) {
-        builder.append("\"" + CharacterEscaper.escapeEscapedCharacters(expression.getStringValue()).replace("\n", "\\n").replace("\\n","\\\\n") + "\"");
+        builder.append("\"" + expression.getStringValue().replace("\n", "\\n").replace("\\n","\\\\n") + "\"");
     }
 
     @Override
     public void generate(BooleanLiteral expression, StringBuilder builder, Context ctx) {
-        if (expression.isBoolValue())
-            builder.append("true");
-        else
-            builder.append("false");
+    	builder.append(Boolean.toString(expression.isBoolValue()));
     }
 
     @Override
@@ -358,7 +375,7 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
-        builder.append("'" + CharacterEscaper.escapeEscapedCharacters(expression.getExpression()).replace("\n", "\\n") + "'");
+        builder.append("'" + expression.getExpression().replace("\n", "\\n") + "'");
         //builder.append("'" + expression.getExpression() + "'");
         for (Expression e : expression.getSegments()) {
             builder.append(" & ");
@@ -390,4 +407,16 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
         generate(action.getVar(), builder, ctx);
         builder.append("--" + NEW_LINE);
     }
+    
+    @Override
+    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
+        builder.append((((ReceiveMessage)expression.getReceiveMsg()).getMessage().getName()) + "." + expression.getParameter().getName());
+    }    
+    
+    @Override
+    public void generate(ExpressionGroup expression, StringBuilder builder, Context ctx) {
+        builder.append("(");
+        generate(expression.getTerm(), builder, ctx);
+        builder.append(")");
+    }    
 }

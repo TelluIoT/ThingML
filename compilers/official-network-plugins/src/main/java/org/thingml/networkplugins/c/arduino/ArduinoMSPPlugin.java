@@ -21,18 +21,22 @@
  */
 package org.thingml.networkplugins.c.arduino;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
-
-import java.lang.IllegalArgumentException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.thingml.compilers.Context;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  *
@@ -71,7 +75,7 @@ public class ArduinoMSPPlugin extends NetworkPlugin {
             
             int j = 0;
             for (Parameter pt : message.getParameters()) {
-                int bytes = cctx.getCByteSize(pt.getType(), 0);
+                int bytes = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
                 for (int i = bytes; i > 0; i--)
                     builder.append("            msg[i++] = buffer["+(j+i-1)+"];\n");
                 j += bytes;
@@ -101,7 +105,7 @@ public class ArduinoMSPPlugin extends NetworkPlugin {
             builder.append("    byte msg["+size+"];\n");
             builder.append("    uint8_t i = 0;\n");
             for (Parameter pt : m.getParameters()) {
-                int bytes = cctx.getCByteSize(pt.getType(), 0);
+                int bytes = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
                 String v = pt.getName();
                 for (int i = 0; i < bytes; i++)
                     builder.append("    msg[i++] = ("+v+" >> "+(i*8)+") & 0xFF;\n");

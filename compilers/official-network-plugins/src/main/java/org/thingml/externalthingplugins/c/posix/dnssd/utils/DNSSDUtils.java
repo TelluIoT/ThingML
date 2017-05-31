@@ -16,16 +16,19 @@
  */
 package org.thingml.externalthingplugins.c.posix.dnssd.utils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.eclipse.emf.common.util.EList;
-
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.Thing;
 import org.thingml.compilers.c.CCompilerContext;
-
-
-import java.util.*;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by vassik on 15.11.16.

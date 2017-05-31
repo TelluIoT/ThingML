@@ -21,13 +21,11 @@
  */
 package org.thingml.networkplugins.c.posix;
 
-import org.sintef.thingml.AnnotatedElement;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
+
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.*;
 
 import java.util.*;
 
@@ -107,7 +105,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
 
     /* ---------- SERIALIZATION ----------*/
     Integer getMaximumSerializedParameterValueLength(Parameter p, CCompilerContext ctx, ExternalConnector eco) {
-        switch (ctx.getCType(p.getType())) {
+        switch (ctx.getCType(p.getTypeRef().getType())) {
             // Signed types
             case "signed char":
             case "int8_t":
@@ -166,7 +164,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                 // ISO8601 format, 24 characters + surrounding ""
                 return 26;
             default:
-                System.err.println("[ERROR] Serialization of type " + ctx.getCType(p.getType()) + " is not implemented in PosixJSONSerializerPlugin!");
+                System.err.println("[ERROR] Serialization of type " + ctx.getCType(p.getTypeRef().getType()) + " is not implemented in PosixJSONSerializerPlugin!");
                 return 4; // We will print 'null' for un-serializable parameters;
         }
     }
@@ -199,7 +197,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
     void generateParameterValueSerialization(StringBuilder builder, String bufferName, Integer maxLength, Parameter p, CCompilerContext ctx, ExternalConnector eco) {
         boolean serialized = false;
         //FIXME: @Jakob: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
-        switch (ctx.getCType(p.getType())) {
+        switch (ctx.getCType(p.getTypeRef().getType())) {
             case "int8_t":
             case "int16_t":
             case "int32_t":
@@ -319,13 +317,13 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         // Generate union
         messagesparser.append("            ");
         messagesparser.append("union u_"+p.getName()+"_t { ");
-        messagesparser.append(ctx.getCType(p.getType())+" "+p.getName()+"; ");
-        messagesparser.append("uint8_t bytebuffer["+ctx.getCByteSize(p.getType(),0)+"]; ");
+        messagesparser.append(ctx.getCType(p.getTypeRef().getType())+" "+p.getName()+"; ");
+        messagesparser.append("uint8_t bytebuffer["+ctx.getCByteSize(p.getTypeRef().getType(),0)+"]; ");
         messagesparser.append("} u_"+p.getName()+";\n");
 
         boolean parsed = false;
         //FIXME: @Jakob: Why not using checker.typeChecker.computeTypeOf(p.getType). All those c_type are already grouped propertly using the @type_checker type.
-        switch (ctx.getCType(p.getType())) {
+        switch (ctx.getCType(p.getTypeRef().getType())) {
             case "int8_t":
             case "int16_t":
             case "int32_t":
@@ -381,11 +379,11 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         // TODO: Also handle fixed length arrays!!!
         if (parsed) {
             // Copy the value onto the output buffer
-            messagesparser.append("            memcpy(&out_buffer["+bytepos+"], u_"+p.getName()+".bytebuffer, "+ctx.getCByteSize(p.getType(),0)+");\n");
+            messagesparser.append("            memcpy(&out_buffer["+bytepos+"], u_"+p.getName()+".bytebuffer, "+ctx.getCByteSize(p.getTypeRef().getType(),0)+");\n");
         } else {
             // The type is not supported, set to 0
-            messagesparser.append("            //Type " + p.getType().getName() + " (in parameter "+p.getName()+") is not supported yet by the PosixJSONSerializer plugin\n");
-            messagesparser.append("            bzero(&out_buffer["+bytepos+"], "+ctx.getCByteSize(p.getType(),0)+");\n");
+            messagesparser.append("            //Type " + p.getTypeRef().getType().getName() + " (in parameter "+p.getName()+") is not supported yet by the PosixJSONSerializer plugin\n");
+            messagesparser.append("            bzero(&out_buffer["+bytepos+"], "+ctx.getCByteSize(p.getTypeRef().getType(),0)+");\n");
         }
     }
 
@@ -402,7 +400,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
                 parameters.put(bytePos, p);
                 forwardedParameters += 1;
             }
-            bytePos += ctx.getCByteSize(p.getType(), 0);
+            bytePos += ctx.getCByteSize(p.getTypeRef().getType(), 0);
         }
 
         // Start function
@@ -454,7 +452,7 @@ public class PosixJSONSerializerPlugin extends SerializationPlugin {
         // Set all non-forwarded parameters to zero-bytes
         messagesparser.append("    // Zero-init all non-forwarded messages\n");
         for (Map.Entry<Integer, Parameter> pospar : not_forwarded.entrySet()) {
-            messagesparser.append("    bzero(&out_buffer["+pospar.getKey()+"], "+ctx.getCByteSize(pospar.getValue().getType(),0)+"); ");
+            messagesparser.append("    bzero(&out_buffer["+pospar.getKey()+"], "+ctx.getCByteSize(pospar.getValue().getTypeRef().getType(),0)+"); ");
             messagesparser.append("// "+pospar.getValue().getName()+"\n");
         }
 

@@ -21,20 +21,30 @@
  */
 package org.thingml.networkplugins.java;
 
-import org.apache.commons.io.IOUtils;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.RequiredPort;
 
 public class JavaSerialPlugin extends NetworkPlugin {
 
@@ -238,8 +248,8 @@ public class JavaSerialPlugin extends NetworkPlugin {
 
                 StringBuilder connBuilder = new StringBuilder();
                 connBuilder.append(conn.getName() + "_" + conn.getProtocol().getName() + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port().addListener(");
-                connBuilder.append(ctx.getInstanceName(conn.getInst().getInstance()) + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port());\n");
-                connBuilder.append(ctx.getInstanceName(conn.getInst().getInstance()) + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port().addListener(");
+                connBuilder.append(ctx.getInstanceName(conn.getInst()) + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port());\n");
+                connBuilder.append(ctx.getInstanceName(conn.getInst()) + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port().addListener(");
                 connBuilder.append(conn.getName() + "_" + conn.getProtocol().getName() + ".get" + ctx.firstToUpper(conn.getPort().getName()) + "_port());\n");
                 main = main.replace("/*$EXT CONNECTORS$*/", "/*$EXT CONNECTORS$*/\n" + connBuilder.toString());
 

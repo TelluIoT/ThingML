@@ -16,16 +16,13 @@
  */
 package org.thingml.compilers.cpp.sintefboard;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ConfigurationHelper;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.thing.ThingCepCompiler;
-import org.thingml.compilers.thing.ThingCepSourceDeclaration;
-import org.thingml.compilers.thing.ThingCepViewCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by ffl on 25.11.14.
@@ -33,7 +30,7 @@ import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
     public SintefboardCompiler() {
-        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGeneratorSintefboard(), new SintefboardCCfgBuildCompiler(), new CThingImplCompilerSintefboard(), new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
+        super(new CThingActionCompilerSintefboard(), new CThingApiCompilerSintefboard(), new CCfgMainGeneratorSintefboard(), new SintefboardCCfgBuildCompiler(), new CThingImplCompilerSintefboard());
     }
 
     @Override

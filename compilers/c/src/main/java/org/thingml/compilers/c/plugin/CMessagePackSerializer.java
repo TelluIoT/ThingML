@@ -21,14 +21,14 @@
  */
 package org.thingml.compilers.c.plugin;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
+import java.util.List;
+
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CMessageSerializer;
-
-import java.util.List;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
 
 /**
  *
@@ -82,42 +82,42 @@ public class CMessagePackSerializer extends CMessageSerializer {
 
         for (Parameter pt : m.getParameters()) {
             builder.append("\n// parameter " + pt.getName() + "\n");
-            int i = ctx.getCByteSize(pt.getType(), 0);
+            int i = ctx.getCByteSize(pt.getTypeRef().getType(), 0);
             String v = pt.getName();
-            if (ctx.isPointer(pt.getType())) {
+            if (ctx.isPointer(pt.getTypeRef().getType())) {
                 // This should not happen and should be checked before.
                 throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
             } else {
                 if (!ctx.containsParam(IgnoreList, pt)) {
 
                     Boolean done = false;
-                    if (ctx.getCType(pt.getType()).equals("uint8_t")) {
+                    if (ctx.getCType(pt.getTypeRef().getType()).equals("uint8_t")) {
                         builder.append(BufferName + "[message_size] = 0xcc;\n");
                         builder.append("message_size ++;\n");
-                    } else if (ctx.getCType(pt.getType()).equals("uint16_t")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("uint16_t")) {
                         builder.append(BufferName + "[message_size] = 0xcd;\n");
                         builder.append("message_size ++;\n");
-                    } else if (ctx.getCType(pt.getType()).equals("uint32_t")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("uint32_t")) {
                         builder.append(BufferName + "[message_size] = 0xce;\n");
                         builder.append("message_size ++;\n");
                         builder.append(BufferName + "[message_size] = " + pt.getName() + " & 0xFF;\n");
                         builder.append("message_size ++;\n");
-                    } else if (ctx.getCType(pt.getType()).equals("uint64_t")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("uint64_t")) {
                         builder.append(BufferName + "[message_size] = 0xcf;\n");
                         builder.append("message_size ++;\n");
-                    } else if (ctx.getCType(pt.getType()).equals("int8_t")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("int8_t")) {
                         builder.append(BufferName + "[message_size] = 0xd0;\n");
                         builder.append("message_size ++;\n");
-                    } else if (ctx.getCType(pt.getType()).equals("int16_t")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("int16_t")) {
                         builder.append(BufferName + "[message_size] = 0xd1;\n");
                         builder.append("message_size ++;\n");
-                    } else if (ctx.getCType(pt.getType()).equals("int32_t")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("int32_t")) {
                         builder.append(BufferName + "[message_size] = 0xd2;\n");
                         builder.append("message_size ++;\n");
-                    } else if (ctx.getCType(pt.getType()).equals("int64_t")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("int64_t")) {
                         builder.append(BufferName + "[message_size] = 0xd3;\n");
                         builder.append("message_size ++;\n");
-                    } else if (ctx.getCType(pt.getType()).equals("int")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("int")) {
                         builder.append("if(sizeof(int) == 1) {\n");
                         builder.append(BufferName + "[message_size] = 0xd0;\n");
                         builder.append("message_size ++;\n");
@@ -131,7 +131,7 @@ public class CMessagePackSerializer extends CMessageSerializer {
                         builder.append(BufferName + "[message_size] = 0xd3;\n");
                         builder.append("message_size ++;\n");
                         builder.append("}\n");
-                    } else if (ctx.getCType(pt.getType()).equals("unsigned int")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("unsigned int")) {
                         builder.append("if(sizeof(int) == 1) {\n");
                         builder.append(BufferName + "[message_size] = 0xcc;\n");
                         builder.append("message_size ++;\n");
@@ -145,17 +145,17 @@ public class CMessagePackSerializer extends CMessageSerializer {
                         builder.append(BufferName + "[message_size] = 0xcf;\n");
                         builder.append("message_size ++;\n");
                         builder.append("}\n");
-                    } else if (ctx.getCType(pt.getType()).equals("byte")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("byte")) {
                         builder.append(BufferName + "[message_size] = 0xcc;\n");
                         builder.append("message_size ++;\n");
                         builder.append(BufferName + "[message_size] = " + pt.getName() + ";\n");
                         builder.append("message_size ++;\n");
-                    } else if (ctx.getCType(pt.getType()).equals("char")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("char")) {
                         builder.append(BufferName + "[message_size] = 0xcc;\n");
                         builder.append("message_size ++;\n");
                         builder.append(BufferName + "[message_size] = " + pt.getName() + ";\n");
                         builder.append("message_size ++;\n");
-                    } else if (ctx.getCType(pt.getType()).equals("float")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("float")) {
                         builder.append("if(sizeof(double) == 4) {\n");
                         builder.append(BufferName + "[message_size] = 0xca;\n");
                         builder.append("message_size ++;\n");
@@ -163,7 +163,7 @@ public class CMessagePackSerializer extends CMessageSerializer {
                         builder.append(BufferName + "[message_size] = 0xcb;\n");
                         builder.append("message_size ++;\n");
                         builder.append("}\n");
-                    } else if (ctx.getCType(pt.getType()).equals("double")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("double")) {
                         builder.append("if(sizeof(double) == 4) {\n");
                         builder.append(BufferName + "[message_size] = 0xca;\n");
                         builder.append("message_size ++;\n");
@@ -171,7 +171,7 @@ public class CMessagePackSerializer extends CMessageSerializer {
                         builder.append(BufferName + "[message_size] = 0xcb;\n");
                         builder.append("message_size ++;\n");
                         builder.append("}\n");
-                    } else if (ctx.getCType(pt.getType()).equals("bool")) {
+                    } else if (ctx.getCType(pt.getTypeRef().getType()).equals("bool")) {
                         builder.append(BufferName + "[message_size] = 0xcc;\n");
                         builder.append("message_size ++;\n");
                         builder.append("if(" + pt.getName() + ") {\n");
@@ -182,18 +182,18 @@ public class CMessagePackSerializer extends CMessageSerializer {
                         builder.append("message_size ++;\n");
                         done = true;
                     } else {
-                        builder.append("//Type " + ctx.getCType(pt.getType()) + " is not handled in print action\n");
+                        builder.append("//Type " + ctx.getCType(pt.getTypeRef().getType()) + " is not handled in print action\n");
                     }
 
                     if (!done) {
                         builder.append("union u_" + v + "_t {\n");
-                        builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                        builder.append("byte bytebuffer[sizeof(" + ctx.getCType(pt.getType()) + ")];\n");
+                        builder.append(ctx.getCType(pt.getTypeRef().getType()) + " p;\n");
+                        builder.append("byte bytebuffer[sizeof(" + ctx.getCType(pt.getTypeRef().getType()) + ")];\n");
                         builder.append("} u_" + v + ";\n");
                         builder.append("u_" + v + ".p = " + v + ";\n");
 
                         builder.append("int counter;\n");
-                        builder.append("for(counter = sizeof(" + ctx.getCType(pt.getType()) + ")-1; counter >= 0 ; counter++;) {\n");
+                        builder.append("for(counter = sizeof(" + ctx.getCType(pt.getTypeRef().getType()) + ")-1; counter >= 0 ; counter++;) {\n");
                         builder.append(BufferName + "[message_size] = (u_" + v + ".bytebuffer[counter] & 0xFF);\n");
                         builder.append("message_size++;\n");
                         builder.append("}\n");

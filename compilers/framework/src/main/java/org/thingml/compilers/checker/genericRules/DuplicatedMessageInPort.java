@@ -16,15 +16,15 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.helpers.ConfigurationHelper;
+import java.util.ArrayList;
+
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
-
-import java.util.ArrayList;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by Alexandre Rio on 6/9/16.

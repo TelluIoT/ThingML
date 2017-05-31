@@ -21,11 +21,11 @@
  */
 package org.thingml.compilers.debugGUI;
 
+import java.util.Set;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.NetworkLibraryGenerator;
 import org.thingml.compilers.ThingMLCompiler;
-
-import java.util.Set;
 
 /**
  *

@@ -16,11 +16,11 @@
  */
 package org.thingml.compilers.cpp.sintefboard;
 
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.CCompilerContext;
-
 import java.util.ArrayList;
 import java.util.Collections;
+
+import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.c.CCompilerContext;
 
 /**
  * Created by ffl on 11.06.15.

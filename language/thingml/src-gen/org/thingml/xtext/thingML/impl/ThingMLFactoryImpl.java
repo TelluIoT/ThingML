@@ -1,17 +1,16 @@
 /**
- * *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  *
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  *
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *  *
+ *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
@@ -81,7 +80,9 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
     {
       case ThingMLPackage.THING_ML_MODEL: return createThingMLModel();
       case ThingMLPackage.PLATFORM_ANNOTATION: return createPlatformAnnotation();
+      case ThingMLPackage.NAMED_ELEMENT: return createNamedElement();
       case ThingMLPackage.ANNOTATED_ELEMENT: return createAnnotatedElement();
+      case ThingMLPackage.VARIABLE: return createVariable();
       case ThingMLPackage.TYPE_REF: return createTypeRef();
       case ThingMLPackage.TYPE: return createType();
       case ThingMLPackage.PRIMITIVE_TYPE: return createPrimitiveType();
@@ -99,20 +100,18 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.REQUIRED_PORT: return createRequiredPort();
       case ThingMLPackage.PROVIDED_PORT: return createProvidedPort();
       case ThingMLPackage.INTERNAL_PORT: return createInternalPort();
-      case ThingMLPackage.REGION: return createRegion();
-      case ThingMLPackage.REGION_OR_SESSION: return createRegionOrSession();
-      case ThingMLPackage.COMPOSITE_STATE: return createCompositeState();
-      case ThingMLPackage.FINAL_STATE: return createFinalState();
-      case ThingMLPackage.SESSION: return createSession();
-      case ThingMLPackage.PARALLEL_REGION: return createParallelRegion();
       case ThingMLPackage.STATE: return createState();
       case ThingMLPackage.HANDLER: return createHandler();
       case ThingMLPackage.TRANSITION: return createTransition();
       case ThingMLPackage.INTERNAL_TRANSITION: return createInternalTransition();
+      case ThingMLPackage.COMPOSITE_STATE: return createCompositeState();
+      case ThingMLPackage.SESSION: return createSession();
+      case ThingMLPackage.REGION: return createRegion();
+      case ThingMLPackage.FINAL_STATE: return createFinalState();
+      case ThingMLPackage.STATE_CONTAINER: return createStateContainer();
       case ThingMLPackage.EVENT: return createEvent();
       case ThingMLPackage.RECEIVE_MESSAGE: return createReceiveMessage();
       case ThingMLPackage.ACTION: return createAction();
-      case ThingMLPackage.VARIABLE: return createVariable();
       case ThingMLPackage.ACTION_BLOCK: return createActionBlock();
       case ThingMLPackage.EXTERN_STATEMENT: return createExternStatement();
       case ThingMLPackage.LOCAL_VARIABLE: return createLocalVariable();
@@ -143,6 +142,7 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.ABSTRACT_CONNECTOR: return createAbstractConnector();
       case ThingMLPackage.CONNECTOR: return createConnector();
       case ThingMLPackage.EXTERNAL_CONNECTOR: return createExternalConnector();
+      case ThingMLPackage.CAST_EXPRESSION: return createCastExpression();
       case ThingMLPackage.OR_EXPRESSION: return createOrExpression();
       case ThingMLPackage.AND_EXPRESSION: return createAndExpression();
       case ThingMLPackage.EQUALS_EXPRESSION: return createEqualsExpression();
@@ -156,6 +156,7 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
       case ThingMLPackage.TIMES_EXPRESSION: return createTimesExpression();
       case ThingMLPackage.DIV_EXPRESSION: return createDivExpression();
       case ThingMLPackage.MOD_EXPRESSION: return createModExpression();
+      case ThingMLPackage.EXPRESSION_GROUP: return createExpressionGroup();
       case ThingMLPackage.NOT_EXPRESSION: return createNotExpression();
       case ThingMLPackage.UNARY_MINUS: return createUnaryMinus();
       case ThingMLPackage.ARRAY_INDEX: return createArrayIndex();
@@ -191,10 +192,32 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public NamedElement createNamedElement()
+  {
+    NamedElementImpl namedElement = new NamedElementImpl();
+    return namedElement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public AnnotatedElement createAnnotatedElement()
   {
     AnnotatedElementImpl annotatedElement = new AnnotatedElementImpl();
     return annotatedElement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Variable createVariable()
+  {
+    VariableImpl variable = new VariableImpl();
+    return variable;
   }
 
   /**
@@ -389,72 +412,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Region createRegion()
-  {
-    RegionImpl region = new RegionImpl();
-    return region;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public RegionOrSession createRegionOrSession()
-  {
-    RegionOrSessionImpl regionOrSession = new RegionOrSessionImpl();
-    return regionOrSession;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public CompositeState createCompositeState()
-  {
-    CompositeStateImpl compositeState = new CompositeStateImpl();
-    return compositeState;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public FinalState createFinalState()
-  {
-    FinalStateImpl finalState = new FinalStateImpl();
-    return finalState;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Session createSession()
-  {
-    SessionImpl session = new SessionImpl();
-    return session;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ParallelRegion createParallelRegion()
-  {
-    ParallelRegionImpl parallelRegion = new ParallelRegionImpl();
-    return parallelRegion;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public State createState()
   {
     StateImpl state = new StateImpl();
@@ -499,6 +456,61 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public CompositeState createCompositeState()
+  {
+    CompositeStateImpl compositeState = new CompositeStateImpl();
+    return compositeState;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Session createSession()
+  {
+    SessionImpl session = new SessionImpl();
+    return session;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Region createRegion()
+  {
+    RegionImpl region = new RegionImpl();
+    return region;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public FinalState createFinalState()
+  {
+    FinalStateImpl finalState = new FinalStateImpl();
+    return finalState;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StateContainer createStateContainer()
+  {
+    StateContainerImpl stateContainer = new StateContainerImpl();
+    return stateContainer;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public Event createEvent()
   {
     EventImpl event = new EventImpl();
@@ -525,17 +537,6 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     ActionImpl action = new ActionImpl();
     return action;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Variable createVariable()
-  {
-    VariableImpl variable = new VariableImpl();
-    return variable;
   }
 
   /**
@@ -873,6 +874,17 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public CastExpression createCastExpression()
+  {
+    CastExpressionImpl castExpression = new CastExpressionImpl();
+    return castExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public OrExpression createOrExpression()
   {
     OrExpressionImpl orExpression = new OrExpressionImpl();
@@ -1009,6 +1021,17 @@ public class ThingMLFactoryImpl extends EFactoryImpl implements ThingMLFactory
   {
     ModExpressionImpl modExpression = new ModExpressionImpl();
     return modExpression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ExpressionGroup createExpressionGroup()
+  {
+    ExpressionGroupImpl expressionGroup = new ExpressionGroupImpl();
+    return expressionGroup;
   }
 
   /**

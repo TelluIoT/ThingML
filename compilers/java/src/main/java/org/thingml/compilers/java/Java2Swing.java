@@ -16,20 +16,28 @@
  */
 package org.thingml.compilers.java;
 
-import org.apache.commons.io.IOUtils;
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
-import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.ProvidedPort;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Type;
 
 /**
  * Created by bmori on 27.01.2015.
@@ -199,7 +207,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                 tempBuilder.append("//Attributes related to " + send.getName() + " via " + port.getName() + "\n");
                 tempBuilder.append("public JButton send" + send.getName() + "_via_" + port.getName() + ";\n");
                 for (Parameter p : send.getParameters()) {
-                    if (p.getType() instanceof Enumeration) {
+                    if (p.getTypeRef().getType() instanceof Enumeration) {
                         tempBuilder.append("private JComboBox field" + send.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ";\n");
                         tempBuilder.append("public JComboBox getField" + send.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "() {\n");
                         tempBuilder.append("return field" + send.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ";\n");
@@ -308,13 +316,13 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                     tempBuilder.append("c.gridx = 0;\n");
                     tempBuilder.append("c.gridy = " + y + ";\n");
                     tempBuilder.append("panel.add(label" + p.getName() + ", c);\n");
-                    if (p.getType() instanceof Enumeration) {
+                    if (p.getTypeRef().getType() instanceof Enumeration) {
                         //builder append p.getType.scala_type + "[] values" + self.getName + Context.firstToUpper(p.getName) + " = {"
                         //builder append p.getType.asInstanceOf[Enumeration].getLiterals.collect{case l => p.getType.getName + "_ENUM" + "." + p.getType.getName.toUpperCase + "_" + l.getName.toUpperCase() + "()"}.mkString(", ") + "};\n"
-                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JComboBox(values_" + p.getType().getName() + ".keySet().toArray());\n");
+                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JComboBox(values_" + p.getTypeRef().getType().getName() + ".keySet().toArray());\n");
                     } else {
                         tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + " = new JTextField();\n");
-                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ".setText(\"" + JavaHelper.getJavaType(p.getType(), p.getCardinality() != null, ctx) + "\");\n");
+                        tempBuilder.append("field" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + ".setText(\"" + JavaHelper.getJavaType(p.getTypeRef().getType(), p.getTypeRef().getCardinality() != null, ctx) + "\");\n");
                     }
 
                     tempBuilder.append("c.gridx = 1;\n");
@@ -383,10 +391,10 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                 for (Parameter p : msg.getParameters()) {
                     tempBuilder.append("param.put(\"" + p.getName() + "\", ");
                     parseBuilder.append("param.put(\"" + p.getName() + "\", ");
-                    if (p.getCardinality() == null) {
-                        if (p.getType() instanceof Enumeration) {
-                            tempBuilder.append("values_" + p.getType().getName() + ".get(getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getSelectedItem().toString())");
-                            parseBuilder.append("values_" + p.getType().getName() + ".get(getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getSelectedItem().toString())");
+                    if (p.getTypeRef().getCardinality() == null) {
+                        if (p.getTypeRef().getType() instanceof Enumeration) {
+                            tempBuilder.append("values_" + p.getTypeRef().getType().getName() + ".get(getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getSelectedItem().toString())");
+                            parseBuilder.append("values_" + p.getTypeRef().getType().getName() + ".get(getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getSelectedItem().toString())");
                         } else {
                             /*tempBuilder.append("(");
                             parseBuilder.append("(");
@@ -398,8 +406,8 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                                 tempBuilder.append(ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), false, ctx)));
                                 parseBuilder.append(ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), false, ctx)));
                             }*/
-                            tempBuilder.append("StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText())");
-                            parseBuilder.append("StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, params[" + msg.getParameters().indexOf(p) + "].trim())");
+                            tempBuilder.append("StringHelper.toObject (" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ".class, getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText())");
+                            parseBuilder.append("StringHelper.toObject (" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ".class, params[" + msg.getParameters().indexOf(p) + "].trim())");
                         }
                     } else {
                         builder.append("getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText().getBytes()");
@@ -423,16 +431,16 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
                 for (Parameter p : msg.getParameters()) {
                     if (j > 0)
                         tempBuilder.append(", ");
-                    if (p.getCardinality() == null) {
-                        if (p.getType() instanceof Enumeration) {
-                            tempBuilder.append("values_" + p.getType().getName() + ".get(getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getSelectedItem().toString())");
+                    if (p.getTypeRef().getCardinality() == null) {
+                        if (p.getTypeRef().getType() instanceof Enumeration) {
+                            tempBuilder.append("values_" + p.getTypeRef().getType().getName() + ".get(getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getSelectedItem().toString())");
                         } else {
                             tempBuilder.append("(");
-                            if (JavaHelper.getJavaType(p.getType(), false, ctx).equals("int"))
+                            if (JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx).equals("int"))
                                 tempBuilder.append("Integer");
                             else
-                                tempBuilder.append(ctx.firstToUpper(JavaHelper.getJavaType(p.getType(), false, ctx)));
-                            tempBuilder.append(")StringHelper.toObject (" + JavaHelper.getJavaType(p.getType(), false, ctx) + ".class, getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText())");
+                                tempBuilder.append(ctx.firstToUpper(JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx)));
+                            tempBuilder.append(")StringHelper.toObject (" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ".class, getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText())");
                         }
                     } else {
                         tempBuilder.append("getField" + msg.getName() + "_via_" + port.getName() + "_" + ctx.firstToUpper(p.getName()) + "().getText().getBytes()");

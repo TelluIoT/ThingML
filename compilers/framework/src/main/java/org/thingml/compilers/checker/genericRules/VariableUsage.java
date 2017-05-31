@@ -23,18 +23,24 @@ package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.constraints.Types;
-import org.sintef.thingml.helpers.ActionHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingHelper;
-import org.sintef.thingml.helpers.TyperHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.Types;
+import org.thingml.xtext.helpers.ActionHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.helpers.TyperHelper;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.LocalVariable;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.Variable;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
  *
@@ -62,10 +68,10 @@ public class VariableUsage extends Rule {
     }
 
     private void check(Variable va, Expression e, Thing t, Checker checker, EObject o) {
-        if (va.getCardinality() == null) {//TODO: check arrays
+        if (va.getTypeRef().getCardinality() == null) {//TODO: check arrays
             if (va instanceof Property) {
                 Property p = (Property) va;
-                if (!p.isChangeable()) {
+                if (p.isReadonly()) {
                     checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is read-only and cannot be re-assigned.", o);
                 }
             }
@@ -73,8 +79,8 @@ public class VariableUsage extends Rule {
                 checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " has no type", va);
                 return;
             }*/
-            if (!(va.getType() == null)) {
-                final Type expected = TyperHelper.getBroadType(va.getType());
+            if (va.getTypeRef() != null && va.getTypeRef().getType() != null) {
+                final Type expected = TyperHelper.getBroadType(va.getTypeRef().getType());
                 final Type actual = checker.typeChecker.computeTypeOf(e);
 
                 if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
@@ -105,21 +111,13 @@ public class VariableUsage extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
-        for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {
-            //FIXME @Brice see testIfElse
-            if (a instanceof VariableAssignment) {
-                VariableAssignment va = (VariableAssignment) a;
-                if (va.getExpression() != null)
-                    check(va.getProperty(), va.getExpression(), t, checker, va);
-            }
+        for (VariableAssignment va : ActionHelper.getAllActions(t, VariableAssignment.class)) {
+            if (va.getExpression() != null)
+                check(va.getProperty(), va.getExpression(), t, checker, va);            
         }
-        for (Action a : ActionHelper.getAllActions(t, LocalVariable.class)) {
-            //FIXME @Brice see testIfElse
-            if (a instanceof LocalVariable) {
-                LocalVariable lv = (LocalVariable) a;
-                if (lv.getInit() != null)
-                    check(lv, lv.getInit(), t, checker, lv);
-            }
+        for (LocalVariable lv : ActionHelper.getAllActions(t, LocalVariable.class)) {
+            if (lv.getInit() != null)
+                check(lv, lv.getInit(), t, checker, lv);            
         }
 
         for(Property p : ThingHelper.allPropertiesInDepth(t)) {

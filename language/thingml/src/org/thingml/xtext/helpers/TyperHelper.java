@@ -16,8 +16,8 @@
  */
 package org.thingml.xtext.helpers;
 
+import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.thingML.*;
-import org.sintef.thingml.constraints.Types;
 
 /**
  * Created by ffl on 10.05.2016.

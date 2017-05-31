@@ -1,0 +1,35 @@
+import "../thingml.thingml"
+
+//Test for issue #172
+thing TestTriggerInsideTransition includes Test 
+@test "t # IFG"
+{
+
+	message m();
+
+	internal port p {
+		sends m
+		receives m
+	}
+
+	statechart TestTriggerInsideTransition init I {
+	
+		state I {
+			on entry harnessOut!testOut('\'I\'')
+			transition -> F
+			event m : harnessIn?testIn
+			guard m.c == '\'t\''
+			action p!m()             //this should be queued and make the state machine to go to state G right after it has entered F
+		}
+		
+		state F {
+			on entry harnessOut!testOut('\'F\'')
+			transition -> G
+			event m : p?m
+		}
+		
+		state G {
+			on entry harnessOut!testOut('\'G\'')
+		}
+	}
+}

@@ -22,13 +22,17 @@
 package org.thingml.compilers.checker.genericRules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.StateHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.FinalState;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  *
@@ -52,7 +56,7 @@ public class StatesUsage extends Rule {
 
     @Override
     public String getDescription() {
-        return "Check for sink and unreachable states.";
+        return "Check that a thing has no more than one state machine, that state are reachable, etc";
     }
 
     @Override
@@ -70,17 +74,32 @@ public class StatesUsage extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
-        for (StateMachine sm : ThingMLHelpers.allStateMachines(t)) {
-            for (State s : StateHelper.allStates(sm)) {
+    	if (ThingMLHelpers.allStateMachines(t).size() > 1) {
+    		String msg = "Thing " + t.getName() + " has multiple state machines: ";
+    		int i = 0;
+    		for(CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
+    			if (i > 0)
+    				msg += ", ";
+    			msg += ((Thing)sm.eContainer()).getName() + ":" + sm.getName(); 
+    			i++;
+    		}
+    		msg += ".\nMake sure one and only state machine is defined in the context of Thing " + t.getName();
+            checker.addGenericError(msg, t);    		
+    	}    	    	
+        for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
+            for (State s : org.thingml.xtext.helpers.StateHelper.allStates(sm)) {
                 if((EcoreUtil.equals(s, sm)))
                     continue;
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Unreachable")) {
-                    if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
+                    //TODO: Re-implement the unreachable condition
+                	/*
+                	if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
                         checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
                     }
+                    */
                 }
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Sink")) {
-                    if (!(s instanceof FinalState) && !(((Region)s.eContainer()).getSubstate().size() == 1) && s.getOutgoing().size() == 0 && !EcoreUtil.equals(s, sm)) {
+                    if (!(s instanceof FinalState) && !EcoreUtil.equals(s, sm) && !(ThingMLHelpers.findContainingStateContainer(s).getSubstate().size() == 1) && s.getOutgoing().size() == 0) {
                         checker.addGenericNotice("Sink state " + s.getName() + " in Thing " + t.getName() + ".", s);
                     }
                 }

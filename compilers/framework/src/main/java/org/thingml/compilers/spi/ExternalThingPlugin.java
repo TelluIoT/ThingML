@@ -16,19 +16,23 @@
  */
 package org.thingml.compilers.spi;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.PlatformAnnotation;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
-import org.thingml.compilers.configuration.CfgMainGenerator;
-
-import java.util.*;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.Thing;
 
 
 /**

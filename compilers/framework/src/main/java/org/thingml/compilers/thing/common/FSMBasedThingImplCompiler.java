@@ -16,9 +16,18 @@
  */
 package org.thingml.compilers.thing.common;
 
-import org.sintef.thingml.*;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.FinalState;
+import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.InternalTransition;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Transition;
 
 /**
  * Created by bmori on 15.04.2015.
@@ -26,10 +35,10 @@ import org.thingml.compilers.thing.ThingImplCompiler;
 public class FSMBasedThingImplCompiler extends ThingImplCompiler {
 
     public void generateState(State s, StringBuilder builder, Context ctx) {
-        if (s instanceof StateMachine) {
-            generateStateMachine((StateMachine) s, builder, ctx);
-        } else if (s instanceof CompositeState) {
-            generateCompositeState((CompositeState) s, builder, ctx);
+        if (s.eContainer() instanceof Thing) {
+            generateStateMachine((CompositeState) s, builder, ctx);
+        } else if (s instanceof StateContainer) {
+            generateCompositeState((StateContainer) s, builder, ctx);
         } else if (s instanceof FinalState) {
             generateFinalState((FinalState) s, builder, ctx);
         } else {
@@ -37,11 +46,11 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
         }
     }
 
-    protected void generateStateMachine(StateMachine sm, StringBuilder builder, Context ctx) {
+    protected void generateStateMachine(CompositeState sm, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("State Machine to be implemented");
     }
 
-    protected void generateCompositeState(CompositeState cs, StringBuilder builder, Context ctx) {
+    protected void generateCompositeState(StateContainer cs, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("Composite State to be implemented");
     }
 
@@ -54,7 +63,7 @@ public class FSMBasedThingImplCompiler extends ThingImplCompiler {
     }
 
 
-    public void generateRegion(Region r, StringBuilder builder, Context ctx) {
+    public void generateRegion(StateContainer r, StringBuilder builder, Context ctx) {
         throw new UnsupportedOperationException("Region to be implemented");
     }
 

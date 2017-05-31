@@ -1,17 +1,16 @@
 /**
- * *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  *
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  *
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *  *
+ *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
@@ -100,9 +99,19 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createPlatformAnnotationAdapter();
       }
       @Override
+      public Adapter caseNamedElement(NamedElement object)
+      {
+        return createNamedElementAdapter();
+      }
+      @Override
       public Adapter caseAnnotatedElement(AnnotatedElement object)
       {
         return createAnnotatedElementAdapter();
+      }
+      @Override
+      public Adapter caseVariable(Variable object)
+      {
+        return createVariableAdapter();
       }
       @Override
       public Adapter caseTypeRef(TypeRef object)
@@ -190,36 +199,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createInternalPortAdapter();
       }
       @Override
-      public Adapter caseRegion(Region object)
-      {
-        return createRegionAdapter();
-      }
-      @Override
-      public Adapter caseRegionOrSession(RegionOrSession object)
-      {
-        return createRegionOrSessionAdapter();
-      }
-      @Override
-      public Adapter caseCompositeState(CompositeState object)
-      {
-        return createCompositeStateAdapter();
-      }
-      @Override
-      public Adapter caseFinalState(FinalState object)
-      {
-        return createFinalStateAdapter();
-      }
-      @Override
-      public Adapter caseSession(Session object)
-      {
-        return createSessionAdapter();
-      }
-      @Override
-      public Adapter caseParallelRegion(ParallelRegion object)
-      {
-        return createParallelRegionAdapter();
-      }
-      @Override
       public Adapter caseState(State object)
       {
         return createStateAdapter();
@@ -240,6 +219,31 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createInternalTransitionAdapter();
       }
       @Override
+      public Adapter caseCompositeState(CompositeState object)
+      {
+        return createCompositeStateAdapter();
+      }
+      @Override
+      public Adapter caseSession(Session object)
+      {
+        return createSessionAdapter();
+      }
+      @Override
+      public Adapter caseRegion(Region object)
+      {
+        return createRegionAdapter();
+      }
+      @Override
+      public Adapter caseFinalState(FinalState object)
+      {
+        return createFinalStateAdapter();
+      }
+      @Override
+      public Adapter caseStateContainer(StateContainer object)
+      {
+        return createStateContainerAdapter();
+      }
+      @Override
       public Adapter caseEvent(Event object)
       {
         return createEventAdapter();
@@ -253,11 +257,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
       public Adapter caseAction(Action object)
       {
         return createActionAdapter();
-      }
-      @Override
-      public Adapter caseVariable(Variable object)
-      {
-        return createVariableAdapter();
       }
       @Override
       public Adapter caseActionBlock(ActionBlock object)
@@ -410,6 +409,11 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
         return createExternalConnectorAdapter();
       }
       @Override
+      public Adapter caseCastExpression(CastExpression object)
+      {
+        return createCastExpressionAdapter();
+      }
+      @Override
       public Adapter caseOrExpression(OrExpression object)
       {
         return createOrExpressionAdapter();
@@ -473,6 +477,11 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
       public Adapter caseModExpression(ModExpression object)
       {
         return createModExpressionAdapter();
+      }
+      @Override
+      public Adapter caseExpressionGroup(ExpressionGroup object)
+      {
+        return createExpressionGroupAdapter();
       }
       @Override
       public Adapter caseNotExpression(NotExpression object)
@@ -542,6 +551,21 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.NamedElement <em>Named Element</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.NamedElement
+   * @generated
+   */
+  public Adapter createNamedElementAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.AnnotatedElement <em>Annotated Element</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -552,6 +576,21 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createAnnotatedElementAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Variable <em>Variable</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.Variable
+   * @generated
+   */
+  public Adapter createVariableAdapter()
   {
     return null;
   }
@@ -812,96 +851,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Region <em>Region</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.Region
-   * @generated
-   */
-  public Adapter createRegionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.RegionOrSession <em>Region Or Session</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.RegionOrSession
-   * @generated
-   */
-  public Adapter createRegionOrSessionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.CompositeState <em>Composite State</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.CompositeState
-   * @generated
-   */
-  public Adapter createCompositeStateAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.FinalState <em>Final State</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.FinalState
-   * @generated
-   */
-  public Adapter createFinalStateAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Session <em>Session</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.Session
-   * @generated
-   */
-  public Adapter createSessionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.ParallelRegion <em>Parallel Region</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.ParallelRegion
-   * @generated
-   */
-  public Adapter createParallelRegionAdapter()
-  {
-    return null;
-  }
-
-  /**
    * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.State <em>State</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -962,6 +911,81 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.CompositeState <em>Composite State</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.CompositeState
+   * @generated
+   */
+  public Adapter createCompositeStateAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Session <em>Session</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.Session
+   * @generated
+   */
+  public Adapter createSessionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Region <em>Region</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.Region
+   * @generated
+   */
+  public Adapter createRegionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.FinalState <em>Final State</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.FinalState
+   * @generated
+   */
+  public Adapter createFinalStateAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.StateContainer <em>State Container</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.StateContainer
+   * @generated
+   */
+  public Adapter createStateContainerAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Event <em>Event</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1002,21 +1026,6 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createActionAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.Variable <em>Variable</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.thingml.xtext.thingML.Variable
-   * @generated
-   */
-  public Adapter createVariableAdapter()
   {
     return null;
   }
@@ -1472,6 +1481,21 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.CastExpression <em>Cast Expression</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.CastExpression
+   * @generated
+   */
+  public Adapter createCastExpressionAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.OrExpression <em>Or Expression</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -1662,6 +1686,21 @@ public class ThingMLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createModExpressionAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.thingml.xtext.thingML.ExpressionGroup <em>Expression Group</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.thingml.xtext.thingML.ExpressionGroup
+   * @generated
+   */
+  public Adapter createExpressionGroupAdapter()
   {
     return null;
   }

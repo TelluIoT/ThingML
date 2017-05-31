@@ -13,12 +13,9 @@ thing TimerNodejs includes Timer
     
     function tstart(delay : Integer)
     do
-        'this.timer = setTimeout(onTimeout.bind(this),' & delay & ');'
-    end
-    
-    function onTimeout() 
-    do
-        timer!timer_timeout()
+        'this.timer = setTimeout(() => {'
+		timer!timer_timeout()
+		'},' & delay & ');'
     end
     
     statechart SoftTimer init default {
@@ -37,9 +34,3 @@ thing TimerNodejs includes Timer
         }
     }
 }
-
-/*configuration TestTimerJS {
-    instance timer : TimerJS
-    instance client : SimpleTimerClient
-    connector client.timer => timer.timer    
-}*/

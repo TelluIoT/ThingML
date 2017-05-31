@@ -17,9 +17,9 @@
 package org.thingml.externalthingplugins.c.posix.dnssd;
 
 
-import org.sintef.thingml.Thing;
 import org.thingml.compilers.c.posix.PosixCCfgBuildCompiler;
 import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by vassik on 18.11.16.

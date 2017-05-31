@@ -16,23 +16,16 @@
  */
 package org.thingml.compilers.c.posixmt;
 
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.thingml.compilers.c.posix.*;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.thingml.compilers.thing.ThingCepCompiler;
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.CCfgMainGenerator;
-import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.CThingApiCompiler;
-import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.thing.ThingCepSourceDeclaration;
-import org.thingml.compilers.thing.ThingCepViewCompiler;
-import org.thingml.compilers.utils.OpaqueThingMLCompiler;
-
-import java.io.File;
 import org.thingml.compilers.Context;
+import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.posix.PosixCCfgBuildCompiler;
+import org.thingml.compilers.c.posix.PosixChecker;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by ffl on 25.11.14.
@@ -41,8 +34,7 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
 
     public PosixMTCompiler() {
         super(new PosixMTThingActionCompiler(), new PosixMTThingApiCompiler(), new PosixMTCfgMainGenerator(),
-                new PosixCCfgBuildCompiler(), new PosixMTThingImplCompiler(),
-                new ThingCepCompiler(new ThingCepViewCompiler(), new ThingCepSourceDeclaration()));
+                new PosixCCfgBuildCompiler(), new PosixMTThingImplCompiler());
         this.checker = new PosixChecker(this.getID());
     }
 

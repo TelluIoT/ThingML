@@ -30,13 +30,39 @@
 package org.thingml.compilers.checker;
 
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.Types;
-import org.sintef.thingml.helpers.TyperHelper;
-import org.sintef.thingml.util.ThingmlSwitch;
+import org.thingml.xtext.constraints.Types;
+import org.thingml.xtext.helpers.TyperHelper;
+import org.thingml.xtext.thingML.AndExpression;
+import org.thingml.xtext.thingML.ArrayIndex;
+import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.CastExpression;
+import org.thingml.xtext.thingML.DivExpression;
+import org.thingml.xtext.thingML.DoubleLiteral;
+import org.thingml.xtext.thingML.EqualsExpression;
+import org.thingml.xtext.thingML.EventReference;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExpressionGroup;
+import org.thingml.xtext.thingML.ExternExpression;
+import org.thingml.xtext.thingML.FunctionCallExpression;
+import org.thingml.xtext.thingML.GreaterExpression;
+import org.thingml.xtext.thingML.GreaterOrEqualExpression;
+import org.thingml.xtext.thingML.IntegerLiteral;
+import org.thingml.xtext.thingML.LowerExpression;
+import org.thingml.xtext.thingML.LowerOrEqualExpression;
+import org.thingml.xtext.thingML.MinusExpression;
+import org.thingml.xtext.thingML.ModExpression;
+import org.thingml.xtext.thingML.NotExpression;
+import org.thingml.xtext.thingML.OrExpression;
+import org.thingml.xtext.thingML.PlusExpression;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.StringLiteral;
+import org.thingml.xtext.thingML.TimesExpression;
+import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.UnaryMinus;
+import org.thingml.xtext.thingML.util.ThingMLSwitch;
 
 
-public class TypeChecker extends ThingmlSwitch<Type> {
+public class TypeChecker extends ThingMLSwitch<Type> {
 
     public Type computeTypeOf(Expression exp) {
         Type result = null;
@@ -50,8 +76,19 @@ public class TypeChecker extends ThingmlSwitch<Type> {
         }
         return result;
     }
-
+    
     @Override
+	public Type caseExpressionGroup(ExpressionGroup object) {
+        return TyperHelper.getBroadType(computeTypeOf(object.getTerm()));
+	}
+
+      
+    @Override
+	public Type caseCastExpression(CastExpression object) {
+        return TyperHelper.getBroadType(object.getType());
+	}
+
+	@Override
     public Type caseExternExpression(ExternExpression object) {
         return Types.ANY_TYPE;
     }
@@ -221,38 +258,20 @@ public class TypeChecker extends ThingmlSwitch<Type> {
 
     @Override
     public Type casePropertyReference(PropertyReference object) {
-        return TyperHelper.getBroadType(object.getProperty().getType());
+        return TyperHelper.getBroadType(object.getProperty().getTypeRef().getType());
     }
-
+    
+    
     @Override
-    public Type caseExpressionGroup(ExpressionGroup object) {
-        return computeTypeOf(object.getExp());
-    }
-
-    @Override
-    public Type caseReference(Reference object) {
-        if (object.getReference() instanceof ReceiveMessage) {
-            ReceiveMessage rm = (ReceiveMessage) object.getReference();
-            if (object.getParameter() instanceof SimpleParamRef) {
-                SimpleParamRef ref = (SimpleParamRef) object.getParameter();
-                if (ref.getParameterRef().getType() == null)
-                    return Types.ERROR_TYPE;
-                return TyperHelper.getBroadType(ref.getParameterRef().getType());
-            }
-        } else if (object instanceof PropertyReference) {
-            PropertyReference pr = (PropertyReference) object;
-            if (pr.getProperty().getType() == null)
-                return Types.ERROR_TYPE;
-            return TyperHelper.getBroadType(pr.getProperty().getType());
-        }
-        return Types.ANY_TYPE;
-    }
+	public Type caseEventReference(EventReference object) {
+    	return TyperHelper.getBroadType(object.getParameter().getTypeRef().getType());
+	}
 
     @Override
     public Type caseFunctionCallExpression(FunctionCallExpression object) {
-        if (object.getFunction().getType() == null)
+        if (object.getFunction().getTypeRef().getType() == null)
             return Types.VOID_TYPE;
-        return TyperHelper.getBroadType(object.getFunction().getType());
+        return TyperHelper.getBroadType(object.getFunction().getTypeRef().getType());
     }
 
     @Override

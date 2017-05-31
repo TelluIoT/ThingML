@@ -16,10 +16,10 @@
  */
 package org.thingml.compilers.c;
 
-import org.sintef.thingml.Thing;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by vassik on 01.11.16.

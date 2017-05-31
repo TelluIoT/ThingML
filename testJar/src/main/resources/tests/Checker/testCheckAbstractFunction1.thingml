@@ -1,0 +1,33 @@
+import "../thingml.thingml"
+
+thing fragment Foo
+{
+
+    function foo() do
+      //...
+    end
+
+}
+
+thing TestCheckAbstractFunction1 includes Test, Foo
+@test "x # x"
+{
+    //Should fail because function foo cannot be implemented twice
+    function foo() do
+      //...
+    end
+
+    statechart TestAbstractFunction init INIT {
+
+    	state INIT {
+
+			transition -> INIT
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+			action do
+				foo()
+			end
+
+    	}
+    }
+}

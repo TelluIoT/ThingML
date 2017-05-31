@@ -16,10 +16,10 @@
  */
 package org.thingml.xtext.helpers;
 
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.*;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.sintef.thingml.constraints.ThingMLHelpers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,35 +59,30 @@ public class ThingMLElementHelper {
     }
 
 
-    public static String qname(EObject self, String separator) {
+    public static String qname(NamedElement self, String separator) {
         if (separator == null) {
             separator = "::";
         }
         
         String result = null;
-        EObject elem  = self;
+        NamedElement elem  = self;
         String name = null;
         while(elem != null) {
-            name = getName(elem);
-            if (name == null || name == "") name = elem.getClass().getName();
+            name = elem.getName();
+            //if (name == null || name == "") name = elem.getClass().getName();
             if (result == null) result = name;
             else result = name + separator + result;
-            if (elem.eContainer() != null && elem.eContainer() instanceof EObject)
-                elem = elem.eContainer();
+            if (elem.eContainer() != null && elem.eContainer() instanceof NamedElement)
+                elem = (NamedElement) elem.eContainer();
             else elem = null;
         }
         return result;
     }
     
     public static String getName(EObject self) {
-    	 EAttribute name_attribut = null;
-         for (EAttribute a : self.eClass().getEAllAttributes()) {
-         	if (a.getName().equals("name")) {name_attribut = a; break;}
-         }
-         if (name_attribut != null) {
-         	return self.eGet(name_attribut).toString();
-         }
-         else return null;
+    	if (self instanceof NamedElement) return ((NamedElement)self).getName();
+    	else return null;
+    	
     }
 
 }

@@ -16,18 +16,28 @@
  */
 package org.thingml.compilers.java;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
-import org.thingml.compilers.configuration.CfgMainGenerator;
-
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
+
+import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Connector;
+import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.InternalPort;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -43,8 +53,8 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
 
 
                 for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-                    builder.append("final " + JavaHelper.getJavaType(a.getType(), true, ctx) + " " + i.getName() + "_" + a.getName() + "_array = new " + JavaHelper.getJavaType(a.getType(), false, ctx) + "[");
-                    ctx.generateFixedAtInitValue(cfg, i, a.getCardinality(), builder);
+                    builder.append("final " + JavaHelper.getJavaType(a.getTypeRef().getType(), true, ctx) + " " + i.getName() + "_" + a.getName() + "_array = new " + JavaHelper.getJavaType(a.getTypeRef().getType(), false, ctx) + "[");
+                    ctx.generateFixedAtInitValue(cfg, i, a.getTypeRef().getCardinality(), builder);
                     builder.append("];\n");
                 }
 
@@ -67,10 +77,10 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
                 for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: not optimal, to be improved
                     for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
-                        if (p.getKey().equals(prop) && prop.getCardinality() == null) {
+                        if (p.getKey().equals(prop) && prop.getTypeRef().getCardinality() == null) {
                             String result = "";
-                            if (prop.getType() instanceof Enumeration) {
-                                Enumeration enum_ = (Enumeration) prop.getType();
+                            if (prop.getTypeRef().getType() instanceof Enumeration) {
+                                Enumeration enum_ = (Enumeration) prop.getTypeRef().getType();
                                 EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
                                 StringBuilder tempbuilder = new StringBuilder();
                                 if (enumL == null) {
@@ -82,15 +92,15 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                             } else {
                                 if (p.getValue() != null) {
                                     StringBuilder tempbuilder = new StringBuilder();
-                                    tempbuilder.append("(" + JavaHelper.getJavaType(p.getKey().getType(), false, ctx) + ") ");
+                                    tempbuilder.append("(" + JavaHelper.getJavaType(p.getKey().getTypeRef().getType(), false, ctx) + ") ");
                                     tempbuilder.append("(");
                                     //ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
                                     ctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
                                     tempbuilder.append(")");
                                     result += tempbuilder.toString();
                                 } else {
-                                    result += "(" + JavaHelper.getJavaType(p.getKey().getType(), false, ctx) + ")"; //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
-                                    result += JavaHelper.getDefaultValue(p.getKey().getType());
+                                    result += "(" + JavaHelper.getJavaType(p.getKey().getTypeRef().getType(), false, ctx) + ")"; //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
+                                    result += JavaHelper.getDefaultValue(p.getKey().getTypeRef().getType());
                                 }
                             }
                             builder.append(", " + result);
@@ -126,12 +136,12 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         builder.append("//Connectors\n");
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
             if (c.getProvided().getSends().size() > 0 && c.getRequired().getReceives().size() > 0) {
-                builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port().addListener(");
-                builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port());\n");
+                builder.append(ctx.getInstanceName(c.getSrv()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port().addListener(");
+                builder.append(ctx.getInstanceName(c.getCli()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port());\n");
             }
             if (c.getProvided().getReceives().size() > 0 && c.getRequired().getSends().size() > 0) {
-                builder.append(ctx.getInstanceName(c.getCli().getInstance()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port().addListener(");
-                builder.append(ctx.getInstanceName(c.getSrv().getInstance()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port());\n");
+                builder.append(ctx.getInstanceName(c.getCli()) + ".get" + ctx.firstToUpper(c.getRequired().getName()) + "_port().addListener(");
+                builder.append(ctx.getInstanceName(c.getSrv()) + ".get" + ctx.firstToUpper(c.getProvided().getName()) + "_port());\n");
             }
         }
     }
@@ -169,7 +179,7 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-        JavaHelper.generateHeader(pack, pack, builder, ctx, true, api, false);
+        JavaHelper.generateHeader(pack, pack, builder, ctx, true, api);
         if (gui) {
             builder.append("import " + pack + ".gui.*;\n");
         }

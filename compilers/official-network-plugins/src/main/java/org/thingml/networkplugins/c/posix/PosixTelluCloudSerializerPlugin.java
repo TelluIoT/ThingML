@@ -17,14 +17,11 @@
 package org.thingml.networkplugins.c.posix;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.PlatformAnnotation;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.impl.ParameterImpl;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.*;
+import org.thingml.xtext.thingML.impl.ParameterImpl;
 
 import java.util.ArrayList;
 import java.util.List;

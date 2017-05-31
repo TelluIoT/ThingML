@@ -21,14 +21,14 @@
  */
 package org.thingml.networkplugins.c.posix;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Protocol;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.spi.NetworkPlugin;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.thingml.compilers.Context;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Protocol;
 
 /**
  *

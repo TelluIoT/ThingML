@@ -48,8 +48,14 @@ public class lPosix extends TargetedLanguage {
     public Command execTargeted(SimpleGeneratedTest t) {
         String prg = t.name + "_Cfg";
         
-        String[] execCmd = new String[1];
-        execCmd[0] = "./" + prg;
+        //String[] execCmd = new String[1];
+        //execCmd[0] = "./" + prg;
+        String[] execCmd = new String[5];
+        execCmd[0] = "timeout";
+        execCmd[1] = "-s";
+        execCmd[2] = "9";
+        execCmd[3] = "30s";
+        execCmd[4] = "./" + prg;
         
         return new Command(execCmd, ".+", null, "Error at c execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));
     }

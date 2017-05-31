@@ -22,17 +22,20 @@
 
 package org.thingml.compilers.commandline;
 
-import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.constraints.ThingMLHelpers;
+import java.io.File;
+
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
-import org.thingml.compilers.registry.ThingMLToolRegistry;
-import org.thingml.thingmltools.ThingMLTool;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ThingMLModel;
 
-import java.io.File;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+
+//comment
+import org.thingml.thingmltools.ThingMLToolRegistry;
+import org.thingml.thingmltools.ThingMLTool;
 
 /**
  * Created by ffl on 15.06.15.
@@ -44,11 +47,7 @@ public class Main {
     String output;
     @Parameter(names = {"--compiler", "-c"}, description = "Compiler ID (Mandatory unless --tool (-t) is used)")
     String compiler;
-    @Parameter(names = {"--tool", "-t"}, description = "Tool ID (Mandatory unless --compiler (-c) is used)")
-    String tool;
-    @Parameter(names = {"--options"}, description = "additional options for ThingML tools.")
-    String tooloptions;
-    boolean toolUsed, compilerUsed;
+    boolean compilerUsed;
     @Parameter(names = {"--help", "-h"}, help = true, description = "Display this message.")
     private boolean help;
     @Parameter(names = {"--create-dir", "-d"}, description = "Create a new directory named after the configuration for the output")
@@ -56,12 +55,26 @@ public class Main {
     @Parameter(names = {"--list-plugins"}, description = "Display the list of available plugins")
     private boolean listPlugins;
 
+    //START TOD0: comment
+    @Parameter(names = {"--tool", "-t"}, description = "Tool ID (Mandatory unless --compiler (-c) is used)")
+    String tool;
+    @Parameter(names = {"--options"}, description = "additional options for ThingML tools.")
+    String tooloptions;
+    boolean toolUsed;
+    //END TODO: vassik
+
+    //comment
     public static void printUsage(JCommander jcom, ThingMLCompilerRegistry registry, ThingMLToolRegistry toolregistry) {
+     //uncomment
+    //public static void printUsage(JCommander jcom, ThingMLCompilerRegistry registry) {
         System.out.println(" --- ThingML help ---");
 
         System.out.println("Typical usages: ");
-        System.out.println("    java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>][-d]");
-        System.out.println("    java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>]");
+        //uncomment
+        //System.out.println("    java -jar your-jar.jar -c <compiler> -s <source> [-o <output-dir>][-d]");
+
+        //comment test-relevant
+        System.out.println("    java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>][-d]");
 
         jcom.usage();
 
@@ -76,9 +89,13 @@ public class Main {
         for (ThingMLTool t : toolregistry.getToolPrototypes()) {
             System.out.println(" └╼     " + t.getID() + "\t- " + t.getDescription());
         }
+
     }
 
+    //comment test-relevant
     public static void printPluginList(JCommander jcom, ThingMLCompilerRegistry registry, ThingMLToolRegistry toolregistry) {
+    //uncomment
+    //public static void printPluginList(JCommander jcom, ThingMLCompilerRegistry registry) {
         registry.printNetworkPluginList();
 
         System.out.println();
@@ -91,31 +108,63 @@ public class Main {
     public static void main(String[] args) {
         Main main = new Main();
         ThingMLCompilerRegistry registry = ThingMLCompilerRegistry.getInstance();
+
+        //comment
         ThingMLToolRegistry toolregistry = ThingMLToolRegistry.getInstance();
+
         JCommander jcom = new JCommander(main, args);
 
         // HELP Handling
+        //comment test-relevant
         if (main.help || ((main.compiler == null) && (main.tool == null) && (!main.listPlugins))) {
+            // comment test-relevant
             printUsage(jcom, registry, toolregistry);
+         //uncomment
+        //if (main.help || ((main.compiler == null) && (!main.listPlugins))) {
+            //uncomment
+            //printUsage(jcom, registry);
+
             if (main.listPlugins) {
                 System.out.println();
+                //uncomment
+                //printPluginList(jcom, registry);
+
+                //comment test-relevant
                 printPluginList(jcom, registry, toolregistry);
             }
             return;
         }
 
         if (main.listPlugins) {
-            printPluginList(jcom, registry, toolregistry);
+            //uncomment
+            //printPluginList(jcom, registry);
+
+            //comment test-relevant
+            printUsage(jcom, registry, toolregistry);
             return;
         }
 
         // COMPILER/TOOL Handling
+
+        //comment
         main.toolUsed = main.tool != null;
+
         main.compilerUsed = main.compiler != null;
+
+        /*
+        uncomment
+        if (main.compiler == null) {
+            System.out.println("Option --compiler must be used (or its short version -c).");
+            return;
+        }*/
+
+        //comment start, test-relevant
         if (!((main.compiler != null) ^ (main.tool != null))) {
-            System.out.println("One (and only one) of the option --compiler or --tool must be used (or their short version -c and -t).");
+           System.out.println("One (and only one) of the option --compiler or --tool must be used (or their short version -c and -t).");
             return;
         }
+        //commetn end, test-relevant
+
 
         //SOURCE Handling
         File input = null;
@@ -163,6 +212,7 @@ public class Main {
         if (main.compiler != null)
             System.out.print(" -c " + main.compiler);
 
+        //comment
         if (main.tool != null)
             System.out.print(" -t " + main.tool);
 
@@ -181,8 +231,8 @@ public class Main {
                 return;
             }
 
+            //comment START test-relevant
             if (main.toolUsed) {
-
                 ThingMLTool thingmlTool = toolregistry.createToolInstanceByName(main.tool.trim());
                 if (thingmlTool == null) {
                     System.out.println("ERROR: Cannot find tool " + main.tool.trim() + ". Use --help (or -h) to check the list of registered compilers.");
@@ -195,6 +245,7 @@ public class Main {
                 thingmlTool.setSourceFile(input);
                 thingmlTool.generateThingMLFrom(input_model);
             }
+            //comment END test-relevant
 
             if (main.compilerUsed) {
                 if (ThingMLHelpers.allConfigurations(input_model).isEmpty()) {

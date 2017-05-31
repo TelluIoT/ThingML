@@ -29,16 +29,16 @@ import java.util.List;
 public class ActionHelper {
 
 
-    public static List<Action> getAllActions(EObject self, Class clazz) {
-        List<Action> result = new ArrayList<Action>();
+    public static <T extends Action> List<T> getAllActions(EObject self, Class<T> clazz) {
+        List<T> result = new ArrayList<T>();
 
         TreeIterator<EObject> it = self.eAllContents();
         while(it.hasNext()) {
             EObject o = it.next();
-            if (clazz.isInstance(o)) result.add((Action) o);
+            if (clazz.isInstance(o)) result.add((T) o);
         }
 
-        if (clazz.isInstance(self)) result.add((Action)self);
+        if (clazz.isInstance(self)) result.add((T)self);
         return result;
     }
 

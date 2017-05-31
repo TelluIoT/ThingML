@@ -21,14 +21,19 @@
  */
 package org.thingml.compilers.c;
 
-import org.sintef.thingml.*;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.NetworkLibraryGenerator;
-import org.thingml.compilers.c.plugin.CByteArraySerializer;
-
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
+
+import org.thingml.compilers.Context;
+import org.thingml.compilers.NetworkLibraryGenerator;
+import org.thingml.compilers.c.plugin.CByteArraySerializer;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  *
@@ -77,7 +82,7 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
 
         for (ExternalConnector eco : this.getExternalConnectors()) {
             //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
-            Thing t = eco.getInst().getInstance().getType();
+            Thing t = eco.getInst().getType();
             Port p = eco.getPort();
 
             for (Message m : p.getSends()) {
@@ -112,7 +117,7 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
 
         for (ExternalConnector eco : this.getExternalConnectors()) {
             //if (AnnotatedElementHelper.hasAnnotation(eco, "c_external_send")) {
-            Thing t = eco.getInst().getInstance().getType();
+            Thing t = eco.getInst().getType();
             Port p = eco.getPort();
 
             for (Message m : p.getSends()) {

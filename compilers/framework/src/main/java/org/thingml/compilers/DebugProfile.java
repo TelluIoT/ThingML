@@ -16,10 +16,15 @@
  */
 package org.thingml.compilers;
 
-import org.sintef.thingml.*;
-
 import java.util.List;
 import java.util.Map;
+
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by bmori on 17.09.2015.

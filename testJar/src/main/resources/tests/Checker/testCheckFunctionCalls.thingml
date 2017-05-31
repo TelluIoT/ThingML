@@ -1,0 +1,23 @@
+import "../thingml.thingml"
+
+thing TestCheckFunctionCalls includes Test
+@test "x # x"
+{
+    function foo(a : Integer) do
+      //...
+    end
+
+    statechart TestAbstractFunction init INIT {
+
+    	state INIT {
+
+			transition -> INIT
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+			action do
+				foo()   //Should fail because foo is called is wrong number of params.
+			end
+
+    	}
+    }
+}

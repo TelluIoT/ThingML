@@ -13,9 +13,10 @@ thing TestSessionOnEntry includes Test
     	}
 
 		session s<5> init S1 {
-			on entry harnessOut!testOut('\'B\'')
+
 			final state S1 {
-			}		
+				on entry harnessOut!testOut('\'B\'')
+			}
 		}
     }
 }

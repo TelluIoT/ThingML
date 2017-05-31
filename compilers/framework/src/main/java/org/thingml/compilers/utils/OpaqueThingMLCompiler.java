@@ -16,18 +16,16 @@
  */
 package org.thingml.compilers.utils;
 
-import org.sintef.thingml.Configuration;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
-import org.thingml.compilers.thing.ThingCepCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
-import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
-
-import java.io.OutputStream;
-import java.io.PrintStream;
+import org.thingml.xtext.thingML.Configuration;
 
 /**
  * Created by ffl on 24.11.14.
@@ -36,8 +34,8 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
     PrintStream m, e;
 
-    public OpaqueThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler, ThingCepCompiler cepCompiler) {
-        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler, cepCompiler);
+    public OpaqueThingMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, ThingImplCompiler thingImplCompiler) {
+        super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
         final OutputStream stream = getMessageStream();
         if (stream != null) {
             m = new PrintStream(stream);

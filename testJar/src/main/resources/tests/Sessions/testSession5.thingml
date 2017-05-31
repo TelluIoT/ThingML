@@ -19,11 +19,12 @@ thing TestSession5 includes Test
 					end
 		  	}
 
-			session s<5> init S1 {
+			
+		}
+		session s<5> init S1 {
 				final state S1 {
 					on entry harnessOut!testOut(ID)
 				}		
 			}
-		}
     }
 }

@@ -30,8 +30,10 @@ import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransi
 import org.thingml.xtext.services.ThingMLGrammarAccess;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.AndExpression;
+import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
@@ -46,6 +48,7 @@ import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
+import org.thingml.xtext.thingML.ExpressionGroup;
 import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.ExternStatement;
 import org.thingml.xtext.thingML.ExternalConnector;
@@ -67,11 +70,11 @@ import org.thingml.xtext.thingML.LowerOrEqualExpression;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.MinusExpression;
 import org.thingml.xtext.thingML.ModExpression;
+import org.thingml.xtext.thingML.NamedElement;
 import org.thingml.xtext.thingML.NotEqualsExpression;
 import org.thingml.xtext.thingML.NotExpression;
 import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.OrExpression;
-import org.thingml.xtext.thingML.ParallelRegion;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.PlusExpression;
 import org.thingml.xtext.thingML.PrimitiveType;
@@ -82,12 +85,14 @@ import org.thingml.xtext.thingML.PropertyReference;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.ReceiveMessage;
+import org.thingml.xtext.thingML.Region;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Session;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.StringLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -96,6 +101,7 @@ import org.thingml.xtext.thingML.TimesExpression;
 import org.thingml.xtext.thingML.Transition;
 import org.thingml.xtext.thingML.TypeRef;
 import org.thingml.xtext.thingML.UnaryMinus;
+import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
 
 @SuppressWarnings("all")
@@ -118,19 +124,26 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 			case ThingMLPackage.AND_EXPRESSION:
 				sequence_AndExpression(context, (AndExpression) semanticObject); 
 				return; 
+			case ThingMLPackage.ANNOTATED_ELEMENT:
+				sequence_AnnotatedElement(context, (AnnotatedElement) semanticObject); 
+				return; 
 			case ThingMLPackage.ARRAY_INDEX:
 				sequence_ArrayIndexPostfix(context, (ArrayIndex) semanticObject); 
 				return; 
 			case ThingMLPackage.BOOLEAN_LITERAL:
 				sequence_BooleanLiteral(context, (BooleanLiteral) semanticObject); 
 				return; 
+			case ThingMLPackage.CAST_EXPRESSION:
+				sequence_CastExpression(context, (CastExpression) semanticObject); 
+				return; 
 			case ThingMLPackage.COMPOSITE_STATE:
-				if (rule == grammarAccess.getRegionRule()
-						|| rule == grammarAccess.getCompositeStateRule()) {
+				if (rule == grammarAccess.getCompositeStateRule()
+						|| rule == grammarAccess.getStateContainerRule()) {
 					sequence_CompositeState(context, (CompositeState) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getAnnotatedElementRule()
+				else if (rule == grammarAccess.getNamedElementRule()
+						|| rule == grammarAccess.getAnnotatedElementRule()
 						|| rule == grammarAccess.getStateRule()) {
 					sequence_CompositeState_StateMachine(context, (CompositeState) semanticObject); 
 					return; 
@@ -179,6 +192,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 			case ThingMLPackage.EVENT_REFERENCE:
 				sequence_EventReference(context, (EventReference) semanticObject); 
 				return; 
+			case ThingMLPackage.EXPRESSION_GROUP:
+				sequence_Primary(context, (ExpressionGroup) semanticObject); 
+				return; 
 			case ThingMLPackage.EXTERN_EXPRESSION:
 				sequence_ExternExpression(context, (ExternExpression) semanticObject); 
 				return; 
@@ -192,8 +208,17 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				sequence_FinalState(context, (FinalState) semanticObject); 
 				return; 
 			case ThingMLPackage.FUNCTION:
-				sequence_Function(context, (Function) semanticObject); 
-				return; 
+				if (rule == grammarAccess.getAbstractFunctionRule()) {
+					sequence_AbstractFunction(context, (Function) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getNamedElementRule()
+						|| rule == grammarAccess.getAnnotatedElementRule()
+						|| rule == grammarAccess.getFunctionRule()) {
+					sequence_AbstractFunction_Function(context, (Function) semanticObject); 
+					return; 
+				}
+				else break;
 			case ThingMLPackage.FUNCTION_CALL_EXPRESSION:
 				sequence_FunctionCallExpression(context, (FunctionCallExpression) semanticObject); 
 				return; 
@@ -242,6 +267,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 			case ThingMLPackage.MOD_EXPRESSION:
 				sequence_Modulo(context, (ModExpression) semanticObject); 
 				return; 
+			case ThingMLPackage.NAMED_ELEMENT:
+				sequence_NamedElement(context, (NamedElement) semanticObject); 
+				return; 
 			case ThingMLPackage.NOT_EQUALS_EXPRESSION:
 				sequence_Equality(context, (NotEqualsExpression) semanticObject); 
 				return; 
@@ -253,9 +281,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.OR_EXPRESSION:
 				sequence_OrExpression(context, (OrExpression) semanticObject); 
-				return; 
-			case ThingMLPackage.PARALLEL_REGION:
-				sequence_ParallelRegion(context, (ParallelRegion) semanticObject); 
 				return; 
 			case ThingMLPackage.PARAMETER:
 				sequence_Parameter(context, (org.thingml.xtext.thingML.Parameter) semanticObject); 
@@ -290,6 +315,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 			case ThingMLPackage.RECEIVE_MESSAGE:
 				sequence_ReceiveMessage(context, (ReceiveMessage) semanticObject); 
 				return; 
+			case ThingMLPackage.REGION:
+				sequence_Region(context, (Region) semanticObject); 
+				return; 
 			case ThingMLPackage.REQUIRED_PORT:
 				sequence_RequiredPort(context, (RequiredPort) semanticObject); 
 				return; 
@@ -307,6 +335,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				return; 
 			case ThingMLPackage.STATE:
 				sequence_State(context, (State) semanticObject); 
+				return; 
+			case ThingMLPackage.STATE_CONTAINER:
+				sequence_StateContainer(context, (StateContainer) semanticObject); 
 				return; 
 			case ThingMLPackage.STRING_LITERAL:
 				sequence_StringLiteral(context, (StringLiteral) semanticObject); 
@@ -329,6 +360,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 			case ThingMLPackage.UNARY_MINUS:
 				sequence_Primary(context, (UnaryMinus) semanticObject); 
 				return; 
+			case ThingMLPackage.VARIABLE:
+				sequence_Variable(context, (Variable) semanticObject); 
+				return; 
 			case ThingMLPackage.VARIABLE_ASSIGNMENT:
 				sequence_VariableAssignment(context, (VariableAssignment) semanticObject); 
 				return; 
@@ -336,6 +370,35 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 		if (errorAcceptor != null)
 			errorAcceptor.accept(diagnosticProvider.createInvalidContextOrTypeDiagnostic(semanticObject, context));
 	}
+	
+	/**
+	 * Contexts:
+	 *     AbstractFunction returns Function
+	 *
+	 * Constraint:
+	 *     (abstract?='abstract' name=ID (parameters+=Parameter parameters+=Parameter*)? typeRef=TypeRef? annotations+=PlatformAnnotation*)
+	 */
+	protected void sequence_AbstractFunction(ISerializationContext context, Function semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns Function
+	 *     AnnotatedElement returns Function
+	 *     Function returns Function
+	 *
+	 * Constraint:
+	 *     (
+	 *         (name=ID (parameters+=Parameter parameters+=Parameter*)? typeRef=TypeRef? annotations+=PlatformAnnotation* body=Action) | 
+	 *         (abstract?='abstract' name=ID (parameters+=Parameter parameters+=Parameter*)? typeRef=TypeRef? annotations+=PlatformAnnotation*)
+	 *     )
+	 */
+	protected void sequence_AbstractFunction_Function(ISerializationContext context, Function semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
 	
 	/**
 	 * Contexts:
@@ -353,6 +416,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns MinusExpression
+	 *     CastExpression returns MinusExpression
+	 *     CastExpression.CastExpression_1_0 returns MinusExpression
 	 *     OrExpression returns MinusExpression
 	 *     OrExpression.OrExpression_1_0 returns MinusExpression
 	 *     AndExpression returns MinusExpression
@@ -368,12 +433,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Addition returns MinusExpression
 	 *     Addition.PlusExpression_1_0_0 returns MinusExpression
 	 *     Addition.MinusExpression_1_1_0 returns MinusExpression
-	 *     Multiplication returns MinusExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns MinusExpression
-	 *     Multiplication.DivExpression_1_1_0 returns MinusExpression
-	 *     Modulo returns MinusExpression
-	 *     Modulo.ModExpression_1_0 returns MinusExpression
-	 *     Primary returns MinusExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Addition_MinusExpression_1_1_0 rhs=Multiplication)
@@ -395,6 +454,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns PlusExpression
+	 *     CastExpression returns PlusExpression
+	 *     CastExpression.CastExpression_1_0 returns PlusExpression
 	 *     OrExpression returns PlusExpression
 	 *     OrExpression.OrExpression_1_0 returns PlusExpression
 	 *     AndExpression returns PlusExpression
@@ -410,12 +471,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Addition returns PlusExpression
 	 *     Addition.PlusExpression_1_0_0 returns PlusExpression
 	 *     Addition.MinusExpression_1_1_0 returns PlusExpression
-	 *     Multiplication returns PlusExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns PlusExpression
-	 *     Multiplication.DivExpression_1_1_0 returns PlusExpression
-	 *     Modulo returns PlusExpression
-	 *     Modulo.ModExpression_1_0 returns PlusExpression
-	 *     Primary returns PlusExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Addition_PlusExpression_1_0_0 rhs=Multiplication)
@@ -437,27 +492,12 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns AndExpression
+	 *     CastExpression returns AndExpression
+	 *     CastExpression.CastExpression_1_0 returns AndExpression
 	 *     OrExpression returns AndExpression
 	 *     OrExpression.OrExpression_1_0 returns AndExpression
 	 *     AndExpression returns AndExpression
 	 *     AndExpression.AndExpression_1_0 returns AndExpression
-	 *     Equality returns AndExpression
-	 *     Equality.EqualsExpression_1_0_0 returns AndExpression
-	 *     Equality.NotEqualsExpression_1_1_0 returns AndExpression
-	 *     Comparaison returns AndExpression
-	 *     Comparaison.GreaterExpression_1_0_0 returns AndExpression
-	 *     Comparaison.LowerExpression_1_1_0 returns AndExpression
-	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns AndExpression
-	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns AndExpression
-	 *     Addition returns AndExpression
-	 *     Addition.PlusExpression_1_0_0 returns AndExpression
-	 *     Addition.MinusExpression_1_1_0 returns AndExpression
-	 *     Multiplication returns AndExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns AndExpression
-	 *     Multiplication.DivExpression_1_1_0 returns AndExpression
-	 *     Modulo returns AndExpression
-	 *     Modulo.ModExpression_1_0 returns AndExpression
-	 *     Primary returns AndExpression
 	 *
 	 * Constraint:
 	 *     (lhs=AndExpression_AndExpression_1_0 rhs=Equality)
@@ -478,7 +518,21 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     AnnotatedElement returns AnnotatedElement
+	 *
+	 * Constraint:
+	 *     annotations+=PlatformAnnotation+
+	 */
+	protected void sequence_AnnotatedElement(ISerializationContext context, AnnotatedElement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Expression returns ArrayIndex
+	 *     CastExpression returns ArrayIndex
+	 *     CastExpression.CastExpression_1_0 returns ArrayIndex
 	 *     OrExpression returns ArrayIndex
 	 *     OrExpression.OrExpression_1_0 returns ArrayIndex
 	 *     AndExpression returns ArrayIndex
@@ -522,6 +576,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns BooleanLiteral
+	 *     CastExpression returns BooleanLiteral
+	 *     CastExpression.CastExpression_1_0 returns BooleanLiteral
 	 *     OrExpression returns BooleanLiteral
 	 *     OrExpression.OrExpression_1_0 returns BooleanLiteral
 	 *     AndExpression returns BooleanLiteral
@@ -549,7 +605,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     BooleanLiteral returns BooleanLiteral
 	 *
 	 * Constraint:
-	 *     (boolValue='true' | boolValue='false')
+	 *     boolValue?='true'?
 	 */
 	protected void sequence_BooleanLiteral(ISerializationContext context, BooleanLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -558,7 +614,22 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     Expression returns CastExpression
+	 *     CastExpression returns CastExpression
+	 *
+	 * Constraint:
+	 *     (term=CastExpression_CastExpression_1_0 type=[Type|ID] isArray?='['?)
+	 */
+	protected void sequence_CastExpression(ISerializationContext context, CastExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Expression returns GreaterExpression
+	 *     CastExpression returns GreaterExpression
+	 *     CastExpression.CastExpression_1_0 returns GreaterExpression
 	 *     OrExpression returns GreaterExpression
 	 *     OrExpression.OrExpression_1_0 returns GreaterExpression
 	 *     AndExpression returns GreaterExpression
@@ -571,15 +642,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Comparaison.LowerExpression_1_1_0 returns GreaterExpression
 	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns GreaterExpression
 	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns GreaterExpression
-	 *     Addition returns GreaterExpression
-	 *     Addition.PlusExpression_1_0_0 returns GreaterExpression
-	 *     Addition.MinusExpression_1_1_0 returns GreaterExpression
-	 *     Multiplication returns GreaterExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns GreaterExpression
-	 *     Multiplication.DivExpression_1_1_0 returns GreaterExpression
-	 *     Modulo returns GreaterExpression
-	 *     Modulo.ModExpression_1_0 returns GreaterExpression
-	 *     Primary returns GreaterExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Comparaison_GreaterExpression_1_0_0 rhs=Addition)
@@ -601,6 +663,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns GreaterOrEqualExpression
+	 *     CastExpression returns GreaterOrEqualExpression
+	 *     CastExpression.CastExpression_1_0 returns GreaterOrEqualExpression
 	 *     OrExpression returns GreaterOrEqualExpression
 	 *     OrExpression.OrExpression_1_0 returns GreaterOrEqualExpression
 	 *     AndExpression returns GreaterOrEqualExpression
@@ -613,15 +677,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Comparaison.LowerExpression_1_1_0 returns GreaterOrEqualExpression
 	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns GreaterOrEqualExpression
 	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns GreaterOrEqualExpression
-	 *     Addition returns GreaterOrEqualExpression
-	 *     Addition.PlusExpression_1_0_0 returns GreaterOrEqualExpression
-	 *     Addition.MinusExpression_1_1_0 returns GreaterOrEqualExpression
-	 *     Multiplication returns GreaterOrEqualExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns GreaterOrEqualExpression
-	 *     Multiplication.DivExpression_1_1_0 returns GreaterOrEqualExpression
-	 *     Modulo returns GreaterOrEqualExpression
-	 *     Modulo.ModExpression_1_0 returns GreaterOrEqualExpression
-	 *     Primary returns GreaterOrEqualExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Comparaison_GreaterOrEqualExpression_1_2_0 rhs=Addition)
@@ -643,6 +698,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns LowerExpression
+	 *     CastExpression returns LowerExpression
+	 *     CastExpression.CastExpression_1_0 returns LowerExpression
 	 *     OrExpression returns LowerExpression
 	 *     OrExpression.OrExpression_1_0 returns LowerExpression
 	 *     AndExpression returns LowerExpression
@@ -655,15 +712,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Comparaison.LowerExpression_1_1_0 returns LowerExpression
 	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns LowerExpression
 	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns LowerExpression
-	 *     Addition returns LowerExpression
-	 *     Addition.PlusExpression_1_0_0 returns LowerExpression
-	 *     Addition.MinusExpression_1_1_0 returns LowerExpression
-	 *     Multiplication returns LowerExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns LowerExpression
-	 *     Multiplication.DivExpression_1_1_0 returns LowerExpression
-	 *     Modulo returns LowerExpression
-	 *     Modulo.ModExpression_1_0 returns LowerExpression
-	 *     Primary returns LowerExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Comparaison_LowerExpression_1_1_0 rhs=Addition)
@@ -685,6 +733,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns LowerOrEqualExpression
+	 *     CastExpression returns LowerOrEqualExpression
+	 *     CastExpression.CastExpression_1_0 returns LowerOrEqualExpression
 	 *     OrExpression returns LowerOrEqualExpression
 	 *     OrExpression.OrExpression_1_0 returns LowerOrEqualExpression
 	 *     AndExpression returns LowerOrEqualExpression
@@ -697,15 +747,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Comparaison.LowerExpression_1_1_0 returns LowerOrEqualExpression
 	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns LowerOrEqualExpression
 	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns LowerOrEqualExpression
-	 *     Addition returns LowerOrEqualExpression
-	 *     Addition.PlusExpression_1_0_0 returns LowerOrEqualExpression
-	 *     Addition.MinusExpression_1_1_0 returns LowerOrEqualExpression
-	 *     Multiplication returns LowerOrEqualExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns LowerOrEqualExpression
-	 *     Multiplication.DivExpression_1_1_0 returns LowerOrEqualExpression
-	 *     Modulo returns LowerOrEqualExpression
-	 *     Modulo.ModExpression_1_0 returns LowerOrEqualExpression
-	 *     Primary returns LowerOrEqualExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Comparaison_LowerOrEqualExpression_1_3_0 rhs=Addition)
@@ -726,8 +767,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
-	 *     Region returns CompositeState
 	 *     CompositeState returns CompositeState
+	 *     StateContainer returns CompositeState
 	 *
 	 * Constraint:
 	 *     (
@@ -739,7 +780,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *         entry=Action? 
 	 *         exit=Action? 
 	 *         (substate+=State | internal+=InternalTransition | outgoing+=Transition)* 
-	 *         region+=RegionOrSession*
+	 *         region+=Region? 
+	 *         (session+=Session? region+=Region?)*
 	 *     )
 	 */
 	protected void sequence_CompositeState(ISerializationContext context, CompositeState semanticObject) {
@@ -749,22 +791,12 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns CompositeState
 	 *     AnnotatedElement returns CompositeState
 	 *     State returns CompositeState
 	 *
 	 * Constraint:
 	 *     (
-	 *         (
-	 *             name=ID? 
-	 *             initial=[State|ID] 
-	 *             history?='history'? 
-	 *             annotations+=PlatformAnnotation* 
-	 *             properties+=Property* 
-	 *             entry=Action? 
-	 *             exit=Action? 
-	 *             (substate+=State | internal+=InternalTransition)* 
-	 *             region+=RegionOrSession*
-	 *         ) | 
 	 *         (
 	 *             name=ID 
 	 *             initial=[State|ID] 
@@ -774,7 +806,20 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *             entry=Action? 
 	 *             exit=Action? 
 	 *             (substate+=State | internal+=InternalTransition | outgoing+=Transition)* 
-	 *             region+=RegionOrSession*
+	 *             region+=Region? 
+	 *             (session+=Session? region+=Region?)*
+	 *         ) | 
+	 *         (
+	 *             name=ID? 
+	 *             initial=[State|ID] 
+	 *             history?='history'? 
+	 *             annotations+=PlatformAnnotation* 
+	 *             properties+=Property* 
+	 *             entry=Action? 
+	 *             exit=Action? 
+	 *             (substate+=State | internal+=InternalTransition)* 
+	 *             session+=Session? 
+	 *             (region+=Region? session+=Session?)*
 	 *         )
 	 *     )
 	 */
@@ -810,6 +855,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Configuration
 	 *     AnnotatedElement returns Configuration
 	 *     Configuration returns Configuration
 	 *
@@ -823,6 +869,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Connector
 	 *     AnnotatedElement returns Connector
 	 *     AbstractConnector returns Connector
 	 *     Connector returns Connector
@@ -856,7 +903,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.DECREMENT__VAR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getDecrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.getVar());
+		feeder.accept(grammarAccess.getDecrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.eGet(ThingMLPackage.Literals.DECREMENT__VAR, false));
 		feeder.finish();
 	}
 	
@@ -864,6 +911,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns DoubleLiteral
+	 *     CastExpression returns DoubleLiteral
+	 *     CastExpression.CastExpression_1_0 returns DoubleLiteral
 	 *     OrExpression returns DoubleLiteral
 	 *     OrExpression.OrExpression_1_0 returns DoubleLiteral
 	 *     AndExpression returns DoubleLiteral
@@ -907,6 +956,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns EnumLiteralRef
+	 *     CastExpression returns EnumLiteralRef
+	 *     CastExpression.CastExpression_1_0 returns EnumLiteralRef
 	 *     OrExpression returns EnumLiteralRef
 	 *     OrExpression.OrExpression_1_0 returns EnumLiteralRef
 	 *     AndExpression returns EnumLiteralRef
@@ -944,14 +995,16 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.ENUM_LITERAL_REF__LITERAL));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getEnumLiteralRefAccess().getEnumEnumerationIDTerminalRuleCall_0_0_1(), semanticObject.getEnum());
-		feeder.accept(grammarAccess.getEnumLiteralRefAccess().getLiteralEnumerationLiteralIDTerminalRuleCall_2_0_1(), semanticObject.getLiteral());
+		feeder.accept(grammarAccess.getEnumLiteralRefAccess().getEnumEnumerationIDTerminalRuleCall_0_0_1(), semanticObject.eGet(ThingMLPackage.Literals.ENUM_LITERAL_REF__ENUM, false));
+		feeder.accept(grammarAccess.getEnumLiteralRefAccess().getLiteralEnumerationLiteralIDTerminalRuleCall_2_0_1(), semanticObject.eGet(ThingMLPackage.Literals.ENUM_LITERAL_REF__LITERAL, false));
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns EnumerationLiteral
+	 *     AnnotatedElement returns EnumerationLiteral
 	 *     EnumerationLiteral returns EnumerationLiteral
 	 *
 	 * Constraint:
@@ -964,6 +1017,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Enumeration
 	 *     AnnotatedElement returns Enumeration
 	 *     Type returns Enumeration
 	 *     Enumeration returns Enumeration
@@ -979,6 +1033,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns EqualsExpression
+	 *     CastExpression returns EqualsExpression
+	 *     CastExpression.CastExpression_1_0 returns EqualsExpression
 	 *     OrExpression returns EqualsExpression
 	 *     OrExpression.OrExpression_1_0 returns EqualsExpression
 	 *     AndExpression returns EqualsExpression
@@ -986,20 +1042,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Equality returns EqualsExpression
 	 *     Equality.EqualsExpression_1_0_0 returns EqualsExpression
 	 *     Equality.NotEqualsExpression_1_1_0 returns EqualsExpression
-	 *     Comparaison returns EqualsExpression
-	 *     Comparaison.GreaterExpression_1_0_0 returns EqualsExpression
-	 *     Comparaison.LowerExpression_1_1_0 returns EqualsExpression
-	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns EqualsExpression
-	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns EqualsExpression
-	 *     Addition returns EqualsExpression
-	 *     Addition.PlusExpression_1_0_0 returns EqualsExpression
-	 *     Addition.MinusExpression_1_1_0 returns EqualsExpression
-	 *     Multiplication returns EqualsExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns EqualsExpression
-	 *     Multiplication.DivExpression_1_1_0 returns EqualsExpression
-	 *     Modulo returns EqualsExpression
-	 *     Modulo.ModExpression_1_0 returns EqualsExpression
-	 *     Primary returns EqualsExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Equality_EqualsExpression_1_0_0 rhs=Comparaison)
@@ -1021,6 +1063,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns NotEqualsExpression
+	 *     CastExpression returns NotEqualsExpression
+	 *     CastExpression.CastExpression_1_0 returns NotEqualsExpression
 	 *     OrExpression returns NotEqualsExpression
 	 *     OrExpression.OrExpression_1_0 returns NotEqualsExpression
 	 *     AndExpression returns NotEqualsExpression
@@ -1028,20 +1072,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Equality returns NotEqualsExpression
 	 *     Equality.EqualsExpression_1_0_0 returns NotEqualsExpression
 	 *     Equality.NotEqualsExpression_1_1_0 returns NotEqualsExpression
-	 *     Comparaison returns NotEqualsExpression
-	 *     Comparaison.GreaterExpression_1_0_0 returns NotEqualsExpression
-	 *     Comparaison.LowerExpression_1_1_0 returns NotEqualsExpression
-	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns NotEqualsExpression
-	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns NotEqualsExpression
-	 *     Addition returns NotEqualsExpression
-	 *     Addition.PlusExpression_1_0_0 returns NotEqualsExpression
-	 *     Addition.MinusExpression_1_1_0 returns NotEqualsExpression
-	 *     Multiplication returns NotEqualsExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns NotEqualsExpression
-	 *     Multiplication.DivExpression_1_1_0 returns NotEqualsExpression
-	 *     Modulo returns NotEqualsExpression
-	 *     Modulo.ModExpression_1_0 returns NotEqualsExpression
-	 *     Primary returns NotEqualsExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Equality_NotEqualsExpression_1_1_0 rhs=Comparaison)
@@ -1082,6 +1112,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns EventReference
+	 *     CastExpression returns EventReference
+	 *     CastExpression.CastExpression_1_0 returns EventReference
 	 *     OrExpression returns EventReference
 	 *     OrExpression.OrExpression_1_0 returns EventReference
 	 *     AndExpression returns EventReference
@@ -1119,8 +1151,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.EVENT_REFERENCE__PARAMETER));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getEventReferenceAccess().getReceiveMsgEventIDTerminalRuleCall_0_0_1(), semanticObject.getReceiveMsg());
-		feeder.accept(grammarAccess.getEventReferenceAccess().getParameterParameterIDTerminalRuleCall_2_0_1(), semanticObject.getParameter());
+		feeder.accept(grammarAccess.getEventReferenceAccess().getReceiveMsgEventIDTerminalRuleCall_0_0_1(), semanticObject.eGet(ThingMLPackage.Literals.EVENT_REFERENCE__RECEIVE_MSG, false));
+		feeder.accept(grammarAccess.getEventReferenceAccess().getParameterParameterIDTerminalRuleCall_2_0_1(), semanticObject.eGet(ThingMLPackage.Literals.EVENT_REFERENCE__PARAMETER, false));
 		feeder.finish();
 	}
 	
@@ -1128,6 +1160,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns ExternExpression
+	 *     CastExpression returns ExternExpression
+	 *     CastExpression.CastExpression_1_0 returns ExternExpression
 	 *     OrExpression returns ExternExpression
 	 *     OrExpression.OrExpression_1_0 returns ExternExpression
 	 *     AndExpression returns ExternExpression
@@ -1177,6 +1211,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns ExternalConnector
 	 *     AnnotatedElement returns ExternalConnector
 	 *     AbstractConnector returns ExternalConnector
 	 *     ExternalConnector returns ExternalConnector
@@ -1191,9 +1226,10 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns FinalState
 	 *     AnnotatedElement returns FinalState
-	 *     FinalState returns FinalState
 	 *     State returns FinalState
+	 *     FinalState returns FinalState
 	 *
 	 * Constraint:
 	 *     (name=ID annotations+=PlatformAnnotation* entry=Action?)
@@ -1206,6 +1242,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns FunctionCallExpression
+	 *     CastExpression returns FunctionCallExpression
+	 *     CastExpression.CastExpression_1_0 returns FunctionCallExpression
 	 *     OrExpression returns FunctionCallExpression
 	 *     OrExpression.OrExpression_1_0 returns FunctionCallExpression
 	 *     AndExpression returns FunctionCallExpression
@@ -1255,19 +1293,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
-	 *     AnnotatedElement returns Function
-	 *     Function returns Function
-	 *
-	 * Constraint:
-	 *     (name=ID (parameters+=Parameter parameters+=Parameter*)? typeRef=TypeRef? annotations+=PlatformAnnotation* body=Action)
-	 */
-	protected void sequence_Function(ISerializationContext context, Function semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     Action returns Increment
 	 *     Increment returns Increment
 	 *
@@ -1280,13 +1305,14 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.INCREMENT__VAR));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getIncrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.getVar());
+		feeder.accept(grammarAccess.getIncrementAccess().getVarVariableIDTerminalRuleCall_0_0_1(), semanticObject.eGet(ThingMLPackage.Literals.INCREMENT__VAR, false));
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Instance
 	 *     AnnotatedElement returns Instance
 	 *     Instance returns Instance
 	 *
@@ -1301,6 +1327,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns IntegerLiteral
+	 *     CastExpression returns IntegerLiteral
+	 *     CastExpression.CastExpression_1_0 returns IntegerLiteral
 	 *     OrExpression returns IntegerLiteral
 	 *     OrExpression.OrExpression_1_0 returns IntegerLiteral
 	 *     AndExpression returns IntegerLiteral
@@ -1343,6 +1371,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns InternalPort
 	 *     AnnotatedElement returns InternalPort
 	 *     Port returns InternalPort
 	 *     InternalPort returns InternalPort
@@ -1357,6 +1386,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns InternalTransition
 	 *     AnnotatedElement returns InternalTransition
 	 *     Handler returns InternalTransition
 	 *     InternalTransition returns InternalTransition
@@ -1371,13 +1401,14 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns LocalVariable
 	 *     AnnotatedElement returns LocalVariable
-	 *     Action returns LocalVariable
 	 *     Variable returns LocalVariable
+	 *     Action returns LocalVariable
 	 *     LocalVariable returns LocalVariable
 	 *
 	 * Constraint:
-	 *     (changeable?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
+	 *     (readonly?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
 	 */
 	protected void sequence_LocalVariable(ISerializationContext context, LocalVariable semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1408,6 +1439,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Message
 	 *     AnnotatedElement returns Message
 	 *     Message returns Message
 	 *
@@ -1422,6 +1454,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns ModExpression
+	 *     CastExpression returns ModExpression
+	 *     CastExpression.CastExpression_1_0 returns ModExpression
 	 *     OrExpression returns ModExpression
 	 *     OrExpression.OrExpression_1_0 returns ModExpression
 	 *     AndExpression returns ModExpression
@@ -1441,8 +1475,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Multiplication.TimesExpression_1_0_0 returns ModExpression
 	 *     Multiplication.DivExpression_1_1_0 returns ModExpression
 	 *     Modulo returns ModExpression
-	 *     Modulo.ModExpression_1_0 returns ModExpression
-	 *     Primary returns ModExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Modulo_ModExpression_1_0 rhs=Expression)
@@ -1464,6 +1496,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns DivExpression
+	 *     CastExpression returns DivExpression
+	 *     CastExpression.CastExpression_1_0 returns DivExpression
 	 *     OrExpression returns DivExpression
 	 *     OrExpression.OrExpression_1_0 returns DivExpression
 	 *     AndExpression returns DivExpression
@@ -1482,9 +1516,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Multiplication returns DivExpression
 	 *     Multiplication.TimesExpression_1_0_0 returns DivExpression
 	 *     Multiplication.DivExpression_1_1_0 returns DivExpression
-	 *     Modulo returns DivExpression
-	 *     Modulo.ModExpression_1_0 returns DivExpression
-	 *     Primary returns DivExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Multiplication_DivExpression_1_1_0 rhs=Modulo)
@@ -1506,6 +1537,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns TimesExpression
+	 *     CastExpression returns TimesExpression
+	 *     CastExpression.CastExpression_1_0 returns TimesExpression
 	 *     OrExpression returns TimesExpression
 	 *     OrExpression.OrExpression_1_0 returns TimesExpression
 	 *     AndExpression returns TimesExpression
@@ -1524,9 +1557,6 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *     Multiplication returns TimesExpression
 	 *     Multiplication.TimesExpression_1_0_0 returns TimesExpression
 	 *     Multiplication.DivExpression_1_1_0 returns TimesExpression
-	 *     Modulo returns TimesExpression
-	 *     Modulo.ModExpression_1_0 returns TimesExpression
-	 *     Primary returns TimesExpression
 	 *
 	 * Constraint:
 	 *     (lhs=Multiplication_TimesExpression_1_0_0 rhs=Modulo)
@@ -1547,6 +1577,25 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns NamedElement
+	 *
+	 * Constraint:
+	 *     name=ID
+	 */
+	protected void sequence_NamedElement(ISerializationContext context, NamedElement semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.NAMED_ELEMENT__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.NAMED_ELEMENT__NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getNamedElementAccess().getNameIDTerminalRuleCall_14_1_0(), semanticObject.getName());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns ObjectType
 	 *     AnnotatedElement returns ObjectType
 	 *     Type returns ObjectType
 	 *     ObjectType returns ObjectType
@@ -1562,27 +1611,10 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns OrExpression
+	 *     CastExpression returns OrExpression
+	 *     CastExpression.CastExpression_1_0 returns OrExpression
 	 *     OrExpression returns OrExpression
 	 *     OrExpression.OrExpression_1_0 returns OrExpression
-	 *     AndExpression returns OrExpression
-	 *     AndExpression.AndExpression_1_0 returns OrExpression
-	 *     Equality returns OrExpression
-	 *     Equality.EqualsExpression_1_0_0 returns OrExpression
-	 *     Equality.NotEqualsExpression_1_1_0 returns OrExpression
-	 *     Comparaison returns OrExpression
-	 *     Comparaison.GreaterExpression_1_0_0 returns OrExpression
-	 *     Comparaison.LowerExpression_1_1_0 returns OrExpression
-	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns OrExpression
-	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns OrExpression
-	 *     Addition returns OrExpression
-	 *     Addition.PlusExpression_1_0_0 returns OrExpression
-	 *     Addition.MinusExpression_1_1_0 returns OrExpression
-	 *     Multiplication returns OrExpression
-	 *     Multiplication.TimesExpression_1_0_0 returns OrExpression
-	 *     Multiplication.DivExpression_1_1_0 returns OrExpression
-	 *     Modulo returns OrExpression
-	 *     Modulo.ModExpression_1_0 returns OrExpression
-	 *     Primary returns OrExpression
 	 *
 	 * Constraint:
 	 *     (lhs=OrExpression_OrExpression_1_0 rhs=AndExpression)
@@ -1603,31 +1635,10 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
-	 *     AnnotatedElement returns ParallelRegion
-	 *     Region returns ParallelRegion
-	 *     RegionOrSession returns ParallelRegion
-	 *     ParallelRegion returns ParallelRegion
-	 *
-	 * Constraint:
-	 *     (
-	 *         name=ID? 
-	 *         initial=[State|ID] 
-	 *         history?='history'? 
-	 *         annotations+=PlatformAnnotation* 
-	 *         substate+=State* 
-	 *         region+=RegionOrSession*
-	 *     )
-	 */
-	protected void sequence_ParallelRegion(ISerializationContext context, ParallelRegion semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
+	 *     NamedElement returns Parameter
 	 *     AnnotatedElement returns Parameter
-	 *     Parameter returns Parameter
 	 *     Variable returns Parameter
+	 *     Parameter returns Parameter
 	 *
 	 * Constraint:
 	 *     (name=ID typeRef=TypeRef annotations+=PlatformAnnotation*)
@@ -1660,7 +1671,50 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     Expression returns ExpressionGroup
+	 *     CastExpression returns ExpressionGroup
+	 *     CastExpression.CastExpression_1_0 returns ExpressionGroup
+	 *     OrExpression returns ExpressionGroup
+	 *     OrExpression.OrExpression_1_0 returns ExpressionGroup
+	 *     AndExpression returns ExpressionGroup
+	 *     AndExpression.AndExpression_1_0 returns ExpressionGroup
+	 *     Equality returns ExpressionGroup
+	 *     Equality.EqualsExpression_1_0_0 returns ExpressionGroup
+	 *     Equality.NotEqualsExpression_1_1_0 returns ExpressionGroup
+	 *     Comparaison returns ExpressionGroup
+	 *     Comparaison.GreaterExpression_1_0_0 returns ExpressionGroup
+	 *     Comparaison.LowerExpression_1_1_0 returns ExpressionGroup
+	 *     Comparaison.GreaterOrEqualExpression_1_2_0 returns ExpressionGroup
+	 *     Comparaison.LowerOrEqualExpression_1_3_0 returns ExpressionGroup
+	 *     Addition returns ExpressionGroup
+	 *     Addition.PlusExpression_1_0_0 returns ExpressionGroup
+	 *     Addition.MinusExpression_1_1_0 returns ExpressionGroup
+	 *     Multiplication returns ExpressionGroup
+	 *     Multiplication.TimesExpression_1_0_0 returns ExpressionGroup
+	 *     Multiplication.DivExpression_1_1_0 returns ExpressionGroup
+	 *     Modulo returns ExpressionGroup
+	 *     Modulo.ModExpression_1_0 returns ExpressionGroup
+	 *     Primary returns ExpressionGroup
+	 *
+	 * Constraint:
+	 *     term=Expression
+	 */
+	protected void sequence_Primary(ISerializationContext context, ExpressionGroup semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.EXPRESSION_GROUP__TERM) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.EXPRESSION_GROUP__TERM));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getPrimaryAccess().getTermExpressionParserRuleCall_0_2_0(), semanticObject.getTerm());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     Expression returns NotExpression
+	 *     CastExpression returns NotExpression
+	 *     CastExpression.CastExpression_1_0 returns NotExpression
 	 *     OrExpression returns NotExpression
 	 *     OrExpression.OrExpression_1_0 returns NotExpression
 	 *     AndExpression returns NotExpression
@@ -1700,6 +1754,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns UnaryMinus
+	 *     CastExpression returns UnaryMinus
+	 *     CastExpression.CastExpression_1_0 returns UnaryMinus
 	 *     OrExpression returns UnaryMinus
 	 *     OrExpression.OrExpression_1_0 returns UnaryMinus
 	 *     AndExpression returns UnaryMinus
@@ -1738,6 +1794,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns PrimitiveType
 	 *     AnnotatedElement returns PrimitiveType
 	 *     Type returns PrimitiveType
 	 *     PrimitiveType returns PrimitiveType
@@ -1785,6 +1842,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns PropertyReference
+	 *     CastExpression returns PropertyReference
+	 *     CastExpression.CastExpression_1_0 returns PropertyReference
 	 *     OrExpression returns PropertyReference
 	 *     OrExpression.OrExpression_1_0 returns PropertyReference
 	 *     AndExpression returns PropertyReference
@@ -1820,19 +1879,20 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.PROPERTY_REFERENCE__PROPERTY));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getPropertyReferenceAccess().getPropertyVariableIDTerminalRuleCall_0_1(), semanticObject.getProperty());
+		feeder.accept(grammarAccess.getPropertyReferenceAccess().getPropertyVariableIDTerminalRuleCall_0_1(), semanticObject.eGet(ThingMLPackage.Literals.PROPERTY_REFERENCE__PROPERTY, false));
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Property
 	 *     AnnotatedElement returns Property
-	 *     Property returns Property
 	 *     Variable returns Property
+	 *     Property returns Property
 	 *
 	 * Constraint:
-	 *     (changeable?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
+	 *     (readonly?='readonly'? name=ID typeRef=TypeRef init=Expression? annotations+=PlatformAnnotation*)
 	 */
 	protected void sequence_Property(ISerializationContext context, Property semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1841,6 +1901,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Protocol
 	 *     AnnotatedElement returns Protocol
 	 *     Protocol returns Protocol
 	 *
@@ -1854,6 +1915,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns ProvidedPort
 	 *     AnnotatedElement returns ProvidedPort
 	 *     Port returns ProvidedPort
 	 *     ProvidedPort returns ProvidedPort
@@ -1868,6 +1930,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns ReceiveMessage
 	 *     Event returns ReceiveMessage
 	 *     ReceiveMessage returns ReceiveMessage
 	 *
@@ -1881,6 +1944,22 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Region
+	 *     AnnotatedElement returns Region
+	 *     Region returns Region
+	 *     StateContainer returns Region
+	 *
+	 * Constraint:
+	 *     (name=ID? initial=[State|ID] history?='history'? annotations+=PlatformAnnotation* substate+=State*)
+	 */
+	protected void sequence_Region(ISerializationContext context, Region semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns RequiredPort
 	 *     AnnotatedElement returns RequiredPort
 	 *     Port returns RequiredPort
 	 *     RequiredPort returns RequiredPort
@@ -1932,23 +2011,13 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Session
 	 *     AnnotatedElement returns Session
-	 *     Region returns Session
-	 *     RegionOrSession returns Session
 	 *     Session returns Session
+	 *     StateContainer returns Session
 	 *
 	 * Constraint:
-	 *     (
-	 *         name=ID 
-	 *         maxInstances=INT? 
-	 *         initial=[State|ID] 
-	 *         annotations+=PlatformAnnotation* 
-	 *         properties+=Property* 
-	 *         entry=Action? 
-	 *         exit=Action? 
-	 *         (substate+=State | internal+=InternalTransition)* 
-	 *         region+=RegionOrSession*
-	 *     )
+	 *     (name=ID (maxInstances=IntegerLiteral | maxInstances=PropertyReference)? initial=[State|ID] annotations+=PlatformAnnotation* substate+=State*)
 	 */
 	protected void sequence_Session(ISerializationContext context, Session semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1969,8 +2038,22 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.START_SESSION__SESSION));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getStartSessionAccess().getSessionSessionIDTerminalRuleCall_1_0_1(), semanticObject.getSession());
+		feeder.accept(grammarAccess.getStartSessionAccess().getSessionSessionIDTerminalRuleCall_1_0_1(), semanticObject.eGet(ThingMLPackage.Literals.START_SESSION__SESSION, false));
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns StateContainer
+	 *     AnnotatedElement returns StateContainer
+	 *     StateContainer returns StateContainer
+	 *
+	 * Constraint:
+	 *     (initial=[State|ID] history?='history'? substate+=State*)
+	 */
+	protected void sequence_StateContainer(ISerializationContext context, StateContainer semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -1988,7 +2071,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *         entry=Action? 
 	 *         exit=Action? 
 	 *         (substate+=State | internal+=InternalTransition)* 
-	 *         region+=RegionOrSession*
+	 *         region+=Region? 
+	 *         (session+=Session? region+=Region?)*
 	 *     )
 	 */
 	protected void sequence_StateMachine(ISerializationContext context, CompositeState semanticObject) {
@@ -1998,6 +2082,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns State
 	 *     AnnotatedElement returns State
 	 *     State returns State
 	 *
@@ -2019,6 +2104,8 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	/**
 	 * Contexts:
 	 *     Expression returns StringLiteral
+	 *     CastExpression returns StringLiteral
+	 *     CastExpression.CastExpression_1_0 returns StringLiteral
 	 *     OrExpression returns StringLiteral
 	 *     OrExpression.OrExpression_1_0 returns StringLiteral
 	 *     AndExpression returns StringLiteral
@@ -2073,6 +2160,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Thing
 	 *     AnnotatedElement returns Thing
 	 *     Type returns Thing
 	 *     Thing returns Thing
@@ -2100,6 +2188,7 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	
 	/**
 	 * Contexts:
+	 *     NamedElement returns Transition
 	 *     AnnotatedElement returns Transition
 	 *     Handler returns Transition
 	 *     Transition returns Transition
@@ -2141,6 +2230,29 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 */
 	protected void sequence_VariableAssignment(ISerializationContext context, VariableAssignment semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamedElement returns Variable
+	 *     AnnotatedElement returns Variable
+	 *     Variable returns Variable
+	 *
+	 * Constraint:
+	 *     (name=ID typeRef=TypeRef)
+	 */
+	protected void sequence_Variable(ISerializationContext context, Variable semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.NAMED_ELEMENT__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.NAMED_ELEMENT__NAME));
+			if (transientValues.isValueTransient(semanticObject, ThingMLPackage.Literals.VARIABLE__TYPE_REF) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, ThingMLPackage.Literals.VARIABLE__TYPE_REF));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getVariableAccess().getNameIDTerminalRuleCall_0_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getVariableAccess().getTypeRefTypeRefParserRuleCall_0_3_0(), semanticObject.getTypeRef());
+		feeder.finish();
 	}
 	
 	

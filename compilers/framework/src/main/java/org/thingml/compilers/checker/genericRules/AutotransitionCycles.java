@@ -21,21 +21,21 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.State;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.CompositeStateHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingHelper;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
-import org.thingml.compilers.checker.Tarjan;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.Rule;
+import org.thingml.compilers.checker.Tarjan;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  *
@@ -65,7 +65,7 @@ public class AutotransitionCycles extends Rule {
     @Override
     public void check(Configuration cfg, Checker checker) {
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {
-            for (StateMachine sm : ThingMLHelpers.allStateMachines(thing)) {
+            for (CompositeState sm : ThingMLHelpers.allStateMachines(thing)) {
                 Set<State> vertices = new HashSet<State>();
                 for (State s : CompositeStateHelper.allContainedStates(sm)) {
                     vertices.add(s);

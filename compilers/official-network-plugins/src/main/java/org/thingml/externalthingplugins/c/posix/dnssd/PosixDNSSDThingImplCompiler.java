@@ -19,15 +19,21 @@ package org.thingml.externalthingplugins.c.posix.dnssd;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.CompositeStateHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
 import org.thingml.externalthingplugins.c.posix.dnssd.utils.DNSSDUtils;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by vassik on 01.11.16.
@@ -166,7 +172,7 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
 
-        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
 
 
         builder.append("void " + getCppNameScope() + ThingMLElementHelper.qname(sm, "_") + "_OnEntry(int state, ");
@@ -175,18 +181,18 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
         builder.append("switch(state) {\n");
 
         //there must be one empty state
-        CompositeState cs = CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm).get(0);
+        CompositeState cs = CompositeStateHelper.allContainedCompositeStatesIncludingSessions(sm).iterator().next();
 
         builder.append("case " + ctx.getStateID(cs) + ":{\n");
         if (debugProfile.isDebugBehavior()) {
             builder.append(thing.getName() + "_print_debug(" + ctx.getInstanceVarName() + ", \""
                     + ctx.traceOnEntry(thing, sm) + "\\n\");\n");
         }
-        ArrayList<Region> regions = new ArrayList<Region>();
+        ArrayList<StateContainer> regions = new ArrayList<StateContainer>();
         regions.add(cs);
         regions.addAll(cs.getRegion());
         // Init state
-        for (Region r : regions) {
+        for (StateContainer r : regions) {
             if (!r.isHistory()) {
                 builder.append(ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
@@ -196,7 +202,7 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
         builder.append("("+ ctx.getInstanceVarName() +");\n");
 
         // Recurse on contained states
-        for (Region r : regions) {
+        for (StateContainer r : regions) {
             builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName() + ");\n");
         }
 

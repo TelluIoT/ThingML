@@ -22,7 +22,7 @@ FILE* cpuFile = NULL;"
 		property transitionsCount : Long = 0
  	    property stateNumber: String = ""
         property time : LongLong = 0
-		
+
 		state Testing {
 
             internal event m : dump?testOut
@@ -31,23 +31,14 @@ FILE* cpuFile = NULL;"
             	transitionsCount=transitionsCount+1
             end
 
-            internal event dump?perfTestOut
-            action transitionsCount=transitionsCount+1
-            
-            transition -> Failed 
+            transition -> Failed
             event dump?testFailure
-            
+
             transition -> End
             event dumpEnd?testEnd
-
-            internal event m: dumpEnd?perfTestSize
-            action do
-                time = m.time
-                transitionsCount=transitionsCount+1
-            end
 		}
-		
-		state Failed {
+
+		final state Failed {
             on entry do
                 print("*FAILURE*\n")
                 'if (testFile != NULL) {
@@ -59,8 +50,8 @@ FILE* cpuFile = NULL;"
                 exit(-1);'
             end
 		}
-		
-		state End {
+
+		final state End {
 			on entry do
 
 print " [Done]\n End of thingml processus\n"

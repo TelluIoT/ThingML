@@ -16,25 +16,35 @@
  */
 package org.thingml.compilers.c;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.*;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
-import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.arduino.ArduinoThingCepCompiler;
-import org.thingml.compilers.c.cepHelper.CCepHelper;
-import org.thingml.compilers.interfaces.c.ICThingApiIncludesStrategy;
-import org.thingml.compilers.interfaces.c.ICThingApiPublicPrototypeStrategy;
-import org.thingml.compilers.interfaces.c.ICThingApiStateIDStrategy;
-import org.thingml.compilers.interfaces.c.ICThingApiStructStrategy;
-import org.thingml.compilers.spi.ExternalThingPlugin;
-import org.thingml.compilers.thing.ThingApiCompiler;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.thingml.compilers.Context;
+import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.interfaces.c.ICThingApiIncludesStrategy;
+import org.thingml.compilers.interfaces.c.ICThingApiPublicPrototypeStrategy;
+import org.thingml.compilers.interfaces.c.ICThingApiStateIDStrategy;
+import org.thingml.compilers.interfaces.c.ICThingApiStructStrategy;
+import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.StateContainerHelper;
+import org.thingml.xtext.helpers.StateHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Type;
 
 
 public class CThingApiCompiler extends ThingApiCompiler {
@@ -107,9 +117,6 @@ public class CThingApiCompiler extends ThingApiCompiler {
         // Fetch code from the "c_header" annotations
         generateCHeaderAnnotation(thing, builder, ctx);
 
-        if (!CCepHelper.getStreamWithBuffer(thing).isEmpty())
-            ArduinoThingCepCompiler.generateCEPLibAPI(thing, builder, ctx);
-
         // Define the data structure for instances
         generateInstanceStruct(thing, builder, ctx, debugProfile);
 
@@ -169,8 +176,8 @@ public class CThingApiCompiler extends ThingApiCompiler {
         //Sessions
         builder.append("\n// Instances of different sessions\n");
         builder.append("bool active;\n");
-        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
-        for(Session s : RegionHelper.allContainedSessions(sm)) {
+        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
+        for(Session s : StateContainerHelper.allContainedSessions(sm)) {
             builder.append("struct " + ctx.getInstanceStructName(thing) + " * sessions_" + s.getName() + ";\n");
             builder.append("uint16_t nb_max_sessions_" + s.getName() + ";\n");
         }
@@ -214,7 +221,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         }
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
-            for (Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
+            for (StateContainer r : StateContainerHelper.allContainedRegionsAndSessions(sm)) {
                 builder.append("int " + ctx.getStateVarName(r) + ";\n");
             }
         }
@@ -222,22 +229,18 @@ public class CThingApiCompiler extends ThingApiCompiler {
         // Create variables for all the properties defined in the Thing and States
         builder.append("// Variables for the properties of the instance\n");
         for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-            builder.append(ctx.getCType(p.getType()) + " ");
-            if (p.getCardinality() != null) {//array
+            builder.append(ctx.getCType(p.getTypeRef().getType()) + " ");
+            if (p.getTypeRef().getCardinality() != null) {//array
                 builder.append("* ");
             }
             builder.append(ctx.getCVarName(p));
             builder.append(";\n");
-            if(p.getCardinality() != null) {//array
+            if(p.getTypeRef().getCardinality() != null) {//array
                 builder.append("uint16_t ");
                 builder.append(ctx.getCVarName(p));
                 builder.append("_size;\n");
             }
         }
-        builder.append("// CEP stream pointers\n");
-        for (Stream s : CCepHelper.getStreamWithBuffer(thing))
-            builder.append("stream_" + s.getName() + "* cep_" + s.getName() + ";\n");
-
         //TBD: the code above should be packed into strategies which we should iterate over and execute
         for(ICThingApiStructStrategy strategy : structStrategies)
             strategy.generateInstanceStruct(thing, builder, ctx, debugProfile);
@@ -249,7 +252,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
         builder.append("// Declaration of prototypes outgoing messages:\n");
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
-            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0); // There should be one and only one
+            CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0); // There should be one and only one
             // Entry actions
             builder.append("void " + ThingMLElementHelper.qname(sm, "_") + "_OnEntry(int state, ");
             builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
@@ -295,7 +298,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
     protected void generateStateIDs(Thing thing, StringBuilder builder, CCompilerContext ctx) {
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
-            StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+            CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
             builder.append("// Definition of the states:\n");
 
             List<State> states = CompositeStateHelper.allContainedStatesIncludingSessions(sm);

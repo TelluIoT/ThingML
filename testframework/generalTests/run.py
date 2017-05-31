@@ -1,4 +1,21 @@
 #!/usr/bin/python
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# See the NOTICE file distributed with this work for additional
+# information regarding copyright ownership.
+#
+
 
 import re
 import os
@@ -73,15 +90,23 @@ def build_docker_image(dockerfile_path, docker_image_name):
 def prep_job(job_folder, test_jar, compiler_jar, network_plugin_jar, test_src):
 	print "Copying files to : " + job_folder
 	test_jar_dest = os.path.join(job_folder, 'testJar.jar')
-	shutil.copy2(os.path.join(SCRIPT_ABSOLUTE_PATH, test_jar), test_jar_dest)
+	test_jar_cur = os.path.join(SCRIPT_ABSOLUTE_PATH, test_jar)
+	print "Copying '" + test_jar_cur + "' to '" + test_jar_dest + "'"
+	shutil.copy2(test_jar_cur, test_jar_dest)
 	compiler_jar_dest = os.path.join(job_folder, 'compilers.jar')
-	shutil.copy2(os.path.join(SCRIPT_ABSOLUTE_PATH, compiler_jar), compiler_jar_dest)
+	compiler_jar_cur = os.path.join(SCRIPT_ABSOLUTE_PATH, compiler_jar)
+	print "Copying '" + compiler_jar_cur + "' to '" + compiler_jar_dest + "'"
+	shutil.copy2(compiler_jar_cur, compiler_jar_dest)
 	network_plugin_jar_dest = os.path.join(job_folder, "official-network-plugins.jar")
-	shutil.copy2(os.path.join(SCRIPT_ABSOLUTE_PATH, network_plugin_jar), network_plugin_jar_dest)
+	network_plugin_jar_cur = os.path.join(SCRIPT_ABSOLUTE_PATH, network_plugin_jar)
+	print "Copying '" + network_plugin_jar_cur + "' to '" + network_plugin_jar_dest + "'"
+	shutil.copy2(network_plugin_jar_cur, network_plugin_jar_dest)
 	test_src_dest = os.path.join(job_folder, 'src')
-	shutil.copytree(os.path.join(SCRIPT_ABSOLUTE_PATH, test_src), test_src_dest)
+	test_src_cur = os.path.join(SCRIPT_ABSOLUTE_PATH, test_src)
+	print "Copying '" + test_src_cur + "' to '" + test_src_dest + "'"
+	shutil.copytree(test_src_cur, test_src_dest)
 
-	#rpace some flags
+	#replace some flags
 	contents = ''
 	with open(os.path.join(job_folder, 'config.properties'), 'r') as file:
 		contents = file.read()

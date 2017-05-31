@@ -16,22 +16,42 @@
  */
 package org.thingml.compilers;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.fusesource.jansi.Ansi;
-import org.sintef.thingml.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
-import org.thingml.compilers.spi.ExternalThingPlugin;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
-
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.io.FileUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+//import org.fusesource.jansi.Ansi;
+import org.thingml.compilers.spi.ExternalThingPlugin;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Connector;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Transition;
+import org.thingml.xtext.thingML.Variable;
 
 public class Context {
 
@@ -58,7 +78,7 @@ public class Context {
     private File outputDirectory = null;
     private Boolean atInitTimeLock = false;
 
-    public Ansi ansi = new Ansi();
+    //public Ansi ansi = new Ansi();
 
     public Context(ThingMLCompiler compiler) {
         this.debugStrings = new HashMap<Integer, String>();
@@ -311,9 +331,9 @@ public class Context {
         if (c.getName() != null)
             builder.append(c.getName());
         builder.append("_");
-        builder.append(getInstanceName(c.getCli().getInstance()) + "-" + c.getRequired());
+        builder.append(getInstanceName(c.getCli()) + "-" + c.getRequired());
         builder.append("_to_");
-        builder.append(getInstanceName(c.getSrv().getInstance()) + "-" + c.getProvided());
+        builder.append(getInstanceName(c.getSrv()) + "-" + c.getProvided());
         return builder.toString();
     }
 
@@ -379,7 +399,7 @@ public class Context {
         debugTraceWithID = b;
     }
 
-    public String traceOnEntry(Thing t, StateMachine sm) {
+    public String traceOnEntry(Thing t, CompositeState sm) {
         if (!debugTraceWithID) {
             return " (" + t.getName() + "): Enters " + sm.getName();
         } else {
@@ -387,17 +407,17 @@ public class Context {
         }
     }
 
-    public String traceOnEntry(Thing t, Region r, State s) {
+    public String traceOnEntry(Thing t, StateContainer r, State s) {
         if (!debugTraceWithID) {
-            return " (" + t.getName() + "): Enters " + r.getName() + ":" + s.getName();
+            return " (" + t.getName() + "): Enters " + ThingMLElementHelper.getName(r) + ":" + s.getName();
         } else {
             return null;
         }
     }
 
-    public String traceOnExit(Thing t, Region r, State s) {
+    public String traceOnExit(Thing t, StateContainer r, State s) {
         if (!debugTraceWithID) {
-            return " (" + t.getName() + "): Exits " + r.getName() + ":" + s.getName();
+            return " (" + t.getName() + "): Exits " + ThingMLElementHelper.getName(r) + ":" + s.getName();
         } else {
             return null;
         }
@@ -440,7 +460,7 @@ public class Context {
             if (p != null) {
                 return " (" + t.getName()
                         + "): transition "
-                        + tr.getSource().getName()
+                        + ((State)tr.eContainer()).getName()
                         + " -> " + tr.getTarget().getName() + " event "
                         + p.getName() + "?"
                         + m.getName();
@@ -456,7 +476,7 @@ public class Context {
         if (!debugTraceWithID) {
             return " (" + t.getName()
                     + "): transition "
-                    + tr.getSource().getName()
+                    + ((State)tr.eContainer()).getName()
                     + " -> " + tr.getTarget().getName();
         } else {
             return null;

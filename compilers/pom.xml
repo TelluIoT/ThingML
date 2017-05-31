@@ -27,9 +27,13 @@
     <parent>
         <groupId>org.thingml</groupId>
         <artifactId>org.thingml.root</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    
+  <properties>
+     <manifest-location>META-INF</manifest-location>
+  </properties>
 
     <modules>
         <module>framework</module>
@@ -41,6 +45,42 @@
         <module>thingmltools</module>
         <module>registry</module>
         <module>official-network-plugins</module>
+		<module>bundle</module>
     </modules>
-
+    <!-- 
+    <build>
+    <plugins>
+    <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.3.1</version>
+          <configuration>
+            <archive>
+              <manifestFile>${manifest-location}/MANIFEST.MF</manifestFile>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>2.1.0</version>
+          <configuration>
+            <manifestLocation>${manifest-location}</manifestLocation>
+          </configuration>
+        </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>bundle-manifest</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>manifest</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+ -->
 </project>

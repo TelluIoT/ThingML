@@ -64,9 +64,17 @@ public class lJavaScript extends TargetedLanguage {
             execCmd[2] = "node";
             execCmd[3] = "main.js";
         } else {
-            execCmd = new String[2];
-            execCmd[0] = "nodejs";
-            execCmd[1] = "main.js";
+
+            execCmd = new String[6];
+            execCmd[0] = "timeout";
+            execCmd[1] = "-s";
+            execCmd[2] = "9";
+            execCmd[3] = "30s";
+            execCmd[4] = "nodejs";
+            execCmd[5] = "main.js";
+            //execCmd = new String[2];
+            //execCmd[0] = "nodejs";
+            //execCmd[1] = "main.js";
         }
         
         return new Command(execCmd, ".+", null, "Error at JS execution", new File(t.genCodeDir, "/_" + compilerID + "/" + t.name + "_Cfg"));

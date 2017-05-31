@@ -21,12 +21,17 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.StateHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.StateHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.InternalTransition;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  *
@@ -64,7 +69,7 @@ public class InternalTransitions extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
-        for (StateMachine sm : ThingMLHelpers.allStateMachines(t)) {
+        for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
             for (Handler h : StateHelper.allEmptyHandlers(sm)) {
                 if (h instanceof InternalTransition) {
                     if (h.getGuard() == null) {

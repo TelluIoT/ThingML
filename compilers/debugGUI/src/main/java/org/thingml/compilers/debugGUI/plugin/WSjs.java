@@ -21,12 +21,16 @@
  */
 package org.thingml.compilers.debugGUI.plugin;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
+import java.util.Set;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.debugGUI.DebugGUINetworkLibraryGenerator;
-
-import java.util.Set;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PrimitiveType;
 
 /**
  *
@@ -99,7 +103,7 @@ public class WSjs extends DebugGUINetworkLibraryGenerator {
                         builder.append("tmp_param = document.getElementById(\"param_" + m.getName() + "_" + p.getName() + "\").value;\n");
                         builder.append("tolog += tmp_param;\n");
                         //builder.append("tosend += intToBytes(tmp_param, " + p.getType().annotation("c_byte_size").iterator().next() + ");\n");
-                        PrimitiveType ty = (PrimitiveType) p.getType();
+                        PrimitiveType ty = (PrimitiveType) p.getTypeRef().getType();
                         builder.append("tosend += \"" + p.getName() + " : \" + tmp_param;\n");
                     }
                     builder.append("tosend = \"}\";\n");

@@ -1,7 +1,7 @@
 import "../thingml.thingml"
 
 
-thing TestDouble includes Test 
+thing TestDouble includes Test
 @test "1234 # 1234"
 {
 
@@ -9,18 +9,18 @@ thing TestDouble includes Test
 	property b : Double = -0.00015
 	property c : Double = 0.0
 	property d : Double = 1.0
-    
+
     statechart TestType init S0 {
-    
+
     	state S0 {
     		internal
 			event m : harnessIn?testIn
-			guard m.c == '\'1\'' and (a == 3.14156)
+			guard m.c == '\'1\'' and (a-3.14156<0.01 and a-3.14156>-0.01) //Floats cannot be compared... used an epsilon-based comparison instead
 			action harnessOut!testOut('\'1\'')
 
     		internal
 			event m : harnessIn?testIn
-			guard m.c == '\'2\'' and (b == -0.00015)
+			guard m.c == '\'2\'' and (b+0.00015<0.01 and b+0.00015>-0.01) //Floats cannot be compared... used an epsilon-based comparison instead
 			action harnessOut!testOut('\'2\'')
 
     		internal

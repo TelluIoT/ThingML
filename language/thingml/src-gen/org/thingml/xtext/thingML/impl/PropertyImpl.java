@@ -1,17 +1,16 @@
 /**
- * *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  *
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  *
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *  *
+ *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
@@ -28,7 +27,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.ThingMLPackage;
-import org.thingml.xtext.thingML.TypeRef;
 
 /**
  * <!-- begin-user-doc -->
@@ -38,65 +36,33 @@ import org.thingml.xtext.thingML.TypeRef;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#isChangeable <em>Changeable</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getTypeRef <em>Type Ref</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#isReadonly <em>Readonly</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.PropertyImpl#getInit <em>Init</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class PropertyImpl extends AnnotatedElementImpl implements Property
+public class PropertyImpl extends VariableImpl implements Property
 {
   /**
-   * The default value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+   * The default value of the '{@link #isReadonly() <em>Readonly</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isChangeable()
+   * @see #isReadonly()
    * @generated
    * @ordered
    */
-  protected static final boolean CHANGEABLE_EDEFAULT = false;
+  protected static final boolean READONLY_EDEFAULT = false;
 
   /**
-   * The cached value of the '{@link #isChangeable() <em>Changeable</em>}' attribute.
+   * The cached value of the '{@link #isReadonly() <em>Readonly</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isChangeable()
+   * @see #isReadonly()
    * @generated
    * @ordered
    */
-  protected boolean changeable = CHANGEABLE_EDEFAULT;
-
-  /**
-   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected static final String NAME_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected String name = NAME_EDEFAULT;
-
-  /**
-   * The cached value of the '{@link #getTypeRef() <em>Type Ref</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getTypeRef()
-   * @generated
-   * @ordered
-   */
-  protected TypeRef typeRef;
+  protected boolean readonly = READONLY_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getInit() <em>Init</em>}' containment reference.
@@ -134,9 +100,9 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
    * <!-- end-user-doc -->
    * @generated
    */
-  public boolean isChangeable()
+  public boolean isReadonly()
   {
-    return changeable;
+    return readonly;
   }
 
   /**
@@ -144,83 +110,12 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setChangeable(boolean newChangeable)
+  public void setReadonly(boolean newReadonly)
   {
-    boolean oldChangeable = changeable;
-    changeable = newChangeable;
+    boolean oldReadonly = readonly;
+    readonly = newReadonly;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__CHANGEABLE, oldChangeable, changeable));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setName(String newName)
-  {
-    String oldName = name;
-    name = newName;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__NAME, oldName, name));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public TypeRef getTypeRef()
-  {
-    return typeRef;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public NotificationChain basicSetTypeRef(TypeRef newTypeRef, NotificationChain msgs)
-  {
-    TypeRef oldTypeRef = typeRef;
-    typeRef = newTypeRef;
-    if (eNotificationRequired())
-    {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__TYPE_REF, oldTypeRef, newTypeRef);
-      if (msgs == null) msgs = notification; else msgs.add(notification);
-    }
-    return msgs;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setTypeRef(TypeRef newTypeRef)
-  {
-    if (newTypeRef != typeRef)
-    {
-      NotificationChain msgs = null;
-      if (typeRef != null)
-        msgs = ((InternalEObject)typeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PROPERTY__TYPE_REF, null, msgs);
-      if (newTypeRef != null)
-        msgs = ((InternalEObject)newTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ThingMLPackage.PROPERTY__TYPE_REF, null, msgs);
-      msgs = basicSetTypeRef(newTypeRef, msgs);
-      if (msgs != null) msgs.dispatch();
-    }
-    else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__TYPE_REF, newTypeRef, newTypeRef));
+      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.PROPERTY__READONLY, oldReadonly, readonly));
   }
 
   /**
@@ -281,8 +176,6 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   {
     switch (featureID)
     {
-      case ThingMLPackage.PROPERTY__TYPE_REF:
-        return basicSetTypeRef(null, msgs);
       case ThingMLPackage.PROPERTY__INIT:
         return basicSetInit(null, msgs);
     }
@@ -299,12 +192,8 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   {
     switch (featureID)
     {
-      case ThingMLPackage.PROPERTY__CHANGEABLE:
-        return isChangeable();
-      case ThingMLPackage.PROPERTY__NAME:
-        return getName();
-      case ThingMLPackage.PROPERTY__TYPE_REF:
-        return getTypeRef();
+      case ThingMLPackage.PROPERTY__READONLY:
+        return isReadonly();
       case ThingMLPackage.PROPERTY__INIT:
         return getInit();
     }
@@ -321,14 +210,8 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   {
     switch (featureID)
     {
-      case ThingMLPackage.PROPERTY__CHANGEABLE:
-        setChangeable((Boolean)newValue);
-        return;
-      case ThingMLPackage.PROPERTY__NAME:
-        setName((String)newValue);
-        return;
-      case ThingMLPackage.PROPERTY__TYPE_REF:
-        setTypeRef((TypeRef)newValue);
+      case ThingMLPackage.PROPERTY__READONLY:
+        setReadonly((Boolean)newValue);
         return;
       case ThingMLPackage.PROPERTY__INIT:
         setInit((Expression)newValue);
@@ -347,14 +230,8 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   {
     switch (featureID)
     {
-      case ThingMLPackage.PROPERTY__CHANGEABLE:
-        setChangeable(CHANGEABLE_EDEFAULT);
-        return;
-      case ThingMLPackage.PROPERTY__NAME:
-        setName(NAME_EDEFAULT);
-        return;
-      case ThingMLPackage.PROPERTY__TYPE_REF:
-        setTypeRef((TypeRef)null);
+      case ThingMLPackage.PROPERTY__READONLY:
+        setReadonly(READONLY_EDEFAULT);
         return;
       case ThingMLPackage.PROPERTY__INIT:
         setInit((Expression)null);
@@ -373,12 +250,8 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
   {
     switch (featureID)
     {
-      case ThingMLPackage.PROPERTY__CHANGEABLE:
-        return changeable != CHANGEABLE_EDEFAULT;
-      case ThingMLPackage.PROPERTY__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case ThingMLPackage.PROPERTY__TYPE_REF:
-        return typeRef != null;
+      case ThingMLPackage.PROPERTY__READONLY:
+        return readonly != READONLY_EDEFAULT;
       case ThingMLPackage.PROPERTY__INIT:
         return init != null;
     }
@@ -396,10 +269,8 @@ public class PropertyImpl extends AnnotatedElementImpl implements Property
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (changeable: ");
-    result.append(changeable);
-    result.append(", name: ");
-    result.append(name);
+    result.append(" (readonly: ");
+    result.append(readonly);
     result.append(')');
     return result.toString();
   }

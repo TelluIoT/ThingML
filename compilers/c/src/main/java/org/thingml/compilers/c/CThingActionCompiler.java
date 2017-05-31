@@ -16,15 +16,27 @@
  */
 package org.thingml.compilers.c;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.c.cepHelper.CCepHelper;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
-
-import java.util.Map;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.BooleanLiteral;
+import org.thingml.xtext.thingML.ConfigPropertyAssign;
+import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.EventReference;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.FunctionCallExpression;
+import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.LocalVariable;
+import org.thingml.xtext.thingML.NamedElement;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.SendAction;
+import org.thingml.xtext.thingML.StartSession;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 
 public abstract class CThingActionCompiler extends CommonThingActionCompiler {
@@ -111,22 +123,22 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
         CCompilerContext context = (CCompilerContext) ctx;
 
-        String arr = action.isIsArray() && action.getCardinality() == null ? "*" : "";
+        String arr = action.getTypeRef().isIsArray() && action.getTypeRef().getCardinality() == null ? "*" : "";
 
-        String propertyName = context.getCType(action.getType()) +  arr + " " + action.getName();
+        String propertyName = context.getCType(action.getTypeRef().getType()) +  arr + " " + action.getName();
         builder.append(";");
         builder.append(propertyName);
-        if (action.getCardinality() != null) {//array declaration
+        if (action.getTypeRef().getCardinality() != null) {//array declaration
             StringBuilder tempBuilder = new StringBuilder();
-            generate(action.getCardinality(), tempBuilder, context);
+            generate(action.getTypeRef().getCardinality(), tempBuilder, context);
             builder.append("[" + tempBuilder.toString() + "];\n");
 
             if (action.getInit() != null && action.getInit() instanceof PropertyReference) {//we want to assign the array, we have to copy all values of the target array
                 PropertyReference pr = (PropertyReference) action.getInit();
-                if (pr.getProperty().getCardinality() != null) {
+                if (pr.getProperty().getTypeRef().getCardinality() != null) {
                     //the target is indeed an array
                     builder.append("int i;");
-                    builder.append("for(i = 0; i < sizeof(" + action.getName() + ") / sizeof(" + context.getCType(action.getType()) + "); i++) {\n");
+                    builder.append("for(i = 0; i < sizeof(" + action.getName() + ") / sizeof(" + context.getCType(action.getTypeRef().getType()) + "); i++) {\n");
                     builder.append(action.getName() + "[i] = ");
                     String propertyName2 = "";
                     if (pr.getProperty() instanceof Parameter) {
@@ -158,7 +170,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
 
     }
 
-    @Override
+    /*@Override
     public void generate(Reference expression, StringBuilder builder, Context ctx) {
         if (expression.getParameter() instanceof ArrayParamRef) {
             if (ctx instanceof CCompilerContext) {
@@ -207,7 +219,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
             throw new UnsupportedOperationException("Parameter " + expression.getParameter().getClass().getName() + " not supported");
         }
 
-    }
+    }*/
 
     @Override
     public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
@@ -218,10 +230,10 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
             if (!ctx.getAtInitTimeLock()) {
                 if (nctx.getConcreteInstance() != null) {
                     Property p = (Property) expression.getProperty();
-                    if (!p.isChangeable()) {
+                    if (p.isReadonly()) {
                         boolean found = false;
                         for (ConfigPropertyAssign pa : ctx.getCurrentConfiguration().getPropassigns()) {
-                            String tmp = ThingMLHelpers.findContainingConfiguration(pa.getInstance().getInstance()).getName() + "_" + pa.getInstance().getInstance().getName();
+                            String tmp = ThingMLHelpers.findContainingConfiguration(pa.getInstance()).getName() + "_" + pa.getInstance().getName();
 
                             if (nctx.getConcreteInstance().getName().equals(tmp)) {
                                 if (pa.getProperty().getName().compareTo(p.getName()) == 0) {
@@ -253,8 +265,8 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
     }
 
 
-    private String c_name(ThingMLElement t) {
-        return ((ThingMLElement) t.eContainer()).getName().toUpperCase() + "_" + t.getName().toUpperCase();
+    private String c_name(NamedElement t) {
+        return ((NamedElement) t.eContainer()).getName().toUpperCase() + "_" + t.getName().toUpperCase();
     }
 
     @Override
@@ -280,6 +292,10 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
             generate(p, builder, context);
         }
         builder.append(")");
+    }
+    
+    public void generate(EventReference expression, StringBuilder builder, Context ctx) {
+        builder.append(expression.getParameter().getName());
     }
 
     //TODO: check if some inherited methods should be overidden

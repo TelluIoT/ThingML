@@ -1,0 +1,26 @@
+import "../thingml.thingml"
+
+thing fragment Foo
+{
+
+  statechart behaviorFoo init INIT {
+    state INIT {}
+  }
+
+}
+
+thing TestCheckStateMachine includes Test, Foo
+@test "x # x"
+{
+    //Should fail because it should not be allowed to have two statechart in the composed thing
+
+    statechart TestAbstractFunction init INIT {
+
+    	state INIT {
+
+			     transition -> INIT
+			     event m : harnessIn?testIn
+			     guard m.c == '\'x\''
+    	}
+    }
+}

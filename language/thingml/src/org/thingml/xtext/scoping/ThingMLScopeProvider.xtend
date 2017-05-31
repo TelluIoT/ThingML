@@ -3,44 +3,39 @@
  */
 package org.thingml.xtext.scoping
 
+import java.util.ArrayList
+import org.eclipse.emf.ecore.ENamedElement
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.thingml.xtext.thingML.ThingMLPackage
 import org.eclipse.xtext.scoping.IScope
-import org.thingml.xtext.thingML.Port
-import org.sintef.thingml.constraints.ThingMLHelpers
-import org.thingml.xtext.thingML.Thing
 import org.eclipse.xtext.scoping.Scopes
-import org.thingml.xtext.thingML.SendAction
+import org.thingml.xtext.constraints.ThingMLHelpers
+import org.thingml.xtext.helpers.ConfigurationHelper
+import org.thingml.xtext.helpers.ThingMLElementHelper
+import org.thingml.xtext.thingML.CompositeState
 import org.thingml.xtext.thingML.ConfigPropertyAssign
+import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.thingML.Connector
 import org.thingml.xtext.thingML.Decrement
+import org.thingml.xtext.thingML.EnumLiteralRef
+import org.thingml.xtext.thingML.EventReference
 import org.thingml.xtext.thingML.ExternalConnector
 import org.thingml.xtext.thingML.Increment
 import org.thingml.xtext.thingML.Instance
-
+import org.thingml.xtext.thingML.Port
 import org.thingml.xtext.thingML.PropertyAssign
 import org.thingml.xtext.thingML.PropertyReference
 import org.thingml.xtext.thingML.ReceiveMessage
-
+import org.thingml.xtext.thingML.Region
+import org.thingml.xtext.thingML.SendAction
+import org.thingml.xtext.thingML.Session
 import org.thingml.xtext.thingML.StartSession
-import org.thingml.xtext.thingML.ThingMLModel
-import org.thingml.xtext.thingML.Transition
-import org.thingml.xtext.thingML.TypeRef
-import org.thingml.xtext.thingML.VariableAssignment
-import java.util.ArrayList
-import org.thingml.xtext.thingML.EnumLiteralRef
-import org.thingml.xtext.thingML.Configuration
-import org.thingml.xtext.helpers.ConfigurationHelper
 import org.thingml.xtext.thingML.State
-import org.thingml.xtext.thingML.*
-import org.thingml.xtext.helpers.CompositeStateHelper
-
-import org.eclipse.emf.ecore.ENamedElement
-import org.thingml.xtext.thingML.EventReference
-import java.util.logging.Handler
-import org.thingml.xtext.helpers.ThingMLElementHelper
-import org.thingml.xtext.helpers.ThingHelper
+import org.thingml.xtext.thingML.Thing
+import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.thingML.Transition
+import org.thingml.xtext.thingML.VariableAssignment
+import org.thingml.xtext.thingML.StateContainer
 
 /**
  * This class contains custom scoping description.
@@ -124,23 +119,20 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		else if (reference == p.typeRef_Type) {
 			return scopeForTypeRef_Type(context);
 		}
+		else if (reference == p.castExpression_Type) {
+			return scopeForCastExpression_Type(context);
+		}
 		else if (reference == p.variableAssignment_Property) {
 			return scopeForVariableAssignment_Property(context as VariableAssignment);
 		}
-		else if (reference == p.compositeState_Initial) {
-			return scopeForCompositeState_Initial(context as CompositeState);
-		}
-		else if (reference == p.parallelRegion_Initial) {
-			return scopeForParallelRegion_Initial(context as ParallelRegion);
+		else if (reference == p.stateContainer_Initial) {
+			return scopeForStateContainer_Initial(context as StateContainer);
 		}
 		else if (reference == p.eventReference_ReceiveMsg) {
 			return scopeForEventReference_ReceiveMsg(context as EventReference);
 		}
 		else if (reference == p.eventReference_Parameter) {
 			return scopeForEventReference_Parameter(context as EventReference);
-		}
-		else if (reference == p.session_Initial) {
-			return scopeForSession_Initial(context as Session);
 		}
 		else if (reference == p.startSession_Session) {
 			return scopeForStartSession_Session(context as StartSession);
@@ -159,6 +151,9 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	
 	protected ArrayList EMPTY = new ArrayList();
 	
+	def protected IScope scopeForStateContainer_Initial(StateContainer context) {
+		Scopes.scopeFor(context.substate);
+	}
 	
 	def protected IScope scopeForConfigurationInstances(Configuration context) {
 		Scopes.scopeFor(ConfigurationHelper.allInstances(context));
@@ -188,13 +183,8 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 		}
 	}
 	
-	def protected IScope scopeForCompositeState_Initial(CompositeState context) {
-		Scopes.scopeFor( context.substate );
-	}
 	
-	def protected IScope scopeForParallelRegion_Initial(ParallelRegion context) {
-		Scopes.scopeFor( context.substate );
-	}
+	
 	
 	def protected IScope scopeForPort_SendsReceives(Port context) {
 		Scopes.scopeFor( ThingMLHelpers.allMessages(context.eContainer as Thing) );
@@ -230,7 +220,7 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	}
 	
 	def protected IScope scopeForEnumLiteralRef_Enum(EnumLiteralRef context) {
-		Scopes.scopeFor( ThingMLHelpers.allEnnumerations(ThingMLHelpers.findContainingModel(context)) ); 
+		Scopes.scopeFor( ThingMLHelpers.allEnumerations(ThingMLHelpers.findContainingModel(context)) ); 
 	}
 	
 	def protected IScope scopeForEnumLiteralRef_Literal(EnumLiteralRef context) {
@@ -261,8 +251,6 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	
 	
 	def protected IScope scopeForPropertyAssign_Property(PropertyAssign context) {
-		val ss = ThingMLHelpers.findContainingStartSession(context)
-		if (ss != null) return Scopes.scopeFor( ss.session.properties );
 		
 		val t = ThingMLHelpers.findContainingThing(context)
 		if (t != null) return Scopes.scopeFor( ThingMLHelpers.allProperties(t) );
@@ -305,6 +293,11 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 	def protected IScope scopeForTypeRef_Type(EObject context) {
 		Scopes.scopeFor( ThingMLHelpers.allTypes(ThingMLHelpers.findContainingModel(context)) ); 
 	}
+	
+	def protected IScope scopeForCastExpression_Type(EObject context) {
+		Scopes.scopeFor( ThingMLHelpers.allTypes(ThingMLHelpers.findContainingModel(context)) ); 
+	}
+	
 	
 	def protected IScope scopeForVariableAssignment_Property(VariableAssignment context) {
 		Scopes.scopeFor( ThingMLHelpers.allVisibleVariables(context) );

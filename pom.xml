@@ -25,14 +25,14 @@
     <name>ThingML :: Root</name>
     <url>http://www.thingml.org</url>
 
-    <version>1.0.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <thingml.version>${project.version}</thingml.version>
-        <eclipse.version>3.8.0</eclipse.version>
-        <emf.version>2.7.0</emf.version>
         <bundle.vendor>SINTEF</bundle.vendor>
+	<maven.compiler.source>1.8</maven.compiler.source>
+	<maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <organization>
@@ -123,8 +123,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
@@ -205,12 +205,11 @@
     </repositories>
 
     <modules>
-        <module>org.emftext.commons.antlr3_4_0</module>
-		<module>org.thingml.model</module>
-        <module>org.thingml.parser</module>
+	<module>language/thingml.target</module>
+        <module>language/thingml</module>
+ 	<module>language/thingml.ide</module>
+	
         <module>compilers</module>
-        <module>org.thingml.editor.standalone</module>
-        <module>org.thingml.editor.eclipse</module>
         <!-- The standalone app can only be built on the server which has the keystore to sign the jar
         <module>../org.thingml.editor.standaloneApp</module>-->
         <!--<module>testJar</module>--><!--BUILT SEPARATELY-->

@@ -16,13 +16,16 @@
  */
 package org.thingml.compilers.javascript;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.thing.ThingApiCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by bmori on 09.12.2014.
@@ -35,8 +38,7 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
 
         builder.append("//ThingML-defined functions\n");
-        for (Function f : ThingMLHelpers.allFunctions(thing)) {
-            if (!AnnotatedElementHelper.isDefined(f, "abstract", "true")) {//should be refined in a PSM thing
+        for (Function f : ThingHelper.allConcreteFunctions(thing)) {
                 builder.append(ctx.firstToUpper(thing.getName()) + ".prototype." + f.getName() + " = function(");
                 int j = 0;
                 for (Parameter p : f.getParameters()) {
@@ -65,7 +67,6 @@ public class JSThingApiCompiler extends ThingApiCompiler {
                     builder.append("" + thing.getName() + "_print_debug(this, \"" + ctx.traceFunctionDone(thing, f) + "\");\n");
                 }*/
                 builder.append("};\n\n");
-            }
         }
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {
@@ -113,16 +114,13 @@ public class JSThingApiCompiler extends ThingApiCompiler {
 
             builder.append(ctx.firstToUpper(thing.getName()) + ".prototype._receive = function(msg) {//msg = {_port:myPort, _msg:myMessage, paramN=paramN, ...}\n");
             builder.append("if(this.ready){\n");
-            if (thing.getStreams().size() > 0) {
-                builder.append("this.cepDispatch(msg);\n");
-            }
             builder.append("StateJS.evaluate(this.statemachine, this." + ThingMLHelpers.allStateMachines(thing).get(0).getName() + "_instance" + ", msg);\n");
             if(ThingHelper.hasSession(thing)) {
                 builder.append("this.forks.forEach(function(fork){\n");
                 builder.append("fork._receive(msg);\n");
                 builder.append("});\n");
             }
-            builder.append("}};\n");
+            builder.append("} else { setTimeout(()=>this._receive(msg),0) }};\n");
 
             generatePublicPort(thing, builder, ctx);
         }

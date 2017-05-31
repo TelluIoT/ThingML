@@ -1,30 +1,39 @@
 /**
- * *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  *
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  *
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *  *
+ *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
 package org.thingml.xtext.thingML.impl;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLPackage;
 
@@ -36,33 +45,23 @@ import org.thingml.xtext.thingML.ThingMLPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.thingml.xtext.thingML.impl.InstanceImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.thingml.xtext.thingML.impl.InstanceImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.thingml.xtext.thingML.impl.InstanceImpl#getType <em>Type</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class InstanceImpl extends AnnotatedElementImpl implements Instance
+public class InstanceImpl extends NamedElementImpl implements Instance
 {
   /**
-   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getName()
+   * @see #getAnnotations()
    * @generated
    * @ordered
    */
-  protected static final String NAME_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getName()
-   * @generated
-   * @ordered
-   */
-  protected String name = NAME_EDEFAULT;
+  protected EList<PlatformAnnotation> annotations;
 
   /**
    * The cached value of the '{@link #getType() <em>Type</em>}' reference.
@@ -100,22 +99,13 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getName()
+  public EList<PlatformAnnotation> getAnnotations()
   {
-    return name;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setName(String newName)
-  {
-    String oldName = name;
-    name = newName;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, ThingMLPackage.INSTANCE__NAME, oldName, name));
+    if (annotations == null)
+    {
+      annotations = new EObjectContainmentEList<PlatformAnnotation>(PlatformAnnotation.class, this, ThingMLPackage.INSTANCE__ANNOTATIONS);
+    }
+    return annotations;
   }
 
   /**
@@ -167,12 +157,28 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance
    * @generated
    */
   @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  {
+    switch (featureID)
+    {
+      case ThingMLPackage.INSTANCE__ANNOTATIONS:
+        return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
+    }
+    return super.eInverseRemove(otherEnd, featureID, msgs);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
     {
-      case ThingMLPackage.INSTANCE__NAME:
-        return getName();
+      case ThingMLPackage.INSTANCE__ANNOTATIONS:
+        return getAnnotations();
       case ThingMLPackage.INSTANCE__TYPE:
         if (resolve) return getType();
         return basicGetType();
@@ -185,13 +191,15 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance
    * <!-- end-user-doc -->
    * @generated
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
     switch (featureID)
     {
-      case ThingMLPackage.INSTANCE__NAME:
-        setName((String)newValue);
+      case ThingMLPackage.INSTANCE__ANNOTATIONS:
+        getAnnotations().clear();
+        getAnnotations().addAll((Collection<? extends PlatformAnnotation>)newValue);
         return;
       case ThingMLPackage.INSTANCE__TYPE:
         setType((Thing)newValue);
@@ -210,8 +218,8 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance
   {
     switch (featureID)
     {
-      case ThingMLPackage.INSTANCE__NAME:
-        setName(NAME_EDEFAULT);
+      case ThingMLPackage.INSTANCE__ANNOTATIONS:
+        getAnnotations().clear();
         return;
       case ThingMLPackage.INSTANCE__TYPE:
         setType((Thing)null);
@@ -230,8 +238,8 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance
   {
     switch (featureID)
     {
-      case ThingMLPackage.INSTANCE__NAME:
-        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case ThingMLPackage.INSTANCE__ANNOTATIONS:
+        return annotations != null && !annotations.isEmpty();
       case ThingMLPackage.INSTANCE__TYPE:
         return type != null;
     }
@@ -244,15 +252,36 @@ public class InstanceImpl extends AnnotatedElementImpl implements Instance
    * @generated
    */
   @Override
-  public String toString()
+  public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass)
   {
-    if (eIsProxy()) return super.toString();
+    if (baseClass == AnnotatedElement.class)
+    {
+      switch (derivedFeatureID)
+      {
+        case ThingMLPackage.INSTANCE__ANNOTATIONS: return ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS;
+        default: return -1;
+      }
+    }
+    return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+  }
 
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (name: ");
-    result.append(name);
-    result.append(')');
-    return result.toString();
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass)
+  {
+    if (baseClass == AnnotatedElement.class)
+    {
+      switch (baseFeatureID)
+      {
+        case ThingMLPackage.ANNOTATED_ELEMENT__ANNOTATIONS: return ThingMLPackage.INSTANCE__ANNOTATIONS;
+        default: return -1;
+      }
+    }
+    return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
   }
 
 } //InstanceImpl

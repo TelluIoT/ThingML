@@ -1,0 +1,33 @@
+import "../thingml.thingml"
+
+thing fragment Foo
+{
+
+    abstract function foo()
+
+    function bar() do
+        foo()
+    end
+
+}
+
+thing TestCheckAbstractFunction includes Test, Foo
+@test "x # x"
+{
+    //Should fail because function foo is not implemented
+
+    statechart TestAbstractFunction init INIT {
+
+    	state INIT {
+
+			transition -> INIT
+			event m : harnessIn?testIn
+			guard m.c == '\'x\''
+			action do
+				foo()
+        bar()
+			end
+
+    	}
+    }
+}

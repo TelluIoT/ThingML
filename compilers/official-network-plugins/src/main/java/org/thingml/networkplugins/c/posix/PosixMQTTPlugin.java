@@ -21,21 +21,29 @@
  */
 package org.thingml.networkplugins.c.posix;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.impl.ThingmlFactoryImpl;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.thingml.compilers.Context;
-import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CCfgMainGenerator;
+import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
-
-import java.io.UnsupportedEncodingException;
-import java.util.*;
-
-import org.thingml.compilers.c.CPluginHelper;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLFactory;
+import org.thingml.xtext.thingML.impl.ThingMLFactoryImpl;
 
 /**
  *
@@ -69,8 +77,8 @@ public class PosixMQTTPlugin extends NetworkPlugin {
 
     private void addDependencies() {
         if (!ctx.hasAnnotationWithValue(cfg, "add_c_libraries", "mosquitto")) {
-            ThingmlFactory factory;
-            factory = ThingmlFactoryImpl.init();
+            ThingMLFactory factory;
+            factory = ThingMLFactoryImpl.init();
             PlatformAnnotation pan = factory.createPlatformAnnotation();
             pan.setName("add_c_libraries");
             pan.setValue("mosquitto");

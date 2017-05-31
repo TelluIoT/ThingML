@@ -33,3 +33,5 @@ node_modules
 .workspace
 runtime-EclipseApplication
 testJar/config.properties
+**._trace
+**.xtendbin

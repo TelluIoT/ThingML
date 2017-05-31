@@ -21,20 +21,29 @@
  */
 package org.thingml.networkplugins.js;
 
-import org.apache.commons.io.IOUtils;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
 
 public class JsTTYPlugin extends NetworkPlugin {
 
@@ -211,14 +220,14 @@ public class JsTTYPlugin extends NetworkPlugin {
                 input.close();
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "/*$REQUIRE_PLUGINS$*/\nconst TTY = require('./TTYJS');");
-                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst tty = new TTY(\"tty\", false, " + conn.getInst().getInstance().getName() + ", function (started) {if (!started) {console.log(\"Cannot start TTY!\"); process.exit(1);}});\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst tty = new TTY(\"tty\", false, " + conn.getInst().getName() + ", function (started) {if (!started) {console.log(\"Cannot start TTY!\"); process.exit(1);}});\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "tty._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getInstance().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
-                    builder.append("(msg) => setImmediate(() => tty.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
-                    builder.append("));\n");
+                    builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
+                    builder.append("(msg) => tty.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
+                    builder.append(");\n");
 
                     /*builder.append(conn.getInst().getInstance().getName() + "." + req.getName() + "On" + conn.getPort().getName() + "Listeners.push(");
                     builder.append("tty.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(tty)");

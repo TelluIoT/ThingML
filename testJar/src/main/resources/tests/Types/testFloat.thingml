@@ -1,7 +1,7 @@
 import "../thingml.thingml"
 
 
-thing TestFloat includes Test 
+thing TestFloat includes Test
 @test "1234 # 1234"
 {
 
@@ -9,18 +9,18 @@ thing TestFloat includes Test
 	property b : Float = -0.00015
 	property c : Float = 0.0
 	property d : Float = 1.0
-    
+
     statechart TestType init S0 {
-    
+
     	state S0 {
     		internal
 			event m : harnessIn?testIn
-			guard m.c == '\'1\'' and (a == 3.14156)
+			guard m.c == '\'1\'' and (a-3.14156<0.01 and a-3.14156>-0.01)
 			action harnessOut!testOut('\'1\'')
 
     		internal
 			event m : harnessIn?testIn
-			guard m.c == '\'2\'' and (b == -0.00015)
+			guard m.c == '\'2\'' and (b+0.00015<0.01 and b+0.00015<0.01)
 			action harnessOut!testOut('\'2\'')
 
     		internal

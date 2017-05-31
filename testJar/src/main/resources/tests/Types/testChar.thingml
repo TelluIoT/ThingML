@@ -1,36 +1,36 @@
 import "../thingml.thingml"
 
 
-thing TestChar includes Test 
+thing TestChar includes Test
 @test "1234 # 1234"
 {
 
-	property min : Char = '\'\\0\''
+	property min : Char = '\'\0\''
 	property max : Char = '\'~\''
 	property zero : Char = '\'0\''
-	property order : Char = '\'A\'' 
-    
+	property order : Char = '\'A\''
+
     statechart TestType init S0 {
-    
+
     	state S0 {
     		internal
 			event m : harnessIn?testIn
-			guard m.c == '\'1\'' and (min == '\'\\0\'')
+			guard (m.c == '\'1\'') and (min == '\'\0\'')
 			action harnessOut!testOut('\'1\'')
 
     		internal
 			event m : harnessIn?testIn
-			guard m.c == '\'2\'' and (max == '\'~\'')
+			guard (m.c == '\'2\'') and (max == '\'~\'')
 			action harnessOut!testOut('\'2\'')
 
     		internal
 			event m : harnessIn?testIn
-			guard m.c == '\'3\'' and (zero ==  '\'0\'')
+			guard (m.c == '\'3\'') and (zero ==  '\'0\'')
 			action harnessOut!testOut('\'3\'')
 
     		internal
 			event m : harnessIn?testIn
-			guard m.c == '\'4\'' and (order == '\'A\'')
+			guard (m.c == '\'4\'') and (order == '\'A\'')
 			action harnessOut!testOut('\'4\'')
     	}
     }

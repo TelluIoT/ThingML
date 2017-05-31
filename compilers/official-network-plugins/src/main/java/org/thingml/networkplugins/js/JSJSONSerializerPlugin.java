@@ -26,21 +26,15 @@
  */
 package org.thingml.networkplugins.js;
 
-import com.eclipsesource.json.JsonObject;
-import org.apache.commons.io.IOUtils;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.PrimitiveType;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.spi.SerializationPlugin;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
 
 public class JSJSONSerializerPlugin extends SerializationPlugin {
 

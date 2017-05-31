@@ -3,11 +3,8 @@
  */
 package org.thingml.xtext.web
 
-import com.google.inject.Provider
-import java.util.List
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import javax.servlet.annotation.WebServlet
+import org.eclipse.xtext.util.DisposableRegistry
 import org.eclipse.xtext.web.servlet.XtextServlet
 
 /**
@@ -16,17 +13,20 @@ import org.eclipse.xtext.web.servlet.XtextServlet
 @WebServlet(name = 'XtextServices', urlPatterns = '/xtext-service/*')
 class ThingMLServlet extends XtextServlet {
 	
-	val List<ExecutorService> executorServices = newArrayList
+	DisposableRegistry disposableRegistry
+	
 	
 	override init() {
 		super.init()
-		val Provider<ExecutorService> executorServiceProvider = [Executors.newCachedThreadPool => [executorServices += it]]
-		new ThingMLWebSetup(executorServiceProvider).createInjectorAndDoEMFRegistration()
+		val injector = new ThingMLWebSetup().createInjectorAndDoEMFRegistration()
+		disposableRegistry = injector.getInstance(DisposableRegistry)
 	}
 	
 	override destroy() {
-		executorServices.forEach[shutdown()]
-		executorServices.clear()
+		if (disposableRegistry !== null) {
+			disposableRegistry.dispose()
+			disposableRegistry = null
+		}
 		super.destroy()
 	}
 	

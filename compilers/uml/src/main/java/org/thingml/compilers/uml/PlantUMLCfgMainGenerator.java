@@ -16,16 +16,35 @@
  */
 package org.thingml.compilers.uml;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.ActionHelper;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.configuration.CfgMainGenerator;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import org.thingml.compilers.Context;
+import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.ActionHelper;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Connector;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.ExternExpression;
+import org.thingml.xtext.thingML.ExternStatement;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.ObjectType;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.PrimitiveType;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
 
 /**
  * Created by bmori on 10.12.2014.
@@ -71,11 +90,10 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                 classes.append("class " + thing.getName() + " <<(T,#5BBF09)PIM>> {\n");
             }
 
-
             if (thing.getProperties().size() > 0)
                 classes.append("..Properties..\n");
             for (Property p : thing.getProperties()) {
-                classes.append("-" + p.getName() + " : " + p.getType().getName());
+                classes.append("-" + p.getName() + " : " + p.getTypeRef().getType().getName());
                 if (p.getInit() != null) {
                     classes.append(" = ");
                     ctx.getCompiler().getThingActionCompiler().generate(p.getInit(), classes, ctx);
@@ -95,7 +113,7 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                     for (Parameter p : m.getParameters()) {
                         if (i > 0)
                             classes.append(", ");
-                        classes.append(p.getName() + " : " + p.getType().getName());
+                        classes.append(p.getName() + " : " + p.getTypeRef().getType().getName());
                     }
                 }
                 classes.append(")");
@@ -125,12 +143,12 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
                     for (Parameter p : f.getParameters()) {
                         if (i > 0)
                             classes.append(", ");
-                        classes.append(p.getName() + " : " + p.getType().getName());
+                        classes.append(p.getName() + " : " + p.getTypeRef().getType().getName());
                     }
                 }
                 classes.append(") : ");
-                if (f.getType() != null) {
-                    classes.append(f.getType().getName());
+                if (f.getTypeRef() != null && f.getTypeRef().getType() != null) {
+                    classes.append(f.getTypeRef().getType().getName());
                 } else {
                     classes.append("void");
                 }
@@ -165,11 +183,11 @@ public class PlantUMLCfgMainGenerator extends CfgMainGenerator {
             builder.append("boundary " + p.getName() + "\n");
         }
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-            builder.append(c.getCli().getInstance().getName() + " -(0- " + c.getSrv().getInstance().getName() + " : " +
+            builder.append(c.getCli().getName() + " -(0- " + c.getSrv().getName() + " : " +
                     c.getRequired().getName() + " => " + c.getProvided().getName() + "\n");
         }
         for (ExternalConnector c : ConfigurationHelper.getExternalConnectors(cfg)) {
-            builder.append(c.getInst().getInstance().getName() + " .. " + c.getProtocol().getName() + " : " + c.getPort().getName() + "\n");
+            builder.append(c.getInst().getName() + " .. " + c.getProtocol().getName() + " : " + c.getPort().getName() + "\n");
         }
         builder.append("@enduml");
 

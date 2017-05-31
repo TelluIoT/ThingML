@@ -1,17 +1,16 @@
 /**
- * *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  *
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  *
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *  *
+ *
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
@@ -56,6 +55,15 @@ public interface ThingMLFactory extends EFactory
   PlatformAnnotation createPlatformAnnotation();
 
   /**
+   * Returns a new object of class '<em>Named Element</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Named Element</em>'.
+   * @generated
+   */
+  NamedElement createNamedElement();
+
+  /**
    * Returns a new object of class '<em>Annotated Element</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -63,6 +71,15 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   AnnotatedElement createAnnotatedElement();
+
+  /**
+   * Returns a new object of class '<em>Variable</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Variable</em>'.
+   * @generated
+   */
+  Variable createVariable();
 
   /**
    * Returns a new object of class '<em>Type Ref</em>'.
@@ -218,60 +235,6 @@ public interface ThingMLFactory extends EFactory
   InternalPort createInternalPort();
 
   /**
-   * Returns a new object of class '<em>Region</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Region</em>'.
-   * @generated
-   */
-  Region createRegion();
-
-  /**
-   * Returns a new object of class '<em>Region Or Session</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Region Or Session</em>'.
-   * @generated
-   */
-  RegionOrSession createRegionOrSession();
-
-  /**
-   * Returns a new object of class '<em>Composite State</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Composite State</em>'.
-   * @generated
-   */
-  CompositeState createCompositeState();
-
-  /**
-   * Returns a new object of class '<em>Final State</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Final State</em>'.
-   * @generated
-   */
-  FinalState createFinalState();
-
-  /**
-   * Returns a new object of class '<em>Session</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Session</em>'.
-   * @generated
-   */
-  Session createSession();
-
-  /**
-   * Returns a new object of class '<em>Parallel Region</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Parallel Region</em>'.
-   * @generated
-   */
-  ParallelRegion createParallelRegion();
-
-  /**
    * Returns a new object of class '<em>State</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -308,6 +271,51 @@ public interface ThingMLFactory extends EFactory
   InternalTransition createInternalTransition();
 
   /**
+   * Returns a new object of class '<em>Composite State</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Composite State</em>'.
+   * @generated
+   */
+  CompositeState createCompositeState();
+
+  /**
+   * Returns a new object of class '<em>Session</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Session</em>'.
+   * @generated
+   */
+  Session createSession();
+
+  /**
+   * Returns a new object of class '<em>Region</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Region</em>'.
+   * @generated
+   */
+  Region createRegion();
+
+  /**
+   * Returns a new object of class '<em>Final State</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Final State</em>'.
+   * @generated
+   */
+  FinalState createFinalState();
+
+  /**
+   * Returns a new object of class '<em>State Container</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>State Container</em>'.
+   * @generated
+   */
+  StateContainer createStateContainer();
+
+  /**
    * Returns a new object of class '<em>Event</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -333,15 +341,6 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   Action createAction();
-
-  /**
-   * Returns a new object of class '<em>Variable</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Variable</em>'.
-   * @generated
-   */
-  Variable createVariable();
 
   /**
    * Returns a new object of class '<em>Action Block</em>'.
@@ -614,6 +613,15 @@ public interface ThingMLFactory extends EFactory
   ExternalConnector createExternalConnector();
 
   /**
+   * Returns a new object of class '<em>Cast Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Cast Expression</em>'.
+   * @generated
+   */
+  CastExpression createCastExpression();
+
+  /**
    * Returns a new object of class '<em>Or Expression</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -729,6 +737,15 @@ public interface ThingMLFactory extends EFactory
    * @generated
    */
   ModExpression createModExpression();
+
+  /**
+   * Returns a new object of class '<em>Expression Group</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Expression Group</em>'.
+   * @generated
+   */
+  ExpressionGroup createExpressionGroup();
 
   /**
    * Returns a new object of class '<em>Not Expression</em>'.

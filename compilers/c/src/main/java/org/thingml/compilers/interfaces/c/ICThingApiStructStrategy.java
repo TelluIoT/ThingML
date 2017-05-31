@@ -16,9 +16,9 @@
  */
 package org.thingml.compilers.interfaces.c;
 
-import org.sintef.thingml.Thing;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by vassik on 04.11.16.

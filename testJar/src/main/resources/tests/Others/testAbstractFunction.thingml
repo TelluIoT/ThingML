@@ -1,30 +1,30 @@
 import "../thingml.thingml"
 
-thing Foo 
+thing Foo
 {
 
-    function foo() @abstract "true" do end
-    
+    abstract function foo()
+
     function bar() do
         foo()
     end
-   
+
 }
 
-thing TestAbstractFunction includes Test, Foo 
+thing TestAbstractFunction includes Test, Foo
 @test "x # xx"
 {
     //Define implementation of function foo
     function foo() do
-        harnessOut!testOut('\'x\'')    	
+        harnessOut!testOut('\'x\'')
     end
-    
-    
-    
+
+
+
     statechart TestAbstractFunction init INIT {
-    
+
     	state INIT {
-			
+
 			transition -> INIT
 			event m : harnessIn?testIn
 			guard m.c == '\'x\''
@@ -32,7 +32,7 @@ thing TestAbstractFunction includes Test, Foo
 				foo() //check that we call the redefined function, not just the empty abstract definition
                 bar() //check that bar is properly included and that the call to foo is properly linked
 			end
-			    		
+
     	}
     }
 }

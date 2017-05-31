@@ -1,4 +1,4 @@
-# ThingML
+![ThingML](https://github.com/SINTEF-9012/ThingML/raw/xtext/Logotype_ThingML_100317_500px.png)
 
 The ThingML approach is composed of *i*) a **modeling language**, *ii*) a set of **tools** and *iii*) a **methodology**. The modeling language combines well-proven software modeling constructs for the design and implementation of distributed reactive systems:
 
@@ -12,8 +12,6 @@ The ThingML language is supported by a set of tools, which include editors, tran
 
 > **Issues, bug reports and feature requests should be submitted to the [issue tracker on GitHub](https://github.com/SINTEF-9012/ThingML/issues)**
 
-> &#x2757; &#x2757; If you are contributing to this repository, please install [Git LFS](https://git-lfs.github.com/) and track all `jar` files: `git lfs track "*.jar"`
-
 ## &#x1F537; Prerequisites &#x2757;
 
 ThingML can compile code for various platforms and languages. Please make sure you follow the required steps
@@ -25,7 +23,7 @@ If you are going to compile Java code from ThingML, please:
 - Install [Maven](http://maven.apache.org/)
 
 ### &#x1F539; Javascript
-If you are going to compile JavaScript (Node.JS) code from ThingML, please:
+If you are going to compile Javascript code from ThingML, please:
 
 - Install [Node.JS](https://nodejs.org/en/)
 
@@ -112,7 +110,7 @@ Once you have created (or imported) ThingML files in your workspace, simply righ
 
 ## &#x1F537; Compile ThingML from the sources
 
-> You need Maven and a proper JDK8+
+> You need Git, Git LFS, Maven, and a proper JDK8+
 
 ```bash
 git clone https://github.com/SINTEF-9012/ThingML.git

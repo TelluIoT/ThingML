@@ -16,10 +16,10 @@
  */
 package org.thingml.compilers.cpp.sintefboard;
 
-import org.sintef.thingml.ErrorAction;
-import org.sintef.thingml.PrintAction;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CThingActionCompiler;
+import org.thingml.xtext.thingML.ErrorAction;
+import org.thingml.xtext.thingML.PrintAction;
 
 /**
  * Created by ffl on 11.06.15.

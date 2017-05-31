@@ -16,17 +16,21 @@
  */
 package org.thingml.networkplugins.c.posix;
 
-import org.sintef.thingml.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.c.CCfgMainGenerator;
-import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.spi.NetworkPlugin;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.thingml.compilers.Context;
+import org.thingml.compilers.c.CCfgMainGenerator;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Protocol;
 
 /**
  * Created by jakobho on 25.01.2017.
@@ -91,18 +95,18 @@ public class PosixTimerPlugin  extends NetworkPlugin {
                     }
 
                     Parameter paramID = parameters.get(0);
-                    if (longestIDParam < cctx.getCByteSize(paramID.getType(), 0)) longestIDParam = cctx.getCByteSize(paramID.getType(),0);
+                    if (longestIDParam < cctx.getCByteSize(paramID.getTypeRef().getType(), 0)) longestIDParam = cctx.getCByteSize(paramID.getTypeRef().getType(),0);
 
                     enqueuers.append("    // Message " + m.getName() + "\n");
                     enqueuers.append("    enqueue_buf[0] = ("+cctx.getHandlerCode(cfg, m)+" >> 8) & 0xFF;\n");
                     enqueuers.append("    enqueue_buf[1] = ("+cctx.getHandlerCode(cfg, m)+" >> 0) & 0xFF;\n");
                     enqueuers.append("    union { ");
-                    enqueuers.append(     cctx.getCType(paramID.getType())+" "+paramID.getName()+"; ");
-                    enqueuers.append(     "uint8_t bytebuffer["+cctx.getCByteSize(paramID.getType(),0)+"] ");
+                    enqueuers.append(     cctx.getCType(paramID.getTypeRef().getType())+" "+paramID.getName()+"; ");
+                    enqueuers.append(     "uint8_t bytebuffer["+cctx.getCByteSize(paramID.getTypeRef().getType(),0)+"] ");
                     enqueuers.append(     "} "+m.getName()+"_"+paramID.getName()+"_u;\n");
                     enqueuers.append("    "+m.getName()+"_"+paramID.getName()+"_u."+paramID.getName()+" = id;\n");
-                    enqueuers.append("    memcpy(&enqueue_buf[2], "+m.getName()+"_"+paramID.getName()+"_u.bytebuffer, "+cctx.getCByteSize(paramID.getType(),0)+");\n");
-                    enqueuers.append("    externalMessageEnqueue(enqueue_buf, "+(cctx.getCByteSize(paramID.getType(),0)+2)+", listener_id);\n");
+                    enqueuers.append("    memcpy(&enqueue_buf[2], "+m.getName()+"_"+paramID.getName()+"_u.bytebuffer, "+cctx.getCByteSize(paramID.getTypeRef().getType(),0)+");\n");
+                    enqueuers.append("    externalMessageEnqueue(enqueue_buf, "+(cctx.getCByteSize(paramID.getTypeRef().getType(),0)+2)+", listener_id);\n");
                 }
             }
             ctemplate = ctemplate.replace("/*ENQUEUERS*/", "uint8_t enqueue_buf["+(longestIDParam+2)+"];\n"+enqueuers.toString());

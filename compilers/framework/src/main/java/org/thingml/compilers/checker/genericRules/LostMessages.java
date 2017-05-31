@@ -21,15 +21,20 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.*;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
-
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.Rule;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Connector;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  *
@@ -85,14 +90,14 @@ public class LostMessages extends Rule {
                 }
                 if (!found) {//See if another instance can receive the message
                     for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
-                        if (EcoreUtil.equals(c.getSrv().getInstance(), j)) {
+                        if (EcoreUtil.equals(c.getSrv(), j)) {
                             for(Message m2 : c.getRequired().getReceives()) {
                                 if(EcoreUtil.equals(m, m2)) {
                                     found = true;
                                     break;
                                 }
                             }
-                        } else if (EcoreUtil.equals(c.getCli().getInstance(), j)) {
+                        } else if (EcoreUtil.equals(c.getCli(), j)) {
                             for(Message m2 : c.getProvided().getReceives()) {
                                 if(EcoreUtil.equals(m, m2)) {
                                     found = true;

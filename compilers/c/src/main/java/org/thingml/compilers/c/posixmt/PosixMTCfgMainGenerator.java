@@ -27,36 +27,40 @@ import java.io.InputStream;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Connector;
-import org.sintef.thingml.Enumeration;
-import org.sintef.thingml.EnumerationLiteral;
-import org.sintef.thingml.Expression;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.InternalPort;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.Region;
-import org.sintef.thingml.Session;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.Type;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.*;
+
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.configuration.CfgMainGenerator;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.StateContainerHelper;
+import org.thingml.xtext.helpers.StateHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Connector;
+import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.InternalPort;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
 
 /**
  *
@@ -179,27 +183,27 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
             
             for(Connector co : ConfigurationHelper.allConnectors(cfg)) {
                 if(co.getProvided().getSends().contains(m)) {
-                    Sender = new HashMap.SimpleEntry<Instance, Port>(co.getSrv().getInstance(),co.getProvided());
+                    Sender = new HashMap.SimpleEntry<Instance, Port>(co.getSrv(),co.getProvided());
                     if(SenderList.containsKey(Sender)) {
                         ReceiverList = SenderList.get(Sender);
                     } else {
                         ReceiverList = new HashSet<Map.Entry<Instance, Port>>();
                         SenderList.put(Sender, ReceiverList);
                     }
-                    Receiver = new HashMap.SimpleEntry<Instance, Port>(co.getCli().getInstance(),co.getRequired());
+                    Receiver = new HashMap.SimpleEntry<Instance, Port>(co.getCli(),co.getRequired());
                     if(!ReceiverList.contains(Receiver)) {
                         ReceiverList.add(Receiver);
                     }
                 }
                 if(co.getRequired().getSends().contains(m)) {
-                    Sender = new HashMap.SimpleEntry<Instance, Port>(co.getCli().getInstance(),co.getRequired());
+                    Sender = new HashMap.SimpleEntry<Instance, Port>(co.getCli(),co.getRequired());
                     if(SenderList.containsKey(Sender)) {
                         ReceiverList = SenderList.get(Sender);
                     } else {
                         ReceiverList = new HashSet<Map.Entry<Instance, Port>>();
                         SenderList.put(Sender, ReceiverList);
                     }
-                    Receiver = new HashMap.SimpleEntry<Instance, Port>(co.getSrv().getInstance(),co.getProvided());
+                    Receiver = new HashMap.SimpleEntry<Instance, Port>(co.getSrv(),co.getProvided());
                     if(!ReceiverList.contains(Receiver)) {
                         ReceiverList.add(Receiver);
                     }
@@ -250,7 +254,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
                             continue; // there is no state machine
 
                         
-                        StateMachine sm = ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).get(0);
+                        CompositeState sm = ThingMLHelpers.allStateMachines(myReceiver.getKey().getType()).get(0);
                         if (StateHelper.canHandleIncludingSessions(sm, myReceiver.getValue(), m)) {
                             builder.append("enqueue_" + myReceiver.getKey().getType().getName() + "_" + myReceiver.getValue().getName() + "_" + m.getName() + "(&" + ctx.getInstanceVarName(myReceiver.getKey()));
                             
@@ -269,9 +273,9 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
                     builder.append("if (sender ==");
                     builder.append(" " + portName + "_instance.listener_id) {\n");
 
-                    StateMachine sm = ThingMLHelpers.allStateMachines(eco.getInst().getInstance().getType()).get(0);
+                    CompositeState sm = ThingMLHelpers.allStateMachines(eco.getInst().getType()).get(0);
                     if (StateHelper.canHandleIncludingSessions(sm, eco.getPort(), m)) {
-                            builder.append("enqueue_" + eco.getInst().getInstance().getType().getName() + "_" + eco.getPort().getName() + "_" + m.getName() + "(&" + ctx.getInstanceVarName(eco.getInst().getInstance()));
+                            builder.append("enqueue_" + eco.getInst().getType().getName() + "_" + eco.getPort().getName() + "_" + m.getName() + "(&" + ctx.getInstanceVarName(eco.getInst()));
                             
                             for (Parameter pt : m.getParameters()) {
                                 builder.append(", " + pt.getName());
@@ -305,10 +309,10 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
         
         for (Instance inst : ConfigurationHelper.allInstances(cfg)) {
             for (Property a : ConfigurationHelper.allArrays(cfg, inst)) {
-                builder.append(ctx.getCType(a.getType()) + " ");
+                builder.append(ctx.getCType(a.getTypeRef().getType()) + " ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getCVarName(a));
                 builder.append("[");
-                ctx.generateFixedAtInitValue(cfg, inst, a.getCardinality(), builder);
+                ctx.generateFixedAtInitValue(cfg, inst, a.getTypeRef().getCardinality(), builder);
                 builder.append("];\n");
             }
         }
@@ -445,17 +449,17 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
 
                 for (Parameter pt : m.getParameters()) {
                     builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
-                    builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append(ctx.getCType(pt.getTypeRef().getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getTypeRef().getType(), 0) + "];\n");
                     builder.append("} u_" + m.getName() + "_" + pt.getName() + ";\n");
 
-                    for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+                    for (int i = 0; i < ctx.getCByteSize(pt.getTypeRef().getType(), 0); i++) {
 
-                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getTypeRef().getType(), 0) - i - 1) + "]");
                         builder.append(" = msg[" + (idx_bis + i) + "];\n");
 
                     }
-                    idx_bis = idx_bis + ctx.getCByteSize(pt.getType(), 0);
+                    idx_bis = idx_bis + ctx.getCByteSize(pt.getTypeRef().getType(), 0);
                 }
                 
                 builder.append("dispatch_" + m.getName() + "(listener_id");
@@ -574,8 +578,8 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
                     
         for(ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
             for(Message m : eco.getPort().getSends()) {
-                builder.append("register_external_" + ctx.getSenderName(eco.getInst().getInstance().getType(), eco.getPort(), m) + "_listener(");
-                builder.append("&forward_" + ctx.getSenderName(eco.getInst().getInstance().getType(), eco.getPort(), m) + ");\n");
+                builder.append("register_external_" + ctx.getSenderName(eco.getInst().getType(), eco.getPort(), m) + "_listener(");
+                builder.append("&forward_" + ctx.getSenderName(eco.getInst().getType(), eco.getPort(), m) + ");\n");
             }
         }
 
@@ -613,10 +617,10 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
         
         // init state variables:
         if (ThingMLHelpers.allStateMachines(inst.getType()).size() > 0) { // There is a state machine
-            for(Region r : CompositeStateHelper.allContainedRegions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
+            for(StateContainer r : CompositeStateHelper.allContainedRegions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
-            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
+            for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(s) + " = -1;\n");
             }
         }
@@ -625,7 +629,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
 
         // Init simple properties
         for (Map.Entry<Property, Expression> init: ConfigurationHelper.initExpressionsForInstance(cfg, inst)) {
-            if (init.getValue() != null && init.getKey().getCardinality() == null) {
+            if (init.getValue() != null && init.getKey().getTypeRef().getCardinality() == null) {
 
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(init.getKey()) + " = ");
                         //ctx.getCompiler().getThingActionCompiler().generate(init.getValue(), builder, ctx);
@@ -636,14 +640,14 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
 
         
         for (Property p : ThingHelper.allPropertiesInDepth(inst.getType())) {
-            if (p.getCardinality() != null) {//array
+            if (p.getTypeRef().getCardinality() != null) {//array
                 //builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = &");
                 //TOCHECK
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = ");
                 builder.append("array_" + inst.getName() + "_" + ctx.getVariableName(p));
                 builder.append(";\n");
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + "_size = ");
-                ctx.generateFixedAtInitValue(cfg, inst, p.getCardinality(), builder);
+                ctx.generateFixedAtInitValue(cfg, inst, p.getTypeRef().getCardinality(), builder);
                 builder.append(";\n");
             }
             if(AnnotatedElementHelper.hasAnnotation(p, "initialize_from_file")) {
@@ -721,7 +725,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
             inst = Instances.get(Instances.size()-1);
             Instances.remove(inst);
             
-            StateMachine sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
+            CompositeState sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
         
             if (ThingMLHelpers.allStateMachines(inst.getType()).size() > 0) { // there is a state machine
                 initb.append(ctx.getInstanceVarName(inst) + ".initState = -1;\n");

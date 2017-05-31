@@ -9,33 +9,33 @@ thing TestDumpArduino includes TestDump
 @platform "arduino"
 {
  	property benchmark: Boolean = false
- 		
+
 	statechart ArduinoHarness init Testing {
 		property transitionsCount : Long = 0
  		property stateNumber: String = ""
-		
+
 		state Testing {
             internal event m : dump?testOut
-            action do 
+            action do
 				print m.c
             	transitionsCount=transitionsCount+1
             end
-            
-            transition -> Failed 
+
+            transition -> Failed
             event dump?testFailure
             action '//printf("*FAILURE*");'
-            
-            
+
+
             transition -> End
             event dumpEnd?testEnd
-            
-		}
-		
-		state Failed {
 
 		}
-		
-		state End {
+
+		final state Failed {
+
+		}
+
+		final state End {
 			on entry do
 				print " [Done]\n"
 			end

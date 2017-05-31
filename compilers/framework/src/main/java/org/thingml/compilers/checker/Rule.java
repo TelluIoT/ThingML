@@ -22,13 +22,11 @@
 package org.thingml.compilers.checker;
 
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ThingMLModel;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.checker.Checker.InfoType;
 
-import java.util.List;
+import org.thingml.compilers.checker.Checker.InfoType;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  *

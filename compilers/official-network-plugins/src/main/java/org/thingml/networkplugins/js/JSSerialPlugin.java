@@ -21,21 +21,32 @@
  */
 package org.thingml.networkplugins.js;
 
-import com.eclipsesource.json.JsonObject;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
+
+import com.eclipsesource.json.JsonObject;
 
 public class JSSerialPlugin extends NetworkPlugin {
 
@@ -255,15 +266,15 @@ public class JSSerialPlugin extends NetworkPlugin {
                 final String port = AnnotatedElementHelper.hasAnnotation(conn.getProtocol(), "port") ? AnnotatedElementHelper.annotation(conn.getProtocol(), "port").get(0) : "/dev/ttyACM0";//FIXME: Raise an exception if port is not specified
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "var Serial = require('./SerialJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nvar serial = new Serial(\"serial\", false, \"" + port + "\", " + speed + ", " + conn.getInst().getInstance().getName() + ", function (started) {if (started) {");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nvar serial = new Serial(\"serial\", false, \"" + port + "\", " + speed + ", " + conn.getInst().getName() + ", function (started) {if (started) {");
                 main = main.replace("/*$PLUGINS_END$*/", "}else {process.exit(1)}});\n/*$PLUGINS_END$*/\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "serial._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getInstance().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
-                    builder.append("(msg) => setImmediate(() => serial.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
-                    builder.append("));\n");
+                    builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
+                    builder.append("(msg) => serial.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
+                    builder.append(");\n");
 
                     /*builder.append(conn.getInst().getInstance().getName() + ".get" + ctx.firstToUpper(req.getName()) + "on" + conn.getPort().getName() + "Listeners().push(");
                     builder.append("serial.receive" + req.getName() + "On" + conn.getPort().getName() + ".bind(serial)");

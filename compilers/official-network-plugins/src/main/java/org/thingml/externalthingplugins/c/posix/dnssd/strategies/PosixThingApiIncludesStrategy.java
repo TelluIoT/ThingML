@@ -16,10 +16,10 @@
  */
 package org.thingml.externalthingplugins.c.posix.dnssd.strategies;
 
-import org.sintef.thingml.Thing;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.interfaces.c.ICThingApiIncludesStrategy;
 import org.thingml.externalthingplugins.c.posix.PosixDNSSDExternalThingPlugin;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by vassik on 16.11.16.

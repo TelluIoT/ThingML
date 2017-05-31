@@ -21,9 +21,9 @@
  */
 package org.thingml.compilers.c.posixmt;
 
-import org.sintef.thingml.StartSession;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.posix.CThingActionCompilerPosix;
+import org.thingml.xtext.thingML.StartSession;
 
 /**
  *

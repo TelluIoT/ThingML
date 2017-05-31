@@ -21,11 +21,11 @@
  */
 package org.thingml.compilers;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
 
 /**
  *

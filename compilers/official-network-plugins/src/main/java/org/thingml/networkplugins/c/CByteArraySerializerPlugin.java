@@ -26,21 +26,17 @@
  */
 package org.thingml.networkplugins.c;
 
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.plugin.CByteArraySerializer;
-import org.thingml.compilers.spi.SerializationPlugin;
-import org.thingml.networkplugins.java.JavaByteArraySerializerPlugin;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.helpers.ConfigurationHelper;
+
+import org.thingml.compilers.Context;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
 
 public class CByteArraySerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
@@ -101,14 +97,14 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
                 builder.append("\n// parameter " + pt.getName() + "\n");
                 int i;
                 String v = pt.getName();
-                if (cctx.isPointer(pt.getType())) {
+                if (cctx.isPointer(pt.getTypeRef().getType())) {
                     // This should not happen and should be checked before.
                     throw new Error("ERROR: Attempting to deserialize a pointer (for message " + m.getName() + "). This is not allowed.");
                 } else {
                     if (!AnnotatedElementHelper.isDefined(pt, "ignore", "true")) {
                         builder.append("union u_" + v + "_t {\n");
-                        builder.append(cctx.getCType(pt.getType()) + " p;\n");
-                        builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getType(), 0) + "];\n");
+                        builder.append(cctx.getCType(pt.getTypeRef().getType()) + " p;\n");
+                        builder.append("byte bytebuffer[" + cctx.getCByteSize(pt.getTypeRef().getType(), 0) + "];\n");
                         builder.append("} u_" + v + ";\n");
                         builder.append("u_" + v + ".p = " + v + ";\n");
                         //if(cctx.networkMSBFirst) {
@@ -119,7 +115,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
                                 j++;
                             }
                         /*} else {*/
-                            i = cctx.getCByteSize(pt.getType(), 0);
+                            i = cctx.getCByteSize(pt.getTypeRef().getType(), 0);
                             while (i > 0) {
                                 i = i - 1;
                                 builder.append(bufferName + "[" + j + "] =  (u_" + v + ".bytebuffer[" + i + "] & 0xFF);\n");

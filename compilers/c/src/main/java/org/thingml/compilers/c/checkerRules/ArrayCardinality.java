@@ -21,13 +21,13 @@
  */
 package org.thingml.compilers.c.checkerRules;
 
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.ThingHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Thing;
 
 
 /**
@@ -56,8 +56,8 @@ public class ArrayCardinality extends Rule {
     public void check(Configuration cfg, Checker checker) {
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             for (Property p : ThingHelper.allPropertiesInDepth(t)) {
-                if (p.isIsArray()) {
-                    if (p.getCardinality() == null) {
+                if (p.getTypeRef().isIsArray()) {
+                    if (p.getTypeRef().getCardinality() == null) {
                         checker.addError("C", "Array declared without cardinality is not allowed with C compiler.", p);
                     }
                 }

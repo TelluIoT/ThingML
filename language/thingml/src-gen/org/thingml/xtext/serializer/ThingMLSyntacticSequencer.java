@@ -35,8 +35,6 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected ThingMLGrammarAccess grammarAccess;
 	protected AbstractElementAlias match_Message_SemicolonKeyword_6_q;
 	protected AbstractElementAlias match_ObjectType_SemicolonKeyword_3_q;
-	protected AbstractElementAlias match_Primary_LeftParenthesisKeyword_0_0_a;
-	protected AbstractElementAlias match_Primary_LeftParenthesisKeyword_0_0_p;
 	protected AbstractElementAlias match_PrimitiveType_SemicolonKeyword_6_q;
 	
 	@Inject
@@ -44,8 +42,6 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 		grammarAccess = (ThingMLGrammarAccess) access;
 		match_Message_SemicolonKeyword_6_q = new TokenAlias(false, true, grammarAccess.getMessageAccess().getSemicolonKeyword_6());
 		match_ObjectType_SemicolonKeyword_3_q = new TokenAlias(false, true, grammarAccess.getObjectTypeAccess().getSemicolonKeyword_3());
-		match_Primary_LeftParenthesisKeyword_0_0_a = new TokenAlias(true, true, grammarAccess.getPrimaryAccess().getLeftParenthesisKeyword_0_0());
-		match_Primary_LeftParenthesisKeyword_0_0_p = new TokenAlias(true, false, grammarAccess.getPrimaryAccess().getLeftParenthesisKeyword_0_0());
 		match_PrimitiveType_SemicolonKeyword_6_q = new TokenAlias(false, true, grammarAccess.getPrimitiveTypeAccess().getSemicolonKeyword_6());
 	}
 	
@@ -65,10 +61,6 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_Message_SemicolonKeyword_6_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ObjectType_SemicolonKeyword_3_q.equals(syntax))
 				emit_ObjectType_SemicolonKeyword_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_Primary_LeftParenthesisKeyword_0_0_a.equals(syntax))
-				emit_Primary_LeftParenthesisKeyword_0_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_Primary_LeftParenthesisKeyword_0_0_p.equals(syntax))
-				emit_Primary_LeftParenthesisKeyword_0_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PrimitiveType_SemicolonKeyword_6_q.equals(syntax))
 				emit_PrimitiveType_SemicolonKeyword_6_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
@@ -97,65 +89,6 @@ public class ThingMLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     name=ID (ambiguity) (rule end)
 	 */
 	protected void emit_ObjectType_SemicolonKeyword_3_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     '('*
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) '-' term=Primary
-	 *     (rule start) (ambiguity) 'not' term=Primary
-	 *     (rule start) (ambiguity) boolValue='false'
-	 *     (rule start) (ambiguity) boolValue='true'
-	 *     (rule start) (ambiguity) doubleValue=FLOAT
-	 *     (rule start) (ambiguity) enum=[Enumeration|ID]
-	 *     (rule start) (ambiguity) expression=STRING_EXT
-	 *     (rule start) (ambiguity) function=[Function|ID]
-	 *     (rule start) (ambiguity) intValue=INT
-	 *     (rule start) (ambiguity) property=[Variable|ID]
-	 *     (rule start) (ambiguity) receiveMsg=[Event|ID]
-	 *     (rule start) (ambiguity) stringValue=STRING_LIT
-	 *     (rule start) (ambiguity) {AndExpression.lhs=}
-	 *     (rule start) (ambiguity) {ArrayIndex.array=}
-	 *     (rule start) (ambiguity) {DivExpression.lhs=}
-	 *     (rule start) (ambiguity) {EqualsExpression.lhs=}
-	 *     (rule start) (ambiguity) {GreaterExpression.lhs=}
-	 *     (rule start) (ambiguity) {GreaterOrEqualExpression.lhs=}
-	 *     (rule start) (ambiguity) {LowerExpression.lhs=}
-	 *     (rule start) (ambiguity) {LowerOrEqualExpression.lhs=}
-	 *     (rule start) (ambiguity) {MinusExpression.lhs=}
-	 *     (rule start) (ambiguity) {ModExpression.lhs=}
-	 *     (rule start) (ambiguity) {NotEqualsExpression.lhs=}
-	 *     (rule start) (ambiguity) {OrExpression.lhs=}
-	 *     (rule start) (ambiguity) {PlusExpression.lhs=}
-	 *     (rule start) (ambiguity) {TimesExpression.lhs=}
-	 */
-	protected void emit_Primary_LeftParenthesisKeyword_0_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     '('+
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) {AndExpression.lhs=}
-	 *     (rule start) (ambiguity) {DivExpression.lhs=}
-	 *     (rule start) (ambiguity) {EqualsExpression.lhs=}
-	 *     (rule start) (ambiguity) {GreaterExpression.lhs=}
-	 *     (rule start) (ambiguity) {GreaterOrEqualExpression.lhs=}
-	 *     (rule start) (ambiguity) {LowerExpression.lhs=}
-	 *     (rule start) (ambiguity) {LowerOrEqualExpression.lhs=}
-	 *     (rule start) (ambiguity) {MinusExpression.lhs=}
-	 *     (rule start) (ambiguity) {ModExpression.lhs=}
-	 *     (rule start) (ambiguity) {NotEqualsExpression.lhs=}
-	 *     (rule start) (ambiguity) {OrExpression.lhs=}
-	 *     (rule start) (ambiguity) {PlusExpression.lhs=}
-	 *     (rule start) (ambiguity) {TimesExpression.lhs=}
-	 */
-	protected void emit_Primary_LeftParenthesisKeyword_0_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

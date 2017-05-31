@@ -21,21 +21,33 @@
  */
 package org.thingml.networkplugins.js;
 
-import com.eclipsesource.json.JsonObject;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.spi.NetworkPlugin;
-import org.thingml.compilers.spi.SerializationPlugin;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.spi.NetworkPlugin;
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.AbstractConnector;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Protocol;
+
+import com.eclipsesource.json.JsonObject;
 
 public class JsMQTTPlugin extends NetworkPlugin {
 
@@ -256,14 +268,14 @@ public class JsMQTTPlugin extends NetworkPlugin {
                 final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "ThingML");
 
                 main = main.replace("/*$REQUIRE_PLUGINS$*/", "const MQTT = require('./MQTTJS');\n/*$REQUIRE_PLUGINS$*/\n");
-                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + subtopic + "\", \"" + pubtopic + "\", " + conn.getInst().getInstance().getName() + ", function (started) {if (!started) {console.log(\"Cannot start mqtt!\"); process.exit(1);}});\n");
+                main = main.replace("/*$PLUGINS$*/", "/*$PLUGINS$*/\nconst mqtt = new MQTT(\"MQTT\", false, \"" + url + "\", \"" + subtopic + "\", \"" + pubtopic + "\", " + conn.getInst().getName() + ", function (started) {if (!started) {console.log(\"Cannot start mqtt!\"); process.exit(1);}});\n");
                 main = main.replace("/*$STOP_PLUGINS$*/", "mqtt._stop();\n/*$STOP_PLUGINS$*/\n");
 
                 StringBuilder builder = new StringBuilder();
                 for (Message req : conn.getPort().getSends()) {
-                    builder.append(conn.getInst().getInstance().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
-                    builder.append("(msg) => setImmediate(() => mqtt.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
-                    builder.append("));\n");
+                    builder.append(conn.getInst().getName() + ".bus.on('" + conn.getPort().getName() + "?" + req.getName() + "', ");
+                    builder.append("(msg) => mqtt.receive" + req.getName() + "On" + conn.getPort().getName() + "(msg)");
+                    builder.append(");\n");
                 }
                 main = main.replace("/*$PLUGINS_CONNECTORS$*/", builder.toString() + "\n/*$PLUGINS_CONNECTORS$*/");
 

@@ -21,17 +21,17 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Instance;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
-
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.checker.Checker;
+import org.thingml.compilers.checker.Rule;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Port;
 
 /**
  *
@@ -64,7 +64,7 @@ public class PortsUsage extends Rule {
             boolean found = false;
             for (Port p : entry.getValue()) {
                 for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
-                    if (EcoreUtil.equals(eco.getInst().getInstance(), entry.getKey()) && EcoreUtil.equals(eco.getPort(), p)) {
+                    if (EcoreUtil.equals(eco.getInst(), entry.getKey()) && EcoreUtil.equals(eco.getPort(), p)) {
                         found = true;
                         break;
                     }

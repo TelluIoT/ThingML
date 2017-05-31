@@ -24,14 +24,15 @@ package org.thingml.compilers.cpp.sintefboard.plugin;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.sintef.thingml.Configuration;
-import org.sintef.thingml.ExternalConnector;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
+
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CNetworkLibraryGenerator;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  *
@@ -121,8 +122,8 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
                 }
                 ctemplate = ctemplate.replace("/*INSTANCE_INFORMATION*/", eco_instance);
 
-                ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
-                ctx.getBuilder(eco.getInst().getInstance().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
+                ctx.getBuilder(eco.getInst().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".c").append(ctemplate);
+                ctx.getBuilder(eco.getInst().getName() + "_" + eco.getPort().getName() + "_" + eco.getProtocol() + ".h").append(htemplate);
             }
         }
     }
@@ -154,7 +155,7 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
 
             //************ Generate methods for sending meassages to timers
             for (ExternalConnector eco : this.getExternalConnectors()) {
-                Thing t = eco.getInst().getInstance().getType();
+                Thing t = eco.getInst().getType();
                 Port p = eco.getPort();
 
                 for (Message m : p.getSends()) {

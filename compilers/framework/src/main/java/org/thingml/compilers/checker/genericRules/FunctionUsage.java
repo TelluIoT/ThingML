@@ -21,19 +21,32 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.sintef.thingml.*;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.constraints.Types;
-import org.sintef.thingml.helpers.ActionHelper;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.ConfigurationHelper;
-import org.sintef.thingml.helpers.TyperHelper;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
-
-import java.util.List;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.constraints.Types;
+import org.thingml.xtext.helpers.ActionHelper;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.TyperHelper;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.FunctionCallExpression;
+import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PropertyReference;
+import org.thingml.xtext.thingML.ReturnAction;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
  *
@@ -57,10 +70,32 @@ public class FunctionUsage extends Rule {
 
     @Override
     public String getDescription() {
-        return "Check that each function defined in a thing is actually called.";
+        return "Check that functions are used, properly called (params) and that can be statically bound to one and only one concrete function";
     }
 
     private boolean check(Checker checker, Thing t, Function call, List<Expression> params, Function f, EObject o) {
+    	List<Function> functions = new ArrayList<>();
+    	for(Function fn : ThingMLHelpers.allFunctions(t)) {
+    		if (fn.getName().equals(f.getName())) {
+    			if (!fn.isAbstract()) {
+    				functions.add(fn);
+    			}
+    		}
+    	}
+    	if (functions.size() == 0) {
+            checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " cannot be bound to any concrete implementation.\nMake sure it exists one and only concrete implementation of " + f.getName() + " in the context of Thing " + t.getName(), f);    		
+    	} else if (functions.size() > 1) {
+    		String msg = "Function " + f.getName() + " of Thing " + t.getName() + " can be resolved to multiple concrete implementations: ";
+    		int i = 0;
+    		for(Function fn : functions) {
+    			if (i > 0)
+    				msg += ", ";
+    			msg += ((Thing)fn.eContainer()).getName() + ":" + fn.getName();
+    			i++;
+    		}
+    		msg += ".\nMake sure it exists one and only concrete implementation of " + f.getName() + " in the context of Thing " + t.getName();
+            checker.addGenericError(msg, f);    		
+    	}    	    	
         boolean found = false;
         if (EcoreUtil.equals(call, f)) {
             if (!AnnotatedElementHelper.isDefined(f, "SuppressWarnings", "Parameters")) {
@@ -70,7 +105,7 @@ public class FunctionUsage extends Rule {
                 } else {
                     for (Parameter p : f.getParameters()) {
                         Expression e = params.get(f.getParameters().indexOf(p));
-                        Type expected = TyperHelper.getBroadType(p.getType());
+                        Type expected = TyperHelper.getBroadType(p.getTypeRef().getType());
                         Type actual = checker.typeChecker.computeTypeOf(e);
                         if (actual != null) {
                             if (actual.equals(Types.ERROR_TYPE)) {
@@ -81,49 +116,41 @@ public class FunctionUsage extends Rule {
                                 checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
                             }
                         }
-                        for (Action a : ActionHelper.getAllActions(t, VariableAssignment.class)) {//TODO: implement allActions on Function directly
-                            if (a instanceof VariableAssignment) {
-                                VariableAssignment va = (VariableAssignment) a;
-                                if (va.getProperty().equals(p)) {
-                                    checker.addWarning("Re-assigning parameter " + p.getName() + " can have side effects", va);
-                                }
-                            }
+                        for (VariableAssignment va : ActionHelper.getAllActions(t, VariableAssignment.class)) {//TODO: implement allActions on Function directly
+                            if (va.getProperty().equals(p)) {
+                                checker.addWarning("Re-assigning parameter " + p.getName() + " can have side effects", va);
+                            }                            
                         }
                     }
                 }
             }
             //break;
         }
-
-
         return found;
     }
 
     public void check(Checker checker, Thing t, Function f) {
         for (Parameter p : f.getParameters()) {
             boolean isUsed = false;
-            for (Expression exp : ThingMLHelpers.getAllExpressions(t, PropertyReference.class)) {//TODO: see above
-                if (exp instanceof PropertyReference) {
-                    PropertyReference pr = (PropertyReference) exp;
-                    if (pr.getProperty().equals(p)) {
-                        isUsed = true;
-                        break;
-                    }
-                }
+            for (PropertyReference pr : ThingMLHelpers.getAllExpressions(t, PropertyReference.class)) {//TODO: see above
+                if (pr.getProperty().equals(p)) {
+                    isUsed = true;
+                    break;
+                }                
             }
             if (!isUsed) {
                 checker.addWarning("Parameter " + p.getName() + " is never read", p);
             }
         }
 
-        if (f.getType() != null) {
+        if (f.getTypeRef() != null && f.getTypeRef().getType() != null) {
             for (Action a : ActionHelper.getAllActions(t, ReturnAction.class)) {
                 EObject parent = a.eContainer();
                 while (parent != null && !EcoreUtil.equals(parent, f)) {
                     parent = parent.eContainer();
                 }
                 if (EcoreUtil.equals(parent, f)) {
-                    Type actualType = TyperHelper.getBroadType(f.getType());
+                    Type actualType = TyperHelper.getBroadType(f.getTypeRef().getType());
                     Type returnType = checker.typeChecker.computeTypeOf(((ReturnAction) a).getExp());
                     if (returnType.equals(Types.ERROR_TYPE)) {
                         checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
@@ -155,23 +182,15 @@ public class FunctionUsage extends Rule {
         for (Function f : ThingMLHelpers.allFunctions(t)) {
             check(checker, t, f);
             boolean found = false;
-            for (Action b : ActionHelper.getAllActions(t, FunctionCallStatement.class)) {
-                //FIXME brice
-                if (b instanceof FunctionCallStatement) {
-                    FunctionCall a = (FunctionCall) b;
-                    if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
-                        found = true;
-                    }
-                }
+            for (FunctionCallStatement a : ActionHelper.getAllActions(t, FunctionCallStatement.class)) {
+                if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
+                    found = true;
+                }                
             }
-            for (Expression b : ThingMLHelpers.getAllExpressions(t, FunctionCallExpression.class)) {
-                //FIXME brice
-                if (b instanceof FunctionCallExpression) {
-                    FunctionCallExpression a = (FunctionCallExpression) b;
-                    if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
-                        found = true;
-                    }
-                }
+            for (FunctionCallExpression a : ThingMLHelpers.getAllExpressions(t, FunctionCallExpression.class)) {
+                if (check(checker, t, a.getFunction(), a.getParameters(), f, a)) {
+                    found = true;
+                }                
             }
             if (!found && !AnnotatedElementHelper.isDefined(f, "SuppressWarnings", "Call"))
                 checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is never called.", f);

@@ -23,27 +23,27 @@ package org.thingml.compilers.c.posixmt;
 
 
 import java.util.HashSet;
-
 import java.util.Set;
-import org.sintef.thingml.Message;
-import org.sintef.thingml.Parameter;
-import org.sintef.thingml.Port;
-import org.sintef.thingml.Property;
-import org.sintef.thingml.Region;
-import org.sintef.thingml.Session;
-import org.sintef.thingml.StateMachine;
-import org.sintef.thingml.Thing;
-import org.sintef.thingml.Type;
-import org.sintef.thingml.constraints.ThingMLHelpers;
-import org.sintef.thingml.helpers.AnnotatedElementHelper;
-import org.sintef.thingml.helpers.CompositeStateHelper;
-import org.sintef.thingml.helpers.RegionHelper;
-import org.sintef.thingml.helpers.StateHelper;
-import org.sintef.thingml.helpers.ThingHelper;
-import org.sintef.thingml.helpers.ThingMLElementHelper;
+
 import org.thingml.compilers.DebugProfile;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.StateContainerHelper;
+import org.thingml.xtext.helpers.StateHelper;
+import org.thingml.xtext.helpers.ThingHelper;
+import org.thingml.xtext.helpers.ThingMLElementHelper;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.Type;
 
 /**
  *
@@ -210,12 +210,12 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("new_session->s.fifo.fifo = &(new_session->fifo_array);\n");
         builder.append("new_session->s." + ctx.getStateVarName(ThingMLHelpers.allStateMachines(thing).get(0)) + " = " + ctx.getStateID(s.getInitial()) + ";\n");
         for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-            if (p.getCardinality() != null) {//array
+            if (p.getTypeRef().getCardinality() != null) {//array
                 builder.append("new_session->s." + ctx.getVariableName(p) + " = ");
-                builder.append("malloc(sizeof(" + ctx.getCType(p.getType()) + ") * new_session->s." + ctx.getVariableName(p) + "_size);");
+                builder.append("malloc(sizeof(" + ctx.getCType(p.getTypeRef().getType()) + ") * new_session->s." + ctx.getVariableName(p) + "_size);");
                 builder.append("memcpy(&(new_session->s." + ctx.getVariableName(p) + "[0]), "
                         + "&(_instance->" + ctx.getVariableName(p) + "[0]), _instance->"
-                        + ctx.getVariableName(p) + "_size * sizeof(" + ctx.getCType(p.getType()) + "));\n");
+                        + ctx.getVariableName(p) + "_size * sizeof(" + ctx.getCType(p.getTypeRef().getType()) + "));\n");
             }
         }
         builder.append("init_runtime(&(new_session->s.fifo));\n");
@@ -224,20 +224,16 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("new_session->next = _instance->sessions_" + s.getName() + ";\n");
         builder.append("_instance->sessions_" + s.getName() + " = new_session;\n");
         
-        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
-        for(Region r : RegionHelper.allContainedRegionsAndSessions(sm)) {
-            if((!RegionHelper.allContainedRegionsAndSessions(s).contains(r)) || ((r instanceof Session) && (r != s))) {
+        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);        
+        for(StateContainer r : StateContainerHelper.allContainedRegionsAndSessions(sm)) {
+            if((!StateContainerHelper.allContainedRegionsAndSessions(s).contains(r)) || ((r instanceof Session) && (r != s))) {
                 builder.append("new_session->s." + ctx.getStateVarName(r) + " = -1;\n");
             } else {
                 builder.append("new_session->s." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
         }
-        for(Session ss : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+        for(Session ss : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
             builder.append("new_session->s.sessions_" + ss.getName() + " = NULL;\n");
-        }
-        
-        if (ThingMLHelpers.allStateMachines(thing).size() > 0) { // there is a state machine
-            builder.append("new_session->s.initState = " + ctx.getStateID(s) + ";\n");
         }
         
         builder.append("pthread_create( &(new_session->thread), NULL, " + thing.getName() + "_run, (void *) &(new_session->s));\n");
@@ -255,7 +251,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             
             builder.append("    fifo_lock(&(_instance->fifo));\n");
             builder.append("    //Active = false;\n");
-            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+            for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
                 builder.append("    struct session_t * head_" + s.getName() + " = _instance->sessions_" + s.getName() + ";\n");
                 builder.append("    while (head_" + s.getName() + " != NULL) {\n");
                 builder.append("        fifo_lock(&(head_" + s.getName() + "->s.fifo));\n");
@@ -265,7 +261,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                 builder.append("    }\n");
             }
             builder.append("    //Join\n");
-            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+            for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
                 builder.append("    head_" + s.getName() + " = _instance->sessions_" + s.getName() + ";\n");
                 builder.append("    struct session_t * prev_" + s.getName() + ";\n");
                 builder.append("    while (head_" + s.getName() + " != NULL) {\n");
@@ -273,7 +269,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                 builder.append("        prev_" + s.getName() + " = head_" + s.getName() + ";\n");
                 builder.append("        head_" + s.getName() + " = head_" + s.getName() + "->next;\n");
                 for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                    if (p.getCardinality() != null) {//array
+                    if (p.getTypeRef().getCardinality() != null) {//array
                         builder.append("free(prev_" + s.getName() + "->s." + ctx.getVariableName(p) + ");");
                     }
                 }
@@ -286,7 +282,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             
             builder.append("void " + thing.getName() + "_clean_sessions(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
             builder.append("        fifo_lock(&(_instance->fifo));\n");
-            for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+            for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
                 builder.append("        struct session_t * head_" + s.getName() + " = _instance->sessions_" + s.getName() + ";\n");
                 builder.append("        struct session_t ** prev_" + s.getName() + " = &(_instance->sessions_" + s.getName() + ");\n");
                 builder.append("        struct session_t * next_" + s.getName() + ";\n");
@@ -296,7 +292,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                 builder.append("                fifo_lock(&(head_" + s.getName() + "->s.fifo));\n");
                 builder.append("                *prev_" + s.getName() + " = next_" + s.getName() + ";\n");
                 for (Property p : ThingHelper.allPropertiesInDepth(thing)) {
-                    if (p.getCardinality() != null) {//array
+                    if (p.getTypeRef().getCardinality() != null) {//array
                         builder.append("free(head_" + s.getName() + "->s." + ctx.getVariableName(p) + ");");
                     }
                 }
@@ -357,11 +353,11 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             builder.append("uint8_t mbufi_" + m.getName() + " = 2;\n");
 
             for (Parameter pt : m.getParameters()) {
-                if(pt.isIsArray()) {
+                if(pt.getTypeRef().isIsArray()) {
                     StringBuilder cardBuilder = new StringBuilder();
-                    ctx.getCompiler().getThingActionCompiler().generate(pt.getCardinality(), cardBuilder, ctx);
+                    ctx.getCompiler().getThingActionCompiler().generate(pt.getTypeRef().getCardinality(), cardBuilder, ctx);
                     String v = m.getName() + "_" + pt.getName();
-                    Type t = pt.getType();
+                    Type t = pt.getTypeRef().getType();
                     builder.append("union u_" + v + "_t {\n");
                     builder.append("    " + ctx.getCType(t) + " p[" + cardBuilder + "];\n");
                     builder.append("    byte bytebuffer[" + ctx.getCByteSize(t, 0) + "* (" + cardBuilder + ")];\n");
@@ -369,7 +365,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
 
                     builder.append("uint8_t u_" + v + "_index = 0;\n");
                     builder.append("while (u_" + v + "_index < (" + ctx.getCByteSize(t, 0) + "* (" + cardBuilder + "))) {\n");
-                    for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+                    for (int i = 0; i < ctx.getCByteSize(pt.getTypeRef().getType(), 0); i++) {
 
                         builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[u_" + v + "_index - " + i + "]");
                         builder.append(" = mbuf[mbufi_" + m.getName() + " + " + cardBuilder + " - 1 + " + i + " - u_" + v + "_index];\n");
@@ -378,22 +374,22 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                     builder.append("    u_" + v + "_index++;\n");
                     builder.append("}\n");
                     
-                    builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getType(), 0) + " * (" + cardBuilder + ");\n");
+                    builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getTypeRef().getType(), 0) + " * (" + cardBuilder + ");\n");
                 } else {
                     builder.append("union u_" + m.getName() + "_" + pt.getName() + "_t {\n");
-                    builder.append(ctx.getCType(pt.getType()) + " p;\n");
-                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getType(), 0) + "];\n");
+                    builder.append(ctx.getCType(pt.getTypeRef().getType()) + " p;\n");
+                    builder.append("byte bytebuffer[" + ctx.getCByteSize(pt.getTypeRef().getType(), 0) + "];\n");
                     builder.append("} u_" + m.getName() + "_" + pt.getName() + ";\n");
 
 
-                    for (int i = 0; i < ctx.getCByteSize(pt.getType(), 0); i++) {
+                    for (int i = 0; i < ctx.getCByteSize(pt.getTypeRef().getType(), 0); i++) {
 
-                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getType(), 0) - i - 1) + "]");
+                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getTypeRef().getType(), 0) - i - 1) + "]");
                         builder.append(" = mbuf[mbufi_" + m.getName() + " + " + i + "];\n");
 
                     }
 
-                    builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getType(), 0) + ";\n");
+                    builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getTypeRef().getType(), 0) + ";\n");
                 }
             }
             // End Horrible deserialization trick
@@ -402,7 +398,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
             builder.append("switch(portID) {\n");
             for(Port p : ThingMLHelpers.allPorts(thing)) {
                 if(p.getReceives().contains(m)) {
-                    StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+                    CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
                     if (StateHelper.canHandleIncludingSessions(sm, p, m)) {
                     
                         builder.append("case " + ctx.getPortID(thing, p) + ":{\n");
@@ -417,7 +413,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
                         for (Parameter pt : m.getParameters()) {
                             //builder.append(",\n" + ctx.deserializeFromByte(pt.getType(), "mbuf", idx, ctx) + " /* " + pt.getName() + " */ ");
                             builder.append(",\n u_" + m.getName() + "_" + pt.getName() + ".p /* " + pt.getName() + " */ ");
-                            idx = idx + ctx.getCByteSize(pt.getType(), 0);
+                            idx = idx + ctx.getCByteSize(pt.getTypeRef().getType(), 0);
                         }
 
                         builder.append(");\n");
@@ -438,7 +434,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
 
     private void generateThingRun(Thing thing, StringBuilder builder, PosixMTCompilerContext ctx, DebugProfile debugProfile) {
         builder.append("void " + thing.getName() + "_run(struct " + ctx.getInstanceStructName(thing) + " * _instance) {\n");
-        StateMachine sm = ThingMLHelpers.allStateMachines(thing).get(0);
+        CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
         
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) { // there is a state machine
             builder.append("if(_instance->initState != -1) {\n");
@@ -457,7 +453,7 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
         builder.append("        " + thing.getName() + "_processMessageQueue(_instance);\n");
         
         
-        if(!RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
+        if(!StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0)).isEmpty()) {
             builder.append("        " + thing.getName() + "_clean_sessions(_instance);\n");
             builder.append("        //Termination\n");
             builder.append("        if(!_instance->active) {\n");
@@ -491,11 +487,11 @@ public class PosixMTThingImplCompiler extends CThingImplCompiler {
 
                     for (Parameter pt : m.getParameters()) {
                         builder.append("\n// parameter " + pt.getName() + "\n");
-                        ctx.bytesToSerialize(pt.getType(), builder, pt.getName(), pt, "&(inst->fifo)");
+                        ctx.bytesToSerialize(pt.getTypeRef().getType(), builder, pt.getName(), pt, "&(inst->fifo)");
                     }
                     builder.append("    }\n");
                     
-                    for(Session s : RegionHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
+                    for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(thing).get(0))) {
                         builder.append("    struct session_t * head_" + s.getName() + " = inst->sessions_" + s.getName() + ";\n");
                         builder.append("    while (head_" + s.getName() + " != NULL) {\n");
 
