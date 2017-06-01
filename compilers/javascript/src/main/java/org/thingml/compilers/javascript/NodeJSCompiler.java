@@ -26,6 +26,7 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Enumeration;
@@ -103,7 +104,19 @@ public class NodeJSCompiler extends OpaqueThingMLCompiler {
                 for (EnumerationLiteral l : e.getLiterals()) {
                     if (i > 0)
                         builder.append(",\n");
-                    builder.append(l.getName().toUpperCase() + ": \"" + l.getName() + "\"");
+                    //TODO: use @enum_val value if annotation is there
+                    String val = AnnotatedElementHelper.annotationOrElse(l, "enum_val", l.getName());
+                    Integer intVal = null;
+                    try {
+                    	intVal = Integer.parseInt(val);
+                    } catch (NumberFormatException nfe) {
+                    	
+                    }
+                    if (intVal != null) {
+                    	builder.append(l.getName().toUpperCase() + ": " + intVal.intValue());
+                    } else {
+                    	builder.append(l.getName().toUpperCase() + ": \"" + val + "\"");
+                    }
                     i++;
                 }
                 builder.append("}\n");
