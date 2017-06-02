@@ -8,7 +8,7 @@ The ThingML approach is composed of *i*) a **modeling language**, *ii*) a set of
 
 The ThingML language is supported by a set of tools, which include editors, transformations (e.g. export to UML) and an advanced multi-platform code generation framework, which support multiple target programming languages (C, Java, Javascript). The [methodology](https://heads-project.github.io/methodology/) documents the development processes and tools used by both the IoT service developers and the platform experts.
 
-> ThingML is distributed under the *[Apache 2.0 licence](https://www.apache.org/licenses/LICENSE-2.0)*, and has been developed by @ffleurey and @brice-morin of the Networked Systems and Services department of SINTEF in Oslo, Norway, together with a vibrant [open-source community](https://github.com/SINTEF-9012/ThingML/graphs/contributors).
+> ThingML is distributed under the *[Apache 2.0 licence](https://www.apache.org/licenses/LICENSE-2.0)*, and has been developed by @ffleurey and @brice-morin of the Networked Systems and Services department of SINTEF in Oslo, Norway, together with a vibrant [open-source community](https://github.com/SINTEF-9012/ThingML/graphs/contributors). ThingML is now owned by [TellU](http://www.tellucloud.com/), but remains open-source.
 
 > **Issues, bug reports and feature requests should be submitted to the [issue tracker on GitHub](https://github.com/SINTEF-9012/ThingML/issues)**
 
@@ -114,7 +114,7 @@ Nothing special. Open the generated `index.html` file in your System Browser (id
 
 ## &#x1F537; Compile ThingML from the sources
 
-> You need Git, Git LFS, Maven, and a proper JDK8+
+> You need Git, Maven, and a proper JDK8+
 
 ```bash
 git clone https://github.com/SINTEF-9012/ThingML.git
@@ -162,20 +162,6 @@ Compiler Id must belong to the following list:
 ??     debugGUI - Generates html/js mock-up for other a ThingML external connector
 ```
 
-To generate a new update site:
-```bash
-cd ThingML
-mvn clean install
-cd org.thingml.editor.standaloneApp
-mvn -f pom_eclipse.xml clean install
-rm ../org.thingml.eclipse.ui/lib/*.*
-cp target/org.thingml.editor.standaloneApp-*-jar-with-dependencies.jar ../org.thingml.eclipse.ui/lib/thingml.jar
-cd ../org.thingml.eclipse.updatesite
-mvn -f pom_eclipse.xml clean install
-```
-
-The update site will be located in `org.thingml.eclipse.updatesite/target/repository`
-
 ## &#x1F537; FAQ
 
 ### &#x1F539; Where can ThingML code run?
@@ -184,7 +170,7 @@ The update site will be located in `org.thingml.eclipse.updatesite/target/reposi
 
 A ThingML file *per se* is a design-time specification of the structure (components) and behavior (state machines) of a reactive system. It cannot be directly executed.
 
-A ThingML file can however be compiled (or transformed) to Java/JavaScript/C/Arduino source code, which can in turn be compiled and executed on a platform. Code generated from ThingML has been successfully executed on a large number of platforms: PC WIndows/Linux, Raspberry Pi 1, 2 and 3, Intel Edison, Arduino Uno/Mega/Yun, ESP8266, Trinket, Teensy, and probably others.
+A ThingML file can however be compiled (or transformed) to Java/JavaScript/C/Arduino source code, which can in turn be compiled and executed on a platform. Code generated from ThingML has been successfully executed on a large number of platforms: PC Windows/Linux, Raspberry Pi 1, 2 and 3, Intel Edison, Arduino Uno/Mega/Yun/Mini, ESP8266/ESP32, Trinket, Teensy, and probably others.
 
 ### &#x1F539; How to express *this* or *that* in ThingML?
 
@@ -250,7 +236,7 @@ You can also include ThingML as a Maven dependency in your project:
 
 Rather than being monolithic blobs, compilers are implemented in a modular way around a set of extension points defined in the [ThingML Code Generation Framework](https://github.com/SINTEF-9012/ThingML/blob/master/compilers/README.md).
 
-### &#x1F539; Why can't I generate Python/Lua/Ruby/*you-name-it*?
+### &#x1F539; Why can't I generate Go/Python/Lua/Ruby/*you-name-it*?
 
 Well, it is up to you to implement a compiler for whatever language that is not supported by default. What are you waiting for?
 
