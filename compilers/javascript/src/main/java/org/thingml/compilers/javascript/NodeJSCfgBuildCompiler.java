@@ -28,6 +28,7 @@ import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.Thing;
 
 import com.eclipsesource.json.JsonObject;
@@ -54,10 +55,15 @@ public class NodeJSCfgBuildCompiler extends CfgBuildCompiler {
             final JsonValue deps = json.get("dependencies");
 
             for (Thing t : ConfigurationHelper.allThings(cfg)) {
-                for (String dep : AnnotatedElementHelper.annotation(cfg, "js_dep")) {
+                for (String dep : AnnotatedElementHelper.annotation(t, "js_dep")) {
                     deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
                 }
-
+            }
+            
+            for (ObjectType t : ConfigurationHelper.allObjectTypes(cfg)) {
+                for (String dep : AnnotatedElementHelper.annotation(t, "js_dep")) {
+                    deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());
+                }
             }
 
             final File f = new File(ctx.getOutputDirectory() + "/package.json");
