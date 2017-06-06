@@ -93,7 +93,7 @@ public class NodeJSCompiler extends OpaqueThingMLCompiler {
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {
         processDebug(t);
-        for (Type ty : ThingMLHelpers.allUsedSimpleTypes(model)) {
+        for (Type ty : ThingMLHelpers.allTypes/*allUsedSimpleTypes*/(model)) {
             if (ty instanceof Enumeration) {
                 Enumeration e = (Enumeration) ty;
                 ctx.addContextAnnotation("hasEnum", "true");
@@ -104,7 +104,6 @@ public class NodeJSCompiler extends OpaqueThingMLCompiler {
                 for (EnumerationLiteral l : e.getLiterals()) {
                     if (i > 0)
                         builder.append(",\n");
-                    //TODO: use @enum_val value if annotation is there
                     String val = AnnotatedElementHelper.annotationOrElse(l, "enum_val", l.getName());
                     Integer intVal = null;
                     try {

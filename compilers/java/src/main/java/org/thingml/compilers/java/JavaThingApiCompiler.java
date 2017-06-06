@@ -65,7 +65,18 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
 
                 if (i > 0)
                     builder.append(", ");
-                builder.append(java_name + "((" + raw_type + ") " + enum_val + ")");
+                
+                Integer intVal = null;
+                try {
+                	intVal = Integer.parseInt(enum_val);
+                } catch (NumberFormatException nfe) {
+                	
+                }
+                if (intVal != null) {
+                    builder.append(java_name + "((" + raw_type + ") " + enum_val + ")");
+                } else {
+                    builder.append(java_name + "((" + raw_type + ") \"" + enum_val + "\")");
+                }
                 i++;
             }
             builder.append(";\n\n");
@@ -109,7 +120,7 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         final String src = "src/main/java/" + pack.replace(".", "/");
 
         //Enumerations
-        for (Type t : ThingMLHelpers.allUsedSimpleTypes(ThingMLElementHelper.findContainingModel(thing))) {
+        for (Type t : ThingMLHelpers.allSimpleTypes/*allUsedSimpleTypes*/(ThingMLElementHelper.findContainingModel(thing))) {
             if (t instanceof Enumeration) {
                 Enumeration e = (Enumeration) t;
                 final StringBuilder builder = ctx.getNewBuilder(src + "/api/" + ctx.firstToUpper(e.getName()) + "_ENUM.java");

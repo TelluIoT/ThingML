@@ -26,6 +26,7 @@ import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
@@ -129,6 +130,12 @@ public class JavaHelper {
                 result.add(cleanDep);
             }
         }
+        for (ObjectType t : ConfigurationHelper.allObjectTypes(cfg)) {
+            for (String dep : AnnotatedElementHelper.annotation(t, "thingml_maven_dep")) {
+                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
+                result.add(cleanDep);
+            }
+        }        
         return result;
     }
 
@@ -145,6 +152,34 @@ public class JavaHelper {
                 result.add(cleanDep);
             }
         }
+        for (ObjectType t : ConfigurationHelper.allObjectTypes(cfg)) {
+            for (String dep : AnnotatedElementHelper.annotation(t, "maven_dep")) {
+                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
+                result.add(cleanDep);
+            }
+        }
         return result;
     }
+    
+    /**
+    *
+    * @return
+    * @generated NOT
+    */
+   public static Set<String> allMavenRepo(Configuration cfg) {//FIXME: should be moved in a JavaHelper
+       Set<String> result = new HashSet<String>();
+       for (Thing t : ConfigurationHelper.allThings(cfg)) {
+           for (String dep : AnnotatedElementHelper.annotation(t, "maven_repo")) {
+               String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
+               result.add(cleanDep);
+           }
+       }
+       for (ObjectType t : ConfigurationHelper.allObjectTypes(cfg)) {
+           for (String dep : AnnotatedElementHelper.annotation(t, "maven_repo")) {
+               String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
+               result.add(cleanDep);
+           }
+       }
+       return result;
+   }    
 }

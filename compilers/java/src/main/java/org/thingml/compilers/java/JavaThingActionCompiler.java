@@ -27,6 +27,7 @@ import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Enumeration;
+import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
@@ -313,7 +314,18 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 
     @Override
     public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
-        builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + ((Enumeration) expression.getLiteral().eContainer()).getName().toUpperCase() + "_" + expression.getLiteral().getName().toUpperCase());
+    	final EnumerationLiteral lit = expression.getLiteral();
+    	if (AnnotatedElementHelper.hasAnnotation(lit, "enum_val")) {
+    		final String value = AnnotatedElementHelper.annotation(lit, "enum_val").get(0);
+    		try {
+    		Double d = Double.parseDouble(value);
+    		builder.append(AnnotatedElementHelper.annotation(lit, "enum_val").get(0));
+    		} catch (NumberFormatException nfe) {
+    			builder.append("\"" + AnnotatedElementHelper.annotation(lit, "enum_val").get(0) + "\"");
+    		}    		
+    	} else {
+    		builder.append(ctx.firstToUpper(expression.getEnum().getName()) + "_ENUM." + ((Enumeration) expression.getLiteral().eContainer()).getName().toUpperCase() + "_" + expression.getLiteral().getName().toUpperCase());
+    	}
     }
 
     @Override

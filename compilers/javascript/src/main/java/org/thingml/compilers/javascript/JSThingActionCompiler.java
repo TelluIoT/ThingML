@@ -180,7 +180,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
             if (action.getTypeRef().getCardinality() != null) {
                 builder.append(" = []");
             }
-            if (action.isReadonly())
+            if (action.isReadonly() && action.getTypeRef().getCardinality() == null)
                 System.out.println("[ERROR] readonly variable " + action + " must be initialized");
         }
         builder.append(";\n");

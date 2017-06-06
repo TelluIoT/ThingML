@@ -88,6 +88,9 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
                 pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep);
             }
 
+            for (String repo : JavaHelper.allMavenRepo(cfg)) {
+                pom = pom.replace("<!--REPO-->", "<!--REPO-->\n" + repo);
+            }
             
             if(AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
                 pom = pom.replace("<!--SelfContained-->", addSelfContainedBuild());
