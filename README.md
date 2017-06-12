@@ -8,7 +8,7 @@ The ThingML approach is composed of *i*) a **modeling language**, *ii*) a set of
 
 The ThingML language is supported by a set of tools, which include editors, transformations (e.g. export to UML) and an advanced multi-platform code generation framework, which support multiple target programming languages (C, Java, Javascript). The [methodology](https://heads-project.github.io/methodology/) documents the development processes and tools used by both the IoT service developers and the platform experts.
 
-> ThingML is distributed under the *[Apache 2.0 licence](https://www.apache.org/licenses/LICENSE-2.0)*, and has been developed by @ffleurey and @brice-morin of the Networked Systems and Services department of SINTEF in Oslo, Norway, together with a vibrant [open-source community](https://github.com/SINTEF-9012/ThingML/graphs/contributors). ThingML is now owned by [TellU](http://www.tellucloud.com/), but remains open-source.
+> ThingML is distributed under the *[Apache 2.0 licence](https://www.apache.org/licenses/LICENSE-2.0)*, and has been developed by @ffleurey and @brice-morin of the Networked Systems and Services department of SINTEF in Oslo, Norway, together with a vibrant [open-source community](https://github.com/SINTEF-9012/ThingML/graphs/contributors). ThingML is now owned by [Tellu](http://www.tellucloud.com/), but remains open-source.
 
 > **Issues, bug reports and feature requests should be submitted to the [issue tracker on GitHub](https://github.com/SINTEF-9012/ThingML/issues)**
 
