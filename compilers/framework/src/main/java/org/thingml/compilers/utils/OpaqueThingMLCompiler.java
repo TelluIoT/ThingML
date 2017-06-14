@@ -43,14 +43,14 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
         }
     }
 
-    protected void println(String msg) {
+    public void println(String msg) {
         if (m != null)
             m.println(msg);
         else
             System.out.println(msg);
     }
 
-    protected void erroln(String msg) {
+    public void erroln(String msg) {
         if (e != null)
             e.println(msg);
         else

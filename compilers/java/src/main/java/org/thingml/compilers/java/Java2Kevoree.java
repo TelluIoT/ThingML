@@ -33,6 +33,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
@@ -237,7 +238,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         }
         builder.append("import org.kevoree.annotation.*;\n");
         //builder.append("import org.kevoree.api.Context;\n");
-        builder.append("import org.kevoree.api.ModelService;\n");
+        builder.append("import org.kevoree.service.ModelService;\n");
         builder.append("import org.kevoree.log.Log;\n");
         builder.append("import " + pack + ".api.*;\n");
         builder.append("import org.thingml.java.*;\n");
@@ -247,7 +248,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("\n\n");
 
 
-        builder.append("@ComponentType\n ");
+        builder.append("@ComponentType(version = 1)\n ");
         builder.append("public class K" + ctx.firstToUpper(cfg.getName()) + " implements AttributeListener {//The Kevoree component wraps the whole ThingML configuration " + cfg.getName() + "\n");
 
         builder.append("@KevoreeInject\nprivate ModelService modelService;\n");
@@ -262,7 +263,9 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         for (Map.Entry<Instance, List<Port>> entry : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
             Instance i = entry.getKey();
             List<Port> ports = entry.getValue();
+            ((OpaqueThingMLCompiler)ctx.getCompiler()).println("Generating port for instance " + i.getName() + " for Kevoree");
             for (Port p : ports) {
+                ((OpaqueThingMLCompiler)ctx.getCompiler()).println("Generating port " + p.getName() + " for Kevoree");
                 if (!AnnotatedElementHelper.hasAnnotation(p, "internal") && p.getSends().size() > 0) {
                     builder.append("@Output\n");
                     builder.append("private org.kevoree.api.Port " + i.getName() + "_" + p.getName() + "Port_out;\n");
@@ -370,7 +373,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                 if (p.getSends().size() > 0) {
                     tempBuilder.append("final I" + i.getType().getName() + "_" + p.getName() + "Client " + i.getName() + "_" + p.getName() + "_listener = new I" + i.getType().getName() + "_" + p.getName() + "Client(){\n");
                     for (Message m : p.getSends()) {
-                        tempBuilder.append("@Override\n");
+                        //tempBuilder.append("@Override\n");
                         tempBuilder.append("public void " + m.getName() + "_from_" + p.getName() + "(");
                         int id = 0;
                         for (Parameter pa : m.getParameters()) {
@@ -400,7 +403,7 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
         builder.append("}");
         builder.append(tempBuilder.toString());
 
-        builder.append("@Override\npublic void onUpdate(String instance, String attribute, Object value){\n");
+        builder.append("/*@Override\n*/public void onUpdate(String instance, String attribute, Object value){\n");
         int index = 0;
         for (Instance i : ConfigurationHelper.allInstances(cfg)) {
             if (index > 0)

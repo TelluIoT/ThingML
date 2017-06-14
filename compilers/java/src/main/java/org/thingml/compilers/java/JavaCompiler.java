@@ -99,8 +99,6 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
         
         //GENERATE A DOCKERFILE IF ASKED
         ctx.getCompiler().getCfgBuildCompiler().generateDockerFile(cfg, ctx);
-        
-        ctx.getCompiler().getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
         ctx.generateNetworkLibs(cfg);
     }
