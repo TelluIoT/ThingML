@@ -156,18 +156,20 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
             final String kevoreePlugin = "\n<plugin>\n<groupId>org.kevoree.tools</groupId>\n<artifactId>org.kevoree.tools.mavenplugin</artifactId>\n<version>${kevoree.version}</version>\n<extensions>true</extensions>\n<configuration>\n<nodename>node0</nodename><model>src/main/kevs/main.kevs</model><mergeLocalLibraries></mergeLocalLibraries>\n</configuration>\n</plugin>\n</plugins>\n";
             pom = pom.replace("</plugins>", kevoreePlugin);
 
-            pom = pom.replace("<!--PROP-->", "<kevoree.version>5.3.2</kevoree.version>\n<!--PROP-->");
+            pom = pom.replace("<!--PROP-->", "<kevoree.version>5.5.0-SNAPSHOT</kevoree.version>\n<!--PROP-->");
 
-            pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
+            //pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.annotation.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
             pom = pom.replace("<!--DEP-->", "<dependency>\n<groupId>org.kevoree</groupId>\n<artifactId>org.kevoree.api</artifactId>\n<version>${kevoree.version}</version>\n</dependency>\n<!--DEP-->");
-
-
+            pom = pom.replace("<!--PLUGIN-->", "<!--PLUGIN-->\n<plugin><groupId>org.kevoree</groupId><artifactId>org.kevoree.tools.mavenplugin</artifactId><version>${kevoree.version}</version><extensions>true</extensions><executions><execution><goals><goal>generate</goal></goals></execution></executions><configuration><!--<nodename>node0</nodename> --><kevscript>src/main/kevs/main.kevs</kevscript><namespace>mynamespace</namespace><kevoree.version>${kevoree.version}</kevoree.version></configuration></plugin>");
+            pom = pom.replace("<!--REPO-->", "<!--REPO-->\n<repository><id>snap1</id><snapshots><enabled>true</enabled></snapshots><url>http://oss.sonatype.org/content/groups/public/</url></repository>");
+            pom = pom.replace("<!--ROOT-->", "<!--ROOT-->\n<pluginRepositories><pluginRepository><id>snap</id><snapshots><enabled>true</enabled></snapshots><url>http://oss.sonatype.org/content/groups/public/</url></pluginRepository></pluginRepositories>");      
+                        
+            
             String dep = "";
             for (String d : AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "kevoree_import")) {
                 dep += "<mergeLocalLibrary>../" + d + "/target/classes</mergeLocalLibrary>";
             }
             pom = pom.replace("<mergeLocalLibraries></mergeLocalLibraries>", "<mergeLocalLibraries>" + dep + "</mergeLocalLibraries>");
-
 
             final File f = new File(ctx.getOutputDirectory() + "/POM.xml");
             final OutputStream output = new FileOutputStream(f);
@@ -277,7 +279,9 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                     for (Message m : p.getReceives()) {
                         if (id > 0)
                             builder.append("else ");
-                        builder.append("if (string.split(\"@:@\")[0].equals(\"" + m.getName() + "\")) {\n");
+                        if (p.getReceives().size()>1) {
+                        	builder.append("if (string.split(\"@:@\")[0].equals(\"" + m.getName() + "\")) {\n");
+                        }
                         builder.append("final Event msg = " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(m.getName()) + "Type().instantiate(");
                         int j = 0;
                         for (Parameter pa : m.getParameters()) {
@@ -291,14 +295,24 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                             else if (t.equals("float")) builder.append(".Float.parseFloat(");
                             else if (t.equals("byte")) builder.append("Byte.parseByte(");
                             else if (t.equals("boolean")) builder.append("Boolean.parseBoolean(");
-                            builder.append("string.split(\"@:@\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
+                            if (p.getReceives().size()>1) {
+                            	builder.append("string.split(\"@:@\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
+                            } else {
+                            	if (m.getParameters().size() > 1) {
+                            		builder.append("string.split(\";\")[" + m.getParameters().indexOf(pa) + "]");
+                            	} else {
+                            		builder.append("string");
+                            	}
+                            }
                             if (t.equals("char")) builder.append(".charAt(0)");
                             else if (!t.equals("String")) builder.append(")");
                             j++;
                         }
                         builder.append(");\n");
                         builder.append(ctx.getInstanceName(i) + ".receive(msg, " + ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
-                        builder.append("}\n");
+                        if (p.getReceives().size()>1) {
+                        	builder.append("}\n");
+                        }
                         id = id + 1;
                     }
                     builder.append("}\n\n");
@@ -329,7 +343,11 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                     else if (t.equals("float")) builder.append(".Float.parseFloat(");
                     else if (t.equals("byte")) builder.append("Byte.parseByte(");
                     else if (t.equals("boolean")) builder.append("Boolean.parseBoolean(");
-                    builder.append("string.split(\"@:@\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
+                    if (p.getReceives().size()>1) {
+                    	builder.append("string.split(\"@:@\")[1].split(\";\")[" + m.getParameters().indexOf(pa) + "]");
+                    } else {
+                    	builder.append("string.split(\";\")[" + m.getParameters().indexOf(pa) + "]");                    	
+                    }
                     if (t.equals("char")) builder.append(".charAt(0)");
                     else builder.append(")");
                 }
@@ -384,9 +402,16 @@ public class Java2Kevoree extends CfgExternalConnectorCompiler {
                             id++;
                         }
                         tempBuilder.append(") {\n");
-                        tempBuilder.append("final String msg = \"" + m.getName() + "@:@\"");
+                        if (p.getSends().size() > 1) {
+                        	tempBuilder.append("final String msg = \"" + m.getName() + "@:@\"");
+                        } else {
+                        	tempBuilder.append("final String msg = \"\"");
+                        }
                         for (Parameter pa : m.getParameters()) {
-                            tempBuilder.append(" + " + ctx.protectKeyword(ctx.getVariableName(pa)) + " + \";\"");
+                            tempBuilder.append(" + " + ctx.protectKeyword(ctx.getVariableName(pa)));
+                            if (m.getParameters().size() > 1) {
+                            	tempBuilder.append(" + \";\"");
+                            }
                         }
                         tempBuilder.append(";\n");
                         tempBuilder.append("try {\n");

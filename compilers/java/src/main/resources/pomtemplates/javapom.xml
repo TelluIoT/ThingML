@@ -115,8 +115,11 @@
                     <mainClass><!--PACK-->.Main</mainClass>
                 </configuration>
             </plugin>
+            <!-- PLUGIN-->
             <!--SelfContained-->
         </plugins>
     </build>
+    
+    <!--ROOT-->
 
 </project>
