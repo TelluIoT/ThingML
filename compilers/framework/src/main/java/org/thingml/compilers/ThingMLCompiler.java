@@ -66,13 +66,14 @@ import org.thingml.xtext.thingML.ThingMLModel;
  */
 public abstract class ThingMLCompiler {
 
-    public static Checker checker = new Checker("ThingML");
+    
     //FIXME: the code below related to loading and errors should be refactored and probably moved. It is just here right now as a convenience.
     public static List<String> errors;
     public static List<String> warnings;
     public static XtextResource resource;
     public static File currentFile;
     protected Context ctx = new Context(this);
+    public Checker checker = new Checker("ThingML", ctx);
     Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
     Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
     Map<String, ExternalThingPlugin> externalThingPlugingPerExternalThing = new HashMap<>();
@@ -129,7 +130,7 @@ public abstract class ThingMLCompiler {
             for (Resource r : model.getResourceSet().getResources()) {
                 checkEMFErrorsAndWarnings(r);
             }
-            if (errors.isEmpty()) {
+            /*if (errors.isEmpty()) {
                 ThingMLModel m = (ThingMLModel) model.getContents().get(0);
                 for (Configuration cfg : ThingMLHelpers.allConfigurations(m)) {
                     checker.do_generic_check(cfg);
@@ -137,7 +138,7 @@ public abstract class ThingMLCompiler {
                 if (errors.isEmpty()) {
                     return m;
                 }
-            }
+            }*/
 
         } catch (Exception e) {
             e.printStackTrace();
