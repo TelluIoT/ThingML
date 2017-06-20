@@ -35,7 +35,7 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
     public PosixMTCompiler() {
         super(new PosixMTThingActionCompiler(), new PosixMTThingApiCompiler(), new PosixMTCfgMainGenerator(),
                 new PosixCCfgBuildCompiler(), new PosixMTThingImplCompiler());
-        this.checker = new PosixChecker(this.getID());
+        this.checker = new PosixChecker(this.getID(), this.ctx);
     }
 
     @Override

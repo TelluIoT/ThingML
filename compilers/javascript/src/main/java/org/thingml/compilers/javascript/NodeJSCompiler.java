@@ -45,7 +45,7 @@ public class NodeJSCompiler extends OpaqueThingMLCompiler {
     public NodeJSCompiler() {
         super(new NodeJSThingActionCompiler(), new JSThingApiCompiler(), new NodeJSCfgMainGenerator(),
                 new NodeJSCfgBuildCompiler(), new NodeJSThingImplCompiler());
-        this.checker = new Checker(this.getID()) {
+        this.checker = new Checker(this.getID(), this.ctx) {
             @Override
             public void do_check(Configuration cfg) {
                 do_generic_check(cfg);

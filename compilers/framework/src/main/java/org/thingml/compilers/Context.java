@@ -77,6 +77,7 @@ public class Context {
     private String postKeywordEscape = "`";
     private File outputDirectory = null;
     private Boolean atInitTimeLock = false;
+	private File inputDirectory;
 
     //public Ansi ansi = new Ansi();
 
@@ -387,8 +388,12 @@ public class Context {
         outputDirectory = outDir.getAbsoluteFile();
     }
   
+    public void setInputDirectory(File dir) {
+    	this.inputDirectory = dir;
+    }
+    
     public File getInputDirectory() {
-        return compiler.getInputDirectory();
+        return this.inputDirectory;
     }
 
     public boolean getDebugWithID() {

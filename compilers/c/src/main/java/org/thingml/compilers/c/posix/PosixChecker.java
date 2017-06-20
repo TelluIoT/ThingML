@@ -21,6 +21,7 @@
  */
 package org.thingml.compilers.c.posix;
 
+import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CChecker;
 import org.thingml.xtext.thingML.Configuration;
 
@@ -30,8 +31,8 @@ import org.thingml.xtext.thingML.Configuration;
  */
 public class PosixChecker extends CChecker {
 
-    public PosixChecker(String compiler) {
-        super(compiler);
+    public PosixChecker(String compiler, Context ctx) {
+        super(compiler, ctx);
     }
 
     @Override

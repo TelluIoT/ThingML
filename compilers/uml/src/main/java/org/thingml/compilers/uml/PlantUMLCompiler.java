@@ -42,7 +42,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     public PlantUMLCompiler() {
         super(new ThingMLPrettyPrinter(), new ThingApiCompiler(), new PlantUMLCfgMainGenerator(),
                 new CfgBuildCompiler(), new PlantUMLThingImplCompiler());
-        this.checker = new Checker(this.getID()) {
+        this.checker = new Checker(this.getID(), this.ctx) {
             @Override
             public void do_check(Configuration cfg) {
                 do_generic_check(cfg);
@@ -52,7 +52,7 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
-        this.checker = new Checker(this.getID()) {
+        this.checker = new Checker(this.getID(), this.ctx) {
             @Override
             public void do_check(Configuration cfg) {
                 do_generic_check(cfg);

@@ -40,6 +40,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.helpers.ActionHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Action;
@@ -849,7 +850,7 @@ public class ThingMLHelpers {
 
 
 	public static <T extends Expression> List<T> getAllExpressions(EObject self, Class<T> clazz) {
-		List<T> result = new ArrayList<T>();
+		List<T> result = new ArrayList<T>();				
 		TreeIterator<EObject> it = self.eAllContents();
 		while(it.hasNext()) {
 			EObject o = it.next();

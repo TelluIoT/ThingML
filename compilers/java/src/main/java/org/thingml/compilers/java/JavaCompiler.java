@@ -35,7 +35,7 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     public JavaCompiler() {
         super(new JavaThingActionCompiler(), new JavaThingApiCompiler(), new JavaCfgMainGenerator(),
                 new JavaCfgBuildCompiler(), new JavaThingImplCompiler());
-        this.checker = new Checker(this.getID()) {
+        this.checker = new Checker(this.getID(), this.ctx) {
             @Override
             public void do_check(Configuration cfg) {
                 do_generic_check(cfg);

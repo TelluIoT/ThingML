@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.InternalTransition;
@@ -45,7 +46,7 @@ import org.thingml.xtext.thingML.VariableAssignment;
  */
 public class ThingHelper {
 
-	
+
 	public static Set<Thing> allIncludedThings(Thing self) {
 		HashSet<Thing> result = new HashSet<>();
 		for(Thing t : self.getIncludes()) {
@@ -54,7 +55,7 @@ public class ThingHelper {
 		}
 		return result;
 	}
-	
+
 	public static List<Function> allConcreteFunctions(Thing self) {
 		List<Function> result = new ArrayList<>();
 		for(Function fn : ThingMLHelpers.allFunctions(self)) {
@@ -64,213 +65,229 @@ public class ThingHelper {
 		}
 		return result;
 	}
-	
+
 	public static Function getConcreteFunction(Thing self, Function f) throws Exception {
+		Function cf = null;
+		int count = 0;
 		for(Function fn : ThingMLHelpers.allFunctions(self)) {
 			if (fn.getName().equals(f.getName()) && !fn.isAbstract()) {//Should be enough to check on names as we cannot have two functions with same name (though <> params)
-				return fn;
+				cf = fn;
+				count++;
 			}
 		}
-		throw new Exception("Cannot bind ThingML function " + f.getName() + " in thing " + self.getName());
+		if (cf == null)
+			throw new Exception("Cannot bind ThingML function " + f.getName() + " in thing " + self.getName());
+		if (count > 0)
+			throw new Exception("ThingML function " + f.getName() + " in thing " + self.getName() + " is bound to multiple concrete implementations");
+		return cf;
 	}
-	
-    public static boolean hasSession(Thing self) {
-        for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
-        	if(CompositeStateHelper.allContainedSessions(sm).size() > 0)
-        		return true;
-        }
-        return false;
-    }
 
-    public static boolean isSingleton(Thing self) {
-        return AnnotatedElementHelper.isDefined(self, "singleton", "true");
-    }
+	public static boolean hasSession(Thing self) {
+		for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
+			if(CompositeStateHelper.allContainedSessions(sm).size() > 0)
+				return true;
+		}
+		return false;
+	}
 
-    public static List<Transition> allTransitionsWithAction(Thing self) {
-        //var result = new ArrayList[Handler]()
-        final List<Transition> result = new ArrayList<Transition>();
-        for(CompositeState sm : self.getBehaviour()) {
-            for(State s : StateHelper.allStates(sm)) {
-                for(Transition o : s.getOutgoing()) {
-                    if (o.getAction() != null) {
-                        result.add(o);
-                    }
-                }
-            }
-        }
-        return result;
-    }
+	public static boolean isSingleton(Thing self) {
+		return AnnotatedElementHelper.isDefined(self, "singleton", "true");
+	}
 
-    public static List<InternalTransition> allInternalTransitionsWithAction(Thing self) {
-        //var result = new ArrayList[Handler]()
-        final List<InternalTransition> result = new ArrayList<InternalTransition>();
-        for(CompositeState sm : self.getBehaviour()) {
-            for(State s : StateHelper.allStates(sm)) {
-                for(InternalTransition o : s.getInternal()) {
-                    if (o.getAction() != null) {
-                        result.add(o);
-                    }
-                }
-            }
-        }
-        return result;
-    }
+	public static List<Transition> allTransitionsWithAction(Thing self) {
+		//var result = new ArrayList[Handler]()
+		final List<Transition> result = new ArrayList<Transition>();
+		for(CompositeState sm : self.getBehaviour()) {
+			for(State s : StateHelper.allStates(sm)) {
+				for(Transition o : s.getOutgoing()) {
+					if (o.getAction() != null) {
+						result.add(o);
+					}
+				}
+			}
+		}
+		return result;
+	}
 
-
-    public static Set<Property> allPropertiesInDepth(Thing self) {
-    	Set<Property> result = new HashSet<Property>();
-    	result.addAll(ThingMLHelpers.allProperties(self));
-        for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
-            result.addAll(CompositeStateHelper.allContainedProperties(sm));
-        }
-        return result;
-    }
+	public static List<InternalTransition> allInternalTransitionsWithAction(Thing self) {
+		//var result = new ArrayList[Handler]()
+		final List<InternalTransition> result = new ArrayList<InternalTransition>();
+		for(CompositeState sm : self.getBehaviour()) {
+			for(State s : StateHelper.allStates(sm)) {
+				for(InternalTransition o : s.getInternal()) {
+					if (o.getAction() != null) {
+						result.add(o);
+					}
+				}
+			}
+		}
+		return result;
+	}
 
 
-    public static Expression initExpression(Thing self, Property p) {
-
-        if (ThingMLHelpers.allProperties(self).contains(p)) {  // It is a property of the thing
-
-            List<PropertyAssign> assigns = new ArrayList<PropertyAssign>();
-            for (PropertyAssign e : self.getAssign()) {
-                if (e.getProperty().equals(p))
-                    assigns.add(e);
-            }
-
-            // If the expression is defined locally return the init expression
-            if (self.getProperties().contains(p)) {
-                if (assigns.size() > 0)
-                    System.out.println("Error: Thing " + self.getName() + " cannot redefine initial value for property " + p.getName());
-                return p.getInit();
-            }
-
-            if (assigns.size() > 1)
-                System.out.println("Error: Thing " + self.getName() + " contains several assignments for property " + p.getName());
-
-            if (assigns.size() == 1) {
-                return assigns.get(0).getInit();
-            }
-
-            List<Thing> imports = new ArrayList<Thing>();
-            for (Thing t : self.getIncludes()) {
-                if (ThingMLHelpers.allProperties(t).contains(p)) {
-                    imports.add(t);
-                }
-            }
-            //  imports cannot be empty since the property must be defined in a imported thing
-            if (imports.size() > 1)
-                System.out.println("Warning: Thing " + self.getName() + " gets property " + p.getName() + " from several paths, it should define its initial value");
+	public static Set<Property> allPropertiesInDepth(Thing self) {
+		Set<Property> result = new HashSet<Property>();
+		result.addAll(ThingMLHelpers.allProperties(self));
+		for(CompositeState sm : ThingMLHelpers.allStateMachines(self)) {
+			result.addAll(CompositeStateHelper.allContainedProperties(sm));
+		}
+		return result;
+	}
 
 
-            return ThingHelper.initExpression(imports.get(0), p);
-        } else { // It is a property of a state machine
-            return p.getInit();
-        }
-    }
+	public static Expression initExpression(Thing self, Property p) {
+
+		if (ThingMLHelpers.allProperties(self).contains(p)) {  // It is a property of the thing
+
+			List<PropertyAssign> assigns = new ArrayList<PropertyAssign>();
+			for (PropertyAssign e : self.getAssign()) {
+				if (e.getProperty().equals(p))
+					assigns.add(e);
+			}
+
+			// If the expression is defined locally return the init expression
+			if (self.getProperties().contains(p)) {
+				if (assigns.size() > 0)
+					System.out.println("Error: Thing " + self.getName() + " cannot redefine initial value for property " + p.getName());
+				return p.getInit();
+			}
+
+			if (assigns.size() > 1)
+				System.out.println("Error: Thing " + self.getName() + " contains several assignments for property " + p.getName());
+
+			if (assigns.size() == 1) {
+				return assigns.get(0).getInit();
+			}
+
+			List<Thing> imports = new ArrayList<Thing>();
+			for (Thing t : self.getIncludes()) {
+				if (ThingMLHelpers.allProperties(t).contains(p)) {
+					imports.add(t);
+				}
+			}
+			//  imports cannot be empty since the property must be defined in a imported thing
+			if (imports.size() > 1)
+				System.out.println("Warning: Thing " + self.getName() + " gets property " + p.getName() + " from several paths, it should define its initial value");
 
 
-    public static List<PropertyAssign> initExpressionsForArray(Thing self, Property p) {
+			return ThingHelper.initExpression(imports.get(0), p);
+		} else { // It is a property of a state machine
+			return p.getInit();
+		}
+	}
 
-        List<PropertyAssign> result = new ArrayList<PropertyAssign>();
 
-        if (ThingMLHelpers.allProperties(self).contains(p)) {  // It is a property of the thing
+	public static List<PropertyAssign> initExpressionsForArray(Thing self, Property p) {
 
-            // collect assignment in the imported things first:
-            for (Thing t : self.getIncludes()) {
-                if (ThingMLHelpers.allProperties(t).contains(p))
-                    result.addAll(ThingHelper.initExpressionsForArray(t,p));
-            }
-            // collect assignments in this thing
-            List<PropertyAssign> assigns = null;
-            for(PropertyAssign pa : self.getAssign()) {
-                if (pa.getProperty().equals(p))
-                    result.add(pa);
-            }
-        }
-        else { // It is a property of a state machine
-            // No way to initialize arrays in state machines (so far)
-        }
-        return result;
-    }
+		List<PropertyAssign> result = new ArrayList<PropertyAssign>();
 
-    public static List<Property> allUsedProperties(Thing self) {
-        List<Property> result = new ArrayList<>();
-        for(Property p : allPropertiesInDepth(self)) {
-            for (VariableAssignment a : ActionHelper.getAllActions(self, VariableAssignment.class)) {
-                if (EcoreUtil.equals(p, a.getProperty())) {
-                    boolean isPresent = false;
-                    for(Property pr : result) {
-                        if (EcoreUtil.equals(p, pr)) {
-                            isPresent = true;
-                            break;
-                        }
-                    }
-                    if (!isPresent)
-                        result.add(p);
-                    break;
-                }
-            }
-            for (PropertyReference e : ThingMLHelpers.getAllExpressions(self, PropertyReference.class)) {
-                if (EcoreUtil.equals(p, e.getProperty())) {
-                    boolean isPresent = false;
-                    for(Property pr : result) {
-                        if (EcoreUtil.equals(p, pr)) {
-                            isPresent = true;
-                            break;
-                        }
-                    }
-                    if (!isPresent)
-                        result.add(p);
-                    break;
-                }
-            }
-        }
-        return result;
-    }
+		if (ThingMLHelpers.allProperties(self).contains(p)) {  // It is a property of the thing
 
-    /**
-     * Returns a list of all the types that is used in a thing
-     * @param self
-     * @return
-     */
-     public static Set<Type> allUsedTypes(Thing self) { //TODO: Optimise for only Types that are actually used
-         List<Type> list = new ArrayList<Type>();
-         // Types for all properties (things or state machines)
-         for(Property p : ThingHelper.allPropertiesInDepth(self)) {
-             list.add(p.getTypeRef().getType());
-         }
-         // Types for all messages
-         for(Message m : ThingMLHelpers.allMessages(self)) {
-             for(Parameter p : m.getParameters()) {
-                 list.add(p.getTypeRef().getType());
-             }
-         }
-         // Types for all variables
-         for (Variable v : ThingMLHelpers.allVariables(self)) {
-             list.add(v.getTypeRef().getType());
-         }
-         // Types for all functions
-         for (Function f : ThingMLHelpers.allFunctions(self)) {
-             for (Parameter p : f.getParameters()) {
-                 list.add(p.getTypeRef().getType());
-             }
-         }
+			// collect assignment in the imported things first:
+			for (Thing t : self.getIncludes()) {
+				if (ThingMLHelpers.allProperties(t).contains(p))
+					result.addAll(ThingHelper.initExpressionsForArray(t,p));
+			}
+			// collect assignments in this thing
+			List<PropertyAssign> assigns = null;
+			for(PropertyAssign pa : self.getAssign()) {
+				if (pa.getProperty().equals(p))
+					result.add(pa);
+			}
+		}
+		else { // It is a property of a state machine
+			// No way to initialize arrays in state machines (so far)
+		}
+		return result;
+	}
 
-         // Make sure we only have one of each type in the resulting set
-         Set<Type> result = new HashSet<Type>();
-         for (Type tl : list) {
-             boolean found = false;
-             for (Type ts : result) {
-                 if (EcoreUtil.equals(tl,ts)) {
-                     found = true;
-                     break;
-                 }
-             }
-             if (!found) {
-                 result.add(tl);
-             }
-         }
-         return result;
- }
+	public static List<Property> allUsedProperties(Thing self) {
+		List<Property> result = new ArrayList<>();
+		for(Property p : allPropertiesInDepth(self)) {
+			for (VariableAssignment a : ActionHelper.getAllActions(self, VariableAssignment.class)) {
+				if (EcoreUtil.equals(p, a.getProperty())) {
+					boolean isPresent = false;
+					for(Property pr : result) {
+						if (EcoreUtil.equals(p, pr)) {
+							isPresent = true;
+							break;
+						}
+					}
+					if (!isPresent)
+						result.add(p);
+					break;
+				}
+			}
+			for (PropertyReference e : ThingMLHelpers.getAllExpressions(self, PropertyReference.class)) {
+				if (EcoreUtil.equals(p, e.getProperty())) {
+					boolean isPresent = false;
+					for(Property pr : result) {
+						if (EcoreUtil.equals(p, pr)) {
+							isPresent = true;
+							break;
+						}
+					}
+					if (!isPresent)
+						result.add(p);
+					break;
+				}
+			}
+			for (EnumLiteralRef e : ThingMLHelpers.getAllExpressions(self, EnumLiteralRef.class)) {
+				boolean isPresent = false;
+				if (EcoreUtil.equals(p.getTypeRef().getType(), e.getEnum())) {
+					isPresent = true;
+					break;
+				}
+				if (!isPresent)
+					result.add(p);
+			}            
+		}
+		return result;
+	}
+
+	/**
+	 * Returns a list of all the types that is used in a thing
+	 * @param self
+	 * @return
+	 */
+	public static Set<Type> allUsedTypes(Thing self) { //TODO: Optimise for only Types that are actually used
+		List<Type> list = new ArrayList<Type>();
+		// Types for all properties (things or state machines)
+		for(Property p : ThingHelper.allPropertiesInDepth(self)) {
+			list.add(p.getTypeRef().getType());
+		}
+		// Types for all messages
+		for(Message m : ThingMLHelpers.allMessages(self)) {
+			for(Parameter p : m.getParameters()) {
+				list.add(p.getTypeRef().getType());
+			}
+		}
+		// Types for all variables
+		for (Variable v : ThingMLHelpers.allVariables(self)) {
+			list.add(v.getTypeRef().getType());
+		}
+		// Types for all functions
+		for (Function f : ThingMLHelpers.allFunctions(self)) {
+			for (Parameter p : f.getParameters()) {
+				list.add(p.getTypeRef().getType());
+			}
+		}
+
+		// Make sure we only have one of each type in the resulting set
+		Set<Type> result = new HashSet<Type>();
+		for (Type tl : list) {
+			boolean found = false;
+			for (Type ts : result) {
+				if (EcoreUtil.equals(tl,ts)) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				result.add(tl);
+			}
+		}
+		return result;
+	}
 
 }
