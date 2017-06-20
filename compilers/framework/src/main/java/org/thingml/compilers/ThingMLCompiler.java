@@ -421,7 +421,7 @@ public abstract class ThingMLCompiler {
             throw new Error("ERROR: The output directory has to be a directory (" + outDir.getAbsolutePath() + ").");
         if (!outDir.canWrite())
             throw new Error("ERROR: The output directory is not writable (" + outDir.getAbsolutePath() + ").");
-        outputDirectory = outDir.getAbsoluteFile();
+        outputDirectory = outDir.getAbsoluteFile();        
     }
   
     public File getInputDirectory() {
@@ -436,6 +436,7 @@ public abstract class ThingMLCompiler {
         if (!inDir.canRead())
             throw new Error("ERROR: The input directory is not readable (" + inDir.getAbsolutePath() + ").");
         inputDirectory = inDir.getAbsoluteFile();
+        ctx.setInputDirectory(inputDirectory);
     }
 
     public void addNetworkPlugin(NetworkPlugin np) {

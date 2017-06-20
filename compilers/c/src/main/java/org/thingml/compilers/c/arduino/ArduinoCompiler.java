@@ -35,7 +35,7 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
     public ArduinoCompiler() {
         super(new CThingActionCompilerArduino(), new CThingApiCompilerArduino(), new CCfgMainGenerator(),
                 new CfgBuildCompiler(), new CThingImplCompiler());
-        this.checker = new ArduinoChecker(this.getID());
+        this.checker = new ArduinoChecker(this.getID(), this.ctx);
     }
 
     @Override

@@ -28,13 +28,11 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Expression;
-import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.ExternExpression;
 import org.thingml.xtext.thingML.LoopAction;
-import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
@@ -69,8 +67,12 @@ public class ControlStructures extends Rule {
         if (actual.equals(Types.BOOLEAN_TYPE)) {
         	return;
         }
-        if (actual.equals(Types.ANY_TYPE)) {
-            checker.addGenericWarning("Condition cannot be typed as Boolean", o);
+        if (actual.equals(Types.ANY_TYPE)) {        	
+        	if (ThingMLHelpers.getAllExpressions(e, ExternExpression.class).size() > 0) {
+        		checker.addGenericNotice("Condition involving extern expressions cannot be typed as Boolean. Consider using a cast: \"<exp> as <Type>\".", o);
+        	} else {       	
+        		checker.addGenericWarning("Condition cannot be typed as Boolean.", o);
+        	}
             return;
         }
         checker.addGenericError("Condition is not a Boolean (" + org.thingml.xtext.helpers.TyperHelper.getBroadType(actual).getName() + ")", o);

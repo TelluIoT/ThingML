@@ -25,7 +25,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.checker.genericRules.AutotransitionCycles;
 import org.thingml.compilers.checker.genericRules.ConnectorCycles;
@@ -61,7 +64,7 @@ public class Checker {
     private String generic;
     public Context ctx;
 
-    public Checker(String compiler) {
+    public Checker(String compiler, Context ctx) {
         Rules = new HashSet<Rule>();
         Errors = new HashSet<CheckerInfo>();
         Warnings = new HashSet<CheckerInfo>();
@@ -69,7 +72,7 @@ public class Checker {
         /*wrappers = new ArrayList<ErrorWrapper>();
         wrappers.add(new EMFWrapper());*/
 
-        this.ctx = new Context(null);
+        this.ctx = ctx;
         this.compiler = compiler;
         generic = "ThingML";
 
@@ -255,8 +258,12 @@ public class Checker {
             this.element = element;
         }
 
-        public String print(EObject el) {
-        	return ThingMLElementHelper.getName(el);
+        public String print(EObject el) {              	        
+        	final URI uri = el.eResource().getURI().deresolve(URI.createFileURI(ctx.getInputDirectory().getAbsolutePath()));          	
+        	INode node = NodeModelUtils.getNode(el);
+        	int startLine = node.getStartLine();
+        	int endLine = node.getEndLine();                    	
+        	return el.getClass().getSimpleName().replace("Impl", "") + " \"" + ThingMLElementHelper.getName(el) + "\" (" + uri + " at lines " + startLine + "-" + endLine + ")" ;
         }
 
         public String toString() {

@@ -263,7 +263,7 @@ public class CompileThingFile implements IHandler {
 
 				compiler.checker.Errors.clear();
 				compiler.checker.Warnings.clear();
-				compiler.checker.Notices.clear();
+				compiler.checker.Notices.clear();												
 				compiler.checker.do_check(cfg);
 				ThingMLConsole.getInstance().printMessage("Configuration " + cfg.getName() + " contains " + compiler.checker.Errors.size() + " error(s), " + compiler.checker.Warnings.size() + " warning(s), and " + compiler.checker.Notices.size() + " notices.\n");
 				if (compiler.checker.Errors.size() > 0) {
@@ -291,9 +291,11 @@ public class CompileThingFile implements IHandler {
 			}
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
-			ThingMLConsole.getInstance().printError("FATAL ERROR: Exeption calling ThingML Compiler: " + e.getLocalizedMessage());
-			ThingMLConsole.getInstance().printError("Please contact the ThingML development team (though GitHub's issue tracker) with 1) your input model, and 2) the following stack trace:");
-			e.printStackTrace(new PrintStream(ThingMLConsole.getInstance().getErrorSteam()));
+			ThingMLConsole.getInstance().printError("Please contact the ThingML development team (though GitHub's issue tracker) with 1) your input model, and 2) the following stack trace:\n");
+			ThingMLConsole.getInstance().printError("FATAL ERROR: Exeption calling ThingML Compiler: " + e.getLocalizedMessage() + "\n");			
+			for(StackTraceElement ste : e.getStackTrace()) {//This should now print the stack trace to Eclipse ThingML Console.
+				ThingMLConsole.getInstance().printError("\t" + ste.toString() + "\n");
+			}
 			e.printStackTrace();
 		}
 

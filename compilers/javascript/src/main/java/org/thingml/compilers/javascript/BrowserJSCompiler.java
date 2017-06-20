@@ -37,7 +37,7 @@ public class BrowserJSCompiler extends OpaqueThingMLCompiler {
     public BrowserJSCompiler() {
         super(new BrowserThingActionCompiler(), new JSThingApiCompiler(), new BrowserJSCfgMainGenerator(),
                 new BrowserJSCfgBuildCompiler(), new BrowserJSThingImplCompiler());
-        this.checker = new Checker(this.getID()) {
+        this.checker = new Checker(this.getID(), this.ctx) {
             @Override
             public void do_check(Configuration cfg) {
                 do_generic_check(cfg);

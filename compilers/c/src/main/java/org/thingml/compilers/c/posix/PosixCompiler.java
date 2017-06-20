@@ -37,7 +37,7 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
         super(new CThingActionCompilerPosix(), new CExternalThingEnabledApiCompiler(new PosixThingApiCompiler()),
                 new CCfgMainGenerator(), new PosixCCfgBuildCompiler(),
                 new CExternalThingEnabledImplCompiler(new PosixThingImplCompiler()));
-        this.checker = new PosixChecker(this.getID());
+        this.checker = new PosixChecker(this.getID(), this.ctx);
     }
 
     @Override

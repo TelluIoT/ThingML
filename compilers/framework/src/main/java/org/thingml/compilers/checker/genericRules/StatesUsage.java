@@ -31,8 +31,10 @@ import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.FinalState;
 import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.thingML.Transition;
 
 /**
  *
@@ -91,16 +93,26 @@ public class StatesUsage extends Rule {
                 if((EcoreUtil.equals(s, sm)))
                     continue;
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Unreachable")) {
-                    //TODO: Re-implement the unreachable condition
-                	/*
-                	if (s.getIncoming().size() == 0 && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
-                        checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
+                    if (s.eContainer() instanceof StateContainer && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
+                    	StateContainer c = (StateContainer) s.eContainer();
+                    	boolean canBeReached = false;
+                    	for(State source : c.getSubstate()) {
+                    		for(Transition tr : source.getOutgoing()) {
+                    			if (EcoreUtil.equals(s, tr.getTarget())) {
+                    				canBeReached = true;
+                    				break;
+                    			}
+                    		}
+                    	}
+                    	if (!canBeReached) {
+                    		checker.addGenericNotice("Unreachable state " + s.getName() + " in Thing " + t.getName() + ".", s);
+                    	}
                     }
-                    */
+                    
                 }
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Sink")) {
                     if (!(s instanceof FinalState) && !EcoreUtil.equals(s, sm) && !(ThingMLHelpers.findContainingStateContainer(s).getSubstate().size() == 1) && s.getOutgoing().size() == 0) {
-                        checker.addGenericNotice("Sink state " + s.getName() + " in Thing " + t.getName() + ".", s);
+                        checker.addGenericNotice("Sink state " + s.getName() + " in Thing " + t.getName() + ". Consider make it a final state if that is the intended behavior.", s);
                     }
                 }
             }

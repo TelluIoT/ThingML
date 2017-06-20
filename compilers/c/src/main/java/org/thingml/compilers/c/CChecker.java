@@ -24,6 +24,7 @@ package org.thingml.compilers.c;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.thingml.compilers.Context;
 import org.thingml.compilers.c.checkerRules.ArrayCardinality;
 import org.thingml.compilers.c.checkerRules.PointerParameters;
 import org.thingml.compilers.checker.Checker;
@@ -37,8 +38,8 @@ import org.thingml.xtext.thingML.Configuration;
 public abstract class CChecker extends Checker {
     Set<Rule> CRules;
 
-    public CChecker(String compiler) {
-        super(compiler);
+    public CChecker(String compiler, Context ctx) {
+        super(compiler, ctx);
         CRules = new HashSet<Rule>();
         CRules.add(new PointerParameters());
         CRules.add(new ArrayCardinality());
