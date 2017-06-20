@@ -805,9 +805,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *             properties+=Property* 
 	 *             entry=Action? 
 	 *             exit=Action? 
-	 *             (substate+=State | internal+=InternalTransition | outgoing+=Transition)* 
-	 *             region+=Region? 
-	 *             (session+=Session? region+=Region?)*
+	 *             outgoing+=Transition? 
+	 *             ((substate+=State | internal+=InternalTransition)? outgoing+=Transition?)* 
+	 *             (region+=Region | session+=Session)*
 	 *         ) | 
 	 *         (
 	 *             name=ID? 
@@ -817,9 +817,9 @@ public class ThingMLSemanticSequencer extends AbstractDelegatingSemanticSequence
 	 *             properties+=Property* 
 	 *             entry=Action? 
 	 *             exit=Action? 
-	 *             (substate+=State | internal+=InternalTransition)* 
-	 *             session+=Session? 
-	 *             (region+=Region? session+=Session?)*
+	 *             substate+=State? 
+	 *             (internal+=InternalTransition? substate+=State?)* 
+	 *             (region+=Region | session+=Session)*
 	 *         )
 	 *     )
 	 */

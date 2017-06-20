@@ -66,7 +66,7 @@ import org.thingml.xtext.thingML.ThingMLModel;
  */
 public abstract class ThingMLCompiler {
 
-    public static Checker checker;
+    public static Checker checker = new Checker("ThingML");
     //FIXME: the code below related to loading and errors should be refactored and probably moved. It is just here right now as a convenience.
     public static List<String> errors;
     public static List<String> warnings;

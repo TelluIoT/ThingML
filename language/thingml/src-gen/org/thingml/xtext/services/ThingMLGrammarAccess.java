@@ -145,9 +145,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNameIDTerminalRuleCall_14_1_0 = (RuleCall)cNameAssignment_14_1.eContents().get(0);
 		
 		//NamedElement:
-		//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance |
-		//	AbstractConnector | EnumerationLiteral | Event |
-		//	";" name=ID // This is never used, it is just to have the attributes in the superclass
+		//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance
+		//	| AbstractConnector | EnumerationLiteral | Event | ";" name=ID
+		//	// This is never used, it is just to have the attributes in the superclass
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -233,8 +233,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//AnnotatedElement:
 		//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | PropertyAssign |
-		//	Variable | Instance | AbstractConnector | EnumerationLiteral |
-		//	";" annotations+=PlatformAnnotation* // This is never used, it is just to have the attributes in the superclass
+		//	Variable | Instance | AbstractConnector | EnumerationLiteral | ";" annotations+=PlatformAnnotation*
+		//	// This is never used, it is just to have the attributes in the superclass
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -339,7 +339,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		public RuleCall getTypeRefTypeRefParserRuleCall_0_3_0() { return cTypeRefTypeRefParserRuleCall_0_3_0; }
 		
 		//// This is never used, it is just to have the attributes in the superclass
-		//LocalVariable
+		// LocalVariable
 		public RuleCall getLocalVariableParserRuleCall_1() { return cLocalVariableParserRuleCall_1; }
 		
 		//Property
@@ -363,7 +363,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		///*****************************************************************************
 		// *       TYPES / ENUMERATIONS                                                *
-		// *****************************************************************************/ TypeRef:
+		// *****************************************************************************/
+		//TypeRef:
 		//	type=[Type] (^isArray?='[' cardinality=Expression? ']')?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -622,11 +623,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		///*****************************************************************************
 		// *       THING / COMPONENT MODEL                                             *
-		// *****************************************************************************/ Thing:
+		// *****************************************************************************/
+		//Thing:
 		//	'thing' ^fragment?='fragment'? name=ID ('includes' includes+=[Thing] ("," includes+=[Thing])*)?
 		//	annotations+=PlatformAnnotation* '{' (messages+=Message | ports+=Port | properties+=Property | functions+=Function |
-		//	assign+=PropertyAssign | behaviour+=StateMachine /* | streams+=Stream*/)*
-		//	'}';
+		//	assign+=PropertyAssign | behaviour+=StateMachine /* | streams+=Stream*/)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'thing' ^fragment?='fragment'? name=ID ('includes' includes+=[Thing] ("," includes+=[Thing])*)?
@@ -961,8 +962,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//AbstractFunction Function:
 		//	abstract?='abstract' 'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':'
-		//	typeRef=TypeRef)?
-		//	annotations+=PlatformAnnotation*;
+		//	typeRef=TypeRef)? annotations+=PlatformAnnotation*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//abstract?='abstract' 'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':'
@@ -1048,8 +1048,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cAnnotationsPlatformAnnotationParserRuleCall_6_0 = (RuleCall)cAnnotationsAssignment_6.eContents().get(0);
 		
 		//Property:
-		//	readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)?
-		//	annotations+=PlatformAnnotation*;
+		//	readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*
@@ -1117,8 +1116,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSemicolonKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
 		//Message:
-		//	'message' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')'
-		//	annotations+=PlatformAnnotation* ';'?;
+		//	'message' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' annotations+=PlatformAnnotation*
+		//	';'?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'message' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' annotations+=PlatformAnnotation* ';'?
@@ -1268,8 +1267,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//RequiredPort:
 		//	optional?='optional'? 'required' 'port' name=ID annotations+=PlatformAnnotation* '{' ('sends' sends+=[Message] (","
-		//	sends+=[Message])* | 'receives' receives+=[Message] ("," receives+=[Message])*)*
-		//	'}';
+		//	sends+=[Message])* | 'receives' receives+=[Message] ("," receives+=[Message])*)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//optional?='optional'? 'required' 'port' name=ID annotations+=PlatformAnnotation* '{' ('sends' sends+=[Message] (","
@@ -1404,8 +1402,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//ProvidedPort:
 		//	'provided' 'port' name=ID annotations+=PlatformAnnotation* '{' ('sends' sends+=[Message] ("," sends+=[Message])* |
-		//	'receives' receives+=[Message] ("," receives+=[Message])*)*
-		//	'}';
+		//	'receives' receives+=[Message] ("," receives+=[Message])*)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'provided' 'port' name=ID annotations+=PlatformAnnotation* '{' ('sends' sends+=[Message] ("," sends+=[Message])* |
@@ -1534,8 +1531,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//InternalPort:
 		//	'internal' 'port' name=ID annotations+=PlatformAnnotation* '{' ('sends' sends+=[Message] ("," sends+=[Message])* |
-		//	'receives' receives+=[Message] ("," receives+=[Message])*)*
-		//	'}';
+		//	'receives' receives+=[Message] ("," receives+=[Message])*)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'internal' 'port' name=ID annotations+=PlatformAnnotation* '{' ('sends' sends+=[Message] ("," sends+=[Message])* |
@@ -1663,12 +1659,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		///*****************************************************************************
 		// *       STATE MECHINES                                                      *
-		// *****************************************************************************/ State:
-		//	StateMachine | FinalState | CompositeState |
-		//	'state' name=ID annotations+=PlatformAnnotation* '{'
+		// *****************************************************************************/
+		//State:
+		//	StateMachine | FinalState | CompositeState | 'state' name=ID annotations+=PlatformAnnotation* '{'
 		//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (internal+=InternalTransition |
-		//	outgoing+=Transition)*
-		//	'}';
+		//	outgoing+=Transition)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//StateMachine | FinalState | CompositeState | 'state' name=ID annotations+=PlatformAnnotation* '{' properties+=Property*
@@ -1899,9 +1894,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cActionActionParserRuleCall_6_1_0 = (RuleCall)cActionAssignment_6_1.eContents().get(0);
 		
 		//InternalTransition:
-		//	{InternalTransition}
-		//	'internal' name=ID?
-		//	annotations+=PlatformAnnotation* ('event' event+=Event)* ('guard' guard=Expression)? ('action' action=Action)?;
+		//	{InternalTransition} 'internal' name=ID? annotations+=PlatformAnnotation* ('event' event+=Event)* ('guard'
+		//	guard=Expression)? ('action' action=Action)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{InternalTransition} 'internal' name=ID? annotations+=PlatformAnnotation* ('event' event+=Event)* ('guard'
@@ -2009,8 +2003,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//CompositeState:
 		//	'composite' 'state' name=ID 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 		//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
-		//	internal+=InternalTransition | outgoing+=Transition)* (region+=Region | session+=Session)*
-		//	'}';
+		//	internal+=InternalTransition | outgoing+=Transition)* (region+=Region | session+=Session)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'composite' 'state' name=ID 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
@@ -2180,19 +2173,20 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_12 = (Keyword)cGroup.eContents().get(12);
 		
 		//StateMachine CompositeState: // Actually only another syntax for a composite state
-		//	'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
-		//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
-		//	internal+=InternalTransition)* (region+=Region | session+=Session)* '}';
+		// 'statechart' name=ID? 'init'
+		//	initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{' properties+=Property* ('on'
+		//	'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State | internal+=InternalTransition)* (region+=Region |
+		//	session+=Session)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//// Actually only another syntax for a composite state
-		//'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
-		//properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
-		//internal+=InternalTransition)* (region+=Region | session+=Session)* '}'
+		// 'statechart' name=ID? 'init' initial=[State] ('keeps'
+		//history?='history')? annotations+=PlatformAnnotation* '{' properties+=Property* ('on' 'entry' entry=Action)? ('on'
+		//'exit' exit=Action)? (substate+=State | internal+=InternalTransition)* (region+=Region | session+=Session)* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//// Actually only another syntax for a composite state
-		//'statechart'
+		// 'statechart'
 		public Keyword getStatechartKeyword_0() { return cStatechartKeyword_0; }
 		
 		//name=ID?
@@ -2329,9 +2323,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//Session:
 		//	'session' name=ID ('<' maxInstances=(IntegerLiteral | PropertyReference) '>')? 'init' initial=[State]
-		//	annotations+=PlatformAnnotation* '{'
-		//	substate+=State*
-		//	'}';
+		//	annotations+=PlatformAnnotation* '{' substate+=State* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'session' name=ID ('<' maxInstances=(IntegerLiteral | PropertyReference) '>')? 'init' initial=[State]
@@ -2421,8 +2413,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//Region:
 		//	'region' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
-		//	substate+=State*
-		//	'}';
+		//	substate+=State* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'region' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
@@ -2564,14 +2555,14 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightCurlyBracketKeyword_3_5 = (Keyword)cGroup_3.eContents().get(5);
 		
 		//StateContainer:
-		//	CompositeState | Region | Session |
-		//	'keeps' initial=[State] ('keeps' history?='history')? '{' // This is never used, it is just to have the attributes in the superclass
-		//	substate+=State*
-		//	'}';
+		//	CompositeState | Region | Session | 'keeps' initial=[State] ('keeps' history?='history')? '{'
+		//	// This is never used, it is just to have the attributes in the superclass
+		// substate+=State* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//CompositeState | Region | Session | 'keeps' initial=[State] ('keeps' history?='history')? '{' // This is never used, it is just to have the attributes in the superclass
-		//substate+=State* '}'
+		//CompositeState | Region | Session | 'keeps' initial=[State] ('keeps' history?='history')? '{'
+		//// This is never used, it is just to have the attributes in the superclass
+		// substate+=State* '}'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//CompositeState
@@ -2583,8 +2574,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		//Session
 		public RuleCall getSessionParserRuleCall_2() { return cSessionParserRuleCall_2; }
 		
-		//'keeps' initial=[State] ('keeps' history?='history')? '{' // This is never used, it is just to have the attributes in the superclass
-		//substate+=State* '}'
+		//'keeps' initial=[State] ('keeps' history?='history')? '{'
+		//// This is never used, it is just to have the attributes in the superclass
+		// substate+=State* '}'
 		public Group getGroup_3() { return cGroup_3; }
 		
 		//'keeps'
@@ -2615,7 +2607,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		public Keyword getLeftCurlyBracketKeyword_3_3() { return cLeftCurlyBracketKeyword_3_3; }
 		
 		//// This is never used, it is just to have the attributes in the superclass
-		//substate+=State*
+		// substate+=State*
 		public Assignment getSubstateAssignment_3_4() { return cSubstateAssignment_3_4; }
 		
 		//State
@@ -2630,7 +2622,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		///*****************************************************************************
 		// *       EVENTS                                                             *
-		// *****************************************************************************/ Event:
+		// *****************************************************************************/
+		//Event:
 		//	ReceiveMessage;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -2712,7 +2705,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		///*****************************************************************************
 		// *       ACTIONS                                                             *
-		// *****************************************************************************/ Action:
+		// *****************************************************************************/
+		//Action:
 		//	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction |
 		//	ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
 		@Override public ParserRule getRule() { return rule; }
@@ -2773,8 +2767,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cEndKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
 		//ActionBlock:
-		//	{ActionBlock}
-		//	'do' actions+=Action* 'end';
+		//	{ActionBlock} 'do' actions+=Action* 'end';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{ActionBlock} 'do' actions+=Action* 'end'
@@ -3336,11 +3329,15 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		///*****************************************************************************
 		// *       EXPRESSIONS                                                         *
-		// *****************************************************************************/ //ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
+		// *****************************************************************************/
+		////ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
+		//
 		////PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | 
+		//
 		////LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | 
+		//
 		////ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
-		//Expression:
+		// Expression:
 		//	CastExpression;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -3812,8 +3809,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cArrayIndexPostfixParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		
 		//Primary Expression:
-		//	{ExpressionGroup} '(' term=Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary
-		//	| ArrayIndexPostfix;
+		//	{ExpressionGroup} '(' term=Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary |
+		//	ArrayIndexPostfix;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{ExpressionGroup} '(' term=Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary |
@@ -3925,8 +3922,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//AtomicExpression Expression:
 		//	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral |
-		//	PropertyReference | FunctionCallExpression
-		//	| EventReference;
+		//	PropertyReference | FunctionCallExpression | EventReference;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | PropertyReference
@@ -4185,8 +4181,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cRightParenthesisKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
 		//FunctionCallExpression:
-		//	function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)?
-		//	')';
+		//	function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)? ')';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)? ')'
@@ -4248,10 +4243,10 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 		
 		///*****************************************************************************
 		// *       CONFIGURATIONS                                                      *
-		// *****************************************************************************/ Configuration:
+		// *****************************************************************************/
+		//Configuration:
 		//	'configuration' name=ID annotations+=PlatformAnnotation* '{' (instances+=Instance | connectors+=AbstractConnector |
-		//	propassigns+=ConfigPropertyAssign)*
-		//	'}';
+		//	propassigns+=ConfigPropertyAssign)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'configuration' name=ID annotations+=PlatformAnnotation* '{' (instances+=Instance | connectors+=AbstractConnector |
@@ -4851,9 +4846,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//NamedElement:
-	//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance |
-	//	AbstractConnector | EnumerationLiteral | Event |
-	//	";" name=ID // This is never used, it is just to have the attributes in the superclass
+	//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | Variable | Instance
+	//	| AbstractConnector | EnumerationLiteral | Event | ";" name=ID
+	//	// This is never used, it is just to have the attributes in the superclass
 	//;
 	public NamedElementElements getNamedElementAccess() {
 		return pNamedElement;
@@ -4865,8 +4860,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//AnnotatedElement:
 	//	Protocol | Function | Message | Port | Configuration | Handler | State | StateContainer | Type | PropertyAssign |
-	//	Variable | Instance | AbstractConnector | EnumerationLiteral |
-	//	";" annotations+=PlatformAnnotation* // This is never used, it is just to have the attributes in the superclass
+	//	Variable | Instance | AbstractConnector | EnumerationLiteral | ";" annotations+=PlatformAnnotation*
+	//	// This is never used, it is just to have the attributes in the superclass
 	//;
 	public AnnotatedElementElements getAnnotatedElementAccess() {
 		return pAnnotatedElement;
@@ -4888,7 +4883,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	///*****************************************************************************
 	// *       TYPES / ENUMERATIONS                                                *
-	// *****************************************************************************/ TypeRef:
+	// *****************************************************************************/
+	//TypeRef:
 	//	type=[Type] (^isArray?='[' cardinality=Expression? ']')?;
 	public TypeRefElements getTypeRefAccess() {
 		return pTypeRef;
@@ -4950,11 +4946,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	///*****************************************************************************
 	// *       THING / COMPONENT MODEL                                             *
-	// *****************************************************************************/ Thing:
+	// *****************************************************************************/
+	//Thing:
 	//	'thing' ^fragment?='fragment'? name=ID ('includes' includes+=[Thing] ("," includes+=[Thing])*)?
 	//	annotations+=PlatformAnnotation* '{' (messages+=Message | ports+=Port | properties+=Property | functions+=Function |
-	//	assign+=PropertyAssign | behaviour+=StateMachine /* | streams+=Stream*/)*
-	//	'}';
+	//	assign+=PropertyAssign | behaviour+=StateMachine /* | streams+=Stream*/)* '}';
 	public ThingElements getThingAccess() {
 		return pThing;
 	}
@@ -4996,8 +4992,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//AbstractFunction Function:
 	//	abstract?='abstract' 'function' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' (':'
-	//	typeRef=TypeRef)?
-	//	annotations+=PlatformAnnotation*;
+	//	typeRef=TypeRef)? annotations+=PlatformAnnotation*;
 	public AbstractFunctionElements getAbstractFunctionAccess() {
 		return pAbstractFunction;
 	}
@@ -5007,8 +5002,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Property:
-	//	readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)?
-	//	annotations+=PlatformAnnotation*;
+	//	readonly?='readonly'? 'property' name=ID ':' typeRef=TypeRef ('=' init=Expression)? annotations+=PlatformAnnotation*;
 	public PropertyElements getPropertyAccess() {
 		return pProperty;
 	}
@@ -5018,8 +5012,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Message:
-	//	'message' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')'
-	//	annotations+=PlatformAnnotation* ';'?;
+	//	'message' name=ID '(' (parameters+=Parameter ("," parameters+=Parameter)*)? ')' annotations+=PlatformAnnotation*
+	//	';'?;
 	public MessageElements getMessageAccess() {
 		return pMessage;
 	}
@@ -5050,8 +5044,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//RequiredPort:
 	//	optional?='optional'? 'required' 'port' name=ID annotations+=PlatformAnnotation* '{' ('sends' sends+=[Message] (","
-	//	sends+=[Message])* | 'receives' receives+=[Message] ("," receives+=[Message])*)*
-	//	'}';
+	//	sends+=[Message])* | 'receives' receives+=[Message] ("," receives+=[Message])*)* '}';
 	public RequiredPortElements getRequiredPortAccess() {
 		return pRequiredPort;
 	}
@@ -5062,8 +5055,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//ProvidedPort:
 	//	'provided' 'port' name=ID annotations+=PlatformAnnotation* '{' ('sends' sends+=[Message] ("," sends+=[Message])* |
-	//	'receives' receives+=[Message] ("," receives+=[Message])*)*
-	//	'}';
+	//	'receives' receives+=[Message] ("," receives+=[Message])*)* '}';
 	public ProvidedPortElements getProvidedPortAccess() {
 		return pProvidedPort;
 	}
@@ -5074,8 +5066,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//InternalPort:
 	//	'internal' 'port' name=ID annotations+=PlatformAnnotation* '{' ('sends' sends+=[Message] ("," sends+=[Message])* |
-	//	'receives' receives+=[Message] ("," receives+=[Message])*)*
-	//	'}';
+	//	'receives' receives+=[Message] ("," receives+=[Message])*)* '}';
 	public InternalPortElements getInternalPortAccess() {
 		return pInternalPort;
 	}
@@ -5086,12 +5077,11 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	///*****************************************************************************
 	// *       STATE MECHINES                                                      *
-	// *****************************************************************************/ State:
-	//	StateMachine | FinalState | CompositeState |
-	//	'state' name=ID annotations+=PlatformAnnotation* '{'
+	// *****************************************************************************/
+	//State:
+	//	StateMachine | FinalState | CompositeState | 'state' name=ID annotations+=PlatformAnnotation* '{'
 	//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (internal+=InternalTransition |
-	//	outgoing+=Transition)*
-	//	'}';
+	//	outgoing+=Transition)* '}';
 	public StateElements getStateAccess() {
 		return pState;
 	}
@@ -5122,9 +5112,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//InternalTransition:
-	//	{InternalTransition}
-	//	'internal' name=ID?
-	//	annotations+=PlatformAnnotation* ('event' event+=Event)* ('guard' guard=Expression)? ('action' action=Action)?;
+	//	{InternalTransition} 'internal' name=ID? annotations+=PlatformAnnotation* ('event' event+=Event)* ('guard'
+	//	guard=Expression)? ('action' action=Action)?;
 	public InternalTransitionElements getInternalTransitionAccess() {
 		return pInternalTransition;
 	}
@@ -5136,8 +5125,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	//CompositeState:
 	//	'composite' 'state' name=ID 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
 	//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
-	//	internal+=InternalTransition | outgoing+=Transition)* (region+=Region | session+=Session)*
-	//	'}';
+	//	internal+=InternalTransition | outgoing+=Transition)* (region+=Region | session+=Session)* '}';
 	public CompositeStateElements getCompositeStateAccess() {
 		return pCompositeState;
 	}
@@ -5147,9 +5135,10 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//StateMachine CompositeState: // Actually only another syntax for a composite state
-	//	'statechart' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
-	//	properties+=Property* ('on' 'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State |
-	//	internal+=InternalTransition)* (region+=Region | session+=Session)* '}';
+	// 'statechart' name=ID? 'init'
+	//	initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{' properties+=Property* ('on'
+	//	'entry' entry=Action)? ('on' 'exit' exit=Action)? (substate+=State | internal+=InternalTransition)* (region+=Region |
+	//	session+=Session)* '}';
 	public StateMachineElements getStateMachineAccess() {
 		return pStateMachine;
 	}
@@ -5160,9 +5149,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//Session:
 	//	'session' name=ID ('<' maxInstances=(IntegerLiteral | PropertyReference) '>')? 'init' initial=[State]
-	//	annotations+=PlatformAnnotation* '{'
-	//	substate+=State*
-	//	'}';
+	//	annotations+=PlatformAnnotation* '{' substate+=State* '}';
 	public SessionElements getSessionAccess() {
 		return pSession;
 	}
@@ -5173,8 +5160,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//Region:
 	//	'region' name=ID? 'init' initial=[State] ('keeps' history?='history')? annotations+=PlatformAnnotation* '{'
-	//	substate+=State*
-	//	'}';
+	//	substate+=State* '}';
 	public RegionElements getRegionAccess() {
 		return pRegion;
 	}
@@ -5194,10 +5180,9 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//StateContainer:
-	//	CompositeState | Region | Session |
-	//	'keeps' initial=[State] ('keeps' history?='history')? '{' // This is never used, it is just to have the attributes in the superclass
-	//	substate+=State*
-	//	'}';
+	//	CompositeState | Region | Session | 'keeps' initial=[State] ('keeps' history?='history')? '{'
+	//	// This is never used, it is just to have the attributes in the superclass
+	// substate+=State* '}';
 	public StateContainerElements getStateContainerAccess() {
 		return pStateContainer;
 	}
@@ -5208,7 +5193,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	///*****************************************************************************
 	// *       EVENTS                                                             *
-	// *****************************************************************************/ Event:
+	// *****************************************************************************/
+	//Event:
 	//	ReceiveMessage;
 	public EventElements getEventAccess() {
 		return pEvent;
@@ -5230,7 +5216,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	///*****************************************************************************
 	// *       ACTIONS                                                             *
-	// *****************************************************************************/ Action:
+	// *****************************************************************************/
+	//Action:
 	//	ActionBlock | ExternStatement | SendAction | VariableAssignment | Increment | Decrement | LoopAction |
 	//	ConditionalAction | ReturnAction | PrintAction | ErrorAction | StartSession | FunctionCallStatement | LocalVariable;
 	public ActionElements getActionAccess() {
@@ -5242,8 +5229,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ActionBlock:
-	//	{ActionBlock}
-	//	'do' actions+=Action* 'end';
+	//	{ActionBlock} 'do' actions+=Action* 'end';
 	public ActionBlockElements getActionBlockAccess() {
 		return pActionBlock;
 	}
@@ -5384,11 +5370,15 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	///*****************************************************************************
 	// *       EXPRESSIONS                                                         *
-	// *****************************************************************************/ //ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
+	// *****************************************************************************/
+	////ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral | NotExpression | UnaryMinus | 
+	//
 	////PlusExpression | MinusExpression | TimesExpression | DivExpression | ModExpression | EqualsExpression | NotEqualsExpression | GreaterExpression | 
+	//
 	////LowerExpression | GreaterOrEqualExpression | LowerOrEqualExpression | AndExpression | OrExpression | PropertyReference | ArrayIndex | 
+	//
 	////ExpressionGroup | FunctionCallExpression | MessageParameter | Reference;
-	//Expression:
+	// Expression:
 	//	CastExpression;
 	public ExpressionElements getExpressionAccess() {
 		return pExpression;
@@ -5482,8 +5472,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//Primary Expression:
-	//	{ExpressionGroup} '(' term=Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary
-	//	| ArrayIndexPostfix;
+	//	{ExpressionGroup} '(' term=Expression ')' | {NotExpression} "not" term=Primary | {UnaryMinus} '-' term=Primary |
+	//	ArrayIndexPostfix;
 	public PrimaryElements getPrimaryAccess() {
 		return pPrimary;
 	}
@@ -5504,8 +5494,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//AtomicExpression Expression:
 	//	ExternExpression | EnumLiteralRef | IntegerLiteral | BooleanLiteral | StringLiteral | DoubleLiteral |
-	//	PropertyReference | FunctionCallExpression
-	//	| EventReference;
+	//	PropertyReference | FunctionCallExpression | EventReference;
 	public AtomicExpressionElements getAtomicExpressionAccess() {
 		return pAtomicExpression;
 	}
@@ -5595,8 +5584,7 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//FunctionCallExpression:
-	//	function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)?
-	//	')';
+	//	function=[Function] '(' (parameters+=Expression ("," parameters+=Expression)*)? ')';
 	public FunctionCallExpressionElements getFunctionCallExpressionAccess() {
 		return pFunctionCallExpression;
 	}
@@ -5607,10 +5595,10 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	
 	///*****************************************************************************
 	// *       CONFIGURATIONS                                                      *
-	// *****************************************************************************/ Configuration:
+	// *****************************************************************************/
+	//Configuration:
 	//	'configuration' name=ID annotations+=PlatformAnnotation* '{' (instances+=Instance | connectors+=AbstractConnector |
-	//	propassigns+=ConfigPropertyAssign)*
-	//	'}';
+	//	propassigns+=ConfigPropertyAssign)* '}';
 	public ConfigurationElements getConfigurationAccess() {
 		return pConfiguration;
 	}
@@ -5684,9 +5672,8 @@ public class ThingMLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal FLOAT returns ecore::EDouble:
-	//	'0'..'9'+ '.' '0'..'9'* (('e' | 'E') ('+' | '-')? '0'..'9'+)?
-	//	| '.' '0'..'9'+ (('e' | 'E') ('+' | '-')? '0'..'9'+)?
-	//	| '0'..'9'+ ('e' | 'E') ('+' | '-')? '0'..'9'+;
+	//	'0'..'9'+ '.' '0'..'9'* (('e' | 'E') ('+' | '-')? '0'..'9'+)? | '.' '0'..'9'+ (('e' | 'E') ('+' | '-')? '0'..'9'+)? |
+	//	'0'..'9'+ ('e' | 'E') ('+' | '-')? '0'..'9'+;
 	public TerminalRule getFLOATRule() {
 		return tFLOAT;
 	}

@@ -50,7 +50,7 @@ import org.thingml.xtext.thingML.ThingMLModel;
  *
  * @author sintef
  */
-abstract public class Checker {
+public class Checker {
     public Set<CheckerInfo> Errors;
     public Set<CheckerInfo> Warnings;
     public Set<CheckerInfo> Notices;
@@ -108,7 +108,9 @@ abstract public class Checker {
     }
 
     // Must be implemented and must contain a call to do_generic_check(cfg)
-    abstract public void do_check(Configuration cfg);
+    public void do_check(Configuration cfg) {
+    	throw new UnsupportedOperationException("The do_check() method is compiler-specific and should be implemented!");
+    }
 
 
     // ---------------------- Accessors ----------------------
