@@ -17,7 +17,6 @@
 package org.thingml.eclipse.ui.commands;
 
 import java.io.File;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -252,14 +251,29 @@ public class CompileThingFile implements IHandler {
 				if (compiler.checker.Errors.size() > 0) {
 					ThingMLConsole.getInstance().printMessage("Please fix the errors below. In future versions, we will block the code generation if errors are identified!\n");	
 				}
+				String file = "";
 				for(CheckerInfo i : compiler.checker.Errors) {
-					ThingMLConsole.getInstance().printError(i.toString());		         
+					if (!i.file.equals(file)) {
+						ThingMLConsole.getInstance().printError("Errors in file " + i.file + "\n");
+						file = i.file;
+					}
+					ThingMLConsole.getInstance().printError("\t" + i.toString());		         
 				}
+				file = "";
 				for(CheckerInfo i : compiler.checker.Warnings) {
-					ThingMLConsole.getInstance().printWarn(i.toString());		         
+					if (!i.file.equals(file)) {
+						ThingMLConsole.getInstance().printWarn("Warnings in file " + i.file + "\n");
+						file = i.file;
+					}
+					ThingMLConsole.getInstance().printWarn("\t" + i.toString());		         
 				}
+				file = "";
 				for(CheckerInfo i : compiler.checker.Notices) {
-					ThingMLConsole.getInstance().printMessage(i.toString());		         
+					if (!i.file.equals(file)) {
+						ThingMLConsole.getInstance().printMessage("Notices in file " + i.file + "\n");
+						file = i.file;
+					}
+					ThingMLConsole.getInstance().printMessage("\t" + i.toString());		         
 				}
 				compiler.compile(cfg, options);
 				if(subCompiler != null) {
