@@ -280,7 +280,7 @@ public class TypeChecker extends ThingMLSwitch<Type> {
 
     @Override
     public Type caseFunctionCallExpression(FunctionCallExpression object) {
-        if (object.getFunction().getTypeRef().getType() == null)
+        if (object.getFunction().getTypeRef() == null || object.getFunction().getTypeRef().getType() == null)
             return Types.VOID_TYPE;
         return TyperHelper.getBroadType(object.getFunction().getTypeRef().getType());
     }
