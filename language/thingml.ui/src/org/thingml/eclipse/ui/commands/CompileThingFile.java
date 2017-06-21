@@ -156,7 +156,9 @@ public class CompileThingFile implements IHandler {
 
 			ThingMLModel model = ThingMLCompiler.loadModel(f);
 			if (model == null) {
-				ThingMLConsole.getInstance().printError("ERROR: The selected model contains errors and will not be compiled. Please fix errors below\n");
+				ThingMLConsole.getInstance().printError("ERROR: The selected model cannot be loaded\n");
+				if (ThingMLCompiler.errors.size() > 0)
+					ThingMLConsole.getInstance().printError("Please fix the errors below:\n");
 				for(String error : ThingMLCompiler.errors) {
 					ThingMLConsole.getInstance().printError(error + "\n");
 				}
@@ -164,27 +166,8 @@ public class CompileThingFile implements IHandler {
 				return null;
 			}
 			for(String warning : ThingMLCompiler.warnings) {
-				ThingMLConsole.getInstance().printMessage(warning + "\n");
+				ThingMLConsole.getInstance().printWarn(warning + "\n");
 			}
-
-
-
-
-			/*System.out.println("checking.......");
-			CheckThingMLFile.running = true;
-
-			ILiveValidator validator = (ILiveValidator)ModelValidationService.getInstance().newValidator(EvaluationMode.LIVE);
-			//validator.setIncludeLiveConstraints(true);
-
-			//IStatus status = validator.validate(model);
-
-			Resource r = ThingMLCompiler.resource;
-			if (!r.eAdapters().contains(liveValidationContentAdapter)) {
-				r.eAdapters().add(liveValidationContentAdapter);
-			}
-
-			CheckThingMLFile.running = false;
-			System.out.println("done!");*/
 
 
 			// Look for a Configurations to compile
@@ -273,7 +256,7 @@ public class CompileThingFile implements IHandler {
 					ThingMLConsole.getInstance().printError(i.toString());		         
 				}
 				for(CheckerInfo i : compiler.checker.Warnings) {
-					ThingMLConsole.getInstance().printMessage(i.toString());		         
+					ThingMLConsole.getInstance().printWarn(i.toString());		         
 				}
 				/*
 				if (store.getBoolean(PreferenceConstants.PRINT_NOTICE_STRING)) {

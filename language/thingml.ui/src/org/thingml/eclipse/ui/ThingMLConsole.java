@@ -62,18 +62,28 @@ public class ThingMLConsole {
 		return null;
 	}
 	
+	private static Color getWarnColor() {
+		Display display = Display.getCurrent();
+		if (display != null)
+			return display.getSystemColor(SWT.COLOR_MAGENTA);
+		return null;
+	}	
+	
 	private IOConsoleOutputStream dbg;
 	private IOConsoleOutputStream msg;
-	private IOConsoleOutputStream err; 
+	private IOConsoleOutputStream err;
+	private IOConsoleOutputStream warn;
 	
 	private ThingMLConsole() {
 		IOConsole console = new IOConsole("[ThingML]", null);
 		dbg = console.newOutputStream();
 		msg = console.newOutputStream();
 		err = console.newOutputStream();
+		warn = console.newOutputStream();
 		dbg.setColor(getDebugColor());
 		msg.setColor(getOutputColor());
 		err.setColor(getErrorColor());
+		warn.setColor(getWarnColor());
 		
 		console.activate();
 		ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IOConsole[]{console});
@@ -93,10 +103,22 @@ public class ThingMLConsole {
 		return err;
 	}
 	
+	public OutputStream getWarnSteam() {
+		return warn;
+	}
+	
 	
 	public void printError(String txt) {
 		try {
 			err.write(txt);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void printWarn(String txt) {
+		try {
+			warn.write(txt);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

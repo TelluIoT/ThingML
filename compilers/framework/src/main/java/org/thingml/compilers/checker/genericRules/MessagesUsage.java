@@ -31,9 +31,12 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.helpers.TyperHelper;
+import org.thingml.xtext.thingML.AbstractConnector;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.Parameter;
@@ -110,30 +113,49 @@ public class MessagesUsage extends Rule {
                     }
                 }
                 if (!found)
-                    checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent.", m);
-                else {//check if message is serializable
-                    for (Parameter pa : m.getParameters()) {
-                        if ((pa.getTypeRef().getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
-                            checker.addGenericNotice("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.", pa);
-                            break;
-                        }
-                    }
-                }
+                    checker.addGenericWarning("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent. Consider removing messagre from port " + p.getName() + " or send the message in your logic.", m);
             }
             for (Message m : p.getReceives()) {
                 for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
                     if (StateHelper.allMessageHandlers(sm).get(p) == null || StateHelper.allMessageHandlers(sm).get(p).get(m) == null) {
-                        checker.addGenericNotice("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received.", m);
-                    }
-                }
-                for (Parameter pa : m.getParameters()) {
-                    if ((pa.getTypeRef().getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
-                        checker.addGenericNotice("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be received from the network, please use only primitive datatypes.", pa);
-                        break;
+                        checker.addGenericWarning("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received. Consider removing message from port " + p.getName() + " or define a handler for the message.", m);
                     }
                 }
             }
         }
+        
+        
+      //check if message is serializable, only if it exists and instance connected to an external connector
+    	for(Configuration c : ThingMLHelpers.allConfigurations(ThingMLHelpers.findContainingModel(t))) {
+    		for(Instance i : c.getInstances()) {
+    			if (EcoreUtil.equals(i.getType(), t)) {
+    				for(AbstractConnector conn : c.getConnectors()) {
+    					if (conn instanceof ExternalConnector) {
+    						ExternalConnector ext = (ExternalConnector) conn;
+    						if (EcoreUtil.equals(ext.getInst(), t)) {
+    							for(Message m : ext.getPort().getSends()) {
+    						        for (Parameter pa : m.getParameters()) {
+    						            if ((pa.getTypeRef().getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
+    						                checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.", pa);
+    						                break;
+    						            }
+    						        }
+    							}
+    							for(Message m : ext.getPort().getReceives()) {
+    						        for (Parameter pa : m.getParameters()) {
+    						            if ((pa.getTypeRef().getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
+    						                checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.", pa);
+    						                break;
+    						            }
+    						        }
+    							}    							
+    						}
+    					}
+    				}
+    			}
+    		}
+    	}  
+        
     }
 
 }

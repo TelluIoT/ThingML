@@ -130,15 +130,15 @@ public abstract class ThingMLCompiler {
             for (Resource r : model.getResourceSet().getResources()) {
                 checkEMFErrorsAndWarnings(r);
             }
-            /*if (errors.isEmpty()) {
+            if (errors.isEmpty()) {
                 ThingMLModel m = (ThingMLModel) model.getContents().get(0);
-                for (Configuration cfg : ThingMLHelpers.allConfigurations(m)) {
+                /*for (Configuration cfg : ThingMLHelpers.allConfigurations(m)) {
                     checker.do_generic_check(cfg);
-                }
+                }*/
                 if (errors.isEmpty()) {
                     return m;
                 }
-            }*/
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
