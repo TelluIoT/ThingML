@@ -1,0 +1,4 @@
+datatype Byte<1> @c_type "uint8_t";
+datatype Int<2> @c_type "int16_t";
+
+object String @c_type "char *";

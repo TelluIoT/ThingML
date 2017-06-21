@@ -1,0 +1,5 @@
+import "SimpleIncludeModelDatatypes.thingml"
+
+thing fragment TestMessages {
+	message TestMessage(ParamA : Byte, ParamB : Int)
+}
