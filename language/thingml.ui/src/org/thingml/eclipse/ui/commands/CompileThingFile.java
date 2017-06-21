@@ -258,13 +258,9 @@ public class CompileThingFile implements IHandler {
 				for(CheckerInfo i : compiler.checker.Warnings) {
 					ThingMLConsole.getInstance().printWarn(i.toString());		         
 				}
-				/*
-				if (store.getBoolean(PreferenceConstants.PRINT_NOTICE_STRING)) {
-					for(CheckerInfo i : compiler.checker.Notices) {
-						ThingMLConsole.getInstance().printMessage(i.toString());		         
-					}
+				for(CheckerInfo i : compiler.checker.Notices) {
+					ThingMLConsole.getInstance().printMessage(i.toString());		         
 				}
-				 */
 				compiler.compile(cfg, options);
 				if(subCompiler != null) {
 					ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");

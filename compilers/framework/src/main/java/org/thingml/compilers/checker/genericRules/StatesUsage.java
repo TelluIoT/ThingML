@@ -88,12 +88,12 @@ public class StatesUsage extends Rule {
     		msg += ".\nMake sure one and only state machine is defined in the context of Thing " + t.getName();
             checker.addGenericError(msg, t);    		
     	}    	    	
-        for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
+        for (CompositeState sm : t.getBehaviour()) { //since we call it for allThings, we should not do that for allStateMachines, or else we can duplicate checks...
             for (State s : org.thingml.xtext.helpers.StateHelper.allStates(sm)) {
                 if((EcoreUtil.equals(s, sm)))
                     continue;
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Unreachable")) {
-                    if (s.eContainer() instanceof StateContainer && !EcoreUtil.equals(s, sm.getInitial()) && !EcoreUtil.equals(s, sm)) {
+                    if (s.eContainer() instanceof StateContainer && !EcoreUtil.equals(s, ((StateContainer)s.eContainer()).getInitial()) && !EcoreUtil.equals(s, sm)) {
                     	StateContainer c = (StateContainer) s.eContainer();
                     	boolean canBeReached = false;
                     	for(State source : c.getSubstate()) {

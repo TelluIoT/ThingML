@@ -38,6 +38,7 @@ import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.CastExpression;
 import org.thingml.xtext.thingML.DivExpression;
 import org.thingml.xtext.thingML.DoubleLiteral;
+import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EqualsExpression;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
@@ -139,6 +140,11 @@ public class TypeChecker extends ThingMLSwitch<Type> {
     public Type casePlusExpression(PlusExpression object) {
         Type t1 = computeTypeOf(object.getLhs());
         Type t2 = computeTypeOf(object.getRhs());
+        //This is to support string concatenation with +, which is somehow supported in ThingML, at least in Java and JS...
+        //TODO: Decide if we should use + or a dedicated concatenation operator like ..
+        if (t1.equals(Types.STRING_TYPE) && !t2.equals(Types.ERROR_TYPE) || t2.equals(Types.STRING_TYPE) && !t2.equals(Types.ERROR_TYPE)) {
+        	return Types.STRING_TYPE;
+        }
         return caseBinaryNumericalOperator(t1, t2);
     }
 
@@ -266,6 +272,11 @@ public class TypeChecker extends ThingMLSwitch<Type> {
 	public Type caseEventReference(EventReference object) {
     	return TyperHelper.getBroadType(object.getParameter().getTypeRef().getType());
 	}
+    
+    @Override
+	public Type caseEnumLiteralRef(EnumLiteralRef object) {
+    	return TyperHelper.getBroadType(object.getEnum());
+	}    
 
     @Override
     public Type caseFunctionCallExpression(FunctionCallExpression object) {

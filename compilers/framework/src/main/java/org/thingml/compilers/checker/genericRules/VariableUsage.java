@@ -85,7 +85,7 @@ public class VariableUsage extends Rule {
                     if (actual.equals(Types.ERROR_TYPE)) {
                         checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
                     } else if (actual.equals(Types.ANY_TYPE)) {
-                        checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed.", o);
+                        checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Consider using a cast (<exp> as <Type>).", o);
                     } else if (!TyperHelper.isA(actual, expected)) {
                         checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
                     }
@@ -118,6 +118,7 @@ public class VariableUsage extends Rule {
                 check(lv, lv.getInit(), t, checker, lv);            
         }
 
+        
         for(Property p : ThingHelper.allPropertiesInDepth(t)) {
             boolean isUsed = false;
             for(Property pr : ThingHelper.allUsedProperties(t)) {

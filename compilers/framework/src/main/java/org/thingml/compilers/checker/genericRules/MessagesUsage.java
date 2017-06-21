@@ -113,7 +113,7 @@ public class MessagesUsage extends Rule {
                     }
                 }
                 if (!found)
-                    checker.addGenericWarning("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent. Consider removing messagre from port " + p.getName() + " or send the message in your logic.", m);
+                    checker.addGenericWarning("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent. Consider removing message from port " + p.getName() + " or send the message in your logic.", m);
             }
             for (Message m : p.getReceives()) {
                 for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {

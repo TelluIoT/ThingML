@@ -203,44 +203,54 @@ public class ThingHelper {
 
 	public static List<Property> allUsedProperties(Thing self) {
 		List<Property> result = new ArrayList<>();
-		for(Property p : allPropertiesInDepth(self)) {
-			for (VariableAssignment a : ActionHelper.getAllActions(self, VariableAssignment.class)) {
-				if (EcoreUtil.equals(p, a.getProperty())) {
-					boolean isPresent = false;
-					for(Property pr : result) {
-						if (EcoreUtil.equals(p, pr)) {
-							isPresent = true;
-							break;
+		List<Thing> things = new ArrayList<>();
+		things.addAll(allIncludedThings(self));
+		things.add(self);
+		for(Thing t : things) {
+			for(Property p : allPropertiesInDepth(t)) {
+				for (VariableAssignment a : ActionHelper.getAllActions(t, VariableAssignment.class)) {
+					if (EcoreUtil.equals(p, a.getProperty())) {
+						boolean isPresent = false;
+						for(Property pr : result) {
+							if (EcoreUtil.equals(p, pr)) {
+								isPresent = true;
+								break;
+							}
 						}
+						if (!isPresent)
+							result.add(p);
+						break;
+					}
+				}
+				for (PropertyReference e : ThingMLHelpers.getAllExpressions(t, PropertyReference.class)) {
+					if (EcoreUtil.equals(p, e.getProperty())) {
+						boolean isPresent = false;
+						for(Property pr : result) {
+							if (EcoreUtil.equals(p, pr)) {
+								isPresent = true;
+								break;
+							}
+						}
+						if (!isPresent)
+							result.add(p);
+						break;
+					}
+				}
+				for (EnumLiteralRef e : ThingMLHelpers.getAllExpressions(t, EnumLiteralRef.class)) {
+					boolean isPresent = false;
+					if (EcoreUtil.equals(p.getTypeRef().getType(), e.getEnum())) {
+						for(Property pr : result) {
+							if (EcoreUtil.equals(p, pr)) {
+								isPresent = true;
+								break;
+							}
+						}
+						break;
 					}
 					if (!isPresent)
 						result.add(p);
-					break;
-				}
+				}            
 			}
-			for (PropertyReference e : ThingMLHelpers.getAllExpressions(self, PropertyReference.class)) {
-				if (EcoreUtil.equals(p, e.getProperty())) {
-					boolean isPresent = false;
-					for(Property pr : result) {
-						if (EcoreUtil.equals(p, pr)) {
-							isPresent = true;
-							break;
-						}
-					}
-					if (!isPresent)
-						result.add(p);
-					break;
-				}
-			}
-			for (EnumLiteralRef e : ThingMLHelpers.getAllExpressions(self, EnumLiteralRef.class)) {
-				boolean isPresent = false;
-				if (EcoreUtil.equals(p.getTypeRef().getType(), e.getEnum())) {
-					isPresent = true;
-					break;
-				}
-				if (!isPresent)
-					result.add(p);
-			}            
 		}
 		return result;
 	}

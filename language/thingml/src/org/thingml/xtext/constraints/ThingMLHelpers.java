@@ -857,7 +857,15 @@ public class ThingMLHelpers {
 			if (clazz.isInstance(o)) result.add((T) o);
 		}
 
-		if (clazz.isInstance(self))result.add((T)self);
+        if (self instanceof Thing) {//We need this to get all the expressions defined in included Things, as they are not part of self.eAllContents. This should be the only case where we need a hack...
+        	Thing t = (Thing) self;
+        	for(Thing i : ThingHelper.allIncludedThings(t)) {
+        		result.addAll(getAllExpressions(i, clazz));
+        	}
+        } else {
+        	if (clazz.isInstance(self))result.add((T)self);
+        }
+		
 		return result;
 	}
 

@@ -27,6 +27,7 @@ import org.thingml.compilers.checker.Checker.InfoType;
 import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Thing;
@@ -65,6 +66,12 @@ public class ThingsUsage extends Rule {
                     if (i.getType().equals(t)) {
                         found = true;
                         break;
+                    }
+                    for(Thing ty : ThingHelper.allIncludedThings(i.getType())) {
+                        if (ty.equals(t)) {
+                            found = true;
+                            break;
+                        }
                     }
                 }
                 if (!found) {
