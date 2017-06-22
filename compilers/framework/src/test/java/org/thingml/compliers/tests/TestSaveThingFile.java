@@ -19,26 +19,43 @@ package org.thingml.compliers.tests;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.junit.Test;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-public class TestLoadIncludeThingFile extends LoadModelTestsCommon {
+public class TestSaveThingFile extends LoadModelTestsCommon {
 
 	@Test
 	public void test() {
 		// Get the .thingml file from resources
-		File test = new File(this.getClass().getResource("/SimpleIncludeModel.thingml").getFile());
+		File test = new File(this.getClass().getResource("/SimpleFlatModel.thingml").getFile());
 		
 		// Load the model
 		ThingMLModel model = ThingMLCompiler.loadModel(test);
 		assertFalse("Loaded model is not null", model == null);
 		
-		ResourceSet set = model.eResource().getResourceSet();
+		// Check that the model is correct
+		checkSimpleModel(model);
 		
-		//checkSimpleModel(model);
+		// Test the saving
+		try {
+			// Create temporary file to save to
+			File tmp = File.createTempFile("thingml-model", ".thingml");
+			
+			// Save the ThingML model
+			ThingMLCompiler.saveAsThingML(model, tmp.toString());
+			
+			// Re-load the saved model
+			ThingMLModel savedModel = ThingMLCompiler.loadModel(tmp);
+			
+			// Check that the model is correct
+			checkSimpleModel(savedModel);
+			
+		} catch (IOException e) {
+			fail("Could not create temporary file to save to");
+		}
 	}
 
 }

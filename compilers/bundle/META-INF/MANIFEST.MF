@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1497969480712
+Bnd-LastModified: 1498120214877
 Build-Jdk: 1.8.0_101
 Built-By: jakobho
 Bundle-ClassPath: jars/official-network-plugins-2.0.0-SNAPSHOT.jar,jars/
@@ -16,7 +16,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ThingML :: Compilers :: Bundle
 Bundle-SymbolicName: compilers.bundle
 Bundle-Vendor: ThingML Project
-Bundle-Version: 2.0.0.201706201436
+Bundle-Version: 2.0.0.201706220829
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: *;scope=compile|runtime;artifactId=!org.eclipse.*|thin
  gml
@@ -97,23 +97,24 @@ Import-Package: com.beust.jcommander,com.beust.jcommander.converters,com
  eclipse.emf.ecore.xmi.impl,org.eclipse.xtext,org.eclipse.xtext.ide,org.
  eclipse.xtext.ide.editor.contentassist,org.eclipse.xtext.ide.editor.con
  tentassist.antlr,org.eclipse.xtext.ide.editor.contentassist.antlr.inter
- nal,org.eclipse.xtext.ide.editor.partialEditing,org.eclipse.xtext.resou
- rce,org.eclipse.xtext.util,org.thingml.compilers,org.thingml.compilers.
- c,org.thingml.compilers.c.arduino,org.thingml.compilers.c.checkerRules,
- org.thingml.compilers.c.plugin,org.thingml.compilers.c.posix,org.thingm
- l.compilers.c.posixmt,org.thingml.compilers.checker,org.thingml.compile
- rs.checker.genericRules,org.thingml.compilers.configuration,org.thingml
- .compilers.cpp.sintefboard,org.thingml.compilers.debugGUI,org.thingml.c
- ompilers.debugGUI.plugin,org.thingml.compilers.interfaces.c,org.thingml
- .compilers.java,org.thingml.compilers.javascript,org.thingml.compilers.
- registry,org.thingml.compilers.spi,org.thingml.compilers.thing,org.thin
- gml.compilers.thing.common,org.thingml.compilers.uml,org.thingml.compil
- ers.utils,org.thingml.externalthingplugins.c.posix,org.thingml.external
- thingplugins.c.posix.dnssd,org.thingml.externalthingplugins.c.posix.dns
- sd.strategies,org.thingml.externalthingplugins.c.posix.dnssd.utils,org.
- thingml.testconfigurationgenerator,org.thingml.thingmltools,org.thingml
- .xtext,org.thingml.xtext.constraints,org.thingml.xtext.helpers,org.thin
- gml.xtext.services,org.thingml.xtext.thingML,org.thingml.xtext.thingML.
- impl,org.thingml.xtext.thingML.util
+ nal,org.eclipse.xtext.ide.editor.partialEditing,org.eclipse.xtext.nodem
+ odel,org.eclipse.xtext.nodemodel.util,org.eclipse.xtext.resource,org.ec
+ lipse.xtext.util,org.thingml.compilers,org.thingml.compilers.c,org.thin
+ gml.compilers.c.arduino,org.thingml.compilers.c.checkerRules,org.thingm
+ l.compilers.c.plugin,org.thingml.compilers.c.posix,org.thingml.compiler
+ s.c.posixmt,org.thingml.compilers.checker,org.thingml.compilers.checker
+ .genericRules,org.thingml.compilers.configuration,org.thingml.compilers
+ .cpp.sintefboard,org.thingml.compilers.debugGUI,org.thingml.compilers.d
+ ebugGUI.plugin,org.thingml.compilers.interfaces.c,org.thingml.compilers
+ .java,org.thingml.compilers.javascript,org.thingml.compilers.registry,o
+ rg.thingml.compilers.spi,org.thingml.compilers.thing,org.thingml.compil
+ ers.thing.common,org.thingml.compilers.uml,org.thingml.compilers.utils,
+ org.thingml.externalthingplugins.c.posix,org.thingml.externalthingplugi
+ ns.c.posix.dnssd,org.thingml.externalthingplugins.c.posix.dnssd.strateg
+ ies,org.thingml.externalthingplugins.c.posix.dnssd.utils,org.thingml.te
+ stconfigurationgenerator,org.thingml.thingmltools,org.thingml.xtext,org
+ .thingml.xtext.constraints,org.thingml.xtext.helpers,org.thingml.xtext.
+ services,org.thingml.xtext.thingML,org.thingml.xtext.thingML.impl,org.t
+ hingml.xtext.thingML.util
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
 Tool: Bnd-3.2.0.201605172007
