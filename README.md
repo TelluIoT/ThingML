@@ -126,40 +126,46 @@ The command-line interface JAR (containing all you need to compile ThingML files
 
 ```bash
 cd compilers/registry/target
-java -jar compilers.registry-1.0.0-SNAPSHOT-jar-with-dependencies.jar
---- ThingML help ---
+java -jar compilers.registry-2.0.0-SNAPSHOT-jar-with-dependencies.jar
+ --- ThingML help ---
 Typical usages:
-   java -jar compilers.registry-1.0.0-SNAPSHOT-jar-with-dependencies.jar \
-   -c <compiler> \
-   -s <source> \
-   [-o <output-dir>]\
-   [-d]
- Options:
-   --compiler, -c
-     Compiler ID (Mandatory)
-   --create-dir, -d
-     Create a new directory named after the configuration for the output
-     Default: false
-   --help, -h
-     Display this message.
-     Default: false
-   --list-plugins
-     Display the list of available plugins
-     Default: false
-   --output, -o
-     Optional output directory - by default current directory is used
-   --source, -s
-     A thingml file to compile (should include at least one configuration)
+    java -jar your-jar.jar -t <tool> -s <source> [-o <output-dir>] [--options <option>][-d]
+Usage: <main class> [options]
+  Options:
+    --compiler, -c
+      Compiler ID (Mandatory unless --tool (-t) is used)
+    --create-dir, -d
+      Create a new directory named after the configuration for the output
+      Default: false
+    --help, -h
+      Display this message.
+      Default: false
+    --list-plugins
+      Display the list of available plugins
+      Default: false
+    --options
+      additional options for ThingML tools.
+    --output, -o
+      Optional output directory - by default current directory is used
+    --source, -s
+      A thingml file to compile (should include at least one configuration)
+    --tool, -t
+      Tool ID (Mandatory unless --compiler (-c) is used)
 
 Compiler Id must belong to the following list:
-??     posixmt  - Generates C code for Linux or other Posix runtime environments (GCC compiler).
-??     java     - Generates plain Java code.
-??     arduino  - Generates C/C++ code for Arduino or other AVR microcontrollers (AVR-GCC compiler).
-??     UML      - Generates UML diagrams in PlantUML
-??     nodejsMT - Generates Multi-Process Javascript code (one nodejs process per instance) for the NodeJS platform.
-??     nodejs   - Generates Javascript code for the NodeJS platform.
-??     posix    - Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).
-??     debugGUI - Generates html/js mock-up for other a ThingML external connector
+ ??     sintefboard     - Generates C++ based in code for Arduino.
+ ??     posixmt - Generates C code for Linux or other Posix runtime environments (GCC compiler).
+ ??     java    - Generates plain Java code.
+ ??     arduino - Generates C/C++ code for Arduino or other AVR microcontrollers (AVR-GCC compiler).
+ ??     UML     - Generates UML diagrams in PlantUML
+ ??     browser - Generates Javascript code that can run in common Web Browsers.
+ ??     nodejsMT        - Generates Multi-Process Javascript code (one nodejs process per instance) for the NodeJS platform.
+ ??     nodejs  - Generates Javascript code for the NodeJS platform.
+ ??     posix   - Generates C/C++ code for Linux or other Posix runtime environments (GCC compiler).
+ ??     debugGUI        - Generates html/js mock-up for other a ThingML external connector
+
+Tool Id must belong to the following list:
+ ??     testconfigurationgen    - Generates test configuration for things annnotated with @test "input # output".
 ```
 
 ## &#x1F537; FAQ
