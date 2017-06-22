@@ -67,7 +67,7 @@
 		  <manifestLocation>${manifest-location}</manifestLocation>
           <instructions>
           	<Bundle-Version>2.0.0.${timestamp}</Bundle-Version>
-          	<Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+          	<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
             <Embed-Dependency>*;scope=compile|runtime;artifactId=!org.eclipse.*|thingml</Embed-Dependency>
             <_exportcontents>
              !org.eclipse.*;!org.thingml.xtext.*;*;
