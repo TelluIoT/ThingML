@@ -740,6 +740,7 @@ public abstract class CCompilerContext extends Context {
         }
     }
 
+    /* removed on 22.06.2017
     public String deserializeFromByte(Type t, String buffer, int idx, Context ctx) {
         String result = "";
         int i = getCByteSize(t, 0);
@@ -758,6 +759,7 @@ public abstract class CCompilerContext extends Context {
         }
         return result;
     }
+    */
 
     public void bytesToSerialize(Type t, StringBuilder builder, String variable, Parameter pt) {
         int i = getCByteSize(t, 0);
