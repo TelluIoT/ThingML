@@ -90,18 +90,18 @@
                     <header>HEADER</header>
                     <strictCheck>true</strictCheck>
                     <excludes>
-                        <exclude>
-                            **/*.cs
-                        </exclude>
-                        <exclude>
-                            **/*.bat
-                        </exclude>
-                        <exclude>
-                            **/test_out/**/*.*
-                        </exclude>
-                        <exclude>
-                            **/resources/**/**.*
-                        </exclude>
+                        <exclude>**/*.cs</exclude>
+                        <exclude>**/*.bat</exclude>
+                        <exclude>**/test_out/**/*.*</exclude>
+                        <exclude>**/resources/**/**.*</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.thingml</exclude>
+                        <exclude>**/*.ini</exclude>
+                        <exclude>**/*.dot</exclude>
+                        <exclude>**/*.jpg</exclude>
+                        <exclude>**/HEADER</exclude>
+                        <exclude>**/*._trace</exclude>
+                        <exclude>**/*.xtendbin</exclude>
                     </excludes>
 					<mapping>
 						<thingml>JAVA_STYLE</thingml>
