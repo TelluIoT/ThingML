@@ -5,6 +5,13 @@
 target/
 */target/
 **/target/
+src-gen/
+*/src-gen/
+**/src-gen/
+xtend-gen/
+*/xtend-gen/
+**/xtend-gen/
+language/thingml/model/
 tmp/
 */tmp/
 **/tmp/
