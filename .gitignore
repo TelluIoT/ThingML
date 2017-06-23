@@ -42,3 +42,4 @@ runtime-EclipseApplication
 testJar/config.properties
 **._trace
 **.xtendbin
+compilers/bundle/META-INF/MANIFEST.MF
