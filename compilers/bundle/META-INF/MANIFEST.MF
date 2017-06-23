@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1498138967035
+Bnd-LastModified: 1498229016219
 Build-Jdk: 1.8.0_101
 Built-By: jakobho
 Bundle-ClassPath: jars/official-network-plugins-2.0.0-SNAPSHOT.jar,jars/
@@ -16,7 +16,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ThingML :: Compilers :: Bundle
 Bundle-SymbolicName: compilers.bundle
 Bundle-Vendor: ThingML Project
-Bundle-Version: 2.0.0.201706221341
+Bundle-Version: 2.0.0.201706231442
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: *;scope=compile|runtime;artifactId=!org.eclipse.*|thin
  gml

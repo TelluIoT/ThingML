@@ -22,6 +22,7 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
+import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.AnnotatedElement;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
@@ -40,16 +41,16 @@ import org.thingml.xtext.thingML.Type;
 
 public abstract class LoadModelTestsCommon {
 	
-	protected void checkAnnotation(AnnotatedElement e, String type, String name, String value) {
+	/* --- Some helper functions --- */
+	private void checkAnnotation(AnnotatedElement e, String type, String name, String value) {
 		for (PlatformAnnotation a : e.getAnnotations()) {
 			if (a.getName().equals(name) && a.getValue().equals(value))
 				return;
 		}
 		fail("'"+type+"' has annotation @"+name+"='"+value+"'");
 	}
-	
 
-	protected PrimitiveType checkPrimitiveType(ThingMLModel m, String name, int size) {
+	private PrimitiveType checkPrimitiveType(ThingMLModel m, String name, int size) {
 		for (Type t : m.getTypes()) {
 			if (t.getName().equals(name)) {
 				assertTrue("'"+name+"' is PrimitiveType", t instanceof PrimitiveType);
@@ -62,7 +63,7 @@ public abstract class LoadModelTestsCommon {
 		return null;
 	}
 	
-	protected ObjectType checkObjectType(ThingMLModel m, String name) {
+	private ObjectType checkObjectType(ThingMLModel m, String name) {
 		for (Type t : m.getTypes()) {
 			if (t.getName().equals(name)) {
 				assertTrue("'"+name+"' is ObjectType", t instanceof ObjectType);
@@ -73,7 +74,7 @@ public abstract class LoadModelTestsCommon {
 		return null;
 	}
 	
-	protected Thing checkThing(ThingMLModel m, String name) {
+	private Thing checkThing(ThingMLModel m, String name) {
 		for (Type t : m.getTypes()) {
 			if (t.getName().equals(name)) {
 				assertTrue("'"+name+"' is Thing", t instanceof Thing);
@@ -84,7 +85,17 @@ public abstract class LoadModelTestsCommon {
 		return null;
 	}
 	
-	protected void checkSimpleModel(ThingMLModel m) {
+	/* --- Datatypes check --- */
+	private class modelTestDatatypes {
+		PrimitiveType b;
+		PrimitiveType i;
+		
+		public modelTestDatatypes(PrimitiveType b, PrimitiveType i) {
+			this.b = b;
+			this.i = i;
+		}
+	}
+	private modelTestDatatypes checkDatatypes(ThingMLModel m) {
 		PrimitiveType b = checkPrimitiveType(m, "Byte", 1);
 		checkAnnotation(b, "Byte", "c_type", "uint8_t");
 		
@@ -93,6 +104,20 @@ public abstract class LoadModelTestsCommon {
 		
 		checkObjectType(m, "String");
 		
+		return new modelTestDatatypes(b, i);		
+	}
+	
+	/* --- Messages check --- */
+	private class modelTestMessages {
+		Thing tm;
+		Message testMessage;
+		
+		public modelTestMessages(Thing tm, Message testMessage) {
+			this.tm = tm;
+			this.testMessage = testMessage;
+		}
+	}
+	private modelTestMessages checkMessages(ThingMLModel m, modelTestDatatypes d) {
 		Thing tm = checkThing(m, "TestMessages");
 		assertTrue("'TestMessages' is fragment",tm.isFragment());
 		List<Message> tmMsgs = tm.getMessages();
@@ -103,16 +128,21 @@ public abstract class LoadModelTestsCommon {
 		assertTrue("'TestMessage' has 2 parameters", tmParams.size() == 2);
 		Parameter paramA = tmParams.get(0);
 		assertTrue("'TestMessage[0]' is named 'ParamA'", paramA.getName().equals("ParamA"));
-		assertTrue("'TestMessage[0]' has type 'Byte'", paramA.getTypeRef().getType() == b);
+		assertTrue("'TestMessage[0]' has type 'Byte'", paramA.getTypeRef().getType() == d.b);
 		Parameter paramB = tmParams.get(1);
 		assertTrue("'TestMessage[1]' is named 'ParamB'", paramB.getName().equals("ParamB"));
-		assertTrue("'TestMessage[1]' has type 'Int'", paramB.getTypeRef().getType() == i);
+		assertTrue("'TestMessage[1]' has type 'Int'", paramB.getTypeRef().getType() == d.i);
 		
+		return new modelTestMessages(tm, testMessage);
+	}
+	
+	/* --- Thing + config check --- */
+	private void checkThingConfig(ThingMLModel m, modelTestDatatypes d, modelTestMessages msgs) {
 		Thing tt = checkThing(m, "TestThing");
 		assertFalse("'TestThing' is not fragment",tt.isFragment());
 		List<Thing> ttIncl = tt.getIncludes();
 		assertTrue("'TestThing' includes 1 thing", ttIncl.size() == 1);
-		assertTrue("'TestThing' includes 'TestMessages'", ttIncl.get(0) == tm);
+		assertTrue("'TestThing' includes 'TestMessages'", ttIncl.get(0) == msgs.tm);
 		List<Port> ttPorts = tt.getPorts();
 		assertTrue("'TestThing' has 1 port", ttPorts.size() == 1);
 		Port testPort = ttPorts.get(0);
@@ -122,7 +152,7 @@ public abstract class LoadModelTestsCommon {
 		assertTrue("'TestPort' sends 0 messages", testPortSends.size() == 0);
 		List<Message> testPortReceives = testPort.getReceives();
 		assertTrue("'TestPort' receives 1 message", testPortReceives.size() == 1);
-		assertTrue("'TestPort' receives 'TestMessage'", testPortReceives.get(0) == testMessage);
+		assertTrue("'TestPort' receives 'TestMessage'", testPortReceives.get(0) == msgs.testMessage);
 		List<CompositeState> behaviour = tt.getBehaviour();
 		assertTrue("'TestThing' has a statechart", behaviour.size() == 1);
 		CompositeState statechart = behaviour.get(0);
@@ -142,5 +172,43 @@ public abstract class LoadModelTestsCommon {
 		Instance testInst = insts.get(0);
 		assertTrue("'test' instance is named 'test'", testInst.getName().equals("test"));
 		assertTrue("'test' instance is of type 'TestThing'", testInst.getType() == tt);
+	}
+	
+	
+	
+	
+	/* ---------- Methods called from the JUnit tests ---------- */
+	protected void checkSimpleModel(ThingMLModel m) {
+		// Everything is in the same model
+		// Check the contents
+		modelTestDatatypes d = checkDatatypes(m);
+		modelTestMessages msgs = checkMessages(m, d);
+		checkThingConfig(m, d, msgs);
+	}
+	
+	protected void checkSimpleIncludeModel(ThingMLModel m) {
+		// This one is split into three models, one for each file. 
+		// Find the associated models for the three files
+		List<ThingMLModel> models = ThingMLHelpers.allThingMLModelModels(m);
+		
+		ThingMLModel topModel = null;
+		ThingMLModel msgsModel = null;
+		ThingMLModel dataModel = null;
+		
+		for (ThingMLModel model : models) {
+			String uri = model.eResource().getURI().toString();
+			if (uri.endsWith("SimpleIncludeModel.thingml")) {
+				topModel = model;
+			} else if (uri.endsWith("SimpleIncludeModelMessages.thingml")) {
+				msgsModel = model;
+			} else if (uri.endsWith("SimpleIncludeModelDatatypes.thingml")) {
+				dataModel = model;
+			}
+		}
+		
+		// Check the contents of the three models
+		modelTestDatatypes d = checkDatatypes(dataModel);
+		modelTestMessages msgs = checkMessages(msgsModel, d);
+		checkThingConfig(topModel, d, msgs);
 	}
 }
