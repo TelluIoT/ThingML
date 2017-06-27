@@ -253,7 +253,7 @@ public class CompileThingFile implements IHandler {
 				}
 				String file = "";
 				for(CheckerInfo i : compiler.checker.Errors) {
-					if (!i.file.equals(file)) {
+					if (i.file != null && !i.file.equals(file)) {
 						ThingMLConsole.getInstance().printError("Errors in file " + i.file + "\n");
 						file = i.file;
 					}
@@ -261,7 +261,7 @@ public class CompileThingFile implements IHandler {
 				}
 				file = "";
 				for(CheckerInfo i : compiler.checker.Warnings) {
-					if (!i.file.equals(file)) {
+					if (i.file != null && !i.file.equals(file)) {
 						ThingMLConsole.getInstance().printWarn("Warnings in file " + i.file + "\n");
 						file = i.file;
 					}
@@ -269,7 +269,7 @@ public class CompileThingFile implements IHandler {
 				}
 				file = "";
 				for(CheckerInfo i : compiler.checker.Notices) {
-					if (!i.file.equals(file)) {
+					if (i.file != null && !i.file.equals(file)) {
 						ThingMLConsole.getInstance().printMessage("Notices in file " + i.file + "\n");
 						file = i.file;
 					}

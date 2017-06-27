@@ -212,7 +212,7 @@ public class Checker {
         } else {*/
 		String file = "";
 		for (final CheckerInfo i : Errors) {
-			if (!i.file.equals(file)) {
+			if (i.file != null && !i.file.equals(file)) {
 				System.err.println("Errors in file " + i.file);
 				file = i.file;
 			}
@@ -229,7 +229,7 @@ public class Checker {
         } else {*/
 		String file = "";
 		for (final CheckerInfo i : Warnings) {
-			if (!i.file.equals(file)) {
+			if (i.file != null && !i.file.equals(file)) {
 				System.out.println("Warnings in file " + i.file);
 				file = i.file;
 			}
@@ -246,7 +246,7 @@ public class Checker {
         } else {*/
 		String file = "";
 		for (CheckerInfo i : Notices) {
-			if (!i.file.equals(file)) {
+			if (i.file != null && !i.file.equals(file)) {
 				System.out.println("Notices in file " + i.file);
 				file = i.file;
 			}
@@ -275,13 +275,13 @@ public class Checker {
 			this.source = source;
 			this.message = message;
 			this.element = element;
-			
+
 			this.file = element.eResource().getURI().deresolve(URI.createFileURI(ctx.getInputDirectory().getAbsolutePath())).toFileString();          	
 			final INode node = NodeModelUtils.getNode(element);
 			this.startLine = node.getStartLine();
 			this.endLine = node.getEndLine(); 
 		}
-		
+
 		public String print() {              	                         	
 			return element.getClass().getSimpleName().replace("Impl", "") + " \"" + ThingMLElementHelper.getName(element) + "\"";
 		}
@@ -319,10 +319,14 @@ public class Checker {
 					return ((o.type == InfoType.ERROR)? -1 : 0);
 				return 0;
 			} else {
-				if (file.equals(o.file)) {
-					return startLine - o.startLine;
+				if (file!=null && o.file!=null) {
+					if (file.equals(o.file)) {
+						return startLine - o.startLine;
+					} else {
+						return file.compareTo(o.file);
+					}
 				} else {
-					return file.compareTo(o.file);
+					return 0;
 				}
 			}
 		}
