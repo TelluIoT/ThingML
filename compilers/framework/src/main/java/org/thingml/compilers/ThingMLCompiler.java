@@ -156,17 +156,26 @@ public abstract class ThingMLCompiler {
     	ThingMLStandaloneSetup.doSetup();
     }
 
-    private static void save(ThingMLModel model, String location){
-        // Then you can load and save resources in the different
-        // formats using a resource set:
+    private static void save(ThingMLModel model, String location) {
+    	
+    	// Saves a single model in a single resource by collapsing all imports.
+    	
+    	// TODO: It would be better to work on a copy. The model is actually flattened in memory. 
+    	
         ResourceSet rs = new ResourceSetImpl();
-        //create empty xmi resource and populate it
         Resource res = rs.createResource(URI.createFileURI(location));
+        
         for(ThingMLModel m : ThingMLHelpers.allThingMLModelModels(model)) {
-            EcoreUtil.resolveAll(m);
-            res.getContents().add(EcoreUtil.getRootContainer(m));
-            //res.getContents().addAll(EcoreUtil.getRootContainer(m).eContents());
+        	if (m != model) {
+        		model.getConfigs().addAll(m.getConfigs());
+        		model.getProtocols().addAll(m.getProtocols());
+        		model.getTypes().addAll(m.getTypes());
+        	}
         }
+        model.getImportURI().clear();
+        res.getContents().add(model);
+        EcoreUtil.resolveAll(res);
+        
         try {
             res.save(null);
         } catch (IOException e) {

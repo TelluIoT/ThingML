@@ -211,4 +211,10 @@ public abstract class LoadModelTestsCommon {
 		modelTestMessages msgs = checkMessages(msgsModel, d);
 		checkThingConfig(topModel, d, msgs);
 	}
+	
+	protected void checkSimpleIncludeModelFlat(ThingMLModel m) {
+		modelTestDatatypes d = checkDatatypes(m);
+		modelTestMessages msgs = checkMessages(m, d);
+		checkThingConfig(m, d, msgs);
+	}
 }

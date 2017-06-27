@@ -51,7 +51,7 @@ public class TestSaveIncludeThingFile extends LoadModelTestsCommon {
 			ThingMLModel savedModel = ThingMLCompiler.loadModel(tmp);
 			
 			// Check that the model is correct
-			checkSimpleIncludeModel(savedModel);
+			checkSimpleIncludeModelFlat(savedModel);
 			
 		} catch (IOException e) {
 			fail("Could not create temporary file to save to");
