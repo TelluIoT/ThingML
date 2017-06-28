@@ -1,5 +1,3 @@
-
-#include "Arduino.h"
 #define /*PORT_NAME*/_NB_SOFT_TIMER /*NB_SOFT_TIMER*/
 uint32_t /*PORT_NAME*/_timer[/*PORT_NAME*/_NB_SOFT_TIMER];
 uint32_t  /*PORT_NAME*/_prev_1sec = 0;

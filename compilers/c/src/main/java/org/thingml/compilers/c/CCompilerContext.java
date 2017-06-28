@@ -103,7 +103,7 @@ public abstract class CCompilerContext extends Context {
     }
 
     public String getTimerTemplate() {
-        if (getCompiler().getID().compareTo("arduino") == 0) {
+        if (getCompiler().getID().compareTo("arduinomf") == 0 || getCompiler().getID().compareTo("arduino") == 0) {
             return getTemplateByID("ctemplates/network_lib/arduino/Timer/Timer.c");
         } else {
             return getTemplateByID("");
@@ -111,7 +111,7 @@ public abstract class CCompilerContext extends Context {
     }
     
     public String getTimerHeaderTemplate() {
-        if (getCompiler().getID().compareTo("arduino") == 0) {
+    	if (getCompiler().getID().compareTo("arduinomf") == 0 || getCompiler().getID().compareTo("arduino") == 0) {
             return getTemplateByID("ctemplates/network_lib/arduino/Timer/Timer.h");
         } else {
             return getTemplateByID("");
