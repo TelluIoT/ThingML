@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -208,7 +209,8 @@ public abstract class ThingMLCompiler {
         EcoreUtil.resolveAll(res);
         
         try {
-            res.save(null);
+        	SaveOptions opt = SaveOptions.newBuilder().format().noValidation().getOptions();
+            res.save(opt.toOptionsMap());
         } catch (IOException e) {
             e.printStackTrace();
         }

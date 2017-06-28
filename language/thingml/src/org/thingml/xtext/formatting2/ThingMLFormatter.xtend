@@ -13,14 +13,21 @@ import org.thingml.xtext.thingML.PrimitiveType
 import org.thingml.xtext.thingML.Protocol
 import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.thingML.Type
+import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.thingML.ObjectType
+import org.thingml.xtext.thingML.Thing
+import org.thingml.xtext.thingML.RequiredPort
+import org.thingml.xtext.thingML.ProvidedPort
+import org.thingml.xtext.thingML.InternalPort
+import org.thingml.xtext.thingML.Port
 
 class ThingMLFormatter extends AbstractFormatter2 {
 	
 	@Inject extension ThingMLGrammarAccess
 
 	def dispatch void format(ThingMLModel thingMLModel, extension IFormattableDocument document) {
+		//println(textRegionAccess.toString())
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		
 		
 		for (Type types : thingMLModel.getTypes()) {
 			types.format;
@@ -31,14 +38,56 @@ class ThingMLFormatter extends AbstractFormatter2 {
 		for (Configuration configs : thingMLModel.getConfigs()) {
 			configs.format;
 		}
-	}
+	}	
 
 	def dispatch void format(PrimitiveType primitiveType, extension IFormattableDocument document) {
-		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		for (PlatformAnnotation annotations : primitiveType.getAnnotations()) {
-			annotations.format;
-		}
+		primitiveType.regionFor.keyword("<").surround[noSpace]
+		primitiveType.regionFor.keyword(">").prepend[noSpace]
+		
+		formatType(primitiveType, document) 
 	}
 	
-	// TODO: implement for ObjectType, Enumeration, EnumerationLiteral, Thing, PropertyAssign, Protocol, Function, Property, Message, Parameter, RequiredPort, ProvidedPort, InternalPort, Stream, JoinSources, MergeSources, SimpleSource, Filter, LengthWindow, TimeWindow, StateMachine, FinalState, CompositeState, Session, ParallelRegion, State, Transition, InternalTransition, ActionBlock, ExternStatement, LocalVariable, SendAction, VariableAssignment, LoopAction, ConditionalAction, ReturnAction, PrintAction, ErrorAction, StartSession, FunctionCallStatement, ExternExpression, Configuration, Instance, ConfigPropertyAssign, Connector, ExternalConnector
+	def dispatch void format(ObjectType objectType, extension IFormattableDocument document) {
+		formatType(objectType, document)
+	}
+	
+	def dispatch void format(Thing thing, extension IFormattableDocument document) {
+		thing.interior[indent]
+		thing.regionFor.keyword("{").append[newLine]
+		thing.regionFor.keyword("}").prepend[newLine]
+		thing.append[setNewLines(1,2,Integer.MAX_VALUE)]
+	}
+	
+	def dispatch void format(RequiredPort requiredPort, extension IFormattableDocument document) {
+		formatPort(requiredPort, document)
+	}
+	
+	def dispatch void format(ProvidedPort providedPort, extension IFormattableDocument document) {
+		formatPort(providedPort, document)
+	}
+
+	def dispatch void format(InternalPort internalPort, extension IFormattableDocument document) {
+		formatPort(internalPort, document)
+	}
+	
+	
+	// TODO: implement for , Enumeration, EnumerationLiteral, Thing, PropertyAssign, Protocol, Function, Property, Message, Parameter, , , , Stream, JoinSources, MergeSources, SimpleSource, Filter, LengthWindow, TimeWindow, StateMachine, FinalState, CompositeState, Session, ParallelRegion, State, Transition, InternalTransition, ActionBlock, ExternStatement, LocalVariable, SendAction, VariableAssignment, LoopAction, ConditionalAction, ReturnAction, PrintAction, ErrorAction, StartSession, FunctionCallStatement, ExternExpression, Configuration, Instance, ConfigPropertyAssign, Connector, ExternalConnector
+	
+	
+	/* --- Helpers --- */
+	
+	def void formatType(Type type, extension IFormattableDocument document) {
+		type.interior[indent]
+		for (PlatformAnnotation annotations : type.getAnnotations()) {
+			annotations.format;
+			if (type.getAnnotations.size > 1) {
+				annotations.prepend[newLine]
+			}
+		}
+		type.append[setNewLines(1,2,Integer.MAX_VALUE)]
+	}
+	
+	def void formatPort(Port port, extension IFormattableDocument document) {
+		port.append[setNewLines(1,2,Integer.MAX_VALUE)]
+	}
 }
