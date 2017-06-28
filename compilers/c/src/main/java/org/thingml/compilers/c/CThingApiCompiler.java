@@ -249,7 +249,8 @@ public class CThingApiCompiler extends ThingApiCompiler {
     }
 
     protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        builder.append("// Declaration of prototypes outgoing messages:\n");
+    
+        builder.append("// Declaration of prototypes outgoing messages :\n");
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
             CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0); // There should be one and only one

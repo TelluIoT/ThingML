@@ -1,3 +1,5 @@
+
+#include "Arduino.h"
 #define /*PORT_NAME*/_NB_SOFT_TIMER /*NB_SOFT_TIMER*/
 uint32_t /*PORT_NAME*/_timer[/*PORT_NAME*/_NB_SOFT_TIMER];
 uint32_t  /*PORT_NAME*/_prev_1sec = 0;
@@ -9,10 +11,13 @@ void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id
 /*INTERRUPT_COUNTER*/
 /*INTERRUPT_VECTOR*/
 
-struct /*PORT_NAME*/_instance_type {
-    uint16_t listener_id;
-    /*INSTANCE_INFORMATION*/
-} /*PORT_NAME*/_instance;
+//struct /*PORT_NAME*/_instance_type {
+//    uint16_t listener_id;
+//    /*INSTANCE_INFORMATION*/
+//} /*PORT_NAME*/_instance;
+
+struct /*PORT_NAME*/_instance_type /*PORT_NAME*/_instance;
+
 
 void /*PORT_NAME*/_setup() {
 	/*INITIALIZATION*/

@@ -109,6 +109,15 @@ public abstract class CCompilerContext extends Context {
             return getTemplateByID("");
         }
     }
+    
+    public String getTimerHeaderTemplate() {
+        if (getCompiler().getID().compareTo("arduino") == 0) {
+            return getTemplateByID("ctemplates/network_lib/arduino/Timer/Timer.h");
+        } else {
+            return getTemplateByID("");
+        }
+    }
+    
 
     public String getNetworkLibSerialTemplate() {
         if (getCompiler().getID().compareTo("arduino") == 0) {

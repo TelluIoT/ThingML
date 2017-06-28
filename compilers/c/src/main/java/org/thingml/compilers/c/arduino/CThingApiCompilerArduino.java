@@ -16,12 +16,22 @@
  */
 package org.thingml.compilers.c.arduino;
 
+import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingApiCompiler;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by ffl on 17.06.15.
  */
 public class CThingApiCompilerArduino extends CThingApiCompiler {
 
+	
+	@Override
+    protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+        builder.append("// generateEventHandlers2\nint " + ctx.getEmptyHandlerName(thing));
+        ctx.appendFormalParametersEmptyHandler(thing, builder);
+        builder.append(";\n");
+        super.generatePublicPrototypes(thing, builder, ctx);
+    }
 
 }

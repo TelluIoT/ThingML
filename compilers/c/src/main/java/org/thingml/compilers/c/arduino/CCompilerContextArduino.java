@@ -56,8 +56,11 @@ public class CCompilerContextArduino extends CCompilerContext {
         ArrayList<String> modules = new ArrayList<String>();
         String main = getCurrentConfiguration().getName() + "_cfg.c";
 
+        StringBuilder mainpart = new StringBuilder();
+        
         for (String filename : generatedCode.keySet()) {
             if (filename.endsWith(".h")) {
+            	mainpart.append("#include \"" + filename +"\"\n");
                 headers.add(filename);
                 //System.out.println("Adding " + filename + " to headers");
             }
@@ -70,20 +73,29 @@ public class CCompilerContextArduino extends CCompilerContext {
         StringBuilder pde = new StringBuilder();
 
         for (String f : headers) {
+        	writeTextFile(getCurrentConfiguration().getName() + File.separatorChar + f, headerWrapper(generatedCode.get(f).toString(), f));
             pde.append(generatedCode.get(f).toString());
         }
 
         for (String f : modules) {
+        	writeTextFile(getCurrentConfiguration().getName() + File.separatorChar + f + "pp","#include \"" +f.substring(0,f.length() - 1)   +"h\"\n"+ generatedCode.get(f).toString());
             pde.append(generatedCode.get(f).toString());
         }
 
         pde.append(generatedCode.get(main).toString());
-
+        writeTextFile(getCurrentConfiguration().getName() + File.separatorChar + getCurrentConfiguration().getName() + ".ino", mainpart.toString() + generatedCode.get(main).toString());
         //writeTextFile(getCurrentConfiguration().getName() + ".pde", pde.toString());
-        writeTextFile(getCurrentConfiguration().getName() + File.separatorChar + getCurrentConfiguration().getName() + ".ino", pde.toString());
+        writeTextFile(getCurrentConfiguration().getName()+"all" + File.separatorChar + getCurrentConfiguration().getName() + "all.ino", pde.toString());
 
     }
 
+    // TODO : generate it in the file constructor
+    private String headerWrapper(String header, String filename){
+    	header = "#ifndef " + filename.substring(0,filename.length() - 2) + "\n#define "+ filename.substring(0,filename.length() - 2) +"\n#include <stdint.h>\n#include <Arduino.h>\n" + header + "\n#endif";
+    	return header;
+    }
+    
+    
     @Override
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {
         ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);

@@ -119,8 +119,10 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             ctx.addToPollCode(hwtimer0.timerName + "_read();\n");
 
             StringBuilder lib = new StringBuilder();
+            StringBuilder libh =new StringBuilder();
             lib.append(hwtimer0.generateTimerLibrary(ctx));
-            hwtimer0.generateInstructions(ctx, lib);
+            libh.append(hwtimer0.generateTimerHeaderLibrary(ctx));
+            hwtimer0.generateInstructions(ctx, lib, libh);
 
             ctx.getBuilder(hwtimer0.timerName + ".c").append(lib);
             ctx.getBuilder(hwtimer0.timerName + ".h").append("//" + hwtimer0.timerName + "\n");
@@ -131,8 +133,10 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             ctx.addToPollCode(hwtimer1.timerName + "_read();\n");
 
             StringBuilder lib = new StringBuilder();
+            StringBuilder libh = new StringBuilder();
             lib.append(hwtimer1.generateTimerLibrary(ctx));
-            hwtimer1.generateInstructions(ctx, lib);
+            libh.append(hwtimer1.generateTimerHeaderLibrary(ctx));
+            hwtimer1.generateInstructions(ctx, lib, libh);
 
             ctx.getBuilder(hwtimer1.timerName + ".c").append(lib);
             ctx.getBuilder(hwtimer1.timerName + ".h").append("//" + hwtimer1.timerName + "\n");
@@ -143,11 +147,13 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             ctx.addToPollCode(hwtimer2.timerName + "_read();\n");
 
             StringBuilder lib = new StringBuilder();
+            StringBuilder libh = new StringBuilder();
             lib.append(hwtimer2.generateTimerLibrary(ctx));
-            hwtimer2.generateInstructions(ctx, lib);
+            libh.append(hwtimer2.generateTimerHeaderLibrary(ctx));
+            hwtimer2.generateInstructions(ctx, lib, libh);
 
             ctx.getBuilder(hwtimer2.timerName + ".c").append(lib);
-            ctx.getBuilder(hwtimer2.timerName + ".h").append("//" + hwtimer2.timerName + "\n");
+            ctx.getBuilder(hwtimer2.timerName + ".h").append(libh); 
         }
         if (!hwtimer3.ExternalConnectors.isEmpty()) {
             ctx.addToInitCode("\n" + hwtimer3.timerName + "_instance.listener_id = add_instance(&" + hwtimer3.timerName + "_instance);\n");
@@ -155,8 +161,10 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             ctx.addToPollCode(hwtimer3.timerName + "_read();\n");
 
             StringBuilder lib = new StringBuilder();
+            StringBuilder libh = new StringBuilder();
             lib.append(hwtimer3.generateTimerLibrary(ctx));
-            hwtimer3.generateInstructions(ctx, lib);
+            libh.append(hwtimer3.generateTimerHeaderLibrary(ctx));
+            hwtimer3.generateInstructions(ctx, lib, libh);
 
             ctx.getBuilder(hwtimer3.timerName + ".c").append(lib);
             ctx.getBuilder(hwtimer3.timerName + ".h").append("//" + hwtimer3.timerName + "\n");
@@ -166,16 +174,16 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
     public void generateMessageForwarders(StringBuilder builder, StringBuilder headerbuilder) {
         CCompilerContext ctx = (CCompilerContext) this.ctx;
         if (!hwtimer0.ExternalConnectors.isEmpty()) {
-            hwtimer0.generateInstructions(ctx, builder);
+            hwtimer0.generateInstructions(ctx, builder, headerbuilder);
         }
         if (!hwtimer1.ExternalConnectors.isEmpty()) {
-            hwtimer1.generateInstructions(ctx, builder);
+            hwtimer1.generateInstructions(ctx, builder, headerbuilder);
         }
         if (!hwtimer2.ExternalConnectors.isEmpty()) {
-            hwtimer2.generateInstructions(ctx, builder);
+            hwtimer2.generateInstructions(ctx, builder, headerbuilder);
         }
         if (!hwtimer3.ExternalConnectors.isEmpty()) {
-            hwtimer3.generateInstructions(ctx, builder);
+            hwtimer3.generateInstructions(ctx, builder, headerbuilder);
         }
     }
 
@@ -236,7 +244,9 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
 
         }
 
-        BigInteger SCM(List<BigInteger> l) {
+        
+
+		BigInteger SCM(List<BigInteger> l) {
             if (l.isEmpty()) {
                 //System.out.println("tscm (empty): 0");
                 return BigInteger.valueOf(0);
@@ -354,8 +364,19 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             return res;
         }
 
+        
+        public String generateTimerHeaderLibrary(CCompilerContext ctx) {
+        	String cheadertemplate = "";
+        	if(!ExternalConnectors.isEmpty()){
+        		cheadertemplate = ctx.getTimerHeaderTemplate();
+        		cheadertemplate = cheadertemplate.replace("/*PORT_NAME*/", timerName);
+                cheadertemplate = cheadertemplate.replace("/*INSTANCE_INFORMATION*/", "/*INSTANCE_INFORMATION*/");
+        	}
+			return cheadertemplate;
+		}
+        
         public String generateTimerLibrary(CCompilerContext ctx) {
-            String ctemplate = "";
+        	String ctemplate = "";
             if (!ExternalConnectors.isEmpty()) {
                 ctemplate = ctx.getTimerTemplate();
                 ctemplate = ctemplate.replace("/*PORT_NAME*/", timerName);
@@ -523,16 +544,18 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             return ctemplate;
         }
 
-        public void generateInstructions(CCompilerContext ctx, StringBuilder builder) {
-            for (ExternalConnector eco : ExternalConnectors) {
+        public void generateInstructions(CCompilerContext ctx, StringBuilder builder, StringBuilder headerbuilder) {
+        	for (ExternalConnector eco : ExternalConnectors) {
                 Thing t = eco.getInst().getType();
                 Port p = eco.getPort();
-
                 for (Message m : p.getSends()) {
-
-                    builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
+                	
+                	builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
                     builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
+                    headerbuilder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
                     ctx.appendFormalParameters(t, builder, m);
+                    ctx.appendFormalParameters(t, headerbuilder, m);
+                    headerbuilder.append(";\n");
                     builder.append("{\n");
 
                     if (AnnotatedElementHelper.hasAnnotation(m, "timer_start")) {
