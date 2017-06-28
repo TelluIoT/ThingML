@@ -7,19 +7,25 @@ import com.google.inject.Inject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
 import org.thingml.xtext.services.ThingMLGrammarAccess
+import org.thingml.xtext.thingML.CompositeState
 import org.thingml.xtext.thingML.Configuration
+import org.thingml.xtext.thingML.Function
+import org.thingml.xtext.thingML.InternalPort
+import org.thingml.xtext.thingML.ObjectType
 import org.thingml.xtext.thingML.PlatformAnnotation
+import org.thingml.xtext.thingML.Port
 import org.thingml.xtext.thingML.PrimitiveType
 import org.thingml.xtext.thingML.Protocol
+import org.thingml.xtext.thingML.ProvidedPort
+import org.thingml.xtext.thingML.RequiredPort
+import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.thingML.Type
-import org.thingml.xtext.thingML.ThingMLPackage
-import org.thingml.xtext.thingML.ObjectType
-import org.thingml.xtext.thingML.Thing
-import org.thingml.xtext.thingML.RequiredPort
-import org.thingml.xtext.thingML.ProvidedPort
-import org.thingml.xtext.thingML.InternalPort
-import org.thingml.xtext.thingML.Port
+import org.thingml.xtext.thingML.State
+import org.thingml.xtext.thingML.StateContainer
+import org.thingml.xtext.thingML.Region
+import org.thingml.xtext.thingML.Session
+import org.thingml.xtext.thingML.Action
 
 class ThingMLFormatter extends AbstractFormatter2 {
 	
@@ -53,6 +59,12 @@ class ThingMLFormatter extends AbstractFormatter2 {
 	
 	def dispatch void format(Thing thing, extension IFormattableDocument document) {
 		thing.interior[indent]
+		for (Function function : thing.functions) {
+			function.format;
+		}
+		for (CompositeState state : thing.behaviour) {
+			state.format;
+		}
 		thing.regionFor.keyword("{").append[newLine]
 		thing.regionFor.keyword("}").prepend[newLine]
 		thing.append[setNewLines(1,2,Integer.MAX_VALUE)]
@@ -70,11 +82,63 @@ class ThingMLFormatter extends AbstractFormatter2 {
 		formatPort(internalPort, document)
 	}
 	
+	def dispatch void format(Function function, extension IFormattableDocument document) {
+		function.interior[indent]
+		if (function.body !== null)
+			function.body.format
+		function.append[setNewLines(1,2,Integer.MAX_VALUE)]
+	}
+	
+	def dispatch void format(State state, extension IFormattableDocument document) {
+		formatState(state, document)		
+	}
+	
+	def dispatch void format(CompositeState state, extension IFormattableDocument document) {
+		formatState(state, document)
+		for (State sub : state.substate) {
+			sub.format;
+		}
+		for(Region r : state.region) {
+			formatStateContainer(r, document)
+		}	
+		for(Session s : state.session) {
+			formatStateContainer(s, document)
+		}	
+	}
+	
+	def dispatch void format(Action action, extension IFormattableDocument document) {
+		action.interior[indent]
+		action.regionFor.keyword("do").append[newLine]
+		action.regionFor.keyword("end").prepend[newLine]
+		action.append[setNewLines(1,2,Integer.MAX_VALUE)]		
+	}
+	
 	
 	// TODO: implement for , Enumeration, EnumerationLiteral, Thing, PropertyAssign, Protocol, Function, Property, Message, Parameter, , , , Stream, JoinSources, MergeSources, SimpleSource, Filter, LengthWindow, TimeWindow, StateMachine, FinalState, CompositeState, Session, ParallelRegion, State, Transition, InternalTransition, ActionBlock, ExternStatement, LocalVariable, SendAction, VariableAssignment, LoopAction, ConditionalAction, ReturnAction, PrintAction, ErrorAction, StartSession, FunctionCallStatement, ExternExpression, Configuration, Instance, ConfigPropertyAssign, Connector, ExternalConnector
 	
 	
 	/* --- Helpers --- */
+	
+	def void formatStateContainer(StateContainer container, extension IFormattableDocument document) {
+		for(State sub : container.substate) {
+			sub.format
+		}
+		container.interior[indent]
+		container.regionFor.keyword("{").append[newLine]
+		container.regionFor.keyword("}").prepend[newLine]
+		container.append[setNewLines(1,2,Integer.MAX_VALUE)]
+	}
+	
+	def void formatState(State state, extension IFormattableDocument document) {
+		if (state.entry !== null)
+			state.entry.format
+		if (state.exit !== null)
+			state.exit.format	
+		state.interior[indent]
+		state.regionFor.keyword("{").append[newLine]
+		state.regionFor.keyword("}").prepend[newLine]
+		state.append[setNewLines(1,2,Integer.MAX_VALUE)]
+	}
 	
 	def void formatType(Type type, extension IFormattableDocument document) {
 		type.interior[indent]
