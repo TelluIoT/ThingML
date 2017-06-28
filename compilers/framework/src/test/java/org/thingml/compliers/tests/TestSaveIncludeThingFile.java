@@ -32,6 +32,7 @@ public class TestSaveIncludeThingFile extends LoadModelTestsCommon {
 		// Get the .thingml file from resources
 		File test = new File(this.getClass().getResource("/SimpleIncludeModel.thingml").getFile());
 		
+	
 		// Load the model
 		ThingMLModel model = ThingMLCompiler.loadModel(test);
 		assertFalse("Loaded model is not null", model == null);
@@ -44,8 +45,10 @@ public class TestSaveIncludeThingFile extends LoadModelTestsCommon {
 			// Create temporary file to save to
 			File tmp = File.createTempFile("thingml-model", ".thingml");
 			
+			ThingMLModel flatmodel = ThingMLCompiler.flattenModel(model);
+			
 			// Save the ThingML model
-			ThingMLCompiler.saveAsThingML(model, tmp.toString());
+			ThingMLCompiler.saveAsThingML(flatmodel, tmp.toString());
 			
 			// Re-load the saved model
 			ThingMLModel savedModel = ThingMLCompiler.loadModel(tmp);

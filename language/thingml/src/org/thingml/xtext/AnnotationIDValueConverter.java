@@ -30,7 +30,7 @@ public class AnnotationIDValueConverter extends AbstractLexerBasedConverter<Stri
 
 	@Override
 	public String toString(String value) {
-		return "@" + super.toString(value);
+		return "@" + value;
 	}
 	
 	
