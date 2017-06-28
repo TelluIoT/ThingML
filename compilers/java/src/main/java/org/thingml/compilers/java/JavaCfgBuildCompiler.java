@@ -92,9 +92,9 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
                 pom = pom.replace("<!--REPO-->", "<!--REPO-->\n" + repo);
             }
             
-            if(AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
+            //if(AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
                 pom = pom.replace("<!--SelfContained-->", addSelfContainedBuild());
-            }
+            //}
 
             PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/pom.xml")));
             w.println(pom);
