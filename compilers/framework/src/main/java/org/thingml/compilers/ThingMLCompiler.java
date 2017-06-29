@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +34,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -155,29 +159,58 @@ public abstract class ThingMLCompiler {
     private static void registerThingMLFactory() {
     	ThingMLStandaloneSetup.doSetup();
     }
+    
+    
+    /**
+     * Take a copy and flatten the model (removes imports and add all elements from the imports in the model)
+     * @param model
+     * @return
+     */
+    public static ThingMLModel flattenModel(ThingMLModel model) {
+
+    	Copier copier = new Copier();
+    	
+    	EcoreUtil.resolveAll(model.eResource().getResourceSet());
+    	
+    	ThingMLModel result = (ThingMLModel)copier.copy(model);
+    	
+    	Collection<ThingMLModel> importedmodels = new ArrayList<ThingMLModel>();
+    	for(ThingMLModel m : ThingMLHelpers.allThingMLModelModels(model)) {
+    		if (m != model) {
+    			importedmodels.add((ThingMLModel)copier.copy(m));
+    		}
+    	}
+    	
+    	copier.copyReferences();
+    		
+    	for(ThingMLModel m : importedmodels) {
+        	if (m != result) {
+        		result.getConfigs().addAll(m.getConfigs());
+        		result.getProtocols().addAll(m.getProtocols());
+        		result.getTypes().addAll(m.getTypes());
+        	}
+        }
+
+    	result.getImportURI().clear();
+    	
+    	return result;
+    }
+    
 
     private static void save(ThingMLModel model, String location) {
     	
-    	// Saves a single model in a single resource by collapsing all imports.
-    	
-    	// TODO: It would be better to work on a copy. The model is actually flattened in memory. 
+    	if (!model.getImportURI().isEmpty())
+    		throw new Error("Only models without imports can be saved with this method. Use the 'flattenModel' method first.");
     	
         ResourceSet rs = new ResourceSetImpl();
         Resource res = rs.createResource(URI.createFileURI(location));
-        
-        for(ThingMLModel m : ThingMLHelpers.allThingMLModelModels(model)) {
-        	if (m != model) {
-        		model.getConfigs().addAll(m.getConfigs());
-        		model.getProtocols().addAll(m.getProtocols());
-        		model.getTypes().addAll(m.getTypes());
-        	}
-        }
-        model.getImportURI().clear();
+
         res.getContents().add(model);
         EcoreUtil.resolveAll(res);
         
         try {
-            res.save(null);
+        	SaveOptions opt = SaveOptions.newBuilder().format().noValidation().getOptions();
+            res.save(opt.toOptionsMap());
         } catch (IOException e) {
             e.printStackTrace();
         }

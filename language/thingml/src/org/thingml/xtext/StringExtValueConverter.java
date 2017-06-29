@@ -32,7 +32,7 @@ public class StringExtValueConverter extends AbstractLexerBasedConverter<String>
 
 	@Override
 	public String toString(String value) {
-		return "'" + super.toString(value).replaceAll("'", "\\'") + "'";
+		return "'" + value.replaceAll("'", "\\'") + "'";
 	}
 	
 	

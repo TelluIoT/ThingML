@@ -27,5 +27,6 @@ Export-Package: org.thingml.xtext,
  org.thingml.xtext.thingML,
  org.thingml.xtext.thingML.impl,
  org.thingml.xtext.thingML.util,
- org.thingml.xtext.validation
+ org.thingml.xtext.validation,
+ org.thingml.xtext.formatting2
 Import-Package: org.apache.log4j

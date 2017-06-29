@@ -32,7 +32,7 @@ public class StringLitValueConverter extends AbstractLexerBasedConverter<String>
 
 	@Override
 	public String toString(String value) {
-		return "\"" + super.toString(value) + "\"";
+		return "\"" + value + "\"";
 	}
 	
 }
