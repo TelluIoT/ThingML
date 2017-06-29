@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.cpp.CppCompilerContext;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
@@ -33,7 +34,7 @@ import org.thingml.xtext.thingML.ThingMLModel;
 /**
  * Created by ffl on 11.06.15.
  */
-public class CCompilerContextArduino extends CCompilerContext {
+public class CCompilerContextArduino extends CppCompilerContext {
 
     public CCompilerContextArduino(ThingMLCompiler c) {
         super(c);
@@ -62,7 +63,7 @@ public class CCompilerContextArduino extends CCompilerContext {
             	headers.add(filename);
                 //System.out.println("Adding " + filename + " to headers");
             }
-            if (filename.endsWith(".c") && !filename.equals(main)) {
+            if ((filename.endsWith(".c") || filename.endsWith(".cpp") )&& !filename.equals(main)) {
                 modules.add(filename);
                 //System.out.println("Adding " + filename + " to modules");
             }
