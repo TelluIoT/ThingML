@@ -102,8 +102,17 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         generateIncludes(cfg, builder, ctx);
         ctemplate = ctemplate.replace("/*INCLUDES*/", builder.toString());
 
-        generateheaderbuilder(cfg, ctx);
+        builder = new StringBuilder();
+        StringBuilder headerbuilder = new StringBuilder();
+        generateCForConfiguration(cfg, builder, headerbuilder, ctx);
+
+        generateDynamicConnectors(cfg, builder, headerbuilder, ctx);
+        
+    
         ctemplate = ctemplate.replace("/*CONFIGURATION*/", builder.toString());
+    
+        generateheaderbuilder(cfg,headerbuilder, ctx);
+        
         StringBuilder initb = new StringBuilder();
         generateInitializationCode(cfg, initb, ctx);
 
@@ -121,14 +130,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
     }
     
-    protected void generateheaderbuilder(Configuration cfg, CCompilerContext ctx){
-    	StringBuilder builder = new StringBuilder();
-        StringBuilder headerbuilder = new StringBuilder();
-        generateCForConfiguration(cfg, builder, headerbuilder, ctx);
-
-        generateDynamicConnectors(cfg, builder, headerbuilder, ctx);
-        
-    }
+    protected void generateheaderbuilder(Configuration cfg, StringBuilder headerbuilder, CCompilerContext ctx){
+	}
 
     protected void generateCleanupOnTerminateInstance(Instance inst, Configuration cfg,
                                                       StringBuilder builder, CCompilerContext ctx){}
@@ -729,14 +732,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(" {\n");
 
 
-                if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                     builder.append("struct executor {\nstatic ");
                 }
 
                 builder.append("void executor_dispatch_" + m.getName());
                 builder.append("(struct Msg_Handler ** head, struct Msg_Handler ** tail");
 
-                if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                     for (Parameter p : m.getParameters()) {
                         builder.append(", ");
                         builder.append(ctx.getCType(p.getTypeRef().getType()));
@@ -809,7 +812,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                 builder.append("}\n");
 
-                if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                     builder.append("};\n");
                 }
 
@@ -820,7 +823,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append(".id_" + s.getValue().getName() + ") {\n");
 
 
-                        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                             builder.append("executor::");
                         }
                         builder.append("executor_dispatch_" + m.getName());
@@ -832,7 +835,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append(s.getValue().getName() + "_receiver_list_tail");
 
 
-                        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                             for (Parameter p : m.getParameters()) {
                                 builder.append(", param_");
                                 builder.append(p.getName());
@@ -857,7 +860,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append("if (sender ==");
                         builder.append(" " + portName + "_instance.listener_id) {\n");
 
-                        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                             builder.append("executor::");
                         }
                         builder.append("executor_dispatch_" + m.getName());
@@ -867,7 +870,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append(portName + "_instance.");
                         builder.append(eco.getPort().getName() + "_receiver_list_tail");
 
-                        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                             for (Parameter p : m.getParameters()) {
                                 builder.append(", param_");
                                 builder.append(p.getName());
@@ -1682,7 +1685,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
         //Initialize stdout if needed (for arduino)
-        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+    	if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                 int baudrate = 9600;
                 if(AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "arduino_stdout_baudrate")){
                     Integer intb = Integer.parseInt(AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout_baudrate").iterator().next());
@@ -1708,7 +1711,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append(ctx.getPollCode());
         builder.append("// End Network Listener\n\n");
 
-        if (ctx.getCompiler().getID().compareTo("arduino") != 0) { //FIXME Nicolas This code is awfull
+        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) { //FIXME Nicolas This code is awfull
             //New Empty Event Handler
             builder.append("int emptyEventConsumed = 1;\n");
             builder.append("while (emptyEventConsumed != 0) {\n");
@@ -1721,7 +1724,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             if (ThingMLHelpers.allStateMachines(i.getType()).size() > 0) { // There has to be only 1
                 CompositeState sm = ThingMLHelpers.allStateMachines(i.getType()).get(0);
                 if (StateHelper.hasEmptyHandlersIncludingSessions(sm)) {
-                    if (ctx.getCompiler().getID().compareTo("arduino") != 0) {
+                	if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                     builder.append("emptyEventConsumed += ");
                     }
                     builder.append(ctx.getEmptyHandlerName(i.getType()) + "(&" + ctx.getInstanceVarName(i) + ");\n");
@@ -1729,7 +1732,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-        if (ctx.getCompiler().getID().compareTo("arduino") != 0) {
+        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
             builder.append("}\n");
         }
         

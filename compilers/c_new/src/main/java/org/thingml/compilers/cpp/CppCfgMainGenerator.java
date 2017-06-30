@@ -45,11 +45,7 @@ public class CppCfgMainGenerator extends CCfgMainGenerator {
     }
 
     @Override
-    protected void generateheaderbuilder(Configuration cfg, CCompilerContext ctx){
-    	StringBuilder builder = new StringBuilder();
-        StringBuilder headerbuilder = new StringBuilder();
-        generateCForConfiguration(cfg, builder, headerbuilder, ctx);
-        generateDynamicConnectors(cfg, builder, headerbuilder, ctx);
+    protected void generateheaderbuilder(Configuration cfg, StringBuilder headerbuilder, CCompilerContext ctx){
         // GENERATE HEADER FOR MAIN
         String cheadertemplate = ctx.getCfgMainHeaderTemplate();
         //generateCppHeaderExternalMessageEnqueue(cfg, headerbuilder, ctx);            
