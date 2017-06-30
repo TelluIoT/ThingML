@@ -98,6 +98,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         //builder.append("#ifdef __cplusplus\n");
         //builder.append("extern \"C\" {\n");
         //builder.append("#endif\n");
+        
         headerPrivateCPrototypes(thing, builder, ctx);
         
         //builder.append("#ifdef __cplusplus\n");
@@ -167,7 +168,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
     
     protected void headerPrivateCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx){
-    
+    	generatePrivateCPrototypes(thing, builder, ctx);
     }
     
     

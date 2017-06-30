@@ -74,7 +74,6 @@ public class CppThingImplCompiler extends CThingImplCompiler {
     }
     
     protected void headerPrivateCPrototypes(Thing thing, StringBuilder builder, CppCompilerContext ctx){
-    	generatePrivateCPrototypes(thing, builder, ctx);
     	StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
     	for (Function f : ThingMLHelpers.allFunctions(thing)) {
             generatePrototypeforThingDirect(f, cppHeaderBuilder, ctx, thing, true);
