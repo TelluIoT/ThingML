@@ -14,14 +14,14 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.c.arduinomf;
+package org.thingml.compilers.cpp.arduinomf;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.c.arduino.CCompilerContextArduino;
+import org.thingml.compilers.cpp.arduino.CCompilerContextArduino;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;

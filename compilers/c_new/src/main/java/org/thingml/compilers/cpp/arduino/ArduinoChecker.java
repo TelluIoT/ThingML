@@ -14,13 +14,34 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.c.arduino;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.thingml.compilers.cpp.arduino;
 
-import org.thingml.compilers.c.CThingApiCompiler;
+import org.thingml.compilers.Context;
+import org.thingml.compilers.c.CChecker;
+import org.thingml.xtext.thingML.Configuration;
 
 /**
- * Created by ffl on 17.06.15.
+ *
+ * @author sintef
  */
-public class CThingApiCompilerArduino extends CThingApiCompiler {
+public class ArduinoChecker extends CChecker {
+
+    public ArduinoChecker(String compiler, Context ctx) {
+        super(compiler, ctx);
+    }
+
+    @Override
+    public void do_check(Configuration cfg) {
+
+        //ADD Arduino specific checks
+
+        super.do_generic_check(cfg);
+
+    }
 
 }

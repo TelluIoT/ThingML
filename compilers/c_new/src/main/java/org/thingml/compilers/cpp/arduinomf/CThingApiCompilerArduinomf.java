@@ -14,34 +14,24 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.thingml.compilers.c.arduino;
+package org.thingml.compilers.cpp.arduinomf;
 
-import org.thingml.compilers.Context;
-import org.thingml.compilers.c.CChecker;
-import org.thingml.xtext.thingML.Configuration;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.c.CThingApiCompiler;
+import org.thingml.xtext.thingML.Thing;
 
 /**
- *
- * @author sintef
+ * Created by ffl on 17.06.15.
  */
-public class ArduinoChecker extends CChecker {
+public class CThingApiCompilerArduinomf extends CThingApiCompiler {
 
-    public ArduinoChecker(String compiler, Context ctx) {
-        super(compiler, ctx);
-    }
-
-    @Override
-    public void do_check(Configuration cfg) {
-
-        //ADD Arduino specific checks
-
-        super.do_generic_check(cfg);
-
+	
+	@Override
+    protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
+        builder.append("// generateEventHandlers2\nint " + ctx.getEmptyHandlerName(thing));
+        ctx.appendFormalParametersEmptyHandler(thing, builder);
+        builder.append(";\n");
+        super.generatePublicPrototypes(thing, builder, ctx);
     }
 
 }

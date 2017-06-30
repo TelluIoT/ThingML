@@ -14,16 +14,16 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.c.arduinomf;
+package org.thingml.compilers.cpp.arduinomf;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.c.arduino.ArduinoChecker;
-import org.thingml.compilers.c.arduino.CCompilerContextArduino;
-import org.thingml.compilers.c.arduino.CThingActionCompilerArduino;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.cpp.arduino.ArduinoChecker;
+import org.thingml.compilers.cpp.arduino.CCompilerContextArduino;
+import org.thingml.compilers.cpp.arduino.CThingActionCompilerArduino;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
