@@ -118,7 +118,7 @@ public class CppThingImplCompiler extends CThingImplCompiler {
         
     }
     
-/*
+
     protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CppCompilerContext ctx, DebugProfile debugProfile) {
         // NB sdalgard - Incorporated C++ prototypes
         StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
@@ -170,10 +170,10 @@ public class CppThingImplCompiler extends CThingImplCompiler {
                 }
 
 
-                builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
+                builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) (this->*" + ctx.getSenderName(thing, port, msg) + "_listener)");
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n");
-                builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) external_" + ctx.getSenderName(thing, port, msg) + "_listener");
+                builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) (this->*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n");
                 builder.append(";\n}\n");
@@ -181,5 +181,5 @@ public class CppThingImplCompiler extends CThingImplCompiler {
         }
         cppHeaderBuilder.append("\n");
         builder.append("\n");
-    }*/
+    }
 }

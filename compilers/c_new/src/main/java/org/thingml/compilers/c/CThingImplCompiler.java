@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
-import org.thingml.compilers.cpp.CppCompilerContext;
 import org.thingml.compilers.interfaces.c.ICThingImpEventHandlerStrategy;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -814,8 +813,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
         // NB sdalgard - Incorporated C++ prototypes
-        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
-
+       
 
         for (Port port : ThingMLHelpers.allPorts(thing)) {
             for (Message msg : port.getSends()) {
@@ -859,11 +857,11 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     }
                 }
 
-                builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) (this->*" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
 
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n");
-                builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) (this->*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) external_" + ctx.getSenderName(thing, port, msg) + "_listener");
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n");
                 builder.append(";\n}\n");
