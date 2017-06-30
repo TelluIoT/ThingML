@@ -14,12 +14,15 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.c.arduino;
+package org.thingml.compilers.c.arduinomf;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
+import org.thingml.compilers.c.arduino.ArduinoChecker;
+import org.thingml.compilers.c.arduino.CCompilerContextArduino;
+import org.thingml.compilers.c.arduino.CThingActionCompilerArduino;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -30,24 +33,23 @@ import org.thingml.xtext.thingML.Thing;
 /**
  * Created by ffl on 25.11.14.
  */
-public class ArduinoCompiler extends OpaqueThingMLCompiler {
+public class ArduinomfCompiler extends OpaqueThingMLCompiler {
 
-    public ArduinoCompiler() {
-        super(new CThingActionCompilerArduino(), new CThingApiCompilerArduino(), new CCfgMainGenerator(),
-                new CfgBuildCompiler(), new CThingImplCompiler());
-        this.checker = new ArduinoChecker(this.getID(), this.ctx);
+    public ArduinomfCompiler() {
+            super(new CThingActionCompilerArduino(), new CThingApiCompilerArduinomf(), new CCfgMainGenerator(),
+                    new CfgBuildCompiler(), new CThingImplCompiler());
+            this.checker = new ArduinoChecker(this.getID(), this.ctx);
     }
 
     @Override
     public ThingMLCompiler clone() {
-        return new ArduinoCompiler();
+        return new ArduinomfCompiler();
     }
 
     @Override
     public String getID() {
-        return "arduino";
+        return "arduinomf";
     }
-
     @Override
     public String getName() {
         return "C/C++ for Arduino (AVR Microcontrollers)";
@@ -60,7 +62,7 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
     @Override
     public void do_call_compiler(Configuration cfg, String... options) {
 
-        CCompilerContext ctx = new CCompilerContextArduino(this);
+        CCompilerContext ctx = new CCompilerContextArduinomf(this);
         processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
@@ -89,5 +91,5 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
         ctx.writeGeneratedCodeToFiles();
 
     }
-
+    
 }

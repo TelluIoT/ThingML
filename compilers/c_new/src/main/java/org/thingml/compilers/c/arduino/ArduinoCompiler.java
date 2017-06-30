@@ -21,6 +21,8 @@ import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
+import org.thingml.compilers.cpp.CppCfgMainGenerator;
+import org.thingml.compilers.cpp.CppThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
@@ -33,8 +35,8 @@ import org.thingml.xtext.thingML.Thing;
 public class ArduinoCompiler extends OpaqueThingMLCompiler {
 
     public ArduinoCompiler() {
-        super(new CThingActionCompilerArduino(), new CThingApiCompilerArduino(), new CCfgMainGenerator(),
-                new CfgBuildCompiler(), new CThingImplCompiler());
+        super(new CThingActionCompilerArduino(), new CThingApiCompilerArduino(), new CppCfgMainGenerator(),
+                new CfgBuildCompiler(), new CppThingImplCompiler());
         this.checker = new ArduinoChecker(this.getID(), this.ctx);
     }
 
