@@ -29,10 +29,6 @@ import org.thingml.compilers.c.CCfgMainGenerator;
  */
 public class CCfgMainGeneratorSintefboard extends CCfgMainGenerator {
 
-    @Override
-    public boolean isGeneratingCpp() {
-        return true;
-    }
 
     @Override
     public String getCppNameScope() {

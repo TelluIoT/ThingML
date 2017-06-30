@@ -51,11 +51,6 @@ import org.thingml.xtext.thingML.Type;
 public class CppThingApiCompiler extends CThingApiCompiler {
 
 	@Override
-    public boolean isGeneratingCpp() {
-        return false;
-    }
-
-	@Override
     public String getCppNameScope() {
         return "/*CFG_CPPNAME_SCOPE*/";
     }

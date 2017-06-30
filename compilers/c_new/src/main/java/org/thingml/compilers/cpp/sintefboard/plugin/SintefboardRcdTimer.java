@@ -47,10 +47,6 @@ public class SintefboardRcdTimer extends CNetworkLibraryGenerator {
         super(cfg, ctx, ExternalConnectors);
     }
 
-    @Override
-    public boolean isGeneratingCpp() {
-        return true;
-    }
 
     @Override
     public String getCppNameScope() {

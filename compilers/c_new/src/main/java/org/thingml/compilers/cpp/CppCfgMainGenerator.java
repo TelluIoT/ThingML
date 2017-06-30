@@ -36,10 +36,6 @@ import org.thingml.xtext.thingML.Session;
  */
 public class CppCfgMainGenerator extends CCfgMainGenerator {
 
-    public boolean isGeneratingCpp() {
-        return true;
-    }
-
     public String getCppNameScope() {
         return "/*CFG_CPPNAME_SCOPE*/";
     }

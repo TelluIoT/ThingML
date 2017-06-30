@@ -63,10 +63,6 @@ import org.thingml.xtext.thingML.Type;
  */
 public class CCfgMainGenerator extends CfgMainGenerator {
 
-    public boolean isGeneratingCpp() {
-        return false;
-    }
-
     public String getCppNameScope() {
         return "";
     }

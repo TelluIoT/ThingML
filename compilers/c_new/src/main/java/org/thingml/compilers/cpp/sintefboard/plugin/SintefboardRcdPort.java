@@ -48,12 +48,7 @@ public class SintefboardRcdPort extends CNetworkLibraryGenerator {
     //public SintefboardPort(Configuration cfg, CCompilerContext ctx, Set<ExternalConnector> ExternalConnectors) {
         super(cfg, ctx, ExternalConnectors);
     }
-
-    @Override
-    public boolean isGeneratingCpp() {
-        return true;
-    }
-
+    
     @Override
     public String getCppNameScope() {
         return "/*CFG_CPPNAME_SCOPE*/";

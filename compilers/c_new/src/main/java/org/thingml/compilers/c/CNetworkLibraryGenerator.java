@@ -61,10 +61,6 @@ public abstract class CNetworkLibraryGenerator extends NetworkLibraryGenerator {
      */
 
 
-    public boolean isGeneratingCpp() {
-        return false;
-    }
-
     public String getCppNameScope() {
         return "";
     }

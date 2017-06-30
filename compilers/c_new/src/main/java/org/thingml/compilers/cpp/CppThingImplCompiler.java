@@ -53,10 +53,6 @@ public class CppThingImplCompiler extends CThingImplCompiler {
         generateCImpl(thing, (CppCompilerContext) ctx);
     }
 
-    public boolean isGeneratingCpp() {
-        return true;
-    }
-
     public String getCppNameScope() {
         return "/*CFG_CPPNAME_SCOPE*/";
     }

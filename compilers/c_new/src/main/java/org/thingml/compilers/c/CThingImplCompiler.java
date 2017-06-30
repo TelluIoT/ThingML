@@ -72,10 +72,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         generateCImpl(thing, (CCompilerContext) ctx);
     }
 
-    public boolean isGeneratingCpp() {
-        return false;
-    }
-
     public String getCppNameScope() {
         return "";
     }
