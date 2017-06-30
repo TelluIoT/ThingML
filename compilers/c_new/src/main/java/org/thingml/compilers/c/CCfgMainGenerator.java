@@ -187,7 +187,53 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     }
 
     protected void generateheaderdeclaration(Configuration cfg, StringBuilder builder, CCompilerContext ctx){
-    	
+    	builder.append("//Declaration of instance variables\n");
+
+        for (Instance inst : ConfigurationHelper.allInstances(cfg)) {
+            
+        builder.append("//Instance " + inst.getName() + "\n");
+            
+        builder.append("// Variables for the properties of the instance\n");
+
+            builder.append(ctx.getInstanceVarDecl(inst) + "\n");
+
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors")) {
+                for (Port p : ThingMLHelpers.allPorts(inst.getType())) {
+                    if (!p.getReceives().isEmpty()) {
+                builder.append("struct Msg_Handler " + inst.getName()
+                        + "_" + p.getName() + "_handlers;\n");
+                builder.append("uint16_t " + inst.getName()
+                        + "_" + p.getName() + "_msgs[" + p.getReceives().size() + "];\n");
+                builder.append("void * " + inst.getName()
+                        + "_" + p.getName() + "_handlers_tab[" + p.getReceives().size() + "];\n\n");
+
+            }
+        }
+        }
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
+        //if(!(debugProfile==null) && debugProfile.g) {}
+        //if(ctx.containsDebug(cfg, inst.getType())) {
+        boolean debugInst = false;
+            for (Instance i : debugProfile.getDebugInstances()) {
+                if (i.getName().equals(inst.getName())) {
+                debugInst = true;
+                break;
+            }
+        }
+            if (debugProfile.isActive()) {
+            //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
+                if (debugInst) {
+                builder.append("char * " + ctx.getInstanceVarName(inst) + "_name = \"" + inst.getName() + "\";\n");
+            }
+        }
+            
+
+            builder.append("// Variables for the sessions of the instance\n");
+            CompositeState sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
+            generateSessionInstanceDeclaration(cfg, ctx, builder, inst, sm, "1");
+    }
+
+        builder.append("\n");
     }
 
     protected void generateCForConfiguration(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
