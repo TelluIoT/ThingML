@@ -170,7 +170,8 @@ public abstract class ThingMLCompiler {
 
     	Copier copier = new Copier();
     	
-    	EcoreUtil.resolveAll(model.eResource().getResourceSet());
+    	if (model.eResource() != null) // TODO: Jakob - when models are flattened once, their resource dissapears
+    		EcoreUtil.resolveAll(model.eResource().getResourceSet());
     	
     	ThingMLModel result = (ThingMLModel)copier.copy(model);
     	

@@ -276,10 +276,14 @@ public class Checker {
 			this.message = message;
 			this.element = element;
 
-			this.file = element.eResource().getURI().deresolve(URI.createFileURI(ctx.getInputDirectory().getAbsolutePath())).toFileString();          	
-			final INode node = NodeModelUtils.getNode(element);
-			this.startLine = node.getStartLine();
-			this.endLine = node.getEndLine(); 
+			if (element.eResource() != null) {
+				this.file = element.eResource().getURI().deresolve(URI.createFileURI(ctx.getInputDirectory().getAbsolutePath())).toFileString();          	
+				final INode node = NodeModelUtils.getNode(element);
+				this.startLine = node.getStartLine();
+				this.endLine = node.getEndLine(); 
+			} else {
+				this.file = null;
+			}
 		}
 
 		public String print() {              	                         	
@@ -304,8 +308,10 @@ public class Checker {
 				t = "";
 			}
 
-
-			return "- [" + source + "] at lines " + startLine + "-" + endLine + ": " + message + " (in " + print() + ")\n";
+			if (file != null)
+				return "- [" + source + "] at lines " + startLine + "-" + endLine + ": " + message + " (in " + print() + ")\n";
+			else
+				return "- [" + source + "] : " + message + " (in " + print() + ")\n";
 		}
 
 		@Override
