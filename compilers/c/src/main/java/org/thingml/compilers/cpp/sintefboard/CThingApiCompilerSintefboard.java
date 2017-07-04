@@ -24,11 +24,6 @@ import org.thingml.compilers.c.CThingApiCompiler;
 public class CThingApiCompilerSintefboard extends CThingApiCompiler {
 
     @Override
-    public boolean isGeneratingCpp() {
-        return true;
-    }
-
-    @Override
     public String getCppNameScope() {
         return "/*CFG_CPPNAME_SCOPE*/";
     }

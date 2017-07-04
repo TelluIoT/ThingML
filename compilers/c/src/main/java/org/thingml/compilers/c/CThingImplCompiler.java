@@ -72,25 +72,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         generateCImpl(thing, (CCompilerContext) ctx);
     }
 
-    public boolean isGeneratingCpp() {
-        return false;
-    }
-
     public String getCppNameScope() {
         return "";
     }
 
 
     protected void generateCImpl(Thing thing, CCompilerContext ctx) {
-
-        if (isGeneratingCpp()) {
-            // GENERATE C++ INIT CODE FOR THING
-            String cppinittemplate = ctx.getThingImplInitTemplate();
-            StringBuilder builder = new StringBuilder();
-            generateCppMessageSendingInit(thing, builder, ctx);
-            cppinittemplate = cppinittemplate.replace("/*CODE*/", builder.toString());
-            ctx.getBuilder(thing.getName() + "_init.c").append(cppinittemplate);
-        }
 
         StringBuilder builder = new StringBuilder();
 
@@ -106,11 +93,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         //builder.append("#ifdef __cplusplus\n");
         //builder.append("extern \"C\" {\n");
         //builder.append("#endif\n");
-
-        if (!isGeneratingCpp()) { // Private prototypes will be generated as part of header for C++
-            generatePrivateCPrototypes(thing, builder, ctx);
-        }
-
+        
+        headerPrivateCPrototypes(thing, builder, ctx);
+        
         //builder.append("#ifdef __cplusplus\n");
         //builder.append("}\n");
         //builder.append("#endif\n");
@@ -176,7 +161,12 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         ctx.getBuilder(ctx.getPrefix() + thing.getName() + ".c").append(itemplate);
 
     }
-
+    
+    protected void headerPrivateCPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx){
+    	generatePrivateCPrototypes(thing, builder, ctx);
+    }
+    
+    
     protected void generatePrototypeforThingDirect(Function func, StringBuilder builder, CCompilerContext ctx, Thing thing, boolean isPrototype) {
         //TODO sdalgard - Added c++ support
 
@@ -234,7 +224,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         // NB sdalgard - ** Reference to be removed ** This function is duplicated in generatePrivateCppPrototypes in class CThingApiCompiler
         // Exit actions 
 
-        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
+        
 
         builder.append("//Prototypes: State Machine\n");
         generateStateMachineOnExitCPrototypes(thing, builder, ctx);
@@ -257,13 +247,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         	if (!f.isAbstract()) {
                 generatePrototypeforThingDirect(f, builder, ctx, thing, true);
                 builder.append(";\n");
-
-                if (isGeneratingCpp()) {
-                    generatePrototypeforThingDirect(f, cppHeaderBuilder, ctx, thing, true);
-                    cppHeaderBuilder.append(";\n");
-            }
+        	}
         }
-    }
     }
 
     protected void generateCFunctions(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
@@ -288,14 +273,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     }
 
     protected void generateCforThingDirect(Function func, Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
-
-        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
-
-
-        if (isGeneratingCpp()) {
-            generatePrototypeforThingDirect(func, cppHeaderBuilder, ctx, thing, true);
-            cppHeaderBuilder.append(";\n");
-        }
 
         builder.append("// Definition of function " + func.getName() + "\n");
         generatePrototypeforThingDirect(func, builder, ctx, thing, false);
@@ -457,14 +434,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
 
-        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
 
         CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
 
-        if (isGeneratingCpp()) {
-            cppHeaderBuilder.append("// generateExitActions\nvoid " + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
-            cppHeaderBuilder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ");\n");
-        }
         builder.append("void " + getCppNameScope() + ThingMLElementHelper.qname(sm, "_") + "_OnExit(int state, ");
         builder.append("struct " + ctx.getInstanceStructName(thing) + " *" + ctx.getInstanceVarName() + ") {\n");
         builder.append("switch(state) {\n");
@@ -505,8 +477,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
     protected void generateEventHandlers(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
 
         if (ThingMLHelpers.allStateMachines(thing).isEmpty()) return;
-
-        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
 
         CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0); // There has to be one and only one state machine here
 
@@ -556,13 +526,6 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
         // Add handler for empty transitions if needed
         if (StateHelper.hasEmptyHandlersIncludingSessions(sm)) {
-
-            if (isGeneratingCpp()) {
-                cppHeaderBuilder.append("// generateEventHandlers2\nint " + ctx.getEmptyHandlerName(thing));
-                ctx.appendFormalParametersEmptyHandler(thing, cppHeaderBuilder);
-                cppHeaderBuilder.append(";\n");
-            }
-
             //New Empty Event Method
             builder.append("int " + getCppNameScope() + ctx.getEmptyHandlerName(thing));
             //builder.append("int " + ctx.getEmptyHandlerName(thing));
@@ -846,42 +809,21 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void generatePrivateMessageSendingOperations(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
         // NB sdalgard - Incorporated C++ prototypes
-        StringBuilder cppHeaderBuilder = ctx.getCppHeaderCode();
-
-        if (isGeneratingCpp()) {
-            cppHeaderBuilder.append("// Observers for outgoing messages:\n");
-        }
+       
 
         for (Port port : ThingMLHelpers.allPorts(thing)) {
             for (Message msg : port.getSends()) {
-                if (isGeneratingCpp()) {
-                    // Variable for the function pointer
-                    cppHeaderBuilder.append("//generatePrivateMessageSendingOperations\nvoid (" + getCppNameScope() + "*" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                    ctx.appendFormalTypeSignature(thing, cppHeaderBuilder, msg);
-                    cppHeaderBuilder.append(";\n");
+                //for external messages
+                //var
+                builder.append("void (*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                ctx.appendFormalTypeSignature(thing, builder, msg);
+                builder.append("= 0x0;\n");
 
-                    // Variable for the external function pointer
-                    cppHeaderBuilder.append("//generatePrivateMessageSendingOperations2\nvoid (" + getCppNameScope() + "*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                    ctx.appendFormalTypeSignature(thing, cppHeaderBuilder, msg);
-                    cppHeaderBuilder.append(";\n");
+                // Variable for the function pointer
+                builder.append("void (*" + ctx.getSenderName(thing, port, msg) + "_listener)");
+                ctx.appendFormalTypeSignature(thing, builder, msg);
+                builder.append("= 0x0;\n");
 
-                    cppHeaderBuilder.append("void " + ctx.getSenderName(thing, port, msg));
-                    ctx.appendFormalParameters(thing, cppHeaderBuilder, msg);
-                    cppHeaderBuilder.append(";\n");
-                }
-                if (!isGeneratingCpp()) {
-
-                    //for external messages
-                    //var
-                    builder.append("void (*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                    ctx.appendFormalTypeSignature(thing, builder, msg);
-                    builder.append("= 0x0;\n");
-
-                    // Variable for the function pointer
-                    builder.append("void (*" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                    ctx.appendFormalTypeSignature(thing, builder, msg);
-                    builder.append("= 0x0;\n");
-                }
                 //register
                 builder.append("void " + getCppNameScope() + "register_external_" + ctx.getSenderName(thing, port, msg) + "_listener(");
                 builder.append("void (" + getCppNameScope() + "*_listener)");
@@ -911,26 +853,15 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
                     }
                 }
 
+                builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
 
-                if (!isGeneratingCpp()) {
-                    builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) " + ctx.getSenderName(thing, port, msg) + "_listener");
-                } else {
-                    builder.append("if (" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) (this->*" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                }
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n");
-                if (!isGeneratingCpp()) {
-                    builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) external_" + ctx.getSenderName(thing, port, msg) + "_listener");
-                } else {
-                    builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) (this->*external_" + ctx.getSenderName(thing, port, msg) + "_listener)");
-                }
+                builder.append("if (external_" + ctx.getSenderName(thing, port, msg) + "_listener != 0x0) external_" + ctx.getSenderName(thing, port, msg) + "_listener");
                 ctx.appendActualParameters(thing, builder, msg, null);
                 builder.append(";\n");
                 builder.append(";\n}\n");
             }
-        }
-        if (isGeneratingCpp()) {
-            cppHeaderBuilder.append("\n");
         }
         builder.append("\n");
     }

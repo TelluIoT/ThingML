@@ -82,10 +82,6 @@ public class CThingApiCompiler extends ThingApiCompiler {
         generateCHeader(thing, (CCompilerContext) ctx, ctx.getCompiler().getDebugProfiles().get(thing));
     }
 
-    public boolean isGeneratingCpp() {
-        return false;
-    }
-
     public String getCppNameScope() {
         return "";
     }
