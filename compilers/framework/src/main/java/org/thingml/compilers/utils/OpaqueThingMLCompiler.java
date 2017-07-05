@@ -66,9 +66,17 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		final long start = System.currentTimeMillis();
 		//Saving the complete model, e.g. to get all required inputs if there is a problem in the compiler
 		ThingMLModel flatModel = flattenModel(ThingMLHelpers.findContainingModel(cfg));
-		saveAsThingML(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.thingml").getAbsolutePath());
-		saveAsXMI(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.xmi").getAbsolutePath());
-
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					saveAsThingML(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.thingml").getAbsolutePath());
+					saveAsXMI(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.xmi").getAbsolutePath());
+				} catch (Exception e) {
+					//We do not really care if something goes wrong here!
+				}
+			}
+		}).start();
 		//compile
 		do_call_compiler(cfg, options);
 		println("Compilation complete. Took " + (System.currentTimeMillis() - start) + " ms.");
