@@ -276,7 +276,7 @@ public class Checker {
 			this.message = message;
 			this.element = element;
 
-			if (element.eResource() != null) {
+			if (element.eResource().getURI().isFile()) {
 				this.file = element.eResource().getURI().deresolve(URI.createFileURI(ctx.getInputDirectory().getAbsolutePath())).toFileString();          	
 				final INode node = NodeModelUtils.getNode(element);
 				this.startLine = node.getStartLine();

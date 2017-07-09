@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -193,6 +194,12 @@ public abstract class ThingMLCompiler {
         }
 
     	result.getImportURI().clear();
+    	
+    	// Add the new model to a resource set
+    	String uriString = "memory:/"+UUID.randomUUID().toString()+".thingml";
+    	ResourceSet rs = new ResourceSetImpl();
+        Resource res = rs.createResource(URI.createURI(uriString));
+        res.getContents().add(result);
     	
     	return result;
     }
