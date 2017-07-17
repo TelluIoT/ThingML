@@ -174,15 +174,15 @@ public class Checker {
 	}
 
 	public boolean containsErrors() {
-		return Errors.isEmpty();
+		return !Errors.isEmpty();
 	}
 
 	public boolean containsWarnings() {
-		return Warnings.isEmpty();
+		return !Warnings.isEmpty();
 	}
 
 	public boolean containsNotices() {
-		return Notices.isEmpty();
+		return !Notices.isEmpty();
 	}
 
 	public void printReport() {

@@ -186,7 +186,9 @@ public class FunctionUsage extends Rule {
 				try {
 					cf = ThingHelper.getConcreteFunction(t, f);
 				} catch (Exception e) {
-					((OpaqueThingMLCompiler)checker.ctx.getCompiler()).println(e.getMessage());
+					//((OpaqueThingMLCompiler)checker.ctx.getCompiler()).println(e.getMessage());
+					//FIXME: Would be nice if we didn't rely on the compiler here
+					System.out.println("FIXME: "+e.getMessage());
 				}
 			}
 			if (cf!=null) {

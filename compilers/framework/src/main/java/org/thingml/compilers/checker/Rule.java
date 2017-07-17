@@ -47,7 +47,11 @@ public abstract class Rule {
 
     public void check(ThingMLModel model, Checker checker) {
         for (Configuration c : ThingMLHelpers.allConfigurations(model)) {
-            checker.do_check(c);
+            //checker.do_check(c);
+        	// FIXME: Why was this implemented like this?
+        	// It should call the check of the rules shouldn't it?
+        	// The way it was before broke calls to do_generic_checks from a Checker instance
+        	check(c, checker);
         }
     }
 
