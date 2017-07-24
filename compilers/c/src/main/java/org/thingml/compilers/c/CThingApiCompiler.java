@@ -31,6 +31,7 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.StateContainerHelper;
 import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.helpers.ThingHelper;
@@ -242,6 +243,7 @@ public class CThingApiCompiler extends ThingApiCompiler {
             strategy.generateInstanceStruct(thing, builder, ctx, debugProfile);
 
         builder.append("\n};\n");
+
     }
 
     protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {

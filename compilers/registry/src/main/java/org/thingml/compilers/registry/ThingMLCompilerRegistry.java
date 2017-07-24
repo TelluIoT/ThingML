@@ -30,6 +30,7 @@ import org.thingml.compilers.c.arduinomf.ArduinomfCompiler;
 import org.thingml.compilers.c.posix.PosixCompiler;
 import org.thingml.compilers.c.posixmt.PosixMTCompiler;
 import org.thingml.compilers.cpp.sintefboard.SintefboardCompiler;
+import org.thingml.compilers.c.teensy.TeensyCompiler;
 import org.thingml.compilers.debugGUI.DebugGUICompiler;
 import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.compilers.javascript.BrowserJSCompiler;
@@ -64,6 +65,7 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new ArduinomfCompiler());
             instance.addCompiler(new PosixCompiler());
             instance.addCompiler(new PosixMTCompiler());
+            instance.addCompiler(new TeensyCompiler());
             instance.addCompiler(new SintefboardCompiler());
             instance.addCompiler(new JavaCompiler());
             instance.addCompiler(new BrowserJSCompiler());
