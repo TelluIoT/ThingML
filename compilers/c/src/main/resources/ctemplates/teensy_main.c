@@ -5,7 +5,6 @@
 /*C_GLOBALS*/
 
 int main(){
-	initialize_timer();
 
 	/*INIT_CODE*/
 
