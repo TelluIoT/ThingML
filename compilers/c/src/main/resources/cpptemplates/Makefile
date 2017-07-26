@@ -5,10 +5,13 @@ TEENSY = 32
 TEENSY_CORE_SPEED = default
 
 # path location for core
-COREPATH = core
+COREPATH =  ../../../../
+COREFOLDER = core
 
 # path location for your code
-UTILSPATH = utils
+UTILSPATH = ./
+UTILSFOLDER = utils
+
 
 # The name of your project (used to name the compiled .hex file)
 TARGET = $(notdir $(CURDIR))
@@ -25,7 +28,7 @@ BUILDDIR = $(abspath $(CURDIR)/build)
 #************************************************************************
 
 # CPPFLAGS = compiler options for C and C++
-CPPFLAGS = -Wall -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DTEENSYDUINO=124 -Isrc -I$(COREPATH) -I$(UTILSPATH)
+CPPFLAGS = -Wall -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DTEENSYDUINO=124 -Isrc -I$(COREPATH)$(COREFOLDER) -I$(UTILSFOLDER)$(UTILSFOLDER)
 
 # compiler options for C++ only
 CXXFLAGS = -std=gnu++0x -felide-constructors -fno-exceptions -fno-rtti
@@ -43,7 +46,7 @@ LIBS = -lm
 ifeq ($(TEENSY), 30)
     CPPFLAGS += -D__MK20DX128__ -mcpu=cortex-m4 -DF_CPU=48000000
     PROCESSOR = mk20dx128
-    LDSCRIPT = $(COREPATH)/$(PROCESSOR).ld
+    LDSCRIPT = $(COREPATH)$(COREFOLDER)/$(PROCESSOR).ld
     LDFLAGS += -mcpu=cortex-m4 -T$(LDSCRIPT)
 else ifeq ($(TEENSY),$(filter $(TEENSY), 31 32))
     CPPFLAGS += -D__MK20DX256__ -mcpu=cortex-m4
@@ -53,18 +56,18 @@ else ifeq ($(TEENSY),$(filter $(TEENSY), 31 32))
         CPPFLAGS += -DF_CPU=96000000
     endif
     PROCESSOR = mk20dx256
-    LDSCRIPT = $(COREPATH)/$(PROCESSOR).ld
+    LDSCRIPT = $(COREPATH)$(COREFOLDER)/$(PROCESSOR).ld
     LDFLAGS += -mcpu=cortex-m4 -T$(LDSCRIPT)
 else ifeq ($(TEENSY), LC)
     CPPFLAGS += -D__MKL26Z64__ -mcpu=cortex-m0plus -DF_CPU=48000000
     PROCESSOR = mkl26z64
-    LDSCRIPT = $(COREPATH)/$(PROCESSOR).ld
+    LDSCRIPT = $(COREPATH)$(COREFOLDER)/$(PROCESSOR).ld
     LDFLAGS += -mcpu=cortex-m0plus -T$(LDSCRIPT)
     LIBS += -larm_cortexM0l_math
 else ifeq ($(TEENSY), 35)
     CPPFLAGS += -D__MK64FX512__ -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DF_CPU=120000000
     PROCESSOR = mk64fx512
-		LDSCRIPT = $(COREPATH)/$(PROCESSOR).ld
+		LDSCRIPT = $(COREPATH)$(COREFOLDER)/$(PROCESSOR).ld
     LDFLAGS += -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -T$(LDSCRIPT)
     LIBS += -larm_cortexM4lf_math
 else ifeq ($(TEENSY), 36)
@@ -75,7 +78,7 @@ else ifeq ($(TEENSY), 36)
         CPPFLAGS += -DF_CPU=240000000
     endif
     PROCESSOR = mk66fx1m0
-    LDSCRIPT = $(COREPATH)/$(PROCESSOR).ld
+    LDSCRIPT = $(COREPATH)$(COREFOLDER)/$(PROCESSOR).ld
     LDFLAGS += -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -T$(LDSCRIPT)
     LIBS += -larm_cortexM4lf_math
 else
@@ -89,10 +92,17 @@ OBJCOPY = arm-none-eabi-objcopy
 SIZE = arm-none-eabi-size
 
 # automatically create lists of the sources and objects
-C_FILES := $(wildcard src/*.c) $(wildcard $(COREPATH)/*.c) $(wildcard $(UTILSPATH)/*.c)
-CPP_FILES := $(wildcard src/*.cpp) $(wildcard $(COREPATH)/*.cpp) $(wildcard $(UTILSPATH)/*.cpp)
-SOURCES := $(C_FILES:.c=.o) $(CPP_FILES:.cpp=.o)
-OBJS := $(foreach src,$(SOURCES), $(BUILDDIR)/$(src))
+C_FILES := $(wildcard src/*.c)
+C_CORE  := $(wildcard $(COREPATH)$(COREFOLDER)/*.c)
+C_UTILS := $(wildcard $(UTILSPATH)$(UTILSFOLDER)/*.c)
+CPP_FILES := $(wildcard src/*.cpp)
+CPP_CORE  := $(wildcard $(COREPATH)$(COREFOLDER)/*.cpp)
+CPP_UTILS := $(wildcard $(UTILSPATH)$(COREFOLDER)/*.cpp)
+C_SOURCES_FILES := $(C_FILES:.c=.o) $(CPP_FILES:.cpp=.o)
+C_SOURCES_CORE  := $(C_CORE:.c=.o) $(CPP_CORE:.cpp=.o)
+C_SOURCES_UTILS := $(C_UTILS:.c=.o) $(CPP_UTILS:.cpp=.o)
+SOURCES := $(C_SOURCES_FILES) $(C_SOURCES_CORE) $(C_SOURCES_UTILS)
+OBJS := $(foreach src,$(C_SOURCES_FILES), $(BUILDDIR)/$(src)) $(foreach core,$(C_SOURCES_CORE),$(subst $(COREPATH),$(BUILDDIR)/,$(core))) $(subst $(UTILSPATH),$(BUILDDIR)/,$(C_SOURCES_UTILS))
 
 all: hex
 
@@ -103,16 +113,38 @@ hex: $(BUILDDIR)/$(TARGET).hex
 flash:
 	@teensy_loader_cli -mmcu=$(PROCESSOR) -w $(BUILDDIR)/$(TARGET).hex
 
-$(BUILDDIR)/%.o: %.c
+
+$(BUILDDIR)/core/%.o: $(COREPATH)core/%.c
 	@echo -e "[CC]\t$<"
 	@mkdir -p "$(dir $@)"
 	@$(CC) $(CPPFLAGS) $(CFLAGS) -o "$@" -c "$<"
 
-$(BUILDDIR)/%.o: %.cpp
+$(BUILDDIR)/core/%.o: $(COREPATH)core/%.cpp
 	@echo -e "[CXX]\t$<"
 	@mkdir -p "$(dir $@)"
 	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o "$@" -c "$<"
 
+$(BUILDDIR)/utils/%.o: $(UTILSPATH)utils/%.c
+	@echo -e "[CC]\t$<"
+	@mkdir -p "$(dir $@)"
+	@$(CC) $(CPPFLAGS) $(CFLAGS) -o "$@" -c "$<"
+
+$(BUILDDIR)/utils/%.o: $(UTILSPATH)utils/%.cpp
+	@echo -e "[CXX]\t$<"
+	@mkdir -p "$(dir $@)"
+	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o "$@" -c "$<"
+
+
+$(BUILDDIR)/src/%.o: src/%.c
+	@echo -e "[CC]\t$<"
+	@mkdir -p "$(dir $@)"
+	@$(CC) $(CPPFLAGS) $(CFLAGS) -o "$@" -c "$<"
+
+$(BUILDDIR)/src/%.o: src/%.cpp
+	@echo -e "[CXX]\t$<"
+	@mkdir -p "$(dir $@)"
+	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o "$@" -c "$<"
+	
 $(BUILDDIR)/$(TARGET).elf: $(OBJS) $(LDSCRIPT)
 	@echo -e "[LD]\t$@"
 	@$(CC) $(LDFLAGS) -o "$@" $(OBJS) $(LIBS)
@@ -124,6 +156,8 @@ $(BUILDDIR)/%.hex: $(BUILDDIR)/%.elf
 
 # compiler generated dependency info
 -include $(OBJS:.o=.d)
+
+print-%  : ; @echo $* = $($*)
 
 clean:
 	@echo Cleaning...
