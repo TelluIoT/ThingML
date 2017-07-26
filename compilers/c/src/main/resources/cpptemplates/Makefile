@@ -114,22 +114,22 @@ flash:
 	@teensy_loader_cli -mmcu=$(PROCESSOR) -w $(BUILDDIR)/$(TARGET).hex
 
 
-$(BUILDDIR)/core/%.o: $(COREPATH)core/%.c
+$(BUILDDIR)/$(COREFOLDER)/%.o: $(COREPATH)$(COREFOLDER)/%.c
 	@echo -e "[CC]\t$<"
 	@mkdir -p "$(dir $@)"
 	@$(CC) $(CPPFLAGS) $(CFLAGS) -o "$@" -c "$<"
 
-$(BUILDDIR)/core/%.o: $(COREPATH)core/%.cpp
+$(BUILDDIR)/$(COREFOLDER)/%.o: $(COREPATH)$(COREFOLDER)/%.cpp
 	@echo -e "[CXX]\t$<"
 	@mkdir -p "$(dir $@)"
 	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(BUILDDIR)/utils/%.o: $(UTILSPATH)utils/%.c
+$(BUILDDIR)/$(UTILSFOLDER)/%.o: $(UTILSPATH)$(UTILSFOLDER)/%.c
 	@echo -e "[CC]\t$<"
 	@mkdir -p "$(dir $@)"
 	@$(CC) $(CPPFLAGS) $(CFLAGS) -o "$@" -c "$<"
 
-$(BUILDDIR)/utils/%.o: $(UTILSPATH)utils/%.cpp
+$(BUILDDIR)/$(UTILSFOLDER)/%.o: $(UTILSPATH)$(UTILSFOLDER)/%.cpp
 	@echo -e "[CXX]\t$<"
 	@mkdir -p "$(dir $@)"
 	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o "$@" -c "$<"
@@ -144,7 +144,7 @@ $(BUILDDIR)/src/%.o: src/%.cpp
 	@echo -e "[CXX]\t$<"
 	@mkdir -p "$(dir $@)"
 	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o "$@" -c "$<"
-	
+
 $(BUILDDIR)/$(TARGET).elf: $(OBJS) $(LDSCRIPT)
 	@echo -e "[LD]\t$@"
 	@$(CC) $(LDFLAGS) -o "$@" $(OBJS) $(LIBS)
