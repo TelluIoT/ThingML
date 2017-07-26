@@ -19,9 +19,5 @@ public class CThingApiCompilerTeensy extends CThingApiCompiler{
 	@Override
 	protected void generateInstanceStruct(Thing thing, StringBuilder builder, CCompilerContext ctx, DebugProfile debugProfile) {
 		super.generateInstanceStruct(thing, builder, ctx, debugProfile);
-		
-		//FIXME :Raphaël Remove it (require for teensy timer no access to _instance)
-		String name = thing.getName();		
-		builder.append("extern struct "+ctx.getInstanceStructName(thing) +" " +Character.toLowerCase(name.charAt(0)) + name.substring(1) +  "_var;\n");
 	}
 }
