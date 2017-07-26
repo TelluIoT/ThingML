@@ -1,11 +1,14 @@
-# The teensy version to use, 30, 31, 32, 35, 36, or LC
+# The teensy version to use, 30, 31, 35, 36, or LC
 TEENSY = 32
 
-# Set to default/overclock to set CPU core speed for 31, 32 & 36
+# Set to default/overclock to set CPU core speed
 TEENSY_CORE_SPEED = default
 
 # path location for core
 COREPATH = core
+
+# path location for your code
+UTILSPATH = utils
 
 # The name of your project (used to name the compiled .hex file)
 TARGET = $(notdir $(CURDIR))
@@ -22,7 +25,7 @@ BUILDDIR = $(abspath $(CURDIR)/build)
 #************************************************************************
 
 # CPPFLAGS = compiler options for C and C++
-CPPFLAGS = -Wall -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DTEENSYDUINO=124 -Isrc -I$(COREPATH)
+CPPFLAGS = -Wall -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DTEENSYDUINO=124 -Isrc -I$(COREPATH) -I$(UTILSPATH)
 
 # compiler options for C++ only
 CXXFLAGS = -std=gnu++0x -felide-constructors -fno-exceptions -fno-rtti
@@ -86,8 +89,8 @@ OBJCOPY = arm-none-eabi-objcopy
 SIZE = arm-none-eabi-size
 
 # automatically create lists of the sources and objects
-C_FILES := $(wildcard src/*.c) $(wildcard $(COREPATH)/*.c)
-CPP_FILES := $(wildcard src/*.cpp) $(wildcard $(COREPATH)/*.cpp)
+C_FILES := $(wildcard src/*.c) $(wildcard $(COREPATH)/*.c) $(wildcard $(UTILSPATH)/*.c)
+CPP_FILES := $(wildcard src/*.cpp) $(wildcard $(COREPATH)/*.cpp) $(wildcard $(UTILSPATH)/*.cpp)
 SOURCES := $(C_FILES:.c=.o) $(CPP_FILES:.cpp=.o)
 OBJS := $(foreach src,$(SOURCES), $(BUILDDIR)/$(src))
 
