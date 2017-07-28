@@ -1,7 +1,6 @@
 package org.thingml.compilers.c.teensy;
 
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
@@ -15,7 +14,7 @@ public class TeensyCompiler extends OpaqueThingMLCompiler{
 
 	public TeensyCompiler() {
 		super(new CThingActionCompilerTeensy(), new CThingApiCompilerTeensy(), new CCfgMainGenerator(),
-                new CfgBuildCompiler(), new CThingImplCompiler());
+                new TeensyCCfgBuildCompiler(), new CThingImplCompiler());
 		this.checker = new TeensyCheker(this.getID(), this.ctx);
 	}
 
@@ -46,6 +45,8 @@ public class TeensyCompiler extends OpaqueThingMLCompiler{
         // GENERATE A MODULE FOR THE CONFIGURATION (+ its dependencies)
         getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 
+        // GENERATE A MAKEFILE
+        getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
 		

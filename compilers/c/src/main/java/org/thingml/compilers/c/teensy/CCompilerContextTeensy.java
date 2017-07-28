@@ -39,6 +39,7 @@ public class CCompilerContextTeensy extends CCompilerContext{
                 modules.add(filename);
                 //System.out.println("Adding " + filename + " to modules");
             }
+            if(filename.equals("Makefile")) writeTextFile(getCurrentConfiguration().getName() + File.separatorChar + filename, generatedCode.get(filename).toString());
         }
 
         StringBuilder pde = new StringBuilder();
