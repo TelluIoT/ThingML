@@ -1,0 +1,114 @@
+import "../../thingml.thingml"
+
+thing TestSerialization includes Test
+@test "12345689A # 12345689A"
+{
+	message m1();
+	message m2(p : Char);
+	message m3(p : Boolean);
+	message m4(p : UInt8);
+	message m5(p : UInt16);
+	message m6(p : Int16);
+	//message m7(p : ULong); //Not supported by all platforms. Make a separate test if we want to support it.
+	message m8(p : Int32);
+	message m9(p : Double);
+	message m10(p1 : Double, p2 : Double);
+
+	provided port pin {
+		receives m1, m2, m3, m4, m5, m6, m8, m9, m10 //,m7
+	}
+	required port pout {
+		sends m1, m2, m3, m4, m5, m6, m8, m9, m10 //,m7
+	}
+
+	statechart Chart init Init {
+		state Init {
+			internal event e : Test?In
+			guard e.c == '\'1\''
+			action pout!m1()
+
+			internal event pin?m1
+			action TestOut('\'1\'')
+
+			internal event e : Test?In
+			guard e.c == '\'2\''
+			action pout!m2('\'X\'')
+
+			internal event e : pin?m2
+			guard e.p == '\'X\''
+			action TestOut('\'2\'')
+
+			internal event e : Test?In
+			guard e.c == '\'3\''
+			action pout!m3((1 == 1))
+
+			internal event e : pin?m3
+			guard e.p
+			action TestOut('\'3\'')
+
+			internal event e : Test?In
+			guard e.c == '\'4\''
+			action pout!m4(128)
+
+			internal event e : pin?m4
+			guard e.p == 128
+			action TestOut('\'4\'')
+
+			internal event e : Test?In
+			guard e.c == '\'5\''
+			action pout!m5(33825)
+
+			internal event e : pin?m5
+			guard e.p == 33825
+			action TestOut('\'5\'')
+
+			internal event e : Test?In
+			guard e.c == '\'6\''
+			action pout!m6(-17441)
+
+			internal event e : pin?m6
+			guard e.p == -17441
+			action TestOut('\'6\'')
+
+			/*internal event e : Test?In
+			guard e.c == '\'7\''
+			action pout!m7('3325658145')
+
+			internal event e : pin?m7
+			guard e.p == '3325658145'
+			action TestOut('\'7\'')*/
+
+			internal event e : Test?In
+			guard e.c == '\'8\''
+			action pout!m8('-1446609953')
+
+			internal event e : pin?m8
+			guard e.p == '-1446609953'
+			action TestOut('\'8\'')
+
+			internal event e : Test?In
+			guard e.c == '\'9\''
+			action pout!m9('-3.14156')
+
+			internal event e : pin?m9
+			guard e.p == '-3.14156'
+			action TestOut('\'9\'')
+
+			internal event e : Test?In
+			guard e.c == '\'A\''
+			action pout!m10('-3.14156', '3.14156')
+
+			internal event e : pin?m10
+			guard ((e.p1 == '-3.14156') and (e.p2 == '3.14156'))
+			action TestOut('\'A\'')
+			
+			internal event Test?Done
+			action TestDone()
+		}
+	}
+}
+
+configuration conf {
+	instance test : TestSerialization
+	connector test.pout => test.pin
+}

@@ -1,0 +1,30 @@
+import "../../thingml.thingml"
+
+
+thing TestFunctionArrays includes Test 
+@test "x # ABCD"
+{
+	property array : Char[4]
+	
+	function f(Ar : Char[4]) do
+		TestOut(Ar[0])
+		TestOut(Ar[1])
+		TestOut(Ar[2])
+		TestOut(Ar[3])
+		TestDone()
+	end
+
+	set array[0] = '\'A\''
+	set array[1] = '\'B\''
+	set array[2] = '\'C\''
+	set array[3] = '\'D\''
+    
+    statechart TestArrays init S0 {
+    	
+    	state S0 {
+			internal event e : Test?In
+			action f(array)
+    	}
+
+    }
+}

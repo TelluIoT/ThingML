@@ -1,0 +1,55 @@
+import "../../thingml.thingml"
+
+thing TestNaming includes Test 
+@test "tt # (AE|EA)BCD"
+{
+    property A : Char = '\'A\''
+    
+	statechart TestNaming init A {
+	                    
+        property A : Char = '\'A\''
+                            
+		state A {
+            property A : Char = '\'A\''
+    
+			on entry do
+                var A : Char = '\'A\''
+                TestOut('\'A\'')
+            end
+			transition t -> C
+			event m : Test?In
+			guard m.c == '\'t\''
+		}
+		
+        composite state C init A {
+            on entry TestOut('\'B\'')
+            
+            state A {
+			on entry do
+                var A : Char = '\'A\''
+                TestOut('\'C\'')
+            end
+			transition t -> C
+			event m : Test?In
+			guard m.c == '\'t\''
+		    } 
+
+   		   state C {
+			on entry do
+				TestOut('\'D\'')
+				TestDone()
+			end
+		  }   
+        }
+
+		
+		region A init A {	
+			state A {
+				on entry do
+                    var A : Char = '\'A\''
+                    TestOut('\'E\'')
+                end
+			}
+		}			
+	}
+}

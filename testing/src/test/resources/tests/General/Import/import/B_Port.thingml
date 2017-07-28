@@ -1,0 +1,10 @@
+import "A_Port.thingml"
+
+thing fragment B_Port includes A_Port {
+	message msgB()
+
+	internal port B {
+		sends msgB
+		receives msgB
+	}
+}

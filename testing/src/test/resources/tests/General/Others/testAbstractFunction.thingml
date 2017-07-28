@@ -1,0 +1,39 @@
+import "../../thingml.thingml"
+
+thing Foo
+{
+
+    abstract function foo()
+
+    function bar() do
+        foo()
+    end
+
+}
+
+thing TestAbstractFunction includes Test, Foo
+@test "x # xx"
+{
+    //Define implementation of function foo
+    function foo() do
+        TestOut('\'x\'')
+    end
+
+
+
+    statechart TestAbstractFunction init INIT {
+
+    	state INIT {
+
+			transition -> INIT
+			event m : Test?In
+			guard m.c == '\'x\''
+			action do
+				foo() //check that we call the redefined function, not just the empty abstract definition
+                bar() //check that bar is properly included and that the call to foo is properly linked
+                TestDone()
+			end
+
+    	}
+    }
+}

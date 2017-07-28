@@ -1,0 +1,20 @@
+import "../../thingml.thingml"
+
+thing TestCheckFunctionCalls includes Test
+@test " # "
+@test_checker "false"
+{
+    function foo(a : Integer) do
+      //...
+    end
+
+    statechart TestAbstractFunction init INIT {
+		//Should fail because foo is called is wrong number of params.
+    	state INIT {
+    		on entry do
+    			foo()
+    			TestFailure('\'A\'')
+    		end
+    	}
+    }
+}
