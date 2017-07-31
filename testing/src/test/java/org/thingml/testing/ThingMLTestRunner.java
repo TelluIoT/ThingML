@@ -119,6 +119,8 @@ public class ThingMLTestRunner extends Runner {
 						chain.addTry(() -> outdir.set(TemporaryDirectory.create()));
 						// Generate target platform source code
 						chain.addCall(() -> compiler.generateSource(outdir.get()));
+						// Save generated full model
+						chain.addCall(() -> compiler.saveModel());
 						// Add test specific files
 						chain.addCall(() -> testCase.addTestFiles(outdir.get()));
 						// Compile target platform source code

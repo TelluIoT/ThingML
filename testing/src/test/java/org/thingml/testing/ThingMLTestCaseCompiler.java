@@ -32,6 +32,8 @@ import org.thingml.xtext.thingML.ThingMLModel;
 
 public abstract class ThingMLTestCaseCompiler extends OutputSwapper implements Describable {
 	protected Class<? extends ThingMLCompiler> compilerClass;
+	private String testName;
+	private String compilerName;
 	private String name;
 	private Description description;
 	
@@ -41,7 +43,10 @@ public abstract class ThingMLTestCaseCompiler extends OutputSwapper implements D
 	protected ThingMLTestCaseCompiler(Class<? extends ThingMLCompiler> compiler, String testName) {
 		compilerClass = compiler;
 		
-		name = compilerClass.getSimpleName().replace("Compiler", "") + " [" + testName + "]";
+		compilerName = compilerClass.getSimpleName().replace("Compiler", "");
+		this.testName = testName;
+		
+		name = compilerName + " [" + testName + "]";
 		description = Description.createTestDescription(compilerClass, name);
 	}
 	
@@ -100,4 +105,19 @@ public abstract class ThingMLTestCaseCompiler extends OutputSwapper implements D
 	public abstract AssertionError compileSource(File outdir);
 	
 	public abstract AssertionError runTest(File outdir);
+	
+	public AssertionError saveModel() {
+		try {
+			File generatedDir = new File("target/test-gen/"+compilerName);
+			generatedDir.mkdirs();
+			File generatedFile = new File(generatedDir, testName+".thingml");
+			hijackSystemOutput();
+			ThingMLCompiler.saveAsThingML(model, generatedFile.getAbsolutePath());
+			BufferedSystemOutput output = givebackSystemOutput();
+			if (!output.err.isEmpty()) throw new Exception(output.err);
+		} catch (Exception e) {
+			return new AssertionError("Couldn't save generated model", e);
+		}
+		return null;
+	}
 }
