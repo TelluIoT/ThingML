@@ -29,6 +29,7 @@ import org.thingml.compilers.c.checkerRules.ArrayCardinality;
 import org.thingml.compilers.c.checkerRules.PointerParameters;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.thingML.Configuration;
 
 /**
@@ -46,7 +47,7 @@ public abstract class CChecker extends Checker {
     }
 
     @Override
-    public void do_generic_check(Configuration cfg) {
+    public void do_generic_check(Configuration cfg, Logger log) {
         String Cname = "C";
 
         for (Rule r : CRules) {
@@ -54,7 +55,7 @@ public abstract class CChecker extends Checker {
         }
         //ADD C specific checks
 
-        super.do_generic_check(cfg);
+        super.do_generic_check(cfg, log);
     }
 
 }

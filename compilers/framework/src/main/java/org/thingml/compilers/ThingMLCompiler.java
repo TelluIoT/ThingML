@@ -148,7 +148,7 @@ public abstract class ThingMLCompiler {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+        	log.error("Error loading ThingML model", e);
         }
         return null;
     }
@@ -221,7 +221,7 @@ public abstract class ThingMLCompiler {
         try {
         	SaveOptions opt = SaveOptions.newBuilder().format().noValidation().getOptions();
             res.save(opt.toOptionsMap());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -292,7 +292,8 @@ public abstract class ThingMLCompiler {
      * Entry point of the compiler
      * ************************************************************
      */
-    public abstract void compile(Configuration cfg, String... options);
+    public void compile(Configuration cfg, String... options) { compile(cfg, Logger.SYSTEM, options); }
+    public abstract void compile(Configuration cfg, Logger log, String... options);
 
     /**
      * Creates debug profiles

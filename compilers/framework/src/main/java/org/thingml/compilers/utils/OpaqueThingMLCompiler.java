@@ -26,6 +26,7 @@ import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -61,21 +62,18 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 	}
 
 	@Override
-	public void compile(Configuration cfg, String... options) {
-		println("Running " + getName() + " compiler on configuration " + cfg.getName());
+	public void compile(Configuration cfg, Logger log, String... options) {
+		log.info("Running " + getName() + " compiler on configuration " + cfg.getName());
 		final long start = System.currentTimeMillis();
+		
 		//Saving the complete model, e.g. to get all required inputs if there is a problem in the compiler
-		new SilentOutputCapturer() {
-			@Override
-			protected void run() {
-				ThingMLModel flatModel = flattenModel(ThingMLHelpers.findContainingModel(cfg));
-				saveAsThingML(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.thingml").getAbsolutePath());
-				saveAsXMI(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.xmi").getAbsolutePath());
-			}
-		};
+		ThingMLModel flatModel = flattenModel(ThingMLHelpers.findContainingModel(cfg));
+		saveAsThingML(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.thingml").getAbsolutePath());
+		saveAsXMI(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.xmi").getAbsolutePath());
+		
 		//compile
-		do_call_compiler(cfg, options);
-		println("Compilation complete. Took " + (System.currentTimeMillis() - start) + " ms.");
+		do_call_compiler(cfg, log, options);
+		log.info("Compilation complete. Took " + (System.currentTimeMillis() - start) + " ms.");
 	}
 
 	@Override
@@ -84,6 +82,6 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		super.compileConnector(connector, cfg, options);
 	}
 
-	public abstract void do_call_compiler(Configuration cfg, String... options);
+	public abstract void do_call_compiler(Configuration cfg, Logger log, String... options);
 
 }
