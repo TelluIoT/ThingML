@@ -51,6 +51,7 @@ import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.ThingImplCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.ThingMLStandaloneSetup;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
@@ -118,7 +119,8 @@ public abstract class ThingMLCompiler {
         this.thingImplCompiler = thingImplCompiler;
     }
 
-    public static ThingMLModel loadModel(final File file) {
+    public static ThingMLModel loadModel(final File file) { return loadModel(file, Logger.SYSTEM); }
+    public static ThingMLModel loadModel(final File file, Logger log) {
         currentFile = file;
         errors = new ArrayList<String>();
         warnings = new ArrayList<String>();
@@ -131,9 +133,9 @@ public abstract class ThingMLCompiler {
         resource = (XtextResource) model;
         try {
             model.load(null);
-            org.eclipse.emf.ecore.util.EcoreUtil.resolveAll(model);
+            EcoreUtil.resolveAll(model);
             for (Resource r : model.getResourceSet().getResources()) {
-                checkEMFErrorsAndWarnings(r);
+                checkEMFErrorsAndWarnings(r, log);
             }
             if (errors.isEmpty()) {
                 ThingMLModel m = (ThingMLModel) model.getContents().get(0);
@@ -234,30 +236,30 @@ public abstract class ThingMLCompiler {
         ThingMLCompiler.save(model, location);
     }
 
-    private static boolean checkEMFErrorsAndWarnings(Resource model) {
-        System.out.println("Checking for EMF errors and warnings");
+    private static boolean checkEMFErrorsAndWarnings(Resource model, Logger log) {
+    	log.info("Checking for EMF errors and warnings");
         boolean isOK = true;
         if (model.getErrors().size() > 0) {
             isOK = false;
-            System.err.println("ERROR: The input model contains " + model.getErrors().size() + " errors.");
+            log.error("ERROR: The input model contains " + model.getErrors().size() + " errors.");
             for (Resource.Diagnostic d : model.getErrors()) {    
             		String location = d.getLocation();
             		if (location == null) {
             			location = model.getURI().toFileString();
-            		}            	
-                    System.err.println("Error in file  " + location + " (" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+            		}
+            		log.error("Error in file  " + location + " (" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
                     errors.add("Error in file  " + location + " (" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());            	
             }
         }
 
         if (model.getWarnings().size() > 0) {
-            System.out.println("WARNING: The input model contains " + model.getWarnings().size() + " warnings.");
+        	log.warning("WARNING: The input model contains " + model.getWarnings().size() + " warnings.");
             for (Resource.Diagnostic d : model.getWarnings()) {
           		String location = d.getLocation();
         		if (location == null) {
         			location = model.getURI().toFileString();
-        		}              	
-                System.out.println("Warning in file  " + location + " (" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
+        		}
+        		log.warning("Warning in file  " + location + " (" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
                 warnings.add("Warning in file  " + location + " (" + d.getLine() + ", " + d.getColumn() + "): " + d.getMessage());
             }
         }
