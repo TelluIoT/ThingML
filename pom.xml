@@ -205,9 +205,11 @@
     </repositories>
 
     <modules>
-	<module>language/thingml.target</module>
+        <module>utilities</module>
+      
+	      <module>language/thingml.target</module>
         <module>language/thingml</module>
- 	<module>language/thingml.ide</module>
+ 	      <module>language/thingml.ide</module>
 	
         <module>compilers</module>
         <!-- The standalone app can only be built on the server which has the keystore to sign the jar

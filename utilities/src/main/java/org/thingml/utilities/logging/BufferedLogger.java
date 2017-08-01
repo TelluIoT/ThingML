@@ -63,10 +63,10 @@ public class BufferedLogger extends Logger {
 		}
 	}
 
-	public boolean hasDebug() { return !hasAny(LogMsg.Type.DEBUG); }
-	public boolean hasInfo() { return !hasAny(LogMsg.Type.DEBUG); }
-	public boolean hasWarning() { return !hasAny(LogMsg.Type.DEBUG); }
-	public boolean hasError() { return !hasAny(LogMsg.Type.DEBUG); }
+	public boolean hasDebug() { return hasAny(LogMsg.Type.DEBUG); }
+	public boolean hasInfo() { return hasAny(LogMsg.Type.INFO); }
+	public boolean hasWarning() { return hasAny(LogMsg.Type.WARNING); }
+	public boolean hasError() { return hasAny(LogMsg.Type.ERROR); }
 	
 	
 	private String getAll(LogMsg.Type type, boolean remove) {
