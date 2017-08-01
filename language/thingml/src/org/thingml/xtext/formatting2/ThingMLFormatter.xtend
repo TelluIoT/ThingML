@@ -54,10 +54,19 @@ import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.thingML.UnaryMinus
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.eclipse.xtext.Keyword
+import org.eclipse.xtext.formatting2.FormatterRequest
+import org.eclipse.xtext.util.ExceptionAcceptor
 
 class ThingMLFormatter extends AbstractFormatter2 {
 	
 	@Inject extension ThingMLGrammarAccess
+	
+	// Fix to silence ConflictingRegionsException from the formatter
+	override void initialize(FormatterRequest request) {
+		super.initialize(request)
+		// All exceptions will be ignored
+		request.exceptionHandler = ExceptionAcceptor.IGNORING
+	}
 
 	def dispatch void format(ThingMLModel thingMLModel, extension IFormattableDocument document) {
 		//println(textRegionAccess.toString())
