@@ -389,15 +389,6 @@ public class GeneralTestHelper {
 		return instancesof;
 	}
 	
-	public boolean checkerShouldFail() {
-		for (Thing thing : allTestThings())
-			if (AnnotatedElementHelper.isDefined(thing, "test_checker", "false"))
-				return true;
-		if (AnnotatedElementHelper.isDefined(config, "test_checker", "false"))
-			return true;
-		return false;
-	}
-	
 	/* --- Reference finding helpers --- */
 	public Thing findThing(String name) throws AssertionError {
 		for (Thing thing : ThingMLHelpers.allThings(model))

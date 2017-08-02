@@ -1,5 +1,3 @@
-import "../../thingml.thingml"
-
 thing fragment Foo
 {
   statechart behaviorFoo init INIT {
@@ -7,16 +5,11 @@ thing fragment Foo
   }
 }
 
-thing TestCheckStateMachine includes Test, Foo
-@test " # "
-@test_checker "false"
+thing TestCheckStateMachine includes Foo
 {
     //Should fail because it should not be allowed to have two statecharts in the composed thing
     statechart TestAbstractFunction init INIT {
     	state INIT {
-    		on entry do
-    			TestFailure('\'A\'')
-    		end
     	}
     }
 }

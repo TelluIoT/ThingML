@@ -26,24 +26,20 @@ import java.util.regex.Pattern;
 
 import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.notification.RunNotifier;
-import org.thingml.compilers.checker.Checker;
 import org.thingml.testing.errors.ThingMLOutputError;
 import org.thingml.testing.tests.ThingMLFileTest;
 import org.thingml.testing.utilities.CommandRunner.Output;
-import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.thingML.Configuration;
 
 public class GeneralTest extends ThingMLFileTest {
 	private static final long serialVersionUID = 1L;
 	
 	protected ArrayList<GeneralTestInputOutput> inputoutputs;
-	protected boolean checkerShouldFail;
 
 	public GeneralTest(File thingmlFile, String[] compilers) {
 		super(thingmlFile, compilers);
 		
 		inputoutputs = new ArrayList<GeneralTestInputOutput>();
-		checkerShouldFail = false;
 	}
 	
 	@Override
@@ -54,15 +50,6 @@ public class GeneralTest extends ThingMLFileTest {
 		try {
 			// The helper is used temporarily to keep track of a lot of references within the model while it is being modified
 			GeneralTestHelper helper = new GeneralTestHelper(this.model);
-			
-			// If the the test is supposed to verify the checker - it will have a @test_checker "false" annotation
-			checkerShouldFail = helper.checkerShouldFail();
-			if (checkerShouldFail) {
-				// If so - try to run it
-				Checker checker = new Checker("ThingMLTesting", null);
-				checker.do_generic_check(this.model, Logger.NULL);
-				if (!checker.containsErrors()) throw new AssertionError("Checker should fail but contains no errors");
-			}
 			
 			// Populate list of @test inputs and outputs
 			inputoutputs.addAll(helper.getAllInputOutputs());
@@ -85,11 +72,6 @@ public class GeneralTest extends ThingMLFileTest {
 			return false;
 		}
 		return true;
-	}
-	
-	@Override
-	public boolean shouldRun() {
-		return super.shouldRun() && !checkerShouldFail;
 	}
 	
 	@Override

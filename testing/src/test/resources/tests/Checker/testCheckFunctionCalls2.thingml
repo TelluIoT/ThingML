@@ -1,8 +1,6 @@
-import "../../thingml.thingml"
+import "../core/datatypes.thingml"
 
-thing TestCheckFunctionCalls2 includes Test
-@test " # "
-@test_checker "false"
+thing TestCheckFunctionCalls2
 {
     function foo(a : Integer) do
       //...
@@ -11,10 +9,7 @@ thing TestCheckFunctionCalls2 includes Test
     statechart TestAbstractFunction init INIT {
     	state INIT {
     		//Should fail because foo is called with wrongly typed parameter.
-    		on entry do
-    			foo("hello")
-    			TestFailure('\'A\'')
-    		end
+    		on entry foo("hello")
     	}
     }
 }

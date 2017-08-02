@@ -5,57 +5,55 @@ package org.thingml.xtext.formatting2
 
 import com.google.inject.Inject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
+import org.eclipse.xtext.formatting2.FormatterRequest
 import org.eclipse.xtext.formatting2.IFormattableDocument
+import org.eclipse.xtext.util.ExceptionAcceptor
+import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.services.ThingMLGrammarAccess
+import org.thingml.xtext.thingML.AbstractConnector
+import org.thingml.xtext.thingML.Action
+import org.thingml.xtext.thingML.ActionBlock
+import org.thingml.xtext.thingML.ArrayIndex
 import org.thingml.xtext.thingML.CompositeState
+import org.thingml.xtext.thingML.ConditionalAction
 import org.thingml.xtext.thingML.Configuration
+import org.thingml.xtext.thingML.Enumeration
+import org.thingml.xtext.thingML.EnumerationLiteral
+import org.thingml.xtext.thingML.Event
+import org.thingml.xtext.thingML.EventReference
+import org.thingml.xtext.thingML.Expression
+import org.thingml.xtext.thingML.ExpressionGroup
 import org.thingml.xtext.thingML.Function
+import org.thingml.xtext.thingML.FunctionCallExpression
+import org.thingml.xtext.thingML.FunctionCallStatement
+import org.thingml.xtext.thingML.Handler
+import org.thingml.xtext.thingML.Instance
 import org.thingml.xtext.thingML.InternalPort
+import org.thingml.xtext.thingML.InternalTransition
+import org.thingml.xtext.thingML.LoopAction
+import org.thingml.xtext.thingML.Message
 import org.thingml.xtext.thingML.ObjectType
+import org.thingml.xtext.thingML.Parameter
 import org.thingml.xtext.thingML.PlatformAnnotation
 import org.thingml.xtext.thingML.Port
 import org.thingml.xtext.thingML.PrimitiveType
+import org.thingml.xtext.thingML.Property
+import org.thingml.xtext.thingML.PropertyReference
 import org.thingml.xtext.thingML.Protocol
 import org.thingml.xtext.thingML.ProvidedPort
+import org.thingml.xtext.thingML.Region
 import org.thingml.xtext.thingML.RequiredPort
-import org.thingml.xtext.thingML.Thing
-import org.thingml.xtext.thingML.ThingMLModel
-import org.thingml.xtext.thingML.Type
+import org.thingml.xtext.thingML.SendAction
+import org.thingml.xtext.thingML.Session
 import org.thingml.xtext.thingML.State
 import org.thingml.xtext.thingML.StateContainer
-import org.thingml.xtext.thingML.Region
-import org.thingml.xtext.thingML.Session
-import org.thingml.xtext.thingML.Action
-import org.thingml.xtext.thingML.ActionBlock
-import org.thingml.xtext.thingML.ConditionalAction
-import org.thingml.xtext.thingML.LoopAction
-import org.thingml.xtext.thingML.Message
-import org.thingml.xtext.thingML.Variable
-import org.thingml.xtext.thingML.Parameter
-import org.thingml.xtext.thingML.FunctionCallStatement
-import org.thingml.xtext.thingML.Expression
+import org.thingml.xtext.thingML.Thing
+import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.thingML.Transition
-import org.thingml.xtext.thingML.InternalTransition
-import org.thingml.xtext.thingML.Handler
-import org.thingml.xtext.thingML.Event
-import org.thingml.xtext.thingML.Instance
-import org.thingml.xtext.thingML.AbstractConnector
-import org.thingml.xtext.thingML.Enumeration
-import org.thingml.xtext.thingML.EnumerationLiteral
-import org.thingml.xtext.thingML.SendAction
-import org.thingml.xtext.thingML.PropertyReference
-import org.thingml.xtext.thingML.EventReference
-import org.thingml.xtext.constraints.ThingMLHelpers
-import org.thingml.xtext.helpers.ActionHelper
-import org.thingml.xtext.thingML.ExpressionGroup
-import org.thingml.xtext.thingML.FunctionCallExpression
-import org.thingml.xtext.thingML.ArrayIndex
-import org.thingml.xtext.thingML.VariableAssignment
+import org.thingml.xtext.thingML.Type
 import org.thingml.xtext.thingML.UnaryMinus
-import org.thingml.xtext.thingML.ThingMLPackage
-import org.eclipse.xtext.Keyword
-import org.eclipse.xtext.formatting2.FormatterRequest
-import org.eclipse.xtext.util.ExceptionAcceptor
+import org.thingml.xtext.thingML.Variable
+import org.thingml.xtext.thingML.VariableAssignment
 
 class ThingMLFormatter extends AbstractFormatter2 {
 	
@@ -137,7 +135,7 @@ class ThingMLFormatter extends AbstractFormatter2 {
 	def dispatch void format(Thing thing, extension IFormattableDocument document) {
 		//TODO add a blank line in-between each bloack of features 
 		thing.interior[indent]
-		for(org.thingml.xtext.thingML.Property p : thing.properties) {
+		for(Property p : thing.properties) {
 			p.format
 		}				
 		for(Port p : thing.ports) {
@@ -346,7 +344,7 @@ class ThingMLFormatter extends AbstractFormatter2 {
 	def void formatState(State state, extension IFormattableDocument document) {
 		state.surround[newLine]
 		state.interior[indent]
-		for(org.thingml.xtext.thingML.Property p : state.properties) {
+		for(Property p : state.properties) {
 			p.format
 		}
 		state.regionFor.keyword("{").append[newLine]
