@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Instance;
@@ -18,6 +19,15 @@ public class CCompilerContextTeensy extends CCompilerContext{
 	public CCompilerContextTeensy(ThingMLCompiler c) {
 		super(c);
 	}
+	
+	@Override
+	public int fifoSize() {
+		Configuration cfg = getCurrentConfiguration();
+		if (AnnotatedElementHelper.hasAnnotation(cfg, "teensy_fifosize"))
+			return Integer.parseInt(AnnotatedElementHelper.annotation(cfg, "teensy_fifosize").get(0));
+		return 256;
+	}
+	
 	@Override
     public void writeGeneratedCodeToFiles() {
 
