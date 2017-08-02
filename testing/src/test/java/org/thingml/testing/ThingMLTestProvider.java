@@ -22,13 +22,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.junit.runner.Describable;
+import org.thingml.testing.framework.ThingMLTest;
 
-public abstract class ThingMLTestCaseProvider implements Describable {
+public abstract class ThingMLTestProvider implements Describable {
 	/* --- Base functions --- */
 	
-	public abstract Collection<ThingMLTestCaseCompiler> getCompilers();
+	//public abstract Collection<ThingMLTestCaseCompiler> getCompilers();
+	public abstract String[] getCompilers();
 	
-	public abstract Collection<ThingMLTestCase> getTestCases();
+	//public abstract Collection<ThingMLTestCase> getTestCases();
+	public abstract Collection<ThingMLTest> getTests();
 	
 	
 	/* --- Helper functions --- */

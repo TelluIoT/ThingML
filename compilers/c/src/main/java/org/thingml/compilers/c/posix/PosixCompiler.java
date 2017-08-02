@@ -23,6 +23,7 @@ import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CExternalThingEnabledApiCompiler;
 import org.thingml.compilers.c.CExternalThingEnabledImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
@@ -60,7 +61,7 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg, String... options) {
+    public void do_call_compiler(Configuration cfg, Logger log, String... options) {
 
         CCompilerContext ctx = new CCompilerContextPosix(this);
         processDebug(cfg);
@@ -68,8 +69,8 @@ public class PosixCompiler extends OpaqueThingMLCompiler {
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
 
         //Checker
-        this.checker.do_check(cfg);
-        this.checker.printReport();
+        this.checker.do_check(cfg, log);
+        this.checker.printReport(log);
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {

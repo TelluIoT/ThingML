@@ -22,6 +22,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
@@ -37,8 +38,8 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
                 new JavaCfgBuildCompiler(), new JavaThingImplCompiler());
         this.checker = new Checker(this.getID(), this.ctx) {
             @Override
-            public void do_check(Configuration cfg) {
-                do_generic_check(cfg);
+            public void do_check(Configuration cfg, Logger log) {
+                do_generic_check(cfg, log);
             }
         };
         connectorCompilers.clear();
@@ -65,9 +66,9 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg, String... options) {
-        this.checker.do_check(cfg);
-        this.checker.printReport();
+    public void do_call_compiler(Configuration cfg, Logger log, String... options) {
+        this.checker.do_check(cfg, log);
+        this.checker.printReport(log);
 
         Context ctx = new Context(this, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@");
         ctx.addContextAnnotation("thisRef", "");
