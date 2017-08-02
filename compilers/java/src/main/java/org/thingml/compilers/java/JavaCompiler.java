@@ -42,7 +42,6 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
             }
         };
         connectorCompilers.clear();
-        connectorCompilers.put("kevoree-java", new Java2Kevoree());
         connectorCompilers.put("swing", new Java2Swing());
     }
 

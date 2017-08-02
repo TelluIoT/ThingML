@@ -89,10 +89,11 @@ public class JavaHelper {
 
         builder.append("import org.thingml.java.*;\n");
         builder.append("import org.thingml.java.ext.*;\n\n");
-        builder.append("import " + rootPack + ".api.*;\n");
-
-        if (hasMessages)
+        
+        if (hasMessages) {
+            builder.append("import " + rootPack + ".api.*;\n");
             builder.append("import " + rootPack + ".messages.*;\n\n");
+        }
 
         builder.append("import java.util.*;\n");
     }
