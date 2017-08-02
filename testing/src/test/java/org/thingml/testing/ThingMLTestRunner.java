@@ -16,29 +16,26 @@
  */
 package org.thingml.testing;
 
-import java.io.File;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
-import org.thingml.testing.utilities.CallChainer;
-import org.thingml.testing.utilities.TemporaryDirectory;
-import org.thingml.testing.utilities.TimeoutExecutor;
+import org.thingml.testing.errors.ThingMLTimeoutError;
+import org.thingml.testing.framework.ThingMLTest;
+import org.thingml.testing.framework.ThingMLTestCase;
+import org.thingml.testing.utilities.TimeoutThreadPoolExecutor;
 
 public class ThingMLTestRunner extends Runner {
 	
-	private ThingMLTestCaseProvider provider;
-	private Collection<ThingMLTestCaseCompiler> compilers;
-	private Map<Class<?>, AssertionError> compilerPlatformErrors;
-	private Collection<ThingMLTestCase> cases;
+	private ThingMLTestProvider provider;
+	private String[] compilers;
+	private Collection<ThingMLTest> tests;
 	private Description description;
 	
-	public ThingMLTestRunner(Class<? extends ThingMLTestCaseProvider> testClass) {
+	public ThingMLTestRunner(Class<? extends ThingMLTestProvider> testClass) {
 		try {
 			provider = testClass.newInstance();
 			
@@ -46,7 +43,7 @@ public class ThingMLTestRunner extends Runner {
 			compilers = provider.getCompilers();
 			
 			// Get the test cases to run
-			cases = provider.getTestCases();
+			tests = provider.getTests();
 			
 			// Get the test description
 			description = provider.getDescription();
@@ -56,98 +53,35 @@ public class ThingMLTestRunner extends Runner {
 		}
 	}
 	
-	private void checkCompilers() {
-		compilerPlatformErrors = new HashMap<Class<?>, AssertionError>();
-		// Run platform checks for all compilers, and store results for later (as this can be a bit intensive)
-		for (ThingMLTestCaseCompiler compiler : compilers) {
-			AssertionError compilerError = compiler.canRunOnCurrentPlatform();
-			if (compilerError != null) compilerPlatformErrors.put(compiler.getClass(), compilerError);
-		}
-	}
-	
-	private AssertionError checkCompiler(ThingMLTestCaseCompiler compiler) {
-		 return compilerPlatformErrors.get(compiler.getClass());
-	}
-	
 	@Override
 	public void run(RunNotifier notifier) {
-		// Determine whether we can run the compilers on the current platform
-		checkCompilers();
+		// Create pool to execute tests
+		TimeoutThreadPoolExecutor executor = new TimeoutThreadPoolExecutor();
 		
-		// Run all of the test cases
-		for (ThingMLTestCase testCase : cases) {
-			EachTestNotifier tcnot = new EachTestNotifier(notifier, testCase.getDescription());
-			
-			// Load the test model
-			AssertionError loadError = testCase.loadModel();
-			if (loadError != null) tcnot.addFailure(loadError);
-			
-			// Run the test case compilers - if we should
-			for (ThingMLTestCaseCompiler compiler : testCase.getTestCompilers()) {
-				EachTestNotifier tccnot = new EachTestNotifier(notifier, compiler.getDescription());
-				
-				if (loadError != null) {
-					// There was an error during loading, so it should not be run
-					tccnot.fireTestIgnored();
-					
-				} else if (!testCase.shouldRunCompilers()) {
-					// The compilers should not be run, any failure would be detected during loading of the model
-					// So this will be considered a success
-					tccnot.fireTestStarted();
-					tccnot.fireTestFinished();
-					
-				} else {
-					// TODO: This is where we could send the resulting ThingML models somewhere else to be compiled and run
-					
-					// Check if we can run the test case compiler on the current platform
-					AssertionError compilerError = checkCompiler(compiler);
-					if (compilerError != null) {
-						tccnot.addFailure(compilerError);
-						tccnot.fireTestIgnored();
-						
-					} else {
-						// Run the test
-						tccnot.fireTestStarted();
-						
-						// Since we cannot set local variables inside lambdas, we can use this trick
-						AtomicReference<File> outdir = new AtomicReference<>();
-						
-						CallChainer chain = new CallChainer();
-						// Populate compiler-specific configuration
-						chain.addCall(() -> compiler.populateConfiguration());
-						// Create a temporary directory for the generated code
-						chain.addTry(() -> outdir.set(TemporaryDirectory.create()));
-						// Generate target platform source code
-						chain.addCall(() -> compiler.generateSource(outdir.get()));
-						// Save generated full model
-						chain.addCall(() -> compiler.saveModel());
-						// Add test specific files
-						chain.addCall(() -> testCase.addTestFiles(outdir.get()));
-						// Compile target platform source code
-						chain.addCall(() -> compiler.compileSource(outdir.get()));
-						// Run test case
-						chain.addCall(() -> compiler.runTest(outdir.get()));
-						// Check test result
-						chain.addCall(() -> testCase.checkTestResult(outdir.get()));
-						
-						// Run everything with a timeout
-						AssertionError error = TimeoutExecutor.callWithTimeout(chain, 60);
-						if (error != null) tccnot.addFailure(error);
-						
-						// Delete the temporary directory
-						if (outdir.get() != null) {
-							try { TemporaryDirectory.delete(outdir.get()); }
-							catch (Exception e) {}
-						}
-						
-						tccnot.fireTestFinished();
-					}
-				}
-			}
+		// Run pre-checks on the testcase compilers so that the tests doesn't have to spend time doing that
+		for (String compiler : compilers) {
+			try { ThingMLTestCase.tryCurrentPlatform(compiler); }
+			catch (AssertionError e) {} // Just keep them for later in the cache
+		}
+		
+		// There seems to be a bug where the first task submitted is not actually executed?
+		executor.submit(new Runnable() { @Override public void run() {}}, 1);
+		
+		// Submit all the tests
+		for (ThingMLTest test : tests) {
+			test.setNotifier(notifier);
+			executor.submit(test, 30);
+		}
+		
+		// Wait for all tasks to be completed
+		try {
+			executor.shutdown(60);
+		} catch (InterruptedException | TimeoutException e) {
+			EachTestNotifier not = new EachTestNotifier(notifier, description);
+			not.addFailure(new ThingMLTimeoutError());
 		}
 	}
 
 	@Override
 	public Description getDescription() { return description; }
-	
 }

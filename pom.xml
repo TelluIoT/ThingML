@@ -212,6 +212,8 @@
  	      <module>language/thingml.ide</module>
 	
         <module>compilers</module>
+        
+        <module>testing/framework</module>
         <!-- The standalone app can only be built on the server which has the keystore to sign the jar
         <module>../org.thingml.editor.standaloneApp</module>-->
         <!--<module>testJar</module>--><!--BUILT SEPARATELY-->

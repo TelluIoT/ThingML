@@ -25,12 +25,17 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
 public class TemporaryDirectory {
-	public static File create() throws IOException {
-		File dir = Files.createTempDirectory("thingml-testing-").toFile();
-		return dir;
+	public static File create() throws AssertionError {
+		try {
+			File dir = Files.createTempDirectory("thingml-testing-").toFile();
+			return dir;
+		} catch (IOException e) {
+			throw new AssertionError("Couldn't create temporary directory", e);
+		}
 	}
 	
 	public static void delete(File dir) {
+		if (dir == null) return;
 		//System.out.println("OUTDIR: "+dir);
 		///*
 		try {
