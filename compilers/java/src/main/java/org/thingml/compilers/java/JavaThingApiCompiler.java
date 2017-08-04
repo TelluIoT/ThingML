@@ -89,31 +89,8 @@ public class JavaThingApiCompiler extends ThingApiCompiler {
         builder.append("}\n");
     }
 
-    public void copyAttributeListener(Context ctx) {
-        String pack = ctx.getContextAnnotation("package");
-        if (pack == null) pack = "org.thingml.generated";
-        final String src = "src/main/java/" + pack.replace(".", "/") + "/api";
-        final File f = new File(ctx.getOutputDirectory() + "/" + src + "/AttributeListener.java");
-        if (!f.exists()) {
-            try {
-                InputStream input = this.getClass().getClassLoader().getResourceAsStream("javatemplates/AttributeListener.java");//FIXME: allow custom package in template
-                List<String> pomLines = IOUtils.readLines(input);
-                String pom = "";
-                for (String line : pomLines) {
-                    pom += line + "\n";
-                }
-                input.close();
-                final StringBuilder builder = ctx.getNewBuilder(src + "/AttributeListener.java");
-                builder.append(pom);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
-        copyAttributeListener(ctx);
         String pack = ctx.getContextAnnotation("package");
         if (pack == null) pack = "org.thingml.generated";
 

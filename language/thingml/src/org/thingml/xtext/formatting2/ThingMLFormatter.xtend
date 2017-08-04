@@ -56,6 +56,10 @@ import org.thingml.xtext.thingML.ThingMLPackage
 import org.eclipse.xtext.Keyword
 import org.eclipse.xtext.formatting2.FormatterRequest
 import org.eclipse.xtext.util.ExceptionAcceptor
+import org.thingml.xtext.thingML.PropertyAssign
+import org.thingml.xtext.thingML.Connector
+import org.thingml.xtext.thingML.ExternalConnector
+import org.thingml.xtext.thingML.ConfigPropertyAssign
 
 class ThingMLFormatter extends AbstractFormatter2 {
 	
@@ -96,10 +100,25 @@ class ThingMLFormatter extends AbstractFormatter2 {
 			i.append[newLine]
 		}		
 		for(AbstractConnector c : cfg.connectors) {
-			c.append[newLine]
+			c.format
+		}		
+		for(ConfigPropertyAssign cpa : cfg.propassigns) {
+			cpa.format
 		}
 		//cfg.append[setNewLines(2,2,Integer.MAX_VALUE)]
 	}
+
+	def dispatch void format(Connector c, extension IFormattableDocument document) {
+		c.interior[indent]
+		c.allRegionsFor.keyword(".").surround[noSpace]
+		c.append[newLine]		
+	}
+	
+	def dispatch void format(ExternalConnector c, extension IFormattableDocument document) {
+		c.interior[indent]
+		c.allRegionsFor.keyword(".").surround[noSpace]
+		c.append[newLine]		
+	}	
 
 	def dispatch void format(Protocol p, extension IFormattableDocument document) {
 		p.interior[indent]
@@ -283,6 +302,20 @@ class ThingMLFormatter extends AbstractFormatter2 {
 		action.regionFor.keyword("]").prepend[noSpace]
 		action.append[newLine]
 	}	
+	
+	def dispatch void format(PropertyAssign assign, extension IFormattableDocument document) {
+		assign.regionFor.keyword("[").surround[noSpace]
+		assign.regionFor.keyword("]").prepend[noSpace]
+		assign.regionFor.keyword(".").surround[noSpace]
+		assign.append[newLine]
+	}
+	
+	def dispatch void format(ConfigPropertyAssign assign, extension IFormattableDocument document) {
+		assign.regionFor.keyword("[").surround[noSpace]
+		assign.regionFor.keyword("]").prepend[noSpace]
+		assign.regionFor.keyword(".").surround[noSpace]
+		assign.append[newLine]
+	}
 	
 	def dispatch void format(LoopAction action, extension IFormattableDocument document) {
 		action.regionFor.keyword("(").append[noSpace]
