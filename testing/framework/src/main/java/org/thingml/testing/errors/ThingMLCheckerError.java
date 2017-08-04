@@ -14,27 +14,26 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.utilities.logging;
+package org.thingml.testing.errors;
 
-public class SystemLogger extends Logger {
-	@Override
-	public void debug(String message) {
-		System.out.println(message);
+public class ThingMLCheckerError extends AssertionError {
+	private static final long serialVersionUID = 1L;
+	
+	public ThingMLCheckerError(boolean shouldSucceed, boolean compilerChecker) {
+		super(checkerType(compilerChecker)+failType(shouldSucceed));
 	}
-
-	@Override
-	public void info(String message) {
-		System.out.println(message);
+	
+	private static String checkerType(boolean compilerChecker) {
+		if (compilerChecker)
+			return "Compiler checker ";
+		else
+			return "Generic checker ";
 	}
-
-	@Override
-	public void warning(String message) {
-		System.out.println(message);
+	
+	private static String failType(boolean shouldSucceed) {
+		if (shouldSucceed)
+			return "should succeed but contains errors";
+		else
+			return "should fail but contains no errors";
 	}
-
-	@Override
-	public void error(String message) {
-		System.err.println(message);
-	}
-
 }

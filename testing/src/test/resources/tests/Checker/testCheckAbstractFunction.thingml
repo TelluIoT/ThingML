@@ -1,5 +1,3 @@
-import "../../thingml.thingml"
-
 thing fragment Foo
 {
     abstract function foo()
@@ -9,9 +7,7 @@ thing fragment Foo
     end
 }
 
-thing TestCheckAbstractFunction includes Test, Foo
-@test " # "
-@test_checker "false"
+thing TestCheckAbstractFunction includes Foo
 {
     //Should fail because function foo is not implemented
     statechart TestAbstractFunction init INIT {
@@ -19,7 +15,6 @@ thing TestCheckAbstractFunction includes Test, Foo
     		on entry do
     			foo()
     			bar()
-    			TestFailure('\'A\'')
     		end
     	}
     }

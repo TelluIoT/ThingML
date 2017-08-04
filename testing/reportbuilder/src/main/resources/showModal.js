@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,27 +14,17 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.utilities.logging;
-
-public class SystemLogger extends Logger {
-	@Override
-	public void debug(String message) {
-		System.out.println(message);
-	}
-
-	@Override
-	public void info(String message) {
-		System.out.println(message);
-	}
-
-	@Override
-	public void warning(String message) {
-		System.out.println(message);
-	}
-
-	@Override
-	public void error(String message) {
-		System.err.println(message);
-	}
-
-}
+$(function() {
+	var modal = $('#thingml-message-modal');
+	var modalTitle = modal.find('.modal-title');
+	var modalMessage = modal.find('pre.thingml-message');
+	
+	$('div.thingml-testcase-result').click(function(event) {
+		var message = $(this).data('result-message');
+		if (message) {
+			modalTitle.text($(this).data('result-title')+' : '+$(this).data('result-error'));
+			modalMessage.text(message);
+			modal.modal('show');
+		}
+	});
+});

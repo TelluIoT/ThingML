@@ -45,7 +45,7 @@ public class ThingMLTest implements Describable, Serializable, Callable<Collecti
 	
 	private UUID uuid;
 	private transient Description description;
-	private transient ThingMLTestCase[] cases;
+	protected transient ThingMLTestCase[] cases;
 	
 	private transient RunNotifier notifier;
 	
@@ -96,15 +96,23 @@ public class ThingMLTest implements Describable, Serializable, Callable<Collecti
 		}
 		
 		// Return the cases so they can be run, or ignore them
-		boolean should = shouldRun();
+		boolean shouldRun = shouldRun();
+		boolean shouldIgnore = shouldIgnoreCases();
+		
 		Collection<Runnable> caseRunners = new ArrayList<Runnable>();
 		for (ThingMLTestCase cse : cases) {
-			if (prepared && should) {
+			if (!prepared) {
+				// Something failed in the preparation
+				this.notifier.fireTestIgnored(cse.getDescription());
+			} else if (!shouldRun) {
+				// The preparation was fine - but we should not run the cases
+				if (shouldIgnore)
+					this.notifier.fireTestIgnored(cse.getDescription());
+			} else {
+				// Preparation was fine - and we should run the cases
 				cse.setNotifier(this.notifier);
 				caseRunners.add(cse);
 			}
-			else
-				this.notifier.fireTestIgnored(cse.getDescription());
 		}
 		return caseRunners;
 	}
@@ -154,6 +162,10 @@ public class ThingMLTest implements Describable, Serializable, Callable<Collecti
 	public boolean shouldRun() {
 		// Indicates whether the test should be run() after prepare()
 		// Allows to write tests that just perform actions on the model, without calling the compilers or executing generated code
+		return true;
+	}
+	
+	public boolean shouldIgnoreCases() {
 		return true;
 	}
 	

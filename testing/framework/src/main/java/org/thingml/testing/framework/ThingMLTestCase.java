@@ -69,6 +69,7 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 	}
 	
 	public String getCompilerId() { return this.id; }
+	public ThingMLCompiler getCompiler() { return this.compiler; }
 	
 	@Override
 	public Description getDescription() {

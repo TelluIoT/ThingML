@@ -14,27 +14,26 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.utilities.logging;
+package org.thingml.testing.reportbuilder;
 
-public class SystemLogger extends Logger {
-	@Override
-	public void debug(String message) {
-		System.out.println(message);
+import org.apache.maven.plugins.surefire.report.ReportTestCase;
+
+public class TestCaseResult {
+	private Result result;
+	private String message;
+	private String title;
+	
+	public TestCaseResult(Result computed, ReportTestCase original, String title) {
+		result = computed;
+		this.title = title;
+		if (original != null) {
+			message = original.getFailureMessage();
+		} else {
+			message = "";
+		}
 	}
-
-	@Override
-	public void info(String message) {
-		System.out.println(message);
-	}
-
-	@Override
-	public void warning(String message) {
-		System.out.println(message);
-	}
-
-	@Override
-	public void error(String message) {
-		System.err.println(message);
-	}
-
+	
+	public Result getResult() { return result; }
+	public String getMessage() { return message; }
+	public String getTitle() { return title; }
 }

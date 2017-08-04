@@ -14,27 +14,47 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.utilities.logging;
+table.table {
+	table-layout: fixed;
+	width: 1px;
+}
 
-public class SystemLogger extends Logger {
-	@Override
-	public void debug(String message) {
-		System.out.println(message);
-	}
+col:first-child {
+	width: 200px;
+}
 
-	@Override
-	public void info(String message) {
-		System.out.println(message);
-	}
+col {
+	width: 50px;
+}
 
-	@Override
-	public void warning(String message) {
-		System.out.println(message);
-	}
+th {
+	transform: translate(12px,0px) rotate(-35deg);
+	font-weight: normal;
+}
 
-	@Override
-	public void error(String message) {
-		System.err.println(message);
-	}
+tbody tr {
+	height: 0;
+}
 
+td:first-child {
+	height: 50px !important;
+	padding: 8px !important;
+}
+
+td {
+	height: inherit !important;
+	padding: 4px !important;
+	vertical-align: middle !important;
+}
+
+div.thingml-testcase-result {
+	height: 100%;
+    border-radius: 4px;
+    font-size: 29px;
+    text-align: center;
+    color: white;
+}
+
+div.thingml-testcase-result.has-failure {
+	cursor: pointer;
 }
