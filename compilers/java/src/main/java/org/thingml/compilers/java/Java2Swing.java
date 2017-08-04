@@ -191,11 +191,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
 
         for (Port p : ThingMLHelpers.allPorts(t)) {
             tempBuilder.append("port_" + ctx.firstToUpper(t.getName()) + "_" + p.getName() + " = new Port(");
-            if (p instanceof ProvidedPort)
-                tempBuilder.append("PortType.PROVIDED");
-            else
-                tempBuilder.append("PortType.REQUIRED");
-            tempBuilder.append(", \"" + p.getName() + "\", this);\n");
+            tempBuilder.append("\"" + p.getName() + "\", this);\n");
         }
         template = template.replace("$PORT_DECL$", tempBuilder.toString());
 
