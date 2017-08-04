@@ -11,6 +11,16 @@ node {
       sh("cd language/ && mvn -Dmaven.test.failure.ignore -pl !thingml.ui.tests clean install && cd ..")
    }
    stage('Testing') {
-      sh("cd testing/ && mvn -Dmaven.test.failure.ignore test && cd ..")
+      sh("cd testing/ && mvn -Dmaven.test.failure.ignore test thingmlreport:generate && cd ..")
+   }
+   stage('Publishing HTML Report') {
+      publishHTML (target: [
+          allowMissing: false,
+          alwaysLinkToLastBuild: false,
+          keepAll: true,
+          reportDir: 'testing/target/',
+          reportFiles: 'thingml-testreport.html',
+          reportName: "ThingML Test Report"
+        ])      
    }
 }
