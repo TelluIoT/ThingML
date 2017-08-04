@@ -85,13 +85,22 @@ public class CommandRunner {
 	
 	public static Output executePlatformSpecificCommandIn(File workingdir, String unix, String windows, long timeoutSeconds) {
 		String os = System.getProperty("os.name").toLowerCase();
+		
+		// Select appropriate command
+		ProcessBuilder pb;
 		String command;
+		if (os.startsWith("win")) {
+			command = windows;
+			pb = new ProcessBuilder("cmd","/c",command);
+		} else {
+			command = unix;
+			pb = new ProcessBuilder("/bin/bash","-c",command);
+		}
 		
-		if (os.startsWith("win")) command = "cmd /c "+windows;
-		else command = "/bin/bash -c '"+unix+"'";
-		
+		// Run
 		try {
-			return new Output(Runtime.getRuntime().exec(command, null, workingdir), command, timeoutSeconds);
+			pb.directory(workingdir);
+			return new Output(pb.start(), command, timeoutSeconds);
 		} catch (Exception e) {
 			return new Output(e);
 		}
