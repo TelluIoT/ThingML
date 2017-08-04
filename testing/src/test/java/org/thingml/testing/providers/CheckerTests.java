@@ -30,7 +30,7 @@ import org.thingml.testing.tests.CheckerTest;
 
 @RunWith(ThingMLTestRunner.class)
 public class CheckerTests extends ThingMLTestProvider {
-	private static String[] compilers = { "nodejs", "java" };
+	private static String[] compilers = { "nodejs", "java", "posix" };
 	
 	@Override
 	public String[] getCompilers() { return compilers; }

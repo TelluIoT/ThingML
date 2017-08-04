@@ -63,8 +63,8 @@ public class JavaTestCase extends ThingMLTestCase {
 	protected void populateStopExecution(Collection<ActionBlock> bodies) throws AssertionError {
 		for (ActionBlock body : bodies) {
 			ThingMLInjector.addActions(body,
-					"'System.exit('&Code&');'"
-				);
+				"'System.exit('&Code&');'"
+			);
 		}
 	}
 

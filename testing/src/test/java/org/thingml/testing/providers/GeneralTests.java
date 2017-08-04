@@ -34,7 +34,7 @@ import org.thingml.testing.tests.general.GeneralTest;
 
 @RunWith(ThingMLTestRunner.class)
 public class GeneralTests extends ThingMLTestProvider {
-	private static String[] compilers = { "nodejs", "java" };
+	private static String[] compilers = { "nodejs", "java", "posix" };
 	
 	@Override
 	public String[] getCompilers() { return compilers; }
