@@ -282,13 +282,15 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 					builder.append("public synchronized void " + m.getName() + "_via_" + p.getName() + "(");
 					JavaHelper.generateParameter(m, builder, ctx);
 					builder.append("){\n");
-					builder.append("receive(" + m.getName() + "Type.instantiate(");
+					builder.append("final Event _msg = " + m.getName() + "Type.instantiate(");
 					for (Parameter pa : m.getParameters()) {
 						if (m.getParameters().indexOf(pa) > 0)
 							builder.append(", ");
 						builder.append(ctx.protectKeyword(ctx.getVariableName(pa)));
 					}
-					builder.append("), " + p.getName() + "_port);\n");
+					builder.append(");\n");					
+					builder.append("_msg.setPort(" + p.getName() + "_port);\n");
+					builder.append("receive(_msg);\n");
 					builder.append("}\n\n");
 				}
 			}
@@ -701,7 +703,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		}
 
 		if (i.getGuard() != null) {
-			builder.append(handler_name + ".guard((Event e, Port p)->{\n");
+			builder.append(handler_name + ".guard((Event e)->{\n");
 			if (msg != null && msg.getMessage().getParameters().size() > 0) {
 				builder.append("final " + ctx.firstToUpper(msg.getMessage().getName()) + "MessageType."
 						+ ctx.firstToUpper(msg.getMessage().getName()) + "Message " + msg.getMessage().getName()
@@ -714,9 +716,9 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 			builder.append("});\n\n");
 		}
 		
-		if (i.getEvent() instanceof ReceiveMessage) {
-			ReceiveMessage m = (ReceiveMessage) i.getEvent();
-			builder.append(handler_name + ".port(" + m.getPort().getName() + ");\n");
+		
+		if (msg != null) {
+			builder.append(handler_name + ".port(" + msg.getPort().getName() + "_port);\n");
 		}
 
 		if (i.getAction() != null) {
