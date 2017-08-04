@@ -41,6 +41,7 @@ public class ThingMLTest implements Describable, Serializable, Callable<Collecti
 	
 	protected transient ThingMLModel model;
 	protected String name;
+	protected String className;
 	protected String[] compilers;
 	
 	private UUID uuid;
@@ -49,9 +50,10 @@ public class ThingMLTest implements Describable, Serializable, Callable<Collecti
 	
 	private transient RunNotifier notifier;
 	
-	public ThingMLTest(ThingMLModel model, String name, String[] compilers) {
+	public ThingMLTest(ThingMLModel model, String name, String className, String[] compilers) {
 		this.model = model;
 		this.name = name;
+		this.className = className;
 		this.compilers = compilers;
 		
 		this.uuid = UUID.randomUUID();
@@ -68,7 +70,8 @@ public class ThingMLTest implements Describable, Serializable, Callable<Collecti
 	}
 	
 	private final void generateDescription() {
-		this.description = Description.createSuiteDescription(this.name, this.uuid);
+		this.description = Description.createTestDescription(this.className, this.name, this.uuid);
+		//this.description = Description.createSuiteDescription(this.name, this.uuid);
 		for (ThingMLTestCase cse : cases) {
 			this.description.addChild(cse.getDescription());
 		}

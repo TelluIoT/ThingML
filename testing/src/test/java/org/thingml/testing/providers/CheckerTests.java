@@ -51,7 +51,7 @@ public class CheckerTests extends ThingMLTestProvider {
 		Collection<File> testFiles = getTestFilesInResourceDir("/tests/Checker/");
 		
 		for (File testFile : testFiles) {
-			CheckerTest test = new CheckerTest(testFile, compilers);
+			CheckerTest test = new CheckerTest(testFile, "Checker", compilers);
 			tests.add(test);
 			
 			description.addChild(test.getDescription());

@@ -61,7 +61,7 @@ public class GeneralTests extends ThingMLTestProvider {
 			//String testName = nameMatcher.group(2);
 			
 			// Create test
-			GeneralTest test = new GeneralTest(testFile, compilers);
+			GeneralTest test = new GeneralTest(testFile, "General."+testCategory, compilers);
 			tests.add(test);
 			
 			// Put it into the given category

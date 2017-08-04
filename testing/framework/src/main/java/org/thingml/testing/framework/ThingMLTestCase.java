@@ -63,9 +63,9 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 		this.id = compiler.getID();
 		this.parent = parent;
 		
-		// Make description
+		// Make description - since the Maven Surefire reports doesn't keep the Description tree as Eclipse does - we can use a fake classname to regenerate it later 
 		String name = compiler.getClass().getSimpleName().replace("Compiler", "") + " [" + this.parent.name + "]";
-		this.description = Description.createTestDescription(this.parent.name, name, UUID.randomUUID());
+		this.description = Description.createTestDescription(this.parent.className, name, UUID.randomUUID());
 	}
 	
 	public String getCompilerId() { return this.id; }
