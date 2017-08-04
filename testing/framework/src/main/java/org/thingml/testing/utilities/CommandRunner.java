@@ -88,7 +88,7 @@ public class CommandRunner {
 		String command;
 		
 		if (os.startsWith("win")) command = "cmd /c "+windows;
-		else command = "/bin/bash -c "+unix;
+		else command = "/bin/bash -c '"+unix+"'";
 		
 		try {
 			return new Output(Runtime.getRuntime().exec(command, null, workingdir), command, timeoutSeconds);
