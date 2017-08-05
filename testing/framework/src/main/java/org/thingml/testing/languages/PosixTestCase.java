@@ -1,11 +1,9 @@
 package org.thingml.testing.languages;
 
 import java.io.File;
-import java.util.Collection;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.posix.PosixCompiler;
-import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.testing.framework.ThingMLTest;
 import org.thingml.testing.framework.ThingMLTestCase;
 import org.thingml.testing.helpers.ThingMLInjector;
@@ -22,6 +20,11 @@ import org.thingml.xtext.thingML.ThingMLFactory;
 public class PosixTestCase extends ThingMLTestCase {
 	public PosixTestCase() {
 		super(new PosixCompiler());
+	}
+	
+	// Allow sub-classing this class
+	protected PosixTestCase(ThingMLCompiler compiler) {
+		super(compiler);
 	}
 	
 	protected PosixTestCase(ThingMLTest parent, ThingMLCompiler compiler) {

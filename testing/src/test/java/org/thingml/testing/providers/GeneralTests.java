@@ -30,11 +30,12 @@ import org.junit.runner.RunWith;
 import org.thingml.testing.ThingMLTestProvider;
 import org.thingml.testing.ThingMLTestRunner;
 import org.thingml.testing.framework.ThingMLTest;
+import org.thingml.testing.framework.ThingMLTestCase;
 import org.thingml.testing.tests.general.GeneralTest;
 
 @RunWith(ThingMLTestRunner.class)
 public class GeneralTests extends ThingMLTestProvider {
-	private static String[] compilers = { "nodejs", "java", "posix" };
+	private static String[] compilers = ThingMLTestCase.allCompilers();
 	
 	@Override
 	public String[] getCompilers() { return compilers; }

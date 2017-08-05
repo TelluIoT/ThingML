@@ -17,7 +17,6 @@
 package org.thingml.testing.languages;
 
 import java.io.File;
-import java.util.Collection;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.javascript.NodeJSCompiler;

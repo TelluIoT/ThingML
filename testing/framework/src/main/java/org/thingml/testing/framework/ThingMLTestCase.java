@@ -33,6 +33,7 @@ import org.thingml.testing.errors.ThingMLTimeoutError;
 import org.thingml.testing.helpers.PlatformHelpers;
 import org.thingml.testing.languages.JavaTestCase;
 import org.thingml.testing.languages.NodeJSTestCase;
+import org.thingml.testing.languages.PosixMTTestCase;
 import org.thingml.testing.languages.PosixTestCase;
 import org.thingml.testing.utilities.CommandRunner.Output;
 import org.thingml.testing.utilities.TemporaryDirectory;
@@ -204,6 +205,7 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 		new NodeJSTestCase(),
 		new JavaTestCase(),
 		new PosixTestCase(),
+		new PosixMTTestCase(),
 		// Add implemented compilers here
 	};
 	
@@ -216,6 +218,14 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 	public static ThingMLTestCase cloneFromId(String id, ThingMLTest parent) {
 		ThingMLTestCase cse = findFromId(id);
 		return cse.clone(parent, cse.compiler.clone());
+	}
+	
+	public static String[] allCompilers() {
+		String[] result = new String[cases.length];
+		for (int i = 0; i < cases.length; i++) {
+			result[i] = cases[i].id;
+		}
+		return result;
 	}
 	
 	
