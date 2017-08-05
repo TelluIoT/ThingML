@@ -64,12 +64,10 @@ public class NodeJSTestCase extends ThingMLTestCase {
 	}
 
 	@Override
-	protected void populateStopExecution(Collection<ActionBlock> bodies) throws AssertionError {
-		for (ActionBlock body : bodies) {
-			ThingMLInjector.addActions(body,
-					"'process.exit('&Code&');'"
-				);
-		}
+	protected void populateStopExecution(Thing thing, ActionBlock body) throws AssertionError {
+		ThingMLInjector.addActions(body,
+			"'process.exit('&Code&');'"
+		);
 	}
 
 	@Override

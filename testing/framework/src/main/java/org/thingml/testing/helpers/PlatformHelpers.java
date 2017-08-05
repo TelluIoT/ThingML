@@ -16,8 +16,10 @@
  */
 package org.thingml.testing.helpers;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map.Entry;
 
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.ActionBlock;
@@ -56,8 +58,8 @@ public class PlatformHelpers {
 	}
 	
 	
-	public static Collection<ActionBlock> findStopExecutionFunctionBodies(ThingMLModel model) {
-		Collection<ActionBlock> bodies = new ArrayList<ActionBlock>();
+	public static Collection<Entry<Thing,ActionBlock>> findStopExecutionFunctionBodies(ThingMLModel model) {
+		Collection<Entry<Thing,ActionBlock>> bodies = new ArrayList<Entry<Thing,ActionBlock>>();
 		for (Thing thing : ThingMLHelpers.allThings(model))
 			for (Function func : ThingMLHelpers.allFunctions(thing))
 				if (func.getName().equals("StopExecution")
@@ -65,7 +67,7 @@ public class PlatformHelpers {
 					&& func.getParameters().size() == 1
 					&& func.getParameters().get(0).getName().equals("Code")
 				   )
-						bodies.add((ActionBlock)func.getBody());
+						bodies.add(new SimpleEntry<>(thing, (ActionBlock)func.getBody()));
 		return bodies;
 	}
 }

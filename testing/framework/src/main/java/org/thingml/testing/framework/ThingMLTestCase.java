@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.junit.internal.runners.model.EachTestNotifier;
@@ -133,8 +134,9 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 			}
 			
 			// Generate stop execution function implementations
-			Collection<ActionBlock> stopExecutionBodies = PlatformHelpers.findStopExecutionFunctionBodies(caseModel);
-			if (!stopExecutionBodies.isEmpty()) populateStopExecution(stopExecutionBodies);
+			Collection<Entry<Thing,ActionBlock>> stopExecutionBodies = PlatformHelpers.findStopExecutionFunctionBodies(caseModel);
+			for (Entry<Thing,ActionBlock> body : stopExecutionBodies)
+				populateStopExecution(body.getKey(), body.getValue());
 			
 			// Save the final model that will be used in 'target/test-gen/<Compiler>/<test>.thingml'
 			try {
@@ -190,7 +192,7 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 	
 	protected abstract void populateFileDumper(Thing dumper, ActionBlock function, Property path) throws AssertionError;
 	
-	protected abstract void populateStopExecution(Collection<ActionBlock> bodies) throws AssertionError;
+	protected abstract void populateStopExecution(Thing thing, ActionBlock body) throws AssertionError;
 	
 	protected abstract Output executePlatformCode(Configuration configuration, File directory) throws AssertionError;
 	
