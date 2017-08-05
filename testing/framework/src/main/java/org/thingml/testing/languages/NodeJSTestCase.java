@@ -38,6 +38,11 @@ public class NodeJSTestCase extends ThingMLTestCase {
 		super(new NodeJSCompiler());
 	}
 	
+	// Allow sub-classing this class
+	protected NodeJSTestCase(ThingMLCompiler compiler) {
+		super(compiler);
+	}
+	
 	protected NodeJSTestCase(ThingMLTest parent, ThingMLCompiler compiler) {
 		super(parent, compiler);
 	}
