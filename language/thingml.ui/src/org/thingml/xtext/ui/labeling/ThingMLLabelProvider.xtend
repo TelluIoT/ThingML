@@ -6,6 +6,16 @@ package org.thingml.xtext.ui.labeling
 import com.google.inject.Inject
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
+import org.thingml.xtext.thingML.Thing
+import org.thingml.xtext.thingML.Property
+import org.thingml.xtext.thingML.Function
+import org.thingml.xtext.thingML.TypeRef
+import org.thingml.xtext.thingML.Variable
+import org.eclipse.emf.common.util.EList
+import org.thingml.xtext.thingML.Parameter
+import org.thingml.xtext.thingML.Message
+import org.thingml.xtext.thingML.Port
+import org.thingml.xtext.thingML.StateContainer
 
 /**
  * Provides labels for EObjects.
@@ -15,17 +25,64 @@ import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider
 class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 
 	@Inject
-	new(AdapterFactoryLabelProvider delegate) {
-		super(delegate);
-	}
-
-	// Labels and icons can be computed like this:
+	new(AdapterFactoryLabelProvider delegate) { super(delegate); }
 	
-//	def text(Greeting ele) {
-//		'A greeting to ' + ele.name
-//	}
-//
-//	def image(Greeting ele) {
-//		'Greeting.gif'
-//	}
+	def text(Thing thing) {
+		thing.name + (if (thing.includes.empty) '' else ' : ' + thing.includes.map[include | include.name].join(', ')) 
+	}
+	
+	
+	
+	def text(Message message) {
+		message.name + parametersString(message.parameters as EList<Parameter>)
+	}
+	def image(Message message) {
+		'outline/annotate.gif'
+	}
+	
+	
+	
+	def text(Function function) {
+		function.name + parametersString(function.parameters as EList<Parameter>) + isTypeString(function.typeRef)
+	}
+	def image(Function function) {
+		'outline/public_co.gif'
+	}
+	
+	
+	
+	def text(Property property) {
+		property.name + isTypeString(property.typeRef)
+	}
+	def image(Property property) {
+		if (property.readonly) 'outline/field_private_obj.gif' else 'outline/field_public_obj.gif'
+	}
+	
+	
+	
+	def image (Port port) {
+		'outline/plugin.gif'
+	}
+	
+	
+	def text(StateContainer container) {
+		container.name + ' -> ' + container.initial.name + if (container.history) ' (keeps history)' else ''
+	}
+	
+	
+	
+	/* --- Helpers --- */
+	def String parametersString(EList<Parameter> parameters) {
+		'(' + parameters.map[typeString(it.typeRef)].join(', ') + ")"
+	}
+	
+	def String isTypeString (TypeRef ref) {
+		if (ref === null) ''
+		else ' : ' + typeString(ref)
+	}
+	
+	def String typeString (TypeRef ref) {
+		if (ref === null) ''
+		else ref.type.name + if (ref.isIsArray) '[]' else '' 
+	}
 }
