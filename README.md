@@ -120,6 +120,8 @@ Nothing special. Open the generated `index.html` file in your System Browser (id
 git clone https://github.com/TelluIoT/ThingML.git
 cd ThingML
 mvn clean install
+cd language
+mvn clean install
 ```
 
 The command-line interface JAR (containing all you need to compile ThingML files) can be found here:
