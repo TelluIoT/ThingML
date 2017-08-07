@@ -590,8 +590,11 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 		for (State s : c.getSubstate()) {
 			builder.append(state_name + ".add(state_" + ThingMLElementHelper.qname(s, "_") + ");\n");
 		}
+		if (c.isHistory()) {
+			builder.append(state_name + ".keepHistory(true);\n");
+		}
 		builder.append(state_name + ".initial(state_" + ThingMLElementHelper.qname(c.getInitial(), "_") + ");\n");
-		builder.append(state_name + ".build();\n\n");
+		
 	}
 
 	protected void generateFinalState(FinalState s, StringBuilder builder, Context ctx) {
