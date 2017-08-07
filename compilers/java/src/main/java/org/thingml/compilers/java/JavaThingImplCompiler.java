@@ -553,6 +553,34 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 			for (Region r : ((CompositeState) c).getRegion()) {
 				builder.append(state_name + ".add(build" + ThingMLElementHelper.qname(r, "_") + "());\n");
 			}
+			
+			if (((CompositeState) c).getEntry() != null || debugProfile.isDebugBehavior()) {
+				builder.append(state_name + ".onEntry(()->{\n");
+				if (debugProfile.isDebugBehavior()) {
+					builder.append("printDebug(\""
+							+ ctx.traceOnEntry(ThingMLHelpers.findContainingThing(c),
+									ThingMLHelpers.findContainingRegion(c), ThingMLHelpers.findContainingState(c))
+							+ "\");\n");
+				}
+				if (((CompositeState) c).getEntry() != null)
+					ctx.getCompiler().getThingActionCompiler().generate(((CompositeState) c).getEntry(), builder, ctx);
+				builder.append("});\n");
+			}
+
+			if (((CompositeState) c).getExit() != null || debugProfile.isDebugBehavior()) {
+				builder.append(state_name + ".onExit(()->{\n");
+				if (debugProfile.isDebugBehavior()) {
+					builder.append(
+							"printDebug(\""
+									+ ctx.traceOnExit(ThingMLHelpers.findContainingThing(c),
+											ThingMLHelpers.findContainingRegion(c), ThingMLHelpers.findContainingState(c))
+									+ "\");\n");
+				}
+				if (((CompositeState) c).getExit() != null)
+					ctx.getCompiler().getThingActionCompiler().generate(((CompositeState) c).getExit(), builder, ctx);
+				builder.append("});\n\n");
+			}
+			
 		}
 
 		if (c.eContainer() instanceof Thing) {
@@ -560,33 +588,7 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 				buildTransitionsHelper(builder, ctx, ((CompositeState) c), i);
 			}
 		}
-
-		if (((CompositeState) c).getEntry() != null || debugProfile.isDebugBehavior()) {
-			builder.append(state_name + ".onEntry(()->{\n");
-			if (debugProfile.isDebugBehavior()) {
-				builder.append("printDebug(\""
-						+ ctx.traceOnEntry(ThingMLHelpers.findContainingThing(c),
-								ThingMLHelpers.findContainingRegion(c), ThingMLHelpers.findContainingState(c))
-						+ "\");\n");
-			}
-			if (((CompositeState) c).getEntry() != null)
-				ctx.getCompiler().getThingActionCompiler().generate(((CompositeState) c).getEntry(), builder, ctx);
-			builder.append("});\n");
-		}
-		if (((CompositeState) c).getExit() != null || debugProfile.isDebugBehavior()) {
-			builder.append(state_name + ".onExit(()->{\n");
-			if (debugProfile.isDebugBehavior()) {
-				builder.append(
-						"printDebug(\""
-								+ ctx.traceOnExit(ThingMLHelpers.findContainingThing(c),
-										ThingMLHelpers.findContainingRegion(c), ThingMLHelpers.findContainingState(c))
-								+ "\");\n");
-			}
-			if (((CompositeState) c).getExit() != null)
-				ctx.getCompiler().getThingActionCompiler().generate(((CompositeState) c).getExit(), builder, ctx);
-			builder.append("});\n\n");
-		}
-
+		
 		for (State s : c.getSubstate()) {
 			builder.append(state_name + ".add(state_" + ThingMLElementHelper.qname(s, "_") + ");\n");
 		}
