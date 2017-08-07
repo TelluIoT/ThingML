@@ -33,8 +33,8 @@ public class ThingMLFileTest extends ThingMLTest {
 	
 	protected File thingmlFile;
 	
-	public ThingMLFileTest(File thingmlFile, String[] compilers) {
-		super(null, getNameFromFile(thingmlFile), compilers);
+	public ThingMLFileTest(File thingmlFile, String className, String[] compilers) {
+		super(null, getNameFromFile(thingmlFile), className, compilers);
 		this.thingmlFile = thingmlFile;
 	}
 	

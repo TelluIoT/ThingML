@@ -8,22 +8,19 @@ node {
       sh "mvn -Dmaven.test.failure.ignore clean install"
    }
    stage('Building Xtext plugins') {
-	sh("cd language/ && mvn -Dmaven.test.failure.ignore -pl !thingml.ui.tests clean install && cd ..")
-   }
-   stage('Building TestJar') {
-      sh("cd testJar/ && mvn -Dmaven.test.failure.ignore clean install && cd ..")
+      sh("cd language/ && mvn -Dmaven.test.failure.ignore -pl !thingml.ui.tests clean install && cd ..")
    }
    stage('Testing') {
-      sh "./testframework/test.py"
+      sh("cd testing/ && mvn -Dmaven.test.failure.ignore test thingmlreport:generate && cd ..")
    }
    stage('Publishing HTML Report') {
       publishHTML (target: [
           allowMissing: false,
           alwaysLinkToLastBuild: false,
           keepAll: true,
-          reportDir: 'htmlreports',
-          reportFiles: 'index.html',
-          reportName: "Test Execution Report"
+          reportDir: 'testing/target/',
+          reportFiles: 'thingml-testreport.html',
+          reportName: "ThingML Test Report"
         ])      
    }
 }

@@ -33,8 +33,8 @@ import org.thingml.xtext.thingML.Thing;
 public class CheckerTest extends ThingMLFileTest {
 	private static final long serialVersionUID = 1L;
 
-	public CheckerTest(File thingmlFile, String[] compilers) {
-		super(thingmlFile, compilers);
+	public CheckerTest(File thingmlFile, String className, String[] compilers) {
+		super(thingmlFile, className, compilers);
 	}
 	
 	@Override

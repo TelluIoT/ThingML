@@ -77,8 +77,8 @@
 		      </plugin>
 		      <plugin>
 		      	<groupId>org.thingml</groupId>
-				<artifactId>testing.reportbuilder</artifactId>
-				<version>${project.version}</version>
+				    <artifactId>testing.reportbuilder</artifactId>
+				    <version>${project.version}</version>
 		      </plugin>
         </plugins>
     </build>

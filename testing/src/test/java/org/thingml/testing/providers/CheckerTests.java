@@ -26,11 +26,12 @@ import org.junit.runner.RunWith;
 import org.thingml.testing.ThingMLTestProvider;
 import org.thingml.testing.ThingMLTestRunner;
 import org.thingml.testing.framework.ThingMLTest;
+import org.thingml.testing.framework.ThingMLTestCase;
 import org.thingml.testing.tests.CheckerTest;
 
 @RunWith(ThingMLTestRunner.class)
 public class CheckerTests extends ThingMLTestProvider {
-	private static String[] compilers = { "nodejs", "java" };
+	private static String[] compilers = ThingMLTestCase.allCompilers();
 	
 	@Override
 	public String[] getCompilers() { return compilers; }
@@ -51,7 +52,7 @@ public class CheckerTests extends ThingMLTestProvider {
 		Collection<File> testFiles = getTestFilesInResourceDir("/tests/Checker/");
 		
 		for (File testFile : testFiles) {
-			CheckerTest test = new CheckerTest(testFile, compilers);
+			CheckerTest test = new CheckerTest(testFile, "Checker", compilers);
 			tests.add(test);
 			
 			description.addChild(test.getDescription());

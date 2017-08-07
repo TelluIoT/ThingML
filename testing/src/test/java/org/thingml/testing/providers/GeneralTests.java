@@ -30,11 +30,12 @@ import org.junit.runner.RunWith;
 import org.thingml.testing.ThingMLTestProvider;
 import org.thingml.testing.ThingMLTestRunner;
 import org.thingml.testing.framework.ThingMLTest;
+import org.thingml.testing.framework.ThingMLTestCase;
 import org.thingml.testing.tests.general.GeneralTest;
 
 @RunWith(ThingMLTestRunner.class)
 public class GeneralTests extends ThingMLTestProvider {
-	private static String[] compilers = { "nodejs", "java" };
+	private static String[] compilers = ThingMLTestCase.allCompilers();
 	
 	@Override
 	public String[] getCompilers() { return compilers; }
@@ -61,7 +62,7 @@ public class GeneralTests extends ThingMLTestProvider {
 			//String testName = nameMatcher.group(2);
 			
 			// Create test
-			GeneralTest test = new GeneralTest(testFile, compilers);
+			GeneralTest test = new GeneralTest(testFile, "General."+testCategory, compilers);
 			tests.add(test);
 			
 			// Put it into the given category

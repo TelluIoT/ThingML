@@ -17,7 +17,6 @@
 package org.thingml.testing.languages;
 
 import java.io.File;
-import java.util.Collection;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.java.JavaCompiler;
@@ -60,12 +59,10 @@ public class JavaTestCase extends ThingMLTestCase {
 	}
 
 	@Override
-	protected void populateStopExecution(Collection<ActionBlock> bodies) throws AssertionError {
-		for (ActionBlock body : bodies) {
-			ThingMLInjector.addActions(body,
-					"'System.exit('&Code&');'"
-				);
-		}
+	protected void populateStopExecution(Thing thing, ActionBlock body) throws AssertionError {
+		ThingMLInjector.addActions(body,
+			"'System.exit('&Code&');'"
+		);
 	}
 
 	@Override

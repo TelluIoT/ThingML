@@ -36,8 +36,8 @@ public class GeneralTest extends ThingMLFileTest {
 	
 	protected ArrayList<GeneralTestInputOutput> inputoutputs;
 
-	public GeneralTest(File thingmlFile, String[] compilers) {
-		super(thingmlFile, compilers);
+	public GeneralTest(File thingmlFile, String className, String[] compilers) {
+		super(thingmlFile, className, compilers);
 		
 		inputoutputs = new ArrayList<GeneralTestInputOutput>();
 	}

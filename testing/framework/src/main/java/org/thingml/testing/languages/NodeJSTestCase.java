@@ -17,7 +17,6 @@
 package org.thingml.testing.languages;
 
 import java.io.File;
-import java.util.Collection;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.javascript.NodeJSCompiler;
@@ -37,6 +36,11 @@ import org.thingml.xtext.thingML.ThingMLFactory;
 public class NodeJSTestCase extends ThingMLTestCase {
 	public NodeJSTestCase() {
 		super(new NodeJSCompiler());
+	}
+	
+	// Allow sub-classing this class
+	protected NodeJSTestCase(ThingMLCompiler compiler) {
+		super(compiler);
 	}
 	
 	protected NodeJSTestCase(ThingMLTest parent, ThingMLCompiler compiler) {
@@ -64,12 +68,10 @@ public class NodeJSTestCase extends ThingMLTestCase {
 	}
 
 	@Override
-	protected void populateStopExecution(Collection<ActionBlock> bodies) throws AssertionError {
-		for (ActionBlock body : bodies) {
-			ThingMLInjector.addActions(body,
-					"'process.exit('&Code&');'"
-				);
-		}
+	protected void populateStopExecution(Thing thing, ActionBlock body) throws AssertionError {
+		ThingMLInjector.addActions(body,
+			"'process.exit('&Code&');'"
+		);
 	}
 
 	@Override
