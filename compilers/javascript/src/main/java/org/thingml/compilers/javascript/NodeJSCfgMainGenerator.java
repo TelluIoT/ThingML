@@ -50,7 +50,7 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
             } else {
                 builder.append("const ");
             }
-            builder.append(i.getName() + " = fork(require('" + ctx.firstToUpper(i.getType().getName()) + ".js').resolve(), ['" + i.getName() + "', null");//FIXME: For Kevoree lib/xxx.js
+            builder.append(i.getName() + " = fork('" + ctx.firstToUpper(i.getType().getName()) + ".js', ['" + i.getName() + "', null");//FIXME: For Kevoree lib/xxx.js
 
             for (Property prop : ThingHelper.allUsedProperties(i.getType())) {
                 if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
