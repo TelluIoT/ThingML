@@ -21,25 +21,11 @@ import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.SendAction;
-import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
  * Created by jakobho on 28.03.2017.
  */
 public class NodeJSThingActionCompiler extends JSThingActionCompiler {
-
-    @Override
-    public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
-        if (action.getProperty().eContainer() instanceof Thing) {//we can only listen to properties of a Thing, not all local variables, etc
-            builder.append("//notify listeners of that attribute\n");
-            if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-                builder.append("process.send({lc:'updated', property:'" + action.getProperty().getName() + "', value: this." + ctx.getVariableName(action.getProperty()) + "});\n");
-            } else {
-                super.traceVariablePost(action, builder, ctx);
-            }
-        }
-    }
 
     @Override
     public void generate(SendAction action, StringBuilder builder, Context ctx) {
