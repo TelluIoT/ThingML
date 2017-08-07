@@ -32,10 +32,8 @@ thing TestSession2 includes Test
 			action do
 				TestOut(e.id)
 				finished++
-			end
-			
-			internal guard (finished == 3)
-			action TestDone()
+				if (finished == 3) TestDone()
+			end						
     	}
 
 		session s <5> init S1 {

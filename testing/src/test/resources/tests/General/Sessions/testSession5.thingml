@@ -22,10 +22,10 @@ thing TestSession5 includes Test
 				end
 				
 				internal event forks?Done
-				action finished++
-				
-				internal guard (finished == 3)
-				action TestDone()
+				action do
+					finished++
+					if (finished == 3) TestDone()
+				end
 		  	}			
 		}
 		session s<5> init S1 {
