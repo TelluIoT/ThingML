@@ -17,11 +17,14 @@
 package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.ThingActionCompiler;
 import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
+import org.thingml.utilities.logging.Logger;
+import org.thingml.xtext.thingML.Configuration;
 
 /**
  * Created by bmori on 09.01.2017.
@@ -29,6 +32,14 @@ import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 public class NodeJSMTCompiler extends NodeJSCompiler {
 
     public NodeJSMTCompiler() {
+        super(new NodeJSThingActionCompiler(), new JSThingApiCompiler(), new NodeJSMTCfgMainGenerator(),
+                new NodeJSCfgBuildCompiler(), new NodeJSThingImplCompiler());
+        this.checker = new Checker(this.getID(), this.ctx) {
+            @Override
+            public void do_check(Configuration cfg, Logger log) {
+                do_generic_check(cfg, log);
+            }
+        };
         multiThreaded = true;
     }
 
