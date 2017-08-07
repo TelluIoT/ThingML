@@ -87,7 +87,7 @@ public class TeensyCCfgBuildCompiler extends CfgBuildCompiler{
         	String externpath = AnnotatedElementHelper.annotation(cfg,"teensy_externpath").get(0);
         	mtemplate = mtemplate.replace("/*EXTERNPATH*/", "# path location for your code\nEXTERNPATH = /*EXTERNPATH*/\nTMPEXTERNFOLDER := $(subst /, ,$(EXTERNPATH))\nEXTERNFOLDER := $(word $(shell echo $(words $(TMPEXTERNFOLDER))),$(TMPEXTERNFOLDER))");
         	mtemplate = mtemplate.replace("/*EXTERNPATH*/", externpath);
-        	mtemplate = mtemplate.replace("/*EXTERNINCLUDE*/"," -I$(EXTERNFOLDER)");
+        	mtemplate = mtemplate.replace("/*EXTERNINCLUDE*/"," -I$(EXTERNPATH)");
         	mtemplate = mtemplate.replace("/*EXTERNSOURCES*/", "C_EXTERN := $(wildcard $(EXTERNPATH)/*.c)\nCPP_EXTERN := $(wildcard $(EXTERNPATH)/*.cpp)\nSOURCES_EXTERN := $(C_EXTERN:.c=.o) $(CPP_EXTERN:.cpp=.o)");
         	mtemplate = mtemplate.replace("/*EXTERNOBJS*/", " $(subst $(EXTERNPATH),$(BUILDDIR)/$(EXTERNFOLDER),$(SOURCES_EXTERN))");
         	mtemplate = mtemplate.replace("/*EXTERNBUILDER*/","$(BUILDDIR)/$(EXTERNFOLDER)/%.o: $(EXTERNPATH)/%.c\n\t@echo -e \"[CC]\t$<\"\n\t@mkdir -p \"$(dir $@)\"\n\t@$(CC) $(CPPFLAGS) $(CFLAGS) -o \"$@\" -c \"$<\"\n\n$(BUILDDIR)/$(EXTERNFOLDER)/%.o: $(EXTERNPATH)/%.cpp\n\t@echo -e \"[CXX]\t$<\"\n\t@mkdir -p \"$(dir $@)\"\n\t@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o \"$@\" -c \"$<\"");

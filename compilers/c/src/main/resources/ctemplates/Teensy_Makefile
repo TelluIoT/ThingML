@@ -26,7 +26,7 @@ BUILDDIR = $(abspath $(CURDIR)/build)
 #************************************************************************
 
 # CPPFLAGS = compiler options for C and C++
-INCLUDES = -Isrc -I$(COREFOLDER)/*EXTERNINCLUDE*/
+INCLUDES = -Isrc -I$(COREPATH)/*EXTERNINCLUDE*/
 CPPFLAGS = -Wall -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DTEENSYDUINO=124 $(INCLUDES)
 
 # compiler options for C++ only
