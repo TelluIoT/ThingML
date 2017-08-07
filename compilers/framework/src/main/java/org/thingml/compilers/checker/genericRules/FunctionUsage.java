@@ -21,33 +21,30 @@
  */
 package org.thingml.compilers.checker.genericRules;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.checker.Rule;
-import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.TyperHelper;
-import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.thingML.PropertyReference;
-import org.thingml.xtext.thingML.ReturnAction;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
-import org.thingml.xtext.thingML.VariableAssignment;
 
 /**
  *
@@ -61,7 +58,7 @@ public class FunctionUsage extends Rule {
 
 	@Override
 	public Checker.InfoType getHighestLevel() {
-		return Checker.InfoType.NOTICE;
+		return Checker.InfoType.ERROR;
 	}
 
 	@Override
@@ -71,98 +68,7 @@ public class FunctionUsage extends Rule {
 
 	@Override
 	public String getDescription() {
-		return "Check that functions are used, properly called (params) and that can be statically bound to one and only one concrete function";
-	}
-
-	private boolean check(Checker checker, Thing t, Function call, List<Expression> params, Function f, EObject o) {
-		/*List<Function> functions = new ArrayList<>();
-		for(Function fn : ThingMLHelpers.allFunctions(t)) {
-			if (fn.getName().equals(f.getName())) {
-				if (!fn.isAbstract()) {
-					functions.add(fn);
-				}
-			}
-		}
-		if (functions.size() == 0) {
-			checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " cannot be bound to any concrete implementation.\nMake sure it exists one and only concrete implementation of " + f.getName() + " in the context of Thing " + t.getName(), f);    		
-		} else if (functions.size() > 1) {
-			String msg = "Function " + f.getName() + " of Thing " + t.getName() + " can be resolved to multiple concrete implementations: ";
-			int i = 0;
-			for(Function fn : functions) {
-				if (i > 0)
-					msg += ", ";
-				msg += ((Thing)fn.eContainer()).getName() + ":" + fn.getName();
-				i++;
-			}
-			msg += ".\nMake sure it exists one and only concrete implementation of " + f.getName() + " in the context of Thing " + t.getName();
-			checker.addGenericError(msg, f);    		
-		} */   	    	
-		boolean found = false;
-		if (call.getName().equals(f.getName())) {			
-			found = true;
-			if (!AnnotatedElementHelper.isDefined(f, "SuppressWarnings", "Parameters")) {
-				if (f.getParameters().size() != params.size()) {
-					checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + f.getParameters().size() + ", called with " + params.size(), o);
-				} else {
-					for (Parameter p : f.getParameters()) {
-						Expression e = params.get(f.getParameters().indexOf(p));
-						Type expected = TyperHelper.getBroadType(p.getTypeRef().getType());
-						Type actual = checker.typeChecker.computeTypeOf(e);
-						if (actual != null) {
-							if (actual.equals(Types.ERROR_TYPE)) {
-								checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
-							} else if (actual.equals(Types.ANY_TYPE)) {
-								checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed.", o);
-							} else if (!TyperHelper.isA(actual, expected)) {
-								checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
-							}
-						}
-						for (VariableAssignment va : ActionHelper.getAllActions(t, VariableAssignment.class)) {//TODO: implement allActions on Function directly
-							if (va.getProperty().equals(p)) {
-								checker.addWarning("Re-assigning parameter " + p.getName() + " can have side effects", va);
-							}                            
-						}
-					}
-				}
-			}
-			//break;
-		}
-		return found;
-	}
-
-	public void check(Checker checker, Thing t, Function f) {
-		for (Parameter p : f.getParameters()) {
-			boolean isUsed = false;
-			for (PropertyReference pr : ThingMLHelpers.getAllExpressions(t, PropertyReference.class)) {//TODO: see above
-				if (pr.getProperty().getName().equals(p.getName())) {
-					isUsed = true;
-					break;
-				}                
-			}
-			if (!isUsed) {
-				checker.addWarning("Parameter " + p.getName() + " is never read", p);
-			}
-		}
-
-		if (f.getTypeRef() != null && f.getTypeRef().getType() != null) {
-			for (Action a : ActionHelper.getAllActions(t, ReturnAction.class)) {
-				EObject parent = a.eContainer();
-				while (parent != null && !EcoreUtil.equals(parent, f)) {
-					parent = parent.eContainer();
-				}
-				if (EcoreUtil.equals(parent, f)) {
-					Type actualType = TyperHelper.getBroadType(f.getTypeRef().getType());
-					Type returnType = checker.typeChecker.computeTypeOf(((ReturnAction) a).getExp());
-					if (returnType.equals(Types.ERROR_TYPE)) {
-						checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
-					} else if (returnType.equals(Types.ANY_TYPE)) {
-						checker.addGenericWarning("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
-					} else if (!TyperHelper.isA(returnType, actualType)) {
-						checker.addGenericError("Function " + f.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
-					}
-				}
-			}
-		}
+		return "Check that functions are used and called with the proper arguments";
 	}
 
 	@Override
@@ -180,34 +86,67 @@ public class FunctionUsage extends Rule {
 	}
 
 	private void check(Thing t, Checker checker) {
+		// We just want to check once per function (based on name) - so that we don't add multiple errors on the same function
+		Map<String,List<Function>> functions = new HashMap<String, List<Function>>();
+		Map<String,Boolean> isCalled = new HashMap<String,Boolean>();
 		for (Function f : ThingMLHelpers.allFunctions(t)) {
-			Function cf = null;
-			if (f.isAbstract()) {
-				try {
-					cf = ThingHelper.getConcreteFunction(t, f);
-				} catch (Exception e) {
-					//((OpaqueThingMLCompiler)checker.ctx.getCompiler()).println(e.getMessage());
-					//FIXME: Would be nice if we didn't rely on the compiler here
-					System.out.println("FIXME: "+e.getMessage());
-				}
+			if (!functions.containsKey(f.getName())) {
+				functions.put(f.getName(), new ArrayList<Function>());
+				isCalled.put(f.getName(), false);
 			}
-			if (cf!=null) {
-				check(checker, t, cf);
-				boolean found = false;
-				for (FunctionCallStatement a : ActionHelper.getAllActions(t, FunctionCallStatement.class)) {
-					if (check(checker, t, a.getFunction(), a.getParameters(), cf, a)) {
-						found = true;
-					}                
-				}
-				for (FunctionCallExpression a : ThingMLHelpers.getAllExpressions(t, FunctionCallExpression.class)) {
-					if (check(checker, t, a.getFunction(), a.getParameters(), cf, a)) {
-						found = true;
-					}                
-				}
-				if (!found && !AnnotatedElementHelper.isDefined(cf, "SuppressWarnings", "Call"))
-					checker.addGenericWarning("Function " + cf.getName() + " of Thing " + t.getName() + " is never called.", cf);
+			functions.get(f.getName()).add(f);
+		}
+		
+		// Check all function call statement and expressions
+		for (FunctionCallStatement a : ActionHelper.getAllActions(t, FunctionCallStatement.class)) {
+			isCalled.put(a.getFunction().getName(), true);
+			check(checker, t, a.getFunction(), a.getParameters(), functions.get(a.getFunction().getName()), a);
+		}
+		for (FunctionCallExpression a : ThingMLHelpers.getAllExpressions(t, FunctionCallExpression.class)) {
+			isCalled.put(a.getFunction().getName(), true);
+			check(checker, t, a.getFunction(), a.getParameters(), functions.get(a.getFunction().getName()), a);
+		}
+		
+		// Check that functions are called
+		for (Entry<String,Boolean> funIsCalled : isCalled.entrySet()) {
+			if (!funIsCalled.getValue() && functions.containsKey(funIsCalled.getKey())) {
+				boolean suppress = false;
+				for (Function f : functions.get(funIsCalled.getKey()))
+					if (AnnotatedElementHelper.isDefined(f, "SuppressWarnings", "Call"))
+						suppress = true;
+				if (!suppress)
+					checker.addGenericWarning("Function " + functions.get(funIsCalled.getKey()).get(0).getName() + " of Thing " + t.getName() + " is never called.", functions.get(funIsCalled.getKey()).get(0));
 			}
 		}
 	}
-
+	
+	private void check(Checker checker, Thing t, Function call, List<Expression> params, List<Function> funcs, EObject o) {
+		// Check that the function is called with the right number of parameters
+		if (call.getParameters().size() != params.size())
+			checker.addGenericError("Function " + call.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + call.getParameters().size() + ", called with " + params.size(), o);
+		
+		// Stop any more checks if the has @SuppressWarnings "Parameters"
+		for (Function f : funcs)
+			if (AnnotatedElementHelper.isDefined(f, "SuppressWarnings", "Parameters"))
+				return;
+		
+		// Check that the parameters are properly typed
+		for (int i = 0; i < call.getParameters().size() && i < params.size(); i++) {
+			Parameter p = call.getParameters().get(i);
+			Expression e = params.get(i);
+			
+			Type expected = TyperHelper.getBroadType(p.getTypeRef().getType());
+			Type actual = checker.typeChecker.computeTypeOf(e);
+			
+			if (actual != null) {
+				if (actual.equals(Types.ERROR_TYPE)) {
+					checker.addGenericError("Function " + call.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
+				} else if (actual.equals(Types.ANY_TYPE)) {
+					checker.addGenericWarning("Function " + call.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed.", o);
+				} else if (!TyperHelper.isA(actual, expected)) {
+					checker.addGenericError("Function " + call.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
+				}
+			}
+		}
+	}
 }

@@ -35,6 +35,7 @@ import org.thingml.compilers.checker.genericRules.AutotransitionCycles;
 import org.thingml.compilers.checker.genericRules.ConnectorCycles;
 import org.thingml.compilers.checker.genericRules.ControlStructures;
 import org.thingml.compilers.checker.genericRules.DuplicatedMessageInPort;
+import org.thingml.compilers.checker.genericRules.FunctionImplementation;
 import org.thingml.compilers.checker.genericRules.FunctionUsage;
 import org.thingml.compilers.checker.genericRules.InternalTransitions;
 import org.thingml.compilers.checker.genericRules.LostMessages;
@@ -85,6 +86,7 @@ public class Checker {
 		Rules.add(new InternalTransitions());
 		Rules.add(new AutotransitionCycles());
 		Rules.add(new NonDeterministicTransitions());
+		Rules.add(new FunctionImplementation());
 		Rules.add(new FunctionUsage());
 		Rules.add(new StatesUsage());
 		Rules.add(new VariableUsage());

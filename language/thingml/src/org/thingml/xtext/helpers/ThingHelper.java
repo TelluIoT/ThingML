@@ -77,7 +77,7 @@ public class ThingHelper {
 		}
 		if (cf == null)
 			throw new Exception("Cannot bind ThingML function " + f.getName() + " in thing " + self.getName());
-		if (count > 0)
+		if (count > 1)
 			throw new Exception("ThingML function " + f.getName() + " in thing " + self.getName() + " is bound to multiple concrete implementations");
 		return cf;
 	}
