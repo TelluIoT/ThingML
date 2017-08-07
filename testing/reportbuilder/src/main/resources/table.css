@@ -42,7 +42,7 @@ td:first-child {
 }
 
 td {
-	height: inherit !important;
+	height: 100% !important;
 	padding: 4px !important;
 	vertical-align: middle !important;
 }

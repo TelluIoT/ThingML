@@ -16,11 +16,8 @@
  */
 package org.thingml.testing.reportbuilder;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
