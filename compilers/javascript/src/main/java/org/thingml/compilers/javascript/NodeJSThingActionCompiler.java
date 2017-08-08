@@ -18,30 +18,12 @@ package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.Context;
 import org.thingml.xtext.thingML.ErrorAction;
-import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrintAction;
-import org.thingml.xtext.thingML.SendAction;
 
 /**
  * Created by jakobho on 28.03.2017.
  */
 public class NodeJSThingActionCompiler extends JSThingActionCompiler {
-
-    @Override
-    public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        if(((NodeJSCompiler)ctx.getCompiler()).multiThreaded) {
-            builder.append("process.send({_port: '" + action.getPort().getName() + "', _msg: '" + action.getMessage().getName() + "'");
-            int i = 0;
-            for(Parameter param : action.getMessage().getParameters()) {
-                builder.append(", " + param.getName() + ": ");
-                generate(action.getParameters().get(i), builder, ctx);
-                i++;
-            }
-            builder.append("});\n");
-        } else {
-            super.generate(action, builder, ctx);
-        }
-    }
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {

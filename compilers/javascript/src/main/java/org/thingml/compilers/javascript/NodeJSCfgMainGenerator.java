@@ -18,20 +18,13 @@ package org.thingml.compilers.javascript;
 
 import java.util.List;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.DebugProfile;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
-import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Connector;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.Instance;
-import org.thingml.xtext.thingML.InternalPort;
-import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;

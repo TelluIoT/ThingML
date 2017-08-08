@@ -23,7 +23,6 @@ import org.thingml.compilers.Context;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.ObjectType;
@@ -61,8 +60,6 @@ public class JavaHelper {
         StringBuilder builder = new StringBuilder();
         if (type == null) {//void
             builder.append("void");
-        } else if (type instanceof Enumeration) {//enumeration
-            builder.append(ctx.firstToUpper(type.getName()) + "_ENUM");
         } else {
             if (AnnotatedElementHelper.hasAnnotation(type, "java_type")) {
                 builder.append(AnnotatedElementHelper.annotation(type, "java_type").toArray()[0]);

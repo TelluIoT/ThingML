@@ -41,8 +41,6 @@ import org.thingml.xtext.thingML.Type;
  */
 public class NodeJSCompiler extends OpaqueThingMLCompiler {
 
-    public boolean multiThreaded = false;
-
     public NodeJSCompiler() {
         super(new NodeJSThingActionCompiler(), new JSThingApiCompiler(), new NodeJSCfgMainGenerator(),
                 new NodeJSCfgBuildCompiler(), new NodeJSThingImplCompiler());

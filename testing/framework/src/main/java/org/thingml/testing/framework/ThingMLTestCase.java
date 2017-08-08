@@ -32,7 +32,6 @@ import org.thingml.testing.errors.ThingMLTestCaseCompilerError;
 import org.thingml.testing.errors.ThingMLTimeoutError;
 import org.thingml.testing.helpers.PlatformHelpers;
 import org.thingml.testing.languages.JavaTestCase;
-import org.thingml.testing.languages.NodeJSMTTestCase;
 import org.thingml.testing.languages.NodeJSTestCase;
 import org.thingml.testing.languages.PosixMTTestCase;
 import org.thingml.testing.languages.PosixTestCase;
@@ -204,7 +203,6 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 	/* --- Static list of all test case compilers that is implemented --- */
 	private static ThingMLTestCase[] cases = {
 		new NodeJSTestCase(),
-		new NodeJSMTTestCase(),
 		new JavaTestCase(),
 		new PosixTestCase(),
 		new PosixMTTestCase(),

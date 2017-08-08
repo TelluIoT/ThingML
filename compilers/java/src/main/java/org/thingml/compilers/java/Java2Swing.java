@@ -35,7 +35,6 @@ import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 

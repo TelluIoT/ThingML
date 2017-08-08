@@ -17,7 +17,6 @@
 package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
