@@ -1,0 +1,40 @@
+import "../../thingml.thingml"
+
+thing TestSelfMessage3 includes Test 
+@test "ttt # IJJJ"
+{
+    message selfMessage(i : Integer, j : Integer);
+    
+    provided port in {
+        receives selfMessage    
+    }
+    
+    required port out {
+        sends selfMessage    
+    }
+    
+	statechart TestSelfMessage init I {
+		state I {
+			on entry TestOut('\'I\'')
+			
+			internal event m : Test?In
+			guard m.c == '\'t\''
+            action out!selfMessage(1+1, 2)
+            
+            internal event m : in?selfMessage
+            guard m.i == 2
+            action do
+				TestOut('\'J\'')
+				out!selfMessage(m.i+1, m.i-1)
+		    end
+		    
+		    internal event Test?Done
+			action TestDone()
+		}
+	}
+}
+
+configuration conf {
+	instance test : TestSelfMessage3
+	connector test.out => test.in
+}

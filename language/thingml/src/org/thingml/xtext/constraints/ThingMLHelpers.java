@@ -355,6 +355,12 @@ public class ThingMLHelpers {
 		return result;
 	}
 	
+	public static ArrayList<Instance> allInstances(Configuration config) {
+		ArrayList<Instance> result = new ArrayList<Instance>();
+		result.addAll(config.getInstances());
+		return result;
+	}
+	
 	public static ArrayList<Enumeration> findEnumeration(ThingMLModel model, String name, boolean fuzzy) {
 		ArrayList<Enumeration> result = new ArrayList<Enumeration>();
 		for (Enumeration t : allEnumerations(model)) {

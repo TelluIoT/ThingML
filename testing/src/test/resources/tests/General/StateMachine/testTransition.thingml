@@ -1,0 +1,30 @@
+import "../../thingml.thingml"
+
+thing TestTransition includes Test 
+@test "t # IF"
+@test "tt # IFI"
+@test "tb # IFF"
+@test "ttsdfgtazbberttt # IFIFFFIFI"
+{
+	statechart TestTransition init I {
+		internal event Test?Done
+		action TestDone()
+	
+		state I {
+			on entry TestOut('\'I\'')
+			transition -> F
+			event m : Test?In
+			guard m.c == '\'t\''
+		}
+		
+		state F {
+			on entry TestOut('\'F\'')
+			transition -> I
+			event m : Test?In
+			guard m.c == '\'t\''
+			transition -> F
+			event m : Test?In
+			guard m.c == '\'b\''
+		}
+	}
+}

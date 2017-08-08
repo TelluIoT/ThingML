@@ -1,0 +1,26 @@
+import "datatypes.thingml"
+
+thing fragment FileDumper {
+	property DumpPath : String
+	
+	// The bodies of these functions will be implemented by the framework
+	function DumpWrite(C : Char) do
+	end
+	
+	// Helper functions
+	function DumpFailure(Reason : Char) do
+		DumpWrite('\'\n\'')
+		DumpWrite('\'[\'')
+		DumpWrite('\'F\'')
+		DumpWrite('\'A\'')
+		DumpWrite('\'I\'')
+		DumpWrite('\'L\'')
+		DumpWrite('\'U\'')
+		DumpWrite('\'R\'')
+		DumpWrite('\'E\'')
+		DumpWrite('\']\'')
+		DumpWrite('\' \'')
+		DumpWrite(Reason)
+		DumpWrite('\'\n\'')
+	end
+}

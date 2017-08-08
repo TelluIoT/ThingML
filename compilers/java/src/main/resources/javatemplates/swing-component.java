@@ -43,17 +43,16 @@ public void start(){
 
 @Override
 public Component buildBehavior(String session,Component root){
-        behavior=new CompositeState("$NAME$",Collections.EMPTY_LIST,new AtomicState("dummy"),Collections.EMPTY_LIST){
-@Override
-public boolean dispatch(final Event event, final Port p){
-        if(event.getPort()!=null){
-        print(event.getType().getName() + "_via_" + p.getName(),dateFormat.format(new Date())+": " + p.getName() + "?"+event.toString());
-        }
-        return false;
-        }
+        behavior = new CompositeState("$NAME$", true){
+        	@Override
+        	public void handle(final Event event, final Port p, final Status status){
+        		if(event.getPort()!=null){
+        			print(event.getType().getName() + "_via_" + p.getName(),dateFormat.format(new Date())+": " + p.getName() + "?"+event.toString());
+        		}
+        	}
         };
         return this;
-        }
+}
 
         $MESSAGE_TO_SEND_BEHAVIOR$
 

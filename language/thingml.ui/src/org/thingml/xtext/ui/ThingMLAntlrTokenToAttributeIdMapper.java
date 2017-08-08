@@ -35,10 +35,10 @@ public class ThingMLAntlrTokenToAttributeIdMapper extends AbstractAntlrTokenToAt
 			{"'function'", "'abstract'", "'state'", "'composite'", "'statechart'", "'event'", "'guard'"
 					, "'action'", "'on'", "'entry'", "'exit'", "'region'"
 					, "'init'", "'keeps'", "'history'", "'exit'", "'->'"
-					, "'session'", "'internal'", "'transition'"}));
+					, "'session'", "'internal'", "'transition'", "'?'"}));
 	
 	HashSet<String> action = new HashSet<String>(java.util.Arrays.asList(new String[]
-			{"'var'", "'return'", "'do'", "'end'", "'if'", "'while'"
+			{"'var'", "'return'", "'do'", "'end'", "'if'", "'else'", "'while'"
 					, "'print'", "'error'", "'not'", "'and'", "'or'"
 					, "'init'", "'keeps'", "'history'", "'exit'", "'->'"
 					, "'fork'", "'set'", "'as'", "'!'"}));

@@ -1,0 +1,74 @@
+import "../../thingml.thingml"
+
+thing TestVariables includes Test 
+@test "xxx # abcdefxxxbxxgabcabcdefxx"
+{
+
+	property pa : Char = '\'a\''
+	
+	readonly property pb : Char = '\'b\''
+    
+    statechart TestPropertyPing init state0 {
+    	property pc : Char = '\'c\''
+    	state state0 {
+			transition -> state1 
+			event e : Test?In
+			guard e.c == '\'x\''
+		}
+
+    	state state1 {
+    		
+    		property pd : Char = '\'d\''
+    		
+    		on entry do
+    			var pe : Char = '\'e\''
+    			if (pa == '\'a\'') do
+    				var pf : Char = '\'f\''
+    				TestOut( pa )
+    				TestOut( pb )
+    				TestOut( pc )
+    				TestOut( pd )
+    				TestOut( pe )
+    				TestOut( pf )
+    				pe = '\'x\''
+    				pf = '\'x\''
+    				TestOut( pe )
+    				TestOut( pf )
+    			end
+    			pa = '\'x\''
+    			pc = '\'x\''
+    			pd = '\'x\''
+    		end
+    		
+    		transition -> state2
+			event m : Test?In
+			guard m.c == '\'x\''
+			action do
+				TestOut( pa ) pa = '\'a\''
+				TestOut( pb )
+				TestOut( pc ) pc = '\'c\''
+				TestOut( pd ) pd = '\'d\''
+				var pg : Char
+				pg = '\'g\''
+				TestOut( pg )
+			end
+    		
+    	}
+    	
+    	state state2 {
+    		
+    		transition -> state1
+			event m : Test?In
+			guard m.c == '\'x\''
+			action do
+				TestOut( pa ) 
+				TestOut( pb )
+				TestOut( pc ) 
+			end
+			
+    	}
+    	
+    	internal event Test?Done
+		action TestDone()
+    }
+}

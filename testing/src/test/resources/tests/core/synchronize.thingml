@@ -1,0 +1,22 @@
+import "test.thingml"
+
+thing Synchronizer includes TestMsgs {
+	// This function will be implemented by the test language compilers
+	function StopExecution(Code : Integer) do
+	end
+	
+	// The rest of the body will be implemented by the framework
+	function CheckCompleted() : Boolean do
+		var Completed : Boolean = true
+		return Completed
+	end
+	
+	statechart Synchronize init Listen {
+		state Listen {
+			transition -> Stop guard (CheckCompleted())
+		}
+		final state Stop {
+			on entry StopExecution(0)
+		}
+	}
+}

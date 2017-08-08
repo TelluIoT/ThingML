@@ -20,6 +20,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
@@ -39,8 +40,8 @@ public class BrowserJSCompiler extends OpaqueThingMLCompiler {
                 new BrowserJSCfgBuildCompiler(), new BrowserJSThingImplCompiler());
         this.checker = new Checker(this.getID(), this.ctx) {
             @Override
-            public void do_check(Configuration cfg) {
-                do_generic_check(cfg);
+            public void do_check(Configuration cfg, Logger log) {
+                do_generic_check(cfg, log);
             }
         };
     }
@@ -65,9 +66,9 @@ public class BrowserJSCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg, String... options) {
-        this.checker.do_check(cfg);
-        this.checker.printReport();
+    public void do_call_compiler(Configuration cfg, Logger log, String... options) {
+        this.checker.do_check(cfg, log);
+        this.checker.printReport(log);
 
         ctx.addContextAnnotation("thisRef", "this.");
         //new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();

@@ -16,23 +16,19 @@
  */
 package org.thingml.compilers.javascript;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ObjectType;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by jakobho on 28.03.2017.
