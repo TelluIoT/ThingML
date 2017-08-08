@@ -20,10 +20,12 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
+import org.thingml.compilers.c.arduino.CCompilerContextArduino;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.cpp.CppCfgMainGenerator;
 import org.thingml.compilers.cpp.CppThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
@@ -58,9 +60,10 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
     public String getDescription() {
         return "Generates C/C++ code for Arduino or other AVR microcontrollers (AVR-GCC compiler).";
     }
-
+    
+    
     @Override
-    public void do_call_compiler(Configuration cfg, String... options) {
+    public void do_call_compiler(Configuration cfg, Logger log, String... options) {
 
         CCompilerContext ctx = new CCompilerContextArduino(this);
         processDebug(cfg);
@@ -69,8 +72,8 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
 
         //Checks
 
-        this.checker.do_check(cfg);
-        this.checker.printReport();
+        this.checker.do_check(cfg, log);
+        this.checker.printReport(log);
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {
