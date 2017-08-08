@@ -1,0 +1,91 @@
+import "../../thingml.thingml"
+
+thing TestOperators includes Test
+@test "x # ABBBABBAAABA"
+{
+    property A : Char = '\'A\''
+    property B : Char = '\'B\''
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			on entry do
+				if(1<2) do
+					TestOut(A)		// A
+				end
+				else do
+					TestOut(B)
+				end
+				if(2<1) do
+					TestOut(A)
+				end
+				else do
+					TestOut(B)		// B
+				end
+				if(2<2) do
+					TestOut(A)
+				end
+				else do
+					TestOut(B)		// B
+				end
+
+				if(1>2) do
+					TestOut(A)
+				end
+				else do
+					TestOut(B)		// B
+				end
+				if(2>1) do
+					TestOut(A)		// A
+				end
+				else do
+					TestOut(B)
+				end
+				if(2>2) do
+					TestOut(A)
+				end
+				else do
+					TestOut(B)		// B
+				end
+
+				if(1>=2) do
+					TestOut(A)
+				end
+				else do
+					TestOut(B)		// B
+				end
+				if(2>=1) do
+					TestOut(A)		// A
+				end
+				else do
+					TestOut(B)
+				end
+				if(2>=2) do
+					TestOut(A)		// A
+				end
+				else do
+					TestOut(B)
+				end
+				if(1<=2) do
+					TestOut(A)		// A
+				end
+				else do
+					TestOut(B)
+				end
+				if(2<=1) do
+					TestOut(A)
+				end
+				else do
+					TestOut(B)		// B
+				end
+				if(2<=2) do
+					TestOut(A)		// A
+				end
+				else do
+					TestOut(B)
+				end
+				TestDone()
+			end
+    	}
+    }
+}

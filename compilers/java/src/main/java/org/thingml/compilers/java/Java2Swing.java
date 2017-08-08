@@ -35,7 +35,6 @@ import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 
@@ -191,11 +190,7 @@ public class Java2Swing extends CfgExternalConnectorCompiler {
 
         for (Port p : ThingMLHelpers.allPorts(t)) {
             tempBuilder.append("port_" + ctx.firstToUpper(t.getName()) + "_" + p.getName() + " = new Port(");
-            if (p instanceof ProvidedPort)
-                tempBuilder.append("PortType.PROVIDED");
-            else
-                tempBuilder.append("PortType.REQUIRED");
-            tempBuilder.append(", \"" + p.getName() + "\", this);\n");
+            tempBuilder.append("\"" + p.getName() + "\", this);\n");
         }
         template = template.replace("$PORT_DECL$", tempBuilder.toString());
 

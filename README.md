@@ -120,6 +120,8 @@ Nothing special. Open the generated `index.html` file in your System Browser (id
 git clone https://github.com/TelluIoT/ThingML.git
 cd ThingML
 mvn clean install
+cd language
+mvn clean install
 ```
 
 The command-line interface JAR (containing all you need to compile ThingML files) can be found here:
@@ -184,7 +186,7 @@ A set of tutorials is available [here](https://github.com/HEADS-project/training
 
 ### &#x1F539; How is ThingML formalized?
 
-The ThingML language is formalized into an [EMF-based metamodel](language/thingml/model/generated/ThingML.ecore). The textual syntax is formalized as an [XText grammar](language/thingml/src/org/thingml/xtext/ThingML.xtext).
+The ThingML language is formalized into an EMF-based metamodel. The textual syntax is formalized as an [XText grammar](language/thingml/src/org/thingml/xtext/ThingML.xtext).
 
 ### &#x1F539; All that code is wonderful, but I need some Science... &#x1F4DA;
 
@@ -261,7 +263,7 @@ ThingMLCompiler.saveAsXMI(myModel, "target.xmi");
 
 >Protip2: Have a look at the [helper functions](language/thingml/src/org/thingml/xtext/helpers) which simplify some typical treatments
 
-> Models saved this way will contain all the imports that the original file refered to in one big file 
+> Models saved this way will contain all the imports that the original file refered to in one big file
 
 > This feature might currently be broken as we migrated to XText.
 

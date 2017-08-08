@@ -25,14 +25,14 @@ public class StringExtValueConverter extends AbstractLexerBasedConverter<String>
 	@Override
 	public String toValue(String string, INode node) throws ValueConverterException {
 		if(string != null && string.length() >= 2 && string.startsWith("'") && string.endsWith("'")) {
-			return string.substring(1, string.length()-1).replaceAll("(\\\\')", "'");
+			return string.substring(1, string.length()-1).replace("\\'", "'");
     	}
     	return string;
 	}
 
 	@Override
 	public String toString(String value) {
-		return "'" + value.replaceAll("'", "\\'") + "'";
+		return "'" + value.replace("'", "\\'") + "'";
 	}
 	
 	

@@ -147,6 +147,18 @@ public class CThingApiCompiler extends ThingApiCompiler {
             }
             builder.append("\n// END: Code from the c_header annotation " + thing.getName() + "\n\n");
         }
+        
+        // c_header annotations from included fragments
+        for (Thing t : ThingMLHelpers.allThingFragments(thing)) {
+        	if (AnnotatedElementHelper.hasAnnotation(t, "c_header")) {
+                builder.append("\n// BEGIN: Code from the c_header annotation " + t.getName());
+                for (String code : AnnotatedElementHelper.annotation(t, "c_header")) {
+                    builder.append("\n");
+                    builder.append(code);
+                }
+                builder.append("\n// END: Code from the c_header annotation " + t.getName() + "\n\n");
+            }
+        }
 
         // c_header annotations from types
         for (Type t : ThingHelper.allUsedTypes(thing)) {

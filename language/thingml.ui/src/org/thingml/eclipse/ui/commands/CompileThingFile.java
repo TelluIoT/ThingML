@@ -39,6 +39,7 @@ import org.thingml.compilers.registry.ThingMLCompilerRegistry;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.eclipse.ui.ThingMLConsole;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -246,7 +247,7 @@ public class CompileThingFile implements IHandler {
 				compiler.checker.Errors.clear();
 				compiler.checker.Warnings.clear();
 				compiler.checker.Notices.clear();												
-				compiler.checker.do_check(cfg);
+				compiler.checker.do_check(cfg, Logger.SYSTEM);
 				ThingMLConsole.getInstance().printMessage("Configuration " + cfg.getName() + " contains " + compiler.checker.Errors.size() + " error(s), " + compiler.checker.Warnings.size() + " warning(s), and " + compiler.checker.Notices.size() + " notices.\n");
 				if (compiler.checker.Errors.size() > 0) {
 					ThingMLConsole.getInstance().printMessage("Please fix the errors below. In future versions, we will block the code generation if errors are identified!\n");	

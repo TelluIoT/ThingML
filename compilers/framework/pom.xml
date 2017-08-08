@@ -74,6 +74,11 @@
             <version>1.14</version>
         </dependency>-->
 
+        <dependency>
+        	<groupId>org.thingml</groupId>
+        	<artifactId>utilities</artifactId>
+        	<version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,0 +1,33 @@
+import "../../thingml.thingml"
+import "import/B_Port.thingml"
+
+thing TestImportPort includes Test, B_Port 
+@test "x # AB"
+{
+	statechart Chart init INIT {   
+    	state INIT {
+			
+			internal
+			event m : Test?In
+			guard m.c == '\'x\''
+			action do
+				A!msgA()
+			end
+
+			internal
+			event A?msgA
+			action do
+				TestOut('\'A\'')
+				B!msgB()
+			end
+
+			internal
+			event B?msgB
+			action do
+				TestOut('\'B\'')
+				TestDone()
+			end
+			    		
+    	}
+    }
+}

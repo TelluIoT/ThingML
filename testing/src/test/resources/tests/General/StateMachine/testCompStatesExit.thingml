@@ -1,0 +1,42 @@
+import "../../thingml.thingml"
+
+thing TestCompStatesExit includes Test 
+@test "t # I"
+@test "tx # I1C"
+@test "t2121 # I1212"
+@test "t212xt # I1212CI"
+{
+	statechart TestCompStatesExit init I {
+		internal event Test?Done
+		action TestDone()
+	
+		state I {
+			on exit TestOut('\'I\'')
+			transition -> CS
+			event m : Test?In
+			guard m.c == '\'t\''
+		}
+		
+		composite state CS init S1 {
+		
+		on exit TestOut('\'C\'')
+		transition -> I
+		event m : Test?In
+		guard m.c == '\'x\''
+		
+			state S1 {
+				on exit TestOut('\'1\'')
+				transition -> S2
+				event m : Test?In
+				guard m.c == '\'2\''
+			}
+			
+			state S2 {
+				on exit TestOut('\'2\'')
+				transition -> S1
+				event m : Test?In
+				guard m.c == '\'1\''
+			}
+		}
+	}
+}
