@@ -1,0 +1,83 @@
+import "../../thingml.thingml"
+
+thing fragment Msgs {
+	message m(c : Char);
+}
+
+thing TestInstanceInitializationOrder includes Test, Msgs
+@test "t # ABC"
+{
+	property inst : Char = '\'A\''	
+
+	provided port p 
+	@sync_send "true"
+	{
+		sends m
+		receives m
+	}
+
+	required port r 
+	@sync_send "true"
+	{
+		sends m
+		receives m
+	}
+
+	statechart TestOnEntry init I {
+		internal event Test?Done
+		action TestDone()
+	
+		state I {
+			on entry do
+				TestOut(inst)
+			end
+			
+			internal event e : p?m
+			action TestOut(e.c)
+		}
+	}
+}
+
+thing I includes Msgs
+{
+	property inst : Char
+
+	provided port p 
+	@sync_send "true"
+	{
+		sends m
+		receives m
+	}
+
+	required port r 
+	@sync_send "true"
+	{
+		sends m
+		receives m
+	}
+
+	statechart myC init J {
+	
+		state J {
+			on entry do
+				r!m(inst)
+			end
+			
+			internal event e : p?m
+			action r!m(e.c)
+		}
+	}
+}
+
+configuration conf {
+	instance test : TestInstanceInitializationOrder
+
+	instance B : I
+	set B.inst = '\'B\''
+	
+	instance C : I
+	set C.inst = '\'C\''
+	
+	connector C.r => B.p
+	connector B.r => test.p
+}

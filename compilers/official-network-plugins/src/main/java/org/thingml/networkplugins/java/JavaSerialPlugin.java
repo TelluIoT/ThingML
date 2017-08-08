@@ -108,11 +108,11 @@ public class JavaSerialPlugin extends NetworkPlugin {
             }
 
             StringBuilder temp = new StringBuilder();
-            temp.append("@Override\npublic byte[] toBytes(Event e){\n");
+            temp.append("@Override\npublic Byte[] format(Event e){\n");
             temp.append("switch(e.getType().getCode()){\n");
             for(Message m : messages) {
                 final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
-                temp.append("case " + code + ": return toBytes((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e);\n");
+                temp.append("case " + code + ": return format((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e);\n");
             }
             temp.append("default: return null;\n");
             temp.append("}\n");
@@ -199,7 +199,7 @@ public class JavaSerialPlugin extends NetworkPlugin {
             template = template.replace("/*$NAME$*/", prot.getName());
             template = template.replace("/*$SERIALIZER$*/", prot.getName() + "BinaryProtocol");
             StringBuilder parseBuilder = new StringBuilder();
-            parseBuilder.append("final Event event = formatter.instantiate(payload);\n");
+            parseBuilder.append("final Event event = formatter.instantiate(JavaBinaryHelper.toObject(payload));\n");
             for(Port p : ports) {//FIXME
                 parseBuilder.append("if (event != null) " + p.getName() + "_port.send(event);\n");
             };

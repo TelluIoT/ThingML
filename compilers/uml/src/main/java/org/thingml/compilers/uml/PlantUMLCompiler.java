@@ -28,6 +28,7 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.compilers.thing.common.FSMBasedThingImplCompiler;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.compilers.utils.ThingMLPrettyPrinter;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.CompositeState;
@@ -44,8 +45,8 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
                 new CfgBuildCompiler(), new PlantUMLThingImplCompiler());
         this.checker = new Checker(this.getID(), this.ctx) {
             @Override
-            public void do_check(Configuration cfg) {
-                do_generic_check(cfg);
+            public void do_check(Configuration cfg, Logger log) {
+                do_generic_check(cfg, log);
             }
         };
     }
@@ -54,8 +55,8 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
         this.checker = new Checker(this.getID(), this.ctx) {
             @Override
-            public void do_check(Configuration cfg) {
-                do_generic_check(cfg);
+            public void do_check(Configuration cfg, Logger log) {
+                do_generic_check(cfg, log);
             }
         };
     }
@@ -80,9 +81,9 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(final Configuration cfg, String... options) {
-        this.checker.do_check(cfg);
-        this.checker.printReport();
+    public void do_call_compiler(final Configuration cfg, Logger log, String... options) {
+        this.checker.do_check(cfg, log);
+        this.checker.printReport(log);
 
         new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);

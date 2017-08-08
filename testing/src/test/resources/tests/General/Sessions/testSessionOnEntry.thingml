@@ -1,0 +1,25 @@
+import "../../thingml.thingml"
+
+thing TestSessionOnEntry includes Test
+@test "A # AB"
+{
+	statechart Chart init INIT {
+
+        on entry TestOut('\'A\'')
+
+    	state INIT {
+			internal event e : Test?In
+			action fork s
+    	}
+
+		session s<5> init S1 {
+
+			final state S1 {
+				on entry do
+					TestOut('\'B\'')
+					TestDone()
+				end
+			}
+		}
+    }
+}

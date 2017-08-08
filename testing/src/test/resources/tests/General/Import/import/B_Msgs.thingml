@@ -1,0 +1,5 @@
+import "A_Msgs.thingml"
+
+thing fragment B_Msgs includes A_Msgs {
+	message msgB()
+}

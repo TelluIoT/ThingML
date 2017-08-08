@@ -1,0 +1,36 @@
+import "../../thingml.thingml"
+
+thing TestInternalEmptyTransition includes Test
+@test "A # XYZ"
+{
+
+	statechart TestInternalEmptyTransition init S0 {
+		property i : UInt16 = '0'
+
+		state S0 {
+			transition -> S1
+			event m : Test?In
+		}
+
+		state S1 {
+			internal
+			guard (i == 0)
+			action do
+				TestOut('\'X\'')
+				i = i + '1'
+			end
+			
+			transition -> S2 guard (not(i == 0))
+			action TestOut('\'Y\'')
+		}
+
+
+		state S2 {
+			on entry do
+				TestOut('\'Z\'')
+				TestDone()
+			end
+		}
+	}
+}
+

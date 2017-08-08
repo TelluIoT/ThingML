@@ -29,7 +29,6 @@ import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Connector;
-import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Enumeration;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.Instance;
@@ -43,6 +42,20 @@ import org.thingml.xtext.thingML.Type;
  * Created by bmori on 10.12.2014.
  */
 public class JavaCfgMainGenerator extends CfgMainGenerator {
+	
+	private static String generateInitialValue(Configuration cfg, Instance i, Property p, Expression e, Context ctx) {
+        StringBuilder tempbuilder = new StringBuilder();
+        if (e == null) {
+        	tempbuilder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ")"); //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
+        	tempbuilder.append(JavaHelper.getDefaultValue(p.getTypeRef().getType()));
+        } else {
+            tempbuilder.append("(" + JavaHelper.getJavaType(p.getTypeRef().getType(), false, ctx) + ") ");
+            tempbuilder.append("(");
+            ctx.generateFixedAtInitValue(cfg, i, e, tempbuilder);
+            tempbuilder.append(")");
+        }
+        return tempbuilder.toString();
+	}
 
     public static void generateInstances(Configuration cfg, Context ctx, StringBuilder builder) {
         builder.append("//Things\n");
@@ -78,35 +91,9 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
                 for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: not optimal, to be improved
                     for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
                         if (p.getKey().equals(prop) && prop.getTypeRef().getCardinality() == null) {
-                            String result = "";
-                            if (prop.getTypeRef().getType() instanceof Enumeration) {
-                                Enumeration enum_ = (Enumeration) prop.getTypeRef().getType();
-                                EnumLiteralRef enumL = (EnumLiteralRef) p.getValue();
-                                StringBuilder tempbuilder = new StringBuilder();
-                                if (enumL == null) {
-                                    tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enum_.getLiterals().get(0).getName().toUpperCase());
-                                } else {
-                                    tempbuilder.append(ctx.firstToUpper(enum_.getName()) + "_ENUM." + enum_.getName().toUpperCase() + "_" + enumL.getLiteral().getName().toUpperCase());
-                                }
-                                result += tempbuilder.toString();
-                            } else {
-                                if (p.getValue() != null) {
-                                    StringBuilder tempbuilder = new StringBuilder();
-                                    tempbuilder.append("(" + JavaHelper.getJavaType(p.getKey().getTypeRef().getType(), false, ctx) + ") ");
-                                    tempbuilder.append("(");
-                                    //ctx.getCompiler().getThingActionCompiler().generate(p.getValue(), tempbuilder, ctx);
-                                    ctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
-                                    tempbuilder.append(")");
-                                    result += tempbuilder.toString();
-                                } else {
-                                    result += "(" + JavaHelper.getJavaType(p.getKey().getTypeRef().getType(), false, ctx) + ")"; //we should explicitly cast default value, as e.g. 0 is interpreted as an int, causing some lossy conversion error when it should be assigned to a short
-                                    result += JavaHelper.getDefaultValue(p.getKey().getTypeRef().getType());
-                                }
-                            }
-                            builder.append(", " + result);
+                            builder.append(", " + generateInitialValue(cfg, i, p.getKey(), p.getValue(), ctx));                            
                         }
                     }
-
                     for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
                         if (prop.equals(a)) {
                             builder.append(", " + i.getName() + "_" + a.getName() + "_array");
@@ -121,15 +108,8 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             Instance i = entries.getKey();
             for (InternalPort p : entries.getValue()) {
-                //for(Message rec : p.getReceives())  {
-                //for(Message send : p.getSends()) {
-                //if(EcoreUtil.equals(rec, send)) {
                 builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port().addListener(");
                 builder.append(ctx.getInstanceName(i) + ".get" + ctx.firstToUpper(p.getName()) + "_port());\n");
-                //break;
-                //}
-                //}
-                //}
             }
         }
 
@@ -245,7 +225,6 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
         builder.append("//Hook to stop instances following client/server dependencies (clients firsts)\n");
         builder.append("Runtime.getRuntime().addShutdownHook(new Thread() {\n");
         builder.append("public void run() {\n");
-        //builder.append("System.out.println(\"Terminating ThingML app...\");\n");
         instances = ConfigurationHelper.orderInstanceInit(cfg);
         while (!instances.isEmpty()) {
             inst = instances.get(0);
@@ -253,7 +232,6 @@ public class JavaCfgMainGenerator extends CfgMainGenerator {
             builder.append(ctx.getInstanceName(inst) + ".stop();\n");
         }
         builder.append("/*$STOP$*/\n");
-        //builder.append("System.out.println(\"ThingML app terminated. RIP!\");");
         builder.append("}\n");
         builder.append("});\n\n");
 

@@ -1,0 +1,27 @@
+import "../../thingml.thingml"
+
+thing TestBool includes Test 
+@test "12 # 12"
+@test "21 # 21"
+{
+	property min : Boolean = false
+	property max : Boolean = true
+    
+    statechart TestType init S0 {
+    	state S0 {
+    		internal
+    		event m : Test?In
+			guard ((m.c == '\'1\'') and (not(min)))
+			action TestOut('\'1\'')
+
+    		internal
+			event m : Test?In
+			guard ((m.c == '\'2\'') and (max))
+			action TestOut('\'2\'')
+			
+			internal
+			event Test?Done
+			action TestDone()
+		}
+    }
+}

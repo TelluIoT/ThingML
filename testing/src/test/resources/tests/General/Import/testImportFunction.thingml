@@ -1,0 +1,20 @@
+import "../../thingml.thingml"
+import "import/B_Func.thingml"
+
+thing TestImportFunction includes Test, B_Func 
+@test "x # AB"
+{
+    statechart Chart init INIT {
+    	state INIT {
+			transition -> INIT
+			event m : Test?In
+			guard m.c == '\'x\''    
+			action do
+				TestOut(A())
+				TestOut(B())
+				TestDone()
+			end
+			    		
+    	}
+    }
+}

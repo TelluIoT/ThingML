@@ -85,14 +85,14 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
         int size = 2; //code encoded by a 2 bytes
         for (Parameter p : m.getParameters()) {
             if (p.getTypeRef().getType() instanceof PrimitiveType) {
-                size = size + ((PrimitiveType) p.getTypeRef().getType()).getByteSize();
+                size = size + (int)((PrimitiveType) p.getTypeRef().getType()).getByteSize();
             }
         }
         //Serialize message into binary
         final String code = AnnotatedElementHelper.hasAnnotation(m, "code") ? AnnotatedElementHelper.annotation(m, "code").get(0) : "0";
         instantiateMessageType(builder, m, code);
         builder.append("/**Serializes a message into a binary format*/\n");
-        builder.append("private byte[] format(" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
+        builder.append("private Byte[] format(" + context.firstToUpper(m.getName()) + "MessageType." + context.firstToUpper(m.getName()) + "Message _this) {\n");
         builder.append("ByteBuffer buffer = ByteBuffer.allocate(" + size + ");\n");
         builder.append("buffer.order(ByteOrder.BIG_ENDIAN);\n");
         builder.append("buffer.putShort(" + m.getName().toUpperCase() + ".getCode());\n");
@@ -112,7 +112,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
                 }
             }
         }
-        builder.append("return buffer.array();\n");
+        builder.append("return JavaBinaryHelper.toObject(buffer.array());\n");
         builder.append("}\n\n");
 
 

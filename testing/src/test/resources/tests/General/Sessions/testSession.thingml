@@ -1,0 +1,38 @@
+import "../../thingml.thingml"
+
+thing TestSession includes Test
+@test "ABC # (ABC|ACB|BAC|BCA|CAB|CBA)"
+{
+	property ID : Char = '\'M\''
+	
+	property finished : Integer = 0
+	internal port forks { receives Done sends Done }
+
+	statechart Chart init INIT {
+    
+    	state INIT {
+			internal 
+			event e : Test?In
+			action do
+				ID = e.c
+				fork s
+				ID = '\'M\''
+			end
+			
+			internal event forks?Done
+			action do
+				finished++
+				if (finished == 3) TestDone()
+			end
+    	}
+
+		session s<5> init S1 {
+			final state S1 {
+				on entry do
+					TestOut(ID)
+					forks!Done()
+				end
+			}		
+		}
+    }
+}

@@ -17,12 +17,12 @@
 package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.thing.common.CommonThingActionCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
+import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.helpers.TyperHelper;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
@@ -140,7 +140,7 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
     public void generate(StartSession action, StringBuilder builder, Context ctx) {
         Session session = action.getSession();
         builder.append("const " + session.getName() + " = new " + ctx.firstToUpper(ThingMLHelpers.findContainingThing(session).getName()) + "(\"" + session.getName() + "\", this");
-        for (Property p : ThingMLHelpers.allProperties(ThingMLHelpers.findContainingThing(session))) {
+        for (Property p : ThingHelper.allPropertiesInDepth(ThingMLHelpers.findContainingThing(session))) {
             if (p.getTypeRef().isIsArray() || p.getTypeRef().getCardinality() != null) {
                 builder.append(", this." + ThingMLElementHelper.qname(p, "_") + "_var.slice(0)");
             } else {

@@ -1,0 +1,15 @@
+import "../core/datatypes.thingml"
+
+thing TestCheckFunctionCalls2
+{
+    function foo(a : Integer) do
+      //...
+    end
+
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+    		//Should fail because foo is called with wrongly typed parameter.
+    		on entry foo("hello")
+    	}
+    }
+}

@@ -1,0 +1,34 @@
+import "../../thingml.thingml"
+
+thing TestEnumeration includes Test 
+@test "tt # aba"
+{
+    
+    property status : DigitalState = DigitalState:LOW
+    
+    statechart TestNaming init A {
+    	internal event Test?Done
+		action TestDone()
+		
+	     state A {
+            on entry do
+                TestOut('\'a\'')
+            end
+            
+            transition -> B
+            event m : Test?In
+			guard m.c == '\'t\'' and status == DigitalState:LOW
+         }               
+         
+         state B {
+             on entry do
+                TestOut('\'b\'')
+                status = DigitalState:HIGH   
+             end
+             
+            transition -> A
+            event m : Test?In
+			guard m.c == '\'t\'' and status == DigitalState:HIGH
+         }
+    }
+}

@@ -35,6 +35,7 @@ import org.thingml.compilers.checker.genericRules.AutotransitionCycles;
 import org.thingml.compilers.checker.genericRules.ConnectorCycles;
 import org.thingml.compilers.checker.genericRules.ControlStructures;
 import org.thingml.compilers.checker.genericRules.DuplicatedMessageInPort;
+import org.thingml.compilers.checker.genericRules.FunctionImplementation;
 import org.thingml.compilers.checker.genericRules.FunctionUsage;
 import org.thingml.compilers.checker.genericRules.InternalTransitions;
 import org.thingml.compilers.checker.genericRules.LostMessages;
@@ -45,6 +46,7 @@ import org.thingml.compilers.checker.genericRules.PropertyInitialization;
 import org.thingml.compilers.checker.genericRules.StatesUsage;
 import org.thingml.compilers.checker.genericRules.ThingsUsage;
 import org.thingml.compilers.checker.genericRules.VariableUsage;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Configuration;
@@ -84,6 +86,7 @@ public class Checker {
 		Rules.add(new InternalTransitions());
 		Rules.add(new AutotransitionCycles());
 		Rules.add(new NonDeterministicTransitions());
+		Rules.add(new FunctionImplementation());
 		Rules.add(new FunctionUsage());
 		Rules.add(new StatesUsage());
 		Rules.add(new VariableUsage());
@@ -93,26 +96,26 @@ public class Checker {
 		Rules.add(new LostMessages());
 	}
 
-	public void do_generic_check(Configuration cfg) {
+	public void do_generic_check(Configuration cfg, Logger log) {
 		List<String> notChecked = AnnotatedElementHelper.annotation(cfg, "SuppressWarnings");
 		long start = System.currentTimeMillis();
 		for (Rule r : Rules) {
 			if (!notChecked.contains(r.getName()))
 				r.check(cfg, this);
 		}
-		System.out.println("checker took " + (System.currentTimeMillis() - start) + " ms");
+		log.info("checker took " + (System.currentTimeMillis() - start) + " ms");
 	}
 
-	public void do_generic_check(ThingMLModel model) {
+	public void do_generic_check(ThingMLModel model, Logger log) {
 		long start = System.currentTimeMillis();
 		for (Rule r : Rules) {
 			r.check(model, this);
 		}
-		System.out.println("checker took " + (System.currentTimeMillis() - start) + " ms");
+		log.info("checker took " + (System.currentTimeMillis() - start) + " ms");
 	}
 
 	// Must be implemented and must contain a call to do_generic_check(cfg)
-	public void do_check(Configuration cfg) {
+	public void do_check(Configuration cfg, Logger log) {
 		throw new UnsupportedOperationException("The do_check() method is compiler-specific and should be implemented!");
 	}
 
@@ -174,85 +177,54 @@ public class Checker {
 	}
 
 	public boolean containsErrors() {
-		return Errors.isEmpty();
+		return !Errors.isEmpty();
 	}
 
 	public boolean containsWarnings() {
-		return Warnings.isEmpty();
+		return !Warnings.isEmpty();
 	}
 
 	public boolean containsNotices() {
-		return Notices.isEmpty();
+		return !Notices.isEmpty();
+	}
+	
+	public void printReport(Logger log) {
+		printNotices(log);
+		printWarnings(log);
+		printErrors(log);
 	}
 
-	public void printReport() {
-		/*new Thread() {
-            @Override
-            public void run() {
-                super.run();*/
-		//AnsiConsole.systemInstall();
-		//ctx.ansi.fg(Ansi.Color.BLUE);
-		printNotices();
-		//ctx.ansi.fg(Ansi.Color.MAGENTA);
-		printWarnings();
-		//ctx.ansi.fg(Ansi.Color.RED);
-		printErrors();
-		//ctx.ansi.reset();
-		//if (ctx.ansi.isEnabled()) System.out.print(ctx.ansi);
-		//AnsiConsole.systemUninstall();
-		/*      }
-        }.start();*/
-	}
-
-	public void printErrors() {
-		/*if(ctx.ansi.isEnabled()) {
-            for (final CheckerInfo i : Errors) {
-                ctx.ansi.a(i.toString());
-            }
-        } else {*/
+	public void printErrors(Logger log) {
 		String file = "";
 		for (final CheckerInfo i : Errors) {
 			if (i.file != null && !i.file.equals(file)) {
-				System.err.println("Errors in file " + i.file);
+				log.error("Errors in file " + i.file);
 				file = i.file;
 			}
-			System.err.print("\t" + i.toString());
+			log.error("\t" + i.toString());
 		}
-		//}
 	}
 
-	public void printWarnings() {
-		/*if(ctx.ansi.isEnabled()) {
-            for (final CheckerInfo i : Warnings) {
-                ctx.ansi.a(i.toString());
-            }
-        } else {*/
+	public void printWarnings(Logger log) {
 		String file = "";
 		for (final CheckerInfo i : Warnings) {
 			if (i.file != null && !i.file.equals(file)) {
-				System.out.println("Warnings in file " + i.file);
+				log.warning("Warnings in file " + i.file);
 				file = i.file;
 			}
-			System.out.print("\t" + i.toString());
+			log.warning("\t" + i.toString());
 		}
-		//}
 	}
 
-	public void printNotices() {
-		/*if(ctx.ansi.isEnabled()) {
-            for (CheckerInfo i : Notices) {
-                ctx.ansi.a(i.toString());
-            }
-        } else {*/
+	public void printNotices(Logger log) {
 		String file = "";
 		for (CheckerInfo i : Notices) {
 			if (i.file != null && !i.file.equals(file)) {
-				System.out.println("Notices in file " + i.file);
+				log.info("Notices in file " + i.file);
 				file = i.file;
 			}
-			System.out.print("\t" + i.toString());
+			log.info("\t" + i.toString());
 		}
-		//}
 	}
 
 	// ---------------------- Structures ----------------------
@@ -276,10 +248,14 @@ public class Checker {
 			this.message = message;
 			this.element = element;
 
-			this.file = element.eResource().getURI().deresolve(URI.createFileURI(ctx.getInputDirectory().getAbsolutePath())).toFileString();          	
-			final INode node = NodeModelUtils.getNode(element);
-			this.startLine = node.getStartLine();
-			this.endLine = node.getEndLine(); 
+			if (element.eResource().getURI().isFile()) {
+				this.file = element.eResource().getURI().deresolve(URI.createFileURI(ctx.getInputDirectory().getAbsolutePath())).toFileString();          	
+				final INode node = NodeModelUtils.getNode(element);
+				this.startLine = node.getStartLine();
+				this.endLine = node.getEndLine(); 
+			} else {
+				this.file = null;
+			}
 		}
 
 		public String print() {              	                         	
@@ -304,8 +280,10 @@ public class Checker {
 				t = "";
 			}
 
-
-			return "- [" + source + "] at lines " + startLine + "-" + endLine + ": " + message + " (in " + print() + ")\n";
+			if (file != null)
+				return "- [" + source + "] at lines " + startLine + "-" + endLine + ": " + message + " (in " + print() + ")\n";
+			else
+				return "- [" + source + "] : " + message + " (in " + print() + ")\n";
 		}
 
 		@Override

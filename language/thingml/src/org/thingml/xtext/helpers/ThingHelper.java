@@ -77,7 +77,7 @@ public class ThingHelper {
 		}
 		if (cf == null)
 			throw new Exception("Cannot bind ThingML function " + f.getName() + " in thing " + self.getName());
-		if (count > 0)
+		if (count > 1)
 			throw new Exception("ThingML function " + f.getName() + " in thing " + self.getName() + " is bound to multiple concrete implementations");
 		return cf;
 	}
@@ -147,13 +147,13 @@ public class ThingHelper {
 
 			// If the expression is defined locally return the init expression
 			if (self.getProperties().contains(p)) {
-				if (assigns.size() > 0)
-					System.out.println("Error: Thing " + self.getName() + " cannot redefine initial value for property " + p.getName());
+				/*if (assigns.size() > 0)
+					System.out.println("Error: Thing " + self.getName() + " cannot redefine initial value for property " + p.getName());*/
 				return p.getInit();
 			}
 
-			if (assigns.size() > 1)
-				System.out.println("Error: Thing " + self.getName() + " contains several assignments for property " + p.getName());
+			/*if (assigns.size() > 1)
+				System.out.println("Error: Thing " + self.getName() + " contains several assignments for property " + p.getName());*/
 
 			if (assigns.size() == 1) {
 				return assigns.get(0).getInit();

@@ -82,7 +82,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
         for (Parameter p : m.getParameters()) {
             if(!AnnotatedElementHelper.isDefined(p, "do_not_forward", "true")) {
                 if (p.getTypeRef().getType() instanceof PrimitiveType) {
-                    size = size + ((PrimitiveType) p.getTypeRef().getType()).getByteSize();
+                    size = size + (int)((PrimitiveType) p.getTypeRef().getType()).getByteSize();
                 }
             }
         }
