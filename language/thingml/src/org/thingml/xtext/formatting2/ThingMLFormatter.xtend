@@ -26,6 +26,22 @@ import org.thingml.xtext.thingML.StateContainer
 import org.thingml.xtext.thingML.Region
 import org.thingml.xtext.thingML.Session
 import org.thingml.xtext.thingML.Action
+import org.thingml.xtext.thingML.ActionBlock
+import org.thingml.xtext.thingML.ConditionalAction
+import org.thingml.xtext.thingML.LoopAction
+import org.thingml.xtext.thingML.Message
+import org.thingml.xtext.thingML.Variable
+import org.thingml.xtext.thingML.Parameter
+import org.thingml.xtext.thingML.FunctionCallStatement
+import org.thingml.xtext.thingML.Expression
+import org.thingml.xtext.thingML.Transition
+import org.thingml.xtext.thingML.InternalTransition
+import org.thingml.xtext.thingML.Handler
+import org.thingml.xtext.thingML.Event
+import org.thingml.xtext.thingML.Instance
+import org.thingml.xtext.thingML.AbstractConnector
+import org.thingml.xtext.thingML.Enumeration
+import org.thingml.xtext.thingML.EnumerationLiteral
 
 class ThingMLFormatter extends AbstractFormatter2 {
 	
@@ -45,6 +61,39 @@ class ThingMLFormatter extends AbstractFormatter2 {
 			configs.format;
 		}
 	}	
+	
+	def dispatch void format(Configuration cfg, extension IFormattableDocument document) {
+		cfg.interior[indent]
+		cfg.regionFor.keyword("{").append[newLine]
+		cfg.regionFor.keyword("}").prepend[newLine]
+		for(Instance i : cfg.instances) {
+			i.append[newLine]
+		}
+		for(AbstractConnector c : cfg.connectors) {
+			c.append[newLine]
+		}
+		cfg.append[setNewLines(1,2,Integer.MAX_VALUE)]
+	}
+
+	def dispatch void format(Protocol p, extension IFormattableDocument document) {
+		p.interior[indent]
+		for (PlatformAnnotation annotations : p.getAnnotations()) {
+			annotations.format;
+			if (p.getAnnotations.size > 1) {
+				annotations.prepend[newLine]
+			}
+		}
+		p.append[setNewLines(1,2,Integer.MAX_VALUE)]
+	}
+	
+	def dispatch void format(Enumeration e, extension IFormattableDocument document) {		
+		formatType(e, document) 
+		e.regionFor.keyword("{").append[newLine]
+		e.regionFor.keyword("}").prepend[newLine]
+		for(EnumerationLiteral l : e.literals) {
+			l.append[newLine]
+		}
+	}
 
 	def dispatch void format(PrimitiveType primitiveType, extension IFormattableDocument document) {
 		primitiveType.regionFor.keyword("<").surround[noSpace]
@@ -59,6 +108,15 @@ class ThingMLFormatter extends AbstractFormatter2 {
 	
 	def dispatch void format(Thing thing, extension IFormattableDocument document) {
 		thing.interior[indent]
+		for(org.thingml.xtext.thingML.Property p : thing.properties) {
+			p.format
+		}
+		for(Port p : thing.ports) {
+			p.format
+		}
+		for(Message m : thing.messages) {
+			m.format
+		}
 		for (Function function : thing.functions) {
 			function.format;
 		}
@@ -68,6 +126,14 @@ class ThingMLFormatter extends AbstractFormatter2 {
 		thing.regionFor.keyword("{").append[newLine]
 		thing.regionFor.keyword("}").prepend[newLine]
 		thing.append[setNewLines(1,2,Integer.MAX_VALUE)]
+	}
+	
+	def dispatch void format(Message message, extension IFormattableDocument document) {
+		for(Parameter p : message.parameters) {
+			p.prepend[space = " "]
+			p.append[noSpace]	
+		}
+		message.append[setNewLines(1,2,Integer.MAX_VALUE)]
 	}
 	
 	def dispatch void format(RequiredPort requiredPort, extension IFormattableDocument document) {
@@ -84,8 +150,12 @@ class ThingMLFormatter extends AbstractFormatter2 {
 	
 	def dispatch void format(Function function, extension IFormattableDocument document) {
 		function.interior[indent]
+		for(Parameter p : function.parameters) {
+			p.prepend[space = " "]
+			p.append[noSpace]	
+		}
 		if (function.body !== null)
-			function.body.format
+			function.body.format			
 		function.append[setNewLines(1,2,Integer.MAX_VALUE)]
 	}
 	
@@ -106,18 +176,70 @@ class ThingMLFormatter extends AbstractFormatter2 {
 		}	
 	}
 	
+	def dispatch void format(Variable variable, extension IFormattableDocument document) {
+		variable.interior[indent]
+		variable.append[setNewLines(1,2,Integer.MAX_VALUE)]		
+	}
+	
 	def dispatch void format(Action action, extension IFormattableDocument document) {
+		action.interior[indent]
+		action.append[setNewLines(1,2,Integer.MAX_VALUE)]		
+	}
+	
+	def dispatch void format(FunctionCallStatement action, extension IFormattableDocument document) {
+		for(Expression p : action.parameters) {
+			p.prepend[space = " "]
+			p.append[noSpace]	
+		}
+		action.interior[indent]
+		action.append[setNewLines(1,2,Integer.MAX_VALUE)]		
+	}	
+	
+	def dispatch void format(ActionBlock action, extension IFormattableDocument document) {
 		action.interior[indent]
 		action.regionFor.keyword("do").append[newLine]
 		action.regionFor.keyword("end").prepend[newLine]
+		for(Action a : action.actions) {
+			a.format
+		}
+		action.append[setNewLines(1,2,Integer.MAX_VALUE)]		
+	}
+	
+	def dispatch void format(ConditionalAction action, extension IFormattableDocument document) {
+		//action.interior[indent]
+		action.action.format
+		if (action.elseAction !== null) {
+			action.elseAction.format	
+		}
+		action.append[setNewLines(1,2,Integer.MAX_VALUE)]		
+	}
+	
+	def dispatch void format(LoopAction action, extension IFormattableDocument document) {
+		action.interior[indent]
+		action.action.format		
 		action.append[setNewLines(1,2,Integer.MAX_VALUE)]		
 	}
 	
 	
 	// TODO: implement for , Enumeration, EnumerationLiteral, Thing, PropertyAssign, Protocol, Function, Property, Message, Parameter, , , , Stream, JoinSources, MergeSources, SimpleSource, Filter, LengthWindow, TimeWindow, StateMachine, FinalState, CompositeState, Session, ParallelRegion, State, Transition, InternalTransition, ActionBlock, ExternStatement, LocalVariable, SendAction, VariableAssignment, LoopAction, ConditionalAction, ReturnAction, PrintAction, ErrorAction, StartSession, FunctionCallStatement, ExternExpression, Configuration, Instance, ConfigPropertyAssign, Connector, ExternalConnector
 	
+	def dispatch void format(Handler h, extension IFormattableDocument document) {
+		if (h.event.size > 0)
+			h.regionFor.keyword("event").prepend[newLine]
+		for(Event e : h.event) {
+			e.append[newLine]				
+		}
+		if (h.guard !== null) {
+			h.guard.append[newLine]
+		}
+		if (h.action !== null) {
+			h.action.format
+		}
+		h.append[setNewLines(1,2,Integer.MAX_VALUE)]		
+	}
 	
 	/* --- Helpers --- */
+	
 	
 	def void formatStateContainer(StateContainer container, extension IFormattableDocument document) {
 		for(State sub : container.substate) {
@@ -134,6 +256,12 @@ class ThingMLFormatter extends AbstractFormatter2 {
 			state.entry.format
 		if (state.exit !== null)
 			state.exit.format	
+		for(Transition t: state.outgoing) {
+			t.format
+		}
+		for(InternalTransition t: state.internal) {
+			t.format
+		}
 		state.interior[indent]
 		state.regionFor.keyword("{").append[newLine]
 		state.regionFor.keyword("}").prepend[newLine]
@@ -152,6 +280,12 @@ class ThingMLFormatter extends AbstractFormatter2 {
 	}
 	
 	def void formatPort(Port port, extension IFormattableDocument document) {
+		for(Message m : port.sends) {
+			m.format
+		}
+		for(Message m : port.receives) {
+			m.format
+		}
 		port.append[setNewLines(1,2,Integer.MAX_VALUE)]
 	}
 }
