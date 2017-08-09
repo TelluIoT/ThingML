@@ -3,94 +3,55 @@ import "../../thingml.thingml"
 // Three servers on the same port and one client.
 
 thing PingMsg {
-    message ping(num : Int16);
-    message pong(num : Int16);        
+    message ping();
+    message pong();        
 }
 
 thing PingServer includes PingMsg {
-    
-    property num : Int16
-    
+        
     provided port pp {
          receives ping
          sends pong
     }
     
     statechart PingServer init Idle {
-    
         state Idle {
             internal event p : pp?ping
-            guard p.num == num
             action do
-                pp!pong(num)
+                pp!pong()
             end
         }    
     } 
 }
 
 thing TestMultiServerPing includes Test, PingMsg
-@test "12221 # P1P2P2P2P1"
-@test "12221011 # P1P2P2P2P1P"
+@test "0 # P111"
 {
     required port ppclient {
         sends ping
         receives pong    
     }
     
+    property doneCount : Integer = 0
+    
 	statechart TestMultiServerPing init Ping {
-		internal event Test?Done
-    	action TestDone()
-	
 		state Ping {
             transition -> Pong
 			event m : Test?In
 			guard m.c == '\'0\''
 			action do
-                	TestOut('\'P\'')
-                	ppclient!ping(0)
-            end
-            
-			transition -> Pong
-			event m : Test?In
-			guard m.c == '\'1\''
-			action do
-                	TestOut('\'P\'')
-                	ppclient!ping(1)
-            end
-                
-            transition -> Pong
-			event m : Test?In
-			guard m.c == '\'2\''
-			action do
-                	TestOut('\'P\'')
-                	ppclient!ping(2)
-            end
-            
-            transition -> Pong
-			event m : Test?In
-			guard m.c == '\'3\''
-			action do
-                	TestOut('\'P\'')
-                	ppclient!ping(3)
+                TestOut('\'P\'')
+                ppclient!ping(0)
             end
 		}
 
 		state Pong {
-    
-			transition -> Ping
-			event p : ppclient?pong
-			guard p.num == 1
-			action TestOut('\'1\'')
-
-			transition -> Ping
-			event p : ppclient?pong
-			guard p.num == 2
-			action TestOut('\'2\'')
-
-            transition -> Ping
-			event p : ppclient?pong
-			guard p.num == 3
-			action TestOut('\'3\'')
+			internal event ppclient?pong
+			action do
+				TestOut('\'1\'')
+				doneCount = doneCount + 1
+    			if (doneCount == 3) Test!Done()
+			end
 		}
 	}
 }
@@ -99,11 +60,8 @@ configuration conf {
 	instance test : TestMultiServerPing
 
 	instance pingServ1 : PingServer
-	set pingServ1.num = 1
 	instance pingServ2 : PingServer
-	set pingServ2.num = 2
 	instance pingServ3 : PingServer
-	set pingServ3.num = 3
 	
 	connector test.ppclient => pingServ1.pp
 	connector test.ppclient => pingServ2.pp
