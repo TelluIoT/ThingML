@@ -8,8 +8,14 @@ thing TestInit includes Test
 		state I {
 			on entry do
 				Test!Out('\'E\'')
-				TestDone()
 			end
+			
+			transition -> J
+		}
+		
+		state J {
+			internal event Test?Done
+			action TestDone()
 		}
 	}
 }

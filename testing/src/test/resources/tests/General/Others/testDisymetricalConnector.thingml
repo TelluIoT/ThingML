@@ -6,8 +6,10 @@ thing fragment Msgs {
 }
 
 thing TestDisymetricalConnector includes Test, Msgs
-@test "12 # IIIII"
+@test "12 # IIIII" //TODO: To be double-checked...
 {
+	property count : Integer = 0
+
 	provided port p1 {
 		sends m1, m2
 		receives m1, m2
@@ -17,10 +19,7 @@ thing TestDisymetricalConnector includes Test, Msgs
 		receives m1, m2
 	}
 	
-	statechart Chart init Init {
-		internal event Test?Done
-		action TestDone()
-		
+	statechart Chart init Init {		
 		state Init {
 			internal event e : Test?In
 			guard e.c == '\'1\''	
@@ -33,11 +32,15 @@ thing TestDisymetricalConnector includes Test, Msgs
 			internal event p1?m2
 			action do
 				TestOut('\'I\'')
+				count = count + 1
+				if (count == 3) TestDone()
 			end
 
 			internal event p2?m2
 			action do
 				TestOut('\'I\'')
+				count = count + 1
+				if (count == 3) TestDone()
 			end
 		}
 	}

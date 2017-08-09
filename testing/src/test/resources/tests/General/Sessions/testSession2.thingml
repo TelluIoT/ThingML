@@ -9,35 +9,46 @@ thing TestSession2 includes Test
 
 	message m(id : Char)
 	message n(id : Char)
+	message ready(id : Char)
 
 	internal port p	{
-		sends m, n
-		receives m, n
+		sends m, n, ready
+		receives m, n, ready
 	}
 
 	statechart Chart init INIT {
 
     	state INIT {
-			internal
+			transition -> WAIT
 			event e : Test?In
 			action do
 				ID = e.c
-				fork s
-                p!m(ID)
-				ID = '\'M\''
+				fork s              				
 			end
 
 			internal
 			event e : p?n
 			action do
 				TestOut(e.id)
-				finished++
+				finished = finished + 1
 				if (finished == 3) TestDone()
 			end						
     	}
+    	
+    	state WAIT {
+    		transition -> INIT
+    		event r : p?ready
+    		guard r.id == ID
+    		action do
+    			ID = '\'M\''
+    			p!m(ID)    			
+    		end
+    	}
 
 		session s <5> init S1 {
-			state S1 {
+			state S1 {		
+				on entry p!ready(ID)
+						
 				transition -> S2
 				event e : p?m
 				guard e.id == ID
