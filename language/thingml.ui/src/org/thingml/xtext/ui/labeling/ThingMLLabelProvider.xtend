@@ -16,6 +16,24 @@ import org.thingml.xtext.thingML.Parameter
 import org.thingml.xtext.thingML.Message
 import org.thingml.xtext.thingML.Port
 import org.thingml.xtext.thingML.StateContainer
+import org.thingml.xtext.thingML.Session
+import org.thingml.xtext.thingML.PlatformAnnotation
+import org.thingml.xtext.thingML.PrimitiveType
+import org.thingml.xtext.thingML.Type
+import org.thingml.xtext.thingML.State
+import org.thingml.xtext.thingML.FinalState
+import org.thingml.xtext.thingML.CompositeState
+import org.thingml.xtext.thingML.Protocol
+import org.thingml.xtext.thingML.Configuration
+import org.thingml.xtext.thingML.Instance
+import org.thingml.xtext.thingML.Connector
+import org.thingml.xtext.thingML.Action
+import org.thingml.xtext.thingML.Expression
+import org.thingml.xtext.thingML.Region
+import org.thingml.xtext.thingML.Transition
+import org.thingml.xtext.thingML.InternalTransition
+import org.thingml.xtext.thingML.ReceiveMessage
+import org.thingml.xtext.thingML.Handler
 
 /**
  * Provides labels for EObjects.
@@ -26,18 +44,49 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 
 	@Inject
 	new(AdapterFactoryLabelProvider delegate) { super(delegate); }
+
+	def image(Action a) {
+		'outline/open iconic/code-2x.png'
+	}
+	
+	def image(Expression e) {
+		'outline/open iconic/code-2x.png'
+	}
+	
+	def image(Configuration cfg) {
+		'outline/open iconic/spreadsheet-2x.png'
+	}
+	def image(Instance i) {
+		'outline/open iconic/media-play-2x.png'
+	}
+	def image(Connector c) {
+		'outline/open iconic/resize-width-2x.png'
+	}		
 	
 	def text(Thing thing) {
 		thing.name + (if (thing.includes.empty) '' else ' : ' + thing.includes.map[include | include.name].join(', ')) 
 	}
+	def image(Thing thing) {
+		'heads.png'
+	}
 	
+	def image(PlatformAnnotation annotation) {
+		'outline/open iconic/paperclip-2x.png'
+	}	
 	
+	def image(Type datatype) {
+		'outline/open iconic/document-2x.png'
+	}
+	
+	def image(Protocol p) {
+		'outline/open iconic/audio-2x.png'
+	}		
 	
 	def text(Message message) {
 		message.name + parametersString(message.parameters as EList<Parameter>)
 	}
 	def image(Message message) {
-		'outline/annotate.gif'
+		'outline/open iconic/envelope-closed-2x.png'
 	}
 	
 	
@@ -68,8 +117,42 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 	def text(StateContainer container) {
 		container.name + ' -> ' + container.initial.name + if (container.history) ' (keeps history)' else ''
 	}
+	def image(CompositeState c) {
+		'outline/open iconic/aperture-2x.png'
+	}	
+	def image(Session session) {
+		'outline/open iconic/fork-2x.png'
+	}
+	def image(Region r) {
+		'outline/open iconic/pause-2x.png'
+	}	
+	def image(State state) {
+		if (state.eContainer instanceof StateContainer) {
+		var c = state.eContainer as StateContainer
+		if (c.initial.equals(state))
+			'outline/open iconic/power-standby-2x.png'
+		else
+			'outline/open iconic/target-2x.png'			
+		} else
+			'outline/open iconic/target-2x.png'
+	}	
+	def image(FinalState state) {
+			'outline/open iconic/account-logout-2x.png'			
+	}
 	
+	def image(Transition t) {
+			'outline/open iconic/share-2x.png'			
+	}
+	def text(Handler t) {
+		if (t.event.size > 0)
+			'on ' + t.event.filter[it instanceof ReceiveMessage].map[(it as ReceiveMessage).port.name + '?' + (it as ReceiveMessage).message.name].join(', ')
+		else
+			''			
+	}
 	
+	def image(InternalTransition t) {
+			'outline/open iconic/reload-2x.png'			
+	}
 	
 	/* --- Helpers --- */
 	def String parametersString(EList<Parameter> parameters) {

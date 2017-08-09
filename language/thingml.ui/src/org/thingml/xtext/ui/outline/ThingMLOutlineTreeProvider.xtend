@@ -21,6 +21,7 @@ import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.thingML.Session
 import org.thingml.xtext.thingML.Region
 import org.thingml.xtext.thingML.Transition
+import org.thingml.xtext.thingML.Configuration
 
 /**
  * Customization of the default outline structure.
@@ -35,6 +36,11 @@ class ThingMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		model.types.forEach[type | createNode(outlineNode, type)];
 		model.protocols.forEach[protocol | createNode(outlineNode, protocol)]
 		model.configs.forEach[config | createNode(outlineNode, config)]
+	}
+	
+	def _createChildren(IOutlineNode parent, Configuration cfg) {
+		cfg.instances.forEach[createNode(parent, it)]
+		cfg.connectors.forEach[createNode(parent, it)]
 	}
 	
 	def _createChildren(IOutlineNode parent, Thing thing) {
@@ -54,6 +60,7 @@ class ThingMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	
 	def _createChildren(IOutlineNode parent, CompositeState composite) {
 		state(parent, composite)
+		session(parent, composite)
 		container(parent, composite)
 	}
 	def _createChildren(IOutlineNode parent, Region region) {
@@ -81,6 +88,12 @@ class ThingMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		//if (state.entry !== null) customNode(...)
 		//if (state.exit !== null) customNode(...)
 		state.outgoing.forEach[createNode(parent, it)]
+		state.internal.forEach[createNode(parent, it)]
+	}
+	
+	def session(IOutlineNode parent, CompositeState state) {
+		state.session.forEach[createNode(parent, it)]
+		state.region.forEach[createNode(parent, it)]
 	}
 	
 	def customNode(IOutlineNode parent, EObject modelElement, String image, String text) {
