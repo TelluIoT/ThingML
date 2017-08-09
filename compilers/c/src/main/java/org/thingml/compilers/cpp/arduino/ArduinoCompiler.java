@@ -20,7 +20,7 @@ import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCfgMainGenerator;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.CThingImplCompiler;
-import org.thingml.compilers.c.arduino.CCompilerContextArduino;
+import org.thingml.compilers.cpp.arduino.CCompilerContextArduino;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.cpp.CppCfgMainGenerator;
 import org.thingml.compilers.cpp.CppThingImplCompiler;

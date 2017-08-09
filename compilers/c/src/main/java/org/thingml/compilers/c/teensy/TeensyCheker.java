@@ -18,6 +18,7 @@ package org.thingml.compilers.c.teensy;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CChecker;
+import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.thingML.Configuration;
 
 public class TeensyCheker extends CChecker{
@@ -27,16 +28,17 @@ public class TeensyCheker extends CChecker{
 	}
 
 	@Override
-	public void do_generic_check(Configuration cfg) {
+	public void do_generic_check(Configuration cfg, Logger log) {
 		// TODO Auto-generated method stub
-		super.do_generic_check(cfg);
+		super.do_generic_check(cfg, log);
 	}
 	
 	@Override
-    public void do_check(Configuration cfg) {
+    public void do_check(Configuration cfg, Logger log) {
 
+        //ADD Arduino specific checks
 
-        super.do_generic_check(cfg);
+        super.do_generic_check(cfg, log);
 
     }
 			
