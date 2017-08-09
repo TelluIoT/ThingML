@@ -73,6 +73,12 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 	def image(PlatformAnnotation annotation) {
 		'outline/open iconic/paperclip-2x.png'
 	}	
+	def text(PlatformAnnotation annotation) {
+		if (annotation.value.length < 16)
+			annotation.name + ': ' + annotation.value
+		else 
+			annotation.name + ': ' + annotation.value.substring(0, 16) + "..."
+	}
 	
 	def image(Type datatype) {
 		'outline/open iconic/document-2x.png'
@@ -148,6 +154,9 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 			'on ' + t.event.filter[it instanceof ReceiveMessage].map[(it as ReceiveMessage).port.name + '?' + (it as ReceiveMessage).message.name].join(', ')
 		else
 			''			
+	}
+	def text(Transition t) {
+		t.target.name + ' ' + text(t as Handler)			
 	}
 	
 	def image(InternalTransition t) {

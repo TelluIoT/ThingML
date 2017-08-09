@@ -22,6 +22,7 @@ import org.thingml.xtext.thingML.Session
 import org.thingml.xtext.thingML.Region
 import org.thingml.xtext.thingML.Transition
 import org.thingml.xtext.thingML.Configuration
+import org.thingml.xtext.thingML.AnnotatedElement
 
 /**
  * Customization of the default outline structure.
@@ -39,11 +40,17 @@ class ThingMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 	
 	def _createChildren(IOutlineNode parent, Configuration cfg) {
+		_createChildren(parent, cfg as AnnotatedElement)
 		cfg.instances.forEach[createNode(parent, it)]
 		cfg.connectors.forEach[createNode(parent, it)]
 	}
 	
+	def _createChildren(IOutlineNode parent, AnnotatedElement elt) {
+		elt.annotations.forEach[createNode(parent, it)]
+	}
+	
 	def _createChildren(IOutlineNode parent, Thing thing) {
+		_createChildren(parent, thing as AnnotatedElement)		
 		thing.messages.forEach[createNode(parent, it)]
 		thing.ports.forEach[createNode(parent, it)]
 		thing.properties.forEach[createNode(parent, it)]
@@ -75,7 +82,7 @@ class ThingMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	
 	def _isLeaf(Transition transition) { true }
 	def _isLeaf(Message message) { true }
-	def _isLeaf(Function function) { true }
+	def _isLeaf(Function function) { false }
 	def _isLeaf(Property property) { true }
 	
 	/* --- Helpers --- */
