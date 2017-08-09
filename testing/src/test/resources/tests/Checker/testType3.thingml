@@ -1,0 +1,12 @@
+datatype DT<1>
+@type_checker "Integer";
+
+thing TestCheckStateMachine
+{
+	readonly property p : DT = false //Should fail because boolean is not an Integer    
+    
+    statechart TestAbstractFunction init INIT {
+    	state INIT {    		    
+    	}
+    }
+}

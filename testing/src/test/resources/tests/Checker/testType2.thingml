@@ -1,0 +1,14 @@
+datatype DT<1>
+@type_checker "Integer";
+
+thing TestCheckStateMachine
+{       
+    statechart TestAbstractFunction init INIT {
+    	state INIT {  
+    		on entry do
+    			var p : DT
+    			p = false //should fail because boolean is not an Integer
+    		end  		    
+    	}
+    }
+}
