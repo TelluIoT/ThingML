@@ -59,6 +59,11 @@ public class ThingsUsage extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
+    	for(Instance i : cfg.getInstances()) {
+    		if (i.getType().isFragment()) {
+    			checker.addGenericNotice("Instance " + i.getName() + " instantiate thing fragment " + i.getType().getName() + ". Make thing " + i.getType().getName() + " concrete (not a fragment) if you want to instantiate it." , i);
+    		}
+    	}    	
         for (Thing t : ThingMLHelpers.allThings(ThingMLHelpers.findContainingModel(cfg))) {
             if (!t.isFragment()) {
                 boolean found = false;

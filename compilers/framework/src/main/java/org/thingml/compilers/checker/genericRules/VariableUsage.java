@@ -122,6 +122,8 @@ public class VariableUsage extends Rule {
         for(Property p : ThingHelper.allPropertiesInDepth(t)) {
             boolean isUsed = false;
             for(Property pr : ThingHelper.allUsedProperties(t)) {
+            	if (pr.getInit() != null)
+            		check(pr, pr.getInit(), t, checker, pr);
                 if (p.getName().equals(pr.getName())/*EcoreUtil.equals(p, pr)*/) {
                     isUsed = true;
                     break;
