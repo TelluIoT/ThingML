@@ -139,17 +139,8 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
 
     protected void generateCHeaderAnnotation(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-
-        if (AnnotatedElementHelper.hasAnnotation(thing, "c_header")) {
-            builder.append("\n// BEGIN: Code from the c_header annotation " + thing.getName());
-            for (String code : AnnotatedElementHelper.annotation(thing, "c_header")) {
-                builder.append("\n");
-                builder.append(code);
-            }
-            builder.append("\n// END: Code from the c_header annotation " + thing.getName() + "\n\n");
-        }
         
-        // c_header annotations from included fragments
+        // c_header annotations from the thing and included fragments
         for (Thing t : ThingMLHelpers.allThingFragments(thing)) {
         	if (AnnotatedElementHelper.hasAnnotation(t, "c_header")) {
                 builder.append("\n// BEGIN: Code from the c_header annotation " + t.getName());
