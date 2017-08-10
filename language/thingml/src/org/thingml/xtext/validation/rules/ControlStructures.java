@@ -19,11 +19,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
 import org.eclipse.emf.ecore.EObject;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
@@ -36,6 +35,9 @@ import org.thingml.xtext.thingML.LoopAction;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 /**
  *
@@ -43,11 +45,11 @@ import org.thingml.xtext.thingML.Type;
  */
 public class ControlStructures extends Rule {
 
-    public ControlStructures() {
-        super();
-    }
+    public ControlStructures(AbstractThingMLValidator v) {
+		super(v);
+	}
 
-    @Override
+	@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
     }
@@ -75,7 +77,9 @@ public class ControlStructures extends Rule {
         	}
             return;
         }
-        checker.addGenericError("Condition is not a Boolean (" + org.thingml.xtext.helpers.TyperHelper.getBroadType(actual).getName() + ")", o);
+        final String msg = "Condition is not a Boolean (" + org.thingml.xtext.helpers.TyperHelper.getBroadType(actual).getName() + ")";
+        checker.addGenericError(msg, o);
+        validator.acceptError(msg, e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
     }
 
     @Override

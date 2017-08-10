@@ -32,6 +32,7 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
@@ -40,13 +41,13 @@ import org.thingml.xtext.thingML.Parameter;
 public class PosixTextDigitSerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
 
-    public PosixTextDigitSerializerPlugin() {
-        super();
+    public PosixTextDigitSerializerPlugin(AbstractThingMLValidator validator) {
+        super(validator);
     }
 
     @Override
     public SerializationPlugin clone() {
-        return new PosixTextDigitSerializerPlugin();
+        return new PosixTextDigitSerializerPlugin(validator);
     }
 
     @Override

@@ -41,6 +41,7 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
@@ -50,8 +51,8 @@ public class ESP8266WebsocketPlugin extends NetworkPlugin {
 
     CCompilerContext ctx;
 
-    public ESP8266WebsocketPlugin() {
-        super();
+    public ESP8266WebsocketPlugin(AbstractThingMLValidator validator) {
+        super(validator);
     }
 
     public String getPluginID() {

@@ -22,23 +22,34 @@
 package org.thingml.networkplugins.c.posix;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.thingML.*;
-
-import java.util.*;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
  * @author sintef
  */
 public class PosixJSONSerializerPlugin extends SerializationPlugin {
-    StringBuilder messagesparser = new StringBuilder();
+    public PosixJSONSerializerPlugin(AbstractThingMLValidator validator) {
+		super(validator);
+	}
+
+	StringBuilder messagesparser = new StringBuilder();
 
     @Override
     public SerializationPlugin clone() {
-        return new PosixJSONSerializerPlugin();
+        return new PosixJSONSerializerPlugin(validator);
     }
 
     @Override

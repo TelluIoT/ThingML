@@ -35,13 +35,18 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
  * @author etostd
  */
 public class RcdTimerPlugin extends NetworkPlugin {
-    CCompilerContext ctx;
+    public RcdTimerPlugin(AbstractThingMLValidator validator) {
+		super(validator);
+	}
+
+	CCompilerContext ctx;
     Set<RcdTimer> rcdTimers;
 
     public String getPluginID() {

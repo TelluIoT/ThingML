@@ -21,14 +21,14 @@ import java.util.Collection;
 
 import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.notification.RunNotifier;
-import org.thingml.compilers.checker.Checker;
 import org.thingml.testing.errors.ThingMLCheckerError;
 import org.thingml.testing.framework.ThingMLTestCase;
-import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.ThingMLValidator;
 
 public class CheckerTest extends ThingMLFileTest {
 	private static final long serialVersionUID = 1L;
@@ -48,8 +48,8 @@ public class CheckerTest extends ThingMLFileTest {
 		
 		if (!compilerChecker) {
 			// We should try the generic checker
-			Checker checker = new Checker("ThingMLTesting", null);
-			checker.do_generic_check(this.model, Logger.NULL);
+			Checker checker = new Checker("ThingMLTesting", new ThingMLValidator());
+			checker.do_generic_check(this.model);
 			
 			EachTestNotifier not = new EachTestNotifier(notifier, getDescription());
 			
@@ -71,12 +71,12 @@ public class CheckerTest extends ThingMLFileTest {
 				
 				if (configurations.isEmpty()) {
 					// If no configurations is present - we do the generic checks
-					checker.do_generic_check(this.model, Logger.NULL);
+					checker.do_generic_check(this.model);
 					foundError = checker.containsErrors();
 				} else {
 					// Or we try the checker for all configurations
 					for (Configuration configuration : configurations) {
-						checker.do_check(configuration, Logger.NULL);
+						checker.do_check(configuration);
 						foundError = foundError || checker.containsErrors();
 					}
 				}

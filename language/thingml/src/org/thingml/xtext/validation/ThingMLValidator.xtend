@@ -3,10 +3,11 @@
  */
 package org.thingml.xtext.validation
 
-import org.thingml.xtext.thingML.Thing
-import org.eclipse.xtext.validation.Check
-import org.thingml.xtext.thingML.ThingMLPackage
 import java.util.LinkedList
+import org.eclipse.xtext.validation.Check
+import org.thingml.xtext.thingML.Thing
+import org.thingml.xtext.thingML.ThingMLModel
+import org.thingml.xtext.thingML.ThingMLPackage
 
 /**
  * This class contains custom validation rules. 
@@ -14,11 +15,18 @@ import java.util.LinkedList
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class ThingMLValidator extends AbstractThingMLValidator {
-	
+
+	Checker checker = new Checker("Generic", this);	
 
 	/*****************************************************************************
 	 *                 CUSTOM VALIDATION RULES FOR THINGS
 	 *****************************************************************************/
+	 
+	 @Check
+	 def checkModel(ThingMLModel model) {
+	 	System.out.println("checkModel");
+	 	checker.do_generic_check(model)	 	
+	 }
 
 	@Check
 	def checkNoCyclesInThingIncludes(Thing thing) {
@@ -31,7 +39,7 @@ class ThingMLValidator extends AbstractThingMLValidator {
 		while (!toCheck.empty) {
 			val current = toCheck.pollFirst
 		 	
-			if (visitedThings.contains(current)) {
+			if (visitedThings.contains(current)) {				
 				error("Cycle in the hierarchy of Thing '" + current.name + "'", ThingMLPackage.eINSTANCE.thing_Includes);
 				return;
 			}

@@ -45,13 +45,14 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 import com.eclipsesource.json.JsonObject;
 
 public class JsWSPlugin extends NetworkPlugin {
 
-    public JsWSPlugin() {
-        super();
+    public JsWSPlugin(AbstractThingMLValidator validator) {
+        super(validator);
     }
 
     public String getPluginID() {

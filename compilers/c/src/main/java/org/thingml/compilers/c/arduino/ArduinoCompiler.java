@@ -27,6 +27,7 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.ThingMLValidator;
 
 /**
  * Created by ffl on 25.11.14.
@@ -36,7 +37,7 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
     public ArduinoCompiler() {
         super(new CThingActionCompilerArduino(), new CThingApiCompilerArduino(), new CCfgMainGenerator(),
                 new CfgBuildCompiler(), new CThingImplCompiler());
-        this.checker = new ArduinoChecker(this.getID(), this.ctx);
+        this.checker = new ArduinoChecker(this.getID(), new ThingMLValidator());
     }
 
     @Override
@@ -68,8 +69,8 @@ public class ArduinoCompiler extends OpaqueThingMLCompiler {
 
         //Checks
 
-        this.checker.do_check(cfg, log);
-        this.checker.printReport(log);
+        this.checker.do_check(cfg);
+        //this.checker.printReport(log);
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {

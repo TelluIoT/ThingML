@@ -40,6 +40,7 @@ import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
@@ -47,7 +48,11 @@ import org.thingml.xtext.thingML.Thing;
  */
 public class RcdPortPlugin extends NetworkPlugin {
 
-    CCompilerContext ctx;
+    public RcdPortPlugin(AbstractThingMLValidator validator) {
+		super(validator);
+	}
+
+	CCompilerContext ctx;
     Set<RcdPort> rcdPorts;
 
     public String getPluginID() {

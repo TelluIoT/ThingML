@@ -44,14 +44,15 @@ import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrimitiveType;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 public class JavaByteArraySerializerPlugin extends SerializationPlugin {
 
-    private Set<Message> messages = new HashSet<Message>();
+    public JavaByteArraySerializerPlugin(AbstractThingMLValidator validator) {
+		super(validator);
+	}
 
-    private void clearMessages() {
-        messages.clear();
-    }
+	private Set<Message> messages = new HashSet<Message>();
 
     private boolean containsMessage(Message m) {
         for(Message msg : messages) {
@@ -77,7 +78,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public SerializationPlugin clone() {
-        return new JavaByteArraySerializerPlugin();
+        return new JavaByteArraySerializerPlugin(validator);
     }
 
     @Override

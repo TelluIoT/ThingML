@@ -16,7 +16,7 @@
  */
 package org.thingml.compliers.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 

@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.ThingApiCompiler;
@@ -33,6 +31,9 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 
 /**
@@ -42,7 +43,8 @@ public abstract class ExternalThingPlugin extends Rule {
 
     protected Map<String, PlatformAnnotation> annotationMap;
 
-    public ExternalThingPlugin() {
+    public ExternalThingPlugin(AbstractThingMLValidator validator) {
+    	super(validator);
         annotationMap = new HashMap<>();
     }
 

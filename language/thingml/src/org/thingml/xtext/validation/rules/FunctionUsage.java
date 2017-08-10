@@ -19,7 +19,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EObject;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
@@ -45,6 +44,9 @@ import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 /**
  *
@@ -52,8 +54,8 @@ import org.thingml.xtext.thingML.Type;
  */
 public class FunctionUsage extends Rule {
 
-	public FunctionUsage() {
-		super();
+	public FunctionUsage(AbstractThingMLValidator v) {
+		super(v);
 	}
 
 	@Override
@@ -122,8 +124,12 @@ public class FunctionUsage extends Rule {
 	
 	private void check(Checker checker, Thing t, Function call, List<Expression> params, List<Function> funcs, EObject o) {
 		// Check that the function is called with the right number of parameters
-		if (call.getParameters().size() != params.size())
-			checker.addGenericError("Function " + call.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + call.getParameters().size() + ", called with " + params.size(), o);
+		if (call.getParameters().size() != params.size()) {
+			final String msg = "Function " + call.getName() + " of Thing " + t.getName() + " is called with wrong number of parameters. Expected " + call.getParameters().size() + ", called with " + params.size();
+			checker.addGenericError(msg, o);
+			validator.acceptError(msg, o, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+		}
+
 		
 		// Stop any more checks if the has @SuppressWarnings "Parameters"
 		for (Function f : funcs)
@@ -140,11 +146,15 @@ public class FunctionUsage extends Rule {
 			
 			if (actual != null) {
 				if (actual.equals(Types.ERROR_TYPE)) {
-					checker.addGenericError("Function " + call.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
+					final String msg = "Function " + call.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getName() + ", called with " + TyperHelper.getBroadType(actual).getName();
+					checker.addGenericError(msg, o);
+					validator.acceptError(msg, o, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
 				} else if (actual.equals(Types.ANY_TYPE)) {
 					checker.addGenericWarning("Function " + call.getName() + " of Thing " + t.getName() + " is called with a parameter which cannot be typed.", o);
 				} else if (!TyperHelper.isA(actual, expected)) {
-					checker.addGenericError("Function " + call.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), o);
+					final String msg = "Function " + call.getName() + " of Thing " + t.getName() + " is called with an erroneous parameter. Expected " + expected.getName() + ", called with " + TyperHelper.getBroadType(actual).getName();
+					checker.addGenericError(msg, o);
+					validator.acceptError(msg, o, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
 				}
 			}
 		}

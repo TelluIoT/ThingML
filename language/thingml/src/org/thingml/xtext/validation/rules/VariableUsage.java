@@ -19,11 +19,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
 import org.eclipse.emf.ecore.EObject;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
@@ -39,6 +38,9 @@ import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.Variable;
 import org.thingml.xtext.thingML.VariableAssignment;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 /**
  *
@@ -46,11 +48,11 @@ import org.thingml.xtext.thingML.VariableAssignment;
  */
 public class VariableUsage extends Rule {
 
-    public VariableUsage() {
-        super();
-    }
+    public VariableUsage(AbstractThingMLValidator v) {
+		super(v);
+	}
 
-    @Override
+	@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
     }
@@ -66,6 +68,7 @@ public class VariableUsage extends Rule {
     }
 
     private void check(Variable va, Expression e, Thing t, Checker checker, EObject o) {
+    	System.out.println("debug");
         if (va.getTypeRef().getCardinality() == null) {//TODO: check arrays
             if (va instanceof Property) {
                 Property p = (Property) va;
@@ -83,11 +86,19 @@ public class VariableUsage extends Rule {
 
                 if (actual != null) { //FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)
                     if (actual.equals(Types.ERROR_TYPE)) {
-                        checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
+                    	final String msg = "Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName();
+                        checker.addGenericError(msg, o);
+                        System.out.println(msg);
+                        validator.acceptError(msg, va, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+                        //error(msg, va, null);
                     } else if (actual.equals(Types.ANY_TYPE)) {
                         checker.addGenericWarning("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with a value/expression which cannot be typed. Consider using a cast (<exp> as <Type>).", o);
                     } else if (!TyperHelper.isA(actual, expected)) {
-                        checker.addGenericError("Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName(), o);
+                    	final String msg = "Property " + va.getName() + " of Thing " + t.getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName();
+                        checker.addGenericError(msg, o);
+                        System.out.println(msg);
+                        validator.acceptError(msg, va, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+                        //error(msg, va, null);
                     }
                 }
             }
@@ -97,6 +108,8 @@ public class VariableUsage extends Rule {
     @Override
     public void check(ThingMLModel model, Checker checker) {
         for (Thing t : ThingMLHelpers.allThings(model)) {
+        	System.out.println("fake error");
+        	//error("fake error", t, t.eContainingFeature());
             check(t, checker);
         }
     }

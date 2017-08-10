@@ -19,18 +19,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
 
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Checker.InfoType;
-import org.thingml.compilers.checker.Rule;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Checker.InfoType;
+import org.thingml.xtext.validation.Rule;
 
 /**
  *
@@ -38,11 +40,11 @@ import org.thingml.xtext.thingML.Thing;
  */
 public class ThingsUsage extends Rule {
 
-    public ThingsUsage() {
-        super();
-    }
+    public ThingsUsage(AbstractThingMLValidator v) {
+		super(v);
+	}
 
-    @Override
+	@Override
     public Checker.InfoType getHighestLevel() {
         return InfoType.NOTICE;
     }
@@ -61,7 +63,11 @@ public class ThingsUsage extends Rule {
     public void check(Configuration cfg, Checker checker) {
     	for(Instance i : cfg.getInstances()) {
     		if (i.getType().isFragment()) {
-    			checker.addGenericNotice("Instance " + i.getName() + " instantiate thing fragment " + i.getType().getName() + ". Make thing " + i.getType().getName() + " concrete (not a fragment) if you want to instantiate it." , i);
+    			final String msg = "Instance " + i.getName() + " instantiate thing fragment " + i.getType().getName() + ". Make thing " + i.getType().getName() + " concrete (not a fragment) if you want to instantiate it.";
+    			checker.addGenericNotice(msg , i);   
+                validator.acceptError(msg, i, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+    			//error(msg, i, null);	
+    			System.out.println(msg);
     		}
     	}    	
         for (Thing t : ThingMLHelpers.allThings(ThingMLHelpers.findContainingModel(cfg))) {

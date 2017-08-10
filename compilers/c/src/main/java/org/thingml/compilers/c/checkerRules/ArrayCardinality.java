@@ -21,13 +21,14 @@
  */
 package org.thingml.compilers.c.checkerRules;
 
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 
 /**
@@ -36,8 +37,11 @@ import org.thingml.xtext.thingML.Thing;
  */
 public class ArrayCardinality extends Rule {
 
+    public ArrayCardinality(AbstractThingMLValidator v) {
+		super(v);
+	}
 
-    @Override
+	@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.ERROR;
     }

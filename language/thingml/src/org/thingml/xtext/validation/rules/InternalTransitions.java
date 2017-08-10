@@ -19,34 +19,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.StateHelper;
-import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.Event;
+import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.InternalTransition;
-import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
-import org.thingml.xtext.thingML.Transition;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 /**
  *
  * @author sintef
  */
-public class NonDeterministicTransitions extends Rule {
+public class InternalTransitions extends Rule {
 
-    @Override
+    public InternalTransitions(AbstractThingMLValidator v) {
+		super(v);
+	}
+
+	@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.ERROR;
     }
@@ -58,13 +57,13 @@ public class NonDeterministicTransitions extends Rule {
 
     @Override
     public String getDescription() {
-        return "Check that no event can trigger two transition at the same time.";
+        return "Check that Internal transition are triggered by event and/or have guard";
     }
 
     @Override
     public void check(ThingMLModel model, Checker checker) {
-        for (Thing t : ThingMLHelpers.allThings(model)) {
-            check(t, checker);
+        for (Thing thing : ThingMLHelpers.allThings(model)) {
+            check(thing, checker);
         }
     }
 
@@ -77,31 +76,18 @@ public class NonDeterministicTransitions extends Rule {
 
     private void check(Thing t, Checker checker) {
         for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
-            for (State s : StateHelper.allStates(sm)) {
-                List<Event> guarded = new ArrayList<Event>();
-                List<Event> notGuarded = new ArrayList<Event>();
-                for (Transition tr : s.getOutgoing()) {
-                    if (tr.getGuard() != null) {
-                        guarded.addAll(tr.getEvent());
+            for (Handler h : StateHelper.allEmptyHandlers(sm)) {
+                if (h instanceof InternalTransition) {
+                    if (h.getGuard() == null) {
+                    	final String msg = "Empty Internal Transition without guard.";
+                        checker.addGenericError(msg, h);
+    					validator.acceptError(msg, h, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
                     } else {
-                        notGuarded.addAll(tr.getEvent());
-                    }
-                }
-                for (InternalTransition it : s.getInternal()) {
-                    if (it.getGuard() != null) {
-                        guarded.addAll(it.getEvent());
-                    } else {
-                        notGuarded.addAll(it.getEvent());
-                    }
-                }
-                for (Event g : guarded) {
-                    for (Event ng : notGuarded) {
-                        if (EcoreUtil.equals(g, ng)) {
-                            checker.addGenericError("Non deterministic behaviour: Two transitions handling " + ThingMLElementHelper.getName(g) + ", with at least one without a guard", g);
-                        }
+                        checker.addGenericNotice("Empty Internal Transition.", h);
                     }
                 }
             }
         }
     }
+
 }

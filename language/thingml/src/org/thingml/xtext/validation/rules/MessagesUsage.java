@@ -19,11 +19,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
@@ -45,6 +44,9 @@ import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 /**
  *
@@ -52,11 +54,13 @@ import org.thingml.xtext.thingML.Type;
  */
 public class MessagesUsage extends Rule {
 
-    public MessagesUsage() {
-        super();
-    }
 
-    @Override
+    public MessagesUsage(AbstractThingMLValidator v) {
+		super(v);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
     }
@@ -93,7 +97,9 @@ public class MessagesUsage extends Rule {
                     if (EcoreUtil.equals(a.getMessage(), m)) {
                         found = true;
                         if (m.getParameters().size() != a.getParameters().size()) {
-                            checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with wrong number of parameters. Expected " + m.getParameters().size() + ", called with " + a.getParameters().size(), a);
+                        	final String msg = "Message " + m.getName() + " of Thing " + t.getName() + " is sent with wrong number of parameters. Expected " + m.getParameters().size() + ", called with " + a.getParameters().size();
+                            checker.addGenericError(msg, a);
+                            validator.acceptError(msg, a, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
                         } else {
                             for (Parameter pa : m.getParameters()) {
                                 Expression e = a.getParameters().get(m.getParameters().indexOf(pa));
@@ -101,11 +107,15 @@ public class MessagesUsage extends Rule {
                                 Type actual = checker.typeChecker.computeTypeOf(e);
                                 if (actual != null) {
                                     if (actual.equals(Types.ERROR_TYPE)) {
-                                        checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), a);
+                                    	final String msg = "Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName();
+                                        checker.addGenericError(msg, a);
+                                        validator.acceptError(msg, a, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
                                     } else if (actual.equals(Types.ANY_TYPE)) {
                                         checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with a parameter which cannot be typed.", a);
                                     } else if (!TyperHelper.isA(actual, expected)) {
-                                        checker.addGenericError("Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName(), a);
+                                    	final String msg = "Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName();
+                                        checker.addGenericError(msg, a);
+                                        validator.acceptError(msg, a, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
                                     }
                                 }
                             }

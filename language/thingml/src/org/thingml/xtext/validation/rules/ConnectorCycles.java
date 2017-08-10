@@ -19,58 +19,67 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
+
 
 import java.util.List;
-import java.util.Map;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Instance;
-import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
+import org.thingml.xtext.validation.Tarjan;
 
 /**
  *
  * @author sintef
  */
-public class PortsUsage extends Rule {
+public class ConnectorCycles extends Rule {
 
-    public PortsUsage() {
-        super();
-    }
+    public ConnectorCycles(AbstractThingMLValidator v) {
+		super(v);
+	}
 
-    @Override
+	@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
     }
 
     @Override
     public String getName() {
-        return "Ports Usage";
+        return "Connector Cycles";
     }
 
     @Override
     public String getDescription() {
-        return "Check that each port of each instance is connected";
+        return "Check that the configuration does not contains dependencies cycles";
     }
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        for (Map.Entry<Instance, List<Port>> entry : ConfigurationHelper.danglingPorts(cfg).entrySet()) {
-            boolean found = false;
-            for (Port p : entry.getValue()) {
-                for (ExternalConnector eco : ConfigurationHelper.getExternalConnectors(cfg)) {
-                    if (EcoreUtil.equals(eco.getInst(), entry.getKey()) && EcoreUtil.equals(eco.getPort(), p)) {
-                        found = true;
-                        break;
+
+        Tarjan<Instance> t = new Tarjan(cfg, ConfigurationHelper.allInstances(cfg));
+        List<List<Instance>> cycles = t.findStronglyConnectedComponents();
+
+        for (List<Instance> cycle : cycles) {
+            if (cycle != null) {
+                if (cycle.size() != 1) {
+                    String msg = "Dependencies cycle: (";
+                    boolean first = true;
+                    for (Instance j : cycle) {
+                        if (first) {
+                            first = false;
+                        } else {
+                            msg += ", ";
+                        }
+                        msg += j.getName();
                     }
-                }
-                if (!found) {
-                    checker.addGenericNotice("Port " + p.getName() + " is not connected.", entry.getKey());
+
+                    checker.addGenericNotice(msg + ")", cfg);
+                } else {
+                    //System.out.println("Mono state: " + cycle.get(0).getName());
                 }
             }
         }

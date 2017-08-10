@@ -40,6 +40,7 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
@@ -47,7 +48,12 @@ import org.thingml.xtext.thingML.Thing;
  */
 public class PosixSerialPlugin extends NetworkPlugin {
 
-    CCompilerContext ctx;
+    public PosixSerialPlugin(AbstractThingMLValidator validator) {
+		super(validator);
+	}
+
+
+	CCompilerContext ctx;
 
     public String getPluginID() {
         return "PosixSerialPlugin";

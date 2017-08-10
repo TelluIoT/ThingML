@@ -29,6 +29,7 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
@@ -36,7 +37,11 @@ import org.thingml.xtext.thingML.Protocol;
  */
 public class PosixNoPollWSPlugin extends NetworkPlugin {
 
-    public String getPluginID() {
+    public PosixNoPollWSPlugin(AbstractThingMLValidator validator) {
+		super(validator);
+	}
+
+	public String getPluginID() {
         return "PosixNoPollWSPlugin";
     }
 

@@ -32,8 +32,6 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.compilers.Context;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ExternalConnector;
@@ -41,6 +39,9 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 /**
  *
@@ -50,7 +51,8 @@ public abstract class NetworkPlugin extends Rule {
 
     Set<Protocol> assignedProtocols = new HashSet<>();
 
-    public NetworkPlugin() {
+    public NetworkPlugin(AbstractThingMLValidator validator) {
+    	super(validator);
     }
 
     //abstract public NetworkPlugin clone();

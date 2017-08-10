@@ -44,11 +44,12 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 public class JsTTYPlugin extends NetworkPlugin {
 
-    public JsTTYPlugin() {
-        super();
+    public JsTTYPlugin(AbstractThingMLValidator validator) {
+        super(validator);
     }
 
     public String getPluginID() {

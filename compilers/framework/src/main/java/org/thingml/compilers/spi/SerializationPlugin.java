@@ -25,12 +25,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 /**
  *
@@ -42,7 +43,8 @@ public abstract class SerializationPlugin extends Rule {
     public Configuration configuration;
     public Protocol protocol;
 
-    public SerializationPlugin() {
+    public SerializationPlugin(AbstractThingMLValidator validator) {
+    	super(validator);
     }
 
     abstract public SerializationPlugin clone();

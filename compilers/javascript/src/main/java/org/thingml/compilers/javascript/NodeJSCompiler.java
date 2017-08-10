@@ -18,7 +18,6 @@ package org.thingml.compilers.javascript;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.ThingActionCompiler;
@@ -35,6 +34,8 @@ import org.thingml.xtext.thingML.EnumerationLiteral;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.ThingMLValidator;
 
 /**
  * Created by ffl on 25.11.14.
@@ -44,10 +45,10 @@ public class NodeJSCompiler extends OpaqueThingMLCompiler {
     public NodeJSCompiler() {
         super(new NodeJSThingActionCompiler(), new JSThingApiCompiler(), new NodeJSCfgMainGenerator(),
                 new NodeJSCfgBuildCompiler(), new NodeJSThingImplCompiler());
-        this.checker = new Checker(this.getID(), this.ctx) {
+        this.checker = new Checker(this.getID(), new ThingMLValidator()) {
             @Override
-            public void do_check(Configuration cfg, Logger log) {
-                do_generic_check(cfg, log);
+            public void do_check(Configuration cfg) {
+                do_generic_check(cfg);
             }
         };
     }
@@ -77,8 +78,8 @@ public class NodeJSCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg, Logger log, String... options) {
-        this.checker.do_check(cfg, log);
-        this.checker.printReport(log);
+        this.checker.do_check(cfg);
+        //this.checker.printReport(log);
 
         ctx.addContextAnnotation("thisRef", "this.");
         //new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();

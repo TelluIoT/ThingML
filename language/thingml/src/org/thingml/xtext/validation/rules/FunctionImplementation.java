@@ -14,16 +14,14 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Checker.InfoType;
-import org.thingml.compilers.checker.Rule;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
@@ -40,8 +38,16 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.VariableAssignment;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Checker.InfoType;
+import org.thingml.xtext.validation.Rule;
 
 public class FunctionImplementation extends Rule {
+
+	public FunctionImplementation(AbstractThingMLValidator v) {
+		super(v);
+	}
 
 	@Override
 	public InfoType getHighestLevel() {
@@ -85,6 +91,7 @@ public class FunctionImplementation extends Rule {
 			try {
 				cf = ThingHelper.getConcreteFunction(t, f);
 			} catch (Exception e) {
+            	validator.acceptError(e.getMessage(), f, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
 				checker.addGenericError(e.getMessage(), f);
 			}
 			// TODO: This will only check one of the implementations?
@@ -131,11 +138,15 @@ public class FunctionImplementation extends Rule {
 					Type actualType = TyperHelper.getBroadType(implementation.getTypeRef().getType());
 					Type returnType = checker.typeChecker.computeTypeOf(((ReturnAction) a).getExp());
 					if (returnType.equals(Types.ERROR_TYPE)) {
-						checker.addGenericError("Function " + implementation.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
+						final String msg = "Function " + implementation.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".";
+						checker.addGenericError(msg, a);
+                    	validator.acceptError(msg, a, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
 					} else if (returnType.equals(Types.ANY_TYPE)) {
 						checker.addGenericWarning("Function " + implementation.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
 					} else if (!TyperHelper.isA(returnType, actualType)) {
-						checker.addGenericError("Function " + implementation.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".", a);
+						final String msg = "Function " + implementation.getName() + " of Thing " + t.getName() + " should return " + actualType.getName() + ". Found " + returnType.getName() + ".";
+						checker.addGenericError(msg, a);
+                    	validator.acceptError(msg, a, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
 					}
 				}
 			}

@@ -14,23 +14,30 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
 import java.util.ArrayList;
 
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 /**
  * Created by Alexandre Rio on 6/9/16.
  */
 public class DuplicatedMessageInPort extends Rule {
-    @Override
+    
+	public DuplicatedMessageInPort(AbstractThingMLValidator v) {
+		super(v);
+	}
+
+	@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.ERROR;
     }
@@ -54,14 +61,20 @@ public class DuplicatedMessageInPort extends Rule {
                 for (Message m : p.getReceives()) {
                     if (!rcvList.contains(m.getName()))
                         rcvList.add(m.getName());
-                    else
-                        checker.addError("Multiple definition of message " + m.getName(), p);
+                    else {
+                    	final String msg = "Multiple definition of message " + m.getName(); 
+                        checker.addError(msg, p);
+                    	validator.acceptError(msg, p, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+                    }
                 }
                 for (Message m : p.getSends()) {
                     if (!sendList.contains(m.getName()))
                         sendList.add(m.getName());
-                    else
-                        checker.addError("Multiple definition of message " + m.getName(), p);
+                    else {
+                    	final String msg = "Multiple definition of message " + m.getName(); 
+                        checker.addError(msg, p);
+                    	validator.acceptError(msg, p, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+                    }
                 }
             }
         }

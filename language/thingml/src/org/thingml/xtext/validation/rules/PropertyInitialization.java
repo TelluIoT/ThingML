@@ -19,18 +19,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
 
 /**
  *
@@ -38,11 +39,11 @@ import org.thingml.xtext.thingML.Property;
  */
 public class PropertyInitialization extends Rule {
 
-    public PropertyInitialization() {
-        super();
-    }
+    public PropertyInitialization(AbstractThingMLValidator v) {
+		super(v);
+	}
 
-    @Override
+	@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
     }

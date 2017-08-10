@@ -16,26 +16,34 @@
  */
 package org.thingml.networkplugins.c.posix;
 
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.spi.SerializationPlugin;
-import org.thingml.xtext.helpers.AnnotatedElementHelper;
-import org.thingml.xtext.thingML.*;
-import org.thingml.xtext.thingML.impl.ParameterImpl;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.c.CCompilerContext;
+import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.impl.ParameterImpl;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+
 /**
  * Created by jakobho on 01.02.2017.
  */
 public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
-    @Override
+    public PosixTelluCloudSerializerPlugin(AbstractThingMLValidator validator) {
+		super(validator);
+	}
+
+	@Override
     public SerializationPlugin clone() {
-        return new PosixTelluCloudSerializerPlugin();
+        return new PosixTelluCloudSerializerPlugin(validator);
     }
 
     @Override

@@ -19,23 +19,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Rule;
-import org.thingml.compilers.checker.Tarjan;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.CompositeStateHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
-import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;
+import org.thingml.xtext.validation.Tarjan;
 
 /**
  *
@@ -43,11 +43,11 @@ import org.thingml.xtext.thingML.Thing;
  */
 public class AutotransitionCycles extends Rule {
 
-    public AutotransitionCycles() {
-        super();
-    }
+    public AutotransitionCycles(AbstractThingMLValidator v) {
+		super(v);
+	}
 
-    @Override
+	@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.WARNING;
     }
@@ -66,19 +66,19 @@ public class AutotransitionCycles extends Rule {
     public void check(Configuration cfg, Checker checker) {
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {
             for (CompositeState sm : ThingMLHelpers.allStateMachines(thing)) {
-                Set<State> vertices = new HashSet<State>();
-                for (State s : CompositeStateHelper.allContainedStates(sm)) {
+                final Set<org.thingml.xtext.thingML.State> vertices = new HashSet<org.thingml.xtext.thingML.State>();
+                for (org.thingml.xtext.thingML.State s : CompositeStateHelper.allContainedStates(sm)) {
                     vertices.add(s);
                 }
-                Tarjan<State> t = new Tarjan(cfg, vertices);
-                List<List<State>> cycles = t.findStronglyConnectedComponents();
+                final Tarjan<org.thingml.xtext.thingML.State> t = new Tarjan<>(cfg, vertices);
+                final List<List<org.thingml.xtext.thingML.State>> cycles = t.findStronglyConnectedComponents();
 
-                for (List<State> cycle : cycles) {
+                for (List<org.thingml.xtext.thingML.State> cycle : cycles) {
                     if (cycle != null) {
                         if (cycle.size() != 1) {
                             String msg = "Auto transition cycle: (";
                             boolean first = true;
-                            for (State j : cycle) {
+                            for (org.thingml.xtext.thingML.State j : cycle) {
                                 if (first) {
                                     first = false;
                                 } else {

@@ -19,22 +19,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker.genericRules;
+package org.thingml.xtext.validation.rules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.compilers.checker.Checker;
-import org.thingml.compilers.checker.Checker.InfoType;
-import org.thingml.compilers.checker.Rule;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.FinalState;
-import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Transition;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Checker.InfoType;
+import org.thingml.xtext.validation.Rule;
 
 /**
  *
@@ -42,11 +43,11 @@ import org.thingml.xtext.thingML.Transition;
  */
 public class StatesUsage extends Rule {
 
-    public StatesUsage() {
-        super();
-    }
+    public StatesUsage(AbstractThingMLValidator v) {
+		super(v);
+	}
 
-    @Override
+	@Override
     public InfoType getHighestLevel() {
         return InfoType.NOTICE;
     }
@@ -86,17 +87,18 @@ public class StatesUsage extends Rule {
     			i++;
     		}
     		msg += ".\nMake sure one and only state machine is defined in the context of Thing " + t.getName();
-            checker.addGenericError(msg, t);    		
+            checker.addGenericError(msg, t); 
+            validator.acceptError(msg, t, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
     	}    	    	
         for (CompositeState sm : t.getBehaviour()) { //since we call it for allThings, we should not do that for allStateMachines, or else we can duplicate checks...
-            for (State s : org.thingml.xtext.helpers.StateHelper.allStates(sm)) {
+            for (org.thingml.xtext.thingML.State s : org.thingml.xtext.helpers.StateHelper.allStates(sm)) {
                 if((EcoreUtil.equals(s, sm)))
                     continue;
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Unreachable")) {
                     if (s.eContainer() instanceof StateContainer && !EcoreUtil.equals(s, ((StateContainer)s.eContainer()).getInitial()) && !EcoreUtil.equals(s, sm)) {
                     	StateContainer c = (StateContainer) s.eContainer();
                     	boolean canBeReached = false;
-                    	for(State source : c.getSubstate()) {
+                    	for(org.thingml.xtext.thingML.State source : c.getSubstate()) {
                     		for(Transition tr : source.getOutgoing()) {
                     			if (EcoreUtil.equals(s, tr.getTarget())) {
                     				canBeReached = true;

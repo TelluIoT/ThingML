@@ -1,13 +1,14 @@
-datatype DT<1>;
-
 thing TestCheckStateMachine
 {
     
-	readonly property p : DT = 0 
+	message m();
+	
+	provided port p {
+		sends m, m
+		receives m, m
+	} 
     
     statechart TestAbstractFunction init INIT {
-    	state INIT {
-    		on entry p = 1 //Should fail because we cannot re-allocate a read-only property
-    	}
+    	state INIT {}
     }
 }

@@ -20,7 +20,6 @@ import java.io.File;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.compilers.thing.ThingActionCompiler;
@@ -35,6 +34,8 @@ import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.ThingMLValidator;
 
 //FIXME: Should use the file writing method provided by the wonderful context class
 
@@ -43,20 +44,20 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     public PlantUMLCompiler() {
         super(new ThingMLPrettyPrinter(), new ThingApiCompiler(), new PlantUMLCfgMainGenerator(),
                 new CfgBuildCompiler(), new PlantUMLThingImplCompiler());
-        this.checker = new Checker(this.getID(), this.ctx) {
+        this.checker = new Checker(this.getID(), new ThingMLValidator()) {
             @Override
-            public void do_check(Configuration cfg, Logger log) {
-                do_generic_check(cfg, log);
+            public void do_check(Configuration cfg) {
+                do_generic_check(cfg);
             }
         };
     }
 
     public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
-        this.checker = new Checker(this.getID(), this.ctx) {
+        this.checker = new Checker(this.getID(), new ThingMLValidator()) {
             @Override
-            public void do_check(Configuration cfg, Logger log) {
-                do_generic_check(cfg, log);
+            public void do_check(Configuration cfg) {
+                do_generic_check(cfg);
             }
         };
     }
@@ -82,8 +83,8 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(final Configuration cfg, Logger log, String... options) {
-        this.checker.do_check(cfg, log);
-        this.checker.printReport(log);
+        this.checker.do_check(cfg);
+        //this.checker.printReport(log);
 
         new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);

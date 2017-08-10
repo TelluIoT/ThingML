@@ -46,13 +46,14 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 import com.eclipsesource.json.JsonObject;
 
 public class JsMQTTPlugin extends NetworkPlugin {
 
-    public JsMQTTPlugin() {
-        super();
+    public JsMQTTPlugin(AbstractThingMLValidator validator) {
+        super(validator);
     }
 
     public String getPluginID() {

@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CCompilerContext;
-import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
@@ -39,6 +38,8 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
+import org.thingml.xtext.validation.Checker;
 
 /**
  *
@@ -46,7 +47,11 @@ import org.thingml.xtext.thingML.Thing;
  */
 public class PosixStdInPlugin extends NetworkPlugin {
 
-    CCompilerContext ctx;
+    public PosixStdInPlugin(AbstractThingMLValidator validator) {
+		super(validator);
+	}
+
+	CCompilerContext ctx;
 
     public String getPluginID() {
         return "PosixStdInPlugin";

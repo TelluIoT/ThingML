@@ -35,17 +35,18 @@ import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 public class CNoneSerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
 
-    public CNoneSerializerPlugin() {
-        super();
+    public CNoneSerializerPlugin(AbstractThingMLValidator validator) {
+        super(validator);
     }
 
     @Override
     public SerializationPlugin clone() {
-        return new CNoneSerializerPlugin();
+        return new CNoneSerializerPlugin(validator);
     }
 
     @Override

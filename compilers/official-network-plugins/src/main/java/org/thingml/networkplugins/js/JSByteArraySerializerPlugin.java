@@ -43,12 +43,17 @@ import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrimitiveType;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 import com.eclipsesource.json.JsonObject;
 
 public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
-    private void updatePackageJSON() {
+    public JSByteArraySerializerPlugin(AbstractThingMLValidator validator) {
+		super(validator);
+	}
+
+	private void updatePackageJSON() {
         try {
             final InputStream input = new FileInputStream(context.getOutputDirectory() + "/package.json");
             final List<String> packLines = IOUtils.readLines(input, Charset.forName("UTF-8"));
@@ -73,7 +78,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public SerializationPlugin clone() {
-        return new JSByteArraySerializerPlugin();
+        return new JSByteArraySerializerPlugin(validator);
     }
 
     @Override

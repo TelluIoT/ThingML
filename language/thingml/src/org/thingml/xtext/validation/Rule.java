@@ -19,14 +19,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker;
+package org.thingml.xtext.validation;
 
 
 
-import org.thingml.compilers.checker.Checker.InfoType;
+import org.eclipse.xtext.validation.Check;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.validation.Checker.InfoType;
 
 /**
  *
@@ -34,7 +35,10 @@ import org.thingml.xtext.thingML.ThingMLModel;
  */
 public abstract class Rule {
 
-    public Rule() {
+	protected AbstractThingMLValidator validator;
+	
+    public Rule(AbstractThingMLValidator v) {
+    	validator = v;
     }
 
     public abstract InfoType getHighestLevel();
@@ -43,8 +47,10 @@ public abstract class Rule {
 
     public abstract String getDescription();
 
+    @Check
     public abstract void check(Configuration cfg, Checker checker);
 
+    @Check
     public void check(ThingMLModel model, Checker checker) {
         for (Configuration c : ThingMLHelpers.allConfigurations(model)) {
             //checker.do_check(c);

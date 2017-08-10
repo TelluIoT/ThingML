@@ -19,7 +19,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.thingml.compilers.checker;
+package org.thingml.xtext.validation;
 
 import java.util.HashSet;
 import java.util.List;
@@ -30,27 +30,11 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.thingml.compilers.Context;
-import org.thingml.compilers.checker.genericRules.AutotransitionCycles;
-import org.thingml.compilers.checker.genericRules.ConnectorCycles;
-import org.thingml.compilers.checker.genericRules.ControlStructures;
-import org.thingml.compilers.checker.genericRules.DuplicatedMessageInPort;
-import org.thingml.compilers.checker.genericRules.FunctionImplementation;
-import org.thingml.compilers.checker.genericRules.FunctionUsage;
-import org.thingml.compilers.checker.genericRules.InternalTransitions;
-import org.thingml.compilers.checker.genericRules.LostMessages;
-import org.thingml.compilers.checker.genericRules.MessagesUsage;
-import org.thingml.compilers.checker.genericRules.NonDeterministicTransitions;
-import org.thingml.compilers.checker.genericRules.PortsUsage;
-import org.thingml.compilers.checker.genericRules.PropertyInitialization;
-import org.thingml.compilers.checker.genericRules.StatesUsage;
-import org.thingml.compilers.checker.genericRules.ThingsUsage;
-import org.thingml.compilers.checker.genericRules.VariableUsage;
-import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.validation.rules.*;
 
 /**
  *
@@ -65,9 +49,11 @@ public class Checker {
 	private Set<Rule> Rules;
 	private String compiler;
 	private String generic;
-	public Context ctx;
+	
+	AbstractThingMLValidator validator;
 
-	public Checker(String compiler, Context ctx) {
+	public Checker(String compiler, AbstractThingMLValidator v) {
+		this.validator = v;
 		Rules = new HashSet<Rule>();
 		Errors = new TreeSet<CheckerInfo>();
 		Warnings = new TreeSet<CheckerInfo>();
@@ -75,47 +61,42 @@ public class Checker {
 		/*wrappers = new ArrayList<ErrorWrapper>();
         wrappers.add(new EMFWrapper());*/
 
-		this.ctx = ctx;
 		this.compiler = compiler;
 		generic = "ThingML";
 
-		Rules.add(new ThingsUsage());
-		Rules.add(new PortsUsage());
-		Rules.add(new MessagesUsage());
-		Rules.add(new ConnectorCycles());
-		Rules.add(new InternalTransitions());
-		Rules.add(new AutotransitionCycles());
-		Rules.add(new NonDeterministicTransitions());
-		Rules.add(new FunctionImplementation());
-		Rules.add(new FunctionUsage());
-		Rules.add(new StatesUsage());
-		Rules.add(new VariableUsage());
-		Rules.add(new ControlStructures());
-		Rules.add(new DuplicatedMessageInPort());
-		Rules.add(new PropertyInitialization());
-		Rules.add(new LostMessages());
+		Rules.add(new ThingsUsage(validator));
+		Rules.add(new PortsUsage(validator));
+		Rules.add(new MessagesUsage(validator));
+		Rules.add(new ConnectorCycles(validator));
+		Rules.add(new InternalTransitions(validator));
+		Rules.add(new AutotransitionCycles(validator));
+		Rules.add(new NonDeterministicTransitions(validator));
+		Rules.add(new FunctionImplementation(validator));
+		Rules.add(new FunctionUsage(validator));
+		Rules.add(new StatesUsage(validator));
+		Rules.add(new VariableUsage(validator));
+		Rules.add(new ControlStructures(validator));
+		Rules.add(new DuplicatedMessageInPort(validator));
+		Rules.add(new PropertyInitialization(validator));
+		Rules.add(new LostMessages(validator));
 	}
 
-	public void do_generic_check(Configuration cfg, Logger log) {
+	public void do_generic_check(Configuration cfg) {
 		List<String> notChecked = AnnotatedElementHelper.annotation(cfg, "SuppressWarnings");
-		long start = System.currentTimeMillis();
 		for (Rule r : Rules) {
 			if (!notChecked.contains(r.getName()))
 				r.check(cfg, this);
 		}
-		log.info("checker took " + (System.currentTimeMillis() - start) + " ms");
 	}
 
-	public void do_generic_check(ThingMLModel model, Logger log) {
-		long start = System.currentTimeMillis();
+	public void do_generic_check(ThingMLModel model) {
 		for (Rule r : Rules) {
 			r.check(model, this);
 		}
-		log.info("checker took " + (System.currentTimeMillis() - start) + " ms");
 	}
 
 	// Must be implemented and must contain a call to do_generic_check(cfg)
-	public void do_check(Configuration cfg, Logger log) {
+	public void do_check(Configuration cfg) {
 		throw new UnsupportedOperationException("The do_check() method is compiler-specific and should be implemented!");
 	}
 
@@ -188,7 +169,7 @@ public class Checker {
 		return !Notices.isEmpty();
 	}
 	
-	public void printReport(Logger log) {
+	/*public void printReport(Logger log) {
 		printNotices(log);
 		printWarnings(log);
 		printErrors(log);
@@ -225,7 +206,7 @@ public class Checker {
 			}
 			log.info("\t" + i.toString());
 		}
-	}
+	}*/
 
 	// ---------------------- Structures ----------------------
 
@@ -248,14 +229,14 @@ public class Checker {
 			this.message = message;
 			this.element = element;
 
-			if (element.eResource().getURI().isFile()) {
+			/*if (element.eResource().getURI().isFile()) {
 				this.file = element.eResource().getURI().deresolve(URI.createFileURI(ctx.getInputDirectory().getAbsolutePath())).toFileString();          	
 				final INode node = NodeModelUtils.getNode(element);
 				this.startLine = node.getStartLine();
 				this.endLine = node.getEndLine(); 
 			} else {
 				this.file = null;
-			}
+			}*/
 		}
 
 		public String print() {              	                         	

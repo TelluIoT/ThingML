@@ -17,7 +17,6 @@
 package org.thingml.compilers;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,10 +36,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResource;
-import org.thingml.compilers.checker.Checker;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgExternalConnectorCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -66,6 +63,8 @@ import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
+import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.ThingMLValidator;
 
 /**
  * Created by ffl on 23.11.14.
@@ -79,7 +78,7 @@ public abstract class ThingMLCompiler {
     public static XtextResource resource;
     public static File currentFile;
     protected Context ctx = new Context(this);
-    public Checker checker = new Checker("ThingML", ctx);
+    public Checker checker = new Checker("ThingML", new ThingMLValidator());
     Map<String, Set<NetworkPlugin>> networkPluginsPerProtocol = new HashMap<>();
     Map<String, SerializationPlugin> serializationPlugins = new HashMap<>();
     Map<String, ExternalThingPlugin> externalThingPlugingPerExternalThing = new HashMap<>();

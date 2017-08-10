@@ -18,10 +18,10 @@ package org.thingml.compilers.c.posix;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CThingActionCompiler;
-import org.thingml.compilers.checker.Checker;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.Type;
+import org.thingml.xtext.validation.Checker;
 
 /**
  * Created by ffl on 11.06.15.

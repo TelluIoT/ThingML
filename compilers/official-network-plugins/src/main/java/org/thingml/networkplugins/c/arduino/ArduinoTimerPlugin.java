@@ -40,6 +40,7 @@ import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
@@ -47,7 +48,11 @@ import org.thingml.xtext.thingML.Thing;
  */
 public class ArduinoTimerPlugin extends NetworkPlugin {
 
-    CCompilerContext ctx;
+    public ArduinoTimerPlugin(AbstractThingMLValidator validator) {
+		super(validator);
+	}
+
+	CCompilerContext ctx;
     HWTimer hwtimer0, hwtimer1, hwtimer2, hwtimer3;
     Boolean isInit = false;
 

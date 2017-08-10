@@ -45,11 +45,12 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.RequiredPort;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 public class JavaWSPlugin extends NetworkPlugin {
 
-    public JavaWSPlugin() {
-        super();
+    public JavaWSPlugin(AbstractThingMLValidator validator) {
+        super(validator);
     }
 
     public String getPluginID() {

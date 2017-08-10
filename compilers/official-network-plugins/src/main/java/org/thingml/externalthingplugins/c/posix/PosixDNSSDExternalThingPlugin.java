@@ -37,6 +37,7 @@ import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiSt
 import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingApiStructDNSSDStrategy;
 import org.thingml.externalthingplugins.c.posix.dnssd.strategies.PosixThingImplHandleMsgStrategy;
 import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  * Created by vassik on 21.10.16.
@@ -49,7 +50,8 @@ public class PosixDNSSDExternalThingPlugin extends ExternalThingPlugin {
     final CfgMainGenerator cfg = new PosixDNSSDCfgMainGenerator(this);
     final CfgBuildCompiler cfgb = new PosixDNSSDCCfgBuildGenerator(this);
 
-    public PosixDNSSDExternalThingPlugin() {
+    public PosixDNSSDExternalThingPlugin(AbstractThingMLValidator validator) {
+    	super(validator);
         ((CThingApiCompiler) api).addStructStrategy(new PosixThingApiStructDNSSDStrategy(this));
         ((CThingApiCompiler) api).addPublicPrototypStrategy(new PosixThingApiHandleMsgPubPrototypeStrategy(this));
         ((CThingApiCompiler) api).addStateIDStrategy(new PosixThingApiStateIDStrategy(this));
