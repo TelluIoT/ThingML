@@ -1774,7 +1774,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
+        if(ctx.getCompiler().getID().compareTo("arduino") != 0 || ctx.getCompiler().getID().compareTo("arduinomf") != 0) {
             builder.append("}\n");
         }
         
