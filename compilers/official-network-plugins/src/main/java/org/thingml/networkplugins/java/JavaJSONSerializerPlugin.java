@@ -46,12 +46,11 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 public class JavaJSONSerializerPlugin extends SerializationPlugin {
 
-    public JavaJSONSerializerPlugin(AbstractThingMLValidator validator) {
-		super(validator);
+    public JavaJSONSerializerPlugin() {
+		super();
 	}
 
 	private Set<Message> messages = new HashSet<Message>();
@@ -80,7 +79,7 @@ public class JavaJSONSerializerPlugin extends SerializationPlugin {
 
     @Override
     public SerializationPlugin clone() {
-        return new JavaJSONSerializerPlugin(validator);
+        return new JavaJSONSerializerPlugin();
     }
 
     @Override

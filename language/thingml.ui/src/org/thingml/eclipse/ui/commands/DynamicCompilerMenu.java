@@ -45,6 +45,7 @@ public class DynamicCompilerMenu extends  CompoundContributionItem implements IW
 		int i=0;
 		Map<String, String> parms;
 		for (ThingMLCompiler c : ThingMLCompilerRegistry.getInstance().getCompilerPrototypes()) {
+			System.out.println("Create menu item for compiler " + c.getName());
 			parms = new HashMap<String, String>();
 			parms.put("org.thingml.eclipse.ui.commandParameterCompilerName", c.getID());
 			list[i] =  new CommandContributionItem(new CommandContributionItemParameter(serviceLocator, "itemid_"+i, "thingml.compile", parms, null, null, null, c.getID(), null, c.getDescription(), CommandContributionItem.STYLE_PUSH, null, true));

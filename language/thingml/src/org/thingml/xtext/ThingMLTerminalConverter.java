@@ -17,9 +17,10 @@
 package org.thingml.xtext;
 
 import org.eclipse.xtext.common.services.DefaultTerminalConverters;
-import com.google.inject.Inject;
-import org.eclipse.xtext.conversion.ValueConverter;
 import org.eclipse.xtext.conversion.IValueConverter;
+import org.eclipse.xtext.conversion.ValueConverter;
+
+import com.google.inject.Inject;
 
 public class ThingMLTerminalConverter extends DefaultTerminalConverters   {
 	

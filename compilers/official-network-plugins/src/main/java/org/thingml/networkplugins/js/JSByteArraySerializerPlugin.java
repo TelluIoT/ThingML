@@ -43,14 +43,13 @@ import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrimitiveType;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 import com.eclipsesource.json.JsonObject;
 
 public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
-    public JSByteArraySerializerPlugin(AbstractThingMLValidator validator) {
-		super(validator);
+    public JSByteArraySerializerPlugin() {
+		super();
 	}
 
 	private void updatePackageJSON() {
@@ -78,7 +77,7 @@ public class JSByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public SerializationPlugin clone() {
-        return new JSByteArraySerializerPlugin(validator);
+        return new JSByteArraySerializerPlugin();
     }
 
     @Override

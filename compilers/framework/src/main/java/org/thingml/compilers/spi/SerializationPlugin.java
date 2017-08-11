@@ -29,22 +29,20 @@ import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Protocol;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
-import org.thingml.xtext.validation.Rule;
 
 /**
  *
  * @author sintef
  */
-public abstract class SerializationPlugin extends Rule {
+public abstract class SerializationPlugin {
 
     public Context context;
     public Configuration configuration;
     public Protocol protocol;
-
-    public SerializationPlugin(AbstractThingMLValidator validator) {
-    	super(validator);
+    
+    public SerializationPlugin() {
+    	super();
     }
 
     abstract public SerializationPlugin clone();

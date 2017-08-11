@@ -16,13 +16,15 @@
  */
 package org.thingml.xtext.helpers;
 
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.thingML.*;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.NamedElement;
+import org.thingml.xtext.thingML.Region;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.Thing;
+import org.thingml.xtext.thingML.ThingMLModel;
 
 /**
  * Created by ffl on 10.05.2016.

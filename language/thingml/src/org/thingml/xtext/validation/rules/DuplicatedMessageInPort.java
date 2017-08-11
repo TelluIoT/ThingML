@@ -18,13 +18,11 @@ package org.thingml.xtext.validation.rules;
 
 import java.util.ArrayList;
 
-import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
 import org.thingml.xtext.validation.Rule;
 
@@ -32,10 +30,6 @@ import org.thingml.xtext.validation.Rule;
  * Created by Alexandre Rio on 6/9/16.
  */
 public class DuplicatedMessageInPort extends Rule {
-    
-	public DuplicatedMessageInPort(AbstractThingMLValidator v) {
-		super(v);
-	}
 
 	@Override
     public Checker.InfoType getHighestLevel() {
@@ -64,7 +58,6 @@ public class DuplicatedMessageInPort extends Rule {
                     else {
                     	final String msg = "Multiple definition of message " + m.getName(); 
                         checker.addError(msg, p);
-                    	validator.acceptError(msg, p, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
                     }
                 }
                 for (Message m : p.getSends()) {
@@ -73,7 +66,6 @@ public class DuplicatedMessageInPort extends Rule {
                     else {
                     	final String msg = "Multiple definition of message " + m.getName(); 
                         checker.addError(msg, p);
-                    	validator.acceptError(msg, p, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
                     }
                 }
             }

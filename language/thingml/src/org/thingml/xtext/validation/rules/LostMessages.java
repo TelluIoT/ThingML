@@ -33,7 +33,6 @@ import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.ThingMLModel;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
 import org.thingml.xtext.validation.Rule;
 
@@ -42,10 +41,6 @@ import org.thingml.xtext.validation.Rule;
  * @author sintef
  */
 public class LostMessages extends Rule {
-
-    public LostMessages(AbstractThingMLValidator v) {
-		super(v);
-	}
 
 	@Override
     public Checker.InfoType getHighestLevel() {
@@ -108,7 +103,8 @@ public class LostMessages extends Rule {
                         }
                     }
                     if (!found) {
-                        checker.addGenericWarning("Message " + m.getName() + " cannot be received by instance " + i.getName(), i);
+                    	final String msg = "Message " + m.getName() + " cannot be received by instance " + i.getName();
+                        checker.addGenericWarning(msg, i);
                     }
                 }
             }

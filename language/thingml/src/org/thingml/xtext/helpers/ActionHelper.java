@@ -16,12 +16,13 @@
  */
 package org.thingml.xtext.helpers;
 
-import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.ecore.EObject;
-import org.thingml.xtext.thingML.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
+import org.thingml.xtext.thingML.Action;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by ffl on 03.05.2016.

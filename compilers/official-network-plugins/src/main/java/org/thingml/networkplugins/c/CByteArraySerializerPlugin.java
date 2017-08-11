@@ -37,18 +37,17 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 public class CByteArraySerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
-
-    public CByteArraySerializerPlugin(AbstractThingMLValidator validator) {
-        super(validator);
+    
+    public CByteArraySerializerPlugin() {
+    	super();
     }
 
     @Override
     public SerializationPlugin clone() {
-        return new CByteArraySerializerPlugin(validator);
+        return new CByteArraySerializerPlugin();
     }
 
     @Override

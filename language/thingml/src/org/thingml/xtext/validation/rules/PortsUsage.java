@@ -30,7 +30,6 @@ import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.Port;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
 import org.thingml.xtext.validation.Rule;
 
@@ -39,10 +38,6 @@ import org.thingml.xtext.validation.Rule;
  * @author sintef
  */
 public class PortsUsage extends Rule {
-
-    public PortsUsage(AbstractThingMLValidator v) {
-		super(v);
-	}
 
 	@Override
     public Checker.InfoType getHighestLevel() {

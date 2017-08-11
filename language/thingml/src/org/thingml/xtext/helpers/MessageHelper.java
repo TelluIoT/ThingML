@@ -16,9 +16,7 @@
  */
 package org.thingml.xtext.helpers;
 
-import org.thingml.xtext.thingML.*;
-
-import java.util.List;
+import org.thingml.xtext.thingML.Message;
 
 /**
  * Created by ffl on 10.05.2016.

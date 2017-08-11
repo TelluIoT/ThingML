@@ -32,7 +32,6 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
@@ -41,13 +40,13 @@ import org.thingml.xtext.validation.AbstractThingMLValidator;
 public class CMSPSerializerPlugin extends SerializationPlugin {
     CCompilerContext cctx;
 
-    public CMSPSerializerPlugin(AbstractThingMLValidator validator) {
-        super(validator);
+    public CMSPSerializerPlugin() {
+        super();
     }
 
     @Override
     public SerializationPlugin clone() {
-        return new CMSPSerializerPlugin(validator);
+        return new CMSPSerializerPlugin();
     }
 
     @Override

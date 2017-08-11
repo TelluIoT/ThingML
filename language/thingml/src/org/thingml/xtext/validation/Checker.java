@@ -26,15 +26,27 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
-import org.thingml.xtext.validation.rules.*;
+import org.thingml.xtext.validation.rules.AutotransitionCycles;
+import org.thingml.xtext.validation.rules.ConnectorCycles;
+import org.thingml.xtext.validation.rules.ControlStructures;
+import org.thingml.xtext.validation.rules.DuplicatedMessageInPort;
+import org.thingml.xtext.validation.rules.FunctionImplementation;
+import org.thingml.xtext.validation.rules.FunctionUsage;
+import org.thingml.xtext.validation.rules.InternalTransitions;
+import org.thingml.xtext.validation.rules.LostMessages;
+import org.thingml.xtext.validation.rules.MessagesUsage;
+import org.thingml.xtext.validation.rules.NonDeterministicTransitions;
+import org.thingml.xtext.validation.rules.PortsUsage;
+import org.thingml.xtext.validation.rules.PropertyInitialization;
+import org.thingml.xtext.validation.rules.StatesUsage;
+import org.thingml.xtext.validation.rules.ThingsUsage;
+import org.thingml.xtext.validation.rules.VariableUsage;
 
 /**
  *
@@ -44,7 +56,6 @@ public class Checker {
 	public Set<CheckerInfo> Errors;
 	public Set<CheckerInfo> Warnings;
 	public Set<CheckerInfo> Notices;
-	//public List<ErrorWrapper> wrappers;
 	public TypeChecker typeChecker = new TypeChecker();
 	private Set<Rule> Rules;
 	private String compiler;
@@ -58,46 +69,67 @@ public class Checker {
 		Errors = new TreeSet<CheckerInfo>();
 		Warnings = new TreeSet<CheckerInfo>();
 		Notices = new TreeSet<CheckerInfo>();
-		/*wrappers = new ArrayList<ErrorWrapper>();
-        wrappers.add(new EMFWrapper());*/
 
 		this.compiler = compiler;
 		generic = "ThingML";
 
-		Rules.add(new ThingsUsage(validator));
-		Rules.add(new PortsUsage(validator));
-		Rules.add(new MessagesUsage(validator));
-		Rules.add(new ConnectorCycles(validator));
-		Rules.add(new InternalTransitions(validator));
-		Rules.add(new AutotransitionCycles(validator));
-		Rules.add(new NonDeterministicTransitions(validator));
-		Rules.add(new FunctionImplementation(validator));
-		Rules.add(new FunctionUsage(validator));
-		Rules.add(new StatesUsage(validator));
-		Rules.add(new VariableUsage(validator));
-		Rules.add(new ControlStructures(validator));
-		Rules.add(new DuplicatedMessageInPort(validator));
-		Rules.add(new PropertyInitialization(validator));
-		Rules.add(new LostMessages(validator));
+		Rules.add(new ThingsUsage());
+		Rules.add(new PortsUsage());
+		Rules.add(new MessagesUsage());
+		Rules.add(new ConnectorCycles());
+		Rules.add(new InternalTransitions());
+		Rules.add(new AutotransitionCycles());
+		Rules.add(new NonDeterministicTransitions());
+		Rules.add(new FunctionImplementation());
+		Rules.add(new FunctionUsage());
+		Rules.add(new StatesUsage());
+		Rules.add(new VariableUsage());
+		Rules.add(new ControlStructures());
+		Rules.add(new DuplicatedMessageInPort());
+		Rules.add(new PropertyInitialization());
+		Rules.add(new LostMessages());
 	}
 
-	public void do_generic_check(Configuration cfg) {
+	public void do_generic_check(Configuration cfg, boolean reportInEditor) {
+		Errors.clear();
+		Warnings.clear();
+		Notices.clear();
 		List<String> notChecked = AnnotatedElementHelper.annotation(cfg, "SuppressWarnings");
 		for (Rule r : Rules) {
 			if (!notChecked.contains(r.getName()))
 				r.check(cfg, this);
 		}
+		if (reportInEditor && validator != null)
+			addXTextError();
 	}
 
-	public void do_generic_check(ThingMLModel model) {
+	public void do_generic_check(ThingMLModel model, boolean reportInEditor) {
+		Errors.clear();
+		Warnings.clear();
+		Notices.clear();
 		for (Rule r : Rules) {
 			r.check(model, this);
+		}
+		if (reportInEditor && validator!=null)
+			addXTextError();
+	}
+	
+	private void addXTextError() {
+		for(CheckerInfo error : Errors) {
+			try {
+				validator.acceptError(error.message, error.element, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+			} catch (IllegalArgumentException e) {}
+		}
+		for(CheckerInfo error : Warnings) {
+			try {
+				validator.acceptWarning(error.message, error.element, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
+			} catch (IllegalArgumentException e) {}
 		}
 	}
 
 	// Must be implemented and must contain a call to do_generic_check(cfg)
-	public void do_check(Configuration cfg) {
-		throw new UnsupportedOperationException("The do_check() method is compiler-specific and should be implemented!");
+	public void do_check(Configuration cfg, boolean reportInEditor) {
+		do_generic_check(cfg, reportInEditor);
 	}
 
 
@@ -105,44 +137,26 @@ public class Checker {
 
 	public void addError(String msg, EObject el) {
 		Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
-		/*for (ErrorWrapper wrapper : wrappers) {
-            wrapper.addError(msg, el);
-        }*/
 	}
 
 	public void addError(String compiler, String msg, EObject el) {
 		Errors.add(new CheckerInfo(InfoType.ERROR, compiler, msg, el));
-		/*for (ErrorWrapper wrapper : wrappers) {
-            wrapper.addError(msg, el);
-        }*/
 	}
 
 	public void addGenericError(String msg, EObject el) {
 		Errors.add(new CheckerInfo(InfoType.ERROR, generic, msg, el));
-		/*for (ErrorWrapper wrapper : wrappers) {
-            wrapper.addError(msg, el);
-        }*/
 	}
 
 	public void addWarning(String msg, EObject el) {
 		Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
-		/*for (ErrorWrapper wrapper : wrappers) {
-            wrapper.addWarning(msg, el);
-        }*/
 	}
 
 	public void addWarning(String compiler, String msg, EObject el) {
 		Warnings.add(new CheckerInfo(InfoType.WARNING, compiler, msg, el));
-		/*for (ErrorWrapper wrapper : wrappers) {
-            wrapper.addWarning(msg, el);
-        }*/
 	}
 
 	public void addGenericWarning(String msg, EObject el) {
 		Warnings.add(new CheckerInfo(InfoType.WARNING, generic, msg, el));
-		/*for (ErrorWrapper wrapper : wrappers) {
-            wrapper.addWarning(msg, el);
-        }*/
 	}
 
 	public void addNotice(String msg, EObject el) {
@@ -169,44 +183,44 @@ public class Checker {
 		return !Notices.isEmpty();
 	}
 	
-	/*public void printReport(Logger log) {
-		printNotices(log);
-		printWarnings(log);
-		printErrors(log);
+	public void printReport() {
+		printNotices();
+		printWarnings();
+		printErrors();
 	}
 
-	public void printErrors(Logger log) {
+	public void printErrors() {
 		String file = "";
 		for (final CheckerInfo i : Errors) {
 			if (i.file != null && !i.file.equals(file)) {
-				log.error("Errors in file " + i.file);
+				System.err.println("Errors in file " + i.file);
 				file = i.file;
 			}
-			log.error("\t" + i.toString());
+			System.err.println("\t" + i.toString());
 		}
 	}
 
-	public void printWarnings(Logger log) {
+	public void printWarnings() {
 		String file = "";
 		for (final CheckerInfo i : Warnings) {
 			if (i.file != null && !i.file.equals(file)) {
-				log.warning("Warnings in file " + i.file);
+				System.out.println("Warnings in file " + i.file);
 				file = i.file;
 			}
-			log.warning("\t" + i.toString());
+			System.out.println("\t" + i.toString());
 		}
 	}
 
-	public void printNotices(Logger log) {
+	public void printNotices() {
 		String file = "";
 		for (CheckerInfo i : Notices) {
 			if (i.file != null && !i.file.equals(file)) {
-				log.info("Notices in file " + i.file);
+				System.out.println("Notices in file " + i.file);
 				file = i.file;
 			}
-			log.info("\t" + i.toString());
+			System.out.println("\t" + i.toString());
 		}
-	}*/
+	}
 
 	// ---------------------- Structures ----------------------
 

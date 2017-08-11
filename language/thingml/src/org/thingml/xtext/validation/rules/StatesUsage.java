@@ -22,7 +22,6 @@
 package org.thingml.xtext.validation.rules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.CompositeState;
@@ -32,7 +31,6 @@ import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Transition;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
 import org.thingml.xtext.validation.Checker.InfoType;
 import org.thingml.xtext.validation.Rule;
@@ -42,10 +40,6 @@ import org.thingml.xtext.validation.Rule;
  * @author sintef
  */
 public class StatesUsage extends Rule {
-
-    public StatesUsage(AbstractThingMLValidator v) {
-		super(v);
-	}
 
 	@Override
     public InfoType getHighestLevel() {
@@ -88,7 +82,6 @@ public class StatesUsage extends Rule {
     		}
     		msg += ".\nMake sure one and only state machine is defined in the context of Thing " + t.getName();
             checker.addGenericError(msg, t); 
-            validator.acceptError(msg, t, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
     	}    	    	
         for (CompositeState sm : t.getBehaviour()) { //since we call it for allThings, we should not do that for allStateMachines, or else we can duplicate checks...
             for (org.thingml.xtext.thingML.State s : org.thingml.xtext.helpers.StateHelper.allStates(sm)) {

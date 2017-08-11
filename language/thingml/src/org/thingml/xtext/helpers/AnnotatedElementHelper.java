@@ -16,10 +16,11 @@
  */
 package org.thingml.xtext.helpers;
 
-import org.thingml.xtext.thingML.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.thingml.xtext.thingML.AnnotatedElement;
+import org.thingml.xtext.thingML.PlatformAnnotation;
 
 /**
  * Created by ffl on 10.05.2016.

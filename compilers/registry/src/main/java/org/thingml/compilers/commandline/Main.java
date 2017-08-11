@@ -26,16 +26,15 @@ import java.io.File;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.registry.ThingMLCompilerRegistry;
+import org.thingml.thingmltools.ThingMLTool;
+//comment
+import org.thingml.thingmltools.ThingMLToolRegistry;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-
-//comment
-import org.thingml.thingmltools.ThingMLToolRegistry;
-import org.thingml.thingmltools.ThingMLTool;
 
 /**
  * Created by ffl on 15.06.15.

@@ -16,11 +16,36 @@
  */
 package org.thingml.xtext.helpers;
 
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.thingML.*;
-
-import java.util.*;
+import org.thingml.xtext.thingML.AbstractConnector;
+import org.thingml.xtext.thingML.ConfigPropertyAssign;
+import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Connector;
+import org.thingml.xtext.thingML.Expression;
+import org.thingml.xtext.thingML.ExternalConnector;
+import org.thingml.xtext.thingML.Function;
+import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.InternalPort;
+import org.thingml.xtext.thingML.LocalVariable;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.ObjectType;
+import org.thingml.xtext.thingML.Parameter;
+import org.thingml.xtext.thingML.PlatformAnnotation;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.PropertyAssign;
+import org.thingml.xtext.thingML.Protocol;
+import org.thingml.xtext.thingML.Thing;
 
 /**
  * Created by ffl on 10.05.2016.
@@ -505,9 +530,7 @@ public class ConfigurationHelper {
 					}
 				}
 				for(ExternalConnector c : getExternalConnectors(self)) {
-					//System.out.println("External connector " + c.getInst().getInstance().qname("_") + "." + c.getPort().getName() + "? " + i.getName() + "." + p.getName());
 					if (EcoreUtil.equals(c.getInst(), i) && EcoreUtil.equals(c.getPort(), p)) {
-						System.out.println("\tis connected to " + i.getName() + "." + p.getName());
 						connected = true;
 						break;
 					}

@@ -40,17 +40,12 @@ import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.ProvidedPort;
 import org.thingml.xtext.thingML.RequiredPort;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
  * @author steffend
  */
 public class RcdPortPlugin extends NetworkPlugin {
-
-    public RcdPortPlugin(AbstractThingMLValidator validator) {
-		super(validator);
-	}
 
 	CCompilerContext ctx;
     Set<RcdPort> rcdPorts;

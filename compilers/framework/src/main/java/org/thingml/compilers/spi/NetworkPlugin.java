@@ -39,21 +39,17 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
-import org.thingml.xtext.validation.Rule;
 
 /**
  *
  * @author sintef
  */
-public abstract class NetworkPlugin extends Rule {
+public abstract class NetworkPlugin {
 
     Set<Protocol> assignedProtocols = new HashSet<>();
 
-    public NetworkPlugin(AbstractThingMLValidator validator) {
-    	super(validator);
-    }
+    public NetworkPlugin() {}
 
     //abstract public NetworkPlugin clone();
 

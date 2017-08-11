@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.thingML.Action;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.Expression;

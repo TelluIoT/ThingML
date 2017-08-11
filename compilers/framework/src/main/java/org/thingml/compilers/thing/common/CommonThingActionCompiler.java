@@ -66,11 +66,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     //ThingML actions that can be compiled the same way for any imperative language like (Java, JS, C)
 
-    /*@Override
-    public void generate(SendAction action, StringBuilder builder, Context ctx) {
-        builder.append("//Platform-specific action (" + action.getClass().getName() + ") should be refined in a sub-compiler");
-    }*/
-
     public void traceVariablePre(VariableAssignment action, StringBuilder builder, Context ctx) {
 
     }
@@ -151,16 +146,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append("\n}\n");
     }
 
-    /*@Override
-    public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
-    }
-
-    @Override
-    public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-        builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
-    }*/
-
     @Override
     public void generate(ReturnAction action, StringBuilder builder, Context ctx) {
         builder.append("return ");
@@ -173,16 +158,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         cast(parent.getTypeRef().getType(), isArray, action.getExp(), builder, ctx);
         builder.append(";\n");
     }
-
-    /*@Override
-    public void generate(LocalVariable action, StringBuilder builder, Context ctx) {
-        builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
-    }
-
-    @Override
-    public void generate(FunctionCallStatement action, StringBuilder builder, Context ctx) {
-        builder.append("//Platform-specific action (" + action.getClass() + ") should be refined in a sub-compiler");
-    }*/
 
     @Override
     public void generate(Increment action, StringBuilder builder, Context ctx) {
@@ -324,11 +299,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append(context.getVariableName(variable) + ".length");
     }
 
-    /*@Override
-    public void generate(PropertyReference expression, StringBuilder builder, Context ctx) {
-        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
-    }*/
-
     @Override
     public void generate(IntegerLiteral expression, StringBuilder builder, Context ctx) {
         builder.append(expression.getIntValue());
@@ -349,11 +319,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         builder.append(Boolean.toString(expression.isBoolValue()));    	
     }
 
-    /*@Override
-    public void generate(EnumLiteralRef expression, StringBuilder builder, Context ctx) {
-        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
-    }*/
-
     @Override
     public void generate(ExternExpression expression, StringBuilder builder, Context ctx) {
         builder.append(expression.getExpression());
@@ -362,11 +327,6 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
         }
     }
 
-    /*@Override
-    public void generate(FunctionCallExpression expression, StringBuilder builder, Context ctx) {//TODO: this should actually be factorizable
-        builder.append("//Platform-specific expression (" + expression.getClass() + ") should be refined in a sub-compiler");
-    }*/
-    
     public void generate(CastExpression expression, StringBuilder builder, Context ctx) {
         //We do not cast explicitly in the generated code. Should a cast be needed, it has to be done in an extern expression
     	generate(expression.getTerm(), builder, ctx);

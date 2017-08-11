@@ -35,7 +35,6 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.validation.Checker;
-import org.thingml.xtext.validation.ThingMLValidator;
 
 /**
  * Created by ffl on 25.11.14.
@@ -45,12 +44,7 @@ public class NodeJSCompiler extends OpaqueThingMLCompiler {
     public NodeJSCompiler() {
         super(new NodeJSThingActionCompiler(), new JSThingApiCompiler(), new NodeJSCfgMainGenerator(),
                 new NodeJSCfgBuildCompiler(), new NodeJSThingImplCompiler());
-        this.checker = new Checker(this.getID(), new ThingMLValidator()) {
-            @Override
-            public void do_check(Configuration cfg) {
-                do_generic_check(cfg);
-            }
-        };
+        this.checker = new Checker(this.getID(), null);
     }
 
     public NodeJSCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
@@ -78,7 +72,7 @@ public class NodeJSCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg, Logger log, String... options) {
-        this.checker.do_check(cfg);
+        this.checker.do_check(cfg, false);
         //this.checker.printReport(log);
 
         ctx.addContextAnnotation("thisRef", "this.");

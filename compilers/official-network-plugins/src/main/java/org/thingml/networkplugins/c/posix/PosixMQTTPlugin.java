@@ -44,16 +44,12 @@ import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLFactory;
 import org.thingml.xtext.thingML.impl.ThingMLFactoryImpl;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
  * @author sintef
  */
 public class PosixMQTTPlugin extends NetworkPlugin {
-    public PosixMQTTPlugin(AbstractThingMLValidator validator) {
-		super(validator);
-	}
 
 	CCompilerContext ctx;
     Configuration cfg;

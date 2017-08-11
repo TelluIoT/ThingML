@@ -40,17 +40,12 @@ import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
  * @author sintef
  */
 public class ArduinoTimerPlugin extends NetworkPlugin {
-
-    public ArduinoTimerPlugin(AbstractThingMLValidator validator) {
-		super(validator);
-	}
 
 	CCompilerContext ctx;
     HWTimer hwtimer0, hwtimer1, hwtimer2, hwtimer3;

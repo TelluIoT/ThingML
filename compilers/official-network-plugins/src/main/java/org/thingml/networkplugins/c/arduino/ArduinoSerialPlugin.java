@@ -38,7 +38,6 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
@@ -47,10 +46,6 @@ import org.thingml.xtext.validation.AbstractThingMLValidator;
 public class ArduinoSerialPlugin extends NetworkPlugin {
 
     CCompilerContext ctx;
-
-    public ArduinoSerialPlugin(AbstractThingMLValidator validator) {
-        super(validator);
-    }
 
     public String getPluginID() {
         return "ArduinoSerialPlugin";

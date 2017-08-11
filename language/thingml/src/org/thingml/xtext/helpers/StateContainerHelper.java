@@ -16,13 +16,19 @@
  */
 package org.thingml.xtext.helpers;
 
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.thingML.*;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.Region;
+import org.thingml.xtext.thingML.Session;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Type;
 
 /**
  * Created by ffl on 10.05.2016.

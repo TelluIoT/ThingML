@@ -29,7 +29,6 @@ import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.validation.Checker;
-import org.thingml.xtext.validation.ThingMLValidator;
 
 /**
  * Created by jakobho on 28.03.2017.
@@ -39,12 +38,7 @@ public class BrowserJSCompiler extends OpaqueThingMLCompiler {
     public BrowserJSCompiler() {
         super(new BrowserThingActionCompiler(), new JSThingApiCompiler(), new BrowserJSCfgMainGenerator(),
                 new BrowserJSCfgBuildCompiler(), new BrowserJSThingImplCompiler());
-        this.checker = new Checker(this.getID(), new ThingMLValidator()) {
-            @Override
-            public void do_check(Configuration cfg) {
-                do_generic_check(cfg);
-            }
-        };
+        this.checker = new Checker(this.getID(), null);
     }
 
     @Override
@@ -68,7 +62,7 @@ public class BrowserJSCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg, Logger log, String... options) {
-        this.checker.do_check(cfg);
+        this.checker.do_check(cfg, false);
         //this.checker.printReport(log);
 
         ctx.addContextAnnotation("thisRef", "this.");

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.StateHelper;
@@ -37,7 +36,6 @@ import org.thingml.xtext.thingML.InternalTransition;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Transition;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
 import org.thingml.xtext.validation.Rule;
 
@@ -46,10 +44,6 @@ import org.thingml.xtext.validation.Rule;
  * @author sintef
  */
 public class NonDeterministicTransitions extends Rule {
-
-    public NonDeterministicTransitions(AbstractThingMLValidator v) {
-		super(v);
-	}
 
 	@Override
     public Checker.InfoType getHighestLevel() {
@@ -104,7 +98,6 @@ public class NonDeterministicTransitions extends Rule {
                         if (EcoreUtil.equals(g, ng)) {
                         	final String msg = "Non deterministic behaviour: Two transitions handling " + ThingMLElementHelper.getName(g) + ", with at least one without a guard";
                             checker.addGenericError(msg, g);
-                            validator.acceptError(msg, g, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
                         }
                     }
                 }

@@ -31,20 +31,17 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
-import org.thingml.xtext.validation.Rule;
 
 
 /**
  * Created by vassik on 21.10.16.
  */
-public abstract class ExternalThingPlugin extends Rule {
+public abstract class ExternalThingPlugin {
 
     protected Map<String, PlatformAnnotation> annotationMap;
 
-    public ExternalThingPlugin(AbstractThingMLValidator validator) {
-    	super(validator);
+    public ExternalThingPlugin() {
         annotationMap = new HashMap<>();
     }
 

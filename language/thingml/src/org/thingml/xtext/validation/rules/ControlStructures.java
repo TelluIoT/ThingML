@@ -22,7 +22,6 @@
 package org.thingml.xtext.validation.rules;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
@@ -35,7 +34,6 @@ import org.thingml.xtext.thingML.LoopAction;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
 import org.thingml.xtext.validation.Rule;
 
@@ -44,10 +42,6 @@ import org.thingml.xtext.validation.Rule;
  * @author sintef
  */
 public class ControlStructures extends Rule {
-
-    public ControlStructures(AbstractThingMLValidator v) {
-		super(v);
-	}
 
 	@Override
     public Checker.InfoType getHighestLevel() {
@@ -73,13 +67,12 @@ public class ControlStructures extends Rule {
         	if (ThingMLHelpers.getAllExpressions(e, ExternExpression.class).size() > 0) {
         		checker.addGenericNotice("Condition involving extern expressions cannot be typed as Boolean. Consider using a cast: \"<exp> as <Type>\".", o);
         	} else {       	
-        		checker.addGenericWarning("Condition cannot be typed as Boolean.", o);
+        		checker.addGenericWarning("Condition cannot be typed as Boolean. Consider using a cast: \"<exp> as <Type>\".", o);
         	}
             return;
         }
         final String msg = "Condition is not a Boolean (" + org.thingml.xtext.helpers.TyperHelper.getBroadType(actual).getName() + ")";
         checker.addGenericError(msg, o);
-        validator.acceptError(msg, e, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
     }
 
     @Override

@@ -44,13 +44,8 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.RequiredPort;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 public class JavaTTYPlugin extends NetworkPlugin {
-
-    public JavaTTYPlugin(AbstractThingMLValidator validator) {
-        super(validator);
-    }
 
     public String getPluginID() {
         return "JavaTTYPlugin";

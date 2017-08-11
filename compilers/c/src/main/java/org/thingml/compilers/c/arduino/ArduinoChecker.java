@@ -22,7 +22,6 @@
 package org.thingml.compilers.c.arduino;
 
 import org.thingml.compilers.c.CChecker;
-import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
@@ -33,15 +32,6 @@ public class ArduinoChecker extends CChecker {
 
     public ArduinoChecker(String compiler, AbstractThingMLValidator validator) {
         super(compiler, validator);
-    }
-
-    @Override
-    public void do_check(Configuration cfg) {
-
-        //ADD Arduino specific checks
-
-        super.do_generic_check(cfg);
-
     }
 
 }

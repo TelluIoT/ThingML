@@ -31,19 +31,18 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.impl.ParameterImpl;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  * Created by jakobho on 01.02.2017.
  */
 public class PosixTelluCloudSerializerPlugin extends PosixJSONSerializerPlugin {
-    public PosixTelluCloudSerializerPlugin(AbstractThingMLValidator validator) {
-		super(validator);
+    public PosixTelluCloudSerializerPlugin() {
+		super();
 	}
 
 	@Override
     public SerializationPlugin clone() {
-        return new PosixTelluCloudSerializerPlugin(validator);
+        return new PosixTelluCloudSerializerPlugin();
     }
 
     @Override

@@ -16,11 +16,14 @@
  */
 package org.thingml.xtext.helpers;
 
-import org.thingml.xtext.thingML.*;
-
 import java.util.AbstractMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.thingml.xtext.thingML.Event;
+import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.ReceiveMessage;
 
 /**
  * Created by ffl on 10.05.2016.

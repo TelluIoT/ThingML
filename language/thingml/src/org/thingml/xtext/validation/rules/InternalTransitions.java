@@ -21,7 +21,6 @@
  */
 package org.thingml.xtext.validation.rules;
 
-import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.StateHelper;
@@ -31,7 +30,6 @@ import org.thingml.xtext.thingML.Handler;
 import org.thingml.xtext.thingML.InternalTransition;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
 import org.thingml.xtext.validation.Rule;
 
@@ -40,10 +38,6 @@ import org.thingml.xtext.validation.Rule;
  * @author sintef
  */
 public class InternalTransitions extends Rule {
-
-    public InternalTransitions(AbstractThingMLValidator v) {
-		super(v);
-	}
 
 	@Override
     public Checker.InfoType getHighestLevel() {
@@ -81,7 +75,6 @@ public class InternalTransitions extends Rule {
                     if (h.getGuard() == null) {
                     	final String msg = "Empty Internal Transition without guard.";
                         checker.addGenericError(msg, h);
-    					validator.acceptError(msg, h, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
                     } else {
                         checker.addGenericNotice("Empty Internal Transition.", h);
                     }

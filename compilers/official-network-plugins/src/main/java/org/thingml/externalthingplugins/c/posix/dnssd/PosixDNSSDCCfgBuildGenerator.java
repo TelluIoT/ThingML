@@ -27,7 +27,7 @@ import org.thingml.xtext.thingML.Thing;
 public class PosixDNSSDCCfgBuildGenerator extends PosixCCfgBuildCompiler {
 
     private final PosixDNSSDExternalThingPlugin plugin;
-
+    
     public PosixDNSSDCCfgBuildGenerator(PosixDNSSDExternalThingPlugin _plugin) {
         plugin = _plugin;
     }

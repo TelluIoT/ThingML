@@ -34,12 +34,8 @@ import org.thingml.xtext.validation.Checker.InfoType;
  * @author sintef
  */
 public abstract class Rule {
-
-	protected AbstractThingMLValidator validator;
 	
-    public Rule(AbstractThingMLValidator v) {
-    	validator = v;
-    }
+    public Rule() {}
 
     public abstract InfoType getHighestLevel();
 

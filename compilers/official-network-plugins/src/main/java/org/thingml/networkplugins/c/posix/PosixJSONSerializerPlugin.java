@@ -34,22 +34,21 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
  * @author sintef
  */
 public class PosixJSONSerializerPlugin extends SerializationPlugin {
-    public PosixJSONSerializerPlugin(AbstractThingMLValidator validator) {
-		super(validator);
+    public PosixJSONSerializerPlugin() {
+		super();
 	}
 
 	StringBuilder messagesparser = new StringBuilder();
 
     @Override
     public SerializationPlugin clone() {
-        return new PosixJSONSerializerPlugin(validator);
+        return new PosixJSONSerializerPlugin();
     }
 
     @Override

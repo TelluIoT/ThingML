@@ -22,7 +22,6 @@
 package org.thingml.xtext.validation.rules;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.constraints.Types;
 import org.thingml.xtext.helpers.ActionHelper;
@@ -44,7 +43,6 @@ import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
 import org.thingml.xtext.validation.Rule;
 
@@ -54,118 +52,140 @@ import org.thingml.xtext.validation.Rule;
  */
 public class MessagesUsage extends Rule {
 
-
-    public MessagesUsage(AbstractThingMLValidator v) {
-		super(v);
-		// TODO Auto-generated constructor stub
+	@Override
+	public Checker.InfoType getHighestLevel() {
+		return Checker.InfoType.NOTICE;
 	}
 
 	@Override
-    public Checker.InfoType getHighestLevel() {
-        return Checker.InfoType.NOTICE;
-    }
+	public String getName() {
+		return "Messages Usage";
+	}
 
-    @Override
-    public String getName() {
-        return "Messages Usage";
-    }
+	@Override
+	public String getDescription() {
+		return "Check that each message declared as to be sent in port declaration can be sent by the state machine.";
+	}
 
-    @Override
-    public String getDescription() {
-        return "Check that each message declared as to be sent in port declaration can be sent by the state machine.";
-    }
+	@Override
+	public void check(ThingMLModel model, Checker checker) {
+		for (Thing t : ThingMLHelpers.allThings(model)) {
+			check(t, checker);
+		}
+	}
 
-    @Override
-    public void check(ThingMLModel model, Checker checker) {
-        for (Thing t : ThingMLHelpers.allThings(model)) {
-            check(t, checker);
-        }
-    }
+	@Override
+	public void check(Configuration cfg, Checker checker) {
+		for (Thing t : ConfigurationHelper.allThings(cfg)) {
+			check(t, checker);
+		}
+	}
 
-    @Override
-    public void check(Configuration cfg, Checker checker) {
-        for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            check(t, checker);
-        }
-    }
+	private void check(Thing t, Checker checker) {
+		for (Port p : ThingMLHelpers.allPorts(t)) {
+			for (Message m : p.getSends()) {
+				boolean found = false;
+				for (SendAction a : ActionHelper.getAllActions(t, SendAction.class)) {
+					if (EcoreUtil.equals(a.getMessage(), m)) {
+						found = true;
+						if (m.getParameters().size() != a.getParameters().size()) {
+							final String msg = "Message " + m.getName() + " of Thing " + t.getName()
+									+ " is sent with wrong number of parameters. Expected " + m.getParameters().size()
+									+ ", called with " + a.getParameters().size();
+							checker.addGenericError(msg, a);
+						} else {
+							for (Parameter pa : m.getParameters()) {
+								Expression e = a.getParameters().get(m.getParameters().indexOf(pa));
+								Type expected = TyperHelper.getBroadType(pa.getTypeRef().getType());
+								Type actual = checker.typeChecker.computeTypeOf(e);
+								if (actual != null) {
+									if (actual.equals(Types.ERROR_TYPE)) {
+										final String msg = "Message " + m.getName() + " of Thing " + t.getName()
+												+ " is sent with an erroneous parameter. Expected "
+												+ TyperHelper.getBroadType(expected).getName() + ", called with "
+												+ TyperHelper.getBroadType(actual).getName();
+										checker.addGenericError(msg, a);
+									} else if (actual.equals(Types.ANY_TYPE)) {
+										final String msg = "Message " + m.getName() + " of Thing " + t.getName()
+												+ " is sent with a parameter which cannot be typed. Consider using a cast <exp> as <type>.";
+										checker.addGenericWarning(msg, a);
+									} else if (!TyperHelper.isA(actual, expected)) {
+										final String msg = "Message " + m.getName() + " of Thing " + t.getName()
+												+ " is sent with an erroneous parameter. Expected "
+												+ TyperHelper.getBroadType(expected).getName() + ", called with "
+												+ TyperHelper.getBroadType(actual).getName();
+										checker.addGenericError(msg, a);
+									}
+								}
+							}
+						}
+					}
+				}
+				if (!found && !t.isFragment()) {
+					final String msg = "Port " + p.getName() + " of Thing " + t.getName() + " defines a Message "
+							+ m.getName() + " that is never sent. Consider removing message from port " + p.getName()
+							+ " or send the message in your logic.";
+					checker.addGenericWarning(msg, m);
+				}
+			}
+			if (!t.isFragment()) {
+				for (Message m : p.getReceives()) {
+					for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
+						if (StateHelper.allMessageHandlers(sm).get(p) == null
+								|| StateHelper.allMessageHandlers(sm).get(p).get(m) == null) {
+							final String msg = "Port " + p.getName() + " of Thing " + t.getName()
+									+ " defines a Message " + m.getName()
+									+ " that is never received. Consider removing message from port " + p.getName()
+									+ " or define a handler for the message.";
+							checker.addGenericWarning(msg, m);
+						}
+					}
+				}
+			}
+		}
 
-    private void check(Thing t, Checker checker) {
-        for (Port p : ThingMLHelpers.allPorts(t)) {
-            for (Message m : p.getSends()) {
-                boolean found = false;
-                for (SendAction a : ActionHelper.getAllActions(t, SendAction.class)) {
-                    if (EcoreUtil.equals(a.getMessage(), m)) {
-                        found = true;
-                        if (m.getParameters().size() != a.getParameters().size()) {
-                        	final String msg = "Message " + m.getName() + " of Thing " + t.getName() + " is sent with wrong number of parameters. Expected " + m.getParameters().size() + ", called with " + a.getParameters().size();
-                            checker.addGenericError(msg, a);
-                            validator.acceptError(msg, a, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-                        } else {
-                            for (Parameter pa : m.getParameters()) {
-                                Expression e = a.getParameters().get(m.getParameters().indexOf(pa));
-                                Type expected = TyperHelper.getBroadType(pa.getTypeRef().getType());
-                                Type actual = checker.typeChecker.computeTypeOf(e);
-                                if (actual != null) {
-                                    if (actual.equals(Types.ERROR_TYPE)) {
-                                    	final String msg = "Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName();
-                                        checker.addGenericError(msg, a);
-                                        validator.acceptError(msg, a, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-                                    } else if (actual.equals(Types.ANY_TYPE)) {
-                                        checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is sent with a parameter which cannot be typed.", a);
-                                    } else if (!TyperHelper.isA(actual, expected)) {
-                                    	final String msg = "Message " + m.getName() + " of Thing " + t.getName() + " is sent with an erroneous parameter. Expected " + TyperHelper.getBroadType(expected).getName() + ", called with " + TyperHelper.getBroadType(actual).getName();
-                                        checker.addGenericError(msg, a);
-                                        validator.acceptError(msg, a, null, ValidationMessageAcceptor.INSIGNIFICANT_INDEX, null);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (!found)
-                    checker.addGenericWarning("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never sent. Consider removing message from port " + p.getName() + " or send the message in your logic.", m);
-            }
-            for (Message m : p.getReceives()) {
-                for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
-                    if (StateHelper.allMessageHandlers(sm).get(p) == null || StateHelper.allMessageHandlers(sm).get(p).get(m) == null) {
-                        checker.addGenericWarning("Port " + p.getName() + " of Thing " + t.getName() + " defines a Message " + m.getName() + " that is never received. Consider removing message from port " + p.getName() + " or define a handler for the message.", m);
-                    }
-                }
-            }
-        }
-        
-        
-      //check if message is serializable, only if it exists and instance connected to an external connector
-    	for(Configuration c : ThingMLHelpers.allConfigurations(ThingMLHelpers.findContainingModel(t))) {
-    		for(Instance i : c.getInstances()) {
-    			if (EcoreUtil.equals(i.getType(), t)) {
-    				for(AbstractConnector conn : c.getConnectors()) {
-    					if (conn instanceof ExternalConnector) {
-    						ExternalConnector ext = (ExternalConnector) conn;
-    						if (EcoreUtil.equals(ext.getInst(), t)) {
-    							for(Message m : ext.getPort().getSends()) {
-    						        for (Parameter pa : m.getParameters()) {
-    						            if ((pa.getTypeRef().getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
-    						                checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.", pa);
-    						                break;
-    						            }
-    						        }
-    							}
-    							for(Message m : ext.getPort().getReceives()) {
-    						        for (Parameter pa : m.getParameters()) {
-    						            if ((pa.getTypeRef().getType() instanceof ObjectType) && !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
-    						                checker.addGenericWarning("Message " + m.getName() + " of Thing " + t.getName() + " is not serializable. Parameter " + pa.getName() + " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.", pa);
-    						                break;
-    						            }
-    						        }
-    							}    							
-    						}
-    					}
-    				}
-    			}
-    		}
-    	}  
-        
-    }
+		// check if message is serializable, only if it exists and instance
+		// connected to an external connector
+		for (Configuration c : ThingMLHelpers.allConfigurations(ThingMLHelpers.findContainingModel(t))) {
+			for (Instance i : c.getInstances()) {
+				if (EcoreUtil.equals(i.getType(), t)) {
+					for (AbstractConnector conn : c.getConnectors()) {
+						if (conn instanceof ExternalConnector) {
+							ExternalConnector ext = (ExternalConnector) conn;
+							if (EcoreUtil.equals(ext.getInst(), t)) {
+								for (Message m : ext.getPort().getSends()) {
+									for (Parameter pa : m.getParameters()) {
+										if ((pa.getTypeRef().getType() instanceof ObjectType)
+												&& !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
+											checker.addGenericNotice(
+													"Message " + m.getName() + " of Thing " + t.getName()
+															+ " is not serializable. Parameter " + pa.getName()
+															+ " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.",
+													pa);
+											break;
+										}
+									}
+								}
+								for (Message m : ext.getPort().getReceives()) {
+									for (Parameter pa : m.getParameters()) {
+										if ((pa.getTypeRef().getType() instanceof ObjectType)
+												&& !AnnotatedElementHelper.isDefined(pa, "serializable", "true")) {
+											checker.addGenericNotice(
+													"Message " + m.getName() + " of Thing " + t.getName()
+															+ " is not serializable. Parameter " + pa.getName()
+															+ " (at least) is not a primitive datatype. If this message is to be sent out on the network, please use only primitive datatypes.",
+													pa);
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
 
 }

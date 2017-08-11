@@ -38,19 +38,12 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
  * @author sintef
  */
 public class PosixUDPPlugin extends NetworkPlugin {
-
-    public PosixUDPPlugin(AbstractThingMLValidator validator) {
-		super(validator);
-	}
-
-
 	CCompilerContext ctx;
 
     public String getPluginID() {

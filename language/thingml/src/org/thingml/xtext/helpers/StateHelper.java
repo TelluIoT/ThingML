@@ -16,10 +16,24 @@
  */
 package org.thingml.xtext.helpers;
 
-import org.thingml.xtext.constraints.ThingMLHelpers;
-import org.thingml.xtext.thingML.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
+import org.thingml.xtext.constraints.ThingMLHelpers;
+import org.thingml.xtext.thingML.CompositeState;
+import org.thingml.xtext.thingML.Event;
+import org.thingml.xtext.thingML.Handler;
+import org.thingml.xtext.thingML.InternalTransition;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
+import org.thingml.xtext.thingML.ReceiveMessage;
+import org.thingml.xtext.thingML.State;
+import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Transition;
 
 /**
  * Created by ffl on 10.05.2016.

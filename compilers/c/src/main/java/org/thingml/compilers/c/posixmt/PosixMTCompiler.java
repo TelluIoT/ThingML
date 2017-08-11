@@ -27,7 +27,6 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.ThingMLValidator;
 
 /**
  * Created by ffl on 25.11.14.
@@ -37,7 +36,7 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
     public PosixMTCompiler() {
         super(new PosixMTThingActionCompiler(), new PosixMTThingApiCompiler(), new PosixMTCfgMainGenerator(),
                 new PosixCCfgBuildCompiler(), new PosixMTThingImplCompiler());
-        this.checker = new PosixChecker(this.getID(), new ThingMLValidator());
+        this.checker = new PosixChecker(this.getID(), null);
     }
 
     @Override
@@ -68,7 +67,7 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
         
         //Checker
-        this.checker.do_check(cfg);
+        this.checker.do_check(cfg, false);
         //this.checker.printReport(log);
 
         // GENERATE A MODULE FOR EACH THING

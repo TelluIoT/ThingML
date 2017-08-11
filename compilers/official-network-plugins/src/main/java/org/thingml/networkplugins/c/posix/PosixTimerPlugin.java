@@ -31,15 +31,11 @@ import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Protocol;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  * Created by jakobho on 25.01.2017.
  */
 public class PosixTimerPlugin  extends NetworkPlugin {
-    public PosixTimerPlugin(AbstractThingMLValidator validator) {
-		super(validator);
-	}
 
 	@Override
     public String getPluginID() {

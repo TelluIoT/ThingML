@@ -32,7 +32,6 @@ import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 import org.thingml.xtext.validation.Checker;
 import org.thingml.xtext.validation.Rule;
 import org.thingml.xtext.validation.Tarjan;
@@ -42,10 +41,6 @@ import org.thingml.xtext.validation.Tarjan;
  * @author sintef
  */
 public class AutotransitionCycles extends Rule {
-
-    public AutotransitionCycles(AbstractThingMLValidator v) {
-		super(v);
-	}
 
 	@Override
     public Checker.InfoType getHighestLevel() {

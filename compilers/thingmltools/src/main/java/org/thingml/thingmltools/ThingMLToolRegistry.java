@@ -16,15 +16,14 @@
  */
 package org.thingml.thingmltools;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Set;
+
 /**
  * Created by vassik on 05.04.17.
  */
 import org.thingml.testconfigurationgenerator.TestConfigurationGenerator;
-
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
 
 /**
  *

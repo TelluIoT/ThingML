@@ -44,12 +44,11 @@ import org.thingml.xtext.thingML.ExternalConnector;
 import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.PrimitiveType;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 public class JavaByteArraySerializerPlugin extends SerializationPlugin {
 
-    public JavaByteArraySerializerPlugin(AbstractThingMLValidator validator) {
-		super(validator);
+    public JavaByteArraySerializerPlugin() {
+		super();
 	}
 
 	private Set<Message> messages = new HashSet<Message>();
@@ -78,7 +77,7 @@ public class JavaByteArraySerializerPlugin extends SerializationPlugin {
 
     @Override
     public SerializationPlugin clone() {
-        return new JavaByteArraySerializerPlugin(validator);
+        return new JavaByteArraySerializerPlugin();
     }
 
     @Override

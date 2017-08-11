@@ -24,8 +24,7 @@ class ThingMLValidator extends AbstractThingMLValidator {
 	 
 	 @Check
 	 def checkModel(ThingMLModel model) {
-	 	System.out.println("checkModel");
-	 	checker.do_generic_check(model)	 	
+	 	checker.do_generic_check(model, true)	 	
 	 }
 
 	@Check

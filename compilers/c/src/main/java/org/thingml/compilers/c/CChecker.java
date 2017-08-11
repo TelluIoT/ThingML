@@ -41,12 +41,12 @@ public abstract class CChecker extends Checker {
     public CChecker(String compiler, AbstractThingMLValidator validator) {
         super(compiler, validator);
         CRules = new HashSet<Rule>();
-        CRules.add(new PointerParameters(validator));
-        CRules.add(new ArrayCardinality(validator));
+        CRules.add(new PointerParameters());
+        CRules.add(new ArrayCardinality());
     }
 
     @Override
-    public void do_generic_check(Configuration cfg) {
+    public void do_check(Configuration cfg, boolean reportInEditor) {
         String Cname = "C";
 
         for (Rule r : CRules) {
@@ -54,7 +54,7 @@ public abstract class CChecker extends Checker {
         }
         //ADD C specific checks
 
-        super.do_generic_check(cfg);
+        super.do_check(cfg, reportInEditor);
     }
 
 }

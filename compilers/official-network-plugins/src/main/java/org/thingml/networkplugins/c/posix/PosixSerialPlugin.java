@@ -40,18 +40,12 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.AbstractThingMLValidator;
 
 /**
  *
  * @author sintef
  */
 public class PosixSerialPlugin extends NetworkPlugin {
-
-    public PosixSerialPlugin(AbstractThingMLValidator validator) {
-		super(validator);
-	}
-
 
 	CCompilerContext ctx;
 
