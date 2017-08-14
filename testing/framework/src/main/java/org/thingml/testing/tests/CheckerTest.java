@@ -48,8 +48,8 @@ public class CheckerTest extends ThingMLFileTest {
 		
 		if (!compilerChecker) {
 			// We should try the generic checker
-			Checker checker = new Checker("ThingMLTesting", new ThingMLValidator());
-			checker.do_generic_check(this.model);
+			Checker checker = new Checker("ThingMLTesting", null);
+			checker.do_generic_check(this.model, false);
 			
 			EachTestNotifier not = new EachTestNotifier(notifier, getDescription());
 			
@@ -71,12 +71,12 @@ public class CheckerTest extends ThingMLFileTest {
 				
 				if (configurations.isEmpty()) {
 					// If no configurations is present - we do the generic checks
-					checker.do_generic_check(this.model);
+					checker.do_generic_check(this.model, false);
 					foundError = checker.containsErrors();
 				} else {
 					// Or we try the checker for all configurations
 					for (Configuration configuration : configurations) {
-						checker.do_check(configuration);
+						checker.do_check(configuration, false);
 						foundError = foundError || checker.containsErrors();
 					}
 				}
