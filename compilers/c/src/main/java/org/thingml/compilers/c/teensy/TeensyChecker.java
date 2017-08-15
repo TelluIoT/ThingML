@@ -16,30 +16,12 @@
  */
 package org.thingml.compilers.c.teensy;
 
-import org.thingml.compilers.Context;
 import org.thingml.compilers.c.CChecker;
-import org.thingml.utilities.logging.Logger;
-import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.validation.AbstractThingMLValidator;
 
-public class TeensyCheker extends CChecker{
-
-	public TeensyCheker(String compiler, Context ctx) {
-		super(compiler, ctx);
-	}
-
-	@Override
-	public void do_generic_check(Configuration cfg, Logger log) {
-		// TODO Auto-generated method stub
-		super.do_generic_check(cfg, log);
-	}
+public class TeensyChecker extends CChecker{
 	
-	@Override
-    public void do_check(Configuration cfg, Logger log) {
-
-        //ADD Arduino specific checks
-
-        super.do_generic_check(cfg, log);
-
-    }
-			
+	public TeensyChecker(String compiler, AbstractThingMLValidator validator) {
+		super(compiler, validator);
+	}			
 }

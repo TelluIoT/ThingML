@@ -32,7 +32,7 @@ public class TeensyCompiler extends OpaqueThingMLCompiler{
 	public TeensyCompiler() {
 		super(new CThingActionCompilerTeensy(), new CThingApiCompilerTeensy(), new CCfgMainGenerator(),
                 new TeensyCCfgBuildCompiler(), new CThingImplCompiler());
-		this.checker = new TeensyCheker(this.getID(), this.ctx);
+		this.checker = new TeensyChecker(this.getID(), null);
 	}
 
 	@Override
@@ -45,8 +45,8 @@ public class TeensyCompiler extends OpaqueThingMLCompiler{
 
         //Checks
 
-        this.checker.do_check(cfg, log);
-        this.checker.printReport(log);
+        this.checker.do_check(cfg, false);
+        //this.checker.printReport(log);
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {

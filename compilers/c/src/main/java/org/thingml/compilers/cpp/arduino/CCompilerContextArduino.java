@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.cpp.CppCompilerContext;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;

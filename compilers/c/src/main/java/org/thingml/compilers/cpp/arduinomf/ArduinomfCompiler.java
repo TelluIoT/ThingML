@@ -39,7 +39,7 @@ public class ArduinomfCompiler extends OpaqueThingMLCompiler {
     public ArduinomfCompiler() {
             super(new CThingActionCompilerArduino(), new CThingApiCompilerArduinomf(), new CCfgMainGenerator(),
                     new CfgBuildCompiler(), new CThingImplCompiler());
-            this.checker = new ArduinoChecker(this.getID(), this.ctx);
+            this.checker = new ArduinoChecker(this.getID(), null);
     }
 
     @Override
@@ -70,8 +70,8 @@ public class ArduinomfCompiler extends OpaqueThingMLCompiler {
 
         //Checks
 
-        this.checker.do_check(cfg, log);
-        this.checker.printReport(log);
+        this.checker.do_check(cfg, false);
+        //this.checker.printReport(log);
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {
