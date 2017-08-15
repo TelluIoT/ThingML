@@ -23,5 +23,4 @@ import org.thingml.compilers.c.CThingApiCompiler;
  */
 public class CThingApiCompilerArduino extends CThingApiCompiler {
 
-
 }

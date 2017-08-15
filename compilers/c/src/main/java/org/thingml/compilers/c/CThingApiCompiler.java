@@ -31,6 +31,7 @@ import org.thingml.compilers.thing.ThingApiCompiler;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.CompositeStateHelper;
+import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.StateContainerHelper;
 import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.helpers.ThingHelper;
@@ -80,10 +81,6 @@ public class CThingApiCompiler extends ThingApiCompiler {
     @Override
     public void generatePublicAPI(Thing thing, Context ctx) {
         generateCHeader(thing, (CCompilerContext) ctx, ctx.getCompiler().getDebugProfiles().get(thing));
-    }
-
-    public boolean isGeneratingCpp() {
-        return false;
     }
 
     public String getCppNameScope() {
@@ -142,17 +139,8 @@ public class CThingApiCompiler extends ThingApiCompiler {
 
 
     protected void generateCHeaderAnnotation(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-
-        if (AnnotatedElementHelper.hasAnnotation(thing, "c_header")) {
-            builder.append("\n// BEGIN: Code from the c_header annotation " + thing.getName());
-            for (String code : AnnotatedElementHelper.annotation(thing, "c_header")) {
-                builder.append("\n");
-                builder.append(code);
-            }
-            builder.append("\n// END: Code from the c_header annotation " + thing.getName() + "\n\n");
-        }
         
-        // c_header annotations from included fragments
+        // c_header annotations from the thing and included fragments
         for (Thing t : ThingMLHelpers.allThingFragments(thing)) {
         	if (AnnotatedElementHelper.hasAnnotation(t, "c_header")) {
                 builder.append("\n// BEGIN: Code from the c_header annotation " + t.getName());
@@ -258,10 +246,12 @@ public class CThingApiCompiler extends ThingApiCompiler {
             strategy.generateInstanceStruct(thing, builder, ctx, debugProfile);
 
         builder.append("\n};\n");
+
     }
 
     protected void generatePublicPrototypes(Thing thing, StringBuilder builder, CCompilerContext ctx) {
-        builder.append("// Declaration of prototypes outgoing messages:\n");
+    
+        builder.append("// Declaration of prototypes outgoing messages :\n");
 
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
             CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0); // There should be one and only one

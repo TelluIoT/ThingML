@@ -56,9 +56,10 @@ public class CCompilerContextArduino extends CCompilerContext {
         ArrayList<String> modules = new ArrayList<String>();
         String main = getCurrentConfiguration().getName() + "_cfg.c";
 
+        
         for (String filename : generatedCode.keySet()) {
             if (filename.endsWith(".h")) {
-                headers.add(filename);
+            	headers.add(filename);
                 //System.out.println("Adding " + filename + " to headers");
             }
             if (filename.endsWith(".c") && !filename.equals(main)) {
@@ -70,20 +71,19 @@ public class CCompilerContextArduino extends CCompilerContext {
         StringBuilder pde = new StringBuilder();
 
         for (String f : headers) {
-            pde.append(generatedCode.get(f).toString());
+        	pde.append(generatedCode.get(f).toString());
         }
 
         for (String f : modules) {
-            pde.append(generatedCode.get(f).toString());
+        	pde.append(generatedCode.get(f).toString());
         }
 
         pde.append(generatedCode.get(main).toString());
-
         //writeTextFile(getCurrentConfiguration().getName() + ".pde", pde.toString());
-        writeTextFile(getCurrentConfiguration().getName() + File.separatorChar + getCurrentConfiguration().getName() + ".ino", pde.toString());
+        writeTextFile(getCurrentConfiguration().getName() + File.separatorChar + getCurrentConfiguration().getName() + ".ino", "#include <stdint.h>\n#include <Arduino.h>\n"+pde.toString());
 
     }
-
+ 
     @Override
     public void generatePSPollingCode(Configuration cfg, StringBuilder builder) {
         ThingMLModel model = ThingMLHelpers.findContainingModel(cfg);

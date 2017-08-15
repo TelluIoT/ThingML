@@ -29,10 +29,6 @@ import org.thingml.compilers.c.CThingImplCompiler;
  */
 public class CThingImplCompilerSintefboard extends CThingImplCompiler {
 
-    @Override
-    public boolean isGeneratingCpp() {
-        return true;
-    }
 
     @Override
     public String getCppNameScope() {

@@ -38,6 +38,15 @@ If you are going to compile Arduino code from ThingML, please:
 
 - Install [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 
+### &#x1F539; Teensy
+If you are going to compile Arduino code from ThingML, please:
+
+- Install [Teensyduino IDE](https://www.pjrc.com/teensy/td_download.html)
+
+or
+- Install [cross compiled arm toochain](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)
+- Install [teensy command line loader](https://www.pjrc.com/teensy/loader_cli.html)
+
 ### &#x1F539; C
 If you are going to compile C code from ThingML, please:
 

@@ -63,10 +63,6 @@ import org.thingml.xtext.thingML.Type;
  */
 public class CCfgMainGenerator extends CfgMainGenerator {
 
-    public boolean isGeneratingCpp() {
-        return false;
-    }
-
     public String getCppNameScope() {
         return "";
     }
@@ -107,18 +103,12 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         generateCForConfiguration(cfg, builder, headerbuilder, ctx);
 
         generateDynamicConnectors(cfg, builder, headerbuilder, ctx);
-
+        
+    
         ctemplate = ctemplate.replace("/*CONFIGURATION*/", builder.toString());
-
-        if (isGeneratingCpp()) {
-            // GENERATE HEADER FOR MAIN
-            String cheadertemplate = ctx.getCfgMainHeaderTemplate();
-            //generateCppHeaderExternalMessageEnqueue(cfg, headerbuilder, ctx);            
-            //generateCppHeaderForConfiguration(cfg, headerbuilder, ctx);
-            cheadertemplate = cheadertemplate.replace("/*HEADER_CONFIGURATION*/", headerbuilder.toString());
-            ctx.getBuilder(cfg.getName() + ".h").append(cheadertemplate);
-        }
-
+    
+        generateheaderbuilder(cfg,headerbuilder, ctx);
+        
         StringBuilder initb = new StringBuilder();
         generateInitializationCode(cfg, initb, ctx);
 
@@ -135,6 +125,9 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
 
     }
+    
+    protected void generateheaderbuilder(Configuration cfg, StringBuilder headerbuilder, CCompilerContext ctx){
+	}
 
     protected void generateCleanupOnTerminateInstance(Instance inst, Configuration cfg,
                                                       StringBuilder builder, CCompilerContext ctx){}
@@ -189,6 +182,55 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ctx.getBuilder(ctx.getPrefix() + "runtime.c").append(rtemplate);
     }
 
+    protected void generateheaderdeclaration(Configuration cfg, StringBuilder builder, CCompilerContext ctx){
+    	builder.append("//Declaration of instance variables\n");
+
+        for (Instance inst : ConfigurationHelper.allInstances(cfg)) {
+            
+        builder.append("//Instance " + inst.getName() + "\n");
+            
+        builder.append("// Variables for the properties of the instance\n");
+
+            builder.append(ctx.getInstanceVarDecl(inst) + "\n");
+
+            if (AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors")) {
+                for (Port p : ThingMLHelpers.allPorts(inst.getType())) {
+                    if (!p.getReceives().isEmpty()) {
+                builder.append("struct Msg_Handler " + inst.getName()
+                        + "_" + p.getName() + "_handlers;\n");
+                builder.append("uint16_t " + inst.getName()
+                        + "_" + p.getName() + "_msgs[" + p.getReceives().size() + "];\n");
+                builder.append("void * " + inst.getName()
+                        + "_" + p.getName() + "_handlers_tab[" + p.getReceives().size() + "];\n\n");
+
+            }
+        }
+        }
+        DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
+        //if(!(debugProfile==null) && debugProfile.g) {}
+        //if(ctx.containsDebug(cfg, inst.getType())) {
+        boolean debugInst = false;
+            for (Instance i : debugProfile.getDebugInstances()) {
+                if (i.getName().equals(inst.getName())) {
+                debugInst = true;
+                break;
+            }
+        }
+            if (debugProfile.isActive()) {
+            //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
+                if (debugInst) {
+                builder.append("char * " + ctx.getInstanceVarName(inst) + "_name = \"" + inst.getName() + "\";\n");
+            }
+        }
+            
+
+            builder.append("// Variables for the sessions of the instance\n");
+            CompositeState sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
+            generateSessionInstanceDeclaration(cfg, ctx, builder, inst, sm, "1");
+    }
+
+        builder.append("\n");
+    }
 
     protected void generateCForConfiguration(Configuration cfg, StringBuilder builder, StringBuilder headerbuilder, CCompilerContext ctx) {
 
@@ -256,57 +298,8 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 }
             }
         }
-        
-        if (!isGeneratingCpp()) { // Declarations are made in header file for C++ - sdalgard
 
-            builder.append("//Declaration of instance variables\n");
-
-            for (Instance inst : ConfigurationHelper.allInstances(cfg)) {
-                
-            builder.append("//Instance " + inst.getName() + "\n");
-                
-            builder.append("// Variables for the properties of the instance\n");
-
-                builder.append(ctx.getInstanceVarDecl(inst) + "\n");
-
-                if (AnnotatedElementHelper.hasAnnotation(cfg, "c_dyn_connectors")) {
-                    for (Port p : ThingMLHelpers.allPorts(inst.getType())) {
-                        if (!p.getReceives().isEmpty()) {
-                    builder.append("struct Msg_Handler " + inst.getName()
-                            + "_" + p.getName() + "_handlers;\n");
-                    builder.append("uint16_t " + inst.getName()
-                            + "_" + p.getName() + "_msgs[" + p.getReceives().size() + "];\n");
-                    builder.append("void * " + inst.getName()
-                            + "_" + p.getName() + "_handlers_tab[" + p.getReceives().size() + "];\n\n");
-
-                }
-            }
-            }
-            DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(inst.getType());
-            //if(!(debugProfile==null) && debugProfile.g) {}
-            //if(ctx.containsDebug(cfg, inst.getType())) {
-            boolean debugInst = false;
-                for (Instance i : debugProfile.getDebugInstances()) {
-                    if (i.getName().equals(inst.getName())) {
-                    debugInst = true;
-                    break;
-                }
-            }
-                if (debugProfile.isActive()) {
-                //if(ctx.isToBeDebugged(ctx.getCurrentConfiguration(), inst)) {
-                    if (debugInst) {
-                    builder.append("char * " + ctx.getInstanceVarName(inst) + "_name = \"" + inst.getName() + "\";\n");
-                }
-            }
-                
-
-                builder.append("// Variables for the sessions of the instance\n");
-                CompositeState sm = ThingMLHelpers.allStateMachines(inst.getType()).get(0);
-                generateSessionInstanceDeclaration(cfg, ctx, builder, inst, sm, "1");
-        }
-
-            builder.append("\n");
-        }
+        generateheaderdeclaration(cfg, builder, ctx);
 
         // TODO Jakob, maybe the compiler can figure this out itself, but then all the network plugins would need fixing
         builder.append(ctx.getNetworkPluginInstance());
@@ -781,14 +774,14 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 builder.append(" {\n");
 
 
-                if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                     builder.append("struct executor {\nstatic ");
                 }
 
                 builder.append("void executor_dispatch_" + m.getName());
                 builder.append("(struct Msg_Handler ** head, struct Msg_Handler ** tail");
 
-                if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                     for (Parameter p : m.getParameters()) {
                         builder.append(", ");
                         builder.append(ctx.getCType(p.getTypeRef().getType()));
@@ -861,7 +854,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                 builder.append("}\n");
 
-                if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                     builder.append("};\n");
                 }
 
@@ -872,7 +865,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append(".id_" + s.getValue().getName() + ") {\n");
 
 
-                        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                             builder.append("executor::");
                         }
                         builder.append("executor_dispatch_" + m.getName());
@@ -884,7 +877,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append(s.getValue().getName() + "_receiver_list_tail");
 
 
-                        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                             for (Parameter p : m.getParameters()) {
                                 builder.append(", param_");
                                 builder.append(p.getName());
@@ -909,7 +902,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append("if (sender ==");
                         builder.append(" " + portName + "_instance.listener_id) {\n");
 
-                        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                             builder.append("executor::");
                         }
                         builder.append("executor_dispatch_" + m.getName());
@@ -919,7 +912,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         builder.append(portName + "_instance.");
                         builder.append(eco.getPort().getName() + "_receiver_list_tail");
 
-                        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+                        if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                             for (Parameter p : m.getParameters()) {
                                 builder.append(", param_");
                                 builder.append(p.getName());
@@ -1734,7 +1727,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
     protected void generateInitializationCode(Configuration cfg, StringBuilder builder, CCompilerContext ctx) {
 
         //Initialize stdout if needed (for arduino)
-        if (ctx.getCompiler().getID().compareTo("arduino") == 0) {
+    	if(ctx.getCompiler().getID().compareTo("arduino") == 0 || ctx.getCompiler().getID().compareTo("arduinomf") == 0) {
                 int baudrate = 9600;
                 if(AnnotatedElementHelper.hasAnnotation(ctx.getCurrentConfiguration(), "arduino_stdout_baudrate")){
                     Integer intb = Integer.parseInt(AnnotatedElementHelper.annotation(ctx.getCurrentConfiguration(), "arduino_stdout_baudrate").iterator().next());
@@ -1760,7 +1753,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         builder.append(ctx.getPollCode());
         builder.append("// End Network Listener\n\n");
 
-        if (ctx.getCompiler().getID().compareTo("arduino") != 0) { //FIXME Nicolas This code is awfull
+        if(ctx.getCompiler().getID().compareTo("arduino") != 0 || ctx.getCompiler().getID().compareTo("arduinomf") != 0) { //FIXME Nicolas This code is awfull
             //New Empty Event Handler
             builder.append("int emptyEventConsumed = 1;\n");
             builder.append("while (emptyEventConsumed != 0) {\n");
@@ -1773,7 +1766,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             if (ThingMLHelpers.allStateMachines(i.getType()).size() > 0) { // There has to be only 1
                 CompositeState sm = ThingMLHelpers.allStateMachines(i.getType()).get(0);
                 if (StateHelper.hasEmptyHandlersIncludingSessions(sm)) {
-                    if (ctx.getCompiler().getID().compareTo("arduino") != 0) {
+                	if(ctx.getCompiler().getID().compareTo("arduino") != 0 || ctx.getCompiler().getID().compareTo("arduinomf") != 0) {
                     builder.append("emptyEventConsumed += ");
                     }
                     builder.append(ctx.getEmptyHandlerName(i.getType()) + "(&" + ctx.getInstanceVarName(i) + ");\n");
@@ -1781,7 +1774,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             }
         }
 
-        if (ctx.getCompiler().getID().compareTo("arduino") != 0) {
+        if(ctx.getCompiler().getID().compareTo("arduino") != 0 || ctx.getCompiler().getID().compareTo("arduinomf") != 0) {
             builder.append("}\n");
         }
         
