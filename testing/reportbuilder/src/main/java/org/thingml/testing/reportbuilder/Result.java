@@ -67,7 +67,7 @@ public enum Result {
 			case FAILURE:
 				return asString.substring(0, 1);
 			default:
-				return "";
+				return "&nbsp;";
 		}
 	}
 	

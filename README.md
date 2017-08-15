@@ -39,7 +39,7 @@ If you are going to compile Arduino code from ThingML, please:
 - Install [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 
 ### &#x1F539; Teensy
-If you are going to compile Arduino code from ThingML, please:
+If you are going to compile Teensy code from ThingML, please:
 
 - Install [Teensyduino IDE](https://www.pjrc.com/teensy/td_download.html)
 
