@@ -55,33 +55,27 @@ public class PropertyInitialization extends Rule {
 
     @Override
     public void check(Configuration cfg, Checker checker) {
-        Map<Instance, Map<Property,Bwrapper>> instProperties;
+        Map<Instance, Map<Property,Boolean>> instProperties;
         instProperties = new HashMap<>();
         for (Instance inst: cfg.getInstances()) {
-            Map<Property,Bwrapper> properties = new HashMap<>();
+            Map<Property,Boolean> properties = new HashMap<>();
             for(Property p : ThingHelper.allPropertiesInDepth(inst.getType())) {
-                Bwrapper b = new Bwrapper();
-                b.b = (p.getInit() != null);
+                final Boolean b = new Boolean(p.getInit() != null);
                 properties.put(p, b);
             }
             instProperties.put(inst, properties);
         }
         
         for(ConfigPropertyAssign pa : cfg.getPropassigns()) {
-            instProperties.get(pa.getInstance()).get(pa.getProperty()).b = (pa.getInit() != null);
+            instProperties.get(pa.getInstance()).put(pa.getProperty(), (pa.getInit() != null));
         }
         
-        for(Map.Entry<Instance, Map<Property,Bwrapper>> ip : instProperties.entrySet()) {
-            for(Map.Entry<Property,Bwrapper> p : ip.getValue().entrySet()) {
-                if(!p.getValue().b) {
+        for(Map.Entry<Instance, Map<Property, Boolean>> ip : instProperties.entrySet()) {
+            for(Map.Entry<Property,Boolean> p : ip.getValue().entrySet()) {
+                if(!p.getValue()) {
                     checker.addGenericNotice("Property " + p.getKey().getName() + " of instance " + ip.getKey().getName() + " is not initialized.", p.getKey());
                 }
             }
         }
     }
-    
-    public class Bwrapper {
-        boolean b;
-    }
-
 }

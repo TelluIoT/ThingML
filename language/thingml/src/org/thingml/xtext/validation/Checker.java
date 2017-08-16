@@ -32,21 +32,7 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
-import org.thingml.xtext.validation.rules.AutotransitionCycles;
-import org.thingml.xtext.validation.rules.ConnectorCycles;
-import org.thingml.xtext.validation.rules.ControlStructures;
-import org.thingml.xtext.validation.rules.DuplicatedMessageInPort;
-import org.thingml.xtext.validation.rules.FunctionImplementation;
-import org.thingml.xtext.validation.rules.FunctionUsage;
-import org.thingml.xtext.validation.rules.InternalTransitions;
-import org.thingml.xtext.validation.rules.LostMessages;
-import org.thingml.xtext.validation.rules.MessagesUsage;
-import org.thingml.xtext.validation.rules.NonDeterministicTransitions;
-import org.thingml.xtext.validation.rules.PortsUsage;
-import org.thingml.xtext.validation.rules.PropertyInitialization;
-import org.thingml.xtext.validation.rules.StatesUsage;
-import org.thingml.xtext.validation.rules.ThingsUsage;
-import org.thingml.xtext.validation.rules.VariableUsage;
+import org.thingml.xtext.validation.rules.*;
 
 /**
  *
@@ -85,7 +71,6 @@ public class Checker {
 		Rules.add(new StatesUsage());
 		Rules.add(new VariableUsage());
 		Rules.add(new ControlStructures());
-		Rules.add(new DuplicatedMessageInPort());
 		Rules.add(new PropertyInitialization());
 		Rules.add(new LostMessages());
 	}
@@ -258,22 +243,20 @@ public class Checker {
 		}
 
 		public String toString() {
-			String t;
+			/*String t;
 			switch (type) {
 			case NOTICE:
 				t = "NOTICE";
 				break;
-
 			case WARNING:
 				t = "WARNING";
 				break;
-
 			case ERROR:
 				t = "ERROR";
 				break;
 			default:
 				t = "";
-			}
+			}*/
 
 			if (file != null)
 				return "- [" + source + "] at lines " + startLine + "-" + endLine + ": " + message + " (in " + print() + ")\n";

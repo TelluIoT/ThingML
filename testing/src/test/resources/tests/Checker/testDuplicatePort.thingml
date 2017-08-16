@@ -1,0 +1,18 @@
+thing fragment F {
+	message m()
+	
+	provided port p {sends m}
+}
+
+
+thing TestCheckStateMachine includes F
+{
+    	
+	provided port p {receives m} //should fail as another port p is already included
+    
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+
+    	}
+    }
+}

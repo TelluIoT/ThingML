@@ -1,0 +1,17 @@
+datatype D<1>
+
+thing fragment F {
+	property a : D
+}
+
+thing TestCheckStateMachine includes F
+{
+    
+	property a : D //should fail as property a is already defined in F
+	
+    statechart TestAbstractFunction init INIT {
+    	state INIT {
+
+    	}
+    }
+}
