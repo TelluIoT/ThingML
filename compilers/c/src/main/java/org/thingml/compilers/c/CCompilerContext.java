@@ -44,6 +44,7 @@ import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.PrimitiveType;
+import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
@@ -76,6 +77,17 @@ public abstract class CCompilerContext extends Context {
     public CCompilerContext(ThingMLCompiler c) {
         super(c);
         NetworkLibraryGenerators = new HashSet<NetworkLibraryGenerator>();
+    }
+    
+    public String getVariableName(Variable var) {
+    	
+    	String propertyName = var.getName();
+
+        if (var instanceof Property) {
+            propertyName = this.getInstanceVarName() + "->" + ThingMLElementHelper.qname(var, "_") + "_var";
+        }
+        
+        return propertyName;
     }
 
     public String getCfgMainHeaderTemplate() {

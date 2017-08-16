@@ -631,7 +631,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
         for (Map.Entry<Property, Expression> init: ConfigurationHelper.initExpressionsForInstance(cfg, inst)) {
             if (init.getValue() != null && init.getKey().getTypeRef().getCardinality() == null) {
 
-                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(init.getKey()) + " = ");
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableQName(init.getKey()) + " = ");
                         //ctx.getCompiler().getThingActionCompiler().generate(init.getValue(), builder, ctx);
                         ctx.generateFixedAtInitValue(cfg, inst, init.getValue(), builder);
                         builder.append(";\n");
@@ -641,17 +641,17 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
         
         for (Property p : ThingHelper.allPropertiesInDepth(inst.getType())) {
             if (p.getTypeRef().getCardinality() != null) {//array
-                //builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = &");
+                //builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableQName(p) + " = &");
                 //TOCHECK
-                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = ");
-                builder.append("array_" + inst.getName() + "_" + ctx.getVariableName(p));
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableQName(p) + " = ");
+                builder.append("array_" + inst.getName() + "_" + ctx.getVariableQName(p));
                 builder.append(";\n");
-                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + "_size = ");
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableQName(p) + "_size = ");
                 ctx.generateFixedAtInitValue(cfg, inst, p.getTypeRef().getCardinality(), builder);
                 builder.append(";\n");
             }
             if(AnnotatedElementHelper.hasAnnotation(p, "initialize_from_file")) {
-                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableName(p) + " = ");
+                builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getVariableQName(p) + " = ");
                 builder.append(inst.getType().getName() + "_" + p.getName() + ";\n");
             }
         }
@@ -663,7 +663,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
         for (Property p : expressions.keySet()) {
             for (Map.Entry<Expression, Expression> e : expressions.get(p)) {
                 if (e.getValue() != null && e.getKey() != null) {
-                    builder.append(ctx.getInstanceVarName(inst) + "." +ctx.getVariableName(p));
+                    builder.append(ctx.getInstanceVarName(inst) + "." +ctx.getVariableQName(p));
                     builder.append("[");
                     ctx.getCompiler().getThingActionCompiler().generate(e.getKey(), builder, ctx);
                     builder.append("] = ");

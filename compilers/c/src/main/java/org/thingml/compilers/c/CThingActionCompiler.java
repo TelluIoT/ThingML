@@ -23,11 +23,13 @@ import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
 import org.thingml.xtext.thingML.BooleanLiteral;
 import org.thingml.xtext.thingML.ConfigPropertyAssign;
+import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
 import org.thingml.xtext.thingML.FunctionCallStatement;
+import org.thingml.xtext.thingML.Increment;
 import org.thingml.xtext.thingML.LocalVariable;
 import org.thingml.xtext.thingML.NamedElement;
 import org.thingml.xtext.thingML.Parameter;
@@ -98,12 +100,7 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
     @Override
     public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
         CCompilerContext context = (CCompilerContext) ctx;
-        String propertyName = action.getProperty().getName();
-
-        if (action.getProperty() instanceof Property) {
-            propertyName = context.getInstanceVarName() + "->" + ThingMLElementHelper.qname(action.getProperty(), "_") + "_var";
-        }
-
+        String propertyName = ctx.getVariableName(action.getProperty());
 
         builder.append(propertyName);
 
@@ -262,6 +259,21 @@ public abstract class CThingActionCompiler extends CommonThingActionCompiler {
                 generate(e, builder, ctx);
             }
         }
+    }
+    
+    
+    @Override
+    public void generate(Increment action, StringBuilder builder, Context ctx) {
+    	builder.append(ctx.getVariableName(action.getVar()));
+        //generate(action.getVar(), builder, ctx);
+        builder.append("++;\n");
+    }
+
+    @Override
+    public void generate(Decrement action, StringBuilder builder, Context ctx) {
+    	builder.append(ctx.getVariableName(action.getVar()));
+    	//generate(action.getVar(), builder, ctx);
+        builder.append("--;\n");
     }
 
 
