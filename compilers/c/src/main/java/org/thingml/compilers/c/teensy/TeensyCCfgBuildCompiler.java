@@ -46,7 +46,7 @@ public class TeensyCCfgBuildCompiler extends CfgBuildCompiler{
             TeensyCCfgBuildCompiler plugable = (TeensyCCfgBuildCompiler) getPlugableCfgBuildCompiler(t, ctx);
             srcs.append(plugable.getSourceFileName(t));
         }
-      
+/*
         String libs = "";
 
         for (String s : AnnotatedElementHelper.annotation(cfg, "add_c_libraries")) {
@@ -62,7 +62,7 @@ public class TeensyCCfgBuildCompiler extends CfgBuildCompiler{
             }
         }
         libs = libs.trim();
-
+*/
         
         if(AnnotatedElementHelper.hasAnnotation(cfg, "teensy_platform")){
         	String platform = AnnotatedElementHelper.annotation(cfg, "teensy_platform").get(0);
@@ -88,6 +88,7 @@ public class TeensyCCfgBuildCompiler extends CfgBuildCompiler{
         	mtemplate = mtemplate.replace("/*EXTERNPATH*/", "# path location for your code\nEXTERNPATH = /*EXTERNPATH*/\nTMPEXTERNFOLDER := $(subst /, ,$(EXTERNPATH))\nEXTERNFOLDER := $(word $(shell echo $(words $(TMPEXTERNFOLDER))),$(TMPEXTERNFOLDER))");
         	mtemplate = mtemplate.replace("/*EXTERNPATH*/", externpath);
         	mtemplate = mtemplate.replace("/*EXTERNINCLUDE*/"," -I$(EXTERNPATH)");
+        	mtemplate = mtemplate.replace("/*SOURCES_EXTERN*/", " $(SOURCES_EXTERN)");
         	mtemplate = mtemplate.replace("/*EXTERNSOURCES*/", "C_EXTERN := $(wildcard $(EXTERNPATH)/*.c)\nCPP_EXTERN := $(wildcard $(EXTERNPATH)/*.cpp)\nSOURCES_EXTERN := $(C_EXTERN:.c=.o) $(CPP_EXTERN:.cpp=.o)");
         	mtemplate = mtemplate.replace("/*EXTERNOBJS*/", " $(subst $(EXTERNPATH),$(BUILDDIR)/$(EXTERNFOLDER),$(SOURCES_EXTERN))");
         	mtemplate = mtemplate.replace("/*EXTERNBUILDER*/","$(BUILDDIR)/$(EXTERNFOLDER)/%.o: $(EXTERNPATH)/%.c\n\t@echo -e \"[CC]\t$<\"\n\t@mkdir -p \"$(dir $@)\"\n\t@$(CC) $(CPPFLAGS) $(CFLAGS) -o \"$@\" -c \"$<\"\n\n$(BUILDDIR)/$(EXTERNFOLDER)/%.o: $(EXTERNPATH)/%.cpp\n\t@echo -e \"[CXX]\t$<\"\n\t@mkdir -p \"$(dir $@)\"\n\t@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o \"$@\" -c \"$<\"");
@@ -95,13 +96,35 @@ public class TeensyCCfgBuildCompiler extends CfgBuildCompiler{
         	mtemplate = mtemplate.replace("/*EXTERNPATH*/", "");
         	mtemplate = mtemplate.replace("/*EXTERNINCLUDE*/", "");
         	mtemplate = mtemplate.replace("/*EXTERNSOURCES*/", "");
+        	mtemplate = mtemplate.replace("/*SOURCES_EXTERN*/", "");
         	mtemplate = mtemplate.replace("/*EXTERNOBJS*/", "");
         	mtemplate = mtemplate.replace("/*EXTERNBUILDER*/","");
         }
         
+        if(AnnotatedElementHelper.hasAnnotation(cfg, "teensy_libpath")){
+        	int i = 0;
+        	for(String libpath : AnnotatedElementHelper.annotation(cfg,"teensy_libpath")){
+        		mtemplate = mtemplate.replace("/*LIBPATH*/", "# path location for your LIB"+i+"\nLIB"+i+"PATH = /*LIB_PATH*/\nTMPLIB"+i+"FOLDER := $(subst /, ,$(LIB"+i+"PATH))\nLIB"+i+"FOLDER := $(word $(shell echo $(words $(TMPLIB"+i+"FOLDER))),$(TMPLIB"+i+"FOLDER))\n\n/*LIBPATH*/");
+            	mtemplate = mtemplate.replace("/*LIB_PATH*/", libpath);
+            	mtemplate = mtemplate.replace("/*LIBINCLUDE*/"," -I$(LIB"+i+"PATH)/*LIBINCLUDE*/");
+            	mtemplate = mtemplate.replace("/*SOURCES_LIB*/", " $(SOURCES_LIB"+i+")/*SOURCES_LIB*/");
+            	mtemplate = mtemplate.replace("/*LIBSOURCES*/", "C_LIB"+i+" := $(wildcard $(LIB"+i+"PATH)/*.c)\nCPP_LIB"+i+" := $(wildcard $(LIB"+i+"PATH)/*.cpp)\nSOURCES_LIB"+i+" := $(C_LIB"+i+":.c=.o) $(CPP_LIB"+i+":.cpp=.o)\n/*LIBSOURCES*/");
+            	mtemplate = mtemplate.replace("/*LIBOBJS*/", " $(subst $(LIB"+i+"PATH),$(BUILDDIR)/$(LIB"+i+"FOLDER),$(SOURCES_LIB"+i+"))\n/*LIBOBJS*/");
+            	mtemplate = mtemplate.replace("/*LIBBUILDER*/","$(BUILDDIR)/$(LIB"+i+"FOLDER)/%.o: $(LIB"+i+"PATH)/%.c\n\t@echo -e \"[CC]\t$<\"\n\t@mkdir -p \"$(dir $@)\"\n\t@$(CC) $(CPPFLAGS) $(CFLAGS) -o \"$@\" -c \"$<\"\n\n$(BUILDDIR)/$(LIB"+i+"FOLDER)/%.o: $(LIB"+i+"PATH)/%.cpp\n\t@echo -e \"[CXX]\t$<\"\n\t@mkdir -p \"$(dir $@)\"\n\t@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o \"$@\" -c \"$<\"\n\n/*LIBBUILDER*/");
+            	i++;
+        	}
+
+        }
+        mtemplate = mtemplate.replace("/*LIBPATH*/", "");
+    	mtemplate = mtemplate.replace("/*LIBINCLUDE*/", "");
+    	mtemplate = mtemplate.replace("/*LIBSOURCES*/", "");
+    	mtemplate = mtemplate.replace("/*SOURCES_LIB*/", "");
+    	mtemplate = mtemplate.replace("/*LIBOBJS*/", "");
+    	mtemplate = mtemplate.replace("/*LIBBUILDER*/","");
+        
         
         mtemplate = mtemplate.replace("/*SOURCES*/", srcs.toString().trim());
-        mtemplate = mtemplate.replace("/*LIBS*/", libs);
+        mtemplate = mtemplate.replace("/*LIBS*/", /*libs*/"");
 
         ctx.getBuilder("Makefile").append(mtemplate);
 	}
