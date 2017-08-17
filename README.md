@@ -58,6 +58,9 @@ If you are going to compile C code from ThingML, please:
 
 The easiest way to get started with ThingML is to use the ThingML plugins in the Eclipse IDE.
 
+If you have docker, you can use the build container with Eclipse and ThingML at the [thingmleditor repository](https://github.com/madkira/thingmleditor) or the [thingmleditor docker hub](https://hub.docker.com/r/madkira/thingmleditor/)
+
+Else
 1. [Download Eclipse for Java Developers](https://eclipse.org/downloads/)
 2. Install and Launch Eclipse
 3. Install XText plugins: `Help -> Install New Software... -> Add...` and choose `XText` as a name and `Xtext - http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/` as location, and then `OK`. Select `XText` and continue with the install procedure &#x23F3;
