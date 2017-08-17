@@ -319,6 +319,10 @@ public class Context {
     }
 
     public String getVariableName(Variable var) {
+        return getVariableQName(var);
+    }
+    
+    public String getVariableQName(Variable var) {
         return ThingMLElementHelper.qname(var, "_") + "_var";
     }
 

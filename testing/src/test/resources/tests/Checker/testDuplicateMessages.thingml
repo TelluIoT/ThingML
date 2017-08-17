@@ -9,6 +9,10 @@ thing TestCheckStateMachine
 	} 
     
     statechart TestAbstractFunction init INIT {
-    	state INIT {}
+    	state INIT {
+    		on entry p!m()
+    		
+    		internal event p?m
+    	}
     }
 }

@@ -22,11 +22,19 @@
 package org.thingml.xtext.validation.rules;
 
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingHelper;
 import org.thingml.xtext.thingML.Configuration;
+import org.thingml.xtext.thingML.Function;
 import org.thingml.xtext.thingML.Instance;
+import org.thingml.xtext.thingML.Message;
+import org.thingml.xtext.thingML.Port;
+import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.validation.Checker;
 import org.thingml.xtext.validation.Checker.InfoType;
@@ -58,10 +66,78 @@ public class ThingsUsage extends Rule {
     	for(Instance i : cfg.getInstances()) {
     		if (i.getType().isFragment()) {
     			final String msg = "Instance " + i.getName() + " instantiate thing fragment " + i.getType().getName() + ". Make thing " + i.getType().getName() + " concrete (not a fragment) if you want to instantiate it.";
-    			checker.addGenericNotice(msg , i);   
+    			checker.addError(msg, i);   
     		}
-    	}    	
-        for (Thing t : ThingMLHelpers.allThings(ThingMLHelpers.findContainingModel(cfg))) {
+    	}  
+    	
+        for (Thing t : ConfigurationHelper.allThings(cfg)) {
+        	
+        	//FIXME: Seems to be some problems with the rules below about duplication...
+        	final Set<String> msg = new HashSet<>();
+        	for(Message m : ThingMLHelpers.allMessages(t)) {
+        		if (!msg.contains(m.getName())) {
+        			msg.add(m.getName());
+        		}
+        		else {
+        			final String message = "Thing " + t.getName() + " declares multiple messages " + m.getName() + ".";
+        			checker.addError(message, t);           			
+        		}
+        	}
+        	
+        	final Set<String> ports = new HashSet<>();
+        	for(Port f : ThingMLHelpers.allPorts(t)) {
+        		if (!ports.contains(f.getName())) {
+        			ports.add(f.getName());
+        		}
+        		else {
+        			final String message = "Thing " + t.getName() + " declares multiple ports " + f.getName() + ".";
+        			checker.addError(message, t);           			
+        		}
+        		
+        		ArrayList<String> rcvList = new ArrayList<>();
+                ArrayList<String> sendList = new ArrayList<>();
+                for (Message m : f.getReceives()) {
+                	System.out.println("checking " + m.getName());
+                    if (!rcvList.contains(m.getName()))
+                        rcvList.add(m.getName());
+                    else { 
+                        checker.addError("Multiple definition of message " + m.getName(), f);
+                    }
+                }
+                for (Message m : f.getSends()) {
+                	System.out.println("checking " + m.getName());
+                    if (!sendList.contains(m.getName()))
+                        sendList.add(m.getName());
+                    else {                    	
+                        checker.addError("Multiple definition of message " + m.getName(), f);
+                    }
+                }
+        		
+        	}
+        	
+        	final Set<String> functions = new HashSet<>();
+        	for(Function f : ThingMLHelpers.allFunctions(t)) {
+        		if (!functions.contains(f.getName())) {
+        			functions.add(f.getName());
+        		}
+        		else {
+        			final String message = "Thing " + t.getName() + " declares multiple functions " + f.getName() + ".";
+        			checker.addError(message, t);           			
+        		}
+        	}
+        	
+        	final Set<String> props = new HashSet<>();
+        	for(Property f : ThingMLHelpers.allProperties(t)) {
+        		if (!props.contains(f.getName())) {
+        			props.add(f.getName());
+        		}
+        		else {
+        			final String message = "Thing " + t.getName() + " declares multiple properties " + f.getName() + ".";
+        			checker.addError(message, t);           			
+        		}
+        	}
+        	
+        	
             if (!t.isFragment()) {
                 boolean found = false;
                 for (Instance i : ConfigurationHelper.allInstances(cfg)) {

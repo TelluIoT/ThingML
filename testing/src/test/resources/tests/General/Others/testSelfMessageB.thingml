@@ -3,6 +3,8 @@ import "../../thingml.thingml"
 thing TestSelfMessageB includes Test 
 @test "ttt # IJJJ"
 {
+	property counter : Integer = 0
+	
     message selfMessage(c : Char);
     
     required port in {
@@ -23,10 +25,11 @@ thing TestSelfMessageB includes Test
             
             internal event m : in?selfMessage
             guard m.c == '\'t\''
-            action TestOut('\'J\'')
-            
-            internal event Test?Done
-			action TestDone()
+            action do
+            	TestOut('\'J\'')
+            	counter = counter + 1
+            	if (counter == 3) TestDone()
+            end
 		}
 	}
 }
