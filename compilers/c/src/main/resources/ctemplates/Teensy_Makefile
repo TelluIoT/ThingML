@@ -11,6 +11,8 @@ COREFOLDER := $(word $(shell echo $(words $(TMPCOREFOLDER))),$(TMPCOREFOLDER))
 
 /*EXTERNPATH*/
 
+/*LIBPATH*/
+
 # The name of your project (used to name the compiled .hex file)
 TARGET = $(notdir $(CURDIR))
 
@@ -26,7 +28,7 @@ BUILDDIR = $(abspath $(CURDIR)/build)
 #************************************************************************
 
 # CPPFLAGS = compiler options for C and C++
-INCLUDES = -Isrc -I$(COREPATH)/*EXTERNINCLUDE*/
+INCLUDES = -Isrc -I$(COREPATH)/*EXTERNINCLUDE*/ /*LIBINCLUDE*/
 CPPFLAGS = -Wall -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DTEENSYDUINO=124 $(INCLUDES)
 
 # compiler options for C++ only
@@ -96,15 +98,17 @@ SOURCES_FILES := $(CPP_FILES:.cpp=.o)
 
 
 C_CORE  := $(wildcard $(COREPATH)/*.c)
-CPP_CORE  := $(wildcard $(COREPATH)/*.cpp)
+CPP_CORE_TMP  := $(wildcard $(COREPATH)/*.cpp)
+CPP_CORE := $(filter-out $(COREPATH)/main.cpp,$(CPP_CORE_TMP))
 SOURCES_CORE  := $(C_CORE:.c=.o) $(CPP_CORE:.cpp=.o)
 
 /*EXTERNSOURCES*/
 
+/*LIBSOURCES*/
 
 
-SOURCES := $(SOURCES_FILES) $(SOURCES_CORE) $(SOURCES_EXTERN)
-OBJS := $(foreach src,$(SOURCES_FILES), $(BUILDDIR)/$(src)) $(foreach core,$(SOURCES_CORE),$(subst $(COREPATH),$(BUILDDIR)/$(COREFOLDER),$(core)))/*EXTERNOBJS*/
+SOURCES := $(SOURCES_FILES) $(SOURCES_CORE)/*SOURCES_EXTERN*//*SOURCES_LIB*/
+OBJS := $(foreach src,$(SOURCES_FILES), $(BUILDDIR)/$(src)) $(foreach core,$(SOURCES_CORE),$(subst $(COREPATH),$(BUILDDIR)/$(COREFOLDER),$(core)))/*EXTERNOBJS*/ /*LIBOBJS*/
 
 all: hex
 
@@ -127,6 +131,8 @@ $(BUILDDIR)/$(COREFOLDER)/%.o: $(COREPATH)/%.cpp
 	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o "$@" -c "$<"
 
 /*EXTERNBUILDER*/
+
+/*LIBBUILDER*/
 
 $(BUILDDIR)/src/%.o: src/%.cpp
 	@echo -e "[CXX]\t$<"
