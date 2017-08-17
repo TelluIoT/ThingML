@@ -97,7 +97,6 @@ public class ThingsUsage extends Rule {
         		ArrayList<String> rcvList = new ArrayList<>();
                 ArrayList<String> sendList = new ArrayList<>();
                 for (Message m : f.getReceives()) {
-                	System.out.println("checking " + m.getName());
                     if (!rcvList.contains(m.getName()))
                         rcvList.add(m.getName());
                     else { 
@@ -105,7 +104,6 @@ public class ThingsUsage extends Rule {
                     }
                 }
                 for (Message m : f.getSends()) {
-                	System.out.println("checking " + m.getName());
                     if (!sendList.contains(m.getName()))
                         sendList.add(m.getName());
                     else {                    	
