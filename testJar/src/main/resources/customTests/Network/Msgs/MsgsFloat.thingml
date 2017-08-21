@@ -1,6 +1,0 @@
-import "../../datatypes.thingml"
-
-thing fragment MsgsFloat {
-	message mFloat(f : Float) @code "120"
-	message mHFloat(f1 : Float, f2 : Float) @code "121"
-}

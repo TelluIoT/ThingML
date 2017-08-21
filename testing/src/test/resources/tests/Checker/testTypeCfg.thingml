@@ -1,5 +1,0 @@
-thing fragment TestFragment {}
-
-configuration cfg {
-	instance i : TestFragment //Should fail because we cannot instantiate fragments
-}

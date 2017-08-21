@@ -1,1 +1,0 @@
-/*PROTOCOL_NAME*/_start_avahi_client(/*PROTOCOL_INSTANCE_NAME*/_instance.service_data->avahi_client);

@@ -1,0 +1,9 @@
+markdown: kramdown
+safe: false
+lsi: false
+highlighter: rouge
+permalink: /:categories/:year/:title/
+url: http://thingml.org
+google_analytics_id: UA-40793073-1
+author: Franck Fleurey and Brice Morin
+future: true

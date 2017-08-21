@@ -1,1 +1,0 @@
-struct /*PROTOCOL_NAME*/_instance_type /*PROTOCOL_INSTANCE_NAME*/_instance;

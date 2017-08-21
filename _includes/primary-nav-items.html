@@ -1,0 +1,14 @@
+<ul>
+  <li class="{% if page.overview %}current{% endif %}">
+    <a href="{{ site.url }}/"><i class="icon-home"></i>Home</a>
+  </li>
+  <li class="{% if page.title contains "Getting Started" %}current{% endif %}">
+    <a href="{{ site.url }}/started"><i class="icon-save"></i>Getting Started</a>
+  </li>
+  <li class="{% if page.title contains "Tutorials" %}current{% endif %}">
+    <a href="{{ site.url }}/tutorial"><i class="icon-search"></i>Tutorials</a>
+  </li>
+  <li class="{% if page.title contains "Documentation" %}current{% endif %}">
+    <a href="{{ site.url }}/documentation"><i class="icon-file-alt"></i>Documentation</a>
+  </li>
+</ul>

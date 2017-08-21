@@ -1,6 +1,0 @@
-import "../../datatypes.thingml"
-
-thing fragment MsgsChar {
-	message mChar(c : Char) @code "130"
-	message mHChar(c1 : Char, c2 : Char) @code "131"
-}
