@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h> // string function definitions
 #include <fcntl.h> // File control definitions
 #include <errno.h> // Error number definitions
@@ -39,12 +40,14 @@ int /*PORT_NAME*/_setup() {
 	struct termios port_settings;
 	result = open(device, O_RDWR | O_NOCTTY | O_NDELAY);
 	if (result < 0) {
-                /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error opening Serial port\n");
+        /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error opening Serial port\n");
 		/*TRACE_LEVEL_1*/perror("Error opening Serial port");
+        exit(1); // Exit in case of error
 	}
 	else if (tcgetattr(result, &port_settings) < 0) {// try to get current options
-                /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error opening Serial port: could not get serial port attributes\n");
+        /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error opening Serial port: could not get serial port attributes\n");
 		/*TRACE_LEVEL_1*/perror("Error opening Serial port: could not get serial port attributes");
+        exit(1); // Exit in case of error
 	}
 	else {
 		//printf("Configuring port %s...\n", device);
@@ -96,6 +99,7 @@ int /*PORT_NAME*/_setup() {
 		if (tcsetattr(result, TCSANOW, &port_settings) < 0 ) {
                     /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error opening Serial port: could not set serial port attributes\n");
                     /*TRACE_LEVEL_1*/perror("Error opening Serial port: could not set serial port attributes");
+                    exit(1); // Exit in case of error
 		}
 		sleep(1); // wait a bit
 	}
@@ -113,6 +117,7 @@ int /*PORT_NAME*/_send_byte(int device, uint8_t byte) {
         /*TRACE_LEVEL_3*/printf("[/*PORT_NAME*/] forwarding %i with result %i\n", data[0], n);
 	if (n < 0) {
             /*TRACE_LEVEL_1*/perror("Error writing to Serial device");
+            exit(1); // Exit in case of error
             return -1;
 	}
 	return 0;
@@ -149,6 +154,7 @@ void /*PORT_NAME*/_start_receiver_process()
 		if (n < 0) {
                     /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error waiting for incoming data from Serial device\n");
                     /*TRACE_LEVEL_1*/perror("Error waiting for incoming data from Serial device");
+                    exit(1); // Exit in case of error
                     break;
 		}
 		else if (n == 0) { // timeout
@@ -161,6 +167,7 @@ void /*PORT_NAME*/_start_receiver_process()
 			if (n<0) {
                             /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error reading from Serial device\n");
                             /*TRACE_LEVEL_1*/perror("Error reading from Serial device");
+                            exit(1); // Exit in case of error
                             break;
 			}
 			else if (n==0) {

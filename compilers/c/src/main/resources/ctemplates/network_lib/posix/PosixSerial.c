@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h> // string function definitions
 #include <fcntl.h> // File control definitions
 #include <errno.h> // Error number definitions
@@ -41,10 +42,12 @@ int /*PORT_NAME*/_setup() {
     if (result < 0) {
         /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error opening Serial port\n");
         /*TRACE_LEVEL_1*/perror("Error opening Serial port");
+        exit(1); // Exit in case of error
     }
     else if (tcgetattr(result, &port_settings) < 0) {// try to get current options
         /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error opening Serial port: could not get serial port attributes\n");
         /*TRACE_LEVEL_1*/perror("Error opening Serial port: could not get serial port attributes");
+        exit(1); // Exit in case of error
     }
     else {
         cfsetispeed(&port_settings, B/*BAUDRATE*/);    // set baud rates to 115200 ---------- Test with 57600
@@ -66,6 +69,7 @@ int /*PORT_NAME*/_setup() {
         if (tcsetattr(result, TCSANOW, &port_settings) < 0 ) {
             /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Error opening Serial port: could not set serial port attributes\n");
             /*TRACE_LEVEL_1*/perror("Error opening Serial port: could not set serial port attributes");
+            exit(1); // Exit in case of error
         }
         sleep(1); // wait a bit
     }
