@@ -54,6 +54,10 @@ public class NodeJSCfgBuildCompiler extends CfgBuildCompiler {
             final JsonObject json = JsonObject.readFrom(pack);
             final JsonValue deps = json.get("dependencies");
 
+            if (AnnotatedElementHelper.isDefined(cfg, "arguments", "cli")) {
+            	deps.asObject().add("minimist", "^1.2.0");
+            }
+            
             for (Thing t : ConfigurationHelper.allThings(cfg)) {
                 for (String dep : AnnotatedElementHelper.annotation(t, "js_dep")) {
                     deps.asObject().add(dep.split(":")[0].trim(), dep.split(":")[1].trim());

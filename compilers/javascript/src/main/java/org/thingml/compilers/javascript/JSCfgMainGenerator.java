@@ -115,7 +115,17 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			}
 		}
 
-		//Generate a hook for other configuration plugins to redefine values for properties
+
+		//TODO: This should be moved to NodeJS-specific part...
+		if (AnnotatedElementHelper.isDefined(cfg, "arguments", "cli")) {
+			for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: use allUsedProperties when fixed
+				if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing && prop.getTypeRef().getCardinality() == null) {
+					builder.append(i.getName() + "_" + prop.getName() + " = (argv." + i.getName() + "_" + prop.getName() + ")? argv." + i.getName() + "_" + prop.getName() + " : " + i.getName() + "_" + prop.getName() + ";\n");
+				}
+			}
+		}
+		
+		//Generate a hook for other configuration plugins to redefine values for properties		
 		builder.append("/*$CONFIGURATION " + i.getName() + "$*/\n");
 	}
 

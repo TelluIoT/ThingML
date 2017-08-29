@@ -70,6 +70,11 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
             builder.append("const " + ctx.firstToUpper(t.getName()) + " = require('./" + ctx.firstToUpper(t.getName()) + "');\n");
         }
         builder.append("/*$REQUIRE_PLUGINS$*/\n");
+        
+		if (AnnotatedElementHelper.isDefined(cfg, "arguments", "cli")) {
+			builder.append("const argv = require('minimist')(process.argv.slice(2));\n");
+		}
+		
         generateInstances(cfg, builder, ctx, false);
         generateConnectors(cfg, builder, ctx, false);
 
