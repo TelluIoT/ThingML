@@ -71,14 +71,25 @@ public class NodeJSCfgMainGenerator extends JSCfgMainGenerator {
         }
         builder.append("/*$REQUIRE_PLUGINS$*/\n");
         
-		if (AnnotatedElementHelper.isDefined(cfg, "arguments", "cli")) {
-			builder.append("const argv = require('minimist')(process.argv.slice(2));\n");
+		if (AnnotatedElementHelper.hasAnnotation(cfg, "arguments")) {
+			builder.append("const nconf = require('nconf');\n");
+			builder.append("const fs = require('fs');\n");
+			builder.append("nconf.argv().env().file({ file: 'config.json' });\n\n");
 		}
 		
         generateInstances(cfg, builder, ctx, false);
         generateConnectors(cfg, builder, ctx, false);
 
-
+        
+		if (AnnotatedElementHelper.hasAnnotation(cfg, "arguments")) {
+			builder.append("nconf.save(function (err) {\n");
+        	builder.append("fs.readFile('config.json', function (err, data) {\n");
+        	builder.append("console.dir(JSON.parse(data.toString()))\n");
+        	builder.append("});\n");
+        	builder.append("});\n");
+		}
+        
+       
         List<Instance> instances = ConfigurationHelper.orderInstanceInit(cfg);
         Instance inst;
         while (!instances.isEmpty()) {

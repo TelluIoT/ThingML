@@ -117,10 +117,11 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 
 
 		//TODO: This should be moved to NodeJS-specific part...
-		if (AnnotatedElementHelper.isDefined(cfg, "arguments", "cli")) {
+		if (AnnotatedElementHelper.hasAnnotation(cfg, "arguments")) {
 			for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: use allUsedProperties when fixed
 				if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing && prop.getTypeRef().getCardinality() == null) {
-					builder.append(i.getName() + "_" + prop.getName() + " = (argv." + i.getName() + "_" + prop.getName() + ")? argv." + i.getName() + "_" + prop.getName() + " : " + i.getName() + "_" + prop.getName() + ";\n");
+					builder.append(i.getName() + "_" + prop.getName() + " = nconf.get('" + i.getName() + ":" + prop.getName() + "')? nconf.get('" + i.getName() + ":" + prop.getName() + "') : " + i.getName() + "_" + prop.getName() + ";\n");
+					builder.append("nconf.set('" + i.getName() + ":" + prop.getName() + "', " + i.getName() + "_" + prop.getName() + ");\n");
 				}
 			}
 		}
