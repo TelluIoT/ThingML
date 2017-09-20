@@ -275,9 +275,12 @@ public class JavaMQTTPlugin extends NetworkPlugin {
                     main += line + "\n";
                 }
                 input.close();
-                final String url = "tcp://" + AnnotatedElementHelper.annotationOrElse(conn, "url", AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "url", "127.0.0.1:1883"));
-                final String subtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "subscribe", "ThingML");
-                final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "publish", "ThingML");
+                
+                final String broker_addr = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "mqtt_broker_address", "127.0.0.1");
+                final String broker_port = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "mqtt_broker_port", "1883");
+                final String url = "tcp://" + broker_addr + ":" + broker_port;
+                final String subtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "mqtt_subscribe_topic", "ThingML");
+                final String pubtopic = AnnotatedElementHelper.annotationOrElse(conn.getProtocol(), "mqtt_publish_topic", "ThingML");
 
                 main = main.replace("/*$NETWORK$*/", "/*$NETWORK$*/\nMQTTJava " + conn.getName() + "_" + conn.getProtocol().getName() + " = (MQTTJava) new MQTTJava(\"" + url + "\", \"" + pubtopic + "\", \"" + subtopic + "\").buildBehavior(null, null);\n");
 
