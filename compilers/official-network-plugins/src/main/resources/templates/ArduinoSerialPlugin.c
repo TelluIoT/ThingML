@@ -18,10 +18,7 @@
 #define /*PROTOCOL*/_STOP_BYTE /*STOP_BYTE*/
 #define /*PROTOCOL*/_ESCAPE_BYTE /*ESCAPE_BYTE*/
 
-struct /*PROTOCOL*/_instance_type {
-    uint16_t listener_id;
-    /*INSTANCE_INFORMATION*/
-} /*PROTOCOL*/_instance;
+struct /*PROTOCOL*/_instance_type /*PROTOCOL*/_instance;
 
 void externalMessageEnqueue(uint8_t * msg, uint8_t msgSize, uint16_t listener_id);
 

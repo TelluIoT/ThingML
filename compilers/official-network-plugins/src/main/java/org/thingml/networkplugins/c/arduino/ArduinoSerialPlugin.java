@@ -64,6 +64,7 @@ public class ArduinoSerialPlugin extends NetworkPlugin {
     public List<String> getTargetedLanguages() {
         List<String> res = new ArrayList<>();
         res.add("arduino");
+        res.add("teensy");
         return res;
     }
 

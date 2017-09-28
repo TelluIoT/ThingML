@@ -69,6 +69,7 @@ public class CByteArraySerializerPlugin extends SerializationPlugin {
         res.add("posixmt");
         res.add("arduino");
         res.add("sintefboard");
+        res.add("teensy");
         return res;
     }
 
