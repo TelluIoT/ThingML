@@ -29,7 +29,8 @@ BUILDDIR = $(abspath $(CURDIR)/build)
 
 # CPPFLAGS = compiler options for C and C++
 INCLUDES = -Isrc -I$(COREPATH)/*EXTERNINCLUDE*/ /*LIBINCLUDE*/
-CPPFLAGS = -Wall -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DTEENSYDUINO=124 $(INCLUDES)
+#CPPFLAGS = -Wall -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DTEENSYDUINO=124 $(INCLUDES)
+CPPFLAGS = -Wall -Wno-unused-variable -Wno-unused-but-set-variable -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DTEENSYDUINO=124 $(INCLUDES)
 
 # compiler options for C++ only
 CXXFLAGS = -std=gnu++0x -felide-constructors -fno-exceptions -fno-rtti
@@ -93,7 +94,8 @@ OBJCOPY = arm-none-eabi-objcopy
 SIZE = arm-none-eabi-size
 
 # automatically create lists of the sources and objects
-CPP_FILES := /*NAME*/ /*SOURCES*/
+#CPP_FILES := /*NAME*/ /*SOURCES*/
+CPP_FILES := /*SOURCES*/
 SOURCES_FILES := $(CPP_FILES:.cpp=.o)
 
 

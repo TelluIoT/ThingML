@@ -39,13 +39,16 @@ public class TeensyCCfgBuildCompiler extends CfgBuildCompiler{
 		
         //GENERATE THE MAKEFILE
         String mtemplate = ctx.getTemplateByID("ctemplates/Teensy_Makefile");
-        mtemplate = mtemplate.replace("/*NAME*/", "src/" + cfg.getName() + ".cpp src/runtime.cpp");
+        //mtemplate = mtemplate.replace("/*NAME*/", "src/" + cfg.getName() + ".cpp src/runtime.cpp");
+        
+        /*
   
         StringBuilder srcs = new StringBuilder();
         for (Thing t : ConfigurationHelper.allThings(cfg)) {
             TeensyCCfgBuildCompiler plugable = (TeensyCCfgBuildCompiler) getPlugableCfgBuildCompiler(t, ctx);
             srcs.append(plugable.getSourceFileName(t));
         }
+        */
 /*
         String libs = "";
 
@@ -122,8 +125,9 @@ public class TeensyCCfgBuildCompiler extends CfgBuildCompiler{
     	mtemplate = mtemplate.replace("/*LIBOBJS*/", "");
     	mtemplate = mtemplate.replace("/*LIBBUILDER*/","");
         
-        
-        mtemplate = mtemplate.replace("/*SOURCES*/", srcs.toString().trim());
+    	// Add all generated files
+        //mtemplate = mtemplate.replace("/*SOURCES*/", srcs.toString().trim());
+    	mtemplate = mtemplate.replace("/*SOURCES*/", String.join(" ",ctx.getGeneratedSources()).replace("\\", "/"));
         mtemplate = mtemplate.replace("/*LIBS*/", /*libs*/"");
 
         ctx.getBuilder("Makefile").append(mtemplate);

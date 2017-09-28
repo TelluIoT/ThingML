@@ -89,6 +89,14 @@ public abstract class CCompilerContext extends Context {
         
         return propertyName;
     }
+    
+    public Set<String> getGeneratedSources() {
+    	Set<String> sources = new HashSet<String>();
+    	for (String file : generatedCode.keySet()) {
+    		if (file.endsWith(".c") || file.endsWith(".cpp")) sources.add(file);
+    	}
+    	return sources;
+    }
 
     public String getCfgMainHeaderTemplate() {
         return getTemplateByID("ctemplates/" + getCompiler().getID() + "_main_header.h");

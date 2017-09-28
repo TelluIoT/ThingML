@@ -18,6 +18,8 @@ package org.thingml.compilers.c.teensy;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
@@ -83,11 +85,24 @@ public class CCompilerContextTeensy extends CCompilerContext{
         pde.append(generatedCode.get(main).toString());
         writeTextFile(getCurrentConfiguration().getName() + File.separatorChar +"src"+  File.separatorChar + getCurrentConfiguration().getName() + ".cpp", mainpart.toString() + generatedCode.get(main).toString());
     }
+	
+	@Override
+	public Set<String> getGeneratedSources() {
+		String main = getCurrentConfiguration().getName() + "_cfg.c";
+		// All the files will be put in 'src/...', and '.c' files will become '.cpp'
+		Set<String> sources = new HashSet<String>();
+		for (String file : super.getGeneratedSources()) {
+			if (file.equals(main)) file = getCurrentConfiguration().getName() + ".cpp";
+			if (file.endsWith(".c")) file = file+"pp";
+			sources.add("src"+File.separatorChar+file);
+		}
+		return sources;
+	}
 
     // TODO : generate it in the file constructor
     private String headerWrapper(String header, String filename){
-    	header = "#ifndef " + filename.substring(0,filename.length() - 2) + "\n#define "+ filename.substring(0,filename.length() - 2) +"\n#include \"WProgram.h\"\n" + header + "\n#endif";
-    	return header;
+    	String defVar = filename.substring(0,filename.length() - 2) + "_h";
+    	return "#ifndef " + defVar + "\n#define "+ defVar +"\n#include \"WProgram.h\"\n" + header + "\n#endif";
     }
     
     @Override
