@@ -138,19 +138,23 @@ public class JavaMQTTPlugin extends NetworkPlugin {
                     temp.append("else ");
                 temp.append("if (e.getType().equals(" +  m.getName().toUpperCase() + ")) {\n");
                 temp.append("return ");
+                /* FIXED?
                 if (sp.getSupportedFormat().contains("Binary")) {//FIXME
                     temp.append("JavaBinaryHelper.toObject(");
                     if (escape) {
                         temp.append("JavaBinaryHelper.unescape(");
                     }
                 }
+                */
                 temp.append("format((" + ctx.firstToUpper(m.getName()) + "MessageType." + ctx.firstToUpper(m.getName()) + "Message)e)\n");
+                /* FIXED?
                 if (sp.getSupportedFormat().contains("Binary")) {//FIXME
                     temp.append(")");
                     if (escape) {
                         temp.append(")");
                     }
                 }
+                */
                 temp.append(";");
                 temp.append("}\n");
                 i++;
