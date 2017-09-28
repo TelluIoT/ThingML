@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,11 +28,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 //import org.fusesource.jansi.Ansi;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
+import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.helpers.ThingMLElementHelper;
@@ -261,20 +264,19 @@ public class Context {
     }
 
     public String getTemplateByID(String template_id) {
-        final InputStream input = this.getClass().getClassLoader().getResourceAsStream(template_id);
-        String result = null;
-        try {
-            if (input != null) {
-                result = org.apache.commons.io.IOUtils.toString(input, java.nio.charset.Charset.forName("UTF-8"));
-                input.close();
-            } else {
-                System.out.println("[Error] Template not found: " + template_id);
-            }
-        } catch (Exception e) {
-            //e.printStackTrace();
-            return null; // the template was not found
-        }
-        return result;
+    	try {
+    		try (final InputStream template = this.getClass().getClassLoader().getResourceAsStream(template_id)) {
+    			return IOUtils.toString(template, Charset.forName("UTF-8"));
+    		}
+    	} catch (Throwable t) {
+    		if (this.getCompiler() instanceof OpaqueThingMLCompiler)
+    			((OpaqueThingMLCompiler)this.getCompiler()).printStack("Template '"+template_id+"' not found.", t);
+    		else {
+    			System.err.println("Template '"+template_id+"' not found.");
+    			t.printStackTrace(System.err);
+    		}
+    		return null;
+    	}
     }
 
     public void addMarker(String marker) {

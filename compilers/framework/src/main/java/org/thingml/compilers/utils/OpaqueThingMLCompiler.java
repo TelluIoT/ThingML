@@ -60,6 +60,14 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		else
 			System.err.println(msg);
 	}
+	
+	public void printStack(String msg, Throwable t) {
+		erroln(msg);
+		erroln(t.toString());
+		for(StackTraceElement ste : t.getStackTrace()) {
+			erroln("\t" + ste.toString());
+		}
+	}
 
 	@Override
 	public void compile(Configuration cfg, Logger log, String... options) {
