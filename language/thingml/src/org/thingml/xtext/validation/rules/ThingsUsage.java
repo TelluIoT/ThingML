@@ -113,17 +113,6 @@ public class ThingsUsage extends Rule {
         		
         	}
         	
-        	final Set<String> functions = new HashSet<>();
-        	for(Function f : ThingMLHelpers.allFunctions(t)) {
-        		if (!functions.contains(f.getName())) {
-        			functions.add(f.getName());
-        		}
-        		else {
-        			final String message = "Thing " + t.getName() + " declares multiple functions " + f.getName() + ".";
-        			checker.addError(message, t);           			
-        		}
-        	}
-        	
         	final Set<String> props = new HashSet<>();
         	for(Property f : ThingMLHelpers.allProperties(t)) {
         		if (!props.contains(f.getName())) {
