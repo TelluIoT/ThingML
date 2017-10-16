@@ -5,7 +5,7 @@ thing fragment Foo
   }
 }
 
-thing TestCheckStateMachine includes Foo
+thing TestStateMachine includes Foo
 {
     //Should fail because it should not be allowed to have two statecharts in the composed thing
     statechart TestAbstractFunction init INIT {

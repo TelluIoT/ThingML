@@ -5,9 +5,7 @@ thing TestCheckStateMachine
 		receives m
 	}
 	
-	
-    //Should fail because it should not be allowed to have two statecharts in the composed thing
-    statechart TestAbstractFunction init INIT {
+    statechart TestStateMachine init INIT {
     	state INIT {
     		transition -> INIT
     		event p?m

@@ -1,0 +1,14 @@
+thing TestCheckStateMachine
+{
+    statechart TestStateMachine init One {
+    	// Should fail because there should only be one unguarded empty transition
+    	state One {
+    		transition -> Two action print "1"
+    		transition -> Two action print "2"
+    	}
+    	
+    	state Two {
+    		
+    	}
+    }
+}
