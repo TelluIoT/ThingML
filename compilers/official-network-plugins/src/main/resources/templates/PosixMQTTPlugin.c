@@ -20,6 +20,7 @@ void /*PORT_NAME*/_setup(struct /*PORT_NAME*/_Instance *_instance)
 {
     const char *host = "/*HOST_ADDRESS*/";
     int port = /*HOST_PORT_NUMBER*/;
+    const char *client_id = /*CLIENT_ID*/;
     const char *username = NULL;
     const char *password = NULL;
     const char *will_topic = /*WILL_TOPIC*/;
@@ -28,7 +29,7 @@ void /*PORT_NAME*/_setup(struct /*PORT_NAME*/_Instance *_instance)
     // Initialise
     /*TRACE_LEVEL_1*/printf("[/*PORT_NAME*/] Initialising MQTT at %s:%i\n", host, port);
     mosquitto_lib_init();
-    /*PORT_NAME*/_mosq = mosquitto_new(NULL, true, _instance);
+    /*PORT_NAME*/_mosq = mosquitto_new(client_id, true, _instance);
     if (!/*PORT_NAME*/_mosq) {
         perror("[/*PORT_NAME*/] mosquitto_new failed ");
         return;

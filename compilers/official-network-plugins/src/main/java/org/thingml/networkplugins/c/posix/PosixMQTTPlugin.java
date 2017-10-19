@@ -222,6 +222,11 @@ public class PosixMQTTPlugin extends NetworkPlugin {
                 Integer portNumber = Integer.parseInt(AnnotatedElementHelper.annotationOrElse(protocol, "mqtt_port_number", "1883"));
                 ctemplate = ctemplate.replace("/*HOST_ADDRESS*/", hostAddr);
                 ctemplate = ctemplate.replace("/*HOST_PORT_NUMBER*/", portNumber.toString());
+                
+                // Replace CLIENT_ID
+                String clientId = "NULL";
+                if (AnnotatedElementHelper.hasAnnotation(protocol, "mqtt_client_id")) clientId = "\""+AnnotatedElementHelper.annotationOrElse(protocol, "mqtt_client_id", "ThingML")+"\"";
+                ctemplate = ctemplate.replace("/*CLIENT_ID*/", clientId);
 
                 // Quality of Service
                 Integer qos = Integer.parseInt(AnnotatedElementHelper.annotationOrElse(protocol, "mqtt_qos", "1"));
