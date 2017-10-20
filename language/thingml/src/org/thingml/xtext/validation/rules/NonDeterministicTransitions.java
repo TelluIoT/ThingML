@@ -80,18 +80,18 @@ public class NonDeterministicTransitions extends Rule {
                 List<Event> guarded = new ArrayList<Event>();
                 List<Event> notGuarded = new ArrayList<Event>();
                 for (Transition tr : s.getOutgoing()) {
-                    if (tr.getGuard() != null) {
-                        guarded.addAll(tr.getEvent());
-                    } else {
-                        notGuarded.addAll(tr.getEvent());
-                    }
+                	if (tr.getEvent() != null)
+                		if (tr.getGuard() != null)
+                			guarded.add(tr.getEvent());
+                		else
+                			notGuarded.add(tr.getEvent());
                 }
                 for (InternalTransition it : s.getInternal()) {
-                    if (it.getGuard() != null) {
-                        guarded.addAll(it.getEvent());
-                    } else {
-                        notGuarded.addAll(it.getEvent());
-                    }
+                	if (it.getEvent() != null)
+                		if (it.getGuard() != null)
+                			guarded.add(it.getEvent());
+                		else
+                			notGuarded.add(it.getEvent());
                 }
                 for (Event g : guarded) {
                     for (Event ng : notGuarded) {

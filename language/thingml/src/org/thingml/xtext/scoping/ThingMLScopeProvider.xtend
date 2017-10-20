@@ -36,6 +36,7 @@ import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.thingML.Transition
 import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.thingML.StateContainer
+import java.util.Arrays
 
 /**
  * This class contains custom scoping description.
@@ -169,7 +170,7 @@ class ThingMLScopeProvider extends AbstractThingMLScopeProvider {
 			Scopes.scopeFor( EMPTY );
 		}
 		else {
-			Scopes.scopeFor(h.event)
+			Scopes.scopeFor(Arrays.asList(h.event))
 		}
 	}
 	

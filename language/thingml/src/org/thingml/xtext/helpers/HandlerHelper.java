@@ -30,7 +30,7 @@ import org.thingml.xtext.thingML.ReceiveMessage;
  */
 public class HandlerHelper {
 
-
+	/*
     public static Set<AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>> allTriggeringPorts(Handler self) {
         Set<AbstractMap.SimpleImmutableEntry<Port, ReceiveMessage>> result = new HashSet<AbstractMap.SimpleImmutableEntry<Port,ReceiveMessage>>();
         for(Event e : self.getEvent()) {
@@ -41,5 +41,5 @@ public class HandlerHelper {
         }
         return result;
     }
-
+    */
 }

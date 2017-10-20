@@ -110,7 +110,7 @@ public class StateHelper {
 			return handlers.get(p).get(m);
 	}
 
-
+	
 	public static Map<Port, Map<Message, List<Handler>>> allMessageHandlersSC(StateContainer self) {
 		Map<Port, Map<Message, List<Handler>>> result = new HashMap<Port, Map<Message, List<Handler>>>();
 		for(State s1 : self.getSubstate()) {
@@ -125,7 +125,8 @@ public class StateHelper {
 				}
 				for (Handler t : handlers) {
 					//println("  Processisng handler " + t + " Event = " + t.getEvent)
-					for (Event e : t.getEvent()) {
+					Event e = t.getEvent();
+					if (e != null) {
 						if (e instanceof ReceiveMessage) {
 							ReceiveMessage rm = (ReceiveMessage) e;
 							Map<Message, List<Handler>> phdlrs = result.get(rm.getPort());
@@ -158,7 +159,8 @@ public class StateHelper {
 				handlers.add(i);
 			}
 			for (Handler t : handlers) {
-				for (Event e : t.getEvent()) {
+				Event e = t.getEvent();
+				if (e != null) {
 					if (e instanceof ReceiveMessage) {
 						ReceiveMessage rm = (ReceiveMessage) e;
 						Map<Message, List<Handler>> phdlrs = result.get(rm.getPort());
@@ -215,7 +217,8 @@ public class StateHelper {
 			}
 			for (Handler t : handlers) {
 				//println("  Processisng handler " + t + " Event = " + t.getEvent)
-				for (Event e : t.getEvent()) {
+				Event e = t.getEvent();
+				if (e != null) {
 					if (e instanceof ReceiveMessage) {
 						ReceiveMessage rm = (ReceiveMessage) e;
 						Map<Message, List<Handler>> phdlrs = result.get(rm.getPort());
@@ -303,7 +306,7 @@ public class StateHelper {
 					handlers.add(i);
 				}
 				for (Handler t : handlers) {
-					if (t.getEvent().isEmpty()) {
+					if (t.getEvent() == null) {
 						result.add(t);
 					}
 				}
@@ -323,7 +326,7 @@ public class StateHelper {
 				handlers.add(i);
 			}
 			for (Handler t : handlers) {
-				if (t.getEvent().isEmpty()) {
+				if (t.getEvent() == null) {
 					result.add(t);
 				}
 			}
@@ -343,7 +346,7 @@ public class StateHelper {
 				handlers.add(i);
 			}
 			for (Handler t : handlers) {
-				if (t.getEvent().isEmpty()) {
+				if (t.getEvent() == null) {
 					result.add(t);
 				}
 			}

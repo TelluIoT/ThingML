@@ -347,11 +347,10 @@ class ThingMLFormatter extends AbstractFormatter2 {
 	// TODO: implement for , Enumeration, EnumerationLiteral, Thing, PropertyAssign, Protocol, Function, Property, Message, Parameter, , , , Stream, JoinSources, MergeSources, SimpleSource, Filter, LengthWindow, TimeWindow, StateMachine, FinalState, CompositeState, Session, ParallelRegion, State, Transition, InternalTransition, ActionBlock, ExternStatement, LocalVariable, SendAction, VariableAssignment, LoopAction, ConditionalAction, ReturnAction, PrintAction, ErrorAction, StartSession, FunctionCallStatement, ExternExpression, Configuration, Instance, ConfigPropertyAssign, Connector, ExternalConnector
 	
 	def dispatch void format(Handler h, extension IFormattableDocument document) {
-		if (h.event.size > 0)
+		if(h.event !== null) {
 			h.regionFor.keyword("event").prepend[newLine]
-		for(Event e : h.event) {
-			e.regionFor.keyword("?").surround[noSpace]
-			e.append[newLine]				
+			h.event.regionFor.keyword("?").surround[noSpace]
+			h.event.append[newLine]
 		}
 		if (h.guard !== null) {
 			h.guard.append[newLine]

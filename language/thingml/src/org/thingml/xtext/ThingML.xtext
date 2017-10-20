@@ -142,7 +142,7 @@ Handler:
 Transition returns Transition:
 	'transition' (name=ID)? '->' target=[State|ID] 
 	( annotations+=PlatformAnnotation )*
-	('event' event+=Event)*
+	('event' event=Event)?
 	('guard' guard=Expression)?
 	('action' action=Action)?;
 
@@ -150,7 +150,7 @@ InternalTransition returns InternalTransition:
 	{InternalTransition}
 	'internal' (name=ID)?
 	( annotations+=PlatformAnnotation )*
-	('event' event+=Event)*
+	('event' event=Event)?
 	('guard' guard=Expression)?
 	('action' action=Action)?;
 

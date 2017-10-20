@@ -304,7 +304,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 
 	//FIXME: avoid duplication in the following 3 methods!!!
 	private void generateHandlerAction(Handler h, Message m, StringBuilder builder, Context ctx, String debug) {
-		if (h.getEvent().size() == 0) {
+		if (h.getEvent() == null) {
 			builder.append(".effect((message) => {\n");
 			builder.append(debug);
 			ctx.getCompiler().getThingActionCompiler().generate(h.getAction(), builder, ctx);
@@ -318,7 +318,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 	}
 
 	protected void generateTransition(Transition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-		if (t.getEvent().size() == 0) {
+		if (t.getEvent() == null) {
 			builder.append(ThingMLElementHelper.qname((State)t.eContainer(), "_") + ".to(" + ThingMLElementHelper.qname(t.getTarget(), "_") + ")");
 			if (t.getGuard() != null) {
 				builder.append(".when((message) => {");
@@ -356,7 +356,7 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 	}
 
 	protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
-		if (t.getEvent().size() == 0) {
+		if (t.getEvent() == null) {
 			if (t.eContainer() instanceof CompositeState && t.eContainer().eContainer() instanceof Thing) {//should be root Composate
 				builder.append("this.statemachine.to(null)");
 			} else {

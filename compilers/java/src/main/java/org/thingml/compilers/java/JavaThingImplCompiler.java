@@ -740,11 +740,9 @@ public class JavaThingImplCompiler extends FSMBasedThingImplCompiler {
 	}
 
 	private void buildTransitionsHelper(StringBuilder builder, Context ctx, State s, Handler i) {
-		if (i.getEvent() != null && i.getEvent().size() > 0) {
-			for (Event e : i.getEvent()) {
-				ReceiveMessage r = (ReceiveMessage) e;
-				buildTransition(builder, ctx, s, i, r);
-			}
+		if (i.getEvent() != null) {
+			ReceiveMessage r = (ReceiveMessage)i.getEvent();
+			buildTransition(builder, ctx, s, i, r);
 		} else {
 			buildTransition(builder, ctx, s, i, null);
 		}

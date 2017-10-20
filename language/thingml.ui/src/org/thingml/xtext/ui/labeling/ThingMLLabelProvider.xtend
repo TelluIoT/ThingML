@@ -150,8 +150,8 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 			'outline/open iconic/share-2x.png'			
 	}
 	def text(Handler t) {
-		if (t.event.size > 0)
-			'on ' + t.event.filter[it instanceof ReceiveMessage].map[(it as ReceiveMessage).port.name + '?' + (it as ReceiveMessage).message.name].join(', ')
+		if (t.event !== null && t.event instanceof ReceiveMessage)
+			'on ' + (t.event as ReceiveMessage).port.name + '?' + (t.event as ReceiveMessage).message.name
 		else
 			''			
 	}

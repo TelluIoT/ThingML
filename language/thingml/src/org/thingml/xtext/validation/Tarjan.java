@@ -78,7 +78,7 @@ public class Tarjan<T extends EObject> {
             if (el instanceof State) {
                 State s = (State) el;
                 for (Transition tr : s.getOutgoing()) {
-                    if (tr.getEvent().isEmpty()) {
+                    if (tr.getEvent() == null) {
                         if (tr.getGuard() == null) {
                             res.add(findElement((T) tr.getTarget()));
                         }

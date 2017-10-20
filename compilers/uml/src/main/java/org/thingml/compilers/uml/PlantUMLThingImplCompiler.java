@@ -59,13 +59,11 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 	}
 
 	private void doGenerateHandlers(Handler h, StringBuilder builder, Context ctx) {
-		if (h.getEvent().size() == 0) {
+		if (h.getEvent() == null) {
 			generateHandler(h, null, null, builder, ctx);
 		} else {
-			for (Event e : h.getEvent()) {
-				ReceiveMessage rm = (ReceiveMessage) e;
-				generateHandler(h, rm.getMessage(), rm.getPort(), builder, ctx);
-			}
+			ReceiveMessage rm = (ReceiveMessage)h.getEvent();
+			generateHandler(h, rm.getMessage(), rm.getPort(), builder, ctx);
 		}
 	}
 
@@ -162,7 +160,7 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 			builder.append("]");
 		}
 		if (t.getAction() != null) {
-			if (t.getEvent().size() == 0 && t.getGuard() == null)
+			if (t.getEvent() == null && t.getGuard() == null)
 				builder.append("action ");
 			else
 				builder.append("\\naction ");
@@ -180,8 +178,8 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 			StringBuilder temp = new StringBuilder();
 			temp.append(transition);
 			if (msg != null && p != null) {
-				if(t.getEvent().size() > 0 && ((ReceiveMessage)t.getEvent().get(0)).getName()!= null)
-					temp.append(((ReceiveMessage)t.getEvent().get(0)).getName() + ":");
+				if(t.getEvent() != null && ((ReceiveMessage)t.getEvent()).getName()!= null)
+					temp.append(((ReceiveMessage)t.getEvent()).getName() + ":");
 				temp.append(p.getName() + "?" + msg.getName());
 			}
 			generateGuardAndActions(t, temp, ctx);
@@ -199,8 +197,8 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 			if (msg != null && p != null) {
 				if (t.getName()!=null)
 					builder.append("\\n");
-				if(t.getEvent().size() > 0 && ((ReceiveMessage)t.getEvent().get(0)).getName()!= null)
-					builder.append(((ReceiveMessage)t.getEvent().get(0)).getName() + ":");
+				if(t.getEvent() != null && ((ReceiveMessage)t.getEvent()).getName()!= null)
+					builder.append(((ReceiveMessage)t.getEvent()).getName() + ":");
 				builder.append(p.getName() + "?" + msg.getName());
 			}
 			generateGuardAndActions(t, builder, ctx);
@@ -210,8 +208,8 @@ public class PlantUMLThingImplCompiler extends FSMBasedThingImplCompiler {
 
 	protected void generateInternalTransition(InternalTransition t, Message msg, Port p, StringBuilder builder, Context ctx) {
 		builder.append("\t" + ThingMLHelpers.findContainingState(t).getName() + " : ");
-		if(t.getEvent().size() > 0 && ((ReceiveMessage)t.getEvent().get(0)).getName()!= null)
-			builder.append(((ReceiveMessage)t.getEvent().get(0)).getName() + ":");
+		if(t.getEvent() != null && ((ReceiveMessage)t.getEvent()).getName()!= null)
+			builder.append(((ReceiveMessage)t.getEvent()).getName() + ":");
 		if(p != null && msg != null)
 			builder.append(p.getName() + "?" + msg.getName() + " / ");
 		generateGuardAndActions(t, builder, ctx);

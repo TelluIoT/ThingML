@@ -604,11 +604,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         boolean first = true;
 
         // Gather all the empty transitions
-        ArrayList<Handler> transitions = new ArrayList<Handler>();
-        for (Transition t : s.getOutgoing()) if (t.getEvent().isEmpty()) transitions.add(t);
-        for (InternalTransition t : s.getInternal()) if (t.getEvent().isEmpty()) transitions.add(t);
-
-        for (Handler h : transitions) {
+        for (Handler h : StateHelper.allEmptyHandlers(s)) {
             if (first) first = false;
             else builder.append("else ");
 
@@ -750,7 +746,8 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         // Gather of the events of the reception of the message
         ArrayList<ReceiveMessage> events = new ArrayList<ReceiveMessage>();
         for (Handler t : transitions) {
-            for (Event e : t.getEvent()) {
+        	Event e = t.getEvent();
+            if (e != null) {
                 if (e instanceof ReceiveMessage) {
                     ReceiveMessage rm = (ReceiveMessage) e;
                     if (rm.getPort() == port && rm.getMessage() == msg) events.add(rm);

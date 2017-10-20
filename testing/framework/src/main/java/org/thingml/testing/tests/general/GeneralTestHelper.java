@@ -328,7 +328,7 @@ public class GeneralTestHelper {
 			ReceiveMessage doneEvent = ThingMLFactory.eINSTANCE.createReceiveMessage();
 			doneEvent.setPort(port);
 			doneEvent.setMessage(testDone);
-			transition.getEvent().add(doneEvent);;
+			transition.setEvent(doneEvent);
 			VariableAssignment setTrue = ThingMLFactory.eINSTANCE.createVariableAssignment();
 			setTrue.setProperty(completed);
 			BooleanLiteral completedTrue = ThingMLFactory.eINSTANCE.createBooleanLiteral();
