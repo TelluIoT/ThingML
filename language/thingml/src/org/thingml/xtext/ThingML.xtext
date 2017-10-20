@@ -128,9 +128,11 @@ State returns State:
 	StateMachine | FinalState | CompositeState |
 	'state' name=ID ( annotations+=PlatformAnnotation )* '{'
 		(properties+=Property)*
-		('on' 'entry' entry=Action)?
-		('on' 'exit' exit=Action)?
-		(internal+=InternalTransition | outgoing+=Transition)*
+		(
+			('on' 'entry' entry=Action)? &
+			('on' 'exit' exit=Action)? &
+			(properties+=Property | internal+=InternalTransition | outgoing+=Transition)*
+		)
 	'}';
 
 Handler:
@@ -156,18 +158,22 @@ InternalTransition returns InternalTransition:
 CompositeState returns CompositeState:
 	'composite' 'state' name=ID 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
 		(properties+=Property)*
-		('on' 'entry' entry=Action)?
-		('on' 'exit' exit=Action)?
-		(substate+=State | internal+=InternalTransition | outgoing+=Transition)*
+		(
+			('on' 'entry' entry=Action)? &
+			('on' 'exit' exit=Action)? &
+			(properties+=Property | substate+=State | internal+=InternalTransition | outgoing+=Transition)*
+		)
 		(region+=Region | session+=Session)*
 	'}';
 
 StateMachine returns CompositeState: // Actually only another syntax for a composite state
 	'statechart' (name=ID)? 'init' initial=[State|ID] ('keeps' history?='history')?	( annotations+=PlatformAnnotation )* '{'
 		(properties+=Property)*
-		('on' 'entry' entry=Action)?
-		('on' 'exit' exit=Action)?
-		(substate+=State | internal+=InternalTransition)*
+		(
+			('on' 'entry' entry=Action)? &
+			('on' 'exit' exit=Action)? &
+			(properties+=Property | substate+=State | internal+=InternalTransition)*
+		)
 		(region+=Region | session+=Session)*
 	'}';
 
