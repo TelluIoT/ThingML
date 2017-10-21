@@ -166,9 +166,8 @@ class ThingMLFormatter extends AbstractFormatter2 {
 		for (Function function : thing.functions) {
 			function.format;
 		}
-		for (CompositeState state : thing.behaviour) {
-			state.format;
-		}
+		if (thing.behaviour !== null)
+			thing.behaviour.format
 		thing.regionFor.keyword("{").append[newLine].append[newLine]
 		thing.regionFor.keyword("}").surround[newLine].append[newLine]
 		//thing.append[setNewLines(2,2,Integer.MAX_VALUE)]

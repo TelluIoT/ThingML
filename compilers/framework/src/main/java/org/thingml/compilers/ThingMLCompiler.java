@@ -340,7 +340,7 @@ public abstract class ThingMLCompiler {
 
             if (debugThings.contains(thing)) {
                 if (!AnnotatedElementHelper.isDefined(thing, "debug", "false")) {//collect everything not marked with @debug "false"
-                    debugBehavior = !thing.getBehaviour().isEmpty() && !AnnotatedElementHelper.isDefined(thing.getBehaviour().get(0), "debug", "false");
+                	debugBehavior = thing.getBehaviour() != null && !AnnotatedElementHelper.isDefined(thing.getBehaviour(), "debug", "false");
                     for (Function f : ThingMLHelpers.allFunctions(thing)) {
                         if (!AnnotatedElementHelper.isDefined(f, "debug", "false")) {
                             debugFunctions.add(f);
@@ -367,7 +367,7 @@ public abstract class ThingMLCompiler {
                         }
                     }
                 } else {//collect everything marked with @debug "true"
-                    debugBehavior = !thing.getBehaviour().isEmpty() && AnnotatedElementHelper.isDefined(thing.getBehaviour().get(0), "debug", "true");
+                	debugBehavior = thing.getBehaviour() != null && AnnotatedElementHelper.isDefined(thing.getBehaviour(), "debug", "true");
                     for (Function f : ThingMLHelpers.allFunctions(thing)) {
                         if (AnnotatedElementHelper.isDefined(f, "debug", "true")) {
                             debugFunctions.add(f);

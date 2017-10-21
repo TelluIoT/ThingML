@@ -153,9 +153,8 @@ public abstract class LoadModelTestsCommon {
 		List<Message> testPortReceives = testPort.getReceives();
 		assertTrue("'TestPort' receives 1 message", testPortReceives.size() == 1);
 		assertTrue("'TestPort' receives 'TestMessage'", testPortReceives.get(0) == msgs.testMessage);
-		List<CompositeState> behaviour = tt.getBehaviour();
-		assertTrue("'TestThing' has a statechart", behaviour.size() == 1);
-		CompositeState statechart = behaviour.get(0);
+		assertTrue("'TestThing' has a statechart", tt.getBehaviour() != null);
+		CompositeState statechart = tt.getBehaviour();
 		assertTrue("'TestThing' has a statechart named 'TestChart'", statechart.getName().equals("TestChart"));
 		List<State> states = statechart.getSubstate();
 		assertTrue("'TestChart' has 1 state", states.size() == 1);

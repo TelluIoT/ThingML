@@ -96,8 +96,8 @@ public class ThingHelper {
 	public static List<Transition> allTransitionsWithAction(Thing self) {
 		//var result = new ArrayList[Handler]()
 		final List<Transition> result = new ArrayList<Transition>();
-		for(CompositeState sm : self.getBehaviour()) {
-			for(State s : StateHelper.allStates(sm)) {
+		if (self.getBehaviour() != null) {
+			for(State s : StateHelper.allStates(self.getBehaviour())) {
 				for(Transition o : s.getOutgoing()) {
 					if (o.getAction() != null) {
 						result.add(o);
@@ -111,8 +111,8 @@ public class ThingHelper {
 	public static List<InternalTransition> allInternalTransitionsWithAction(Thing self) {
 		//var result = new ArrayList[Handler]()
 		final List<InternalTransition> result = new ArrayList<InternalTransition>();
-		for(CompositeState sm : self.getBehaviour()) {
-			for(State s : StateHelper.allStates(sm)) {
+		if (self.getBehaviour() != null) {
+			for(State s : StateHelper.allStates(self.getBehaviour())) {
 				for(InternalTransition o : s.getInternal()) {
 					if (o.getAction() != null) {
 						result.add(o);

@@ -509,7 +509,8 @@ public class ThingMLHelpers {
 	public static ArrayList<CompositeState> allStateMachines(Thing thing) {
 		ArrayList<CompositeState> result = new ArrayList<CompositeState>();
 		for (Thing t : allThingFragments(thing)) {
-			result.addAll(t.getBehaviour());
+			if (t.getBehaviour() != null)
+				result.add(t.getBehaviour());
 		}
 		return result;
 	}

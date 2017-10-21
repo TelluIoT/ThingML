@@ -65,7 +65,8 @@ EnumerationLiteral returns EnumerationLiteral:
 Thing returns Thing:
 	'thing' (^fragment?='fragment')? name=ID ('includes' includes+=[Thing|ID] ( "," includes+=[Thing|ID])*)? 
 	( annotations+=PlatformAnnotation )*'{'
-		(messages+=Message | ports += Port | properties+=Property | functions+=Function | assign+=PropertyAssign | behaviour+=StateMachine /* | streams+=Stream*/)* 
+		(messages+=Message | ports += Port | properties+=Property | functions+=Function | assign+=PropertyAssign /* | streams+=Stream*/)*
+		(behaviour=StateMachine)?
 	'}';
 
 PropertyAssign returns PropertyAssign:

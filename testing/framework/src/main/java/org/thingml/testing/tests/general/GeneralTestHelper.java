@@ -17,6 +17,7 @@
 package org.thingml.testing.tests.general;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -441,7 +442,7 @@ public class GeneralTestHelper {
 		return null;
 	}
 	public State findState(Thing thing, String name) throws AssertionError {
-		State found = findState(thing.getBehaviour(), name);
+		State found = findState(Arrays.asList(thing.getBehaviour()), name);
 		if (found != null) return found;
 		throw new AssertionError("Couldn't find state '"+name+"' in thing '"+thing.getName()+"'");
 	}

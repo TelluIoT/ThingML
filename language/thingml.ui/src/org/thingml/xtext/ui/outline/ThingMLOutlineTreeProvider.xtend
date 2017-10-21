@@ -56,7 +56,7 @@ class ThingMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		thing.properties.forEach[createNode(parent, it)]
 		thing.functions.forEach[createNode(parent, it)]
 		//thing.assign.forEach[createNode(outlineNode, it)]
-		thing.behaviour.forEach[createNode(parent, it)]
+		if (thing.behaviour !== null) createNode(parent, thing.behaviour)
 	}
 	
 	def _isLeaf(Port port) { false }

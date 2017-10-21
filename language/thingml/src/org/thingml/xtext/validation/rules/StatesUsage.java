@@ -24,9 +24,11 @@ package org.thingml.xtext.validation.rules;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
+import org.thingml.xtext.helpers.StateHelper;
 import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.FinalState;
+import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
@@ -48,12 +50,12 @@ public class StatesUsage extends Rule {
 
     @Override
     public String getName() {
-        return "Things Usage";
+        return "States Usage";
     }
 
     @Override
     public String getDescription() {
-        return "Check that a thing has no more than one state machine, that state are reachable, etc";
+        return "Check that states are reachable and not sinks";
     }
 
     @Override
@@ -71,27 +73,16 @@ public class StatesUsage extends Rule {
     }
 
     private void check(Thing t, Checker checker) {
-    	if (ThingMLHelpers.allStateMachines(t).size() > 1) {
-    		String msg = "Thing " + t.getName() + " has multiple state machines: ";
-    		int i = 0;
-    		for(CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
-    			if (i > 0)
-    				msg += ", ";
-    			msg += ((Thing)sm.eContainer()).getName() + ":" + sm.getName(); 
-    			i++;
-    		}
-    		msg += ".\nMake sure one and only state machine is defined in the context of Thing " + t.getName();
-            checker.addGenericError(msg, t); 
-    	}    	    	
-        for (CompositeState sm : t.getBehaviour()) { //since we call it for allThings, we should not do that for allStateMachines, or else we can duplicate checks...
-            for (org.thingml.xtext.thingML.State s : org.thingml.xtext.helpers.StateHelper.allStates(sm)) {
+    	if (t.getBehaviour() != null) {
+    		CompositeState sm = t.getBehaviour();
+            for (State s : StateHelper.allStates(sm)) {
                 if((EcoreUtil.equals(s, sm)))
                     continue;
                 if (!AnnotatedElementHelper.isDefined(s, "SuppressWarnings", "Unreachable")) {
                     if (s.eContainer() instanceof StateContainer && !EcoreUtil.equals(s, ((StateContainer)s.eContainer()).getInitial()) && !EcoreUtil.equals(s, sm)) {
                     	StateContainer c = (StateContainer) s.eContainer();
                     	boolean canBeReached = false;
-                    	for(org.thingml.xtext.thingML.State source : c.getSubstate()) {
+                    	for(State source : c.getSubstate()) {
                     		for(Transition tr : source.getOutgoing()) {
                     			if (EcoreUtil.equals(s, tr.getTarget())) {
                     				canBeReached = true;
