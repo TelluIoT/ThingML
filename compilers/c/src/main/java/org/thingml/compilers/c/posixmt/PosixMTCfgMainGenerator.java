@@ -617,7 +617,7 @@ public class PosixMTCfgMainGenerator extends CCfgMainGenerator {
         
         // init state variables:
         if (ThingMLHelpers.allStateMachines(inst.getType()).size() > 0) { // There is a state machine
-            for(StateContainer r : CompositeStateHelper.allContainedRegions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
+            for(StateContainer r : CompositeStateHelper.allContainedStateContainers(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
                 builder.append(ctx.getInstanceVarName(inst) + "." + ctx.getStateVarName(r) + " = " + ctx.getStateID(r.getInitial()) + ";\n");
             }
             for(Session s : StateContainerHelper.allContainedSessions(ThingMLHelpers.allStateMachines(inst.getType()).get(0))) {
