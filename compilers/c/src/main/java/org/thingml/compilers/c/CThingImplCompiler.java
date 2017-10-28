@@ -604,7 +604,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         boolean first = true;
 
         // Gather all the empty transitions
-        for (Handler h : StateHelper.allEmptyHandlers(s)) {
+        for (Handler h : StateHelper.emptyHandlers(s)) {
             if (first) first = false;
             else builder.append("else ");
 

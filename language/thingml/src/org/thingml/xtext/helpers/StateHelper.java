@@ -318,38 +318,42 @@ public class StateHelper {
 	public static List<Handler> allEmptyHandlers(State self) {
 		final List<Handler> result = new ArrayList<Handler>();
 		for (State s : allStates(self)) {
-			List<Handler> handlers = new ArrayList<Handler>();
 			for (Transition t : s.getOutgoing()) {
-				handlers.add(t);
+				if (t.getEvent() == null) result.add(t);
 			}
 			for (InternalTransition i : s.getInternal()) {
-				handlers.add(i);
+				if (i.getEvent() == null) result.add(i);
 			}
-			for (Handler t : handlers) {
-				if (t.getEvent() == null) {
-					result.add(t);
-				}
-			}
+
 		}
 		return result;
 	}
 
+	public static List<Handler> emptyHandlers(State self) {
+		final List<Handler> result = new ArrayList<Handler>();
+ 
+			for (Transition t : self.getOutgoing()) {
+				if (t.getEvent() == null) result.add(t);
+			}
+			for (InternalTransition i : self.getInternal()) {
+				if (i.getEvent() == null) result.add(i);
+			}
+
+
+		return result;
+	}
 
 	public static List<Handler> allEmptyHandlersIncludingSessions(State self) {
 		final List<Handler> result = new ArrayList<Handler>();
 		for (State s : allStatesIncludingSessions(self)) {
-			List<Handler> handlers = new ArrayList<Handler>();
+
 			for (Transition t : s.getOutgoing()) {
-				handlers.add(t);
+				if (t.getEvent() == null)  result.add(t);
 			}
 			for (InternalTransition i : s.getInternal()) {
-				handlers.add(i);
+				if (i.getEvent() == null) result.add(i);
 			}
-			for (Handler t : handlers) {
-				if (t.getEvent() == null) {
-					result.add(t);
-				}
-			}
+
 		}
 		return result;
 	}

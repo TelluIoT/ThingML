@@ -86,8 +86,6 @@ public class CompositeStateHelper {
     public static List<StateContainer> allContainedRegions(CompositeState self) {
     	List<StateContainer> result = new ArrayList<StateContainer>();
         result.add(self);
-        // Contained composite states are not regions for the current state!
-        //result.addAll(ThingMLHelpers.<StateContainer>allContainedElementsOfType(self, CompositeState.class));
         result.addAll(ThingMLHelpers.<StateContainer>allContainedElementsOfType(self, Region.class));
         return result;
     }
