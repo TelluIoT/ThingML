@@ -206,7 +206,7 @@ public class PosixDNSSDThingImplCompiler extends CThingImplCompiler {
             builder.append(ThingMLElementHelper.qname(sm, "_") + "_OnEntry(" + ctx.getInstanceVarName() + "->" + ctx.getStateVarName(r) + ", " + ctx.getInstanceVarName() + ");\n");
         }
 
-        State s = CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm).get(0);
+        State s = CompositeStateHelper.allContainedSimpleStatesIncludingSessions(sm).iterator().next();
         builder.append("break;\n}\n");
 
         builder.append("case " + ctx.getStateID(s) + ":{\n");

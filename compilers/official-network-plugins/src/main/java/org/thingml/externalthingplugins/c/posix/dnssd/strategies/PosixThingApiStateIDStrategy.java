@@ -17,6 +17,7 @@
 package org.thingml.externalthingplugins.c.posix.dnssd.strategies;
 
 import java.util.List;
+import java.util.Set;
 
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.interfaces.c.ICThingApiStateIDStrategy;
@@ -45,7 +46,7 @@ public class PosixThingApiStateIDStrategy implements ICThingApiStateIDStrategy {
         if (ThingMLHelpers.allStateMachines(thing).size() > 0) {// There should be only one if there is one
             CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
 
-            List<State> states = CompositeStateHelper.allContainedStatesIncludingSessions(sm);
+            Set<State> states = CompositeStateHelper.allContainedStatesIncludingSessions(sm);
             builder.append("#define " + getTerminateStateName(thing) + " " + states.size() + "\n");
             builder.append("\n");
         }

@@ -303,9 +303,11 @@ public class CThingApiCompiler extends ThingApiCompiler {
             CompositeState sm = ThingMLHelpers.allStateMachines(thing).get(0);
             builder.append("// Definition of the states:\n");
 
-            List<State> states = CompositeStateHelper.allContainedStatesIncludingSessions(sm);
-            for (int i = 0; i < states.size(); i++) {
-                builder.append("#define " + ctx.getStateID(states.get(i)) + " " + i + "\n");
+            Set<State> states = CompositeStateHelper.allContainedStatesIncludingSessions(sm);
+            int i = 0;
+            for (State s : states) {
+                builder.append("#define " + ctx.getStateID(s) + " " + i + "\n");
+                i++;
             }
             builder.append("\n");
         }

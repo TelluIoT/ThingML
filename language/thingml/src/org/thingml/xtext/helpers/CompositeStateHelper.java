@@ -67,9 +67,9 @@ public class CompositeStateHelper {
         return result;
     }
 
-    public static List<State> allContainedStatesIncludingSessions(CompositeState self) {
-        final List<State> result = new ArrayList<State>();
-        for(StateContainer r : allContainedRegionsAndSessions(self)) {
+    public static Set<State> allContainedStatesIncludingSessions(CompositeState self) {
+        final Set<State> result = new HashSet<State>();
+        for(StateContainer r : allContainedStateContainers(self)) {
             if (r instanceof State) {
                 result.add((State)r);
             }
@@ -91,7 +91,7 @@ public class CompositeStateHelper {
     }
 
 
-    public static List<StateContainer> allContainedRegionsAndSessions(CompositeState self) {
+    public static List<StateContainer> allContainedStateContainers(CompositeState self) {
         List<StateContainer> result = new ArrayList<StateContainer>();
         result.add(self);
         result.addAll(ThingMLHelpers.<StateContainer>allContainedElementsOfType(self, StateContainer.class));
@@ -142,8 +142,8 @@ public class CompositeStateHelper {
     }
 
 
-    public static List<State> allContainedSimpleStatesIncludingSessions(CompositeState self) {
-        final List<State> result = allContainedStatesIncludingSessions(self);
+    public static Set<State> allContainedSimpleStatesIncludingSessions(CompositeState self) {
+        final Set<State> result = allContainedStatesIncludingSessions(self);
         result.removeAll(allContainedCompositeStatesIncludingSessions(self));
         return result;
     }

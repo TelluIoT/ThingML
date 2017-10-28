@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.CompositeState;
@@ -49,11 +50,11 @@ public class StateHelper {
 		}
 	}
 
-	public static List<State> allStatesIncludingSessions(State self) {
+	public static Set<State> allStatesIncludingSessions(State self) {
 		if (self instanceof CompositeState) {
 			return CompositeStateHelper.allContainedStatesIncludingSessions((CompositeState) self);
 		} else {
-			return Collections.singletonList((State) self);
+			return Collections.singleton((State) self);
 		}
 	}
 
