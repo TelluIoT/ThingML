@@ -699,7 +699,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
             builder.append(r.getName() + " ");
         }
         builder.append("\n");
-*/
+    	 */
         for (StateContainer r : CompositeStateHelper.allContainedRegions(cs)) {
         	
             builder.append("//Region " + r.getName() + "\n");
