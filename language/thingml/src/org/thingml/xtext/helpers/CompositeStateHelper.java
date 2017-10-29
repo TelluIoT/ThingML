@@ -161,8 +161,13 @@ public class CompositeStateHelper {
         return result;
     }
     
-    
-    public static List<StateContainer> allContainedRegions(CompositeState self) {
+    /**
+     * Return the regions for this composite state. NOT IN DEPTH.
+     * It corresponds to { self U self.getRegion() }
+     * @param self
+     * @return itself plus self.getRegion()
+     */
+    public static List<StateContainer> allRegionsFor(CompositeState self) {
     	List<StateContainer> result = new ArrayList<StateContainer>();
         result.add(self);
         result.addAll(self.getRegion());

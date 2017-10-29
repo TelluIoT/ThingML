@@ -558,7 +558,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
 
     protected void dispatchEmptyToSubRegions(Thing thing, StringBuilder builder, CompositeState cs, CCompilerContext ctx, DebugProfile debugProfile) {
 
-        for (StateContainer r :CompositeStateHelper.allContainedRegions(cs)) {
+        for (StateContainer r :CompositeStateHelper.allRegionsFor(cs)) {
             builder.append("//Region " + r.getName() + "\n");
 
             ArrayList<State> states = new ArrayList<State>();
@@ -700,7 +700,7 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         builder.append("\n");
     	 */
-        for (StateContainer r : CompositeStateHelper.allContainedRegions(cs)) {
+        for (StateContainer r : CompositeStateHelper.allRegionsFor(cs)) {
         	
             builder.append("//Region " + r.getName() + "\n");
 
@@ -722,9 +722,9 @@ public class CThingImplCompiler extends FSMBasedThingImplCompiler {
         }
         
 
-        if ((cs.eContainer() instanceof Region) && (!(cs.eContainer() instanceof Session))) {
-            builder.append(ctx.getStateVarName((Region) cs.eContainer()) + "_event_consumed = 0 ");
-            for (Region r : cs.getRegion()) {
+        if ((cs.eContainer() instanceof Region) || (cs.eContainer() instanceof CompositeState)) {
+            builder.append(ctx.getStateVarName((StateContainer) cs.eContainer()) + "_event_consumed = 0 ");
+            for (StateContainer r : CompositeStateHelper.allRegionsFor(cs)) {
                 // for all states of the region, if the state can handle the message and that state is active we forward the message
                 builder.append("| " + ctx.getStateVarName(r) + "_event_consumed ");
             }
