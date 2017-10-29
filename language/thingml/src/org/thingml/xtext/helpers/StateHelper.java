@@ -42,11 +42,11 @@ import org.thingml.xtext.thingML.Transition;
 public class StateHelper {
 
 
-	public static List<State> allStates(State self) {
+	public static Set<State> allStates(State self) {
 		if (self instanceof CompositeState) {
-			return CompositeStateHelper.allContainedStates((CompositeState) self);
+			return CompositeStateHelper.allContainedStatesExludingSessions((CompositeState) self);
 		} else {
-			return Collections.singletonList((State) self);
+			return Collections.singleton((State) self);
 		}
 	}
 

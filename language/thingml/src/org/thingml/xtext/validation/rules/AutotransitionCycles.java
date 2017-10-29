@@ -62,7 +62,7 @@ public class AutotransitionCycles extends Rule {
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {
             for (CompositeState sm : ThingMLHelpers.allStateMachines(thing)) {
                 final Set<org.thingml.xtext.thingML.State> vertices = new HashSet<org.thingml.xtext.thingML.State>();
-                for (org.thingml.xtext.thingML.State s : CompositeStateHelper.allContainedStates(sm)) {
+                for (org.thingml.xtext.thingML.State s : CompositeStateHelper.allContainedStatesExludingSessions(sm)) {
                     vertices.add(s);
                 }
                 final Tarjan<org.thingml.xtext.thingML.State> t = new Tarjan<>(cfg, vertices);
