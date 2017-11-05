@@ -1,4 +1,4 @@
-CC = /*CC*/
+# CC = /*CC*/
 LIBS = -lpthread /*LIBS*/
 /*CFLAGS*/
 SRCS = /*SOURCES*/ runtime.c

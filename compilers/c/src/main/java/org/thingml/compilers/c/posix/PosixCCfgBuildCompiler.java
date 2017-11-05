@@ -78,8 +78,11 @@ public class PosixCCfgBuildCompiler extends CfgBuildCompiler {
         mtemplate = mtemplate.replace("/*NAME*/", cfg.getName());
 
         String compiler = "cc"; // default value
-        if (AnnotatedElementHelper.hasAnnotation(cfg, "c_compiler")) compiler = AnnotatedElementHelper.annotation(cfg, "c_compiler").iterator().next();
-        mtemplate = mtemplate.replace("/*CC*/", compiler);
+        if (AnnotatedElementHelper.hasAnnotation(cfg, "c_compiler")) {
+        	compiler = AnnotatedElementHelper.annotation(cfg, "c_compiler").iterator().next();
+        	mtemplate = mtemplate.replace("# CC = /*CC*/", "CC = " + compiler);
+        }
+        
 
         String flags;
         if (ctx.enableDebug()) flags = "CFLAGS = -DDEBUG";
