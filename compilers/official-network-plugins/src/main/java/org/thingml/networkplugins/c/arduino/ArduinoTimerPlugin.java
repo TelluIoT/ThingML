@@ -126,7 +126,7 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             hwtimer0.generateInstructions(ctx, lib, libh);
 
             ctx.getBuilder(hwtimer0.timerName + ".c").append(lib);
-            ctx.getBuilder(hwtimer0.timerName + ".h").append("//" + hwtimer0.timerName + "\n");
+            ctx.getBuilder(hwtimer0.timerName + ".h").append(libh);
         }
         if (!hwtimer1.ExternalConnectors.isEmpty()) {
             ctx.addToInitCode("\n" + hwtimer1.timerName + "_instance.listener_id = add_instance(&" + hwtimer1.timerName + "_instance);\n");
@@ -140,7 +140,7 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             hwtimer1.generateInstructions(ctx, lib, libh);
 
             ctx.getBuilder(hwtimer1.timerName + ".c").append(lib);
-            ctx.getBuilder(hwtimer1.timerName + ".h").append("//" + hwtimer1.timerName + "\n");
+            ctx.getBuilder(hwtimer1.timerName + ".h").append(libh);
         }
         if (!hwtimer2.ExternalConnectors.isEmpty()) {
             ctx.addToInitCode("\n" + hwtimer2.timerName + "_instance.listener_id = add_instance(&" + hwtimer2.timerName + "_instance);\n");
@@ -168,7 +168,7 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
             hwtimer3.generateInstructions(ctx, lib, libh);
 
             ctx.getBuilder(hwtimer3.timerName + ".c").append(lib);
-            ctx.getBuilder(hwtimer3.timerName + ".h").append("//" + hwtimer3.timerName + "\n");
+            ctx.getBuilder(hwtimer3.timerName + ".h").append(libh); 
         }
     }
 
