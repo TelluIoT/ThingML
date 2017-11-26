@@ -372,7 +372,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                 ctx.setConcreteThing(t);
                 Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch = ConfigurationHelper.allMessageDispatch(cfg, t, p);
 
-                //Ugly
+                //Ugly -- Adding message for internal ports ?
                 for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
                     if (entries.getKey().getType().getName().equals(t.getName())) {
                         for (Port ip : entries.getValue()) {
@@ -390,6 +390,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
                         break;
                     }
                 }
+                
 
                 for (Message m : allMessageDispatch.keySet()) {
                     headerbuilder.append("// Enqueue of messages " + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
@@ -454,7 +455,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
         ctx.clearConcreteThing();
     }
 
-
+/*   DEAD CODE ?
     public int generateSerializationForForwarder(CCompilerContext ctx, Message m, StringBuilder builder, int HandlerCode, Set<String> ignoreList) {
 
         builder.append("byte forward_buf[" + (ctx.getMessageSerializationSize(m) - 2) + "];\n");
@@ -499,7 +500,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
             return j - 1;
         }
     }
-
+*/
     protected boolean isThereNetworkListener(Configuration cfg) {
         boolean ret = false;
 
@@ -1232,7 +1233,7 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
             if (ctx.sync_fifo()) builder.append("fifo_unlock();\n");
 
-            // Begin Horrible deserialization trick
+            // Deserialization of the parameters
             builder.append("uint8_t mbufi_" + m.getName() + " = 2;\n");
 
             for (Parameter pt : m.getParameters()) {
@@ -1267,15 +1268,16 @@ public class CCfgMainGenerator extends CfgMainGenerator {
 
                     for (int i = 0; i < ctx.getCByteSize(pt.getTypeRef().getType(), 0); i++) {
 
-                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getTypeRef().getType(), 0) - i - 1) + "]");
-                            builder.append(" = mbuf[mbufi_" + m.getName() + " + " + i + "];\n");
+                    	//builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + (ctx.getCByteSize(pt.getTypeRef().getType(), 0) - i - 1) + "]");
+                        builder.append("u_" + m.getName() + "_" + pt.getName() + ".bytebuffer[" + i + "]");
+                        builder.append(" = mbuf[mbufi_" + m.getName() + " + " + i + "];\n");
 
                     }
 
                     builder.append("mbufi_" + m.getName() + " += " + ctx.getCByteSize(pt.getTypeRef().getType(), 0) + ";\n");
                 }
             }
-            // End Horrible deserialization trick
+            
 
             builder.append("dispatch_" + m.getName() + "(");
             builder.append("(mbuf[0] << 8) + mbuf[1] /* instance port*/");

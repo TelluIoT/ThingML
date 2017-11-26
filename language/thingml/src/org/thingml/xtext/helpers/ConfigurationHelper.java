@@ -416,7 +416,7 @@ public class ConfigurationHelper {
      sorted by source instance as a list of target instances+port
      message* -> source instance* -> (target instance, port)*
 
-     TODO: WTF?! We need to return a proper structure that one can exploit intuitively, not that mess of Map<Message, ...>!!!
+     TODO: We should return a proper structure that one can exploit intuitively, not a Map<Message, ...>
 	 */
 	public static Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> allMessageDispatch(Configuration self, Thing t, Port p) {
 		Map<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>> result = new HashMap<Message, Map<Instance, List<AbstractMap.SimpleImmutableEntry<Instance, Port>>>>();

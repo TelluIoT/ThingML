@@ -824,13 +824,16 @@ public abstract class CCompilerContext extends Context {
                 builder.append("} u_" + v + ";\n");
                 builder.append("u_" + v + ".p = " + v + ";\n");
             
-                while (i > 0) {
-                    i = i - 1;
+                int j = 0;
+                while (j < i) {
+                    
                     //if (i == 0) 
                     //builder.append("_fifo_enqueue(" + variable + "_serializer_pointer[" + i + "] & 0xFF);\n");
                     
-                    builder.append("_fifo_enqueue(u_" + variable + ".bytebuffer[" + i + "] & 0xFF );\n");
+                    builder.append("_fifo_enqueue(u_" + variable + ".bytebuffer[" + j + "] & 0xFF );\n");
                     //else builder.append("_fifo_enqueue((parameter_serializer_pointer[" + i + "]>>" + (8 * i) + ") & 0xFF);\n");
+                    j = j+1;
+                    		
         }
             }
         }
