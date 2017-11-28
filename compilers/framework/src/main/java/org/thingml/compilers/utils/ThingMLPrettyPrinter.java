@@ -398,13 +398,13 @@ public class ThingMLPrettyPrinter extends ThingActionCompiler {
 
     @Override
     public void generate(Increment action, StringBuilder builder, Context ctx) {
-        generate(action.getVar(), builder, ctx);
+        builder.append(action.getVar().getName());
         builder.append("++" + NEW_LINE);
     }
 
     @Override
     public void generate(Decrement action, StringBuilder builder, Context ctx) {
-        generate(action.getVar(), builder, ctx);
+    	builder.append(action.getVar().getName());
         builder.append("--" + NEW_LINE);
     }
     
