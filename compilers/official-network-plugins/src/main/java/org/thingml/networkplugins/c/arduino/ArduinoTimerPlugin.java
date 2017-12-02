@@ -548,8 +548,9 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
         public void generateInstructions(CCompilerContext ctx, StringBuilder builder, StringBuilder headerbuilder) {
         	
         	// Keep track of messages which have been processed. The forward function should not be generated several times
-        	// even if the same messages is used in different Things / Connectors.
-        	HashSet<Message> processed = new HashSet<Message>();
+        	// for the same thing/port/message combination
+        	
+        	HashSet<String> processed = new HashSet<String>();
         	
         	for (ExternalConnector eco : ExternalConnectors) {
                 Thing t = eco.getInst().getType();
@@ -557,8 +558,10 @@ public class ArduinoTimerPlugin extends NetworkPlugin {
 
                 for (Message m : p.getSends()) {
                 	
-                	if (processed.contains(m)) continue;
-                	processed.add(m);
+                	String id = eco.getName() + "_" + ctx.getSenderName(t, p, m);
+                	
+                	if (processed.contains(id)) continue;
+                	processed.add(id);
                 	
                 	builder.append("// Forwarding of messages " + eco.getName() + "::" + t.getName() + "::" + p.getName() + "::" + m.getName() + "\n");
                     builder.append("void forward_" + eco.getName() + "_" + ctx.getSenderName(t, p, m));
