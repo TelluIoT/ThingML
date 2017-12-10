@@ -32,6 +32,7 @@ void /*PORT_NAME*/_setup(struct /*PORT_NAME*/_Instance *_instance)
     /*PORT_NAME*/_mosq = mosquitto_new(client_id, true, _instance);
     if (!/*PORT_NAME*/_mosq) {
         perror("[/*PORT_NAME*/] mosquitto_new failed ");
+        exit(1); // Exit in case of error
         return;
     }
 
@@ -40,6 +41,7 @@ void /*PORT_NAME*/_setup(struct /*PORT_NAME*/_Instance *_instance)
     if (username && !password) fprintf(stderr, "[/*PORT_NAME*/] Warning: Not using username since password is not set.\n");
     if (username && password && mosquitto_username_pw_set(/*PORT_NAME*/_mosq, username, password)) {
         fprintf(stderr, "[/*PORT_NAME*/] mosquitto_username_pw_set failed\n");
+        exit(1); // Exit in case of error
         return;
     }
 
@@ -53,13 +55,20 @@ void /*PORT_NAME*/_setup(struct /*PORT_NAME*/_Instance *_instance)
     if (will_string && !will_topic) fprintf(stderr, "[/*PORT_NAME*/] Warning: Not setting will since will_topic is not set.\n");
     if (will_string && will_topic && mosquitto_will_set(/*PORT_NAME*/_mosq, will_topic, strlen(will_string), will_string, /*PORT_NAME*/_qos, false)) {
         fprintf(stderr, "[/*PORT_NAME*/] mosquitto_will_set failed\n");
+        exit(1); // Exit in case of error
         return;
     }
 
     // Connect to broker
     int result = mosquitto_connect(/*PORT_NAME*/_mosq, host, port, 10);
-    if (result == MOSQ_ERR_ERRNO) perror("[/*PORT_NAME*/] mosquitto_connect failed ");
-    else if (result) fprintf(stderr, "[/*PORT_NAME*/] mosquitto_connect failed : %s\n", mosquitto_strerror(result));
+    if (result == MOSQ_ERR_ERRNO) {
+        perror("[/*PORT_NAME*/] mosquitto_connect failed ");
+        exit(1); // Exit in case of error
+    }
+    else if (result) {
+        fprintf(stderr, "[/*PORT_NAME*/] mosquitto_connect failed : %s\n", mosquitto_strerror(result));
+        exit(1); // Exit in case of error    
+    }
 
     if (result) /*PORT_NAME*/_mosq = NULL;
 }
@@ -68,24 +77,35 @@ void /*PORT_NAME*/_setup(struct /*PORT_NAME*/_Instance *_instance)
 void /*PORT_NAME*/_start_receiver_thread() {
     int result = mosquitto_loop_forever(/*PORT_NAME*/_mosq, -1, 1);
 
-    if (result == MOSQ_ERR_ERRNO) perror("[/*PORT_NAME*/] mosquitto_loop_forever_failed ");
-    else if (result) fprintf(stderr, "[/*PORT_NAME*/] mosquitto_connect failed : %s\n", mosquitto_strerror(result));
+    if (result == MOSQ_ERR_ERRNO) {
+        perror("[/*PORT_NAME*/] mosquitto_loop_forever_failed ");
+    }
+    else if (result) {
+        fprintf(stderr, "[/*PORT_NAME*/] mosquitto_connect failed : %s\n", mosquitto_strerror(result));
+    }
 
 	mosquitto_destroy(/*PORT_NAME*/_mosq);
 	/*PORT_NAME*/_mosq = NULL;
 	mosquitto_lib_cleanup();
+    exit(1); // Exit in case of error
 }
+
 void /*PORT_NAME*/_loop_poll() {
 	if (/*PORT_NAME*/_mosq) {
         int result = mosquitto_loop(/*PORT_NAME*/_mosq, 0, 1);
 
-        if (result == MOSQ_ERR_ERRNO) perror("[/*PORT_NAME*/] mosquitto_loop_forever_failed ");
-        else if (result) fprintf(stderr, "[/*PORT_NAME*/] mosquitto_connect failed : %s\n", mosquitto_strerror(result));
+        if (result == MOSQ_ERR_ERRNO) {
+            perror("[/*PORT_NAME*/] mosquitto_loop_forever_failed ");
+        }
+        else if (result) {
+            fprintf(stderr, "[/*PORT_NAME*/] mosquitto_connect failed : %s\n", mosquitto_strerror(result));
+        }
 
         if (result) {
             mosquitto_destroy(/*PORT_NAME*/_mosq);
             /*PORT_NAME*/_mosq = NULL;
             mosquitto_lib_cleanup();
+            exit(1); // Exit in case of error
         }
     }
 }
@@ -104,20 +124,27 @@ void /*PORT_NAME*/_connect_callback(struct mosquitto *mosq, void *_instance, int
         case 0:
             for (i = 0; i < /*NUM_TOPICS*/; i++) {
                 ret = mosquitto_subscribe(mosq, &/*PORT_NAME*/_topics_subscribed[i], /*PORT_NAME*/_topics[i], /*PORT_NAME*/_qos);
-                if (ret) fprintf(stderr, "[MQTT] mosquitto_subscribe failed for %s : %s\n", /*PORT_NAME*/_topics[i], mosquitto_strerror(result));
+                if (ret) {
+                    fprintf(stderr, "[MQTT] mosquitto_subscribe failed for %s : %s\n", /*PORT_NAME*/_topics[i], mosquitto_strerror(result));
+                    exit(1); // Exit in case of error
+                }
             }
             break;
         case 1:
             /*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] Connection error : unacceptable protocol version\n");
+            exit(1); // Exit in case of error
             break;
         case 2:
             /*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] Connection error : identifier rejected\n");
+            exit(1); // Exit in case of error
             break;
         case 3:
             /*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] Connection error : broker unavailable\n");
+            exit(1); // Exit in case of error
             break;
         default:
             /*TRACE_LEVEL_1*/fprintf(stderr, "[/*PORT_NAME*/] Connection error : unknown reason\n");
+            exit(1); // Exit in case of error
             break;
     }
 }
@@ -170,7 +197,10 @@ void /*PORT_NAME*/_send_message(uint8_t *msg, int msglen, int topic)
     if (topic < /*NUM_TOPICS*/) {
         /*TRACE_LEVEL_2*/printf("[/*PORT_NAME*/] Sending message (%i bytes) on topic %s\n", msglen, /*PORT_NAME*/_topics[topic]);
         ret = mosquitto_publish(/*PORT_NAME*/_mosq, NULL, /*PORT_NAME*/_topics[topic], msglen, msg, /*PORT_NAME*/_qos, false);
-        if (ret) fprintf(stderr, "[MQTT] mosquitto_publish failed for %s : %s\n", /*PORT_NAME*/_topics[topic], mosquitto_strerror(ret));
+        if (ret) {
+            fprintf(stderr, "[MQTT] mosquitto_publish failed for %s : %s\n", /*PORT_NAME*/_topics[topic], mosquitto_strerror(ret));
+            exit(1); // Exit in case of error
+        }
     }
 }
 
