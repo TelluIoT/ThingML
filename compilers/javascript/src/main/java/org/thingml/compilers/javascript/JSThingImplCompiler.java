@@ -333,7 +333,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 			builder.append("return " + msg.getName() + "._port === '" + p.getName() + "' && " + msg.getName() + "._msg === '" + msg.getName() + "'");
 			if (t.getGuard() != null) {
 				builder.append(" && ");
+				builder.append("(");
 				ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
+				builder.append(")");
 			}
 			builder.append(";})");
 		}
@@ -377,7 +379,9 @@ public class JSThingImplCompiler extends FSMBasedThingImplCompiler {
 			builder.append("return " + msg.getName() + "._port === '" + p.getName() + "' && " + msg.getName() + "._msg === '" + msg.getName() + "'");
 			if (t.getGuard() != null) {
 				builder.append(" && ");
+				builder.append("(");
 				ctx.getCompiler().getThingActionCompiler().generate(t.getGuard(), builder, ctx);
+				builder.append(")");
 			}
 			builder.append(";})");
 		}
