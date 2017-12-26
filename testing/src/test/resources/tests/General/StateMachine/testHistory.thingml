@@ -1,8 +1,8 @@
 import "../../thingml.thingml"
 
 thing TestHistory includes Test 
-@test "t # IC0"
-@test "tntt # IC0123XIC2"
+@test "t # IC0(1X)?"
+@test "tntt # IC0123XIC2(3X)?"
 
 {
 	statechart TestHistory init I {

@@ -1,9 +1,9 @@
 import "../../thingml.thingml"
 
 thing TestInternalTransition includes Test 
-@test "i # EI"
-@test "t # EXTE"
-@test "titi # EXTEIXTEI"
+@test "i # EI(X)?"
+@test "t # EXTE(X)?"
+@test "titi # EXTEIXTEI(X)?"
 {
 	statechart TestInternalTransition init I {
 		state I {

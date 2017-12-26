@@ -1,10 +1,10 @@
 import "../../thingml.thingml"
 
 thing TestMaskCompositeStates includes Test 
-@test "n # 01"
-@test "nn # 0123"
-@test "nnp # 012321"
-@test "nnn # 012345"
+@test "n # 01(0)?"
+@test "nn # 0123(20)?"
+@test "nnp # 012321(0)?"
+@test "nnn # 012345(5420)?"
 @test "nnnppp # 012345543210"
 
 {

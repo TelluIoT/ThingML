@@ -1,9 +1,9 @@
 import "../../thingml.thingml"
 
 thing TestDeepCompositeStates includes Test 
-@test "n # (012abc|abc012)"
-@test "na # (012abc|abc012)(63gd|gd63)"
-@test "naa # (012abc|abc012)(63gd|gd63)(74he|he74)"
+@test "n # (012abc|abc012)(65gf|gf65)?"
+@test "na # (012abc|abc012)(63gd|gd63)(75hf|hf75)?"
+@test "naa # (012abc|abc012)(63gd|gd63)(74he|he74)(85if|if85)?"
 @test "naaa # (012abc|abc012)(63gd|gd63)(74he|he74)(85if|if85)"
 {
 	statechart TestDeepCompositeStates init I {
