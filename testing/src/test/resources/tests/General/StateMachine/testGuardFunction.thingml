@@ -1,9 +1,9 @@
 import "../../thingml.thingml"
 
 thing TestGuardFunction includes Test 
-@test "i # EI"
-@test "t # EXTE"
-@test "titi # EXTEIXTEI"
+@test "i # EI(X)?"
+@test "t # EXTE(X)?"
+@test "titi # EXTEIXTEI(X)?"
 {
     
     function f() : Boolean do

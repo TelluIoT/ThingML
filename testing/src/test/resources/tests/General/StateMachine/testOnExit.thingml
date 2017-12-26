@@ -1,10 +1,9 @@
 import "../../thingml.thingml"
 
 thing TestOnExit includes Test 
-@test "t # X"
-@test "tt # XX"
-@test "tdfgt # XX"
-@test "t* # X*"
+@test "t # X(X)?"
+@test "tt # XX(X)?"
+@test "tdfgt # XX(X)?"
 {
 	statechart TestOnExit init I {
 		internal event Test?Done

@@ -1,10 +1,10 @@
 import "../../thingml.thingml"
 
 thing TestCompStatesExit includes Test 
-@test "t # I"
-@test "tx # I1C"
-@test "t2121 # I1212"
-@test "t212xt # I1212CI"
+@test "t # I(1C)?"
+@test "tx # I1C(I)?"
+@test "t2121 # I1212(1C)?"
+@test "t212xt # I1212CI(1C)?"
 {
 	statechart TestCompStatesExit init I {
 		internal event Test?Done
