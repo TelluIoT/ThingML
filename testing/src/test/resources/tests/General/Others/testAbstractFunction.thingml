@@ -1,6 +1,6 @@
 import "../../thingml.thingml"
 
-thing Foo
+thing fragment Foo
 {
 
     abstract function foo()

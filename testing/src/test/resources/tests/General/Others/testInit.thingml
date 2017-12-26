@@ -7,7 +7,7 @@ thing TestInit includes Test
 	
 		state I {
 			on entry do
-				Test!Out('\'E\'')
+				TestOut('\'E\'')
 				TestDone()
 			end			
 		}
