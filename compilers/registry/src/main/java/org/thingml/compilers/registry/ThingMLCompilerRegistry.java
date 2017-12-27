@@ -40,6 +40,8 @@ import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
 import org.thingml.compilers.uml.PlantUMLCompiler;
 
+import compilers.go.GoCompiler;
+
 /**
  * Created by ffl on 25.11.14.
  */
@@ -71,6 +73,7 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new NodeJSCompiler());
             instance.addCompiler(new PlantUMLCompiler());
             instance.addCompiler(new DebugGUICompiler());
+            instance.addCompiler(new GoCompiler());
 
         }
         loadedPlugins = new HashSet<>();

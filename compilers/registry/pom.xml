@@ -63,6 +63,13 @@
             <artifactId>compilers.debugGUI</artifactId>
             <version>${thingml.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.thingml</groupId>
+            <artifactId>compilers.go</artifactId>
+            <version>${thingml.version}</version>
+        </dependency>
+        
 
         <!--this dependency should be removed-->
         <dependency>
