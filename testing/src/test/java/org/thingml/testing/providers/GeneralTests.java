@@ -59,10 +59,10 @@ public class GeneralTests extends ThingMLTestProvider {
 			if (!nameMatcher.matches()) continue;
 			
 			String testCategory = nameMatcher.group(1);
-			//String testName = nameMatcher.group(2);
+			String testName = nameMatcher.group(2);
 			
 			// Create test
-			GeneralTest test = new GeneralTest(testFile, "General."+testCategory, compilers);
+			GeneralTest test = new GeneralTest(testFile, testName+" [General."+testCategory+"]", compilers);
 			tests.add(test);
 			
 			// Put it into the given category

@@ -67,7 +67,7 @@ public enum Result {
 			case FAILURE:
 				return asString.substring(0, 1);
 			default:
-				return " ";
+				return "-";
 		}
 	}
 	
@@ -81,6 +81,15 @@ public enum Result {
 				return "#777777";
 			default:
 				return "#f0ad4e";
+		}
+	}
+	
+	public String toTextColor() {
+		switch (this.simplify()) {
+			case SUCCESS:
+				return "#5cb85c";
+			default:
+				return "#ffffff";
 		}
 	}
 	

@@ -124,7 +124,7 @@ public class ReportBuilder {
 		
 		filterRow.addElement("div").addAttribute("class", "col-sm-2")
 		         .addElement("button").addAttribute("id", "thingml-only-failures").addAttribute("type", "button").addAttribute("class", "btn btn-default")
-		         .addText("Show only failures");
+		         .addText("Show failures only");
 	}
 	
 	private void buildSuites(Element parent, List<Suite> suites) {
@@ -177,7 +177,7 @@ public class ReportBuilder {
 				String testCaseHasFailure = res.getResult().simplify() == Result.FAILURE ? " has-failure" : "";
 				
 				row.addElement("td").addAttribute("class", "thingml-test"+testHasFailure)
-			       .addElement("div").addAttribute("style","background-color:"+res.getResult().toColor())
+			       .addElement("div").addAttribute("style","background-color:"+res.getResult().toColor()+";color:"+res.getResult().toTextColor())
 			   	   .addAttribute("title", res.getResult().toString())
 			   	   .addText(res.getResult().toIcon())
 			   	   .addAttribute("class", "thingml-testcase-result"+testCaseHasFailure)

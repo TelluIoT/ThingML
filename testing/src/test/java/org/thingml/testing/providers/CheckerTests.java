@@ -28,6 +28,7 @@ import org.thingml.testing.ThingMLTestRunner;
 import org.thingml.testing.framework.ThingMLTest;
 import org.thingml.testing.framework.ThingMLTestCase;
 import org.thingml.testing.tests.CheckerTest;
+import org.thingml.testing.tests.general.GeneralTest;
 
 @RunWith(ThingMLTestRunner.class)
 public class CheckerTests extends ThingMLTestProvider {
@@ -52,7 +53,10 @@ public class CheckerTests extends ThingMLTestProvider {
 		Collection<File> testFiles = getTestFilesInResourceDir("/tests/Checker/");
 		
 		for (File testFile : testFiles) {
-			CheckerTest test = new CheckerTest(testFile, "Checker", compilers);
+			String testName = testFile.getName();
+			if (testName.lastIndexOf(".") > 0) testName = testName.substring(0, testName.lastIndexOf("."));
+			
+			CheckerTest test = new CheckerTest(testFile, testName+" [Checker]", compilers);
 			tests.add(test);
 			
 			description.addChild(test.getDescription());

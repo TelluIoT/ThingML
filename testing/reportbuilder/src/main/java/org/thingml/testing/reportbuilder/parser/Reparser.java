@@ -56,10 +56,14 @@ public class Reparser {
 		results.clear();
 		
 		Pattern p = Pattern.compile("^(\\S+)\\s+\\[(.+)\\]$");
+		Pattern ps = Pattern.compile("^(.+) \\[(.+)(\\..+)*\\]$");
 		
 		for (ReportTestSuite suite : original) {
 			// Add this suite to the tree
-			String[] cSuites = suite.getFullClassName().split("\\.");
+			Matcher ms = ps.matcher(suite.getFullClassName());
+			if (!ms.matches()) continue;
+			
+			String[] cSuites = ms.group(2).split("\\.");
 			Collection<Suite> nSuites = results;
 			Suite nSuite = null;
 				
