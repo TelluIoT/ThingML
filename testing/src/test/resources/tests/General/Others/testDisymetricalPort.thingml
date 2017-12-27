@@ -6,17 +6,15 @@ thing TestDisymetricalPort includes Test
 	message m1();
 	message m2();
 	message m3();
+	message mDone();
 
 	provided port pin {
-		receives m1, m3
+		receives m1, m3, mDone
 	}
 	required port pout {
-		sends m1, m2
+		sends m1, m2, mDone
 	}
 	statechart Chart init Init {
-		internal event Test?Done
-		action TestDone()
-		
 		state Init {
 			on entry do
 				TestOut('\'I\'')
@@ -35,6 +33,13 @@ thing TestDisymetricalPort includes Test
 
 			internal event pin?m3
 			action TestOut('\'3\'')
+			
+			
+			internal event Test?Done
+			action pout!mDone()
+			
+			internal event pin?mDone
+			action TestDone() 
 		}
 	}
 }

@@ -24,14 +24,14 @@ thing TestFunction includes Test
     
     	state INIT {
 			
-			property a : UInt16 = 8
+			property a : ULong = 8
 			
     		transition -> INIT
 			event m : Test?In
 			guard m.c == '\'x\''
 			action do
 				var result : ULong = foo(a, 5)
-                var index : UInt16 = 0
+                var index : ULong = 0
                 while (index < result) do
 				    TestOut('\'x\'')
                     index = index + 1

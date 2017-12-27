@@ -7,7 +7,7 @@ thing fragment Obj {
 }
 
 thing TestMaskProperty includes Test, Obj 
-@test "ttt # 111"
+@test "t # 1"
 {
 	set obj = 1
 	statechart TestMaskProperty init I {

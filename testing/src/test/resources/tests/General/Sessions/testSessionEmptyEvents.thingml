@@ -19,10 +19,6 @@ thing TestSessionEmptyEvents includes Test
 			action do
 				fork s
 			end
-
-			internal
-			event e : p?n
-			action p!n()
     	}
 
 		session s<5> init S1 {

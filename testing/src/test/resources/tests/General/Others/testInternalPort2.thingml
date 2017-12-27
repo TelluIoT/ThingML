@@ -25,8 +25,11 @@ thing TestInternalPort2 includes Test, Msg
 				received++
 			end
 			
-			internal guard (received == 2)
-			action TestDone()
+			transition -> S guard (received == 2)
+		}
+		
+		state S {
+			on entry TestDone()
 		}
 	}
 }

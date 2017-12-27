@@ -2,7 +2,7 @@ import "../../thingml.thingml"
 
 // Three servers on the same port and one client.
 
-thing PingMsg {
+thing fragment PingMsg {
     message ping();
     message pong();        
 }

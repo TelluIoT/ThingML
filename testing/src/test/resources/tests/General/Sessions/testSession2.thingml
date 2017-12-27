@@ -4,8 +4,6 @@ thing TestSession2 includes Test
 @test "ABC # (ABC|ACB|BAC|BCA|CAB|CBA)"
 {
 	property ID : Char = '\'M\''
-	
-	property finished : Integer = 0
 
 	message m(id : Char)
 	message n(id : Char)
@@ -17,22 +15,22 @@ thing TestSession2 includes Test
 	}
 
 	statechart Chart init INIT {
+		internal event Test?Done
+		action TestDone()
+		
+		internal
+		event e : p?n
+		action do
+			TestOut(e.id)
+		end
 
     	state INIT {
 			transition -> WAIT
 			event e : Test?In
 			action do
 				ID = e.c
-				fork s              				
+				fork s
 			end
-
-			internal
-			event e : p?n
-			action do
-				TestOut(e.id)
-				finished = finished + 1
-				if (finished == 3) TestDone()
-			end						
     	}
     	
     	state WAIT {

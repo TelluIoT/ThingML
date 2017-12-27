@@ -2,7 +2,7 @@ import "../../thingml.thingml"
 
 // Two independents client server couples.
 
-thing PingMsg {
+thing fragment PingMsg {
     message ping();
     message pong();        
 }
