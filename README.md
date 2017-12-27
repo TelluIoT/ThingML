@@ -56,7 +56,6 @@ If you are going to compile C code from ThingML, please:
 If you are going to compile Go code from ThingML, please:
 - Install the appropriate [Go distribution](https://golang.org/doc/install)
 - Install the [Go state-machine library used by ThingML](https://github.com/jakhog/gosm) `go get github.com/jakhog/gosm`
-- If you want to run or compile the generated Go code without putting it in a proper [Go package structure](https://golang.org/doc/code.html), you can `go run *.go` or `go build *.go` directly in the ThingML generated folder
 
 ## &#x1F537; Getting Started
 
@@ -129,6 +128,12 @@ Nothing special. Open the generated `index.html` file in your System Browser (id
 
 > For more information about how to use the Arduino IDE and Arduino boards, have a look at [the Arduino documentation](https://www.arduino.cc/en/Guide/Environment).
 
+####  How to compile and run generated Go code
+- Open a terminal at `thingml-gen/go/your-configuration`
+- To run the program directly: `go run *.go`
+- To compile to an executable file: `go build *.go`
+
+> For more information about Go package structures, have a look at the [Go documentation](https://golang.org/doc/code.html)
 
 ## &#x1F537; Compile ThingML from the sources
 
