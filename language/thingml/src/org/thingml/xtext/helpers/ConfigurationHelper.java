@@ -277,7 +277,16 @@ public class ConfigurationHelper {
 		}
 		return result;
 	}
-
+	
+	public static Set<Thing> allUsedThings(Configuration self) {
+		Set<Thing> result = new HashSet<Thing>();
+		for(Instance i : allInstances(self)) {
+			Thing t = i.getType();
+			result.add(t);
+			result.addAll(ThingHelper.allIncludedThings(t));
+		}
+		return result;
+	}
 
 	public static Set<Message> allMessages(Configuration self) {
 		Set<Message> result = new HashSet<Message>();

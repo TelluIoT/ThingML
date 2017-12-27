@@ -36,7 +36,8 @@ public class Types {
     public static Type OBJECT_TYPE;
 
     static {
-        ThingMLFactory factory = ThingMLPackageImpl.init().getThingMLFactory();
+        //ThingMLFactory factory = ThingMLPackageImpl.init().getThingMLFactory();
+    	ThingMLFactory factory = ThingMLFactory.eINSTANCE;
         ANY_TYPE = factory.createPrimitiveType();
         ANY_TYPE.setName("Any");
         PlatformAnnotation any = factory.createPlatformAnnotation();

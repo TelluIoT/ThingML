@@ -225,14 +225,20 @@ public abstract class ThingMLCompiler {
         }
     }
 
+    private static final Object saveLock = new Object(); // We can only save one at a time...
+    
     public static void saveAsXMI(final ThingMLModel model, String location) {
-        ThingMLCompiler.registerXMIFactory();
-        ThingMLCompiler.save(model, location);
+    	synchronized (saveLock) {
+    		ThingMLCompiler.registerXMIFactory();
+            ThingMLCompiler.save(model, location);
+		}
     }
 
     public static void saveAsThingML(final ThingMLModel model, String location) {
-        ThingMLCompiler.registerThingMLFactory();
-        ThingMLCompiler.save(model, location);
+    	synchronized (saveLock) {
+    		ThingMLCompiler.registerThingMLFactory();
+            ThingMLCompiler.save(model, location);
+		}
     }
 
     private static boolean checkEMFErrorsAndWarnings(Resource model, Logger log) {

@@ -36,8 +36,6 @@ public class TemporaryDirectory {
 	
 	public static void delete(File dir) {
 		if (dir == null) return;
-		//System.out.println("OUTDIR: "+dir);
-		///*
 		try {
 			Files.walkFileTree(dir.toPath(), new FileVisitor<Path>() {
 				@Override
@@ -59,6 +57,5 @@ public class TemporaryDirectory {
 				public FileVisitResult visitFileFailed(Path file, IOException exc) { return FileVisitResult.TERMINATE; }
 			});
 		} catch (IOException e) {} // We don't really care
-		//*/
 	}
 }

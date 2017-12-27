@@ -72,19 +72,14 @@ public class AnnotatedElementHelper {
     }
 
     public static String annotationOrElse(AnnotatedElement self, String name, String defaultValue) {
-        List<String> result = new ArrayList<String>();
-        for (PlatformAnnotation a : self.getAnnotations()) {
-            if (a.getName().equals(name)) {
-                result.add(cleanAnnotation(a.getValue()));
-            }
-        }
+        List<String> result = annotation(self, name);
         if (result.isEmpty())
             return defaultValue;
         else
             return result.get(0);
     }
-
-
-
-
+    
+    public static String firstAnnotation(AnnotatedElement self, String name) {
+    	return annotationOrElse(self, name, null);
+    }
 }
