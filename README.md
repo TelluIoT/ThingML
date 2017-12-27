@@ -52,6 +52,12 @@ If you are going to compile C code from ThingML, please:
 
 - Use a C-friendly OS (such as Linux) with a decent build toolchain (`make`, `gcc`), potentially in a Virtual Box
 
+### &#x1F539; Go
+If you are going to compile Go code from ThingML, please:
+- Install the appropriate [Go distribution](https://golang.org/doc/install)
+- Install the [Go state-machine library used by ThingML](https://github.com/jakhog/gosm) `go get github.com/jakhog/gosm`
+- If you want to run or compile the generated Go code without putting it in a proper [Go package structure](https://golang.org/doc/code.html), you can `go run *.go` or `go build *.go` directly in the ThingML generated folder
+
 ## &#x1F537; Getting Started
 
 ### &#x1F539; Installation
