@@ -18,6 +18,7 @@ package org.thingml.testing.reportbuilder;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -155,23 +156,27 @@ public class ReportBuilder {
 		colgroup.addElement("col");
 		colgroup.addElement("col").addAttribute("span", ""+tests.size());
 		
+		
+		// Sort tests
+		List<Test> sortedTests = Test.sortTests(tests);
+		
 		// Build first row
 		Element topRow = table.addElement("thead").addElement("tr");
 		topRow.addElement("th"); // empty first cell
-		for (Test test : tests) {
+		for (Test test : sortedTests) {
 			String testHasFailure = test.hasFailure() ? " has-failure" : "";
 			topRow.addElement("th").addAttribute("class", "thingml-test"+testHasFailure).addText(test.getName());
 		}
 		
 		// Get all the compilers
-		Set<String> compilers = Test.getCompilers(tests);
+		List<String> compilers = Test.getSortedCompilers(tests);
 		
 		Element tBody = table.addElement("tbody");
 		for (String compiler : compilers) {
 			Element row = tBody.addElement("tr");
 			row.addElement("td").addText(compiler);
 			
-			for (Test test : tests) {
+			for (Test test : sortedTests) {
 				TestCaseResult res = test.getTestCaseFullResult(compiler);
 				String testHasFailure = test.hasFailure() ? " has-failure" : "";
 				String testCaseHasFailure = res.getResult().simplify() == Result.FAILURE ? " has-failure" : "";

@@ -18,6 +18,7 @@ package org.thingml.testing.reportbuilder.parser;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -109,6 +110,28 @@ public class Test {
 		Set<String> result = new HashSet<String>();
 		for (Test test : tests)
 			result.addAll(test.getCompilers());
+		return result;
+	}
+	
+	public static List<String> getSortedCompilers(Collection<Test> tests) {
+		List<String> result = new ArrayList<String>(getCompilers(tests));
+		result.sort(new Comparator<String>() {
+			@Override
+			public int compare(String a, String b) {
+				return a.compareTo(b);
+			}
+		});
+		return result;
+	}
+	
+	public static List<Test> sortTests(Collection<Test> tests) {
+		List<Test> result = new ArrayList<Test>(tests);
+		result.sort(new Comparator<Test>() {
+			@Override
+			public int compare(Test a, Test b) {
+				return a.name.compareTo(b.name);
+			}
+		});
 		return result;
 	}
 }
