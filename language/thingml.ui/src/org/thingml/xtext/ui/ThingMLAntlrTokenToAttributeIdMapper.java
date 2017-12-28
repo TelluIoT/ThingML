@@ -65,7 +65,8 @@ public class ThingMLAntlrTokenToAttributeIdMapper extends AbstractAntlrTokenToAt
 			return ThingMLHighlightingConfiguration.COMMENTS_ID;
 		case InternalThingMLLexer.RULE_SL_COMMENT: 
 			return ThingMLHighlightingConfiguration.COMMENTS_ID;
-		case InternalThingMLLexer.RULE_STRING_EXT: 
+		case InternalThingMLLexer.RULE_STRING_EXT:
+		case InternalThingMLLexer.RULE_STRING_TIC:
 			return ThingMLHighlightingConfiguration.EXTERN_ID;
 		case InternalThingMLLexer.RULE_ANY_OTHER: 
 			return ThingMLHighlightingConfiguration.DEFAULT_TEXT_ID;

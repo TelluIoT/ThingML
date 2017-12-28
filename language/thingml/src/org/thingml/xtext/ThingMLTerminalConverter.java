@@ -22,29 +22,36 @@ import org.eclipse.xtext.conversion.ValueConverter;
 
 import com.google.inject.Inject;
 
-public class ThingMLTerminalConverter extends DefaultTerminalConverters   {
+public class ThingMLTerminalConverter extends DefaultTerminalConverters {
+	@Inject
+	private AnnotationIDValueConverter annotationIDValueConverter;
 	
-	 @Inject
-     private AnnotationIDValueConverter annotationIDValueConverter;
-	 
-	 @Inject
-     private StringExtValueConverter stringExtValueConverter;
-	 
-	 @Inject
-     private StringLitValueConverter stringLitValueConverter;
-       
-    @ValueConverter(rule = "ANNOTATION_ID")
-     public IValueConverter<String> ANNOTATION_ID() {
-            return annotationIDValueConverter;
-    }
-    
-    @ValueConverter(rule = "STRING_EXT")
-    public IValueConverter<String> STRING_EXT() {
-           return stringExtValueConverter;
-   }
-    
-    @ValueConverter(rule = "STRING_LIT")
-    public IValueConverter<String> STRING_LIT() {
-           return stringLitValueConverter;
-   }
+	@Inject
+	private StringExtValueConverter stringExtValueConverter;
+	
+	@Inject
+	private StringLitValueConverter stringLitValueConverter;
+	
+	@Inject
+	private StringTicValueConverter stringTicValueConverter;
+	
+	@ValueConverter(rule = "ANNOTATION_ID")
+	public IValueConverter<String> ANNOTATION_ID() {
+		return annotationIDValueConverter;
+	}
+	
+	@ValueConverter(rule = "STRING_EXT")
+	public IValueConverter<String> STRING_EXT() {
+		return stringExtValueConverter;
+	}
+	
+	@ValueConverter(rule = "STRING_LIT")
+	public IValueConverter<String> STRING_LIT() {
+		return stringLitValueConverter;
+	}
+	
+	@ValueConverter(rule = "STRING_TIC")
+	public IValueConverter<String> STRING_TIC() {
+		return stringTicValueConverter;
+	}
 }

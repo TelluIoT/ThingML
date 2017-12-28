@@ -16,7 +16,7 @@ Import returns ThingMLModel:
 ;
 */
 PlatformAnnotation returns PlatformAnnotation:
-	name=ANNOTATION_ID value=STRING_LIT ; 
+	name=ANNOTATION_ID (value=STRING_LIT | value=STRING_TIC); 
 
 
 NamedElement:
@@ -223,7 +223,7 @@ ActionBlock returns ActionBlock:
 	'do' (actions+=Action)* 'end';
 
 ExternStatement returns ExternStatement:
-	statement = STRING_EXT ('&' segments+=Expression)*;
+	(statement=STRING_EXT | statement=STRING_TIC) ('&' segments+=Expression)*;
 	
 LocalVariable returns LocalVariable:
 	(readonly?='readonly')? 'var' name=ID ':'  typeRef=TypeRef ( '=' init=Expression)? ( annotations+=PlatformAnnotation )*
@@ -342,7 +342,7 @@ AtomicExpression returns Expression:
 ;
 
 ExternExpression returns ExternExpression:
-	expression = STRING_EXT ('&' segments+=Expression)*;
+	(expression=STRING_EXT | expression=STRING_TIC) ('&' segments+=Expression)*;
 	
 	
 EnumLiteralRef returns EnumLiteralRef:
@@ -428,6 +428,9 @@ terminal STRING_EXT:
 
 terminal STRING_LIT	: 
 			'"' ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|'"') )* '"';
+			
+terminal STRING_TIC	: 
+			'`' ( '\\' . | !('\\'|'`') )* '`';
 
 terminal ML_COMMENT	: '/*' -> '*/';
 terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
