@@ -267,7 +267,7 @@ You can also include ThingML as a Maven dependency in your project:
 
 Rather than being monolithic blobs, compilers are implemented in a modular way around a set of extension points defined in the [ThingML Code Generation Framework](compilers/README.md).
 
-### &#x1F539; Why can't I generate Go/Python/Lua/Ruby/*you-name-it*?
+### &#x1F539; Why can't I generate Python/Lua/Ruby/*you-name-it*?
 
 Well, it is up to you to implement a compiler for whatever language that is not supported by default. What are you waiting for?
 
