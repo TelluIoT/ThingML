@@ -45,8 +45,9 @@ public void start(){
 public Component buildBehavior(String session,Component root){
         behavior = new CompositeState("$NAME$", true){
         	@Override
-        	public void handle(final Event event, final Port p, final Status status){
-        		if(event.getPort()!=null){
+        	public void handle(final Event event, final Status status){
+        		final Port p = event.getPort();
+        		if(p!=null){
         			print(event.getType().getName() + "_via_" + p.getName(),dateFormat.format(new Date())+": " + p.getName() + "?"+event.toString());
         		}
         	}
