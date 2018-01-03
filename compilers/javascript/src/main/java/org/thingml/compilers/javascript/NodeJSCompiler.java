@@ -45,10 +45,12 @@ public class NodeJSCompiler extends OpaqueThingMLCompiler {
         super(new NodeJSThingActionCompiler(), new JSThingApiCompiler(), new NodeJSCfgMainGenerator(),
                 new NodeJSCfgBuildCompiler(), new NodeJSThingImplCompiler());
         this.checker = new Checker(this.getID(), null);
+        this.ctx = new JSContext(this); // TODO: Move this to a common JS compiler
     }
 
     public NodeJSCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
+        this.ctx = new JSContext(this); // TODO: Move this to a common JS compiler
     }
 
     @Override

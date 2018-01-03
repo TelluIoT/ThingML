@@ -35,6 +35,7 @@ import org.thingml.compilers.debugGUI.DebugGUICompiler;
 import org.thingml.compilers.java.JavaCompiler;
 import org.thingml.compilers.javascript.BrowserJSCompiler;
 import org.thingml.compilers.javascript.NodeJSCompiler;
+import org.thingml.compilers.javascript.react.ReactJSCompiler;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
 import org.thingml.compilers.spi.SerializationPlugin;
@@ -71,6 +72,7 @@ public class ThingMLCompilerRegistry {
             instance.addCompiler(new JavaCompiler());
             instance.addCompiler(new BrowserJSCompiler());
             instance.addCompiler(new NodeJSCompiler());
+            instance.addCompiler(new ReactJSCompiler());
             instance.addCompiler(new PlantUMLCompiler());
             instance.addCompiler(new DebugGUICompiler());
             instance.addCompiler(new GoCompiler());

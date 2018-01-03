@@ -1,0 +1,23 @@
+{
+  "name": "<NAME>",
+  "version": "1.0.0",
+  "description": "<NAME> configuration generated from ThingML",
+  "private": true,
+  "dependencies": {
+    "state.js": "^5.11.0",
+    "babel-core": "^6.2.1",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-react": "^6.1.18",
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3",
+    "webpack": "^1.12.8"
+  },
+  "scripts": {
+    "dev": "webpack -d --watch",
+    "build" : "webpack -p"
+  },
+  "repository": "",
+  "author": "",
+  "license": "Apache-2.0"
+}
