@@ -101,7 +101,7 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 		function.name + parametersString(function.parameters as EList<Parameter>) + isTypeString(function.typeRef)
 	}
 	def image(Function function) {
-		'outline/public_co.gif'
+		'outline/open iconic/cog-2x.png'
 	}
 	
 	
@@ -110,13 +110,13 @@ class ThingMLLabelProvider extends DefaultEObjectLabelProvider {
 		property.name + isTypeString(property.typeRef)
 	}
 	def image(Property property) {
-		if (property.readonly) 'outline/field_private_obj.gif' else 'outline/field_public_obj.gif'
+		'outline/open iconic/tag-2x.png'
 	}
 	
 	
 	
 	def image (Port port) {
-		'outline/plugin.gif'
+		'outline/open iconic/transfer-2x.png'
 	}
 	
 	

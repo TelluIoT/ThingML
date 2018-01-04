@@ -61,8 +61,8 @@ class ThingMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	
 	def _isLeaf(Port port) { false }
 	def _createChildren(IOutlineNode parent, Port port) {
-		port.receives.forEach[customNode(parent, it, 'outline/inst_ptr.gif', it.name)]
-		port.sends.forEach[customNode(parent, it, 'outline/inst_ptr_top_flipped.gif', it.name)]
+		port.receives.forEach[customNode(parent, it, 'outline/open iconic/chevron-right-2x.png', it.name)]
+		port.sends.forEach[customNode(parent, it, 'outline/open iconic/chevron-left-2x.png', it.name)]
 	}
 	
 	def _createChildren(IOutlineNode parent, CompositeState composite) {
