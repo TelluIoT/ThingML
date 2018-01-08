@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.thingml.compilers.Context;
 import org.thingml.compilers.DebugProfile;
+import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.configuration.CfgMainGenerator;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
@@ -38,12 +38,9 @@ import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 
-/**
- * Created by bmori on 10.12.2014.
- */
-public class JSCfgMainGenerator extends CfgMainGenerator {
-
-	public static String getDefaultValue(Type type) {
+public class JavascriptCfgMainGenerator extends CfgMainGenerator {
+	
+	protected String getDefaultValue(Type type) {
 		if (AnnotatedElementHelper.isDefined(type, "js_type", "boolean"))
 			return "false";
 		else if (AnnotatedElementHelper.isDefined(type, "js_type", "int"))
@@ -64,18 +61,12 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 			return "null";
 	}
 
-	/**
-	 * For instance i in configuration cfg generate declarations for all the properties of i, initialized if possible with values infered from ThingML
-	 * These (or some) variables can then be overridden by configuration plugins 
-	 * @param cfg
-	 * @param i
-	 * @param builder
-	 */
-	public static void generatePropertyDecl(StringBuilder builder, Context ctx, Configuration cfg, Instance i) {
-		//FIXME: enumeration					
+	protected void generatePropertyDecl(Instance i, Configuration cfg, Section section, JSContext jctx) {
+		//FIXME: enumerations
 
+		Section arrays = section.section("arrays");
 		for (Property a : ConfigurationHelper.allArrays(cfg, i)) {
-			builder.append("var " + i.getName() + "_" + a.getName() + " = [];\n");
+			arrays.append("var " + i.getName() + "_" + a.getName() + " = [];");
 		}
 
 		for (Map.Entry<Property, List<AbstractMap.SimpleImmutableEntry<Expression, Expression>>> entry : ConfigurationHelper.initExpressionsForInstanceArrays(cfg, i).entrySet()) {
@@ -83,69 +74,61 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 				String result = "";
 				StringBuilder tempBuilder = new StringBuilder();
 				result += i.getName() + "_" + entry.getKey().getName() + " [";
-				ctx.getCompiler().getThingActionCompiler().generate(e.getKey(), tempBuilder, ctx);
+				jctx.getCompiler().getThingActionCompiler().generate(e.getKey(), tempBuilder, jctx);
 				result += tempBuilder.toString();
 				result += "] = ";
 				tempBuilder = new StringBuilder();
-				ctx.getCompiler().getThingActionCompiler().generate(e.getValue(), tempBuilder, ctx);
-				result += tempBuilder.toString() + ";\n";
-				builder.append(result);
+				jctx.getCompiler().getThingActionCompiler().generate(e.getValue(), tempBuilder, jctx);
+				result += tempBuilder.toString() + ";";
+				arrays.append(result);
 			}
 		}
 
 		for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: use allUsedProperties when fixed
 			if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing && prop.getTypeRef().getCardinality() == null) {
 				boolean isInit = false;
-				builder.append("var " + i.getName() + "_" + prop.getName() + " = ");
+				Section property = section.section("property");
+				property.append("var " + i.getName() + "_" + prop.getName() + " = ");
 				for (AbstractMap.SimpleImmutableEntry<Property, Expression> p : ConfigurationHelper.initExpressionsForInstance(cfg, i)) {
 					if (EcoreUtil.equals(p.getKey(),prop) && prop.getTypeRef().getCardinality() == null && !AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
 						if (p.getValue() != null) {
 							StringBuilder tempbuilder = new StringBuilder();
-							ctx.currentInstance = i;
-							ctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
-							ctx.currentInstance = null;
-							builder.append(tempbuilder.toString() + ";\n");
+							jctx.currentInstance = i;
+							jctx.generateFixedAtInitValue(cfg, i, p.getValue(), tempbuilder);
+							jctx.currentInstance = null;
+							property.append(tempbuilder.toString() + ";");
 							isInit = true;
 						}
 					}
 				}
 				if (!isInit) {
-					builder.append(getDefaultValue(prop.getTypeRef().getType()) + ";\n");
+					property.append(getDefaultValue(prop.getTypeRef().getType()) + ";");
 				}
 			}
-		}
-
-
-		//TODO: This should be moved to NodeJS-specific part...
-		if (AnnotatedElementHelper.hasAnnotation(cfg, "arguments")) {
-			for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//TODO: use allUsedProperties when fixed
-				if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing && prop.getTypeRef().getCardinality() == null) {
-					builder.append(i.getName() + "_" + prop.getName() + " = nconf.get('" + i.getName() + ":" + prop.getName() + "')? nconf.get('" + i.getName() + ":" + prop.getName() + "') : " + i.getName() + "_" + prop.getName() + ";\n");
-					builder.append("nconf.set('" + i.getName() + ":" + prop.getName() + "', " + i.getName() + "_" + prop.getName() + ");\n");
-				}
-			}
-		}
-		
-		//Generate a hook for other configuration plugins to redefine values for properties		
-		builder.append("/*$CONFIGURATION " + i.getName() + "$*/\n");
+		}		
 	}
 
-	public static void generateInstance(Instance i, Configuration cfg, StringBuilder builder, Context ctx, boolean useThis, boolean debug) {
-		generatePropertyDecl(builder, ctx, cfg, i);
-
-        if (useThis) {
-            builder.append("this." + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "('" + i.getName() + "', null");
-        } else {
-            builder.append("const " + i.getName() + " = new " + ctx.firstToUpper(i.getType().getName()) + "('" + i.getName() + "', null");
-        }
+	protected void generateInstance(Instance i, Configuration cfg, Section section, JSContext jctx) {
+		Section instanceProperties = section.section("properties").lines();
+		generatePropertyDecl(i, cfg, instanceProperties, jctx);
+		
+		Section instance = section.section("instance");
+		instance.append("const ")
+		        .append(i.getName())
+		        .append(" = new ")
+		        .append(jctx.firstToUpper(i.getType().getName()));
+		Section instanceArgs = instance.section("arguments").surroundWith("(", ")").joinWith(", ");
+		instance.append(";");
+		instanceArgs.append("'"+i.getName()+"'")
+		            .append("null");
 
 		for (Property prop : ThingHelper.allPropertiesInDepth(i.getType())) {//use allUsedProperties
 			if (!AnnotatedElementHelper.isDefined(prop, "private", "true") && prop.eContainer() instanceof Thing) {
-				builder.append(", " + i.getName() + "_" + prop.getName());
+				instanceArgs.append(i.getName() + "_" + prop.getName());
 			}
 		}
 
-		DebugProfile debugProfile = ctx.getCompiler().getDebugProfiles().get(i.getType());
+		DebugProfile debugProfile = jctx.getCompiler().getDebugProfiles().get(i.getType());
 		boolean debugInst = false;
 		for (Instance inst : debugProfile.getDebugInstances()) {
 			if (i.getName().equals(inst.getName())) {
@@ -153,13 +136,8 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
 				break;
 			}
 		}
-		if (debugInst) {
-			builder.append(", true");
-		} else {
-			builder.append(", false");
-		}
-
-		builder.append(");\n");
+		if (debugInst) instanceArgs.append("true");
+		else instanceArgs.append("false");
 
 		/*if (useThis) { //FIXME: have a pass on debug traces
             if (debug || debugProfile.getDebugInstances().contains(i)) {
@@ -170,62 +148,60 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
                 builder.append(i.getName() + "." + i.getType().getName() + "_print_debug(" + i.getName() + ", '" + ctx.traceInit(i.getType()) + "');\n");
             }
         }*/
+		
 	}
 
-	public static void generateInstances(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
-		final boolean debug = AnnotatedElementHelper.isDefined(cfg, "debug", "true");
+	protected void generateInstances(Configuration cfg, Section section, JSContext jctx) {
 		for (Instance i : ConfigurationHelper.allInstances(cfg)) {
-			generateInstance(i, cfg, builder, ctx, useThis, debug);
+			generateInstance(i, cfg, section, jctx);
 		}
-		builder.append("/*$PLUGINS$*/\n");
+	}
+	
+	
+	
+	
+	protected void generateOnEvent(Section section, Message msg, String client, String clientPort, String server, String serverPort) {
+		Section connector = section.section("connector");
+		
+		connector.append(server).append(".bus.on(")
+		         .append("'").append(serverPort).append("?").append(msg.getName()).append("'")
+		         .append(", ");
+		
+		Section inArgs = connector.section("parameters").surroundWith("(", ")", 0).joinWith(", ");
+		for(Parameter pa : msg.getParameters())
+			inArgs.append(pa.getName());
+		
+		connector.append(" => ")
+				 .append(client).append(".receive").append(msg.getName()).append("On").append(clientPort);
+		Section outArgs = connector.section("parameters").surroundWith("(", ")", 0).joinWith(", ");
+		for(Parameter pa : msg.getParameters())
+			outArgs.append(pa.getName());
+		
+		connector.append(");");
 	}
 
-	private static void generateOnEvent(StringBuilder builder, String prefix, Message msg, String client, String clientPort, String server, String serverPort) {
-		builder.append(prefix + server + ".bus.on('" + serverPort + "?" + msg.getName() + "', (");
-		int id = 0;
-		for(Parameter pa : msg.getParameters()) {
-			if(id>0)
-				builder.append(", ");
-			builder.append(pa.getName());
-			id++;
-		}
-		builder.append(") => ");
-		builder.append(prefix + client + ".receive" + msg.getName() + "On" + clientPort + "(");
-		id = 0;
-		for(Parameter pa : msg.getParameters()) {
-			if(id>0)
-				builder.append(", ");
-			builder.append(pa.getName());
-			id++;
-		}
-		builder.append("));\n");
-	}
-
-	public static void generateConnectors(Configuration cfg, StringBuilder builder, Context ctx, boolean useThis) {
-		String prefix = "";
-		if (useThis) {
-			prefix = "this.";
-		}
-        builder.append("//Connecting internal ports...\n");
-        for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
+	protected void generateConnectors(Configuration cfg, Section section, JSContext jctx) {
+		section.comment("Connecting internal ports...");
+		for (Map.Entry<Instance, List<InternalPort>> entries : ConfigurationHelper.allInternalPorts(cfg).entrySet()) {
             Instance i = entries.getKey();
             for (InternalPort p : entries.getValue()) {
                 for (Message rec : p.getReceives()) {
                     for (Message send : p.getSends()) {
                         if (EcoreUtil.equals(rec, send)) {
-                            generateOnEvent(builder, prefix, send, i.getName(), p.getName(), i.getName(), p.getName());
+                            generateOnEvent(section, send, i.getName(), p.getName(), i.getName(), p.getName());
                             break;
                         }
                     }
                 }
             }
         }
-        builder.append("//Connecting ports...\n");
+		
+		section.comment("Connecting ports...");
         for (Connector c : ConfigurationHelper.allConnectors(cfg)) {
             for (Message req : c.getRequired().getReceives()) {
                 for (Message prov : c.getProvided().getSends()) {
                     if (req.getName().equals(prov.getName())) {
-                        generateOnEvent(builder, prefix, req, c.getCli().getName(), c.getRequired().getName(), c.getSrv().getName(), c.getProvided().getName());
+                        generateOnEvent(section, req, c.getCli().getName(), c.getRequired().getName(), c.getSrv().getName(), c.getProvided().getName());
                         break;
                     }
                 }
@@ -233,12 +209,11 @@ public class JSCfgMainGenerator extends CfgMainGenerator {
             for (Message req : c.getProvided().getReceives()) {
                 for (Message prov : c.getRequired().getSends()) {
                     if (req.getName().equals(prov.getName())) {
-                        generateOnEvent(builder, prefix, req, c.getSrv().getName(), c.getProvided().getName(), c.getCli().getName(), c.getRequired().getName());
+                        generateOnEvent(section, req, c.getSrv().getName(), c.getProvided().getName(), c.getCli().getName(), c.getRequired().getName());
                         break;
                     }
                 }
             }
-        }
-		builder.append("/*$PLUGINS_CONNECTORS$*/\n");
+        }		
 	}
 }

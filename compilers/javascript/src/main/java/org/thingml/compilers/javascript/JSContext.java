@@ -16,51 +16,22 @@
  */
 package org.thingml.compilers.javascript;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.compilers.builder.SourceBuilder;
 
-public class JSContext extends Context {
-	private Map<String, JSSourceBuilder> generatedFiles = new HashMap<String, JSSourceBuilder>();
-	
+public class JSContext extends Context {	
 	public JSContext(ThingMLCompiler compiler) {
 		super(compiler);
 		// TODO Add reserved keywords
 	}
 	
-	public JSSourceBuilder getSourceBuilder(String path) {
-		if (generatedFiles.containsKey(path))
-			return generatedFiles.get(path);
-		else {
-			JSSourceBuilder builder = new JSSourceBuilder();
-			generatedFiles.put(path, builder);
-			return builder;
-		}
-	}
-	
 	@Override
-	public void writeGeneratedCodeToFiles() {
-		try {
-			for (Entry<String, JSSourceBuilder> generatedFile : generatedFiles.entrySet()) {
-				File outFile = new File(this.getOutputDirectory(), generatedFile.getKey());
-				File outDir = outFile.getParentFile();
-				if (outDir != null) outDir.mkdirs();
-				FileWriter writer = new FileWriter(outFile);
-				generatedFile.getValue().write(writer);
-				writer.close();
-			}
-		} catch (IOException e) {
-			System.err.println("Problem while dumping the code");
-            e.printStackTrace();
-		}
-		
-		// TODO Change other source generators to use builders
-		super.writeGeneratedCodeToFiles();
+	protected SourceBuilder newBuilder() {
+		return new JSSourceBuilder();
+	}
+	public JSSourceBuilder getSourceBuilder(String path) {
+		// TODO Auto-generated method stub
+		return (JSSourceBuilder)super.getSourceBuilder(path);
 	}
 }

@@ -17,8 +17,13 @@
 package org.thingml.compilers.builder;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.Writer;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class Section extends Element {
 	protected Section parent;
@@ -77,8 +82,7 @@ public class Section extends Element {
 	
 	@Override
 	public boolean isEmpty() {
-		return super.isEmpty() && this.children.isEmpty()
-				&& !(this.surroundMin <= 0 && (this.before != null || this.after != null));
+		return (super.isEmpty() && this.children.isEmpty() && !(this.surroundMin <= 0 && (this.before != null || this.after != null))) || !this.enabled;
 	}
 	
 	public Section clear() { this.children.clear(); this.set(); return this; }
@@ -129,13 +133,14 @@ public class Section extends Element {
 	}
 	public Section addAfter(Element add, Element after) {
 		int index = this.children.indexOf(after);
-		if (index >= 0) this.children.add(index, add);
+		if (index >= 0) this.children.add(index+1, add);
 		return this;
 	}
 	
 	/* --- Some specialised helpers --- */
 	public Section comment(String comment) {
-		return this.appendSection("comment").comment().append(comment);
+		this.appendSection("comment").comment().append(comment);
+		return this;
 	}
 	
 	public StringBuilderSection stringbuilderSection(String name) {
@@ -145,6 +150,49 @@ public class Section extends Element {
 	}
 	public StringBuilder stringbuilder(String name) {
 		return this.stringbuilderSection(name).stringbuilder();
+	}
+	
+	/* --- Tree traversal helpers --- */
+	public List<Section> findAll(String ...path) {
+		List<Section> result = new LinkedList<Section>();
+		if (path.length > 0) {
+			Pattern current = Pattern.compile(path[0]);
+			String[] next = Arrays.copyOfRange(path, 1, path.length);
+			for (Element el : children) {
+				if (el instanceof Section) {
+					Section child = (Section)el;
+					if (current.matcher(child.name).matches()) {
+						if (next.length == 0)
+							result.add(child);
+						else
+							result.addAll(child.findAll(next));
+					}
+				}
+			}
+		}
+		return result;
+	}
+	public Section find(String ...path) {
+		List<Section> all = findAll(path);
+		if (all.isEmpty()) return null;
+		else return all.get(0);
+	}
+	
+	private void printTree(PrintStream out, String indent) {
+		out.print(indent);
+		out.print("> ");
+		out.println(name);
+		for (Element el : children)
+			if (el instanceof Section)
+				((Section)el).printTree(out, indent+"\t");
+	}
+	public void printTree(PrintStream out) {
+		out.println("------------------------------------ SourceBuilder Section Tree ------------------------------------");
+		printTree(out, "");
+		out.println("------------------------------------ SourceBuilder Section Tree ------------------------------------");
+	}
+	public void printTree() {
+		printTree(System.out);
 	}
 	
 	/* --- The actual writing --- */

@@ -14,52 +14,65 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.javascript.react;
+package org.thingml.compilers.javascript.node;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.javascript.JavascriptCompiler;
 import org.thingml.compilers.javascript.JavascriptThingApiCompiler;
-import org.thingml.compilers.javascript.browser.BrowserThingActionCompiler;
-import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-public class ReactJSCompiler extends JavascriptCompiler {
-	
-	public ReactJSCompiler() {
-		super(new BrowserThingActionCompiler(), new JavascriptThingApiCompiler(), new ReactJSCfgMainGenerator(),
-                new ReactJSCfgBuildCompiler(), new ReactThingImplCompiler());
+public class NodeJSCompiler extends JavascriptCompiler {
+
+	public NodeJSCompiler() {
+		super(
+			new NodeJSThingActionCompiler(),
+			new JavascriptThingApiCompiler(),
+			new NodeJSCfgMainGenerator(),
+			new NodeJSCfgBuildCompiler(),
+			new NodeJSThingImplCompiler()
+		);
 	}
-	
+
 	@Override
 	public ThingMLCompiler clone() {
-		return new ReactJSCompiler();
+		return new NodeJSCompiler();
 	}
 
 	@Override
 	public String getID() {
-		return "reactjs";
+		return "nodejs";
 	}
 
 	@Override
 	public String getName() {
-		return "User-interfaces for Web Browsers with React";
+		return "Javascript for NodeJS";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Generates Javascript and HTML for Web Browser user-interfaces using React components and JSX templates";
+		return "Generates Javascript code for the NodeJS platform.";
 	}
-
 
 	@Override
-	public void do_call_compiler(Configuration cfg, Logger log, String... options) {
-		super.do_call_compiler(cfg, log, options);
-	}
+    public String getDockerBaseImage(Configuration cfg, Context ctx) {
+        return "node:latest";
+    }
+    
+    @Override
+    public String getDockerCMD(Configuration cfg, Context ctx) {
+        return "node\", \"main.js"; //Param main.js
+    }
+    
+    @Override
+    public String getDockerCfgRunPath(Configuration cfg, Context ctx) {
+        return "COPY ./*.js /work/\n" + 
+                "COPY ./node_modules /work/node_modules\n";
+    }
 
 	@Override
 	protected String getEnumPath(Configuration t, ThingMLModel model, Context ctx) {
-		return "src/enums.jsx";
+		return "enums.js";
 	}
 }

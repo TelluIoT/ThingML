@@ -14,9 +14,10 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.javascript;
+package org.thingml.compilers.javascript.node;
 
 import org.thingml.compilers.Context;
+import org.thingml.compilers.javascript.JSThingActionCompiler;
 import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.PrintAction;
 

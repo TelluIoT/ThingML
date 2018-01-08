@@ -19,7 +19,7 @@ package org.thingml.testing.languages;
 import java.io.File;
 
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.javascript.NodeJSCompiler;
+import org.thingml.compilers.javascript.node.NodeJSCompiler;
 import org.thingml.testing.framework.ThingMLTest;
 import org.thingml.testing.framework.ThingMLTestCase;
 import org.thingml.testing.helpers.ThingMLInjector;

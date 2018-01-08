@@ -17,6 +17,8 @@
 package org.thingml.compilers;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -25,11 +27,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.thingml.compilers.builder.SourceBuilder;
 //import org.fusesource.jansi.Ansi;
 import org.thingml.compilers.spi.ExternalThingPlugin;
 import org.thingml.compilers.spi.NetworkPlugin;
@@ -61,6 +65,7 @@ public class Context {
     public Instance currentInstance;
     // Store the output of the compilers. The key is typically a file name but finer grained generatedCode may also be used by the compilers.
     protected Map<String, StringBuilder> generatedCode = new HashMap<String, StringBuilder>();
+    protected Map<String, SourceBuilder> generatedFiles = new HashMap<String, SourceBuilder>();
     protected Map<String, File> filesToCopy = new HashMap<String, File>();
     boolean debugTraceWithID = false;
     Map<Integer, String> debugStrings;
@@ -155,6 +160,7 @@ public class Context {
      * @param path (relative to outputDir) where the code should be generated
      * @return a StringBuilder where the code can be built
      */
+    // TODO I think we should aim for removing the StringBuilders
     public StringBuilder getBuilder(String path) {
         StringBuilder b = generatedCode.get(path);
         if (b == null) {
@@ -162,6 +168,19 @@ public class Context {
             generatedCode.put(path, b);
         }
         return b;
+    }
+    
+    protected SourceBuilder newBuilder() {
+    	return new SourceBuilder();
+    }
+    public SourceBuilder getSourceBuilder(String path) {
+    	if (generatedFiles.containsKey(path))
+    		return generatedFiles.get(path);
+    	else {
+    		SourceBuilder builder = newBuilder();
+    		generatedFiles.put(path, builder);
+    		return builder;
+    	}
     }
 
     /**
@@ -184,7 +203,22 @@ public class Context {
         for (Map.Entry<String, StringBuilder> e : generatedCode.entrySet()) {
             writeTextFile(e.getKey(), e.getValue().toString());
         }
+    	try {
+			for (Entry<String, SourceBuilder> generatedFile : generatedFiles.entrySet()) {
+				File outFile = new File(this.getOutputDirectory(), generatedFile.getKey());
+				File outDir = outFile.getParentFile();
+				if (outDir != null) outDir.mkdirs();
+				FileWriter writer = new FileWriter(outFile);
+				generatedFile.getValue().write(writer);
+				writer.close();
+			}
+		} catch (IOException e) {
+			System.err.println("Problem while dumping the code");
+            e.printStackTrace();
+		}
+        
     }
+    
   
     /**
      * @param path (relative to outputDir) where the file should be copied

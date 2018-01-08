@@ -14,52 +14,49 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.javascript.react;
+package org.thingml.compilers.javascript.browser;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.javascript.JavascriptCompiler;
 import org.thingml.compilers.javascript.JavascriptThingApiCompiler;
-import org.thingml.compilers.javascript.browser.BrowserThingActionCompiler;
-import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-public class ReactJSCompiler extends JavascriptCompiler {
-	
-	public ReactJSCompiler() {
-		super(new BrowserThingActionCompiler(), new JavascriptThingApiCompiler(), new ReactJSCfgMainGenerator(),
-                new ReactJSCfgBuildCompiler(), new ReactThingImplCompiler());
+public class BrowserJSCompiler extends JavascriptCompiler {
+
+	public BrowserJSCompiler() {
+		super(
+			new BrowserThingActionCompiler(),
+			new JavascriptThingApiCompiler(),
+			new BrowserJSCfgMainGenerator(),
+			new BrowserJSCfgBuildCompiler(),
+			new BrowserJSThingImplCompiler()
+		);
 	}
-	
+
 	@Override
 	public ThingMLCompiler clone() {
-		return new ReactJSCompiler();
+		return new BrowserJSCompiler();
 	}
 
 	@Override
 	public String getID() {
-		return "reactjs";
+		return "browser";
 	}
 
 	@Override
 	public String getName() {
-		return "User-interfaces for Web Browsers with React";
+		return "Javascript for Web Browsers";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Generates Javascript and HTML for Web Browser user-interfaces using React components and JSX templates";
+		return "Generates Javascript code that can run in common Web Browsers.";
 	}
-
-
-	@Override
-	public void do_call_compiler(Configuration cfg, Logger log, String... options) {
-		super.do_call_compiler(cfg, log, options);
-	}
-
+	
 	@Override
 	protected String getEnumPath(Configuration t, ThingMLModel model, Context ctx) {
-		return "src/enums.jsx";
+		return "enums.js";
 	}
 }

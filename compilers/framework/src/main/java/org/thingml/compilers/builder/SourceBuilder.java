@@ -27,7 +27,7 @@ public class SourceBuilder extends Section {
 	
 	public int currentTabs = 0;
 
-	protected SourceBuilder() {
+	public SourceBuilder() {
 		super(null, "file");
 		this.parent = this;
 		this.lines();

@@ -18,14 +18,14 @@ package org.thingml.compilers.javascript.react;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Section;
-import org.thingml.compilers.javascript.JSCfgMainGenerator;
 import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
 import org.thingml.compilers.javascript.JSSourceBuilder.ReactComponent;
+import org.thingml.compilers.javascript.JavascriptCfgMainGenerator;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-public class ReactJSCfgMainGenerator extends JSCfgMainGenerator {
+public class ReactJSCfgMainGenerator extends JavascriptCfgMainGenerator {
 	@Override
 	public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
 		JSContext jctx = (JSContext)ctx;

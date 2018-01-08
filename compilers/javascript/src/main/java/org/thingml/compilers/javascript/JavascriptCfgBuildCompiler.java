@@ -14,37 +14,37 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.javascript.react;
+package org.thingml.compilers.javascript;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.compilers.javascript.JavascriptCfgBuildCompiler;
-import org.thingml.xtext.thingML.Configuration;
 
-public class ReactJSCfgBuildCompiler extends JavascriptCfgBuildCompiler {
-	@Override
-	public void generateBuildScript(Configuration cfg, Context ctx) {
-		// Copy the necessary files
-		copyResourceToFile("react/index.html", "index.html", ctx);
-		copyResourceToFile("react/webpack.config.js", "webpack.config.js", ctx);
-		copyResourceToFile("react/babelrc", ".babelrc", ctx);
-		
-		// Write package.json
-		writeLinesToFile(
-			readResource("react/package.json").stream().map(new Function<String, String>() {
-				@Override
-				public String apply(String line) {
-					return line.replace("<NAME>", cfg.getName());
-				}
-			}).collect(Collectors.toList())
-		, "package.json", ctx);
+public class JavascriptCfgBuildCompiler extends CfgBuildCompiler {
+	protected List<String> readResource(String path) {
+		try {
+			InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/"+path);
+			List<String> lines = IOUtils.readLines(input, "UTF-8");
+			input.close();
+			return lines;
+		} catch (IOException e) {
+			return new ArrayList<String>();
+		}
+	}
+	
+	protected void writeLinesToFile(List<String> lines, String path, Context ctx) {
+		StringBuilder writer = ctx.getBuilder(path);
+		for (String line : lines) {
+			writer.append(line).append(System.lineSeparator());
+		}
+	}
+	
+	protected void copyResourceToFile(String path, String out, Context ctx) {
+		writeLinesToFile(readResource(path), out, ctx);
 	}
 }

@@ -14,9 +14,10 @@
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  */
-package org.thingml.compilers.javascript;
+package org.thingml.compilers.javascript.browser;
 
 import org.thingml.compilers.Context;
+import org.thingml.compilers.javascript.JSThingActionCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.SendAction;
