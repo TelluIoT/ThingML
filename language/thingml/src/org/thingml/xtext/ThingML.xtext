@@ -252,10 +252,10 @@ ReturnAction returns ReturnAction:
 	'return' exp=Expression;
 
 PrintAction returns PrintAction:
-	'print' msg=Expression;
+	'print' msg+=Expression ('..' msg+=Expression)*;
 
 ErrorAction returns ErrorAction:
-	'error' msg=Expression;
+	'error' msg+=Expression ('..' msg+=Expression)*;
 
 StartSession returns StartSession:
 	'fork' session=[Session|ID] ;

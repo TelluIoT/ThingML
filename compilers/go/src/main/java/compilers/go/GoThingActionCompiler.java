@@ -24,6 +24,7 @@ import org.thingml.xtext.thingML.ArrayIndex;
 import org.thingml.xtext.thingML.ConditionalAction;
 import org.thingml.xtext.thingML.Decrement;
 import org.thingml.xtext.thingML.EnumLiteralRef;
+import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.EventReference;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.FunctionCallExpression;
@@ -56,12 +57,25 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 	
 	@Override
 	public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-		GoContext gctx = (GoContext)ctx;
+		GoContext gctx = (GoContext) ctx;
 		gctx.currentThingContext.addImports("fmt");
-		
-		builder.append("fmt.Print(");
-		generate(action.getMsg(), builder, ctx);
-		builder.append(")\n");
+		for (Expression msg : action.getMsg()) {
+			builder.append("fmt.Print(");
+			generate(msg, builder, ctx);
+			builder.append(")\n");
+		}
+	}
+	
+	
+	@Override
+	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
+		GoContext gctx = (GoContext) ctx;
+		gctx.currentThingContext.addImports("fmt");
+		for (Expression msg : action.getMsg()) {
+			builder.append("fmt.Print(");
+			generate(msg, builder, ctx);
+			builder.append(")\n");
+		}
 	}
 	
 	@Override
