@@ -267,6 +267,9 @@ public abstract class JavascriptThingImplCompiler extends NewFSMBasedThingImplCo
 			
 			// Handlers
 			section.append("this._initial_" + ThingMLElementHelper.qname(sm, "_") + ".to(" + ThingMLElementHelper.qname(sm.getInitial(), "_") + ");");
+			for (Handler h : StateHelper.allEmptyHandlersSC(cs)) {
+				generateHandler(h, null, null, section, ctx);
+			}
 
 			final Map<Port, Map<Message, List<Handler>>> allHanders = StateHelper.allMessageHandlersSC(cs);
 			for (Map.Entry<Port, Map<Message, List<Handler>>> entry : allHanders.entrySet()) {

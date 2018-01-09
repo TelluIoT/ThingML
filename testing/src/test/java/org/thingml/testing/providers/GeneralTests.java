@@ -35,7 +35,7 @@ import org.thingml.testing.tests.general.GeneralTest;
 
 @RunWith(ThingMLTestRunner.class)
 public class GeneralTests extends ThingMLTestProvider {
-	private static String[] compilers = ThingMLTestCase.allCompilers();
+	private static String[] compilers = ThingMLTestCase.selectedCompilers();
 	
 	@Override
 	public String[] getCompilers() { return compilers; }

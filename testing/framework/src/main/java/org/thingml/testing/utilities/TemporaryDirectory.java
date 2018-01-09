@@ -27,7 +27,17 @@ import java.nio.file.attribute.BasicFileAttributes;
 public class TemporaryDirectory {
 	public static File create() throws AssertionError {
 		try {
-			File dir = Files.createTempDirectory("thingml-testing-").toFile();
+			// Check if an output-directory is defined in system properties
+			String outDir = System.getProperty("outDir", "");
+			
+			File dir;
+			if (outDir.isEmpty()) dir = Files.createTempDirectory("thingml-testing-").toFile();
+			else {
+				File parent = new File(outDir);
+				parent.mkdirs();
+				dir = Files.createTempDirectory(parent.toPath(), "thingml-testing-").toFile();
+			}
+
 			return dir;
 		} catch (IOException e) {
 			throw new AssertionError("Couldn't create temporary directory", e);
@@ -36,6 +46,7 @@ public class TemporaryDirectory {
 	
 	public static void delete(File dir) {
 		if (dir == null) return;
+		if (!System.getProperty("outDir", "").isEmpty()) return;
 		try {
 			Files.walkFileTree(dir.toPath(), new FileVisitor<Path>() {
 				@Override
