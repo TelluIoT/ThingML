@@ -19,6 +19,7 @@ package org.thingml.compilers.javascript.node;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.javascript.JSThingActionCompiler;
 import org.thingml.xtext.thingML.ErrorAction;
+import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.PrintAction;
 
 /**
@@ -28,15 +29,19 @@ public class NodeJSThingActionCompiler extends JSThingActionCompiler {
 
     @Override
     public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
-        builder.append("process.stderr.write(''+");
-        generate(action.getMsg(), builder, ctx);
-        builder.append(");\n");
+    	for (Expression msg : action.getMsg()) {
+		    builder.append("process.stderr.write(''+");
+		    generate(msg, builder, ctx);
+		    builder.append(");\n");
+    	}
     }
 
     @Override
     public void generate(PrintAction action, StringBuilder builder, Context ctx) {
-        builder.append("process.stdout.write(''+");
-        generate(action.getMsg(), builder, ctx);
-        builder.append(");\n");
+    	for (Expression msg : action.getMsg()) {
+	        builder.append("process.stdout.write(''+");
+	        generate(msg, builder, ctx);
+	        builder.append(");\n");
+    	}
     }
 }

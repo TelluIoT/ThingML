@@ -81,18 +81,8 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 	@Override
 	public void generate(VariableAssignment action, StringBuilder builder, Context ctx) {
 		traceVariablePre(action, builder, ctx);
-		if (action.getProperty().getTypeRef().getCardinality() != null && action.getIndex() != null) {// this
-																										// is
-																										// an
-																										// array
-																										// (and
-																										// we
-																										// want
-																										// to
-																										// affect
-																										// just
-																										// one
-																										// index)
+		if (action.getProperty().getTypeRef().getCardinality() != null && action.getIndex() != null) {
+			// this is an array (and we want to affect just one index)
 			for (Expression i : action.getIndex()) {
 				if (action.getProperty() instanceof Property) {
 					builder.append(ctx.getContextAnnotation("thisRef"));
@@ -106,7 +96,8 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 				builder.append(";\n");
 
 			}
-		} else {// simple variable or we re-affect the whole array
+		} else {
+			// simple variable or we re-affect the whole array
 			if (action.getProperty() instanceof Property) {
 				builder.append(ctx.getContextAnnotation("thisRef"));
 			}
@@ -132,15 +123,8 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void traceVariablePost(VariableAssignment action, StringBuilder builder, Context ctx) {
-		if (action.getProperty().eContainer() instanceof Thing) {// we can only
-																	// listen to
-																	// properties
-																	// of a
-																	// Thing,
-																	// not all
-																	// local
-																	// variables,
-																	// etc
+		if (action.getProperty().eContainer() instanceof Thing) {
+			// we can only listen to properties of a Thing, not all local variables, etc
 			builder.append("this.bus.emit('" + action.getProperty().getName() + "=', this."
 					+ ctx.getVariableName(action.getProperty()) + ");\n");
 		}
