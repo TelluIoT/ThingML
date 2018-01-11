@@ -73,6 +73,12 @@
 		        <artifactId>maven-surefire-plugin</artifactId>
 		        <version>2.20</version>
 		        <configuration>
+		        	<systemPropertyVariables>
+		        		<outDir></outDir>
+		        		<noRun></noRun>
+		        		<tests></tests>
+		        		<compilers></compilers>
+		        	</systemPropertyVariables>
 		        </configuration>
 		      </plugin>
 		      <plugin>

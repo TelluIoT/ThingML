@@ -19,8 +19,10 @@ package org.thingml.testing.framework;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
 import org.junit.internal.runners.model.EachTestNotifier;
@@ -166,12 +168,15 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 					// TODO: Should we maybe find the matching configuration in the parents model? It doesn't actually know anything about the reference we passed it...
 					this.parent.prepareDirectory(this.id, config, tempDir);
 					
-					// Execute the platform test code
-					Output executorResult = executePlatformCode(config, tempDir);
-					
-					// Allow the parent ThingMLTest to verify whether the test run was successful or not
-					// TODO: same as above for the configuration
-					this.parent.verifyExecutionResults(this.id, config, tempDir, executorResult);
+					// Allow preparing everything, but without actually running the tests
+					if (!System.getProperty("noRun", "false").equalsIgnoreCase("true")) {
+						// Execute the platform test code
+						Output executorResult = executePlatformCode(config, tempDir);
+						
+						// Allow the parent ThingMLTest to verify whether the test run was successful or not
+						// TODO: same as above for the configuration
+						this.parent.verifyExecutionResults(this.id, config, tempDir, executorResult);
+					}
 				} finally {
 					TemporaryDirectory.delete(tempDir);
 				}
@@ -228,6 +233,21 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 			result[i] = cases[i].id;
 		}
 		return result;
+	}
+	
+	public static String[] selectedCompilers() {
+		String[] all = allCompilers();
+		String compilers = System.getProperty("compilers", "");
+		if (compilers.isEmpty())
+			return all;
+		else {
+			Set<String> selected = new HashSet<String>();
+			for (String compiler : compilers.split(","))
+				for (String comp : all)
+					if (comp.equalsIgnoreCase(compiler))
+						selected.add(comp);
+			return selected.toArray(new String[0]);
+		}
 	}
 	
 	
