@@ -322,6 +322,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			generate(msg, builder, ctx);
 			builder.append(");\n");
 		}
+		if (action.isLine())
+			builder.append("System.err.println();\n");
 	}
 
 	@Override
@@ -331,6 +333,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 			generate(msg, builder, ctx);
 			builder.append(");\n");
 		}
+		if (action.isLine())
+			builder.append("System.out.println();\n");
 	}
 
 	/*

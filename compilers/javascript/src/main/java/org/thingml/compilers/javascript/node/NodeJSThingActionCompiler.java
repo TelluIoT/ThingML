@@ -34,6 +34,8 @@ public class NodeJSThingActionCompiler extends JSThingActionCompiler {
 		    generate(msg, builder, ctx);
 		    builder.append(");\n");
     	}
+    	if (action.isLine())
+    		builder.append("process.stderr.write('\\n');\n");
     }
 
     @Override
@@ -43,5 +45,7 @@ public class NodeJSThingActionCompiler extends JSThingActionCompiler {
 	        generate(msg, builder, ctx);
 	        builder.append(");\n");
     	}
+    	if (action.isLine())
+    		builder.append("process.stderr.write('\\n');\n");
     }
 }

@@ -203,20 +203,24 @@ public class JSThingActionCompiler extends CommonThingActionCompiler {
 
 	@Override
 	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
+		builder.append("console.error(''");
 		for (Expression msg : action.getMsg()) {
-			builder.append("console.error(''+");
+			builder.append("+");
 			generate(msg, builder, ctx);
-			builder.append(");\n");
 		}
+		builder.append(");\n");
+		// console.error() always prints lines
 	}
 
 	@Override
 	public void generate(PrintAction action, StringBuilder builder, Context ctx) {
+		builder.append("console.log(''");
 		for (Expression msg : action.getMsg()) {
-			builder.append("console.log(''+");
+			builder.append("+");
 			generate(msg, builder, ctx);
-			builder.append(");\n");
 		}
+		builder.append(");\n");
+		// console.log() always prints lines
 	}
 
 	@Override

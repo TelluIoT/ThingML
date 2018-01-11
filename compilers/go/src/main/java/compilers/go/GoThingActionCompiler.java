@@ -64,6 +64,8 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 			generate(msg, builder, ctx);
 			builder.append(")\n");
 		}
+		if (action.isLine())
+			builder.append("fmt.Println()\n");
 	}
 	
 	
@@ -71,11 +73,14 @@ public class GoThingActionCompiler extends CommonThingActionCompiler {
 	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
 		GoContext gctx = (GoContext) ctx;
 		gctx.currentThingContext.addImports("fmt");
+		gctx.currentThingContext.addImports("os");
 		for (Expression msg : action.getMsg()) {
-			builder.append("fmt.Print(");
+			builder.append("fmt.Fprint(os.Stderr, ");
 			generate(msg, builder, ctx);
 			builder.append(")\n");
 		}
+		if (action.isLine())
+			builder.append("fmt.Fprintln(os.Stderr)\n");
 	}
 	
 	@Override
