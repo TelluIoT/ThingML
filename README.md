@@ -65,11 +65,10 @@ The easiest way to get started with ThingML is to use the ThingML plugins in the
 
 If you have docker, you can use the build container with Eclipse and ThingML at the [thingmleditor repository](https://github.com/madkira/thingmleditor) or the [thingmleditor docker hub](https://hub.docker.com/r/madkira/thingmleditor/)
 
-Else
-1. [Download Eclipse for Java Developers](https://eclipse.org/downloads/)
+Otherwise:
+1. [Eclipse IDE for Java and DSL Developers](https://eclipse.org/downloads/eclipse-packages/)
 2. Install and Launch Eclipse
-3. Install XText plugins: `Help -> Install New Software... -> Add...` and choose `XText` as a name and `Xtext - http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/` as location, and then `OK`. Select `XText` and continue with the install procedure &#x23F3;
-4. Install the ThingML plugins: Same procedure. Use `ThingML - http://thingml.org/dist/update2/` update site, and select ThingML &#x23F3;
+3. Install the ThingML plugins: `Help -> Install New Software... -> Add...` and input `ThingML` as name and `http://thingml.org/dist/update2/` as location, and then `OK`. Select ThingML and continue with the install procedure &#x23F3;
 
 You are now ready to use ThingML. &#x270C;
 
