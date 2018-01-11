@@ -84,8 +84,8 @@ public class JavaHelper {
 
         builder.append("package " + pack + ";\n\n");
 
-        builder.append("import org.thingml.java.*;\n");
-        builder.append("import org.thingml.java.ext.*;\n\n");
+        builder.append("import no.sintef.jasm.*;\n");
+        builder.append("import no.sintef.jasm.ext.*;\n\n");
         
         if (hasMessages) {
             builder.append("import " + rootPack + ".api.*;\n");
@@ -95,6 +95,7 @@ public class JavaHelper {
         builder.append("import java.util.*;\n");
     }
 
+    //FIXME: use the new builder by @jakhog
     public static void generateParameter(Message m, StringBuilder builder, Context ctx) {
         int i = 0;
         for (Parameter pa : m.getParameters()) {
@@ -113,28 +114,6 @@ public class JavaHelper {
             builder.append("final " + JavaHelper.getJavaType(pa.getTypeRef().getType(), pa.getTypeRef().isIsArray(), ctx) + " " + ctx.protectKeyword(ctx.getVariableName(pa)));
             i++;
         }
-    }
-
-    /**
-     *
-     * @return
-     * @generated NOT
-     */
-    public static Set<String> allThingMLMavenDep(Configuration cfg) {//FIXME: should be moved in a JavaHelper
-        Set<String> result = new HashSet<String>();
-        for (Thing t : ConfigurationHelper.allThings(cfg)) {
-            for (String dep : AnnotatedElementHelper.annotation(t, "thingml_maven_dep")) {
-                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
-                result.add(cleanDep);
-            }
-        }
-        for (ObjectType t : ConfigurationHelper.allObjectTypes(cfg)) {
-            for (String dep : AnnotatedElementHelper.annotation(t, "thingml_maven_dep")) {
-                String cleanDep = dep.replace(" ", "").replace("\n", "").replace("\t", "");
-                result.add(cleanDep);
-            }
-        }        
-        return result;
     }
 
     /**

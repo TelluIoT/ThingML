@@ -1,7 +1,7 @@
 package org.thingml.generated.gui;
 
-import org.thingml.java.Port;
-import org.thingml.java.ext.EventType;
+import no.sintef.jasm.Port;
+import no.sintef.jasm.ext.EventType;
 
 import java.util.Map;
 

@@ -31,40 +31,13 @@ import org.thingml.xtext.thingML.Configuration;
  * Created by bmori on 17.12.2014.
  */
 public class JavaCfgBuildCompiler extends CfgBuildCompiler {    
-    private String addSelfContainedBuild() {
-        String res = "<plugin>\n" +
-"                <artifactId>maven-assembly-plugin</artifactId>\n" +
-"                <configuration>\n" +
-"                    <archive>\n" +
-"                        <manifest>\n" +
-"                            <mainClass>org.thingml.generated.Main</mainClass>\n" +
-"                        </manifest>\n" +
-"                    </archive>\n" +
-"                    <descriptorRefs>\n" +
-"                        <descriptorRef>jar-with-dependencies</descriptorRef>\n" +
-"                    </descriptorRefs>\n" +
-"                </configuration>\n" +
-"                <executions>\n" +
-"                    <execution>\n" +
-"                        <id>make-assembly</id>\n" +
-"                        <!-- this is used for inheritance merges -->\n" +
-"                        <phase>package</phase>\n" +
-"                        <!-- bind to the packaging phase -->\n" +
-"                        <goals>\n" +
-"                            <goal>single</goal>\n" +
-"                        </goals>\n" +
-"                    </execution>\n" +
-"                </executions>\n" +
-"            </plugin>";
-        return res;
-    }
 
     @Override
     public void generateBuildScript(Configuration cfg, Context ctx) {
         //TODO: update POM
         try {
             InputStream input = this.getClass().getClassLoader().getResourceAsStream("pomtemplates/javapom.xml");
-            List<String> pomLines = IOUtils.readLines(input);
+            List<String> pomLines = IOUtils.readLines(input, "UTF-8");
             String pom = "";
             for (String line : pomLines) {
                 pom += line + "\n";
@@ -76,13 +49,6 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
             if (pack == null) pack = "org.thingml.generated";
             pom = pom.replace("<!--PACK-->", pack);
 
-
-            //Add ThingML dependencies
-            String thingMLDep = "<!--DEP-->\n<dependency>\n<groupId>org.thingml</groupId>\n<artifactId></artifactId>\n<version>${thingml.version}</version>\n</dependency>\n";
-            //TODO: will not work if more than one thingml dep. We should re-declare the whole <dependency>
-            for (String dep : JavaHelper.allThingMLMavenDep(cfg)) {
-                pom = pom.replace("<!--DEP-->", thingMLDep.replace("<artifactId></artifactId>", "<artifactId>" + dep + "</artifactId>"));
-            }
             for (String dep : JavaHelper.allMavenDep(cfg)) {
                 pom = pom.replace("<!--DEP-->", "<!--DEP-->\n" + dep);
             }
@@ -91,10 +57,6 @@ public class JavaCfgBuildCompiler extends CfgBuildCompiler {
                 pom = pom.replace("<!--REPO-->", "<!--REPO-->\n" + repo);
             }
             
-            //if(AnnotatedElementHelper.hasAnnotation(cfg, "docker")) {
-                pom = pom.replace("<!--SelfContained-->", addSelfContainedBuild());
-            //}
-
             PrintWriter w = new PrintWriter(new FileWriter(new File(ctx.getOutputDirectory() + "/pom.xml")));
             w.println(pom);
             w.close();
