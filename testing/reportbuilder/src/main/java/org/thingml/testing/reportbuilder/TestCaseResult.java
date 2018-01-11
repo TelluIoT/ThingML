@@ -27,7 +27,15 @@ public class TestCaseResult {
 		result = computed;
 		this.title = title;
 		if (original != null) {
-			message = original.getFailureMessage();
+			String type = original.getFailureType();
+			if (type == null || type.isEmpty())
+				message = original.getFailureDetail();
+			else {
+				if (type.startsWith("org.thingml.testing.errors."))
+					message = original.getFailureMessage();
+				else
+					message = original.getFailureDetail();
+			}
 		} else {
 			message = "";
 		}
