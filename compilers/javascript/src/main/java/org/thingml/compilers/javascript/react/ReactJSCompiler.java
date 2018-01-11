@@ -18,17 +18,17 @@ package org.thingml.compilers.javascript.react;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.javascript.JavascriptCompiler;
-import org.thingml.compilers.javascript.JavascriptThingApiCompiler;
+import org.thingml.compilers.javascript.JSCompiler;
+import org.thingml.compilers.javascript.JSThingApiCompiler;
 import org.thingml.compilers.javascript.browser.BrowserThingActionCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-public class ReactJSCompiler extends JavascriptCompiler {
+public class ReactJSCompiler extends JSCompiler {
 	
 	public ReactJSCompiler() {
-		super(new BrowserThingActionCompiler(), new JavascriptThingApiCompiler(), new ReactJSCfgMainGenerator(),
+		super(new BrowserThingActionCompiler(), new JSThingApiCompiler(), new ReactJSCfgMainGenerator(),
                 new ReactJSCfgBuildCompiler(), new ReactThingImplCompiler());
 	}
 	

@@ -23,14 +23,14 @@ import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.builder.SourceBuilder;
 import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
-import org.thingml.compilers.javascript.JavascriptCfgMainGenerator;
+import org.thingml.compilers.javascript.JSCfgMainGenerator;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSFunction;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Instance;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-public class BrowserJSCfgMainGenerator extends JavascriptCfgMainGenerator {
+public class BrowserJSCfgMainGenerator extends JSCfgMainGenerator {
 	@Override
 	public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
 		JSContext jctx = (JSContext)ctx;

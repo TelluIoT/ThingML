@@ -26,14 +26,14 @@ import java.util.regex.Pattern;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.builder.SourceBuilder;
-import org.thingml.compilers.javascript.JavascriptCfgBuildCompiler;
+import org.thingml.compilers.javascript.JSCfgBuildCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ObjectType;
 import org.thingml.xtext.thingML.Thing;
 
-public class BrowserJSCfgBuildCompiler extends JavascriptCfgBuildCompiler {
+public class BrowserJSCfgBuildCompiler extends JSCfgBuildCompiler {
 	final protected static Pattern dependencyAnnotationPattern = Pattern.compile("^src=(?<src1>.+),target=(?<target1>.+)$|^target=(?<target2>.+),src=(?<src2>.+)$");
 	protected Entry<String, String> parseExternalDependencyAnnotation(String annotation) {
 		Matcher m = dependencyAnnotationPattern.matcher(annotation);

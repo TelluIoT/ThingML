@@ -18,17 +18,17 @@ package org.thingml.compilers.javascript.browser;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.javascript.JavascriptCompiler;
-import org.thingml.compilers.javascript.JavascriptThingApiCompiler;
+import org.thingml.compilers.javascript.JSCompiler;
+import org.thingml.compilers.javascript.JSThingApiCompiler;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-public class BrowserJSCompiler extends JavascriptCompiler {
+public class BrowserJSCompiler extends JSCompiler {
 
 	public BrowserJSCompiler() {
 		super(
 			new BrowserThingActionCompiler(),
-			new JavascriptThingApiCompiler(),
+			new JSThingApiCompiler(),
 			new BrowserJSCfgMainGenerator(),
 			new BrowserJSCfgBuildCompiler(),
 			new BrowserJSThingImplCompiler()

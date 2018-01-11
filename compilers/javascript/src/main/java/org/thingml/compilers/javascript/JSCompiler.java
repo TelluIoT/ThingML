@@ -40,9 +40,9 @@ import org.thingml.xtext.thingML.ThingMLModel;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.validation.Checker;
 
-public abstract class JavascriptCompiler extends OpaqueThingMLCompiler {
+public abstract class JSCompiler extends OpaqueThingMLCompiler {
 
-	public JavascriptCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler,
+	public JSCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler,
 			CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, NewFSMBasedThingImplCompiler thingImplCompiler) {
 		super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
 		this.checker = new Checker(getID(), null);

@@ -48,7 +48,7 @@ import org.thingml.xtext.thingML.StateContainer;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Transition;
 
-public abstract class JavascriptThingImplCompiler extends NewFSMBasedThingImplCompiler {
+public abstract class JSThingImplCompiler extends NewFSMBasedThingImplCompiler {
 	DebugProfile debugProfile;
 	
 	@Override

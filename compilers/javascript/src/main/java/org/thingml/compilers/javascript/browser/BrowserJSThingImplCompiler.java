@@ -20,10 +20,10 @@ import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
 import org.thingml.compilers.javascript.JSSourceBuilder.JSClass;
-import org.thingml.compilers.javascript.JavascriptThingImplCompiler;
+import org.thingml.compilers.javascript.JSThingImplCompiler;
 import org.thingml.xtext.thingML.Thing;
 
-public class BrowserJSThingImplCompiler extends JavascriptThingImplCompiler {
+public class BrowserJSThingImplCompiler extends JSThingImplCompiler {
 
 	@Override
 	protected String getThingPath(Thing thing, JSContext jctx) {

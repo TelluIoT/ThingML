@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
-import org.thingml.compilers.javascript.JavascriptCfgBuildCompiler;
+import org.thingml.compilers.javascript.JSCfgBuildCompiler;
 import org.thingml.xtext.thingML.Configuration;
 
-public class ReactJSCfgBuildCompiler extends JavascriptCfgBuildCompiler {
+public class ReactJSCfgBuildCompiler extends JSCfgBuildCompiler {
 	@Override
 	public void generateBuildScript(Configuration cfg, Context ctx) {
 		// Copy the necessary files

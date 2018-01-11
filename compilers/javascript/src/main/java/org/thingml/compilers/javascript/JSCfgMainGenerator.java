@@ -38,7 +38,7 @@ import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Type;
 
-public class JavascriptCfgMainGenerator extends CfgMainGenerator {
+public class JSCfgMainGenerator extends CfgMainGenerator {
 	
 	protected String getDefaultValue(Type type) {
 		if (AnnotatedElementHelper.isDefined(type, "js_type", "boolean"))

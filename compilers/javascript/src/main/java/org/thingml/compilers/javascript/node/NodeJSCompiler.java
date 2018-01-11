@@ -18,17 +18,17 @@ package org.thingml.compilers.javascript.node;
 
 import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
-import org.thingml.compilers.javascript.JavascriptCompiler;
-import org.thingml.compilers.javascript.JavascriptThingApiCompiler;
+import org.thingml.compilers.javascript.JSCompiler;
+import org.thingml.compilers.javascript.JSThingApiCompiler;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-public class NodeJSCompiler extends JavascriptCompiler {
+public class NodeJSCompiler extends JSCompiler {
 
 	public NodeJSCompiler() {
 		super(
 			new NodeJSThingActionCompiler(),
-			new JavascriptThingApiCompiler(),
+			new JSThingApiCompiler(),
 			new NodeJSCfgMainGenerator(),
 			new NodeJSCfgBuildCompiler(),
 			new NodeJSThingImplCompiler()

@@ -17,7 +17,7 @@
 package org.thingml.compilers.javascript.node;
 
 import org.thingml.compilers.Context;
-import org.thingml.compilers.javascript.JavascriptCfgBuildCompiler;
+import org.thingml.compilers.javascript.JSCfgBuildCompiler;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
@@ -29,7 +29,7 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.WriterConfig;
 
-public class NodeJSCfgBuildCompiler extends JavascriptCfgBuildCompiler {
+public class NodeJSCfgBuildCompiler extends JSCfgBuildCompiler {
 	@Override
 	public void generateBuildScript(Configuration cfg, Context ctx) {
 		String json = "";

@@ -31,12 +31,12 @@ import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Thing;
 
-public class JavascriptThingApiCompiler extends ThingApiCompiler {
+public class JSThingApiCompiler extends ThingApiCompiler {
 	@Override
 	public void generatePublicAPI(Thing thing, Context ctx) {
 		// Find the jsClass object corresponding to the thing
 		JSContext jctx = (JSContext)ctx;
-		JavascriptThingImplCompiler implCompiler = (JavascriptThingImplCompiler)ctx.getCompiler().getThingImplCompiler();
+		JSThingImplCompiler implCompiler = (JSThingImplCompiler)ctx.getCompiler().getThingImplCompiler();
 		SourceBuilder builder = ctx.getSourceBuilder(implCompiler.getThingPath(thing, jctx));
 		JSClass thingClass = (JSClass)builder.find("main","class<.*>");
 		

@@ -25,7 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.thingml.compilers.Context;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 
-public class JavascriptCfgBuildCompiler extends CfgBuildCompiler {
+public class JSCfgBuildCompiler extends CfgBuildCompiler {
 	protected List<String> readResource(String path) {
 		try {
 			InputStream input = this.getClass().getClassLoader().getResourceAsStream("javascript/"+path);

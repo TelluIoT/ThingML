@@ -21,11 +21,11 @@ import org.thingml.compilers.builder.Section;
 import org.thingml.compilers.javascript.JSContext;
 import org.thingml.compilers.javascript.JSSourceBuilder;
 import org.thingml.compilers.javascript.JSSourceBuilder.ReactComponent;
-import org.thingml.compilers.javascript.JavascriptCfgMainGenerator;
+import org.thingml.compilers.javascript.JSCfgMainGenerator;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
 
-public class ReactJSCfgMainGenerator extends JavascriptCfgMainGenerator {
+public class ReactJSCfgMainGenerator extends JSCfgMainGenerator {
 	@Override
 	public void generateMainAndInit(Configuration cfg, ThingMLModel model, Context ctx) {
 		JSContext jctx = (JSContext)ctx;
