@@ -19,6 +19,7 @@ package org.thingml.compilers.utils;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Date;
 
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
@@ -71,7 +72,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
 	@Override
 	public void compile(Configuration cfg, Logger log, String... options) {
-		log.info("Running " + getName() + " compiler on configuration " + cfg.getName());
+		log.info("Running " + getName() + " compiler on configuration " + cfg.getName() + "[" + new Date() + "]");
 		final long start = System.currentTimeMillis();
 		
 		//Saving the complete model, e.g. to get all required inputs if there is a problem in the compiler
@@ -81,7 +82,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		
 		//compile
 		do_call_compiler(cfg, log, options);
-		log.info("Compilation complete. Took " + (System.currentTimeMillis() - start) + " ms.");
+		log.info("Compilation complete [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
 	}
 
 	@Override

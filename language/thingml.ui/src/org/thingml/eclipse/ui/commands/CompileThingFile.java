@@ -18,6 +18,7 @@ package org.thingml.eclipse.ui.commands;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -41,7 +42,7 @@ import org.thingml.eclipse.ui.ThingMLConsole;
 import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.ThingMLModel;
-import org.thingml.xtext.validation.Checker.CheckerInfo;
+
 
 public class CompileThingFile implements IHandler {
 
@@ -119,7 +120,7 @@ public class CompileThingFile implements IHandler {
             	ThingMLPrettyPrinter.USE_ELLIPSIS_FOR_PARAMS = store.getBoolean(PreferenceConstants.UML_ELLIPSIS);
             }
 			 */
-			ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\" (Platform: " + compiler.getID() + ")\n");
+			ThingMLConsole.getInstance().printDebug("Compiling with \"" + compiler.getName() + "\"[" + new Date() + "] (Platform: " + compiler.getID() + ")\n");
 
 			// Fetch the input model to be used
 			java.io.File f = null;
@@ -263,7 +264,7 @@ public class CompileThingFile implements IHandler {
 					ThingMLConsole.getInstance().printDebug("Compiling with connector compiler \"" + subCompiler + "\" (Platform: " + compiler.getID() + ")\n");
 					compiler.compileConnector(subCompiler, cfg);
 				}
-				ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully.\n");
+				ThingMLConsole.getInstance().printDebug("Configuration " + cfg.getName() + " compiled successfully [" + new Date() + "].\n");
 			}
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
