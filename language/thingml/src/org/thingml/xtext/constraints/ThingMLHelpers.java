@@ -448,6 +448,8 @@ public class ThingMLHelpers {
 	public static ArrayList<Message> allMessages(Thing thing) {
 		ArrayList<Message> result = new ArrayList<Message>();
 		for (Thing t : allThingFragments(thing)) {
+			result.addAll(t.getMessages());
+			/*
 			for (Message msg : t.getMessages()) {
 				boolean isPresent = false;
 				for(Message m : result) {
@@ -458,6 +460,7 @@ public class ThingMLHelpers {
 				}
 				if (!isPresent) result.add(msg);
 			}
+			*/
 		}
 		return result;
 	}
