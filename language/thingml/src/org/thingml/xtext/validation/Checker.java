@@ -66,7 +66,7 @@ public class Checker {
 		Rules.add(new InternalTransitions());
 		Rules.add(new AutotransitionCycles());
 		Rules.add(new NonDeterministicTransitions());
-		Rules.add(new FunctionImplementation());
+		//Rules.add(new FunctionImplementation());
 		Rules.add(new FunctionUsage());
 		Rules.add(new StatesUsage());
 		Rules.add(new VariableUsage());

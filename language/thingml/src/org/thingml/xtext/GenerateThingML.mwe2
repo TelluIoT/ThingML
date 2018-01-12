@@ -57,6 +57,8 @@ Workflow {
 				generateStub = true
 			}
 			validator = {
+				generateStub = true
+				composedCheck = "org.thingml.xtext.validation.checks.FunctionImplementation"
 				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
 			}
 		}
