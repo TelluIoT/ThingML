@@ -69,7 +69,7 @@ public class Checker {
 		//Rules.add(new FunctionImplementation());
 		Rules.add(new FunctionUsage());
 		Rules.add(new StatesUsage());
-		Rules.add(new VariableUsage());
+		//Rules.add(new VariableUsage());
 		Rules.add(new ControlStructures());
 		Rules.add(new PropertyInitialization());
 		Rules.add(new LostMessages());
