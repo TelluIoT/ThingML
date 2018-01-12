@@ -6,6 +6,7 @@ import org.thingml.xtext.validation.AbstractThingMLValidator
 import org.thingml.xtext.helpers.ThingMLElementHelper
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.thingml.xtext.thingML.ReceiveMessage
+import org.thingml.xtext.thingML.InternalTransition
 
 class TransitionUsage extends AbstractThingMLValidator {
 
@@ -39,5 +40,13 @@ class TransitionUsage extends AbstractThingMLValidator {
 		}
 
 	}
+	
+	@Check(FAST)
+	def checkEmptyInternal(InternalTransition t) {
+		if (t.event === null && t.guard === null) {
+			val msg = "Internal Transition without guard and without event. Will loop forever.";
+			error(msg, t.eContainer, ThingMLPackage.eINSTANCE.state_Internal, (t.eContainer as org.thingml.xtext.thingML.State).internal.indexOf(t))
+		}
+	}	
 
 }

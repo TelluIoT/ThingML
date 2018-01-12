@@ -58,7 +58,7 @@ Workflow {
 			}
 			validator = {
 				generateStub = true
-				composedCheck = "org.thingml.xtext.validation.checks.FunctionImplementation"
+				composedCheck = "org.thingml.xtext.validation.checks.FunctionUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.VariableUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.ThingsUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.StateUsage"
