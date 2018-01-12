@@ -59,7 +59,7 @@ public class Checker {
 		this.compiler = compiler;
 		generic = "ThingML";
 
-		Rules.add(new ThingsUsage());
+		//Rules.add(new ThingsUsage());
 		Rules.add(new PortsUsage());
 		Rules.add(new MessagesUsage());
 		Rules.add(new ConnectorCycles());
