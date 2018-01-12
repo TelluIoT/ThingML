@@ -244,7 +244,7 @@ You can also include ThingML as a Maven dependency in your project:
 <dependency>
      <groupId>org.thingml</groupId>
      <artifactId>compilers.registry</artifactId>
-     <version>1.0.0-SNAPSHOT</version>
+     <version>2.0.0-SNAPSHOT</version>
 </dependency>
 
 ...
