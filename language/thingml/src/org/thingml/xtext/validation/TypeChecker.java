@@ -64,13 +64,15 @@ import org.thingml.xtext.thingML.util.ThingMLSwitch;
 
 
 public class TypeChecker extends ThingMLSwitch<Type> {
-
-    public Type computeTypeOf(Expression exp) {
+	
+	protected static TypeChecker INSTANCE = new TypeChecker();
+	
+    public static Type computeTypeOf(Expression exp) {
         Type result = null;
         if (exp == null) {
             return Types.ANY_TYPE;
         }
-        result = doSwitch(exp);
+        result = INSTANCE.doSwitch(exp);
         if (result == null) {
             System.out.println("TODO: Type checking for " + exp.getClass().getName());
             return Types.ANY_TYPE;

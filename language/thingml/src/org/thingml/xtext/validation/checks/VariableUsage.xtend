@@ -5,20 +5,19 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.constraints.Types
+import org.thingml.xtext.helpers.ThingHelper
 import org.thingml.xtext.helpers.TyperHelper
 import org.thingml.xtext.thingML.Expression
 import org.thingml.xtext.thingML.LocalVariable
 import org.thingml.xtext.thingML.Property
+import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.thingML.Variable
 import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.validation.AbstractThingMLValidator
-import org.thingml.xtext.validation.Checker
-import org.thingml.xtext.helpers.ThingHelper
-import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.validation.TypeChecker
 
 class VariableUsage extends AbstractThingMLValidator {
-	Checker checker = new Checker("Generic", this);
-
+	
 	@Check(FAST)
 	def checkVariableAssignment(VariableAssignment va) {
 		checkReadonly(va.property, va)
@@ -54,7 +53,7 @@ class VariableUsage extends AbstractThingMLValidator {
 	def check(Variable va, Expression e, EObject o) {
 		if (va.getTypeRef().getCardinality() === null) { // not an array
 			val expected = TyperHelper.getBroadType(va.getTypeRef().getType());
-			val actual = checker.typeChecker.computeTypeOf(e);
+			val actual = TypeChecker.computeTypeOf(e);
 			if (actual !== null) { // FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)				
 				if (actual.equals(Types.ERROR_TYPE)) {
 					val msg = "Property " + va.getName() + " of Thing " + (ThingMLHelpers.findContainingThing(va)).getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName();

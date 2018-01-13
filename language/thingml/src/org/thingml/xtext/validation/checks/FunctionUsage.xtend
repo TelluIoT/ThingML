@@ -1,12 +1,17 @@
 package org.thingml.xtext.validation.checks
 
+import java.util.List
 import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.constraints.Types
 import org.thingml.xtext.helpers.ActionHelper
 import org.thingml.xtext.helpers.TyperHelper
+import org.thingml.xtext.thingML.Expression
 import org.thingml.xtext.thingML.Function
+import org.thingml.xtext.thingML.FunctionCallExpression
+import org.thingml.xtext.thingML.FunctionCallStatement
 import org.thingml.xtext.thingML.PropertyReference
 import org.thingml.xtext.thingML.ReturnAction
 import org.thingml.xtext.thingML.Thing
@@ -14,17 +19,9 @@ import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.thingML.VariableAssignment
 import org.thingml.xtext.validation.AbstractThingMLValidator
 import org.thingml.xtext.validation.Checker
-import org.thingml.xtext.thingML.Type
-import org.thingml.xtext.thingML.Expression
-import org.eclipse.emf.ecore.EObject
-import java.util.List
-import org.thingml.xtext.helpers.AnnotatedElementHelper
-import org.thingml.xtext.thingML.Parameter
-import org.thingml.xtext.thingML.FunctionCallStatement
-import org.thingml.xtext.thingML.FunctionCallExpression
+import org.thingml.xtext.validation.TypeChecker
 
 class FunctionUsage extends AbstractThingMLValidator {
-	Checker checker = new Checker("Generic", this);
 
 	@Check(FAST)
 	def checkFunction(Function f) {
@@ -52,7 +49,7 @@ class FunctionUsage extends AbstractThingMLValidator {
 			if (f.typeRef !== null && f.typeRef.type !== null) { // non-void function
 				ActionHelper.getAllActions(f, ReturnAction).forEach [ ra |
 					val actualType = TyperHelper.getBroadType(f.getTypeRef().getType());
-					val returnType = checker.typeChecker.computeTypeOf(ra.getExp());
+					val returnType = TypeChecker.computeTypeOf(ra.getExp());
 					val parent = ra.eContainer.eGet(ra.eContainingFeature)
 					if (returnType.equals(Types.ERROR_TYPE)) {
 						val msg = "Function " + f.getName() + " of Thing " + (f.eContainer as Thing).getName() +
@@ -116,7 +113,7 @@ class FunctionUsage extends AbstractThingMLValidator {
 		call.parameters.forEach [ p, i |
 			val e = params.get(i);
 			val expected = TyperHelper.getBroadType(p.getTypeRef().getType());
-			val actual = checker.typeChecker.computeTypeOf(e);
+			val actual = TypeChecker.computeTypeOf(e);
 			if (actual !== null) {
 				if (actual.equals(Types.ERROR_TYPE)) {
 					val msg = "Function " + call.getName() + " of Thing " + thing.getName() +

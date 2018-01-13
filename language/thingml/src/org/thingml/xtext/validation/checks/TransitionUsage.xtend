@@ -47,6 +47,13 @@ class TransitionUsage extends AbstractThingMLValidator {
 			val msg = "Internal Transition without guard and without event. Will loop forever.";
 			error(msg, t.eContainer, ThingMLPackage.eINSTANCE.state_Internal, (t.eContainer as org.thingml.xtext.thingML.State).internal.indexOf(t))
 		}
-	}	
-
+	}
+	
+	@Check(FAST)
+	def checkInternalWithoutAction(InternalTransition t) {
+		if (t.action === null) {
+			val msg = "Internal Transition without action, consider removing.";
+			warning(msg, t.eContainer, ThingMLPackage.eINSTANCE.state_Internal, (t.eContainer as org.thingml.xtext.thingML.State).internal.indexOf(t))
+		}
+	}
 }

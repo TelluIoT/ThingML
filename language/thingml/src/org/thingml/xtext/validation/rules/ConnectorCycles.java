@@ -41,6 +41,8 @@ public class ConnectorCycles extends Rule {
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
     }
+	
+	// FIXME: I believe that this rule is not correct
 
     @Override
     public String getName() {
