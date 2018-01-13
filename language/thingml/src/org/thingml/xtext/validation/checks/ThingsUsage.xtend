@@ -24,7 +24,6 @@ import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.validation.AbstractThingMLValidator
-import org.thingml.xtext.validation.Checker
 import org.thingml.xtext.validation.TypeChecker
 
 class ThingsUsage extends AbstractThingMLValidator {
@@ -137,7 +136,7 @@ class ThingsUsage extends AbstractThingMLValidator {
 
 	def checkBooleanExpression(Expression e, EObject o) {
 		val parent = o.eContainer.eGet(o.eContainingFeature)
-		val actual = TypeChecker.instance().computeTypeOf(e);
+		val actual = TypeChecker.computeTypeOf(e);
 		if (actual.equals(Types.BOOLEAN_TYPE)) {
 			return;
 		}

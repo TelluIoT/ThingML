@@ -48,7 +48,7 @@ class FunctionUsage extends AbstractThingMLValidator {
 			if (f.typeRef !== null && f.typeRef.type !== null) { // non-void function
 				ActionHelper.getAllActions(f, ReturnAction).forEach [ ra |
 					val actualType = TyperHelper.getBroadType(f.getTypeRef().getType());
-					val returnType = TypeChecker.instance().computeTypeOf(ra.getExp());
+					val returnType = TypeChecker.computeTypeOf(ra.getExp());
 					val parent = ra.eContainer.eGet(ra.eContainingFeature)
 					if (returnType.equals(Types.ERROR_TYPE)) {
 						val msg = "Function " + f.getName() + " of Thing " + (f.eContainer as Thing).getName() +
@@ -112,7 +112,7 @@ class FunctionUsage extends AbstractThingMLValidator {
 		call.parameters.forEach [ p, i |
 			val e = params.get(i);
 			val expected = TyperHelper.getBroadType(p.getTypeRef().getType());
-			val actual = TypeChecker.instance().computeTypeOf(e);
+			val actual = TypeChecker.computeTypeOf(e);
 			if (actual !== null) {
 				if (actual.equals(Types.ERROR_TYPE)) {
 					val msg = "Function " + call.getName() + " of Thing " + thing.getName() +

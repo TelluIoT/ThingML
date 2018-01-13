@@ -27,7 +27,7 @@ public class ThingMLAntlrTokenToAttributeIdMapper extends AbstractAntlrTokenToAt
 
 
 	HashSet<String> typesAndMessages = new HashSet<String>(java.util.Arrays.asList(new String[]
-					{"'thing'", "'readonly'", "'includes'", "'datatype'", "'object'", "'enumeration'"
+					{"'thing'", "'fragment'", "'readonly'", "'includes'", "'datatype'", "'object'", "'enumeration'"
 							, "'sends'", "'receives'", "'port'", "'provided'", "'required'", "'protocol'"
 							, "'optional'", "'message'", "'property'"}));
 	
@@ -39,7 +39,7 @@ public class ThingMLAntlrTokenToAttributeIdMapper extends AbstractAntlrTokenToAt
 	
 	HashSet<String> action = new HashSet<String>(java.util.Arrays.asList(new String[]
 			{"'var'", "'return'", "'do'", "'end'", "'if'", "'else'", "'while'"
-					, "'print'", "'error'", "'not'", "'and'", "'or'"
+					, "'print'", "'println'", "'error'", "'errorln'", "'not'", "'and'", "'or'"
 					, "'init'", "'keeps'", "'history'", "'exit'", "'->'"
 					, "'fork'", "'set'", "'as'", "'!'"}));
 	

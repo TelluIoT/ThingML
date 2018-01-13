@@ -64,15 +64,15 @@ public class Checker {
 		Rules.add(new MessagesUsage());
 		Rules.add(new ConnectorCycles());
 		//Rules.add(new InternalTransitions());
-		Rules.add(new AutotransitionCycles());
+		//Rules.add(new AutotransitionCycles());
 		//Rules.add(new NonDeterministicTransitions());
 		//Rules.add(new FunctionImplementation());
 		//Rules.add(new FunctionUsage());
 		//Rules.add(new StatesUsage());
 		//Rules.add(new VariableUsage());
 		//Rules.add(new ControlStructures());
-		Rules.add(new PropertyInitialization());
-		Rules.add(new LostMessages());
+		//Rules.add(new PropertyInitialization());
+		//Rules.add(new LostMessages());
 	}
 
 	public void do_generic_check(Configuration cfg, boolean reportInEditor) {

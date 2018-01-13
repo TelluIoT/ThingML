@@ -36,7 +36,7 @@ class MessageUsage extends AbstractThingMLValidator {
 		msg.parameters.forEach [ p, i |
 			val e = params.get(i);
 			val expected = TyperHelper.getBroadType(p.getTypeRef().getType());
-			val actual = TypeChecker.instance().computeTypeOf(e);
+			val actual = TypeChecker.computeTypeOf(e);
 			if (actual !== null) {
 				if (actual.equals(Types.ERROR_TYPE)) {
 					val m = "Message " + msg.getName() + " of Thing " + thing.getName() +

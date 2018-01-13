@@ -58,13 +58,18 @@ Workflow {
 			}
 			validator = {
 				generateStub = true
+				
 				composedCheck = "org.thingml.xtext.validation.checks.FunctionUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.VariableUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.ThingsUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.StateUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.TransitionUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.MessageUsage"
-				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+				composedCheck = "org.thingml.xtext.validation.checks.AutotransitionCycles"
+				composedCheck = "org.thingml.xtext.validation.checks.PortsUsage"
+				composedCheck = "org.thingml.xtext.validation.checks.ControlStructures"
+				composedCheck = "org.thingml.xtext.validation.checks.LostMessages"
+				composedCheck = "org.thingml.xtext.validation.checks.PropertyInitialization"
 			}
 		}
 	}

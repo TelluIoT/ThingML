@@ -17,6 +17,7 @@ import org.thingml.xtext.validation.AbstractThingMLValidator
 import org.thingml.xtext.validation.TypeChecker
 
 class VariableUsage extends AbstractThingMLValidator {
+
 	@Check(FAST)
 	def checkVariableAssignment(VariableAssignment va) {
 		checkReadonly(va.property, va)
@@ -52,7 +53,7 @@ class VariableUsage extends AbstractThingMLValidator {
 	def check(Variable va, Expression e, EObject o) {
 		if (va.getTypeRef().getCardinality() === null) { // not an array
 			val expected = TyperHelper.getBroadType(va.getTypeRef().getType());
-			val actual = TypeChecker.instance().computeTypeOf(e);
+			val actual = TypeChecker.computeTypeOf(e);
 			if (actual !== null) { // FIXME: improve type checker so that it does not return null (some actions are not yet implemented in the type checker)				
 				if (actual.equals(Types.ERROR_TYPE)) {
 					val msg = "Property " + va.getName() + " of Thing " + (ThingMLHelpers.findContainingThing(va)).getName() + " is assigned with an erroneous value/expression. Expected " + TyperHelper.getBroadType(expected).getName() + ", assigned with " + TyperHelper.getBroadType(actual).getName();
