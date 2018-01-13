@@ -10,11 +10,9 @@ import org.thingml.xtext.thingML.Expression
 import org.thingml.xtext.thingML.Message
 import org.thingml.xtext.thingML.SendAction
 import org.thingml.xtext.validation.AbstractThingMLValidator
-import org.thingml.xtext.validation.Checker
+import org.thingml.xtext.validation.TypeChecker
 
 class MessageUsage extends AbstractThingMLValidator {
-	Checker checker = new Checker("Generic", this);
-
 	@Check(FAST)
 	def checkSendAction(SendAction send) {
 		checkSend(send.message, send.parameters, send)
@@ -38,7 +36,7 @@ class MessageUsage extends AbstractThingMLValidator {
 		msg.parameters.forEach [ p, i |
 			val e = params.get(i);
 			val expected = TyperHelper.getBroadType(p.getTypeRef().getType());
-			val actual = checker.typeChecker.computeTypeOf(e);
+			val actual = TypeChecker.instance().computeTypeOf(e);
 			if (actual !== null) {
 				if (actual.equals(Types.ERROR_TYPE)) {
 					val m = "Message " + msg.getName() + " of Thing " + thing.getName() +

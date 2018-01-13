@@ -64,6 +64,14 @@ import org.thingml.xtext.thingML.util.ThingMLSwitch;
 
 
 public class TypeChecker extends ThingMLSwitch<Type> {
+	
+	private static TypeChecker instance;
+	
+	public static TypeChecker instance() {
+		if (instance == null)
+			instance = new TypeChecker();
+		return instance;
+	}
 
     public Type computeTypeOf(Expression exp) {
         Type result = null;
