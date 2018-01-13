@@ -88,7 +88,8 @@ public class MessagesUsage extends Rule {
 				for (SendAction a : ActionHelper.getAllActions(t, SendAction.class)) {
 					if (EcoreUtil.equals(a.getMessage(), m)) {
 						found = true;
-						if (m.getParameters().size() != a.getParameters().size()) {
+						//NOTE: this commented part has been migrated to new checker
+						/*if (m.getParameters().size() != a.getParameters().size()) {
 							final String msg = "Message " + m.getName() + " of Thing " + t.getName()
 									+ " is sent with wrong number of parameters. Expected " + m.getParameters().size()
 									+ ", called with " + a.getParameters().size();
@@ -118,7 +119,7 @@ public class MessagesUsage extends Rule {
 									}
 								}
 							}
-						}
+						}*/
 					}
 				}
 				if (!found && !t.isFragment()) {

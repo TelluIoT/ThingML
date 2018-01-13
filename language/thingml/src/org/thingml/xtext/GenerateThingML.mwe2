@@ -63,6 +63,7 @@ Workflow {
 				composedCheck = "org.thingml.xtext.validation.checks.ThingsUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.StateUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.TransitionUsage"
+				composedCheck = "org.thingml.xtext.validation.checks.MessageUsage"
 				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
 			}
 		}

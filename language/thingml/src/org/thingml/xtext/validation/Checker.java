@@ -60,7 +60,7 @@ public class Checker {
 		generic = "ThingML";
 
 		//Rules.add(new ThingsUsage());
-		Rules.add(new PortsUsage());
+		//Rules.add(new PortsUsage());
 		Rules.add(new MessagesUsage());
 		Rules.add(new ConnectorCycles());
 		//Rules.add(new InternalTransitions());
@@ -70,7 +70,7 @@ public class Checker {
 		//Rules.add(new FunctionUsage());
 		//Rules.add(new StatesUsage());
 		//Rules.add(new VariableUsage());
-		Rules.add(new ControlStructures());
+		//Rules.add(new ControlStructures());
 		Rules.add(new PropertyInitialization());
 		Rules.add(new LostMessages());
 	}
