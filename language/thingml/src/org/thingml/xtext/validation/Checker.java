@@ -61,7 +61,7 @@ public class Checker {
 
 		//Rules.add(new ThingsUsage());
 		//Rules.add(new PortsUsage());
-		Rules.add(new MessagesUsage());
+		//Rules.add(new MessagesUsage());
 		Rules.add(new ConnectorCycles());
 		//Rules.add(new InternalTransitions());
 		//Rules.add(new AutotransitionCycles());

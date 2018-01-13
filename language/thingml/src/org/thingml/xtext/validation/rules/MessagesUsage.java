@@ -82,69 +82,6 @@ public class MessagesUsage extends Rule {
 	}
 
 	private void check(Thing t, Checker checker) {
-		for (Port p : ThingMLHelpers.allPorts(t)) {
-			for (Message m : p.getSends()) {
-				boolean found = false;
-				for (SendAction a : ActionHelper.getAllActions(t, SendAction.class)) {
-					if (EcoreUtil.equals(a.getMessage(), m)) {
-						found = true;
-						//NOTE: this commented part has been migrated to new checker
-						/*if (m.getParameters().size() != a.getParameters().size()) {
-							final String msg = "Message " + m.getName() + " of Thing " + t.getName()
-									+ " is sent with wrong number of parameters. Expected " + m.getParameters().size()
-									+ ", called with " + a.getParameters().size();
-							checker.addGenericError(msg, a);
-						} else {
-							for (Parameter pa : m.getParameters()) {
-								Expression e = a.getParameters().get(m.getParameters().indexOf(pa));
-								Type expected = TyperHelper.getBroadType(pa.getTypeRef().getType());
-								Type actual = checker.typeChecker.computeTypeOf(e);
-								if (actual != null) {
-									if (actual.equals(Types.ERROR_TYPE)) {
-										final String msg = "Message " + m.getName() + " of Thing " + t.getName()
-												+ " is sent with an erroneous parameter. Expected "
-												+ TyperHelper.getBroadType(expected).getName() + ", called with "
-												+ TyperHelper.getBroadType(actual).getName();
-										checker.addGenericError(msg, a);
-									} else if (actual.equals(Types.ANY_TYPE)) {
-										final String msg = "Message " + m.getName() + " of Thing " + t.getName()
-												+ " is sent with a parameter which cannot be typed. Consider using a cast <exp> as <type>.";
-										checker.addGenericWarning(msg, a);
-									} else if (!TyperHelper.isA(actual, expected)) {
-										final String msg = "Message " + m.getName() + " of Thing " + t.getName()
-												+ " is sent with an erroneous parameter. Expected "
-												+ TyperHelper.getBroadType(expected).getName() + ", called with "
-												+ TyperHelper.getBroadType(actual).getName();
-										checker.addGenericError(msg, a);
-									}
-								}
-							}
-						}*/
-					}
-				}
-				if (!found && !t.isFragment()) {
-					final String msg = "Port " + p.getName() + " of Thing " + t.getName() + " defines a Message "
-							+ m.getName() + " that is never sent. Consider removing message from port " + p.getName()
-							+ " or send the message in your logic.";
-					checker.addGenericWarning(msg, m);
-				}
-			}
-			if (!t.isFragment()) {
-				for (Message m : p.getReceives()) {
-					for (CompositeState sm : ThingMLHelpers.allStateMachines(t)) {
-						if (StateHelper.allMessageHandlers(sm).get(p) == null
-								|| StateHelper.allMessageHandlers(sm).get(p).get(m) == null) {
-							final String msg = "Port " + p.getName() + " of Thing " + t.getName()
-									+ " defines a Message " + m.getName()
-									+ " that is never received. Consider removing message from port " + p.getName()
-									+ " or define a handler for the message.";
-							checker.addGenericWarning(msg, m);
-						}
-					}
-				}
-			}
-		}
-
 		// check if message is serializable, only if it exists and instance
 		// connected to an external connector
 		for (Configuration c : ThingMLHelpers.allConfigurations(ThingMLHelpers.findContainingModel(t))) {

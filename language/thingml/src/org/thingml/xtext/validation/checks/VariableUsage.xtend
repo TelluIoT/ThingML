@@ -44,7 +44,7 @@ class VariableUsage extends AbstractThingMLValidator {
         val isUsed = ThingHelper.allUsedProperties(thing).exists[pr | 
             p.getName().equals(pr.getName())
        	]
-        if (!isUsed) {
+        if (!isUsed && !ThingMLHelpers.findContainingThing(p).fragment) {
           	val msg = "Property " + p.getName() + " of Thing " + thing.getName() + " is never used. Consider removing (or using) it.";
             warning(msg, thing, ThingMLPackage.eINSTANCE.thing_Properties, thing.properties.indexOf(p))
         }
