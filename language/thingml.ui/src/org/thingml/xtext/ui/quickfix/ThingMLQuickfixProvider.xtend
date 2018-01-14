@@ -4,21 +4,27 @@
 package org.thingml.xtext.ui.quickfix
 
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
+import org.eclipse.xtext.ui.editor.quickfix.Fix
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
+import org.eclipse.xtext.validation.Issue
 
 /**
  * Custom quickfixes.
  *
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#quick-fixes
  */
-class ThingMLQuickfixProvider extends DefaultQuickfixProvider {
+class ThingMLQuickfixProvider extends DefaultQuickfixProvider
+ {
 
-//	@Fix(ThingMLValidator.INVALID_NAME)
-//	def capitalizeName(Issue issue, IssueResolutionAcceptor acceptor) {
-//		acceptor.accept(issue, 'Capitalize name', 'Capitalize the name.', 'upcase.png') [
-//			context |
-//			val xtextDocument = context.xtextDocument
-//			val firstLetter = xtextDocument.get(issue.offset, 1)
-//			xtextDocument.replace(issue.offset, 1, firstLetter.toUpperCase)
-//		]
-//	}
+	@Fix("state-sink")
+	def makeStateFinal(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(
+			issue,
+			"Make state final",
+			"Change state "+issue.data.get(0)+" to a final state",
+			"" // Image
+		)[ context | 
+			context.xtextDocument.replace(issue.offset, 0, "final ")
+		]
+	}
 }

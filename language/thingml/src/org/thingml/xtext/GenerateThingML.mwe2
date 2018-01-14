@@ -58,7 +58,6 @@ Workflow {
 			}
 			validator = {
 				generateStub = true
-				
 				composedCheck = "org.thingml.xtext.validation.checks.FunctionUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.VariableUsage"
 				composedCheck = "org.thingml.xtext.validation.checks.ThingsUsage"
@@ -70,6 +69,10 @@ Workflow {
 				composedCheck = "org.thingml.xtext.validation.checks.ControlStructures"
 				composedCheck = "org.thingml.xtext.validation.checks.LostMessages"
 				composedCheck = "org.thingml.xtext.validation.checks.PropertyInitialization"
+			}
+			
+			quickFixProvider = {
+				generateStub = true
 			}
 		}
 	}
