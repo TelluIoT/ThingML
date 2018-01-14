@@ -32,7 +32,7 @@ public class ThingMLAntlrTokenToAttributeIdMapper extends AbstractAntlrTokenToAt
 							, "'optional'", "'message'", "'property'"}));
 	
 	HashSet<String> statemachine = new HashSet<String>(java.util.Arrays.asList(new String[]
-			{"'function'", "'abstract'", "'state'", "'composite'", "'statechart'", "'event'", "'guard'"
+			{"'function'", "'abstract'", "'state'", "'final'", "'composite'", "'statechart'", "'event'", "'guard'"
 					, "'action'", "'on'", "'entry'", "'exit'", "'region'"
 					, "'init'", "'keeps'", "'history'", "'exit'", "'->'"
 					, "'session'", "'internal'", "'transition'", "'?'"}));
