@@ -17,8 +17,8 @@
 package org.thingml.testing.tests;
 
 import java.io.File;
-import java.util.Collection;
 
+import org.eclipse.xtext.validation.Issue;
 import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.notification.RunNotifier;
 import org.thingml.testing.errors.ThingMLCheckerError;
@@ -27,8 +27,7 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.Checker;
-import org.thingml.xtext.validation.ThingMLValidator;
+import org.thingml.xtext.validation.NewChecker;
 
 public class CheckerTest extends ThingMLFileTest {
 	private static final long serialVersionUID = 1L;
@@ -48,12 +47,17 @@ public class CheckerTest extends ThingMLFileTest {
 		
 		if (!compilerChecker) {
 			// We should try the generic checker
-			Checker checker = new Checker("ThingMLTesting", null);
-			checker.do_generic_check(this.model, false);
+			NewChecker checker = new NewChecker();
+			checker.validateModel(this.model);
+			/*
+			System.out.println(this.name);
+			for (Issue error : checker.getErrors()) {
+				System.out.println(error);
+			}*/
 			
 			EachTestNotifier not = new EachTestNotifier(notifier, getDescription());
 			
-			if (shouldSucceed == checker.containsErrors())
+			if (shouldSucceed == checker.hasErrors())
 				not.addFailure(new ThingMLCheckerError(shouldSucceed, compilerChecker));
 			
 			for (ThingMLTestCase cse : this.cases)
@@ -65,23 +69,10 @@ public class CheckerTest extends ThingMLFileTest {
 				EachTestNotifier not = new EachTestNotifier(notifier, cse.getDescription());
 				not.fireTestStarted();
 				
-				Checker checker = cse.getCompiler().checker;
-				Collection<Configuration> configurations = ThingMLHelpers.allConfigurations(this.model);
-				boolean foundError = false;
+				NewChecker checker = cse.getCompiler().newChecker;
+				checker.validateModel(this.model);
 				
-				if (configurations.isEmpty()) {
-					// If no configurations is present - we do the generic checks
-					checker.do_generic_check(this.model, false);
-					foundError = checker.containsErrors();
-				} else {
-					// Or we try the checker for all configurations
-					for (Configuration configuration : configurations) {
-						checker.do_check(configuration, false);
-						foundError = foundError || checker.containsErrors();
-					}
-				}
-				
-				if (shouldSucceed == foundError)
+				if (shouldSucceed == checker.hasErrors())
 					not.addFailure(new ThingMLCheckerError(shouldSucceed, compilerChecker));
 				
 				not.fireTestFinished();

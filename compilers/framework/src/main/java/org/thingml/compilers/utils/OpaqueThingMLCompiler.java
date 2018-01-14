@@ -72,7 +72,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 
 	@Override
 	public void compile(Configuration cfg, Logger log, String... options) {
-		log.info("Running " + getName() + " compiler on configuration " + cfg.getName() + "[" + new Date() + "]");
+		log.info("Running " + getName() + " compiler on configuration " + cfg.getName() + " [" + new Date() + "]");
 		final long start = System.currentTimeMillis();
 		
 		//Saving the complete model, e.g. to get all required inputs if there is a problem in the compiler
@@ -80,9 +80,16 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		saveAsThingML(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.thingml").getAbsolutePath());
 		saveAsXMI(flatModel, new File(ctx.getOutputDirectory(), cfg.getName() + "_merged.xmi").getAbsolutePath());
 		
-		//compile
-		do_call_compiler(cfg, log, options);
-		log.info("Compilation complete [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
+		//Run validation
+		if (newChecker.validateConfiguration(cfg)) {
+			//Compile
+			do_call_compiler(cfg, log, options);
+			log.info("Compilation complete [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
+		} else {
+			//TODO: Print errors
+			log.error("Compilation failed [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
+		}
+		
 	}
 
 	@Override
