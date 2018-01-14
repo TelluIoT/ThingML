@@ -3,10 +3,10 @@ import "../../thingml.thingml"
 thing TestChar includes Test
 @test "1234 # 1234"
 {
-	property min : Char = '\'\0\''
-	property max : Char = '\'~\''
-	property zero : Char = '\'0\''
-	property order : Char = '\'A\''
+	property min : Char = '\'\0\'' as Char
+	property max : Char = '\'~\'' as Char
+	property zero : Char = '\'0\'' as Char
+	property order : Char = '\'A\'' as Char
 
     statechart TestType init S0 {
     	state S0 {

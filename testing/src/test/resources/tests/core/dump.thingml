@@ -9,18 +9,18 @@ thing fragment FileDumper {
 	
 	// Helper functions
 	function DumpFailure(Reason : Char) do
-		DumpWrite('\'\n\'')
-		DumpWrite('\'[\'')
-		DumpWrite('\'F\'')
-		DumpWrite('\'A\'')
-		DumpWrite('\'I\'')
-		DumpWrite('\'L\'')
-		DumpWrite('\'U\'')
-		DumpWrite('\'R\'')
-		DumpWrite('\'E\'')
-		DumpWrite('\']\'')
-		DumpWrite('\' \'')
+		DumpWrite('\'\n\'' as Char)
+		DumpWrite('\'[\'' as Char)
+		DumpWrite('\'F\'' as Char)
+		DumpWrite('\'A\'' as Char)
+		DumpWrite('\'I\'' as Char)
+		DumpWrite('\'L\'' as Char)
+		DumpWrite('\'U\'' as Char)
+		DumpWrite('\'R\'' as Char)
+		DumpWrite('\'E\'' as Char)
+		DumpWrite('\']\'' as Char)
+		DumpWrite('\' \'' as Char)
 		DumpWrite(Reason)
-		DumpWrite('\'\n\'')
+		DumpWrite('\'\n\'' as Char)
 	end
 }

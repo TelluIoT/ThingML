@@ -59,7 +59,7 @@ public class NodeJSTestCase extends ThingMLTestCase {
 		ThingMLHelpers.findContainingModel(dumper).getTypes().add(fsType);
 		
 		ThingMLInjector.addProperties(dumper,
-			"property fs : JavaScriptFS = 'require(\\'fs\\')'"
+			"property fs : JavaScriptFS = 'require(\\'fs\\')' as JavaScriptFS"
 		);
 		
 		ThingMLInjector.addActions(function,
