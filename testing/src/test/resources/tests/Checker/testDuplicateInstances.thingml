@@ -1,0 +1,17 @@
+thing A {
+    statechart TestDuplicateInstanceA init INIT {
+    	final state INIT {}
+    }
+}
+
+thing B {
+    statechart TestDuplicateInstanceB init INIT {
+    	final state INIT {}
+    }
+}
+
+configuration cfg {
+	// Should fail because there are multiple instances with the same name
+	instance i : TestDuplicateInstanceA
+	instance i : TestDuplicateInstanceB
+}

@@ -1,0 +1,4 @@
+datatype A<1>
+datatype A<2>
+
+// Should fail because there are multiple datatypes with the same name

@@ -1,0 +1,15 @@
+thing TestDuplicateSessions {
+    statechart TestDuplicateSessions init INIT {
+    	state INIT {}
+    	
+    	session S1 init S11 {
+    		state S11 {}
+		}
+		
+		session S1 init S12 {
+    		state S12 {}
+		}
+		
+		// Should fail because there are multiple sessions with the same name
+    }
+}

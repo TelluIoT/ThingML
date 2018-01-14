@@ -1,0 +1,14 @@
+thing TestDuplicateStates {
+    statechart TestDuplicateStates init S1 {
+    	state S1 {}
+    	
+    	composite state S1 init S2 {
+    		final state S2 {}
+    		state S2 {}
+    	}
+    	
+    	final state S1 {}
+    	
+    	// Should fail because there are multiple states with the same name
+    }
+}
