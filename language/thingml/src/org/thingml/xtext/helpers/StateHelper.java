@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -34,6 +35,7 @@ import org.thingml.xtext.thingML.Property;
 import org.thingml.xtext.thingML.ReceiveMessage;
 import org.thingml.xtext.thingML.State;
 import org.thingml.xtext.thingML.StateContainer;
+import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.Transition;
 
 /**
@@ -176,6 +178,28 @@ public class StateHelper {
 						}
 						hdlrs.add(t);
 					}
+				}
+			}
+		}
+		return result;
+	}
+	
+	public static Map<Port, Map<Message, List<Handler>>> allMessageHandlers(Thing self) {
+		Map<Port, Map<Message, List<Handler>>> result = new HashMap<Port, Map<Message, List<Handler>>>();
+		for (CompositeState sc : ThingMLHelpers.allStateMachines(self)) {
+			Map<Port, Map<Message, List<Handler>>> handlers = allMessageHandlers(sc);
+			for (Entry<Port, Map<Message, List<Handler>>> portMsgsHandlers : handlers.entrySet()) {
+				if (result.containsKey(portMsgsHandlers.getKey())) {
+					Map<Message, List<Handler>> resultPortHandlers = result.get(portMsgsHandlers.getKey());
+					for (Entry<Message, List<Handler>> msgHandlers : portMsgsHandlers.getValue().entrySet()) {
+						if (resultPortHandlers.containsKey(msgHandlers.getKey())) {
+							resultPortHandlers.get(msgHandlers.getKey()).addAll(msgHandlers.getValue());
+						} else {
+							resultPortHandlers.put(msgHandlers.getKey(), msgHandlers.getValue());
+						}
+					}
+				} else {
+					result.put(portMsgsHandlers.getKey(), portMsgsHandlers.getValue());
 				}
 			}
 		}
