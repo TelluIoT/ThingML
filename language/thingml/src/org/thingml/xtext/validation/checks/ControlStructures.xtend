@@ -1,18 +1,18 @@
 package org.thingml.xtext.validation.checks
 
 import org.eclipse.xtext.validation.Check
+import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.constraints.Types
+import org.thingml.xtext.helpers.TyperHelper
 import org.thingml.xtext.thingML.Action
 import org.thingml.xtext.thingML.ConditionalAction
 import org.thingml.xtext.thingML.Expression
-import org.thingml.xtext.thingML.LoopAction
-import org.thingml.xtext.validation.AbstractThingMLValidator
-import org.thingml.xtext.validation.TypeChecker
-import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.thingML.ExternExpression
-import org.thingml.xtext.helpers.TyperHelper
+import org.thingml.xtext.thingML.LoopAction
+import org.thingml.xtext.validation.ThingMLValidatorCheck
+import org.thingml.xtext.validation.TypeChecker
 
-class ControlStructures extends AbstractThingMLValidator {
+class ControlStructures extends ThingMLValidatorCheck {
 	
 	def checkActionExpression(Action a, Expression e) {
 		val actual = TypeChecker.computeTypeOf(e)

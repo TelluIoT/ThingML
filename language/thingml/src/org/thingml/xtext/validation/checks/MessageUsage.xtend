@@ -1,6 +1,5 @@
 package org.thingml.xtext.validation.checks
 
-import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.constraints.ThingMLHelpers
@@ -8,16 +7,13 @@ import org.thingml.xtext.constraints.Types
 import org.thingml.xtext.helpers.ActionHelper
 import org.thingml.xtext.helpers.StateHelper
 import org.thingml.xtext.helpers.TyperHelper
-import org.thingml.xtext.thingML.Expression
-import org.thingml.xtext.thingML.Message
 import org.thingml.xtext.thingML.SendAction
 import org.thingml.xtext.thingML.Thing
-import org.thingml.xtext.thingML.ThingMLModel
-import org.thingml.xtext.validation.AbstractThingMLValidator
-import org.thingml.xtext.validation.TypeChecker
 import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.validation.ThingMLValidatorCheck
+import org.thingml.xtext.validation.TypeChecker
 
-class MessageUsage extends AbstractThingMLValidator {
+class MessageUsage extends ThingMLValidatorCheck {
 	
 	@Check(NORMAL)
 	def checkMessageNotSent(Thing thing) {

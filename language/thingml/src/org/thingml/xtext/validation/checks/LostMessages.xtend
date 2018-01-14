@@ -1,14 +1,14 @@
 package org.thingml.xtext.validation.checks
 
-import org.thingml.xtext.validation.AbstractThingMLValidator
 import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.thingML.Configuration
-import org.thingml.xtext.thingML.RequiredPort
-import org.thingml.xtext.thingML.ExternalConnector
 import org.thingml.xtext.thingML.Connector
+import org.thingml.xtext.thingML.ExternalConnector
+import org.thingml.xtext.thingML.RequiredPort
 import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.validation.ThingMLValidatorCheck
 
-class LostMessages extends AbstractThingMLValidator {
+class LostMessages extends ThingMLValidatorCheck {
 	@Check(NORMAL)
 	def checkLostMessages(Configuration cfg) {
 		cfg.instances.forEach[inst, i|

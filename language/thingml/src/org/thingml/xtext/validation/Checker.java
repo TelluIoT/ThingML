@@ -46,23 +46,7 @@ public class Checker {
     		if (r instanceof XtextResource) {
     			IResourceValidator validator = ((XtextResource)r).getResourceServiceProvider().getResourceValidator();
     			List<Issue> issues = validator.validate(r, CheckMode.ALL, CancelIndicator.NullImpl);
-    			for (Issue issue : issues) {
-    				boolean found = false;
-    				for (Issue already : out) {
-    					if (
-    						issue.getSeverity() == already.getSeverity()
-    						&& issue.getLineNumber() == already.getLineNumber()
-    						&& issue.getColumn() == already.getColumn()
-    						&& (issue.getCode() != null && already.getCode() != null && issue.getCode().equals(already.getCode()))
-    						// FIXME: Issues in multiple files (resources)
-    					) {
-    						found = true;
-    						break;
-    					}
-    				}
-    				if (!found)
-    					out.add(issue);
-    			}
+    			out.addAll(issues);
     		}
     	}
     	return out;

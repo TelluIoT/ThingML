@@ -1,14 +1,14 @@
 package org.thingml.xtext.validation.checks
 
-import org.eclipse.xtext.validation.Check
-import org.thingml.xtext.thingML.ThingMLPackage
-import org.thingml.xtext.validation.AbstractThingMLValidator
-import org.thingml.xtext.helpers.ThingMLElementHelper
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.thingml.xtext.thingML.ReceiveMessage
+import org.eclipse.xtext.validation.Check
+import org.thingml.xtext.helpers.ThingMLElementHelper
 import org.thingml.xtext.thingML.InternalTransition
+import org.thingml.xtext.thingML.ReceiveMessage
+import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.validation.ThingMLValidatorCheck
 
-class TransitionUsage extends AbstractThingMLValidator {
+class TransitionUsage extends ThingMLValidatorCheck {
 
 	@Check(FAST)
 	def checkNonDeterministicTransition(org.thingml.xtext.thingML.State s) {

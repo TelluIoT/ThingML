@@ -16,10 +16,10 @@ import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.thingML.Variable
 import org.thingml.xtext.thingML.VariableAssignment
-import org.thingml.xtext.validation.AbstractThingMLValidator
+import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
 
-class VariableUsage extends AbstractThingMLValidator {
+class VariableUsage extends ThingMLValidatorCheck {
 	
 	def checkType(Variable va, Expression e, EObject o, EStructuralFeature f) {
 		if (va.typeRef.cardinality === null) {

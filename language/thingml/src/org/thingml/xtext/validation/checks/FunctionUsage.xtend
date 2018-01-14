@@ -17,10 +17,10 @@ import org.thingml.xtext.thingML.ReturnAction
 import org.thingml.xtext.thingML.Thing
 import org.thingml.xtext.thingML.ThingMLPackage
 import org.thingml.xtext.thingML.VariableAssignment
-import org.thingml.xtext.validation.AbstractThingMLValidator
+import org.thingml.xtext.validation.ThingMLValidatorCheck
 import org.thingml.xtext.validation.TypeChecker
 
-class FunctionUsage extends AbstractThingMLValidator {
+class FunctionUsage extends ThingMLValidatorCheck {
 
 	@Check(NORMAL)
 	def checkParameters2(Function f) {

@@ -2,11 +2,11 @@ package org.thingml.xtext.validation.checks
 
 import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.thingML.StateContainer
-import org.thingml.xtext.validation.AbstractThingMLValidator
-import org.thingml.xtext.validation.Tarjan
 import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.validation.Tarjan
+import org.thingml.xtext.validation.ThingMLValidatorCheck
 
-class AutotransitionCycles extends AbstractThingMLValidator {
+class AutotransitionCycles extends ThingMLValidatorCheck {
 	
 	@Check(NORMAL)
 	def checkAutotransitionCycles(StateContainer c) {

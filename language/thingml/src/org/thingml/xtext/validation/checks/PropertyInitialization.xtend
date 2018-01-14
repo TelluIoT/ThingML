@@ -1,15 +1,16 @@
 package org.thingml.xtext.validation.checks
 
-import org.thingml.xtext.validation.AbstractThingMLValidator
+import java.util.Set
 import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.thingML.Configuration
+import org.thingml.xtext.thingML.Property
 import org.thingml.xtext.thingML.Thing
-import java.util.Set
 import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.validation.ThingMLValidatorCheck
 
-class PropertyInitialization extends AbstractThingMLValidator {
+class PropertyInitialization extends ThingMLValidatorCheck {
 	
-	def Set<org.thingml.xtext.thingML.Property> getUninitializedProperties(Thing t) {
+	def Set<Property> getUninitializedProperties(Thing t) {
 		val props = newHashSet()
 		// Properties from current thing
 		t.properties.forEach[prop|

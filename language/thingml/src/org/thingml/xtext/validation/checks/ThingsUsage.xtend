@@ -1,5 +1,6 @@
 package org.thingml.xtext.validation.checks
 
+import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.validation.Check
 import org.thingml.xtext.constraints.ThingMLHelpers
 import org.thingml.xtext.helpers.ActionHelper
@@ -12,12 +13,10 @@ import org.thingml.xtext.thingML.Message
 import org.thingml.xtext.thingML.Port
 import org.thingml.xtext.thingML.Property
 import org.thingml.xtext.thingML.Thing
-import org.thingml.xtext.thingML.ThingMLModel
 import org.thingml.xtext.thingML.ThingMLPackage
-import org.thingml.xtext.validation.AbstractThingMLValidator
-import org.eclipse.emf.common.util.EList
+import org.thingml.xtext.validation.ThingMLValidatorCheck
 
-class ThingsUsage extends AbstractThingMLValidator {
+class ThingsUsage extends ThingMLValidatorCheck {
 
 	@Check(FAST)
 	def checkInstance(Instance i) {

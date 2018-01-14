@@ -5,10 +5,10 @@ import org.thingml.xtext.thingML.Configuration
 import org.thingml.xtext.thingML.Connector
 import org.thingml.xtext.thingML.ExternalConnector
 import org.thingml.xtext.thingML.RequiredPort
-import org.thingml.xtext.validation.AbstractThingMLValidator
 import org.thingml.xtext.thingML.ThingMLPackage
+import org.thingml.xtext.validation.ThingMLValidatorCheck
 
-class PortsUsage extends AbstractThingMLValidator {
+class PortsUsage extends ThingMLValidatorCheck {
 	
 	@Check(NORMAL)
 	def checkDanglingPorts(Configuration cfg) {
