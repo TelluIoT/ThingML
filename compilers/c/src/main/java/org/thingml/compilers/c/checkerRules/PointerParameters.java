@@ -32,16 +32,16 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Parameter;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.Checker;
-import org.thingml.xtext.validation.Rule;
+/*import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.Rule;*/
 
 /**
  *
  * @author sintef
  */
-public class PointerParameters extends Rule {
+public class PointerParameters /*extends Rule*/ {
 
-	@Override
+	/*@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.ERROR;
     }
@@ -78,5 +78,5 @@ public class PointerParameters extends Rule {
             }
         }
     }
-
+*/
 }

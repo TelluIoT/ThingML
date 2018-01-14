@@ -34,7 +34,6 @@ import org.thingml.xtext.thingML.CompositeState;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
 import org.thingml.xtext.thingML.ThingMLModel;
-import org.thingml.xtext.validation.Checker;
 
 //FIXME: Should use the file writing method provided by the wonderful context class
 
@@ -43,12 +42,10 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     public PlantUMLCompiler() {
         super(new ThingMLPrettyPrinter(), new ThingApiCompiler(), new PlantUMLCfgMainGenerator(),
                 new CfgBuildCompiler(), new PlantUMLThingImplCompiler());
-        this.checker = new Checker(this.getID(), null);
     }
 
     public PlantUMLCompiler(ThingActionCompiler thingActionCompiler, ThingApiCompiler thingApiCompiler, CfgMainGenerator mainCompiler, CfgBuildCompiler cfgBuildCompiler, FSMBasedThingImplCompiler thingImplCompiler) {
         super(thingActionCompiler, thingApiCompiler, mainCompiler, cfgBuildCompiler, thingImplCompiler);
-        this.checker = new Checker(this.getID(), null);
     }
 
     @Override
@@ -72,9 +69,6 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(final Configuration cfg, Logger log, String... options) {
-        this.checker.do_check(cfg, false);
-        //this.checker.printReport(log);
-
         new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);

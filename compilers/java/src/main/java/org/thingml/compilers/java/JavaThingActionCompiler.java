@@ -48,6 +48,7 @@ import org.thingml.xtext.thingML.SendAction;
 import org.thingml.xtext.thingML.StartSession;
 import org.thingml.xtext.thingML.Type;
 import org.thingml.xtext.thingML.VariableAssignment;
+import org.thingml.xtext.validation.TypeChecker;
 
 /**
  * Created by bmori on 01.12.2014.
@@ -84,8 +85,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	public void generate(EqualsExpression expression, StringBuilder builder, Context ctx) { // FIXME:
 																							// avoid
 																							// duplication
-		final Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
-		final Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
+		final Type leftType = TypeChecker.computeTypeOf(expression.getLhs());
+		final Type rightType = TypeChecker.computeTypeOf(expression.getRhs());
 		if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
 			if (expression.getRhs() instanceof ExternExpression) {
 				final ExternExpression ext = (ExternExpression) expression.getRhs();
@@ -123,8 +124,8 @@ public class JavaThingActionCompiler extends CommonThingActionCompiler {
 	public void generate(NotEqualsExpression expression, StringBuilder builder, Context ctx) { // FIXME:
 																								// avoid
 																								// duplication
-		final Type leftType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getLhs());
-		final Type rightType = ctx.getCompiler().checker.typeChecker.computeTypeOf(expression.getRhs());
+		final Type leftType = TypeChecker.computeTypeOf(expression.getLhs());
+		final Type rightType = TypeChecker.computeTypeOf(expression.getRhs());
 		if (TyperHelper.isA(leftType, Types.OBJECT_TYPE)) {
 			if (expression.getRhs() instanceof ExternExpression) {
 				final ExternExpression ext = (ExternExpression) expression.getRhs();

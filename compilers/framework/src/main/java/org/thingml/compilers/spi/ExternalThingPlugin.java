@@ -31,7 +31,6 @@ import org.thingml.xtext.helpers.AnnotatedElementHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.PlatformAnnotation;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.Checker;
 
 
 /**
@@ -50,10 +49,6 @@ public abstract class ExternalThingPlugin {
     public abstract List<String> getTargetedLanguages();
 
     public String getPluginID() { return this.getClass().getSimpleName(); }
-
-    public Checker.InfoType getHighestLevel() {
-        return Checker.InfoType.NOTICE;
-    }
 
     public String getExternalThingAnnotation(String name) {
         PlatformAnnotation annotation = annotationMap.get(name);
@@ -79,10 +74,6 @@ public abstract class ExternalThingPlugin {
         Should be overridden if the plugin needs to perform
      * some specific checking.
     */
-
-    public void check(Configuration cfg, Checker checker) {
-
-    }
 
     public abstract ThingApiCompiler getThingApiCompiler();
 

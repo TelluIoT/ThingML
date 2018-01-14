@@ -38,7 +38,6 @@ import org.thingml.xtext.thingML.Message;
 import org.thingml.xtext.thingML.Port;
 import org.thingml.xtext.thingML.Protocol;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.Checker;
 
 /**
  *
@@ -67,11 +66,6 @@ public class PosixStdInPlugin extends NetworkPlugin {
         res.add("posix");
         res.add("posixmt");
         return res;
-    }
-    
-    @Override
-    public void check(Configuration cfg, Checker checker) {
-
     }
 
     public void generateNetworkLibrary(Configuration cfg, Context cctx, Set<Protocol> protocols) {

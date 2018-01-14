@@ -22,7 +22,7 @@ import org.thingml.xtext.thingML.ErrorAction;
 import org.thingml.xtext.thingML.Expression;
 import org.thingml.xtext.thingML.PrintAction;
 import org.thingml.xtext.thingML.Type;
-import org.thingml.xtext.validation.Checker;
+import org.thingml.xtext.validation.TypeChecker;
 
 /**
  * Created by ffl on 11.06.15.
@@ -31,9 +31,8 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 	@Override
 	public void generate(ErrorAction action, StringBuilder builder, Context ctx) {
 		final StringBuilder b = new StringBuilder();
-		Checker checker = ctx.getCompiler().checker;
 		for (Expression msg : action.getMsg()) {
-		Type actual = checker.typeChecker.computeTypeOf(msg);
+		Type actual = TypeChecker.computeTypeOf(msg);
 		generate(msg, b, ctx);
 		if (actual != null) {
 			if (actual.getName().equals("Integer")) {
@@ -58,9 +57,8 @@ public class CThingActionCompilerPosix extends CThingActionCompiler {
 	@Override
 	public void generate(PrintAction action, StringBuilder builder, Context ctx) {
 		final StringBuilder b = new StringBuilder();
-		Checker checker = ctx.getCompiler().checker;
 		for (Expression msg : action.getMsg()) {
-			Type actual = checker.typeChecker.computeTypeOf(msg);
+			Type actual = TypeChecker.computeTypeOf(msg);
 			generate(msg, b, ctx);
 			if (actual != null) {
 				if (actual.getName().equals("Integer")) {

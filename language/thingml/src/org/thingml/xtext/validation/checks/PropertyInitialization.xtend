@@ -28,7 +28,7 @@ class PropertyInitialization extends AbstractThingMLValidator {
 		return props
 	}
 	
-	@Check(FAST)
+	@Check(NORMAL)
 	def checkPropertyInitialization(Configuration cfg) {
 		cfg.instances.forEach[inst, i|
 			val props = getUninitializedProperties(inst.type)

@@ -26,7 +26,6 @@ import org.thingml.xtext.constraints.ThingMLHelpers;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Thing;
-import org.thingml.xtext.validation.Checker;
 
 /**
  * Created by ffl on 25.11.14.
@@ -36,7 +35,6 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
     public JavaCompiler() {
         super(new JavaThingActionCompiler(), new JavaThingApiCompiler(), new JavaCfgMainGenerator(),
                 new JavaCfgBuildCompiler(), new JavaThingImplCompiler());
-        this.checker = new Checker(this.getID(), null);
         connectorCompilers.clear();
         connectorCompilers.put("swing", new Java2Swing());
     }
@@ -62,9 +60,6 @@ public class JavaCompiler extends OpaqueThingMLCompiler {
 
     @Override
     public void do_call_compiler(Configuration cfg, Logger log, String... options) {
-        this.checker.do_check(cfg, false);
-        //this.checker.printReport(log);
-
         Context ctx = new Context(this, "match", "requires", "type", "abstract", "do", "finally", "import", "object", "throw", "case", "else", "for", "lazy", "override", "return", "trait", "catch", "extends", "forSome", "match", "package", "sealed", "try", "while", "class", "false", "if", "new", "private", "super", "true", "final", "null", "protected", "this", "_", ":", "=", "=>", "<-", "<:", "<%", ">:", "#", "@");
         ctx.addContextAnnotation("thisRef", "");
         String pack = "org.thingml.generated";

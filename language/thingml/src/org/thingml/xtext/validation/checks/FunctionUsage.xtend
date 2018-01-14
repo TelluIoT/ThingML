@@ -22,8 +22,8 @@ import org.thingml.xtext.validation.TypeChecker
 
 class FunctionUsage extends AbstractThingMLValidator {
 
-	@Check(FAST)
-	def checkFunction(Function f) {
+	@Check(NORMAL)
+	def checkParameters2(Function f) {
 		if (!f.abstract) { // if function is concrete then we check its implementation
 			val refs = ThingMLHelpers.getAllExpressions(ThingMLHelpers.findContainingThing(f), PropertyReference)
 			val assigns = ActionHelper.getAllActions(ThingMLHelpers.findContainingThing(f), VariableAssignment)
@@ -44,6 +44,18 @@ class FunctionUsage extends AbstractThingMLValidator {
 					}
 				]
 			]
+		} else {
+			var thing = f.eContainer as Thing
+			if (!thing.fragment) {
+				error("Thing " + thing.getName() + " is not a fragment, but contains abstract function " + f.getName(),
+					f.eContainer, f.eContainingFeature, thing.functions.indexOf(f))
+			}
+		}
+	}
+
+	@Check(FAST)
+	def checkParameters1(Function f) {
+		if (!f.abstract) { // if function is concrete then we check its implementation
 			// Checks return type
 			if (f.typeRef !== null && f.typeRef.type !== null) { // non-void function
 				ActionHelper.getAllActions(f, ReturnAction).forEach [ ra |
@@ -75,13 +87,7 @@ class FunctionUsage extends AbstractThingMLValidator {
 					}
 				]
 			}
-		} else {
-			var thing = f.eContainer as Thing
-			if (!thing.fragment) {
-				error("Thing " + thing.getName() + " is not a fragment, but contains abstract function " + f.getName(),
-					f.eContainer, f.eContainingFeature, thing.functions.indexOf(f))
-			}
-		}
+		} 
 	}
 
 	@Check(FAST)

@@ -26,15 +26,15 @@ import org.eclipse.emf.common.util.EList
  */
 class ThingMLValidator extends AbstractThingMLValidator {
 
-	Checker checker = new Checker("Generic", this);
+	//Checker checker = new Checker("Generic", this);
 	
 	/*****************************************************************************
 	 *                 CUSTOM VALIDATION RULES FOR THINGS
 	 *****************************************************************************/
-	@Check(NORMAL)
+	/* @Check(NORMAL)
 	def checkModel(ThingMLModel model) {
 		checker.do_generic_check(model, true)
-	}
+	}*/
 
 	
 

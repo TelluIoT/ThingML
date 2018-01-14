@@ -20,7 +20,6 @@ import org.thingml.compilers.Context;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.c.CCompilerContext;
 import org.thingml.compilers.c.posix.PosixCCfgBuildCompiler;
-import org.thingml.compilers.c.posix.PosixChecker;
 import org.thingml.compilers.utils.OpaqueThingMLCompiler;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.constraints.ThingMLHelpers;
@@ -36,7 +35,6 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
     public PosixMTCompiler() {
         super(new PosixMTThingActionCompiler(), new PosixMTThingApiCompiler(), new PosixMTCfgMainGenerator(),
                 new PosixCCfgBuildCompiler(), new PosixMTThingImplCompiler());
-        this.checker = new PosixChecker(this.getID(), null);
     }
 
     @Override
@@ -65,10 +63,6 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
         processDebug(cfg);
         ctx.setCurrentConfiguration(cfg);
         //ctx.setOutputDirectory(new File(ctx.getOutputDirectory(), cfg.getName()));
-        
-        //Checker
-        this.checker.do_check(cfg, false);
-        //this.checker.printReport(log);
 
         // GENERATE A MODULE FOR EACH THING
         for (Thing thing : ConfigurationHelper.allThings(cfg)) {

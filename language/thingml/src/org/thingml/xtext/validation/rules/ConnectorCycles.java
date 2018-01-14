@@ -27,17 +27,17 @@ import java.util.List;
 import org.thingml.xtext.helpers.ConfigurationHelper;
 import org.thingml.xtext.thingML.Configuration;
 import org.thingml.xtext.thingML.Instance;
-import org.thingml.xtext.validation.Checker;
-import org.thingml.xtext.validation.Rule;
+//import org.thingml.xtext.validation.Checker;
+//import org.thingml.xtext.validation.Rule;
 import org.thingml.xtext.validation.Tarjan;
 
 /**
  *
  * @author sintef
  */
-public class ConnectorCycles extends Rule {
+public class ConnectorCycles /*extends Rule*/ {
 
-	@Override
+	/*@Override
     public Checker.InfoType getHighestLevel() {
         return Checker.InfoType.NOTICE;
     }
@@ -80,6 +80,6 @@ public class ConnectorCycles extends Rule {
                 }
             }
         }
-    }
+    }*/
 
 }
