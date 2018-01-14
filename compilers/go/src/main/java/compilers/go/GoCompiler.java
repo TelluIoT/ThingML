@@ -95,7 +95,7 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 	}
 
 	@Override
-	public void do_call_compiler(Configuration cfg, Logger log, String... options) {		
+	public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {		
 		GoContext ctx = new GoContext(this);
 		
 		// Generate types
@@ -115,5 +115,6 @@ public class GoCompiler extends OpaqueThingMLCompiler {
 		getMainCompiler().generateMainAndInit(cfg, ThingMLHelpers.findContainingModel(cfg), ctx);
 		
 		ctx.writeGeneratedCodeToFiles();
+		return true;
 	}
 }

@@ -296,8 +296,8 @@ public abstract class ThingMLCompiler {
      * Entry point of the compiler
      * ************************************************************
      */
-    public void compile(Configuration cfg, String... options) { compile(cfg, Logger.SYSTEM, options); }
-    public abstract void compile(Configuration cfg, Logger log, String... options);
+    public boolean compile(Configuration cfg, String... options) { return compile(cfg, Logger.SYSTEM, options); }
+    public abstract boolean compile(Configuration cfg, Logger log, String... options);
 
     /**
      * Creates debug profiles

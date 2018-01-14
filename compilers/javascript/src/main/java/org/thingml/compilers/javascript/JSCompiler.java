@@ -48,7 +48,7 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
 	}
 
 	@Override
-    public void do_call_compiler(Configuration cfg, Logger log, String... options) {
+    public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
         ctx.addContextAnnotation("thisRef", "this.");
         //new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
@@ -57,6 +57,8 @@ public abstract class JSCompiler extends OpaqueThingMLCompiler {
         ctx.getCompiler().getCfgBuildCompiler().generateBuildScript(cfg, ctx);
         ctx.writeGeneratedCodeToFiles();
         ctx.generateNetworkLibs(cfg);
+        
+        return true;
     }
 	
 	abstract protected String getEnumPath(Configuration t, ThingMLModel model, Context ctx);

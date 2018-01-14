@@ -35,7 +35,7 @@ public class TeensyCompiler extends OpaqueThingMLCompiler{
 	}
 
 	@Override
-    public void do_call_compiler(Configuration cfg, Logger log, String... options) {
+    public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
 
 		CCompilerContext ctx = new CCompilerContextTeensy(this);
         processDebug(cfg);
@@ -62,6 +62,7 @@ public class TeensyCompiler extends OpaqueThingMLCompiler{
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
 		
+        return true;
 	}
 
 	@Override

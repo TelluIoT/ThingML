@@ -22,8 +22,9 @@ public enum Result {
 	LOADMODELERROR("Load model error", 3),
 	CHECKERERROR("Checker error", 4),
 	OUTPUTERROR("Output error", 5),
-	EXECUTIONERROR("Execution error",6),
-	TIMEOUT("Timout",6),
+	COMPILATIONERROR("Compilation error",6),
+	EXECUTIONERROR("Execution error",7),
+	TIMEOUT("Timout",8),
 	SKIPPED("Skipped",99),
 	UNKNOWN("Unknown",100);
 	
@@ -42,6 +43,7 @@ public enum Result {
 			case LOADMODELERROR:
 			case CHECKERERROR:
 			case OUTPUTERROR:
+			case COMPILATIONERROR:
 			case EXECUTIONERROR:
 			case TIMEOUT:
 				return FAILURE;
@@ -88,6 +90,8 @@ public enum Result {
 		switch (this.simplify()) {
 			case SUCCESS:
 				return "#5cb85c";
+			case SKIPPED:
+				return "#777777";
 			default:
 				return "#ffffff";
 		}
@@ -108,6 +112,8 @@ public enum Result {
 			return CHECKERERROR;
 		if (failure.equals("org.thingml.testing.errors.ThingMLOutputError"))
 			return OUTPUTERROR;
+		if (failure.equals("org.thingml.testing.errors.ThingMLCompilationError"))
+			return COMPILATIONERROR;
 		if (failure.equals("org.thingml.testing.errors.ThingMLExecutionError"))
 			return EXECUTIONERROR;
 		if (failure.equals("org.thingml.testing.errors.ThingMLTimeoutError"))

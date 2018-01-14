@@ -30,6 +30,7 @@ import org.junit.runner.Describable;
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.thingml.compilers.ThingMLCompiler;
+import org.thingml.testing.errors.ThingMLCompilationError;
 import org.thingml.testing.errors.ThingMLTestCaseCompilerError;
 import org.thingml.testing.errors.ThingMLTimeoutError;
 import org.thingml.testing.helpers.PlatformHelpers;
@@ -40,6 +41,7 @@ import org.thingml.testing.languages.PosixMTTestCase;
 import org.thingml.testing.languages.PosixTestCase;
 import org.thingml.testing.utilities.CommandRunner.Output;
 import org.thingml.testing.utilities.TemporaryDirectory;
+import org.thingml.utilities.logging.BufferedLogger;
 import org.thingml.utilities.logging.Logger;
 import org.thingml.xtext.thingML.ActionBlock;
 import org.thingml.xtext.thingML.Configuration;
@@ -162,7 +164,10 @@ public abstract class ThingMLTestCase implements Describable, Runnable {
 					
 					// Generate platform code
 					this.compiler.setOutputDirectory(tempDir);
-					this.compiler.compile(config, Logger.NULL); // Maybe we should buffer the logs and look at them?
+					BufferedLogger buffer = Logger.newBuffered();
+					if (!this.compiler.compile(config, buffer)) {
+						throw new ThingMLCompilationError(buffer);
+					}
 					
 					// Allow the parent ThingMLTest to possibly modify the contents of the directory
 					// TODO: Should we maybe find the matching configuration in the parents model? It doesn't actually know anything about the reference we passed it...

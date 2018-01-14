@@ -54,8 +54,8 @@ public class ReactJSCompiler extends JSCompiler {
 
 
 	@Override
-	public void do_call_compiler(Configuration cfg, Logger log, String... options) {
-		super.do_call_compiler(cfg, log, options);
+	public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
+		return super.do_call_compiler(cfg, log, options);
 	}
 
 	@Override

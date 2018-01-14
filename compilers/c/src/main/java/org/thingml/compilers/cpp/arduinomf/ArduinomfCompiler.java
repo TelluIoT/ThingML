@@ -59,7 +59,7 @@ public class ArduinomfCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg, Logger log, String... options) {
+    public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
 
         CCompilerContext ctx = new CCompilerContextArduino(this);
         processDebug(cfg);
@@ -83,7 +83,8 @@ public class ArduinomfCompiler extends OpaqueThingMLCompiler {
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
-
+        
+        return true;
     }
     
 }

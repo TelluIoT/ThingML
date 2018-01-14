@@ -329,6 +329,7 @@ public class CommonThingActionCompiler extends ThingActionCompiler {
 
     public void generate(CastExpression expression, StringBuilder builder, Context ctx) {
         //We do not cast explicitly in the generated code. Should a cast be needed, it has to be done in an extern expression
+    	//FIXME: Shouldn't we really do that?
     	generate(expression.getTerm(), builder, ctx);
     }
 }

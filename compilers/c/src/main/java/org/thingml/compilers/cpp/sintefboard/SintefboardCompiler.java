@@ -54,7 +54,7 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg, Logger log, String... options) {
+    public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
 
         CCompilerContext ctx = new CCompilerContextSintefboard(this);
         processDebug(cfg);
@@ -85,6 +85,7 @@ public class SintefboardCompiler extends OpaqueThingMLCompiler {
 
         // WRITE THE GENERATED CODE
         ctx.writeGeneratedCodeToFiles();
-
+        
+        return true;
     }
 }

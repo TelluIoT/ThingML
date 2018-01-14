@@ -57,7 +57,7 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(Configuration cfg, Logger log, String... options) {
+    public boolean do_call_compiler(Configuration cfg, Logger log, String... options) {
 
         CCompilerContext ctx = new PosixMTCompilerContext(this);
         processDebug(cfg);
@@ -89,7 +89,8 @@ public class PosixMTCompiler extends OpaqueThingMLCompiler {
       
         // COPY OUTPUT FILES
         ctx.copyFilesToOutput();
-
+        
+        return true;
     }
     
     @Override

@@ -68,11 +68,12 @@ public class PlantUMLCompiler extends OpaqueThingMLCompiler {
     }
 
     @Override
-    public void do_call_compiler(final Configuration cfg, Logger log, String... options) {
+    public boolean do_call_compiler(final Configuration cfg, Logger log, String... options) {
         new File(ctx.getOutputDirectory() + "/" + cfg.getName()).mkdirs();
         ctx.setCurrentConfiguration(cfg);
         compile(cfg, ThingMLHelpers.findContainingModel(cfg), true, ctx);
         ctx.writeGeneratedCodeToFiles();
+        return true;
     }
 
     private void compile(Configuration t, ThingMLModel model, boolean isNode, Context ctx) {

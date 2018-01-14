@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Date;
 
+import org.eclipse.xtext.validation.Issue;
 import org.thingml.compilers.ThingMLCompiler;
 import org.thingml.compilers.configuration.CfgBuildCompiler;
 import org.thingml.compilers.configuration.CfgMainGenerator;
@@ -71,7 +72,7 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 	}
 
 	@Override
-	public void compile(Configuration cfg, Logger log, String... options) {
+	public boolean compile(Configuration cfg, Logger log, String... options) {
 		log.info("Running " + getName() + " compiler on configuration " + cfg.getName() + " [" + new Date() + "]");
 		final long start = System.currentTimeMillis();
 		
@@ -83,12 +84,14 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		//Run validation
 		if (checker.validateConfiguration(cfg)) {
 			//Compile
-			do_call_compiler(cfg, log, options);
-			log.info("Compilation complete [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
-		} else {
-			//TODO: Print errors
-			log.error("Compilation failed [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
-		}
+			if (do_call_compiler(cfg, log, options)) {
+				log.info("Compilation complete [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
+				return true;
+			}
+		} // TODO: print checker errors in else
+		// Failed
+		log.error("Compilation failed [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
+		return false;
 		
 	}
 
@@ -98,6 +101,6 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 		super.compileConnector(connector, cfg, options);
 	}
 
-	public abstract void do_call_compiler(Configuration cfg, Logger log, String... options);
+	public abstract boolean do_call_compiler(Configuration cfg, Logger log, String... options);
 
 }
