@@ -88,7 +88,12 @@ public abstract class OpaqueThingMLCompiler extends ThingMLCompiler {
 				log.info("Compilation complete [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
 				return true;
 			}
-		} // TODO: print checker errors in else
+		} else {
+			for (Issue error : checker.getErrors()) {
+				// TODO: Some line information as well!
+				log.error("Error: "+error.getMessage());
+			}
+		}
 		// Failed
 		log.error("Compilation failed [" + new Date() + "]. Took " + (System.currentTimeMillis() - start) + " ms.");
 		return false;
