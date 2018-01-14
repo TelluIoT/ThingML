@@ -12,6 +12,6 @@ thing B {
 
 configuration cfg {
 	// Should fail because there are multiple instances with the same name
-	instance i : TestDuplicateInstanceA
-	instance i : TestDuplicateInstanceB
+	instance i : A
+	instance i : B
 }

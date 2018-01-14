@@ -53,7 +53,7 @@ public class Checker {
     						issue.getSeverity() == already.getSeverity()
     						&& issue.getLineNumber() == already.getLineNumber()
     						&& issue.getColumn() == already.getColumn()
-    						&& issue.getCode().equals(already.getCode())
+    						&& (issue.getCode() != null && already.getCode() != null && issue.getCode().equals(already.getCode()))
     						// FIXME: Issues in multiple files (resources)
     					) {
     						found = true;
